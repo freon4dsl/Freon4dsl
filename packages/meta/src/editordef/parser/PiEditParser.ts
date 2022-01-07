@@ -2,10 +2,10 @@ import { PiLanguage } from "../../languagedef/metalanguage";
 import { PiParser } from "../../utils";
 
 const editorParser = require("./PiEditGrammar");
-import { setCurrentFileName as editFileName } from "./NewPiEditCreators";
+import { setCurrentFileName as editFileName } from "./PiEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
-import { PiEditUnit } from "../metalanguage/NewPiEditDefLang";
-import { NewPiEditChecker } from "../metalanguage/NewPiEditChecker";
+import { PiEditUnit } from "../metalanguage/PiEditDefLang";
+import { PiEditChecker } from "../metalanguage/PiEditChecker";
 
 export class PiEditParser extends PiParser<PiEditUnit> {
     language: PiLanguage;
@@ -14,7 +14,7 @@ export class PiEditParser extends PiParser<PiEditUnit> {
         super();
         this.language = language;
         this.parser = editorParser;
-        this.checker = new NewPiEditChecker(language);
+        this.checker = new PiEditChecker(language);
     }
 
     protected merge(submodels: PiEditUnit[]): PiEditUnit {

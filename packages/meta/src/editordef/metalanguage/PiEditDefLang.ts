@@ -1,30 +1,203 @@
-import { PiClassifier, PiConcept, PiInstanceExp, PiLangExp, PiLanguage } from "../../languagedef/metalanguage";
+import { PiClassifier, PiInstance, PiLangExp, PiLanguage, PiProperty } from "../../languagedef/metalanguage";
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
-import { PiDefinitionElement } from "../../utils";
+import { Names, PiDefinitionElement } from "../../utils";
 import { Roles } from "../../utils/Roles";
 
-export class PiEditUnit extends PiDefinitionElement {
-    name: string;
-    language: PiLanguage;
-    languageName: string;
-    conceptEditors: PiEditConcept[] = [];
+/**
+ * Super type of all elements that may be part of a projection definition
+ */
+export type PiEditProjectionItem =
+    PiEditParsedProjectionIndent    // removed after parsing, by PiEditProjectionUtil.normalize()
+    | PiEditParsedNewline           // removed after parsing, by PiEditProjectionUtil.normalize()
+    | PiEditProjectionText
+    | PiEditPropertyProjection
+    | PiEditSuperProjection ;
 
-    findConceptEditor(cls: PiClassifier): PiEditConcept {
-        return this.conceptEditors.find(con => con.concept.referred === cls);
+/**
+ * The direction of a property that is a list
+ */
+export enum PiEditProjectionDirection {
+    NONE = "NONE",
+    Horizontal = "Horizontal",
+    Vertical = "Vertical"
+}
+
+/**
+ * The manner in which elements of a list are combined
+ */
+export enum ListJoinType {
+    NONE = "NONE",
+    Terminator = "Terminator",  // the accompanying string is placed after each list element
+    Separator = "Separator",    // the accompanying string is placed between each list element
+    Initiator = "Initiator"     // the accompanying string is placed before each list element
+}
+
+/**
+ * The root of the complete editor definition
+ */
+export class PiEditUnit extends PiDefinitionElement {
+    language: PiLanguage;
+    projectiongroups: PiEditProjectionGroup[] = [];
+
+    getDefaultProjectiongroup(): PiEditProjectionGroup {
+        return this.projectiongroups.find(group => group.name = Names.defaultProjectionName);
+    }
+
+    findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
+        for (const group of this.projectiongroups) {
+            const found = group.findProjectionForType(cls);
+            if (!!found) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    allTableProjections(): PiEditTableProjection[] {
+        let result: PiEditTableProjection[] = [];
+        for (const group of this.projectiongroups) {
+            result.push(...group.allTableProjections());
+        }
+        return result;
+    }
+
+    findTableProjectionForType(cls: PiClassifier): PiEditTableProjection {
+        for (const group of this.projectiongroups) {
+            const found = group.findTableProjectionForType(cls);
+            if (!!found) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    toString(): string {
+        return `${this.projectiongroups.map(pr => pr.toString()). join("\n")}`;
     }
 }
 
-export class PiEditConcept extends PiDefinitionElement {
-    languageEditor: PiEditUnit;
+export class BoolKeywords extends PiDefinitionElement {
+    trueKeyword: string = "true";
+    falseKeyword?: string;
 
-    concept: PiElementReference<PiClassifier>;
-    projection: PiEditProjection = null;
-    tableProjections: PiEditTableProjection[] = [];
-    _trigger: string = null;
-    // The name of the reference property for which a shortcut can be used
-    referenceShortcut: PiLangExp;
+    toString(): string {
+        return `BoolKeywords [ ${this.trueKeyword} | ${this.falseKeyword} ]`;
+    }
+}
 
-    symbol: string = null; // only for binary expressions
+/**
+ * A group of projection definitions that share the same name
+ */
+export class PiEditProjectionGroup extends PiDefinitionElement {
+    name: string = null;
+    standardBooleanProjection: BoolKeywords = new BoolKeywords();
+    standardReferenceSeparator: string = ".";
+    projections: PiEditClassifierProjection[] = [];
+    extras: ExtraClassifierInfo[] = [];
+
+    findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
+        return this.projections.find(con => con.classifier.referred === cls);
+    }
+
+    findExtrasForType(cls: PiClassifier): ExtraClassifierInfo {
+        return this.extras.find(con => con.classifier.referred === cls);
+    }
+
+    allTableProjections(): PiEditTableProjection[] {
+        return this.projections.filter(con => con instanceof PiEditTableProjection) as PiEditTableProjection[];
+    }
+
+    findTableProjectionForType(cls: PiClassifier): PiEditTableProjection {
+        return this.allTableProjections().find(con => con.classifier.referred === cls);
+    }
+
+    toString(): string {
+        return `editor ${this.name}
+        ${this.standardBooleanProjection ? `boolean ${this.standardBooleanProjection}` : ``}
+        ${this.standardReferenceSeparator ? `referenceSeparator [ ${this.standardReferenceSeparator} ]` : ``}
+        
+        ${this.projections.map(gr => gr.toString()).join("\n")}
+
+        ${this.extras.map(gr => gr.toString()).join("\n")}`;
+    }
+}
+
+/**
+ * A single projection definition for a single concept or interface
+ */
+export abstract class PiEditClassifierProjection extends PiDefinitionElement {
+    name: string;
+    classifier: PiElementReference<PiClassifier>;
+    toString(): string {
+        return `TO BE IMPLEMENTED BY SUBCLASSES`;
+    }
+}
+
+/**
+ * A 'normal', i.e. not a table projection, for a concept or interface
+ */
+export class PiEditProjection extends PiEditClassifierProjection {
+    lines: PiEditProjectionLine[] = [];
+
+    cursorLocation(): string {
+        for (const line of this.lines) {
+            for (const item of line.items) {
+                if (item instanceof PiEditPropertyProjection) {
+                    return Roles.property(item.expression.appliedfeature.referredElement.referred);
+                    // const referred: PiProperty = item.expression.appliedfeature.referredElement.referred;
+                    // if (referred.type.referred instanceof PiExpressionConcept) {
+                    //     return "expression-placeholder";
+                    // } else {
+                    // }
+                }
+            }
+        }
+        return "";
+    }
+
+    toString() {
+        return `${this.classifier?.name} {
+        [ // #lines: ${this.lines.length}
+        ${this.lines.map(line => line.toString()).join("\n")}
+        ]}`;
+    }
+}
+
+/**
+ * A table projection for a concept or interface
+ */
+export class PiEditTableProjection extends PiEditClassifierProjection {
+    headers: string[] = [];
+    cells: PiEditPropertyProjection[] = [];
+
+    toString() {
+        return `${this.classifier?.name} {
+        table [ 
+        ${this.headers.map(head => `"${head}"`).join(" | ")}
+        ${this.cells.map(it => it.toString()). join(" | ")}
+        ]}`;
+    }
+}
+
+export class PiEditLimitedProjection extends PiEditClassifierProjection {
+    instanceProjections: PiEditInstanceProjection[] = [];
+}
+export class PiEditInstanceProjection {
+    instance: PiElementReference<PiInstance>;
+    keyword: BoolKeywords;
+}
+/**
+ * Holds extra information, defined in the default editor, per classifier
+ */
+export class ExtraClassifierInfo extends PiDefinitionElement {
+    classifier: PiElementReference<PiClassifier>;
+    // The string that triggers the creation of an object of this class in the editor.
+    private _trigger: string = null;
+    // The name of the reference property for which a shortcut can be used.
+    // TODO change type to PiProperty and add prop to hold name string
+    referenceShortcut: PiLangExp = null;
+    // Only for binary expressions: the operator between left and right parts.
+    symbol: string = null;
 
     get trigger(): string {
         if (!!(this._trigger)) {
@@ -37,8 +210,134 @@ export class PiEditConcept extends PiDefinitionElement {
     set trigger(value: string) {
         this._trigger = value;
     }
+
+    toString(): string {
+        return `${this.classifier?.name} {
+            trigger = ${this._trigger}
+            symbol = ${this.symbol}
+            referenceShortcut = ${this.referenceShortcut}
+        }`;
+    }
 }
 
+/**
+ * One of the lines in a 'normal' projection definition
+ */
+export class PiEditProjectionLine extends PiDefinitionElement {
+    items: PiEditProjectionItem[] = [];
+    indent: number = 0; // this number is calculated by PiEditProjectionUtil.normalize()
+
+    isEmpty(): boolean {
+        return this.items.every(i => i instanceof PiEditParsedNewline || i instanceof PiEditParsedProjectionIndent);
+    }
+
+    toString(): string {
+        return "#indents: [" + this.indent + "] " + this.items.map(item => item.toString()).join("");
+    }
+}
+
+/**
+ * An element of a line in a projection definition that holds a (simple) text.
+ */
+export class PiEditProjectionText extends PiDefinitionElement {
+    public static create(text: string): PiEditProjectionText {
+        const result = new PiEditProjectionText();
+        result.text = text;
+        return result;
+    }
+
+    text: string = "";
+    // TODO should style be here?
+    style: string = "propertykeyword";
+
+    toString(): string {
+        return this.text;
+    }
+}
+
+/**
+ * An element of a line in a projection definition that represents the projection of a property.
+ * Note that properties that are lists, properties that have boolean type, and optional properties,
+ * are represented by subclasses of this class.
+ */
+export class PiEditPropertyProjection extends PiDefinitionElement {
+    property: PiElementReference<PiProperty> = null;
+    // expression used during parsing, should not be used after that phase
+    expression: PiLangExp = null;
+    // projection info if the referred property is a list
+    listInfo: ListInfo = null;
+    // projection info if the referred property is a primitive of boolean type
+    boolInfo: BoolKeywords = null;
+
+    toString(): string {
+        let extraText: string;
+        if (!!this.listInfo) {
+            extraText = `\n/* list */ ${this.listInfo}`;
+        }
+        if (!!this.boolInfo) {
+            extraText = `\n/* boolean */ ${this.boolInfo}`;
+        }
+        return `\${ ${this.expression} /* found ${this.property?.referred?.name} */ }${extraText}`;
+    }
+}
+
+/**
+ * An element of a line in a projection definition that represents the projection of a property that is optional.
+ */
+export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
+    lines: PiEditProjectionLine[] = [];
+    toString(): string {
+        return `[? /* found ${this.property?.referred?.name} */ 
+        // #lines ${this.lines.length}
+            ${this.lines.map(line => line.toString()).join("\n")}\`;
+        ]`;
+    }
+}
+
+/**
+ * Information on how a list property should be projected: as list or table;
+ * horizontal or vertical, row or columns based; with a terminator, separator, initiator, or
+ * without any of these.
+ */
+export class ListInfo extends PiDefinitionElement {
+    isTable: boolean = false;
+    direction: PiEditProjectionDirection = PiEditProjectionDirection.Vertical;
+    joinType: ListJoinType = ListJoinType.Separator;
+    joinText: string = "";
+
+    toString(): string {
+        if (this.isTable) {
+            return `table ${this.direction}`
+        } else {
+            return `direction: ${this.direction} joinType: ${this.joinType} [${this.joinText}]`;
+        }
+    }
+}
+
+/**
+ * An element of a line in a projection definition that represents the projection of a superconcept or interface.
+ */
+export class PiEditSuperProjection extends PiDefinitionElement {
+    superRef: PiElementReference<PiClassifier> = null;
+    projectionName: string = "";
+    toString(): string {
+        return `[=> ${this.superRef?.name} /* found ${this.superRef?.referred?.name} */ ${this.projectionName.length > 0 ? `:${this.projectionName}` : ``}]`;
+    }
+}
+
+////////////////////////////////////
+
+/**
+ * This class is only used during parsing. It is removed from the model in the creation phase.
+ */
+export class PiEditParsedClassifier extends PiEditClassifierProjection {
+    projection: PiEditProjection = null;
+    tableProjection: PiEditTableProjection = null;
+    classifierInfo: ExtraClassifierInfo = null;
+    toString(): string {
+        return `ParsedClassifier ${this.classifier?.name}`
+    }
+}
 /**
  * This class is only used by the parser and removed from the edit model after normalization.
  */
@@ -75,167 +374,4 @@ export class PiEditParsedProjectionIndent extends PiDefinitionElement {
     }
 }
 
-export class PiEditProjectionText extends PiDefinitionElement {
-    public static create(text: string): PiEditProjectionText {
-        const result = new PiEditProjectionText();
-        result.text = text;
-        return result;
-    }
-
-    text: string = "";
-    style: string = "propertykeyword";
-
-    toString(): string {
-        return this.text;
-    }
-}
-
-export enum PiEditProjectionDirection {
-    NONE = "NONE",
-    Horizontal = "Horizontal",
-    Vertical = "Vertical"
-}
-
-export enum ListInfoType {
-    NONE = "NONE",
-    Terminator = "Terminator",
-    Separator = "Separator"
-}
-
-export class ListInfo extends PiDefinitionElement {
-    direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
-    joinType?: ListInfoType = ListInfoType.NONE;
-    joinText?: string = "";
-
-    toString(): string {
-        return `direction ${this.direction} joinType: ${this.joinType} text: "${this.joinText}"`;
-    }
-}
-
-export class TableInfo extends PiDefinitionElement {
-    direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
-    toString(): string {
-        return `@table direction ${this.direction}`;
-    }
-}
-
-export class PiEditPropertyProjection extends PiDefinitionElement {
-    // propertyName: string = "";
-    listInfo: ListInfo;
-    tableInfo?: TableInfo;
-    keyword?: string;
-    expression: PiLangExp;
-
-    propertyName(): string {
-        // TODO This is a hack to skip "this." Needs to be done properly.
-        return this.expression.toPiString().substring(5);
-    }
-
-    toString(): string {
-        return (
-            "${" +
-            this.expression.toPiString() + " " +
-            (!!this.listInfo ? " " + this.listInfo.toString() : "") +
-            (!!this.tableInfo ? " " + this.tableInfo.toString() : "") +
-            (!!this.keyword ? " @keyword [" + this.keyword + "]" : "") +
-            "}"
-        );
-    }
-}
-
-export class PiEditSubProjection extends PiDefinitionElement {
-    optional: boolean;
-    items: PiEditProjectionItem[];
-
-    /**
-     * Return the first property projection inside this sub projection
-     */
-    public optionalProperty(): PiEditPropertyProjection {
-        for (const item of this.items) {
-            if (item instanceof PiEditPropertyProjection) {
-                return item;
-            }
-        }
-        return undefined;
-        // return this.items.find((value, index, obj) => {
-        //     value instanceof PiEditPropertyProjection
-        // }) as PiEditPropertyProjection;
-    }
-
-    /**
-     * Returns the first literal word in the sub projection.
-     * Returns the empty string "" if there is no such literal.
-     */
-    public firstLiteral(): string {
-        for (const item of this.items) {
-            if (item instanceof PiEditProjectionText) {
-                return item.text.trim();
-            }
-        }
-        return "";
-    }
-
-    // TODO what about sub-sub-sub... projections: will they all have one language element?
-}
-
-export class PiEditInstanceProjection { // instances of this class are created by the checker
-    keyword: string;
-    expression: PiInstanceExp;
-    toString(): string {
-        return `${this.expression.toPiString()} @keyword ${this.keyword}`;
-    }
-}
-
-export type PiEditProjectionItem = PiEditParsedProjectionIndent | PiEditProjectionText | PiEditPropertyProjection | PiEditSubProjection | PiEditInstanceProjection;
-
-export class PiEditProjectionLine extends PiDefinitionElement {
-    items: PiEditProjectionItem[] = [];
-    indent: number = 0;
-
-    isEmpty(): boolean {
-        return this.items.every(i => i instanceof PiEditParsedNewline || i instanceof PiEditParsedProjectionIndent);
-    }
-
-    toString(): string {
-        return this.items.map(item => item.toString()).join("");
-    }
-}
-
-export class PiEditProjection extends PiDefinitionElement {
-    name: string;
-    conceptEditor: PiEditConcept;
-    lines: PiEditProjectionLine[] = [];
-
-    cursorLocation(): string {
-        for (const line of this.lines) {
-            for (const item of line.items) {
-                if (item instanceof PiEditPropertyProjection) {
-                    return Roles.property(item.expression.appliedfeature.referredElement.referred);
-                    // const referred: PiProperty = item.expression.appliedfeature.referredElement.referred;
-                    // if (referred.type.referred instanceof PiExpressionConcept) {
-                    //     return "expression-placeholder";
-                    // } else {
-                    // }
-                }
-            }
-        }
-        return "";
-    }
-
-    toString() {
-        return `projection ${this.name} lines: ${this.lines.length}
-${this.lines.map(line => line.toString()).join("\n")}`;
-    }
-}
-
-export class PiEditTableProjection extends PiDefinitionElement {
-    name: string;
-    conceptEditor: PiEditConcept;
-    headers: string[] = [];
-    cells: PiEditPropertyProjection[] = [];
-
-    toString() {
-        return `table "${this.name}" headers: ${this.headers.map(head => `"${head}"`).join(" | ")}
-        items: ${this.cells.map(it => it.toString()). join(" | ")}`;
-    }
-}
+///////////////////////////////

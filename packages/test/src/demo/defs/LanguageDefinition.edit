@@ -1,25 +1,22 @@
-editor StartEditor for language Demo
+editor StartEditor
 
 DemoNumberLiteralExpression {
-    @projection normal
-        [${self.value}]
+    [${self.value}]
 }
 
 
 DemoAttribute {
-    @projection attribuut [ ${self.name} : ${self.declaredType} ]
+    [ ${self.name} : ${self.declaredType} ]
 }
 
 DemoStringLiteralExpression {
-    @projection DemoStringLiteralExpression
         [
         '${self.value}'
         ]
-    @trigger "'"
+    trigger = "'"
 }
 
 DemoIfExpression {
-    @projection DemoIfExpression
         [
         if (${self.condition}) then
                   ${self.whenTrue}
@@ -28,102 +25,97 @@ DemoIfExpression {
         endif
         ]
 
-    @trigger "if"
-    @symbol "if"
+    trigger = "if"
+    symbol = "if"
 }
 
 /*
 DemoIfExpression {
-    @projection DemoIfExpression
         [
         (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
         ]
 
-    @trigger "if"
-    @symbol "if"
+    trigger = "if"
+    symbol = "if"
 }
 */
 DemoPlusExpression {
-    @symbol "+"
+    symbol = "+"
 }
 
 DemoMultiplyExpression {
-    @symbol "*"
+    symbol = "*"
 }
 
 DemoDivideExpression {
-    @symbol "/"
+    symbol = "/"
 }
 DemoLessThenExpression {
-    @symbol "<"
+    symbol = "<"
 }
 DemoOrExpression {
-    @symbol "or"
+    symbol = "or"
 }
 
 
 
 DemoEntity {
-    @trigger "entity"
+    trigger = "entity"
 }
 
 /*
 DemoFunctionCallExpression {
-    @projection gewoon
         [
         ${self.name} (  )
         ]
-    @trigger "function2"
+    trigger = "function2"
 }
 */
 
 DemoFunctionCallExpression {
-    @projection DemoFunctionCallExpression
         [
         CALL ${self.functionDefinition} (  )
         ]
-    @trigger "function"
+    trigger = "function"
 }
 
 
 DemoModel {
 // Note that self.type is optional, therefore this projection gives problems in the parser
-//    @projection DemoModel
 //        [
 //        model ${self.name} {
 //        main: ${self.main}
 //        type: ${self.type}
 //        types:
 //            ${self.types
-//                @vertical
-//                @terminator [\n\n]
+//                vertical
+//                terminator [\n\n]
 //            }
 //        entities:
 //            ${self.entities
-//                @vertical
-//                @terminator [\n\n]
+//                vertical
+//                terminator [\n\n]
 //            }
 //        model wide functions:
-//            ${self.functions @horizontal @separator [\n] }
+//            ${self.functions horizontal separator [\n] }
 //        }
 //        ]
-    @projection DemoModel
         [
         model ${self.name} {
         main: ${self.main}
         [?type: ${self.type}]
         types:
             ${self.types
-                @vertical
-                @terminator [\n\n]
+                vertical
+                terminator [\n\n]
             }
         entities:
             ${self.entities
-                @vertical
-                @terminator [\n\n]
+                vertical
+                terminator [\n\n]
             }
         model wide functions:
-            ${self.functions @horizontal @separator [\n] }
+            ${self.functions horizontal separator [\n] }
         }
         ]
 }

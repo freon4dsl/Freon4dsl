@@ -144,13 +144,13 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.parserGenerator.outputfolder = this.outputFolder;
             this.parserGenerator.language = this.language;
 
-            // TODO
-            // if (this.editFiles.length > 0) {
-            //     editor = new PiEditParser(this.language).parseMulti(this.editFiles);
-            // } else {
-            //     editor = this.editorGenerator.createDefaultEditorDefinition();
-            // }
-            //
+            if (this.editFiles.length > 0) {
+                let temp = new PiEditParser(this.language).parseMulti(this.editFiles);
+                // editor = new PiEditParser(this.language).parseMulti(this.editFiles);
+            } else {
+                editor = this.editorGenerator.createDefaultEditorDefinition();
+            }
+
             // this.editorGenerator.generate(editor);
             // this.parserGenerator.generate(editor);
         } catch (e) {

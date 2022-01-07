@@ -1,5 +1,5 @@
 import {
-    PiClassifier, PiConcept, PiInterface,
+    PiClassifier, PiConcept, PiInstance, PiInterface,
     PiLanguage, PiPrimitiveProperty
 } from "../languagedef/metalanguage";
 import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
@@ -57,6 +57,7 @@ export class Names {
     public static styles:string = "projectitStyles";
     public static nameForSelf:string = "self";
     public static initializeLanguage:string = "initializeLanguage";
+    public static defaultProjectionName: string = "default";
     // reserved role names for expressions, use with care.
     // Should remain identical to the definitions in @projectit/core !!
     public static PI_BINARY_EXPRESSION_LEFT:string = "PiBinaryExpression-left";
@@ -270,5 +271,9 @@ export class Names {
 
     public static binaryProjectionFunction(): string {
         return "_getBinaryExpressionBox";
+    }
+
+    public static instance(instance: PiInstance): string {
+        return instance.name;
     }
 }

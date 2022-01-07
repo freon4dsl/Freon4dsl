@@ -1,6 +1,6 @@
 {
-    let creator = require("./NewPiEditCreators");
-    let expCreator = require("../../languagedef/parser/ExpressionCreators");
+    let creator = require("./PiEditCreators");
+    let expCreate = require("../../languagedef/parser/ExpressionCreators");
 }
 
 // TODO make order of things more flexible
@@ -226,11 +226,6 @@ listDirection = dir:("horizontal" / "vertical") ws
 listInfoType = joinType:("separator" / "terminator" / "initiator") ws
 {
     return creator.createJoinType( {"type": joinType, "location": location() } );
-}
-
-classifierReference = referredName:var
-{
-    return expCreator.createClassifierReference({"name": referredName, "location": location()})
 }
 
 trigger = "trigger" ws equals_separator ws "\"" value:string "\"" ws
