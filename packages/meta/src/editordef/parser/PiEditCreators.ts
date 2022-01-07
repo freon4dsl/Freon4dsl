@@ -19,7 +19,7 @@ import {
 } from "../metalanguage/PiEditDefLang";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiClassifier, PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
-import { NewPiEditProjectionUtil } from "../metalanguage/NewPiEditProjectionUtil";
+import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
@@ -191,7 +191,7 @@ export function createProjection(data: Partial<PiEditProjection>): PiEditProject
     if (!!data.lines) {
         result.lines = data.lines;
         // Now cleanup the parsed projection
-        NewPiEditProjectionUtil.normalize(result);
+        PiEditProjectionUtil.normalize(result);
     }
     if (!!data.location) {
         result.location = data.location;

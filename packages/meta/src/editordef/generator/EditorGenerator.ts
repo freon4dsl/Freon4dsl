@@ -10,7 +10,7 @@ import {
     Names,
     STYLES_FOLDER
 } from "../../utils";
-import { PiEditUnit } from "../metalanguage";
+import { PiEditProjectionGroup, PiEditUnit } from "../metalanguage";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
@@ -31,14 +31,14 @@ export class EditorGenerator {
         }
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
-        const name = editDef ? editDef.name : "";
+        const name = editDef ? editDef.getDefaultProjectiongroup().name : "";
         LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder + " for language " + this.language?.name);
 
         // TODO the following should already have been set by the edit checker, but it seems to be needed here
         editDef.language = this.language;
 
         if (isNullOrUndefined(editDef)) {
-            editDef = this.createDefaultEditorDefinition();
+            editDef = this.createEmptyEditorDefinition();
         }
 
         // add default values if they are not present in the editor definition
@@ -109,10 +109,12 @@ export class EditorGenerator {
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
     }
 
-    public createDefaultEditorDefinition(): PiEditUnit {
+    public createEmptyEditorDefinition(): PiEditUnit {
         const editDef = new PiEditUnit();
-        editDef.name = "default";
-        editDef.languageName = this.language.name;
+        editDef.language = this.language;
+        const defaultGroup = new PiEditProjectionGroup();
+        defaultGroup.name = Names.defaultProjectionName;
+        editDef.projectiongroups.push(defaultGroup);
         return editDef;
     }
 

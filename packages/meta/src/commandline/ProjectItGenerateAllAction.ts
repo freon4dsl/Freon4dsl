@@ -145,14 +145,13 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.parserGenerator.language = this.language;
 
             if (this.editFiles.length > 0) {
-                let temp = new PiEditParser(this.language).parseMulti(this.editFiles);
-                // editor = new PiEditParser(this.language).parseMulti(this.editFiles);
+                editor = new PiEditParser(this.language).parseMulti(this.editFiles);
             } else {
-                editor = this.editorGenerator.createDefaultEditorDefinition();
+                editor = this.editorGenerator.createEmptyEditorDefinition();
             }
 
-            // this.editorGenerator.generate(editor);
-            // this.parserGenerator.generate(editor);
+            this.editorGenerator.generate(editor);
+            this.parserGenerator.generate(editor);
         } catch (e) {
             // LOG2USER.error("Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
             LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);

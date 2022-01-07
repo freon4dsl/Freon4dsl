@@ -1,12 +1,11 @@
 import {
-    ListInfoType,
-    PiEditConcept,
+    ListJoinType,
+    PiEditClassifierProjection, PiEditProjection,
     PiEditProjectionItem,
     PiEditProjectionLine,
     PiEditProjectionText,
     PiEditPropertyProjection,
-    PiEditSubProjection,
-    PiEditUnit,
+    PiEditUnit, PiOptionalPropertyProjection
 } from "../../editordef/metalanguage";
 import { PiBinaryExpressionConcept, PiClassifier, PiLimitedConcept, PiPrimitiveProperty, PiPrimitiveType, PiProperty } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
@@ -48,13 +47,14 @@ export class ConceptMaker {
         let rules: GrammarRule[] = [];
         for (const piConcept of conceptsUsed) {
             // find editDef for this concept
-            const conceptDef: PiEditConcept = editUnit.findConceptEditor(piConcept);
-
-            let rule: ConceptRule = new ConceptRule(piConcept);
-            for (const l of conceptDef.projection.lines) {
-                rule.ruleParts.push(...this.doLine(l, false));
+            const conceptDef: PiEditClassifierProjection = editUnit.findProjectionForType(piConcept);
+            if (conceptDef instanceof PiEditProjection) {
+                let rule: ConceptRule = new ConceptRule(piConcept);
+                for (const l of conceptDef.lines) {
+                    rule.ruleParts.push(...this.doLine(l, false));
+                }
+                rules.push(rule);
             }
-            rules.push(rule);
         }
         return rules;
     }
@@ -72,13 +72,13 @@ export class ConceptMaker {
         let parts: RightHandSideEntry[] = [];
         if (!!list && list.length > 0) {
             list.forEach((item) => {
-                if (item instanceof PiEditSubProjection) {
+                if (item instanceof PiOptionalPropertyProjection) {
                     // TODO check: I expect exactly one property projection in a sub projection
                     // things go wrong if this is not the case!!!
                     // hack: item should be optional but it is not ????
                     // TODO find out why
                     // if (item.optional) {
-                    parts.push(new RHSOptionalGroup(item.optionalProperty().expression.findRefOfLastAppliedFeature(), this.addItems(item.items, true)));
+                    parts.push(new RHSOptionalGroup(item.property.referred, this.addItems(item.lines, true)));
                     // } else {
                     //     parts.push(new RHSGroup(this.addItems(item.items)));
                     // }
@@ -100,9 +100,10 @@ export class ConceptMaker {
             const propType: PiClassifier = prop.type.referred; // more efficient to determine referred only once
             this.imports.push(propType);
             if (prop instanceof PiPrimitiveProperty) {
-                if (propType === PiPrimitiveType.boolean && !!item.keyword) {
+                if (propType === PiPrimitiveType.boolean && !!item.boolInfo) {
                     // TODO list???
-                    return new RHSBooleanWithKeyWord(prop, item.keyword);
+                    return new RHSBooleanWithKeyWord(prop, item.boolInfo.trueKeyword);
+                    // TODO falseKeyword
                 } else if (!prop.isList) {
                     if (!prop.isOptional || inOptionalGroup) {
                         return new RHSPrimEntry(prop);
@@ -110,15 +111,15 @@ export class ConceptMaker {
                         return new RHSPrimOptionalEntry(prop);
                     }
                 } else {
-                    if (!!item.tableInfo) {
+                    if (!!item.listInfo && item.listInfo.isTable) {
                         // TODO adjust for tables
                     } else {
                         let joinText = this.makeListJoinText(item.listInfo?.joinText);
-                        if (joinText.length == 0 || item.listInfo?.joinType === ListInfoType.NONE) {
+                        if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
                             return new RHSPrimListEntry(prop); // propTypeName*
-                        } else if (item.listInfo?.joinType === ListInfoType.Separator) {
+                        } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                             return new RHSPrimListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
-                        } else if (item.listInfo?.joinType === ListInfoType.Terminator) {
+                        } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                             const sub1 = new RHSPrimEntry(prop);
                             return new RHSPrimListGroup(prop, sub1, joinText); // `(${propTypeName} '${joinText}' )* /* option C */`
                         } else {
@@ -135,15 +136,15 @@ export class ConceptMaker {
                         return new RHSLimitedRefOptionalEntry(prop);
                     }
                 } else {
-                    if (!!item.tableInfo) {
+                    if (!!item.listInfo && item.listInfo.isTable) {
                         // TODO adjust for tables
                     } else {
                         let joinText = this.makeListJoinText(item.listInfo?.joinText);
-                        if (joinText.length == 0 || item.listInfo?.joinType === ListInfoType.NONE) {
+                        if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
                             return new RHSLimitedRefListEntry(prop); // propTypeName*
-                        } else if (item.listInfo?.joinType === ListInfoType.Separator) {
+                        } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                             return new RHSLimitedRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
-                        } else if (item.listInfo?.joinType === ListInfoType.Terminator) {
+                        } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                             const sub1 = new RHSLimitedRefEntry(prop);
                             return new RHSListGroup(prop, sub1, joinText); // `(${propTypeName} '${joinText}' )* /* option C */`
                         }
@@ -166,30 +167,30 @@ export class ConceptMaker {
                 return new RHSRefOptionalEntry(prop); //`${propTypeName} /* option E */`;
             } else if (prop.isList && prop.isPart) {
                 // (list, part, optionality not relevant)
-                if (!!item.tableInfo) {
+                if (!!item.listInfo && item.listInfo.isTable) {
                     // TODO adjust for tables
                 } else {
                     let joinText = this.makeListJoinText(item.listInfo?.joinText);
-                    if (joinText.length == 0 || item.listInfo?.joinType === ListInfoType.NONE) {
+                    if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
                         return new RHSPartListEntry(prop); // propTypeName*
-                    } else if (item.listInfo?.joinType === ListInfoType.Separator) {
+                    } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                         return new RHSPartListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
-                    } else if (item.listInfo?.joinType === ListInfoType.Terminator) {
+                    } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                         const sub1 = new RHSPartEntry(prop);
                         return new RHSListGroup(prop, sub1, joinText); // `(${propTypeName} '${joinText}' )* /* option C */`
                     }
                 }
             } else if (prop.isList && !prop.isPart) {
                 // (list, reference, optionality not relevant)
-                if (!!item.tableInfo) {
+                if (!!item.listInfo && item.listInfo.isTable) {
                     // TODO adjust for tables
                 } else {
                     let joinText = this.makeListJoinText(item.listInfo?.joinText);
-                    if (joinText.length == 0 || item.listInfo?.joinType === ListInfoType.NONE) {
+                    if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
                         return new RHSRefListEntry(prop); // propTypeName*
-                    } else if (item.listInfo?.joinType === ListInfoType.Separator) {
+                    } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                         return new RHSRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
-                    } else if (item.listInfo?.joinType === ListInfoType.Terminator) {
+                    } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                         const sub1 = new RHSRefEntry(prop);
                         return new RHSListGroup(prop, sub1, joinText); // `(${propTypeName} '${joinText}' )* /* option C */`
                     }

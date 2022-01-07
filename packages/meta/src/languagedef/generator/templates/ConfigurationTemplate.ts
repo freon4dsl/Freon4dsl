@@ -11,6 +11,7 @@ export class ConfigurationTemplate {
     generate(language: PiLanguage, relativePath: string): string {
         const configurationName = Names.configuration();
         const workerName = Names.checkerInterface(language);
+        // TODO add all projection groups to the customProjection or make sure these are knwon in another fashion
         return `
             import { ${Names.PiProjection}, ${Names.PiActions}, ${Names.PiTyperPart}} from "${PROJECTITCORE}";
             import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}";

@@ -1,6 +1,6 @@
-import { PiEditInstanceProjection, PiEditUnit } from "../../editordef/metalanguage";
+import { PiEditInstanceProjection, PiEditLimitedProjection, PiEditUnit } from "../../editordef/metalanguage";
 import { PiClassifier, PiLimitedConcept } from "../../languagedef/metalanguage";
-import { langExpToTypeScript } from "../../utils";
+import { langExpToTypeScript, Names } from "../../utils";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { LimitedRule } from "./grammarModel/LimitedRule";
 
@@ -19,20 +19,20 @@ export class LimitedMaker {
         let rules: GrammarRule[] = [];
         for (const piClassifier of limitedConcepts) {
             // first, see if there is a projection defined
-            const conceptEditor = editUnit.findConceptEditor(piClassifier);
-            // find the mapping of keywords to predef instances
-            // first is the name of the instance, second is the keyword
-            let myMap: Map<string, string> = new Map<string, string>();
-            conceptEditor.projection.lines.forEach(line => {
-                line.items.forEach(item => {
-                    // TODO do we allow other projections for limited concepts????
+            const conceptEditor = editUnit.findProjectionForType(piClassifier);
+            if ( conceptEditor instanceof PiEditLimitedProjection) {
+                // find the mapping of keywords to predef instances
+                // first is the name of the instance, second is the keyword
+                let myMap: Map<string, string> = new Map<string, string>();
+                conceptEditor.instanceProjections.forEach(item => {
                     if (item instanceof PiEditInstanceProjection) {
-                        myMap.set(langExpToTypeScript(item.expression), item.keyword);
+                        const myTypeScript: string = `${Names.classifier(piClassifier)}.${Names.instance(item.instance.referred)}`;
+                        myMap.set(myTypeScript, item.keyword.trueKeyword);
                     }
-                })
-            });
-            rules.push(new LimitedRule(piClassifier, myMap));
-            this.imports.push(piClassifier);
+                });
+                rules.push(new LimitedRule(piClassifier, myMap));
+                this.imports.push(piClassifier);
+            }
         }
         return rules;
     }

@@ -62,6 +62,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         // TODO only 'default' projectionGroup may define standardBooleanProjection and referenceSeparator
         // TODO table projection may not be used for limited concept
         // TODO projection for limited concept may have 1 keyword, not 2
+        // TODO optional projection may have just one property
+        // TODO set property filed of optional projection
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
     }
 

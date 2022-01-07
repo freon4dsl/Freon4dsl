@@ -1,4 +1,4 @@
-import { PiBinaryExpressionConcept, PiClassifier, PiConcept, PiExpressionConcept, PiLanguage } from "../../languagedef/metalanguage";
+import { PiBinaryExpressionConcept, PiClassifier, PiExpressionConcept, PiLanguage } from "../../languagedef/metalanguage";
 import { PiEditUnit } from "../../editordef/metalanguage";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { BinaryExpressionRule } from "./grammarModel/BinaryExpressionRule";
@@ -22,8 +22,9 @@ export class BinaryExpMaker {
     private findEditDefs(binaryConceptsUsed: PiBinaryExpressionConcept[], editUnit: PiEditUnit): Map<PiClassifier, string> {
         let result: Map<PiClassifier, string> = new Map<PiClassifier, string>();
         for (const binCon of binaryConceptsUsed) {
-            const piEditConcept = editUnit.findConceptEditor(binCon);
-            result.set(piEditConcept.concept.referred, piEditConcept.symbol);
+            const piEditConcept = editUnit.findProjectionForType(binCon);
+            const mySymbol = editUnit.findExtrasForType(binCon).symbol;
+            result.set(piEditConcept.classifier.referred, mySymbol);
         }
         return result;
     }

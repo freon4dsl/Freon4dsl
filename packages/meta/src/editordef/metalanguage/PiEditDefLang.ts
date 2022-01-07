@@ -74,6 +74,16 @@ export class PiEditUnit extends PiDefinitionElement {
     toString(): string {
         return `${this.projectiongroups.map(pr => pr.toString()). join("\n")}`;
     }
+
+    findExtrasForType(cls: PiClassifier): ExtraClassifierInfo {
+        for (const group of this.projectiongroups) {
+            const found = group.findExtrasForType(cls);
+            if (!!found) {
+                return found;
+            }
+        }
+        return null;
+    }
 }
 
 export class BoolKeywords extends PiDefinitionElement {
@@ -286,6 +296,34 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
  */
 export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
     lines: PiEditProjectionLine[] = [];
+
+    public findPropertyProjection(): PiEditPropertyProjection {
+        this.lines.forEach(l => {
+            l.items.forEach(item => {
+                if (item instanceof PiEditPropertyProjection) {
+                    return item;
+                }
+                return null;
+            })
+        });
+        return null;
+    }
+
+    /**
+     * Returns the first literal word in the sub projection.
+     * Returns the empty string "" if there is no such literal.
+     */
+    public firstLiteral(): string {
+        for (const line of this.lines) {
+            for (const item of line.items) {
+                if (item instanceof PiEditProjectionText) {
+                    return item.text.trim();
+                }
+            }
+        }
+        return "";
+    }
+
     toString(): string {
         return `[? /* found ${this.property?.referred?.name} */ 
         // #lines ${this.lines.length}

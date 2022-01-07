@@ -3,12 +3,17 @@ import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import {
     PiLanguage,
     PiBinaryExpressionConcept,
-    PiConcept,
     PiClassifier,
     PiLangSelfExp
 } from "../../../languagedef/metalanguage";
 import { Roles, LangUtil } from "../../../utils";
-import { PiEditConcept, PiEditPropertyProjection, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
+import {
+    PiEditClassifierProjection,
+    PiEditPropertyProjection,
+    PiOptionalPropertyProjection,
+    PiEditUnit,
+    PiEditProjection, ExtraClassifierInfo
+} from "../../metalanguage";
 import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class DefaultActionsTemplate {
@@ -54,7 +59,7 @@ export class DefaultActionsTemplate {
             export const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
                 ${language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
             `{
-                    trigger: "${editorDef.findConceptEditor(c).symbol}",
+                    trigger: "${editorDef.findExtrasForType(c).symbol}",
                     activeInBoxRoles: [
                         LEFT_MOST,
                         RIGHT_MOST,
@@ -101,16 +106,15 @@ export class DefaultActionsTemplate {
 
     customActionsForOptional(language: PiLanguage, editorDef: PiEditUnit): string {
         let result: string = "";
-        editorDef.conceptEditors.forEach( ce => {
-            if (!!ce.projection) {
-                ce.projection.lines.forEach(line => {
+        editorDef.getDefaultProjectiongroup().projections.forEach( projection => {
+            if (!!projection && projection instanceof PiEditProjection) {
+                projection.lines.forEach(line => {
                     line.items.forEach(item => {
-                        if (item instanceof PiEditSubProjection) {
-                            if (item.optional) {
-                                const firstLiteral: string = item.firstLiteral();
-                                const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
-                                const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.propertyName());
-                                result += `
+                        if (item instanceof PiOptionalPropertyProjection) {
+                            const firstLiteral: string = item.firstLiteral();
+                            const propertyProjection: PiEditPropertyProjection = item.findPropertyProjection();
+                            const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.property.name);
+                            result += `
                                     {
                                         trigger: "${firstLiteral === "" ? optionalPropertyName : firstLiteral}",
                                         activeInBoxRoles: ["optional-${optionalPropertyName}"],
@@ -118,10 +122,9 @@ export class DefaultActionsTemplate {
                                             ((box.parent) as OptionalBox).mustShow = true;
                                             return null;
                                         },
-                                        boxRoleToSelect: "${ce.concept.name}-${optionalPropertyName}"
+                                        boxRoleToSelect: "${projection.classifier.name}-${optionalPropertyName}"
                                     }`;
-                                result += ","
-                            }
+                            result += ","
                         }
                     });
                 });
@@ -137,8 +140,8 @@ export class DefaultActionsTemplate {
         allClassifiers.push(...language.concepts);
         allClassifiers.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
                 const referredConcept = reference.type.referred;
-                const conceptEditor = editorDef.findConceptEditor(referredConcept);
-                const trigger = (!!conceptEditor && !!conceptEditor.trigger) ? conceptEditor.trigger : reference.name;
+                const extras = editorDef.findExtrasForType(referredConcept);
+                const trigger = (!!extras && !!extras.trigger) ? extras.trigger : reference.name;
                 result += `
                 {   // Action to insert new reference to a concept
                     activeInBoxRoles: ["${Roles.newConceptReferencePart(reference)}"],
@@ -170,7 +173,7 @@ export class DefaultActionsTemplate {
         //             {
         //                 // ProjectIt Generator: customActionForPart list
         //                 activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
-        //                 trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for Concept part
+        //                 trigger: "${editorDef.findProjectionForType(subClass).trigger}",  // for Concept part
         //                 action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
         //                     const parent = box.element;
         //                     const newElement = new ${Names.concept(subClass)}();
@@ -188,7 +191,7 @@ export class DefaultActionsTemplate {
         language.modelConcept.allParts().forEach(part => { // all parts are model units
             const partType = part.type.referred;
             if (partType instanceof PiUnitDescription) {
-                const conceptEditor: PiEditConcept = editorDef.findConceptEditor(partType);
+                const conceptEditor: ExtraClassifierInfo = editorDef.findExtrasForType(partType);
                 behaviorMap.createOrAdd(partType,
                     {
                         activeInBoxRoles: [`${Roles.newConceptPart(language.modelConcept, part)}`],
@@ -229,7 +232,7 @@ export class DefaultActionsTemplate {
             const partType = part.type.referred;
             if (partType instanceof PiClassifier) { // exclude all primitive types
                 LangUtil.subConceptsIncludingSelf(partType).filter(cls => !cls.isAbstract).forEach(subClass => {
-                    const conceptEditor: PiEditConcept = editorDef.findConceptEditor(subClass);
+                    const conceptEditor: ExtraClassifierInfo = editorDef.findExtrasForType(subClass);
                     behaviorMap.createOrAdd(subClass,
                         {
                                 activeInBoxRoles: [`${Roles.newConceptPart(concept, part)}`],
@@ -280,12 +283,12 @@ export class DefaultActionsTemplate {
     }
 
     cursorLocation(editorDef: PiEditUnit, c: PiClassifier) {
-        const projection = editorDef.findConceptEditor(c).projection;
-        if (!!projection) {
-            if (c.name === "DemoEntity") {
-                // console.log("DemoEntity cursorLocation: " + projection.cursorLocation());
-                // console.log(projection.toString());
-            }
+        const projection = editorDef.findProjectionForType(c);
+        if (!!projection && projection instanceof PiEditProjection) {
+            // if (c.name === "DemoEntity") {
+            //     // console.log("DemoEntity cursorLocation: " + projection.cursorLocation());
+            //     // console.log(projection.toString());
+            // }
             return projection.cursorLocation();
         } else {
             if (c instanceof PiBinaryExpressionConcept) {
