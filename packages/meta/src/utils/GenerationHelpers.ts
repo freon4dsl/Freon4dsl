@@ -149,6 +149,25 @@ export function langExpToTypeScript(exp: PiLangExp): string {
 }
 
 /**
+ * Returns a string representation of 'exp' that can be used in TypeScript code.
+ * @param exp
+ */
+export function propertyToTypeScript(prop : PiProperty): string {
+    const isRef = !prop.isPart;
+    let result: string = `modelelement.${prop.name + (isRef ? "?.referred" : "")}`;
+    return result;
+}
+
+/**
+ * Returns a string representation of 'exp' that can be used in TypeScript code.
+ * @param exp
+ */
+export function propertyToTypeScriptWithoutReferred(prop : PiProperty): string {
+    let result: string = `modelelement.${prop.name}`;
+    return result;
+}
+
+/**
  * Returns true if the feature to which 'exp' refers, is marked to be a reference
  * property in the language.
  * @param exp

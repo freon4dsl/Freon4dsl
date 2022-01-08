@@ -1,4 +1,12 @@
-import { hasNameProperty, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../utils";
+import {
+    hasNameProperty,
+    LANGUAGE_GEN_FOLDER,
+    Names,
+    PROJECTITCORE,
+    propertyToTypeScript,
+    propertyToTypeScriptWithoutReferred,
+    sortConcepts
+} from "../../utils";
 import {
     PiBinaryExpressionConcept, PiClassifier,
     PiConcept,
@@ -6,7 +14,6 @@ import {
     PiPrimitiveProperty,
     PiProperty
 } from "../../languagedef/metalanguage";
-import { sortConcepts, langExpToTypeScript } from "../../utils";
 import {
     PiEditUnit,
     PiEditProjectionText,
@@ -18,11 +25,12 @@ import {
     PiEditProjection,
     PiEditClassifierProjection,
     PiEditLimitedProjection,
-    PiEditInstanceProjection, PiOptionalPropertyProjection
+    PiEditInstanceProjection,
+    PiOptionalPropertyProjection
 } from "../../editordef/metalanguage";
 import { PiPrimitiveType } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
-import { PiEditProjectionGroup } from "../../editordef/metalanguage/PiEditDefLang";
+import { PiEditProjectionGroup } from "../../editordef/metalanguage";
 
 export class WriterTemplate {
 
@@ -471,7 +479,7 @@ export class WriterTemplate {
             const myText = ParserGenUtil.escapeRelevantChars(item.text).trimRight();
             result += `this.output[this.currentLine] += \`${myText} \`;\n`;
         } else if (item instanceof PiEditPropertyProjection) {
-            const myElem = item.expression.findRefOfLastAppliedFeature();
+            const myElem = item.property.referred;
             if (myElem instanceof PiPrimitiveProperty) {
                 result += this.makeItemWithPrimitiveType(myElem, item);
             } else {
@@ -483,14 +491,12 @@ export class WriterTemplate {
             item.lines.forEach(sub => {
                 subresult += this.makeItem(sub, indent);
                 if (sub instanceof PiEditPropertyProjection) {
-                    myTypeScript = langExpToTypeScript(sub.expression);
-                    if (sub.expression.findRefOfLastAppliedFeature().isList) {
+                    const myRealProp: PiProperty = sub.property.referred;
+                    if (myRealProp.isList) {
+                        myTypeScript = propertyToTypeScript(myRealProp);
                         myTypeScript = `!!${myTypeScript} && ${myTypeScript}.length > 0`;
                     } else {
-                        // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
-                        // remove only the last ".referred"
-                        myTypeScript = this.removeLastReferred(myTypeScript);
-                        // end hack
+                        myTypeScript = propertyToTypeScriptWithoutReferred(myRealProp);
                         myTypeScript = `!!${myTypeScript}`;
                     }
                 }
@@ -529,9 +535,9 @@ export class WriterTemplate {
      * @param item
      */
     private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, item: PiEditPropertyProjection): string {
-        // the expression is of primitive type
+        // the property is of primitive type
         let result: string = ``;
-        const elemStr = langExpToTypeScript(item.expression);
+        const elemStr = propertyToTypeScript(item.property.referred);
         if (myElem.isList) {
             let isIdentifier: string = "false";
             if (myElem.type.referred === PiPrimitiveType.identifier) {
@@ -550,17 +556,27 @@ export class WriterTemplate {
                 );`;
             }
         } else {
-            let myCall: string = ``;
+            let myCall: string;
             const myType: PiClassifier = myElem.type.referred;
             if (myType === PiPrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
-            } else if (myType === PiPrimitiveType.boolean && !!item.boolInfo.trueKeyword) {
-                // TODO add unparsing for two keywords
+            } else if (myType === PiPrimitiveType.boolean && !!item.boolInfo) {
                 // add escapes to keyword
-                const myKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.trueKeyword);
-                myCall = `if (${elemStr}) { 
-                              this.output[this.currentLine] += \`${myKeyword} \`
+                const myTrueKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.trueKeyword);
+                if (!!item.boolInfo.falseKeyword) {
+                    // add escapes to keyword
+                    const myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.falseKeyword);
+                    // add unparsing for two keywords
+                    myCall = `if (${elemStr}) { 
+                              this.output[this.currentLine] += \`${myTrueKeyword} \`
+                          } else {
+                            this.output[this.currentLine] += \`${myFalseKeyword} \`
                           }`;
+                } else {
+                    myCall = `if (${elemStr}) { 
+                              this.output[this.currentLine] += \`${myTrueKeyword} \`
+                          }`;
+                }
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }
@@ -577,11 +593,11 @@ export class WriterTemplate {
      * @param indent
      */
     private makeItemWithConceptType(myElem: PiProperty, item: PiEditPropertyProjection, indent: number) {
-        // the expression has a concept as type, thus we need to call its unparse method
+        // the property has a concept as type, thus we need to call its unparse method
         let result: string = "";
         const type = myElem.type.referred;
         if (!!type) {
-            let myTypeScript: string = langExpToTypeScript(item.expression);
+            let myTypeScript: string = propertyToTypeScript(item.property.referred);
             if (myElem.isList) {
                 if (!!item.listInfo && !item.listInfo.isTable) { // it is a list not table
                     const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);

@@ -207,12 +207,13 @@ export class DefaultActionsTemplate {
                                                 } 
                                                 return newElement;
                                           }`,
-                        referenceShortcut: (!!conceptEditor.referenceShortcut ?
+                        referenceShortcut: (!!conceptEditor.referenceShortcutExp ?
                             `{
-                                                              propertyname: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.sourceName}",
-                                                              metatype: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.referredElement.referred.type.name}"
+                                                              propertyname: "${((conceptEditor.referenceShortcutExp) as PiLangSelfExp).appliedfeature.sourceName}",
+                                                              metatype: "${((conceptEditor.referenceShortcutExp) as PiLangSelfExp).appliedfeature.referredElement.referred.type.name}"
                                                          }` : undefined),
-                        undo: (!!conceptEditor.referenceShortcut ?
+                        undo: (!!conceptEditor.referenceShortcutExp
+                            ?
                             `(box: Box, editor: PiEditor): void => {
                                                         const parent = box.element;
                                                         parent[(box as AliasBox).propertyName] = null;
@@ -248,12 +249,12 @@ export class DefaultActionsTemplate {
                                                 } 
                                                 return newElement;
                                           }`,
-                                referenceShortcut: (!!conceptEditor.referenceShortcut ?
+                                referenceShortcut: (!!conceptEditor.referenceShortcutExp ?
                                                         `{
-                                                              propertyname: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.sourceName}",
-                                                              metatype: "${Names.classifier(((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.referredElement.referred.type.referred)}"
+                                                              propertyname: "${((conceptEditor.referenceShortcutExp) as PiLangSelfExp).appliedfeature.sourceName}",
+                                                              metatype: "${Names.classifier(((conceptEditor.referenceShortcutExp) as PiLangSelfExp).appliedfeature.referredElement.referred.type.referred)}"
                                                          }` : undefined),
-                                undo: (!!conceptEditor.referenceShortcut ?
+                                undo: (!!conceptEditor.referenceShortcutExp ?
                                                     `(box: Box, editor: PiEditor): void => {
                                                         const parent = box.element;
                                                         parent[(box as AliasBox).propertyName] = null;

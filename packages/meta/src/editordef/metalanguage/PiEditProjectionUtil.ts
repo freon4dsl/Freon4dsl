@@ -51,8 +51,16 @@ export class PiEditProjectionUtil {
                 projection.classifier.owner = editor.language;
                 defaultGroup.projections.push(projection);
             }
-            let extraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(binConcept);
-            this.defaultExtras(extraInfo, binConcept, defaultGroup);
+            let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(binConcept);
+            if (!foundExtraInfo) {
+                const extraInfo = this.defaultExtras(binConcept);
+                extraInfo.classifier = PiElementReference.create<PiBinaryExpressionConcept>(
+                    binConcept as PiBinaryExpressionConcept,
+                    "PiBinaryExpressionConcept"
+                );
+                extraInfo.classifier.owner = editor.language;
+                defaultGroup.extras.push(extraInfo);
+            }
         }
 
         // add default for other classifiers, that are not limited concepts, iff they are not allready present
@@ -70,9 +78,13 @@ export class PiEditProjectionUtil {
                 const projection: PiEditProjection = this.defaultClassifierProjection(con, editor);
                 defaultGroup.projections.push(projection);
             }
-
-            let extraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
-            this.defaultExtras(extraInfo, con, defaultGroup);
+            let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
+            if (!foundExtraInfo) {
+                const extraInfo = this.defaultExtras(con);
+                extraInfo.classifier = PiElementReference.create<PiClassifier>(con,"PiClassifier");
+                extraInfo.classifier.owner = editor.language;
+                defaultGroup.extras.push(extraInfo);
+            }
         }
     }
 
@@ -126,18 +138,16 @@ export class PiEditProjectionUtil {
         return projection;
     }
 
-    private static defaultExtras(extraInfo: ExtraClassifierInfo, con: PiClassifier, defaultGroup: PiEditProjectionGroup) {
-        if (extraInfo === null || extraInfo === undefined) {
-            extraInfo = new ExtraClassifierInfo();
-        }
+    private static defaultExtras(con: PiClassifier): ExtraClassifierInfo {
+        const result = new ExtraClassifierInfo();
         // default for referenceShortcut is not needed
-        if (!extraInfo.trigger) {
-            extraInfo.trigger = Names.classifier(con);
+        if (!result.trigger) {
+            result.trigger = Names.classifier(con);
         }
-        if (!extraInfo.symbol) {
-            extraInfo.symbol = Names.classifier(con);
+        if (!result.symbol) {
+            result.symbol = Names.classifier(con);
         }
-        defaultGroup.extras.push(extraInfo);
+        return result;
     }
 
     private static defaultSingleConceptProperty(concept: PiClassifier, prop: PiConceptProperty, projection: PiEditProjection): void {

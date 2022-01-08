@@ -110,6 +110,10 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
     }
 
     findExtrasForType(cls: PiClassifier): ExtraClassifierInfo {
+        // this.extras.forEach(ex => {
+        //     if (!ex) console.log("\t====> null element")
+        //     console.log("\t" + ex.classifier?.name + ": " + ex.classifier?.referred?.name + ", " + ex.location?.filename);
+        // })
         return this.extras.find(con => con.classifier.referred === cls);
     }
 
@@ -153,12 +157,7 @@ export class PiEditProjection extends PiEditClassifierProjection {
         for (const line of this.lines) {
             for (const item of line.items) {
                 if (item instanceof PiEditPropertyProjection) {
-                    return Roles.property(item.expression.appliedfeature.referredElement.referred);
-                    // const referred: PiProperty = item.expression.appliedfeature.referredElement.referred;
-                    // if (referred.type.referred instanceof PiExpressionConcept) {
-                    //     return "expression-placeholder";
-                    // } else {
-                    // }
+                    return Roles.property(item.property.referred);
                 }
             }
         }
@@ -203,9 +202,10 @@ export class ExtraClassifierInfo extends PiDefinitionElement {
     classifier: PiElementReference<PiClassifier>;
     // The string that triggers the creation of an object of this class in the editor.
     private _trigger: string = null;
-    // The name of the reference property for which a shortcut can be used.
-    // TODO change type to PiProperty and add prop to hold name string
-    referenceShortcut: PiLangExp = null;
+    // The property to be used when an element of type 'classifier' is used within a reference.
+    referenceShortCut: PiElementReference<PiProperty> = null;
+    // The parsed expression that refers to the referenceShortcut. Deleted during checking!
+    referenceShortcutExp: PiLangExp = null;
     // Only for binary expressions: the operator between left and right parts.
     symbol: string = null;
 
@@ -225,7 +225,7 @@ export class ExtraClassifierInfo extends PiDefinitionElement {
         return `${this.classifier?.name} {
             trigger = ${this._trigger}
             symbol = ${this.symbol}
-            referenceShortcut = ${this.referenceShortcut}
+            referenceShortcut = ${this.referenceShortcutExp}
         }`;
     }
 }
@@ -298,15 +298,11 @@ export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
     lines: PiEditProjectionLine[] = [];
 
     public findPropertyProjection(): PiEditPropertyProjection {
+        let result: PiEditPropertyProjection = null;
         this.lines.forEach(l => {
-            l.items.forEach(item => {
-                if (item instanceof PiEditPropertyProjection) {
-                    return item;
-                }
-                return null;
-            })
+            result = l.items.find(item => item instanceof PiEditPropertyProjection) as PiEditPropertyProjection;
         });
-        return null;
+        return result;
     }
 
     /**
@@ -325,7 +321,9 @@ export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
     }
 
     toString(): string {
-        return `[? /* found ${this.property?.referred?.name} */ 
+        return `[? /*  ${this.property?.referred ? 
+            `found ${this.property?.referred?.name}` : 
+            `not found ${this.property?.name}`} */ 
         // #lines ${this.lines.length}
             ${this.lines.map(line => line.toString()).join("\n")}\`;
         ]`;

@@ -79,7 +79,7 @@ extraClassifierInfo =
 {
     return creator.createClassifierInfo({
         "trigger"          : trigger,
-        "referenceShortcut": referenceShortcut,
+        "referenceShortcutExp": referenceShortcut,
         "symbol"           : symbol,
         "location"         : location()
     });

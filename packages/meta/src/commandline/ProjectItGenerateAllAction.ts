@@ -130,8 +130,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.validatorGenerator.outputfolder = this.outputFolder;
             this.validatorGenerator.generate(validator);
         } catch (e) {
-            // LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
-            LOG2USER.error("Stopping validator generation because of errors: " + e.message);
+            LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
+            // LOG2USER.error("Stopping validator generation because of errors: " + e.message);
         }
     };
 
@@ -153,8 +153,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.editorGenerator.generate(editor);
             this.parserGenerator.generate(editor);
         } catch (e) {
-            // LOG2USER.error("Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
-            LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
+            LOG2USER.error("Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
+            // LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
         }
         return editor;
     };

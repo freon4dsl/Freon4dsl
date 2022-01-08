@@ -29,7 +29,7 @@ ExampleUnit {
 
 Method {
     [
-        method ${name} ( ${parameters } ): ${declaredType} {
+        method ${name} ( ${parameters table} ): ${declaredType} {
             ${body}
         }
     ]
@@ -118,7 +118,6 @@ AbsExpression {
 }
 
 //IfExpression {
-//    IfExpression
 //        [
 //        ${ condition } ? ${ whenTrue } : ${whenFalse}
 //        ]

@@ -61,6 +61,9 @@ function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEdit
                 if (!!proj.tableProjection.location) {
                     myProj.location = proj.tableProjection.location;
                 }
+                if (!!data.name) {
+                    myProj.name = data.name;
+                }
                 result.projections.push(myProj);
             }
             if (!!proj.projection) {
@@ -73,6 +76,9 @@ function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEdit
                 }
                 if (!!proj.projection.location) {
                     myProj.location = proj.projection.location;
+                }
+                if (!!data.name) {
+                    myProj.name = data.name;
                 }
                 result.projections.push(myProj);
             }
@@ -164,8 +170,8 @@ export function createClassifierInfo(data: Partial<ExtraClassifierInfo>): ExtraC
         result.trigger = data.trigger;
         hasContent = true;
     }
-    if (!!data.referenceShortcut) {
-        result.referenceShortcut = data.referenceShortcut;
+    if (!!data.referenceShortcutExp) {
+        result.referenceShortcutExp = data.referenceShortcutExp;
         hasContent = true;
     }
     if (!!data.symbol) {

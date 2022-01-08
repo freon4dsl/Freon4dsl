@@ -19,7 +19,6 @@ import {
 import {
     ListInfo,
     ListJoinType,
-    PiEditInstanceProjection,
     PiEditParsedProjectionIndent,
     PiEditProjection,
     PiEditProjectionDirection,
@@ -27,7 +26,7 @@ import {
     PiEditPropertyProjection,
     PiOptionalPropertyProjection,
     PiEditUnit,
-    PiEditTableProjection, PiEditClassifierProjection, PiEditSuperProjection, PiEditProjectionItem
+    PiEditTableProjection, PiEditClassifierProjection, PiEditProjectionItem
 } from "../../metalanguage";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
@@ -43,7 +42,7 @@ export class ProjectionTemplate {
         // sort the concepts such that base concepts come last
         binaryConcepts = sortConceptsWithBase(binaryConcepts, language.findExpressionBase());
 
-        const conceptsWithoutProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) ).filter(c => {
+        const conceptsWithoutProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) && !(c instanceof PiLimitedConcept) ).filter(c => {
             const editor = editorDef.findProjectionForType(c);
             return editor === undefined || editor === null;
         });
@@ -247,10 +246,12 @@ export class ProjectionTemplate {
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
             result += ` BoxUtils.labelBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "${lineIndex}-item-${itemIndex}") `;
-        } else if (item instanceof PiEditPropertyProjection) {
-            result += this.propertyProjection(item, elementVarName, concept, language);
         } else if (item instanceof PiOptionalPropertyProjection) {
             result += this.optionalProjection(item, elementVarName, lineIndex, concept, language);
+        } else if (item instanceof PiEditPropertyProjection) {
+            // Note: this condition should come after PiOptionalPropertyProjection, because PiOptionalPropertyProjection is a sub class
+            // of PiEditPropertyProjection
+            result += this.propertyProjection(item, elementVarName, concept, language);
         }
         return result;
     }
@@ -293,33 +294,33 @@ export class ProjectionTemplate {
      */
     private propertyProjection(item: PiEditPropertyProjection, elementVarName: string, concept: PiClassifier, language: PiLanguage) {
         let result: string = "";
-        const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
-        if (appliedFeature instanceof PiPrimitiveProperty) {
-            result += this.primitivePropertyProjection(appliedFeature, elementVarName);
-        } else if (appliedFeature instanceof PiConceptProperty) {
-            if (appliedFeature.isPart) {
-                if (appliedFeature.isList) {
+        const property: PiProperty = item.property.referred;
+        if (property instanceof PiPrimitiveProperty) {
+            result += this.primitivePropertyProjection(property, elementVarName);
+        } else if (property instanceof PiConceptProperty) {
+            if (property.isPart) {
+                if (property.isList) {
                     if (!!item.listInfo) { // if there is information on how to project the appliedFeature as a list, make it a list
-                        result += this.conceptPartListProjection(item, concept, appliedFeature, elementVarName);
+                        result += this.conceptPartListProjection(item, concept, property, elementVarName);
                     } else if (!!item.listInfo && item.listInfo.isTable) {  // if there is information on how to project the appliedFeature as a table, make it a table
-                        result += this.conceptPartTableProjection(item.listInfo.direction, appliedFeature, elementVarName, language);
+                        result += this.conceptPartTableProjection(item.listInfo.direction, property, elementVarName, language);
                     }
                 } else { // single element
-                    result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${appliedFeature.name}", this.rootProjection) `;
+                    result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${property.name}", this.rootProjection) `;
                 }
             } else { // reference
-                if (appliedFeature.isList) {
+                if (property.isList) {
                     if (!!item.listInfo) {
-                        result += this.conceptReferenceListProjection(language, item.listInfo, appliedFeature, elementVarName);
+                        result += this.conceptReferenceListProjection(language, item.listInfo, property, elementVarName);
                     } else if (!!item.listInfo && item.listInfo.isTable) {
                         // TODO adjust for tables
                     }
                 } else { // single element
-                    result += this.conceptReferenceProjection(language, appliedFeature, elementVarName);
+                    result += this.conceptReferenceProjection(language, property, elementVarName);
                 }
             }
         } else {
-            result += `/* ERROR unknown property box here for ${appliedFeature.name} */ `;
+            result += `/* ERROR unknown property box here for ${property.name} */ `;
         }
         return result;
     }

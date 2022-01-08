@@ -116,6 +116,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                     // tr.property.appliedfeature.sourceName = "unitName";
                     // tr.property.appliedfeature.referredElement = PiElementReference.create<PiProperty>(myProp, "PiProperty");
                     tr.property.location = tr.location;
+                    tr.property.language = this.language;
                   }
             });
         }

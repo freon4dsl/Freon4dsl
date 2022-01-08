@@ -95,7 +95,7 @@ export class ConceptMaker {
 
     private makePropPart(item: PiEditPropertyProjection, inOptionalGroup: boolean): RHSPropEntry {
         // TODO adjust this when the default for joinType is properly set in the .edit parser
-        const prop: PiProperty = item.expression.findRefOfLastAppliedFeature();
+        const prop: PiProperty = item.property.referred;
         if (!!prop) {
             const propType: PiClassifier = prop.type.referred; // more efficient to determine referred only once
             this.imports.push(propType);

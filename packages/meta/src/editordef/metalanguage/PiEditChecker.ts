@@ -1,5 +1,5 @@
 import {
-    PiClassifier, PiInstance,
+    PiClassifier, PiInstance, PiLangElement,
     PiLangExpressionChecker,
     PiLanguage,
     PiLimitedConcept,
@@ -222,22 +222,36 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: PiClassifier) {
+        const propProjections: PiEditPropertyProjection[] = [];
         item.lines.forEach(line => {
             this.checkLine(line, cls);
+            propProjections.push(...line.items.filter(item => item instanceof PiEditPropertyProjection) as PiEditPropertyProjection[]);
         });
-        // TODO find the optional property and set item.property
-        let myProp: PiProperty = null;
-
-        // if (optional) {
-        //     // TODO this error should be a warning only
-        //     // TODO think through this error message
-        //     this.simpleCheck(myprop.isOptional,
-        //         `Property '${myprop.name}' is not optional, therefore it should not have an optional projection ${this.location(projection)}`)
-        // }
+        this.nestedCheck({check: propProjections.length === 1,
+            error: `There should be only one property within an optional projection, found ${propProjections.length} ${this.location(item)}`,
+            whenOk: () => {
+                // find the optional property and set item.property
+                const myprop = propProjections[0].property.referred;
+                this.simpleWarning(myprop.isOptional,
+                    `Property '${myprop.name}' is not optional, therefore it should not be within an optional projection ${this.location(propProjections[0])}`)
+                item.property = this.copyReference(propProjections[0].property);
+            }
+        });
     }
 
     private checkExtras(other: ExtraClassifierInfo) {
-        // TODO
+        // check the reference shortcut and change the expression into a reference to a property
+        if (!!other.referenceShortcutExp) {
+            this.myExpressionChecker.checkLangExp(other.referenceShortcutExp, other.classifier.referred);
+            const xx: PiProperty = other.referenceShortcutExp.findRefOfLastAppliedFeature();
+            // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat
+            if (!!xx) {
+                other.referenceShortCut = PiElementReference.create<PiProperty>(xx as PiProperty, "PiProperty");
+                other.referenceShortCut.owner = this.language;
+            }
+        }
+        // TODO check the trigger
+        // TODO check the symbol
     }
 
     private resolveReferences(editorDef: PiEditUnit) {
@@ -283,6 +297,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 whenOk: () => {
                     // set the 'property' attribute of the projection
                     item.property = PiElementReference.create<PiProperty>(myProp, "PiProperty");
+                    item.property.owner = this.language;
                     item.expression = null;
                     // check the rest
                     if (!!item.boolInfo) {
@@ -331,5 +346,11 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     private removeLimitedProjections(group: PiEditProjectionGroup) {
         // TODO
         this.projectionsForLimitedType = [];
+    }
+
+    private copyReference(reference: PiElementReference<PiProperty>): PiElementReference<PiProperty> {
+        const result: PiElementReference<PiProperty> = PiElementReference.create<PiProperty>(reference.referred, "PiProperty");
+        result.owner = this.language;
+        return result;
     }
 }
