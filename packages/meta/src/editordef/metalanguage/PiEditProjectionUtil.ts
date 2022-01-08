@@ -2,7 +2,8 @@ import { PiElementReference } from "../../languagedef/metalanguage/PiElementRefe
 import {
     PiBinaryExpressionConcept,
     PiClassifier,
-    PiConceptProperty, PiLimitedConcept,
+    PiConceptProperty,
+    PiLimitedConcept,
     PiPrimitiveProperty,
     PiProperty
 } from "../../languagedef/metalanguage";
@@ -170,7 +171,8 @@ export class PiEditProjectionUtil {
         const sub = new PiEditPropertyProjection();
         sub.property = PiElementReference.create<PiProperty>(prop, "PiProperty");
         sub.property.owner = concept.language;
-        sub.listInfo = new ListInfo();  // listInfo gets default values on initialization
+        sub.listInfo = new ListInfo();  // listInfo gets default values on initialization, but we change the joinType here
+        sub.listInfo.joinType = ListJoinType.Separator;
         line2.items.push(sub);
         projection.lines.push(line1);
         projection.lines.push(line2);

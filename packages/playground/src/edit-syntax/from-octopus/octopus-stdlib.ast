@@ -1,5 +1,0 @@
-language octopus
-
-concept OclIterator {
-    name: identifier;
-}

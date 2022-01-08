@@ -1,7 +1,0 @@
-language octopus
-
-model OctopusModel {
-    name: identifier;
-    umlParts: UmlPart[];
-    oclParts: OclPart[];
-}

@@ -35,12 +35,12 @@ concept UmlClass implements IClass {
 }
 
 interface IClassifier base IPackagableElement {
-    attributes: Attribute[];
-    operations: Operation[];
-    navigations: AssociationEnd[];
-    reference generalizations: IClassifier[];
-    reference subClasses: IClassifier[];
-    reference interfaces: UmlInterface[];
+    attributes?: Attribute[];
+    operations?: Operation[];
+    navigations?: AssociationEnd[];
+    reference generalizations?: IClassifier[];
+    reference subClasses?: IClassifier[];
+    reference interfaces?: UmlInterface[];
     states: State[];
     classAttributes: Attribute[];
     classOperations: Operation[];
@@ -119,7 +119,7 @@ concept UmlPackage implements IModelElement {
 }
 
 interface IPackagableElement base IModelElement {
-    visibility: VisibilityKind;
+    visibility?: VisibilityKind;
 }
 concept Parameter implements IModelElement {
     reference type: IClassifier;

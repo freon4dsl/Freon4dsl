@@ -1,22 +1,19 @@
-editor YYY for language octopus
+editor YYY
 
 OclPart {
-    @projection normal
-        [package ${self.pack}
-            ${self.constraints @vertical @separator[\n]}
+        [package ${pack}
+            ${constraints vertical}
         ]
 }
 
 OclContext {
-    @projection normal
     [
-    context ${self.owningModelelement}
-    ${self.usageType}: [? ${self.definedOperation} =][? ${self.definedAttribute} =]${self.expression}
+    context ${owningModelelement}
+    ${usageType}: [? ${definedOperation} =][? ${definedAttribute} =]${expression}
     ]
 
 }
 
 ModelElementReference {
-    @projection normal
-    [ ${self.surroundingClassifier}[?::${self.feature}]]
+    [ ${surroundingClassifier}[?::${feature}]]
 }

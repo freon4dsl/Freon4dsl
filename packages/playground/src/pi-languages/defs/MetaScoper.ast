@@ -4,15 +4,15 @@ language PiLanguage
 modelunit PiScoperDef {
     public name: identifier;
     languageName: string;
-    reference namespaces: PiClassifier[];
+    reference namespaces?: PiClassifier[];
     scopeConceptDefs: ScopeConceptDef[];
     file-extension = "scope";
 }
 
 concept ScopeConceptDef {
     reference conceptRef: PiConcept;
-    namespaceAdditions: PiNamespaceAddition;
-    alternativeScope: PiAlternativeScope;
+    namespaceAdditions?: PiNamespaceAddition;
+    alternativeScope?: PiAlternativeScope;
 }
 
 concept PiNamespaceAddition {

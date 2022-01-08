@@ -27,17 +27,18 @@ abstract concept PiClassifier base PiLangElement {
     primProperties: PiPrimitiveProperty[];
 }
 concept PiModelDescription base PiClassifier {
+    units: PiUnitDescription[];
 }
 concept PiUnitDescription base PiClassifier {
     fileExtension: string = "";
 }
 concept PiInterface base PiClassifier {
-    reference base: PiInterface[];
+    reference base?: PiInterface[];
 }
 concept PiConcept base PiClassifier {
     isAbstract: boolean;
     reference base?: PiConcept;
-    reference interfaces: PiInterface[];
+    reference interfaces?: PiInterface[];
 }
 concept PiExpressionConcept base PiConcept {
 }

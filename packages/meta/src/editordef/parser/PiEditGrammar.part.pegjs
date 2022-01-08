@@ -133,7 +133,7 @@ property_projection = s:singleProperty {return s;}
     / b:booleanProperty {return b;}
 
 singleProperty = propProjectionStart ws
-                         propName:var (colon_separator editorName:var)? ws
+                         "self."? propName:var (colon_separator editorName:var)? ws
                       propProjectionEnd
 {
     return creator.createPropertyProjection( {
@@ -143,7 +143,7 @@ singleProperty = propProjectionStart ws
 }
 
 listProperty = propProjectionStart ws
-                         propName:var (colon_separator editorName:var)? ws l:listInfo? ws
+                         "self."? propName:var (colon_separator editorName:var)? ws l:listInfo? ws
                       propProjectionEnd
 {
     return creator.createListPropertyProjection( {
@@ -154,7 +154,7 @@ listProperty = propProjectionStart ws
 }
 
 tableProperty = propProjectionStart ws
-                         propName:var (colon_separator editorName:var)? ws t:tableInfo? ws
+                         "self."? propName:var (colon_separator editorName:var)? ws t:tableInfo? ws
                       propProjectionEnd
 {
     return creator.createTablePropertyProjection( {
@@ -165,7 +165,7 @@ tableProperty = propProjectionStart ws
 }
 
 booleanProperty = propProjectionStart ws
-                         propName:var (colon_separator editorName:var)? ws k:keywordDecl? ws
+                         "self."? propName:var (colon_separator editorName:var)? ws k:keywordDecl? ws
                       propProjectionEnd
 {
     return creator.createBooleanPropertyProjection( {
@@ -213,7 +213,7 @@ listInfo =  dir:listDirection? l:(type:listInfoType "[" t:textBut "]" {return { 
         "isTable"       : false,
         "listDirection" : dir,
         "joinType"      : !!l ? l["type"] : undefined,
-        "joinText"      : !!l ? l["text"]: undefined,
+        "joinText"      : !!l ? l["text"] : undefined,
         "location"      : location()
     });
 }
@@ -233,7 +233,7 @@ trigger = "trigger" ws equals_separator ws "\"" value:string "\"" ws
     return value;
 }
 
-referenceShortcut = "referenceShortcut" ws equals_separator ws propProjectionStart ws exp:var propProjectionEnd ws
+referenceShortcut = "referenceShortcut" ws equals_separator ws propProjectionStart ws "self."? exp:var propProjectionEnd ws
 {
     return creator.createSelfExp(exp);
 }

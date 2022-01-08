@@ -190,10 +190,19 @@ export class PiEditTableProjection extends PiEditClassifierProjection {
 
 export class PiEditLimitedProjection extends PiEditClassifierProjection {
     instanceProjections: PiEditInstanceProjection[] = [];
+    toString(): string {
+        return `${this.classifier?.name} {
+        [ 
+        ${this.instanceProjections.map(instance => `"${instance.toString()}"`).join("\n")}
+        ]}`;
+    }
 }
-export class PiEditInstanceProjection {
+export class PiEditInstanceProjection extends PiDefinitionElement {
     instance: PiElementReference<PiInstance>;
     keyword: BoolKeywords;
+    toString(): string {
+        return `${this.instance?.name} /* found ${this.instance.referred?.name} */ = ${this.keyword.toString()}`;
+    }
 }
 /**
  * Holds extra information, defined in the default editor, per classifier
@@ -287,7 +296,9 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
         if (!!this.boolInfo) {
             extraText = `\n/* boolean */ ${this.boolInfo}`;
         }
-        return `\${ ${this.expression} /* found ${this.property?.referred?.name} */ }${extraText}`;
+        return `\${ ${this.expression} /* ${this.property?.referred ?
+            `found ${this.property?.referred?.name}` :
+            `not found ${this.property?.name}`} */ }${extraText}`;
     }
 }
 
@@ -338,7 +349,7 @@ export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
 export class ListInfo extends PiDefinitionElement {
     isTable: boolean = false;
     direction: PiEditProjectionDirection = PiEditProjectionDirection.Vertical;
-    joinType: ListJoinType = ListJoinType.Separator;
+    joinType: ListJoinType = ListJoinType.NONE; // indicates that user has not inserted join info
     joinText: string = "";
 
     toString(): string {
