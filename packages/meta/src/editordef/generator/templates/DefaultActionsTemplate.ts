@@ -4,7 +4,7 @@ import {
     PiLanguage,
     PiBinaryExpressionConcept,
     PiClassifier,
-    PiLangSelfExp
+    PiLangSelfExp, PiLimitedConcept
 } from "../../../languagedef/metalanguage";
 import { Roles, LangUtil } from "../../../utils";
 import {
@@ -15,6 +15,7 @@ import {
     PiEditProjection, ExtraClassifierInfo
 } from "../../metalanguage";
 import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
+import { insert } from "svelte/internal";
 
 export class DefaultActionsTemplate {
 
@@ -227,9 +228,9 @@ export class DefaultActionsTemplate {
         // we do need actions for all units and concepts
         const allClassifiers: PiClassifier[] = [];
         allClassifiers.push(...language.units);
-        allClassifiers.push(...language.concepts);
+        allClassifiers.push(...language.concepts.filter(c => !(c instanceof PiLimitedConcept)));
+
         allClassifiers.forEach(concept => concept.allParts().forEach(part => {
-            // language.concepts.forEach(concept => concept.allParts().filter(ref => !ref.isList).forEach(part => {
             const partType = part.type.referred;
             if (partType instanceof PiClassifier) { // exclude all primitive types
                 LangUtil.subConceptsIncludingSelf(partType).filter(cls => !cls.isAbstract).forEach(subClass => {

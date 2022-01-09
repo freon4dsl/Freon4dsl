@@ -16,17 +16,17 @@ import {
     PiEditTableProjection,
     PiEditUnit,
     PiOptionalPropertyProjection
-} from "../metalanguage/PiEditDefLang";
-import { MetaLogger } from "../../utils/MetaLogger";
+} from "../metalanguage";
+import { MetaLogger } from "../../utils";
 import { PiClassifier, PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
-import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
+import { PiEditParseUtil } from "./PiEditParseUtil";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { PiElementReference } from "../../languagedef/metalanguage";
 
-const LOGGER = new MetaLogger("NewEditorCreators").mute();
+const LOGGER = new MetaLogger("EditorCreators").mute();
 
 let currentFileName: string = "SOME_FILENAME";
 export function setCurrentFileName(newName: string) {
@@ -198,7 +198,7 @@ export function createProjection(data: Partial<PiEditProjection>): PiEditProject
     if (!!data.lines) {
         result.lines = data.lines;
         // Now cleanup the parsed projection
-        PiEditProjectionUtil.normalize(result);
+        PiEditParseUtil.normalize(result);
     }
     if (!!data.location) {
         result.location = data.location;

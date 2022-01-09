@@ -1,4 +1,4 @@
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { PiElementReference } from "../../languagedef/metalanguage";
 import {
     PiBinaryExpressionConcept,
     PiClassifier,
@@ -12,19 +12,17 @@ import {
     ExtraClassifierInfo,
     ListInfo,
     ListJoinType,
-    PiEditClassifierProjection,
-    PiEditParsedNewline,
-    PiEditParsedProjectionIndent,
+    PiEditClassifierProjection, PiEditLimitedProjection,
     PiEditProjection,
     PiEditProjectionGroup,
     PiEditProjectionLine,
     PiEditProjectionText,
     PiEditPropertyProjection,
     PiEditUnit
-} from "./PiEditDefLang";
+} from "../metalanguage";
 import { Names } from "../../utils";
 
-export class PiEditProjectionUtil {
+export class EditorDefaultsGenerator {
 
     /**
      * Add default projections for all concepts that do not have one yet.
@@ -38,10 +36,67 @@ export class PiEditProjectionUtil {
             defaultGroup.name = Names.defaultProjectionName;
             defaultGroup.standardBooleanProjection = new BoolKeywords();
             defaultGroup.standardReferenceSeparator = ".";
+        }
+        if (!defaultGroup.extras) {
             defaultGroup.extras = [];
         }
 
         // add defaults for binary expressions
+        this.defaultsForBinaryExpressions(editor, defaultGroup);
+
+        // add default for other classifiers, that are not limited concepts, iff they are not already present
+        this.defaultsForOrdinaryClassifiers(editor, defaultGroup);
+
+        // add defaults for limited concepts, iff they are not already present
+        const limitedConceptsToDo: PiClassifier[] =
+            editor.language.concepts.filter(c => (c instanceof PiLimitedConcept));
+
+        for (const con of limitedConceptsToDo) {
+            // Find or create the concept editor, and its properties
+            let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionForType(con);
+            if (!foundProjection) {
+                // create a new projection
+                // console.log("Adding default projection for " + con.unitName);
+                const projection: PiEditLimitedProjection = this.defaultLimitedProjection(con as PiLimitedConcept, editor);
+                defaultGroup.projections.push(projection);
+            }
+            let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
+            if (!foundExtraInfo) {
+                const extraInfo = this.defaultExtras(con);
+                extraInfo.classifier = PiElementReference.create<PiLimitedConcept>(con as PiLimitedConcept, "PiLimitedConcept");
+                extraInfo.classifier.owner = editor.language;
+                defaultGroup.extras.push(extraInfo);
+            }
+        }
+
+    }
+
+    private static defaultsForOrdinaryClassifiers(editor: PiEditUnit, defaultGroup: PiEditProjectionGroup) {
+        const classifiersToDo: PiClassifier[] =
+            editor.language.conceptsAndInterfaces().filter(c => !(c instanceof PiBinaryExpressionConcept))
+                .filter(c => !(c instanceof PiLimitedConcept));
+        classifiersToDo.push(...editor.language.units);
+
+        for (const con of classifiersToDo) {
+            // Find or create the concept editor, and its properties
+            let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionForType(con);
+            if (!foundProjection) {
+                // create a new projection
+                // console.log("Adding default projection for " + con.unitName);
+                const projection: PiEditProjection = this.defaultClassifierProjection(con, editor);
+                defaultGroup.projections.push(projection);
+            }
+            let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
+            if (!foundExtraInfo) {
+                const extraInfo = this.defaultExtras(con);
+                extraInfo.classifier = PiElementReference.create<PiClassifier>(con, "PiClassifier");
+                extraInfo.classifier.owner = editor.language;
+                defaultGroup.extras.push(extraInfo);
+            }
+        }
+    }
+
+    private static defaultsForBinaryExpressions(editor: PiEditUnit, defaultGroup: PiEditProjectionGroup) {
         for (const binConcept of editor.language.concepts.filter(c => c instanceof PiBinaryExpressionConcept)) {
             let projection: PiEditClassifierProjection = defaultGroup.findProjectionForType(binConcept);
             if (projection === null || projection === undefined) {
@@ -62,30 +117,6 @@ export class PiEditProjectionUtil {
                     binConcept as PiBinaryExpressionConcept,
                     "PiBinaryExpressionConcept"
                 );
-                extraInfo.classifier.owner = editor.language;
-                defaultGroup.extras.push(extraInfo);
-            }
-        }
-
-        // add default for other classifiers, that are not limited concepts, iff they are not allready present
-        const classifiersToDo: PiClassifier[] =
-            editor.language.conceptsAndInterfaces().filter(c => !(c instanceof PiBinaryExpressionConcept))
-                .filter(c => !(c instanceof PiLimitedConcept));
-        classifiersToDo.push(...editor.language.units);
-
-        for (const con of classifiersToDo) {
-            // Find or create the concept editor, and its properties
-            let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionForType(con);
-            if (!foundProjection) {
-                // create a new projection
-                // console.log("Adding default projection for " + con.unitName);
-                const projection: PiEditProjection = this.defaultClassifierProjection(con, editor);
-                defaultGroup.projections.push(projection);
-            }
-            let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
-            if (!foundExtraInfo) {
-                const extraInfo = this.defaultExtras(con);
-                extraInfo.classifier = PiElementReference.create<PiClassifier>(con,"PiClassifier");
                 extraInfo.classifier.owner = editor.language;
                 defaultGroup.extras.push(extraInfo);
             }
@@ -142,6 +173,18 @@ export class PiEditProjectionUtil {
         return projection;
     }
 
+    private static defaultLimitedProjection(con: PiLimitedConcept, editor: PiEditUnit): PiEditLimitedProjection {
+        const projection = new PiEditLimitedProjection();
+        projection.name = Names.defaultProjectionName;
+        projection.classifier = PiElementReference.create<PiLimitedConcept>(con, "PiLimitedConcept");
+        projection.classifier.owner = editor.language;
+
+        // TODO is this really needed?
+        // projection.instanceProjections
+
+        return projection;
+    }
+
     private static defaultExtras(con: PiClassifier): ExtraClassifierInfo {
         const result = new ExtraClassifierInfo();
         // default for referenceShortcut is not needed
@@ -179,64 +222,6 @@ export class PiEditProjectionUtil {
         line2.items.push(sub);
         projection.lines.push(line1);
         projection.lines.push(line2);
-    }
-
-    /** Normalizing means:
-     * - break lines at newline,
-     * - remove empty lines
-     * - set indent property per line and then remove all indent items
-     * - All PiEditParseNewline and PiEditParseProjectionIndent instances are removed.
-     */
-    public static normalize(projection: PiEditProjection): void {
-        const result: PiEditProjectionLine[] = [];
-        let currentLine = new PiEditProjectionLine();
-        const lastItemIndex = projection.lines[0].items.length - 1;
-        // TODO Empty lines are discarded now, decide how to handle them in general
-        projection.lines[0].items.forEach((item, index) => {
-            if (item instanceof PiEditParsedProjectionIndent) {
-                item.normalize();
-            }
-            if (item instanceof PiEditParsedNewline) {
-                if (currentLine.isEmpty()) {
-                    currentLine = new PiEditProjectionLine();
-                } else {
-                    result.push(currentLine);
-                    currentLine = new PiEditProjectionLine();
-                }
-            } else {
-                currentLine.items.push(item);
-            }
-            if (lastItemIndex === index) {
-                // push last line if not empty
-                if (!currentLine.isEmpty()) {
-                    result.push(currentLine);
-                }
-            }
-        });
-        projection.lines = result;
-
-        let ignoredIndent = 0;
-        // find the ignored indent value
-        projection.lines.forEach(line => {
-            const firstItem = line.items[0];
-            if (firstItem instanceof PiEditParsedProjectionIndent) {
-                ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
-            }
-        });
-        // find indent of first line and substract that from all other lines
-        // set indent of each line to the remainder
-        projection.lines.forEach(line => {
-            const firstItem = line.items[0];
-            if (firstItem instanceof PiEditParsedProjectionIndent) {
-                // const indent = firstItem.amount - ignoredIndent;
-                line.indent = firstItem.amount - ignoredIndent;
-                line.items.splice(0, 1);
-            }
-        });
-        // remove all indent items, as they are not needed anymore
-        projection.lines.forEach(line => {
-            line.items = line.items.filter(item => !(item instanceof PiEditParsedProjectionIndent));
-        });
     }
 
 }

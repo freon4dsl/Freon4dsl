@@ -1,14 +1,12 @@
-editor YYY for language octopus
+editor YYY
 
 OclPart {
-    @projection normal
         [OCL expressions for ${self.name}
-            ${self.constraints @vertical @separator[\n]}
+            ${self.constraints vertical }
         ]
 }
 
 OclContext {
-    @projection normal
     [
     context ${self.owningModelelement}
     inv: ${self.expression}

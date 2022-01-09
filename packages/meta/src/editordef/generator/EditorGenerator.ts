@@ -11,7 +11,7 @@ import {
     STYLES_FOLDER
 } from "../../utils";
 import { PiEditProjectionGroup, PiEditUnit } from "../metalanguage";
-import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
+import { EditorDefaultsGenerator } from "./EditorDefaultsGenerator";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
 
@@ -42,7 +42,7 @@ export class EditorGenerator {
         }
 
         // add default values if they are not present in the editor definition
-        PiEditProjectionUtil.addDefaults(editDef);
+        EditorDefaultsGenerator.addDefaults(editDef);
 
         const defaultActions = new DefaultActionsTemplate();
         const customActions = new CustomActionsTemplate();

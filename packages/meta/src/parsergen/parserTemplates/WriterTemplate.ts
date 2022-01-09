@@ -478,13 +478,6 @@ export class WriterTemplate {
             // add escapes to item.text
             const myText = ParserGenUtil.escapeRelevantChars(item.text).trimRight();
             result += `this.output[this.currentLine] += \`${myText} \`;\n`;
-        } else if (item instanceof PiEditPropertyProjection) {
-            const myElem = item.property.referred;
-            if (myElem instanceof PiPrimitiveProperty) {
-                result += this.makeItemWithPrimitiveType(myElem, item);
-            } else {
-                result += this.makeItemWithConceptType(myElem, item, indent);
-            }
         } else if (item instanceof PiOptionalPropertyProjection){
             let myTypeScript: string = "";
             let subresult: string = "";
@@ -505,6 +498,13 @@ export class WriterTemplate {
                 result += `if (${myTypeScript}) { ${subresult} }`;
             } else {
                 result += subresult;
+            }
+        } else if (item instanceof PiEditPropertyProjection) {
+            const myElem = item.property.referred;
+            if (myElem instanceof PiPrimitiveProperty) {
+                result += this.makeItemWithPrimitiveType(myElem, item);
+            } else {
+                result += this.makeItemWithConceptType(myElem, item, indent);
             }
         }
         return result;
@@ -546,7 +546,7 @@ export class WriterTemplate {
             const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
             const joinType = this.getJoinType(item);
             // TODO adjust to tables
-            if (joinType.length > 0) { // it is a list not table
+            if (!item.listInfo.isTable) { // it is a list not table
                 // add escapes to joinText
                 const myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
                 result += `this.unparseListOfPrimitiveValues(

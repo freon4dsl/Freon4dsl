@@ -2,6 +2,7 @@ import * as fs from "fs";
 import { Checker } from "./Checker";
 import { Parser } from "pegjs";
 import { LOG2USER } from "./UserLogger";
+import { PiDefinitionElement } from "./PiDefinitionElement";
 
 // the following two types are used to store the location information from the parser
 export type ParseLocation = {
@@ -132,5 +133,12 @@ export class PiParser<DEFINITION> {
 
     protected cleanNonFatalParseErrors() {
         // throw Error("PiParser.cleanNonFatalParseErrors should be implemented by its subclasses.");
+    }
+
+    protected location(elem: PiDefinitionElement): string {
+        if (!!elem.location) {
+            return `[file: ${elem.location.filename}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
+        }
+        return `[no location]`;
     }
 }

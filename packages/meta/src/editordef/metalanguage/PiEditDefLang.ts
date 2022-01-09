@@ -76,13 +76,14 @@ export class PiEditUnit extends PiDefinitionElement {
     }
 
     findExtrasForType(cls: PiClassifier): ExtraClassifierInfo {
-        for (const group of this.projectiongroups) {
-            const found = group.findExtrasForType(cls);
-            if (!!found) {
-                return found;
-            }
-        }
-        return null;
+        return this.getDefaultProjectiongroup().findExtrasForType(cls);
+        // for (const group of this.projectiongroups) {
+        //     const found = group.findExtrasForType(cls);
+        //     if (!!found) {
+        //         return found;
+        //     }
+        // }
+        // return null;
     }
 }
 
@@ -110,11 +111,11 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
     }
 
     findExtrasForType(cls: PiClassifier): ExtraClassifierInfo {
-        // this.extras.forEach(ex => {
-        //     if (!ex) console.log("\t====> null element")
-        //     console.log("\t" + ex.classifier?.name + ": " + ex.classifier?.referred?.name + ", " + ex.location?.filename);
-        // })
-        return this.extras.find(con => con.classifier.referred === cls);
+        if (!!this.extras) {
+            return this.extras.find(con => con.classifier.referred === cls);
+        } else {
+            return null;
+        }
     }
 
     allTableProjections(): PiEditTableProjection[] {

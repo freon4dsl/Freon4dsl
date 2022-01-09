@@ -1,134 +1,129 @@
 // This is an editor definiton that is intentionally wrong
 // it should cause an error in the generation of the grammar
 // for this purpose we have eliminated all keywords
-editor User for language Example
+editor User
 
 Attribute {
-    @projection attribuut [
+    [
         ${self.name} ${self.declaredType}
     ]
 }
 
 Entity {
-    @projection [
+     [
         ${self.name} [? ${self.baseEntity}] {
-            ${self.attributes @vertical @separator [\n]}
-            ${self.methods @vertical @separator [\n]}
+            ${self.attributes vertical }
+            ${self.methods vertical }
         }
     ]
-    @trigger "entity"
+    trigger = "entity"
 }
 
 ExModel {
-    @projection Model
         [
         ${self.name}
             ${self.entities
-                @vertical
-                @terminator [\n]
+                vertical              
             }
-        ${self.methods @vertical @separator [\n] }
+        ${self.methods vertical  }
         ]
 }
 
 Method {
-    @projection [
-        ${self.name} ${self.parameters @separator[,] } ${self.declaredType} {
+     [
+        ${self.name} ${self.parameters separator[,] } ${self.declaredType} {
             ${self.body}
         }
     ]
 }
 
 Parameter {
-    @projection attribuut [
+     [
         ${self.name} ${self.declaredType}
     ]
 }
 
 MethodCallExpression {
-    @projection MethodCallExpression
         [
-        ${self.methodDefinition} ${self.args @separator[,] }
+        ${self.methodDefinition} ${self.args separator[,] }
         ]
-    @trigger "method"
+    trigger = "method"
 }
 
 SumExpression {
-    @projection [
+     [
         ${self.variable}  ${self.from}  ${self.to}  ${self.body}
     ]
-    @trigger "sum"
+    trigger = "sum"
 }
 
 LoopVariableRef {
-    @projection [ ${self.variable} ]
+     [ ${self.variable} ]
 }
 
 LoopVariable {
-    @projection [ ${self.name} ]
-    @trigger    "var"
+     [ ${self.name} ]
+    trigger =    "var"
 }
 
 
 NumberLiteralExpression {
-    @projection normal
         [${self.value}]
 }
 
 StringLiteralExpression {
-    @projection StringLiteralExpression
         [
         ${self.value}
         ]
-    @trigger "'"
+    trigger = "'"
 }
 
 PlusExpression {
-    @symbol "+"
+    symbol = "+"
 }
 
 MultiplyExpression {
-    @symbol "*"
+    symbol = "*"
 }
 
 DivideExpression {
-    @symbol "/"
+    symbol = "/"
 }
 
 LessThenExpression {
-    @symbol "<"
+    symbol = "<"
 }
 
 OrExpression {
-    @symbol "or"
+    symbol = "or"
 }
 AndExpression {
-    @symbol "and"
+    symbol = "and"
 }
 GreaterThenExpression {
-    @symbol ">"
+    symbol = ">"
 }
 EqualsExpression {
-    @symbol "=="
+    symbol = "=="
 }
 
 BooleanLiteralExpression {
-    @projection [ ${self.value} ]
-    @trigger "boolean"
+     [ ${self.value} ]
+    trigger = "boolean"
 }
 
 
 AttributeRef {
-    @projection [ ${self.attribute} ]
-    @trigger "attribute"
+     [ ${self.attribute} ]
+    trigger = "attribute"
 }
 
 ParameterRef {
-    @projection [ ${self.parameter}  ${self.appliedfeature} ]
+     [ ${self.parameter}  ${self.appliedfeature} ]
 }
 
 //IfExpression {
-//    @projection IfExpression
+//     IfExpression
 //        [
 //        if (${self.condition}) then
 //            ${self.whenTrue}
@@ -136,19 +131,18 @@ ParameterRef {
 //            ${self.whenFalse}
 //        endif
 //        ]
-//    @trigger "if"
+//    trigger = "if"
 //}
 
 AbsExpression {
-    @projection default [
+    [
         abs( ${self.expr} )
     ]
 }
 
 IfExpression {
-    @projection IfExpression
         [
         ${ self.condition }  ${ self.whenTrue }  ${self.whenFalse}
         ]
-    @trigger "if"
+    trigger = "if"
 }

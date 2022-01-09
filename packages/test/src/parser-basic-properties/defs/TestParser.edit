@@ -1,98 +1,98 @@
-editor XXX for language TestParser
+editor XXX
 
 // for testing primitives
 PrimExtra {
-    @projection normal [
+     [
         bef\"ore ${self.primIdentifierWithExtra} after
         be\[fore ${self.primNumberWithExtra} after
         bef\/ore ${self.primStringWithExtra} after
         bef\${ore ${self.primBooleanWithExtra} after
-        bef(ore ${self.primListIdentifierWithExtra @separator [, ]} after
-        bef\]ore ${self.primListNumberWithExtra @separator [, ]} after
-        before ${self.primListStringWithExtra @separator [, ]} after
-        before ${self.primListBooleanWithExtra @separator [, ]}    after
+        bef(ore ${self.primListIdentifierWithExtra separator [, ]} after
+        bef\]ore ${self.primListNumberWithExtra separator [, ]} after
+        before ${self.primListStringWithExtra separator [, ]} after
+        before ${self.primListBooleanWithExtra separator [, ]}    after
     ]
 }
 
 PrimExtraOptional {
-    @projection normal [PrimExtraOptional
+     [PrimExtraOptional
         [?before ${self.primIdentifierWithExtra} after]
         [?before ${self.primNumberWithExtra} after]
         [?before ${self.primStringWithExtra} after]
         [?before ${self.primBooleanWithExtra} after]
-        [?before ${self.primListIdentifierWithExtra @separator [, ]} after]
-        [?before ${self.primListNumberWithExtra @separator [, ]} after]
-        [?before ${self.primListStringWithExtra @separator [, ]} after]
-        [?before ${self.primListBooleanWithExtra @separator [, ]} after]
+        [?before ${self.primListIdentifierWithExtra separator [, ]} after]
+        [?before ${self.primListNumberWithExtra separator [, ]} after]
+        [?before ${self.primListStringWithExtra separator [, ]} after]
+        [?before ${self.primListBooleanWithExtra separator [, ]} after]
     ]
 }
 
 PrimOptionalSeparator {
-    @projection normal [PrimOptionalSeparator
-        [?before ${self.primListIdentifierSeparator @separator [, ]} after]
-        [?before ${self.primListNumberSeparator @separator [, ]} after]
-        [?before ${self.primListStringSeparator @separator [, ]} after]
-        [?before ${self.primListBooleanSeparator @separator [, ]} after]
+     [PrimOptionalSeparator
+        [?before ${self.primListIdentifierSeparator separator [, ]} after]
+        [?before ${self.primListNumberSeparator separator [, ]} after]
+        [?before ${self.primListStringSeparator separator [, ]} after]
+        [?before ${self.primListBooleanSeparator separator [, ]} after]
     ]
 }
 
 PrimOptionalTerminator {
-    @projection normal [PrimOptionalTerminator
-        [?before ${self.primListIdentifierTerminator @terminator [! ]} after]
-        [?before ${self.primListNumberTerminator @terminator [! ]} after]
-        [?before ${self.primListStringTerminator @terminator [! ]} after]
-        [?before ${self.primListBooleanTerminator @terminator [! ]} after]
+     [PrimOptionalTerminator
+        [?before ${self.primListIdentifierTerminator terminator [! ]} after]
+        [?before ${self.primListNumberTerminator terminator [! ]} after]
+        [?before ${self.primListStringTerminator terminator [! ]} after]
+        [?before ${self.primListBooleanTerminator terminator [! ]} after]
     ]
 }
 
 PrimWith {
-    @projection normal [ PrimWithKeywordProj [?${self.primBoolean @keyword [<BOOL>]}] ]
+     [ PrimWithKeywordProj [?${self.primBoolean [<BOOL>]}] ]
 }
 // for limited concepts
 VisibilityKind {
-    @projection normal [
-        ${PUBLIC @keyword [+]}
-        ${PRIVATE @keyword [-]}
-        ${PROTECTED @keyword [#]}
+     [
+        ${PUBLIC [+]}
+        ${PRIVATE [-]}
+        ${PROTECTED [#]}
     ]
 }
 
 LimitedNonOptional {
-    @projection normal [
+     [
     LimitedNonOptional
     ${self.visibility} ;
-    ${self.visMulti @horizontal @separator[, ]} ;
+    ${self.visMulti horizontal separator[, ]} ;
     before ${self.visWithExtra} after ;
-    before ${self.visMultiWithExtra  @horizontal @separator[, ]} after ;
+    before ${self.visMultiWithExtra  horizontal separator[, ]} after ;
     ${self.other} ;
-    ${self.otherMulti @horizontal @separator[, ]} ;
+    ${self.otherMulti horizontal separator[, ]} ;
     ]
 }
 
 LimitedOptional {
-    @projection normal [
+     [
     LimitedOptional
     [?${self.visibility} ;]
-    [?${self.visMulti @horizontal @separator[, ]} ;]
+    [?${self.visMulti horizontal separator[, ]} ;]
     [?before ${self.visWithExtra} after ;]
-    [?before ${self.visMultiWithExtra  @horizontal @separator[, ]} after ;]
+    [?before ${self.visMultiWithExtra  horizontal separator[, ]} after ;]
     ]
 }
 
 // for part properties
 WithDirectParts { 
-    @projection normal [
+     [
     WithDirectParts part ${self.part}
 	[?optPart ${self.optPart}]
-	partList ${self.partList @horizontal @separator[, ]}
-	[?optList ${self.optList @horizontal @separator[, ]} ]
+	partList ${self.partList horizontal separator[, ]}
+	[?optList ${self.optList horizontal separator[, ]} ]
 	]
 }
 
 // for references
 RefsWithSeparator {
-    @projection normal [
-    ${self.partList @separator [!]}
-    [?${self.optList @separator [!!]}]
+     [
+    ${self.partList separator [!]}
+    [?${self.optList separator [!!]}]
     ]
 }

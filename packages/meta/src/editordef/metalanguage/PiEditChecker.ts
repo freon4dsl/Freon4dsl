@@ -21,7 +21,7 @@ import {
     PiEditProjectionLine,
     ListJoinType,
     PiEditLimitedProjection,
-    PiEditInstanceProjection, BoolKeywords
+    PiEditInstanceProjection, BoolKeywords, PiEditProjectionDirection
 } from "./PiEditDefLang";
 import { MetaLogger } from "../../utils";
 import { PiElementReference } from "../../languagedef/metalanguage";
@@ -109,8 +109,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 `Only the 'default' projectionGroup may define a standard Boolean projection ${this.location(projectionGroup)}.`);
             this.simpleCheck(!projectionGroup.standardReferenceSeparator,
                 `Only the 'default' projectionGroup may define a standard reference separator ${this.location(projectionGroup)}.`);
-            this.simpleCheck(!projectionGroup.extras,
-                `Only the 'default' projectionGroup may define trigger, symbols, and reference shortcuts ${this.location(projectionGroup)}.`);
+            // this.simpleCheck(!projectionGroup.extras,
+            //     `Only the 'default' projectionGroup may define trigger, symbols, and reference shortcuts ${this.location(projectionGroup)}.`);
         }
     }
 
@@ -221,9 +221,6 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     private checkListProperty(item: PiEditPropertyProjection, myProp: PiProperty) {
         LOGGER.log("checking list property projection: " + myProp?.name);
         if (!!item.listInfo) {
-            this.simpleCheck(!(myProp instanceof PiPrimitiveProperty),
-                `Only properties that are lists can be displayed as list or table ${this.location(item)}.`);
-            //
             if (item.listInfo.isTable) {
                 // remember this property - there should be a table projection for it - to be checked later
                 this.propsWithTableProjection.push(item);
@@ -239,6 +236,10 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         } else {
             //create default
             item.listInfo = new ListInfo();
+            item.listInfo.isTable = false;
+            item.listInfo.direction = PiEditProjectionDirection.Vertical;
+            item.listInfo.joinType = ListJoinType.Separator; // indicates that user has not inserted join info
+            item.listInfo.joinText = ", ";
         }
     }
 
@@ -359,9 +360,18 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                         if (!!item.boolInfo) {
                             // check whether the boolInfo is appropriate
                             this.checkBooleanPropertyProjection(item, myProp);
-                        } else if (myProp.isList) {
-                            // either create a default list projection or check the user defined one
-                            this.checkListProperty(item, myProp);
+                        } else if (!!item.listInfo) {
+                            this.nestedCheck({check: myProp.isList,
+                                error: `Only properties that are lists can be displayed as list or table ${this.location(item)}.`,
+                                whenOk: () => {
+                                    // either create a default list projection or check the user defined one
+                                    this.checkListProperty(item, myProp);
+                                }
+                            });
+                        } else {
+                            if (myProp.isList) {
+                                this.checkListProperty(item, myProp);
+                            }
                         }
                     }
                 });
