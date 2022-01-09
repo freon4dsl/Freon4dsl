@@ -33,6 +33,7 @@ import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil"
 export class ProjectionTemplate {
     private tableProjections: PiEditTableProjection[] = []; // holds all table projections during the generation
 
+    // TODO take super projections into account
     generateProjectionDefault(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
         // reset the table projections, then remember all table projections
         this.tableProjections = [];

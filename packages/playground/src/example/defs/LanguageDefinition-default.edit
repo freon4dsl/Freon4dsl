@@ -41,8 +41,8 @@ Parameter {
 
 MethodCallExpression {
     [CALL ${methodDefinition} ( ${args separator[,] } )]
-    trigger = "method"
     referenceShortcut = ${methodDefinition}
+    trigger = "method"
 }
 SumExpression {
     [sum from ${variable} = ${from} to ${to} of ${body}]

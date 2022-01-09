@@ -1,18 +1,17 @@
 import {
-    PiClassifier, PiInstance, PiLangElement,
+    PiClassifier, PiConcept, PiInstance, PiInterface,
     PiLangExpressionChecker,
     PiLanguage,
     PiLimitedConcept,
     PiPrimitiveProperty,
     PiPrimitiveType, PiProperty
 } from "../../languagedef/metalanguage";
-import { Checker, Names } from "../../utils";
+import { Checker, LangUtil, Names } from "../../utils";
 import {
     ListInfo,
     PiEditClassifierProjection,
     PiEditProjection,
     PiEditProjectionGroup,
-    PiEditProjectionText,
     PiEditPropertyProjection,
     PiEditSuperProjection,
     PiEditTableProjection,
@@ -22,18 +21,19 @@ import {
     PiEditProjectionLine,
     ListJoinType,
     PiEditLimitedProjection,
-    PiEditInstanceProjection
+    PiEditInstanceProjection, BoolKeywords
 } from "./PiEditDefLang";
-import { MetaLogger } from "../../utils/MetaLogger";
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { MetaLogger } from "../../utils";
+import { PiElementReference } from "../../languagedef/metalanguage";
 
-const LOGGER = new MetaLogger("PiEditChecker"); // .mute();
+const LOGGER = new MetaLogger("PiEditChecker").mute();
 
 export class PiEditChecker extends Checker<PiEditUnit> {
     myExpressionChecker: PiLangExpressionChecker;
     private propsWithTableProjection: PiEditPropertyProjection[] = [];
     private toBeRemoved: PiEditClassifierProjection[] = []; // to be removed after checking !!
     private toBeAdded: PiEditLimitedProjection[] = []; // limited projections to be added after checking
+
 
     constructor(language: PiLanguage) {
         super(language);
@@ -46,6 +46,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
      * @param editUnit
      */
     public check(editUnit: PiEditUnit): void {
+        LOGGER.log("checking editUnit");
         if (this.language === null || this.language === undefined) {
             throw new Error(`Editor definition checker does not known the language.`);
         }
@@ -56,7 +57,6 @@ export class PiEditChecker extends Checker<PiEditUnit> {
 
         for (const group of editUnit.projectiongroups) {
             this.checkProjectionGroup(group);
-            this.removeLimitedProjections(group);
         }
         this.checkPropsWithTableProjection(editUnit);
         this.simpleWarning(!editUnit.getDefaultProjectiongroup(),
@@ -65,13 +65,30 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkProjectionGroup(projectionGroup: PiEditProjectionGroup) {
+        LOGGER.log("checking projectionGroup " + projectionGroup?.name);
         this.simpleCheck(!!projectionGroup.name, `Editor should have a name, it is empty ${this.location(projectionGroup)}.`);
         for (const projection of projectionGroup.projections) {
-            this.checkProjection(projection, projectionGroup);
+            this.checkProjection(projection);
             projection.name = projectionGroup.name;
         }
+        let allTriggers: string[] = [];
+        let allSymbols: string[] = [];
         for (const other of projectionGroup.extras) {
             this.checkExtras(other);
+            this.nestedCheck({
+                check: !other.trigger || !allTriggers.includes(other.trigger) ,
+                error: `Trigger ${other.trigger} is not unique ${this.location(other)}.`,
+                whenOk: () => {
+                    allTriggers.push(other.trigger);
+                }
+            });
+            this.nestedCheck({
+                check: !other.symbol || !allSymbols.includes(other.symbol),
+                error: `Symbol ${other.symbol} is not unique ${this.location(other)}.`,
+                whenOk: () => {
+                    allSymbols.push(other.symbol)
+                }
+            });
         }
         // remove 'normal' projections for limited concepts from the group,
         // and add the projections of type PiEditLimitedProjection
@@ -82,18 +99,21 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             }
             projectionGroup.projections.push(...this.toBeAdded);
         } else  {
-            console.log("internal error: number of limited projections does not match number of projections to be removed.");
+            console.error("internal error: number of limited projections does not match number of projections to be removed.");
         }
-        // only 'default' projectionGroup may define standardBooleanProjection and referenceSeparator
+        // only 'default' projectionGroup may define standardBooleanProjection, referenceSeparator, and extras
         if (projectionGroup.name != Names.defaultProjectionName){
             this.simpleCheck(!!projectionGroup.standardBooleanProjection,
                 `Only the 'default' projectionGroup may define a standard Boolean projection ${this.location(projectionGroup)}.`);
             this.simpleCheck(!!projectionGroup.standardReferenceSeparator,
                 `Only the 'default' projectionGroup may define a standard reference separator ${this.location(projectionGroup)}.`);
+            this.simpleCheck(!!projectionGroup.extras,
+                `Only the 'default' projectionGroup may define trigger, symbols, and reference shortcuts ${this.location(projectionGroup)}.`);
         }
     }
 
-    private checkProjection(projection: PiEditClassifierProjection, group: PiEditProjectionGroup) {
+    private checkProjection(projection: PiEditClassifierProjection) {
+        LOGGER.log("checking projection for " + projection.classifier?.name);
         const myClassifier: PiClassifier = projection.classifier.referred;
         this.nestedCheck({
             check: !!myClassifier,
@@ -122,6 +142,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkNormalProjection(projection: PiEditProjection, cls: PiClassifier) {
+        LOGGER.log("checking normal projection ");
         if (!!projection) {
             projection.lines.forEach(line => {
                 this.checkLine(line, cls);
@@ -130,19 +151,18 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkLine(line: PiEditProjectionLine, cls: PiClassifier) {
-        line.items.forEach((item, index) => {
-            if (item instanceof PiEditProjectionText) {
-                // TODO ???
-            } else if (item instanceof PiEditPropertyProjection) {
+        // LOGGER.log("checking line ");
+        line.items.forEach(item => {
+            if (item instanceof PiEditPropertyProjection) {
                 this.checkPropProjection(item, cls);
             } else if (item instanceof PiEditSuperProjection) {
-                this.checkSuperProjection(item, cls, false);
+                this.checkSuperProjection(item, cls);
             }
         });
     }
 
     private checkTableProjection(projection: PiEditTableProjection, cls: PiClassifier) {
-        // TODO see which checks are actually useful
+        LOGGER.log("checking table projection for " + cls?.name);
         if (!!projection) {
             this.nestedCheck({
                 check: projection.cells.length > 0,
@@ -160,9 +180,10 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private createLimitedPropertyProjection(projection: PiEditPropertyProjection, cls: PiLimitedConcept): PiEditInstanceProjection {
+        LOGGER.log("creating projection for limited property");
         // an instance of a limited concept can (!) have an alternative projection: "${INSTANCE [text]}"
         // this alternative is being checked in this method
-        let myProj: PiEditInstanceProjection = new PiEditInstanceProjection();
+        let myProj: PiEditInstanceProjection = null;
 
         if (!!projection.expression && !!projection.expression.appliedfeature) {
             const myinstance = cls.findInstance(projection.expression.appliedfeature.sourceName);
@@ -171,28 +192,34 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 error: `Cannot find instance ${projection.expression.appliedfeature.sourceName} of limited concept ${cls.name} ${this.location(projection)}`,
                 whenOk: () => {
                     this.simpleCheck(
-                        !this.includesWhitespace(projection.boolInfo.trueKeyword),
+                        !PiEditChecker.includesWhitespace(projection.boolInfo.trueKeyword),
                         `The text for a keyword projection should not include any whitespace ${this.location(projection)}.`);
+                    myProj = new PiEditInstanceProjection();
+                    myProj.instance = PiElementReference.create<PiInstance>(myinstance, "PiInstance");
+                    myProj.instance.owner = cls.language;
+                    this.simpleWarning(!projection.boolInfo.falseKeyword,
+                        `Projection for limited instance may have one keyword, second keyword will be ignored ${this.location(projection.boolInfo)}`);
+                    myProj.keyword = projection.boolInfo;
+                    myProj.keyword.falseKeyword = null;
                 }
             });
-            myProj.instance = PiElementReference.create<PiInstance>(myinstance, "PiInstance");
-            myProj.instance.owner = cls.language;
-            myProj.keyword = projection.boolInfo;
             return myProj;
         } else {
             return null;
         }
     }
 
-    private checkBooleanPropertyProjection(item: PiEditPropertyProjection, myProp: PiProperty, cls: PiClassifier) {
+    private checkBooleanPropertyProjection(item: PiEditPropertyProjection, myProp: PiProperty) {
+        LOGGER.log("checking boolean property projection: " + myProp?.name);
         this.simpleCheck(myProp instanceof PiPrimitiveProperty && myProp.type.referred === PiPrimitiveType.boolean,
             `Property '${myProp.name}' may not have a keyword projection, because it is not of boolean type ${this.location(item)}.`);
-        this.simpleCheck(!this.includesWhitespace(item.boolInfo.trueKeyword), `The text for a keyword projection should not include any whitespace ${this.location(item)}.`);
+        this.simpleCheck(!PiEditChecker.includesWhitespace(item.boolInfo.trueKeyword), `The text for a keyword projection should not include any whitespace ${this.location(item)}.`);
     }
 
-    private checkListProperty(item: PiEditPropertyProjection, myprop: PiProperty, cls: PiClassifier) {
+    private checkListProperty(item: PiEditPropertyProjection, myProp: PiProperty) {
+        LOGGER.log("checking list property projection: " + myProp?.name);
         if (!!item.listInfo) {
-            this.simpleCheck(!(myprop instanceof PiPrimitiveProperty),
+            this.simpleCheck(!(myProp instanceof PiPrimitiveProperty),
                 `Only properties that are lists can be displayed as list or table ${this.location(item)}.`);
             //
             if (item.listInfo.isTable) {
@@ -213,25 +240,29 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkSingleProperty(item: PiEditPropertyProjection, myProp: PiProperty, cls: PiClassifier) {
-        if (!(myProp instanceof PiPrimitiveProperty) && myProp.isList) {
-            // TODO
-        }
-    }
-
-    private checkSuperProjection(item: PiEditSuperProjection, cls: PiClassifier, b: boolean) {
+    private checkSuperProjection(item: PiEditSuperProjection, cls: PiClassifier) {
+        LOGGER.log("checking super projection: " + cls?.name);
         const myParent = item.superRef.referred;
         this.nestedCheck({
             check: !!myParent,
             error: `Cannot find "${item.superRef.name}" ${this.location(item)}`,
             whenOk: () => {
                 // see if myParent is indeed one of the implemented interfaces or a super concept
-                // TODO
+                if (myParent instanceof PiConcept) {
+                    const mySupers = LangUtil.superConcepts(cls);
+                    this.simpleCheck(!!mySupers.find(superCl => superCl === myParent),
+                        `Concept ${myParent.name} is not a base concept of ${cls.name} ${this.location(item.superRef)}.`);
+                } else if (myParent instanceof PiInterface) {
+                    const mySupers = LangUtil.superInterfaces(cls);
+                    this.simpleCheck(!!mySupers.find(superCl => superCl === myParent),
+                        `Interface ${myParent.name} is not implemented by ${cls.name} ${this.location(item.superRef)}.`);
+                }
             }
         });
     }
 
     private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: PiClassifier) {
+        LOGGER.log("checking optional projection for " + cls?.name);
         const propProjections: PiEditPropertyProjection[] = [];
         item.lines.forEach(line => {
             this.checkLine(line, cls);
@@ -250,6 +281,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkExtras(other: ExtraClassifierInfo) {
+        LOGGER.log("checking extra info on classifier " + other.classifier?.name);
         // check the reference shortcut and change the expression into a reference to a property
         if (!!other.referenceShortcutExp) {
             this.myExpressionChecker.checkLangExp(other.referenceShortcutExp, other.classifier.referred);
@@ -260,11 +292,24 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 other.referenceShortCut.owner = this.language;
             }
         }
-        // TODO check the trigger
-        // TODO check the symbol
+        if (!!other.trigger) {
+            if (other.trigger === "ERROR") {
+                this.simpleCheck(false,
+                    `A trigger may not be an empty string ${this.location(other)}`);
+                other.trigger = null;
+            }
+        }
+        if (!!other.symbol) {
+            if (other.symbol === "ERROR") {
+                this.simpleCheck(false,
+                    `A symbol may not be an empty string ${this.location(other)}`);
+                other.symbol = null;
+            }
+        }
     }
 
     private resolveReferences(editorDef: PiEditUnit) {
+        LOGGER.log("resolving references ");
         for (const group of editorDef.projectiongroups) {
             for (const proj of group.projections) {
                 proj.classifier.owner = this.language;
@@ -276,7 +321,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkPropsWithTableProjection(editor: PiEditUnit) {
-        const tabelProjections: PiEditTableProjection[] = editor.allTableProjections();
+        LOGGER.log("checking properties that have a TableProjection");
         for (const projection of this.propsWithTableProjection) {
             const myprop = projection.property.referred;
             const propEditor = editor.findTableProjectionForType(myprop.type.referred);
@@ -292,6 +337,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkPropProjection(item: PiEditPropertyProjection, cls: PiClassifier) {
+        LOGGER.log("checking property projection for " + cls?.name);
         if (item instanceof PiOptionalPropertyProjection) {
             this.checkOptionalProjection(item, cls);
         } else {
@@ -308,45 +354,46 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                         // check the rest
                         if (!!item.boolInfo) {
                             // check whether the boolInfo is appropriate
-                            this.checkBooleanPropertyProjection(item, myProp, cls);
+                            this.checkBooleanPropertyProjection(item, myProp);
                         } else if (myProp.isList) {
                             // either create a default list projection or check the user defined one
-                            this.checkListProperty(item, myProp, cls);
-                        } else {
-                            // check all other issues
-                            this.checkSingleProperty(item, myProp, cls);
+                            this.checkListProperty(item, myProp);
                         }
                     }
                 });
-            } else {
-                // TODO
             }
         }
     }
 
-    private includesWhitespace(keyword: string) {
+    private static includesWhitespace(keyword: string) {
         return keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r") || keyword.includes("\t");
     }
 
     private createAndCheckLimitedProjection(projection: PiEditProjection, myClassifier: PiLimitedConcept): PiEditLimitedProjection {
+        LOGGER.log("creating limited projection for " + myClassifier?.name);
         let myLim: PiEditLimitedProjection = new PiEditLimitedProjection();
         myLim.classifier = projection.classifier;
         projection.lines.forEach(line => {
-            line.items.forEach((item, index) => {
+            line.items.forEach(item=> {
                 if (item instanceof PiEditPropertyProjection) {
                     myLim.instanceProjections.push(this.createLimitedPropertyProjection(item, myClassifier));
                 }
             })
         });
-        // TODO all instances should be projected by a keyword or none at all
-        // TODO table projection may not be used for limited concept
-        // TODO projection for limited concept may have 1 keyword, not 2
+        for (const inst of myClassifier.instances) {
+            const found = myLim.instanceProjections.find(p => p.instance.referred === inst);
+            this.simpleWarning(!!found, `No keyword projection defined for ${inst.name}, using its name in capitals instead ${this.location(projection)}.`);
+            // create the missing instance projection
+            if (!found) {
+                let myProj: PiEditInstanceProjection = new PiEditInstanceProjection();
+                myProj.instance = PiElementReference.create<PiInstance>(inst, "PiInstance");
+                myProj.instance.owner = myClassifier.language;
+                myProj.keyword = new BoolKeywords();
+                myProj.keyword.trueKeyword = inst.name.toUpperCase();
+                myLim.instanceProjections.push(myProj);
+            }
+        }
         return myLim;
-    }
-
-    private removeLimitedProjections(group: PiEditProjectionGroup) {
-        // TODO
-        this.toBeRemoved = [];
     }
 
     private copyReference(reference: PiElementReference<PiProperty>): PiElementReference<PiProperty> {

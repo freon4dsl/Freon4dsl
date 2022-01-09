@@ -44,7 +44,7 @@ standardReferenceSeparator = "referenceSeparator" projection_begin t:textBut pro
 classifierProjection =
             classifier:classifierReference curly_begin ws
                 projections:projectionChoice?
-                extras: extraClassifierInfo
+                extras: extraClassifierInfo?
             curly_end
 {
     return creator.createParsedClassifier({
@@ -72,18 +72,89 @@ projectionChoice = p:projection t:tableProjection?
     };
 }
 
-extraClassifierInfo =
-                trigger:trigger?
-                referenceShortcut:referenceShortcut?
-                symbol:symbol?
+/* rules that make order of extra info flexible */
+extraClassifierInfo = trigger:trigger
+              sub:extraChoiceSub1?
 {
     return creator.createClassifierInfo({
-        "trigger"          : trigger,
-        "referenceShortcutExp": referenceShortcut,
-        "symbol"           : symbol,
-        "location"         : location()
+        "trigger"               : trigger,
+        "referenceShortcutExp"  : !!sub ? sub["referenceShortcut"] : null,
+        "symbol"                : !!sub ? sub["symbol"] : null,
+        "location"      : location()
     });
 }
+    / symbol:symbol
+      sub:extraChoiceSub2?
+{
+    return creator.createClassifierInfo({
+        "trigger"               : !!sub ? sub["trigger"] : null,
+        "referenceShortcutExp"  : !!sub ? sub["referenceShortcut"] : null,
+        "symbol"                : symbol,
+        "location"      : location()
+    });
+}
+    / referenceShortcut:referenceShortcut
+      sub:extraChoiceSub3?
+{
+    return creator.createClassifierInfo({
+        "trigger"               : !!sub ? sub["trigger"] : null,
+        "referenceShortcutExp"  : referenceShortcut,
+        "symbol"                : !!sub ? sub["symbol"] : null,
+        "location"      : location()
+    });
+}
+
+extraChoiceSub1 = referenceShortcut:referenceShortcut
+                  symbol:symbol?
+{
+    return {
+        "referenceShortcut"   : referenceShortcut,
+        "symbol"   : symbol,
+    };
+}
+    / symbol:symbol
+      referenceShortcut:referenceShortcut?
+{
+    return {
+        "referenceShortcut"   : referenceShortcut,
+        "symbol"   : symbol,
+    };
+}
+
+extraChoiceSub2 = referenceShortcut:referenceShortcut
+                  trigger:trigger?
+{
+    return {
+        "referenceShortcut"   : referenceShortcut,
+        "trigger"  : trigger
+    };
+}
+    / trigger:trigger
+      referenceShortcut:referenceShortcut?
+{
+    return {
+        "referenceShortcut"   : referenceShortcut,
+        "trigger"  : trigger
+    };
+}
+
+extraChoiceSub3 = symbol:symbol
+                  trigger:trigger?
+{
+    return {
+        "symbol"   : symbol,
+        "trigger"  : trigger
+    };
+}
+    / trigger:trigger
+      symbol:symbol?
+{
+    return {
+        "symbol"   : symbol,
+        "trigger"  : trigger
+    };
+}
+/* END of rules that make order of extra info flexible */
 
 projection = projection_begin lines:lineWithOptional* projection_end
 {
@@ -228,9 +299,9 @@ listInfoType = joinType:("separator" / "terminator" / "initiator") ws
     return creator.createJoinType( {"type": joinType, "location": location() } );
 }
 
-trigger = "trigger" ws equals_separator ws "\"" value:string "\"" ws
+trigger = "trigger" ws equals_separator ws "\"" triggerValue:string "\"" ws
 {
-    return value;
+    return !!triggerValue ? triggerValue : "ERROR";
 }
 
 referenceShortcut = "referenceShortcut" ws equals_separator ws propProjectionStart ws "self."? exp:var propProjectionEnd ws
@@ -238,9 +309,9 @@ referenceShortcut = "referenceShortcut" ws equals_separator ws propProjectionSta
     return creator.createSelfExp(exp);
 }
 
-symbol = "symbol" ws equals_separator ws "\"" value:string "\"" ws
+symbol = "symbol" ws equals_separator ws "\"" symbolValue:string "\"" ws
 {
-    return value;
+    return !!symbolValue ? symbolValue : "ERROR";
 }
 
 priority = "priority" ws ":" ws "\"" value:string "\"" ws
