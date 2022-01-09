@@ -86,6 +86,7 @@ function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEdit
                 if (!!proj.classifier) {
                     proj.classifierInfo.classifier = proj.classifier;
                 }
+                result.extras = [];
                 result.extras.push(proj.classifierInfo);
             }
         }

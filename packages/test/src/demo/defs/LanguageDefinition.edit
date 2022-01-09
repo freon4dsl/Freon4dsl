@@ -107,15 +107,13 @@ DemoModel {
         types:
             ${self.types
                 vertical
-                terminator [\n\n]
             }
         entities:
             ${self.entities
                 vertical
-                terminator [\n\n]
             }
         model wide functions:
-            ${self.functions horizontal separator [\n] }
+            ${self.functions horizontal }
         }
         ]
 }

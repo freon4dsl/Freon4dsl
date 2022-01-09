@@ -8,6 +8,7 @@ import {
     PiProperty
 } from "../../languagedef/metalanguage";
 import {
+    BoolKeywords,
     ExtraClassifierInfo,
     ListInfo,
     ListJoinType,
@@ -35,7 +36,9 @@ export class PiEditProjectionUtil {
         if (defaultGroup === null || defaultGroup === undefined) {
             defaultGroup = new PiEditProjectionGroup();
             defaultGroup.name = Names.defaultProjectionName;
-            // standardBooleanProjection and standardReferenceSeparator get default values on initialization
+            defaultGroup.standardBooleanProjection = new BoolKeywords();
+            defaultGroup.standardReferenceSeparator = ".";
+            defaultGroup.extras = [];
         }
 
         // add defaults for binary expressions

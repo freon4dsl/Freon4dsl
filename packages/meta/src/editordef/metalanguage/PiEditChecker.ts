@@ -71,24 +71,26 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             this.checkProjection(projection);
             projection.name = projectionGroup.name;
         }
-        let allTriggers: string[] = [];
-        let allSymbols: string[] = [];
-        for (const other of projectionGroup.extras) {
-            this.checkExtras(other);
-            this.nestedCheck({
-                check: !other.trigger || !allTriggers.includes(other.trigger) ,
-                error: `Trigger ${other.trigger} is not unique ${this.location(other)}.`,
-                whenOk: () => {
-                    allTriggers.push(other.trigger);
-                }
-            });
-            this.nestedCheck({
-                check: !other.symbol || !allSymbols.includes(other.symbol),
-                error: `Symbol ${other.symbol} is not unique ${this.location(other)}.`,
-                whenOk: () => {
-                    allSymbols.push(other.symbol)
-                }
-            });
+        if (!!projectionGroup.extras) {
+            let allTriggers: string[] = [];
+            let allSymbols: string[] = [];
+            for (const other of projectionGroup.extras) {
+                this.checkExtras(other);
+                this.nestedCheck({
+                    check: !other.trigger || !allTriggers.includes(other.trigger),
+                    error: `Trigger ${other.trigger} is not unique ${this.location(other)}.`,
+                    whenOk: () => {
+                        allTriggers.push(other.trigger);
+                    }
+                });
+                this.nestedCheck({
+                    check: !other.symbol || !allSymbols.includes(other.symbol),
+                    error: `Symbol ${other.symbol} is not unique ${this.location(other)}.`,
+                    whenOk: () => {
+                        allSymbols.push(other.symbol)
+                    }
+                });
+            }
         }
         // remove 'normal' projections for limited concepts from the group,
         // and add the projections of type PiEditLimitedProjection
@@ -102,12 +104,12 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             console.error("internal error: number of limited projections does not match number of projections to be removed.");
         }
         // only 'default' projectionGroup may define standardBooleanProjection, referenceSeparator, and extras
-        if (projectionGroup.name != Names.defaultProjectionName){
-            this.simpleCheck(!!projectionGroup.standardBooleanProjection,
+        if (projectionGroup.name !== Names.defaultProjectionName){
+            this.simpleCheck(!projectionGroup.standardBooleanProjection,
                 `Only the 'default' projectionGroup may define a standard Boolean projection ${this.location(projectionGroup)}.`);
-            this.simpleCheck(!!projectionGroup.standardReferenceSeparator,
+            this.simpleCheck(!projectionGroup.standardReferenceSeparator,
                 `Only the 'default' projectionGroup may define a standard reference separator ${this.location(projectionGroup)}.`);
-            this.simpleCheck(!!projectionGroup.extras,
+            this.simpleCheck(!projectionGroup.extras,
                 `Only the 'default' projectionGroup may define trigger, symbols, and reference shortcuts ${this.location(projectionGroup)}.`);
         }
     }
@@ -314,8 +316,10 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             for (const proj of group.projections) {
                 proj.classifier.owner = this.language;
             }
-            for (const proj of group.extras) {
-                proj.classifier.owner = this.language;
+            if (!!group.extras) {
+                for (const proj of group.extras) {
+                    proj.classifier.owner = this.language;
+                }
             }
         }
     }

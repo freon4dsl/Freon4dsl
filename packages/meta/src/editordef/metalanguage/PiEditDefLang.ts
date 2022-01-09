@@ -100,10 +100,10 @@ export class BoolKeywords extends PiDefinitionElement {
  */
 export class PiEditProjectionGroup extends PiDefinitionElement {
     name: string = null;
-    standardBooleanProjection: BoolKeywords = new BoolKeywords();
-    standardReferenceSeparator: string = ".";
+    standardBooleanProjection: BoolKeywords = null;
+    standardReferenceSeparator: string = null;
     projections: PiEditClassifierProjection[] = [];
-    extras: ExtraClassifierInfo[] = [];
+    extras: ExtraClassifierInfo[] = null;
 
     findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
         return this.projections.find(con => con.classifier.referred === cls);
