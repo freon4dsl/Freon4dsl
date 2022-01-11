@@ -100,7 +100,7 @@ export class EditorDefaultsGenerator {
         for (const binConcept of editor.language.concepts.filter(c => c instanceof PiBinaryExpressionConcept)) {
             let projection: PiEditClassifierProjection = defaultGroup.findProjectionForType(binConcept);
             if (projection === null || projection === undefined) {
-                // console.log("Adding brand editor for " + binConcept.unitName);
+                // console.log("Adding projection for " + binConcept.name);
                 projection = new PiEditProjection();
                 projection.name = Names.defaultProjectionName;
                 projection.classifier = PiElementReference.create<PiBinaryExpressionConcept>(

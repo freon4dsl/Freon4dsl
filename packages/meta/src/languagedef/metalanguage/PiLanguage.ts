@@ -330,14 +330,7 @@ export class PiExpressionConcept extends PiConcept {
 export class PiBinaryExpressionConcept extends PiExpressionConcept {
     // left: PiExpressionConcept;
     // right: PiExpressionConcept;
-    // TODO move to editor
-    symbol: string;
     priority: number;
-
-    getSymbol(): string {
-        const p = this.symbol;
-        return (!!p ? p : "undefined");
-    }
 
     getPriority(): number {
         const p = this.priority;

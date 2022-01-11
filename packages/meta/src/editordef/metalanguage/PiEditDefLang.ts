@@ -101,10 +101,10 @@ export class BoolKeywords extends PiDefinitionElement {
  */
 export class PiEditProjectionGroup extends PiDefinitionElement {
     name: string = null;
-    standardBooleanProjection: BoolKeywords = null;
-    standardReferenceSeparator: string = null;
     projections: PiEditClassifierProjection[] = [];
-    extras: ExtraClassifierInfo[] = null;
+    standardBooleanProjection: BoolKeywords = null; // may only be present in default group
+    standardReferenceSeparator: string = null;      // may only be present in default group
+    extras: ExtraClassifierInfo[] = null;           // may only be present in default group
 
     findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
         return this.projections.find(con => con.classifier.referred === cls);
@@ -229,6 +229,11 @@ export class ExtraClassifierInfo extends PiDefinitionElement {
 
     set trigger(value: string) {
         this._trigger = value;
+    }
+
+    getSymbol(): string {
+        const p = this.symbol;
+        return (!!p ? p : "undefined");
     }
 
     toString(): string {

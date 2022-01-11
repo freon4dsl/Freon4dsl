@@ -26,7 +26,7 @@ import {
     PiEditPropertyProjection,
     PiOptionalPropertyProjection,
     PiEditUnit,
-    PiEditTableProjection, PiEditClassifierProjection, PiEditProjectionItem
+    PiEditTableProjection, PiEditClassifierProjection, PiEditProjectionItem, PiEditLimitedProjection
 } from "../../metalanguage";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
@@ -57,10 +57,11 @@ export class ProjectionTemplate {
         // TODO add interfaces as well?
         allClassifiers.push(...language.concepts);
 
-        const nonBinaryClassifiers: PiClassifier[] = allClassifiers.filter(c => !(c instanceof PiBinaryExpressionConcept));
+        // both binary expressions and limited concepts are treated differently
+        const normalClassifiers: PiClassifier[] = allClassifiers.filter(c => !(c instanceof PiBinaryExpressionConcept) && !(c instanceof PiLimitedConcept));
         const binaryClassifiers: PiClassifier[] = allClassifiers.filter(c => c instanceof PiBinaryExpressionConcept);
 
-        const nonBinaryConceptsWithProjection = nonBinaryClassifiers.filter(c => {
+        const normalConceptsWithProjection = normalClassifiers.filter(c => {
             const editor = editorDef.findProjectionForType(c);
             return !!editor;
         });
@@ -119,7 +120,7 @@ export class ProjectionTemplate {
                     }
 
                     switch( exp.piLanguageConcept() ) {
-                        ${nonBinaryClassifiers.map(c => `
+                        ${normalClassifiers.map(c => `
                         case "${Names.classifier(c)}" : return this.${Names.projectionFunction(c)} (exp as ${Names.classifier(c)});`
                         ).join("  ")}
                         ${binaryClassifiers.map(c =>
@@ -138,7 +139,7 @@ export class ProjectionTemplate {
                      return null;
                 }              
 
-                ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findProjectionForType(c))).join("\n")}
+                ${normalConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findProjectionForType(c))).join("\n")}
 
                 /**
                  *  Create a standard binary box to ensure binary expressions can be edited easily
@@ -164,8 +165,8 @@ export class ProjectionTemplate {
 
     private generateUserProjection(language: PiLanguage, concept: PiClassifier, projection: PiEditClassifierProjection) {
         // TODO for now: do not do anything for a limited concept
-        if (projection.classifier instanceof PiLimitedConcept) {
-            return '';
+        if (projection instanceof PiEditLimitedProjection) {
+            return ``;
         }
 
         if (projection instanceof PiEditProjection) {

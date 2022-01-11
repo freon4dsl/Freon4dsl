@@ -9,7 +9,7 @@ import {
 } from "../../utils";
 import {
     PiBinaryExpressionConcept, PiClassifier,
-    PiConcept,
+    PiConcept, PiInterface,
     PiLanguage, PiLimitedConcept,
     PiPrimitiveProperty,
     PiProperty
@@ -26,7 +26,7 @@ import {
     PiEditClassifierProjection,
     PiEditLimitedProjection,
     PiEditInstanceProjection,
-    PiOptionalPropertyProjection
+    PiOptionalPropertyProjection, ExtraClassifierInfo
 } from "../../editordef/metalanguage";
 import { PiPrimitiveType } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
@@ -41,7 +41,7 @@ export class WriterTemplate {
     public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
         let defaultGroup: PiEditProjectionGroup = editDef.getDefaultProjectiongroup();
 
-        const allLangConcepts: string = Names.allConcepts(language);
+        const allLangConceptsName: string = Names.allConcepts(language);
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
         let limitedConcepts: PiLimitedConcept[] = [];
@@ -56,11 +56,20 @@ export class WriterTemplate {
                 limitedConcepts.push(myConcept);
             }
         }
+        // TODO maybe replace the above with editDef.language.concepts.filter(c => c instanceof PiLimitedConcept) ???
+
+        const binaryExtras: ExtraClassifierInfo[] = [];
+        for (const conceptDef of defaultGroup.extras) {
+            const myConcept: PiClassifier = conceptDef.classifier.referred;
+            if (myConcept instanceof PiBinaryExpressionConcept && !myConcept.isAbstract) {
+                binaryExtras.push(conceptDef);
+            }
+        }
 
         // Template starts here
         return `
         import { ${Names.PiNamedElement}, ${writerInterfaceName} } from "${PROJECTITCORE}";
-        import { ${allLangConcepts}, ${Names.PiElementReference}, ${language.units.map(concept => `
+        import { ${allLangConceptsName}, ${Names.PiElementReference}, ${language.units.map(concept => `
                 ${Names.classifier(concept)}`).join(", ")},
             ${language.concepts.map(concept => `
                     ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
@@ -96,7 +105,7 @@ export class WriterTemplate {
              * @param startIndent
              * @param short
              */
-            public writeToString(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean) : string {
+            public writeToString(modelelement: ${allLangConceptsName}, startIndent?: number, short?: boolean) : string {
                 this.writeToLines(modelelement, startIndent, short);
                 return \`\$\{this.output.map(line => \`\$\{line\}\`).join("\\n").trimRight()}\`;
             }
@@ -111,7 +120,7 @@ export class WriterTemplate {
              * @param startIndent
              * @param short
              */
-            public writeToLines(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean): string[] {
+            public writeToLines(modelelement: ${allLangConceptsName}, startIndent?: number, short?: boolean): string[] {
                 // set default for optional parameters
                 if (startIndent === undefined) {
                     startIndent = 0;
@@ -143,11 +152,11 @@ export class WriterTemplate {
              *
              * @param modelelement
              */
-            public writeNameOnly(modelelement: ${allLangConcepts}): string {
+            public writeNameOnly(modelelement: ${allLangConceptsName}): string {
                 ${this.makeWriteOnly(language)}
             }
         
-            private unparse(modelelement: ${allLangConcepts}, short: boolean) {
+            private unparse(modelelement: ${allLangConceptsName}, short: boolean) {
                 ${elementsToUnparse.map((concept, index) => `
                 ${index == 0 ? `` : `} else ` }if (modelelement instanceof ${Names.classifier(concept)}) {
                     this.unparse${Names.classifier(concept)}(modelelement, short);`).join("")}
@@ -155,6 +164,7 @@ export class WriterTemplate {
             }
 
             ${defaultGroup.projections.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
+            ${binaryExtras.map(bin => `${this.makeBinaryExpMethod(bin)}`).join("\n")}
             // TODO add method(s) for limited concepts that have no projection
              
             /**
@@ -190,7 +200,7 @@ export class WriterTemplate {
              * @param indent
              * @param short
              */         
-            private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
+            private unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
                     const isLastInList: boolean = index === list.length - 1;
                     this.unparse(listElem, short);
@@ -321,24 +331,13 @@ export class WriterTemplate {
      */
     private makeConceptMethod (conceptDef: PiEditClassifierProjection): string {
         const myConcept: PiClassifier = conceptDef.classifier.referred;
-        if (myConcept instanceof PiLimitedConcept && conceptDef instanceof PiEditLimitedProjection) {
+        if (conceptDef instanceof PiEditLimitedProjection && myConcept instanceof PiLimitedConcept) {
             return this.makeLimitedMethod(conceptDef, myConcept);
         } else if (conceptDef instanceof PiEditProjection) {
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
                 return this.makeAbstractMethod(myConcept);
-            } else if (myConcept instanceof PiBinaryExpressionConcept ) {
-                // return this.makeBinaryExpMethod(myConcept);
-                // TODO add these elsewhere
-                // if (myConcept instanceof PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
-                //     return `${comment}
-                //     private unparse${name}(modelelement: ${name}, short: boolean) {
-                //         //this.output[this.currentLine] += "( ";
-                //         this.unparse(modelelement.left, short);
-                //         this.output[this.currentLine] += "${conceptDef.symbol} ";
-                //         this.unparse(modelelement.right, short);
-                //         //this.output[this.currentLine] += ") ";
-                // }`;
-                // }
+            } else if (myConcept instanceof PiBinaryExpressionConcept || myConcept instanceof PiInterface) {
+                // do nothing, binary expressions and interfaces are treated differently
             } else {
                 return this.makeNormalMethod(conceptDef, myConcept);
             }
@@ -597,15 +596,16 @@ export class WriterTemplate {
         let result: string = "";
         const type = myElem.type.referred;
         if (!!type) {
-            let myTypeScript: string = propertyToTypeScript(item.property.referred);
             if (myElem.isList) {
                 if (!!item.listInfo && !item.listInfo.isTable) { // it is a list not table
                     const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
                     const joinType = this.getJoinType(item);
                     if (joinType.length > 0) {
                         if (myElem.isPart) {
+                            let myTypeScript: string = propertyToTypeScript(item.property.referred);
                             result += `this.unparseList(${myTypeScript}, "${item.listInfo.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
                         } else {
+                            let myTypeScript: string = propertyToTypeScriptWithoutReferred(item.property.referred);
                             result += `this.unparseReferenceList(${myTypeScript}, "${item.listInfo.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
                         }
                     }
@@ -614,13 +614,12 @@ export class WriterTemplate {
                 }
             } else {
                 let myCall: string = "";
+                let myTypeScript: string = "";
                 if (myElem.isPart) {
+                    myTypeScript = propertyToTypeScript(item.property.referred);
                     myCall += `this.unparse(${myTypeScript}, short) `;
                 } else {
-                    // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
-                    // remove only the last ".referred"
-                    myTypeScript = this.removeLastReferred(myTypeScript);
-                    // end hack
+                    myTypeScript = propertyToTypeScriptWithoutReferred(item.property.referred);
                     myCall += `this.unparseReference(${myTypeScript}, short);`;
                     // if (type instanceof PiLimitedConcept) {
                     //     myCall += `this.unparse${type.name}(${myTypeScript}, short);`;
@@ -636,15 +635,6 @@ export class WriterTemplate {
             }
         }
         return result + ";\n";
-    }
-
-    private removeLastReferred(myTypeScript: string) {
-        if (myTypeScript.endsWith("?.referred")) {
-            myTypeScript = myTypeScript.substring(0, myTypeScript.length - 10);
-        } else if (myTypeScript.endsWith(".referred")) {
-            myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
-        }
-        return myTypeScript;
     }
 
     /**
@@ -701,5 +691,21 @@ export class WriterTemplate {
         } else {
             return `${shortUnparsing}`;
         }
+    }
+
+    private makeBinaryExpMethod(myConcept: ExtraClassifierInfo) {
+        const name: string = Names.classifier(myConcept.classifier.referred);
+        const comment = `/**
+                          * See the public unparse method.
+                          */`;
+        if (!!(myConcept.symbol)) {
+            return `${comment}
+            private unparse${name}(modelelement: ${name}, short: boolean) {
+                this.unparse(modelelement.left, short);
+                this.output[this.currentLine] += "${myConcept.symbol} ";
+                this.unparse(modelelement.right, short);
+        }`;
+        }
+        return ``;
     }
 }
