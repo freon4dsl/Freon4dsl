@@ -1,10 +1,10 @@
 import { PiLanguage } from "../../languagedef/metalanguage";
-import { PiParser } from "../../utils";
+import { Names, PiParser } from "../../utils";
 
 const editorParser = require("./PiEditGrammar");
 import { setCurrentFileName as editFileName } from "./PiEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
-import { ExtraClassifierInfo, PiEditUnit } from "../metalanguage/PiEditDefLang";
+import { ExtraClassifierInfo, PiEditProjectionGroup, PiEditUnit } from "../metalanguage/PiEditDefLang";
 import { PiEditChecker } from "../metalanguage/PiEditChecker";
 
 export class PiEditParser extends PiParser<PiEditUnit> {
@@ -20,9 +20,33 @@ export class PiEditParser extends PiParser<PiEditUnit> {
     protected merge(submodels: PiEditUnit[]): PiEditUnit {
         if (submodels.length > 0) {
             const result: PiEditUnit = submodels[0];
+
+            // make sure we can handle each projection group based on its name
+            const projectionGroupsByName: Map<string, PiEditProjectionGroup> = new Map<string, PiEditProjectionGroup>();
+            // add all groups from the first submodel
+            result.projectiongroups.forEach(group => {
+                projectionGroupsByName.set(group.name, group);
+            })
+
+            // now merge the other submodels
             submodels.forEach((sub, index) => {
-                if (index > 0) {
-                    result.projectiongroups.push(...sub.projectiongroups);
+                if (index > 0) { // we have already added submodels[0] to the result
+                    sub.projectiongroups.forEach(group => {
+                        if (projectionGroupsByName.has(group.name)) {
+                            // there is already a group with this name in the definition, so
+                            // merge all info into this group
+                            const found = projectionGroupsByName.get(group.name);
+                            found.projections.push(...group.projections);
+                            if (!!found.extras && !!group.extras) {
+                                found.extras.push(...group.extras);
+                            }
+                        } else {
+                            // group with this name is not yet encountered,
+                            // add it to the definition
+                            projectionGroupsByName.set(group.name, group);
+                            result.projectiongroups.push(group);
+                        }
+                    });
                 }
             });
             // place extra classifier information always in the default projection group
@@ -34,51 +58,56 @@ export class PiEditParser extends PiParser<PiEditUnit> {
     }
 
     private mergeExtraInformation(result: PiEditUnit) {
-        const defaultGroup = result.getDefaultProjectiongroup();
-        if (!!defaultGroup) { //
-            if (!defaultGroup.extras) {
-                defaultGroup.extras = [];
-            }
-            result.projectiongroups.forEach(group => {
-                if (group !== defaultGroup) {
-                    if (!!group.extras && group.extras.length > 0) {
-                        for (const extra of group.extras) {
-                            const knownOne = defaultGroup.extras.find(ex => ex.classifier.referred === extra.classifier.referred);
-                            if (!!knownOne) {
-                                // merge the extra info, when possible
-                                if (!!extra.symbol) {
-                                    if (!!knownOne.symbol) {
-                                        throw new Error(`merge error: symbol for classifier ${extra.classifier.name} is defined twice ${this.location(extra)}`);
-                                    } else {
-                                        knownOne.symbol = extra.symbol;
-                                    }
+        // first make sure there is a default projection group
+        let defaultGroup = result.getDefaultProjectiongroup();
+        if (!defaultGroup) {
+            defaultGroup = new PiEditProjectionGroup();
+            defaultGroup.name = Names.defaultProjectionName;
+        }
+        // initialize extras
+        if (!defaultGroup.extras) {
+            defaultGroup.extras = [];
+        }
+        // add all extra information to the default group
+        result.projectiongroups.forEach(group => {
+            if (group !== defaultGroup) {
+                if (!!group.extras && group.extras.length > 0) {
+                    for (const extra of group.extras) {
+                        // first see whether the default group has extras for this classifier
+                        const knownOne = defaultGroup.extras.find(ex => ex.classifier.referred === extra.classifier.referred);
+                        // if already present, then merge the extra info
+                        if (!!knownOne) {
+                            if (!!extra.symbol) {
+                                if (!!knownOne.symbol) {
+                                    this.checker.warnings.push(`symbol for classifier ${extra.classifier.name} is defined twice: ${this.location(extra)} and ${this.location(knownOne)}.`);
+                                } else {
+                                    knownOne.symbol = extra.symbol;
                                 }
-                                if (!!extra.trigger) {
-                                    if (!!knownOne.trigger) {
-                                        throw new Error(`merge error: trigger for classifier ${extra.classifier.name} is defined twice ${this.location(extra)}`);
-                                    } else {
-                                        knownOne.trigger = extra.trigger;
-                                    }
-                                }
-                                if (!!extra.referenceShortCut) {
-                                    if (!!knownOne.referenceShortCut) {
-                                        throw new Error(`merge error: symbol for classifier ${extra.classifier.name} is defined twice ${this.location(extra)}`);
-                                    } else {
-                                        knownOne.referenceShortCut = extra.referenceShortCut;
-                                    }
-                                }
-                            } else {
-                                // this is a new extra
-                                defaultGroup.extras.push(extra);
                             }
+                            if (!!extra.trigger) {
+                                if (!!knownOne.trigger) {
+                                    this.checker.warnings.push(`trigger for classifier ${extra.classifier.name} is defined twice: ${this.location(extra)} and ${this.location(knownOne)}.`);
+                                } else {
+                                    knownOne.trigger = extra.trigger;
+                                }
+                            }
+                            if (!!extra.referenceShortCut) {
+                                if (!!knownOne.referenceShortCut) {
+                                    this.checker.warnings.push(`reference shortcut for classifier ${extra.classifier.name} is defined twice: ${this.location(extra)} and ${this.location(knownOne)}.`);
+                                } else {
+                                    knownOne.referenceShortCut = extra.referenceShortCut;
+                                }
+                            }
+                        } else {
+                            // this is a new extra, add it to the default group
+                            defaultGroup.extras.push(extra);
                         }
                     }
-                    group.extras = null;
                 }
-            });
-        } else { // should not happen, because PiEditProjectionUtil adds a default group
-            console.log("internal error: no default projection group found");
-        }
+                // remove the extras from all non-default groups
+                group.extras = null;
+            }
+        });
     }
 
     protected setCurrentFileName(file: string) {

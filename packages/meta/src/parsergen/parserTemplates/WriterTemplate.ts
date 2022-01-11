@@ -83,7 +83,8 @@ export class WriterTemplate {
         enum SeparatorType {
             NONE = "NONE",
             Terminator = "Terminator",
-            Separator = "Separator"
+            Separator = "Separator",
+            Initiator ="Initiator",
         }
 
         /**
@@ -288,6 +289,10 @@ export class WriterTemplate {
                         this.output[this.currentLine] += sepText;
                         break;
                     }
+                    case SeparatorType.Initiator: {
+                        this.output[this.currentLine] += sepText;
+                        break;
+                    }
                     case SeparatorType.NONE: {
                         break;
                     }
@@ -303,6 +308,14 @@ export class WriterTemplate {
                     }
                 } else if (!vertical && isLastInList) {
                     this.output[this.currentLine] += \` \`;
+                }
+                
+                // then add the initiator
+                switch (sepType) {
+                    case SeparatorType.Initiator: {
+                        this.output[this.currentLine] += sepText;
+                        break;
+                    }
                 }
             }
         
@@ -433,7 +446,7 @@ export class WriterTemplate {
                 private unparse${name}(modelelement: ${name}, short: boolean) {
                     const blockIndent = this.output[this.currentLine].length;
                     // do the first line
-                    ${this.makeLine(lines[0])}
+                    ${this.makeLine(lines[0], true)}
                     if (!short) { // do the rest of the lines as well
                         ${this.makeRemainingLines(lines)}
                     }
@@ -442,7 +455,7 @@ export class WriterTemplate {
                 return `
                 ${comment}
                 private unparse${name}(modelelement: ${name}, short: boolean) {
-                    ${this.makeLine(lines[0])}
+                    ${this.makeLine(lines[0], true)}
                 }`;
             }
         } else {
@@ -461,49 +474,45 @@ export class WriterTemplate {
     /**
      * Creates the statements needed to unparse a single line in an editor projection definition
      * @param line
+     * @param inOptionalGroup
+     * @private
      */
     // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
-    private makeLine (line: PiEditProjectionLine): string {
+    private makeLine(line: PiEditProjectionLine, inOptionalGroup: boolean): string {
         let result: string = ``;
         line.items.forEach(item => {
-            result += this.makeItem(item, line.indent);
+            result += this.makeItem(item, line.indent, inOptionalGroup);
         });
         return result;
     }
 
-    private makeItem(item: PiEditProjectionItem, indent: number): string {
+    private makeItem(item: PiEditProjectionItem, indent: number, inOptionalGroup: boolean): string {
         let result: string = ``;
         if (item instanceof PiEditProjectionText) {
             // add escapes to item.text
             const myText = ParserGenUtil.escapeRelevantChars(item.text).trimRight();
             result += `this.output[this.currentLine] += \`${myText} \`;\n`;
         } else if (item instanceof PiOptionalPropertyProjection){
-            let myTypeScript: string = "";
-            let subresult: string = "";
-            item.lines.forEach(sub => {
-                subresult += this.makeItem(sub, indent);
-                if (sub instanceof PiEditPropertyProjection) {
-                    const myRealProp: PiProperty = sub.property.referred;
-                    if (myRealProp.isList) {
-                        myTypeScript = propertyToTypeScript(myRealProp);
-                        myTypeScript = `!!${myTypeScript} && ${myTypeScript}.length > 0`;
-                    } else {
-                        myTypeScript = propertyToTypeScriptWithoutReferred(myRealProp);
-                        myTypeScript = `!!${myTypeScript}`;
-                    }
-                }
-            });
-            if (myTypeScript.length > 0) { // surround whole sub-projection with an if-statement
-                result += `if (${myTypeScript}) { ${subresult} }`;
-            } else {
-                result += subresult;
+            const myElem = item.property.referred;
+            let myTypeScript: string = propertyToTypeScript(myElem);
+            if (!myElem.isPart) {
+                myTypeScript = propertyToTypeScriptWithoutReferred(item.property.referred);
             }
+            if (myElem.isList) {
+                myTypeScript += " && " + myTypeScript + '.length > 0';
+            }
+            let subresult: string = "";
+            item.lines.forEach(line => {
+                subresult += this.makeLine(line, true);
+            });
+            // surround whole sub-projection with an if-statement
+            result += `if (!!${myTypeScript}) { ${subresult} }`;
         } else if (item instanceof PiEditPropertyProjection) {
             const myElem = item.property.referred;
             if (myElem instanceof PiPrimitiveProperty) {
-                result += this.makeItemWithPrimitiveType(myElem, item);
+                result += this.makeItemWithPrimitiveType(myElem, item, inOptionalGroup);
             } else {
-                result += this.makeItemWithConceptType(myElem, item, indent);
+                result += this.makeItemWithConceptType(myElem, item, indent, inOptionalGroup);
             }
         }
         return result;
@@ -521,7 +530,7 @@ export class WriterTemplate {
                 first = false;
             } else {
                 result += `this.newlineAndIndentation(blockIndent + ${line.indent});
-                           ${this.makeLine(line)}`;
+                           ${this.makeLine(line, true)}`;
             }
         });
         return result;
@@ -532,8 +541,9 @@ export class WriterTemplate {
      * a single property.
      * @param myElem
      * @param item
+     * @param inOptionalGroup
      */
-    private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, item: PiEditPropertyProjection): string {
+    private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, item: PiEditPropertyProjection, inOptionalGroup: boolean): string {
         // the property is of primitive type
         let result: string = ``;
         const elemStr = propertyToTypeScript(item.property.referred);
@@ -547,7 +557,9 @@ export class WriterTemplate {
             // TODO adjust to tables
             if (!item.listInfo.isTable) { // it is a list not table
                 // add escapes to joinText
-                const myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
+                let myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
+                // Add a space to the join text. This is needed in a text string, not in a projectional editor.
+                myJoinText = (!!myJoinText && myJoinText.length > 0) ? myJoinText + ' ' : '';
                 result += `this.unparseListOfPrimitiveValues(
                     ${elemStr}, ${isIdentifier},"${myJoinText}", ${joinType}, ${vertical},
                     this.output[this.currentLine].length,
@@ -590,8 +602,9 @@ export class WriterTemplate {
      * @param myElem
      * @param item
      * @param indent
+     * @param inOptionalGroup
      */
-    private makeItemWithConceptType(myElem: PiProperty, item: PiEditPropertyProjection, indent: number) {
+    private makeItemWithConceptType(myElem: PiProperty, item: PiEditPropertyProjection, indent: number, inOptionalGroup: boolean) {
         // the property has a concept as type, thus we need to call its unparse method
         let result: string = "";
         const type = myElem.type.referred;
@@ -599,14 +612,16 @@ export class WriterTemplate {
             if (myElem.isList) {
                 if (!!item.listInfo && !item.listInfo.isTable) { // it is a list not table
                     const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
-                    const joinType = this.getJoinType(item);
+                    const joinType: string = this.getJoinType(item);
                     if (joinType.length > 0) {
+                        // Add a space to the join text. This is needed in a text string, not in a projectional editor.
+                        const myJoinText: string = (!!item.listInfo.joinText && item.listInfo.joinText.length > 0) ? item.listInfo.joinText + ' ' : '';
                         if (myElem.isPart) {
                             let myTypeScript: string = propertyToTypeScript(item.property.referred);
-                            result += `this.unparseList(${myTypeScript}, "${item.listInfo.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                            result += `this.unparseList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
                         } else {
                             let myTypeScript: string = propertyToTypeScriptWithoutReferred(item.property.referred);
-                            result += `this.unparseReferenceList(${myTypeScript}, "${item.listInfo.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                            result += `this.unparseReferenceList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
                         }
                     }
                 } else {
@@ -614,20 +629,15 @@ export class WriterTemplate {
                 }
             } else {
                 let myCall: string = "";
-                let myTypeScript: string = "";
+                let myTypeScript: string;
                 if (myElem.isPart) {
                     myTypeScript = propertyToTypeScript(item.property.referred);
                     myCall += `this.unparse(${myTypeScript}, short) `;
                 } else {
                     myTypeScript = propertyToTypeScriptWithoutReferred(item.property.referred);
                     myCall += `this.unparseReference(${myTypeScript}, short);`;
-                    // if (type instanceof PiLimitedConcept) {
-                    //     myCall += `this.unparse${type.name}(${myTypeScript}, short);`;
-                    // } else {
-                    //     myCall += `this.output[this.currentLine] += \`\$\{${myTypeScript}.name\} \``;
-                    // }
                 }
-                if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
+                if (myElem.isOptional && !inOptionalGroup) { // surround the unparse call with an if-statement, because the element may not be present
                     result += `if (!!${myTypeScript}) { ${myCall} }`;
                 } else {
                     result = myCall;
@@ -648,6 +658,8 @@ export class WriterTemplate {
                 joinType = "SeparatorType.Separator";
             } else if (item.listInfo.joinType === ListJoinType.Terminator) {
                 joinType = "SeparatorType.Terminator";
+            } else if (item.listInfo.joinType === ListJoinType.Initiator) {
+                joinType = "SeparatorType.Initiator";
             } else if (item.listInfo.joinType === ListJoinType.NONE) {
                 joinType = "SeparatorType.NONE";
             }

@@ -73,15 +73,11 @@ export class ConceptMaker {
         if (!!list && list.length > 0) {
             list.forEach((item) => {
                 if (item instanceof PiOptionalPropertyProjection) {
-                    // TODO check: I expect exactly one property projection in a sub projection
-                    // things go wrong if this is not the case!!!
-                    // hack: item should be optional but it is not ????
-                    // TODO find out why
-                    // if (item.optional) {
-                    parts.push(new RHSOptionalGroup(item.property.referred, this.addItems(item.lines, true)));
-                    // } else {
-                    //     parts.push(new RHSGroup(this.addItems(item.items)));
-                    // }
+                    let subs: RightHandSideEntry[] = [];
+                    item.lines.forEach(line => {
+                        subs.push(...this.addItems(line.items, true));
+                    })
+                    parts.push(new RHSOptionalGroup(item.property.referred, subs));
                 } else if (item instanceof PiEditPropertyProjection) {
                     const propPart = this.makePropPart(item, inOptionalGroup);
                     if (!!propPart) parts.push(propPart);

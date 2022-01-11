@@ -238,7 +238,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             item.listInfo = new ListInfo();
             item.listInfo.isTable = false;
             item.listInfo.direction = PiEditProjectionDirection.Vertical;
-            item.listInfo.joinType = ListJoinType.Separator; // indicates that user has not inserted join info
+            item.listInfo.joinType = ListJoinType.Separator;
             item.listInfo.joinText = ", ";
         }
     }

@@ -263,9 +263,9 @@ superProjection = projection_begin "=>" ws superRef:classifierReference projName
 tableInfo = "table" ws dir:("rows" / "columns")? ws
 {
     return creator.createListInfo({
-        "isTable"       : true,
-        "listDirection" : creator.createListDirection( {"listDirection": dir, "location": location() } ),
-        "location"      : location()
+        "isTable"   : true,
+        "direction" : creator.createListDirection( {"direction": dir, "location": location() } ),
+        "location"  : location()
     });
 }
 
@@ -281,17 +281,17 @@ keywordDecl = projection_begin text1:textBut text2:(projection_separator t2:text
 listInfo =  dir:listDirection? l:(type:listInfoType "[" t:textBut "]" {return { "type": type, "text": t }})? ws
 {
     return creator.createListInfo({
-        "isTable"       : false,
-        "listDirection" : dir,
-        "joinType"      : !!l ? l["type"] : undefined,
-        "joinText"      : !!l ? l["text"] : undefined,
-        "location"      : location()
+        "isTable"   : false,
+        "direction" : dir,
+        "joinType"  : !!l ? l["type"] : undefined,
+        "joinText"  : !!l ? l["text"] : undefined,
+        "location"  : location()
     });
 }
 
 listDirection = dir:("horizontal" / "vertical") ws
 {
-    return creator.createListDirection( {"listDirection": dir, "location": location() } );
+    return creator.createListDirection( {"direction": dir, "location": location() } );
 }
 
 listInfoType = joinType:("separator" / "terminator" / "initiator") ws

@@ -1,4 +1,4 @@
-editor XXX
+editor default
 
 AssociationClassCallExp {
     [${self.referredAssociationClass}]
@@ -108,7 +108,7 @@ TupleLiteralExp {
 //}
 
 VariableDeclaration {
-    [$self.name} : ${self.type} [?= ${self.initExpression}]]
+    [${self.name} : ${self.type} [?= ${self.initExpression}]]
 //    isIteratorVar: boolean;
 }
 
