@@ -382,11 +382,9 @@ export function createJoinType(data: Object): ListJoinType {
 }
 
 export function createListInfo(data: Partial<ListInfo>): ListInfo {
-    console.log ("createListInfo " + JSON.stringify(data));
     const result = new ListInfo();
     if (!!data.direction) {
         result.direction = data.direction;
-        console.log ("found direction: " + result.direction.toString());
     }
     if (!!data.isTable) {
         result.isTable = data.isTable;
