@@ -46,7 +46,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
      * @param editUnit
      */
     public check(editUnit: PiEditUnit): void {
-        LOGGER.log("checking editUnit");
+        // LOGGER.log("checking editUnit");
         if (this.language === null || this.language === undefined) {
             throw new Error(`Editor definition checker does not known the language.`);
         }
@@ -65,7 +65,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkProjectionGroup(projectionGroup: PiEditProjectionGroup) {
-        LOGGER.log("checking projectionGroup " + projectionGroup?.name);
+        // LOGGER.log("checking projectionGroup " + projectionGroup?.name);
         this.simpleCheck(!!projectionGroup.name, `Editor should have a name, it is empty ${this.location(projectionGroup)}.`);
         for (const projection of projectionGroup.projections) {
             this.checkProjection(projection);
@@ -115,7 +115,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkProjection(projection: PiEditClassifierProjection) {
-        LOGGER.log("checking projection for " + projection.classifier?.name);
+        // LOGGER.log("checking projection for " + projection.classifier?.name);
         const myClassifier: PiClassifier = projection.classifier.referred;
         this.nestedCheck({
             check: !!myClassifier,
@@ -144,7 +144,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkNormalProjection(projection: PiEditProjection, cls: PiClassifier) {
-        LOGGER.log("checking normal projection ");
+        // LOGGER.log("checking normal projection ");
         if (!!projection) {
             projection.lines.forEach(line => {
                 this.checkLine(line, cls);
@@ -164,7 +164,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkTableProjection(projection: PiEditTableProjection, cls: PiClassifier) {
-        LOGGER.log("checking table projection for " + cls?.name);
+        // LOGGER.log("checking table projection for " + cls?.name);
         if (!!projection) {
             this.nestedCheck({
                 check: projection.cells.length > 0,
@@ -182,7 +182,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private createLimitedPropertyProjection(projection: PiEditPropertyProjection, cls: PiLimitedConcept): PiEditInstanceProjection {
-        LOGGER.log("creating projection for limited property");
+        // LOGGER.log("creating projection for limited property");
         // an instance of a limited concept can (!) have an alternative projection: "${INSTANCE [text]}"
         // this alternative is being checked in this method
         let myProj: PiEditInstanceProjection = null;
@@ -212,14 +212,14 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkBooleanPropertyProjection(item: PiEditPropertyProjection, myProp: PiProperty) {
-        LOGGER.log("checking boolean property projection: " + myProp?.name);
+        // LOGGER.log("checking boolean property projection: " + myProp?.name);
         this.simpleCheck(myProp instanceof PiPrimitiveProperty && myProp.type.referred === PiPrimitiveType.boolean,
             `Property '${myProp.name}' may not have a keyword projection, because it is not of boolean type ${this.location(item)}.`);
         this.simpleCheck(!PiEditChecker.includesWhitespace(item.boolInfo.trueKeyword), `The text for a keyword projection should not include any whitespace ${this.location(item)}.`);
     }
 
     private checkListProperty(item: PiEditPropertyProjection, myProp: PiProperty) {
-        LOGGER.log("checking list property projection: " + myProp?.name);
+        // LOGGER.log("checking list property projection: " + myProp?.name);
         if (!!item.listInfo) {
             if (item.listInfo.isTable) {
                 // remember this property - there should be a table projection for it - to be checked later
@@ -244,7 +244,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkSuperProjection(item: PiEditSuperProjection, cls: PiClassifier) {
-        LOGGER.log("checking super projection: " + cls?.name);
+        // LOGGER.log("checking super projection: " + cls?.name);
         const myParent = item.superRef.referred;
         this.nestedCheck({
             check: !!myParent,
@@ -265,7 +265,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: PiClassifier) {
-        LOGGER.log("checking optional projection for " + cls?.name);
+        // LOGGER.log("checking optional projection for " + cls?.name);
         const propProjections: PiEditPropertyProjection[] = [];
         item.lines.forEach(line => {
             this.checkLine(line, cls);
@@ -284,7 +284,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkExtras(other: ExtraClassifierInfo) {
-        LOGGER.log("checking extra info on classifier " + other.classifier?.name);
+        // LOGGER.log("checking extra info on classifier " + other.classifier?.name);
         // check the reference shortcut and change the expression into a reference to a property
         if (!!other.referenceShortcutExp) {
             this.myExpressionChecker.checkLangExp(other.referenceShortcutExp, other.classifier.referred);
@@ -312,7 +312,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private resolveReferences(editorDef: PiEditUnit) {
-        LOGGER.log("resolving references ");
+        // LOGGER.log("resolving references ");
         for (const group of editorDef.projectiongroups) {
             for (const proj of group.projections) {
                 proj.classifier.owner = this.language;
@@ -326,7 +326,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkPropsWithTableProjection(editor: PiEditUnit) {
-        LOGGER.log("checking properties that have a TableProjection");
+        // LOGGER.log("checking properties that have a TableProjection");
         for (const projection of this.propsWithTableProjection) {
             const myprop = projection.property.referred;
             const propEditor = editor.findTableProjectionForType(myprop.type.referred);
@@ -342,7 +342,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkPropProjection(item: PiEditPropertyProjection, cls: PiClassifier) {
-        LOGGER.log("checking property projection for " + cls?.name);
+        // LOGGER.log("checking property projection for " + cls?.name);
         if (item instanceof PiOptionalPropertyProjection) {
             this.checkOptionalProjection(item, cls);
         } else {
@@ -384,7 +384,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private createAndCheckLimitedProjection(projection: PiEditProjection, myClassifier: PiLimitedConcept): PiEditLimitedProjection {
-        LOGGER.log("creating limited projection for " + myClassifier?.name);
+        // LOGGER.log("creating limited projection for " + myClassifier?.name);
         let myLim: PiEditLimitedProjection = new PiEditLimitedProjection();
         myLim.classifier = projection.classifier;
         projection.lines.forEach(line => {
