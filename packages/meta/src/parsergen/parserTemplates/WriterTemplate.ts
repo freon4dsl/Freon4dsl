@@ -483,6 +483,7 @@ export class WriterTemplate {
         line.items.forEach(item => {
             result += this.makeItem(item, line.indent, inOptionalGroup);
         });
+        result += "/* HERE end of line FROM Writer Template */"
         return result;
     }
 
@@ -502,9 +503,10 @@ export class WriterTemplate {
                 myTypeScript += " && " + myTypeScript + '.length > 0';
             }
             let subresult: string = "";
-            item.lines.forEach(line => {
-                subresult += this.makeLine(line, true);
-            });
+            // make first line without newline and indent
+            subresult += this.makeLine(item.lines[0], true);
+            // make all other lines with newline and indent
+            subresult += this.makeRemainingLines(item.lines);
             // surround whole sub-projection with an if-statement
             result += `if (!!${myTypeScript}) { ${subresult} }`;
         } else if (item instanceof PiEditPropertyProjection) {
