@@ -24,10 +24,11 @@ MultiplyEx {
     symbol = "*"
 }
 
-DivideEx {
-    symbol = "/"
-}
 
 AndEx {
     symbol = "and"
+}
+
+DivideEx {
+    symbol = "/"
 }

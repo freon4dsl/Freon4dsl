@@ -70,13 +70,16 @@ export class PiEditParser extends PiParser<PiEditUnit> {
         }
         // add all extra information to the default group
         result.projectiongroups.forEach(group => {
+            console.log("merging extras, group: " + group.name)
             if (group !== defaultGroup) {
                 if (!!group.extras && group.extras.length > 0) {
                     for (const extra of group.extras) {
+                        console.log("\t found extras for: " + extra.classifier?.name)
                         // first see whether the default group has extras for this classifier
                         const knownOne = defaultGroup.extras.find(ex => ex.classifier.referred === extra.classifier.referred);
                         // if already present, then merge the extra info
                         if (!!knownOne) {
+                            console.log("there is already an extra for " + knownOne.classifier.name);
                             if (!!extra.symbol) {
                                 if (!!knownOne.symbol) {
                                     this.checker.warnings.push(`symbol for classifier ${extra.classifier.name} is defined twice: ${this.location(extra)} and ${this.location(knownOne)}.`);
@@ -100,12 +103,15 @@ export class PiEditParser extends PiParser<PiEditUnit> {
                             }
                         } else {
                             // this is a new extra, add it to the default group
+                            console.log("new extra for " + knownOne.classifier.name);
                             defaultGroup.extras.push(extra);
                         }
                     }
                 }
                 // remove the extras from all non-default groups
                 group.extras = null;
+            } else {
+                console.log("found in default:" + group.extras.map(ex => ex.classifier.name));
             }
         });
     }

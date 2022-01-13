@@ -16,7 +16,7 @@ import {
     RHSText,
     RHSPropEntry,
     RHSOptionalGroup,
-    RHSBooleanWithKeyWord,
+    RHSBooleanWithSingleKeyWord,
     RHSPrimEntry,
     RHSPrimOptionalEntry,
     RHSPrimListEntry,
@@ -98,7 +98,7 @@ export class ConceptMaker {
             if (prop instanceof PiPrimitiveProperty) {
                 if (propType === PiPrimitiveType.boolean && !!item.boolInfo) {
                     // TODO list???
-                    return new RHSBooleanWithKeyWord(prop, item.boolInfo.trueKeyword);
+                    return new RHSBooleanWithSingleKeyWord(prop, item.boolInfo.trueKeyword);
                     // TODO falseKeyword
                 } else if (!prop.isList) {
                     if (!prop.isOptional || inOptionalGroup) {

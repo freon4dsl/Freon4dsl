@@ -14,10 +14,10 @@ Association {
 AssociationClass {
         [[?${self.visibility}] <associationclass> ${self.name}
         ${self.end1} <-> ${self.end2}
-        [?<attributes> ${self.attributes vertical }]
-        [?<operations> ${self.operations vertical  }]
-        [?<states> ${self.states vertical terminator [;] }]
-        [?<invariants> ${self.invariants vertical terminator [;] }]
+            [?<attributes> ${self.attributes vertical }]
+            [?<operations> ${self.operations vertical  }]
+            [?<states> ${self.states vertical terminator [;] }]
+            [?<invariants> ${self.invariants vertical terminator [;] }]
         <endassociationclass>
         ]
 }
@@ -37,10 +37,10 @@ UmlClass {
         [[?${self.visibility}] [?${self.isAbstract [<abstract>]}] <class> ${self.name}
         [?<specializes> ${self.generalizations horizontal separator [, ] }]
         [?<implements> ${self.interfaces horizontal separator [, ] }]
-        [?<attributes> ${self.attributes vertical  }]
-        [?<operations> ${self.operations vertical  }]
-        [?<states> ${self.states vertical terminator [;] }]
-        [?<invariants> ${self.invariants vertical terminator [;] }]
+            [?<attributes> ${self.attributes vertical  }]
+            [?<operations> ${self.operations vertical  }]
+            [?<states> ${self.states vertical terminator [;] }]
+            [?<invariants> ${self.invariants vertical terminator [;] }]
         <endclass>
         ]
 }
@@ -64,16 +64,16 @@ DataType {
         [[?${self.visibility}] <datatype> ${self.name}
         [?<specializes> ${self.generalizations horizontal separator [, ] }]
         [?<implements> ${self.interfaces horizontal separator [, ] }]
-        [?<attributes> ${self.attributes vertical  }]
-        [?<operations> ${self.operations vertical  }]
-        [?<invariants> ${self.invariants vertical terminator [;] }]
+            [?<attributes> ${self.attributes vertical  }]
+            [?<operations> ${self.operations vertical  }]
+            [?<invariants> ${self.invariants vertical terminator [;] }]
         <enddatatype>
         ]
 }
 
 EnumerationType {
         [[?${self.visibility}] <enumeration> ${self.name}
-        <values> ${self.literals vertical terminator [;] }
+            <values> ${self.literals vertical terminator [;] }
         <endenumeration>
         ]
 }
@@ -85,9 +85,9 @@ EnumLiteral {
 UmlInterface  {
         [[?${self.visibility}] <interface> ${self.name}
         [?<specializes> ${self.generalizations horizontal separator [, ] }]
-        [?<attributes> ${self.attributes vertical }]
-        [?<operations> ${self.operations vertical  }]
-        [?<invariants> ${self.invariants vertical terminator [;] }]
+            [?<attributes> ${self.attributes vertical }]
+            [?<operations> ${self.operations vertical  }]
+            [?<invariants> ${self.invariants vertical terminator [;] }]
         <endinterface>
         ]
 }
@@ -113,9 +113,9 @@ UmlPackage {
 // TODO subprojection self.imports removes newline between self.name and self.classifiers
         [<package> ${self.name}
         [?${ self.imports vertical  }]
-        ${ self.classifiers vertical  }
+            ${ self.classifiers vertical  }
         <associations>
-        ${ self.associations vertical terminator [;] }
+            ${ self.associations vertical terminator [;] }
         <endpackage>
         ]
 }

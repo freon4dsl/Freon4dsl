@@ -277,6 +277,12 @@ export class WriterTemplate {
                 // first eliminate any whitespace at the end of the line
                 this.output[this.currentLine] = this.output[this.currentLine].trimRight();
                 
+                if (!vertical && (!sepText || sepText.length == 0)) {
+                    // at least separate the items by a space to avoid things
+                    // like "IntegerFunction", which should be "Integer Function"
+                    sepText = " ";
+                }
+                
                 // then add the right separator or terminator
                 switch (sepType) {
                     case SeparatorType.Separator: {
@@ -294,6 +300,11 @@ export class WriterTemplate {
                         break;
                     }
                     case SeparatorType.NONE: {
+                        if (!vertical) {
+                            // at least separate the items by a space to avoid things
+                            // like "IntegerFunction", which should be "Integer Function"
+                            this.output[this.currentLine] += " ";
+                        }
                         break;
                     }
                 }
@@ -310,7 +321,7 @@ export class WriterTemplate {
                     this.output[this.currentLine] += \` \`;
                 }
                 
-                // then add the initiator
+                // then add the next initiator
                 switch (sepType) {
                     case SeparatorType.Initiator: {
                         this.output[this.currentLine] += sepText;
@@ -452,12 +463,21 @@ export class WriterTemplate {
                     }
                 }`;
             } else {
-                return `
-                ${comment}
-                private unparse${name}(modelelement: ${name}, short: boolean) {
-                    const blockIndent = this.output[this.currentLine].length;
-                    ${this.makeLine(lines[0], false)}
-                }`;
+                if (!!lines[0].items.find(item => item instanceof PiOptionalPropertyProjection)) {
+                    // add blockIndent, it is used in the Optional part
+                    return `
+                        ${comment}
+                        private unparse${name}(modelelement: ${name}, short: boolean) {
+                            const blockIndent = this.output[this.currentLine].length;
+                            ${this.makeLine(lines[0], false)}
+                        }`;
+                } else {
+                    return `
+                        ${comment}
+                        private unparse${name}(modelelement: ${name}, short: boolean) {
+                            ${this.makeLine(lines[0], false)}
+                        }`;
+                }
             }
         } else {
             // TODO check in which cases there are no lines in the edit def
@@ -482,7 +502,6 @@ export class WriterTemplate {
     private makeLine(line: PiEditProjectionLine, inOptionalGroup: boolean): string {
         let result: string = ``;
         line.items.forEach((item, index) => {
-            result += `/* line indent:  + ${line.indent} */`;
             result += this.makeItem(item, line.indent, inOptionalGroup, line.isOptional());
         });
         return result;
@@ -509,11 +528,11 @@ export class WriterTemplate {
                     if (lineIsOptional) {
                         // the indent and newline needs to be within the optional if-stat
                         // because otherwise there will be empty lines in the output of the unparser
-                        subresult += `this.newlineAndIndentation(blockIndent + ${line.indent} + ${indent});`;
+                        subresult += `this.newlineAndIndentation(blockIndent + ${indent} + ${line.indent});`;
                     }
                     subresult += this.makeLine(line, true);
                 } else
-                    subresult += `this.newlineAndIndentation(blockIndent + ${line.indent} + ${indent});
+                    subresult += `this.newlineAndIndentation(blockIndent + ${indent} + ${line.indent});
                            ${this.makeLine(line, true)}`;
             });
             // surround whole sub-projection with an if-statement
@@ -566,6 +585,7 @@ export class WriterTemplate {
         let result: string = ``;
         const elemStr = propertyToTypeScript(item.property.referred);
         if (myElem.isList) {
+            // TODO adjust to boolKeywords
             let isIdentifier: string = "false";
             if (myElem.type.referred === PiPrimitiveType.identifier) {
                 isIdentifier = "true";
@@ -670,7 +690,7 @@ export class WriterTemplate {
      * @param item
      */
     private getJoinType(item: PiEditPropertyProjection): string {
-        let joinType: string = "";
+        let joinType: string = "SeparatorType.NONE";
         if (!!item.listInfo) {
             if (item.listInfo.joinType === ListJoinType.Separator) {
                 joinType = "SeparatorType.Separator";
@@ -678,8 +698,8 @@ export class WriterTemplate {
                 joinType = "SeparatorType.Terminator";
             } else if (item.listInfo.joinType === ListJoinType.Initiator) {
                 joinType = "SeparatorType.Initiator";
-            } else if (item.listInfo.joinType === ListJoinType.NONE) {
-                joinType = "SeparatorType.NONE";
+            // } else if (item.listInfo.joinType === ListJoinType.NONE) {
+            //     joinType = "SeparatorType.NONE";
             }
         }
         return joinType;

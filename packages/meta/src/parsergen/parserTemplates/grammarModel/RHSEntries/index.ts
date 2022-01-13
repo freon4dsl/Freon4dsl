@@ -1,4 +1,5 @@
-export * from "./RHSBooleanWithKeyWord";
+export * from "./RHSBooleanWithSingleKeyWord";
+export * from "./RHSBooleanWithDoubleKeyWord";
 export * from "./RHSLimitedRefEntry";
 export * from "./RHSLimitedRefListEntry";
 export * from "./RHSLimitedRefListWithSeparator";

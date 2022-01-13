@@ -2,11 +2,11 @@
 
 exports[`Test the parser : read two units and create a model 1`] = `
 "unit eenNaam { 
-main: entity1 base anotherEntity,
-                   andAnother,
+main: entity1 base anotherEntity, 
+                   andAnother, 
                    andYetAnother
       start 
-          attr1 : type1  = \\"myString\\",
+          attr1 : type1  = \\"myString\\", 
           attr2 : type2  = \\"TEKST\\"
       end 
 unit wide functions: 
@@ -15,17 +15,17 @@ unit wide functions:
         parameters 
             DemoVariable variableYYY 
                 declaredType entity1
-        declaredType STRING
+        declaredType STRING 
 }"
 `;
 
 exports[`Test the parser : read two units and create a model 2`] = `
 "unit andereNaam { 
-main: entity56 base anotherEntity,
-                    andAnother,
+main: entity56 base anotherEntity, 
+                    andAnother, 
                     andYetAnother
       start 
-          attr78 : type1  = \\"myString\\",
+          attr78 : type1  = \\"myString\\", 
           attr9 : type2  = \\"TEKST\\"
       end 
 unit wide functions: 
@@ -34,6 +34,6 @@ unit wide functions:
         parameters 
             DemoVariable variableZZZ 
                 declaredType entity56
-        declaredType STRING
+        declaredType STRING 
 }"
 `;

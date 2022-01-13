@@ -11,7 +11,8 @@ exports[`Testing Unparser Unparse DemoModel Instance 'determine(AAP : TEST1) : T
 
 exports[`Testing Unparser Unparse DemoModel Instance complete example model with simple attribute types 1`] = `
 "model DemoModel_with_inheritance { 
-main: types: 
+main: 
+types: 
     
 entities: 
     DemoEntity Vehicle 
@@ -39,8 +40,6 @@ entities:
             
         baseEntity 
         baseInterface
-
-
     DemoEntity Car 
         simpleprop \\"simple\\" 
         baseInterface_attr 0 
@@ -66,8 +65,6 @@ entities:
             
         baseEntity Vehicle 
         baseInterface
-
-
     DemoEntity Bike 
         simpleprop \\"simple\\" 
         baseInterface_attr 0 
@@ -93,8 +90,6 @@ entities:
             
         baseEntity Vehicle 
         baseInterface
-
-
     DemoEntity RaceBike 
         simpleprop \\"simple\\" 
         baseInterface_attr 0 
@@ -120,8 +115,6 @@ entities:
             
         baseEntity Bike 
         baseInterface
-
-
 model wide functions: 
     DemoFunction SOMETHING 
         expression if ( 4 < 80 ) then 
@@ -137,7 +130,8 @@ model wide functions:
 
 exports[`Testing Unparser Unparse DemoModel Instance complete example model with simple attribute types 2`] = `
 "model CorrectUnit { 
-main: types: 
+main: 
+types: 
     
 entities: 
     DemoEntity School 
@@ -162,8 +156,6 @@ entities:
             
         baseEntity 
         baseInterface
-
-
     DemoEntity Company 
         simpleprop \\"simple\\" 
         baseInterface_attr 0 
@@ -186,8 +178,6 @@ entities:
             
         baseEntity 
         baseInterface
-
-
 model wide functions: 
     DemoFunction compare 
         expression if ( 2 < 5 ) then 
@@ -197,8 +187,7 @@ model wide functions:
                    endif 
         parameters 
             
-        declaredType Integer
-DemoFunction helloString 
+        declaredType Integer DemoFunction helloString 
                                  expression ' \\"Hello Demo\\" ' 
                                  parameters 
                                      

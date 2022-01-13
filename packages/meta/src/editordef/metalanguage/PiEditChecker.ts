@@ -26,7 +26,7 @@ import {
 import { MetaLogger } from "../../utils";
 import { PiElementReference } from "../../languagedef/metalanguage";
 
-const LOGGER = new MetaLogger("PiEditChecker").mute();
+const LOGGER = new MetaLogger("PiEditChecker"); //.mute();
 
 export class PiEditChecker extends Checker<PiEditUnit> {
     myExpressionChecker: PiLangExpressionChecker;
@@ -59,7 +59,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             this.checkProjectionGroup(group);
         }
         this.checkPropsWithTableProjection(editUnit);
-        this.simpleWarning(!editUnit.getDefaultProjectiongroup(),
+        this.simpleWarning(!!editUnit.getDefaultProjectiongroup(),
             `No editor with name 'default' found, a default editor will be generated.`);
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
     }
@@ -232,6 +232,9 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     case ListJoinType.Initiator: joinTypeName = `Initiator`; break;
                 }
                 this.simpleCheck(!!item.listInfo.joinText, `${joinTypeName} should be followed by a string between '[' and ']' (no whitespace allowed) ${this.location(item)}.`);
+            } else { // the user has only entered 'vertical' or 'horizontal'
+                // create default join type
+                item.listInfo.joinType = ListJoinType.Separator;
             }
         } else {
             //create default
