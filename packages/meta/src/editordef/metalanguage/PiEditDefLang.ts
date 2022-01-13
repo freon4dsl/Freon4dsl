@@ -1,7 +1,6 @@
 import { PiClassifier, PiInstance, PiLangExp, PiLanguage, PiProperty } from "../../languagedef/metalanguage";
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 import { Names, PiDefinitionElement } from "../../utils";
-import { Roles } from "../../utils/Roles";
 
 /**
  * Super type of all elements that may be part of a projection definition
@@ -154,15 +153,15 @@ export abstract class PiEditClassifierProjection extends PiDefinitionElement {
 export class PiEditProjection extends PiEditClassifierProjection {
     lines: PiEditProjectionLine[] = [];
 
-    cursorLocation(): string {
+    firstProperty(): PiProperty {
         for (const line of this.lines) {
             for (const item of line.items) {
                 if (item instanceof PiEditPropertyProjection) {
-                    return Roles.property(item.property.referred);
+                    return item.property.referred;
                 }
             }
         }
-        return "";
+        return null;
     }
 
     toString() {

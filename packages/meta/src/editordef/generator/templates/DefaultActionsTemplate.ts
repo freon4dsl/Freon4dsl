@@ -1,4 +1,3 @@
-import { flatten } from "lodash";
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import {
     PiLanguage,
@@ -8,14 +7,13 @@ import {
 } from "../../../languagedef/metalanguage";
 import { Roles, LangUtil } from "../../../utils";
 import {
-    PiEditClassifierProjection,
     PiEditPropertyProjection,
     PiOptionalPropertyProjection,
     PiEditUnit,
-    PiEditProjection, ExtraClassifierInfo
+    PiEditProjection,
+    ExtraClassifierInfo, PiEditClassifierProjection
 } from "../../metalanguage";
 import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
-import { insert } from "svelte/internal";
 
 export class DefaultActionsTemplate {
 
@@ -268,9 +266,13 @@ export class DefaultActionsTemplate {
         return result;
     }
     cursorLocation(editorDef: PiEditUnit, c: PiClassifier) {
-        const projection = editorDef.findProjectionForType(c);
-        if (!!projection) {
-            return projection.cursorLocation();
+        const projection: PiEditClassifierProjection = editorDef.findProjectionForType(c);
+        if (!!projection && projection instanceof PiEditProjection) {
+            const prop = projection.firstProperty();
+            if (!!prop) {
+                return Roles.property(prop);
+            } else
+                return "";
         } else {
             if (c instanceof PiBinaryExpressionConcept) {
                 return Names.PI_BINARY_EXPRESSION_LEFT;

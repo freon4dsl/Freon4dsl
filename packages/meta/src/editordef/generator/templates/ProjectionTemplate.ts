@@ -1,6 +1,6 @@
 import {
     PiBinaryExpressionConcept,
-    PiClassifier,
+    PiClassifier, PiConcept,
     PiConceptProperty,
     PiExpressionConcept,
     PiLanguage,
@@ -26,18 +26,30 @@ import {
     PiEditPropertyProjection,
     PiOptionalPropertyProjection,
     PiEditUnit,
-    PiEditTableProjection, PiEditClassifierProjection, PiEditProjectionItem, PiEditLimitedProjection
+    PiEditTableProjection, PiEditClassifierProjection, PiEditProjectionItem, PiEditLimitedProjection, BoolKeywords
 } from "../../metalanguage";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
 export class ProjectionTemplate {
     private tableProjections: PiEditTableProjection[] = []; // holds all table projections during the generation
+    private currentEditDef: PiEditUnit = null;
+    private trueKeyword: string = "true";
+    private falseKeyword: string = "false";
 
     // TODO take super projections into account
     generateProjectionDefault(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
         // reset the table projections, then remember all table projections
         this.tableProjections = [];
         this.tableProjections.push(...editorDef.allTableProjections());
+
+        this.currentEditDef = editorDef;
+
+        // get the standard labels for true and false
+        const stdLabels: BoolKeywords = this.currentEditDef.getDefaultProjectiongroup().standardBooleanProjection;
+        if (!!stdLabels) {
+            this.trueKeyword = stdLabels.trueKeyword;
+            this.falseKeyword = stdLabels.falseKeyword;
+        }
 
         let binaryConcepts = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept));
         // sort the concepts such that base concepts come last
@@ -140,7 +152,7 @@ export class ProjectionTemplate {
                 }              
 
                 ${normalConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findProjectionForType(c))).join("\n")}
-
+                
                 /**
                  *  Create a standard binary box to ensure binary expressions can be edited easily
                  */
@@ -164,11 +176,6 @@ export class ProjectionTemplate {
     }
 
     private generateUserProjection(language: PiLanguage, concept: PiClassifier, projection: PiEditClassifierProjection) {
-        // TODO for now: do not do anything for a limited concept
-        if (projection instanceof PiEditLimitedProjection) {
-            return ``;
-        }
-
         if (projection instanceof PiEditProjection) {
             let result: string = "";
             const elementVarName = Roles.elementVarName(concept);
@@ -298,7 +305,7 @@ export class ProjectionTemplate {
         let result: string = "";
         const property: PiProperty = item.property.referred;
         if (property instanceof PiPrimitiveProperty) {
-            result += this.primitivePropertyProjection(property, elementVarName);
+            result += this.primitivePropertyProjection(property, elementVarName, item.boolInfo);
         } else if (property instanceof PiConceptProperty) {
             if (property.isPart) {
                 if (property.isList) {
@@ -418,15 +425,15 @@ export class ProjectionTemplate {
         return joinEntry;
     }
 
-    private primitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
+    private primitivePropertyProjection(property: PiPrimitiveProperty, element: string, boolInfo?: BoolKeywords): string {
         if (property.isList) {
-            return this.listPrimitivePropertyProjection(property, element);
+            return this.listPrimitivePropertyProjection(property, element, boolInfo);
         } else {
-            return this.singlePrimitivePropertyProjection(property, element);
+            return this.singlePrimitivePropertyProjection(property, element, boolInfo);
         }
     }
 
-    private singlePrimitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
+    private singlePrimitivePropertyProjection(property: PiPrimitiveProperty, element: string, boolInfo?: BoolKeywords): string {
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type.referred) {
             case PiPrimitiveType.string:
@@ -435,17 +442,22 @@ export class ProjectionTemplate {
             case PiPrimitiveType.number:
                 return `BoxUtils.numberBox(${element}, "${property.name}"${listAddition})`;
             case PiPrimitiveType.boolean:
-                // TODO labels
-                return `BoxUtils.booleanBox(${element}, "${property.name}", {yes:"true", no:"false"}${listAddition})`;
+                let trueKeyword: string = this.trueKeyword;
+                let falseKeyword: string = this.falseKeyword;
+                if (!!boolInfo) {
+                    trueKeyword = boolInfo.trueKeyword;
+                    falseKeyword = boolInfo.falseKeyword;
+                }
+                return `BoxUtils.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition})`;
             default:
                 return `BoxUtils.textBox(${element}, "${property.name}"${listAddition})`;
         }
     }
 
-    private listPrimitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
+    private listPrimitivePropertyProjection(property: PiPrimitiveProperty, element: string, boolInfo?: BoolKeywords): string {
         return `BoxFactory.horizontalList(${element}, "${Roles.property(property)}-hlist",
                             (${element}.${property.name}.map( (item, index)  =>
-                                ${this.singlePrimitivePropertyProjection(property, element)}
+                                ${this.singlePrimitivePropertyProjection(property, element, boolInfo)}
                             ) as Box[]).concat( [
                                 // TODO  Create Action for the role to actually add an element.
                                 BoxFactory.alias(${element}, "new-${Roles.property(property)}-hlist", "<+ ${property.name}>")

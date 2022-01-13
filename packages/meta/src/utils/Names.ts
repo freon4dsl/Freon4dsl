@@ -276,4 +276,5 @@ export class Names {
     public static instance(instance: PiInstance): string {
         return instance.name;
     }
+
 }
