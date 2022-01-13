@@ -308,7 +308,7 @@ export class ProjectionTemplate {
                         result += this.conceptPartTableProjection(item.listInfo.direction, property, elementVarName, language);
                     }
                 } else { // single element
-                    result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${property.name}", this.rootProjection) `;
+                    result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${property.name}", "${property.type.name}", this.rootProjection) `;
                 }
             } else { // reference
                 if (property.isList) {

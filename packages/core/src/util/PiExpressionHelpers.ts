@@ -6,9 +6,10 @@ import {
     SelectBox,
     SelectOption,
     PiEditor,
-    PiProjection, triggerToString, PiStyle
+    PiProjection, triggerToString, PiStyle, BoxFactory
 } from "../editor";
 import { PiBinaryExpression, PiExpression } from "../language";
+import { Language } from "../storage";
 import {
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
@@ -36,24 +37,24 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
         if (children.length === 1 && isHorizontalBox(children[0])) {
             result = children[0] as HorizontalListBox;
         } else {
-            result = new HorizontalListBox(exp, EXPRESSION, children);
+            result = BoxFactory.horizontalList(exp, EXPRESSION, children);
         }
         if (isLeftMost) {
             // TODO Change into Svelte Style
             // result.insertChild(new AliasBox(exp, LEFT_MOST, NBSP, { style: STYLES.aliasExpression }));
-            result.insertChild(new AliasBox(exp, LEFT_MOST, NBSP));
+            result.insertChild(BoxFactory.alias(exp, LEFT_MOST, NBSP));
         }
         if (isRightMost) {
             // TODO Change into Svelte Style
             // result.addChild(new AliasBox(exp, RIGHT_MOST, NBSP, { style: STYLES.aliasExpression }));
-            result.addChild(new AliasBox(exp, RIGHT_MOST, NBSP));
+            result.addChild(BoxFactory.alias(exp, RIGHT_MOST, NBSP));
         }
         return result;
     } else {
         if (children.length === 1) {
             return children[0];
         } else {
-            return new HorizontalListBox(exp, EXPRESSION, children);
+            return BoxFactory.horizontalList(exp, EXPRESSION, children);
         }
     }
 }
@@ -67,18 +68,22 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
  * @param style
  */
 export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, editor: PiEditor, style?: string): HorizontalListBox {
-    const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
+    const result = BoxFactory.horizontalList(exp, BINARY_EXPRESSION);
     const projection = editor.projection;
     const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 
+    const rightConceptName = Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("right")?.type;
+    const leftConceptName = Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("left")?.type;
+    console.log("RIGHT CONCEPT for "+ exp.piLanguageConcept()  + " is " + Language.getInstance().classifier(exp.piLanguageConcept()) );
+    console.log("            ===> " + Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("right") + " is " + rightConceptName);
     result.addChildren([
-        (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : new AliasBox(exp, PI_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left" })),
+        (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : BoxFactory.alias(exp, PI_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left", conceptName: leftConceptName  })),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
-        new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP),
+        BoxFactory.alias(exp, BEFORE_BINARY_OPERATOR, NBSP),
         createOperatorBox(editor, exp, symbol),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
-        new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP),
-        (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : new AliasBox(exp, PI_BINARY_EXPRESSION_RIGHT, "[add-right]", { propertyName: "right" }))
+        BoxFactory.alias(exp, AFTER_BINARY_OPERATOR, NBSP),
+        (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : BoxFactory.alias(exp, PI_BINARY_EXPRESSION_RIGHT, "[add-right]", { propertyName: "right", conceptName: rightConceptName }))
     ]);
     return result;
 }
@@ -111,7 +116,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
             }
         },
         () => null,
-        async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
+        (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
             if (editor.actions && editor.actions.binaryExpressionCreators) {
                 const alias = editor.actions.binaryExpressionCreators.filter(e => (e.trigger as string) === option.id)[0];
                 if (!!alias) {

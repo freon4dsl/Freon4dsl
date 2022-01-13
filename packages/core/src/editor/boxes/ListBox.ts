@@ -1,7 +1,7 @@
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, action } from "mobx";
 
 import { NBSP, createKeyboardShortcutForList, PiUtils } from "../../util";
-import { Box, AliasBox, PiEditor } from "../internal";
+import { Box, AliasBox, PiEditor, BoxFactory } from "../internal";
 import { PiElement } from "../../language";
 
 export enum ListDirection {
@@ -16,7 +16,11 @@ export abstract class ListBox extends Box {
     protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role);
         makeObservable<ListBox, "_children">(this, {
-           _children: observable
+           _children: observable,
+            insertChild: action,
+            addChild: action,
+            clearChildren: action,
+            addChildren: action,
         });
         PiUtils.initializeObject(this, initializer);
         if (children) {
@@ -26,6 +30,10 @@ export abstract class ListBox extends Box {
 
     get children(): ReadonlyArray<Box> {
         return this._children as ReadonlyArray<Box>;
+    }
+
+    clearChildren(): void {
+        this._children.splice(0, this._children.length);
     }
 
     addChild(child: Box | null): ListBox {
@@ -45,7 +53,7 @@ export abstract class ListBox extends Box {
     }
 
     addChildren(children?: Box[]): ListBox {
-        if (children) {
+        if (!!children) {
             children.forEach(child => this.addChild(child));
         }
         return this;
@@ -128,9 +136,9 @@ export class VerticalPiElementListBox extends VerticalListBox {
     init() {
         let index = 0;
         for (const ent of this.list) {
-            const line = new HorizontalListBox(ent, this.role + "-hor-" + index, [
+            const line = BoxFactory.horizontalList(ent, this.role + "-hor-" + index, [
                 this.editor.projection.getBox(ent),
-                new AliasBox(ent, "list-for-" + this.role /* + index*/, NBSP, {
+                BoxFactory.alias(ent, "list-for-" + this.role /* + index*/, NBSP, {
                     selectable: true
                 })
             ]);
@@ -139,7 +147,7 @@ export class VerticalPiElementListBox extends VerticalListBox {
         }
         // Add alias with placeholder for adding new elements
         this.addChild(
-            new AliasBox(this.element, "empty-list-for-" + this.role /* + index*/, NBSP, {
+            BoxFactory.alias(this.element, "empty-list-for-" + this.role /* + index*/, NBSP, {
                 placeholder: `<add ${this.role}>`
             })
         );

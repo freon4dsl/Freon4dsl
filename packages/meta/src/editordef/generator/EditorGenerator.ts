@@ -14,6 +14,7 @@ import { PiEditProjectionGroup, PiEditUnit } from "../metalanguage";
 import { EditorDefaultsGenerator } from "./EditorDefaultsGenerator";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
+import { EditorDefTemplate } from "./templates/EditorDefTemplate";
 
 const LOGGER = new MetaLogger("EditorGenerator").mute();
 
@@ -51,6 +52,7 @@ export class EditorGenerator {
         const customProjectiontemplate = new CustomProjectionTemplate();
         const editorIndexTemplate = new EditorIndexTemplate();
         const stylesTemplate = new StylesTemplate();
+        const editorDefTemplate = new EditorDefTemplate();
 
         // Prepare folders
         Helpers.createDirIfNotExisting(this.editorFolder);  // will not be overwritten
@@ -93,6 +95,10 @@ export class EditorGenerator {
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
         const editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef), "Editor Gen Index", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/index.ts`, editorIndexGenFile);
+
+        LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
+        const editorDefFile = Helpers.pretty(editorDefTemplate.generateEditorDef(this.language, editDef), "Editor Definition", generationStatus);
+        fs.writeFileSync(`${this.editorGenFolder}/EditorDef.ts`, editorDefFile);
 
         LOGGER.log(`Generating editor index: ${this.editorFolder}/index.ts`);
         const editorIndexFile = Helpers.pretty(editorIndexTemplate.generateIndex(this.language, editDef), "Editor Index", generationStatus);

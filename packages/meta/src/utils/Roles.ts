@@ -34,7 +34,7 @@ export class Roles {
                 }
             }
         }
-        return Names.classifier(concept) + "-" + property.name;
+        return Names.classifier(concept) + "-" + property.name + "-new-list-item";
     }
 
     public static newConceptReferencePart(reference: PiConceptProperty): string {

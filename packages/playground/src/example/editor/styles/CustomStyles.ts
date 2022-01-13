@@ -62,7 +62,7 @@ export const editorStyle: PiEditorStyle = {
                 color: "black"
             },
             list: {
-                "margin": "3px"
+                // "margin": "3px"
             }
         },
         dark: {

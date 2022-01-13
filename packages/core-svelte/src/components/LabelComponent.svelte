@@ -5,9 +5,10 @@
     import type { PiEditor } from "@projectit/core";
     import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
 
-    export let label = new LabelBox(null, "boxRole", "This is a box");
+    export let label;// = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
 
+    // console.log("LABEL COMPONENT - " + label?.role)
     const LOGGER = new PiLogger("LabelComponent");
 
     onDestroy(() => {

@@ -66,7 +66,7 @@
     };
 
     onMount(() => {
-        MOUNT_LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
+        MOUNT_LOGGER.log("AliasComponent.onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
@@ -102,11 +102,11 @@
             // textComponent.textOnScreen = key;
             // choiceBox.textHelper.setText(key);
         }
-        const aliasResult = await executeBehavior(choiceBox, key, key, editor);
-        await handleStringInput(key, aliasResult);
+        const aliasResult = executeBehavior(choiceBox, key, key, editor);
+        handleStringInput(key, aliasResult);
     };
 
-    const handleStringInput = async (s: string, aliasResult: BehaviorExecutionResult) => {
+    const handleStringInput = (s: string, aliasResult: BehaviorExecutionResult): BehaviorExecutionResult => {
         LOGGER.info(this, "handleStringInput for box " + choiceBox.role);
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
@@ -134,7 +134,7 @@
         return aliasResult;
     };
 
-    const onKeyPress = async (e: KeyboardEvent) => {
+    const onKeyPress = (e: KeyboardEvent) => {
         EVENT_LOG.log("onKeyPress: " + e.key + " for role " + choiceBox.role);
         isEditing = true;
         if (isPrintable(e) && !e.ctrlKey) {
@@ -142,7 +142,7 @@
         }
     };
 
-    const onInput = async (e: InputEvent) => {
+    const onInput = (e: InputEvent) => {
         isEditing = true;
         const value = (e.target as HTMLElement).innerText;
         LOGGER.log("onInput: [" + value + "] for role " + choiceBox.role + " with text [" + textComponent.getText() + "]");
@@ -151,9 +151,9 @@
             const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);
             LOGGER.log("    onInput alias box selected " + JSON.stringify(selected));
             if (!!selected) {
-                aliasResult = await choiceBox.selectOption(editor, selected);
+                aliasResult = choiceBox.selectOption(editor, selected);
             } else {
-                aliasResult = await choiceBox.selectOption(editor, { id: value, label: value });
+                aliasResult = choiceBox.selectOption(editor, { id: value, label: value });
             }
             if (aliasResult === BehaviorExecutionResult.EXECUTED) {
                 isEditing = false;
@@ -165,7 +165,7 @@
             LOGGER.log("    onInput select box selected " + JSON.stringify(selected));
             if (selected !== null) {
                 isEditing = false;
-                aliasResult = await choiceBox.selectOption(editor, { id: value, label: value });
+                aliasResult = choiceBox.selectOption(editor, { id: value, label: value });
                 choiceBox.textHelper.setText("")
             } else {
                 aliasResult = BehaviorExecutionResult.NO_MATCH;
@@ -201,7 +201,7 @@
         return aliasResult;
     };
 
-    const onKeyDown = async (e: KeyboardEvent) => {
+    const onKeyDown = (e: KeyboardEvent) => {
         LOGGER.log("onKeyDown: " + e.key + " for role " + choiceBox.role);
         isEditing = true;
         if (isPrintable(e) && !e.ctrlKey) {
@@ -247,7 +247,7 @@
                 case KEY_ENTER:
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
-                        await PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
+                        PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
                         e.stopPropagation();
                     }
                     break;
@@ -273,15 +273,14 @@
 
     const onSelectOption = (event: CustomEvent<SelectOption>): void => {
         LOGGER.log("set selected SVELTE option to " + JSON.stringify(event.detail));
+        isEditing = false;
         runInAction( () => {
-
-            isEditing = false;
             choiceBox.textHelper.setText("");
             const option = event.detail;
             choiceBox.selectOption(editor, option);
             let selected = choiceBox.getSelectedOption();
             selectableOptionList.text = "";
-            // choiceBox.textHelper.setText(!!selected ? selected.label : "");
+            // choiceBox.textBox.setText(!!selected ? selected.label : "");
             LOGGER.log("      selected is " + JSON.stringify(selected));
             setOpen("selectedEvent", false);
         });
@@ -302,7 +301,7 @@
             listForDropdown = selectableOptionList.getFilteredOptions();
         }
         selectedOption = choiceBox.getSelectedOption();
-        AUTO_LOGGER.log("AliasComponent role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id " + selectedOption?.id);
+        LOGGER.log("AliasComponent role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id " + selectedOption?.id);
         if (!!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }

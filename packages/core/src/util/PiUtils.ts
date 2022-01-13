@@ -74,13 +74,13 @@ export class PiUtils {
      * @param box
      * @param editor
      */
-    static async handleKeyboardShortcut(piKey: PiKey, box: Box, editor: PiEditor): Promise<boolean> {
+    static handleKeyboardShortcut(piKey: PiKey, box: Box, editor: PiEditor): boolean {
         for (const act of editor.keyboardActions) {
             // LOGGER.log("handleKeyboardShortcut activeroles: " + act.activeInBoxRoles);
             if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
                 if (act.activeInBoxRoles.includes(box.role)) {
                     LOGGER.log("handleKeyboardShortcut: executing keyboard action");
-                    const selected = await act.action(box, piKey, editor);
+                    const selected = act.action(box, piKey, editor);
                     if (selected) {
                         editor.selectElement(selected, act.boxRoleToSelect);
                     }
@@ -96,4 +96,11 @@ export class PiUtils {
 
 export function isNullOrUndefined(obj: Object | null | undefined): obj is null | undefined {
     return obj === undefined || obj === null;
+}
+
+export function getRoot(box: Box): Box {
+    if (!!box.parent) {
+        return getRoot(box.parent);
+    }
+    return box;
 }

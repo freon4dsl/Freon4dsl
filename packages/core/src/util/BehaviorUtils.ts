@@ -1,3 +1,4 @@
+import { runInAction } from "mobx";
 import { isRegExp, isString, Box, PiEditor, InternalBehavior } from "../editor";
 import { Language } from "../storage/Language";
 import { PiLogger } from "./internal";
@@ -44,7 +45,7 @@ export enum BehaviorExecutionResult {
  * @param {PiEditor} editor
  * @returns {boolean}
  */
-export async function executeBehavior(box: Box, text: string, label: string, editor: PiEditor): Promise<BehaviorExecutionResult> {
+export function executeBehavior(box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
     LOGGER.log("Enter executeBehavior text [" + text + "] label [" + label + "] box role [" + box.role + "]");
     let partialMatch: boolean = false;
 
@@ -56,21 +57,27 @@ export async function executeBehavior(box: Box, text: string, label: string, edi
                 LOGGER.log("executeBehavior: MATCH " + label + " against " + trigger +
                     "  results in " + (!!matchArray ? matchArray.length : "null"));
                 if (matchArray !== null && label === matchArray[0]) {
-                    const execresult = behavior.execute(box, label, editor);
-                    // if( !!execresult){
-                    //     editor.selectElement(execresult);
-                    //     editor.selectFirstLeafChildBox();
-                    // }
+                    runInAction( () => {
+                        const execresult = behavior.execute(box, label, editor);
+                        // if( !!execresult){
+                        //     editor.selectElement(execresult);
+                        //     editor.selectFirstLeafChildBox();
+                        // }
+                    });
                     return BehaviorExecutionResult.EXECUTED;
                 }
             } else if (isString(trigger)) {
                 if (trigger === text) {
                     LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + behavior.referenceShortcut + "]");
-                    const execresult = behavior.execute(box, label, editor);
-                    // If this is a referenceShortcut, fill in the selected reference, which is in the label
-                    if (!!label && !!behavior.referenceShortcut) {
-                        execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, behavior.referenceShortcut.metatype);
-                    }
+                    runInAction( () => {
+                        console.log("============== START")
+                        const execresult = behavior.execute(box, label, editor);
+                        // If this is a referenceShortcut, fill in the selected reference, which is in the label
+                        if (!!label && !!behavior.referenceShortcut) {
+                            execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, behavior.referenceShortcut.metatype);
+                        }
+                        console.log("============== END")
+                    });
                     // if( !!execresult){
                     //     await editor.selectElement(execresult, LEFT_MOST);
                     //     editor.selectFirstLeafChildBox();
@@ -99,20 +106,24 @@ export async function executeBehavior(box: Box, text: string, label: string, edi
  * @param label
  * @param editor
  */
-export async function executeSingleBehavior(behavior: InternalBehavior, box: Box, text: string, label: string, editor: PiEditor): Promise<BehaviorExecutionResult> {
-    LOGGER.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "]");
+export function executeSingleBehavior(behavior: InternalBehavior, box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
+    LOGGER.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + behavior.referenceShortcut + "]");
     let partialMatch: boolean = false;
 
     const trigger = behavior.trigger;
-    const execresult = behavior.execute(box, label, editor);
-    // if( !!execresult){
-    //     editor.selectElement(execresult);
-    //     editor.selectFirstLeafChildBox();
-    // }
-    // If this is a referenceShortcut, fill in the selected reference, which is in the label
-    if (!!label && !!behavior.referenceShortcut) {
-        execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, behavior.referenceShortcut.metatype);
-    }
+    runInAction( () => {
+        console.log("========================== START");
+        const execresult = behavior.execute(box, label, editor);
+        // if( !!execresult){
+        //     editor.selectElement(execresult);
+        //     editor.selectFirstLeafChildBox();
+        // }
+        // If this is a referenceShortcut, fill in the selected reference, which is in the label
+        if (!!label && !!behavior.referenceShortcut) {
+            execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, behavior.referenceShortcut.metatype);
+        }
+        console.log("===============================")
+    });
     // if( !!execresult){
     //     await editor.selectElement(execresult, LEFT_MOST);
     //     editor.selectFirstLeafChildBox();

@@ -21,13 +21,12 @@
         PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox, KEY_ESCAPE, styleToCSS, conceptStyle, SelectBox
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { AUTO_LOGGER, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
     const LOGGER = new PiLogger("TextComponent");
     // Is this component currently being edited by the user?
     export let isEditing: boolean = false;
-    export let textBox = new TextBox(null, "role:", () => "Editable textbox", (v: string) => {
-    });
+    export let textBox ; // new TextBox(null, "role:", () => "Editable textbox", (v: string) => { });
     export let editor: PiEditor;
 
     export let getText = (): string => {
@@ -108,7 +107,7 @@
     let originalText: string;
 
     onMount(() => {
-        LOGGER.log("onMount for role [" + textBox.role + "]");
+        MOUNT_LOGGER.log("TextComponent.onMount for role [" + textBox.role + "]");
         textBox.setFocus = setFocus;
         textBox.setCaret = setCaret;
         originalText = textBox.getText();
@@ -118,13 +117,13 @@
      * Used to handle non-printing characters
      * @param event
      */
-    const onKeyDown = async (event: KeyboardEvent) => {
+    const onKeyDown = (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.ctrlKey + "] shift [" + event.shiftKey + "] key [" + event.key + "]");
         isEditing = true;
         if (event.key === KEY_DELETE) {
             if (currentText() === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
-                    await editor.deleteBox(editor.selectedBox);
+                    editor.deleteBox(editor.selectedBox);
                     event.stopPropagation();
                     return;
                 }
@@ -135,7 +134,7 @@
         if (event.key === KEY_BACKSPACE) {
             if (currentText() === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
-                    await editor.deleteBox(editor.selectedBox);
+                    editor.deleteBox(editor.selectedBox);
                     event.stopPropagation();
                     return;
                 }
@@ -150,7 +149,7 @@
         }
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === KEY_ENTER) {
-            const isKeyboardShortcutForThis = await PiUtils.handleKeyboardShortcut(piKey, textBox, editor);
+            const isKeyboardShortcutForThis = PiUtils.handleKeyboardShortcut(piKey, textBox, editor);
             if (!isKeyboardShortcutForThis) {
                 LOGGER.log("Key not handled for element " + textBox.element);
                 if (event.key === KEY_ENTER) {
@@ -230,7 +229,7 @@
         window.getSelection().removeAllRanges();
     };
 
-    const onClick = async (event: MouseEvent) => {
+    const onClick = (event: MouseEvent) => {
         logBox("onClick before");
         textBox.caretPosition = getCaretPosition();
         logBox("onClick after");
@@ -244,7 +243,7 @@
      * IS triggered for printable keys only,
      * @param event
      */
-    const onKeyPress = async (event: KeyboardEvent) => {
+    const onKeyPress = (event: KeyboardEvent) => {
         LOGGER.log("onKeyPress: " + event.key);
         isEditing = true;
         const insertionIndex = getCaretPosition();
@@ -287,18 +286,22 @@
     let element: HTMLDivElement;
     let placeholder: string;
 
-    const onInput = async (e: InputEvent) => {
+    /**
+     * Would like to use onChange event, but that is only defined for <inout>, not for contenteditable.
+     * @param e
+     */
+    const onBlur = (e: FocusEvent) => {
         isEditing = true;
         let value = currentText();
-        LOGGER.log("onInput data" + e.data + ":  current [" + currentText() + "] box text [" + textBox.getText() + "]");
+        LOGGER.log("onBlur current [" + currentText() + "] box text [" + textBox.getText() + "]");
         textBox.caretPosition = getCaretPosition();
         textBox.setText(value);
         editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
-            await editor.deleteBox(textBox);
+            editor.deleteBox(textBox);
         }
-        LOGGER.log("END END text [" + currentText() + "]");
+        LOGGER.log("END onBlur text [" + currentText() + "]");
     };
 
     afterUpdate(() => {
@@ -320,13 +323,13 @@
     let textStyle: string = "";
 
     autorun(() => {
-        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "]");
+        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "] isEditing [" + isEditing + "]");
         placeholder = textBox.placeHolder;
+        const tmp = textBox.getText();
         // If being edited, do not set the value, let the user type whatever (s)he wants
-        if (!isEditing) {
-        // TODO Check whether this does not do too much now
+        // if (!isEditing) {
             text = textBox.getText();
-        }
+        // }
         // textStyle = ":before {" +  styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style)) + "}";
         // TODO check these style calcs for each situation
         const boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
@@ -355,7 +358,9 @@
       on:keypress={onKeyPress}
       on:keydown={onKeyDown}
       on:click={onClick}
-      on:input={onInput}
+
+
+      on:blur={onBlur}
       contenteditable="true"
       bind:innerHTML={text}
       bind:this={element}
