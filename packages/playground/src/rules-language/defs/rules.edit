@@ -1,15 +1,14 @@
-editor RulesEditor for language RulesLanguage
+editor default
 
 Rules {
-    @projection default [
-        Using data from ${self.imports @separator [||||]}
+    [Using data from ${self.imports vertical separator [\|\|\|\|]}
 
-        ${self.Rules @vertical @separator [\n\n]}
+        ${self.Rules vertical }
     ]
 }
 
 CheckingRule {
-    @projection default [
+    [
 
         Validation ${self.name}: ${self.check}
             description: ${self.description}
@@ -18,7 +17,7 @@ CheckingRule {
 }
 
 IfThenElseRule {
-    @projection [
+    [
         Rule ${self.name}
             description: ${self.description}
         ${self.IfStatement}
@@ -27,50 +26,42 @@ IfThenElseRule {
 }
 
 IfStatement {
-    @projection [
+    [
         if
             ${self.Condition}
         then
-            ${self.ThenStatements @vertical @separator [and]}
+            ${self.ThenStatements vertical separator [and]}
         else
-            ${self.ElseStatements @vertical}
+            ${self.ElseStatements vertical}
     ]
 }
 
 SetValue {
-    @projection [
+    [
         set ${self.attribute} to ${self.value}
     ]
 }
 
 AttributeRef {
-    @projection [
+    [
         ${self.attr}
     ]
-    @referenceShortcut self.attr
+    referenceShortcut = ${self.attr}
 }
 
 DateLiteral {
-    @projection [
-        ${self.day} / ${self.month} / ${self.year}
-    ]
+    [${self.day} / ${self.month} / ${self.year}]
 }
 
 HasNoValue {
-    @projection [
-        has no value: ${self.attribute}
-    ]
+    [has no value: ${self.attribute}]
 }
 
 HasAnyValue {
-    @projection [
-        has any value: ${self.attribute}
-    ]
+    [has any value: ${self.attribute}]
 }
 
 CheckingRuleCall {
-    @projection [
-        check ${self.rule}
-    ]
+    [check ${self.rule}]
 }
 

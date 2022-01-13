@@ -1,56 +1,56 @@
-editor heat for language heat // long name: jetbrains.mps.samples.heating
+editor default // long name: jetbrains.mps.samples.heating
 
 HeatingPlan {
-    @projection
+
     [Heating plan for room: ${self.name}
 
-    ${self.dailyPlans @vertical @terminator [\n]}
+    ${self.dailyPlans vertical }
     ]
 }
 
 DailyPlan {
-    @projection
+
     [
     Daily Plan ${self.name} applicable on ${self.applicability}
     customizing the ${self.customizes}
     plan
-        ${self.items @vertical @terminator [\n]}
+        ${self.items vertical }
     ]
 }
 ChangeEvent  {
-    @projection
+
     [
     set temperature to ${self.temperature} Celsius
     ]
 }
 
 NotSpecified {
-    @projection
+
     [not specified]
 }
 
 WeekendDay {
-    @projection
+
     [weekend day]
 }
 
 WeekDays {
-    @projection
+
     [week day]
 }
 
 SpecificDay {
-    @projection
+
     [${self.day}]
 }
 
 DayRange {
-    @projection
+
     [from ${self.start} to ${self.end}]
 }
 
 Slot  {
-    @projection
+
     [At ${self.start} o clock ${self.event}]
 }
 

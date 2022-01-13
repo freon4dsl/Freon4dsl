@@ -1,14 +1,14 @@
-editor XXX for language ExpressionLibrary
+editor default
 
 BooleanLiteral {
-    @projection [${self.value}]
+    [${self.value}]
 }
 
 NumberLiteral {
-    @projection [${self.value}]
+    [${self.value}]
 }
 
 StringLiteral {
-    @projection [${self.value}]
+    [${self.value}]
 }
 

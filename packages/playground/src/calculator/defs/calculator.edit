@@ -1,47 +1,47 @@
-editor calculator for language calculator
+editor default
 
 Calculator {
-    @projection normal
-    [Calculator ${self.name}
-    ${self.inputFields @vertical @terminator [\n]}
 
-    ${self.outputFields @vertical @separator [\n]}
+    [Calculator ${self.name}
+    ${self.inputFields vertical }
+
+    ${self.outputFields vertical }
     ]
 }
 
 InputField {
-    @projection normal
+
     [input ${self.name}]
 }
 
 OutputField {
-    @projection normal
+
     [output ${self.expression}]
 }
 
 InputFieldReference {
-    @projection normal
+
     [${self.field}]
 }
 
 NumberLiteralExpression {
-    @projection normal
+
         [${self.value}]
 }
 
 PlusExpression {
-    @symbol "+"
+    symbol = "+"
 }
 
 MinusExpression {
-    @symbol "-"
+    symbol = "-"
 }
 
 MultiplyExpression {
-    @symbol "*"
+    symbol = "*"
 }
 
 DivideExpression {
-    @symbol "/"
+    symbol = "/"
 }
 

@@ -1,8 +1,8 @@
-editor XXX for language ExpressionLibrary
+editor default
 
 LibUnit {
-@projection [ ${self.name}
-              expressions:
-              ${self.exps @vertical @terminator[;]}
-            ]
+    [ ${self.name}
+        expressions:
+        ${self.exps vertical terminator[;]}
+    ]
 }
