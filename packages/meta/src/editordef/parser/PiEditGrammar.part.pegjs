@@ -25,11 +25,11 @@ projectionGroup = ws "editor" ws name:var ws
 
 propProjectionStart     = "${"
 propProjectionEnd       = "}"
-projection_begin        = ws "["
-projection_end          = "]" ws
+projection_begin        = "["
+projection_end          = "]"
 projection_separator    = "|"
 
-standardBooleanProjection = "boolean" projection_begin t1:textBut projection_separator t2:textBut projection_end
+standardBooleanProjection = "boolean" ws projection_begin t1:textBut projection_separator t2:textBut projection_end ws
 {
     return creator.createStdBool({
         "trueKeyword"   : t1,
@@ -38,7 +38,7 @@ standardBooleanProjection = "boolean" projection_begin t1:textBut projection_sep
     });
 }
 
-standardReferenceSeparator = "referenceSeparator" projection_begin t:textBut projection_end
+standardReferenceSeparator = "referenceSeparator" ws projection_begin t:textBut projection_end ws
 { return t; }
 
 classifierProjection =
@@ -156,7 +156,7 @@ extraChoiceSub3 = symbol:symbol
 }
 /* END of rules that make order of extra info flexible */
 
-projection = projection_begin lines:lineWithOptional* projection_end
+projection = ws projection_begin lines:lineWithOptional* projection_end ws
 {
     return creator.createProjection({
         "lines" : lines,
@@ -173,12 +173,12 @@ tableProjection = "table" ws projection_begin ws
                                 tail:(ws projection_separator ws v:property_projection { return v; })*
                                     { return [head].concat(tail); }
                              ) ws
-                   projection_end
+                   projection_end ws
 {
     return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
 }
 
-lineWithOptional = items:(templateSpace / textItem / property_projection / optionalProjection / superProjection / newline )+
+lineWithOptional = items:(templateSpace / textItem / optionalProjection / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
@@ -329,7 +329,8 @@ textBut  = chars:anythingBut+
 // Note that these chars can still be escaped, through the 'char' rule in the basic grammar
 // The following are excluded:
 // propProjectionStart     = "${"
-// projection_begin        = ws "["
+// projection_begin        = "["
+// projection_end          = "]"
 // projection_separator    = "|"
 anythingBut = !("${" / newline / "[" / "|" / "]") src:char
 {

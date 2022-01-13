@@ -446,7 +446,7 @@ export class WriterTemplate {
                 private unparse${name}(modelelement: ${name}, short: boolean) {
                     const blockIndent = this.output[this.currentLine].length;
                     // do the first line
-                    ${this.makeLine(lines[0], true)}
+                    ${this.makeLine(lines[0], false)}
                     if (!short) { // do the rest of the lines as well
                         ${this.makeRemainingLines(lines)}
                     }
@@ -455,7 +455,8 @@ export class WriterTemplate {
                 return `
                 ${comment}
                 private unparse${name}(modelelement: ${name}, short: boolean) {
-                    ${this.makeLine(lines[0], true)}
+                    const blockIndent = this.output[this.currentLine].length;
+                    ${this.makeLine(lines[0], false)}
                 }`;
             }
         } else {
@@ -480,14 +481,14 @@ export class WriterTemplate {
     // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
     private makeLine(line: PiEditProjectionLine, inOptionalGroup: boolean): string {
         let result: string = ``;
-        line.items.forEach(item => {
-            result += this.makeItem(item, line.indent, inOptionalGroup);
+        line.items.forEach((item, index) => {
+            result += `/* line indent:  + ${line.indent} */`;
+            result += this.makeItem(item, line.indent, inOptionalGroup, line.isOptional());
         });
-        result += "/* HERE end of line FROM Writer Template */"
         return result;
     }
 
-    private makeItem(item: PiEditProjectionItem, indent: number, inOptionalGroup: boolean): string {
+    private makeItem(item: PiEditProjectionItem, indent: number, inOptionalGroup: boolean, lineIsOptional: boolean): string {
         let result: string = ``;
         if (item instanceof PiEditProjectionText) {
             // add escapes to item.text
@@ -503,10 +504,18 @@ export class WriterTemplate {
                 myTypeScript += " && " + myTypeScript + '.length > 0';
             }
             let subresult: string = "";
-            // make first line without newline and indent
-            subresult += this.makeLine(item.lines[0], true);
-            // make all other lines with newline and indent
-            subresult += this.makeRemainingLines(item.lines);
+            item.lines.forEach((line, index) => {
+                if (index === 0) {
+                    if (lineIsOptional) {
+                        // the indent and newline needs to be within the optional if-stat
+                        // because otherwise there will be empty lines in the output of the unparser
+                        subresult += `this.newlineAndIndentation(blockIndent + ${line.indent} + ${indent});`;
+                    }
+                    subresult += this.makeLine(line, true);
+                } else
+                    subresult += `this.newlineAndIndentation(blockIndent + ${line.indent} + ${indent});
+                           ${this.makeLine(line, true)}`;
+            });
             // surround whole sub-projection with an if-statement
             result += `if (!!${myTypeScript}) { ${subresult} }`;
         } else if (item instanceof PiEditPropertyProjection) {
@@ -531,8 +540,15 @@ export class WriterTemplate {
             if (first) { // skip the first line, this is already taken care of in 'makeConceptMethod'
                 first = false;
             } else {
-                result += `this.newlineAndIndentation(blockIndent + ${line.indent});
-                           ${this.makeLine(line, true)}`;
+                // we need to include an indent and newline within an optional if-stat
+                // because these would otherwise result in empty lines in the output of the unparser
+                // therefore we need to know whether the next item is an optional one
+                if (line.items[0] instanceof PiOptionalPropertyProjection) {
+                    result += this.makeLine(line, false);
+                } else {
+                    result += `this.newlineAndIndentation(blockIndent + ${line.indent});
+                           ${this.makeLine(line, false)}`;
+                }
             }
         });
         return result;

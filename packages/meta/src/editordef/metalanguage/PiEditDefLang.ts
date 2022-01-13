@@ -256,6 +256,10 @@ export class PiEditProjectionLine extends PiDefinitionElement {
         return this.items.every(i => i instanceof PiEditParsedNewline || i instanceof PiEditParsedProjectionIndent);
     }
 
+    isOptional(): boolean {
+        return this.items.every(i => i instanceof PiOptionalPropertyProjection);
+    }
+
     toString(): string {
         return "#indents: [" + this.indent + "] " + this.items.map(item => item.toString()).join("");
     }
