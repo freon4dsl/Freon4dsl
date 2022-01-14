@@ -8,7 +8,7 @@ import {
     GridOrientation,
     HorizontalListBox, isAliasBox,
     KeyboardShortcutBehavior,
-    PiEditor,
+    PiEditor, PiKeyboardShortcutAction,
     PiStyle
 } from "../index";
 import { PiElement } from "../../language";
@@ -167,7 +167,13 @@ export class TableUtil {
      * @private
      */
     private static addKeyBoardShortCuts(element: PiElement,propertyName: string, nrOfRows: number, nrOfColumns: number, editor: PiEditor, elementBuilder: () => PiElement) {
-        editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(element, propertyName, nrOfRows, nrOfColumns, elementBuilder));
+        // editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(element, propertyName, nrOfRows, nrOfColumns, elementBuilder));
+        // editor.keyboardActions.splice(
+        //     0,
+        //     0,
+        //     this.createKeyboardShortcutForEmptyCollectionGrid()
+        // );
+        editor.new_pi_actions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(element, propertyName, nrOfRows, nrOfColumns, elementBuilder));
         editor.keyboardActions.splice(
             0,
             0,
@@ -179,7 +185,7 @@ export class TableUtil {
      * Create a keyboard shortcut for use in an element table
      * @param roleToSelect
      */
-    private static createKeyboardShortcutForCollectionGrid(element: PiElement, propertyName: string, nrOfRows: number, nrOfColumns: number, elementBuilder: () => PiElement): KeyboardShortcutBehavior {
+    private static createKeyboardShortcutForCollectionGrid(element: PiElement, propertyName: string, nrOfRows: number, nrOfColumns: number, elementBuilder: () => PiElement): PiKeyboardShortcutAction {
         const rolenames: string[] = [];
         for(let row = 1; row <= nrOfRows; row++) {
             for(let column = 1; column <= nrOfColumns; column++) {
@@ -189,7 +195,7 @@ export class TableUtil {
             }
         }
         LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
-        return {
+        return new PiKeyboardShortcutAction({
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             activeInBoxRoles: rolenames,
             action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
@@ -216,7 +222,7 @@ export class TableUtil {
                 return newElement;
                 // return null;
             }
-        };
+        });
     }
 
     /**

@@ -19,7 +19,9 @@ export * from "./PiEditorStyles";
 // load PiEditor last, as it needs one or more of the above definitions
 export * from "./PiEditor";
 
-export * from "./InternalBehavior"; // needs PiEditor, so this is really the last
-export * from "./InternalBinaryBehavior";
-export * from "./InternalExpressionBehavior";
-export * from "./InternalCustomBehavior";
+// export * from "./InternalBehavior"; // needs PiEditor, so this is really the last
+// export * from "./InternalBinaryBehavior";
+// export * from "./InternalExpressionBehavior";
+// export * from "./InternalCustomBehavior";
+
+export * from "./actions";

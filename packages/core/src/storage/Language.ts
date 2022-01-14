@@ -1,4 +1,4 @@
-import { ReferenceShortcut } from "../editor/index";
+import { ReferenceShortcut2 } from "../editor/index";
 import { PiElement } from "../language/PiElement";
 import { isNullOrUndefined, PiLogger } from "../util";
 
@@ -32,7 +32,7 @@ export type Concept = {
     baseName: string;
     subConceptNames: string[];
     trigger: string;
-    referenceShortcut?: ReferenceShortcut;
+    referenceShortcut?: ReferenceShortcut2;
     properties: Map<string, Property>;
     constructor: () => PiElement;
 };

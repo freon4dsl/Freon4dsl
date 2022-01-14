@@ -1,7 +1,8 @@
 /**
  * Describes an option in a dropdown
  */
-import { InternalBehavior } from "../InternalBehavior";
+import { PiAction } from "../actions/index";
+// import { InternalBehavior } from "../InternalBehavior";
 
 export interface SelectOption {
     /**
@@ -15,7 +16,10 @@ export interface SelectOption {
     /**
      * The behavior to be executed
      */
-    behavior?: InternalBehavior
+    // behavior?: InternalBehavior,
+
+
+    action?: PiAction,
     /**
      * A more vervose description, keep this to a single short line.
      */

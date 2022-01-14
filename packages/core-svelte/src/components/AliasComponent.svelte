@@ -148,7 +148,8 @@
         LOGGER.log("onInput: [" + value + "] for role " + choiceBox.role + " with text [" + textComponent.getText() + "]");
         let aliasResult = undefined;
         if (isAliasBox(choiceBox)) {
-            const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);
+            // const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);
+            const selected: SelectOption = findOption(selectableOptionList.options, value);
             LOGGER.log("    onInput alias box selected " + JSON.stringify(selected));
             if (!!selected) {
                 aliasResult = choiceBox.selectOption(editor, selected);
@@ -161,7 +162,8 @@
                 // choiceBox.textHelper.setText("");
             }
         } else if (isSelectBox(choiceBox)) {
-            const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);
+            // const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);
+            const selected: SelectOption = findOption(selectableOptionList.options, value);
             LOGGER.log("    onInput select box selected " + JSON.stringify(selected));
             if (selected !== null) {
                 isEditing = false;
@@ -180,24 +182,6 @@
         }
         LOGGER.log("onInput aliasResult: [" + aliasResult + "]");
         handleStringInput(value, aliasResult);
-        // switch (aliasResult) {
-        //     case BehaviorExecutionResult.EXECUTED:
-        //         LOGGER.log("ALIAS MATCH");
-        //         if (!!textComponent) {
-        //             textComponent.textOnScreen = "";
-        //         }
-        //         setOpen("onInput alias executed", false);
-        //         break;
-        //     case BehaviorExecutionResult.PARTIAL_MATCH:
-        //         LOGGER.log("PARTIAL_MATCH");
-        //         selectableOptionList.text = value;
-        //         setOpen("onInput alias partial match", true);
-        //         break;
-        //     case BehaviorExecutionResult.NO_MATCH:
-        //         LOGGER.log("NO MATCH");
-        //         selectableOptionList.text = value;
-        //         break;
-        // }
         return aliasResult;
     };
 
@@ -296,7 +280,6 @@
     let listForDropdown: SelectOption[];
     let aliasStyle: string = "";
 
-    // selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun(() => {
         if ($openStore) {
             listForDropdown = selectableOptionList.getFilteredOptions();

@@ -4,10 +4,13 @@ import { PiEnvironment } from "../environment/PiEnvironment";
 import { PiContainerDescriptor, PiElement } from "../language";
 import { PiCaret, wait, PiLogger } from "../util";
 import {
-    InternalBehavior,
-    InternalBinaryBehavior,
-    InternalCustomBehavior,
-    InternalExpressionBehavior,
+    PiAction,
+    PiCreateBinaryExpressionAction,
+    PiCreateExpressionAction,
+    PiCustomAction
+} from "./actions/index";
+import { PiKeyboardShortcutAction } from "./actions/PiKeyboardShortcutAction";
+import {
     PiProjection,
     isAliasBox,
     isSelectBox,
@@ -23,7 +26,9 @@ export class PiEditor {
     private _rootElement: PiElement = null;
     readonly actions?: PiActions;
     readonly projection: PiProjection;
-    readonly behaviors: InternalBehavior[] = [];
+    // readonly behaviors: InternalBehavior[] = [];
+    public new_pi_actions: PiAction[]= [];
+    new_keyboardactions: PiKeyboardShortcutAction[] = [];
     keyboardActions: KeyboardShortcutBehavior[] = [];
     style: PiEditorStyle = { global: { dark: {}, light: {}}};
     theme: string = "light";
@@ -75,10 +80,47 @@ export class PiEditor {
         if (!actions) {
             return;
         }
-        actions.expressionCreators.forEach(ea => this.behaviors.push(new InternalExpressionBehavior(ea)));
-        actions.binaryExpressionCreators.forEach(ba => this.behaviors.push(new InternalBinaryBehavior(ba)));
-        actions.customBehaviors.forEach(ca => this.behaviors.push(new InternalCustomBehavior(ca)));
+        // actions.expressionCreators.forEach(ea => this.behaviors.push(new InternalExpressionBehavior(ea)));
+        // actions.binaryExpressionCreators.forEach(ba => this.behaviors.push(new InternalBinaryBehavior(ba)));
+        // actions.customBehaviors.forEach(ca => this.behaviors.push(new InternalCustomBehavior(ca)));
         this.keyboardActions = actions.keyboardActions;
+
+        actions.customBehaviors.forEach(ca => this.new_pi_actions.push(new PiCustomAction({
+            activeInBoxRoles: ca.activeInBoxRoles,
+            boxRoleToSelect: ca.boxRoleToSelect,
+            caretPosition: ca.caretPosition,
+            trigger: ca.trigger,
+            action: ca.action,
+            isApplicable: ca.isApplicable,
+            referenceShortcut: ca.referenceShortcut
+        })));
+        actions.expressionCreators.forEach(ca => this.new_pi_actions.push(new PiCreateExpressionAction({
+            activeInBoxRoles: ca.activeInBoxRoles,
+            boxRoleToSelect: ca.boxRoleToSelect,
+            caretPosition: ca.caretPosition,
+            trigger: ca.trigger,
+            expressionBuilder: ca.expressionBuilder,
+            isApplicable: ca.isApplicable,
+            referenceShortcut: ca.referenceShortcut
+        })));
+        actions.binaryExpressionCreators.forEach(ca => this.new_pi_actions.push(new PiCreateBinaryExpressionAction({
+            activeInBoxRoles: ca.activeInBoxRoles,
+            boxRoleToSelect: ca.boxRoleToSelect,
+            caretPosition: ca.caretPosition,
+            trigger: ca.trigger,
+            expressionBuilder: ca.expressionBuilder,
+            isApplicable: ca.isApplicable,
+            referenceShortcut: ca.referenceShortcut
+        })));
+        this.keyboardActions.forEach( action => {this.new_pi_actions.push(new PiKeyboardShortcutAction({
+            activeInBoxRoles: action.activeInBoxRoles,
+            boxRoleToSelect: action.boxRoleToSelect,
+            caretPosition: action.caretPosition,
+            trigger: action.trigger,
+            isApplicable: action.isApplicable,
+            referenceShortcut: action.referenceShortcut,
+            action: action.action
+        }))});
     }
 
     get projectedElement() {
@@ -95,7 +137,7 @@ export class PiEditor {
     NOSELECT: Boolean = false;
 
     selectElement(element: PiElement, role?: string, caretPosition?: PiCaret) {
-        LOGGER.log("selectElement " + element.piLanguageConcept());
+        LOGGER.log("selectElement " + element?.piLanguageConcept());
         if( this.NOSELECT) { return; }
         if (element === null || element === undefined) {
             console.error("PiEditor.selectElement is null !");

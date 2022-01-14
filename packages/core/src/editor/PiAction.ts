@@ -1,4 +1,4 @@
-import { Box, ReferenceShortcut } from "./internal";
+import { Box, ReferenceShortcut2 } from "./internal";
 import { PiBinaryExpression, PiElement, PiExpression } from "../language";
 import { PiCaret, PiKey } from "../util";
 import { PiEditor } from "./internal";
@@ -46,7 +46,7 @@ export interface PiBehavior {
     boxRoleToSelect?: string;
     caretPosition?: PiCaret;
 
-    referenceShortcut?: ReferenceShortcut;
+    referenceShortcut?: ReferenceShortcut2;
 
 }
 // end::PiBehavior[]
@@ -72,7 +72,7 @@ export interface PiCustomBehavior extends PiBehavior {
     action: (box: Box, trigger: string, editor: PiEditor, propertyName?: string) => PiElement | null;
     undo?: (box: Box, ed: PiEditor) => void;
 
-    referenceShortcut?: ReferenceShortcut; // TODO this is already defined in the parent
+    referenceShortcut?: ReferenceShortcut2; // TODO this is already defined in the parent
 }
 
 // TODO Use this to replace KeyboardShortcutTrigger
