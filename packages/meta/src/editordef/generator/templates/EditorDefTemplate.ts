@@ -19,8 +19,8 @@ export class EditorDefTemplate {
                  ${editorDef.conceptEditors.filter(conceptEditor => conceptEditor.concept.referred instanceof PiConcept && conceptEditor.referenceShortcut !== null).map( concepteditor =>
                 `Language.getInstance().concept("${Names.concept(concepteditor.concept.referred as PiConcept)}").referenceShortcut = 
                        {
-                                                              propertyname: "${((concepteditor.referenceShortcut) as PiLangSelfExp).appliedfeature.sourceName}",
-                                                              metatype: "${((concepteditor.referenceShortcut) as PiLangSelfExp).appliedfeature.referredElement.referred.type.name}"
+                                                              propertyName: "${((concepteditor.referenceShortcut) as PiLangSelfExp).appliedfeature.sourceName}",
+                                                              conceptName: "${((concepteditor.referenceShortcut) as PiLangSelfExp).appliedfeature.referredElement.referred.type.name}"
                                                          }
                 ;`
             ).join("\n")}

@@ -1,8 +1,7 @@
 import { Concept, Language } from "../../storage/index";
 import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior, PiLogger } from "../../util";
 import { PiCreatePartAction } from "../actions/PiCreatePartAction";
-import { triggerToString, PiEditor, TextBox, PiCustomAction } from "../internal";
-import { DummyBox, DummyElement } from "./DummyBox";
+import { triggerToString, PiEditor, TextBox, isProKey } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
 import { PiElement } from "../../language";
 import { runInAction } from "mobx";
@@ -74,9 +73,9 @@ export class AliasBox extends AbstractChoiceBox {
             LOGGER.log("No property and concept defined for alias box " + this.role);
         }
         // Using the new actions:
-        // Now look in all actions defined in the editor whether they fit this alias
+        // Now look in all actions defined in the editor whether they fit this alias, except for the keyboard shortcuts
         editor.new_pi_actions
-            .filter(action => action.activeInBoxRoles.includes(this.role))
+            .filter(action => !isProKey(action.trigger) && action.activeInBoxRoles.includes(this.role))
             .forEach(action => {
                 const options: SelectOption[] = [];
                 options.push({
@@ -88,47 +87,6 @@ export class AliasBox extends AbstractChoiceBox {
                 // }
                 result.push(...options);
             });
-
-        // Now look in all actions defined in the ediotr whether they fit this alias
-        // editor.behaviors
-        //     .filter(behavior => behavior.activeInBoxRoles.includes(this.role))
-        //     .forEach(behavior => {
-        //         const options: SelectOption[] = [];
-                // If the behavior has a referenceShortcut, we need to find all potential referred elements and add them to the options.
-                // TODO Decide whethers this is neede, sas it assumes quite a lot implicitly
-                // if (!!(behavior.referenceShortcut)) {
-                //     // Create the new element for this behavior inside a dummy and then point the container to the
-                //     // current element.  This way the new element is not part of the model and will not trigger mobx
-                //     // reactions. But the scoper can be used to find available references, because the scoper only
-                //     // needs the container.
-                //     const dummyElement = new DummyElement();
-                //     const dummyBox = new DummyBox(dummyElement, "dummy-role");
-                //     runInAction(() => {
-                //         const newElement = behavior.execute(dummyBox, triggerToString(behavior.trigger), editor);
-                //         newElement["container"] = this.element;
-                //         options.push(...
-                //             editor.environment
-                //                 .scoper.getVisibleNames(newElement, behavior.referenceShortcut.metatype)
-                //                 .filter(name => !!name && name !== "")
-                //                 .map(name => ({
-                //                     id: triggerToString(behavior.trigger) + "-" + name,
-                //                     label: name,
-                //                     description: behavior.referenceShortcut.metatype,
-                //                     behavior: behavior
-                //                 })));
-                //     });
-                // }
-                /// if there are no reference shortcut options, add the alias itself
-                // if (options.length === 0) {
-                //     options.push({
-                //         id: triggerToString(behavior.trigger),
-                //         label: triggerToString(behavior.trigger),
-                //         behavior: behavior,
-                //         description: "alias " + triggerToString(behavior.trigger)
-                //     });
-                // }
-            //     result.push(...options);
-            // });
         return result;
     }
 
@@ -163,43 +121,19 @@ export class AliasBox extends AbstractChoiceBox {
             newElement["container"] = this.element;
             result.push(...
                 editor.environment
-                    .scoper.getVisibleNames(newElement, concept.referenceShortcut.metatype)
+                    .scoper.getVisibleNames(newElement, concept.referenceShortcut.conceptName)
                     .filter(name => !!name && name !== "")
                     .map(name => ({
                         id: concept.trigger + "-" + name,
                         label: name,
-                        description: "create " + concept.referenceShortcut.metatype,
+                        description: "create " + concept.referenceShortcut.conceptName,
                         action: new PiCreatePartAction({
                             referenceShortcut: {
-                                propertyname: concept.referenceShortcut.propertyname,
-                                metatype: concept.referenceShortcut.metatype
+                                propertyName: concept.referenceShortcut.propertyName,
+                                conceptName: concept.referenceShortcut.conceptName
                             },
                             propertyName: self.propertyName,
                             conceptName: concept.typeName
-                            // action: (box: Box, text: string, editor: PiEditor): PiElement | null => {
-                            //     LOGGER.log("Alias auto REFSHORTCUT action: " + this.propertyName + " concept " + concept.typeName);
-                            //     const newElement: PiElement = concept.constructor()
-                            //     if (newElement === undefined) {
-                            //         // TODO Find out why this happens sometimes
-                            //         console.error("AliasBox action: Unexpected new element undefined");
-                            //         return null;
-                            //     }
-                            //     // runInAction(() => {
-                            //         if (Language.getInstance().conceptProperty(this.element.piLanguageConcept(), this.propertyName).isList) {
-                            //             this.element[this.propertyName].push(newElement);
-                            //         } else {
-                            //             this.element[this.propertyName] = newElement;
-                            //         }
-                            //         if (!!text && !!action.referenceShortcut) {
-                            //             execresult[action.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, action.referenceShortcut.metatype);
-                            //         }
-                            //
-                            //     // });
-                            //
-                            //     editor.selectElement(newElement);
-                            //     editor.selectFirstEditableChildBox();
-                            //     return newElement;
-                            // }
                         })
                     })));
         });

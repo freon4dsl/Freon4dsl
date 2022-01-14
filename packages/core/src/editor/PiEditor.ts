@@ -1,3 +1,4 @@
+import { isEqual } from "lodash";
 import { makeObservable, observable, computed, action, trace } from "mobx";
 import { PiEnvironment } from "../environment/PiEnvironment";
 
@@ -6,17 +7,14 @@ import { PiCaret, wait, PiLogger } from "../util";
 import {
     PiAction,
     PiCreateBinaryExpressionAction,
-    PiCreateExpressionAction,
-    PiCustomAction
+    PiCustomAction, PiKeyboardShortcutAction, triggerToString2, triggerTypeToString
 } from "./actions/index";
-import { PiKeyboardShortcutAction } from "./actions/PiKeyboardShortcutAction";
 import {
     PiProjection,
     isAliasBox,
     isSelectBox,
     isTextBox,
     Box,
-    KeyboardShortcutBehavior,
     PiActions, PiEditorStyle
 } from "./internal";
 
@@ -26,10 +24,7 @@ export class PiEditor {
     private _rootElement: PiElement = null;
     readonly actions?: PiActions;
     readonly projection: PiProjection;
-    // readonly behaviors: InternalBehavior[] = [];
-    public new_pi_actions: PiAction[]= [];
-    new_keyboardactions: PiKeyboardShortcutAction[] = [];
-    keyboardActions: KeyboardShortcutBehavior[] = [];
+    new_pi_actions: PiAction[]= [];
     style: PiEditorStyle = { global: { dark: {}, light: {}}};
     theme: string = "light";
 
@@ -80,10 +75,7 @@ export class PiEditor {
         if (!actions) {
             return;
         }
-        // actions.expressionCreators.forEach(ea => this.behaviors.push(new InternalExpressionBehavior(ea)));
-        // actions.binaryExpressionCreators.forEach(ba => this.behaviors.push(new InternalBinaryBehavior(ba)));
-        // actions.customBehaviors.forEach(ca => this.behaviors.push(new InternalCustomBehavior(ca)));
-        this.keyboardActions = actions.keyboardActions;
+        // this.keyboardActions = actions.keyboardActions;
 
         actions.customBehaviors.forEach(ca => this.new_pi_actions.push(new PiCustomAction({
             activeInBoxRoles: ca.activeInBoxRoles,
@@ -91,15 +83,6 @@ export class PiEditor {
             caretPosition: ca.caretPosition,
             trigger: ca.trigger,
             action: ca.action,
-            isApplicable: ca.isApplicable,
-            referenceShortcut: ca.referenceShortcut
-        })));
-        actions.expressionCreators.forEach(ca => this.new_pi_actions.push(new PiCreateExpressionAction({
-            activeInBoxRoles: ca.activeInBoxRoles,
-            boxRoleToSelect: ca.boxRoleToSelect,
-            caretPosition: ca.caretPosition,
-            trigger: ca.trigger,
-            expressionBuilder: ca.expressionBuilder,
             isApplicable: ca.isApplicable,
             referenceShortcut: ca.referenceShortcut
         })));
@@ -112,15 +95,6 @@ export class PiEditor {
             isApplicable: ca.isApplicable,
             referenceShortcut: ca.referenceShortcut
         })));
-        this.keyboardActions.forEach( action => {this.new_pi_actions.push(new PiKeyboardShortcutAction({
-            activeInBoxRoles: action.activeInBoxRoles,
-            boxRoleToSelect: action.boxRoleToSelect,
-            caretPosition: action.caretPosition,
-            trigger: action.trigger,
-            isApplicable: action.isApplicable,
-            referenceShortcut: action.referenceShortcut,
-            action: action.action
-        }))});
     }
 
     get projectedElement() {
@@ -413,4 +387,20 @@ export class PiEditor {
         return this._rootElement;
     }
 
+    addOrReplaceAction(piCustomAction: PiAction) {
+        console.log("   addOrReplaceAction [" + triggerTypeToString(piCustomAction.trigger) + "] [" + piCustomAction.activeInBoxRoles + "]");
+
+        this.new_pi_actions.forEach(act => {
+            console.log("   Trigger [" + triggerTypeToString(act.trigger) + "] [" + act.activeInBoxRoles + "]");
+        })
+        const alreadyThere = this.new_pi_actions.findIndex( action => {
+            return isEqual(action.trigger, piCustomAction.trigger) && isEqual(action.activeInBoxRoles, piCustomAction.activeInBoxRoles);
+        });
+        console.log("  alreadyThere: " + alreadyThere);
+        if(alreadyThere !== -1) { // found it
+            this.new_pi_actions.splice(alreadyThere, 1, piCustomAction);
+        }else {
+            this.new_pi_actions.splice(0, 0, piCustomAction);
+        }
+    }
 }

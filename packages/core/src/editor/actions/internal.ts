@@ -9,7 +9,7 @@
 
 export * from "./PiAction";
 export * from "./PiCustomAction";
-export * from "./PiCreateExpressionAction";
+// export * from "./PiCreateExpressionAction";
 export * from "./PiCreateBinaryExpressionAction";
 export * from "./PiKeyboardShortcutAction";
 export * from "./PiCreatePartAction";

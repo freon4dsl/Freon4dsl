@@ -4,9 +4,65 @@
    "entities": [
       {
          "$typename": "Entity",
-         "name": "Aap",
-         "attributes": [],
-         "methods": [],
+         "name": "Aasss-p",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "qwe",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "asde",
+               "declaredType": "Integer"
+            }
+         ],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "",
+               "body": {
+                  "$typename": "PlusExpression",
+                  "left": {
+                     "$typename": "ParameterRef",
+                     "appliedfeature": {
+                        "$typename": "AttributeRef",
+                        "appliedfeature": null,
+                        "attribute": "qwe"
+                     },
+                     "parameter": "aaa"
+                  },
+                  "right": {
+                     "$typename": "ParameterRef",
+                     "appliedfeature": {
+                        "$typename": "AttributeRef",
+                        "appliedfeature": null,
+                        "attribute": "qwe"
+                     },
+                     "parameter": "asaa1"
+                  },
+                  "appliedfeature": null
+               },
+               "parameters": [
+                  {
+                     "$typename": "Parameter",
+                     "name": "asaa1",
+                     "declaredType": "Aasss-p"
+                  },
+                  {
+                     "$typename": "Parameter",
+                     "name": "appeltje",
+                     "declaredType": "Boolean"
+                  },
+                  {
+                     "$typename": "Parameter",
+                     "name": "aaaaaa",
+                     "declaredType": null
+                  }
+               ],
+               "declaredType": "Boolean"
+            }
+         ],
          "baseEntity": "Mies"
       },
       {

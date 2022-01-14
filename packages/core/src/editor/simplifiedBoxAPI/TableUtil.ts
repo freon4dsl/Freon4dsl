@@ -1,4 +1,5 @@
 import { runInAction } from "mobx";
+import { PiCreateSiblingAction } from "../actions/PiCreateSiblingAction";
 import { GridCellBox } from "../boxes/GridCellBox";
 import {
     AliasBox,
@@ -6,8 +7,7 @@ import {
     BoxUtils,
     GridBox,
     GridOrientation,
-    HorizontalListBox, isAliasBox,
-    KeyboardShortcutBehavior,
+    isAliasBox, PiCustomAction,
     PiEditor, PiKeyboardShortcutAction,
     PiStyle
 } from "../index";
@@ -18,7 +18,6 @@ import { MetaKey, PiKey } from "../../util/Keys";
 import { NBSP, PiLogger, PiUtils } from "../../util";
 import { Language } from "../../storage";
 import { RoleProvider } from "./RoleProvider";
-import { merge } from "lodash";
 
 // headerStyle and rowStyle are the default styles for a table
 export const headerStyle: PiStyle = {
@@ -84,7 +83,7 @@ export class TableUtil {
         const property = element[propertyName];
         // const isList: boolean = propInfo.isList;
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
-        const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
+        // const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
         const hasHeaders = columnHeaders !== null && columnHeaders !== undefined && columnHeaders.length > 0;
         // create the box
         if (property !== undefined && property !== null) {
@@ -126,7 +125,7 @@ export class TableUtil {
             // Add keyboard actions to grid such that new rows can be added by Return Key
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
             const nrOfRowsAndColumns = this.calcLocation( {row: property.length, column: cellGetters.length}, orientation, hasHeaders);
-            this.addKeyBoardShortCuts(element, propertyName, nrOfRowsAndColumns.row, nrOfRowsAndColumns.column,editor, elementBuilder);
+            this.addKeyBoardShortCuts(element, propertyName, nrOfRowsAndColumns.row, nrOfRowsAndColumns.column,editor, propInfo.type);
             return new GridBox(element, roleName, cells, { orientation: orientation } );
         }
         return null;
@@ -166,18 +165,15 @@ export class TableUtil {
      * @param cells
      * @private
      */
-    private static addKeyBoardShortCuts(element: PiElement,propertyName: string, nrOfRows: number, nrOfColumns: number, editor: PiEditor, elementBuilder: () => PiElement) {
+    private static addKeyBoardShortCuts(element: PiElement,propertyName: string, nrOfRows: number, nrOfColumns: number, editor: PiEditor, conceptName: string) {
         // editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(element, propertyName, nrOfRows, nrOfColumns, elementBuilder));
         // editor.keyboardActions.splice(
         //     0,
         //     0,
         //     this.createKeyboardShortcutForEmptyCollectionGrid()
         // );
-        editor.new_pi_actions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(element, propertyName, nrOfRows, nrOfColumns, elementBuilder));
-        editor.keyboardActions.splice(
-            0,
-            0,
-            this.createKeyboardShortcutForEmptyCollectionGrid()
+        editor.addOrReplaceAction(this.createKeyboardShortcutForCollectionGrid(element, propertyName, nrOfRows, nrOfColumns, conceptName));
+        editor.addOrReplaceAction(this.createKeyboardShortcutForEmptyCollectionGrid()
         );
     }
 
@@ -185,7 +181,7 @@ export class TableUtil {
      * Create a keyboard shortcut for use in an element table
      * @param roleToSelect
      */
-    private static createKeyboardShortcutForCollectionGrid(element: PiElement, propertyName: string, nrOfRows: number, nrOfColumns: number, elementBuilder: () => PiElement): PiKeyboardShortcutAction {
+    private static createKeyboardShortcutForCollectionGrid(element: PiElement, propertyName: string, nrOfRows: number, nrOfColumns: number, conceptName: string): PiCreateSiblingAction {
         const rolenames: string[] = [];
         for(let row = 1; row <= nrOfRows; row++) {
             for(let column = 1; column <= nrOfColumns; column++) {
@@ -195,34 +191,40 @@ export class TableUtil {
             }
         }
         LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
-        return new PiKeyboardShortcutAction({
+        const result = new PiCreateSiblingAction({
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             activeInBoxRoles: rolenames,
-            action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
-                LOGGER.log("=================================== 1 New table row/column for " + box.role + " in " + box.element.piLanguageConcept() + "." + propertyName );
-                const element = box.element;
-                const proc = element.piContainer();
-                const parent: PiElement = proc.container;
-                LOGGER.log("parent is of type " + parent?.piLanguageConcept() + "  box is " + box.kind + " role " + box.role);
-                PiUtils.CHECK(parent[proc.propertyName][proc.propertyIndex] === element);
-                const newElement: PiElement = elementBuilder();
-                LOGGER.log("newElement is of type " + newElement?.piLanguageConcept());
-                if( newElement === undefined) {
-                    // TODO Find out why this happens sometimes
-                    LOGGER.log("IN BETWEEN GRID: Unexpected new element undefined");
-                    return null;
-                }
-                LOGGER.log("KEYBOARD START")
-                runInAction( () => {
-                    parent[propertyName].splice(proc.propertyIndex + 1, 0, newElement);
-                });
-                LOGGER.log("KEYBOARD END")
-                editor.selectElement(newElement);
-                editor.selectFirstEditableChildBox();
-                return newElement;
-                // return null;
-            }
+            conceptName: conceptName,
+
         });
+        return result;
+        // return new PiKeyboardShortcutAction({
+        //     trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
+        //     activeInBoxRoles: rolenames,
+        //     action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
+        //         LOGGER.log("=================================== 1 New table row/column for " + box.role + " in " + box.element.piLanguageConcept() + "." + propertyName );
+        //         const element = box.element;
+        //         const proc = element.piContainer();
+        //         const parent: PiElement = proc.container;
+        //         LOGGER.log("parent is of type " + parent?.piLanguageConcept() + "  box is " + box.kind + " role " + box.role);
+        //         PiUtils.CHECK(parent[proc.propertyName][proc.propertyIndex] === element);
+        //         const constructor = Language.getInstance().concept(conceptName).constructor;
+        //         const newElement: PiElement =  constructor();
+        //         LOGGER.log("newElement is of type " + newElement?.piLanguageConcept());
+        //         if( newElement === undefined) {
+        //             // TODO Find out why this happens sometimes
+        //             LOGGER.log("IN BETWEEN GRID: Unexpected new element undefined");
+        //             return null;
+        //         }
+        //         LOGGER.log("KEYBOARD START")
+        //             parent[propertyName].splice(proc.propertyIndex + 1, 0, newElement);
+        //         LOGGER.log("KEYBOARD END")
+        //         // editor.selectElement(newElement);
+        //         // editor.selectFirstEditableChildBox();
+        //         return newElement;
+        //         // return null;
+        //     }
+        // });
     }
 
     /**
@@ -230,8 +232,8 @@ export class TableUtil {
      * @param roleToSelect
      * @private
      */
-    private static createKeyboardShortcutForEmptyCollectionGrid(): KeyboardShortcutBehavior {
-        return {
+    private static createKeyboardShortcutForEmptyCollectionGrid(): PiKeyboardShortcutAction {
+        return new PiKeyboardShortcutAction({
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             activeInBoxRoles: ["alias-add-row-or-column", "alias-alias-add-row-or-column-textbox"],
             action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
@@ -247,12 +249,9 @@ export class TableUtil {
                 runInAction( () => {
                     element[aliasBox.propertyName].push(newElement);
                 });
-
-                editor.selectElement(newElement);
-                editor.selectFirstEditableChildBox();
-                // await editor.selectFirstLeafChildBox();
+                LOGGER.log("runInaction finished.")
                 return newElement;
             }
-        };
+        });
     }
 }

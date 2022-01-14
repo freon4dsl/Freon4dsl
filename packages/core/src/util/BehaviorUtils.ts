@@ -50,10 +50,10 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
     LOGGER.log("Enter executeBehavior text [" + text + "] label [" + label + "] box role [" + box.role + "]");
     let partialMatch: boolean = false;
 
-    for (const behavior of editor.new_pi_actions) {
-        const trigger = behavior.trigger;
-        LOGGER.log("  executeHebavior trigger " + trigger + "  roles " + behavior.activeInBoxRoles);
-        if (behavior.activeInBoxRoles.includes(box.role)) {
+    for (const action of editor.new_pi_actions) {
+        const trigger = action.trigger;
+        LOGGER.log("  executeHebavior trigger " + trigger + "  roles " + action.activeInBoxRoles);
+        if (action.activeInBoxRoles.includes(box.role)) {
             if (isRegExp(trigger)) {
                 const matchArray = label.match(trigger);
                 LOGGER.log("executeBehavior: MATCH " + label + " against " + trigger +
@@ -61,47 +61,25 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                 let execresult: PiPostAction;
                 if (matchArray !== null && label === matchArray[0]) {
                     runInAction( () => {
-                        const command = behavior.command(box);
+                        const command = action.command(box);
                         execresult = command.execute(box, label, editor);
-                        // execresult = behavior.execute(box, label, editor);
-                        // if( !!execresult){
-                        //     editor.selectElement(execresult);
-                        //     editor.selectFirstLeafChildBox();
-                        // }
                     });
                     if(!!execresult) {
                         execresult();
-                        // if (!!behavior.boxRoleToSelect) {
-                        //     editor.selectBoxByRoleAndElementId(execresult.piId(), behavior.boxRoleToSelect, behavior.caretPosition);
-                        // } else {
-                        //     editor.selectElement(execresult);
-                        //     editor.selectFirstEditableChildBox();
-                        // }
                     }
                     return BehaviorExecutionResult.EXECUTED;
                 }
             } else if (isString(trigger)) {
                 if (trigger === text) {
-                    LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + behavior.referenceShortcut + "]");
+                    LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + action.referenceShortcut + "]");
                     let postAction: PiPostAction;
                     runInAction( () => {
                         console.log("============== START")
-                        const command = behavior.command(box);
+                        const command = action.command(box);
                         postAction = command.execute(box, label, editor);
-                        // postAction = behavior.execute(box, label, editor);
-                        // If this is a referenceShortcut, fill in the selected reference, which is in the label
-                        // TODO CHECK: The assumption is that 'newElement' has a property with the name and type
-                        //  of the reference shortcut with the
-                        // if (!!label && !!behavior.referenceShortcut) {
-                        //     execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, behavior.referenceShortcut.metatype);
-                        // }
                         console.log("============== END")
                     });
                     postAction();
-                    // if( !!execresult){
-                    //     await editor.selectElement(execresult, LEFT_MOST);
-                    //     editor.selectFirstLeafChildBox();
-                    // }
                     return BehaviorExecutionResult.EXECUTED;
                 } else if (trigger.startsWith(label)) {
                     LOGGER.log("executeBehavior: MATCH PARTIAL TEXT");
@@ -136,11 +114,6 @@ export function executeSingleBehavior(action: PiAction, box: Box, text: string, 
         console.log("========================== START");
         const command = action.command(box);
         execresult = command.execute(box, label, editor);
-        // execresult = action.execute(box, label, editor);
-        // If this is a referenceShortcut, fill in the selected reference, which is in the label
-        // if (!!label && !!action.referenceShortcut) {
-        //     execresult[action.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, action.referenceShortcut.metatype);
-        // }
         console.log("===============================")
     });
     if( !!execresult){

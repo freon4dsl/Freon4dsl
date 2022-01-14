@@ -11,7 +11,9 @@ Attribute {
 
 Entity {
     @projection [
-        entity ${self.name} [? base ${self.baseEntity}] {
+        entity ${self.name}
+
+        [? base ${self.baseEntity}] {
             ${self.attributes @table @columns  }
             ${self.methods @vertical}
         }

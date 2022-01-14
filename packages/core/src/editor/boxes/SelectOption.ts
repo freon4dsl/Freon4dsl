@@ -1,9 +1,8 @@
+import { PiAction } from "../actions/index";
+
 /**
  * Describes an option in a dropdown
  */
-import { PiAction } from "../actions/index";
-// import { InternalBehavior } from "../InternalBehavior";
-
 export interface SelectOption {
     /**
      *  Unique id used to distinguish options in selection lists.
@@ -13,11 +12,6 @@ export interface SelectOption {
      * The text as shown to the user, usually also the text that the user needs to type.
      */
     label: string;
-    /**
-     * The behavior to be executed
-     */
-    // behavior?: InternalBehavior,
-
 
     action?: PiAction,
     /**

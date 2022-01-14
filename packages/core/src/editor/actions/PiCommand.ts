@@ -6,11 +6,10 @@ import { isString } from "../PiAction";
 import { PiEditor } from "../PiEditor";
 import {
     CustomAction,
-    EMPTY_FUNCTION,
-    PiAction,
+    EMPTY_POST_ACTION,
     PiActionTrigger,
     PiPostAction,
-    ReferenceShortcut2,
+    ReferenceShortcut,
     triggerToString2
 } from "./PiAction";
 
@@ -34,7 +33,7 @@ export abstract class PiCommand {
 
 class PiNullCommand extends PiCommand {
     execute(box: Box, text: PiActionTrigger, editor: PiEditor): PiPostAction {
-        return null;
+        return EMPTY_POST_ACTION;
     }
 
     undo(box: Box, editor: PiEditor): void {}
@@ -42,17 +41,17 @@ class PiNullCommand extends PiCommand {
 
 export const PI_NULL_COMMAND: PiCommand = new PiNullCommand();
 
-
 export class PiCreatePartCommand extends PiCommand {
     propertyName: string;
     conceptName: string;
-    referenceShortcut: ReferenceShortcut2;
+    referenceShortcut: ReferenceShortcut;
 
-    constructor(propertyName: string, conceptName: string, index: number, referenceShortcut: ReferenceShortcut2) {
+    constructor(propertyName: string, conceptName: string, index: number, referenceShortcut: ReferenceShortcut) {
         super();
         this.propertyName = propertyName;
         this.conceptName = conceptName
         this.referenceShortcut = referenceShortcut;
+        console.log("+++++++++++++++ Create part command " + propertyName + ", " + conceptName);
     }
     execute(box: Box, trigger: PiActionTrigger , editor: PiEditor): PiPostAction {
         console.log("CreatePartCommand: trigger [" + triggerToString2(trigger) + "] part: " + this.conceptName + " in " + this.propertyName + " refshort " + this.referenceShortcut);
@@ -60,7 +59,7 @@ export class PiCreatePartCommand extends PiCommand {
         if (newElement === undefined || newElement === null) {
             // TODO Find out why this happens sometimes
             console.error("AliasBox action: Unexpected new element undefined");
-            return EMPTY_FUNCTION;
+            return EMPTY_POST_ACTION;
         }
         if (Language.getInstance().classifierProperty(box.element.piLanguageConcept(), this.propertyName).isList) {
             box.element[this.propertyName].push(newElement);
@@ -68,7 +67,45 @@ export class PiCreatePartCommand extends PiCommand {
             box.element[this.propertyName] = newElement;
         }
         if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
-            newElement[this.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(trigger, this.referenceShortcut.metatype);
+            newElement[this.referenceShortcut.propertyName] = Language.getInstance().referenceCreator(trigger, this.referenceShortcut.conceptName);
+        }
+
+        return function() {
+            editor.selectElement(newElement);
+            editor.selectFirstEditableChildBox();
+        }
+    }
+
+    undo(box: Box, editor: PiEditor) {
+    }
+}
+
+export class PiCreateSiblingCommand extends PiCommand {
+    conceptName: string;
+    referenceShortcut: ReferenceShortcut;
+
+    constructor(conceptName: string, referenceShortcut: ReferenceShortcut) {
+        super();
+        this.conceptName = conceptName
+        this.referenceShortcut = referenceShortcut;
+    }
+
+    execute(box: Box, trigger: PiActionTrigger , editor: PiEditor): PiPostAction {
+        console.log("CreateSiblingCommand: trigger [" + triggerToString2(trigger) + "] part: " + this.conceptName + " refshort " + this.referenceShortcut);
+        const newElement: PiElement = Language.getInstance().concept(this.conceptName)?.constructor()
+        if (newElement === undefined || newElement === null) {
+            // TODO Find out why this happens sometimes
+            console.error("PiCreateSiblingCommand: Unexpected new element undefined");
+            return EMPTY_POST_ACTION;
+        }
+        const container = box.element.piContainer();
+        if (Language.getInstance().classifierProperty(container.container.piLanguageConcept(), container.propertyName).isList) {
+            container.container[container.propertyName].splice(container.propertyIndex+1, 0, newElement);
+        } else {
+            container.container[container.propertyName] = newElement;
+        }
+        if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
+            newElement[this.referenceShortcut.propertyName] = Language.getInstance().referenceCreator(trigger, this.referenceShortcut.conceptName);
         }
 
         return function() {
@@ -121,14 +158,15 @@ export class PiCustomCommand extends PiCommand {
     execute(box: Box, trigger: PiActionTrigger, editor: PiEditor): PiPostAction {
         // LOGGER.log("execute custom action, text is [" + text + "] refShort [" + this.referenceShortcut + "]" );
         console.log("PiCustomCommand: trigger [" + triggerToString2(trigger) + "]");
-        const selected = this.action(box, triggerToString2(trigger), editor);
+        const self = this;
+        const selected = self.action(box, triggerToString2(trigger), editor);
 
         if (!!selected) {
             return function() {
-                editor.selectElement(selected, this.boxRoleToSelect, this.caretPosition);
+                editor.selectElement(selected, self.boxRoleToSelect);
             }
         }
-        return EMPTY_FUNCTION;
+        return EMPTY_POST_ACTION;
     }
 
     undo() {
