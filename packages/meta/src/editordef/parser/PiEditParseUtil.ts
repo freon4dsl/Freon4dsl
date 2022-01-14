@@ -17,24 +17,44 @@ export class PiEditParseUtil {
      */
     public static normalize(projection: PiEditProjection): void {
         // everything is parsed as one line, now break this line on ParsedNewLines and remove empty lines
-        projection.lines = this.normalizeLine(projection.lines[0]);
+        projection.lines = PiEditParseUtil.normalizeLine(projection.lines[0]);
 
         // find the indentation of the complete projection, which should be ignored
         let ignoredIndent = 0;
-        // find the ignored indent value
+
+        // find the line with the least indentation
         projection.lines.forEach(line => {
             const firstItem = line.items[0];
             if (firstItem instanceof PiEditParsedProjectionIndent) {
                 ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
             }
+            line.items.forEach(item => {
+                if (item instanceof PiOptionalPropertyProjection) {
+                    item.lines.forEach(subLine => {
+                        const firstItem = subLine.items[0];
+                        if (firstItem instanceof PiEditParsedProjectionIndent) {
+                            ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
+                        }
+                    });
+                }
+            });
         });
 
         // determine the indent of each line, while ignoring the 'ignoredIndent'
-        this.determineIndents(projection.lines, ignoredIndent);
+        PiEditParseUtil.determineIndents(projection.lines, ignoredIndent);
 
         // remove all indent items, as they are not needed anymore
-        projection.lines.forEach(line => {
+        PiEditParseUtil.removeParsedItems(projection.lines);
+    }
+
+    private static removeParsedItems(lines: PiEditProjectionLine[]) {
+        lines.forEach(line => {
             line.items = line.items.filter(item => !(item instanceof PiEditParsedProjectionIndent));
+            line.items.forEach(item => {
+                if (item instanceof PiOptionalPropertyProjection) {
+                    PiEditParseUtil.removeParsedItems(item.lines);
+                }
+            });
         });
     }
 
@@ -49,7 +69,7 @@ export class PiEditParseUtil {
             }
             line.items.forEach(item => {
                 if (item instanceof PiOptionalPropertyProjection) {
-                    this.determineIndents(item.lines, ignoredIndent);
+                    PiEditParseUtil.determineIndents(item.lines, ignoredIndent);
                 }
             })
         });
@@ -59,29 +79,26 @@ export class PiEditParseUtil {
         const result: PiEditProjectionLine[] = [];
         let currentLine = new PiEditProjectionLine();
         const lastItemIndex = line.items.length - 1;
-        // TODO Empty lines are discarded now, decide how to handle them in general
         line.items.forEach((item, index) => {
             if (item instanceof PiEditParsedProjectionIndent) {
                 item.normalize();
+                // add the location to the new line for error messaging
+                if (!currentLine.location) {
+                    currentLine.location = item.location;
+                }
                 currentLine.items.push(item);
             } else if (item instanceof PiEditParsedNewline) {
-                if (currentLine.isEmpty()) {
-                    currentLine = new PiEditProjectionLine();
-                } else {
-                    result.push(currentLine);
-                    currentLine = new PiEditProjectionLine();
-                }
+                // make a new line
+                result.push(currentLine);
+                currentLine = new PiEditProjectionLine();
             } else if (item instanceof PiOptionalPropertyProjection) {
-                item.lines = this.normalizeLine(item.lines[0]);
+                item.lines = PiEditParseUtil.normalizeLine(item.lines[0]);
                 currentLine.items.push(item);
             } else {
                 currentLine.items.push(item);
             }
             if (lastItemIndex === index) {
-                // push last line if not empty
-                if (!currentLine.isEmpty()) {
-                    result.push(currentLine);
-                }
+                result.push(currentLine);
             }
         });
         return result;

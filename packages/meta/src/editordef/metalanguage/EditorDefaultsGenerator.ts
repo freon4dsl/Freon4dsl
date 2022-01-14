@@ -2,7 +2,6 @@ import { PiElementReference } from "../../languagedef/metalanguage";
 import {
     PiBinaryExpressionConcept,
     PiClassifier,
-    PiConceptProperty,
     PiLimitedConcept,
     PiPrimitiveProperty,
     PiProperty
@@ -12,7 +11,7 @@ import {
     ExtraClassifierInfo,
     ListInfo,
     ListJoinType,
-    PiEditClassifierProjection, PiEditLimitedProjection,
+    PiEditClassifierProjection,
     PiEditProjection,
     PiEditProjectionGroup,
     PiEditProjectionLine,
@@ -46,39 +45,13 @@ export class EditorDefaultsGenerator {
 
         // add default for other classifiers, that are not limited concepts, iff they are not already present
         this.defaultsForOrdinaryClassifiers(editor, defaultGroup);
-
-        // add defaults for limited concepts, iff they are not already present
-        const limitedConceptsToDo: PiClassifier[] =
-            editor.language.concepts.filter(c => (c instanceof PiLimitedConcept));
-
-        for (const con of limitedConceptsToDo) {
-            // Find or create the concept editor, and its properties
-            let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionForType(con);
-            if (!foundProjection) {
-                // create a new projection
-                // console.log("Adding default projection for " + con.unitName);
-                const projection: PiEditLimitedProjection = this.defaultLimitedProjection(con as PiLimitedConcept, editor);
-                defaultGroup.projections.push(projection);
-            }
-            let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
-            if (!foundExtraInfo) {
-                const extraInfo = this.defaultExtras(con);
-                extraInfo.classifier = PiElementReference.create<PiLimitedConcept>(con as PiLimitedConcept, "PiLimitedConcept");
-                extraInfo.classifier.owner = editor.language;
-                defaultGroup.extras.push(extraInfo);
-            }
-        }
-
     }
 
     private static defaultsForOrdinaryClassifiers(editor: PiEditUnit, defaultGroup: PiEditProjectionGroup) {
-        const classifiersToDo: PiClassifier[] =
-            editor.language.conceptsAndInterfaces().filter(c => !(c instanceof PiBinaryExpressionConcept))
-                .filter(c => !(c instanceof PiLimitedConcept));
-        classifiersToDo.push(...editor.language.units);
+        const classifiersToDo: PiClassifier[] = editor.language.classifiersWithProjection();
 
         for (const con of classifiersToDo) {
-            // Find or create the concept editor, and its properties
+            // Find or create the projection, and its properties
             let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionForType(con);
             if (!foundProjection) {
                 // create a new projection
@@ -86,13 +59,8 @@ export class EditorDefaultsGenerator {
                 const projection: PiEditProjection = this.defaultClassifierProjection(con, editor);
                 defaultGroup.projections.push(projection);
             }
-            let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
-            if (!foundExtraInfo) {
-                const extraInfo = this.defaultExtras(con);
-                extraInfo.classifier = PiElementReference.create<PiClassifier>(con, "PiClassifier");
-                extraInfo.classifier.owner = editor.language;
-                defaultGroup.extras.push(extraInfo);
-            }
+            // find or create the extra info
+            this.addExtraDefaults(defaultGroup, con, editor);
         }
     }
 
@@ -110,16 +78,7 @@ export class EditorDefaultsGenerator {
                 projection.classifier.owner = editor.language;
                 defaultGroup.projections.push(projection);
             }
-            let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(binConcept);
-            if (!foundExtraInfo) {
-                const extraInfo = this.defaultExtras(binConcept);
-                extraInfo.classifier = PiElementReference.create<PiBinaryExpressionConcept>(
-                    binConcept as PiBinaryExpressionConcept,
-                    "PiBinaryExpressionConcept"
-                );
-                extraInfo.classifier.owner = editor.language;
-                defaultGroup.extras.push(extraInfo);
-            }
+            this.addExtraDefaults(defaultGroup, binConcept, editor);
         }
     }
 
@@ -141,29 +100,7 @@ export class EditorDefaultsGenerator {
             startLine.items.push(sub);
         }
         projection.lines.push(startLine);
-        for (const prop of con.allPrimProperties().filter((p => p !== nameProp))) {
-            const line = new PiEditProjectionLine();
-            line.indent = 4;
-            line.items.push(PiEditProjectionText.create(prop.name));
-            const sub = new PiEditPropertyProjection();
-            sub.property = PiElementReference.create<PiProperty>(prop, "PiProperty");
-            sub.property.owner = con.language;
-            if (prop.isList) {
-                sub.listInfo = new ListInfo();
-                sub.listInfo.joinType = ListJoinType.Separator;
-                sub.listInfo.joinText = ", ";
-            }
-            line.items.push(sub);
-            projection.lines.push(line);
-        }
-        for (const prop of con.allParts()) {
-            if (prop.isList) {
-                this.defaultListConceptProperty(con, prop, projection);
-            } else {
-                this.defaultSingleConceptProperty(con, prop, projection);
-            }
-        }
-        for (const prop of con.allReferences()) {
+        for (const prop of con.allProperties().filter((p => p !== nameProp))) {
             if (prop.isList) {
                 this.defaultListConceptProperty(con, prop, projection);
             } else {
@@ -173,31 +110,7 @@ export class EditorDefaultsGenerator {
         return projection;
     }
 
-    private static defaultLimitedProjection(con: PiLimitedConcept, editor: PiEditUnit): PiEditLimitedProjection {
-        const projection = new PiEditLimitedProjection();
-        projection.name = Names.defaultProjectionName;
-        projection.classifier = PiElementReference.create<PiLimitedConcept>(con, "PiLimitedConcept");
-        projection.classifier.owner = editor.language;
-
-        // TODO is this really needed?
-        // projection.instanceProjections
-
-        return projection;
-    }
-
-    private static defaultExtras(con: PiClassifier): ExtraClassifierInfo {
-        const result = new ExtraClassifierInfo();
-        // default for referenceShortcut is not needed
-        if (!result.trigger) {
-            result.trigger = Names.classifier(con);
-        }
-        if (!result.symbol) {
-            result.symbol = Names.classifier(con);
-        }
-        return result;
-    }
-
-    private static defaultSingleConceptProperty(concept: PiClassifier, prop: PiConceptProperty, projection: PiEditProjection): void {
+    private static defaultSingleConceptProperty(concept: PiClassifier, prop: PiProperty, projection: PiEditProjection): void {
         const line = new PiEditProjectionLine();
         line.indent = 4;
         line.items.push(PiEditProjectionText.create(prop.name));
@@ -208,7 +121,7 @@ export class EditorDefaultsGenerator {
         projection.lines.push(line);
     }
 
-    private static defaultListConceptProperty(concept: PiClassifier, prop: PiConceptProperty, projection: PiEditProjection): void {
+    private static defaultListConceptProperty(concept: PiClassifier, prop: PiProperty, projection: PiEditProjection): void {
         const line1 = new PiEditProjectionLine();
         const line2 = new PiEditProjectionLine();
         line1.indent = 4;
@@ -224,4 +137,27 @@ export class EditorDefaultsGenerator {
         projection.lines.push(line2);
     }
 
+    private static addExtraDefaults(defaultGroup: PiEditProjectionGroup, con: PiClassifier, editor: PiEditUnit) {
+        let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
+        if (!foundExtraInfo) {
+            const extraInfo = new ExtraClassifierInfo();
+            this.addExtras(extraInfo, con);
+            extraInfo.classifier = PiElementReference.create<PiClassifier>(con, "PiClassifier");
+            extraInfo.classifier.owner = editor.language;
+            defaultGroup.extras.push(extraInfo);
+        } else {
+            // add trigger and symbol, iff not present
+            this.addExtras(foundExtraInfo, con);
+        }
+    }
+
+    private static addExtras(foundExtraInfo: ExtraClassifierInfo, con: PiClassifier) {
+        // default for referenceShortcut is not needed
+        if (!foundExtraInfo.trigger) {
+            foundExtraInfo.trigger = Names.classifier(con);
+        }
+        if (!foundExtraInfo.symbol) {
+            foundExtraInfo.symbol = Names.classifier(con);
+        }
+    }
 }

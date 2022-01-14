@@ -11,7 +11,6 @@ import {
     STYLES_FOLDER
 } from "../../utils";
 import { PiEditProjectionGroup, PiEditUnit } from "../metalanguage";
-import { EditorDefaultsGenerator } from "./EditorDefaultsGenerator";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
 import { EditorDefTemplate } from "./templates/EditorDefTemplate";
@@ -26,10 +25,15 @@ export class EditorGenerator {
     language: PiLanguage;
 
     generate(editDef: PiEditUnit): void {
-        if (this.language == null) {
+        if (isNullOrUndefined(this.language)) {
             LOGGER.error("Cannot generate editor because language is not set.");
             return;
         }
+        if (isNullOrUndefined(editDef)) {
+            LOGGER.error("Cannot generate editor because editor definition is null or undefined.");
+            return;
+        }
+
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
         const name = editDef ? editDef.getDefaultProjectiongroup().name : "";
@@ -37,13 +41,6 @@ export class EditorGenerator {
 
         // TODO the following should already have been set by the edit checker, but it seems to be needed here
         editDef.language = this.language;
-
-        if (isNullOrUndefined(editDef)) {
-            editDef = this.createEmptyEditorDefinition();
-        }
-
-        // add default values if they are not present in the editor definition
-        EditorDefaultsGenerator.addDefaults(editDef);
 
         const defaultActions = new DefaultActionsTemplate();
         const customActions = new CustomActionsTemplate();

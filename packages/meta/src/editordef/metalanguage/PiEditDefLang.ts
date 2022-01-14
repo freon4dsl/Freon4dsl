@@ -188,22 +188,6 @@ export class PiEditTableProjection extends PiEditClassifierProjection {
     }
 }
 
-export class PiEditLimitedProjection extends PiEditClassifierProjection {
-    instanceProjections: PiEditInstanceProjection[] = [];
-    toString(): string {
-        return `${this.classifier?.name} {
-        [ 
-        ${this.instanceProjections.map(instance => `"${instance.toString()}"`).join("\n")}
-        ]}`;
-    }
-}
-export class PiEditInstanceProjection extends PiDefinitionElement {
-    instance: PiElementReference<PiInstance>;
-    keyword: BoolKeywords;
-    toString(): string {
-        return `${this.instance?.name} /* found ${this.instance.referred?.name} */ = ${this.keyword.toString()}`;
-    }
-}
 /**
  * Holds extra information, defined in the default editor, per classifier
  */
@@ -239,7 +223,7 @@ export class ExtraClassifierInfo extends PiDefinitionElement {
         return `${this.classifier?.name} {
             trigger = ${this._trigger}
             symbol = ${this.symbol}
-            referenceShortcut = ${this.referenceShortcutExp}
+            referenceShortcut = ${this.referenceShortCut ? this.referenceShortCut.name : this.referenceShortcutExp}
         }`;
     }
 }
@@ -252,7 +236,7 @@ export class PiEditProjectionLine extends PiDefinitionElement {
     indent: number = 0; // this number is calculated by PiEditProjectionUtil.normalize()
 
     isEmpty(): boolean {
-        return this.items.every(i => i instanceof PiEditParsedNewline || i instanceof PiEditParsedProjectionIndent);
+        return (this.items.every(i => i instanceof PiEditParsedNewline || i instanceof PiEditParsedProjectionIndent)) || this.items.length === 0 ;
     }
 
     isOptional(): boolean {
@@ -305,7 +289,7 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
         if (!!this.boolInfo) {
             extraText = `\n/* boolean */ ${this.boolInfo}`;
         }
-        return `\${ ${this.expression} /* ${this.property?.referred ?
+        return `\${ ${this.expression.toPiString()} /* ${this.property?.referred ?
             `found ${this.property?.referred?.name}` :
             `not found ${this.property?.name}`} */ }${extraText}`;
     }
