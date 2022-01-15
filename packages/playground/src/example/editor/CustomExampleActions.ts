@@ -7,6 +7,7 @@ import {
     PiActions,
     Box, PiTriggerType, PiEditor, AliasBox, PiCaret, PiElement, OptionalBox
 } from "@projectit/core";
+import { PiCustomAction } from "@projectit/core";
 import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
 
 /**
@@ -22,8 +23,25 @@ export class CustomExampleActions implements PiActions {
     binaryExpressionCreators: PiBinaryExpressionCreator[] = MANUAL_BINARY_EXPRESSION_CREATORS;
     customBehaviors: PiCustomBehavior[] = MANUAL_CUSTOM_BEHAVIORS;
     expressionCreators: PiExpressionCreator[] = MANUAL_EXPRESSION_CREATORS;
-    keyboardActions: KeyboardShortcutBehavior[] = MANUAL_KEYBOARD;
 }
+
+const cust: PiCustomAction[] = [
+    new PiCustomAction({
+        activeInBoxRoles: [],
+        boxRoleToSelect: "",
+        caretPosition: null,
+        trigger: "",
+    }),
+    new PiCustomAction({
+        trigger: "base",
+        activeInBoxRoles: ["optional-baseEntity"],
+        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+            (box.parent as OptionalBox).mustShow = true;
+            return null;
+        },
+        boxRoleToSelect: "Entity-baseEntity"
+    }),
+];
 
 export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     // Add your own custom expression creators here

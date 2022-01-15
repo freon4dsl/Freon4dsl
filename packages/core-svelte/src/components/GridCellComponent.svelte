@@ -1,19 +1,32 @@
 <script lang="ts">
-    import { conceptStyle, GridBox, PiLogger, styleToCSS } from "@projectit/core";
-    import type { GridCell, PiEditor } from "@projectit/core";
+    import {
+        conceptStyle,
+        GridBox,
+        isMetaKey,
+        KEY_ENTER,
+        PiLogger,
+        PiUtils,
+        styleToCSS,
+        toPiKey,
+        GridCellBox
+    } from "@projectit/core";
+    import type { PiEditor } from "@projectit/core";
+    import { gridcell } from "@projectit/playground/dist/example/editor/styles/CustomStyles";
     import { autorun } from "mobx";
     import { afterUpdate } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
+    // import { textBox } from "./TextComponent.svelte";
     import { isOdd } from "./util";
 
     // properties
     export let grid: GridBox;
-    export let cell: GridCell;
+    export let cellBox: GridCellBox ;
     export let editor: PiEditor;
 
     //local variable
     const LOGGER = new PiLogger("GridCellComponent");
+    let cell = cellBox;
     let cssVariables: string;
     let notifier = new ChangeNotifier();
     afterUpdate(() => {
@@ -22,6 +35,26 @@
         notifier.notifyChange();
     });
 
+    const onKeydown = (event: KeyboardEvent) => {
+        console.log("GridCellComponent onKeyDown")
+        const piKey = toPiKey(event);
+        if (isMetaKey(event) || event.key === KEY_ENTER) {
+            console.log("Keyboard shortcut in GridCell ===============")
+            const isKeyboardShortcutForThis = PiUtils.handleKeyboardShortcut(piKey, cell, editor);
+            if (!isKeyboardShortcutForThis) {
+                LOGGER.log("Key not handled for element gridcell so propagate ");// + textBox.element);
+                if (event.key === KEY_ENTER) {
+                    LOGGER.log("   ENTER, so propagate");
+                    return;
+                }
+
+            } else {
+                event.stopPropagation();
+            }
+        }
+
+    };
+
     const onCellClick = ( () => {
         LOGGER.log("GridCellComponent.onCellClick " + cell.row + ", "+ cell.column);
     });
@@ -29,8 +62,10 @@
     let row: string;
     let column: string;
     let boxStyle: string = "";
+    let int: number = 0;
     autorun(() => {
-        AUTO_LOGGER.log("GridCellComponent["+ notifier.dummy + "] ");
+        cell = cellBox;
+        AUTO_LOGGER.log("GridCellComponent row/col " + cell.$id + ": " + cell.row + "," + cell.column + "  span " + cell.rowSpan + "," + cell.columnSpan + "  box " + cell.box.role + "   --- " + int++);
         row = cell.row + (cell.rowSpan ? " / span " + cell.rowSpan : "");
         column = cell.column + (cell.columnSpan ? " / span " + cell.columnSpan : "");
         const gridStyle = `grid-row: ${row}; grid-column: ${column};`;
@@ -41,12 +76,12 @@
 </script>
 
 <div
-        id={"-c:" + cell.column + "-r:" + cell.row}
         class="gridcellcomponent"
         style={boxStyle}
-        onClick={this.onCellClick}
+        onClick={onCellClick}
+        on:keydown={onKeydown}
 >
-    <RenderComponent box={cell.box} editor={editor}/>
+     <RenderComponent box={cell.box} editor={editor}/>
 </div>
 
 <style>
@@ -54,5 +89,6 @@
         box-sizing: content-box;
         align-self: stretch;
         display: flex;
+        color: magenta
     }
 </style>

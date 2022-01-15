@@ -26,7 +26,6 @@ export class CustomActionsTemplate {
                 binaryExpressionCreators: PiBinaryExpressionCreator[] = MANUAL_BINARY_EXPRESSION_CREATORS;
                 customBehaviors: PiCustomBehavior[] = MANUAL_CUSTOM_BEHAVIORS;
                 expressionCreators: PiExpressionCreator[] = MANUAL_EXPRESSION_CREATORS;
-                keyboardActions: KeyboardShortcutBehavior[] = MANUAL_KEYBOARD;
             }
 
             export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
@@ -39,11 +38,11 @@ export class CustomActionsTemplate {
             
             export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
                 // Add your own custom behavior here
-            ];
-            
+            ];     
+                        
             export const MANUAL_KEYBOARD: KeyboardShortcutBehavior[] = [
                 // Add your own custom keyboard shortcuts here
-            ];
+            ];       
         `;
     }
 }

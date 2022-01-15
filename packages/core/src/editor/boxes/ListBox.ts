@@ -1,7 +1,7 @@
 import { observable, makeObservable, action } from "mobx";
 
-import { NBSP, createKeyboardShortcutForList, PiUtils } from "../../util";
-import { Box, AliasBox, PiEditor, BoxFactory } from "../internal";
+import { PiUtils } from "../../util";
+import { Box} from "../internal";
 import { PiElement } from "../../language";
 
 export enum ListDirection {
@@ -105,58 +105,6 @@ export class VerticalListBox extends ListBox {
     }
 }
 
-/**
- * A listbox containing PiElement list
- */
-export class VerticalPiElementListBox extends VerticalListBox {
-    kind = "VerticalPiElementListBox";
-    insertElement: () => PiElement;
-    listPropertyName: string;
-    list: PiElement[];
-    editor: PiEditor;
-    roleToSelectAfterCreation: string;
-
-    constructor(
-        element: PiElement,
-        role: string,
-        list: PiElement[],
-        listPropertyName: string,
-        builder: () => PiElement,
-        editor: PiEditor,
-        initializer?: Partial<VerticalPiElementListBox>
-    ) {
-        super(element, role, [], initializer);
-        this.list = list;
-        this.editor = editor;
-        this.listPropertyName = listPropertyName;
-        this.insertElement = builder;
-        this.init();
-    }
-
-    init() {
-        let index = 0;
-        for (const ent of this.list) {
-            const line = BoxFactory.horizontalList(ent, this.role + "-hor-" + index, [
-                this.editor.projection.getBox(ent),
-                BoxFactory.alias(ent, "list-for-" + this.role /* + index*/, NBSP, {
-                    selectable: true
-                })
-            ]);
-            this.addChild(line);
-            index++;
-        }
-        // Add alias with placeholder for adding new elements
-        this.addChild(
-            BoxFactory.alias(this.element, "empty-list-for-" + this.role /* + index*/, NBSP, {
-                placeholder: `<add ${this.role}>`
-            })
-        );
-        // Add keyboard actions to grid such that new rows can be added by Return Key
-        this.editor.keyboardActions.splice(0, 0, createKeyboardShortcutForList(this.role, this.insertElement, this.roleToSelectAfterCreation));
-        // this.editor.keyboardActions.splice(0,0,
-        //     createKeyboardShortcutForEmptyList(this.role, this.insertElement, this.roleToSelectAfterCreation))
-    }
-}
 
 export function isHorizontalBox(b: Box): b is HorizontalListBox {
     return b.kind === "HorizontalListBox"; // b instanceof HorizontalListBox;

@@ -13,7 +13,7 @@ import {
     SelectBox,
     IndentBox,
     OptionalBox,
-    HorizontalListBox, VerticalListBox, SvgBox, BoolFunctie
+    HorizontalListBox, VerticalListBox, SvgBox, BoolFunctie, GridCellBox
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -35,6 +35,7 @@ let optionalCache: BoxCache<OptionalBox> = {};
 let svgCache: BoxCache<SvgBox> = {};
 let horizontalListCache: BoxCache<HorizontalListBox> = {};
 let verticalListCache: BoxCache<VerticalListBox> = {};
+let gridcellCache: BoxCache<GridCellBox> = {};
 
 let cacheAliasOff: boolean = false;
 let cacheLabelOff: boolean = false;
@@ -44,6 +45,7 @@ let cacheIndentOff: boolean = false;
 let cacheOptionalOff: boolean = false;
 let cacheHorizontalOff: boolean = false;
 let cacheVerticalOff: boolean = false;
+let cacheGridcellOff = true;
 
 /**
  * Caching of boxes, avoid recalculating them.
@@ -252,6 +254,24 @@ export class BoxFactory {
         return result;
 
     }
+
+    static gridcell(element: PiElement, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>): GridCellBox {
+        if (cacheGridcellOff) {
+            return new GridCellBox(element, role, row, column, box, initializer);
+        }
+        // 1. Create the alias box, or find the one that already exists for this element and role
+        const creator = () => new GridCellBox(element, role, row, column, box, initializer);
+        const result: GridCellBox = this.find<GridCellBox>(element, role, creator, gridcellCache);
+
+        runInAction( () => {
+            // 2. Apply the other arguments in case they have changed
+            PiUtils.initializeObject(result, initializer);
+        });
+
+        return result;
+    }
+
+
 }
 
 const equals = (a, b) => {

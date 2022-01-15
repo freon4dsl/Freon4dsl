@@ -266,7 +266,6 @@ export class ProjectionTemplate {
         }
         return result;
     }
-
     private optionalProjection(optional: PiOptionalPropertyProjection, elementVarName: string, lineIndex: number, concept: PiClassifier,
                                language: PiLanguage): string {
         let result = "";
@@ -295,6 +294,30 @@ export class ProjectionTemplate {
             }
         });
         return result;
+    }
+
+    private optionalProjection(item: PiEditSubProjection, elementVarName: string, lineIndex: number, itemIndex: number, concept: PiClassifier,
+                               language: PiLanguage): string {
+        let result = "";
+        item.items.forEach((subitem, subitemIndex) => {
+            result += this.itemProjection(subitem, elementVarName, lineIndex, subitemIndex, concept, language);
+            // Add a comma if there was a projection and its in the middle of the list
+            if (! (subitem instanceof PiEditParsedProjectionIndent) && subitemIndex < item.items.length - 1) {
+                result += ", ";
+            }
+        });
+
+        // If there are more items, surround with horizontal list
+        if (item.items.length > 1) {
+            result = `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${lineIndex}-${itemIndex}", [${result}])`;
+        }
+
+        const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
+        const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.propertyName());
+        return `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
+            ${ result},
+            false, "<+>"
+        )`;
     }
 
     /**

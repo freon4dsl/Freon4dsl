@@ -35,9 +35,9 @@
     };
 
     export const setFocus = async () => {
-        logBox("setFocus in setFocus");
+        LOGGER.log("setFocus in SetFocus" + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
         if (hasFocus()) {
-            LOGGER.log("    has focus already");
+            FOCUS_LOGGER.log("    has focus already");
             return;
         }
         element.focus();
@@ -120,6 +120,10 @@
     const onKeyDown = (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.ctrlKey + "] shift [" + event.shiftKey + "] key [" + event.key + "]");
         isEditing = true;
+        // if( isAliasTextBox(editor.selectedBox) ) {
+        //     // let alias handle this
+        //     return;
+        // }
         if (event.key === KEY_DELETE) {
             if (currentText() === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
@@ -145,10 +149,12 @@
             event.stopPropagation();
         }
         if (shouldIgnore(event)) {
+            LOGGER.log("preventDefault");
             event.preventDefault();
         }
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === KEY_ENTER) {
+            console.log("Keyboard shortcut in TextComponentg ===============")
             const isKeyboardShortcutForThis = PiUtils.handleKeyboardShortcut(piKey, textBox, editor);
             if (!isKeyboardShortcutForThis) {
                 LOGGER.log("Key not handled for element " + textBox.element);
@@ -156,6 +162,7 @@
                     LOGGER.log("   ENTER, so propagate");
                     return;
                 }
+
             }
         }
     };
@@ -247,7 +254,7 @@
         LOGGER.log("onKeyPress: " + event.key);
         isEditing = true;
         const insertionIndex = getCaretPosition();
-        switch (textBox.keyPressAction(textBox.getText(), event.key, insertionIndex)) {
+        switch (textBox.keyPressAction(currentText(), event.key, insertionIndex)) {
             case KeyPressAction.OK:
                 logBox("KeyPressAction.OK");
                 break;
@@ -291,12 +298,14 @@
      * @param e
      */
     const onBlur = (e: FocusEvent) => {
-        isEditing = true;
+        isEditing = false;
         let value = currentText();
-        LOGGER.log("onBlur current [" + currentText() + "] box text [" + textBox.getText() + "]");
-        textBox.caretPosition = getCaretPosition();
-        textBox.setText(value);
-        editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
+        LOGGER.log("onBlur current [" + value + "] box text [" + textBox.getText() + "]");
+        if (!isAliasTextBox(textBox)) {
+            textBox.caretPosition = getCaretPosition();
+            textBox.setText(value);
+            editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
+        }
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
             editor.deleteBox(textBox);
@@ -319,6 +328,7 @@
         // return window.getSelection().focusOffset;
         return window.getSelection().getRangeAt(0).startOffset;
     };
+
 
     let textStyle: string = "";
 
