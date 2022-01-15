@@ -10,8 +10,8 @@ Attribute {
 Entity {
     [
         entity ${name} [? base ${baseEntity}] {
-            ${attributes table columns }
-            ${methods:name2 vertical initiator[\],]}
+            ${attributes vertical }
+            ${methods:name2 vertical }
         }
     ]
     trigger = "entity"
@@ -20,16 +20,16 @@ Entity {
 ExampleUnit {
         [
         unit ${name} {
-            ${entities vertical terminator[;]}
+            ${entities vertical }
         unit level methods:
-            ${methods table columns}
+            ${methods vertical}
         }
         ]
 }
 
 Method {
     [
-        method ${name} ( ${parameters table} ): ${declaredType} {
+        method ${name} ( ${parameters horizontal separator [, ]} ): ${declaredType} {
             ${body}
         }
     ]
@@ -40,7 +40,7 @@ Parameter {
 }
 
 MethodCallExpression {
-    [CALL ${methodDefinition} ( ${args separator[,] } )]
+    [CALL ${methodDefinition} ( ${args horizontal separator[,] } )]
     referenceShortcut = ${methodDefinition}
     trigger = "method"
 }
@@ -101,11 +101,12 @@ AttributeRef {
 }
 
 ParameterRef {
-    [ ${parameter} [? . ${appliedfeature}] ]
+    [ xx ${parameter} yy [? . ${appliedfeature}] zz]
     referenceShortcut = ${parameter}
 }
 IfExpression {
-        [if (${condition}) then
+        [
+        if (${condition}) then
             ${whenTrue}
         else
             ${whenFalse}

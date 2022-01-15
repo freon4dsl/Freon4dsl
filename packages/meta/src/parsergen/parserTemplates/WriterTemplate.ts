@@ -24,8 +24,6 @@ import {
     PiEditProjectionItem,
     PiEditProjection,
     PiEditClassifierProjection,
-    PiEditLimitedProjection,
-    PiEditInstanceProjection,
     PiOptionalPropertyProjection, ExtraClassifierInfo
 } from "../../editordef/metalanguage";
 import { PiPrimitiveType } from "../../languagedef/metalanguage";
@@ -44,19 +42,9 @@ export class WriterTemplate {
         const allLangConceptsName: string = Names.allConcepts(language);
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
-        let limitedConcepts: PiLimitedConcept[] = [];
+        let limitedConcepts: PiLimitedConcept[] = language.concepts.filter(c => c instanceof PiLimitedConcept) as PiLimitedConcept[];
         const elementsToUnparse: PiClassifier[] = sortConcepts(language.concepts);
         elementsToUnparse.push(...language.units);
-
-        // find all limited concepts used, the are treated differently in both (1) the creation of unparse method
-        // (2) in the generic method 'unparseReferenceList'
-        for (const conceptDef of defaultGroup.projections) {
-            const myConcept: PiClassifier = conceptDef.classifier.referred;
-            if (myConcept instanceof PiLimitedConcept) {
-                limitedConcepts.push(myConcept);
-            }
-        }
-        // TODO maybe replace the above with editDef.language.concepts.filter(c => c instanceof PiLimitedConcept) ???
 
         const binaryExtras: ExtraClassifierInfo[] = [];
         for (const conceptDef of defaultGroup.extras) {
@@ -166,7 +154,7 @@ export class WriterTemplate {
 
             ${defaultGroup.projections.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
             ${binaryExtras.map(bin => `${this.makeBinaryExpMethod(bin)}`).join("\n")}
-            // TODO add method(s) for limited concepts that have no projection
+            ${limitedConcepts.map(con => `${this.makeLimitedMethod(con)}`).join("\n")}
              
             /**
              *
@@ -263,7 +251,7 @@ export class WriterTemplate {
             }
             
             /**
-             * Adds a separator text or a terminator text (followed by a newline and the right amount of indentation) 
+             * Adds a separator, terminator, or initiator text (followed or preceded by a newline and the right amount of indentation) 
              * to the output, depending on the parameters.
              * @param sepType
              * @param isLastInList
@@ -349,15 +337,12 @@ export class WriterTemplate {
 
     /**
      * Creates a method that unparses the concept in 'conceptDef' based on the projection in
-     * 'conceptDef'. If the concept is a limited concept it is treated differently, because
-     * limited concepts can only be used as a reference.
+     * 'conceptDef'.
      * @param conceptDef
      */
     private makeConceptMethod (conceptDef: PiEditClassifierProjection): string {
         const myConcept: PiClassifier = conceptDef.classifier.referred;
-        if (conceptDef instanceof PiEditLimitedProjection && myConcept instanceof PiLimitedConcept) {
-            return this.makeLimitedMethod(conceptDef, myConcept);
-        } else if (conceptDef instanceof PiEditProjection) {
+        if (conceptDef instanceof PiEditProjection) {
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
                 return this.makeAbstractMethod(myConcept);
             } else if (myConcept instanceof PiBinaryExpressionConcept || myConcept instanceof PiInterface) {
@@ -371,67 +356,59 @@ export class WriterTemplate {
         return "";
     }
 
-    private makeLimitedMethod(conceptDef: PiEditLimitedProjection, myConcept: PiLimitedConcept) {
-        // when a 'keyword' projection is present, use that
-        // when not, use the name of the instance of the limited concept
-        let result = this.makeLimitedKeywordMethod(conceptDef , myConcept);
-        if (result.length > 0) { // it was a `keyword` projection
-            return result;
-        } else {
-            // TODO this will never be reached, move to other method (see TODO above)
-            const name: string = Names.concept(myConcept);
-            return `/**
-                         * The limited concept '${myConcept.name}' is unparsed as its name.
-                         */
-                        private unparse${name}(modelelement: ${name}, short: boolean) {
-                            if (!!modelelement) {
-                                this.output[this.currentLine] += modelelement.name + " ";
-                            }
-                        }`;
-        }
-    }
-
-    private makeLimitedKeywordMethod(conceptDef: PiEditLimitedProjection, myConcept: PiLimitedConcept) {
-        const comment = `/**
-                          * The limited concept '${myConcept.name}' is unparsed according to the keywords in the editor definition.
-                          */`;
+    private makeLimitedMethod(myConcept: PiLimitedConcept) {
         const name: string = Names.concept(myConcept);
-        const lines: PiEditInstanceProjection[] = conceptDef.instanceProjections;
-
-        // if the special 'keyword' construct is used, we create an extra method with a switch statement
-        // if not, do nothing, the limited concept is being referred to by its name
-        if (!!lines) {
-            let cases: string = "";
-            lines.map(item => {
-                // if the special 'keyword' construct is used, there will be instances of PiEditPropertyProjection
-                // that have 'booleanInfo'
-                if (item instanceof PiEditInstanceProjection && !!item.keyword) {
-                    // add escapes to keyword
-                    const myKeyword = ParserGenUtil.escapeRelevantChars(item.keyword.trueKeyword);
-                    cases += `case ${Names.concept(myConcept)}.${Names.instance(item.instance.referred)}: {
-                                this.output[this.currentLine] += "${myKeyword} ";
-                                break;
-                                }
-                                `
-                }
-            });
-            if (cases.length > 0) {
-                return `
-                    ${comment}
-                        private unparse${name}(modelelement: ${name}, short: boolean) {
-                            if (!!modelelement) {
-                                switch (modelelement) {
-                                    ${cases}
-                                    default: {
-                                        this.output[this.currentLine] += modelelement.name + " ";
-                                    }
-                                }
-                            }
-                        }`;
-            }
-        }
-        return "";
+        return `/**
+                 * The limited concept '${myConcept.name}' is unparsed as its name.
+                 */
+                 private unparse${name}(modelelement: ${name}, short: boolean) {
+                     if (!!modelelement) {
+                         this.output[this.currentLine] += modelelement.name + " ";
+                     }
+                 }`;
     }
+
+    // private makeLimitedKeywordMethod(conceptDef: PiEditLimitedProjection, myConcept: PiLimitedConcept) {
+    //     const comment = `/**
+    //                       * The limited concept '${myConcept.name}' is unparsed according to the keywords in the editor definition.
+    //                       */`;
+    //     const name: string = Names.concept(myConcept);
+    //     const lines: PiEditInstanceProjection[] = conceptDef.instanceProjections;
+    //
+    //     // if the special 'keyword' construct is used, we create an extra method with a switch statement
+    //     // if not, do nothing, the limited concept is being referred to by its name
+    //     if (!!lines) {
+    //         let cases: string = "";
+    //         lines.map(item => {
+    //             // if the special 'keyword' construct is used, there will be instances of PiEditPropertyProjection
+    //             // that have 'booleanInfo'
+    //             if (item instanceof PiEditInstanceProjection && !!item.keyword) {
+    //                 // add escapes to keyword
+    //                 const myKeyword = ParserGenUtil.escapeRelevantChars(item.keyword.trueKeyword);
+    //                 cases += `case ${Names.concept(myConcept)}.${Names.instance(item.instance.referred)}: {
+    //                             this.output[this.currentLine] += "${myKeyword} ";
+    //                             break;
+    //                             }
+    //                             `
+    //             }
+    //         });
+    //         if (cases.length > 0) {
+    //             return `
+    //                 ${comment}
+    //                     private unparse${name}(modelelement: ${name}, short: boolean) {
+    //                         if (!!modelelement) {
+    //                             switch (modelelement) {
+    //                                 ${cases}
+    //                                 default: {
+    //                                     this.output[this.currentLine] += modelelement.name + " ";
+    //                                 }
+    //                             }
+    //                         }
+    //                     }`;
+    //         }
+    //     }
+    //     return "";
+    // }
 
     private makeAbstractMethod(myConcept: PiConcept): string {
         const name: string = Names.concept(myConcept);
@@ -501,7 +478,7 @@ export class WriterTemplate {
     // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
     private makeLine(line: PiEditProjectionLine, inOptionalGroup: boolean): string {
         let result: string = ``;
-        line.items.forEach((item, index) => {
+        line.items.forEach(item => {
             result += this.makeItem(item, line.indent, inOptionalGroup, line.isOptional());
         });
         return result;

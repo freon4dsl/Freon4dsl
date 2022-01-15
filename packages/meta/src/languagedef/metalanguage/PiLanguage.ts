@@ -16,6 +16,22 @@ export class PiLanguage extends PiLangElement {
         super();
     }
 
+    classifiersWithProjection(): PiClassifier[] {
+        // TODO add interfaces
+        // TODO add abstract concepts
+        const xx: PiClassifier[] = this.concepts.filter(c => !(c instanceof PiLimitedConcept || c instanceof PiBinaryExpressionConcept || c.isAbstract));
+        xx.push(...this.units);
+        return xx;
+    }
+
+    classifiersWithExtras(): PiClassifier[] {
+        // TODO add interfaces
+        // TODO add abstract concepts
+        const xx: PiClassifier[] = this.concepts.filter(c => !(c instanceof PiLimitedConcept || c.isAbstract));
+        xx.push(...this.units);
+        return xx;
+    }
+
     conceptsAndInterfaces(): PiClassifier[] {
         const result: PiClassifier[] = this.concepts;
         return result.concat(this.interfaces);

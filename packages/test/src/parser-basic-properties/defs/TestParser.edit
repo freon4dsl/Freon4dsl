@@ -49,13 +49,6 @@ PrimWith {
      [ PrimWithKeywordProj [?${self.primBoolean [<BOOL>]}] ]
 }
 // for limited concepts
-VisibilityKind {
-     [
-        ${PUBLIC [+]}
-        ${PRIVATE [-]}
-        ${PROTECTED [#]}
-    ]
-}
 
 LimitedNonOptional {
      [

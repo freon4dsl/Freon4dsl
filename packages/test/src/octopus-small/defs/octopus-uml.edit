@@ -164,17 +164,3 @@ OclStatement {
 // [[?${self.visibility}]]
 //}
 // for limited concepts
-VisibilityKind {
- [
-        ${PUBLIC [+]}
-        ${PRIVATE [-]}
-        ${PROTECTED [#]}
-    ]
-}
-ParameterDirectionKind {
- [
-        ${IN [<in>]}
-        ${OUT [<out>]}
-        ${INOUT [<inout>]}
-    ]
-}

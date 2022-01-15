@@ -170,9 +170,9 @@ concept OclPostStatement {
 //    parts: VariableDeclaration[];
 //}
 limited ParameterDirectionKind {
-    IN    = { name: "IN" }
-    OUT   = { name: "OUT" }
-    INOUT = { name: "INOUT" }
+    IN    = { name: "<in>" }
+    OUT   = { name: "<out>>" }
+    INOUT = { name: "<inout>" }
 }
 //concept VariableDeclaration implements IModelElement {
 //    reference type: IClassifier;
@@ -180,7 +180,7 @@ limited ParameterDirectionKind {
 //    isIteratorVar: boolean;
 //}
 limited VisibilityKind {
-	PUBLIC = { name: "PUBLIC" }
-	PRIVATE = { name: "PRIVATE" }
-	PROTECTED = { name: "PROTECTED" }
+	PUBLIC = { name: "+" }
+	PRIVATE = { name: "-" }
+	PROTECTED = { name: "#" }
 }

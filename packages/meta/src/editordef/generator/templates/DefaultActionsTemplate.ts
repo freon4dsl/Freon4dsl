@@ -216,9 +216,10 @@ export class DefaultActionsTemplate {
             const partType = part.type.referred;
             if (partType instanceof PiClassifier) { // exclude all primitive types
                 LangUtil.subConceptsIncludingSelf(partType).filter(cls => !cls.isAbstract).forEach(subClass => {
-                    const conceptEditor: ExtraClassifierInfo = editorDef.findExtrasForType(subClass);
-                    behaviorMap.createOrAdd(subClass,
-                        {
+                    if (!(subClass instanceof PiLimitedConcept)) {
+                        const conceptEditor: ExtraClassifierInfo = editorDef.findExtrasForType(subClass);
+                        behaviorMap.createOrAdd(subClass,
+                            {
                                 activeInBoxRoles: [`${Roles.newConceptPart(concept, part)}`],
                                 trigger: `${conceptEditor.trigger}`,  // for single Concept part
                                 action: `(box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
@@ -233,36 +234,22 @@ export class DefaultActionsTemplate {
                                                 return newElement;
                                           }`,
                                 referenceShortcut: (!!conceptEditor.referenceShortcutExp ?
-                                                        `{
+                                    `{
                                                               propertyname: "${((conceptEditor.referenceShortcutExp) as PiLangSelfExp).appliedfeature.sourceName}",
                                                               metatype: "${Names.classifier(((conceptEditor.referenceShortcutExp) as PiLangSelfExp).appliedfeature.referredElement.referred.type.referred)}"
                                                          }` : undefined),
                                 undo: (!!conceptEditor.referenceShortcutExp ?
-                                                    `(box: Box, editor: PiEditor): void => {
+                                    `(box: Box, editor: PiEditor): void => {
                                                         const parent = box.element;
                                                         parent[(box as AliasBox).propertyName] = null;
                                                      }` : undefined),
                                 boxRoleToSelect: `${this.cursorLocation(editorDef, subClass)}` /* CURSOR 4  ${subClass.name} */
                             }
-                    );
+                        );
+                    }
                 });
             }
         }));
-        // for (const elem of behaviorMap.map.values()) {
-        //     // console.log("FOUND "+ elem.trigger + " roles: " + elem.activeInBoxRoles.length + " ==> " + elem.activeInBoxRoles);
-        //     result += `
-        //             {
-        //                 // ProjectIt Generator: custom Action for creating a PiElement
-        //                 activeInBoxRoles: [${elem.activeInBoxRoles.map(role => `"${role}"`).join(",")}],
-        //                 trigger: "${elem.trigger}",  // for single Concept part
-        //                 action: ${elem.action},
-        //                 ${!!elem.referenceShortcut  ? `referenceShortcut: ${elem.referenceShortcut},` : ``}
-        //                 ${!!elem.undo               ? `undo: ${elem.undo},`                           : ``}
-        //                 boxRoleToSelect: "${elem.boxRoleToSelect}-textbox" /* CURSOR 4 */
-        //             },
-        //             `;
-        // }
-
         return result;
     }
     cursorLocation(editorDef: PiEditUnit, c: PiClassifier) {

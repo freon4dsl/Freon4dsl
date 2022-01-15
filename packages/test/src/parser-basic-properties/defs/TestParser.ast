@@ -112,9 +112,9 @@ concept LimitedOptional {
 }
 
 limited VisibilityKind {
-	PUBLIC = { name: "PUBLIC" }
-	PRIVATE = { name: "PRIVATE" }
-	PROTECTED = { name: "PROTECTED" }
+	PUBLIC = { name: "+" }
+	PRIVATE = { name: "-" }
+	PROTECTED = { name: "#" }
 }
 
 limited OtherLimited {

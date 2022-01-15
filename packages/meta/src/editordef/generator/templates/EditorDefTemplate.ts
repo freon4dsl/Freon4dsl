@@ -1,4 +1,4 @@
-import { PiConcept, PiLanguage, PiProperty } from "../../../languagedef/metalanguage";
+import { PiConcept, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
 import { Names, PROJECTITCORE } from "../../../utils";
 import { PiEditUnit } from "../../metalanguage";
 
@@ -10,21 +10,24 @@ export class EditorDefTemplate {
         let conceptsWithTrigger: ConceptTriggerElement[] = [];
         let conceptsWithRefShortcut: ConceptShortCutElement[] = [];
         let imports: string[] = [];
-        language.concepts.forEach(concept => {
-            // find the triggers for all concepts
-            // every concept should have one - added by EditorDefaultsGenerator
-            const trigger = defaultProjGroup.findExtrasForType(concept).trigger;
-            if (!!trigger && trigger.length > 0) {
-                conceptsWithTrigger.push(new ConceptTriggerElement(concept, trigger));
-            }
+        language.classifiersWithExtras().forEach(concept => {
+            // TODO handle other sub types of PiClassifier
+            if (concept instanceof PiConcept) {
+                // find the triggers for all concepts
+                // every concept should have one - added by EditorDefaultsGenerator
+                const trigger = defaultProjGroup.findExtrasForType(concept).trigger;
+                if (!!trigger && trigger.length > 0) {
+                    conceptsWithTrigger.push(new ConceptTriggerElement(concept, trigger));
+                }
 
-            // find concepts with reference shortcuts
-            const referenceShortCut = defaultProjGroup.findExtrasForType(concept).referenceShortCut?.referred;
-            if (!!referenceShortCut) {
-                conceptsWithRefShortcut.push(new ConceptShortCutElement(concept, referenceShortCut));
-            }
+                // find concepts with reference shortcuts
+                const referenceShortCut = defaultProjGroup.findExtrasForType(concept).referenceShortCut?.referred;
+                if (!!referenceShortCut) {
+                    conceptsWithRefShortcut.push(new ConceptShortCutElement(concept, referenceShortCut));
+                }
 
-            imports.push(Names.concept(concept));
+                imports.push(Names.concept(concept));
+            }
         });
 
         return `import { Language, Model, ModelUnit, Property, Concept, Interface } from "${PROJECTITCORE}";
