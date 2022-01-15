@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { conceptStyle, styleToCSS } from "@projectit/core";
-    import type { GridBox, GridCell, PiEditor } from "@projectit/core";
+    import { conceptStyle, GridCellBox, isMetaKey, KEY_ENTER, PiUtils, styleToCSS, toPiKey } from "@projectit/core";
+    import type { GridBox, PiEditor } from "@projectit/core";
     import { afterUpdate } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
     import GridCellComponent from "./GridCellComponent.svelte";
@@ -9,7 +9,6 @@
     export let gridBox: GridBox;
     export let editor: PiEditor;
 
-     let showgrid = gridBox;
     let notifier = new ChangeNotifier();
     afterUpdate(() => {
         UPDATE_LOGGER.log("ListComponent.afterUpdate")
@@ -17,19 +16,31 @@
         notifier.notifyChange();
     });
 
-    let cells: GridCell[];
+    let cells: GridCellBox[];
     let templateColumns: string;
     let templateRows: string;
     let boxStyle = ""
+    const onKeydown = (event: KeyboardEvent) => {
+        const piKey = toPiKey(event);
+        if (isMetaKey(event) || event.key === KEY_ENTER) {
+            const isKeyboardShortcutForThis = PiUtils.handleKeyboardShortcut(piKey, gridBox, editor);
+            if (!isKeyboardShortcutForThis) {
+                if (event.key === KEY_ENTER) {
+                    return;
+                }
 
+            }
+        }
+
+    };
     autorun(() => {
-        AUTO_LOGGER.log("GridComponent[" + notifier.dummy + "] ");
-        showgrid = gridBox;
-        cells = showgrid.cells;
-        cells.forEach(cell => {
-        });
-        templateRows = `repeat(${showgrid.numberOfRows() - 1}, auto)`;
-        templateColumns = `repeat(${showgrid.numberOfColumns() - 1}, auto)`;
+        AUTO_LOGGER.log("GridComponent[" + notifier.dummy + "] " + gridBox.role);
+        cells = [...gridBox.cells];
+        // cells.forEach(cell => {
+        //     AUTO_LOGGER.log("    cell.role: " + cell.role + " box role " + cell.box.role + " id " + cell.box.id);
+        // });
+        templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
+        templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
         boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, gridBox.element.piLanguageConcept(), "grid", gridBox.style));
 
     });
@@ -39,11 +50,11 @@
                 grid-template-rows: {templateRows};
                 {boxStyle}
               "
-        id={showgrid.id}
         class="maingridcomponent"
+        on:keydown={onKeydown}
 >
-    {#each cells as cell (cell.box.id)}
-        <GridCellComponent grid={gridBox} cell={cell} editor={editor}/>
+    {#each cells as cell (cell.box.id + cell.role + "-grid")}
+        <GridCellComponent grid={gridBox} cellBox={cell} editor={editor}/>
     {/each}
 </div>
 

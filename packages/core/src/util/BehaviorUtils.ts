@@ -1,7 +1,8 @@
 import { runInAction } from "mobx";
-import { isRegExp, isString, Box, PiEditor, InternalBehavior } from "../editor";
+import { isRegExp, isString, Box, PiEditor, PiPostAction, PiAction } from "../editor";
+import { PiElement } from "../language/index";
 import { Language } from "../storage/Language";
-import { PiLogger } from "./internal";
+import { LEFT_MOST, PiLogger } from "./internal";
 
 const LOGGER = new PiLogger("BehaviorUtils");
 
@@ -49,39 +50,36 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
     LOGGER.log("Enter executeBehavior text [" + text + "] label [" + label + "] box role [" + box.role + "]");
     let partialMatch: boolean = false;
 
-    for (const behavior of editor.behaviors) {
-        const trigger = behavior.trigger;
-        if (behavior.activeInBoxRoles.includes(box.role)) {
+    for (const action of editor.new_pi_actions) {
+        const trigger = action.trigger;
+        LOGGER.log("  executeHebavior trigger " + trigger + "  roles " + action.activeInBoxRoles);
+        if (action.activeInBoxRoles.includes(box.role)) {
             if (isRegExp(trigger)) {
                 const matchArray = label.match(trigger);
                 LOGGER.log("executeBehavior: MATCH " + label + " against " + trigger +
                     "  results in " + (!!matchArray ? matchArray.length : "null"));
+                let execresult: PiPostAction;
                 if (matchArray !== null && label === matchArray[0]) {
                     runInAction( () => {
-                        const execresult = behavior.execute(box, label, editor);
-                        // if( !!execresult){
-                        //     editor.selectElement(execresult);
-                        //     editor.selectFirstLeafChildBox();
-                        // }
+                        const command = action.command(box);
+                        execresult = command.execute(box, label, editor);
                     });
+                    if(!!execresult) {
+                        execresult();
+                    }
                     return BehaviorExecutionResult.EXECUTED;
                 }
             } else if (isString(trigger)) {
                 if (trigger === text) {
-                    LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + behavior.referenceShortcut + "]");
+                    LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + action.referenceShortcut + "]");
+                    let postAction: PiPostAction;
                     runInAction( () => {
                         console.log("============== START")
-                        const execresult = behavior.execute(box, label, editor);
-                        // If this is a referenceShortcut, fill in the selected reference, which is in the label
-                        if (!!label && !!behavior.referenceShortcut) {
-                            execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, behavior.referenceShortcut.metatype);
-                        }
+                        const command = action.command(box);
+                        postAction = command.execute(box, label, editor);
                         console.log("============== END")
                     });
-                    // if( !!execresult){
-                    //     await editor.selectElement(execresult, LEFT_MOST);
-                    //     editor.selectFirstLeafChildBox();
-                    // }
+                    postAction();
                     return BehaviorExecutionResult.EXECUTED;
                 } else if (trigger.startsWith(label)) {
                     LOGGER.log("executeBehavior: MATCH PARTIAL TEXT");
@@ -99,31 +97,39 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
 }
 
 /**
- * We know the behavior to be executed, so just do it.
- * @param behavior
+ * We know the action to be executed, so just do it.
+ * @param action
  * @param box
  * @param text
  * @param label
  * @param editor
  */
-export function executeSingleBehavior(behavior: InternalBehavior, box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
-    LOGGER.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + behavior.referenceShortcut + "]");
+export function executeSingleBehavior(action: PiAction, box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
+    console.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
     let partialMatch: boolean = false;
+    let execresult: PiPostAction;
 
-    const trigger = behavior.trigger;
+    const trigger = action.trigger;
     runInAction( () => {
         console.log("========================== START");
-        const execresult = behavior.execute(box, label, editor);
-        // if( !!execresult){
-        //     editor.selectElement(execresult);
-        //     editor.selectFirstLeafChildBox();
-        // }
-        // If this is a referenceShortcut, fill in the selected reference, which is in the label
-        if (!!label && !!behavior.referenceShortcut) {
-            execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, behavior.referenceShortcut.metatype);
-        }
+        const command = action.command(box);
+        execresult = command.execute(box, label, editor);
         console.log("===============================")
     });
+    if( !!execresult){
+        execresult();
+
+        // if (!!action.boxRoleToSelect) {
+        //     editor.selectBoxByRoleAndElementId(execresult.piId(),action.boxRoleToSelect,action.caretPosition);
+        // }else {
+        //     editor.selectElement(execresult);
+        //     editor.selectFirstLeafChildBox();
+        //     if (editor.selectedBox.role.includes(LEFT_MOST)){
+        //         // Special expression prefix box, don't select it
+        //         editor.selectNextLeaf()
+        //     }
+        // }
+    }
     // if( !!execresult){
     //     await editor.selectElement(execresult, LEFT_MOST);
     //     editor.selectFirstLeafChildBox();

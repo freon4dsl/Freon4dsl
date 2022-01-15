@@ -62,24 +62,24 @@ export class Language {
     private constructor() {
     }
 
-    model(typeName): Model {
+    model(typeName: string): Model {
         return this.models.get(typeName);
     }
 
-    unit(typeName): ModelUnit {
+    unit(typeName: string): ModelUnit {
         return this.units.get(typeName);
     }
 
-    concept(typeName): Concept {
+    concept(typeName: string): Concept {
         // console.log("Language find concept " + typeName + " ==> " + this.concepts.get(typeName));
         return this.concepts.get(typeName);
     }
 
-    interface(typeName): Interface {
+    interface(typeName: string): Interface {
         return this.interfaces.get(typeName);
     }
 
-    classifier(typeName): ModelUnit | Concept | Interface {
+    classifier(typeName: string): ModelUnit | Concept | Interface {
         let concept1 = this.concepts.get(typeName);
         if (!!concept1) {
             return concept1;
@@ -97,20 +97,21 @@ export class Language {
         return null;
     }
 
-    conceptProperty(typeName, propertyName): Property {
+    conceptProperty(typeName: string, propertyName: string): Property {
         LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
         return this.concepts.get(typeName).properties.get(propertyName);
     }
 
-    unitProperty(typeName, propertyName): Property {
+    unitProperty(typeName: string, propertyName: string): Property {
         return this.units.get(typeName).properties.get(propertyName);
     }
 
-    interfaceProperty(typeName, propertyName): Property {
+    interfaceProperty(typeName: string, propertyName: string): Property {
         return this.interfaces.get(typeName).properties.get(propertyName);
     }
 
-    classifierProperty(typeName, propertyName): Property {
+    classifierProperty(typeName: string, propertyName: string): Property {
+        console.log("CLASSIFIERPROPRTY " + typeName + "." + propertyName);
         let concept1 = this.concepts.get(typeName);
         if (!!concept1) {
             return concept1.properties.get(propertyName);

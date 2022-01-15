@@ -1,19 +1,20 @@
+import { isEqual } from "lodash";
 import { makeObservable, observable, computed, action, trace } from "mobx";
 import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiContainerDescriptor, PiElement } from "../language";
 import { PiCaret, wait, PiLogger } from "../util";
 import {
-    InternalBehavior,
-    InternalBinaryBehavior,
-    InternalCustomBehavior,
-    InternalExpressionBehavior,
+    PiAction,
+    PiCreateBinaryExpressionAction,
+    PiCustomAction, PiKeyboardShortcutAction, triggerToString2, triggerTypeToString
+} from "./actions/index";
+import {
     PiProjection,
     isAliasBox,
     isSelectBox,
     isTextBox,
     Box,
-    KeyboardShortcutBehavior,
     PiActions, PiEditorStyle
 } from "./internal";
 
@@ -23,8 +24,7 @@ export class PiEditor {
     private _rootElement: PiElement = null;
     readonly actions?: PiActions;
     readonly projection: PiProjection;
-    readonly behaviors: InternalBehavior[] = [];
-    keyboardActions: KeyboardShortcutBehavior[] = [];
+    new_pi_actions: PiAction[]= [];
     style: PiEditorStyle = { global: { dark: {}, light: {}}};
     theme: string = "light";
 
@@ -75,10 +75,26 @@ export class PiEditor {
         if (!actions) {
             return;
         }
-        actions.expressionCreators.forEach(ea => this.behaviors.push(new InternalExpressionBehavior(ea)));
-        actions.binaryExpressionCreators.forEach(ba => this.behaviors.push(new InternalBinaryBehavior(ba)));
-        actions.customBehaviors.forEach(ca => this.behaviors.push(new InternalCustomBehavior(ca)));
-        this.keyboardActions = actions.keyboardActions;
+        // this.keyboardActions = actions.keyboardActions;
+
+        actions.customBehaviors.forEach(ca => this.new_pi_actions.push(new PiCustomAction({
+            activeInBoxRoles: ca.activeInBoxRoles,
+            boxRoleToSelect: ca.boxRoleToSelect,
+            caretPosition: ca.caretPosition,
+            trigger: ca.trigger,
+            action: ca.action,
+            isApplicable: ca.isApplicable,
+            referenceShortcut: ca.referenceShortcut
+        })));
+        actions.binaryExpressionCreators.forEach(ca => this.new_pi_actions.push(new PiCreateBinaryExpressionAction({
+            activeInBoxRoles: ca.activeInBoxRoles,
+            boxRoleToSelect: ca.boxRoleToSelect,
+            caretPosition: ca.caretPosition,
+            trigger: ca.trigger,
+            expressionBuilder: ca.expressionBuilder,
+            isApplicable: ca.isApplicable,
+            referenceShortcut: ca.referenceShortcut
+        })));
     }
 
     get projectedElement() {
@@ -95,7 +111,7 @@ export class PiEditor {
     NOSELECT: Boolean = false;
 
     selectElement(element: PiElement, role?: string, caretPosition?: PiCaret) {
-        LOGGER.log("selectElement");
+        LOGGER.log("selectElement " + element?.piLanguageConcept());
         if( this.NOSELECT) { return; }
         if (element === null || element === undefined) {
             console.error("PiEditor.selectElement is null !");
@@ -104,25 +120,28 @@ export class PiEditor {
         this.selectedElement = element;
         this.selectedRole = role;
         this.selectedPosition = caretPosition;
-        wait(0);
-        LOGGER.log("  ==> selectElement " + (!!element && element) + " Role: " + role + " caret: " + caretPosition?.position);
+        // wait(0);
+        LOGGER.log("selectElement: selectElement " + (!!element && element) + " Role: " + role + " caret: " + caretPosition?.position);
         const rootBox = this.$rootBox;
         const box = rootBox.findBox(element.piId(), role);
-        LOGGER.log("  ==> selectElement found box " + (!!box && box.kind));
-        if (box) {
+        LOGGER.log("selectElement: selectElement found box " + box?.kind);
+        if (!!box) {
             this.selectBoxNew(box, caretPosition);
         } else {
             if (!!role) {
-                LOGGER.info(this, "Trying without role");
-                this.selectElement(element);
-                this.selectedRole = role;
-                this.selectedPosition = caretPosition;
+                // TODO Does not work ok
+                LOGGER.log("seletElement: Trying without role, element id is " + element.piId());
+                const box = rootBox.findBox(element.piId());
+                LOGGER.log("selectElement: selectElement found main box " + box?.kind);
+                // this.selectElement(element);
+                // this.selectedRole = role;
+                // this.selectedPosition = caretPosition;
             }
         }
     }
 
     selectBoxNew(box: Box, caretPosition?: PiCaret) {
-        LOGGER.log("SelectBoxNEW " + (box ? box.role : box) + "  caret " + caretPosition?.position + " NOSELECT[" + this.NOSELECT + "]");
+        LOGGER.log("SelectBoxNEW: " + (box ? box.role : box) + "  caret " + caretPosition?.position + " NOSELECT[" + this.NOSELECT + "]");
         if( this.NOSELECT) { return; }
         this.selectBox(this.$rootBox.findBox(box.element.piId(), box.role), caretPosition);
     }
@@ -139,7 +158,7 @@ export class PiEditor {
             console.error("PiEditor.selectBox is null !");
             return;
         }
-        LOGGER.log("selectBox " + (!!box ? box.role : box) + " caret " + caretPosition?.position);
+        LOGGER.log("selectBox: " + (!!box ? box.role : box) + " caret " + caretPosition?.position);
         if (box === this.selectedBox) {
             LOGGER.info(this, "box already selected");
             return;
@@ -149,7 +168,7 @@ export class PiEditor {
         } else {
             this.selectedBox = box;
         }
-        LOGGER.log("==> select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
+        LOGGER.log("selectBox: select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
         if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
             if (!!caretPosition) {
                 LOGGER.log("caret position is " + caretPosition.position);
@@ -168,7 +187,7 @@ export class PiEditor {
     }
 
     set selectedBox(box: Box) {
-        LOGGER.log(" ==> set selected box to: " + (!!box ? box.role : "null") + "  NOSELECT [" + this.NOSELECT + "]");
+        LOGGER.log("selecteedBox:  set selected box to: " + (!!box ? box.role : "null") + "  NOSELECT [" + this.NOSELECT + "]");
         if( this.NOSELECT) { return; }
 
         if (isAliasBox(box)) {
@@ -193,7 +212,7 @@ export class PiEditor {
     }
 
     selectParentBox() {
-        LOGGER.log("==> SelectParent of " + this.selectedBox.role);
+        LOGGER.log("==> SelectParent of " + this.selectedBox.role + this.selectedBox?.parent.kind);
         let parent = this.selectedBox.parent;
         if (isAliasBox(parent) || isSelectBox(parent)) {
             // Coming from (hidden) textbox in Select/Alias box
@@ -368,4 +387,20 @@ export class PiEditor {
         return this._rootElement;
     }
 
+    addOrReplaceAction(piCustomAction: PiAction) {
+        console.log("   addOrReplaceAction [" + triggerTypeToString(piCustomAction.trigger) + "] [" + piCustomAction.activeInBoxRoles + "]");
+
+        this.new_pi_actions.forEach(act => {
+            console.log("   Trigger [" + triggerTypeToString(act.trigger) + "] [" + act.activeInBoxRoles + "]");
+        })
+        const alreadyThere = this.new_pi_actions.findIndex( action => {
+            return isEqual(action.trigger, piCustomAction.trigger) && isEqual(action.activeInBoxRoles, piCustomAction.activeInBoxRoles);
+        });
+        console.log("  alreadyThere: " + alreadyThere);
+        if(alreadyThere !== -1) { // found it
+            this.new_pi_actions.splice(alreadyThere, 1, piCustomAction);
+        }else {
+            this.new_pi_actions.splice(0, 0, piCustomAction);
+        }
+    }
 }

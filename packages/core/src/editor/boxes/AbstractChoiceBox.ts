@@ -17,9 +17,6 @@ export abstract class AbstractChoiceBox extends Box {
         super(exp, role);
         this.placeholder = placeHolder;
         this.textHelper = new ChoiceTextHelper();
-        makeObservable(this, {
-            textHelper: observable
-        });
         PiUtils.initializeObject(this, initializer);
         this.textBox = BoxFactory.text(
             exp,
@@ -38,6 +35,11 @@ export abstract class AbstractChoiceBox extends Box {
                 placeHolder: placeHolder
             }
         );
+        makeObservable(this, {
+            textHelper: observable,
+            textBox: observable
+        });
+
     }
 
 

@@ -1,5 +1,6 @@
 import { observable, makeObservable } from "mobx";
 import { PiStyle } from "../PiStyle";
+import { GridCellBox } from "./GridCellBox";
 
 import { Box } from "./internal";
 import { PiElement } from "../../language";
@@ -7,22 +8,13 @@ import { PiUtils } from "../../util";
 
 export type GridOrientation = "neutral" | "row" | "column";
 
-export type GridCell = {
-    row: number;
-    column: number;
-    box: Box;
-    rowSpan?: number;
-    columnSpan?: number;
-    style?: PiStyle;
-};
-
 export class GridBox extends Box {
     readonly kind = "GridBox";
-    cells: GridCell[];
+    cells: GridCellBox[] = [];
     private $children: Box[] = [];
     orientation: GridOrientation = "neutral";
 
-    constructor(exp: PiElement, role: string, cells: GridCell[], initializer?: Partial<GridBox>) {
+    constructor(exp: PiElement, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
         super(exp, role);
         PiUtils.initializeObject(this, initializer);
         this.cells = cells;
@@ -36,7 +28,8 @@ export class GridBox extends Box {
         });
         this.sortCellsAndAddChildren();
         makeObservable<GridBox, "$children">(this, {
-            $children: observable
+            $children: observable,
+            cells: observable
         });
     }
 
@@ -49,7 +42,7 @@ export class GridBox extends Box {
     private sortCellsAndAddChildren() {
         this.cells = this.cells.sort(compare);
         this.cells.forEach(cell => {
-            this.addChild(cell.box);
+            this.addChild(cell);
         });
     }
     numberOfColumns(): number {
@@ -64,7 +57,7 @@ export class GridBox extends Box {
         return max;
     }
 
-    private addChild(child: Box) {
+    private addChild(child: GridCellBox) {
         if (!!child) {
             this.$children.push(child);
             child.parent = this;
@@ -72,7 +65,7 @@ export class GridBox extends Box {
     }
 }
 
-function compare(a: GridCell, b: GridCell): number {
+function compare(a: GridCellBox, b: GridCellBox): number {
     if (a.row < b.row) {
         return -1;
     } else if (a.row > b.row) {

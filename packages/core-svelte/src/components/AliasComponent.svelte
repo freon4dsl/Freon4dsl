@@ -57,11 +57,11 @@
     };
 
     const setFocus = async (): Promise<void> => {
-        LOGGER.log("AliasComponent set focus " + choiceBox.role);
+        FOCUS_LOGGER.log("AliasComponent set focus " + choiceBox.role);
         if (!!textComponent) {
             textComponent.setFocus();
         } else {
-            LOGGER.log("?ERROR? textComponent is null in setFocus.");
+            FOCUS_LOGGER.log("?ERROR? textComponent is null in setFocus.");
         }
     };
 
@@ -95,7 +95,7 @@
      * @param {string} key
      * @returns {Promise<void>}
      */
-    const triggerKeyPressEvent = async (key: string) => {
+    const triggerKeyPressEvent = (key: string) => {
         LOGGER.info(this, "triggerKeyPressEvent " + key);
         isEditing = true;
         if (!!textComponent) {
@@ -148,7 +148,8 @@
         LOGGER.log("onInput: [" + value + "] for role " + choiceBox.role + " with text [" + textComponent.getText() + "]");
         let aliasResult = undefined;
         if (isAliasBox(choiceBox)) {
-            const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);
+            // const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);
+            const selected: SelectOption = findOption(selectableOptionList.options, value);
             LOGGER.log("    onInput alias box selected " + JSON.stringify(selected));
             if (!!selected) {
                 aliasResult = choiceBox.selectOption(editor, selected);
@@ -161,7 +162,8 @@
                 // choiceBox.textHelper.setText("");
             }
         } else if (isSelectBox(choiceBox)) {
-            const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);
+            // const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);
+            const selected: SelectOption = findOption(selectableOptionList.options, value);
             LOGGER.log("    onInput select box selected " + JSON.stringify(selected));
             if (selected !== null) {
                 isEditing = false;
@@ -180,24 +182,6 @@
         }
         LOGGER.log("onInput aliasResult: [" + aliasResult + "]");
         handleStringInput(value, aliasResult);
-        // switch (aliasResult) {
-        //     case BehaviorExecutionResult.EXECUTED:
-        //         LOGGER.log("ALIAS MATCH");
-        //         if (!!textComponent) {
-        //             textComponent.textOnScreen = "";
-        //         }
-        //         setOpen("onInput alias executed", false);
-        //         break;
-        //     case BehaviorExecutionResult.PARTIAL_MATCH:
-        //         LOGGER.log("PARTIAL_MATCH");
-        //         selectableOptionList.text = value;
-        //         setOpen("onInput alias partial match", true);
-        //         break;
-        //     case BehaviorExecutionResult.NO_MATCH:
-        //         LOGGER.log("NO MATCH");
-        //         selectableOptionList.text = value;
-        //         break;
-        // }
         return aliasResult;
     };
 
@@ -247,6 +231,7 @@
                 case KEY_ENTER:
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
+                        console.log("Keyboard shortcut in AliasComponentg ===============")
                         PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
                         e.stopPropagation();
                     }
@@ -274,7 +259,7 @@
     const onSelectOption = (event: CustomEvent<SelectOption>): void => {
         LOGGER.log("set selected SVELTE option to " + JSON.stringify(event.detail));
         isEditing = false;
-        runInAction( () => {
+        // runInAction( () => {
             choiceBox.textHelper.setText("");
             const option = event.detail;
             choiceBox.selectOption(editor, option);
@@ -283,7 +268,7 @@
             // choiceBox.textBox.setText(!!selected ? selected.label : "");
             LOGGER.log("      selected is " + JSON.stringify(selected));
             setOpen("selectedEvent", false);
-        });
+        // });
     };
 
     const onClick = (e: MouseEvent) => {
@@ -295,7 +280,6 @@
     let listForDropdown: SelectOption[];
     let aliasStyle: string = "";
 
-    // selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun(() => {
         if ($openStore) {
             listForDropdown = selectableOptionList.getFilteredOptions();

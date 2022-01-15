@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../language";
 import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes";
-import { BehaviorExecutionResult, PiUtils } from "../../util";
+import { BehaviorExecutionResult, createKeyboardShortcutForList2, PiUtils } from "../../util";
 import { Language, PropertyType } from "../../storage";
 import { PiEditor } from "../PiEditor";
 import { PiProjection } from "../PiProjection";
@@ -224,7 +224,7 @@ export class BoxUtils {
                 if (!!option) {
                     console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
                     runInAction( () => {
-                        element[propertyName] = setFunc(option.label);
+                        setFunc(option.label);
                     });
                 } else {
                     element[propertyName] = null;
@@ -270,6 +270,10 @@ export class BoxUtils {
             let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin);
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
+            // TODO: Add keboard action for Enter:
+            // TODO for role:RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item")
+           // CANNO DO< no EDIGOR AVAILABLE:
+            // editorr.addOrReplaceAction(createKeyboardShortcutForList2(RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item"), propertyName, element.piLanguageConcept(), "dummy"));
             // return the box
             return BoxFactory.verticalList(
                 element,
@@ -351,7 +355,6 @@ export class BoxUtils {
         const result =  !!property
             ? rootProjection.getBox(property)
             : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
-        console.log("ALIAS OR BOX: " + propertyName + " => " + property + " result: " + result.kind);
         return result;
     }
 

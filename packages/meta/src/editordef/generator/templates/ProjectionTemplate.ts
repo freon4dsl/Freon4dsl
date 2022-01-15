@@ -247,12 +247,12 @@ export class ProjectionTemplate {
         } else if (item instanceof PiEditPropertyProjection) {
             result += this.propertyProjection(item, elementVarName, concept, language);
         } else if (item instanceof PiEditSubProjection) {
-            result += this.optionalProjection(item, elementVarName, lineIndex, concept, language);
+            result += this.optionalProjection(item, elementVarName, lineIndex, itemIndex, concept, language);
         }
         return result;
     }
 
-    private optionalProjection(item: PiEditSubProjection, elementVarName: string, lineIndex: number, concept: PiClassifier,
+    private optionalProjection(item: PiEditSubProjection, elementVarName: string, lineIndex: number, itemIndex: number, concept: PiClassifier,
                                language: PiLanguage): string {
         let result = "";
         item.items.forEach((subitem, subitemIndex) => {
@@ -265,7 +265,7 @@ export class ProjectionTemplate {
 
         // If there are more items, surround with horizontal list
         if (item.items.length > 1) {
-            result = `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${lineIndex}", [${result}])`;
+            result = `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${lineIndex}-${itemIndex}", [${result}])`;
         }
 
         const propertyProjection: PiEditPropertyProjection = item.optionalProperty();

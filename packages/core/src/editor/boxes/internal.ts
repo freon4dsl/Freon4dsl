@@ -21,6 +21,7 @@ export * from "./SvgBox";
 export * from "./TextBox";
 export * from "./SelectBox";
 export * from "./BoxFactory";
+export * from "./GridCellBox";
 
 // the following files contain export that do not depend on any other file
 export * from "./SelectOption";

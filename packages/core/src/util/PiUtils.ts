@@ -2,7 +2,7 @@ import { action, runInAction } from "mobx";
 import { PiLogger } from "./internal";
 // the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
 import { PiKey } from "./Keys";
-import { Box, PiEditor } from "../editor";
+import { Box, isProKey, PiActionTrigger, PiEditor, PiKeyboardShortcutAction } from "../editor";
 import { PiContainerDescriptor, PiElement, PiExpression, isPiExpression } from "../language";
 
 export type BooleanCallback = () => boolean;
@@ -74,21 +74,32 @@ export class PiUtils {
      * @param box
      * @param editor
      */
-    static handleKeyboardShortcut(piKey: PiKey, box: Box, editor: PiEditor): boolean {
-        for (const act of editor.keyboardActions) {
-            // LOGGER.log("handleKeyboardShortcut activeroles: " + act.activeInBoxRoles);
-            if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
-                if (act.activeInBoxRoles.includes(box.role)) {
-                    LOGGER.log("handleKeyboardShortcut: executing keyboard action");
-                    const selected = act.action(box, piKey, editor);
-                    if (selected) {
-                        editor.selectElement(selected, act.boxRoleToSelect);
+    static handleKeyboardShortcut(piKey: PiActionTrigger, box: Box, editor: PiEditor): boolean {
+        LOGGER.log("?????? handleKeyboardShortcut for box " + box.role + " kind " + box.kind + " for key " + JSON.stringify(piKey));
+        for (const act of editor.new_pi_actions) {
+            // if(act instanceof PiKeyboardShortcutAction) {
+                if (isProKey(act.trigger) && isProKey(piKey)) {
+                    LOGGER.log("!!!!!!!!!handleKeyboardShortcut for box " + box.role + " kind " + box.kind + " with activeroles: " + act.activeInBoxRoles);
+                    if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
+                        if (act.activeInBoxRoles.includes(box.role)) {
+                            LOGGER.log("handleKeyboardShortcut: executing keyboard action");
+                            const command = act.command(box);
+                            let postAction ;
+                            runInAction( () => {
+                                console.log("START run in action for handleKeyboarddShortcut")
+                                postAction = command.execute(box, piKey, editor);
+                                console.log("END run in action for handleKeyboarddShortcut")
+                            });
+                            if (!!postAction) {
+                                postAction();
+                            }
+                            return true;
+                        } else {
+                            LOGGER.log("handleKeyboardShortcut: Keyboard action does not include role " + box.role);
+                        }
                     }
-                    return true;
-                } else {
-                    LOGGER.log("handleKeyboardShortcut: Keyboard action does not include role " + box.role);
                 }
-            }
+            // }
         }
         return false;
     }

@@ -17,13 +17,11 @@ export function triggerToString(t: PiTriggerType): string {
 
 // tag::action-interface[]
 export interface PiActions {
-    expressionCreators: PiExpressionCreator[];
+    // expressionCreators: PiExpressionCreator[];
 
     binaryExpressionCreators: PiBinaryExpressionCreator[];
 
     customBehaviors: PiCustomBehavior[];
-
-    keyboardActions: KeyboardShortcutBehavior[];
 }
 // end::action-interface[]
 
@@ -62,7 +60,7 @@ export interface PiExpressionCreator extends PiBehavior {
  * Special behavior for creating a binary expression.
  */
 export interface PiBinaryExpressionCreator extends PiBehavior {
-    expressionBuilder: (box: Box, trigger: string, editor: PiEditor, propertyName?: string) => PiBinaryExpression;
+    expressionBuilder: (box: Box, trigger: string, editor: PiEditor) => PiBinaryExpression;
 }
 
 /**
