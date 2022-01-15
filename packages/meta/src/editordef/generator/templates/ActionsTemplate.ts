@@ -8,7 +8,6 @@ export class ActionsTemplate {
     generate(language: PiLanguage, editorDef: PiEditUnit): string {
         return `
             import {
-                KeyboardShortcutBehavior,
                 PiActions,
                 PiActionsUtil,
                 PiBinaryExpressionCreator,
@@ -16,8 +15,8 @@ export class ActionsTemplate {
                 PiExpressionCreator
             } from "${PROJECTITCORE}";
             
-            import { EXPRESSION_CREATORS, BINARY_EXPRESSION_CREATORS, CUSTOM_BEHAVIORS, KEYBOARD } from "./${Names.defaultActions(language)}";
-            import { MANUAL_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_CREATORS, MANUAL_CUSTOM_BEHAVIORS, MANUAL_KEYBOARD } from "../${Names.customActions(language)}";
+            import { EXPRESSION_CREATORS, BINARY_EXPRESSION_CREATORS, CUSTOM_BEHAVIORS } from "./${Names.defaultActions(language)}";
+            import { MANUAL_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_CREATORS, MANUAL_CUSTOM_BEHAVIORS } from "../${Names.customActions(language)}";
 
              /**
              * Class ${Names.actions(language)} implements ... TODO.

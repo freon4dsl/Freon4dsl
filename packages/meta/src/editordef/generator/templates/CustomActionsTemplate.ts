@@ -6,7 +6,6 @@ export class CustomActionsTemplate {
     generate(language: PiLanguage): string {
         return `
             import {
-                KeyboardShortcutBehavior,
                 PiBinaryExpressionCreator,
                 PiCustomBehavior,
                 PiExpressionCreator,
@@ -39,10 +38,6 @@ export class CustomActionsTemplate {
             export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
                 // Add your own custom behavior here
             ];     
-                        
-            export const MANUAL_KEYBOARD: KeyboardShortcutBehavior[] = [
-                // Add your own custom keyboard shortcuts here
-            ];       
-        `;
+f        `;
     }
 }

@@ -23,7 +23,6 @@ export class DefaultActionsTemplate {
                 AFTER_BINARY_OPERATOR,
                 BEFORE_BINARY_OPERATOR,
                 Box,
-                KeyboardShortcutBehavior,
                 MetaKey,
                 PiActions,
                 PiBinaryExpressionCreator,
@@ -75,9 +74,6 @@ export class DefaultActionsTemplate {
                 ${this.customActionsForOptional(language, editorDef)}
                 ${this.customActionForParts(language, editorDef)}
                 ${this.customActionForReferences(language, editorDef)}
-            ];
-            
-            export const KEYBOARD: KeyboardShortcutBehavior[] = [
             ];
             `;
         }
