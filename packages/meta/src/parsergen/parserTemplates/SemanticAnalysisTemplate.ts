@@ -85,7 +85,7 @@ export class SemanticAnalysisTemplate {
                         // now change all ref errors
                         for (const [toBeReplaced, newObject] of changesToBeMade) {
                             // TODO test the replacement of all properties
-                            const myType: Concept = Language.getInstance().concept(toBeReplaced.piLanguageConcept);
+                            const myType: Concept = Language.getInstance().concept(toBeReplaced.piLanguageConcept());
                             myType.properties.forEach(prop => {
                                 if (prop.type !== "boolean" && !!toBeReplaced[prop.name]) {
                                     newObject[prop.name] = toBeReplaced[prop.name];
