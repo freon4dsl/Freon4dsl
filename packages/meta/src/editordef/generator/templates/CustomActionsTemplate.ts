@@ -38,6 +38,6 @@ export class CustomActionsTemplate {
             export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
                 // Add your own custom behavior here
             ];     
-f        `;
+        `;
     }
 }
