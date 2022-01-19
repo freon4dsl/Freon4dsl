@@ -43,14 +43,14 @@ export class WriterTemplate {
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
         let limitedConcepts: PiLimitedConcept[] = language.concepts.filter(c => c instanceof PiLimitedConcept) as PiLimitedConcept[];
-        const elementsToUnparse: PiClassifier[] = sortConcepts(language.concepts);
+        const elementsToUnparse: PiClassifier[] = sortConcepts(language.concepts).filter(c => !c.isAbstract);
         elementsToUnparse.push(...language.units);
 
         const binaryExtras: ExtraClassifierInfo[] = [];
-        for (const conceptDef of defaultGroup.extras) {
-            const myConcept: PiClassifier = conceptDef.classifier.referred;
+        for (const myExtra of defaultGroup.extras) {
+            const myConcept: PiClassifier = myExtra.classifier.referred;
             if (myConcept instanceof PiBinaryExpressionConcept && !myConcept.isAbstract) {
-                binaryExtras.push(conceptDef);
+                binaryExtras.push(myExtra);
             }
         }
 

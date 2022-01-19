@@ -247,7 +247,7 @@ leaf booleanLiteral      = 'false' | 'true';
                 if (!!children) {
                     for (const child of children) {
                         let refName: any = this.${internalTransformNode}(child);
-                        if (refName !== null && refName !== undefined && refName.length > 0) {
+                        if (refName !== null && refName !== undefined) {
                             if (separator === null || separator === undefined) {
                                 result.push(PiElementReference.create<T>(refName, typeName));
                             } else {

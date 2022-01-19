@@ -8,7 +8,7 @@ import {
     PiLimitedConcept, PiPrimitiveProperty,
     PiPrimitiveType,
     PiProperty,
-    PiPropertyInstance, PiUnitDescription
+    PiInstanceProperty, PiUnitDescription
 } from "./PiLanguage";
 import { PiElementReference } from "./PiElementReference";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
@@ -263,7 +263,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         });
     }
 
-    private checkInstanceProperty(piPropertyInstance: PiPropertyInstance, enclosingConcept: PiConcept) {
+    private checkInstanceProperty(piPropertyInstance: PiInstanceProperty, enclosingConcept: PiConcept) {
         const myInstance = piPropertyInstance.owningInstance.referred;
         this.nestedCheck(
             {

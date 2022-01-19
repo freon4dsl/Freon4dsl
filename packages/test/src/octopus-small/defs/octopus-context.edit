@@ -1,7 +1,8 @@
 editor default
 
 OclPart {
-        [OCL expressions for ${self.name}
+        [
+        OCL expressions for ${self.name}
             ${self.constraints vertical }
         ]
 }

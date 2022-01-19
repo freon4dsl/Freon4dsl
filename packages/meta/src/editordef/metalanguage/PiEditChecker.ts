@@ -1,6 +1,5 @@
 import {
-    PiBinaryExpressionConcept,
-    PiClassifier, PiConcept, PiInstance, PiInterface,
+    PiClassifier, PiConcept, PiInterface,
     PiLangExpressionChecker,
     PiLanguage,
     PiLimitedConcept,
@@ -25,7 +24,6 @@ import {
 } from "./PiEditDefLang";
 import { MetaLogger } from "../../utils";
 import { PiElementReference } from "../../languagedef/metalanguage";
-import { EditorDefaultsGenerator } from "./EditorDefaultsGenerator";
 
 const LOGGER = new MetaLogger("PiEditChecker"); //.mute();
 
@@ -60,20 +58,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         this.simpleWarning(!!editUnit.getDefaultProjectiongroup(),
             `No editor with name 'default' found, a default editor will be generated.`);
 
-        // add default values for everything that is not present in the editor definition
-        EditorDefaultsGenerator.addDefaults(editUnit);
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
-        // this.checkProjectionGroup(editUnit.getDefaultProjectiongroup());
-        // extras checks, should not be needed when defaults are correctly created
-        // const defaultGroup = editUnit.getDefaultProjectiongroup();
-        // this.language.classifiersWithProjection().forEach(concept => {
-        //     this.simpleCheck(!!defaultGroup.findExtrasForType(concept), `No extras defined for ${concept.name} ${this.location(defaultGroup)}.`);
-        //     this.simpleCheck(!!defaultGroup.findProjectionForType(concept), `No projection defined for ${concept.name} ${this.location(defaultGroup)}.`);
-        // });
-        // this.language.concepts.filter(c => c instanceof PiBinaryExpressionConcept).forEach(bin => {
-        //     this.simpleCheck(!!defaultGroup.findExtrasForType(bin), `No extras defined for ${bin.name} ${this.location(defaultGroup)}.`);
-        // })
-        //
     }
 
     private checkProjectionGroup(projectionGroup: PiEditProjectionGroup) {
@@ -251,20 +236,23 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: PiClassifier) {
         // LOGGER.log("checking optional projection for " + cls?.name);
         const propProjections: PiEditPropertyProjection[] = [];
+        let nrOfItems = 0;
         item.lines.forEach(line => {
             this.checkLine(line, cls);
+            nrOfItems += line.items.length;
             propProjections.push(...line.items.filter(item => item instanceof PiEditPropertyProjection) as PiEditPropertyProjection[]);
         });
         this.nestedCheck({check: propProjections.length === 1,
-            error: `There should be only one property within an optional projection, found ${propProjections.length} ${this.location(item)}`,
+            error: `There should be (only) one property within an optional projection, found ${propProjections.length} ${this.location(item)}.`,
             whenOk: () => {
                 // find the optional property and set item.property
                 const myprop = propProjections[0].property.referred;
-                this.simpleWarning(myprop.isOptional,
-                    `Property '${myprop.name}' is not optional, therefore it should not be within an optional projection ${this.location(propProjections[0])}`)
+                this.simpleCheck(myprop.isOptional || myprop.isList,
+                    `Property '${myprop.name}' is not optional, therefore it may not be within an optional projection ${this.location(propProjections[0])}.`)
                 item.property = this.copyReference(propProjections[0].property);
             }
         });
+
     }
 
     private checkExtras(other: ExtraClassifierInfo) {

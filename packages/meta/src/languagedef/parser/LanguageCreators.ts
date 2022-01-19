@@ -3,7 +3,7 @@ import {
     PiConceptProperty,
     PiLanguage,
     PiInterface,
-    PiPropertyInstance,
+    PiInstanceProperty,
     PiInstance,
     PiExpressionConcept,
     PiBinaryExpressionConcept,
@@ -349,7 +349,7 @@ export function createInstance(data: Partial<PiInstance>): PiInstance {
     // or the instance was defined using the shorthand that simulates enumeration
     // create a value for the 'name' property based on 'data.name'
     if (!(!!data.props) || !data.props.some(prop => prop.name === "name")) {
-        const prop = new PiPropertyInstance();
+        const prop = new PiInstanceProperty();
         prop.name = "name";
         prop.value = data.name;
         prop.owningInstance = PiElementReference.create<PiInstance>(result, "PiInstance");
@@ -363,8 +363,8 @@ export function createInstance(data: Partial<PiInstance>): PiInstance {
     return result;
 }
 
-export function createPropDef(data: Partial<PiPropertyInstance>): PiPropertyInstance {
-    const result = new PiPropertyInstance();
+export function createPropDef(data: Partial<PiInstanceProperty>): PiInstanceProperty {
+    const result = new PiInstanceProperty();
     if (!!data.name) {
         result.name = data.name;
     }

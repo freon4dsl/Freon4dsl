@@ -1,9 +1,8 @@
-ExpressionTest simpleExpressions
+ExpressionTest simpleExpressions {
 	normalEx
 	binEx
-	StringLiteralEx value "stringLiteral" + StringLiteralEx value "stringLiteral"
-	NumberLiteralEx value 109 / StringLiteralEx value "stringLiteral" * BooleanLiteralEx
-                                                                       	value true
+	StringLiteralEx {value "literal1"} + StringLiteralEx {value "literal2"} ,
+	NumberLiteralEx {value 109} / StringLiteralEx {value "literal3"} * BooleanLiteralEx
+                                                                       	{value true}
 
-
-
+}

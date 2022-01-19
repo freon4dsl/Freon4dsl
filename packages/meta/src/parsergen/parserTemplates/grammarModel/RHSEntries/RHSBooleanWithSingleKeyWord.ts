@@ -13,9 +13,8 @@ export class RHSBooleanWithSingleKeyWord extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        // no need for the closing '?' because this is always within an optional group
-        // e.g [?${self.primBoolean @keyword [<BOOL>]}]
-        return `'${this.keyword}'` + this.doNewline();
+        // TODO check the need for the closing '?' because this can be within an optional group
+        return `'${this.keyword}'?` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

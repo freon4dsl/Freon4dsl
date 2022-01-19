@@ -114,15 +114,6 @@ export class EditorGenerator {
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
     }
 
-    public createEmptyEditorDefinition(): PiEditUnit {
-        const editDef = new PiEditUnit();
-        editDef.language = this.language;
-        const defaultGroup = new PiEditProjectionGroup();
-        defaultGroup.name = Names.defaultProjectionName;
-        editDef.projectiongroups.push(defaultGroup);
-        return editDef;
-    }
-
     clean(force: boolean) {
         this.getFolderNames();
         Helpers.deleteDirAndContent(this.editorGenFolder);

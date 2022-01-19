@@ -1,7 +1,8 @@
 editor default
 
 Rules {
-    [Using data from ${self.imports vertical separator [\|\|\|\|]}
+    [
+    Using data from ${self.imports vertical separator [\|\|\|\|]}
 
         ${self.Rules vertical }
     ]

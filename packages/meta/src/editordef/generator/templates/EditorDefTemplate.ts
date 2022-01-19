@@ -1,4 +1,4 @@
-import { PiConcept, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
 import { Names, PROJECTITCORE } from "../../../utils";
 import { PiEditUnit } from "../../metalanguage";
 
@@ -10,11 +10,13 @@ export class EditorDefTemplate {
         let conceptsWithTrigger: ConceptTriggerElement[] = [];
         let conceptsWithRefShortcut: ConceptShortCutElement[] = [];
         let imports: string[] = [];
-        language.classifiersWithExtras().forEach(concept => {
+
+        language.concepts.filter(c => !(c instanceof PiLimitedConcept || c.isAbstract)).forEach(concept => {
             // TODO handle other sub types of PiClassifier
             if (concept instanceof PiConcept) {
                 // find the triggers for all concepts
                 // every concept should have one - added by EditorDefaultsGenerator
+                // console.log("searching trigger for: " + concept.name);
                 const trigger = defaultProjGroup.findExtrasForType(concept).trigger;
                 if (!!trigger && trigger.length > 0) {
                     conceptsWithTrigger.push(new ConceptTriggerElement(concept, trigger));

@@ -119,12 +119,12 @@ concept UmlPackage implements IModelElement {
 }
 
 interface IPackagableElement base IModelElement {
-    visibility: VisibilityKind;
+    visibility?: VisibilityKind;
 }
 concept Parameter implements IModelElement {
     reference type: IClassifier;
 //    reference owner: Operation;
-    directionKind: ParameterDirectionKind;
+    directionKind?: ParameterDirectionKind;
 }
 //concept PathName {
 //    names: string[];
@@ -141,7 +141,7 @@ concept State implements IPackagableElement {
 concept StructuralFeature implements IPackagableElement {
     reference type: IClassifier;
 //    reference owner: IClassifier;
-    multiplicity: MultiplicityKind;
+    multiplicity?: MultiplicityKind;
 //    isOrdered?: boolean;
 //    isDerived?: boolean;
 //    isUnique?: boolean;
@@ -151,18 +151,18 @@ concept StructuralFeature implements IPackagableElement {
 }
 
 concept OclStatement {
-    name: identifier;
+    name?: identifier;
     expr: OclExpression;
 }
 
 // TODO remove the following two concepts when we can cater for a prefix to lists
 concept OclPreStatement {
-    name: identifier;
+    name?: identifier;
     expr: OclExpression;
 }
 
 concept OclPostStatement {
-    name: identifier;
+    name?: identifier;
     expr: OclExpression;
 }
 

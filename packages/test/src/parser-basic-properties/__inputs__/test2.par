@@ -1,127 +1,160 @@
-PartsTest myName
-	directParts WithDirectParts
-                  	part PartConcept
+PartsTest myName {
+	directParts WithDirectParts {{
+                  	part PartConcept {
                             	content "stringLiteral"
                             	optContent 10
                             	visibility +
+                            	}
                   	partList
-                        PartConcept
+                        PartConcept {
                             content "otherString"
-                            optContent
-                            visibility # ,
-                        PartConcept
+                            // optContent empty
+                            visibility # },
+                        PartConcept {
                             content "stringLiteralXXX"
                             optContent 123
-                            visibility - ,
-                        PartConcept
+                            visibility - },
+                        PartConcept {
                             content "stringLiteralYYY"
-                            optContent
-                            visibility +
+                            // optContent empty
+                            visibility + }
+    }}
     partsOfParts
-        WithSubSubParts
-        	part SubConcept
-                    	normalSub WithDirectParts
-                    	                  	part PartConcept
+        WithSubSubParts {
+        	part SubConcept {
+                    	normalSub WithDirectParts {{
+                    	                  	part PartConcept {
                                                     	content "stringLiteral"
                                                     	optContent 10
                                                     	visibility +
+                                                    	}
                                           	partList
-                    	optionalSub
+                        }}
+                    	// optionalSub not present
                     	listSub
-                            WithDirectParts
-                                part PartConcept
+                            WithDirectParts {{
+                                part PartConcept {
                                             content "stringLiteralFGT"
                                             optContent 10
                                             visibility +
+                                            }
                                 partList
-                                    PartConcept
+                                    PartConcept {
                                         content "otherStringZZZ"
-                                        optContent
-                                        visibility #
-                            WithDirectParts
-                                part PartConcept
+                                        // optContent empty
+                                        visibility # }
+                            }},
+                            WithDirectParts {{
+                                part PartConcept {
                                             content "stringLiteralZZZ"
                                             optContent 1045
                                             visibility -
+                                            }
                                 partList
-                                    PartConcept
+                                    PartConcept {
                                         content "otherString"
-                                        optContent
+                                        // optContent empty
                                         visibility #
-                    	optListSub
-        	optPart
+                                        }
+                            }}            
+                    	// optListSub not present
+        	    }
+        	// optPart not present
         	partList
-                SubConcept
-                    normalSub WithDirectParts
-                                    part PartConcept
+                SubConcept {
+                    normalSub WithDirectParts {{
+                                    part PartConcept {
                                                 content "stringLiteral"
                                                 optContent 10
                                                 visibility +
+                                                }
                                     partList
-                                        PartConcept
+                                        PartConcept {
                                             content "otherString"
-                                            optContent
-                                            visibility # ,
-                                        PartConcept
+                                            // optContent empty
+                                            visibility #
+                                        },
+                                        PartConcept {
                                             content "stringLiteralXXX"
                                             optContent 123
-                                            visibility - ,
-                                        PartConcept
+                                            visibility -
+                                        },
+                                        PartConcept {
                                             content "stringLiteralYYY"
-                                            optContent
+                                            // optContent empty
                                             visibility +
-                    optionalSub WithDirectParts
-                                    part PartConcept
+                                        }
+                    }}
+                    optionalSub WithDirectParts {{
+                                    part PartConcept {
                                                 content "stringLiteral"
                                                 optContent 10
                                                 visibility +
+                                    }
                                     partList
-                                        PartConcept
+                                        PartConcept {
                                             content "otherString"
-                                            optContent
-                                            visibility # ,
-                                        PartConcept
+                                            // optContent empty
+                                            visibility #
+                                        },
+                                        PartConcept {
                                             content "stringLiteralXXX"
                                             optContent 123
-                                            visibility - ,
-                                        PartConcept
+                                            visibility -
+                                        },
+                                        PartConcept {
                                             content "stringLiteralYYY"
-                                            optContent
+                                            // optContent empty
                                             visibility +
+                                        }
+                    }}
                     listSub
-                    WithDirectParts
-                        part PartConcept
+                    WithDirectParts {{
+                        part PartConcept {
                             content "stringLiteral"
                             optContent 10
                             visibility +
+                        }
                         partList
-                    optListSub
-                SubConcept
-                    normalSub WithDirectParts
-                        part PartConcept
+                    // optListSub not present
+                    }}
+                },
+                SubConcept {
+                    normalSub WithDirectParts {{
+                        part PartConcept {
                             content "stringLiteral"
                             optContent 10
                             visibility +
+                            }
                         partList
-                    optionalSub WithDirectParts
-                        part PartConcept
+                    }}
+                    optionalSub WithDirectParts {{
+                        part PartConcept {
                             content "stringLiteral"
                             optContent 10
                             visibility #
+                            }
                         partList
+                    }}
                     listSub
-                        WithDirectParts
-                            part PartConcept
+                        WithDirectParts {{
+                            part PartConcept {
                                 content "stringLiteral"
                                 optContent 10
                                 visibility +
+                                }
                             partList
+                        }}
                     optListSub
-                        WithDirectParts
-                            part PartConcept
+                        WithDirectParts {{
+                            part PartConcept {
                                 content "stringLit"
                                 optContent 1440
                                 visibility +
+                                }
                             partList
-
+                        }}
+                }
             optList
+        }
+}

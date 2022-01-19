@@ -6,16 +6,18 @@ main: entity1 base anotherEntity,
                    andAnother, 
                    andYetAnother
       start 
-          attr1 : type1  = \\"myString\\", 
-          attr2 : type2  = \\"TEKST\\"
+          attr1 : String = \\"myString\\", 
+          attr2 : Integer = \\"TEKST\\"
       end 
 unit wide functions: 
-    DemoFunction functionXXX 
+    DemoFunction functionXXX { 
         expression CALL funct555 (  ) 
         parameters 
-            DemoVariable variableYYY 
-                declaredType entity1
-        declaredType STRING 
+            DemoVariable variableYYY { 
+                declaredType entity1 
+            }
+        declaredType String 
+    } 
 }"
 `;
 
@@ -25,15 +27,17 @@ main: entity56 base anotherEntity,
                     andAnother, 
                     andYetAnother
       start 
-          attr78 : type1  = \\"myString\\", 
-          attr9 : type2  = \\"TEKST\\"
+          attr78 : Boolean = \\"myString\\", 
+          attr9 : String = \\"TEKST\\"
       end 
 unit wide functions: 
-    DemoFunction functionYYY 
+    DemoFunction functionYYY { 
         expression CALL funct555 (  ) 
         parameters 
-            DemoVariable variableZZZ 
-                declaredType entity56
-        declaredType STRING 
+            DemoVariable variableZZZ { 
+                declaredType entity56 
+            }
+        declaredType Integer 
+    } 
 }"
 `;

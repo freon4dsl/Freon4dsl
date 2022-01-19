@@ -51,7 +51,7 @@ export class GrammarGenerator {
 
         // create parse rules and syntax analysis methods for the limited concepts
         const limitedMaker: LimitedMaker = new LimitedMaker();
-        grammarPart.rules.push(...limitedMaker.generateLimitedRules(editUnit, analyser.limitedsReferred));
+        grammarPart.rules.push(...limitedMaker.generateLimitedRules(analyser.limitedsReferred));
 
         // imports
         grammarPart.addToImports(analyser.classifiersUsed);

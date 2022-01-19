@@ -23,7 +23,7 @@ function compareReadAndWrittenUmlParts(path: string) {
         expect(unit1_json).toEqual(unit2_json);
     } catch (e) {
         console.log(e.message);
-        // expect(e).toBeNaN();
+        expect(e).toBeNaN();
     }
 }
 

@@ -52,8 +52,9 @@ IntegerLiteralExp {
 //}
 
 LetExp {
-    [let ${self.variables horizontal separator[, ]}
-    in ${self.inExpression}
+    [
+    let ${self.variables horizontal separator[, ]}
+        in ${self.inExpression}
     ]
 }
 

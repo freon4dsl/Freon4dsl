@@ -9,9 +9,16 @@ LimitedTest {
     "$typename": "LimitedNonOptional",
     "_PI_other": PiElementReference {
       "_PI_pathname": Array [
-        "FIRST ",
+        "FIRST",
       ],
-      "_PI_referred": null,
+      "_PI_referred": OtherLimited {
+        "$id": "ID-4",
+        "$typename": "OtherLimited",
+        "container": null,
+        "name": "FIRST",
+        "propertyIndex": undefined,
+        "propertyName": "",
+      },
       "container": [Circular],
       "propertyIndex": undefined,
       "propertyName": "other",
@@ -22,7 +29,14 @@ LimitedTest {
         "_PI_pathname": Array [
           "SECOND",
         ],
-        "_PI_referred": null,
+        "_PI_referred": OtherLimited {
+          "$id": "ID-5",
+          "$typename": "OtherLimited",
+          "container": null,
+          "name": "SECOND",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
         "container": [Circular],
         "propertyIndex": 0,
         "propertyName": "otherMulti",
@@ -32,7 +46,14 @@ LimitedTest {
         "_PI_pathname": Array [
           "FIRST",
         ],
-        "_PI_referred": null,
+        "_PI_referred": OtherLimited {
+          "$id": "ID-4",
+          "$typename": "OtherLimited",
+          "container": null,
+          "name": "FIRST",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
         "container": [Circular],
         "propertyIndex": 1,
         "propertyName": "otherMulti",
@@ -42,7 +63,14 @@ LimitedTest {
         "_PI_pathname": Array [
           "FIRST",
         ],
-        "_PI_referred": null,
+        "_PI_referred": OtherLimited {
+          "$id": "ID-4",
+          "$typename": "OtherLimited",
+          "container": null,
+          "name": "FIRST",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
         "container": [Circular],
         "propertyIndex": 2,
         "propertyName": "otherMulti",
@@ -52,7 +80,14 @@ LimitedTest {
         "_PI_pathname": Array [
           "SECOND",
         ],
-        "_PI_referred": null,
+        "_PI_referred": OtherLimited {
+          "$id": "ID-5",
+          "$typename": "OtherLimited",
+          "container": null,
+          "name": "SECOND",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
         "container": [Circular],
         "propertyIndex": 3,
         "propertyName": "otherMulti",
@@ -60,24 +95,137 @@ LimitedTest {
       },
       PiElementReference {
         "_PI_pathname": Array [
-          "SECOND  ",
+          "SECOND",
         ],
-        "_PI_referred": null,
+        "_PI_referred": OtherLimited {
+          "$id": "ID-5",
+          "$typename": "OtherLimited",
+          "container": null,
+          "name": "SECOND",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
         "container": [Circular],
         "propertyIndex": 4,
         "propertyName": "otherMulti",
         "typeName": "OtherLimited",
       },
     ],
+    "_PI_visMulti": Array [
+      PiElementReference {
+        "_PI_pathname": Array [
+          "+",
+        ],
+        "_PI_referred": VisibilityKind {
+          "$id": "ID-1",
+          "$typename": "VisibilityKind",
+          "container": null,
+          "name": "+",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
+        "container": [Circular],
+        "propertyIndex": 0,
+        "propertyName": "visMulti",
+        "typeName": "VisibilityKind",
+      },
+      PiElementReference {
+        "_PI_pathname": Array [
+          "+",
+        ],
+        "_PI_referred": VisibilityKind {
+          "$id": "ID-1",
+          "$typename": "VisibilityKind",
+          "container": null,
+          "name": "+",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
+        "container": [Circular],
+        "propertyIndex": 1,
+        "propertyName": "visMulti",
+        "typeName": "VisibilityKind",
+      },
+      PiElementReference {
+        "_PI_pathname": Array [
+          "+",
+        ],
+        "_PI_referred": VisibilityKind {
+          "$id": "ID-1",
+          "$typename": "VisibilityKind",
+          "container": null,
+          "name": "+",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
+        "container": [Circular],
+        "propertyIndex": 2,
+        "propertyName": "visMulti",
+        "typeName": "VisibilityKind",
+      },
+    ],
+    "_PI_visMultiWithExtra": Array [
+      PiElementReference {
+        "_PI_pathname": Array [
+          "-",
+        ],
+        "_PI_referred": VisibilityKind {
+          "$id": "ID-2",
+          "$typename": "VisibilityKind",
+          "container": null,
+          "name": "-",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
+        "container": [Circular],
+        "propertyIndex": 0,
+        "propertyName": "visMultiWithExtra",
+        "typeName": "VisibilityKind",
+      },
+      PiElementReference {
+        "_PI_pathname": Array [
+          "+",
+        ],
+        "_PI_referred": VisibilityKind {
+          "$id": "ID-1",
+          "$typename": "VisibilityKind",
+          "container": null,
+          "name": "+",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
+        "container": [Circular],
+        "propertyIndex": 1,
+        "propertyName": "visMultiWithExtra",
+        "typeName": "VisibilityKind",
+      },
+      PiElementReference {
+        "_PI_pathname": Array [
+          "-",
+        ],
+        "_PI_referred": VisibilityKind {
+          "$id": "ID-2",
+          "$typename": "VisibilityKind",
+          "container": null,
+          "name": "-",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
+        "container": [Circular],
+        "propertyIndex": 2,
+        "propertyName": "visMultiWithExtra",
+        "typeName": "VisibilityKind",
+      },
+    ],
     "_PI_visWithExtra": PiElementReference {
       "_PI_pathname": Array [
-        "PROTECTED",
+        "-",
       ],
       "_PI_referred": VisibilityKind {
-        "$id": "ID-3",
+        "$id": "ID-2",
         "$typename": "VisibilityKind",
         "container": null,
-        "name": "PROTECTED",
+        "name": "-",
         "propertyIndex": undefined,
         "propertyName": "",
       },
@@ -88,13 +236,13 @@ LimitedTest {
     },
     "_PI_visibility": PiElementReference {
       "_PI_pathname": Array [
-        "PUBLIC",
+        "+",
       ],
       "_PI_referred": VisibilityKind {
         "$id": "ID-1",
         "$typename": "VisibilityKind",
         "container": null,
-        "name": "PUBLIC",
+        "name": "+",
         "propertyIndex": undefined,
         "propertyName": "",
       },
@@ -113,7 +261,7 @@ LimitedTest {
     "_PI_visMulti": Array [
       PiElementReference {
         "_PI_pathname": Array [
-          "+",
+          "#",
         ],
         "_PI_referred": null,
         "container": [Circular],
@@ -122,15 +270,68 @@ LimitedTest {
         "typeName": "VisibilityKind",
       },
     ],
+    "_PI_visMultiWithExtra": Array [
+      PiElementReference {
+        "_PI_pathname": Array [
+          "-",
+        ],
+        "_PI_referred": VisibilityKind {
+          "$id": "ID-2",
+          "$typename": "VisibilityKind",
+          "container": null,
+          "name": "-",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
+        "container": [Circular],
+        "propertyIndex": 0,
+        "propertyName": "visMultiWithExtra",
+        "typeName": "VisibilityKind",
+      },
+      PiElementReference {
+        "_PI_pathname": Array [
+          "-",
+        ],
+        "_PI_referred": VisibilityKind {
+          "$id": "ID-2",
+          "$typename": "VisibilityKind",
+          "container": null,
+          "name": "-",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
+        "container": [Circular],
+        "propertyIndex": 1,
+        "propertyName": "visMultiWithExtra",
+        "typeName": "VisibilityKind",
+      },
+      PiElementReference {
+        "_PI_pathname": Array [
+          "-",
+        ],
+        "_PI_referred": VisibilityKind {
+          "$id": "ID-2",
+          "$typename": "VisibilityKind",
+          "container": null,
+          "name": "-",
+          "propertyIndex": undefined,
+          "propertyName": "",
+        },
+        "container": [Circular],
+        "propertyIndex": 2,
+        "propertyName": "visMultiWithExtra",
+        "typeName": "VisibilityKind",
+      },
+    ],
     "_PI_visWithExtra": PiElementReference {
       "_PI_pathname": Array [
-        "PROTECTED",
+        "-",
       ],
       "_PI_referred": VisibilityKind {
-        "$id": "ID-3",
+        "$id": "ID-2",
         "$typename": "VisibilityKind",
         "container": null,
-        "name": "PROTECTED",
+        "name": "-",
         "propertyIndex": undefined,
         "propertyName": "",
       },
@@ -141,13 +342,13 @@ LimitedTest {
     },
     "_PI_visibility": PiElementReference {
       "_PI_pathname": Array [
-        "PUBLIC",
+        "+",
       ],
       "_PI_referred": VisibilityKind {
         "$id": "ID-1",
         "$typename": "VisibilityKind",
         "container": null,
-        "name": "PUBLIC",
+        "name": "+",
         "propertyIndex": undefined,
         "propertyName": "",
       },
@@ -163,52 +364,6 @@ LimitedTest {
   "_PI_limitedOpt2": LimitedOptional {
     "$id": "ID-27",
     "$typename": "LimitedOptional",
-    "_PI_visMulti": Array [
-      PiElementReference {
-        "_PI_pathname": Array [
-          "+",
-        ],
-        "_PI_referred": null,
-        "container": [Circular],
-        "propertyIndex": 0,
-        "propertyName": "visMulti",
-        "typeName": "VisibilityKind",
-      },
-    ],
-    "_PI_visWithExtra": PiElementReference {
-      "_PI_pathname": Array [
-        "PROTECTED",
-      ],
-      "_PI_referred": VisibilityKind {
-        "$id": "ID-3",
-        "$typename": "VisibilityKind",
-        "container": null,
-        "name": "PROTECTED",
-        "propertyIndex": undefined,
-        "propertyName": "",
-      },
-      "container": [Circular],
-      "propertyIndex": undefined,
-      "propertyName": "visWithExtra",
-      "typeName": "VisibilityKind",
-    },
-    "_PI_visibility": PiElementReference {
-      "_PI_pathname": Array [
-        "PUBLIC",
-      ],
-      "_PI_referred": VisibilityKind {
-        "$id": "ID-1",
-        "$typename": "VisibilityKind",
-        "container": null,
-        "name": "PUBLIC",
-        "propertyIndex": undefined,
-        "propertyName": "",
-      },
-      "container": [Circular],
-      "propertyIndex": undefined,
-      "propertyName": "visibility",
-      "typeName": "VisibilityKind",
-    },
     "container": [Circular],
     "propertyIndex": undefined,
     "propertyName": "limitedOpt2",
@@ -234,13 +389,13 @@ PartsTest {
       "$typename": "PartConcept",
       "_PI_visibility": PiElementReference {
         "_PI_pathname": Array [
-          "PUBLIC",
+          "+",
         ],
         "_PI_referred": VisibilityKind {
           "$id": "ID-1",
           "$typename": "VisibilityKind",
           "container": null,
-          "name": "PUBLIC",
+          "name": "+",
           "propertyIndex": undefined,
           "propertyName": "",
         },
@@ -261,13 +416,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PROTECTED",
+            "#",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-3",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PROTECTED",
+            "name": "#",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -287,13 +442,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PRIVATE",
+            "-",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-2",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PRIVATE",
+            "name": "-",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -313,13 +468,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PUBLIC",
+            "+",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-1",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PUBLIC",
+            "name": "+",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -361,13 +516,13 @@ PartsTest {
       "$typename": "PartConcept",
       "_PI_visibility": PiElementReference {
         "_PI_pathname": Array [
-          "PUBLIC",
+          "+",
         ],
         "_PI_referred": VisibilityKind {
           "$id": "ID-1",
           "$typename": "VisibilityKind",
           "container": null,
-          "name": "PUBLIC",
+          "name": "+",
           "propertyIndex": undefined,
           "propertyName": "",
         },
@@ -388,13 +543,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PROTECTED",
+            "#",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-3",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PROTECTED",
+            "name": "#",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -414,13 +569,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PRIVATE",
+            "-",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-2",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PRIVATE",
+            "name": "-",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -440,13 +595,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PUBLIC",
+            "+",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-1",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PUBLIC",
+            "name": "+",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -485,13 +640,13 @@ PartsTest {
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
-                "PUBLIC",
+                "+",
               ],
               "_PI_referred": VisibilityKind {
                 "$id": "ID-1",
                 "$typename": "VisibilityKind",
                 "container": null,
-                "name": "PUBLIC",
+                "name": "+",
                 "propertyIndex": undefined,
                 "propertyName": "",
               },
@@ -512,13 +667,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PROTECTED",
+                  "#",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-3",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PROTECTED",
+                  "name": "#",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -548,13 +703,13 @@ PartsTest {
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
-                "PRIVATE",
+                "-",
               ],
               "_PI_referred": VisibilityKind {
                 "$id": "ID-2",
                 "$typename": "VisibilityKind",
                 "container": null,
-                "name": "PRIVATE",
+                "name": "-",
                 "propertyIndex": undefined,
                 "propertyName": "",
               },
@@ -575,13 +730,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PROTECTED",
+                  "#",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-3",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PROTECTED",
+                  "name": "#",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -612,13 +767,13 @@ PartsTest {
           "$typename": "PartConcept",
           "_PI_visibility": PiElementReference {
             "_PI_pathname": Array [
-              "PUBLIC",
+              "+",
             ],
             "_PI_referred": VisibilityKind {
               "$id": "ID-1",
               "$typename": "VisibilityKind",
               "container": null,
-              "name": "PUBLIC",
+              "name": "+",
               "propertyIndex": undefined,
               "propertyName": "",
             },
@@ -659,13 +814,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PUBLIC",
+                  "+",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PUBLIC",
+                  "name": "+",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -696,13 +851,13 @@ PartsTest {
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
-                "PUBLIC",
+                "+",
               ],
               "_PI_referred": VisibilityKind {
                 "$id": "ID-1",
                 "$typename": "VisibilityKind",
                 "container": null,
-                "name": "PUBLIC",
+                "name": "+",
                 "propertyIndex": undefined,
                 "propertyName": "",
               },
@@ -723,13 +878,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PROTECTED",
+                  "#",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-3",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PROTECTED",
+                  "name": "#",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -749,13 +904,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PRIVATE",
+                  "-",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-2",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PRIVATE",
+                  "name": "-",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -775,13 +930,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PUBLIC",
+                  "+",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PUBLIC",
+                  "name": "+",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -812,13 +967,13 @@ PartsTest {
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
-                "PUBLIC",
+                "+",
               ],
               "_PI_referred": VisibilityKind {
                 "$id": "ID-1",
                 "$typename": "VisibilityKind",
                 "container": null,
-                "name": "PUBLIC",
+                "name": "+",
                 "propertyIndex": undefined,
                 "propertyName": "",
               },
@@ -839,13 +994,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PROTECTED",
+                  "#",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-3",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PROTECTED",
+                  "name": "#",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -865,13 +1020,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PRIVATE",
+                  "-",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-2",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PRIVATE",
+                  "name": "-",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -891,13 +1046,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PUBLIC",
+                  "+",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PUBLIC",
+                  "name": "+",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -935,13 +1090,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PUBLIC",
+                  "+",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PUBLIC",
+                  "name": "+",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -972,13 +1127,13 @@ PartsTest {
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
-                "PUBLIC",
+                "+",
               ],
               "_PI_referred": VisibilityKind {
                 "$id": "ID-1",
                 "$typename": "VisibilityKind",
                 "container": null,
-                "name": "PUBLIC",
+                "name": "+",
                 "propertyIndex": undefined,
                 "propertyName": "",
               },
@@ -1009,13 +1164,13 @@ PartsTest {
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
-                  "PUBLIC",
+                  "+",
                 ],
                 "_PI_referred": VisibilityKind {
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
                   "container": null,
-                  "name": "PUBLIC",
+                  "name": "+",
                   "propertyIndex": undefined,
                   "propertyName": "",
                 },
@@ -1046,13 +1201,13 @@ PartsTest {
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
-                "PROTECTED",
+                "#",
               ],
               "_PI_referred": VisibilityKind {
                 "$id": "ID-3",
                 "$typename": "VisibilityKind",
                 "container": null,
-                "name": "PROTECTED",
+                "name": "#",
                 "propertyIndex": undefined,
                 "propertyName": "",
               },
@@ -1101,13 +1256,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PUBLIC",
+            "+",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-1",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PUBLIC",
+            "name": "+",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -1127,13 +1282,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PUBLIC",
+            "+",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-1",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PUBLIC",
+            "name": "+",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -1154,13 +1309,13 @@ PartsTest {
       "$typename": "PartConcept",
       "_PI_visibility": PiElementReference {
         "_PI_pathname": Array [
-          "PUBLIC",
+          "+",
         ],
         "_PI_referred": VisibilityKind {
           "$id": "ID-1",
           "$typename": "VisibilityKind",
           "container": null,
-          "name": "PUBLIC",
+          "name": "+",
           "propertyIndex": undefined,
           "propertyName": "",
         },
@@ -1180,13 +1335,13 @@ PartsTest {
       "$typename": "PartConcept",
       "_PI_visibility": PiElementReference {
         "_PI_pathname": Array [
-          "PUBLIC",
+          "+",
         ],
         "_PI_referred": VisibilityKind {
           "$id": "ID-1",
           "$typename": "VisibilityKind",
           "container": null,
-          "name": "PUBLIC",
+          "name": "+",
           "propertyIndex": undefined,
           "propertyName": "",
         },
@@ -1207,13 +1362,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PROTECTED",
+            "#",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-3",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PROTECTED",
+            "name": "#",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -1233,13 +1388,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PRIVATE",
+            "-",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-2",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PRIVATE",
+            "name": "-",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -1259,13 +1414,13 @@ PartsTest {
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
-            "PUBLIC",
+            "+",
           ],
           "_PI_referred": VisibilityKind {
             "$id": "ID-1",
             "$typename": "VisibilityKind",
             "container": null,
-            "name": "PUBLIC",
+            "name": "+",
             "propertyIndex": undefined,
             "propertyName": "",
           },
@@ -1567,7 +1722,8 @@ RefsTest {
     "$typename": "WithDirectRefs",
     "_PI_ref": PiElementReference {
       "_PI_pathname": Array [
-        "someName::otherName::xxx::yyy",
+        "someName::otherName::xxx::yyy
+                  	// optRef not present",
       ],
       "_PI_referred": null,
       "container": [Circular],
@@ -1608,7 +1764,8 @@ RefsTest {
       },
       PiElementReference {
         "_PI_pathname": Array [
-          "name4",
+          "name4
+                    // optRefList not present",
         ],
         "_PI_referred": null,
         "container": [Circular],
@@ -1631,7 +1788,8 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy",
+            "someName::otherName::xxx::yyy
+                        // optRef not present",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1652,7 +1810,8 @@ RefsTest {
           },
           PiElementReference {
             "_PI_pathname": Array [
-              "name2",
+              "name2
+                        // optRefList not present",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1670,7 +1829,8 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy",
+            "someName::otherName::xxx::yyy
+                        // optRef not present",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1691,7 +1851,8 @@ RefsTest {
           },
           PiElementReference {
             "_PI_pathname": Array [
-              "name2",
+              "name2
+                        // optRefList not present",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1709,7 +1870,8 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy",
+            "someName::otherName::xxx::yyy
+                        // optRef not present",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1730,7 +1892,8 @@ RefsTest {
           },
           PiElementReference {
             "_PI_pathname": Array [
-              "name2",
+              "name2
+                        // optRefList not present",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1750,7 +1913,8 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy",
+            "someName::otherName::xxx::yyy
+                                    	// optRef not present",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1791,7 +1955,8 @@ RefsTest {
           },
           PiElementReference {
             "_PI_pathname": Array [
-              "name4",
+              "name4
+                                      // optRefList not present",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1809,7 +1974,8 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy",
+            "someName::otherName::xxx::yyy
+                        // optRef not present",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1830,7 +1996,8 @@ RefsTest {
           },
           PiElementReference {
             "_PI_pathname": Array [
-              "name2",
+              "name2
+                        // optRefList not present",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -2159,146 +2326,6 @@ RefsTest {
           "_PI_referred": null,
           "container": [Circular],
           "propertyIndex": 3,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "optRefList",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 4,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "nameZ",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 5,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "nameY",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 6,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "nameX",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 7,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "WithDirectRefs",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 8,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "ref",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 9,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "someName",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 10,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "optRef",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 11,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "nameA",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 12,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "refList",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 13,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "name1",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 14,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "name2",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 15,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "name3",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 16,
-          "propertyName": "refList",
-          "typeName": "RefConcept",
-        },
-        PiElementReference {
-          "_PI_pathname": Array [
-            "name4",
-          ],
-          "_PI_referred": null,
-          "container": [Circular],
-          "propertyIndex": 17,
           "propertyName": "refList",
           "typeName": "RefConcept",
         },

@@ -22,9 +22,8 @@ export class BinaryExpMaker {
     private findEditDefs(binaryConceptsUsed: PiBinaryExpressionConcept[], editUnit: PiEditUnit): Map<PiClassifier, string> {
         let result: Map<PiClassifier, string> = new Map<PiClassifier, string>();
         for (const binCon of binaryConceptsUsed) {
-            const piEditConcept = editUnit.findProjectionForType(binCon);
             const mySymbol = editUnit.findExtrasForType(binCon).symbol;
-            result.set(piEditConcept.classifier.referred, mySymbol);
+            result.set(binCon, mySymbol);
         }
         return result;
     }

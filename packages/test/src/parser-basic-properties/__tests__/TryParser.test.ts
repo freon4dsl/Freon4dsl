@@ -2,6 +2,7 @@ import { TestParserEnvironment } from "../environment/gen/TestParserEnvironment"
 import { FileHandler } from "../../utils/FileHandler";
 import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, WithKeywordProj } from "../language/gen";
 
+
 describe("Parser properties of type", () => {
     const reader = TestParserEnvironment.getInstance().reader;
     const writer = TestParserEnvironment.getInstance().writer;
@@ -32,6 +33,7 @@ describe("Parser properties of type", () => {
     });
 
     test( " Limited Concept ", () => {
+        // TODO not correct: line 14 of input not handled as it should
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.lim");
             const unit1: LimitedTest = reader.readFromString(input, "LimitedTest") as LimitedTest;

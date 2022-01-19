@@ -15,7 +15,7 @@ export class LimitedMaker {
     branchNames: string[] = [];
     imports: PiClassifier[] = [];
 
-    generateLimitedRules(editUnit: PiEditUnit, limitedConcepts: PiLimitedConcept[]): GrammarRule[] {
+    generateLimitedRules(limitedConcepts: PiLimitedConcept[]): GrammarRule[] {
         let rules: GrammarRule[] = [];
         for (const piClassifier of limitedConcepts) {
             // find the mapping of keywords to predef instances
@@ -23,7 +23,20 @@ export class LimitedMaker {
             let myMap: Map<string, string> = new Map<string, string>();
             piClassifier.instances.forEach(item => {
                 const myTypeScript: string = `${Names.classifier(piClassifier)}.${Names.instance(item)}`;
-                myMap.set(myTypeScript, item.name);
+                // set the string to be used to the value of the name property, iff present
+                // else use the typescript name of the instance
+                let myKeyword: string = item.nameProperty().value.toString();
+                if (!myKeyword ) {
+                    console.log("no keyword")
+                }
+                if (myKeyword.length === 0) {
+                    console.log("no lengthy keyword")
+                }
+
+                if (!myKeyword || myKeyword.length === 0) {
+                    myKeyword = Names.instance(item);
+                }
+                myMap.set(myTypeScript, myKeyword);
             });
             rules.push(new LimitedRule(piClassifier, myMap));
             this.imports.push(piClassifier);

@@ -5,7 +5,8 @@ DemoAttribute {
 }
 
 DemoEntity  {
-[${self.name} base ${self.baseEntity vertical separator [, ]}
+[
+${self.name} base ${self.baseEntity vertical separator [, ]}
     start
         ${self.attributes vertical separator [, ]}
     end

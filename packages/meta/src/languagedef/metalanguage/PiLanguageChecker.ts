@@ -1,4 +1,3 @@
-import { isNullOrUndefined } from "../../utils";
 import {
     PiLanguage,
     PiBinaryExpressionConcept,
@@ -229,6 +228,12 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                         //     });
                         // }
                     }
+                    // optionality for lists is ignored
+                    if (piProperty.isList && piProperty.isOptional) {
+                        this.simpleWarning(false,
+                            `Property is a list, optionality will be ignored ${this.location(piProperty)}.`);
+                        piProperty.isOptional = false;
+                    }
                 }
             });
     }
@@ -267,6 +272,11 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                 whenOk: () => {
                     let myType = element.type.referred;
                     this.checkPrimitiveType(myType, element);
+                    if (element.isOptional) {
+                        this.simpleWarning(false,
+                            `Property with primitive type may not be optional, optionality will be ignored ${this.location(element)}.`);
+                        element.isOptional = false;
+                    }
                     // check initial value(s)
                     if (!element.isList) {
                         this.simpleCheck(!element.initialValueList,

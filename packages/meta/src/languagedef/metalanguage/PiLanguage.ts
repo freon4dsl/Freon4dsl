@@ -16,22 +16,6 @@ export class PiLanguage extends PiLangElement {
         super();
     }
 
-    classifiersWithProjection(): PiClassifier[] {
-        // TODO add interfaces
-        // TODO add abstract concepts
-        const xx: PiClassifier[] = this.concepts.filter(c => !(c instanceof PiLimitedConcept || c instanceof PiBinaryExpressionConcept || c.isAbstract));
-        xx.push(...this.units);
-        return xx;
-    }
-
-    classifiersWithExtras(): PiClassifier[] {
-        // TODO add interfaces
-        // TODO add abstract concepts
-        const xx: PiClassifier[] = this.concepts.filter(c => !(c instanceof PiLimitedConcept || c.isAbstract));
-        xx.push(...this.units);
-        return xx;
-    }
-
     conceptsAndInterfaces(): PiClassifier[] {
         const result: PiClassifier[] = this.concepts;
         return result.concat(this.interfaces);
@@ -393,10 +377,14 @@ export class PiPrimitiveProperty extends PiProperty {
 
 export class PiInstance extends PiLangElement {
     concept: PiElementReference<PiConcept>; // should be a limited concept
-    props: PiPropertyInstance[] = [];
+    props: PiInstanceProperty[] = [];
+
+    nameProperty(): PiInstanceProperty {
+        return this.props.find(p => p.name === "name");
+    }
 }
 
-export class PiPropertyInstance extends PiLangElement {
+export class PiInstanceProperty extends PiLangElement {
     owningInstance: PiElementReference<PiInstance>;
     property: PiElementReference<PiProperty>;
     value: PiPrimitiveValue;
