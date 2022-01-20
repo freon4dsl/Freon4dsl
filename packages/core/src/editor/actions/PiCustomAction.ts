@@ -8,9 +8,14 @@ const LOGGER = new PiLogger("PiCustomAction");
 export class PiCustomAction extends PiAction {
     action: CustomAction;
 
-    constructor(initializer?: Partial<PiCustomAction>) {
+    static create(initializer?: Partial<PiCustomAction>) {
+        const result = new PiCustomAction();
+        PiUtils.initializeObject(result, initializer);
+        return result;
+    }
+
+    constructor() {
         super();
-        PiUtils.initializeObject(this, initializer);
     }
 
     command(box: Box): PiCommand {

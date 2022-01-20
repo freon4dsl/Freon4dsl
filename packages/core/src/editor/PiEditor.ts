@@ -77,7 +77,7 @@ export class PiEditor {
         }
         // this.keyboardActions = actions.keyboardActions;
 
-        actions.customBehaviors.forEach(ca => this.new_pi_actions.push(new PiCustomAction({
+        actions.customBehaviors.forEach(ca => this.new_pi_actions.push(PiCustomAction.create({
             activeInBoxRoles: ca.activeInBoxRoles,
             boxRoleToSelect: ca.boxRoleToSelect,
             caretPosition: ca.caretPosition,
@@ -86,15 +86,7 @@ export class PiEditor {
             isApplicable: ca.isApplicable,
             referenceShortcut: ca.referenceShortcut
         })));
-        actions.binaryExpressionCreators.forEach(ca => this.new_pi_actions.push(new PiCreateBinaryExpressionAction({
-            activeInBoxRoles: ca.activeInBoxRoles,
-            boxRoleToSelect: ca.boxRoleToSelect,
-            caretPosition: ca.caretPosition,
-            trigger: ca.trigger,
-            expressionBuilder: ca.expressionBuilder,
-            isApplicable: ca.isApplicable,
-            referenceShortcut: ca.referenceShortcut
-        })));
+        actions.binaryExpressionActions.forEach(ca => this.new_pi_actions.push(ca));
     }
 
     get projectedElement() {

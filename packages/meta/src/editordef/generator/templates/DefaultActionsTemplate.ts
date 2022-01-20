@@ -1,15 +1,12 @@
-import { flatten } from "lodash";
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import {
     PiLanguage,
     PiBinaryExpressionConcept,
     PiConcept,
-    PiClassifier,
-    PiLangSelfExp
+    PiClassifier
 } from "../../../languagedef/metalanguage";
 import { Roles, LangUtil } from "../../../utils";
 import { PiEditConcept, PiEditPropertyProjection, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
-import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class DefaultActionsTemplate {
 
@@ -25,7 +22,7 @@ export class DefaultActionsTemplate {
                 Box,
                 MetaKey,
                 PiActions,
-                PiBinaryExpressionCreator,
+                PiCreateBinaryExpressionAction,
                 PiCaret,
                 PiCustomBehavior,
                 PiEditor,
@@ -47,9 +44,9 @@ export class DefaultActionsTemplate {
              * This module implements all default actions for the editor.
              * These default actions are merged with custom actions.
              */ 
-            export const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
+            export const BINARY_EXPRESSION_CREATORS: PiCreateBinaryExpressionAction[] = [
                 ${language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
-            `{
+            `PiCreateBinaryExpressionAction.create({
                     trigger: "${editorDef.findConceptEditor(c).symbol}",
                     activeInBoxRoles: [
                         LEFT_MOST,
@@ -63,7 +60,7 @@ export class DefaultActionsTemplate {
                         parent[(box as AliasBox).propertyName] = newExpression;
                         return newExpression;
                     }
-            }`
+            })`
         )}
             ];
             

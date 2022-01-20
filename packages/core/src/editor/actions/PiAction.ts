@@ -41,7 +41,6 @@ export function triggerTypeToString(trigger: PiActionTriggerType): string {
     }
 }
 
-
 export abstract class PiAction {
     /**
      * The trigger to activate this behavior

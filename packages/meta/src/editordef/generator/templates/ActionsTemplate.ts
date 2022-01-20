@@ -10,12 +10,12 @@ export class ActionsTemplate {
             import {
                 PiActions,
                 PiActionsUtil,
-                PiBinaryExpressionCreator,
+                PiCreateBinaryExpressionAction,
                 PiCustomBehavior
             } from "${PROJECTITCORE}";
             
             import { BINARY_EXPRESSION_CREATORS, CUSTOM_BEHAVIORS } from "./${Names.defaultActions(language)}";
-            import { MANUAL_BINARY_EXPRESSION_CREATORS, MANUAL_CUSTOM_BEHAVIORS } from "../${Names.customActions(language)}";
+            import { MANUAL_BINARY_EXPRESSION_ACTIONS, MANUAL_CUSTOM_BEHAVIORS } from "../${Names.customActions(language)}";
 
              /**
              * Class ${Names.actions(language)} implements ... TODO.
@@ -27,7 +27,7 @@ export class ActionsTemplate {
              */  
             export class ${Names.actions(language)} implements ${Names.PiActions} {
                 // Combine generated and manually written actions, where manual actions may override the generated ones
-                binaryExpressionCreators: PiBinaryExpressionCreator[] = PiActionsUtil.join(BINARY_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_CREATORS) as PiBinaryExpressionCreator[];
+                binaryExpressionActions: PiCreateBinaryExpressionAction[] = PiActionsUtil.join(BINARY_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_ACTIONS) as PiCreateBinaryExpressionAction[];
                 customBehaviors: PiCustomBehavior[] = PiActionsUtil.join(CUSTOM_BEHAVIORS, MANUAL_CUSTOM_BEHAVIORS) as PiCustomBehavior[];
             }`;
     }

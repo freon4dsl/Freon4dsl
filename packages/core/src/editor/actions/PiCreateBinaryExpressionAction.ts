@@ -11,9 +11,13 @@ export class PiCreateBinaryExpressionAction extends PiAction {
 
     expressionBuilder: (box: Box, text: string, editor: PiEditor) => PiBinaryExpression;
 
-    constructor(initializer?: Partial<PiCreateBinaryExpressionAction>) {
+    static create(initializer?: Partial<PiCreateBinaryExpressionAction>): PiCreateBinaryExpressionAction {
+        const result = new PiCreateBinaryExpressionAction();
+        PiUtils.initializeObject(result, initializer);
+        return result;
+    }
+    constructor() {
         super();
-        PiUtils.initializeObject(this, initializer);
     }
 
     command(box: Box): PiCommand {

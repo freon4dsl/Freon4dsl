@@ -1,4 +1,4 @@
-import { Box, ReferenceShortcut } from "./internal";
+import { Box, PiCreateBinaryExpressionAction, ReferenceShortcut } from "./internal";
 import { PiBinaryExpression, PiElement, PiExpression } from "../language";
 import { PiCaret, PiKey } from "../util";
 import { PiEditor } from "./internal";
@@ -17,7 +17,7 @@ export function triggerToString(t: PiTriggerType): string {
 
 // tag::action-interface[]
 export interface PiActions {
-    binaryExpressionCreators: PiBinaryExpressionCreator[];
+    binaryExpressionActions: PiCreateBinaryExpressionAction[];
 
     customBehaviors: PiCustomBehavior[];
 }
@@ -46,13 +46,6 @@ export interface PiBehavior {
 
 }
 // end::PiBehavior[]
-
-/**
- * Special behavior for creating a binary expression.
- */
-export interface PiBinaryExpressionCreator extends PiBehavior {
-    expressionBuilder: (box: Box, trigger: string, editor: PiEditor) => PiBinaryExpression;
-}
 
 /**
  * Behavior with custom action, intended to be used to create non expression elements.

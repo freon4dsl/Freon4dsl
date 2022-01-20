@@ -2,7 +2,7 @@ import { action, runInAction } from "mobx";
 import { PiLogger } from "./internal";
 // the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
 import { PiKey } from "./Keys";
-import { Box, isProKey, PiActionTrigger, PiEditor, PiKeyboardShortcutAction } from "../editor";
+import { Box, isProKey, PiActionTrigger, PiEditor } from "../editor";
 import { PiContainerDescriptor, PiElement, PiExpression, isPiExpression } from "../language";
 
 export type BooleanCallback = () => boolean;
