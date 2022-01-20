@@ -3,6 +3,7 @@ import {
     PiLanguage, PiPrimitiveProperty
 } from "../languagedef/metalanguage";
 import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
+import { PiEditProjectionGroup } from "../editordef/metalanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -107,6 +108,10 @@ export class Names {
 
     public static projectionDefault(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ProjectionDefault";
+    }
+
+    public static projection(group: PiEditProjectionGroup): string {
+        return "Projection" + this.startWithUpperCase(group.name);
     }
 
     public static customProjection(language: PiLanguage): string {
@@ -276,5 +281,4 @@ export class Names {
     public static instance(instance: PiInstance): string {
         return instance.name;
     }
-
 }

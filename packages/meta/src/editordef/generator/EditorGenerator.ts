@@ -15,7 +15,7 @@ import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./temp
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
 import { EditorDefTemplate } from "./templates/EditorDefTemplate";
 
-const LOGGER = new MetaLogger("EditorGenerator").mute();
+const LOGGER = new MetaLogger("EditorGenerator"); //.mute();
 
 export class EditorGenerator {
     public outputfolder: string = ".";
@@ -34,18 +34,18 @@ export class EditorGenerator {
             return;
         }
 
-        const generationStatus = new GenerationStatus();
         this.getFolderNames();
-        const name = editDef ? editDef.getDefaultProjectiongroup().name : "";
-        LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder + " for language " + this.language?.name);
+        LOGGER.log("Generating editor in folder " + this.editorGenFolder + " for language " + this.language?.name);
 
         // TODO the following should already have been set by the edit checker, but it seems to be needed here
-        editDef.language = this.language;
+        // editDef.language = this.language;
 
+        const generationStatus = new GenerationStatus();
         const defaultActions = new DefaultActionsTemplate();
         const customActions = new CustomActionsTemplate();
         const actions = new ActionsTemplate();
         const projection = new ProjectionTemplate();
+        projection.setStandardBooleanKeywords(editDef); // initiate the template with the standard boolean keywords
         const customProjectiontemplate = new CustomProjectionTemplate();
         const editorIndexTemplate = new EditorIndexTemplate();
         const stylesTemplate = new StylesTemplate();
@@ -57,18 +57,25 @@ export class EditorGenerator {
         Helpers.createDirIfNotExisting(this.editorGenFolder);
         Helpers.deleteFilesInDir(this.editorGenFolder, generationStatus);
 
-        // set relative path to get the imports right
+        // Set relative path to get the imports right
         const relativePath = "../../";
 
-        //  Generate it
+        // Generate the default projection
         LOGGER.log(`Generating projection default: ${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`);
         const projectionfileDefault = Helpers.pretty(projection.generateProjectionDefault(this.language, editDef, relativePath),
             "Projection Default", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`, projectionfileDefault);
 
-        // TODO generate the other projection groups
+        // Generate the other projection groups
+        editDef.projectiongroups.forEach(group => {
+            LOGGER.log(`Generating projection group: ${this.editorGenFolder}/${Names.projection(group)}.ts`);
+            const projectionfile = Helpers.pretty(projection.generateProjectionGroup(this.language, group, relativePath),
+                "Projection " + group.name, generationStatus);
+            fs.writeFileSync(`${this.editorGenFolder}/${Names.projection(group)}.ts`, projectionfile);
+        });
 
-        LOGGER.log(`Generating default actions: ${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`);
+        // Generate the actions
+        LOGGER.log(`Generating actions default: ${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`);
         const defaultActionsFile = Helpers.pretty(defaultActions.generate(this.language, editDef, relativePath), "DefaultActions", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`, defaultActionsFile);
 
@@ -77,7 +84,7 @@ export class EditorGenerator {
         const actionsFile = Helpers.pretty(actions.generate(this.language, editDef), "Actions", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/${Names.actions(this.language)}.ts`, actionsFile);
 
-        LOGGER.log(`Generating manual actions: ${this.editorFolder}${Names.customActions(this.language)}.ts`);
+        LOGGER.log(`Generating custom actions: ${this.editorFolder}${Names.customActions(this.language)}.ts`);
         const customActionsFile = Helpers.pretty(customActions.generate(this.language), "CustomActions", generationStatus);
         Helpers.generateManualFile(`${this.editorFolder}/${Names.customActions(this.language)}.ts`, customActionsFile, "CustomActions");
 
@@ -102,9 +109,9 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorFolder}/index.ts`, editorIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(`Generated editor '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated editor with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated editor ${name}`);
+            LOGGER.info(`Succesfully generated editor`);
         }
     }
 
