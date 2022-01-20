@@ -27,7 +27,7 @@
     "openhab":      "bash ../../scripts/projectit-dev.sh -v all -d src/openhab/defs -o src/openhab",
     "pi-languages": "bash ../../scripts/projectit-dev.sh -v all -d src/pi-languages/defs -o src/pi-languages",
     "taxrules": 	"bash ../../scripts/projectit-dev.sh all -d src/taxrules/defs -o src/taxrules",
-    "all-examples": "yarn calculator && yarn octopus && yarn example && yarn heating && yarn json && yarn libraries && yarn openhab && yarn pi-languages && yarn taxrules && yarn expressions && yarn rules && yarn openhab",
+    "all-examples": "yarn calculator && yarn octopus && yarn example && yarn heating && yarn json && yarn libraries && yarn openhab && yarn pi-languages && yarn taxrules && yarn expressions && yarn rules && yarn openhab && yarn graphviz",
     "clean-graphviz":	  "bash ../../scripts/projectit-dev.sh clean-it -f -d src/graphviz/defs -o src/graphviz",
     "clean-example": 	  "bash ../../scripts/projectit-dev.sh clean-it -d src/example/defs -o src/example",
     "clean-calculator":   "bash ../../scripts/projectit-dev.sh clean-it -f -d src/calculator/defs -o src/calculator",

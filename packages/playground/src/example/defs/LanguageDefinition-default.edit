@@ -10,7 +10,7 @@ Attribute {
 Entity {
     [
         entity ${name} [? base ${baseEntity}] {
-            ${attributes vertical }
+            ${attributes table rows }
             ${methods:name2 vertical }
         }
     ]
@@ -22,14 +22,14 @@ ExampleUnit {
         unit ${name} {
             ${entities vertical }
         unit level methods:
-            ${methods vertical}
+            ${methods table rows}
         }
         ]
 }
 
 Method {
     [
-        method ${name} ( ${parameters horizontal separator [, ]} ): ${declaredType} {
+        method ${name} ( ${parameters table rows} ): ${declaredType} {
             ${body}
         }
     ]

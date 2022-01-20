@@ -4,7 +4,7 @@ import {
     TYPER_GEN_FOLDER,
     SCOPER_GEN_FOLDER,
     VALIDATOR_GEN_FOLDER,
-    EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER, WRITER_GEN_FOLDER, READER_GEN_FOLDER
+    EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER, WRITER_GEN_FOLDER, READER_GEN_FOLDER, STYLES_FOLDER
 } from "../../../utils/";
 import { PiLanguage } from "../../metalanguage";
 
@@ -12,23 +12,20 @@ export class EnvironmentTemplate {
 
     generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
-        import { projectitConfiguration } from "../../projectit/ProjectitConfiguration";
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
                     ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
                     ${Names.PiWriter}
                } from "${PROJECTITCORE}";
-        import { ${Names.actions(language)}, ${Names.projectionDefault(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}";
+        import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
-        import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
-        import { editorStyle } from "../../editor/styles/CustomStyles";
-        import { ${Names.initializeLanguage} } from  "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { initializeEditorDef } from  "${relativePath}${EDITOR_GEN_FOLDER}";
+        import { editorStyle } from "${relativePath}${STYLES_FOLDER}/CustomStyles";
 
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.
@@ -56,11 +53,7 @@ export class EnvironmentTemplate {
             private constructor() {
                 const actions = new ${Names.actions(language)}();
                 const rootProjection = new ${Names.CompositeProjection}("root");
-                for (const p of projectitConfiguration.customProjection) {
-                    rootProjection.addProjection(p);
-                }
-                const projectionDefault = new ${Names.projectionDefault(language)}("default");
-                rootProjection.addProjection(projectionDefault);
+                initializeProjections(rootProjection);
                 this.editor = new PiEditor(rootProjection, actions);
                 this.editor.style = editorStyle;
                 this.editor.rootElement = null;
@@ -68,6 +61,7 @@ export class EnvironmentTemplate {
                 initializeLanguage();
                 initializeEditorDef();
             }
+
             
             /**
              * Returns a new model with name 'modelName'.

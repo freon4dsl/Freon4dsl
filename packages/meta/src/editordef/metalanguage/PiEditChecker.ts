@@ -303,14 +303,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         for (const projection of this.propsWithTableProjection) {
             const myprop = projection.property.referred;
             const propEditor = editor.findTableProjectionForType(myprop.type.referred);
-            if (propEditor === null || propEditor === undefined) {
-                // create default listInfo if not present
-                if (!(!!projection.listInfo)) {
-                    projection.listInfo = new ListInfo();
-                }
-                this.simpleWarning(false,
-                    `No table projection defined for '${myprop.name}', it will be shown as a vertical list ${this.location(projection)}.`);
-            }
+            this.simpleWarning(propEditor !== null && propEditor !== undefined,
+                `No table projection defined for '${myprop.name}', it will be shown as a table with a single column ${this.location(projection)}.`);
         }
     }
 

@@ -1,15 +1,16 @@
-import { PiClassifier, PiConcept, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
-import { Names, PROJECTITCORE } from "../../../utils";
+import { PiConcept, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
+import { CONFIGURATION_FOLDER, EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
 import { PiEditUnit } from "../../metalanguage";
 
 export class EditorDefTemplate {
 
-    generateEditorDef(language: PiLanguage, editorDef: PiEditUnit): string {
+    generateEditorDef(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
         const defaultProjGroup = editorDef.getDefaultProjectiongroup();
 
         let conceptsWithTrigger: ConceptTriggerElement[] = [];
         let conceptsWithRefShortcut: ConceptShortCutElement[] = [];
-        let imports: string[] = [];
+        let languageImports: string[] = [];
+        let editorImports: string[] = [];
 
         language.concepts.filter(c => !(c instanceof PiLimitedConcept || c.isAbstract)).forEach(concept => {
             // TODO handle other sub types of PiClassifier
@@ -28,14 +29,40 @@ export class EditorDefTemplate {
                     conceptsWithRefShortcut.push(new ConceptShortCutElement(concept, referenceShortCut));
                 }
 
-                imports.push(Names.concept(concept));
+                languageImports.push(Names.concept(concept));
             }
         });
 
-        return `import { Language, Model, ModelUnit, Property, Concept, Interface } from "${PROJECTITCORE}";
+        editorImports.push(Names.projectionDefault(language));
+        editorDef.getAllNonDefaultProjectiongroups().map(group => {
+            editorImports.push(Names.projection(group));
+        });
+
+        return `import { Language, Model, ModelUnit, Property, Concept, Interface, PiCompositeProjection, PiProjection } from "${PROJECTITCORE}";
         
-            import { ${imports.join(", ")} } from "../../language/gen";
+            import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
+            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";      
+            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";       
     
+            /**
+             * Adds all known projection groups to the root projection.
+             * @param rootProjection
+             */
+            export function initializeProjections(rootProjection: PiCompositeProjection) {
+                for (const p of projectitConfiguration.customProjection) {
+                    rootProjection.addProjection(p);
+                }
+                
+                let projectionGroup: PiProjection = null;               
+                ${editorDef.getAllNonDefaultProjectiongroups().map(group => `
+                projectionGroup = new ${Names.projection(group)}();
+                rootProjection.addProjection(projectionGroup);
+                `).join("")}
+
+                const projectionDefault = new ${Names.projectionDefault(language)}();
+                rootProjection.addProjection(projectionDefault);
+            }    
+            
             /**
              * Adds trigger and reference shortcut info to the in-memory representation of structure of the language metamodel.
              */

@@ -234,8 +234,8 @@ export class Names {
         return "get" + Names.classifier(c) + "Box";
     }
 
-    public static tableCellFunction(c: PiClassifier): string {
-        return "get" + Names.classifier(c) + "Cells";
+    public static tabelDefinitionFunction(c: PiClassifier): string {
+        return "get" + Names.classifier(c) + "TableDefinition";
     }
 
     public static writer(language: PiLanguage): string {

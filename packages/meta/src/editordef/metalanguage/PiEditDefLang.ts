@@ -39,7 +39,11 @@ export class PiEditUnit extends PiDefinitionElement {
     projectiongroups: PiEditProjectionGroup[] = [];
 
     getDefaultProjectiongroup(): PiEditProjectionGroup {
-        return this.projectiongroups.find(group => group.name = Names.defaultProjectionName);
+        return this.projectiongroups.find(group => group.name == Names.defaultProjectionName);
+    }
+
+    getAllNonDefaultProjectiongroups(): PiEditProjectionGroup[] {
+        return this.projectiongroups.filter(group => group.name !== Names.defaultProjectionName);
     }
 
     findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
@@ -109,6 +113,14 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
         return this.projections.find(con => con.classifier.referred === cls);
     }
 
+    findTableProjectionForType(cls: PiClassifier): PiEditTableProjection {
+        return this.allTableProjections().find(con => con.classifier.referred === cls);
+    }
+
+    findNonTableProjectionForType(cls: PiClassifier): PiEditProjection {
+        return this.allNonTableProjections().find(con => con.classifier.referred === cls);
+    }
+
     findExtrasForType(cls: PiClassifier): ExtraClassifierInfo {
         if (!!this.extras) {
             return this.extras.find(con => con.classifier.referred === cls);
@@ -121,8 +133,8 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
         return this.projections.filter(con => con instanceof PiEditTableProjection) as PiEditTableProjection[];
     }
 
-    findTableProjectionForType(cls: PiClassifier): PiEditTableProjection {
-        return this.allTableProjections().find(con => con.classifier.referred === cls);
+    allNonTableProjections(): PiEditProjection[] {
+        return this.projections.filter(con => con instanceof PiEditProjection) as PiEditProjection[];
     }
 
     toString(): string {

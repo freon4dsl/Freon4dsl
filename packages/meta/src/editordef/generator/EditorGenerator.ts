@@ -15,7 +15,7 @@ import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./temp
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
 import { EditorDefTemplate } from "./templates/EditorDefTemplate";
 
-const LOGGER = new MetaLogger("EditorGenerator"); //.mute();
+const LOGGER = new MetaLogger("EditorGenerator").mute();
 
 export class EditorGenerator {
     public outputfolder: string = ".";
@@ -36,9 +36,6 @@ export class EditorGenerator {
 
         this.getFolderNames();
         LOGGER.log("Generating editor in folder " + this.editorGenFolder + " for language " + this.language?.name);
-
-        // TODO the following should already have been set by the edit checker, but it seems to be needed here
-        // editDef.language = this.language;
 
         const generationStatus = new GenerationStatus();
         const defaultActions = new DefaultActionsTemplate();
@@ -67,7 +64,7 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`, projectionfileDefault);
 
         // Generate the other projection groups
-        editDef.projectiongroups.forEach(group => {
+        editDef.getAllNonDefaultProjectiongroups().forEach(group => {
             LOGGER.log(`Generating projection group: ${this.editorGenFolder}/${Names.projection(group)}.ts`);
             const projectionfile = Helpers.pretty(projection.generateProjectionGroup(this.language, group, relativePath),
                 "Projection " + group.name, generationStatus);
@@ -78,6 +75,10 @@ export class EditorGenerator {
         LOGGER.log(`Generating actions default: ${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`);
         const defaultActionsFile = Helpers.pretty(defaultActions.generate(this.language, editDef, relativePath), "DefaultActions", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`, defaultActionsFile);
+
+        LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
+        const editorDefFile = Helpers.pretty(editorDefTemplate.generateEditorDef(this.language, editDef, relativePath), "Editor Definition", generationStatus);
+        fs.writeFileSync(`${this.editorGenFolder}/EditorDef.ts`, editorDefFile);
 
         // the following do not need the relativePath for imports
         LOGGER.log(`Generating actions: ${this.editorGenFolder}/${Names.actions(this.language)}.ts`);
@@ -99,10 +100,6 @@ export class EditorGenerator {
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
         const editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef), "Editor Gen Index", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/index.ts`, editorIndexGenFile);
-
-        LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
-        const editorDefFile = Helpers.pretty(editorDefTemplate.generateEditorDef(this.language, editDef), "Editor Definition", generationStatus);
-        fs.writeFileSync(`${this.editorGenFolder}/EditorDef.ts`, editorDefFile);
 
         LOGGER.log(`Generating editor index: ${this.editorFolder}/index.ts`);
         const editorIndexFile = Helpers.pretty(editorIndexTemplate.generateIndex(this.language, editDef), "Editor Index", generationStatus);
