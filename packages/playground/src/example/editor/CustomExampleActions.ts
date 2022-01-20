@@ -2,7 +2,15 @@
 import {
     PiCustomAction,
     PiActions,
-    Box, PiTriggerType, PiEditor, AliasBox, PiCaret, PiElement, OptionalBox, PiCreateBinaryExpressionAction
+    Box,
+    PiTriggerType,
+    PiEditor,
+    AliasBox,
+    PiCaret,
+    PiElement,
+    OptionalBox,
+    PiCreateBinaryExpressionAction,
+    PiActionTrigger, isString
 } from "@projectit/core";
 import { RoleProvider } from "@projectit/core";
 import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
@@ -77,10 +85,12 @@ export const MANUAL_CUSTOM_ACTIONS: PiCustomAction[] = [
             "EqualsExpression-right"
         ],
         trigger: /[0-9]/,
-        action: (box: Box, trigger: string, editor: PiEditor) => {
+        action: (box: Box, trigger: PiActionTrigger, editor: PiEditor) => {
             const parent = box.element;
             const x = new NumberLiteralExpression();
-            x.value = Number.parseInt(trigger.toString());
+            if( isString(trigger) ) {
+                x.value = Number.parseInt(trigger.toString());
+            }
             parent[(box as AliasBox).propertyName] = x;
             return x;
         },

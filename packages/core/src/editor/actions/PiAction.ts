@@ -7,7 +7,7 @@ import { PiCommand } from "./PiCommand";
 
 export type PiActionTriggerType = string | RegExp | PiKey;
 export type PiActionTrigger = string | PiKey;
-export type CustomAction = (box: Box, text: string, editor: PiEditor) => PiElement | null;
+export type CustomAction = (box: Box, trigger: PiActionTrigger, editor: PiEditor) => PiElement | null;
 export type PiPostAction = () => void;
 
 export const EMPTY_POST_ACTION = function() {};

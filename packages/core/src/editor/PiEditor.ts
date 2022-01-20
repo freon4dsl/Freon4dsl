@@ -4,11 +4,7 @@ import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiContainerDescriptor, PiElement } from "../language";
 import { PiCaret, wait, PiLogger } from "../util";
-import {
-    PiAction,
-    PiCreateBinaryExpressionAction,
-    PiCustomAction, PiKeyboardShortcutAction, triggerToString2, triggerTypeToString
-} from "./actions/index";
+import { PiAction } from "./actions/index";
 import {
     PiProjection,
     isAliasBox,
