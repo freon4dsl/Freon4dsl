@@ -22,7 +22,8 @@ PiLogger.mute("DropdownItemComponent");
 PiLogger.mute("X");
 PiLogger.mute("BoxFactory");
 PiLogger.mute("EditorCommunication");
-// PiLogger.mute("TableUtil");
+PiLogger.mute("TableUtil");
+PiLogger.mute("Language");
 
 PiLogger.mute("ExampleScoper");
 

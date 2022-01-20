@@ -150,9 +150,10 @@ export class PiCustomCommand extends PiCommand {
     caretPosition: PiCaretPosition;
     action: CustomAction;
 
-    constructor(action: CustomAction) {
+    constructor(action: CustomAction, boxRoleToSelect) {
         super();
         this.action = action;
+        this.boxRoleToSelect = boxRoleToSelect;
     }
 
     execute(box: Box, trigger: PiActionTrigger, editor: PiEditor): PiPostAction {
@@ -163,6 +164,7 @@ export class PiCustomCommand extends PiCommand {
 
         if (!!selected) {
             return function() {
+                console.log("PiCommand select " + self.boxRoleToSelect);
                 editor.selectElement(selected, self.boxRoleToSelect);
             }
         }

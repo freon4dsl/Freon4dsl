@@ -18,7 +18,7 @@ export class PiKeyboardShortcutAction extends PiAction {
 
     command(box: Box): PiCommand {
         const act = (box: Box, text: string, editor: PiEditor) => { return this.action(box, {  meta: MetaKey.None, keyCode: ENTER},editor)};
-        return new PiCustomCommand(act);
+        return new PiCustomCommand(act, this.boxRoleToSelect);
     }
 
 }

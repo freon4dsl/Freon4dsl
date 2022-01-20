@@ -14,6 +14,6 @@ export class PiCustomAction extends PiAction {
     }
 
     command(box: Box): PiCommand {
-        return new PiCustomCommand(this.action);
+        return new PiCustomCommand(this.action, this.boxRoleToSelect);
     }
 }

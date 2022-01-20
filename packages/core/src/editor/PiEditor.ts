@@ -388,15 +388,15 @@ export class PiEditor {
     }
 
     addOrReplaceAction(piCustomAction: PiAction) {
-        console.log("   addOrReplaceAction [" + triggerTypeToString(piCustomAction.trigger) + "] [" + piCustomAction.activeInBoxRoles + "]");
+        // LOGGER.log("   addOrReplaceAction [" + triggerTypeToString(piCustomAction.trigger) + "] [" + piCustomAction.activeInBoxRoles + "]");
 
-        this.new_pi_actions.forEach(act => {
-            console.log("   Trigger [" + triggerTypeToString(act.trigger) + "] [" + act.activeInBoxRoles + "]");
-        })
+        // this.new_pi_actions.forEach(act => {
+        //     LOGGER.log("   Trigger [" + triggerTypeToString(act.trigger) + "] [" + act.activeInBoxRoles + "]");
+        // })
         const alreadyThere = this.new_pi_actions.findIndex( action => {
             return isEqual(action.trigger, piCustomAction.trigger) && isEqual(action.activeInBoxRoles, piCustomAction.activeInBoxRoles);
         });
-        console.log("  alreadyThere: " + alreadyThere);
+        // console.log("  alreadyThere: " + alreadyThere);
         if(alreadyThere !== -1) { // found it
             this.new_pi_actions.splice(alreadyThere, 1, piCustomAction);
         }else {

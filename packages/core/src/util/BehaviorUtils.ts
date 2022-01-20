@@ -52,7 +52,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
 
     for (const action of editor.new_pi_actions) {
         const trigger = action.trigger;
-        LOGGER.log("  executeHebavior trigger " + trigger + "  roles " + action.activeInBoxRoles);
+        LOGGER.log("  executeBehavior trigger " + trigger + "  roles " + action.activeInBoxRoles);
         if (action.activeInBoxRoles.includes(box.role)) {
             if (isRegExp(trigger)) {
                 const matchArray = label.match(trigger);

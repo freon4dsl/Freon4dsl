@@ -7,6 +7,7 @@ import {
     Box, PiTriggerType, PiEditor, AliasBox, PiCaret, PiElement, OptionalBox
 } from "@projectit/core";
 import { PiCustomAction } from "@projectit/core";
+import { RoleProvider } from "@projectit/core/dist/index";
 import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
 
 /**
@@ -44,6 +45,57 @@ const cust: PiCustomAction[] = [
 
 export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     // Add your own custom expression creators here
+    // {
+    //
+    //     activeInBoxRoles: [
+    //         "Method-body",
+    //         "AbsExpression-expr",
+    //         "SumExpression-from",
+    //         "SumExpression-to",
+    //         "SumExpression-body",
+    //         "IfExpression-condition",
+    //         "IfExpression-whenTrue",
+    //         "IfExpression-whenFalse",
+    //         "PiBinaryExpression-left",
+    //         "PiBinaryExpression-right",
+    //         "MultiplyExpression-left",
+    //         "MultiplyExpression-right",
+    //         "PlusExpression-left",
+    //         "PlusExpression-right",
+    //         "DivideExpression-left",
+    //         "DivideExpression-right",
+    //         "AndExpression-left",
+    //         "AndExpression-right",
+    //         "OrExpression-left",
+    //         "OrExpression-right",
+    //         "ComparisonExpression-left",
+    //         "ComparisonExpression-right",
+    //         "LessThenExpression-left",
+    //         "LessThenExpression-right",
+    //         "GreaterThenExpression-left",
+    //         "GreaterThenExpression-right",
+    //         "EqualsExpression-left",
+    //         "EqualsExpression-right"
+    //     ],
+    //     trigger: /[0-9]/,
+    //     expressionBuilder: (box: Box, trigger: string, editor: PiEditor) => {
+    //         const parent = box.element;
+    //         const x = new NumberLiteralExpression();
+    //         x.value = Number.parseInt(trigger.toString());
+    //         parent[(box as AliasBox).propertyName] = x;
+    //         return x;
+    //     },
+    //     boxRoleToSelect: "NumberLiteralExpression-value-numberbox",
+    //     caretPosition: PiCaret.RIGHT_MOST
+    // }
+];
+
+export const MANUAL_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
+    // Add your own custom binary expression creators here
+];
+
+export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
+    // Add your own custom behavior here
     {
 
         activeInBoxRoles: [
@@ -77,23 +129,16 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
             "EqualsExpression-right"
         ],
         trigger: /[0-9]/,
-        expressionBuilder: (box: Box, trigger: string, editor: PiEditor) => {
+        action: (box: Box, trigger: string, editor: PiEditor) => {
             const parent = box.element;
             const x = new NumberLiteralExpression();
             x.value = Number.parseInt(trigger.toString());
             parent[(box as AliasBox).propertyName] = x;
             return x;
         },
-        boxRoleToSelect: "NumberLiteralExpression-value-numberbox",
+        boxRoleToSelect: RoleProvider.property("NumberLiteralExpression", "value", "numberbox"),
         caretPosition: PiCaret.RIGHT_MOST
     }
-];
 
-export const MANUAL_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
-    // Add your own custom binary expression creators here
-];
-
-export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
-    // Add your own custom behavior here
 ];
 
