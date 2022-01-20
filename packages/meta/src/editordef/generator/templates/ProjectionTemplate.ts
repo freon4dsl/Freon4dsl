@@ -62,6 +62,7 @@ export class ProjectionTemplate {
 
         const nonBinaryClassifiers: PiClassifier[] = allClassifiers.filter(c => !(c instanceof PiBinaryExpressionConcept));
         const binaryClassifiers: PiClassifier[] = allClassifiers.filter(c => c instanceof PiBinaryExpressionConcept);
+        const classifiersWithTableProjection: PiClassifier[] = this.tableProjections.map(t => t.concept.referred);
 
         const nonBinaryConceptsWithProjection = nonBinaryClassifiers.filter(c => {
             const editor = editorDef.findConceptEditor(c);
@@ -78,6 +79,7 @@ export class ProjectionTemplate {
             import {
                 BoxFactory,
                 Box,
+                PiTableDefinition,
                 TableUtil,
                 ${Names.PiElement},
                 ${Names.PiProjection},
@@ -114,21 +116,34 @@ export class ProjectionTemplate {
                     });
                 }
 
-                getBox(exp: ${Names.PiElement}): Box {
-                    if (exp === null ) {
+                getBox(element: ${Names.PiElement}): Box {
+                    if (element === null ) {
                         return null;
                     }
 
-                    switch( exp.piLanguageConcept() ) {
+                    switch( element.piLanguageConcept() ) {
                         ${nonBinaryClassifiers.map(c => `
-                        case "${Names.classifier(c)}" : return this.${Names.projectionFunction(c)} (exp as ${Names.classifier(c)});`
+                        case "${Names.classifier(c)}" : return this.${Names.projectionFunction(c)} (element as ${Names.classifier(c)});`
                         ).join("  ")}
                         ${binaryClassifiers.map(c =>
-                        `case "${Names.classifier(c)}" : return this.${Names.binaryProjectionFunction()} (exp as ${Names.classifier(c)});`
+                        `case "${Names.classifier(c)}" : return this.${Names.binaryProjectionFunction()} (element as ${Names.classifier(c)});`
                         ).join("  ")}
                     }
                     // nothing fits
-                    throw new Error("No box defined for this expression:" + exp.piId());
+                    throw new Error("No box defined for this expression:" + element.piId());
+                }
+                
+                getTableDefinition(conceptName: string): PiTableDefinition {
+                    if (conceptName === null || conceptName.length === 0) {
+                        return null;
+                    }
+
+                    switch( conceptName ) {
+                        ${classifiersWithTableProjection.map(c => `
+                        case "${Names.classifier(c)}" : return this.${Names.tableCellFunction(c)} ();`).join("  ")}
+                    }
+                    // nothing fits
+                    return null;
                 }
                 
                 private ${Names.binaryProjectionFunction()} (element: ${Names.allConcepts(language)}) {
@@ -140,6 +155,8 @@ export class ProjectionTemplate {
                 }              
 
                 ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
+
+                ${classifiersWithTableProjection.map(c => this.generateTableCellFunction(language, c, editorDef.findConceptEditor(c))).join("\n")}
 
                 /**
                  *  Create a standard binary box to ensure binary expressions can be edited easily
@@ -348,15 +365,15 @@ export class ProjectionTemplate {
             return `TableUtil.tableBoxColumnOriented(
                 ${elementVarName},
                 "${property.name}",
-                [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")}] ,
-                [ ${cellGetters} ],
+                this.rootProjection.getTableDefinition("${property.type.referred.name}").headers,
+                this.rootProjection.getTableDefinition("${property.type.referred.name}").cells,
                 ExampleEnvironment.getInstance().editor)`;
         } else {
             return `TableUtil.tableBoxRowOriented(
                 ${elementVarName},
                 "${property.name}",
-                [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")}] ,
-                [ ${cellGetters} ],
+                this.rootProjection.getTableDefinition("${property.type.referred.name}").headers,
+                this.rootProjection.getTableDefinition("${property.type.referred.name}").cells,
                 ExampleEnvironment.getInstance().editor)`;
         }
     }
@@ -443,5 +460,31 @@ export class ProjectionTemplate {
                                 BoxFactory.alias(${element}, "new-${Roles.property(property)}-hlist", "<+ ${property.name}>")
                             ])
                         )`;
+    }
+
+    private generateTableCellFunction(language: PiLanguage, c: PiClassifier, piEditConcept: PiEditConcept): string {
+        // find the projection to use for the type of the given property
+        const myTableProjection: PiEditTableProjection = piEditConcept?.tableProjections[0];
+        if (!!myTableProjection) {
+            // create the cell getters
+            let cellGetters: string = '';
+            myTableProjection.cells.forEach((cell, index) =>
+                cellGetters += `(cell${index}: ${Names.classifier(c)}): Box => {
+                    return ${this.itemProjection(cell, `cell${index}`, index, index, c, language)}
+                },\n`
+            );
+
+            return `${Names.tableCellFunction(c)}(): PiTableDefinition {
+                const result: PiTableDefinition = {
+                    headers: [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")} ],
+                    cells: [${cellGetters}]
+                };
+                return result;
+            }
+        `;
+        } else {
+            console.log("INTERNAL PROJECTIYT ERROR in generaateTableCellFunction");
+            return "";
+        }
     }
 }

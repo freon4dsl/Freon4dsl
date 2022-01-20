@@ -7,6 +7,7 @@
  * concepts that are using them.
  */
 
+export * from "./PiTables";
 export * from "./boxes";
 export * from "./simplifiedBoxAPI";
 export * from "./OrderedList";

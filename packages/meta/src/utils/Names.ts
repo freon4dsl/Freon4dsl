@@ -228,6 +228,10 @@ export class Names {
         return "get" + Names.classifier(c) + "Box";
     }
 
+    public static tableCellFunction(c: PiClassifier): string {
+        return "get" + Names.classifier(c) + "Cells";
+    }
+
     public static writer(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
