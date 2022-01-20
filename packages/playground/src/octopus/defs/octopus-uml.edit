@@ -17,7 +17,8 @@ IClassifier {
         ]
 }
 AssociationClass {
-        [[?${visibility}] <associationclass> ${name}
+        [
+        [?${visibility}] <associationclass> ${name}
         ${end1} <-> ${end2}
         [=> IClassifier:editorName ]
         <endassociationclass>
@@ -27,13 +28,15 @@ AssociationEnd {
         [[?${visibility}] ${baseType}.${name}${multiplicity}]
 }
 Attribute {
-        [[?${visibility}] ${name}[?${multiplicity}] : ${type}
+        [
+        [?${visibility}] ${name}[?${multiplicity}] : ${type}
             [?init ${init}]
             [?derive ${derive}]
         ]
 }
 UmlClass {
-    [[?${visibility}] [?${isAbstract [<abstract>]}] <class> ${name}
+    [
+    [?${visibility}] [?${isAbstract [<abstract>]}] <class> ${name}
     [?<specializes> ${generalizations horizontal separator [, ] }]
     [?<implements> ${interfaces horizontal separator [, ] }]
     [=> IClassifier]
@@ -49,7 +52,8 @@ UmlClass {
 //}
 //// end 'short'
 DataType {
-        [[?${visibility}] <datatype> ${name}
+        [
+        [?${visibility}] <datatype> ${name}
         [?<specializes> ${generalizations horizontal separator [, ] }]
         [?<implements> ${interfaces horizontal separator [, ] }]
         [=>IClassifier:short]
@@ -58,7 +62,8 @@ DataType {
         ]
 }
 EnumerationType {
-        [[?${visibility}] <enumeration> ${name}
+        [
+        [?${visibility}] <enumeration> ${name}
         <values> ${literals vertical terminator [;] }
         <endenumeration>
         ]
@@ -69,7 +74,8 @@ EnumLiteral {
 }
 
 UmlInterface  {
-        [[?${visibility}] <interface> ${name}
+        [
+        [?${visibility}] <interface> ${name}
         [?<specializes> ${generalizations horizontal separator [, ] }]
         [?<attributes> ${attributes vertical terminator [;]}]
         [?<operations> ${operations vertical terminator [;] }]
@@ -89,7 +95,8 @@ StarUpperBound {
 }
 
 Operation {
-    [[?${visibility}] ${name} ( [?${parameters horizontal separator [, ]}] ) [?: ${returnType}]
+    [
+    [?${visibility}] ${name} ( [?${parameters horizontal separator [, ]}] ) [?: ${returnType}]
         [?${pre vertical}]
         [?${post vertical}]
     ]
@@ -97,7 +104,8 @@ Operation {
 
 UmlPackage {
 // TODO subprojection imports removes newline between name and classifiers
-        [<package> ${name}
+        [
+        <package> ${name}
         [?${ imports vertical}]
         ${ classifiers vertical}
         <associations>
@@ -150,21 +158,3 @@ OclStatement {
 //    // initExpression: OclExpression;
 //    isIteratorVar: boolean;
 //}
-//VisibilityKind {
-// [[?${visibility}]]
-//}
-// for limited concepts
-VisibilityKind {
- [
-        ${PUBLIC [+]}
-        ${PRIVATE [-]}
-        ${PROTECTED [#]}
-    ]
-}
-ParameterDirectionKind {
- [
-        ${IN [<in>]}
-        ${OUT [<out>]}
-        ${INOUT [<inout>]}
-    ]
-}

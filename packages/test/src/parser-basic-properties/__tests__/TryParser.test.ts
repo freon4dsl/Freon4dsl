@@ -1,6 +1,6 @@
 import { TestParserEnvironment } from "../environment/gen/TestParserEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
-import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, WithKeywordProj } from "../language/gen";
+import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, PrimsWithKeywordTest } from "../language/gen";
 
 
 describe("Parser properties of type", () => {
@@ -23,7 +23,7 @@ describe("Parser properties of type", () => {
     test( " Primitive with Keyword projection ", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.wit");
-            const unit1: WithKeywordProj = reader.readFromString(input, "WithKeywordProj") as WithKeywordProj;
+            const unit1: PrimsWithKeywordTest = reader.readFromString(input, "PrimsWithKeywordTest") as PrimsWithKeywordTest;
             // console.log(writer.writeToString(unit1));
             expect(unit1).toMatchSnapshot();
         } catch (e) {

@@ -1,4 +1,4 @@
-editor XXX
+editor default
 
 AssociationClassCallExp {
     [${referredAssociationClass}]
@@ -31,7 +31,8 @@ IntegerLiteralExp {
     [${value}]
 }
 LetExp {
-    [let ${variables horizontal separator[, ]}
+    [
+    let ${variables horizontal separator[, ]}
     in ${inExpression}
     ]
 }

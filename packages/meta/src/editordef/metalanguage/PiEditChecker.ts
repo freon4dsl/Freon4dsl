@@ -235,6 +235,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
 
     private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: PiClassifier) {
         // LOGGER.log("checking optional projection for " + cls?.name);
+        // TODO when a primitive property is in an optional group is will not be shown when it has the default value for that property
         const propProjections: PiEditPropertyProjection[] = [];
         let nrOfItems = 0;
         item.lines.forEach(line => {
@@ -247,8 +248,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             whenOk: () => {
                 // find the optional property and set item.property
                 const myprop = propProjections[0].property.referred;
-                this.simpleCheck(myprop.isOptional || myprop.isList,
-                    `Property '${myprop.name}' is not optional, therefore it may not be within an optional projection ${this.location(propProjections[0])}.`)
+                this.simpleCheck(myprop.isOptional || myprop.isList || myprop.isPrimitive,
+                    `Property '${myprop.name}' is not optional, not a list or primitive, therefore it may not be within an optional projection ${this.location(propProjections[0])}.`)
                 item.property = this.copyReference(propProjections[0].property);
             }
         });

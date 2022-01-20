@@ -46,8 +46,8 @@ export class EditorDefTemplate {
                  ${conceptsWithRefShortcut.map( element =>
                 `Language.getInstance().concept("${Names.concept(element.concept)}").referenceShortcut = 
                     {
-                        propertyname: "${element.property.name}",
-                        metatype: "${element.property.type.name}"
+                        propertyName: "${element.property.name}",
+                        conceptName: "${element.property.type.name}"
                     }
                 ;`
             ).join("\n")}

@@ -1,7 +1,8 @@
 editor MetaScoper
 
 PiScoperDef {
-[ scoper ${self.name} for language ${self.languageName}
+[
+scoper ${self.name} for language ${self.languageName}
 
     [?isnamespace { ${self.namespaces horizontal separator[, ]} }]
 

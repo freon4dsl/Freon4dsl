@@ -2,10 +2,10 @@
 
 exports[`Parser properties of type  Limited Concept  1`] = `
 LimitedTest {
-  "$id": "ID-28",
+  "$id": "ID-26",
   "$typename": "LimitedTest",
   "_PI_limitedNonOpt": LimitedNonOptional {
-    "$id": "ID-25",
+    "$id": "ID-23",
     "$typename": "LimitedNonOptional",
     "_PI_other": PiElementReference {
       "_PI_pathname": Array [
@@ -256,7 +256,7 @@ LimitedTest {
     "propertyName": "limitedNonOpt",
   },
   "_PI_limitedOpt": LimitedOptional {
-    "$id": "ID-26",
+    "$id": "ID-24",
     "$typename": "LimitedOptional",
     "_PI_visMulti": Array [
       PiElementReference {
@@ -362,7 +362,7 @@ LimitedTest {
     "propertyName": "limitedOpt",
   },
   "_PI_limitedOpt2": LimitedOptional {
-    "$id": "ID-27",
+    "$id": "ID-25",
     "$typename": "LimitedOptional",
     "container": [Circular],
     "propertyIndex": undefined,
@@ -377,15 +377,15 @@ LimitedTest {
 
 exports[`Parser properties of type  Part  1`] = `
 PartsTest {
-  "$id": "ID-34",
+  "$id": "ID-32",
   "$typename": "PartsTest",
   "_PI_directParts": WithDirectParts {
-    "$id": "ID-33",
+    "$id": "ID-31",
     "$typename": "WithDirectParts",
     "_PI_optList": Array [],
     "_PI_optPart": null,
     "_PI_part": PartConcept {
-      "$id": "ID-29",
+      "$id": "ID-27",
       "$typename": "PartConcept",
       "_PI_visibility": PiElementReference {
         "_PI_pathname": Array [
@@ -412,7 +412,7 @@ PartsTest {
     },
     "_PI_partList": Array [
       PartConcept {
-        "$id": "ID-30",
+        "$id": "ID-28",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -438,7 +438,7 @@ PartsTest {
         "propertyName": "partList",
       },
       PartConcept {
-        "$id": "ID-31",
+        "$id": "ID-29",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -464,7 +464,7 @@ PartsTest {
         "propertyName": "partList",
       },
       PartConcept {
-        "$id": "ID-32",
+        "$id": "ID-30",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -504,15 +504,15 @@ PartsTest {
 
 exports[`Parser properties of type  Part and Sub Parts  1`] = `
 PartsTest {
-  "$id": "ID-81",
+  "$id": "ID-79",
   "$typename": "PartsTest",
   "_PI_directParts": WithDirectParts {
-    "$id": "ID-48",
+    "$id": "ID-46",
     "$typename": "WithDirectParts",
     "_PI_optList": Array [],
     "_PI_optPart": null,
     "_PI_part": PartConcept {
-      "$id": "ID-44",
+      "$id": "ID-42",
       "$typename": "PartConcept",
       "_PI_visibility": PiElementReference {
         "_PI_pathname": Array [
@@ -539,7 +539,7 @@ PartsTest {
     },
     "_PI_partList": Array [
       PartConcept {
-        "$id": "ID-45",
+        "$id": "ID-43",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -565,7 +565,7 @@ PartsTest {
         "propertyName": "partList",
       },
       PartConcept {
-        "$id": "ID-46",
+        "$id": "ID-44",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -591,7 +591,7 @@ PartsTest {
         "propertyName": "partList",
       },
       PartConcept {
-        "$id": "ID-47",
+        "$id": "ID-45",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -622,21 +622,21 @@ PartsTest {
     "propertyName": "directParts",
   },
   "_PI_partsOfParts": WithSubSubParts {
-    "$id": "ID-80",
+    "$id": "ID-78",
     "$typename": "WithSubSubParts",
     "_PI_optList": Array [],
     "_PI_optPart": null,
     "_PI_part": SubConcept {
-      "$id": "ID-57",
+      "$id": "ID-55",
       "$typename": "SubConcept",
       "_PI_listSub": Array [
         WithDirectParts {
-          "$id": "ID-53",
+          "$id": "ID-51",
           "$typename": "WithDirectParts",
           "_PI_optList": Array [],
           "_PI_optPart": null,
           "_PI_part": PartConcept {
-            "$id": "ID-51",
+            "$id": "ID-49",
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
@@ -663,7 +663,7 @@ PartsTest {
           },
           "_PI_partList": Array [
             PartConcept {
-              "$id": "ID-52",
+              "$id": "ID-50",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -694,12 +694,12 @@ PartsTest {
           "propertyName": "listSub",
         },
         WithDirectParts {
-          "$id": "ID-56",
+          "$id": "ID-54",
           "$typename": "WithDirectParts",
           "_PI_optList": Array [],
           "_PI_optPart": null,
           "_PI_part": PartConcept {
-            "$id": "ID-54",
+            "$id": "ID-52",
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
@@ -726,7 +726,7 @@ PartsTest {
           },
           "_PI_partList": Array [
             PartConcept {
-              "$id": "ID-55",
+              "$id": "ID-53",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -758,12 +758,12 @@ PartsTest {
         },
       ],
       "_PI_normalSub": WithDirectParts {
-        "$id": "ID-50",
+        "$id": "ID-48",
         "$typename": "WithDirectParts",
         "_PI_optList": Array [],
         "_PI_optPart": null,
         "_PI_part": PartConcept {
-          "$id": "ID-49",
+          "$id": "ID-47",
           "$typename": "PartConcept",
           "_PI_visibility": PiElementReference {
             "_PI_pathname": Array [
@@ -801,16 +801,16 @@ PartsTest {
     },
     "_PI_partList": Array [
       SubConcept {
-        "$id": "ID-70",
+        "$id": "ID-68",
         "$typename": "SubConcept",
         "_PI_listSub": Array [
           WithDirectParts {
-            "$id": "ID-69",
+            "$id": "ID-67",
             "$typename": "WithDirectParts",
             "_PI_optList": Array [],
             "_PI_optPart": null,
             "_PI_part": PartConcept {
-              "$id": "ID-68",
+              "$id": "ID-66",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -842,12 +842,12 @@ PartsTest {
           },
         ],
         "_PI_normalSub": WithDirectParts {
-          "$id": "ID-62",
+          "$id": "ID-60",
           "$typename": "WithDirectParts",
           "_PI_optList": Array [],
           "_PI_optPart": null,
           "_PI_part": PartConcept {
-            "$id": "ID-58",
+            "$id": "ID-56",
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
@@ -874,7 +874,7 @@ PartsTest {
           },
           "_PI_partList": Array [
             PartConcept {
-              "$id": "ID-59",
+              "$id": "ID-57",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -900,7 +900,7 @@ PartsTest {
               "propertyName": "partList",
             },
             PartConcept {
-              "$id": "ID-60",
+              "$id": "ID-58",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -926,7 +926,7 @@ PartsTest {
               "propertyName": "partList",
             },
             PartConcept {
-              "$id": "ID-61",
+              "$id": "ID-59",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -958,12 +958,12 @@ PartsTest {
         },
         "_PI_optListSub": Array [],
         "_PI_optionalSub": WithDirectParts {
-          "$id": "ID-67",
+          "$id": "ID-65",
           "$typename": "WithDirectParts",
           "_PI_optList": Array [],
           "_PI_optPart": null,
           "_PI_part": PartConcept {
-            "$id": "ID-63",
+            "$id": "ID-61",
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
@@ -990,7 +990,7 @@ PartsTest {
           },
           "_PI_partList": Array [
             PartConcept {
-              "$id": "ID-64",
+              "$id": "ID-62",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -1016,7 +1016,7 @@ PartsTest {
               "propertyName": "partList",
             },
             PartConcept {
-              "$id": "ID-65",
+              "$id": "ID-63",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -1042,7 +1042,7 @@ PartsTest {
               "propertyName": "partList",
             },
             PartConcept {
-              "$id": "ID-66",
+              "$id": "ID-64",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -1077,16 +1077,16 @@ PartsTest {
         "propertyName": "partList",
       },
       SubConcept {
-        "$id": "ID-79",
+        "$id": "ID-77",
         "$typename": "SubConcept",
         "_PI_listSub": Array [
           WithDirectParts {
-            "$id": "ID-76",
+            "$id": "ID-74",
             "$typename": "WithDirectParts",
             "_PI_optList": Array [],
             "_PI_optPart": null,
             "_PI_part": PartConcept {
-              "$id": "ID-75",
+              "$id": "ID-73",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -1118,12 +1118,12 @@ PartsTest {
           },
         ],
         "_PI_normalSub": WithDirectParts {
-          "$id": "ID-72",
+          "$id": "ID-70",
           "$typename": "WithDirectParts",
           "_PI_optList": Array [],
           "_PI_optPart": null,
           "_PI_part": PartConcept {
-            "$id": "ID-71",
+            "$id": "ID-69",
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
@@ -1155,12 +1155,12 @@ PartsTest {
         },
         "_PI_optListSub": Array [
           WithDirectParts {
-            "$id": "ID-78",
+            "$id": "ID-76",
             "$typename": "WithDirectParts",
             "_PI_optList": Array [],
             "_PI_optPart": null,
             "_PI_part": PartConcept {
-              "$id": "ID-77",
+              "$id": "ID-75",
               "$typename": "PartConcept",
               "_PI_visibility": PiElementReference {
                 "_PI_pathname": Array [
@@ -1192,12 +1192,12 @@ PartsTest {
           },
         ],
         "_PI_optionalSub": WithDirectParts {
-          "$id": "ID-74",
+          "$id": "ID-72",
           "$typename": "WithDirectParts",
           "_PI_optList": Array [],
           "_PI_optPart": null,
           "_PI_part": PartConcept {
-            "$id": "ID-73",
+            "$id": "ID-71",
             "$typename": "PartConcept",
             "_PI_visibility": PiElementReference {
               "_PI_pathname": Array [
@@ -1245,14 +1245,14 @@ PartsTest {
 
 exports[`Parser properties of type  Part with Optionals present 1`] = `
 PartsTest {
-  "$id": "ID-43",
+  "$id": "ID-41",
   "$typename": "PartsTest",
   "_PI_directParts": WithDirectParts {
-    "$id": "ID-42",
+    "$id": "ID-40",
     "$typename": "WithDirectParts",
     "_PI_optList": Array [
       PartConcept {
-        "$id": "ID-40",
+        "$id": "ID-38",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -1278,7 +1278,7 @@ PartsTest {
         "propertyName": "optList",
       },
       PartConcept {
-        "$id": "ID-41",
+        "$id": "ID-39",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -1305,7 +1305,7 @@ PartsTest {
       },
     ],
     "_PI_optPart": PartConcept {
-      "$id": "ID-36",
+      "$id": "ID-34",
       "$typename": "PartConcept",
       "_PI_visibility": PiElementReference {
         "_PI_pathname": Array [
@@ -1331,7 +1331,7 @@ PartsTest {
       "propertyName": "optPart",
     },
     "_PI_part": PartConcept {
-      "$id": "ID-35",
+      "$id": "ID-33",
       "$typename": "PartConcept",
       "_PI_visibility": PiElementReference {
         "_PI_pathname": Array [
@@ -1358,7 +1358,7 @@ PartsTest {
     },
     "_PI_partList": Array [
       PartConcept {
-        "$id": "ID-37",
+        "$id": "ID-35",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -1384,7 +1384,7 @@ PartsTest {
         "propertyName": "partList",
       },
       PartConcept {
-        "$id": "ID-38",
+        "$id": "ID-36",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -1410,7 +1410,7 @@ PartsTest {
         "propertyName": "partList",
       },
       PartConcept {
-        "$id": "ID-39",
+        "$id": "ID-37",
         "$typename": "PartConcept",
         "_PI_visibility": PiElementReference {
           "_PI_pathname": Array [
@@ -1450,7 +1450,7 @@ PartsTest {
 
 exports[`Parser properties of type  Primitive  1`] = `
 PrimitivesTest {
-  "$id": "ID-15",
+  "$id": "ID-13",
   "$typename": "PrimitivesTest",
   "_PI_prim": Prim {
     "$id": "ID-7",
@@ -1482,9 +1482,9 @@ PrimitivesTest {
     "propertyIndex": undefined,
     "propertyName": "prim",
   },
-  "_PI_primExtra": PrimExtra {
+  "_PI_primExtra": PrimsWithExtraText {
     "$id": "ID-8",
-    "$typename": "PrimExtra",
+    "$typename": "PrimsWithExtraText",
     "container": [Circular],
     "primBooleanWithExtra": false,
     "primIdentifierWithExtra": "EenNaam",
@@ -1511,83 +1511,9 @@ PrimitivesTest {
     "propertyIndex": undefined,
     "propertyName": "primExtra",
   },
-  "_PI_primExtraOpt": PrimExtraOptional {
-    "$id": "ID-10",
-    "$typename": "PrimExtraOptional",
-    "container": [Circular],
-    "primBooleanWithExtra": false,
-    "primIdentifierWithExtra": "",
-    "primListBooleanWithExtra": Array [],
-    "primListIdentifierWithExtra": Array [],
-    "primListNumberWithExtra": Array [],
-    "primListStringWithExtra": Array [],
-    "primNumberWithExtra": 0,
-    "primStringWithExtra": "",
-    "propertyIndex": undefined,
-    "propertyName": "primExtraOpt",
-  },
-  "_PI_primExtraOptPresent": PrimExtraOptional {
-    "$id": "ID-12",
-    "$typename": "PrimExtraOptional",
-    "container": [Circular],
-    "primBooleanWithExtra": false,
-    "primIdentifierWithExtra": "EenNaam",
-    "primListBooleanWithExtra": Array [
-      false,
-      true,
-      false,
-    ],
-    "primListIdentifierWithExtra": Array [
-      "EenNaam",
-      "NogEenNaam",
-      "EnNogEen",
-    ],
-    "primListNumberWithExtra": Array [
-      67,
-      98,
-    ],
-    "primListStringWithExtra": Array [
-      "TEKST",
-      "TEXT",
-    ],
-    "primNumberWithExtra": 45,
-    "primStringWithExtra": "TEKST",
-    "propertyIndex": undefined,
-    "propertyName": "primExtraOptPresent",
-  },
-  "_PI_primOpt": PrimOptional {
+  "_PI_separator": PrimsWithSeparator {
     "$id": "ID-9",
-    "$typename": "PrimOptional",
-    "container": [Circular],
-    "primBoolean": false,
-    "primIdentifier": "",
-    "primListBoolean": Array [],
-    "primListIdentifier": Array [],
-    "primListNumber": Array [],
-    "primListString": Array [],
-    "primNumber": 0,
-    "primString": "",
-    "propertyIndex": undefined,
-    "propertyName": "primOpt",
-  },
-  "_PI_primOptPresent": PrimOptional {
-    "$id": "ID-11",
-    "$typename": "PrimOptional",
-    "container": [Circular],
-    "primBoolean": false,
-    "primIdentifier": "",
-    "primListBoolean": Array [],
-    "primListIdentifier": Array [],
-    "primListNumber": Array [],
-    "primListString": Array [],
-    "primNumber": 0,
-    "primString": "",
-    "propertyIndex": undefined,
-    "propertyName": "primOptPresent",
-  },
-  "_PI_separator": PrimOptionalSeparator {
-    "$id": "ID-13",
-    "$typename": "PrimOptionalSeparator",
+    "$typename": "PrimsWithSeparator",
     "container": [Circular],
     "primListBooleanSeparator": Array [
       true,
@@ -1610,9 +1536,27 @@ PrimitivesTest {
     "propertyIndex": undefined,
     "propertyName": "separator",
   },
-  "_PI_terminator": PrimOptionalTerminator {
-    "$id": "ID-14",
-    "$typename": "PrimOptionalTerminator",
+  "_PI_separatorOpt": PrimsWithSeparator {
+    "$id": "ID-11",
+    "$typename": "PrimsWithSeparator",
+    "container": [Circular],
+    "primListBooleanSeparator": Array [
+      true,
+      false,
+    ],
+    "primListIdentifierSeparator": Array [],
+    "primListNumberSeparator": Array [
+      56,
+      67,
+      78,
+    ],
+    "primListStringSeparator": Array [],
+    "propertyIndex": undefined,
+    "propertyName": "separatorOpt",
+  },
+  "_PI_terminator": PrimsWithTerminator {
+    "$id": "ID-10",
+    "$typename": "PrimsWithTerminator",
     "container": [Circular],
     "primListBooleanTerminator": Array [
       true,
@@ -1629,6 +1573,21 @@ PrimitivesTest {
     "propertyIndex": undefined,
     "propertyName": "terminator",
   },
+  "_PI_terminatorOpt": PrimsWithTerminator {
+    "$id": "ID-12",
+    "$typename": "PrimsWithTerminator",
+    "container": [Circular],
+    "primListBooleanTerminator": Array [],
+    "primListIdentifierTerminator": Array [
+      "EenNaam",
+    ],
+    "primListNumberTerminator": Array [],
+    "primListStringTerminator": Array [
+      "iets",
+    ],
+    "propertyIndex": undefined,
+    "propertyName": "terminatorOpt",
+  },
   "container": null,
   "name": "someName",
   "propertyIndex": undefined,
@@ -1637,69 +1596,69 @@ PrimitivesTest {
 `;
 
 exports[`Parser properties of type  Primitive with Keyword projection  1`] = `
-WithKeywordProj {
-  "$id": "ID-24",
-  "$typename": "WithKeywordProj",
+PrimsWithKeywordTest {
+  "$id": "ID-22",
+  "$typename": "PrimsWithKeywordTest",
   "_PI_primWith": Array [
-    PrimWith {
-      "$id": "ID-16",
-      "$typename": "PrimWith",
+    PrimKeyword {
+      "$id": "ID-14",
+      "$typename": "PrimKeyword",
       "container": [Circular],
       "primBoolean": true,
       "propertyIndex": 0,
       "propertyName": "primWith",
     },
-    PrimWith {
-      "$id": "ID-17",
-      "$typename": "PrimWith",
+    PrimKeyword {
+      "$id": "ID-15",
+      "$typename": "PrimKeyword",
       "container": [Circular],
       "primBoolean": false,
       "propertyIndex": 1,
       "propertyName": "primWith",
     },
-    PrimWith {
-      "$id": "ID-18",
-      "$typename": "PrimWith",
+    PrimKeyword {
+      "$id": "ID-16",
+      "$typename": "PrimKeyword",
       "container": [Circular],
       "primBoolean": true,
       "propertyIndex": 2,
       "propertyName": "primWith",
     },
-    PrimWith {
-      "$id": "ID-19",
-      "$typename": "PrimWith",
+    PrimKeyword {
+      "$id": "ID-17",
+      "$typename": "PrimKeyword",
       "container": [Circular],
       "primBoolean": false,
       "propertyIndex": 3,
       "propertyName": "primWith",
     },
-    PrimWith {
-      "$id": "ID-20",
-      "$typename": "PrimWith",
+    PrimKeyword {
+      "$id": "ID-18",
+      "$typename": "PrimKeyword",
       "container": [Circular],
       "primBoolean": true,
       "propertyIndex": 4,
       "propertyName": "primWith",
     },
-    PrimWith {
-      "$id": "ID-21",
-      "$typename": "PrimWith",
+    PrimKeyword {
+      "$id": "ID-19",
+      "$typename": "PrimKeyword",
       "container": [Circular],
       "primBoolean": false,
       "propertyIndex": 5,
       "propertyName": "primWith",
     },
-    PrimWith {
-      "$id": "ID-22",
-      "$typename": "PrimWith",
+    PrimKeyword {
+      "$id": "ID-20",
+      "$typename": "PrimKeyword",
       "container": [Circular],
       "primBoolean": false,
       "propertyIndex": 6,
       "propertyName": "primWith",
     },
-    PrimWith {
-      "$id": "ID-23",
-      "$typename": "PrimWith",
+    PrimKeyword {
+      "$id": "ID-21",
+      "$typename": "PrimKeyword",
       "container": [Circular],
       "primBoolean": true,
       "propertyIndex": 7,
@@ -1715,10 +1674,10 @@ WithKeywordProj {
 
 exports[`Parser properties of type  Ref  1`] = `
 RefsTest {
-  "$id": "ID-89",
+  "$id": "ID-87",
   "$typename": "RefsTest",
   "_PI_directRefs": WithDirectRefs {
-    "$id": "ID-82",
+    "$id": "ID-80",
     "$typename": "WithDirectRefs",
     "_PI_ref": PiElementReference {
       "_PI_pathname": Array [
@@ -1780,11 +1739,11 @@ RefsTest {
   },
   "_PI_indirectRefs": null,
   "_PI_withSeparator": RefsWithSeparator {
-    "$id": "ID-88",
+    "$id": "ID-86",
     "$typename": "RefsWithSeparator",
     "_PI_optList": Array [
       WithDirectRefs {
-        "$id": "ID-85",
+        "$id": "ID-83",
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
@@ -1825,7 +1784,7 @@ RefsTest {
         "propertyName": "optList",
       },
       WithDirectRefs {
-        "$id": "ID-86",
+        "$id": "ID-84",
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
@@ -1866,7 +1825,7 @@ RefsTest {
         "propertyName": "optList",
       },
       WithDirectRefs {
-        "$id": "ID-87",
+        "$id": "ID-85",
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
@@ -1909,7 +1868,7 @@ RefsTest {
     ],
     "_PI_partList": Array [
       WithDirectRefs {
-        "$id": "ID-83",
+        "$id": "ID-81",
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
@@ -1970,7 +1929,7 @@ RefsTest {
         "propertyName": "partList",
       },
       WithDirectRefs {
-        "$id": "ID-84",
+        "$id": "ID-82",
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
@@ -2024,10 +1983,10 @@ RefsTest {
 
 exports[`Parser properties of type  Ref with Optionals present 1`] = `
 RefsTest {
-  "$id": "ID-100",
+  "$id": "ID-98",
   "$typename": "RefsTest",
   "_PI_directRefs": WithDirectRefs {
-    "$id": "ID-90",
+    "$id": "ID-88",
     "$typename": "WithDirectRefs",
     "_PI_optRef": PiElementReference {
       "_PI_pathname": Array [
@@ -2128,11 +2087,11 @@ RefsTest {
     "propertyName": "directRefs",
   },
   "_PI_indirectRefs": WithSubSubRefs {
-    "$id": "ID-96",
+    "$id": "ID-94",
     "$typename": "WithSubSubRefs",
     "_PI_optList": Array [
       WithDirectRefs {
-        "$id": "ID-95",
+        "$id": "ID-93",
         "$typename": "WithDirectRefs",
         "_PI_optRef": PiElementReference {
           "_PI_pathname": Array [
@@ -2234,7 +2193,7 @@ RefsTest {
       },
     ],
     "_PI_optPart": WithDirectRefs {
-      "$id": "ID-92",
+      "$id": "ID-90",
       "$typename": "WithDirectRefs",
       "_PI_optRef": PiElementReference {
         "_PI_pathname": Array [
@@ -2335,7 +2294,7 @@ RefsTest {
       "propertyName": "optPart",
     },
     "_PI_part": WithDirectRefs {
-      "$id": "ID-91",
+      "$id": "ID-89",
       "$typename": "WithDirectRefs",
       "_PI_optRef": PiElementReference {
         "_PI_pathname": Array [
@@ -2437,7 +2396,7 @@ RefsTest {
     },
     "_PI_partList": Array [
       WithDirectRefs {
-        "$id": "ID-93",
+        "$id": "ID-91",
         "$typename": "WithDirectRefs",
         "_PI_optRef": PiElementReference {
           "_PI_pathname": Array [
@@ -2538,7 +2497,7 @@ RefsTest {
         "propertyName": "partList",
       },
       WithDirectRefs {
-        "$id": "ID-94",
+        "$id": "ID-92",
         "$typename": "WithDirectRefs",
         "_PI_optRef": PiElementReference {
           "_PI_pathname": Array [
@@ -2644,11 +2603,11 @@ RefsTest {
     "propertyName": "indirectRefs",
   },
   "_PI_withSeparator": RefsWithSeparator {
-    "$id": "ID-99",
+    "$id": "ID-97",
     "$typename": "RefsWithSeparator",
     "_PI_optList": Array [
       WithDirectRefs {
-        "$id": "ID-97",
+        "$id": "ID-95",
         "$typename": "WithDirectRefs",
         "_PI_optRef": PiElementReference {
           "_PI_pathname": Array [
@@ -2749,7 +2708,7 @@ RefsTest {
         "propertyName": "optList",
       },
       WithDirectRefs {
-        "$id": "ID-98",
+        "$id": "ID-96",
         "$typename": "WithDirectRefs",
         "_PI_optRef": PiElementReference {
           "_PI_pathname": Array [

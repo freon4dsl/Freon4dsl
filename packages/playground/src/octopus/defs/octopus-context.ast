@@ -22,16 +22,16 @@ concept ModelElementReference {
 	 */
     reference surroundingClassifier: IClassifier;
 
-    reference feature: IModelElement; // the model element that is referenced.
+    reference feature?: IModelElement; // the model element that is referenced.
     isInheritedFeature: boolean; // true if 'getModelElement().getOwner()' is not equal to 'getSurroundingClassifier()'.
 }
 
 concept OclContext implements IModelElement {
     owningModelelement: ModelElementReference; // the element to which the OCL expression is attached.
     isDefinition: boolean; // true if the OCL expression defines an attribute or operation.
-    definedOperation?: Operation; // the operation that is defined in the OCL expression using the
+    reference definedOperation?: Operation; // the operation that is defined in the OCL expression using the
                                             // def construct.
-    definedAttribute?: Attribute; // the attribute that is defined in the OCL expression using the
+    reference definedAttribute?: Attribute; // the attribute that is defined in the OCL expression using the
                                             // def construct.
     expression: OclExpression; // The OCL expression itself.
     usageType: OclUsageType; // The role that the OCL plays. E.g. invariant, precondition, init expression, derivation rule, etc.

@@ -230,8 +230,9 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                     }
                     // optionality for lists is ignored
                     if (piProperty.isList && piProperty.isOptional) {
+                        // TODO get wording of error message right
                         this.simpleWarning(false,
-                            `Property is a list, optionality will be ignored ${this.location(piProperty)}.`);
+                            `Property '${piProperty.name}' is a list and therefore always optional, optionality will be ignored ${this.location(piProperty)}.`);
                         piProperty.isOptional = false;
                     }
                 }
@@ -274,7 +275,7 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                     this.checkPrimitiveType(myType, element);
                     if (element.isOptional) {
                         this.simpleWarning(false,
-                            `Property with primitive type may not be optional, optionality will be ignored ${this.location(element)}.`);
+                            `Property '${element.name}' has primitive type, may therefore not be optional, optionality will be ignored ${this.location(element)}.`);
                         element.isOptional = false;
                     }
                     // check initial value(s)

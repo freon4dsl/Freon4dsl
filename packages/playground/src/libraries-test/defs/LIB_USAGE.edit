@@ -1,7 +1,8 @@
 editor default
 
 LibUnit {
-    [ ${self.name}
+    [
+    ${self.name}
         expressions:
         ${self.exps vertical terminator[;]}
     ]

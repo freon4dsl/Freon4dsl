@@ -35,12 +35,12 @@ concept UmlClass implements IClass {
 }
 
 interface IClassifier base IPackagableElement {
-    attributes?: Attribute[];
-    operations?: Operation[];
-    navigations?: AssociationEnd[];
-    reference generalizations?: IClassifier[];
-    reference subClasses?: IClassifier[];
-    reference interfaces?: UmlInterface[];
+    attributes: Attribute[];
+    operations: Operation[];
+    navigations: AssociationEnd[];
+    reference generalizations: IClassifier[];
+    reference subClasses: IClassifier[];
+    reference interfaces: UmlInterface[];
     states: State[];
     classAttributes: Attribute[];
     classOperations: Operation[];
@@ -105,8 +105,8 @@ concept Operation implements IPackagableElement {
 //    isAbstract: boolean;
 //    isInfix: boolean;
 //    isPrefix: boolean;
-    pre?: OclPreStatement[];
-    post?: OclPostStatement[];
+    pre: OclPreStatement[];
+    post: OclPostStatement[];
 }
 concept UmlPackage implements IModelElement {
 //    subpackages: UmlPackage[];
@@ -124,7 +124,7 @@ interface IPackagableElement base IModelElement {
 concept Parameter implements IModelElement {
     reference type: IClassifier;
 //    reference owner: Operation;
-    directionKind: ParameterDirectionKind;
+    directionKind?: ParameterDirectionKind;
 }
 //concept PathName {
 //    names: string[];
@@ -141,7 +141,7 @@ concept State implements IPackagableElement {
 concept StructuralFeature implements IPackagableElement {
     reference type: IClassifier;
 //    reference owner: IClassifier;
-    multiplicity: MultiplicityKind;
+    multiplicity?: MultiplicityKind;
 //    isOrdered?: boolean;
 //    isDerived?: boolean;
 //    isUnique?: boolean;
@@ -170,9 +170,9 @@ concept OclPostStatement {
 //    parts: VariableDeclaration[];
 //}
 limited ParameterDirectionKind {
-    IN    = { name: "IN" }
-    OUT   = { name: "OUT" }
-    INOUT = { name: "INOUT" }
+    IN    = { name: "<in>" }
+    OUT   = { name: "<out>>" }
+    INOUT = { name: "<inout>" }
 }
 //concept VariableDeclaration implements IModelElement {
 //    reference type: IClassifier;
@@ -180,7 +180,7 @@ limited ParameterDirectionKind {
 //    isIteratorVar: boolean;
 //}
 limited VisibilityKind {
-	PUBLIC = { name: "PUBLIC" }
-	PRIVATE = { name: "PRIVATE" }
-	PROTECTED = { name: "PROTECTED" }
+	PUBLIC = { name: "+" }
+	PRIVATE = { name: "-" }
+	PROTECTED = { name: "#" }
 }

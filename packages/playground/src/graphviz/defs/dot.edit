@@ -57,20 +57,4 @@ Port {[
 ]}
 DirectedEdgeExp{ symbol = "->" }
 UnDirectedEdgeExp{ symbol = "--" }
-AttrType {[
-        ${GRAPH  [GRAPH]}
-        ${NODE  [NODE]}
-        ${EDGE  [EDGE]}
-    ]}
-CompassPoint {[
-        ${north  [n]}
-        ${northeast  [ne]}
-        ${east  [e]}
-        ${southeast  [se]}
-        ${south  [s]}
-        ${southwest  [sw]}
-        ${west  [w]}
-        ${northwest  [nw]}
-        ${central  [c]}
-        ${dash  [-]}
-    ]}
+

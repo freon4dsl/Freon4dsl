@@ -1,13 +1,15 @@
 editor First
 
 PiEditorDef {
-    [editor ${name} for language ${languageName}
+    [
+    editor ${name} for language ${languageName}
     ${conceptEditors vertical}
     ]
 }
 
 PiEditConcept {
-    [${concept} {
+    [
+    ${concept} {
     ${projection}
     [?trigger ${trigger}]
     [?symbol ${operator}]

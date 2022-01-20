@@ -2,7 +2,8 @@ editor default // long name: jetbrains.mps.samples.heating
 
 HeatingPlan {
 
-    [Heating plan for room: ${self.name}
+    [
+    Heating plan for room: ${self.name}
 
     ${self.dailyPlans vertical }
     ]

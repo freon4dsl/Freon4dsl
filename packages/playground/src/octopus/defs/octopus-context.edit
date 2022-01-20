@@ -1,15 +1,16 @@
-editor YYY
+editor default
 
 OclPart {
-        [package ${pack}
-            ${constraints vertical}
+        [
+        OCL expressions for ${self.name}
+            ${self.constraints vertical }
         ]
 }
 
 OclContext {
     [
-    context ${owningModelelement}
-    ${usageType}: [? ${definedOperation} =][? ${definedAttribute} =]${expression}
+    context ${self.owningModelelement}
+    inv: ${self.expression}
     ]
 
 }

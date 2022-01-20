@@ -1,8 +1,8 @@
 editor default
 
 Calculator {
-
-    [Calculator ${self.name}
+    [
+    Calculator ${self.name}
     ${self.inputFields vertical }
 
     ${self.outputFields vertical }
@@ -10,22 +10,18 @@ Calculator {
 }
 
 InputField {
-
     [input ${self.name}]
 }
 
 OutputField {
-
     [output ${self.expression}]
 }
 
 InputFieldReference {
-
     [${self.field}]
 }
 
 NumberLiteralExpression {
-
         [${self.value}]
 }
 
