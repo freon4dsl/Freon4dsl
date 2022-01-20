@@ -8,9 +8,8 @@ export class CustomDemoActions implements PiActions {
     binaryExpressionCreators: PiBinaryExpressionCreator[] = MANUAL_BINARY_EXPRESSION_CREATORS;
     customBehaviors: PiCustomBehavior[] = MANUAL_CUSTOM_BEHAVIORS;
     expressionCreators: PiExpressionCreator[] = MANUAL_EXPRESSION_CREATORS;
-    keyboardActions: KeyboardShortcutBehavior[] = MANUAL_KEYBOARD;
-
 }
+
 export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     // Add your own custom expression creators here
     {

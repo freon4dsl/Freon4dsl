@@ -5,16 +5,18 @@ import {
     Box,
     createDefaultExpressionBox,
     KeyPressAction,
-    TextBox, BoxFactory
+    TextBox, BoxFactory, PiTableDefinition
 } from "@projectit/core";
 import { DemoNumberLiteralExpression } from "../language/gen";
 
 export class CustomDemoProjection implements PiProjection {
     rootProjection: PiProjection;
-    name: string = "";
+    name: string = "manual";
 
-    constructor(name: string) {
-        this.name = name;
+    constructor(name?: string) {
+        if (!!name) {
+            this.name = name;
+        }
     }
 
     getBox(element: PiElement): Box {
@@ -22,6 +24,12 @@ export class CustomDemoProjection implements PiProjection {
             return this.getDemoNumberLiteralExpressionBox(element);
         }
 
+        return null;
+    }
+
+
+    getTableDefinition(conceptName: string): PiTableDefinition {
+        // Add any handmade table cells of your own before next statement
         return null;
     }
 
