@@ -77,7 +77,7 @@ export class PiEditor {
         }
         // this.keyboardActions = actions.keyboardActions;
 
-        actions.customBehaviors.forEach(ca => this.new_pi_actions.push(PiCustomAction.create({
+        actions.customActions.forEach(ca => this.new_pi_actions.push(PiCustomAction.create({
             activeInBoxRoles: ca.activeInBoxRoles,
             boxRoleToSelect: ca.boxRoleToSelect,
             caretPosition: ca.caretPosition,

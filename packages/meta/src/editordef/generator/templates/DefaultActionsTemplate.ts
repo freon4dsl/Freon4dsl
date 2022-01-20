@@ -24,7 +24,7 @@ export class DefaultActionsTemplate {
                 PiActions,
                 PiCreateBinaryExpressionAction,
                 PiCaret,
-                PiCustomBehavior,
+                PiCustomAction,
                 PiEditor,
                 PiElement,
                 PiBinaryExpression,
@@ -64,7 +64,7 @@ export class DefaultActionsTemplate {
         )}
             ];
             
-            export const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
+            export const CUSTOM_ACTIONS: PiCustomAction[] = [
                 ${this.customActionsForOptional(language, editorDef)}
                 ${this.customActionForParts(language, editorDef)}
                 ${this.customActionForReferences(language, editorDef)}
@@ -83,7 +83,7 @@ export class DefaultActionsTemplate {
                                 const firstLiteral: string = item.firstLiteral();
                                 const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
                                 const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.propertyName());
-                                result += `
+                                result += `PiCustomAction.create(
                                     {
                                         trigger: "${firstLiteral === "" ? optionalPropertyName : firstLiteral}",
                                         activeInBoxRoles: ["optional-${optionalPropertyName}"],
@@ -92,7 +92,7 @@ export class DefaultActionsTemplate {
                                             return null;
                                         },
                                         boxRoleToSelect: "${ce.concept.name}-${optionalPropertyName}"
-                                    }`;
+                                    })`;
                                 result += ","
                             }
                         }
@@ -112,7 +112,7 @@ export class DefaultActionsTemplate {
                 const referredConcept = reference.type.referred;
                 const conceptEditor = editorDef.findConceptEditor(referredConcept);
                 const trigger = (!!conceptEditor && !!conceptEditor.trigger) ? conceptEditor.trigger : reference.name;
-                result += `
+                result += `PiCustomAction.create(
                 {   // Action to insert new reference to a concept
                     activeInBoxRoles: ["${Roles.newConceptReferencePart(reference)}"],
                     trigger: "${trigger}",
@@ -123,7 +123,7 @@ export class DefaultActionsTemplate {
                         return newBase.referred;
                     },
                     boxRoleToSelect: "${this.cursorLocation(editorDef, concept)}"  /* CURSOR 1 */
-                }
+                })
                 `;
                 result += ",";
             })
