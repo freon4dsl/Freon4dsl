@@ -104,6 +104,7 @@ export class ProjectionTemplate {
         // TODO add projections for abstract concepts and interfaces
         // get all units and all concepts that are not bin expressions, limited concepts, or abstract
         const allClassifiersWithProjection = this.findClassifiersWithProjection(language, projectionGroup);
+        const classifiersWithTableProjection: PiClassifier[] = this.tableProjections.map(t => t.concept.referred);
 
         // TODO sort out unused imports
         const modelImports: string[] = language.units.map(u => `${Names.classifier(u)}`)
@@ -116,6 +117,7 @@ export class ProjectionTemplate {
             import {
                 BoxFactory,
                 Box,
+                PiTableDefinition,
                 TableUtil,
                 ${Names.PiElement},
                 ${Names.PiProjection},
@@ -164,6 +166,27 @@ export class ProjectionTemplate {
                     }
                     return null;
                 }
+                
+                getTableDefinition(conceptName: string): PiTableDefinition {
+                    if (conceptName === null || conceptName.length === 0) {
+                        return null;
+                    }
+
+                    switch( conceptName ) {
+                        ${classifiersWithTableProjection.map(c => `
+                        case "${Names.classifier(c)}" : return this.${Names.tableCellFunction(c)} ();`).join("  ")}
+                    }
+                    // nothing fits
+                    return null;
+                }
+                
+                private ${Names.binaryProjectionFunction()} (element: ${Names.allConcepts(language)}) {
+                    ${binaryConceptsWithDefaultProjection.map(c => 
+                     `if (element instanceof ${Names.classifier(c)}) {
+                        return this.createBinaryBox(element, "${editorDef.findConceptEditor(c).symbol}");
+                     }`).join(" else ")}
+                     return null;
+                }              
 
                 ${allClassifiersWithProjection.map(c => this.generateProjectionForClassfier(language, c, projectionGroup.findProjectionForType(c))).join("\n")}                                        
         `;
@@ -364,15 +387,15 @@ export class ProjectionTemplate {
             return `TableUtil.tableBoxColumnOriented(
                 ${elementVarName},
                 "${property.name}",
-                [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")}] ,
-                [ ${cellGetters} ],
+                this.rootProjection.getTableDefinition("${property.type.referred.name}").headers,
+                this.rootProjection.getTableDefinition("${property.type.referred.name}").cells,
                 ExampleEnvironment.getInstance().editor)`;
         } else {
             return `TableUtil.tableBoxRowOriented(
                 ${elementVarName},
                 "${property.name}",
-                [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")}] ,
-                [ ${cellGetters} ],
+                this.rootProjection.getTableDefinition("${property.type.referred.name}").headers,
+                this.rootProjection.getTableDefinition("${property.type.referred.name}").cells,
                 ExampleEnvironment.getInstance().editor)`;
         }
     }
@@ -471,4 +494,29 @@ export class ProjectionTemplate {
                         )`;
     }
 
+    private generateTableCellFunction(language: PiLanguage, c: PiClassifier, piEditConcept: PiEditConcept): string {
+        // find the projection to use for the type of the given property
+        const myTableProjection: PiEditTableProjection = piEditConcept?.tableProjections[0];
+        if (!!myTableProjection) {
+            // create the cell getters
+            let cellGetters: string = '';
+            myTableProjection.cells.forEach((cell, index) =>
+                cellGetters += `(cell${index}: ${Names.classifier(c)}): Box => {
+                    return ${this.itemProjection(cell, `cell${index}`, index, index, c, language)}
+                },\n`
+            );
+
+            return `${Names.tableCellFunction(c)}(): PiTableDefinition {
+                const result: PiTableDefinition = {
+                    headers: [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")} ],
+                    cells: [${cellGetters}]
+                };
+                return result;
+            }
+        `;
+        } else {
+            console.log("INTERNAL PROJECTIYT ERROR in generaateTableCellFunction");
+            return "";
+        }
+    }
 }

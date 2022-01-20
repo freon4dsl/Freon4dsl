@@ -1,5 +1,6 @@
 import { Box } from "./internal";
 import { PiElement } from "../language";
+import { PiTableDefinition } from "./PiTables";
 
 /**
  * Interface for the projection.
@@ -10,6 +11,11 @@ export interface PiProjection {
      * returns the box for `element`.
      */
     getBox(element: PiElement): Box;
+
+    /**
+     * returns the table cells for `element`.
+     */
+    getTableDefinition(conceptName: string): PiTableDefinition ;
 
     rootProjection: PiProjection;
     name: string;
