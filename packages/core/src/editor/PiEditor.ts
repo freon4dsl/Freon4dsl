@@ -75,17 +75,7 @@ export class PiEditor {
         if (!actions) {
             return;
         }
-        // this.keyboardActions = actions.keyboardActions;
-
-        actions.customActions.forEach(ca => this.new_pi_actions.push(PiCustomAction.create({
-            activeInBoxRoles: ca.activeInBoxRoles,
-            boxRoleToSelect: ca.boxRoleToSelect,
-            caretPosition: ca.caretPosition,
-            trigger: ca.trigger,
-            action: ca.action,
-            isApplicable: ca.isApplicable,
-            referenceShortcut: ca.referenceShortcut
-        })));
+        actions.customActions.forEach(ca => this.new_pi_actions.push(ca));
         actions.binaryExpressionActions.forEach(ca => this.new_pi_actions.push(ca));
     }
 
