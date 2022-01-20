@@ -8,7 +8,6 @@ export class CustomActionsTemplate {
             import {
                 PiBinaryExpressionCreator,
                 PiCustomBehavior,
-                PiExpressionCreator,
                 PiActions
             } from "${PROJECTITCORE}";
  
@@ -24,12 +23,7 @@ export class CustomActionsTemplate {
             export class ${Names.customActions(language)} implements PiActions {
                 binaryExpressionCreators: PiBinaryExpressionCreator[] = MANUAL_BINARY_EXPRESSION_CREATORS;
                 customBehaviors: PiCustomBehavior[] = MANUAL_CUSTOM_BEHAVIORS;
-                expressionCreators: PiExpressionCreator[] = MANUAL_EXPRESSION_CREATORS;
             }
-
-            export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
-                // Add your own custom expression creators here
-            ];
 
             export const MANUAL_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
                 // Add your own custom binary expression creators here

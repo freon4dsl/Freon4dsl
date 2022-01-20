@@ -17,8 +17,6 @@ export function triggerToString(t: PiTriggerType): string {
 
 // tag::action-interface[]
 export interface PiActions {
-    // expressionCreators: PiExpressionCreator[];
-
     binaryExpressionCreators: PiBinaryExpressionCreator[];
 
     customBehaviors: PiCustomBehavior[];
@@ -48,13 +46,6 @@ export interface PiBehavior {
 
 }
 // end::PiBehavior[]
-
-/**
- * Special behavior for creating an expression.
- */
-export interface PiExpressionCreator extends PiBehavior {
-    expressionBuilder: (box: Box, trigger: string, editor: PiEditor, propertyName?: string) => PiExpression;
-}
 
 /**
  * Special behavior for creating a binary expression.

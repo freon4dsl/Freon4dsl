@@ -30,7 +30,6 @@ export class DefaultActionsTemplate {
                 PiCustomBehavior,
                 PiEditor,
                 PiElement,
-                PiExpressionCreator,
                 PiBinaryExpression,
                 PiKey,
                 PiLogger,
@@ -48,8 +47,6 @@ export class DefaultActionsTemplate {
              * This module implements all default actions for the editor.
              * These default actions are merged with custom actions.
              */ 
-            export const EXPRESSION_CREATORS: PiExpressionCreator[] = [];
-
             export const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
                 ${language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
             `{
