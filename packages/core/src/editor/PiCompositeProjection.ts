@@ -1,6 +1,7 @@
 import { observable, makeObservable, action } from "mobx";
 import { PiElement } from "../language";
 import { Box, BoxFactory, LabelBox, OrderedList, PiProjection } from "./internal";
+import { PiTableDefinition } from "./PiTables";
 
 export class PiCompositeProjection implements PiProjection {
     private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
@@ -33,6 +34,22 @@ export class PiCompositeProjection implements PiProjection {
         }
         // return a default box if nothing has been  found.
         return new LabelBox(element, "unknown-projection", () => "unknown box for " + element);
+    }
+
+    getTableDefinition(conceptName: string): PiTableDefinition {
+        for (let p of this.projections.toArray()) {
+            const result = p.element.getTableDefinition(conceptName);
+            if (result !== null) {
+                return result;
+            }
+        }
+        // return a default box if nothing has been  found.
+        return {
+            headers: [conceptName],
+            cells: [(element: PiElement) => {
+                return this.getBox(element);
+            }]
+        };
     }
 
     addProjection(p: PiProjection) {

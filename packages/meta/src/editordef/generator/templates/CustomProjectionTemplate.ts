@@ -1,12 +1,11 @@
 import { Names, PROJECTITCORE } from "../../../utils";
 import { PiLanguage } from "../../../languagedef/metalanguage";
-import { PiEditUnit } from "../../metalanguage";
 
 export class CustomProjectionTemplate {
 
     generate(language: PiLanguage): string {
         return `
-            import { ${Names.PiProjection}, ${Names.PiElement}, ${Names.Box} } from "${PROJECTITCORE}";
+            import { ${Names.PiProjection}, ${Names.PiElement}, ${Names.Box}, PiTableDefinition } from "${PROJECTITCORE}";
             
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to
@@ -31,6 +30,11 @@ export class CustomProjectionTemplate {
                     // Add any handmade projections of your own before next statement 
                     return null;
                 }            
+                
+                getTableDefinition(conceptName: string): PiTableDefinition {
+                    // Add any handmade table cells of your own before next statement 
+                    return null;
+                }              
             }
         `;
     }
