@@ -271,8 +271,6 @@ export class PiEditProjectionText extends PiDefinitionElement {
     }
 
     text: string = "";
-    // TODO should style be here?
-    style: string = "propertykeyword";
 
     toString(): string {
         return this.text;

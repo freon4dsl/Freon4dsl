@@ -45,7 +45,6 @@ export class PiLanguage extends PiLangElement {
     }
 
     findExpressionBase(): PiExpressionConcept {
-        // TODO why the return inside the find???
         // TODO rethink the inheritance structure of expressions: should binaries always inherit from expression, and more questions!
         // TODO the following depends on the order of concepts in the .ast file
         const result = this.concepts.find(c => {
