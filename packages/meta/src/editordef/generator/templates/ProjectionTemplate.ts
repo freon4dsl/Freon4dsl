@@ -1,6 +1,6 @@
 import {
     PiBinaryExpressionConcept,
-    PiClassifier,
+    PiClassifier, PiConcept,
     PiConceptProperty,
     PiExpressionConcept,
     PiLanguage,
@@ -29,156 +29,25 @@ import {
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
 export class ProjectionTemplate {
-    private tableProjections: PiEditTableProjection[] = []; // holds all table projections during the generation
+    private tableProjections: PiEditTableProjection[] = []; // holds all table projections during the generation of a single projection group
+    private modelImports: string[] = []; // holds all imports from LANGUAGE during the generation of a single projection group
+    private coreImports: string[] = []; // holds all imports from ProjectIt/core during the generation of a single projection group
+    private envImports: string[] = []; // holds all imports from ENVIRONMENT during the generation of a single projection group
     // the values for the boolean keywords are set on initialization (by a call to 'setStandardBooleanKeywords')
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
 
     // TODO take super projections into account
-    generateProjectionDefault(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
-        const projectionGroup: PiEditProjectionGroup = editorDef.getDefaultProjectiongroup();
+    generateProjectionGroup(language: PiLanguage, projectionGroup: PiEditProjectionGroup, relativePath: string): string {
 
         // binary concepts are only handled in the default projection group
-        let binaryConcepts = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept));
-        // sort the concepts such that base concepts come last
-        binaryConcepts = sortConceptsWithBase(binaryConcepts, language.findExpressionBase());
-
-        // reset the table projections, then remember all table projections
-        this.tableProjections = [];
-        this.tableProjections.push(...projectionGroup.allTableProjections());
-
-        // get all units and all concepts that are not bin expressions, limited concepts, or abstract
-        const allClassifiersWithProjection = this.findClassifiersWithNormalProjection(language, projectionGroup);
-        const classifiersWithTableProjection: PiClassifier[] = this.tableProjections.map(t => t.classifier.referred);
-
-        // TODO sort out unused imports
-        const modelImports: string[] = language.units.map(u => `${Names.classifier(u)}`)
-            .concat(language.concepts.map(c => `${Names.classifier(c)}`)
-                .concat(language.interfaces.map(c => `${Names.interface(c)}`)));
-
-        // differences with the template in 'generateProjectionGroup':
-        // (1) extra additions to the 'getBox' method
-        // (2) methods '_getBinaryExpressionBox' and 'createBinaryBox' are added
-        return `
-            import { observable, makeObservable } from "mobx";
-
-            import {
-                BoxFactory,
-                Box,
-                PiTableDefinition,
-                TableUtil,
-                ${Names.PiElement},
-                ${Names.PiProjection},
-                ${Names.PiCompositeProjection}, 
-                createDefaultBinaryBox,
-                createDefaultExpressionBox,
-                isPiBinaryExpression,
-                ${Names.PiBinaryExpression},
-                BoxUtils
-            } from "${PROJECTITCORE}";
-
-            import { ${Names.PiElementReference}, ${Names.allConcepts(language)}, ${modelImports.map(c => `${c}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
-
-             /**
-             * Class ${Names.projectionDefault(language)} implements the projections for elements of
-             * language ${language.name} defined in the editor named ${projectionGroup.name}.
-             * These are merged with the custom build additions and other definition-based editor parts
-             * in a three-way manner. For each modelelement,
-             * (1) if a custom build creator/behavior is present, this is used,
-             * (2) if a creator/behavior based on one of the editor definition is present, this is used,
-             * (3) if neither (1) nor (2) yields a result, the default is used.
-             */
-            export class ${Names.projectionDefault(language)} implements ${Names.PiProjection} {
-                rootProjection: ${Names.PiCompositeProjection};
-                showBrackets: boolean = false;
-                name: string = "${projectionGroup.name}";
-
-                constructor() {
-                    makeObservable(this, {
-                        showBrackets: observable,
-                    });
-                }
-
-                getBox(element: ${Names.PiElement}): Box {
-                    if (element === null ) {
-                        return null;
-                    }
-
-                    switch( element.piLanguageConcept() ) {
-                        ${allClassifiersWithProjection.map(c => `
-                        case "${Names.classifier(c)}" : return this.${Names.projectionFunction(c)} (element as ${Names.classifier(c)});`
-                            ).join("  ")}
-                        ${binaryConcepts.map(c => // these are added only in the default projection group
-                        `case "${Names.classifier(c)}" : return this.${Names.binaryProjectionFunction()} (element as ${Names.classifier(c)});`
-                            ).join("  ")}
-                    }
-                    // nothing fits
-                    throw new Error("No box defined for this expression:" + element.piId());
-                }
-                
-                getTableDefinition(conceptName: string): PiTableDefinition {
-                    if (conceptName === null || conceptName.length === 0) {
-                        return null;
-                    }
-
-                    switch( conceptName ) {
-                        ${classifiersWithTableProjection.map(c => `
-                        case "${Names.classifier(c)}" : return this.${Names.tabelDefinitionFunction(c)} ();`).join("  ")}
-                    }
-                    // nothing fits
-                    return null;
-                }                     
-
-                ${allClassifiersWithProjection.map(c => this.generateProjectionForClassfier(language, c, projectionGroup.findProjectionForType(c))).join("\n")}                                        
-
-                ${classifiersWithTableProjection.map(c => this.generateTableDefinition(language, c, projectionGroup.findTableProjectionForType(c))).join("\n")}
-
-                ${ !!binaryConcepts && binaryConcepts.length > 0
-                    // only add these two methods when there are binary concepts, i.e. only for the default projection group
-                    ?
-                    `private ${Names.binaryProjectionFunction()} (element: ${Names.allConcepts(language)}) {
-                                ${binaryConcepts.map(c =>
-                        `if (element instanceof ${Names.classifier(c)}) {
-                                    return this.createBinaryBox(element, "${editorDef.getDefaultProjectiongroup().findExtrasForType(c).symbol}");
-                                 }`).join(" else ")}
-                                 return null;
-                    }              
-                                            
-                    /**
-                     *  Create a standard binary box to ensure binary expressions can be edited easily
-                     */
-                    private createBinaryBox(exp: PiBinaryExpression, symbol: string): Box {
-                        const binBox = createDefaultBinaryBox(exp, symbol, ${Names.environment(language)}.getInstance().editor);
-                        if (
-                            this.showBrackets &&
-                            !!exp.piContainer().container &&
-                            isPiBinaryExpression(exp.piContainer().container)
-                        ) {
-                            return BoxFactory.horizontalList(exp, "brackets", [
-                                BoxUtils.labelBox(exp, "(", "bracket-open", true),
-                                binBox,
-                                BoxUtils.labelBox(exp, ")", "bracket-close", true)
-                            ]);
-                        } else {
-                            return binBox;
-                        }
-                    }`
-                : ``
-                }   
-            }`;
-    }
-
-    setStandardBooleanKeywords(editorDef: PiEditUnit) {
-        // get the standard labels for true and false
-        const stdLabels: BoolKeywords = editorDef.getDefaultProjectiongroup().standardBooleanProjection;
-        if (!!stdLabels) {
-            this.trueKeyword = stdLabels.trueKeyword;
-            this.falseKeyword = stdLabels.falseKeyword;
+        let binaryConcepts: PiConcept[] = [];
+        if (projectionGroup.name === Names.defaultProjectionName) {
+             binaryConcepts = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept));
+            // sort the concepts such that base concepts come last
+            binaryConcepts = sortConceptsWithBase(binaryConcepts, language.findExpressionBase());
         }
-    }
 
-    generateProjectionGroup(language: PiLanguage, projectionGroup: PiEditProjectionGroup, relativePath: string): string {
         // reset the table projections, then remember all table projections
         this.tableProjections = [];
         this.tableProjections.push(...projectionGroup.allTableProjections());
@@ -187,32 +56,22 @@ export class ProjectionTemplate {
         const allClassifiersWithProjection = this.findClassifiersWithNormalProjection(language, projectionGroup);
         const classifiersWithTableProjection: PiClassifier[] = this.tableProjections.map(t => t.classifier.referred);
 
-        // TODO sort out unused imports
-        const modelImports: string[] = language.units.map(u => `${Names.classifier(u)}`)
-            .concat(language.concepts.map(c => `${Names.classifier(c)}`)
-                .concat(language.interfaces.map(c => `${Names.interface(c)}`)));
+        // reset the imports
+        // the neccessary imports are gathered while making the methods in the template
+        // they are added to the generated 'coreText' string afterwards
+        this.modelImports = [];
+        this.envImports = [];
+        this.coreImports = [Names.PiProjection, Names.PiCompositeProjection, Names.PiElement, "PiTableDefinition", "Box"]; // these are always used
+        if (!!binaryConcepts && binaryConcepts.length > 0 && projectionGroup.name === Names.defaultProjectionName) {
+            this.modelImports.push(Names.allConcepts(language), Names.PiElementReference);
+            this.coreImports.push("isPiBinaryExpression", "PiBinaryExpression", "createDefaultBinaryBox", "BoxFactory", "BoxUtils");
+            this.envImports.push(Names.environment(language));
+        }
+        binaryConcepts.forEach(c =>
+            this.addToIfNotPresent(this.modelImports, Names.classifier(c))
+        );
 
-        return `
-            import { observable, makeObservable } from "mobx";
-
-            import {
-                BoxFactory,
-                Box,
-                PiTableDefinition,
-                TableUtil,
-                ${Names.PiElement},
-                ${Names.PiProjection},
-                ${Names.PiCompositeProjection}, 
-                createDefaultBinaryBox,
-                createDefaultExpressionBox,
-                isPiBinaryExpression,
-                ${Names.PiBinaryExpression},
-                BoxUtils
-            } from "${PROJECTITCORE}";
-
-            import { ${Names.PiElementReference}, ${Names.allConcepts(language)}, ${modelImports.map(c => `${c}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
-
+        const coreText: string = `
              /**
              * Class ${Names.projection(projectionGroup)} implements the projections for elements of
              * language ${language.name} defined in the editor named ${projectionGroup.name}.
@@ -241,9 +100,17 @@ export class ProjectionTemplate {
                     switch( element.piLanguageConcept() ) {
                         ${allClassifiersWithProjection.map(c => `
                         case "${Names.classifier(c)}" : return this.${Names.projectionFunction(c)} (element as ${Names.classifier(c)});`
-        ).join("  ")}
+                            ).join("  ")}
+                        ${binaryConcepts.map(c => // these are added only in the default projection group
+                        `case "${Names.classifier(c)}" : return this.${Names.binaryProjectionFunction()} (element as ${Names.classifier(c)});`
+                            ).join("  ")}
                     }
-                    return null;
+                    ${projectionGroup.name === Names.defaultProjectionName 
+                    ?
+                    `// nothing fits
+                    throw new Error("No box defined for this expression:" + element.piId());`
+                    : 
+                    `return null;`}
                 }
                 
                 getTableDefinition(conceptName: string): PiTableDefinition {
@@ -257,12 +124,71 @@ export class ProjectionTemplate {
                     }
                     // nothing fits
                     return null;
-                }                         
+                }                     
 
-                ${allClassifiersWithProjection.map(c => this.generateProjectionForClassfier(language, c, projectionGroup.findProjectionForType(c))).join("\n")}                 
-               
-                ${classifiersWithTableProjection.map(c => this.generateTableDefinition(language, c, projectionGroup.findTableProjectionForType(c))).join("\n")}                                       
-        }`;
+                ${allClassifiersWithProjection.map(c => this.generateProjectionForClassfier(language, c, projectionGroup.findProjectionForType(c))).join("\n")}                                        
+
+                ${classifiersWithTableProjection.map(c => this.generateTableDefinition(language, c, projectionGroup.findTableProjectionForType(c))).join("\n")}
+
+                ${!!binaryConcepts && binaryConcepts.length > 0 && projectionGroup.name === Names.defaultProjectionName
+                    // only add these two methods when there are binary concepts, i.e. only for the default projection group
+                    ?
+                    `private ${Names.binaryProjectionFunction()} (element: ${Names.allConcepts(language)}) {
+                                ${binaryConcepts.map(c =>
+                        `if (element instanceof ${Names.classifier(c)}) {
+                                    return this.createBinaryBox(element, "${projectionGroup.findExtrasForType(c).symbol}");
+                                 }`).join(" else ")}
+                                 return null;
+                    }              
+                                            
+                    /**
+                     *  Create a standard binary box to ensure binary expressions can be edited easily
+                     */
+                    private createBinaryBox(exp: PiBinaryExpression, symbol: string): Box {
+                        const binBox = createDefaultBinaryBox(exp, symbol, ${Names.environment(language)}.getInstance().editor);
+                        if (
+                            this.showBrackets &&
+                            !!exp.piContainer().container &&
+                            isPiBinaryExpression(exp.piContainer().container)
+                        ) {
+                            return BoxFactory.horizontalList(exp, "brackets", [
+                                BoxUtils.labelBox(exp, "(", "bracket-open", true),
+                                binBox,
+                                BoxUtils.labelBox(exp, ")", "bracket-close", true)
+                            ]);
+                        } else {
+                            return binBox;
+                        }
+                    }`
+                : ``
+                }   
+            }`;
+
+        let importsText: string = `
+            import { observable, makeObservable } from "mobx";
+
+            ${this.coreImports.length > 0
+                ? `import { ${this.coreImports.map(c => `${c}`).join(", ")} } from "${PROJECTITCORE}";`
+                : ``}          
+
+            ${this.modelImports.length > 0
+            ? `import { ${this.modelImports.map(c => `${c}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";`
+            : ``}             
+            
+            ${this.envImports.length > 0 
+                ? `import { ${this.envImports.map(c => `${c}`).join(", ")} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";`
+                : ``}          
+            `;
+        return importsText + coreText;
+    }
+
+    setStandardBooleanKeywords(editorDef: PiEditUnit) {
+        // get the standard labels for true and false
+        const stdLabels: BoolKeywords = editorDef.getDefaultProjectiongroup().standardBooleanProjection;
+        if (!!stdLabels) {
+            this.trueKeyword = stdLabels.trueKeyword;
+            this.falseKeyword = stdLabels.falseKeyword;
+        }
     }
 
     private findClassifiersWithNormalProjection(language: PiLanguage, group: PiEditProjectionGroup) {
@@ -274,19 +200,19 @@ export class ProjectionTemplate {
         nonBinaryClassifiers.push(...language.units);
 
         // only for non-default projections group the following can be true: nonBinaryConceptsWithProjection !== nonBinaryClassifiers
-        const nonBinaryConceptsWithProjection = nonBinaryClassifiers.filter(c => {
+        return nonBinaryClassifiers.filter(c => {
             const editor = group.findNonTableProjectionForType(c);
             return !!editor;
         });
-
-        return nonBinaryConceptsWithProjection;
     }
 
     private generateProjectionForClassfier(language: PiLanguage, concept: PiClassifier, projection: PiEditClassifierProjection) {
+        this.addToIfNotPresent(this.modelImports, Names.classifier(concept));
         if (projection instanceof PiEditProjection) {
             const elementVarName = Roles.elementVarName(concept);
             let result = this.generateLines(projection.lines, elementVarName, concept.name, language);
             if (concept instanceof PiExpressionConcept) {
+                this.addToIfNotPresent(this.coreImports, "createDefaultExpressionBox");
                 return `public ${Names.projectionFunction(concept)} (${elementVarName}: ${Names.concept(concept)}) : Box {
                     return createDefaultExpressionBox( ${elementVarName}, "default-expression-box", [
                             ${result}
@@ -314,6 +240,7 @@ export class ProjectionTemplate {
             }
         });
         if (lines.length > 1) { // multi-line projection, so surround with vertical box
+            this.addToIfNotPresent(this.coreImports, "BoxFactory");
             result = `BoxFactory.verticalList(${elementVarName}, "${boxLabel}-overall", [
                 ${result} 
             ])`;
@@ -337,9 +264,11 @@ export class ProjectionTemplate {
             });
             if (line.items.length > 1) { // surround with horizontal box
                 // TODO Too many things are now selectable, but if false, you cannot select e.g. an attribute
+                this.addToIfNotPresent(this.coreImports, "BoxFactory");
                 result = `BoxFactory.horizontalList(${elementVarName}, "${boxLabel}-hlist-line-${index}", [ ${result} ], { selectable: true } ) `;
             }
             if (line.indent > 0) { // surround with indentBox
+                this.addToIfNotPresent(this.coreImports, "BoxUtils");
                 result = `BoxUtils.indentBox(${elementVarName}, ${line.indent}, "${index}", ${result} )`;
             }
         }
@@ -354,6 +283,7 @@ export class ProjectionTemplate {
                            language: PiLanguage) {
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
+            this.addToIfNotPresent(this.coreImports, "BoxUtils");
             result += ` BoxUtils.labelBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "${lineIndex}-item-${itemIndex}") `;
         } else if (item instanceof PiOptionalPropertyProjection) {
             result += this.generateOptionalProjection(item, elementVarName, mainBoxLabel, language);
@@ -374,6 +304,7 @@ export class ProjectionTemplate {
         let result = this.generateLines(optional.lines, elementVarName, myLabel, language);
 
         // surround with optional box
+        this.addToIfNotPresent(this.coreImports, "BoxFactory");
         result = `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
                 ${result},
                 false, "<+>"
@@ -408,8 +339,8 @@ export class ProjectionTemplate {
                         result += this.generatePartAsList(item, property, elementVarName, projNameStr);
                     }
                 } else { // single element
+                    this.addToIfNotPresent(this.coreImports, "BoxUtils");
                     result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${property.name}", "${property.type.name}", this.rootProjection ${projNameStr}) `;
-                    // this.rootproejection.getNamedBox
                 }
             } else { // reference
                 if (property.isList) {
@@ -438,6 +369,8 @@ export class ProjectionTemplate {
      * @private
      */
     private generatePropertyAsTable(orientation: PiEditProjectionDirection, property: PiConceptProperty, elementVarName: string, language: PiLanguage): string {
+        this.addToIfNotPresent(this.coreImports, "TableUtil");
+        this.addToIfNotPresent(this.envImports, Names.environment(language));
         // return the projection based on the orientation of the table
         if (orientation === PiEditProjectionDirection.Vertical) {
             return `TableUtil.tableBoxColumnOriented(
@@ -445,14 +378,14 @@ export class ProjectionTemplate {
                 "${property.name}",
                 this.rootProjection.getTableDefinition("${property.type.referred.name}").headers,
                 this.rootProjection.getTableDefinition("${property.type.referred.name}").cells,
-                ExampleEnvironment.getInstance().editor)`;
+                ${Names.environment(language)}.getInstance().editor)`;
         } else {
             return `TableUtil.tableBoxRowOriented(
                 ${elementVarName},
                 "${property.name}",
                 this.rootProjection.getTableDefinition("${property.type.referred.name}").headers,
                 this.rootProjection.getTableDefinition("${property.type.referred.name}").cells,
-                ExampleEnvironment.getInstance().editor)`;
+                ${Names.environment(language)}.getInstance().editor)`;
         }
     }
 
@@ -462,8 +395,11 @@ export class ProjectionTemplate {
      * @param item
      * @param propertyConcept   The property for which the projection is generated.
      * @param elementVarName    The name of the element parameter of the getBox projection method.
+     * @param projNameStr
+     * @private
      */
     private generatePartAsList(item: PiEditPropertyProjection, propertyConcept: PiConceptProperty, elementVarName: string, projNameStr: string) {
+        this.addToIfNotPresent(this.coreImports, "BoxUtils");
         let joinEntry = this.getJoinEntry(item.listInfo);
         if (item.listInfo.direction === PiEditProjectionDirection.Vertical) {
             return `BoxUtils.verticalPartListBox(${elementVarName}, "${propertyConcept.name}", this.rootProjection, ${joinEntry}${projNameStr})`;
@@ -473,6 +409,10 @@ export class ProjectionTemplate {
 
     private generateReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
         const featureType = Names.classifier(appliedFeature.type.referred);
+        this.addToIfNotPresent(this.modelImports, featureType);
+        this.addToIfNotPresent(this.modelImports, Names.PiElementReference);
+        this.addToIfNotPresent(this.coreImports, "BoxUtils");
+        this.addToIfNotPresent(this.envImports, Names.environment(language));
         return `BoxUtils.referenceBox(
                                 ${element},
                                 "${appliedFeature.name}",
@@ -489,6 +429,8 @@ export class ProjectionTemplate {
     }
 
     private generateReferenceAsList(language: PiLanguage, listJoin: ListInfo, reference: PiConceptProperty, element: string) {
+        this.addToIfNotPresent(this.coreImports, "BoxUtils");
+        this.addToIfNotPresent(this.envImports, Names.environment(language));
         let joinEntry = this.getJoinEntry(listJoin);
         if (listJoin.direction === PiEditProjectionDirection.Vertical) {
             return `BoxUtils.verticalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
@@ -513,6 +455,7 @@ export class ProjectionTemplate {
     }
 
     private singlePrimitivePropertyProjection(property: PiPrimitiveProperty, element: string, boolInfo?: BoolKeywords): string {
+        this.addToIfNotPresent(this.coreImports, "BoxUtils");
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type.referred) {
             case PiPrimitiveType.string:
@@ -539,6 +482,8 @@ export class ProjectionTemplate {
             direction = "horizontalList";
         }
         // TODO also adjust role '..-hlist' to '..-vlist'?
+        this.addToIfNotPresent(this.coreImports, "BoxFactory");
+        this.addToIfNotPresent(this.coreImports, "Box");
         return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-hlist",
                             (${element}.${property.name}.map( (item, index)  =>
                                 ${this.singlePrimitivePropertyProjection(property, element, boolInfo)}
@@ -553,11 +498,13 @@ export class ProjectionTemplate {
         if (!!myTableProjection) {
             // create the cell getters
             let cellGetters: string = '';
-            myTableProjection.cells.forEach((cell, index) =>
+            myTableProjection.cells.forEach((cell, index) => {
+                this.addToIfNotPresent(this.modelImports, Names.classifier(c));
                 cellGetters += `(cell${index}: ${Names.classifier(c)}): Box => {
-                    return ${this.generateItem(cell, `cell${index}`, index, index, c.name + "_table", language)}
-                },\n`
-            );
+                        return ${this.generateItem(cell, `cell${index}`, index, index, c.name + "_table", language)}
+                    },\n`;
+            });
+            this.addToIfNotPresent(this.coreImports, "PiTableDefinition");
 
             return `${Names.tabelDefinitionFunction(c)}(): PiTableDefinition {
                 const result: PiTableDefinition = {
@@ -571,5 +518,12 @@ export class ProjectionTemplate {
             console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
             return "";
         }
+    }
+
+    private addToIfNotPresent(imports: string[], newEntry: string) {
+        if (imports.indexOf(newEntry) === -1) {
+            imports.push(newEntry);
+        }
+
     }
 }

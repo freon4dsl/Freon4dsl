@@ -3,12 +3,12 @@ RefsTest myName {
                   	ref someName::x34565
                   	optRef nameA
                   	refList
-                        name1::d45fgh,
-                        name2,
-                        name3,
+                        name1::d45fgh
+                        name2
+                        name3
                         name4
-                    optRefList nameZ,
-                    nameY::sdfsgargh::HERA,
+                    optRefList nameZ
+                    nameY::sdfsgargh::HERA
                     nameX
     }
     indirectRefs WithSubSubRefs {
@@ -16,25 +16,25 @@ RefsTest myName {
                                            	ref someName
                                            	optRef nameA
                                            	refList
-                                                 name1::WREQWR::gag,
-                                                 name2,
-                                                 name3::fghy,
+                                                 name1::WREQWR::gag
+                                                 name2
+                                                 name3::fghy
                                                  name4
                                              optRefList
-                                                 nameZ,
-                                                 nameY::h56,
+                                                 nameZ
+                                                 nameY::h56
                                                  nameX
                  	    }
                  	optPart WithDirectRefs {
                                               	ref someName
                                               	optRef nameA
                                               	refList
-                                                    name1,
-                                                    name2,
-                                                    name3,
+                                                    name1
+                                                    name2
+                                                    name3
                                                     name4
-                                                optRefList nameZ,
-                                                nameY,
+                                                optRefList nameZ
+                                                nameY
                                                 nameX
                             }
                  	partList
@@ -42,24 +42,24 @@ RefsTest myName {
                                             ref someName
                                             optRef nameA
                                             refList
-                                                name1,
-                                                name2,
-                                                name3,
+                                                name1
+                                                name2
+                                                name3
                                                 name4
-                                            optRefList nameZ,
-                                            nameY,
+                                            optRefList nameZ
+                                            nameY
                                             nameX
-                        } ,
+                        }
                         WithDirectRefs {
                                             ref someName
                                             optRef nameA
                                             refList
-                                                name1,
-                                                name2,
-                                                name3,
+                                                name1
+                                                name2
+                                                name3
                                                 name4
-                                            optRefList nameZ,
-                                            nameY,
+                                            optRefList nameZ
+                                            nameY
                                             nameX
                  	    }
                  	optList
@@ -67,12 +67,12 @@ RefsTest myName {
                                             ref someName
                                             optRef nameA
                                             refList
-                                                name1,
-                                                name2,
-                                                name3,
+                                                name1
+                                                name2
+                                                name3
                                                 name4
-                                            optRefList nameZ,
-                                            nameY,
+                                            optRefList nameZ
+                                            nameY
                                             nameX
                         }
     }
@@ -81,24 +81,24 @@ withSeparator
                                             ref someName
                                             optRef nameA
                                             refList
-                                                name1,
-                                                name2,
-                                                name3,
+                                                name1
+                                                name2
+                                                name3
                                                 name4
-                                            optRefList nameZ,
-                                            nameY,
+                                            optRefList nameZ
+                                            nameY
                                             nameX
                         } !!
                         WithDirectRefs {
                                             ref someName
                                             optRef nameA
                                             refList
-                                                name1,
-                                                name2,
-                                                name3,
+                                                name1
+                                                name2
+                                                name3
                                                 name4
-                                            optRefList nameZ,
-                                            nameY,
+                                            optRefList nameZ
+                                            nameY
                                             nameX
                         }
 }

@@ -46,6 +46,7 @@ export class EditorDefaultsGenerator {
             defaultGroup.name = Names.defaultProjectionName;
             defaultGroup.standardBooleanProjection = new BoolKeywords();
             defaultGroup.standardReferenceSeparator = ".";
+            editor.projectiongroups.push(defaultGroup);
         }
         if (!defaultGroup.extras) {
             defaultGroup.extras = [];

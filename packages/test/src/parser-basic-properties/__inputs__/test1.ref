@@ -3,9 +3,9 @@ RefsTest myName {
                   	ref someName::otherName::xxx::yyy
                   	// optRef not present
                   	refList
-                        name1::ff::gg::yuio,
-                        name2,
-                        name3,
+                        name1::ff::gg::yuio
+                        name2
+                        name3
                         name4
                     // optRefList not present
     }
@@ -14,9 +14,9 @@ RefsTest myName {
                                     	ref someName::otherName::xxx::yyy
                                     	// optRef not present
                                     	refList
-                                          name1::ff::gg::yuio,
-                                          name2,
-                                          name3,
+                                          name1::ff::gg::yuio
+                                          name2
+                                          name3
                                           name4
                                       // optRefList not present
                     } !
@@ -24,7 +24,7 @@ RefsTest myName {
                         ref someName::otherName::xxx::yyy
                         // optRef not present
                         refList
-                            name1::ff::gg::yuio,
+                            name1::ff::gg::yuio
                             name2
                         // optRefList not present
                     }
@@ -32,7 +32,7 @@ RefsTest myName {
                         ref someName::otherName::xxx::yyy
                         // optRef not present
                         refList
-                            name1::ff::gg::yuio,
+                            name1::ff::gg::yuio
                             name2
                         // optRefList not present
                     } !!
@@ -40,7 +40,7 @@ RefsTest myName {
                         ref someName::otherName::xxx::yyy
                         // optRef not present
                         refList
-                            name1::ff::gg::yuio,
+                            name1::ff::gg::yuio
                             name2
                         // optRefList not present
                     } !!
@@ -48,7 +48,7 @@ RefsTest myName {
                         ref someName::otherName::xxx::yyy
                         // optRef not present
                         refList
-                            name1::ff::gg::yuio,
+                            name1::ff::gg::yuio
                             name2
                         // optRefList not present
                     }

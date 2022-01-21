@@ -55,10 +55,26 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             this.checkProjectionGroup(group, editUnit);
         }
         this.checkPropsWithTableProjection(editUnit);
+        let names: string[] = [];
+        editUnit.projectiongroups.forEach(group => {
+            this.checkUniqueNameOfProjectionGroup(names, group);
+        })
+        this.simpleCheck(true, ``);
         this.simpleWarning(!!editUnit.getDefaultProjectiongroup(),
             `No editor with name 'default' found, a default editor will be generated.`);
 
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
+    }
+
+    private checkUniqueNameOfProjectionGroup(names: string[], group: PiEditProjectionGroup) {
+        // check unique names, disregarding upper/lower case of first character
+        if (names.includes(group.name)) {
+            this.simpleCheck(false,
+                `Projection group with name '${group.name}' already exists ${this.location(group)}.`);
+        } else {
+            names.push(Names.startWithUpperCase(group.name));
+            names.push(group.name);
+        }
     }
 
     private checkProjectionGroup(projectionGroup: PiEditProjectionGroup, editor: PiEditUnit) {

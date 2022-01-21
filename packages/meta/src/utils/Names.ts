@@ -107,9 +107,9 @@ export class Names {
         return "Custom" + this.validator(language);
     }
 
-    public static projectionDefault(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "ProjectionDefault";
-    }
+    // public static projectionDefault(language: PiLanguage): string {
+    //     return this.startWithUpperCase(language?.name) + "ProjectionDefault";
+    // }
 
     public static projection(group: PiEditProjectionGroup): string {
         return "Projection" + this.startWithUpperCase(group.name);

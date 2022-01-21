@@ -10,7 +10,7 @@ import {
     Names,
     STYLES_FOLDER
 } from "../../utils";
-import { PiEditProjectionGroup, PiEditUnit } from "../metalanguage";
+import { PiEditUnit } from "../metalanguage";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
 import { EditorDefTemplate } from "./templates/EditorDefTemplate";
@@ -58,13 +58,13 @@ export class EditorGenerator {
         const relativePath = "../../";
 
         // Generate the default projection
-        LOGGER.log(`Generating projection default: ${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`);
-        const projectionfileDefault = Helpers.pretty(projection.generateProjectionDefault(this.language, editDef, relativePath),
-            "Projection Default", generationStatus);
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`, projectionfileDefault);
+        // LOGGER.log(`Generating projection default: ${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`);
+        // const projectionfileDefault = Helpers.pretty(projection.generateProjectionDefault(this.language, editDef, relativePath),
+        //     "Projection Default", generationStatus);
+        // fs.writeFileSync(`${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`, projectionfileDefault);
 
         // Generate the other projection groups
-        editDef.getAllNonDefaultProjectiongroups().forEach(group => {
+        editDef.projectiongroups.forEach(group => {
             LOGGER.log(`Generating projection group: ${this.editorGenFolder}/${Names.projection(group)}.ts`);
             const projectionfile = Helpers.pretty(projection.generateProjectionGroup(this.language, group, relativePath),
                 "Projection " + group.name, generationStatus);

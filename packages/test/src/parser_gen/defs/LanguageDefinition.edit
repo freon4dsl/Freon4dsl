@@ -1,4 +1,4 @@
-editor StartEditor
+editor default
 
 DemoAttribute {
     [ ${self.name} : ${self.declaredType} = ${self.somePrimAttr}]

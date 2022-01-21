@@ -1,7 +1,7 @@
 // This is an editor definiton that is intentionally wrong
 // it should cause an error in the generation of the grammar
 // for this purpose we have eliminated all keywords
-editor User
+editor default
 
 Attribute {
     [

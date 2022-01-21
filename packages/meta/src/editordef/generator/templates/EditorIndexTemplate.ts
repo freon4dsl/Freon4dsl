@@ -8,8 +8,7 @@ export class EditorIndexTemplate {
         return `
         export * from "./${Names.actions(language)}";
         export * from "./${Names.defaultActions(language)}";
-        export * from "./${Names.projectionDefault(language)}";
-        ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
+        ${editorDef.projectiongroups.map(group => 
             `export * from "./${Names.projection(group)}";`
         ).join("")}
         export * from "./EditorDef";

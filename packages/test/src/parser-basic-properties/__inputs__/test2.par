@@ -43,7 +43,7 @@ PartsTest myName {
                                         content "otherStringZZZ"
                                         // optContent empty
                                         visibility # }
-                            }},
+                            }}
                             WithDirectParts {{
                                 part PartConcept {
                                             content "stringLiteralZZZ"
@@ -118,7 +118,7 @@ PartsTest myName {
                         partList
                     // optListSub not present
                     }}
-                },
+                }
                 SubConcept {
                     normalSub WithDirectParts {{
                         part PartConcept {

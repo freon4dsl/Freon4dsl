@@ -33,8 +33,7 @@ export class EditorDefTemplate {
             }
         });
 
-        editorImports.push(Names.projectionDefault(language));
-        editorDef.getAllNonDefaultProjectiongroups().map(group => {
+        editorDef.projectiongroups.map(group => {
             editorImports.push(Names.projection(group));
         });
 
@@ -59,7 +58,7 @@ export class EditorDefTemplate {
                 rootProjection.addProjection(projectionGroup);
                 `).join("")}
 
-                const projectionDefault = new ${Names.projectionDefault(language)}();
+                const projectionDefault = new ${Names.projection(editorDef.getDefaultProjectiongroup())}();
                 rootProjection.addProjection(projectionDefault);
             }    
             
