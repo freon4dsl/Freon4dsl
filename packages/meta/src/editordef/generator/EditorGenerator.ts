@@ -123,13 +123,12 @@ export class EditorGenerator {
     }
 
     clean(force: boolean) {
+        LOGGER.show();
         this.getFolderNames();
         Helpers.deleteDirAndContent(this.editorGenFolder);
         if (force) {
             Helpers.deleteFile(`${this.stylesFolder}/styles.ts`);
-            Helpers.deleteFile(`${this.editorGenFolder}/index.ts`);
             Helpers.deleteFile(`${this.editorFolder}/index.ts`);
-            Helpers.deleteDirIfEmpty(this.editorGenFolder);
             Helpers.deleteDirIfEmpty(this.stylesFolder);
             if (this.language == null) {
                 LOGGER.error("Cannot remove all because language is not set.");
@@ -143,9 +142,9 @@ export class EditorGenerator {
             LOGGER.info(`Not removed: ${this.editorFolder}/${Names.customActions(this.language)}.ts` +
                 '\n\t' + `${this.editorFolder}/${Names.customProjection(this.language)}.ts` +
                 '\n\t' + `${this.editorFolder}/index.ts` +
-                '\n\t' + `${this.stylesFolder}/styles.ts` +
-                '\n\t' + `${this.editorGenFolder}/index.ts`
+                '\n\t' + `${this.stylesFolder}/styles.ts`
             );
         }
+        LOGGER.mute();
     }
 }

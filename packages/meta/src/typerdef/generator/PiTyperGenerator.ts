@@ -74,6 +74,7 @@ export class PiTyperGenerator {
     }
 
     clean(force: boolean) {
+        LOGGER.show();
         this.getFolderNames();
         Helpers.deleteDirAndContent(this.typerGenFolder);
         if (force) {
@@ -89,5 +90,6 @@ export class PiTyperGenerator {
             LOGGER.info(`Not removed: ${this.typerFolder}/${Names.customTyper(this.language)}.ts` +
             '\n\t' + `${this.typerFolder}/index.ts`);
         }
+        LOGGER.mute();
     }
 }

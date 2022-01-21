@@ -102,6 +102,7 @@ export class ValidatorGenerator {
     }
 
     clean(force: boolean) {
+        LOGGER.show();
         this.getFolderNames();
         Helpers.deleteDirAndContent(this.validatorGenFolder);
         if (force) {
@@ -117,6 +118,6 @@ export class ValidatorGenerator {
             LOGGER.info(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts` +
                 '\n\t' + `${this.validatorFolder}/index.ts`);
         }
-
+        LOGGER.mute();
     }
 }

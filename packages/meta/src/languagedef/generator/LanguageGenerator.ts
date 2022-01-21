@@ -183,6 +183,7 @@ export class LanguageGenerator {
     }
 
     clean(force: boolean) {
+        LOGGER.show();
         this.getFolderNames();
         Helpers.deleteDirAndContent(this.languageGenFolder);
         Helpers.deleteDirAndContent(this.utilsGenFolder);
@@ -199,5 +200,6 @@ export class LanguageGenerator {
             // do not delete the following files, because these may contain user edits
             LOGGER.info(`Not removed: ${this.configurationFolder}/${Names.configuration()}.ts`);
         }
+        LOGGER.mute();
     }
 }
