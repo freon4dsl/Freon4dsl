@@ -1,4 +1,4 @@
-editor StartEditor
+editor default
 
 DemoNumberLiteralExpression {
     [${self.value}]
