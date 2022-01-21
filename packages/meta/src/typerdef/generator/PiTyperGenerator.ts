@@ -6,6 +6,7 @@ import { GenerationStatus, Helpers, Names, TYPER_FOLDER, TYPER_GEN_FOLDER } from
 import { PiTyperTemplate } from "./templates/PiTyperTemplate";
 import { PiTyperPartTemplate } from "./templates/PiTyperPartTemplate";
 import { CustomTyperPartTemplate } from "./templates/CustomTyperPartTemplate";
+import { LOG2USER } from "../../utils/UserLogger";
 
 const LOGGER = new MetaLogger("PiTyperGenerator").mute();
 export class PiTyperGenerator {
@@ -74,22 +75,20 @@ export class PiTyperGenerator {
     }
 
     clean(force: boolean) {
-        LOGGER.show();
         this.getFolderNames();
         Helpers.deleteDirAndContent(this.typerGenFolder);
         if (force) {
             Helpers.deleteFile(`${this.typerFolder}/index.ts`);
             if (this.language == null) {
-                LOGGER.error("Cannot remove all because language is not set.");
+                LOG2USER.error("Cannot remove all files because language is not set.");
             } else {
                 Helpers.deleteFile(`${this.typerFolder}/${Names.customTyper(this.language)}.ts`);
             }
             Helpers.deleteDirIfEmpty(this.typerFolder);
         } else {
             // do not delete the following files, because these may contain user edits
-            LOGGER.info(`Not removed: ${this.typerFolder}/${Names.customTyper(this.language)}.ts` +
+            LOG2USER.info(`Not removed: ${this.typerFolder}/${Names.customTyper(this.language)}.ts` +
             '\n\t' + `${this.typerFolder}/index.ts`);
         }
-        LOGGER.mute();
     }
 }
