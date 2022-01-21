@@ -36,6 +36,18 @@ export class PiCompositeProjection implements PiProjection {
         return new LabelBox(element, "unknown-projection", () => "unknown box for " + element);
     }
 
+    getNamedBox(element: PiElement, projectionName: string): Box {
+        const proj = this.projections.getByName(projectionName);
+        if (!!proj) {
+            const result: Box = proj.element.getBox(element);
+            if (result !== null) {
+                return result;
+            }
+        }
+        // return the default box if nothing has been found.
+        return this.getBox(element);
+    }
+
     getTableDefinition(conceptName: string): PiTableDefinition {
         for (let p of this.projections.toArray()) {
             const result = p.element.getTableDefinition(conceptName);
@@ -43,7 +55,7 @@ export class PiCompositeProjection implements PiProjection {
                 return result;
             }
         }
-        // return a default box if nothing has been  found.
+        // return a default box if nothing has been found.
         return {
             headers: [conceptName],
             cells: [(element: PiElement) => {

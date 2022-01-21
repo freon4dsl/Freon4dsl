@@ -13,7 +13,7 @@ Attribute {
 }
 Method {
     table [
-        Name    | parameters    | type            | body
-        ${name} | ${parameters} | ${declaredType} | ${body}
+        Name    | parameters            | type            | body
+        ${name} | ${parameters:CALLOUT} | ${declaredType} | ${body}
     ]
 }

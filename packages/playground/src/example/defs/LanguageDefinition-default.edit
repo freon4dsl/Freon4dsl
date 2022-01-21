@@ -1,6 +1,6 @@
 editor default
 
-boolean [RIGHT | WRONG]
+boolean [RIGHT | WRONG] // are the strings used to display a boolean value
 
 referenceSeparator [.] // is the string that separates the names in a path name, e.g. pack1.cls3.part
 
@@ -10,13 +10,14 @@ Attribute {
 Entity {
     [
         entity ${name} [? base ${baseEntity}] {
-            ${attributes table rows }
-            ${methods:name2 vertical }
+            ${construc:Third}
+            list of references: ${listOfReferences}
+            ${attributes:Third }
+            ${methods vertical }
         }
     ]
     trigger = "entity"
 }
-
 ExampleUnit {
         [
         unit ${name} {
@@ -26,7 +27,6 @@ ExampleUnit {
         }
         ]
 }
-
 Method {
     [
         method ${name} ( ${parameters table rows} ): ${declaredType} {
@@ -34,11 +34,9 @@ Method {
         }
     ]
 }
-
 Parameter {
     [${name} : ${declaredType}]
 }
-
 MethodCallExpression {
     [CALL ${methodDefinition} ( ${args horizontal separator[,] } )]
     referenceShortcut = ${methodDefinition}
@@ -89,7 +87,6 @@ GreaterThenExpression {
 EqualsExpression {
     symbol = "=="
 }
-
 BooleanLiteralExpression {
     [ ${value} ]
     trigger = "boolean"
@@ -101,7 +98,7 @@ AttributeRef {
 }
 
 ParameterRef {
-    [ xx ${parameter} yy [? . ${appliedfeature}] zz]
+    [ ${parameter} [? . ${appliedfeature}] ]
     referenceShortcut = ${parameter}
 }
 IfExpression {

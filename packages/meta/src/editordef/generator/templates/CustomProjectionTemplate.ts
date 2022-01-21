@@ -5,7 +5,7 @@ export class CustomProjectionTemplate {
 
     generate(language: PiLanguage): string {
         return `
-            import { ${Names.PiProjection}, ${Names.PiElement}, ${Names.Box}, PiTableDefinition } from "${PROJECTITCORE}";
+            import { ${Names.PiProjection}, ${Names.PiCompositeProjection}, ${Names.PiElement}, ${Names.Box}, PiTableDefinition } from "${PROJECTITCORE}";
             
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to
@@ -17,7 +17,7 @@ export class CustomProjectionTemplate {
              * (3) if neither (1) nor (2) yields a result, the default is used.
              */           
             export class ${Names.customProjection(language)} implements ${Names.PiProjection} {
-                rootProjection: ${Names.PiProjection};
+                rootProjection: ${Names.PiCompositeProjection};
                 name: string = "manual";
                 
                 constructor(name?: string) {

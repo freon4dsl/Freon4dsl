@@ -1,0 +1,8 @@
+editor CALLOUT
+
+Attribute {
+    [ Attribute named \"${name}\" has type ${declaredType} ]
+}
+Parameter {
+    [Parameter named \"${name}\" has type ${declaredType}]
+}

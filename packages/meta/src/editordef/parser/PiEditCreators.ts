@@ -292,10 +292,13 @@ export function createSuperProjection(data: Partial<PiEditSuperProjection>) : Pi
     return result;
 }
 
-export function createPropertyProjection(data: { expression, location }): PiEditPropertyProjection {
+export function createPropertyProjection(data: { expression, projectionName, location }): PiEditPropertyProjection {
     let result: PiEditPropertyProjection = new PiEditPropertyProjection();
     if (!!data["expression"]) {
         result.expression = data["expression"];
+    }
+    if (!!data["projectionName"]) {
+        result.projectionName = data["projectionName"];
     }
     if (!!data["location"]) {
         result.location = data["location"];
@@ -304,12 +307,15 @@ export function createPropertyProjection(data: { expression, location }): PiEdit
     return result;
 }
 
-export function createListPropertyProjection(data: { expression, listInfo, location }): PiEditPropertyProjection {
+export function createListPropertyProjection(data: { expression, projectionName, listInfo, location }): PiEditPropertyProjection {
     let result: PiEditPropertyProjection = new PiEditPropertyProjection();
     result.listInfo = data["listInfo"];
     if (!!data["expression"]) {
         result.expression = data["expression"];
     }
+    if (!!data["projectionName"]) {
+        result.projectionName = data["projectionName"];
+    }
     if (!!data["location"]) {
         result.location = data["location"];
         result.location.filename = currentFileName;
@@ -317,13 +323,16 @@ export function createListPropertyProjection(data: { expression, listInfo, locat
     return result;
 }
 
-export function createTablePropertyProjection(data: { expression, tableInfo, location }): PiEditPropertyProjection {
+export function createTablePropertyProjection(data: { expression, projectionName, tableInfo, location }): PiEditPropertyProjection {
     let result: PiEditPropertyProjection = new PiEditPropertyProjection();
     if (!!data["tableInfo"]) {
         result.listInfo = data["tableInfo"];
     }
     if (!!data["expression"]) {
         result.expression = data["expression"];
+    }
+    if (!!data["projectionName"]) {
+        result.projectionName = data["projectionName"];
     }
     if (!!data["location"]) {
         result.location = data["location"];
@@ -333,13 +342,16 @@ export function createTablePropertyProjection(data: { expression, tableInfo, loc
     return result;
 }
 
-export function createBooleanPropertyProjection(data: { expression, keyword, location }): PiEditPropertyProjection {
+export function createBooleanPropertyProjection(data: { expression, projectionName, keyword, location }): PiEditPropertyProjection {
     let result: PiEditPropertyProjection = new PiEditPropertyProjection();
     if (!!data["keyword"]) {
         result.boolInfo = data["keyword"];
     }
     if (!!data["expression"]) {
         result.expression = data["expression"];
+    }
+    if (!!data["projectionName"]) {
+        result.projectionName = data["projectionName"];
     }
     if (!!data["location"]) {
         result.location = data["location"];

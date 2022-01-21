@@ -1,4 +1,4 @@
-import { Box } from "./internal";
+import { Box, PiCompositeProjection } from "./internal";
 import { PiElement } from "../language";
 import { PiTableDefinition } from "./PiTables";
 
@@ -17,7 +17,7 @@ export interface PiProjection {
      */
     getTableDefinition(conceptName: string): PiTableDefinition ;
 
-    rootProjection: PiProjection;
+    rootProjection: PiCompositeProjection;
     name: string;
 }
 // end::PiProjection[]

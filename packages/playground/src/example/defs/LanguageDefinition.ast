@@ -18,6 +18,8 @@ interface Type base BaseType {
 }
 
 public concept Entity implements Type {
+    construc: Method;
+    reference listOfReferences: Entity[];
     attributes: Attribute[];
     methods: Method[];
     reference baseEntity?: Entity;

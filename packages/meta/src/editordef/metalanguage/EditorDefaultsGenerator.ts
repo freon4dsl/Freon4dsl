@@ -40,7 +40,7 @@ export class EditorDefaultsGenerator {
     public static addDefaults(editor: PiEditUnit): void {
         // console.log("adding defaults: " + editor.projectiongroups.map(p => p.name).join(", "))
         // find projection group to add defaults to, or make one if it does not exist
-        let defaultGroup: PiEditProjectionGroup = editor.projectiongroups.find(group => group.name = Names.defaultProjectionName);
+        let defaultGroup: PiEditProjectionGroup = editor.getDefaultProjectiongroup();
         if (defaultGroup === null || defaultGroup === undefined) {
             defaultGroup = new PiEditProjectionGroup();
             defaultGroup.name = Names.defaultProjectionName;

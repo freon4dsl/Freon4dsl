@@ -141,6 +141,7 @@ export class BoxFactory {
 
         runInAction( () => {
             // 2. Apply the other arguments in case they have changed
+            result.setLabel(getLabel);
             PiUtils.initializeObject(result, initializer);
         });
 

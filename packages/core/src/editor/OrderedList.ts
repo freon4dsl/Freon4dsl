@@ -54,6 +54,10 @@ export class OrderedList<T> implements Iterable<T> {
         return this.elements[index];
     }
 
+    getByName(name: string): NamedElement<T> {
+        return this.elements.find(p => p.name === name);
+    }
+
     [Symbol.iterator](): Iterator<T> {
         return new OrderedListIterator<T>(this);
     }

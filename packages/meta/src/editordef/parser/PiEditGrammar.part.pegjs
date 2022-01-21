@@ -204,43 +204,47 @@ property_projection = s:singleProperty {return s;}
     / b:booleanProperty {return b;}
 
 singleProperty = propProjectionStart ws
-                         "self."? propName:var (colon_separator editorName:var)? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws
                       propProjectionEnd
 {
     return creator.createPropertyProjection( {
         "expression": creator.createSelfExp(propName),
+        "projectionName": projName,
         "location": location()
     });
 }
 
 listProperty = propProjectionStart ws
-                         "self."? propName:var (colon_separator editorName:var)? ws l:listInfo? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws l:listInfo? ws
                       propProjectionEnd
 {
     return creator.createListPropertyProjection( {
         "expression": creator.createSelfExp(propName),
+        "projectionName": projName,
         "listInfo": l,
         "location": location()
     });
 }
 
 tableProperty = propProjectionStart ws
-                         "self."? propName:var (colon_separator editorName:var)? ws t:tableInfo? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws t:tableInfo? ws
                       propProjectionEnd
 {
     return creator.createTablePropertyProjection( {
         "expression": creator.createSelfExp(propName),
+        "projectionName": projName,
         "tableInfo": t,
         "location": location()
     });
 }
 
 booleanProperty = propProjectionStart ws
-                         "self."? propName:var (colon_separator editorName:var)? ws k:keywordDecl? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws k:keywordDecl? ws
                       propProjectionEnd
 {
     return creator.createBooleanPropertyProjection( {
         "expression": creator.createSelfExp(propName),
+        "projectionName": projName,
         "keyword":k,
         "location": location()
     });

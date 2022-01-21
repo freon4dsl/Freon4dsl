@@ -292,6 +292,8 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
     listInfo: ListInfo = null;
     // projection info if the referred property is a primitive of boolean type
     boolInfo: BoolKeywords = null;
+    // projection to be used for this property
+    projectionName: string = null;
 
     toString(): string {
         let extraText: string;

@@ -32,7 +32,7 @@
     "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-parser": "rm -r */*/*parse*",
-    "clean":        "yarn clean-config && yarn clean-custom && yarn clean-init",
+    "clean":        "yarn clean-config && yarn clean-custom",
     "clean-testproject" : "bash ../../scripts/projectit-dev.sh clean-it -f -d src/testproject/defs -o src/testproject",
     "test":         "jest"
   },

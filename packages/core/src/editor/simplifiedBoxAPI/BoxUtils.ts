@@ -7,6 +7,7 @@ import { PiEditor } from "../PiEditor";
 import { PiProjection } from "../PiProjection";
 import { PiScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
+import { PiCompositeProjection } from "../PiCompositeProjection";
 
 export class PiListInfo {
     text: string;
@@ -33,7 +34,7 @@ export class BoxUtils {
         if (property !== undefined && property !== null && typeof property === "string") {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "textbox", index);
             if (isList && this.checkList(isList, index, propertyName)) {
-                result = BoxFactory.text(element, roleName, () => element[propertyName][index], (v: string) => (element[propertyName][index] = v),{
+                result = BoxFactory.text(element, roleName, () => element[propertyName][index], (v: string) => (element[propertyName][index] = v), {
                     placeHolder: `<${propertyName}>`
                 });
             } else {
@@ -104,14 +105,17 @@ export class BoxUtils {
      * @param labels the different texts to be shown when the property is false or true
      * @param index the index of the item in the list, if the property is a list
      */
-    static booleanBox(element: PiElement, propertyName: string, labels: { yes: string; no: string } = {yes: "yes", no: "no"}, index?: number): Box {
+    static booleanBox(element: PiElement, propertyName: string, labels: { yes: string; no: string } = {
+        yes: "yes",
+        no: "no"
+    }, index?: number): Box {
         // find the information on the property to be shown
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
         const property = element[propertyName];
 
         // check the found information
-        if (!(property !== undefined && property !== null )) {
+        if (!(property !== undefined && property !== null)) {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist:" + property + "\"");
         }
         if (!(typeof property === "boolean" || typeof property === "string")) {
@@ -133,13 +137,13 @@ export class BoxUtils {
                         return { id: labels.no, label: labels.no };
                     }
                 },
-                 (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
+                (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
                     if (option.id === labels.yes) {
                         element[propertyName][index] = true;
                     } else if (option.id === labels.no) {
                         element[propertyName][index] = false;
                     }
-                    return BehaviorExecutionResult.NULL
+                    return BehaviorExecutionResult.NULL;
                 }
             );
         } else {
@@ -161,7 +165,7 @@ export class BoxUtils {
                     } else if (option.id === labels.no) {
                         element[propertyName] = false;
                     }
-                    return BehaviorExecutionResult.NULL
+                    return BehaviorExecutionResult.NULL;
                 }
             );
         }
@@ -190,7 +194,7 @@ export class BoxUtils {
     ): Box {
         const propType: string = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
         if (!propType) {
-            throw new Error("Cannot find property type '" + propertyName +"'");
+            throw new Error("Cannot find property type '" + propertyName + "'");
         }
         let property = element[propertyName];
         const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "referencebox", index);
@@ -219,11 +223,11 @@ export class BoxUtils {
                     return null;
                 }
             },
-             (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
-                console.log("==> SET selected option for property " + propertyName + " of " + element["name"] +  " to " + option?.label)
+            (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
+                console.log("==> SET selected option for property " + propertyName + " of " + element["name"] + " to " + option?.label);
                 if (!!option) {
                     console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
-                    runInAction( () => {
+                    runInAction(() => {
                         setFunc(option.label);
                     });
                 } else {
@@ -231,7 +235,7 @@ export class BoxUtils {
                 }
                 return BehaviorExecutionResult.EXECUTED;
             },
-            { }
+            {}
         );
     }
 
@@ -258,21 +262,21 @@ export class BoxUtils {
             RoleProvider.indent(element, uid),
             indent,
             childBox
-        )
+        );
     }
 
-    static verticalPartListBox(element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListInfo): Box {
+    static verticalPartListBox(element: PiElement, propertyName: string, rootProjection: PiCompositeProjection, listJoin: PiListInfo, projName?: string): Box {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a part list
         if (property !== undefined && propertyName !== null && isList && isPart === "part") {
             // find the children to show in this listBox
-            let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin);
+            let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin, projName);
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
             // TODO: Add keboard action for Enter:
             // TODO for role:RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item")
-           // CANNO DO< no EDIGOR AVAILABLE:
+            // CANNO DO< no EDIGOR AVAILABLE:
             // editorr.addOrReplaceAction(createKeyboardShortcutForList2(RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item"), propertyName, element.piLanguageConcept(), "dummy"));
             // return the box
             return BoxFactory.verticalList(
@@ -306,13 +310,13 @@ export class BoxUtils {
         }
     }
 
-    static horizontalPartListBox(element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListInfo): Box {
+    static horizontalPartListBox(element: PiElement, propertyName: string, rootProjection: PiCompositeProjection, listJoin: PiListInfo, projName?: string): Box {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a part list
         if (property !== undefined && property !== null && isList && isPart !== "reference") {
             // find the children to show in this listBox, depending on whether it is a list of parts or of references
-            let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin);
+            let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin, projName);
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
             // return the box
@@ -348,12 +352,13 @@ export class BoxUtils {
         }
     }
 
-    static getBoxOrAlias(element: PiElement, propertyName: string, conceptName: string, rootProjection: PiProjection): Box {
+    static getBoxOrAlias(element: PiElement, propertyName: string, conceptName: string, rootProjection: PiCompositeProjection, projectionName?: string): Box {
         // find the information on the property to be shown
         const property = element[propertyName];
         const roleName = RoleProvider.property(element.piLanguageConcept(), propertyName);
-        const result =  !!property
-            ? rootProjection.getBox(property)
+        const byName: boolean = !!projectionName && projectionName.length > 0;
+        const result = !!property
+            ? (byName ? rootProjection.getNamedBox(property, projectionName) : rootProjection.getBox(property))
             : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
         return result;
     }
@@ -384,33 +389,37 @@ export class BoxUtils {
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item"),
                 `<+ ${propertyName}>`,
-                { propertyName: `${propertyName}`, conceptName: Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName).type })
+                {
+                    propertyName: `${propertyName}`,
+                    conceptName: Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName).type
+                })
         );
     }
 
-    private static findPartItems(property: PiElement[], element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListInfo) {
+    private static findPartItems(property: PiElement[], element: PiElement, propertyName: string, rootProjection: PiCompositeProjection, listJoin: PiListInfo, projectionName?: string) {
         const numberOfItems = property.length;
         return property.map((listElem, index) => {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
+            const byName: boolean = !!projectionName && projectionName.length > 0;
             if (listJoin !== null && listJoin !== undefined) {
-                // TODO make constant of strings "Separator" and ..
+                // TODO make constant of strings "Separator" and .., and add "Initiator"
                 if (listJoin.type === "Separator") {
                     if (index < numberOfItems - 1) {
                         return BoxFactory.horizontalList(element, roleName, [
-                            rootProjection.getBox(listElem),
+                            (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]);
                     } else {
-                        return rootProjection.getBox(listElem);
+                        return (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem));
                     }
                 } else if (listJoin.type === "Terminator") {
                     return BoxFactory.horizontalList(element, roleName, [
-                        rootProjection.getBox(listElem),
+                        (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]);
                 }
             } else {
-                return rootProjection.getBox(listElem);
+                return (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem));
             }
             return null;
         });
@@ -423,7 +432,7 @@ export class BoxUtils {
             const setFunc = (selected: string) => {
                 listElem.name = selected;
                 return BehaviorExecutionResult.EXECUTED;
-            }
+            };
             if (listJoin !== null && listJoin !== undefined) {
                 // TODO constants
                 if (listJoin.type === "Separator") {
@@ -458,7 +467,7 @@ export class BoxUtils {
 }
 
 function isNumber(currentText: string, key: string, index: number): KeyPressAction {
-    console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof ["+ typeof currentText + "] key [" + key + "] index [" + index + "]");
+    console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof [" + typeof currentText + "] key [" + key + "] index [" + index + "]");
     if (isNaN(Number(key))) {
         if (index === currentText.length) {
             return KeyPressAction.GOTO_NEXT;

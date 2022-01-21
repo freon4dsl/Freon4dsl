@@ -27,7 +27,7 @@
     "openhab":      "bash ../../scripts/projectit-dev.sh -v all -d src/openhab/defs -o src/openhab",
     "pi-languages": "bash ../../scripts/projectit-dev.sh -v all -d src/pi-languages/defs -o src/pi-languages",
     "taxrules": 	"bash ../../scripts/projectit-dev.sh all -d src/taxrules/defs -o src/taxrules",
-    "all-examples": "yarn calculator && yarn octopus && yarn example && yarn heating && yarn json && yarn libraries && yarn openhab && yarn pi-languages && yarn taxrules && yarn expressions && yarn rules && yarn openhab && yarn graphviz",
+    "all-examples": "yarn calculator && yarn example && yarn graphviz && yarn heating && yarn json && yarn libraries && yarn expressions && yarn octopus && yarn openhab && yarn pi-languages && yarn rules && yarn taxrules",
     "clean-graphviz":	  "bash ../../scripts/projectit-dev.sh clean-it -f -d src/graphviz/defs -o src/graphviz",
     "clean-example": 	  "bash ../../scripts/projectit-dev.sh clean-it -d src/example/defs -o src/example",
     "clean-calculator":   "bash ../../scripts/projectit-dev.sh clean-it -f -d src/calculator/defs -o src/calculator",
@@ -38,7 +38,12 @@
     "clean-openhab":      "bash ../../scripts/projectit-dev.sh clean-it -f -d src/openhab/defs -o src/openhab",
     "clean-pi-languages": "bash ../../scripts/projectit-dev.sh clean-it -f -d src/pi-languages/defs -o src/pi-languages",
     "clean-taxrules": 	  "bash ../../scripts/projectit-dev.sh clean-it -f -d src/taxrules/defs -o src/taxrules",
-    "clean-all-examples": "yarn clean-calculator && yarn clean-octopus && yarn clean-example && yarn clean-heating && yarn clean-json && yarn clean-expressions && yarn clean-openhab && yarn clean-pi-languages && yarn clean-taxrules && yarn clean-expressions"
+    "clean-rules":        "bash ../../scripts/projectit-dev.sh clean-it -f -d src/rules-language/defs -o src/rules-language",
+    "clean-libraries":    "bash ../../scripts/projectit-dev.sh clean-it -f -d src/libraries-test/defs -o src/libraries-test",
+    "clean-all-examples": "yarn clean-calculator && yarn clean-example && yarn clean-graphviz && yarn clean-heating && yarn clean-json && yarn clean-libraries && yarn clean-expressions && yarn clean-octopus && yarn clean-openhab && yarn clean-pi-languages && yarn clean-rules && yarn clean-taxrules",
+    "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
+    "clean-custom": "rm */*/*/Custom*.ts",
+    "clean":        "yarn clean-config && yarn clean-custom"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
