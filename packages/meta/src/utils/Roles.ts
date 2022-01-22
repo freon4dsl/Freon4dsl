@@ -13,9 +13,18 @@ export class Roles {
         return Names.classifier(concept).toLowerCase();
     }
 
-    // public static elementName(concept: PiClassifier): string {
-    //     return Names.classifier(concept);//.toLowerCase();
-    // }
+    // NB Identical to RoleProvider in core package!!
+    //
+    public static propertyRole(owningConceptName: string, propertyName: string, boxType?: string, index?: number): string {
+        let roleName: string = Roles.startWithUpperCase(owningConceptName) + "-" + propertyName;
+        if (index !== null && index !== undefined && index >= 0) {
+            roleName += "-" + index;
+        }
+        if (boxType !== null && boxType !== undefined && boxType.length >= 0) {
+            roleName += "-" + boxType;
+        }
+        return roleName;
+    }
 
     public static property(property: PiProperty): string {
         return Names.classifier(property.owningConcept) + "-" + property.name;
@@ -39,6 +48,13 @@ export class Roles {
 
     public static newConceptReferencePart(reference: PiConceptProperty): string {
         return reference.name;
+    }
+
+    private static startWithUpperCase(word: string): string {
+        if (!!word) {
+            return word[0].toUpperCase() + word.substr(1);
+        }
+        return "";
     }
 
 }

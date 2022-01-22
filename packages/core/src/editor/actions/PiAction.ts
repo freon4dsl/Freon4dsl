@@ -41,6 +41,9 @@ export function triggerTypeToString(trigger: PiActionTriggerType): string {
     }
 }
 
+/**
+ * Abstract supercass for all actions in ProjectIt
+ */
 export abstract class PiAction {
     /**
      * The trigger to activate this behavior
@@ -73,6 +76,10 @@ export abstract class PiAction {
      */
     referenceShortcut?: ReferenceShortcut;
 
+    /**
+     * Returns the command object that can be executed to perform the action.
+     * @param box
+     */
     abstract command(box: Box): PiCommand;
 }
 

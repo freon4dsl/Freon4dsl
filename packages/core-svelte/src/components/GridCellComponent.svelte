@@ -1,22 +1,24 @@
+
 <script lang="ts">
-    import {
-        conceptStyle,
-        GridBox,
-        isMetaKey,
-        KEY_ENTER,
-        PiLogger,
-        PiUtils,
-        styleToCSS,
-        toPiKey,
-        GridCellBox
-    } from "@projectit/core";
+     import {
+          conceptStyle,
+          GridBox,
+          isMetaKey,
+          KEY_ENTER,
+          PiLogger,
+          PiUtils,
+          styleToCSS,
+          toPiKey,
+          GridCellBox, Box
+     } from "@projectit/core";
     import type { PiEditor } from "@projectit/core";
-    import { gridcell } from "@projectit/playground/dist/example/editor/styles/CustomStyles";
     import { autorun } from "mobx";
     import { afterUpdate } from "svelte";
+    import { writable } from "svelte/store";
+    import type { Writable } from "svelte/store";
+
     import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
-    // import { textBox } from "./TextComponent.svelte";
     import { isOdd } from "./util";
 
     // properties
@@ -26,13 +28,13 @@
 
     //local variable
     const LOGGER = new PiLogger("GridCellComponent");
-    let cell = cellBox;
+    let boxStore: Writable<Box> = writable<Box>(cellBox.box);
     let cssVariables: string;
-    let notifier = new ChangeNotifier();
+
     afterUpdate(() => {
         UPDATE_LOGGER.log("GridCellComponent.afterUpdate")
         // Triggers autorun
-        notifier.notifyChange();
+        $boxStore = cellBox.box
     });
 
     const onKeydown = (event: KeyboardEvent) => {
@@ -40,7 +42,7 @@
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === KEY_ENTER) {
             console.log("Keyboard shortcut in GridCell ===============")
-            const isKeyboardShortcutForThis = PiUtils.handleKeyboardShortcut(piKey, cell, editor);
+            const isKeyboardShortcutForThis = PiUtils.handleKeyboardShortcut(piKey, cellBox, editor);
             if (!isKeyboardShortcutForThis) {
                 LOGGER.log("Key not handled for element gridcell so propagate ");// + textBox.element);
                 if (event.key === KEY_ENTER) {
@@ -56,7 +58,7 @@
     };
 
     const onCellClick = ( () => {
-        LOGGER.log("GridCellComponent.onCellClick " + cell.row + ", "+ cell.column);
+        LOGGER.log("GridCellComponent.onCellClick " + cellBox.row + ", "+ cellBox.column);
     });
 
     let row: string;
@@ -64,13 +66,13 @@
     let boxStyle: string = "";
     let int: number = 0;
     autorun(() => {
-        cell = cellBox;
-        AUTO_LOGGER.log("GridCellComponent row/col " + cell.$id + ": " + cell.row + "," + cell.column + "  span " + cell.rowSpan + "," + cell.columnSpan + "  box " + cell.box.role + "   --- " + int++);
-        row = cell.row + (cell.rowSpan ? " / span " + cell.rowSpan : "");
-        column = cell.column + (cell.columnSpan ? " / span " + cell.columnSpan : "");
+        $boxStore = cellBox.box;
+        console.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);
+        row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
+        column = cellBox.column + (cellBox.columnSpan ? " / span " + cellBox.columnSpan : "");
         const gridStyle = `grid-row: ${row}; grid-column: ${column};`;
-        const orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cell.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cell.column) ?"gridcellOdd" : "gridcellEven" )));
-        boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, cell.box.element.piLanguageConcept(), orientation, cell.style)) + gridStyle;
+        const orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ?"gridcellOdd" : "gridcellEven" )));
+        boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, cellBox.box.element.piLanguageConcept(), orientation, cellBox.style)) + gridStyle;
     });
 
 </script>
@@ -81,7 +83,7 @@
         onClick={onCellClick}
         on:keydown={onKeydown}
 >
-     <RenderComponent box={cell.box} editor={editor}/>
+     <RenderComponent box={$boxStore} editor={editor}/>
 </div>
 
 <style>

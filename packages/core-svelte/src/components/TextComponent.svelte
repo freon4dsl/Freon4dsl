@@ -34,7 +34,7 @@
         return currentText();
     };
 
-    export const setFocus = async () => {
+    export const setFocus = () => {
         LOGGER.log("setFocus in SetFocus" + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
         if (hasFocus()) {
             FOCUS_LOGGER.log("    has focus already");

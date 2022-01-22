@@ -9,6 +9,7 @@ export class GridCellBox extends Box  {
     private $box: Box = null;
     rowSpan?: number;
     columnSpan?: number;
+    kind: "GridCellBox";
 
     constructor(element: PiElement, role: string, row, column: number, box: Box, initializer?: Partial<GridCellBox>) {
         super(element, role);
@@ -24,7 +25,7 @@ export class GridCellBox extends Box  {
             row: observable,
             column: observable
         });
-        this.selectable = true;
+        // this.selectable = true;
     }
 
     get box(): Box {

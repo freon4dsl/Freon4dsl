@@ -65,7 +65,7 @@ export class OptionalBox extends Box {
     }
 
     get children(): ReadonlyArray<Box> {
-        if (this.condition()) {
+        if (this.condition() || this.mustShow) {
             return [this.box];
         } else {
             return [this.whenNoShowingAlias];

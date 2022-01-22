@@ -6,6 +6,9 @@ import { PiCommand, PiCustomCommand } from "./PiCommand";
 const LOGGER = new PiLogger("PiCustomAction");
 
 export class PiCustomAction extends PiAction {
+    /**
+     * The action function taht will be performed
+     */
     action: CustomAction;
 
     static create(initializer?: Partial<PiCustomAction>) {

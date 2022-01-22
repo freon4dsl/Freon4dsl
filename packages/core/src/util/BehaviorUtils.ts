@@ -122,7 +122,6 @@ export function executeSingleBehavior(action: PiAction, box: Box, text: string, 
         // if (!!action.boxRoleToSelect) {
         //     editor.selectBoxByRoleAndElementId(execresult.piId(),action.boxRoleToSelect,action.caretPosition);
         // }else {
-        //     editor.selectElement(execresult);
         //     editor.selectFirstLeafChildBox();
         //     if (editor.selectedBox.role.includes(LEFT_MOST)){
         //         // Special expression prefix box, don't select it

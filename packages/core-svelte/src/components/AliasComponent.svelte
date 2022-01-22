@@ -58,7 +58,7 @@
 
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("AliasComponent set focus " + choiceBox.role);
-        if (!!textComponent) {
+        if (!!textComponent && !!textComponent.setFocus) {
             textComponent.setFocus();
         } else {
             FOCUS_LOGGER.log("?ERROR? textComponent is null in setFocus.");

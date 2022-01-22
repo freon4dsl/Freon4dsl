@@ -67,7 +67,7 @@
     {#if mustShow || showByCondition}
         <RenderComponent box={optionalBox.box} editor={editor} />
     {:else}
-         <RenderComponent box={optionalBox.whenNoShowingAlias} editor={editor} />
+        <RenderComponent box={optionalBox.whenNoShowingAlias} editor={editor} />
     {/if}
 </div>
 

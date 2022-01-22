@@ -83,6 +83,7 @@ export class TableUtil {
         const property = element[propertyName];
         // const isList: boolean = propInfo.isList;
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
+        LOGGER.log("TABLE BOX CREATION for " + propertyName + " size " + property.length)
         // const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
         const hasHeaders = columnHeaders !== null && columnHeaders !== undefined && columnHeaders.length > 0;
         // create the box
@@ -187,10 +188,10 @@ export class TableUtil {
             for(let column = 1; column <= nrOfColumns; column++) {
                 const rolename = RoleProvider.cell(element.piLanguageConcept(), propertyName, row, column);
                 rolenames.push(rolename);
-                LOGGER.log("Add keyboard [" + rolename + "] for r/c " + row + "." + column);
+                // LOGGER.log("Add keyboard [" + rolename + "] for r/c " + row + "." + column);
             }
         }
-        LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
+        // LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
         const result = new PiCreateSiblingAction({
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             activeInBoxRoles: rolenames,

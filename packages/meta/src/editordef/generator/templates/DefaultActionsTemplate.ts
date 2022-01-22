@@ -3,7 +3,7 @@ import {
     PiLanguage,
     PiBinaryExpressionConcept,
     PiConcept,
-    PiClassifier
+    PiClassifier, PiProperty, PiPrimitiveType
 } from "../../../languagedef/metalanguage";
 import { Roles, LangUtil } from "../../../utils";
 import { PiEditConcept, PiEditPropertyProjection, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
@@ -83,15 +83,33 @@ export class DefaultActionsTemplate {
                                 const firstLiteral: string = item.firstLiteral();
                                 const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
                                 const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.propertyName());
+                                console.log("Looking for [" + optionalPropertyName + "] in [" + ce.concept.referred.name + "]")
+                                const prop: PiProperty =ce.concept.referred.allProperties().find(prop => prop.name === optionalPropertyName);
+                                let rolename: string = "unknown role";
+                                if(prop.isPart) {
+                                    // TODO Check for lists (everywhere)
+                                    rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName);
+                                } else if (prop.isPrimitive) {
+                                    if( prop.type.referred === PiPrimitiveType.number) {
+                                        rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "numberbox")
+                                    } else if( prop.type.referred === PiPrimitiveType.string) {
+                                        rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "textbox")
+                                    } else if( prop.type.referred === PiPrimitiveType.boolean) {
+                                        rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "booleanbox")
+                                    }
+                                } else {
+                                    // reference
+                                    rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "referencebox" );
+                                }
                                 result += `PiCustomAction.create(
                                     {
                                         trigger: "${firstLiteral === "" ? optionalPropertyName : firstLiteral}",
                                         activeInBoxRoles: ["optional-${optionalPropertyName}"],
                                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                                             ((box.parent) as OptionalBox).mustShow = true;
-                                            return null;
+                                            return box.element;
                                         },
-                                        boxRoleToSelect: "${ce.concept.name}-${optionalPropertyName}"
+                                        boxRoleToSelect: "${rolename}"
                                     })`;
                                 result += ","
                             }
