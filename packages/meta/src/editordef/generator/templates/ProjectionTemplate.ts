@@ -2,7 +2,7 @@ import {
     PiBinaryExpressionConcept,
     PiClassifier, PiConcept,
     PiConceptProperty,
-    PiExpressionConcept,
+    PiExpressionConcept, PiInterface,
     PiLanguage,
     PiLimitedConcept,
     PiPrimitiveProperty,
@@ -21,7 +21,7 @@ import {
     PiEditProjectionItem,
     PiEditProjectionLine,
     PiEditProjectionText,
-    PiEditPropertyProjection,
+    PiEditPropertyProjection, PiEditSuperProjection,
     PiEditTableProjection,
     PiEditUnit,
     PiOptionalPropertyProjection
@@ -37,7 +37,6 @@ export class ProjectionTemplate {
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
 
-    // TODO take super projections into account
     generateProjectionGroup(language: PiLanguage, projectionGroup: PiEditProjectionGroup, relativePath: string): string {
 
         // binary concepts are only handled in the default projection group
@@ -63,6 +62,7 @@ export class ProjectionTemplate {
         this.envImports = [];
         this.coreImports = [Names.PiProjection, Names.PiCompositeProjection, Names.PiElement, "PiTableDefinition", "Box"]; // these are always used
         if (!!binaryConcepts && binaryConcepts.length > 0 && projectionGroup.name === Names.defaultProjectionName) {
+            // these are always used in the default projection group
             this.modelImports.push(Names.allConcepts(language), Names.PiElementReference);
             this.coreImports.push("isPiBinaryExpression", "PiBinaryExpression", "createDefaultBinaryBox", "BoxFactory", "BoxUtils");
             this.envImports.push(Names.environment(language));
@@ -92,12 +92,21 @@ export class ProjectionTemplate {
                     });
                 }
 
-                getBox(element: ${Names.PiElement}): Box {
+                getBox(element: ${Names.PiElement}, nameOfSuper?: string): Box {
                     if (element === null ) {
                         return null;
                     }
+                    
+                    let boxType: string = element.piLanguageConcept();
+                    if (!!nameOfSuper && nameOfSuper.length > 0) {
+                        if (!this.rootProjection.checkSuper(nameOfSuper, element.piLanguageConcept()) ) {
+                            throw new Error(\`A box requested for '\${nameOfSuper}', which is not a super class or interface of '\${element.piLanguageConcept()}'\`);
+                        } else {
+                            boxType = nameOfSuper;
+                        }
+                    }
 
-                    switch( element.piLanguageConcept() ) {
+                    switch( boxType ) {
                         ${allClassifiersWithProjection.map(c => `
                         case "${Names.classifier(c)}" : return this.${Names.projectionFunction(c)} (element as ${Names.classifier(c)});`
                             ).join("  ")}
@@ -105,7 +114,7 @@ export class ProjectionTemplate {
                         `case "${Names.classifier(c)}" : return this.${Names.binaryProjectionFunction()} (element as ${Names.classifier(c)});`
                             ).join("  ")}
                     }
-                    ${projectionGroup.name === Names.defaultProjectionName 
+                    ${projectionGroup.name === Names.defaultProjectionName // only in the default projection group we need to give a message to the user
                     ?
                     `// nothing fits
                     throw new Error("No box defined for this expression:" + element.piId());`
@@ -129,7 +138,7 @@ export class ProjectionTemplate {
                 ${allClassifiersWithProjection.map(c => this.generateProjectionForClassfier(language, c, projectionGroup.findProjectionForType(c))).join("\n")}                                        
 
                 ${classifiersWithTableProjection.map(c => this.generateTableDefinition(language, c, projectionGroup.findTableProjectionForType(c))).join("\n")}
-
+                
                 ${!!binaryConcepts && binaryConcepts.length > 0 && projectionGroup.name === Names.defaultProjectionName
                     // only add these two methods when there are binary concepts, i.e. only for the default projection group
                     ?
@@ -192,12 +201,11 @@ export class ProjectionTemplate {
     }
 
     private findClassifiersWithNormalProjection(language: PiLanguage, group: PiEditProjectionGroup) {
-        // TODO add projections for abstract concepts and interfaces
         const nonBinaryClassifiers: PiClassifier[] = language.concepts.filter(c =>
             !(c instanceof PiBinaryExpressionConcept) &&
-            !(c instanceof PiLimitedConcept) &&
-            !c.isAbstract);
+            !(c instanceof PiLimitedConcept));
         nonBinaryClassifiers.push(...language.units);
+        nonBinaryClassifiers.push(...language.interfaces);
 
         // only for non-default projections group the following can be true: nonBinaryConceptsWithProjection !== nonBinaryClassifiers
         return nonBinaryClassifiers.filter(c => {
@@ -206,7 +214,7 @@ export class ProjectionTemplate {
         });
     }
 
-    private generateProjectionForClassfier(language: PiLanguage, concept: PiClassifier, projection: PiEditClassifierProjection) {
+    private generateProjectionForClassfier(language: PiLanguage, concept: PiClassifier, projection: PiEditClassifierProjection): string {
         this.addToIfNotPresent(this.modelImports, Names.classifier(concept));
         if (projection instanceof PiEditProjection) {
             const elementVarName = Roles.elementVarName(concept);
@@ -291,6 +299,8 @@ export class ProjectionTemplate {
             // Note: this condition must come after PiOptionalPropertyProjection,
             // because PiOptionalPropertyProjection is a sub class of PiEditPropertyProjection
             result += this.generatePropertyProjection(item, elementVarName, mainBoxLabel, language);
+        } else if (item instanceof PiEditSuperProjection) {
+            result += this.generateSuperProjection(item, elementVarName);
         }
         return result;
     }
@@ -525,5 +535,9 @@ export class ProjectionTemplate {
             imports.push(newEntry);
         }
 
+    }
+
+    private generateSuperProjection(item: PiEditSuperProjection, elementVarName: string) {
+        return `this.getBox(${elementVarName}, "${Names.classifier(item.superRef.referred)}")`;
     }
 }

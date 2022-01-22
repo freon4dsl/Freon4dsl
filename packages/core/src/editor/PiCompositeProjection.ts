@@ -2,6 +2,7 @@ import { observable, makeObservable, action } from "mobx";
 import { PiElement } from "../language";
 import { Box, BoxFactory, LabelBox, OrderedList, PiProjection } from "./internal";
 import { PiTableDefinition } from "./PiTables";
+import { Language } from "../storage";
 
 export class PiCompositeProjection implements PiProjection {
     private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
@@ -81,5 +82,29 @@ export class PiCompositeProjection implements PiProjection {
 
     projectionNames(): string[] {
         return this.projections.toArray().map(p => p.name);
+    }
+
+    checkSuper(nameOfSuper: string, elementName: string ): boolean {
+        // find the names of the subclasses of 'nameOfSuper'
+        const myConcept = Language.getInstance().concept(nameOfSuper);
+        let names: string[] = [];
+        if (!!myConcept) {
+            names = myConcept.subConceptNames;
+        } else {
+            names = Language.getInstance().interface(nameOfSuper)?.subConceptNames;
+        }
+        // now search the names for 'elementName'
+        let result: boolean = false;
+        if (!!names && names.length > 0) {
+            result = names.includes(elementName);
+            if (!result) { // do recursive
+                myConcept.subConceptNames.forEach(n => {
+                    if (this.checkSuper(n, elementName)) { // to avoid overwriting 'result' with next element
+                        result = true;
+                    }
+                });
+            }
+        }
+        return result;
     }
 }

@@ -261,6 +261,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: PiClassifier, editor: PiEditUnit) {
         // LOGGER.log("checking optional projection for " + cls?.name);
         // TODO when a primitive property is in an optional group is will not be shown when it has the default value for that property
+        // TODO add check on boolean prop with one keyword => should not be within optional group
         const propProjections: PiEditPropertyProjection[] = [];
         let nrOfItems = 0;
         item.lines.forEach(line => {

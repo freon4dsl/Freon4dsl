@@ -1,4 +1,4 @@
-editor XXX
+editor default
 
 UmlPart {
         [${umlPackage}]
@@ -36,7 +36,7 @@ Attribute {
 }
 UmlClass {
     [
-    [?${visibility}] [?${isAbstract [<abstract>]}] <class> ${name}
+    [?${visibility}] ${isAbstract [<abstract>]} <class> ${name}
     [?<specializes> ${generalizations horizontal separator [, ] }]
     [?<implements> ${interfaces horizontal separator [, ] }]
     [=> IClassifier]

@@ -17,7 +17,7 @@ import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 import { LOG2USER } from "../utils/UserLogger";
-import { EditorDefaultsGenerator } from "../editordef/metalanguage/EditorDefaultsGenerator";
+import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
@@ -148,10 +148,10 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             if (this.editFiles.length > 0) {
                 editor = new PiEditParser(this.language).parseMulti(this.editFiles);
             } else {
-                editor = EditorDefaultsGenerator.createEmptyEditorDefinition(this.language);
+                editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
             }
             // add default values for everything that is not present in the editor definition
-            EditorDefaultsGenerator.addDefaults(editor);
+            DefaultEditorGenerator.addDefaults(editor);
 
             this.editorGenerator.generate(editor);
             this.parserGenerator.generate(editor);

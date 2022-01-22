@@ -37,7 +37,7 @@ LetExp {
     ]
 }
 NavigationCallExp {
-    [${navigationSource:someOtherProjection}]
+    [${navigationSource}]
 }
 OclMessageExp {
     [<${target}>^^${calledOperation}( ${args horizontal separator[, ]} )]

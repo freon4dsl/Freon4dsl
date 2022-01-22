@@ -2,7 +2,7 @@ import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
-import { EditorDefaultsGenerator } from "../editordef/metalanguage/EditorDefaultsGenerator";
+import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
 import { PiEditUnit } from "../editordef/metalanguage";
 
 const LOGGER = new MetaLogger("ProjectItGenerateEditor"); // .mute();
@@ -30,10 +30,10 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
         // and the reader/writer couple. Therefore we do not generate a default editor when
         // no editor definition is found.
         if (editor === null) {
-            editor = EditorDefaultsGenerator.createEmptyEditorDefinition(this.language);
+            editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
         }
         // add default values for everything that is not present in the editor definition
-        EditorDefaultsGenerator.addDefaults(editor);
+        DefaultEditorGenerator.addDefaults(editor);
 
         this.editorGenerator.generate(editor);
     }

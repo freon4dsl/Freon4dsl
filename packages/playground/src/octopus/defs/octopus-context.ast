@@ -5,6 +5,7 @@ modelunit OclPart {
     public name: identifier;
     reference pack: UmlPackage;
     constraints: OclContext[];
+    file-extension = "ocl";
 }
 /**
  * ModelElementReference : because OCL expressions may express initial values etc. of

@@ -85,7 +85,7 @@ export class EnvironmentTemplate {
             languageName: string = "${language.name}";
             unitNames: string[] = [${language.modelConcept.unitTypes().map(unit => `"${Names.classifier(unit)}"`)}];
             fileExtensions: Map<string, string> = new Map([
-                ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", ".${unit.fileExtension}"]`)}
+                ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
             ]);
         }`;
     }

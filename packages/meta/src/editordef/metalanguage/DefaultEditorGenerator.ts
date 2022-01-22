@@ -22,7 +22,7 @@ import {
 import { Names } from "../../utils";
 import { EditorDefaults } from "./EditorDefaults";
 
-export class EditorDefaultsGenerator {
+export class DefaultEditorGenerator {
 
     public static createEmptyEditorDefinition(language: PiLanguage): PiEditUnit {
         const editDef = new PiEditUnit();
@@ -53,18 +53,18 @@ export class EditorDefaultsGenerator {
         }
 
         // add defaults for binary expressions
-        EditorDefaultsGenerator.defaultsForBinaryExpressions(editor.language, defaultGroup);
+        DefaultEditorGenerator.defaultsForBinaryExpressions(editor.language, defaultGroup);
 
         // add defaults for other classifiers, that are not limited concepts, iff they are not already present
-        EditorDefaultsGenerator.defaultsForOrdinaryClassifiers(editor.language, defaultGroup);
+        DefaultEditorGenerator.defaultsForOrdinaryClassifiers(editor.language, defaultGroup);
 
         // add defaults for units
-        EditorDefaultsGenerator.defaultsForUnit(editor.language, defaultGroup);
+        DefaultEditorGenerator.defaultsForUnit(editor.language, defaultGroup);
     }
 
     private static defaultsForBinaryExpressions(language: PiLanguage, defaultGroup: PiEditProjectionGroup) {
         for (const binConcept of language.concepts.filter(c => c instanceof PiBinaryExpressionConcept)) {
-            EditorDefaultsGenerator.addExtraDefaults(defaultGroup, binConcept, language);
+            DefaultEditorGenerator.addExtraDefaults(defaultGroup, binConcept, language);
         }
     }
 
@@ -77,11 +77,11 @@ export class EditorDefaultsGenerator {
             if (!foundProjection) {
                 // create a new projection
                 // console.log("Adding default projection for " + con.name);
-                const projection: PiEditProjection = EditorDefaultsGenerator.defaultClassifierProjection(con, language);
+                const projection: PiEditProjection = DefaultEditorGenerator.defaultClassifierProjection(con, language);
                 defaultGroup.projections.push(projection);
             }
             // find or create the extra info
-            EditorDefaultsGenerator.addExtraDefaults(defaultGroup, con, language);
+            DefaultEditorGenerator.addExtraDefaults(defaultGroup, con, language);
         }
     }
 
@@ -106,13 +106,13 @@ export class EditorDefaultsGenerator {
         // add all properties on the next lines
         for (const prop of con.allProperties().filter((p => p !== nameProp))) {
             if (prop.isList && !prop.isOptional) {
-                EditorDefaultsGenerator.defaultListProperty(con, prop, projection);
+                DefaultEditorGenerator.defaultListProperty(con, prop, projection);
             } else if (prop.isList && prop.isOptional) {
-                EditorDefaultsGenerator.defaultOptionalListProperty(con, prop, projection);
+                DefaultEditorGenerator.defaultOptionalListProperty(con, prop, projection);
             } else if (!prop.isList && !prop.isOptional) {
-                EditorDefaultsGenerator.defaultSingleProperty(con, prop, projection);
+                DefaultEditorGenerator.defaultSingleProperty(con, prop, projection);
             } else { // prop.isList && prop.isOptional
-                EditorDefaultsGenerator.defaultOptionalSingleProperty(con, prop, projection);
+                DefaultEditorGenerator.defaultOptionalSingleProperty(con, prop, projection);
             }
         }
         // add end line with end bracket
@@ -138,7 +138,7 @@ export class EditorDefaultsGenerator {
         const optional = new PiOptionalPropertyProjection();
         optional.property = PiElementReference.create<PiProperty>(prop, "PiProperty");
         optional.property.owner = concept.language;
-        EditorDefaultsGenerator.defaultSingleProperty(concept, prop, optional);
+        DefaultEditorGenerator.defaultSingleProperty(concept, prop, optional);
         line.items.push(optional);
         projection.lines.push(line);
     }
@@ -170,7 +170,7 @@ export class EditorDefaultsGenerator {
         const optional = new PiOptionalPropertyProjection();
         optional.property = PiElementReference.create<PiProperty>(prop, "PiProperty");
         optional.property.owner = concept.language;
-        EditorDefaultsGenerator.defaultListProperty(concept, prop, optional);
+        DefaultEditorGenerator.defaultListProperty(concept, prop, optional);
         line.items.push(optional);
         projection.lines.push(line);
     }
@@ -179,13 +179,13 @@ export class EditorDefaultsGenerator {
         let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
         if (!foundExtraInfo) {
             const extraInfo = new ExtraClassifierInfo();
-            EditorDefaultsGenerator.addExtras(extraInfo, con);
+            DefaultEditorGenerator.addExtras(extraInfo, con);
             extraInfo.classifier = PiElementReference.create<PiClassifier>(con, "PiClassifier");
             extraInfo.classifier.owner = language;
             defaultGroup.extras.push(extraInfo);
         } else {
             // add trigger and symbol, iff not present
-            EditorDefaultsGenerator.addExtras(foundExtraInfo, con);
+            DefaultEditorGenerator.addExtras(foundExtraInfo, con);
         }
     }
 
@@ -208,7 +208,7 @@ export class EditorDefaultsGenerator {
             if (!foundProjection) {
                 // create a new projection
                 // console.log("Adding default projection for " + con.name);
-                const projection: PiEditProjection = EditorDefaultsGenerator.defaultClassifierProjection(con, language);
+                const projection: PiEditProjection = DefaultEditorGenerator.defaultClassifierProjection(con, language);
                 defaultGroup.projections.push(projection);
             }
         }

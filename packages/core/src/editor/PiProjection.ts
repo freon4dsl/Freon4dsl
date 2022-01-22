@@ -8,9 +8,13 @@ import { PiTableDefinition } from "./PiTables";
 // tag::PiProjection[]
 export interface PiProjection {
     /**
-     * returns the box for `element`.
+     * Returns the box for `element`. If 'nameOfSuper' is present, it returns the box for the
+     * super concept or implemented interface with that name.
+     *
+     * @param element
+     * @param nameOfSuper if present, the name of a super concept or implemented interface of 'element'
      */
-    getBox(element: PiElement): Box;
+    getBox(element: PiElement, nameOfSuper?: string): Box;
 
     /**
      * returns the table cells for `element`.
