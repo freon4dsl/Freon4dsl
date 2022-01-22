@@ -20,7 +20,7 @@ import {
     PiEditUnit, PiOptionalPropertyProjection
 } from "../metalanguage";
 import { Names } from "../../utils";
-import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { EditorDefaults } from "./EditorDefaults";
 
 export class EditorDefaultsGenerator {
 
@@ -45,7 +45,7 @@ export class EditorDefaultsGenerator {
             defaultGroup = new PiEditProjectionGroup();
             defaultGroup.name = Names.defaultProjectionName;
             defaultGroup.standardBooleanProjection = new BoolKeywords();
-            defaultGroup.standardReferenceSeparator = ".";
+            defaultGroup.standardReferenceSeparator = EditorDefaults.standardReferenceSeparator;
             editor.projectiongroups.push(defaultGroup);
         }
         if (!defaultGroup.extras) {
@@ -101,7 +101,7 @@ export class EditorDefaultsGenerator {
             sub.property.owner = con.language;
             startLine.items.push(sub);
         }
-        startLine.items.push(PiEditProjectionText.create("{")); // start bracket
+        startLine.items.push(PiEditProjectionText.create(EditorDefaults.startBracket)); // start bracket
         projection.lines.push(startLine);
         // add all properties on the next lines
         for (const prop of con.allProperties().filter((p => p !== nameProp))) {
@@ -115,16 +115,16 @@ export class EditorDefaultsGenerator {
                 EditorDefaultsGenerator.defaultOptionalSingleProperty(con, prop, projection);
             }
         }
-        // add end line with end bracket - "}"
+        // add end line with end bracket
         const endLine = new PiEditProjectionLine();
-        endLine.items.push(PiEditProjectionText.create("}")); // end bracket
+        endLine.items.push(PiEditProjectionText.create(EditorDefaults.endBracket)); // end bracket
         projection.lines.push(endLine);
         return projection;
     }
 
     private static defaultSingleProperty(concept: PiClassifier, prop: PiProperty, projection: PiEditProjection | PiOptionalPropertyProjection): void {
         const line = new PiEditProjectionLine();
-        line.indent = 4;
+        line.indent = EditorDefaults.standardIndent;
         line.items.push(PiEditProjectionText.create(prop.name));
         const sub = new PiEditPropertyProjection();
         sub.property = PiElementReference.create<PiProperty>(prop, "PiProperty");
@@ -144,18 +144,23 @@ export class EditorDefaultsGenerator {
     }
     
     private static defaultListProperty(concept: PiClassifier, prop: PiProperty, projection: PiEditProjection | PiOptionalPropertyProjection): void {
+        // every list is projected as two lines
+        // the first shows the property name
         const line1 = new PiEditProjectionLine();
-        const line2 = new PiEditProjectionLine();
-        line1.indent = 4;
+        line1.indent = EditorDefaults.standardIndent;
         line1.items.push(PiEditProjectionText.create(prop.name));
-        line2.indent = 8;
+
+        // the second shows the property itself
+        const line2 = new PiEditProjectionLine();
+        line2.indent = EditorDefaults.standardIndent * 2;
         const sub = new PiEditPropertyProjection();
         sub.property = PiElementReference.create<PiProperty>(prop, "PiProperty");
         sub.property.owner = concept.language;
         sub.listInfo = new ListInfo();  // listInfo gets default values on initialization, but we change them here
-        sub.listInfo.joinType = ListJoinType.Separator;
-        sub.listInfo.joinText = ",";
+        sub.listInfo.joinType = EditorDefaults.listJoinType;
+        sub.listInfo.joinText = EditorDefaults.listJoinText;
         line2.items.push(sub);
+
         projection.lines.push(line1);
         projection.lines.push(line2);
     }

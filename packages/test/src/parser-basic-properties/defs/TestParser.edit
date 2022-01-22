@@ -1,6 +1,21 @@
 editor default
 
 // for testing primitives
+Prim {
+[
+Prim {
+    primIdentifier ${primIdentifier}
+    primNumber ${primNumber}
+    primString ${primString}
+    primBoolean ${primBoolean}
+    primListIdentifier ${primListIdentifier separator[,]}
+    primListNumber ${primListNumber separator[,]}
+    primListString ${primListString separator[,]}
+    primListBoolean ${primListBoolean separator[,]}
+}
+]
+}
+
 PrimsWithExtraText {
      [
         bef\"ore ${self.primIdentifierWithExtra} after

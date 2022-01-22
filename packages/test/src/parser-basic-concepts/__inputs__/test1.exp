@@ -1,7 +1,7 @@
 ExpressionTest simpleExpressions {
 	normalEx
 	binEx
-	StringLiteralEx {value "literal1"} + StringLiteralEx {value "literal2"} ,
+	StringLiteralEx {value "literal1"} + StringLiteralEx {value "literal2"}
 	NumberLiteralEx {value 109} / StringLiteralEx {value "literal3"} * BooleanLiteralEx
                                                                        	{value true}
 

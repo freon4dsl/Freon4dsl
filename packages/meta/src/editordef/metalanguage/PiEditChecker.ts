@@ -24,6 +24,7 @@ import {
 } from "./PiEditDefLang";
 import { MetaLogger } from "../../utils";
 import { PiElementReference } from "../../languagedef/metalanguage";
+import { EditorDefaults } from "./EditorDefaults";
 
 const LOGGER = new MetaLogger("PiEditChecker"); //.mute();
 
@@ -222,15 +223,17 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 this.simpleCheck(!!item.listInfo.joinText, `${joinTypeName} should be followed by a string between '[' and ']' (no whitespace allowed) ${this.location(item)}.`);
             } else { // the user has only entered 'vertical' or 'horizontal'
                 // create default join type
-                item.listInfo.joinType = ListJoinType.Separator;
+                item.listInfo.joinType = EditorDefaults.listJoinType;
+                item.listInfo.joinText = EditorDefaults.listJoinText;
             }
         } else {
             //create default
             item.listInfo = new ListInfo();
-            item.listInfo.isTable = false;
-            item.listInfo.direction = PiEditProjectionDirection.Vertical;
-            item.listInfo.joinType = ListJoinType.Separator;
-            item.listInfo.joinText = "";
+            // the following are set upon creation of ListInfo
+            // item.listInfo.isTable = false;
+            // item.listInfo.direction = PiEditProjectionDirection.Vertical;
+            item.listInfo.joinType = EditorDefaults.listJoinType;
+            item.listInfo.joinText = EditorDefaults.listJoinText;
         }
     }
 

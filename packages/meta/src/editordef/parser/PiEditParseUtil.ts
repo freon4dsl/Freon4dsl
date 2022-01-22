@@ -6,6 +6,7 @@ import {
     PiEditProjectionText,
     PiOptionalPropertyProjection
 } from "../metalanguage";
+import { EditorDefaults } from "../metalanguage/EditorDefaults";
 
 export class PiEditParseUtil {
 
@@ -81,7 +82,7 @@ export class PiEditParseUtil {
         const lastItemIndex = line.items.length - 1;
         line.items.forEach((item, index) => {
             if (item instanceof PiEditParsedProjectionIndent) {
-                item.normalize();
+                this.normalizeIndent(item);
                 // add the location to the new line for error messaging
                 if (!currentLine.location) {
                     currentLine.location = item.location;
@@ -102,5 +103,21 @@ export class PiEditParseUtil {
             }
         });
         return result;
+    }
+
+    /**
+     * Calculates the `amount` of indentation.
+     */
+    private static normalizeIndent(indent: PiEditParsedProjectionIndent): void {
+        let spaces = 0;
+        for (const char of indent.indent) {
+            // TODO change calculation based on spaces for the tab
+            if (char === "\t") {
+                spaces += EditorDefaults.standardIndent;
+            } else if (char === " ") {
+                spaces += 1;
+            }
+        }
+        indent.amount = spaces;
     }
 }

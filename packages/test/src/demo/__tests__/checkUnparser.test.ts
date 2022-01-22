@@ -121,7 +121,7 @@ describe("Testing Unparser", () => {
                 "    baseInterface_attr 0 \n" +
                 "    x \"\" \n" +
                 "    attributes \n" +
-                "        age : Boolean, \n" +
+                "        age : Boolean\n" +
                 "        name : String\n" +
                 "    entAttributes \n" +
                 "        \n" +

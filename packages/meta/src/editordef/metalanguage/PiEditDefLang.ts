@@ -406,21 +406,6 @@ export class PiEditParsedProjectionIndent extends PiDefinitionElement {
     indent: string = "";
     amount: number = 0;
 
-    /**
-     * Calculates the `amount` of indentation.
-     */
-    normalize(): void {
-        let spaces = 0;
-        for (const char of this.indent) {
-            if (char === "\t") {
-                spaces += 4;
-            } else if (char === " ") {
-                spaces += 1;
-            }
-        }
-        this.amount = spaces;
-    }
-
     toString(): string {
         return this.indent.replace(/ /g, "_" + this.amount);
     }

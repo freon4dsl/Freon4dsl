@@ -214,9 +214,6 @@ export function createTableProjection(data: Partial<PiEditTableProjection>): PiE
     const result = new PiEditTableProjection();
     if (!!data.name) {
         result.name = data.name;
-    } else {
-        // create default name
-        result.name = "table";
     }
     if (!!data.headers) {
         result.headers = data.headers;

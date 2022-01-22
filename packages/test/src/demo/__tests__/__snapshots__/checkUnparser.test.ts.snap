@@ -22,7 +22,7 @@ entities:
         baseInterface_attr 0 
         x \\"xxx\\" 
         attributes 
-            brand : String, 
+            brand : String
             type : String
         entAttributes 
             
@@ -47,7 +47,7 @@ entities:
         baseInterface_attr 0 
         x \\"xxx\\" 
         attributes 
-            numberplate : Integer, 
+            numberplate : Integer
             make : String
         entAttributes 
             
@@ -73,7 +73,7 @@ entities:
         baseInterface_attr 0 
         x \\"xxx\\" 
         attributes 
-            backseat : Boolean, 
+            backseat : Boolean
             gears : Integer
         entAttributes 
             
@@ -99,7 +99,7 @@ entities:
         baseInterface_attr 0 
         x \\"xxx\\" 
         attributes 
-            color : String, 
+            color : String
             wheelsize : Integer
         entAttributes 
             
@@ -145,7 +145,7 @@ entities:
         baseInterface_attr 0 
         x \\"xxx\\" 
         attributes 
-            foundedIn : Integer, 
+            foundedIn : Integer
             name : String
         entAttributes 
             
@@ -168,7 +168,7 @@ entities:
         baseInterface_attr 0 
         x \\"xxx\\" 
         attributes 
-            name : String, 
+            name : String
             VAT_Number : Integer
         entAttributes 
             
