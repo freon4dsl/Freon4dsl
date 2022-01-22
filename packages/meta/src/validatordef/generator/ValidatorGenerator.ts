@@ -8,6 +8,7 @@ import { ValidatorTemplate } from "./templates/ValidatorTemplate";
 import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate";
 import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate";
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate";
+import { LOG2USER } from "../../utils/UserLogger";
 
 const LOGGER = new MetaLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
@@ -107,16 +108,15 @@ export class ValidatorGenerator {
         if (force) {
             Helpers.deleteFile(`${this.validatorFolder}/index.ts`);
             if (this.language == null) {
-                LOGGER.error("Cannot remove all because language is not set.");
+                LOG2USER.error("Cannot remove all because language is not set.");
             } else {
                 Helpers.deleteFile(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts`);
             }
             Helpers.deleteDirIfEmpty(this.validatorFolder);
         } else {
             // do not delete the following files, because these may contain user edits
-            LOGGER.info(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts` +
+            LOG2USER.info(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts` +
                 '\n\t' + `${this.validatorFolder}/index.ts`);
         }
-
     }
 }

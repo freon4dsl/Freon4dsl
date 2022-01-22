@@ -15,6 +15,7 @@ import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
 import { EditorDefTemplate } from "./templates/EditorDefTemplate";
+import { LOG2USER } from "../../utils/UserLogger";
 
 const LOGGER = new MetaLogger("EditorGenerator").mute();
 
@@ -127,12 +128,10 @@ export class EditorGenerator {
         Helpers.deleteDirAndContent(this.editorGenFolder);
         if (force) {
             Helpers.deleteFile(`${this.stylesFolder}/styles.ts`);
-            Helpers.deleteFile(`${this.editorGenFolder}/index.ts`);
             Helpers.deleteFile(`${this.editorFolder}/index.ts`);
-            Helpers.deleteDirIfEmpty(this.editorGenFolder);
             Helpers.deleteDirIfEmpty(this.stylesFolder);
             if (this.language == null) {
-                LOGGER.error("Cannot remove all because language is not set.");
+                LOG2USER.error("Cannot remove all files because language is not set.");
             } else {
                 Helpers.deleteFile(`${this.editorFolder}/${Names.customActions(this.language)}.ts`);
                 Helpers.deleteFile(`${this.editorFolder}/${Names.customProjection(this.language)}.ts`);
@@ -140,11 +139,10 @@ export class EditorGenerator {
             }
         } else {
             // do not delete the following files, because these may contain user edits
-            LOGGER.info(`Not removed: ${this.editorFolder}/${Names.customActions(this.language)}.ts` +
+            LOG2USER.info(`Not removed: ${this.editorFolder}/${Names.customActions(this.language)}.ts` +
                 '\n\t' + `${this.editorFolder}/${Names.customProjection(this.language)}.ts` +
                 '\n\t' + `${this.editorFolder}/index.ts` +
-                '\n\t' + `${this.stylesFolder}/styles.ts` +
-                '\n\t' + `${this.editorGenFolder}/index.ts`
+                '\n\t' + `${this.stylesFolder}/styles.ts`
             );
         }
     }

@@ -14,7 +14,7 @@ Entity {
         entity ${self.name}
 
         [? base ${self.baseEntity}] {
-            ${self.attributes @table @columns  }
+            ${self.attributes @vertical }
             ${self.methods @vertical}
         }
     ]
@@ -29,14 +29,14 @@ ExampleUnit {
                 @vertical
             }
         unit level methods:
-            ${self.methods @table }
+            ${self.methods @vertical }
         }
         ]
 }
 
 Method {
     @projection [
-        method ${self.name} ( ${self.parameters @table } ): ${self.declaredType} {
+        method ${self.name} ( ${self.parameters @horizontal @separator [, ]} ): ${self.declaredType} {
             ${self.body}
         }
     ]

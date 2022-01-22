@@ -38,7 +38,7 @@ export class ProjectItCleanAction extends CommandLineAction {
             actionName: "clean-it",
             summary: "Removes the generated TypeScript code for all parts of the work environment for your language",
             documentation:
-                "Removes the TypeScript code for the language implemention, the editor, the scoper, the typer, the reader, the writer, and the " +
+                "Removes the TypeScript code for the language implementation, the editor, the scoper, the typer, the reader, the writer, and the " +
                 "validator. Any files that may contain customizations are left untouched."
         });
     }
@@ -76,8 +76,6 @@ export class ProjectItCleanAction extends CommandLineAction {
         });
     }
 
-    // name of this mehtod needs to be generate, even though it does not generate, but removes files
-    // because the superclass expects a method with this name
     doClean(): void {
         LOGGER.info("Removing of all parts of your language");
         // LOGGER.log("Output will be cleaned from: " + this.outputFolder);
@@ -85,6 +83,7 @@ export class ProjectItCleanAction extends CommandLineAction {
         // when the force flag is present we need to parse the definition ast files
         // because some generators must remove files with names based on the language
         if (this.force) {
+            LOGGER.info("Force flag is present therefore we need to parse the definition ast files, because some generators must remove files with names based on the language.")
             this.findLanguage();
         }
         // clean the workspace
