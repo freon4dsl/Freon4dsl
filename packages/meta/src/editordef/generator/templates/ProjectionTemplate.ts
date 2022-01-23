@@ -477,6 +477,7 @@ export class ProjectionTemplate {
                 let trueKeyword: string = this.trueKeyword;
                 let falseKeyword: string = this.falseKeyword;
                 if (!!boolInfo) {
+                    // TODO this should probably get a new type of box
                     trueKeyword = boolInfo.trueKeyword;
                     falseKeyword = boolInfo.falseKeyword;
                 }

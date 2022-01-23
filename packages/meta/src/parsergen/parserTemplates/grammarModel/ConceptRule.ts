@@ -19,9 +19,9 @@ export class ConceptRule extends GrammarRule {
         let xx: PiProperty[] = [];
         for (const part of this.ruleParts) {
             if (part instanceof RHSPropEntry) {
-                xx.push(part.property);
-                // } else if (part instanceof RHSGroup) {
-                //     xx.push(...part.propsToSet());
+                if (!xx.includes(part.property)) {
+                    xx.push(part.property);
+                }
             }
         }
         return xx;

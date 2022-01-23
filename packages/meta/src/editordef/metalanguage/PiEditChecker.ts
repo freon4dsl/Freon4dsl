@@ -59,6 +59,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         let names: string[] = [];
         editUnit.projectiongroups.forEach(group => {
             this.checkUniqueNameOfProjectionGroup(names, group);
+            group.owningDefinition = editUnit;
         })
         this.simpleCheck(true, ``);
         this.simpleWarning(!!editUnit.getDefaultProjectiongroup(),

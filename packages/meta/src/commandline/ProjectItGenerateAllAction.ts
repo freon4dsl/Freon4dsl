@@ -150,7 +150,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             } else {
                 editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
             }
-            // add default values for everything that is not present in the editor definition
+            // add default values for everything that is not present in the default projection group
             DefaultEditorGenerator.addDefaults(editor);
 
             this.editorGenerator.generate(editor);

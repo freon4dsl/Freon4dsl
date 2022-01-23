@@ -10,6 +10,7 @@ OclPart {
 OclContext {
     [
     context ${self.owningModelelement}
+    ${self.usageType}: [? ${self.definedOperation} =][? ${self.definedAttribute} =]${self.expression}
     inv: ${self.expression}
     ]
 

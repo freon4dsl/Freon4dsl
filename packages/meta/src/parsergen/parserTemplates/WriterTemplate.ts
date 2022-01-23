@@ -4,8 +4,7 @@ import {
     Names,
     PROJECTITCORE,
     propertyToTypeScript,
-    propertyToTypeScriptWithoutReferred,
-    sortConcepts
+    propertyToTypeScriptWithoutReferred
 } from "../../utils";
 import {
     PiBinaryExpressionConcept, PiClassifier,
@@ -24,7 +23,7 @@ import {
     PiEditProjectionItem,
     PiEditProjection,
     PiEditClassifierProjection,
-    PiOptionalPropertyProjection, ExtraClassifierInfo
+    PiOptionalPropertyProjection, ExtraClassifierInfo, PiEditSuperProjection
 } from "../../editordef/metalanguage";
 import { PiPrimitiveType } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
@@ -37,14 +36,30 @@ export class WriterTemplate {
      * 'language', based on the given editor definition.
      */
     public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
+        // TODO use 'parser' projection group
         let defaultGroup: PiEditProjectionGroup = editDef.getDefaultProjectiongroup();
 
         const allLangConceptsName: string = Names.allConcepts(language);
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
         let limitedConcepts: PiLimitedConcept[] = language.concepts.filter(c => c instanceof PiLimitedConcept) as PiLimitedConcept[];
-        const elementsToUnparse: PiClassifier[] = sortConcepts(language.concepts).filter(c => !c.isAbstract);
-        elementsToUnparse.push(...language.units);
+        const conceptsToUnparse: PiClassifier[] = [];
+        conceptsToUnparse.push(...language.concepts);
+        conceptsToUnparse.push(...language.units);
+
+        const conceptsWithoutProjection: PiClassifier[] = conceptsToUnparse.filter(c => !(c instanceof PiLimitedConcept))
+            .filter(c => {
+            const projection = editDef.findProjectionForType(c);
+            return projection === undefined || projection === null;
+        });
+        const interfacesWithoutProjection: PiInterface[] = language.interfaces.filter(c => {
+            const projection = editDef.findProjectionForType(c);
+            return projection === undefined || projection === null;
+        });
+        const interfacesWithProjection: PiInterface[] = language.interfaces.filter(c => {
+            const projection = editDef.findProjectionForType(c);
+            return projection !== undefined && projection !== null;
+        });
 
         const binaryExtras: ExtraClassifierInfo[] = [];
         for (const myExtra of defaultGroup.extras) {
@@ -57,10 +72,14 @@ export class WriterTemplate {
         // Template starts here
         return `
         import { ${Names.PiNamedElement}, ${writerInterfaceName} } from "${PROJECTITCORE}";
-        import { ${allLangConceptsName}, ${Names.PiElementReference}, ${language.units.map(concept => `
+        import { ${allLangConceptsName}, ${Names.PiElementReference}, 
+            ${language.interfaces.map(concept => `
+                ${Names.classifier(concept)}`).join(", ")},
+            ${language.units.map(concept => `
                 ${Names.classifier(concept)}`).join(", ")},
             ${language.concepts.map(concept => `
-                    ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
+                    ${Names.concept(concept)}`).join(", ")}                               
+        } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         
         /**
          * SeparatorType is used to unparse lists.
@@ -146,15 +165,23 @@ export class WriterTemplate {
             }
         
             private unparse(modelelement: ${allLangConceptsName}, short: boolean) {
-                ${elementsToUnparse.map((concept, index) => `
-                ${index == 0 ? `` : `} else ` }if (modelelement instanceof ${Names.classifier(concept)}) {
-                    this.unparse${Names.classifier(concept)}(modelelement, short);`).join("")}
+                switch (modelelement.piLanguageConcept()) {
+                ${conceptsToUnparse.map(concept =>
+                `case "${Names.classifier(concept)}": this.unparse${Names.classifier(concept)}(modelelement as ${Names.classifier(concept)}, short);
+                break;`
+                ).join("\n")}
+                ${language.interfaces.map(concept =>
+                `case "${Names.classifier(concept)}": this.unparse${Names.classifier(concept)}(modelelement as ${Names.classifier(concept)}, short);
+                break;`
+                ).join("\n")}
                 }
             }
 
             ${defaultGroup.projections.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
             ${binaryExtras.map(bin => `${this.makeBinaryExpMethod(bin)}`).join("\n")}
             ${limitedConcepts.map(con => `${this.makeLimitedMethod(con)}`).join("\n")}
+            ${conceptsWithoutProjection.map(concept => `${this.makeAbstractConceptMethodWithout(concept)}`).join("\n")}
+            ${interfacesWithoutProjection.map(intf => `${this.makeInterfaceMethod(intf, Names.allConcepts(language))}`).join("\n") }
              
             /**
              *
@@ -343,10 +370,8 @@ export class WriterTemplate {
     private makeConceptMethod (conceptDef: PiEditClassifierProjection): string {
         const myConcept: PiClassifier = conceptDef.classifier.referred;
         if (conceptDef instanceof PiEditProjection) {
-            if (myConcept instanceof PiConcept && myConcept.isAbstract) {
-                return this.makeAbstractMethod(myConcept);
-            } else if (myConcept instanceof PiBinaryExpressionConcept || myConcept instanceof PiInterface) {
-                // do nothing, binary expressions and interfaces are treated differently
+            if (myConcept instanceof PiBinaryExpressionConcept) {
+                // do nothing, binary expressions are treated differently
             } else {
                 return this.makeNormalMethod(conceptDef, myConcept);
             }
@@ -367,48 +392,6 @@ export class WriterTemplate {
                      }
                  }`;
     }
-
-    // private makeLimitedKeywordMethod(conceptDef: PiEditLimitedProjection, myConcept: PiLimitedConcept) {
-    //     const comment = `/**
-    //                       * The limited concept '${myConcept.name}' is unparsed according to the keywords in the editor definition.
-    //                       */`;
-    //     const name: string = Names.concept(myConcept);
-    //     const lines: PiEditInstanceProjection[] = conceptDef.instanceProjections;
-    //
-    //     // if the special 'keyword' construct is used, we create an extra method with a switch statement
-    //     // if not, do nothing, the limited concept is being referred to by its name
-    //     if (!!lines) {
-    //         let cases: string = "";
-    //         lines.map(item => {
-    //             // if the special 'keyword' construct is used, there will be instances of PiEditPropertyProjection
-    //             // that have 'booleanInfo'
-    //             if (item instanceof PiEditInstanceProjection && !!item.keyword) {
-    //                 // add escapes to keyword
-    //                 const myKeyword = ParserGenUtil.escapeRelevantChars(item.keyword.trueKeyword);
-    //                 cases += `case ${Names.concept(myConcept)}.${Names.instance(item.instance.referred)}: {
-    //                             this.output[this.currentLine] += "${myKeyword} ";
-    //                             break;
-    //                             }
-    //                             `
-    //             }
-    //         });
-    //         if (cases.length > 0) {
-    //             return `
-    //                 ${comment}
-    //                     private unparse${name}(modelelement: ${name}, short: boolean) {
-    //                         if (!!modelelement) {
-    //                             switch (modelelement) {
-    //                                 ${cases}
-    //                                 default: {
-    //                                     this.output[this.currentLine] += modelelement.name + " ";
-    //                                 }
-    //                             }
-    //                         }
-    //                     }`;
-    //         }
-    //     }
-    //     return "";
-    // }
 
     private makeAbstractMethod(myConcept: PiConcept): string {
         const name: string = Names.concept(myConcept);
@@ -521,6 +504,9 @@ export class WriterTemplate {
             } else {
                 result += this.makeItemWithConceptType(myElem, item, indent, inOptionalGroup);
             }
+        } else if (item instanceof PiEditSuperProjection) {
+            // TODO test this
+            result += `this.unparse${Names.classifier(item.superRef.referred)}(modelelement, short);`;
         }
         return result;
     }
@@ -733,6 +719,25 @@ export class WriterTemplate {
                 this.unparse(modelelement.right, short);
         }`;
         }
-        return ``;
+        return '';
+    }
+
+    private makeInterfaceMethod(piInterface: PiInterface, classifierType: string): string {
+        const name: string = Names.interface(piInterface);
+        return `/**
+                 * The interface '${piInterface.name}' is not unparsed.
+                 */
+                private unparse${name}(modelelement: ${classifierType}, short: boolean) {
+                    throw new Error('Method unparse${name} should be implemented by the classes that implement it.');
+                }`;
+    }
+
+    private makeAbstractConceptMethodWithout(concept: PiClassifier): string {
+        if (concept instanceof PiConcept && concept.isAbstract) {
+            return this.makeAbstractMethod(concept);
+        } else {
+            console.log("INTERNAL ERROR: concept without projection is not abstract or limited: " + concept.name);
+        }
+        return '';
     }
 }

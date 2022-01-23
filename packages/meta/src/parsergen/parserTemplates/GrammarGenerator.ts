@@ -1,5 +1,5 @@
 import { PiLanguage } from "../../languagedef/metalanguage";
-import { PiEditUnit } from "../../editordef/metalanguage";
+import { PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
 import { LimitedMaker } from "./LimitedMaker";
 import { BinaryExpMaker } from "./BinaryExpMaker";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
@@ -7,34 +7,44 @@ import { ConceptMaker } from "./ConceptMaker";
 import { GrammarModel } from "./grammarModel/GrammarModel";
 import { LanguageAnalyser, PiAnalyser } from "./LanguageAnalyser";
 import { GrammarPart } from "./grammarModel/GrammarPart";
-import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
+import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
+import { Names } from "../../utils";
 
 export class GrammarGenerator {
-    private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
 
     createGrammar(language: PiLanguage, analyser: LanguageAnalyser, editUnit: PiEditUnit): GrammarModel {
         // create the model of the grammar and syntax analysis
         const grammar = new GrammarModel();
         grammar.language = language;
-        this.createGrammarRules(grammar, editUnit, analyser, language);
+        // find the projection group that can be used for the parser and unparser
+        let projectionGroup: PiEditProjectionGroup = editUnit.projectiongroups.find(g => g.name === EditorDefaults.parserGroupName);
+        if (!projectionGroup) {
+            projectionGroup = editUnit.getDefaultProjectiongroup();
+        }
+        // if no projection group found, return
+        if (!projectionGroup) {
+            return null;
+        }
+
+        this.createGrammarRules(grammar, projectionGroup, analyser, language);
         return grammar;
     }
 
-    private createGrammarRules(grammar: GrammarModel, editUnit: PiEditUnit, myLanguageAnalyser: LanguageAnalyser, language: PiLanguage) {
+    private createGrammarRules(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: PiLanguage) {
         // generate the rules for each unit
         for (const unitAnalyser of myLanguageAnalyser.unitAnalysers) {
-            this.createRulesPerAnalyser(grammar, editUnit, unitAnalyser, language);
+            this.createRulesPerAnalyser(grammar, projectionGroup, unitAnalyser, language);
         }
         // do the same for the common analyser
-        this.createRulesPerAnalyser(grammar, editUnit, myLanguageAnalyser, language);
+        this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser, language);
     }
 
-    private createRulesPerAnalyser(grammar: GrammarModel, editUnit: PiEditUnit, analyser: PiAnalyser, language: PiLanguage) {
+    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, analyser: PiAnalyser, language: PiLanguage) {
         const grammarPart = new GrammarPart();
         grammarPart.unit = analyser.unit;
         // create parse rules and syntax analysis methods for the concepts
         const conceptMaker: ConceptMaker = new ConceptMaker();
-        grammarPart.rules.push(...conceptMaker.generateClassifiers(editUnit, analyser.classifiersUsed));
+        grammarPart.rules.push(...conceptMaker.generateClassifiers(projectionGroup, analyser.classifiersUsed));
 
         // create parse rules and syntax analysis methods for the interfaces and abstracts
         const choiceRuleMaker: ChoiceRuleMaker = new ChoiceRuleMaker();
@@ -45,8 +55,12 @@ export class GrammarGenerator {
 
         // create parse rules and syntax analysis methods for the binary expressions
         const binaryExpMaker: BinaryExpMaker = new BinaryExpMaker();
+        // always use the default projection group for binary expressions
+        if (projectionGroup.name !== Names.defaultProjectionName) {
+            projectionGroup = projectionGroup.owningDefinition.getDefaultProjectiongroup();
+        }
         if (analyser.binaryConceptsUsed.length > 0) {
-            grammarPart.rules.push(binaryExpMaker.generateBinaryExpressions(language, editUnit, analyser.binaryConceptsUsed));
+            grammarPart.rules.push(binaryExpMaker.generateBinaryExpressions(language, projectionGroup, analyser.binaryConceptsUsed));
         }
 
         // create parse rules and syntax analysis methods for the limited concepts

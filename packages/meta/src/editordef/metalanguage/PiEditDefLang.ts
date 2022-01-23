@@ -47,6 +47,7 @@ export class PiEditUnit extends PiDefinitionElement {
     }
 
     findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
+        // TODO this method should return all projections for type 'cls'
         for (const group of this.projectiongroups) {
             const found = group.findProjectionForType(cls);
             if (!!found) {
@@ -108,6 +109,7 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
     standardBooleanProjection: BoolKeywords = null; // may only be present in default group
     standardReferenceSeparator: string = null;      // may only be present in default group
     extras: ExtraClassifierInfo[] = null;           // may only be present in default group
+    owningDefinition: PiEditUnit;
 
     findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
         return this.projections.find(con => con.classifier.referred === cls);

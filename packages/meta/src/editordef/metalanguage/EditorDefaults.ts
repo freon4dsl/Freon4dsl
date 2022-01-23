@@ -1,4 +1,4 @@
-import { ListJoinType } from "./PiEditDefLang";
+import { ListJoinType, PiEditProjectionGroup } from "./PiEditDefLang";
 
 export class EditorDefaults {
     static standardReferenceSeparator = ".";
@@ -13,4 +13,9 @@ export class EditorDefaults {
     //  direction: PiEditProjectionDirection = PiEditProjectionDirection.Vertical;
     // Defaults for trigger and symbol are set in EditorDefaultsGenerator.
     // Both values are determined by Names.classifier(classifier).
+
+    // for parser/unparser
+    static parserGroupName = "parser";
+
+
 }

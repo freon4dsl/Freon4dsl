@@ -10,7 +10,6 @@ import {
     BoolKeywords,
     ExtraClassifierInfo,
     ListInfo,
-    ListJoinType,
     PiEditClassifierProjection,
     PiEditProjection,
     PiEditProjectionGroup,
@@ -21,6 +20,7 @@ import {
 } from "../metalanguage";
 import { Names } from "../../utils";
 import { EditorDefaults } from "./EditorDefaults";
+import { LOG2USER } from "../../utils/UserLogger";
 
 export class DefaultEditorGenerator {
 
@@ -35,6 +35,7 @@ export class DefaultEditorGenerator {
 
     /**
      * Add default projections for all concepts that do not have one yet.
+     * Not included are: limited concepts, abstract concepts, and interfaces.
      * @param editor
      */
     public static addDefaults(editor: PiEditUnit): void {
@@ -60,6 +61,18 @@ export class DefaultEditorGenerator {
 
         // add defaults for units
         DefaultEditorGenerator.defaultsForUnit(editor.language, defaultGroup);
+
+        // TEST TODO to be moved elsewere
+        editor.language.concepts.filter(c => !(c instanceof PiLimitedConcept)).forEach(c => {
+            if (!defaultGroup.findProjectionForType(c) && !c.isAbstract) {
+                console.log("INTERNAL ERROR: no default projection for " + c.name );
+            }
+        });
+        editor.language.units.forEach(u => {
+            if (!defaultGroup.findProjectionForType(u) ) {
+                console.log("INTERNAL ERROR: no default projection for " + u.name );
+            }
+        });
     }
 
     private static defaultsForBinaryExpressions(language: PiLanguage, defaultGroup: PiEditProjectionGroup) {

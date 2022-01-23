@@ -1,5 +1,5 @@
 import { PiBinaryExpressionConcept, PiClassifier, PiExpressionConcept, PiLanguage } from "../../languagedef/metalanguage";
-import { PiEditUnit } from "../../editordef/metalanguage";
+import { PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { BinaryExpressionRule } from "./grammarModel/BinaryExpressionRule";
 
@@ -7,10 +7,10 @@ export class BinaryExpMaker {
     static specialBinaryRuleName = `__pi_binary_expression`;
     imports: PiClassifier[] = [];
 
-    public generateBinaryExpressions(language:PiLanguage, editUnit: PiEditUnit, binaryConceptsUsed: PiBinaryExpressionConcept[]): GrammarRule {
+    public generateBinaryExpressions(language:PiLanguage, projectionGroup: PiEditProjectionGroup, binaryConceptsUsed: PiBinaryExpressionConcept[]): GrammarRule {
         // common information
         const expressionBase: PiExpressionConcept = language.findExpressionBase();
-        const editDefs: Map<PiClassifier, string> = this.findEditDefs(binaryConceptsUsed, editUnit);
+        const editDefs: Map<PiClassifier, string> = this.findEditDefs(binaryConceptsUsed, projectionGroup);
         const branchName = BinaryExpMaker.specialBinaryRuleName;
 
         this.imports.push(expressionBase);
@@ -19,10 +19,10 @@ export class BinaryExpMaker {
         return new BinaryExpressionRule(branchName, expressionBase, editDefs);
     }
 
-    private findEditDefs(binaryConceptsUsed: PiBinaryExpressionConcept[], editUnit: PiEditUnit): Map<PiClassifier, string> {
+    private findEditDefs(binaryConceptsUsed: PiBinaryExpressionConcept[], projectionGroup: PiEditProjectionGroup): Map<PiClassifier, string> {
         let result: Map<PiClassifier, string> = new Map<PiClassifier, string>();
         for (const binCon of binaryConceptsUsed) {
-            const mySymbol = editUnit.findExtrasForType(binCon).symbol;
+            const mySymbol = projectionGroup.findExtrasForType(binCon).symbol;
             result.set(binCon, mySymbol);
         }
         return result;

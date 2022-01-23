@@ -11,7 +11,7 @@ Association {
 IClassifier {
         [
         [?<attributes>  ${attributes vertical terminator [;] }]
-        [?<operations>  ${operations vertical initiator [function] }]
+        [?<operations>  ${operations vertical terminator [;] }]
         [?<states>      ${states     vertical separator [;] }]
         [?<invariants>  ${invariants vertical terminator [;] }]
         ]
