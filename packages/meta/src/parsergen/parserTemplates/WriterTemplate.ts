@@ -222,6 +222,7 @@ export class WriterTemplate {
             private unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
                     const isLastInList: boolean = index === list.length - 1;
+                    this.doInitiator(sepText, sepType);
                     this.unparse(listElem, short);
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
@@ -240,7 +241,8 @@ export class WriterTemplate {
              */
             private unparseReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index === list.length - 1;                   
+                    const isLastInList: boolean = index === list.length - 1;     
+                    this.doInitiator(sepText, sepType);              
                     this.unparseReference(listElem, short);                 
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
@@ -314,7 +316,6 @@ export class WriterTemplate {
                         break;
                     }
                     case SeparatorType.Initiator: {
-                        this.output[this.currentLine] += sepText;
                         break;
                     }
                     case SeparatorType.NONE: {
@@ -338,14 +339,6 @@ export class WriterTemplate {
                 } else if (!vertical && isLastInList) {
                     this.output[this.currentLine] += \` \`;
                 }
-                
-                // then add the next initiator
-                switch (sepType) {
-                    case SeparatorType.Initiator: {
-                        this.output[this.currentLine] += sepText;
-                        break;
-                    }
-                }
             }
         
             /**
@@ -362,6 +355,18 @@ export class WriterTemplate {
                 }
                 this.output[this.currentLine] = indentation;
             }
+ 
+             /**
+             * Adds the 'initiator' text  
+             * @param sepText
+             * @param sepType
+             * @private
+             */           
+            private doInitiator(sepText: string, sepType: SeparatorType) {
+                if (sepType === SeparatorType.Initiator) {
+                    this.output[this.currentLine] += sepText;
+                }
+            }           
         } `;
     }
 

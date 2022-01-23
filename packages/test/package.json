@@ -28,7 +28,8 @@
     "langconstr":   "bash ../../scripts/projectit-dev.sh all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "noparser":     "bash ../../scripts/projectit-dev.sh all -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
     "testproject":  "bash ../../scripts/projectit-dev.sh all -d src/testproject/defs -o src/testproject",
-    "build":        "yarn demo && yarn octopus && yarn parser-conc && yarn parser-props && yarn parsergen && yarn imports && yarn defaultscoper && yarn definedscoper && yarn langconstr && yarn noparser && yarn testproject && tsc",
+    "vehicles":     "bash ../../scripts/projectit-dev.sh all -d src/vehicles/defs -o src/vehicles",
+    "build":        "yarn demo && yarn octopus && yarn parser-conc && yarn parser-props && yarn parsergen && yarn imports && yarn defaultscoper && yarn definedscoper && yarn langconstr && yarn noparser && yarn testproject && yarn vehicles && tsc",
     "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-parser": "rm -r */*/*parse*",
@@ -44,7 +45,8 @@
     "clean-langconstr":   "bash ../../scripts/projectit-dev.sh clean-it -f -d src/testLangConstructs/defs -o src/testLangConstructs",
     "clean-noparser":     "bash ../../scripts/projectit-dev.sh clean-it -f -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
     "clean-testproject" : "bash ../../scripts/projectit-dev.sh clean-it -f -d src/testproject/defs -o src/testproject",
-    "clean-all-projects": "yarn clean-demo && yarn clean-octopus && yarn clean-parser-conc && yarn clean-parser-props && yarn clean-parsergen && yarn clean-imports && yarn clean-defaultscoper && yarn clean-definedscoper && yarn clean-langconstr && yarn clean-noparser && yarn clean-testproject",
+    "clean-vehicles":     "bash ../../scripts/projectit-dev.sh clean-it -f -d src/vehicles/defs -o src/vehicles",
+    "clean-all-projects": "yarn clean-demo && yarn clean-octopus && yarn clean-parser-conc && yarn clean-parser-props && yarn clean-parsergen && yarn clean-imports && yarn clean-defaultscoper && yarn clean-definedscoper && yarn clean-langconstr && yarn clean-noparser && yarn clean-testproject && yarn clean-vehicles",
     "test":         "jest"
   },
   "dependencies": {

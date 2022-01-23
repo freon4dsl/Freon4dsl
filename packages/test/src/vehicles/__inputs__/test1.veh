@@ -1,0 +1,40 @@
+VehicleUnit unitTest1 {
+	vehicle of type Bike with 5 wheels
+	    Manufacturer: "Gazelle"
+	    Size of tyres: 25
+    vehicle of type SteamBoat with 1 wheels
+    	Manufacturer: "Altena Yachting"
+        TypeOfEngine: Steam MaxSpeed: 30
+        NrOfPassengers: 100
+        PreferedWaterWay: "Donau"
+        Is a heritage ship: true
+	vehicle of type PetrolCar with 4 wheels
+	    Manufacturer: "Porsche"
+        TypeOfEngine: Gasoline
+        MaxSpeed: 240
+        max content of boot (in m2): 20	    
+	vehicle of type SolarCar with 4 wheels
+		Manufacturer: "LightYear"
+        TypeOfEngine: Electricity
+        MaxSpeed: 10
+        ChargeCapacity: 10
+        Brand of solar panels: "someName"
+	vehicle of type Scooter with 2 wheels
+		Manufacturer: "Cushman"
+        TypeOfEngine: Electricity
+        MaxSpeed: 10
+        ChargeCapacity: 10
+        Color: "someName"
+	vehicle of type Segway with 2 wheels
+	    Manufacturer: "Segway"
+        TypeOfEngine: Electricity
+        MaxSpeed: 10
+        ChargeCapacity: 10
+        Is allowed on the road: HOORAY
+	vehicle of type Scateboard with 8 wheels
+		Manufacturer: "Olympics"
+        Size: 10
+	vehicle of type KickBike with 2 wheels
+		Manufacturer: "Kicks"
+        Is foldable: UNFOLDABLE
+}

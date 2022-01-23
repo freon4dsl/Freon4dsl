@@ -1,0 +1,79 @@
+language vehicles
+// test for super projections
+// test for named projections
+// test for multiple projection groups
+// test for initiator
+// test for boolean keywords
+// test for reference separator
+// test for initial values overriding prop of super concept
+
+model VehicleModel {
+    public name: identifier;
+    unit: VehicleUnit;
+}
+
+modelunit VehicleUnit {
+    public name: identifier;
+    vehicles: Vehicle[];
+    file-extension = "veh";
+}
+
+abstract concept Vehicle {
+    manufacturer: string;
+    nrOfWheels: number;
+}
+
+interface IsElectrical base IsMotorised {
+    chargeCapacity: number;
+}
+
+interface IsMotorised {
+    typeOfEngine: EngineType;
+    maxSpeed: number;
+}
+
+limited EngineType {
+    Steam; Gasoline; Electricity; Hydrogen; Solar;
+}
+
+concept Bike base Vehicle {
+    tyreSize: number;
+    typeName: identifier = "Bike";
+}
+
+concept Steamboat base Vehicle implements IsMotorised {
+    nrOfPassengers: number;
+    preferedWaterWay: string;
+    isHeritage: boolean;
+    typeName: identifier = "PetrolCar";
+}
+
+concept PetrolCar base Vehicle implements IsMotorised {
+    bootContent: number;
+    typeName: identifier = "PetrolCar";
+}
+
+concept SolarCar base Vehicle implements IsElectrical {
+    solarPanelBrand: string;
+    typeName: identifier = "SolarCar";
+}
+
+concept Scooter base Vehicle implements IsElectrical {
+    color: string;
+    typeName: identifier = "Scooter";
+}
+
+concept Segway base Vehicle implements IsElectrical {
+    isAllowedOnRoad: boolean;
+    typeName: identifier = "Segway";
+}
+
+concept Scateboard base Vehicle {
+    size: number;
+    typeName: identifier = "Scateboard";
+}
+
+concept KickBike base Vehicle {
+    typeName: identifier = "KickBike";
+    foldable: boolean;
+}

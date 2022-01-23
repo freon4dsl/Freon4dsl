@@ -1,0 +1,88 @@
+editor default
+// test for super projections
+// test for multiple projection groups TODO
+// test for named projections TODO
+// test for initiator
+// test for boolean keywords
+// test for reference separator TODO
+// test for initial values overriding prop of super concepts TODO
+
+VehicleUnit {
+[
+VehicleUnit ${name} {
+	 [? ${vehicles initiator [vehicle of type]}]
+}
+]}
+
+Vehicle {
+[
+    with ${nrOfWheels} wheels
+Manufacturer: ${manufacturer }
+]}
+
+IsElectrical {
+[
+    [=> IsMotorised]
+    ChargeCapacity: ${chargeCapacity}
+]}
+
+IsMotorised {
+[
+    TypeOfEngine: ${typeOfEngine}
+    MaxSpeed: ${maxSpeed}
+]}
+
+Bike {
+[
+    ${typeName} [=> Vehicle]
+    Size of tyres: ${tyreSize}
+]}
+
+Steamboat  {
+[
+    ${typeName} [=> Vehicle]
+    [=> IsMotorised]
+    NrOfPassengers: ${nrOfPassengers}
+    PreferedWaterWay: ${preferedWaterWay}
+    Is a heritage ship: ${isHeritage}
+]}
+
+PetrolCar {
+[
+    ${typeName} [=> Vehicle]
+    [=> IsMotorised]
+    max content of boot (in m2): ${bootContent}
+]}
+
+SolarCar {
+[
+    ${typeName} [=> Vehicle]
+    [=> IsElectrical]
+    Brand of solar panels: ${solarPanelBrand}
+]}
+
+Scooter {
+[
+    ${typeName} [=> Vehicle]
+    [=> IsElectrical]
+    Color: ${color}
+]}
+
+Segway {
+[
+    ${typeName} [=> Vehicle]
+    [=> IsElectrical]
+    Is allowed on the road: ${isAllowedOnRoad [HOORAY]}
+]}
+
+Scateboard {
+[
+    ${typeName} [=> Vehicle]
+    Size: ${size}
+]}
+
+KickBike {
+[
+    ${typeName} [=> Vehicle]
+    Is foldable: ${foldable [UNFOLDABLE | SURELY]}
+]}
