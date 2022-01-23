@@ -20,7 +20,7 @@ AssociationClass {
         [
         [?${visibility}] <associationclass> ${name}
         ${end1} <-> ${end2}
-        [=> IClassifier:editorName ]
+        [=> IClassifier ]
         <endassociationclass>
         ]
 }
@@ -43,21 +43,12 @@ UmlClass {
     <endclass>
     ]
 }
-//// in another editor, called 'short', this could be defined
-//abstract IClassifier {
-//        [
-//        [?<attributes>  ${attributes vertical terminator [;] }]
-//        [?<operations>  ${operations vertical terminator [;] }]
-//        ]
-//}
-//// end 'short'
 DataType {
         [
         [?${visibility}] <datatype> ${name}
         [?<specializes> ${generalizations horizontal separator [, ] }]
         [?<implements> ${interfaces horizontal separator [, ] }]
-        [=>IClassifier:short]
-        [?<invariants> ${invariants vertical terminator [;] }]
+        [=>IClassifier]
         <enddatatype>
         ]
 }

@@ -36,8 +36,7 @@ export class WriterTemplate {
      * 'language', based on the given editor definition.
      */
     public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
-        // TODO use 'parser' projection group
-        let defaultGroup: PiEditProjectionGroup = editDef.getDefaultProjectiongroup();
+        let projectionGroup = ParserGenUtil.findParsableProjectionGroup(editDef);
 
         const allLangConceptsName: string = Names.allConcepts(language);
         const generatedClassName: String = Names.writer(language);
@@ -47,22 +46,24 @@ export class WriterTemplate {
         conceptsToUnparse.push(...language.concepts);
         conceptsToUnparse.push(...language.units);
 
-        const conceptsWithoutProjection: PiClassifier[] = conceptsToUnparse.filter(c => !(c instanceof PiLimitedConcept))
+        // find all concepts that are not limited, and do not have a projection
+        // this should be only abstract concepts
+        const conceptsWithoutProjection: PiClassifier[] = conceptsToUnparse
+            .filter(c => !(c instanceof PiLimitedConcept)) // handled in list 'limitedConcepts'
+            .filter(c => !(c instanceof PiBinaryExpressionConcept && !c.isAbstract)) // handled in list 'binaryExtras'
             .filter(c => {
             const projection = editDef.findProjectionForType(c);
             return projection === undefined || projection === null;
         });
+
+        // find all interfaces that do not have a projection
         const interfacesWithoutProjection: PiInterface[] = language.interfaces.filter(c => {
             const projection = editDef.findProjectionForType(c);
             return projection === undefined || projection === null;
         });
-        const interfacesWithProjection: PiInterface[] = language.interfaces.filter(c => {
-            const projection = editDef.findProjectionForType(c);
-            return projection !== undefined && projection !== null;
-        });
 
         const binaryExtras: ExtraClassifierInfo[] = [];
-        for (const myExtra of defaultGroup.extras) {
+        for (const myExtra of projectionGroup.extras) {
             const myConcept: PiClassifier = myExtra.classifier.referred;
             if (myConcept instanceof PiBinaryExpressionConcept && !myConcept.isAbstract) {
                 binaryExtras.push(myExtra);
@@ -73,8 +74,10 @@ export class WriterTemplate {
         return `
         import { ${Names.PiNamedElement}, ${writerInterfaceName} } from "${PROJECTITCORE}";
         import { ${allLangConceptsName}, ${Names.PiElementReference}, 
-            ${language.interfaces.map(concept => `
-                ${Names.classifier(concept)}`).join(", ")},
+            ${language.interfaces.length > 0
+            ? language.interfaces.map(concept => `
+                ${Names.classifier(concept)}, `).join("")
+            : ``}
             ${language.units.map(concept => `
                 ${Names.classifier(concept)}`).join(", ")},
             ${language.concepts.map(concept => `
@@ -177,7 +180,7 @@ export class WriterTemplate {
                 }
             }
 
-            ${defaultGroup.projections.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
+            ${projectionGroup.projections.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
             ${binaryExtras.map(bin => `${this.makeBinaryExpMethod(bin)}`).join("\n")}
             ${limitedConcepts.map(con => `${this.makeLimitedMethod(con)}`).join("\n")}
             ${conceptsWithoutProjection.map(concept => `${this.makeAbstractConceptMethodWithout(concept)}`).join("\n")}

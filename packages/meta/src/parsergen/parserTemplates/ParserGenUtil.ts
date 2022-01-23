@@ -1,4 +1,21 @@
+import { PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
+import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
+
 export class ParserGenUtil {
+
+    /**
+     * Returns either the projection group named 'parser' ot, if that one is not present,
+     * the default projection group.
+     *
+     * @param editUnit the edit definition to serach for the projection groups
+     */
+    static findParsableProjectionGroup(editUnit: PiEditUnit) {
+        let projectionGroup: PiEditProjectionGroup = editUnit.projectiongroups.find(g => g.name === EditorDefaults.parserGroupName);
+        if (!projectionGroup) {
+            projectionGroup = editUnit.getDefaultProjectiongroup();
+        }
+        return projectionGroup;
+    }
 
     /**
      * Creates a name to be used internally in the parser/unparser, to avoid name classes with user

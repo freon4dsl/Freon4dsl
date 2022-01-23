@@ -9,26 +9,28 @@ import { LanguageAnalyser, PiAnalyser } from "./LanguageAnalyser";
 import { GrammarPart } from "./grammarModel/GrammarPart";
 import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
 import { Names } from "../../utils";
+import { ParserGenUtil } from "./ParserGenUtil";
 
 export class GrammarGenerator {
 
     createGrammar(language: PiLanguage, analyser: LanguageAnalyser, editUnit: PiEditUnit): GrammarModel {
-        // create the model of the grammar and syntax analysis
+        // create an empty model of the grammar and syntax analysis
         const grammar = new GrammarModel();
         grammar.language = language;
+
         // find the projection group that can be used for the parser and unparser
-        let projectionGroup: PiEditProjectionGroup = editUnit.projectiongroups.find(g => g.name === EditorDefaults.parserGroupName);
-        if (!projectionGroup) {
-            projectionGroup = editUnit.getDefaultProjectiongroup();
-        }
+        let projectionGroup = ParserGenUtil.findParsableProjectionGroup(editUnit);
         // if no projection group found, return
         if (!projectionGroup) {
             return null;
         }
 
+        // create the grammar rules and add them to the model
         this.createGrammarRules(grammar, projectionGroup, analyser, language);
         return grammar;
     }
+
+
 
     private createGrammarRules(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: PiLanguage) {
         // generate the rules for each unit

@@ -20,7 +20,6 @@ import {
 } from "../metalanguage";
 import { Names } from "../../utils";
 import { EditorDefaults } from "./EditorDefaults";
-import { LOG2USER } from "../../utils/UserLogger";
 
 export class DefaultEditorGenerator {
 
@@ -30,6 +29,7 @@ export class DefaultEditorGenerator {
         const defaultGroup = new PiEditProjectionGroup();
         defaultGroup.name = Names.defaultProjectionName;
         editDef.projectiongroups.push(defaultGroup);
+        defaultGroup.owningDefinition = editDef;
         return editDef;
     }
 
@@ -43,11 +43,13 @@ export class DefaultEditorGenerator {
         // find projection group to add defaults to, or make one if it does not exist
         let defaultGroup: PiEditProjectionGroup = editor.getDefaultProjectiongroup();
         if (defaultGroup === null || defaultGroup === undefined) {
+            // create a default projection group
             defaultGroup = new PiEditProjectionGroup();
             defaultGroup.name = Names.defaultProjectionName;
             defaultGroup.standardBooleanProjection = new BoolKeywords();
             defaultGroup.standardReferenceSeparator = EditorDefaults.standardReferenceSeparator;
             editor.projectiongroups.push(defaultGroup);
+            defaultGroup.owningDefinition = editor;
         }
         if (!defaultGroup.extras) {
             defaultGroup.extras = [];
@@ -63,7 +65,7 @@ export class DefaultEditorGenerator {
         DefaultEditorGenerator.defaultsForUnit(editor.language, defaultGroup);
 
         // TEST TODO to be moved elsewere
-        editor.language.concepts.filter(c => !(c instanceof PiLimitedConcept)).forEach(c => {
+        editor.language.concepts.filter(c => !(c instanceof PiLimitedConcept) && !(c instanceof PiBinaryExpressionConcept)).forEach(c => {
             if (!defaultGroup.findProjectionForType(c) && !c.isAbstract) {
                 console.log("INTERNAL ERROR: no default projection for " + c.name );
             }
