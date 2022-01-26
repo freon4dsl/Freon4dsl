@@ -43,7 +43,7 @@ export class ConceptMaker {
     private currentProjectionGroup: PiEditProjectionGroup = null;
     // namedProjections is the list of projections with a different name than the current projection group
     // this list is filled during the build of the template and should alwyas be the last to added
-    private namedProjections: PiEditClassifierProjection[] = [];
+    private namedProjections: PiEditProjection[] = [];
 
     generateClassifiers(projectionGroup: PiEditProjectionGroup, conceptsUsed: PiClassifier[]): GrammarRule[] {
         this.currentProjectionGroup = projectionGroup;
@@ -53,28 +53,28 @@ export class ConceptMaker {
             let projection: PiEditProjection = ParserGenUtil.findProjection(projectionGroup, piConcept);
             // generate a grammar rule entry
             if (projection instanceof PiEditProjection) {
-                let rule: ConceptRule = new ConceptRule(piConcept);
-                for (const l of projection.lines) {
-                    rule.ruleParts.push(...this.doLine(l, false));
-                }
-                this.checkRule(rule);
-                rules.push(rule);
+                rules.push(this.generateProjection(piConcept, projection, false));
             }
         }
         for (const projection of this.namedProjections) {
             // generate a grammar rule entry
-            console.log("found named: " + projection.name);
-            if (projection instanceof PiEditProjection) {
-                let rule: ConceptRule = new ConceptRule(projection.classifier.referred, projection.name);
-                for (const l of projection.lines) {
-                    rule.ruleParts.push(...this.doLine(l, false));
-                }
-                console.log("made rule: " + rule.toGrammar());
-                this.checkRule(rule);
-                rules.push(rule);
-            }
+            rules.push(this.generateProjection(projection.classifier.referred, projection, true));
         }
         return rules;
+    }
+
+    private generateProjection(piConcept: PiClassifier, projection: PiEditProjection, addName: boolean) {
+        let rule: ConceptRule;
+        if (addName) {
+            rule = new ConceptRule(piConcept, projection.name);
+        } else {
+            rule = new ConceptRule(piConcept);
+        }
+        for (const l of projection.lines) {
+            rule.ruleParts.push(...this.doLine(l, false));
+        }
+        this.checkRule(rule);
+        return rule;
     }
 
     private doLine(line: PiEditProjectionLine, inOptionalGroup: boolean): RightHandSideEntry[] {
