@@ -36,5 +36,5 @@ VehicleUnit unitTest1 {
         Size: 10
 	vehicle of type KickBike with 2 wheels
 		Manufacturer: "Kicks"
-        Is foldable: SURELY // some comment
+        Is foldable: SORRY // some comment
 }

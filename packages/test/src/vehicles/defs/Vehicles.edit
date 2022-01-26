@@ -2,8 +2,10 @@ editor parser
 // test for super projections
 // test for initiator
 // test for boolean keywords
-// test for multiple projection groups TODO
-// test for named projections TODO
+// test for multiple projection groups in parser
+// test for named projections in parser
+// test for multiple projection groups in editor TODO
+// test for named projections in editor TODO
 // test for reference separator TODO
 // test for initial values overriding prop of super concepts TODO
 

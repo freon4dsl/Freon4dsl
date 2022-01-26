@@ -1681,8 +1681,7 @@ RefsTest {
     "$typename": "WithDirectRefs",
     "_PI_ref": PiElementReference {
       "_PI_pathname": Array [
-        "someName::otherName::xxx::yyy
-                  	// optRef not present",
+        "someName::otherName::xxx::yyy",
       ],
       "_PI_referred": null,
       "container": [Circular],
@@ -1723,8 +1722,7 @@ RefsTest {
       },
       PiElementReference {
         "_PI_pathname": Array [
-          "name4
-                    // optRefList not present",
+          "name4",
         ],
         "_PI_referred": null,
         "container": [Circular],
@@ -1747,8 +1745,7 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy
-                        // optRef not present",
+            "someName::otherName::xxx::yyy",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1769,8 +1766,7 @@ RefsTest {
           },
           PiElementReference {
             "_PI_pathname": Array [
-              "name2
-                        // optRefList not present",
+              "name2",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1788,8 +1784,7 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy
-                        // optRef not present",
+            "someName::otherName::xxx::yyy",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1810,8 +1805,7 @@ RefsTest {
           },
           PiElementReference {
             "_PI_pathname": Array [
-              "name2
-                        // optRefList not present",
+              "name2",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1829,8 +1823,7 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy
-                        // optRef not present",
+            "someName::otherName::xxx::yyy",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1851,8 +1844,7 @@ RefsTest {
           },
           PiElementReference {
             "_PI_pathname": Array [
-              "name2
-                        // optRefList not present",
+              "name2",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1872,8 +1864,7 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy
-                                    	// optRef not present",
+            "someName::otherName::xxx::yyy",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1914,8 +1905,7 @@ RefsTest {
           },
           PiElementReference {
             "_PI_pathname": Array [
-              "name4
-                                      // optRefList not present",
+              "name4",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1933,8 +1923,7 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy
-                        // optRef not present",
+            "someName::otherName::xxx::yyy",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1955,8 +1944,7 @@ RefsTest {
           },
           PiElementReference {
             "_PI_pathname": Array [
-              "name2
-                        // optRefList not present",
+              "name2",
             ],
             "_PI_referred": null,
             "container": [Circular],
