@@ -1,8 +1,7 @@
 <script lang="ts">
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
-    import { conceptStyle, LabelBox, PiLogger, styleToCSS } from "@projectit/core";
-    import type { PiEditor } from "@projectit/core";
+    import { conceptStyle, LabelBox, PiLogger, styleToCSS, type PiEditor } from "@projectit/core";
     import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
 
     export let label;// = new LabelBox(null, "boxRole", "This is a box");

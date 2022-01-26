@@ -5,8 +5,8 @@ import App from './App.svelte';
 
 PiLogger.mute("PiEditor");
 // PiLogger.mute("PiUtils");
-// PiLogger.mute("TextComponent");
-// PiLogger.mute("AliasComponent");
+PiLogger.mute("TextComponent");
+PiLogger.mute("AliasComponent");
 PiLogger.mute("AUTORUN");
 PiLogger.mute("FOCUS")
 PiLogger.mute("AFTER_UPDATE");
@@ -23,6 +23,7 @@ PiLogger.mute("X");
 PiLogger.mute("BoxFactory");
 PiLogger.mute("EditorCommunication");
 // PiLogger.mute("TableUtil");
+PiLogger.mute("Language");
 
 PiLogger.mute("ExampleScoper");
 

@@ -101,8 +101,8 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
         EXPRESSION_SYMBOL,
         "<...>",
         () => {
-            if (!!editor.actions && editor.actions.binaryExpressionCreators) {
-                return editor.actions.binaryExpressionCreators
+            if (!!editor.actions && editor.actions.binaryExpressionActions) {
+                return editor.actions.binaryExpressionActions
                     .filter(e => !e.isApplicable || e.isApplicable(operatorBox))
                     .map(e => ({
                         id: e.trigger as string,
@@ -117,8 +117,8 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
         },
         () => null,
         (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
-            if (editor.actions && editor.actions.binaryExpressionCreators) {
-                const alias = editor.actions.binaryExpressionCreators.filter(e => (e.trigger as string) === option.id)[0];
+            if (editor.actions && editor.actions.binaryExpressionActions) {
+                const alias = editor.actions.binaryExpressionActions.filter(e => (e.trigger as string) === option.id)[0];
                 if (!!alias) {
                     const newExp = alias.expressionBuilder(operatorBox, triggerToString(alias.trigger), editor);
                     newExp.piSetLeft(exp.piLeft());

@@ -11,5 +11,10 @@
          "name": "Mies"
       }
    ],
-   "methods": []
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "asassasa"
+      }
+   ]
 }

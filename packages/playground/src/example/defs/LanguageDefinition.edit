@@ -47,10 +47,10 @@ Method {
 }
 
 Parameter {
-    @projection attribuut [
+    @projection  [
         ${self.name} : ${self.declaredType}
     ]
-    @table xxx [
+    @table  [
         Type                 | Name
         ${self.declaredType} | ${self.name}
     ]

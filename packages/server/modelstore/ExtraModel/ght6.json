@@ -15,6 +15,11 @@
                "$typename": "Attribute",
                "name": "asde",
                "declaredType": "Integer"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "",
+               "declaredType": null
             }
          ],
          "methods": [
@@ -58,6 +63,11 @@
                      "$typename": "Parameter",
                      "name": "aaaaaa",
                      "declaredType": null
+                  },
+                  {
+                     "$typename": "Parameter",
+                     "name": "",
+                     "declaredType": null
                   }
                ],
                "declaredType": "Boolean"
@@ -68,10 +78,40 @@
       {
          "$typename": "Entity",
          "name": "Mies",
-         "attributes": [],
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "",
+               "declaredType": null
+            }
+         ],
          "methods": [],
          "baseEntity": null
       }
    ],
-   "methods": []
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "asassasa",
+         "body": null,
+         "parameters": [
+            {
+               "$typename": "Parameter",
+               "name": "fwewf",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Parameter",
+               "name": "",
+               "declaredType": null
+            },
+            {
+               "$typename": "Parameter",
+               "name": "",
+               "declaredType": null
+            }
+         ],
+         "declaredType": null
+      }
+   ]
 }

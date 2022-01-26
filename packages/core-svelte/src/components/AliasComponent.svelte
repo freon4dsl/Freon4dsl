@@ -19,14 +19,13 @@
         KEY_TAB,
         KEY_ARROW_DOWN,
         KEY_ARROW_UP,
-        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT, styleToCSS, conceptStyle
+        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT, styleToCSS, conceptStyle,
+        type SelectOption
     } from "@projectit/core";
-    import type { SelectOption } from "@projectit/core";
     import { action, autorun, runInAction } from "mobx";
     import { clickOutside } from "./clickOutside";
     import { afterUpdate, onMount } from "svelte";
-    import { writable } from "svelte/store";
-    import type { Writable } from "svelte/store";
+    import { type Writable, writable } from "svelte/store";
     import { SelectOptionList } from "./SelectableOptionList";
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import SelectableComponent from "./SelectableComponent.svelte";
@@ -58,7 +57,7 @@
 
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("AliasComponent set focus " + choiceBox.role);
-        if (!!textComponent) {
+        if (!!textComponent && !!textComponent.setFocus) {
             textComponent.setFocus();
         } else {
             FOCUS_LOGGER.log("?ERROR? textComponent is null in setFocus.");

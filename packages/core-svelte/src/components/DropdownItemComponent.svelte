@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { PiLogger } from "@projectit/core";
+    import { PiLogger, type SelectOption } from "@projectit/core";
     import { createEventDispatcher } from "svelte";
-    import type { SelectOption } from "@projectit/core";
 
     const LOGGER: PiLogger = new PiLogger("DropdownItemComponent");
     const dispatcher = createEventDispatcher();

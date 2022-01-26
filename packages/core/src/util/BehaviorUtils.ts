@@ -52,7 +52,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
 
     for (const action of editor.new_pi_actions) {
         const trigger = action.trigger;
-        LOGGER.log("  executeHebavior trigger " + trigger + "  roles " + action.activeInBoxRoles);
+        LOGGER.log("  executeBehavior trigger " + trigger + "  roles " + action.activeInBoxRoles);
         if (action.activeInBoxRoles.includes(box.role)) {
             if (isRegExp(trigger)) {
                 const matchArray = label.match(trigger);
@@ -122,7 +122,6 @@ export function executeSingleBehavior(action: PiAction, box: Box, text: string, 
         // if (!!action.boxRoleToSelect) {
         //     editor.selectBoxByRoleAndElementId(execresult.piId(),action.boxRoleToSelect,action.caretPosition);
         // }else {
-        //     editor.selectElement(execresult);
         //     editor.selectFirstLeafChildBox();
         //     if (editor.selectedBox.role.includes(LEFT_MOST)){
         //         // Special expression prefix box, don't select it
