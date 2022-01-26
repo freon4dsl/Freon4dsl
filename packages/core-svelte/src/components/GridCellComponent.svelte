@@ -5,17 +5,16 @@
           GridBox,
           isMetaKey,
           KEY_ENTER,
+          type PiEditor,
           PiLogger,
           PiUtils,
           styleToCSS,
           toPiKey,
           GridCellBox, Box
      } from "@projectit/core";
-    import type { PiEditor } from "@projectit/core";
     import { autorun } from "mobx";
     import { afterUpdate } from "svelte";
-    import { writable } from "svelte/store";
-    import type { Writable } from "svelte/store";
+    import { writable, type Writable } from "svelte/store";
 
     import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";

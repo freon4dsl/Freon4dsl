@@ -1,12 +1,11 @@
 <script lang="ts">
-    import { conceptStyle, GridCellBox, isMetaKey, KEY_ENTER, PiUtils, styleToCSS, toPiKey } from "@projectit/core";
-    import type { GridBox, PiEditor } from "@projectit/core";
+    import { conceptStyle, GridCellBox, isMetaKey, KEY_ENTER, PiUtils, styleToCSS, toPiKey,
+        type GridBox, type PiEditor } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import GridCellComponent from "./GridCellComponent.svelte";
     import { autorun } from "mobx";
-    import { writable } from "svelte/store";
-    import type { Writable } from "svelte/store";
+    import { writable, type Writable } from "svelte/store";
 
     export let gridBox: GridBox;
     export let editor: PiEditor;

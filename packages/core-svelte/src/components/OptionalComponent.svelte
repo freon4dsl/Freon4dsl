@@ -2,11 +2,10 @@
     import RenderComponent from "./RenderComponent.svelte";
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
-    import { getRoot, OptionalBox, PiLogger } from "@projectit/core";
-    import type { PiEditor } from "@projectit/core";
+    import { getRoot, OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
 
-    export let optionalBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
+    export let optionalBox: OptionalBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("OptionalComponent");

@@ -101,7 +101,7 @@
      * in relationship with each other.
      */
     function onScroll() {
-        editor.scrollX = element.scrollLeft;
+                    editor.scrollX = element.scrollLeft;
         editor.scrollY = element.scrollTop;
     }
 </script>
