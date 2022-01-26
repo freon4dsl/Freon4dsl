@@ -21,11 +21,14 @@ export function getPrimCall(propType: PiClassifier): string {
     }
 }
 
-export function getTypeCall(propType: PiClassifier): string {
+export function getTypeCall(propType: PiClassifier, projectionName?: string): string {
     const result = ChoiceRuleMaker.superNames.get(propType);
     if (!!result && result.length > 0) {
         return result;
     } else {
+        if (!!projectionName && projectionName.length > 0) {
+            return Names.classifier(propType) + "_" + projectionName;
+        }
         return Names.classifier(propType);
     }
 }

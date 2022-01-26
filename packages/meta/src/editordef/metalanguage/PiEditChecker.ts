@@ -6,7 +6,7 @@ import {
     PiPrimitiveProperty,
     PiPrimitiveType, PiProperty
 } from "../../languagedef/metalanguage";
-import { Checker, LangUtil, Names } from "../../utils";
+import { Checker, LangUtil, Names, PiDefinitionElement } from "../../utils";
 import {
     ListInfo,
     PiEditClassifierProjection,
@@ -254,13 +254,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     this.simpleCheck(!!mySupers.find(superCl => superCl === myParent),
                         `Interface ${myParent.name} is not implemented by ${cls.name} ${this.location(item.superRef)}.`);
                 }
-                if (!!item.projectionName && item.projectionName.length > 0) {
-                    const myGroup = editor.projectiongroups.find(group => group.name === item.projectionName);
-                    const found = myGroup?.findProjectionForType(myParent);
-                    this.simpleCheck(
-                        !!myGroup && !!found,
-                        `Cannot find a projection named '${item.projectionName}' for concept or interface '${myParent.name}' ${this.location(item)}.`);
-
+                if (!!item.projectionName && item.projectionName.length > 0 ) {
+                    this.checkProjectionName(item.projectionName, myParent, item, editor);
                 }
             }
         });
@@ -373,23 +368,32 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                                 this.checkListProperty(item, myProp);
                             }
                         }
-                        if (!!item.projectionName) {
+                        if (!!item.projectionName && item.projectionName.length > 0) {
                             this.nestedCheck({
                                 check: !myProp.isPrimitive && myProp.isPart,
                                 error: `Named projections are only allowed for non-primitive part properties ${this.location(item)}.`,
-                                whenOk: ()=> {
-                                    const myGroup = editor.projectiongroups.find(group => group.name === item.projectionName);
+                                whenOk: () => {
                                     const propType = myProp.type.referred;
-                                    const found = myGroup?.findProjectionForType(propType);
-                                    this.simpleCheck(
-                                        !!myGroup && !!found,
-                                        `Cannot find a projection named '${item.projectionName}' for concept or interface '${propType.name}' ${this.location(item)}.`);
+                                    this.checkProjectionName(item.projectionName, propType, item, editor);
                                 }
                             });
-                       }
+                        }
                     }
                 });
             }
+        }
+    }
+
+    private checkProjectionName(projectionName: string, propType: PiClassifier, item: PiDefinitionElement, editor: PiEditUnit) {
+        if (projectionName !== Names.defaultProjectionName) {
+            const myGroup = editor.projectiongroups.find(group => group.name === projectionName);
+            const found = myGroup?.findProjectionForType(propType);
+            this.simpleCheck(
+                !!myGroup && !!found,
+                `Cannot find a projection named '${projectionName}' for concept or interface '${propType.name}' ${this.location(item)}.`);
+        } else {
+            this.simpleWarning(false,
+                `No default projection defined, using generated default ${this.location(item)}.`);
         }
     }
 

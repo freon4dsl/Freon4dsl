@@ -4,7 +4,7 @@ import { Names, PiParser } from "../../utils";
 const editorParser = require("./PiEditGrammar");
 import { setCurrentFileName as editFileName } from "./PiEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
-import { ExtraClassifierInfo, PiEditProjectionGroup, PiEditUnit } from "../metalanguage/PiEditDefLang";
+import { PiEditProjectionGroup, PiEditUnit } from "../metalanguage/PiEditDefLang";
 import { PiEditChecker } from "../metalanguage/PiEditChecker";
 
 export class PiEditParser extends PiParser<PiEditUnit> {
@@ -63,6 +63,7 @@ export class PiEditParser extends PiParser<PiEditUnit> {
         if (!defaultGroup) {
             defaultGroup = new PiEditProjectionGroup();
             defaultGroup.name = Names.defaultProjectionName;
+            result.projectiongroups.push(defaultGroup);
         }
         // initialize extras
         if (!defaultGroup.extras) {

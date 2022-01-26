@@ -58,11 +58,12 @@ export class GrammarGenerator {
         // create parse rules and syntax analysis methods for the binary expressions
         const binaryExpMaker: BinaryExpMaker = new BinaryExpMaker();
         // always use the default projection group for binary expressions
+        let groupForBinaries: PiEditProjectionGroup = projectionGroup;
         if (projectionGroup.name !== Names.defaultProjectionName) {
-            projectionGroup = projectionGroup.owningDefinition.getDefaultProjectiongroup();
+            groupForBinaries = projectionGroup.owningDefinition.getDefaultProjectiongroup();
         }
         if (analyser.binaryConceptsUsed.length > 0) {
-            grammarPart.rules.push(binaryExpMaker.generateBinaryExpressions(language, projectionGroup, analyser.binaryConceptsUsed));
+            grammarPart.rules.push(binaryExpMaker.generateBinaryExpressions(language, groupForBinaries, analyser.binaryConceptsUsed));
         }
 
         // create parse rules and syntax analysis methods for the limited concepts

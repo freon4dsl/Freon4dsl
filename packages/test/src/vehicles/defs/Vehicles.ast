@@ -19,8 +19,14 @@ modelunit VehicleUnit {
 }
 
 abstract concept Vehicle {
-    manufacturer: string;
+    manufacturer: Manufacturer;
     nrOfWheels: number;
+}
+
+concept Manufacturer {
+    name: string;
+    country: string;
+    CEO_name: string;
 }
 
 interface IsElectrical base IsMotorised {

@@ -5,13 +5,17 @@ import { getBaseTypeAsString } from "../../../../utils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPartOptionalEntry extends RHSPropEntry {
-    constructor(prop: PiProperty) {
+    private projectionName: string;
+
+    // TODO remove optionality of last argument
+    constructor(prop: PiProperty, projectionName?: string) {
         super(prop);
         this.isList = false;
+        this.projectionName = projectionName;
     }
 
     toGrammar(): string {
-        return `${getTypeCall(this.property.type.referred)}?` + this.doNewline();
+        return `${getTypeCall(this.property.type.referred, this.projectionName)}?` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

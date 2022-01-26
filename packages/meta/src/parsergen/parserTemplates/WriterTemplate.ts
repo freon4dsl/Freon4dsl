@@ -30,14 +30,20 @@ import { ParserGenUtil } from "./ParserGenUtil";
 import { PiEditProjectionGroup } from "../../editordef/metalanguage";
 
 export class WriterTemplate {
+    private currentProjectionGroup: PiEditProjectionGroup = null;
+    // namedProjections is the list of projections with a different name than the current projection group
+    // this list is filled during the build of the template and should alwyas be the last
+    // to added to the template
+    private namedProjections: PiEditClassifierProjection[] = [];
 
     /**
      * Returns a string representation of the class that implements an unparser for modelunits of
      * 'language', based on the given editor definition.
      */
     public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
+        this.namedProjections = [];
         let projectionGroup = ParserGenUtil.findParsableProjectionGroup(editDef);
-
+        this.currentProjectionGroup = projectionGroup;
         const allLangConceptsName: string = Names.allConcepts(language);
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
@@ -63,10 +69,12 @@ export class WriterTemplate {
         });
 
         const binaryExtras: ExtraClassifierInfo[] = [];
-        for (const myExtra of projectionGroup.extras) {
-            const myConcept: PiClassifier = myExtra.classifier.referred;
-            if (myConcept instanceof PiBinaryExpressionConcept && !myConcept.isAbstract) {
-                binaryExtras.push(myExtra);
+        if (!!projectionGroup.extras) {
+            for (const myExtra of projectionGroup.extras) {
+                const myConcept: PiClassifier = myExtra.classifier.referred;
+                if (myConcept instanceof PiBinaryExpressionConcept && !myConcept.isAbstract) {
+                    binaryExtras.push(myExtra);
+                }
             }
         }
 
@@ -185,6 +193,7 @@ export class WriterTemplate {
             ${limitedConcepts.map(con => `${this.makeLimitedMethod(con)}`).join("\n")}
             ${conceptsWithoutProjection.map(concept => `${this.makeAbstractConceptMethodWithout(concept)}`).join("\n")}
             ${interfacesWithoutProjection.map(intf => `${this.makeInterfaceMethod(intf, Names.allConcepts(language))}`).join("\n") }
+            ${this.namedProjections.map(projection => `${this.makeConceptMethod(projection)}`).join("\n")}
              
             /**
              *
@@ -219,11 +228,12 @@ export class WriterTemplate {
              * @param indent
              * @param short
              */         
-            private unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
+            private unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean,
+        method: (modelelement: ${allLangConceptsName}, short: boolean) => void) {
                 list.forEach((listElem, index) => {
                     const isLastInList: boolean = index === list.length - 1;
                     this.doInitiator(sepText, sepType);
-                    this.unparse(listElem, short);
+                    method(listElem, short);
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
             }
@@ -373,15 +383,15 @@ export class WriterTemplate {
     /**
      * Creates a method that unparses the concept in 'conceptDef' based on the projection in
      * 'conceptDef'.
-     * @param conceptDef
+     * @param projection
      */
-    private makeConceptMethod (conceptDef: PiEditClassifierProjection): string {
-        const myConcept: PiClassifier = conceptDef.classifier.referred;
-        if (conceptDef instanceof PiEditProjection) {
+    private makeConceptMethod (projection: PiEditClassifierProjection): string {
+        const myConcept: PiClassifier = projection.classifier.referred;
+        if (projection instanceof PiEditProjection) {
             if (myConcept instanceof PiBinaryExpressionConcept) {
                 // do nothing, binary expressions are treated differently
             } else {
-                return this.makeNormalMethod(conceptDef, myConcept);
+                return this.makeNormalMethod(projection, myConcept);
             }
         } // else if (conceptDef instanceof PiEditTableProjection) {
         // cannot unparse a table projection
@@ -411,18 +421,22 @@ export class WriterTemplate {
                 }`;
     }
 
-    private makeNormalMethod(conceptDef: PiEditProjection, myConcept: PiClassifier) {
+    private makeNormalMethod(projection: PiEditProjection, myConcept: PiClassifier) {
         const name: string = Names.classifier(myConcept);
-        const lines: PiEditProjectionLine[] = conceptDef.lines;
+        const lines: PiEditProjectionLine[] = projection.lines;
         const comment = `/**
-                          * See the public unparse method.
+                          * Unparsing of '${name}' according to projection '${projection.name}'.
                           */`;
-
+        // take care of named projections, the unparse method gets a different name
+        let methodName: string = `unparse${name}`;
+        if (projection.name != this.currentProjectionGroup.name) {
+            methodName += "_" + projection.name;
+        }
         if (!!lines) {
             if (lines.length > 1) {
                 return `
                 ${comment}
-                private unparse${name}(modelelement: ${name}, short: boolean) {
+                private ${methodName}(modelelement: ${name}, short: boolean) {
                     const blockIndent = this.output[this.currentLine].length;
                     // do the first line
                     ${this.makeLine(lines[0], false)}
@@ -435,24 +449,23 @@ export class WriterTemplate {
                     // add blockIndent, it is used in the Optional part
                     return `
                         ${comment}
-                        private unparse${name}(modelelement: ${name}, short: boolean) {
+                        private ${methodName}(modelelement: ${name}, short: boolean) {
                             const blockIndent = this.output[this.currentLine].length;
                             ${this.makeLine(lines[0], false)}
                         }`;
                 } else {
                     return `
                         ${comment}
-                        private unparse${name}(modelelement: ${name}, short: boolean) {
+                        private ${methodName}(modelelement: ${name}, short: boolean) {
                             ${this.makeLine(lines[0], false)}
                         }`;
                 }
             }
         } else {
             // TODO check in which cases there are no lines in the edit def
-
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
                 return `${comment}
-                    private unparse${name}(modelelement: ${name}, short: boolean) {
+                    private ${methodName}(modelelement: ${name}, short: boolean) {
                         this.output[this.currentLine] += \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
                 }`;
             }
@@ -513,8 +526,15 @@ export class WriterTemplate {
                 result += this.makeItemWithConceptType(myElem, item, indent, inOptionalGroup);
             }
         } else if (item instanceof PiEditSuperProjection) {
-            // TODO test this
-            result += `this.unparse${Names.classifier(item.superRef.referred)}(modelelement, short);`;
+            // TODO HIER BEN IK
+            // take care of named projection
+            if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
+                // find the projection that we need and add it to the extra list
+                ParserGenUtil.addIfNotPresent(this.namedProjections, ParserGenUtil.findProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName));
+                result += `this.unparse${Names.classifier(item.superRef.referred)}_${item.projectionName}(modelelement, short);`;
+            } else { // use the normal unparse method
+                result += `this.unparse${Names.classifier(item.superRef.referred)}(modelelement, short);`;
+            }
         }
         return result;
     }
@@ -617,7 +637,15 @@ export class WriterTemplate {
         // the property has a concept as type, thus we need to call its unparse method
         let result: string = "";
         const type = myElem.type.referred;
+        let nameOfUnparseMethod: string = "unparse";
         if (!!type) {
+            // take care of named projections
+            if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
+                // find the projection that we need and add it to the extra list
+                const foundProjection = ParserGenUtil.findProjection(this.currentProjectionGroup, type, item.projectionName);
+                ParserGenUtil.addIfNotPresent(this.namedProjections, foundProjection);
+                nameOfUnparseMethod += `${Names.classifier(type)}_${item.projectionName}`;
+            }
             if (myElem.isList) {
                 if (!!item.listInfo && !item.listInfo.isTable) { // it is a list not table
                     const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
@@ -627,7 +655,8 @@ export class WriterTemplate {
                         const myJoinText: string = (!!item.listInfo.joinText && item.listInfo.joinText.length > 0) ? item.listInfo.joinText + ' ' : '';
                         if (myElem.isPart) {
                             let myTypeScript: string = propertyToTypeScript(item.property.referred);
-                            result += `this.unparseList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                            result += `this.unparseList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short,
+                            (modelelement, short) => this.${nameOfUnparseMethod}(modelelement, short) )`;
                         } else {
                             let myTypeScript: string = propertyToTypeScriptWithoutReferred(item.property.referred);
                             result += `this.unparseReferenceList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
@@ -641,7 +670,7 @@ export class WriterTemplate {
                 let myTypeScript: string;
                 if (myElem.isPart) {
                     myTypeScript = propertyToTypeScript(item.property.referred);
-                    myCall += `this.unparse(${myTypeScript}, short) `;
+                    myCall += `this.${nameOfUnparseMethod}(${myTypeScript}, short) `;
                 } else {
                     myTypeScript = propertyToTypeScriptWithoutReferred(item.property.referred);
                     myCall += `this.unparseReference(${myTypeScript}, short);`;

@@ -1,6 +1,6 @@
 import {
-    ListJoinType,
-    PiEditClassifierProjection, PiEditProjection, PiEditProjectionGroup,
+    ListJoinType, PiEditClassifierProjection,
+    PiEditProjection, PiEditProjectionGroup,
     PiEditProjectionItem,
     PiEditProjectionLine,
     PiEditProjectionText,
@@ -34,24 +34,42 @@ import {
     RHSLimitedRefListEntry,
     RHSLimitedRefListWithSeparator,
     RHSListGroup,
-    RHSPrimListGroup, RHSListGroupWithInitiator, RHSPrimListGroupWithInitiator
+    RHSPrimListGroup, RHSListGroupWithInitiator, RHSPrimListGroupWithInitiator, RHSBooleanWithDoubleKeyWord
 } from "./grammarModel";
 import { LOG2USER } from "../../utils/UserLogger";
 
 export class ConceptMaker {
     imports: PiClassifier[] = [];
+    private currentProjectionGroup: PiEditProjectionGroup = null;
+    // namedProjections is the list of projections with a different name than the current projection group
+    // this list is filled during the build of the template and should alwyas be the last to added
+    private namedProjections: PiEditClassifierProjection[] = [];
 
     generateClassifiers(projectionGroup: PiEditProjectionGroup, conceptsUsed: PiClassifier[]): GrammarRule[] {
+        this.currentProjectionGroup = projectionGroup;
         let rules: GrammarRule[] = [];
         for (const piConcept of conceptsUsed) {
             // find editDef for this concept
-            let conceptDef: PiEditProjection = this.findProjection(projectionGroup, piConcept);
+            let projection: PiEditProjection = ParserGenUtil.findProjection(projectionGroup, piConcept);
             // generate a grammar rule entry
-            if (conceptDef instanceof PiEditProjection) {
+            if (projection instanceof PiEditProjection) {
                 let rule: ConceptRule = new ConceptRule(piConcept);
-                for (const l of conceptDef.lines) {
-                    rule.ruleParts.push(...this.doLine(l, projectionGroup, false));
+                for (const l of projection.lines) {
+                    rule.ruleParts.push(...this.doLine(l, false));
                 }
+                this.checkRule(rule);
+                rules.push(rule);
+            }
+        }
+        for (const projection of this.namedProjections) {
+            // generate a grammar rule entry
+            console.log("found named: " + projection.name);
+            if (projection instanceof PiEditProjection) {
+                let rule: ConceptRule = new ConceptRule(projection.classifier.referred, projection.name);
+                for (const l of projection.lines) {
+                    rule.ruleParts.push(...this.doLine(l, false));
+                }
+                console.log("made rule: " + rule.toGrammar());
                 this.checkRule(rule);
                 rules.push(rule);
             }
@@ -59,8 +77,8 @@ export class ConceptMaker {
         return rules;
     }
 
-    private doLine(line: PiEditProjectionLine, projectionGroup: PiEditProjectionGroup, inOptionalGroup: boolean): RightHandSideEntry[] {
-        const subs = this.addItems(line.items, projectionGroup, inOptionalGroup);
+    private doLine(line: PiEditProjectionLine, inOptionalGroup: boolean): RightHandSideEntry[] {
+        const subs = this.addItems(line.items, inOptionalGroup);
         if (!!subs && !!subs[subs.length - 1] ) {
             // to manage the layout of the grammar, we set 'addNewLineToGrammar' of the last entry in the line
             subs[subs.length - 1].addNewLineToGrammar = true;
@@ -68,14 +86,14 @@ export class ConceptMaker {
         return subs;
     }
 
-    private addItems(list: PiEditProjectionItem[], projectionGroup: PiEditProjectionGroup, inOptionalGroup: boolean): RightHandSideEntry[] {
+    private addItems(list: PiEditProjectionItem[], inOptionalGroup: boolean): RightHandSideEntry[] {
         let parts: RightHandSideEntry[] = [];
         if (!!list && list.length > 0) {
             list.forEach((item) => {
                 if (item instanceof PiOptionalPropertyProjection) {
                     let subs: RightHandSideEntry[] = [];
                     item.lines.forEach(line => {
-                        subs.push(...this.addItems(line.items, projectionGroup, true));
+                        subs.push(...this.addItems(line.items, true));
                     })
                     parts.push(new RHSOptionalGroup(item.property.referred, subs));
                 } else if (item instanceof PiEditPropertyProjection) {
@@ -84,7 +102,7 @@ export class ConceptMaker {
                 } else if (item instanceof PiEditProjectionText) {
                     parts.push(...this.makeTextPart(item));
                 } else if (item instanceof PiEditSuperProjection) {
-                    parts.push(...this.makeSuperParts(item, projectionGroup, inOptionalGroup))
+                    parts.push(...this.makeSuperParts(item, inOptionalGroup))
                 }
             });
         }
@@ -97,6 +115,13 @@ export class ConceptMaker {
         if (!!prop) {
             const propType: PiClassifier = prop.type.referred; // more efficient to determine referred only once
             this.imports.push(propType);
+            // take care of named projections
+            let myProjName: string = null;
+            if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
+                ParserGenUtil.addIfNotPresent(this.namedProjections, ParserGenUtil.findProjection(this.currentProjectionGroup, propType, item.projectionName));
+                myProjName = item.projectionName;
+            }
+            //
             if (prop instanceof PiPrimitiveProperty) {
                 result = this.makePrimitiveProperty(prop, propType, item, inOptionalGroup);
             } else if (propType instanceof PiLimitedConcept) {
@@ -106,7 +131,7 @@ export class ConceptMaker {
                 // TODO
             } else {
                 if (!prop.isList) {
-                    result = this.makeSingleProperty(prop, inOptionalGroup);
+                    result = this.makeSingleProperty(prop, myProjName, inOptionalGroup);
                 } else {
                     result = this.makeListProperty(prop, item);
                 }
@@ -158,12 +183,12 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeSingleProperty(prop: PiProperty, inOptionalGroup: boolean): RHSPropEntry {
+    private makeSingleProperty(prop: PiProperty, myProjName: string, inOptionalGroup: boolean): RHSPropEntry {
         let result: RHSPropEntry;
         if (prop.isPart && (!prop.isOptional || inOptionalGroup)) {
-            result = new RHSPartEntry(prop); //`${propTypeName}`;
+            result = new RHSPartEntry(prop, myProjName); //`${propTypeName}`;
         } else if (prop.isPart && prop.isOptional && !inOptionalGroup) {
-            result = new RHSPartOptionalEntry(prop); //`${propTypeName} `;
+            result = new RHSPartOptionalEntry(prop, myProjName); //`${propTypeName} `;
         } else if (!prop.isPart && (!prop.isOptional || inOptionalGroup)) {
             result = new RHSRefEntry(prop); //`${propTypeName} `;
         } else if (!prop.isPart && prop.isOptional && !inOptionalGroup) {
@@ -196,8 +221,11 @@ export class ConceptMaker {
     private makePrimitiveProperty(prop: PiPrimitiveProperty, propType: PiClassifier, item: PiEditPropertyProjection, inOptionalGroup: boolean): RHSPropEntry {
         if (propType === PiPrimitiveType.boolean && !!item.boolInfo) {
             // TODO list???
-            return new RHSBooleanWithSingleKeyWord(prop, item.boolInfo.trueKeyword);
-            // TODO falseKeyword
+            if (!item.boolInfo.falseKeyword) {
+                return new RHSBooleanWithSingleKeyWord(prop, item.boolInfo.trueKeyword);
+            } else {
+                return new RHSBooleanWithDoubleKeyWord(prop, item.boolInfo.trueKeyword, item.boolInfo.falseKeyword);
+            }
         } else if (!prop.isList) {
             if (!prop.isOptional || inOptionalGroup) {
                 return new RHSPrimEntry(prop);
@@ -246,29 +274,14 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeSuperParts(item: PiEditSuperProjection, projectionGroup: PiEditProjectionGroup, inOptionalGroup: boolean): RightHandSideEntry[] {
+    private makeSuperParts(item: PiEditSuperProjection, inOptionalGroup: boolean): RightHandSideEntry[] {
         let subs: RightHandSideEntry[] = [];
         // find the projection that we need
-        let myProjection: PiEditProjection = this.findProjection(projectionGroup, item.superRef.referred);
+        let myProjection: PiEditProjection = ParserGenUtil.findProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
         myProjection.lines.forEach(line => {
-            subs.push(...this.addItems(line.items, projectionGroup, inOptionalGroup));
+            subs.push(...this.addItems(line.items, inOptionalGroup));
         });
         return subs;
-    }
-
-    private findProjection(projectionGroup: PiEditProjectionGroup, classifier: PiClassifier): PiEditProjection {
-        // TODO add named projections
-        let myProjection: PiEditClassifierProjection = projectionGroup.findProjectionForType(classifier);
-        if (!!myProjection) {
-            myProjection = projectionGroup.owningDefinition.getDefaultProjectiongroup().findProjectionForType(classifier);
-        }
-        if (myProjection instanceof PiEditProjection) {
-            return myProjection;
-        } else {
-            LOG2USER.error(`Cannot make parse rules for a table: '${classifier.name}'.`);
-            return null;
-            // TODO make rules for a list instead
-        }
     }
 
     private makeLimitedProp(prop: PiProperty, item: PiEditPropertyProjection, inOptionalGroup: boolean): RHSPropEntry {

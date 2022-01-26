@@ -1,5 +1,7 @@
-import { PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
+import { PiEditClassifierProjection, PiEditProjection, PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
 import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
+import { PiClassifier } from "../../languagedef/metalanguage";
+import { LOG2USER } from "../../utils/UserLogger";
 
 export class ParserGenUtil {
 
@@ -15,6 +17,36 @@ export class ParserGenUtil {
             projectionGroup = editUnit.getDefaultProjectiongroup();
         }
         return projectionGroup;
+    }
+
+    static findProjection(projectionGroup: PiEditProjectionGroup, classifier: PiClassifier, projectionName?: string): PiEditProjection {
+        let myGroup: PiEditProjectionGroup = projectionGroup;
+        // take care of named projections: search the projection group with the right name
+        if (!!projectionName && projectionName.length > 0) {
+            if (projectionGroup.name !== projectionName) {
+                myGroup = projectionGroup.owningDefinition.projectiongroups.find(group => group.name === projectionName);
+            }
+        }
+        let myProjection: PiEditClassifierProjection = myGroup.findProjectionForType(classifier);
+        if (!myProjection && projectionGroup !== myGroup) { // if not found, then try my 'own' projection group
+            myProjection = projectionGroup.findProjectionForType(classifier);
+        }
+        if (!myProjection) { // still not found, try the default group
+            myProjection = projectionGroup.owningDefinition.getDefaultProjectiongroup().findProjectionForType(classifier);
+        }
+        if (myProjection instanceof PiEditProjection) {
+            return myProjection;
+        } else {
+            LOG2USER.error(`Cannot make parse rules for a table: '${classifier.name}'.`);
+            return null;
+            // TODO make rules for a list instead
+        }
+    }
+
+    static addIfNotPresent(namedProjections: PiEditClassifierProjection[], addition: PiEditClassifierProjection) {
+        if (!namedProjections.includes(addition)) {
+            namedProjections.push(addition);
+        }
     }
 
     /**

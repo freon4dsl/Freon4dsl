@@ -1,9 +1,9 @@
-editor default
+editor parser
 // test for super projections
-// test for multiple projection groups TODO
-// test for named projections TODO
 // test for initiator
 // test for boolean keywords
+// test for multiple projection groups TODO
+// test for named projections TODO
 // test for reference separator TODO
 // test for initial values overriding prop of super concepts TODO
 
@@ -12,6 +12,11 @@ VehicleUnit {
 VehicleUnit ${name} {
 	 [? ${vehicles initiator [vehicle of type]}]
 }
+]}
+
+Manufacturer {
+[
+${name}
 ]}
 
 Vehicle {
@@ -40,7 +45,7 @@ Bike {
 
 Steamboat  {
 [
-    ${typeName} [=> Vehicle]
+    ${typeName} Manufacturer: ${manufacturer:additional}
     [=> IsMotorised]
     NrOfPassengers: ${nrOfPassengers}
     PreferedWaterWay: ${preferedWaterWay}
@@ -49,7 +54,7 @@ Steamboat  {
 
 PetrolCar {
 [
-    ${typeName} [=> Vehicle]
+    ${typeName} [=> Vehicle:additional]
     [=> IsMotorised]
     max content of boot (in m2): ${bootContent}
 ]}
@@ -84,5 +89,5 @@ Scateboard {
 KickBike {
 [
     ${typeName} [=> Vehicle]
-    Is foldable: ${foldable [UNFOLDABLE | SURELY]}
+    Is foldable: ${foldable [SURELY | SORRY]}
 ]}

@@ -2,14 +2,14 @@ VehicleUnit unitTest1 {
 	vehicle of type Bike with 5 wheels
 	    Manufacturer: "Gazelle"
 	    Size of tyres: 25
-    vehicle of type SteamBoat with 1 wheels
-    	Manufacturer: "Altena Yachting"
+    vehicle of type SteamBoat
+    	Manufacturer: "Altena Yachting" based in "NL" CEO: "Peter Petersen"
         TypeOfEngine: Steam MaxSpeed: 30
         NrOfPassengers: 100
         PreferedWaterWay: "Donau"
         Is a heritage ship: true
 	vehicle of type PetrolCar with 4 wheels
-	    Manufacturer: "Porsche"
+	    ADDITIONAL PROJECTION Maker: "Porsche"
         TypeOfEngine: Gasoline
         MaxSpeed: 240
         max content of boot (in m2): 20	    
@@ -36,5 +36,5 @@ VehicleUnit unitTest1 {
         Size: 10
 	vehicle of type KickBike with 2 wheels
 		Manufacturer: "Kicks"
-        Is foldable: UNFOLDABLE
+        Is foldable: SURELY // some comment
 }
