@@ -18,11 +18,11 @@ export class Roles {
     // }
 
     public static property(property: PiProperty): string {
-        return Names.classifier(property.owningConcept) + "-" + property.name;
+        return Names.classifier(property.owningClassifier) + "-" + property.name;
     }
 
     public static newPart(property: PiProperty): string {
-        return Roles.newConceptPart(property.owningConcept, property)
+        return Roles.newConceptPart(property.owningClassifier, property)
         // return Roles.property(property);
     }
 

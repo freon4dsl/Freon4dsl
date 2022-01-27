@@ -289,6 +289,7 @@ export class PiConcept extends PiClassifier {
     implementedProperties(): PiProperty[] {
         let result: PiProperty[] = [];
         result = result.concat(this.implementedPrimProperties()).concat(this.implementedParts()).concat(this.implementedReferences());
+        console.log("found OVERRIDING props: " + result.filter(p => p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
         return result;
     }
 
@@ -320,6 +321,7 @@ export class PiConcept extends PiClassifier {
         tmp.forEach(concept => result = result.concat(concept.allSubConceptsRecursive()));
         return result;
     }
+
 }
 
 export class PiExpressionConcept extends PiConcept {
@@ -350,8 +352,9 @@ export class PiProperty extends PiLangElement {
     isOptional: boolean;
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
+    isOverriding: boolean = false;
     type: PiElementReference<PiClassifier>;
-    owningConcept: PiClassifier;
+    owningClassifier: PiClassifier;
 
     get isPrimitive(): boolean {
         return false;

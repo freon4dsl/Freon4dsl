@@ -125,7 +125,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                         throw e;
                     } else {
                         // add more info to the error message 
-                        throw new Error(\`Syntax error in "\${node?.nonSkipMatchedText}": \${e.message}\`);
+                        throw new Error(\`Syntax error in "\${node?.matchedText}": \${e.message}\`);
                     }
                 }
             }
@@ -153,7 +153,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 let brName: string = branch.name;
                 ${switchContent}                
                 {
-                    throw new Error(\`Error in ${className}: \${brName} not handled for node '\${branch?.nonSkipMatchedText}'\`);
+                    throw new Error(\`Error in ${className}: \${brName} not handled for node '\${branch?.matchedText}'\`);
                 }
             }
 
@@ -165,7 +165,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 try {
                     return branch.nonSkipChildren.toArray();
                 } catch (e) {
-                    throw new Error(\`Cannot follow branch: \${e.message} (\${branch.nonSkipMatchedText})\`);
+                    throw new Error(\`Cannot follow branch: \${e.message} (\${branch.matchedText})\`);
                 }
                 return children;
             }
@@ -182,7 +182,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                     try {
                         nextOne = group.nonSkipChildren.toArray()[0]; 
                     } catch (e) {
-                        throw new Error(\`Cannot follow group: \${e.message} (\${group.nonSkipMatchedText})\`);
+                        throw new Error(\`Cannot follow group: \${e.message} (\${group.matchedText})\`);
                     }
                     if (!nextOne.name.includes("multi") && !nextOne.name.includes("group")) {
                         stop = true; // found a branch with actual content, return its parent!
@@ -208,9 +208,9 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             public piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
                 let referred: string | string[] | T = this.${internalTransformNode}(branch);
                 if (referred == null || referred == undefined ) {
-                    throw new Error(\`Syntax error in "\${branch?.parent?.nonSkipMatchedText}": cannot create empty reference\`);
+                    throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
                 } else if (typeof referred === "string" && (referred as string).length == 0) {
-                    throw new Error(\`Syntax error in "\${branch?.parent?.nonSkipMatchedText}": cannot create empty reference\`);
+                    throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
                 } else {
                     return PiElementReference.create<T>(referred, typeName);
                 }

@@ -195,7 +195,7 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                     this.checkClassifierReference(piProperty.type);
                     const realType = piProperty.type.referred;
                     if (!!realType) { // error message handled by checkClassifierReference
-                        const owningClassifier = piProperty.owningConcept;
+                        const owningClassifier = piProperty.owningClassifier;
                         this.checkPropertyType(piProperty, realType);
 
                         const isUnit = (realType instanceof PiUnitDescription);

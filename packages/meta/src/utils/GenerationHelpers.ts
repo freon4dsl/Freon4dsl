@@ -2,7 +2,7 @@ import {
     PiClassifier,
     PiConcept,
     PiConceptProperty,
-    PiInterface,
+    PiInterface, PiLangElement,
     PiLanguage,
     PiPrimitiveProperty,
     PiProperty
@@ -71,28 +71,28 @@ function _internalSort(piconcepts: PiConcept[] | PiElementReference<PiConcept>[]
     return newList.reverse();
 }
 
-// /**
-//  * This function returns true if 'list' contains 'element', whether the element
-//  * is a reference to, or the concept itself.
-//  *
-//  * @param list
-//  * @param element
-//  */
-// export function refListIncludes(list: PiElementReference<PiLangElement>[],
-//                                 element: PiElementReference<PiLangElement> | PiLangElement): boolean {
-//     for (const xx of list) {
-//         if (element instanceof PiLangElement) {
-//             if (xx.referred === element) {
-//                 return true;
-//             }
-//         } else if (element instanceof PiElementReference) {
-//             if (xx.referred === element.referred) {
-//                 return true;
-//             }
-//         }
-//     }
-//     return false;
-// }
+/**
+ * This function returns true if 'list' contains 'element', whether the element
+ * is a reference to, or the concept itself.
+ *
+ * @param list
+ * @param element
+ */
+export function refListIncludes(list: PiElementReference<PiLangElement>[],
+                                element: PiElementReference<PiLangElement> | PiLangElement): boolean {
+    for (const xx of list) {
+        if (element instanceof PiLangElement) {
+            if (xx.referred === element) {
+                return true;
+            }
+        } else if (element instanceof PiElementReference) {
+            if (xx.referred === element.referred) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 /**
  * Takes a list of PiClassifiers that contains both interfaces and concepts and returns a list of concepts

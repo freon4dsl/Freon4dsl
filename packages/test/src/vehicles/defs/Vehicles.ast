@@ -4,8 +4,8 @@ language vehicles
 // test for multiple projection groups
 // test for initiator
 // test for boolean keywords
-// test for reference separator
 // test for initial values overriding prop of super concept
+// test for reference separator
 
 model VehicleModel {
     public name: identifier;
@@ -23,6 +23,7 @@ modelunit VehicleUnit {
 abstract concept Vehicle {
     manufacturer: Manufacturer;
     nrOfWheels: number;
+    typeName: identifier;
 }
 
 concept Manufacturer {

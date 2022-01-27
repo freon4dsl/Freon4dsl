@@ -79,7 +79,7 @@ export function createModel(data: Partial<PiModelDescription>): PiModelDescripti
             } else {
                 result.properties.push(prop);
             }
-            prop.owningConcept = result;
+            prop.owningClassifier = result;
         }
     }
     if (!!data.location) {
@@ -102,7 +102,7 @@ export function createUnit(data: Partial<PiUnitDescription>): PiUnitDescription 
             } else {
                 result.properties.push(prop);
             }
-            prop.owningConcept = result;
+            prop.owningClassifier = result;
         }
     }
     if (!!data.fileExtension) {
@@ -169,7 +169,7 @@ export function createInterface(data: Partial<PiInterface>): PiInterface {
             } else {
                 result.properties.push(prop);
             }
-            prop.owningConcept = result;
+            prop.owningClassifier = result;
         }
     }
     if (!!data.location) {
@@ -202,7 +202,7 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
             } else {
                 result.properties.push(prop);
             }
-            prop.owningConcept = result;
+            prop.owningClassifier = result;
         }
     }
     if (!!data.location) {

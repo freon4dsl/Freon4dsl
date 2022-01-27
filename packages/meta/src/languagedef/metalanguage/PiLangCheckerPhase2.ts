@@ -1,4 +1,4 @@
-import { isNullOrUndefined, LangUtil, Names } from "../../utils";
+import { isNullOrUndefined, LangUtil, Names, refListIncludes } from "../../utils";
 import {
     PiClassifier,
     PiConcept,
@@ -29,8 +29,9 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             this.checkUniqueFileExtension(extensions, unit);
         });
         language.concepts.forEach(con => {
-            if (this.checkClassifier(names, con, true)) {
-                // we cannot use a simple assignment, because checking the next concept would set
+            if (this.checkClassifier(names, con, false)) {
+                // we cannot use a simple assignment, like "foundSomeCircularity = this.checkClassifier(names, con, false)"
+                // because checking the next concept would set
                 // the value of 'foundSomeCircularity' back to false;
                 foundSomeCircularity = true;
             } else {
@@ -138,10 +139,32 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
                         `Property with name '${prop.name}' already exists in ${classifier.name} ${this.location(previous)} and ${this.location(prop)}.`);
                 } else {
                     // in non-strict mode properties with the same name are allowed, but only if they have the same type
+                    // TODO extends this to types that conform
                     // find the first property with this name
                     const otherProp = propsDone.find(p => p.name === prop.name);
-                    this.simpleCheck(LangUtil.compareTypes(prop, otherProp),
-                        `Property with name '${prop.name}' but different type already exists in ${classifier.name} ${this.location(prop)} and ${this.location(otherProp)}.`);
+                    this.nestedCheck({
+                        check: LangUtil.compareTypes(prop, otherProp),
+                        error: `Property with name '${prop.name}' but different type already exists in ${classifier.name} ${this.location(prop)} and ${this.location(otherProp)}.`,
+                        whenOk: () => {
+                            // set the 'isOverriding' flag
+                            if (classifier instanceof PiConcept) {
+                                if (prop.owningClassifier instanceof PiConcept) {
+                                    // 'prop' is property of a super concept of 'classifier'
+                                    // which already implements it
+                                    otherProp.isOverriding = true;
+                                } else if (prop.owningClassifier instanceof PiInterface){
+                                    // 'prop' is property of an interface
+                                    if (!refListIncludes(classifier.interfaces, prop.owningClassifier)) {
+                                        // the interface is indirectly implemented by 'classifier'
+                                        // thus one of its superclasses is already implementing it
+                                        otherProp.isOverriding = true;
+                                    }
+                                }
+                            }
+                            if (prop.isOverriding) console.log("isOverriding flag set for: '" + prop.name + "' of '" + prop.owningClassifier.name);
+                            // if (!prop.isOverriding) console.log("isOverriding flag NOT set for: '" + prop.name + "' of '" + classifier.name);
+                        }
+                    });
                 }
             } else {
                 propnames.push(prop.name);
@@ -162,7 +185,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             nameProperty.isOptional = false;
             nameProperty.isPublic = false;
             nameProperty.isStatic = false;
-            nameProperty.owningConcept = piLimitedConcept;
+            nameProperty.owningClassifier = piLimitedConcept;
             piLimitedConcept.primProperties.push(nameProperty);
         } else {
             this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,

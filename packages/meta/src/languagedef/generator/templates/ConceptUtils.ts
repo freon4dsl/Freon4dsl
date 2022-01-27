@@ -85,8 +85,10 @@ export function makeReferenceProperty(property: PiConceptProperty): string {
 }
 
 export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): string {
-    const allButPrimitiveProps: PiConceptProperty[] = allProps.filter(p => !p.isPrimitive) as PiConceptProperty[];
-    const allPrimitiveProps: PiPrimitiveProperty[] = allProps.filter(p => p.isPrimitive) as PiPrimitiveProperty[];
+    // console.log("found overriding props: " + allProps.filter(p => p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name} [${p.location.filename}]`).join(", "))
+    // console.log("found NON overriding props: " + allProps.filter(p => !p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
+    const allButPrimitiveProps: PiConceptProperty[] = allProps.filter(p => !p.isPrimitive && !p.isOverriding) as PiConceptProperty[];
+    const allPrimitiveProps: PiPrimitiveProperty[] = allProps.filter(p => p.isPrimitive && !p.isOverriding) as PiPrimitiveProperty[];
     return `constructor(id?: string) {
                     ${!hasSuper ? `
                         super();
