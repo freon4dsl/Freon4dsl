@@ -4,7 +4,7 @@ editor parser
 // test for boolean keywords
 // test for multiple projection groups in parser
 // test for named projections in parser
-// test for initial values overriding prop of super concepts TODO
+// test for initial values overriding prop of super concepts
 // test for reference separator TODO
 
 VehicleUnit {
@@ -12,7 +12,7 @@ VehicleUnit {
 VehicleUnit ${name} {
     first = ${first}
     second = ${second}
-	 [? ${vehicles initiator [vehicle of type]}]
+	[?${vehicles initiator [vehicle of type]}]
 }
 ]}
 
@@ -23,8 +23,8 @@ ${name}
 
 Vehicle {
 [
-    with ${nrOfWheels} wheels
-Manufacturer: ${manufacturer }
+${typeName} with ${nrOfWheels} wheels
+    Manufacturer: ${manufacturer }
 ]}
 
 IsElectrical {
@@ -41,7 +41,7 @@ IsMotorised {
 
 Bike {
 [
-    ${typeName} [=> Vehicle]
+     [=> Vehicle]
     Size of tyres: ${tyreSize}
 ]}
 
@@ -63,33 +63,33 @@ PetrolCar {
 
 SolarCar {
 [
-    ${typeName} [=> Vehicle]
+    [=> Vehicle]
     [=> IsElectrical]
     Brand of solar panels: ${solarPanelBrand}
 ]}
 
 Scooter {
 [
-    ${typeName} [=> Vehicle]
+    [=> Vehicle]
     [=> IsElectrical]
     Color: ${color}
 ]}
 
 Segway {
 [
-    ${typeName} [=> Vehicle]
+    [=> Vehicle]
     [=> IsElectrical]
     Is allowed on the road: ${isAllowedOnRoad [HOORAY]}
 ]}
 
 Scateboard {
 [
-    ${typeName} [=> Vehicle]
+    [=> Vehicle]
     Size: ${size}
 ]}
 
 KickBike {
 [
-    ${typeName} [=> Vehicle]
+    [=> Vehicle]
     Is foldable: ${foldable [SURELY | SORRY]}
 ]}
