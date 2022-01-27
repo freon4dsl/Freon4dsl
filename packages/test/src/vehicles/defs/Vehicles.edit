@@ -12,6 +12,8 @@ editor parser
 VehicleUnit {
 [
 VehicleUnit ${name} {
+    first = ${first}
+    second = ${second}
 	 [? ${vehicles initiator [vehicle of type]}]
 }
 ]}

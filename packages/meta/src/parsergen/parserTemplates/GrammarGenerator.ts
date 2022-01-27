@@ -7,7 +7,6 @@ import { ConceptMaker } from "./ConceptMaker";
 import { GrammarModel } from "./grammarModel/GrammarModel";
 import { LanguageAnalyser, PiAnalyser } from "./LanguageAnalyser";
 import { GrammarPart } from "./grammarModel/GrammarPart";
-import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
 import { Names } from "../../utils";
 import { ParserGenUtil } from "./ParserGenUtil";
 
@@ -17,6 +16,11 @@ export class GrammarGenerator {
         // create an empty model of the grammar and syntax analysis
         const grammar = new GrammarModel();
         grammar.language = language;
+        const stdBoolKeywords = editUnit.getDefaultProjectiongroup().standardBooleanProjection;
+        if (!!stdBoolKeywords) {
+            grammar.trueValue = stdBoolKeywords.trueKeyword;
+            grammar.falseValue = stdBoolKeywords.falseKeyword;
+        }
 
         // find the projection group that can be used for the parser and unparser
         let projectionGroup = ParserGenUtil.findParsableProjectionGroup(editUnit);

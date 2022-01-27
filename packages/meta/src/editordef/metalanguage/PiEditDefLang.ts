@@ -112,14 +112,17 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
     owningDefinition: PiEditUnit;
 
     findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
+        // TODO should return a list
         return this.projections.find(con => con.classifier.referred === cls);
     }
 
     findTableProjectionForType(cls: PiClassifier): PiEditTableProjection {
+        // TODO should return a list
         return this.allTableProjections().find(con => con.classifier.referred === cls);
     }
 
     findNonTableProjectionForType(cls: PiClassifier): PiEditProjection {
+        // TODO should return a list
         return this.allNonTableProjections().find(con => con.classifier.referred === cls);
     }
 

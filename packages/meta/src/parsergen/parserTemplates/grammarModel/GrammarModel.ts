@@ -1,4 +1,3 @@
-
 import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, READER_GEN_FOLDER } from "../../../utils";
 import {
@@ -14,9 +13,11 @@ import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage"
 import { GrammarPart } from "./GrammarPart";
 
 export class GrammarModel {
-    language: PiLanguage = null;
-    parts: GrammarPart[] = [];
-    // private allRuleNames: string[] = [];
+    // these four properties are set by the GrammarGenerator
+    public language: PiLanguage = null;
+    public parts: GrammarPart[] = [];
+    public trueValue: string = 'true';
+    public falseValue: string = 'false';
 
     toGrammar() : string {
         // there is no prettier for the grammar string, therefore we take indentation and
@@ -44,7 +45,7 @@ leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf stringLiteral       = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
 leaf numberLiteral       = "[0-9]+";
-leaf booleanLiteral      = 'false' | 'true';
+leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             
 }\`; // end of grammar`;
     }
@@ -135,9 +136,9 @@ leaf booleanLiteral      = 'false' | 'true';
                     if (tmp.startsWith('"')) { // stringLiteral, strip the surrounding quotes
                         tmp = tmp.slice(1, tmp.length - 1);
                         return tmp;
-                    } else if (tmp == "false") { // booleanLiteral
+                    } else if (tmp == "${this.falseValue}") { // booleanLiteral
                         return false;
-                    } else if (tmp == "true") { // booleanLiteral
+                    } else if (tmp == "${this.trueValue}") { // booleanLiteral
                         return true;
                     } else if (Number.isInteger(parseInt(tmp))) { // numberLiteral
                         return parseInt(tmp);

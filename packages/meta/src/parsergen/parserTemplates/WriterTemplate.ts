@@ -35,15 +35,25 @@ export class WriterTemplate {
     // this list is filled during the build of the template and should alwyas be the last
     // to added to the template
     private namedProjections: PiEditClassifierProjection[] = [];
+    private trueValue: string = 'true';
+    private falseValue: string = 'false';
 
     /**
      * Returns a string representation of the class that implements an unparser for modelunits of
      * 'language', based on the given editor definition.
      */
     public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
+        // first initialize the class variables
         this.namedProjections = [];
-        let projectionGroup = ParserGenUtil.findParsableProjectionGroup(editDef);
-        this.currentProjectionGroup = projectionGroup;
+        this.currentProjectionGroup = ParserGenUtil.findParsableProjectionGroup(editDef);
+
+        const stdBoolKeywords = editDef.getDefaultProjectiongroup().standardBooleanProjection;
+        if (!!stdBoolKeywords) {
+            this.trueValue = stdBoolKeywords.trueKeyword;
+            this.falseValue = stdBoolKeywords.falseKeyword;
+        }
+
+        // next, do some admin: which concepts should be generated as what?
         const allLangConceptsName: string = Names.allConcepts(language);
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
@@ -69,8 +79,8 @@ export class WriterTemplate {
         });
 
         const binaryExtras: ExtraClassifierInfo[] = [];
-        if (!!projectionGroup.extras) {
-            for (const myExtra of projectionGroup.extras) {
+        if (!!this.currentProjectionGroup.extras) {
+            for (const myExtra of this.currentProjectionGroup.extras) {
                 const myConcept: PiClassifier = myExtra.classifier.referred;
                 if (myConcept instanceof PiBinaryExpressionConcept && !myConcept.isAbstract) {
                     binaryExtras.push(myExtra);
@@ -188,7 +198,7 @@ export class WriterTemplate {
                 }
             }
 
-            ${projectionGroup.projections.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
+            ${this.currentProjectionGroup.projections.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
             ${binaryExtras.map(bin => `${this.makeBinaryExpMethod(bin)}`).join("\n")}
             ${limitedConcepts.map(con => `${this.makeLimitedMethod(con)}`).join("\n")}
             ${conceptsWithoutProjection.map(concept => `${this.makeAbstractConceptMethodWithout(concept)}`).join("\n")}
@@ -576,7 +586,6 @@ export class WriterTemplate {
         let result: string = ``;
         const elemStr = propertyToTypeScript(item.property.referred);
         if (myElem.isList) {
-            // TODO adjust to boolKeywords
             let isIdentifier: string = "false";
             if (myElem.type.referred === PiPrimitiveType.identifier) {
                 isIdentifier = "true";
@@ -600,23 +609,45 @@ export class WriterTemplate {
             const myType: PiClassifier = myElem.type.referred;
             if (myType === PiPrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
-            } else if (myType === PiPrimitiveType.boolean && !!item.boolInfo) {
-                // add escapes to keyword
-                const myTrueKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.trueKeyword);
-                if (!!item.boolInfo.falseKeyword) {
-                    // add escapes to keyword
-                    const myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.falseKeyword);
-                    // add unparsing for two keywords
+            } else if (myType === PiPrimitiveType.boolean) {
+                // get the right manner to unparse the boolean values
+                // either from the standard boolean keywords in the default projection group
+                // or from 'item', and add escapes to the keywords
+                let myTrueKeyword: string = ParserGenUtil.escapeRelevantChars(this.trueValue);
+                let myFalseKeyword: string = ParserGenUtil.escapeRelevantChars(this.falseValue);
+                if (!!item.boolInfo) {
+                    myTrueKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.trueKeyword);
+                    if (!!item.boolInfo.falseKeyword) {
+                        myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.falseKeyword);
+                    } else {
+                        myFalseKeyword = null;
+                    }
+                }
+                if (myTrueKeyword === 'true' && myFalseKeyword === 'false') {
+                    // possibility 1: the keywords are simply 'true' and 'false'
+                    myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
+                } else if (myFalseKeyword === null) {
+                    // possibility 2: there is no false keyword, which means that
+                    // the boolean value should be shown only when it is true
+                    myCall = `if (${elemStr}) { 
+                              this.output[this.currentLine] += \`${myTrueKeyword} \`
+                          }`;
+                } else {
+                    // possibility 3: both true and false keywords have been altered in the editor definition
                     myCall = `if (${elemStr}) { 
                               this.output[this.currentLine] += \`${myTrueKeyword} \`
                           } else {
                             this.output[this.currentLine] += \`${myFalseKeyword} \`
                           }`;
-                } else {
-                    myCall = `if (${elemStr}) { 
-                              this.output[this.currentLine] += \`${myTrueKeyword} \`
-                          }`;
                 }
+                // if (!!item.boolInfo.falseKeyword) {
+                //     // add unparsing for two keywords
+                //
+                // } else {
+                //     myCall = `if (${elemStr}) {
+                //               this.output[this.currentLine] += \`${myTrueKeyword} \`
+                //           }`;
+                // }
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }

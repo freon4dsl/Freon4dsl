@@ -14,6 +14,8 @@ model VehicleModel {
 
 modelunit VehicleUnit {
     public name: identifier;
+    first: boolean;
+    second: boolean;
     vehicles: Vehicle[];
     file-extension = "veh";
 }
