@@ -11,12 +11,11 @@ describe("Vehicles parser on", () => {
         try {
             const input = fileHandler.stringFromFile("src/vehicles/__inputs__/test1.veh");
             const unit1: VehicleUnit = reader.readFromString(input, "VehicleUnit") as VehicleUnit;
-            console.log(writer.writeToString(unit1, 0, false));
-            // expect(unit1).toMatchSnapshot();
+            // console.log(writer.writeToString(unit1, 0, false));
+            expect(unit1).toMatchSnapshot();
         } catch (e) {
-            console.log(e.stack);
-            // expect(e).toBeNaN();
-            // weather
+            // console.log(e.stack);
+            expect(e).toBeNaN();
         }
     });
 

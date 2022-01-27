@@ -638,13 +638,22 @@ export class WriterTemplate {
         let result: string = "";
         const type = myElem.type.referred;
         let nameOfUnparseMethod: string = "unparse";
+        let typeCast: string = '';
         if (!!type) {
-            // take care of named projections
+            // In case of a named projection, another unparse method needs to be called,
+            // and the parameter to that call needs a type cast.
+            // The projection that must be implemented in this new unparse method is stored
+            // in 'this.namedProjections'. All elements in this list are added to the generated class
+            // when all 'normal' methods have been generated - so we know all extra methods needed.
+            // Note that the name of the call generated here must be equal to the name of the method
+            // which is generated in 'makeNormalMethod'.
             if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
                 // find the projection that we need and add it to the extra list
                 const foundProjection = ParserGenUtil.findProjection(this.currentProjectionGroup, type, item.projectionName);
                 ParserGenUtil.addIfNotPresent(this.namedProjections, foundProjection);
-                nameOfUnparseMethod += `${Names.classifier(type)}_${item.projectionName}`;
+                nameOfUnparseMethod += `${Names.classifier
+                (type)}_${item.projectionName}`;
+                typeCast = ` as ${Names.classifier(type)}`;
             }
             if (myElem.isList) {
                 if (!!item.listInfo && !item.listInfo.isTable) { // it is a list not table
@@ -656,7 +665,7 @@ export class WriterTemplate {
                         if (myElem.isPart) {
                             let myTypeScript: string = propertyToTypeScript(item.property.referred);
                             result += `this.unparseList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short,
-                            (modelelement, short) => this.${nameOfUnparseMethod}(modelelement, short) )`;
+                            (modelelement, short) => this.${nameOfUnparseMethod}(modelelement${typeCast}, short) )`;
                         } else {
                             let myTypeScript: string = propertyToTypeScriptWithoutReferred(item.property.referred);
                             result += `this.unparseReferenceList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
