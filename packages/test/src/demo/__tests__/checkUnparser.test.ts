@@ -117,8 +117,8 @@ describe("Testing Unparser", () => {
 
             result = unparser.writeToString(personEnt, 0, false);
             expect(result).toBe("DemoEntity Person { \n" +
-                "    simpleprop \"\" \n" +
                 "    baseInterface_attr 0 \n" +
+                "    simpleprop \"\" \n" +
                 "    x \"\" \n" +
                 "    attributes \n" +
                 "        age : Boolean\n" +

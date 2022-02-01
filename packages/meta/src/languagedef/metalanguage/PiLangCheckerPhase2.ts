@@ -172,7 +172,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             const propsDone: PiProperty[] = [];
             classifier.allInterfaces().forEach(intf => {
                 intf.allProperties().forEach(toBeImplemented => {
-                    const implementedProp = this.findImplementedProperty(toBeImplemented, classifier);
+                    const implementedProp = this.findImplementedProperty(toBeImplemented, classifier, false);
                     if (!implementedProp) { // there is NO counter part in either this concept of its base
                         const inAnotherInterface = propsDone.find(prevProp => prevProp.name === toBeImplemented.name);
                         if (!!inAnotherInterface) { // there is a prop with the same name in another interface
@@ -247,15 +247,21 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         }
     }
 
-    private findImplementedProperty(prop: PiProperty, concept: PiConcept) {
+    private findImplementedProperty(prop: PiProperty, concept: PiConcept, includeInterfaces: boolean) {
         const propsToCheck: PiProperty[] = [];
         propsToCheck.push(...concept.primProperties);
         propsToCheck.push(...concept.properties);
+        if (includeInterfaces && concept.interfaces.length > 0) {
+            concept.interfaces.forEach(intf => {
+                propsToCheck.push(...intf.referred.allPrimProperties());
+                propsToCheck.push(...intf.referred.allProperties());
+            });
+        }
         let implementedProp = propsToCheck.find(prevProp => prevProp.name === prop.name);
         // if not implemented by the concept itself, try its base - recursive -
         const myBase = concept.base?.referred;
         if (!implementedProp && !!myBase) {
-            implementedProp = this.findImplementedProperty(prop, myBase);
+            implementedProp = this.findImplementedProperty(prop, myBase, true);
         }
         return implementedProp;
     }

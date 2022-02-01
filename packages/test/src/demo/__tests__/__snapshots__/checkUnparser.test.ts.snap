@@ -18,8 +18,8 @@ types:
     
 entities: 
     DemoEntity Vehicle { 
-        simpleprop \\"simple\\" 
         baseInterface_attr 0 
+        simpleprop \\"simple\\" 
         x \\"xxx\\" 
         attributes 
             brand : String
@@ -43,8 +43,8 @@ entities:
             
     }
     DemoEntity Car { 
-        simpleprop \\"simple\\" 
         baseInterface_attr 0 
+        simpleprop \\"simple\\" 
         x \\"xxx\\" 
         attributes 
             numberplate : Integer
@@ -69,8 +69,8 @@ entities:
         baseEntity Vehicle 
     }
     DemoEntity Bike { 
-        simpleprop \\"simple\\" 
         baseInterface_attr 0 
+        simpleprop \\"simple\\" 
         x \\"xxx\\" 
         attributes 
             backseat : Boolean
@@ -95,8 +95,8 @@ entities:
         baseEntity Vehicle 
     }
     DemoEntity RaceBike { 
-        simpleprop \\"simple\\" 
         baseInterface_attr 0 
+        simpleprop \\"simple\\" 
         x \\"xxx\\" 
         attributes 
             color : String
@@ -141,8 +141,8 @@ types:
     
 entities: 
     DemoEntity School { 
-        simpleprop \\"simple\\" 
         baseInterface_attr 0 
+        simpleprop \\"simple\\" 
         x \\"xxx\\" 
         attributes 
             foundedIn : Integer
@@ -164,8 +164,8 @@ entities:
             
     }
     DemoEntity Company { 
-        simpleprop \\"simple\\" 
         baseInterface_attr 0 
+        simpleprop \\"simple\\" 
         x \\"xxx\\" 
         attributes 
             name : String

@@ -1,11 +1,14 @@
 import { PiTyperParser } from "../../../typerdef/parser/PiTyperParser";
 import { PiLanguage } from "../../../languagedef/metalanguage";
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
+import { MetaLogger } from "../../../utils";
 
 describe("Checking typer on checking errors", () => {
     const testdir = "src/test/__tests__/typer-tests/faultyDefFiles/syntax-errors/";
     let parser: PiTyperParser;
     let language: PiLanguage;
+    MetaLogger.muteAllLogs();
+    MetaLogger.muteAllErrors();
 
     beforeEach(() => {
         try {
