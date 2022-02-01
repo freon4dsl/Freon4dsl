@@ -1,12 +1,14 @@
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
 import { PiExpressionConcept, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
-import { LangUtil } from "../../../utils";
+import { LangUtil, MetaLogger } from "../../../utils";
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
 
 describe("Checking internal structure of language", () => {
     const parser = new LanguageParser();
     const testdir = "src/test/__tests__/language-tests/correctDefFiles/internal-structure/";
+    MetaLogger.muteAllLogs();
+    MetaLogger.muteAllErrors();
 
     // TODO implement the following tests:
 

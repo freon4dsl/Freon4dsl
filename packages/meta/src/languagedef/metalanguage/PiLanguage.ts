@@ -77,7 +77,9 @@ export abstract class PiClassifier extends PiLangElement {
     }
 
     allPrimProperties(): PiPrimitiveProperty[] {
-        return this.primProperties;
+        let result: PiPrimitiveProperty[] = [];
+        result.push(...this.primProperties);
+        return result;
     }
 
     allParts(): PiConceptProperty[] {
@@ -90,7 +92,9 @@ export abstract class PiClassifier extends PiLangElement {
 
     allProperties(): PiProperty[] {
         let result: PiProperty[] = [];
-        result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
+        result.push(...this.allPrimProperties());
+        result.push(...this.allParts());
+        result.push(...this.allReferences());
         return result;
     }
 
@@ -98,6 +102,7 @@ export abstract class PiClassifier extends PiLangElement {
         return this.allPrimProperties().find(p => p.name === "name");
     }
 
+    // TODO use this method in favour of nameProperty()
     identifierNameProperty(): PiPrimitiveProperty {
         return this.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
     }
@@ -123,7 +128,8 @@ export class PiInterface extends PiClassifier {
     base: PiElementReference<PiInterface>[] = [];
 
     allPrimProperties(): PiPrimitiveProperty[] {
-        let result: PiPrimitiveProperty[] = this.primProperties;
+        let result: PiPrimitiveProperty[] = []; // return a new array
+        result.push(...this.primProperties);
         for (const intf of this.base) {
             result = result.concat(intf.referred.allPrimProperties());
         }
@@ -180,6 +186,7 @@ export class PiInterface extends PiClassifier {
         tmp.forEach(concept => result = result.concat(concept.allSubInterfacesRecursive()));
         return result;
     }
+
 }
 
 export class PiConcept extends PiClassifier {
@@ -190,7 +197,12 @@ export class PiConcept extends PiClassifier {
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.implementedPrimProperties();
         if (!!this.base && !!this.base.referred) {
-            result = result.concat(this.base.referred.allPrimProperties());
+            this.base.referred.allPrimProperties().forEach(p => {
+                // hide overwritten property
+                if (!result.some(previous => previous.name === p.name && previous.implementedInBase)) {
+                    result.push(p);
+                }
+            });
         }
         return result;
     }
@@ -198,7 +210,12 @@ export class PiConcept extends PiClassifier {
     allParts(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.implementedParts();
         if (!!this.base && !!this.base.referred) {
-            result = result.concat(this.base.referred.allParts());
+            this.base.referred.allParts().forEach(p => {
+                // hide overwritten property
+                if (!result.some(previous => previous.name === p.name && previous.implementedInBase)) {
+                    result.push(p);
+                }
+            });
         }
         return result;
     }
@@ -206,7 +223,12 @@ export class PiConcept extends PiClassifier {
     allReferences(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.implementedReferences();
         if (!!this.base && !!this.base.referred) {
-            result = result.concat(this.base.referred.allReferences());
+            this.base.referred.allReferences().forEach(p => {
+                // hide overwritten property
+                if (!result.some(previous => previous.name === p.name && previous.implementedInBase)) {
+                    result.push(p);
+                }
+            });
         }
         return result;
     }
@@ -217,8 +239,14 @@ export class PiConcept extends PiClassifier {
         return result;
     }
 
+    /**
+     * Returns a list of properties that are either (1) defined in this concept or (2) in one of the interfaces
+     * that is implemented by this concept. Excluded are properties that are defined in an interface but are already
+     * included in one of the base concepts.
+     */
     implementedPrimProperties(): PiPrimitiveProperty[] {
-        let result: PiPrimitiveProperty[] = this.primProperties;
+        let result: PiPrimitiveProperty[] = []; // return a new array!
+        result.push(...this.primProperties);
         for (const intf of this.interfaces) {
             for (const intfProp of intf.referred.allPrimProperties()) {
                 let allreadyIncluded = false;
@@ -289,7 +317,6 @@ export class PiConcept extends PiClassifier {
     implementedProperties(): PiProperty[] {
         let result: PiProperty[] = [];
         result = result.concat(this.implementedPrimProperties()).concat(this.implementedParts()).concat(this.implementedReferences());
-        console.log("found OVERRIDING props: " + result.filter(p => p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
         return result;
     }
 
@@ -352,7 +379,7 @@ export class PiProperty extends PiLangElement {
     isOptional: boolean;
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
-    isOverriding: boolean = false;
+    implementedInBase: boolean = false;
     type: PiElementReference<PiClassifier>;
     owningClassifier: PiClassifier;
 
@@ -436,6 +463,13 @@ export class PiPrimitiveType extends PiConcept {
         }
         // TODO see whether we need to return null?
         return this.$piANY;
+    }
+
+    allSubConceptsRecursive(): PiConcept[] {
+        return [];
+    }
+    allSubConceptsDirect(): PiConcept[] {
+        return [];
     }
 }
 

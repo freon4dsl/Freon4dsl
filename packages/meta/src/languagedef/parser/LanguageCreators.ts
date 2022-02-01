@@ -10,6 +10,7 @@ import {
     PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveValue, PiPrimitiveType, PiModelDescription, PiUnitDescription
 } from "../metalanguage/PiLanguage";
 import { PiElementReference } from "../metalanguage/PiElementReference";
+import { Checker } from "../../utils";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";
@@ -43,7 +44,7 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
                 if (hasModel) {
                     let location: string = `[no location]`;
                     if (!!con.location) {
-                        location = `[file: ${currentFileName}, line: ${con.location.start.line}, column: ${con.location.start.column}]`;
+                        location = Checker.locationPlus(currentFileName, con.location);
                     }
                     nonFatalParseErrors.push(`There may be only one model in the language definition ${location}.`)
                 } else {
@@ -197,6 +198,10 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
     }
     if (!!data.properties) {
         for (const prop of data.properties) {
+            // if (result.name === "Type2"){
+            //     console.log("parsed: " + data.properties.map(p => p.name).join(", "))
+            // }
+            // TODO check whether this distinction can be removed
             if (prop instanceof PiPrimitiveProperty) {
                 result.primProperties.push(prop);
             } else {
@@ -274,8 +279,7 @@ export function createPartOrPrimProperty(data: Partial<PiPrimitiveProperty>): Pi
             // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
             // we are not interested in its value, only whether it is present
             if (data.initialValue !== null && data.initialValue !== undefined) {
-                nonFatalParseErrors.push(`A non-primitive property may not have an initial value ` +
-                    `[file: ${currentFileName}, line: ${data.location.start.line}, column: ${data.location.start.column}].`);
+                nonFatalParseErrors.push(`A non-primitive property may not have an initial value ${Checker.locationPlus(currentFileName, data.location)}.`);
             }
             result = conceptProperty;
         }

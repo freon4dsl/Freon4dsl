@@ -1,0 +1,28 @@
+language YYYY
+model Y {
+    name: identifier;
+    unit: Yunit;
+}
+
+modelunit Yunit {
+    public name: identifier;
+    part: XXX;
+}
+
+concept XXX { // properties may not have the same name
+    name1: boolean;
+    name1: number;
+    name2: Type1;
+    name2: Type2;
+    name3: string;
+    name3: Type2;
+    name4: Type1;
+    reference name4: Type2;
+}
+
+interface Type1 {
+}
+
+interface Type2 {
+    name: identifier;
+}

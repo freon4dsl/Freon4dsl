@@ -1,0 +1,41 @@
+// 2. all props defined in a classifier should be different from the props of its super concepts/interfaces
+//      except when their types conform, then props of the sub should be marked 'implementedInBase' - but only if
+//      base is a concept
+
+// this test compares properties of a concept with its base using type equality
+language YYYY
+model Y {
+    name: identifier;
+    unit: Yunit;
+}
+
+modelunit Yunit {
+    public name: identifier;
+    part2: Wrong;
+}
+
+concept BaseConcept1 {
+    name1: boolean;
+    name2: Type1;
+    reference name3: Type2;
+    name4: Type3;
+}
+
+concept Wrong base BaseConcept1 {
+    name1: number;
+    name2: Type2;
+    reference name3: Type3;
+    name4: Type1;
+}
+
+concept Type1 {
+    name: identifier;
+}
+
+concept Type2 {
+    name: identifier;
+}
+
+concept Type3 {
+    name: identifier;
+}

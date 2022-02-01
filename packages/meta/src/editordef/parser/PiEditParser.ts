@@ -1,5 +1,5 @@
 import { PiLanguage } from "../../languagedef/metalanguage";
-import { Names, PiParser } from "../../utils";
+import { Checker, Names, PiParser } from "../../utils";
 
 const editorParser = require("./PiEditGrammar");
 import { setCurrentFileName as editFileName } from "./PiEditCreators";
@@ -80,21 +80,21 @@ export class PiEditParser extends PiParser<PiEditUnit> {
                         if (!!knownOne) {
                             if (!!extra.symbol) {
                                 if (!!knownOne.symbol) {
-                                    this.checker.warnings.push(`symbol for classifier ${extra.classifier.name} is defined twice: ${this.location(extra)} and ${this.location(knownOne)}.`);
+                                    this.checker.warnings.push(`symbol for classifier ${extra.classifier.name} is defined twice: ${Checker.location(extra)} and ${Checker.location(knownOne)}.`);
                                 } else {
                                     knownOne.symbol = extra.symbol;
                                 }
                             }
                             if (!!extra.trigger) {
                                 if (!!knownOne.trigger) {
-                                    this.checker.warnings.push(`trigger for classifier ${extra.classifier.name} is defined twice: ${this.location(extra)} and ${this.location(knownOne)}.`);
+                                    this.checker.warnings.push(`trigger for classifier ${extra.classifier.name} is defined twice: ${Checker.location(extra)} and ${Checker.location(knownOne)}.`);
                                 } else {
                                     knownOne.trigger = extra.trigger;
                                 }
                             }
                             if (!!extra.referenceShortCut) {
                                 if (!!knownOne.referenceShortCut) {
-                                    this.checker.warnings.push(`reference shortcut for classifier ${extra.classifier.name} is defined twice: ${this.location(extra)} and ${this.location(knownOne)}.`);
+                                    this.checker.warnings.push(`reference shortcut for classifier ${extra.classifier.name} is defined twice: ${Checker.location(extra)} and ${Checker.location(knownOne)}.`);
                                 } else {
                                     knownOne.referenceShortCut = extra.referenceShortCut;
                                 }

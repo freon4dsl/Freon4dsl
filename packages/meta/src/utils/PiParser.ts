@@ -43,7 +43,7 @@ export class PiParser<DEFINITION> {
             // syntax error
             const errorstr = `${e} 
                 ${e.location && e.location.start ?
-                    `[file: ${definitionFile}, line ${e.location.start.line}, column ${e.location.start.column}]`
+                    Checker.locationPlus(definitionFile, e.location)
                 :
                     ``}`;
             LOG2USER.error(errorstr);
@@ -79,7 +79,7 @@ export class PiParser<DEFINITION> {
                     // to avoid a newline in the output, we do not put this if-stat in a smart string
                     let location: string = "";
                     if (e.location && e.location.start) {
-                        location = `[file: ${file}, line ${e.location.start.line}, column ${e.location.start.column}]`;
+                        location = Checker.locationPlus(file, e.location);
                     }
                     const errorstr = `${e.message.trimEnd()} ${location}`;
                     LOG2USER.error(errorstr);
