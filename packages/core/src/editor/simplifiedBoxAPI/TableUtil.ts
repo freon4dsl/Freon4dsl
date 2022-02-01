@@ -8,7 +8,7 @@ import {
     GridBox,
     GridOrientation,
     isAliasBox, PiCustomAction,
-    PiEditor, PiKeyboardShortcutAction,
+    PiEditor,
     PiStyle
 } from "../index";
 import { PiElement } from "../../language";
@@ -83,6 +83,7 @@ export class TableUtil {
         const property = element[propertyName];
         // const isList: boolean = propInfo.isList;
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
+        LOGGER.log("TABLE BOX CREATION for " + propertyName + " size " + property.length)
         // const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
         const hasHeaders = columnHeaders !== null && columnHeaders !== undefined && columnHeaders.length > 0;
         // create the box
@@ -187,10 +188,10 @@ export class TableUtil {
             for(let column = 1; column <= nrOfColumns; column++) {
                 const rolename = RoleProvider.cell(element.piLanguageConcept(), propertyName, row, column);
                 rolenames.push(rolename);
-                LOGGER.log("Add keyboard [" + rolename + "] for r/c " + row + "." + column);
+                // LOGGER.log("Add keyboard [" + rolename + "] for r/c " + row + "." + column);
             }
         }
-        LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
+        // LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
         const result = new PiCreateSiblingAction({
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             activeInBoxRoles: rolenames,
@@ -198,33 +199,6 @@ export class TableUtil {
 
         });
         return result;
-        // return new PiKeyboardShortcutAction({
-        //     trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
-        //     activeInBoxRoles: rolenames,
-        //     action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
-        //         LOGGER.log("=================================== 1 New table row/column for " + box.role + " in " + box.element.piLanguageConcept() + "." + propertyName );
-        //         const element = box.element;
-        //         const proc = element.piContainer();
-        //         const parent: PiElement = proc.container;
-        //         LOGGER.log("parent is of type " + parent?.piLanguageConcept() + "  box is " + box.kind + " role " + box.role);
-        //         PiUtils.CHECK(parent[proc.propertyName][proc.propertyIndex] === element);
-        //         const constructor = Language.getInstance().concept(conceptName).constructor;
-        //         const newElement: PiElement =  constructor();
-        //         LOGGER.log("newElement is of type " + newElement?.piLanguageConcept());
-        //         if( newElement === undefined) {
-        //             // TODO Find out why this happens sometimes
-        //             LOGGER.log("IN BETWEEN GRID: Unexpected new element undefined");
-        //             return null;
-        //         }
-        //         LOGGER.log("KEYBOARD START")
-        //             parent[propertyName].splice(proc.propertyIndex + 1, 0, newElement);
-        //         LOGGER.log("KEYBOARD END")
-        //         // editor.selectElement(newElement);
-        //         // editor.selectFirstEditableChildBox();
-        //         return newElement;
-        //         // return null;
-        //     }
-        // });
     }
 
     /**
@@ -232,8 +206,8 @@ export class TableUtil {
      * @param roleToSelect
      * @private
      */
-    private static createKeyboardShortcutForEmptyCollectionGrid(): PiKeyboardShortcutAction {
-        return new PiKeyboardShortcutAction({
+    private static createKeyboardShortcutForEmptyCollectionGrid(): PiCustomAction {
+        return PiCustomAction.create({
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             activeInBoxRoles: ["alias-add-row-or-column", "alias-alias-add-row-or-column-textbox"],
             action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {

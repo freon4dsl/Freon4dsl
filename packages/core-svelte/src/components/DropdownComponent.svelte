@@ -4,10 +4,10 @@
     import { createEventDispatcher } from "svelte";
     import {
         findOption, PiLogger,
+        type SelectOption,
         KEY_ESCAPE, KEY_ARROW_DOWN, KEY_ARROW_UP, KEY_DELETE, KEY_ENTER
     } from "@projectit/core";
     import DropdownItemComponent from "./DropdownItemComponent.svelte";
-    import type { SelectOption } from "@projectit/core";
 
     export let getOptions: () => SelectOption[];
     export let selectedOptionId: string = "1";

@@ -1,22 +1,29 @@
 <script lang="ts">
-    import { conceptStyle, GridCellBox, isMetaKey, KEY_ENTER, PiUtils, styleToCSS, toPiKey } from "@projectit/core";
-    import type { GridBox, PiEditor } from "@projectit/core";
-    import { afterUpdate } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { conceptStyle, GridCellBox, isMetaKey, KEY_ENTER, PiUtils, styleToCSS, toPiKey,
+        type GridBox, type PiEditor } from "@projectit/core";
+    import { afterUpdate, onMount } from "svelte";
+    import { AUTO_LOGGER, ChangeNotifier, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import GridCellComponent from "./GridCellComponent.svelte";
     import { autorun } from "mobx";
+    import { writable, type Writable } from "svelte/store";
 
     export let gridBox: GridBox;
     export let editor: PiEditor;
 
     let notifier = new ChangeNotifier();
+
+    onMount( () => {
+        MOUNT_LOGGER.log("GridComponent onmount")
+        $cells = gridBox.cells;
+    })
+
     afterUpdate(() => {
-        UPDATE_LOGGER.log("ListComponent.afterUpdate")
+        UPDATE_LOGGER.log("GridComponent afterUpdate for girdBox " + gridBox.element.piLanguageConcept())
+        $cells = gridBox.cells;
         // Triggers autorun
         notifier.notifyChange();
     });
-
-    let cells: GridCellBox[];
+    let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(gridBox.cells);
     let templateColumns: string;
     let templateRows: string;
     let boxStyle = ""
@@ -34,17 +41,16 @@
 
     };
     autorun(() => {
-        AUTO_LOGGER.log("GridComponent[" + notifier.dummy + "] " + gridBox.role);
-        cells = [...gridBox.cells];
-        // cells.forEach(cell => {
-        //     AUTO_LOGGER.log("    cell.role: " + cell.role + " box role " + cell.box.role + " id " + cell.box.id);
-        // });
+        $cells = [...gridBox.cells];
+        length = $cells.length;
+
         templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
         templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
         boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, gridBox.element.piLanguageConcept(), "grid", gridBox.style));
 
     });
 </script>
+
 <div
         style=" grid-template-columns: {templateColumns};
                 grid-template-rows: {templateRows};
@@ -53,7 +59,7 @@
         class="maingridcomponent"
         on:keydown={onKeydown}
 >
-    {#each cells as cell (cell.box.id + cell.role + "-grid")}
+    {#each $cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid" + "-" + notifier.dummy)}
         <GridCellComponent grid={gridBox} cellBox={cell} editor={editor}/>
     {/each}
 </div>

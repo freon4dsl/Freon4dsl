@@ -1,4 +1,4 @@
-import { PiBehavior, PiTriggerType } from "../editor";
+import { PiAction, PiTriggerType } from "../editor";
 // the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
 import { PiKey } from "./Keys";
 import { remove, union } from "lodash";
@@ -15,12 +15,12 @@ export class PiActionsUtil {
      * @param defaultActions The first PiActions to join.
      * @param newActions The ssecond PiActions to join.
      */
-    static join(defaultActions: PiBehavior[], newActions: PiBehavior[]) {
+    static join(defaultActions: PiAction[], newActions: PiAction[]) {
         newActions.forEach(newA => this.remove(defaultActions, newA));
         return union(defaultActions, newActions);
     }
 
-    static remove(from: PiBehavior[], item: PiBehavior) {
+    static remove(from: PiAction[], item: PiAction) {
         remove(from, (value, index, collection) => this.equalsTrigger(value.trigger, item.trigger));
     }
 

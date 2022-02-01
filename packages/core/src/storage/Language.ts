@@ -98,7 +98,7 @@ export class Language {
     }
 
     conceptProperty(typeName: string, propertyName: string): Property {
-        LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
+        // LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
         return this.concepts.get(typeName).properties.get(propertyName);
     }
 
@@ -111,7 +111,7 @@ export class Language {
     }
 
     classifierProperty(typeName: string, propertyName: string): Property {
-        console.log("CLASSIFIERPROPRTY " + typeName + "." + propertyName);
+        LOGGER.log("CLASSIFIERPROPRTY " + typeName + "." + propertyName);
         let concept1 = this.concepts.get(typeName);
         if (!!concept1) {
             return concept1.properties.get(propertyName);

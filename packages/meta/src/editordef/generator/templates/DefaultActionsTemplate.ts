@@ -2,18 +2,11 @@ import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import {
     PiLanguage,
     PiBinaryExpressionConcept,
-    PiClassifier,
-    PiLangSelfExp, PiLimitedConcept
+    PiConcept,
+    PiClassifier, PiProperty, PiPrimitiveType
 } from "../../../languagedef/metalanguage";
 import { Roles, LangUtil } from "../../../utils";
-import {
-    PiEditPropertyProjection,
-    PiOptionalPropertyProjection,
-    PiEditUnit,
-    PiEditProjection,
-    ExtraClassifierInfo, PiEditClassifierProjection
-} from "../../metalanguage";
-import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiEditConcept, PiEditPropertyProjection, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
 
 export class DefaultActionsTemplate {
 
@@ -27,15 +20,13 @@ export class DefaultActionsTemplate {
                 AFTER_BINARY_OPERATOR,
                 BEFORE_BINARY_OPERATOR,
                 Box,
-                KeyboardShortcutBehavior,
                 MetaKey,
                 PiActions,
-                PiBinaryExpressionCreator,
+                PiCreateBinaryExpressionAction,
                 PiCaret,
-                PiCustomBehavior,
+                PiCustomAction,
                 PiEditor,
                 PiElement,
-                PiExpressionCreator,
                 PiBinaryExpression,
                 PiKey,
                 PiLogger,
@@ -53,11 +44,9 @@ export class DefaultActionsTemplate {
              * This module implements all default actions for the editor.
              * These default actions are merged with custom actions.
              */ 
-            export const EXPRESSION_CREATORS: PiExpressionCreator[] = [];
-
-            export const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
+            export const BINARY_EXPRESSION_CREATORS: PiCreateBinaryExpressionAction[] = [
                 ${language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
-            `{
+            `PiCreateBinaryExpressionAction.create({
                     trigger: "${editorDef.findExtrasForType(c).symbol}",
                     activeInBoxRoles: [
                         LEFT_MOST,
@@ -71,17 +60,14 @@ export class DefaultActionsTemplate {
                         parent[(box as AliasBox).propertyName] = newExpression;
                         return newExpression;
                     }
-            }`
+            })`
         )}
             ];
             
-            export const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
+            export const CUSTOM_ACTIONS: PiCustomAction[] = [
                 ${this.customActionsForOptional(language, editorDef)}
                 ${this.customActionForParts(language, editorDef)}
                 ${this.customActionForReferences(language, editorDef)}
-            ];
-            
-            export const KEYBOARD: KeyboardShortcutBehavior[] = [
             ];
             `;
         }
@@ -96,16 +82,34 @@ export class DefaultActionsTemplate {
                             const firstLiteral: string = item.firstLiteral();
                             const propertyProjection: PiEditPropertyProjection = item.findPropertyProjection();
                             const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.property.name);
-                            result += `
+                            console.log("Looking for [" + optionalPropertyName + "] in [" + ce.concept.referred.name + "]")
+                            const prop: PiProperty =ce.concept.referred.allProperties().find(prop => prop.name === optionalPropertyName);
+                            let rolename: string = "unknown role";
+                            if(prop.isPart) {
+                                // TODO Check for lists (everywhere)
+                                rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName);
+                            } else if (prop.isPrimitive) {
+                                if( prop.type.referred === PiPrimitiveType.number) {
+                                    rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "numberbox")
+                                } else if( prop.type.referred === PiPrimitiveType.string) {
+                                    rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "textbox")
+                                } else if( prop.type.referred === PiPrimitiveType.boolean) {
+                                    rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "booleanbox")
+                                }
+                            } else {
+                                // reference
+                                rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "referencebox" );
+                            }
+                            result += `PiCustomAction.create(
                                     {
                                         trigger: "${firstLiteral === "" ? optionalPropertyName : firstLiteral}",
                                         activeInBoxRoles: ["optional-${optionalPropertyName}"],
                                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                                             ((box.parent) as OptionalBox).mustShow = true;
-                                            return null;
+                                            return box.element;
                                         },
-                                        boxRoleToSelect: "${projection.classifier.name}-${optionalPropertyName}"
-                                    }`;
+                                        boxRoleToSelect: "${rolename}"
+                                    })`;
                             result += ","
                         }
                     });
@@ -124,7 +128,7 @@ export class DefaultActionsTemplate {
                 const referredConcept = reference.type.referred;
                 const extras = editorDef.findExtrasForType(referredConcept);
                 const trigger = (!!extras && !!extras.trigger) ? extras.trigger : reference.name;
-                result += `
+                result += `PiCustomAction.create(
                 {   // Action to insert new reference to a concept
                     activeInBoxRoles: ["${Roles.newConceptReferencePart(reference)}"],
                     trigger: "${trigger}",
@@ -135,7 +139,7 @@ export class DefaultActionsTemplate {
                         return newBase.referred;
                     },
                     boxRoleToSelect: "${this.cursorLocation(editorDef, concept)}"  /* CURSOR 1 */
-                }
+                })
                 `;
                 result += ",";
             })

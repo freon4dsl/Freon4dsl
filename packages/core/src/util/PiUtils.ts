@@ -2,13 +2,13 @@ import { action, runInAction } from "mobx";
 import { PiLogger } from "./internal";
 // the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
 import { PiKey } from "./Keys";
-import { Box, isProKey, PiActionTrigger, PiEditor, PiKeyboardShortcutAction } from "../editor";
+import { Box, isProKey, PiActionTrigger, PiEditor } from "../editor";
 import { PiContainerDescriptor, PiElement, PiExpression, isPiExpression } from "../language";
 
 export type BooleanCallback = () => boolean;
 export type DynamicBoolean = BooleanCallback | boolean;
 
-export const wait = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export const wait = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export const NBSP: string = "".concat("\u00A0");
 
 let LATEST_ID = 0;
@@ -16,7 +16,6 @@ let LATEST_ID = 0;
 const LOGGER = new PiLogger("PiUtils");
 
 export class PiUtils {
-
     /**
      *
      */
@@ -30,7 +29,7 @@ export class PiUtils {
         if (!(target && source)) {
             return;
         }
-        Object.keys(source).forEach(key => {
+        Object.keys(source).forEach((key) => {
             if (source.hasOwnProperty(key)) {
                 (target as any)[key] = (source as any)[key];
             }
@@ -60,7 +59,7 @@ export class PiUtils {
     static replaceExpression(oldExpression: PiExpression, newExpression: PiExpression, editor: PiEditor) {
         PiUtils.CHECK(isPiExpression(oldExpression), "replaceExpression: old element should be a PiExpression, but it isn't");
         PiUtils.CHECK(isPiExpression(newExpression), "replaceExpression: new element should be a PiExpression, but it isn't");
-        runInAction( () => {
+        runInAction(() => {
             PiUtils.setContainer(newExpression, oldExpression.piContainer(), editor);
         });
     }
@@ -77,29 +76,27 @@ export class PiUtils {
     static handleKeyboardShortcut(piKey: PiActionTrigger, box: Box, editor: PiEditor): boolean {
         LOGGER.log("?????? handleKeyboardShortcut for box " + box.role + " kind " + box.kind + " for key " + JSON.stringify(piKey));
         for (const act of editor.new_pi_actions) {
-            // if(act instanceof PiKeyboardShortcutAction) {
-                if (isProKey(act.trigger) && isProKey(piKey)) {
-                    LOGGER.log("!!!!!!!!!handleKeyboardShortcut for box " + box.role + " kind " + box.kind + " with activeroles: " + act.activeInBoxRoles);
-                    if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
-                        if (act.activeInBoxRoles.includes(box.role)) {
-                            LOGGER.log("handleKeyboardShortcut: executing keyboard action");
-                            const command = act.command(box);
-                            let postAction ;
-                            runInAction( () => {
-                                console.log("START run in action for handleKeyboarddShortcut")
-                                postAction = command.execute(box, piKey, editor);
-                                console.log("END run in action for handleKeyboarddShortcut")
-                            });
-                            if (!!postAction) {
-                                postAction();
-                            }
-                            return true;
-                        } else {
-                            LOGGER.log("handleKeyboardShortcut: Keyboard action does not include role " + box.role);
+            if (isProKey(act.trigger) && isProKey(piKey)) {
+                LOGGER.log("!!!!!!!!!handleKeyboardShortcut for box " + box.role + " kind " + box.kind + " with activeroles: " + act.activeInBoxRoles);
+                if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
+                    if (act.activeInBoxRoles.includes(box.role)) {
+                        LOGGER.log("handleKeyboardShortcut: executing keyboard action");
+                        const command = act.command(box);
+                        let postAction;
+                        runInAction(() => {
+                            console.log("START run in action for handleKeyboarddShortcut");
+                            postAction = command.execute(box, piKey, editor);
+                            console.log("END run in action for handleKeyboarddShortcut");
+                        });
+                        if (!!postAction) {
+                            postAction();
                         }
+                        return true;
+                    } else {
+                        LOGGER.log("handleKeyboardShortcut: Keyboard action does not include role " + box.role);
                     }
                 }
-            // }
+            }
         }
         return false;
     }

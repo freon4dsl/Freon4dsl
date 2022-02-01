@@ -32,6 +32,7 @@ import {
 import { ConfigurationTemplate } from "./templates/ConfigurationTemplate";
 import { ModelTemplate } from "./templates/ModelTemplate";
 import { UnitTemplate } from "./templates/UnitTemplate";
+import { LOG2USER } from "../../utils/UserLogger";
 
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
@@ -197,7 +198,7 @@ export class LanguageGenerator {
             Helpers.deleteDirIfEmpty(this.configurationFolder);
         } else {
             // do not delete the following files, because these may contain user edits
-            LOGGER.info(`Not removed: ${this.configurationFolder}/${Names.configuration()}.ts`);
+            LOG2USER.info(`Not removed: ${this.configurationFolder}/${Names.configuration()}.ts`);
         }
     }
 }

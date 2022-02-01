@@ -7,7 +7,7 @@ import { PiCommand } from "./PiCommand";
 
 export type PiActionTriggerType = string | RegExp | PiKey;
 export type PiActionTrigger = string | PiKey;
-export type CustomAction = (box: Box, text: string, editor: PiEditor) => PiElement | null;
+export type CustomAction = (box: Box, trigger: PiActionTrigger, editor: PiEditor) => PiElement | null;
 export type PiPostAction = () => void;
 
 export const EMPTY_POST_ACTION = function() {};
@@ -41,7 +41,9 @@ export function triggerTypeToString(trigger: PiActionTriggerType): string {
     }
 }
 
-
+/**
+ * Abstract supercass for all actions in ProjectIt
+ */
 export abstract class PiAction {
     /**
      * The trigger to activate this behavior
@@ -74,6 +76,10 @@ export abstract class PiAction {
      */
     referenceShortcut?: ReferenceShortcut;
 
+    /**
+     * Returns the command object that can be executed to perform the action.
+     * @param box
+     */
     abstract command(box: Box): PiCommand;
 }
 

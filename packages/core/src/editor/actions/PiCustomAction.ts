@@ -6,14 +6,22 @@ import { PiCommand, PiCustomCommand } from "./PiCommand";
 const LOGGER = new PiLogger("PiCustomAction");
 
 export class PiCustomAction extends PiAction {
+    /**
+     * The action function taht will be performed
+     */
     action: CustomAction;
 
-    constructor(initializer?: Partial<PiCustomAction>) {
+    static create(initializer?: Partial<PiCustomAction>) {
+        const result = new PiCustomAction();
+        PiUtils.initializeObject(result, initializer);
+        return result;
+    }
+
+    constructor() {
         super();
-        PiUtils.initializeObject(this, initializer);
     }
 
     command(box: Box): PiCommand {
-        return new PiCustomCommand(this.action);
+        return new PiCustomCommand(this.action, this.boxRoleToSelect);
     }
 }
