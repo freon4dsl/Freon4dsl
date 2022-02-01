@@ -1,7 +1,6 @@
 import { DSmodel } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { ScoperTestEnvironment } from "../environment/gen/ScoperTestEnvironment";
-import * as fs from "fs";
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";
@@ -136,7 +135,7 @@ describe("Testing Default Scoper", () => {
         errors.forEach(mess => {
             errorMessages.push(mess.message + " in " + mess.locationdescription);
         });
-        print("found errors", errorMessages);
+        // print("found errors", errorMessages);
         expect(errors.length).toBe(8);
         expect(errorMessages.includes("Cannot find reference 'private30_OF_private28_OF_private24_OF_unit16_OF_model' in dsRefs of unit1_OF_model")).toBeTruthy();
         expect(errorMessages.includes("Cannot find reference 'private27_OF_public25_OF_private24_OF_unit16_OF_model' in dsRefs of unit1_OF_model")).toBeTruthy();

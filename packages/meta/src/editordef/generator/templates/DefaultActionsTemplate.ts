@@ -2,11 +2,16 @@ import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import {
     PiLanguage,
     PiBinaryExpressionConcept,
-    PiConcept,
     PiClassifier, PiProperty, PiPrimitiveType
 } from "../../../languagedef/metalanguage";
-import { Roles, LangUtil } from "../../../utils";
-import { PiEditConcept, PiEditPropertyProjection, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
+import { Roles } from "../../../utils";
+import {
+    PiEditClassifierProjection,
+    PiEditProjection,
+    PiEditPropertyProjection,
+    PiEditUnit,
+    PiOptionalPropertyProjection
+} from "../../metalanguage";
 
 export class DefaultActionsTemplate {
 
@@ -80,25 +85,30 @@ export class DefaultActionsTemplate {
                     line.items.forEach(item => {
                         if (item instanceof PiOptionalPropertyProjection) {
                             const firstLiteral: string = item.firstLiteral();
-                            const propertyProjection: PiEditPropertyProjection = item.findPropertyProjection();
-                            const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.property.name);
-                            console.log("Looking for [" + optionalPropertyName + "] in [" + ce.concept.referred.name + "]")
-                            const prop: PiProperty =ce.concept.referred.allProperties().find(prop => prop.name === optionalPropertyName);
+                            const myClassifier = projection.classifier.referred;
+                            // TODO check this change
+                            // const propertyProjection: PiEditPropertyProjection = item.findPropertyProjection();
+                            // const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.property.name);
+                            // console.log("Looking for [" + optionalPropertyName + "] in [" + myClassifier.name + "]")
+                            // const prop: PiProperty = myClassifier.allProperties().find(prop => prop.name === optionalPropertyName);
+                            const prop: PiProperty = item.property.referred;
+                            const optionalPropertyName = prop.name;
+                            // end change
                             let rolename: string = "unknown role";
                             if(prop.isPart) {
                                 // TODO Check for lists (everywhere)
-                                rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName);
+                                rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
                             } else if (prop.isPrimitive) {
                                 if( prop.type.referred === PiPrimitiveType.number) {
-                                    rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "numberbox")
+                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox")
                                 } else if( prop.type.referred === PiPrimitiveType.string) {
-                                    rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "textbox")
+                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox")
                                 } else if( prop.type.referred === PiPrimitiveType.boolean) {
-                                    rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "booleanbox")
+                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox")
                                 }
                             } else {
                                 // reference
-                                rolename = Roles.propertyRole(ce.concept.name, optionalPropertyName, "referencebox" );
+                                rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "referencebox" );
                             }
                             result += `PiCustomAction.create(
                                     {
