@@ -50,7 +50,7 @@ export class ConceptMaker {
         let rules: GrammarRule[] = [];
         for (const piConcept of conceptsUsed) {
             // find editDef for this concept
-            let projection: PiEditProjection = ParserGenUtil.findProjection(projectionGroup, piConcept);
+            let projection: PiEditProjection = ParserGenUtil.findNonTableProjection(projectionGroup, piConcept);
             // generate a grammar rule entry
             if (projection instanceof PiEditProjection) {
                 rules.push(this.generateProjection(piConcept, projection, false));
@@ -118,7 +118,7 @@ export class ConceptMaker {
             // take care of named projections
             let myProjName: string = null;
             if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
-                ParserGenUtil.addIfNotPresent(this.namedProjections, ParserGenUtil.findProjection(this.currentProjectionGroup, propType, item.projectionName));
+                ParserGenUtil.addIfNotPresent(this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName));
                 myProjName = item.projectionName;
             }
             //
@@ -277,7 +277,7 @@ export class ConceptMaker {
     private makeSuperParts(item: PiEditSuperProjection, inOptionalGroup: boolean): RightHandSideEntry[] {
         let subs: RightHandSideEntry[] = [];
         // find the projection that we need
-        let myProjection: PiEditProjection = ParserGenUtil.findProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
+        let myProjection: PiEditProjection = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
         myProjection.lines.forEach(line => {
             subs.push(...this.addItems(line.items, inOptionalGroup));
         });

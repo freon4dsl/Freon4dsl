@@ -1,0 +1,47 @@
+editor someGroup
+
+AAAAAA  {[
+    ${AAprop1}
+    ${AAprop2}
+    ${AAprop3}
+    ${AAprop4}
+    ${AAprop5}
+    ${AAprop6}
+
+
+   ]
+}
+
+AAAAAA  {[
+
+    ${AAprop3}
+    ${AAprop4}
+    ${AAprop5}
+    ${AAprop6}
+
+
+   ]
+}
+
+AAAAAA  {
+table [
+
+    ${AAprop3} |
+    ${AAprop4} |
+    ${AAprop5} |
+    ${AAprop6}
+
+
+   ]
+}
+
+AAAAAA  {
+table [
+
+    ${AAprop3} |
+    ${AAprop4} |
+    ${AAprop5}
+
+
+   ]
+}

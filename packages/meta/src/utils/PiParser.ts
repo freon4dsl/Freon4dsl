@@ -34,7 +34,7 @@ export class PiParser<DEFINITION> {
 
         // clean the error list from the creator functions
         this.cleanNonFatalParseErrors();
-        // parse Language file
+        // parse definition file
         let model: DEFINITION = null;
         try {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value

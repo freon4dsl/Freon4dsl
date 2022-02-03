@@ -45,9 +45,6 @@ export function createEditUnit(group: PiEditProjectionGroup): PiEditUnit {
 }
 
 function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEditProjectionGroup) {
-    if (!result.extras) {
-        result.extras = [];
-    }
     data.projections.forEach(proj => {
         if (proj instanceof PiEditParsedClassifier) {
             if (!!proj.tableProjection) {
@@ -88,6 +85,9 @@ function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEdit
             if (!!proj.classifierInfo) {
                 if (!!proj.classifier) {
                     proj.classifierInfo.classifier = proj.classifier;
+                }
+                if (!result.extras) {
+                    result.extras = [];
                 }
                 result.extras.push(proj.classifierInfo);
             }

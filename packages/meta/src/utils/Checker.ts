@@ -63,7 +63,7 @@ export abstract class Checker<DEFINITION> {
     }
 
     static location(elem: PiDefinitionElement): string {
-        if (!!elem.location) {
+        if (!!elem && !!elem.location) {
             const shortFileName: string[] = elem.location.filename.split("/");
             return `[file: ${shortFileName[shortFileName.length - 1]}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
         }

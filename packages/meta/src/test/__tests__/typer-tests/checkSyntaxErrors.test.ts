@@ -3,7 +3,7 @@ import { PiLanguage } from "../../../languagedef/metalanguage";
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../../utils";
 
-describe("Checking typer on checking errors", () => {
+describe("Checking typer on syntax errors", () => {
     const testdir = "src/test/__tests__/typer-tests/faultyDefFiles/syntax-errors/";
     let parser: PiTyperParser;
     let language: PiLanguage;
@@ -12,7 +12,7 @@ describe("Checking typer on checking errors", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/test/__tests__/typer-tests/test-language.ast");
+            language = new LanguageParser().parse("src/test/__tests__/commonAstFiles/test-language.ast");
             parser = new PiTyperParser(language);
         } catch (e) {
             console.log("Language could not be read");

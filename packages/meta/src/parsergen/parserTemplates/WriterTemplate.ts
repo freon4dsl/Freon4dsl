@@ -68,13 +68,13 @@ export class WriterTemplate {
             .filter(c => !(c instanceof PiLimitedConcept)) // handled in list 'limitedConcepts'
             .filter(c => !(c instanceof PiBinaryExpressionConcept && !c.isAbstract)) // handled in list 'binaryExtras'
             .filter(c => {
-            const projection = editDef.findProjectionForType(c);
+            const projection = editDef.findProjectionsForType(c);
             return projection === undefined || projection === null;
         });
 
         // find all interfaces that do not have a projection
         const interfacesWithoutProjection: PiInterface[] = language.interfaces.filter(c => {
-            const projection = editDef.findProjectionForType(c);
+            const projection = editDef.findProjectionsForType(c);
             return projection === undefined || projection === null;
         });
 
@@ -540,7 +540,7 @@ export class WriterTemplate {
             // take care of named projection
             if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
                 // find the projection that we need and add it to the extra list
-                ParserGenUtil.addIfNotPresent(this.namedProjections, ParserGenUtil.findProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName));
+                ParserGenUtil.addIfNotPresent(this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName));
                 result += `this.unparse${Names.classifier(item.superRef.referred)}_${item.projectionName}(modelelement, short);`;
             } else { // use the normal unparse method
                 result += `this.unparse${Names.classifier(item.superRef.referred)}(modelelement, short);`;
@@ -680,7 +680,7 @@ export class WriterTemplate {
             // which is generated in 'makeNormalMethod'.
             if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
                 // find the projection that we need and add it to the extra list
-                const foundProjection = ParserGenUtil.findProjection(this.currentProjectionGroup, type, item.projectionName);
+                const foundProjection = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, type, item.projectionName);
                 ParserGenUtil.addIfNotPresent(this.namedProjections, foundProjection);
                 nameOfUnparseMethod += `${Names.classifier
                 (type)}_${item.projectionName}`;

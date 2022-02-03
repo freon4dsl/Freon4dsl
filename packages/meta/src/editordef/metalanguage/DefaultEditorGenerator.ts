@@ -63,18 +63,6 @@ export class DefaultEditorGenerator {
 
         // add defaults for units
         DefaultEditorGenerator.defaultsForUnit(editor.language, defaultGroup);
-
-        // TEST TODO to be moved elsewere
-        editor.language.concepts.filter(c => !(c instanceof PiLimitedConcept) && !(c instanceof PiBinaryExpressionConcept)).forEach(c => {
-            if (!defaultGroup.findProjectionForType(c) && !c.isAbstract) {
-                console.log("INTERNAL ERROR: no default projection for " + c.name );
-            }
-        });
-        editor.language.units.forEach(u => {
-            if (!defaultGroup.findProjectionForType(u) ) {
-                console.log("INTERNAL ERROR: no default projection for " + u.name );
-            }
-        });
     }
 
     private static defaultsForBinaryExpressions(language: PiLanguage, defaultGroup: PiEditProjectionGroup) {
@@ -88,7 +76,7 @@ export class DefaultEditorGenerator {
         // console.log("classifiersToDo: " + classifiersToDo.map(c => c.name).join(', '))
         for (const con of classifiersToDo) {
             // Find or create the projection, and its properties
-            let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionForType(con);
+            let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionsForType(con)[0];
             if (!foundProjection) {
                 // create a new projection
                 // console.log("Adding default projection for " + con.name);
@@ -207,7 +195,11 @@ export class DefaultEditorGenerator {
     private static addExtras(foundExtraInfo: ExtraClassifierInfo, con: PiClassifier) {
         // default for referenceShortcut is not needed
         if (!foundExtraInfo.trigger) {
-            foundExtraInfo.trigger = Names.classifier(con);
+            if (foundExtraInfo.symbol) { // is there is a symbol defined then the trigger is equal to the symbol
+                foundExtraInfo.trigger = foundExtraInfo.symbol;
+            } else {
+                foundExtraInfo.trigger = Names.classifier(con);
+            }
         }
         // only binary expression need a symbol
         if (con instanceof PiBinaryExpressionConcept && !foundExtraInfo.symbol) {
@@ -219,7 +211,7 @@ export class DefaultEditorGenerator {
         // console.log("classifiersToDo: " + classifiersToDo.map(c => c.name).join(', '))
         for (const con of language.units) {
             // Find or create the projection, and its properties
-            let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionForType(con);
+            let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionsForType(con)[0];
             if (!foundProjection) {
                 // create a new projection
                 // console.log("Adding default projection for " + con.name);

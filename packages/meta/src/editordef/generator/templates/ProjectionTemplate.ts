@@ -135,7 +135,7 @@ export class ProjectionTemplate {
                     return null;
                 }                     
 
-                ${allClassifiersWithProjection.map(c => this.generateProjectionForClassfier(language, c, projectionGroup.findProjectionForType(c))).join("\n")}                                        
+                ${allClassifiersWithProjection.map(c => this.generateProjectionForClassfier(language, c, projectionGroup.findNonTableProjectionForType(c))).join("\n")}                                        
 
                 ${classifiersWithTableProjection.map(c => this.generateTableDefinition(language, c, projectionGroup.findTableProjectionForType(c))).join("\n")}
                 

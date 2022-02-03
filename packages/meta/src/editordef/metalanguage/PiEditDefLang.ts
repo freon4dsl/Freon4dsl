@@ -46,11 +46,10 @@ export class PiEditUnit extends PiDefinitionElement {
         return this.projectiongroups.filter(group => group.name !== Names.defaultProjectionName);
     }
 
-    findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
-        // TODO this method should return all projections for type 'cls'
+    findProjectionsForType(cls: PiClassifier): PiEditClassifierProjection[] {
         for (const group of this.projectiongroups) {
-            const found = group.findProjectionForType(cls);
-            if (!!found) {
+            const found = group.findProjectionsForType(cls);
+            if (found !== null && found !== undefined) {
                 return found;
             }
         }
@@ -65,14 +64,15 @@ export class PiEditUnit extends PiDefinitionElement {
         return result;
     }
 
-    findTableProjectionForType(cls: PiClassifier): PiEditTableProjection {
+    findTableProjectionsForType(cls: PiClassifier): PiEditTableProjection[] {
+        const result: PiEditTableProjection[] = [];
         for (const group of this.projectiongroups) {
             const found = group.findTableProjectionForType(cls);
             if (!!found) {
-                return found;
+                result.push(found);
             }
         }
-        return null;
+        return result;
     }
 
     toString(): string {
@@ -81,13 +81,6 @@ export class PiEditUnit extends PiDefinitionElement {
 
     findExtrasForType(cls: PiClassifier): ExtraClassifierInfo {
         return this.getDefaultProjectiongroup().findExtrasForType(cls);
-        // for (const group of this.projectiongroups) {
-        //     const found = group.findExtrasForType(cls);
-        //     if (!!found) {
-        //         return found;
-        //     }
-        // }
-        // return null;
     }
 }
 
@@ -111,18 +104,15 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
     extras: ExtraClassifierInfo[] = null;           // may only be present in default group
     owningDefinition: PiEditUnit;
 
-    findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
-        // TODO should return a list
-        return this.projections.find(con => con.classifier.referred === cls);
+    findProjectionsForType(cls: PiClassifier): PiEditClassifierProjection[] {
+        return this.projections.filter(con => con.classifier.referred === cls);
     }
 
     findTableProjectionForType(cls: PiClassifier): PiEditTableProjection {
-        // TODO should return a list
         return this.allTableProjections().find(con => con.classifier.referred === cls);
     }
 
     findNonTableProjectionForType(cls: PiClassifier): PiEditProjection {
-        // TODO should return a list
         return this.allNonTableProjections().find(con => con.classifier.referred === cls);
     }
 
@@ -211,7 +201,7 @@ export class PiEditTableProjection extends PiEditClassifierProjection {
 export class ExtraClassifierInfo extends PiDefinitionElement {
     classifier: PiElementReference<PiClassifier>;
     // The string that triggers the creation of an object of this class in the editor.
-    private _trigger: string = null;
+    trigger: string = null;
     // The property to be used when an element of type 'classifier' is used within a reference.
     referenceShortCut: PiElementReference<PiProperty> = null;
     // The parsed expression that refers to the referenceShortcut. Deleted during checking!
@@ -219,26 +209,9 @@ export class ExtraClassifierInfo extends PiDefinitionElement {
     // Only for binary expressions: the operator between left and right parts.
     symbol: string = null;
 
-    get trigger(): string {
-        if (!!(this._trigger)) {
-            return this._trigger;
-        } else {
-            return this.symbol;
-        }
-    }
-
-    set trigger(value: string) {
-        this._trigger = value;
-    }
-
-    getSymbol(): string {
-        const p = this.symbol;
-        return (!!p ? p : "undefined");
-    }
-
     toString(): string {
         return `${this.classifier?.name} {
-            trigger = ${this._trigger}
+            trigger = ${this.trigger}
             symbol = ${this.symbol}
             referenceShortcut = ${this.referenceShortCut ? this.referenceShortCut.name : this.referenceShortcutExp}
         }`;

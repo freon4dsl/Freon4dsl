@@ -147,8 +147,7 @@ export class DefaultActionsTemplate {
                         const newBase: PiElementReference<${Names.classifier(referredConcept)}> = PiElementReference.create<${Names.classifier(referredConcept)}>("", null);
                         parent.${reference.name}.push(newBase);
                         return newBase.referred;
-                    },
-                    boxRoleToSelect: "${this.cursorLocation(editorDef, concept)}"  /* CURSOR 1 */
+                    }
                 })
                 `;
                 result += ",";
@@ -161,20 +160,5 @@ export class DefaultActionsTemplate {
         let result = "";
         // Nothing to do for the moment
         return result;
-    }
-    cursorLocation(editorDef: PiEditUnit, c: PiClassifier) {
-        const projection: PiEditClassifierProjection = editorDef.findProjectionForType(c);
-        if (!!projection && projection instanceof PiEditProjection) {
-            const prop = projection.firstProperty();
-            if (!!prop) {
-                return Roles.property(prop);
-            } else
-                return "";
-        } else {
-            if (c instanceof PiBinaryExpressionConcept) {
-                return Names.PI_BINARY_EXPRESSION_LEFT;
-            }
-        }
-        return "===== " + c.name + " =====";
     }
 }

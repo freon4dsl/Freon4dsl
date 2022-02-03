@@ -79,6 +79,11 @@ export class PiEditParseUtil {
     private static normalizeLine(line: PiEditProjectionLine): PiEditProjectionLine[] {
         const result: PiEditProjectionLine[] = [];
         let currentLine = new PiEditProjectionLine();
+        // handle an empty projection: error message will be given by the checker
+        if (line === null || line === undefined) {
+            return result;
+        }
+        // else: handle a normal projection
         const lastItemIndex = line.items.length - 1;
         line.items.forEach((item, index) => {
             if (item instanceof PiEditParsedProjectionIndent) {

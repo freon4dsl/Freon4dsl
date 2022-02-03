@@ -19,7 +19,7 @@ export class ParserGenUtil {
         return projectionGroup;
     }
 
-    static findProjection(projectionGroup: PiEditProjectionGroup, classifier: PiClassifier, projectionName?: string): PiEditProjection {
+    static findNonTableProjection(projectionGroup: PiEditProjectionGroup, classifier: PiClassifier, projectionName?: string): PiEditProjection {
         let myGroup: PiEditProjectionGroup = projectionGroup;
         // take care of named projections: search the projection group with the right name
         if (!!projectionName && projectionName.length > 0) {
@@ -27,20 +27,14 @@ export class ParserGenUtil {
                 myGroup = projectionGroup.owningDefinition.projectiongroups.find(group => group.name === projectionName);
             }
         }
-        let myProjection: PiEditClassifierProjection = myGroup.findProjectionForType(classifier);
+        let myProjection: PiEditProjection = myGroup.findNonTableProjectionForType(classifier);
         if (!myProjection && projectionGroup !== myGroup) { // if not found, then try my 'own' projection group
-            myProjection = projectionGroup.findProjectionForType(classifier);
+            myProjection = projectionGroup.findNonTableProjectionForType(classifier);
         }
         if (!myProjection) { // still not found, try the default group
-            myProjection = projectionGroup.owningDefinition.getDefaultProjectiongroup().findProjectionForType(classifier);
+            myProjection = projectionGroup.owningDefinition.getDefaultProjectiongroup().findNonTableProjectionForType(classifier);
         }
-        if (myProjection instanceof PiEditProjection) {
-            return myProjection;
-        } else {
-            LOG2USER.error(`Cannot make parse rules for a table: '${classifier.name}'.`);
-            return null;
-            // TODO make rules for a list instead
-        }
+        return myProjection;
     }
 
     static addIfNotPresent(namedProjections: PiEditClassifierProjection[], addition: PiEditClassifierProjection) {
