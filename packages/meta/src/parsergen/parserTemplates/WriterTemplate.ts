@@ -68,14 +68,14 @@ export class WriterTemplate {
             .filter(c => !(c instanceof PiLimitedConcept)) // handled in list 'limitedConcepts'
             .filter(c => !(c instanceof PiBinaryExpressionConcept && !c.isAbstract)) // handled in list 'binaryExtras'
             .filter(c => {
-            const projection = editDef.findProjectionsForType(c);
-            return projection === undefined || projection === null;
-        });
+                const projection: PiEditClassifierProjection[] = editDef.findProjectionsForType(c);
+                return projection === undefined || projection === null || projection.length === 0;
+            });
 
         // find all interfaces that do not have a projection
         const interfacesWithoutProjection: PiInterface[] = language.interfaces.filter(c => {
-            const projection = editDef.findProjectionsForType(c);
-            return projection === undefined || projection === null;
+            const projection: PiEditClassifierProjection[] = editDef.findProjectionsForType(c);
+            return projection === undefined || projection === null || projection.length === 0;
         });
 
         const binaryExtras: ExtraClassifierInfo[] = [];

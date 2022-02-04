@@ -47,13 +47,14 @@ export class PiEditUnit extends PiDefinitionElement {
     }
 
     findProjectionsForType(cls: PiClassifier): PiEditClassifierProjection[] {
+        const result: PiEditClassifierProjection[] = [];
         for (const group of this.projectiongroups) {
-            const found = group.findProjectionsForType(cls);
-            if (found !== null && found !== undefined) {
-                return found;
+            const found: PiEditClassifierProjection[] = group.findProjectionsForType(cls);
+            if (found.length > 0) {
+                result.push(...found);
             }
         }
-        return null;
+        return result;
     }
 
     allTableProjections(): PiEditTableProjection[] {
