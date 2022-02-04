@@ -21,10 +21,35 @@ export class PiEditParser extends PiParser<PiEditUnit> {
     protected merge(submodels: PiEditUnit[]): PiEditUnit {
         if (submodels.length > 0) {
             const result: PiEditUnit = submodels[0];
+
+            // we merge all edit files based on the name of the 'editor'
+            // same name => all info is stored in the same group
+            // therefore we build a map of projection groups by name
+            const projectionGroupsByName: Map<string, PiEditProjectionGroup> = new Map<string, PiEditProjectionGroup>();
+            // add the groups from the first submodel (should be a single group)
+            result.projectiongroups.forEach(group => {
+                projectionGroupsByName.set(group.name, group);
+            })
+
+            // now merge the other submodels
             submodels.forEach((sub, index) => {
                 if (index > 0) { // we have already added submodels[0] to the result
                     sub.projectiongroups.forEach(group => {
-                        result.projectiongroups.push(group);
+                        if (projectionGroupsByName.has(group.name)) {
+                            // there is already a group with this name in the definition, so
+                            // merge all info into this group
+                            const found = projectionGroupsByName.get(group.name);
+                            found.projections.push(...group.projections);
+                            if (!!found.extras && !!group.extras) {
+                                found.extras.push(...group.extras);
+                            }
+                        } else {
+                            // group with this name is not yet encountered,
+                            // add it to the definition
+                            // and add it to the map
+                            projectionGroupsByName.set(group.name, group);
+                            result.projectiongroups.push(group);
+                        }
                     });
                 }
             });
