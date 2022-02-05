@@ -307,7 +307,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     // remember this property - there should be a table projection for it - to be checked later
                     this.propsWithTableProjection.push(item);
                 } else {
-                    this.simpleCheck(false,
+                    this.simpleWarning(false,
                         `References cannot be shown as table, property '${myProp.name}' will be shown as list instead ${Checker.location(item)}.`);
                     item.listInfo.isTable = false;
                 }

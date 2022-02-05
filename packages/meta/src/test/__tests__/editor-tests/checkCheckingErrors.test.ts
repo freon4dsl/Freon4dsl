@@ -117,13 +117,14 @@ describe("Checking editor definition ", () => {
         } catch (e) {
             // console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            expect(e.message).toBe(`checking errors (6).`);
+            // console.log(checker.warnings.map(err => `"${err}"`).join("\n"));
+            expect(e.message).toBe(`checking errors (4).`);
             expect(checker.errors.includes("Only properties that are lists can be displayed as list or table [file: test8.edit, line: 5, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Only properties that are lists can be displayed as list or table [file: test8.edit, line: 7, column: 3].")).toBeTruthy();
-            expect(checker.errors.includes("References cannot be shown as table, property 'AAprop10' will be shown as list instead [file: test8.edit, line: 8, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Only properties that are lists can be displayed as list or table [file: test8.edit, line: 10, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Only properties that are lists can be displayed as list or table [file: test8.edit, line: 12, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("References cannot be shown as table, property 'AAprop14' will be shown as list instead [file: test8.edit, line: 13, column: 5].")).toBeTruthy();
+            expect(checker.warnings.includes("References cannot be shown as table, property 'AAprop10' will be shown as list instead [file: test8.edit, line: 8, column: 5].")).toBeTruthy();
+            expect(checker.warnings.includes("References cannot be shown as table, property 'AAprop14' will be shown as list instead [file: test8.edit, line: 13, column: 5].")).toBeTruthy();
         }
     });
     test("keywords are only allowed for non-list boolean properties", () => {
