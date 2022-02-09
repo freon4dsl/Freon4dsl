@@ -27,9 +27,10 @@
     "definedscoper":"cp src/testDefaultScoper/defs/Language.ast src/testDefinedScoper/defs/Language.ast && cp src/testDefaultScoper/__tests__/SimpleModelCreator.ts src/testDefinedScoper/__tests__/ModelCreator.ts && bash ../../scripts/projectit-dev.sh all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
     "langconstr":   "bash ../../scripts/projectit-dev.sh all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "noparser":     "bash ../../scripts/projectit-dev.sh all -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
+    "prim-gen":     "bash ../../scripts/projectit-dev.sh all -d src/testPrimPropsGeneration/defs -o src/testPrimPropsGeneration",
     "testproject":  "bash ../../scripts/projectit-dev.sh all -d src/testproject/defs -o src/testproject",
     "vehicles":     "bash ../../scripts/projectit-dev.sh all -d src/vehicles/defs -o src/vehicles",
-    "build":        "yarn demo && yarn octopus && yarn parser-conc && yarn parser-props && yarn parsergen && yarn imports && yarn defaultscoper && yarn definedscoper && yarn langconstr && yarn noparser && yarn testproject && yarn vehicles && tsc",
+    "build":        "yarn demo && yarn octopus && yarn parser-conc && yarn parser-props && yarn parsergen && yarn imports && yarn defaultscoper && yarn definedscoper && yarn langconstr && yarn noparser && yarn prim-gen && yarn testproject && yarn vehicles && tsc",
     "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-parser": "rm -r */*/*parse*",
@@ -44,9 +45,10 @@
     "clean-definedscoper":"bash ../../scripts/projectit-dev.sh clean-it -f -d src/testDefinedScoper/defs -o src/testDefinedScoper",
     "clean-langconstr":   "bash ../../scripts/projectit-dev.sh clean-it -f -d src/testLangConstructs/defs -o src/testLangConstructs",
     "clean-noparser":     "bash ../../scripts/projectit-dev.sh clean-it -f -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
+    "clean-prim-gen" :    "bash ../../scripts/projectit-dev.sh clean-it -f -d src/testPrimPropsGeneration/defs -o src/testPrimPropsGeneration",
     "clean-testproject" : "bash ../../scripts/projectit-dev.sh clean-it -f -d src/testproject/defs -o src/testproject",
     "clean-vehicles":     "bash ../../scripts/projectit-dev.sh clean-it -f -d src/vehicles/defs -o src/vehicles",
-    "clean-all-projects": "yarn clean-demo && yarn clean-octopus && yarn clean-parser-conc && yarn clean-parser-props && yarn clean-parsergen && yarn clean-imports && yarn clean-defaultscoper && yarn clean-definedscoper && yarn clean-langconstr && yarn clean-noparser && yarn clean-testproject && yarn clean-vehicles",
+    "clean-all-projects": "yarn clean-demo && yarn clean-octopus && yarn clean-parser-conc && yarn clean-parser-props && yarn clean-parsergen && yarn clean-imports && yarn clean-defaultscoper && yarn clean-definedscoper && yarn clean-langconstr && yarn clean-noparser && yarn clean-prim-gen && yarn clean-testproject && yarn clean-vehicles",
     "test":         "jest"
   },
   "dependencies": {

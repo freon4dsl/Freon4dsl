@@ -1,8 +1,10 @@
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { PiExpressionConcept, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { PiConcept, PiExpressionConcept, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import { LangUtil, MetaLogger } from "../../../utils";
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
+
+
 
 describe("Checking internal structure of language", () => {
     const parser = new LanguageParser();
@@ -10,20 +12,22 @@ describe("Checking internal structure of language", () => {
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 
-    // TODO implement the following tests:
-
-    // on PiLanguage
-    // ??? predefined (primitive types)
-    test("internal structure of PiLanguage", () => {
-        const parseFile = testdir + "test2.ast";
+    function readAstFile(parseFile: string): PiLanguage {
         let piLanguage: PiLanguage;
         try {
             piLanguage = parser.parse(parseFile);
         } catch (e) {
             // this would be a true error
-            console.log(e.message);
-            console.log(e.stack);
+            console.log(e.message + parser.checker.errors.map(err => err).join("\n") + e.stack );
         }
+        return piLanguage;
+    }
+
+    // on PiLanguage
+    // ??? predefined (primitive types)
+    test("internal structure of PiLanguage", () => {
+        let piLanguage: PiLanguage = readAstFile(testdir + "test2.ast");
+
         expect(piLanguage).not.toBeUndefined();
         // there is a root concept
         expect(piLanguage.modelConcept).not.toBeNull();
@@ -48,15 +52,7 @@ describe("Checking internal structure of language", () => {
     // on PiConcept and PiInterface
     // TODO if an implemented interface has a prop, we can find it
     test("internal structure of PiConcept and PiInterface: properties", () => {
-        const parseFile = testdir + "test2.ast";
-        let piLanguage: PiLanguage;
-        try {
-            piLanguage = parser.parse(parseFile);
-        } catch (e) {
-            // this would be a true error
-            console.log(e.message);
-            console.log(e.stack);
-        }
+        let piLanguage: PiLanguage = readAstFile(testdir + "test2.ast");
         expect(piLanguage).not.toBeUndefined();
         // no references in the parts list, and vice versa
         // no primProps in reference list
@@ -74,15 +70,7 @@ describe("Checking internal structure of language", () => {
     });
 
     test("internal structure of PiConcept and PiInterface: inheritance", () => {
-        const parseFile = testdir + "test3.ast";
-        let piLanguage: PiLanguage;
-        try {
-            piLanguage = parser.parse(parseFile);
-        } catch (e) {
-            // this would be a true error
-            console.log(e.message);
-        }
-
+        let piLanguage: PiLanguage = readAstFile(testdir + "test3.ast");
         expect(piLanguage).not.toBeUndefined();
 
         // no references in the parts list, and vice versa
@@ -130,22 +118,9 @@ describe("Checking internal structure of language", () => {
         // TODO we can find all superinterfaces, also recursive
     });
 
-    // on PiProperty
-    // test optional, list, part properties
-    // test properties with limited concept as type
-    // test isStatic prim properties
-    // test initial value of properties
-
     // on PiInstance
     test("internal structure of PiInstance", () => {
-        const parseFile = testdir + "test4.ast";
-        let piLanguage: PiLanguage;
-        try {
-            piLanguage = parser.parse(parseFile);
-        } catch (e) {
-            // this would be a true error
-            console.log(e.message);
-        }
+        let piLanguage: PiLanguage = readAstFile(testdir + "test4.ast");
         expect(piLanguage).not.toBeUndefined();
         const list = piLanguage.concepts.filter(con => con instanceof PiLimitedConcept);
         // PiInstance.concept should be a limited property
@@ -161,4 +136,64 @@ describe("Checking internal structure of language", () => {
             });
         });
     });
+
+    // TODO implement the following tests:
+    // on PiProperty
+    // test optional, list, part properties
+    // test properties with limited concept as type
+    // test isStatic prim properties
+
+    // test initial value of properties
+    test("initial values of primitive properties", () => {
+        let piLanguage: PiLanguage = readAstFile(testdir + "test5.ast");
+        // expect(piLanguage).not.toBeUndefined();
+        // const BB: PiConcept = piLanguage.concepts.find(con => con.name === "BB");
+        // expect(BB).not.toBeNull();
+        // BB.allPrimProperties().forEach(prim => {
+        //     switch (prim.name) {
+        //         case "BBprop1": {
+        //             expect(prim.initialValue).toBe("prop1Value");
+        //             expect(prim.initialValueList).toBeUndefined();
+        //             break;
+        //         }
+        //         case "BBprop2": {
+        //             expect(prim.initialValueList).toStrictEqual(["prop2Index1", "prop2Index2", "prop2Index3"]);
+        //             expect(prim.initialValue).toBeUndefined();
+        //             break;
+        //         }
+        //         case "BBprop3": {
+        //             expect(prim.initialValue).toBe(24);
+        //             expect(prim.initialValueList).toBeUndefined();
+        //             break;
+        //         }
+        //         case "BBprop4": {
+        //             expect(prim.initialValueList).toStrictEqual([2, 24, 61, 11, 6, 58]);
+        //             expect(prim.initialValue).toBeUndefined();
+        //             break;
+        //         }
+        //         case "BBprop5": {
+        //             expect(prim.initialValue).toBe(true);
+        //             expect(prim.initialValueList).toBeUndefined();
+        //             break;
+        //         }
+        //         case "BBprop6": {
+        //             expect(prim.initialValueList).toStrictEqual([true, false, true, false, false]);
+        //             expect(prim.initialValue).toBeUndefined();
+        //             break;
+        //         }
+        //         case "BBprop7": {
+        //             expect(prim.initialValue).toBe("myName");
+        //             expect(prim.initialValueList).toBeUndefined();
+        //             break;
+        //         }
+        //         case "BBprop8": {
+        //             expect(prim.initialValueList).toStrictEqual(["prop8Name1", "prop8Name2", "prop8Name3"]);
+        //             expect(prim.initialValue).toBeUndefined();
+        //             break;
+        //         }
+        //     }
+        // });
+
+    });
+
 });

@@ -394,14 +394,19 @@ export class PiConceptProperty extends PiProperty {
 
 export class PiPrimitiveProperty extends PiProperty {
     isStatic: boolean;
-    // only one of 'initialValue' and 'initialValueList' may have a value
-    // TODO see if we can improve this
-    initialValue: PiPrimitiveValue;
-    initialValueList: PiPrimitiveValue[];
+    initialValueList: PiPrimitiveValue[] = [];
 
     get isPrimitive(): boolean {
         return true;
     };
+
+    get initialValue(): PiPrimitiveValue {
+        return this.initialValueList[0];
+    }
+
+    set initialValue(value: PiPrimitiveValue) {
+        this.initialValueList[0] = value;
+    }
 }
 
 export class PiInstance extends PiLangElement {

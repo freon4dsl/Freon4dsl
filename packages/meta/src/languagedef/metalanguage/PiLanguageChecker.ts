@@ -279,16 +279,16 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                     }
                     // check initial value(s)
                     if (!element.isList) {
-                        this.simpleCheck(!element.initialValueList,
+                        this.simpleCheck(element.initialValueList.length <= 1,
                             `Initial value of property '${element.name}' should be a single value ${Checker.location(element)}.`);
                         if (element.initialValue !== null && element.initialValue !== undefined) { // the property has an initial value, so check it
                             this.simpleCheck(this.checkValueToType(element.initialValue, myType as PiPrimitiveType),
                                 `Type of '${element.initialValue}' (${typeof element.initialValue}) does not fit type (${element.type.name}) of property '${element.name}' ${Checker.location(element)}.`);
                         }
                     } else {
-                        this.simpleCheck(element.initialValue === null || element.initialValue === undefined,
-                            `Initial value of property '${element.name}' should be a list value ${Checker.location(element)}.`);
-                        if (!!element.initialValueList) { // the property has an initial value, so check it
+                        // this.simpleCheck(element.initialValue === null || element.initialValue === undefined,
+                        //     `Initial value of property '${element.name}' should be a list value ${Checker.location(element)}.`);
+                        if (element.initialValueList.length > 0) { // the property has an initial value, so check it
                             element.initialValueList.forEach(value => {
                                 this.simpleCheck(this.checkValueToType(value, myType as PiPrimitiveType),
                                     `Type of '${value}' (${typeof element.initialValue}) does not fit type (${element.type.name}[]) of property '${element.name}' ${Checker.location(element)}.`);
