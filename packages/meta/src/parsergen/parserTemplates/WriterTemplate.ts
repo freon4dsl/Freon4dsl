@@ -37,6 +37,7 @@ export class WriterTemplate {
     private namedProjections: PiEditClassifierProjection[] = [];
     private trueValue: string = 'true';
     private falseValue: string = 'false';
+    private refSeparator: string = ".";
 
     /**
      * Returns a string representation of the class that implements an unparser for modelunits of
@@ -51,6 +52,10 @@ export class WriterTemplate {
         if (!!stdBoolKeywords) {
             this.trueValue = stdBoolKeywords.trueKeyword;
             this.falseValue = stdBoolKeywords.falseKeyword;
+        }
+        const refSeparator = editDef.getDefaultProjectiongroup().standardReferenceSeparator;
+        if (!!refSeparator) {
+            this.refSeparator = refSeparator;
         }
 
         // next, do some admin: which concepts should be generated as what?
@@ -217,13 +222,13 @@ export class WriterTemplate {
                         `${index == 0 ? `` : `} else `}if (type instanceof ${Names.concept(lim)}) {
                             this.unparse${Names.concept(lim)}(type, short);`).join("")}
                         } else {
-                            this.output[this.currentLine] +=  type.name + " ";
+                            this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";
                         }`
                     :
-                        `this.output[this.currentLine] +=  type.name + " ";`
+                        `this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";`
                     }
                 } else {
-                    this.output[this.currentLine] += modelelement.name + " ";
+                    this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";
                 }
             }
        

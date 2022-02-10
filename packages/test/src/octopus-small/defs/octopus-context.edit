@@ -1,5 +1,7 @@
 editor default
 
+referenceSeparator [::]
+
 OclPart {
         [
         OCL expressions for ${self.name}
@@ -16,6 +18,5 @@ OclContext {
 }
 
 IModelElementReference {
-    @projection normal
-    [ ${self.surroundingClassifier.name}[?::${self.feature.name}]]
+    [[?${self.surroundingClassifier}::]${self.feature}]
 }

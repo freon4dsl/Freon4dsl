@@ -1,14 +1,14 @@
 RefsTest myName {
 	directRefs WithDirectRefs {
-                  	ref someName::x34565
+                  	ref someName.x34565
                   	optRef nameA
                   	refList
-                        name1::d45fgh
+                        name1.d45fgh
                         name2
                         name3
                         name4
                     optRefList nameZ
-                    nameY::sdfsgargh::HERA
+                    nameY.sdfsgargh.HERA
                     nameX
     }
     indirectRefs WithSubSubRefs {
@@ -16,13 +16,13 @@ RefsTest myName {
                                            	ref someName
                                            	optRef nameA
                                            	refList
-                                                 name1::WREQWR::gag
+                                                 name1.WREQWR.gag
                                                  name2
-                                                 name3::fghy
+                                                 name3.fghy
                                                  name4
                                              optRefList
                                                  nameZ
-                                                 nameY::h56
+                                                 nameY.h56
                                                  nameX
                  	    }
                  	optPart WithDirectRefs {

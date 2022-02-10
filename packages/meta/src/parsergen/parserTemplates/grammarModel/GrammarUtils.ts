@@ -33,7 +33,6 @@ export function getTypeCall(propType: PiClassifier, projectionName?: string): st
     }
 }
 
-export const refSeparator: string = "::";
 export const refRuleName: string = "__pi_reference";
 
 export function makeIndent(depth: number) {

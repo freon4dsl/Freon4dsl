@@ -1681,7 +1681,7 @@ RefsTest {
     "$typename": "WithDirectRefs",
     "_PI_ref": PiElementReference {
       "_PI_pathname": Array [
-        "someName::otherName::xxx::yyy",
+        "someName.otherName.xxx.yyy",
       ],
       "_PI_referred": null,
       "container": [Circular],
@@ -1692,7 +1692,7 @@ RefsTest {
     "_PI_refList": Array [
       PiElementReference {
         "_PI_pathname": Array [
-          "name1::ff::gg::yuio",
+          "name1.ff.gg.yuio",
         ],
         "_PI_referred": null,
         "container": [Circular],
@@ -1745,7 +1745,7 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy",
+            "someName.otherName.xxx.yyy",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1756,7 +1756,7 @@ RefsTest {
         "_PI_refList": Array [
           PiElementReference {
             "_PI_pathname": Array [
-              "name1::ff::gg::yuio",
+              "name1.ff.gg.yuio",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1784,7 +1784,7 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy",
+            "someName.otherName.xxx.yyy",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1795,7 +1795,7 @@ RefsTest {
         "_PI_refList": Array [
           PiElementReference {
             "_PI_pathname": Array [
-              "name1::ff::gg::yuio",
+              "name1.ff.gg.yuio",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1823,7 +1823,7 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy",
+            "someName.otherName.xxx.yyy",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1834,7 +1834,7 @@ RefsTest {
         "_PI_refList": Array [
           PiElementReference {
             "_PI_pathname": Array [
-              "name1::ff::gg::yuio",
+              "name1.ff.gg.yuio",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1864,7 +1864,7 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy",
+            "someName.otherName.xxx.yyy",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1875,7 +1875,7 @@ RefsTest {
         "_PI_refList": Array [
           PiElementReference {
             "_PI_pathname": Array [
-              "name1::ff::gg::yuio",
+              "name1.ff.gg.yuio",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1923,7 +1923,7 @@ RefsTest {
         "$typename": "WithDirectRefs",
         "_PI_ref": PiElementReference {
           "_PI_pathname": Array [
-            "someName::otherName::xxx::yyy",
+            "someName.otherName.xxx.yyy",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -1934,7 +1934,7 @@ RefsTest {
         "_PI_refList": Array [
           PiElementReference {
             "_PI_pathname": Array [
-              "name1::ff::gg::yuio",
+              "name1.ff.gg.yuio",
             ],
             "_PI_referred": null,
             "container": [Circular],
@@ -1999,7 +1999,7 @@ RefsTest {
       },
       PiElementReference {
         "_PI_pathname": Array [
-          "nameY::sdfsgargh::HERA",
+          "nameY.sdfsgargh.HERA",
         ],
         "_PI_referred": null,
         "container": [Circular],
@@ -2020,7 +2020,7 @@ RefsTest {
     ],
     "_PI_ref": PiElementReference {
       "_PI_pathname": Array [
-        "someName::x34565",
+        "someName.x34565",
       ],
       "_PI_referred": null,
       "container": [Circular],
@@ -2031,7 +2031,7 @@ RefsTest {
     "_PI_refList": Array [
       PiElementReference {
         "_PI_pathname": Array [
-          "name1::d45fgh",
+          "name1.d45fgh",
         ],
         "_PI_referred": null,
         "container": [Circular],
@@ -2307,7 +2307,7 @@ RefsTest {
         },
         PiElementReference {
           "_PI_pathname": Array [
-            "nameY::h56",
+            "nameY.h56",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -2339,7 +2339,7 @@ RefsTest {
       "_PI_refList": Array [
         PiElementReference {
           "_PI_pathname": Array [
-            "name1::WREQWR::gag",
+            "name1.WREQWR.gag",
           ],
           "_PI_referred": null,
           "container": [Circular],
@@ -2359,7 +2359,7 @@ RefsTest {
         },
         PiElementReference {
           "_PI_pathname": Array [
-            "name3::fghy",
+            "name3.fghy",
           ],
           "_PI_referred": null,
           "container": [Circular],

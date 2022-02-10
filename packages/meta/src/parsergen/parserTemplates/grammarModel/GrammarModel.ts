@@ -1,5 +1,5 @@
-import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, READER_GEN_FOLDER } from "../../../utils";
+import { PiLanguage } from "../../../languagedef/metalanguage";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 import {
     internalTransformBranch,
     internalTransformLeaf,
@@ -7,9 +7,7 @@ import {
     internalTransformNode,
     internalTransformRefList
 } from "../ParserGenUtil";
-import { GrammarRule } from "./GrammarRule";
-import { refRuleName, refSeparator } from "./GrammarUtils";
-import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
+import { refRuleName } from "./GrammarUtils";
 import { GrammarPart } from "./GrammarPart";
 
 export class GrammarModel {
@@ -18,6 +16,7 @@ export class GrammarModel {
     public parts: GrammarPart[] = [];
     public trueValue: string = 'true';
     public falseValue: string = 'false';
+    public refSeparator: string = "."; // default reference separator
 
     toGrammar() : string {
         // there is no prettier for the grammar string, therefore we take indentation and
@@ -33,7 +32,7 @@ grammar ${Names.grammar(this.language)} {
                 
 ${this.grammarContent()}   
 
-__pi_reference = [ identifier / '${refSeparator}' ]+ ;
+__pi_reference = [ identifier / '${this.refSeparator}' ]+ ;
         
 // white space and comments
 skip WHITE_SPACE = "\\\\s+" ;
@@ -195,7 +194,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
               
             public transform__pi_reference(branch: SPPTBranch){
                 if (branch.name.includes("multi") || branch.name.includes("List")) {
-                    return this.${internalTransformList}<string>(branch, "${refSeparator}");
+                    return this.${internalTransformList}<string>(branch, "${this.refSeparator}");
                 } else {
                     return this.${internalTransformLeaf}(branch);
                 }

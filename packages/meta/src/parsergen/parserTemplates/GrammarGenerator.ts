@@ -16,12 +16,18 @@ export class GrammarGenerator {
         // create an empty model of the grammar and syntax analysis
         const grammar = new GrammarModel();
         grammar.language = language;
+
+        // add the standard option from the editor definition
         const stdBoolKeywords = editUnit.getDefaultProjectiongroup().standardBooleanProjection;
         if (!!stdBoolKeywords) {
             grammar.trueValue = stdBoolKeywords.trueKeyword;
             grammar.falseValue = stdBoolKeywords.falseKeyword;
         }
-
+        const refSeparator = editUnit.getDefaultProjectiongroup().standardReferenceSeparator;
+        if (!!refSeparator) {
+            grammar.refSeparator = refSeparator;
+        }
+        
         // find the projection group that can be used for the parser and unparser
         let projectionGroup = ParserGenUtil.findParsableProjectionGroup(editUnit);
         // if no projection group found, return
