@@ -135,19 +135,6 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
         }
     }
     createCommonConceptProps(data, result);
-    // // if 'name' property is not present, create it.
-    // if ( !(!!result.base) && !result.primProperties.some(prop => prop.name === "name") ) {
-    //     const nameProperty = new PiPrimitiveProperty();
-    //     nameProperty.name = "name";
-    //     nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
-    //     nameProperty.isPart = true;
-    //     nameProperty.isList = false;
-    //     nameProperty.isOptional = false;
-    //     nameProperty.isPublic = false;
-    //     nameProperty.isStatic = false;
-    //     nameProperty.owningConcept = result;
-    //     result.primProperties.push(nameProperty);
-    // }
     return result;
 }
 
@@ -344,7 +331,7 @@ export function createInstance(data: Partial<PiInstance>): PiInstance {
         result.name = data.name;
     }
     if (!!data.props) {
-        result.props = data.props;
+        result.props.push(...data.props);
         for (const p of result.props) {
             p.owningInstance = PiElementReference.create<PiInstance>(result, "PiInstance");
         }
@@ -376,7 +363,7 @@ export function createPropDef(data: Partial<PiInstanceProperty>): PiInstanceProp
     // we are not interested in its value, only whether it is present
     if (data.value !== null && data.value !== undefined) {
         if (Array.isArray(data.value)) {
-            result.valueList = data.value;
+            result.valueList.push(...data.value);
         } else {
             result.value = data.value;
         }

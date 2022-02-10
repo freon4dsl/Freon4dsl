@@ -1,7 +1,6 @@
 import { PiEditClassifierProjection, PiEditProjection, PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
 import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
 import { PiClassifier } from "../../languagedef/metalanguage";
-import { LOG2USER } from "../../utils/UserLogger";
 
 export class ParserGenUtil {
 

@@ -411,6 +411,7 @@ export class PiPrimitiveProperty extends PiProperty {
 
 export class PiInstance extends PiLangElement {
     concept: PiElementReference<PiConcept>; // should be a limited concept
+    // Note that these properties may be undefined, when there is no definition in the .ast file
     props: PiInstanceProperty[] = [];
 
     nameProperty(): PiInstanceProperty {
@@ -421,8 +422,15 @@ export class PiInstance extends PiLangElement {
 export class PiInstanceProperty extends PiLangElement {
     owningInstance: PiElementReference<PiInstance>;
     property: PiElementReference<PiProperty>;
-    value: PiPrimitiveValue;
-    valueList: PiPrimitiveValue[];
+    valueList: PiPrimitiveValue[] = [];
+
+    get value(): PiPrimitiveValue {
+        return this.valueList[0];
+    }
+
+    set value(newV) {
+        this.valueList[0] = newV;
+    }
 }
 
 // the following two classes are only used in the typer and validator definitions

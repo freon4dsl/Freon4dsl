@@ -365,16 +365,9 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             check: piInstance.concept.referred !== null,
             error: `Predefined instance '${piInstance.name}' should belong to a concept ${Checker.location(piInstance)}.`,
             whenOk: () => {
-                let hasValueForNameProperty: boolean = false;
                 piInstance.props.forEach(p => {
                     this.checkInstanceProperty(p, piInstance.concept.referred);
-                    if (p.name === "name" && (p.value.toString().length !== 0) ) {
-                        hasValueForNameProperty = true;
-                    }
                 });
-                // the following check is not really needed, because this situation is taken care of by the 'createInstance' method in 'LanguageCreators.ts'
-                this.simpleCheck(hasValueForNameProperty,
-                    `Predefined instance '${piInstance.name}' should provide value for property 'name' ${Checker.location(piInstance)}.`);
             }
         });
     }

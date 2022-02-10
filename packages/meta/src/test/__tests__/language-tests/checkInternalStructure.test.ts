@@ -146,54 +146,86 @@ describe("Checking internal structure of language", () => {
     // test initial value of properties
     test("initial values of primitive properties", () => {
         let piLanguage: PiLanguage = readAstFile(testdir + "test5.ast");
-        // expect(piLanguage).not.toBeUndefined();
-        // const BB: PiConcept = piLanguage.concepts.find(con => con.name === "BB");
-        // expect(BB).not.toBeNull();
-        // BB.allPrimProperties().forEach(prim => {
-        //     switch (prim.name) {
-        //         case "BBprop1": {
-        //             expect(prim.initialValue).toBe("prop1Value");
-        //             expect(prim.initialValueList).toBeUndefined();
-        //             break;
-        //         }
-        //         case "BBprop2": {
-        //             expect(prim.initialValueList).toStrictEqual(["prop2Index1", "prop2Index2", "prop2Index3"]);
-        //             expect(prim.initialValue).toBeUndefined();
-        //             break;
-        //         }
-        //         case "BBprop3": {
-        //             expect(prim.initialValue).toBe(24);
-        //             expect(prim.initialValueList).toBeUndefined();
-        //             break;
-        //         }
-        //         case "BBprop4": {
-        //             expect(prim.initialValueList).toStrictEqual([2, 24, 61, 11, 6, 58]);
-        //             expect(prim.initialValue).toBeUndefined();
-        //             break;
-        //         }
-        //         case "BBprop5": {
-        //             expect(prim.initialValue).toBe(true);
-        //             expect(prim.initialValueList).toBeUndefined();
-        //             break;
-        //         }
-        //         case "BBprop6": {
-        //             expect(prim.initialValueList).toStrictEqual([true, false, true, false, false]);
-        //             expect(prim.initialValue).toBeUndefined();
-        //             break;
-        //         }
-        //         case "BBprop7": {
-        //             expect(prim.initialValue).toBe("myName");
-        //             expect(prim.initialValueList).toBeUndefined();
-        //             break;
-        //         }
-        //         case "BBprop8": {
-        //             expect(prim.initialValueList).toStrictEqual(["prop8Name1", "prop8Name2", "prop8Name3"]);
-        //             expect(prim.initialValue).toBeUndefined();
-        //             break;
-        //         }
-        //     }
-        // });
-
+        expect(piLanguage).not.toBeUndefined();
+        const BB: PiConcept = piLanguage.concepts.find(con => con.name === "BB");
+        expect(BB).not.toBeNull();
+        BB.allPrimProperties().forEach(prim => {
+            switch (prim.name) {
+                case "BBprop1": {
+                    expect(prim.initialValue).toBe("prop1Value");
+                    expect(prim.initialValueList.length).toBe(1);
+                    break;
+                }
+                case "BBprop2": {
+                    expect(prim.initialValueList).toStrictEqual(["prop2Index1", "prop2Index2", "prop2Index3"]);
+                    break;
+                }
+                case "BBprop3": {
+                    expect(prim.initialValue).toBe(24);
+                    expect(prim.initialValueList.length).toBe(1);
+                    break;
+                }
+                case "BBprop4": {
+                    expect(prim.initialValueList).toStrictEqual([2, 24, 61, 11, 6, 58]);
+                    break;
+                }
+                case "BBprop5": {
+                    expect(prim.initialValue).toBe(true);
+                    expect(prim.initialValueList.length).toBe(1);
+                    break;
+                }
+                case "BBprop6": {
+                    expect(prim.initialValueList).toStrictEqual([true, false, true, false, false]);
+                    break;
+                }
+                case "BBprop7": {
+                    expect(prim.initialValue).toBe("myName");
+                    expect(prim.initialValueList.length).toBe(1);
+                    break;
+                }
+                case "BBprop8": {
+                    expect(prim.initialValueList).toStrictEqual(["prop8Name1", "prop8Name2", "prop8Name3"]);
+                    break;
+                }
+            }
+        });
     });
 
+    test("all kinds of limited concepts", () => {
+        let piLanguage: PiLanguage = readAstFile(testdir + "test6.ast");
+        expect(piLanguage).not.toBeUndefined();
+        const CC: PiConcept = piLanguage.concepts.find(con => con.name === "CC");
+        expect(CC instanceof PiLimitedConcept).toBe(true);
+        (CC as PiLimitedConcept).instances.forEach(inst => {
+            switch (inst.name) {
+                case "CC1": {
+                    expect(inst.props.find(prop => prop.name === "AAprop1").value).toBe("some_text");
+                    expect(inst.props.find(prop => prop.name === "AAprop2").valueList).toStrictEqual([ "text1", "text2" ]);
+                    expect(inst.props.find(prop => prop.name === "AAprop3").value).toBe(78);
+                    expect(inst.props.find(prop => prop.name === "AAprop4").valueList).toStrictEqual([ 102, 3489 ]);
+                    expect(inst.props.find(prop => prop.name === "AAprop5").value).toBe(true);
+                    expect(inst.props.find(prop => prop.name === "AAprop6").valueList).toStrictEqual([ false, false ]);
+                    break;
+                }
+                case "CC2": {
+                    expect(inst.props.find(prop => prop.name === "AAprop1").value).toBe("other_text");
+                    expect(inst.props.find(prop => prop.name === "AAprop2")).toBeUndefined();
+                    expect(inst.props.find(prop => prop.name === "AAprop3").value).toBe(99999);
+                    expect(inst.props.find(prop => prop.name === "AAprop4")).toBeUndefined();
+                    expect(inst.props.find(prop => prop.name === "AAprop5").value).toBe(false);
+                    expect(inst.props.find(prop => prop.name === "AAprop6")).toBeUndefined();
+                    break;
+                }
+                case "CC3": {
+                    expect(inst.props.find(prop => prop.name === "AAprop1")).toBeUndefined();
+                    expect(inst.props.find(prop => prop.name === "AAprop2")).toBeUndefined();
+                    expect(inst.props.find(prop => prop.name === "AAprop3")).toBeUndefined();
+                    expect(inst.props.find(prop => prop.name === "AAprop4")).toBeUndefined();
+                    expect(inst.props.find(prop => prop.name === "AAprop5")).toBeUndefined();
+                    expect(inst.props.find(prop => prop.name === "AAprop6")).toBeUndefined();
+                    break;
+                }
+            }
+        });
+    });
 });
