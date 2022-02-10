@@ -10,6 +10,7 @@ export function compareReadAndWrittenUnits(reader: PiReader, writer: PiWriter, f
         const unit1 = reader.readFromString(langSpec, metatype);
         let result: string = writer.writeToString(unit1, 0, false);
         // console.log(result);
+        // handler.stringToFile(filepath+ "out", result);
         expect(result.length).toBeGreaterThan(0);
         const unit2 = reader.readFromString(result, metatype);
         // simply comparing the units does not work because the id properties of the two units

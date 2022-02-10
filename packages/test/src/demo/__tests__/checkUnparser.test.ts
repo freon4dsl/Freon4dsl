@@ -116,28 +116,29 @@ describe("Testing Unparser", () => {
             personEnt.functions.push(first);
 
             result = unparser.writeToString(personEnt, 0, false);
-            expect(result).toBe("DemoEntity Person { \n" +
-                "    baseInterface_attr 0 \n" +
-                "    simpleprop \"\" \n" +
-                "    x \"\" \n" +
-                "    attributes \n" +
+            // console.log(result)
+            expect(result).toBe("DemoEntity Person {\n" +
+                "    baseInterface_attr 0\n" +
+                "    simpleprop \"\"\n" +
+                "    x \"\"\n" +
+                "    attributes\n" +
                 "        age : Boolean\n" +
                 "        name : String\n" +
-                "    entAttributes \n" +
-                "        \n" +
-                "    functions \n" +
-                "        DemoFunction first { \n" +
-                "            expression 5 + 24 \n" +
-                "            parameters \n" +
-                "                DemoVariable Resultvar { \n" +
-                "                    declaredType someOtherEntity \n" +
+                "    entAttributes\n" +
+                "\n" +
+                "    functions\n" +
+                "        DemoFunction first {\n" +
+                "            expression 5 + 24\n" +
+                "            parameters\n" +
+                "                DemoVariable Resultvar {\n" +
+                "                    declaredType someOtherEntity\n" +
                 "                }\n" +
-                "            declaredType Boolean \n" +
+                "            declaredType Boolean\n" +
                 "        }\n" +
-                "    int_attrs \n" +
-                "        \n" +
-                "    int_functions \n" +
-                "        \n" +
+                "    int_attrs\n" +
+                "\n" +
+                "    int_functions\n" +
+                "\n" +
                 "}");
         });
 

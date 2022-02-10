@@ -15,9 +15,7 @@ OclContext {
 
 }
 
-// TODO: do we allow projections of interfaces????
-//IModelElementReference {
-//    @projection normal
-//    [ ${self.surroundingClassifier.name}[?::${self.feature.name}]]
-//
-//}
+IModelElementReference {
+    @projection normal
+    [ ${self.surroundingClassifier.name}[?::${self.feature.name}]]
+}

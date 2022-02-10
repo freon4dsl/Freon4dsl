@@ -136,7 +136,7 @@ export class WriterTemplate {
              */
             public writeToString(modelelement: ${allLangConceptsName}, startIndent?: number, short?: boolean) : string {
                 this.writeToLines(modelelement, startIndent, short);
-                return \`\$\{this.output.map(line => \`\$\{line\}\`).join("\\n").trimRight()}\`;
+                return \`\$\{this.output.map(line => \`\$\{line.trimEnd()\}\`).join("\\n").trimEnd()}\`;
             }
  
             /**
@@ -315,7 +315,7 @@ export class WriterTemplate {
             // tslint:disable-next-line:max-line-length
             private doSeparatorOrTerminatorAndNewline(sepType: SeparatorType, isLastInList: boolean, sepText: string, vertical: boolean, short: boolean, indent: number) {
                 // first eliminate any whitespace at the end of the line
-                this.output[this.currentLine] = this.output[this.currentLine].trimRight();
+                this.output[this.currentLine] = this.output[this.currentLine].trimEnd();
                 
                 if (!vertical && (!sepText || sepText.length == 0)) {
                     // at least separate the items by a space to avoid things
@@ -356,13 +356,17 @@ export class WriterTemplate {
                         // note that the following cannot be parsed
                         this.output[this.currentLine] += \` ...\`;
                     }
-                } else if (!vertical && isLastInList) {
-                    this.output[this.currentLine] += \` \`;
+                } else if (isLastInList) {
+                    // end with a space to avoid things
+                    // like "666after", which should be "666 after"
+                    if (this.output[this.currentLine][this.output[this.currentLine].length-1] !== " ") {
+                        this.output[this.currentLine] += \` \`;
+                    }
                 }
             }
         
             /**
-             * Makes a a new entry in the 'output' array
+             * Makes a new entry in the 'output' array
              * and adds the indentation of 'number' spaces
              * to the new entry/line.
              * @param indent
@@ -405,7 +409,6 @@ export class WriterTemplate {
             }
         } // else if (conceptDef instanceof PiEditTableProjection) {
         // cannot unparse a table projection
-        // TODO
         return "";
     }
 
@@ -472,7 +475,6 @@ export class WriterTemplate {
                 }
             }
         } else {
-            // TODO check in which cases there are no lines in the edit def
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
                 return `${comment}
                     private ${methodName}(modelelement: ${name}, short: boolean) {
@@ -489,12 +491,15 @@ export class WriterTemplate {
      * @param inOptionalGroup
      * @private
      */
-    // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
     private makeLine(line: PiEditProjectionLine, inOptionalGroup: boolean): string {
         let result: string = ``;
-        line.items.forEach(item => {
-            result += this.makeItem(item, line.indent, inOptionalGroup, line.isOptional());
-        });
+        if (line.isEmpty()) {
+            result = `this.output[this.currentLine] += "\n";`
+        } else {
+            line.items.forEach(item => {
+                result += this.makeItem(item, line.indent, inOptionalGroup, line.isOptional());
+            });
+        }
         return result;
     }
 
@@ -502,7 +507,7 @@ export class WriterTemplate {
         let result: string = ``;
         if (item instanceof PiEditProjectionText) {
             // add escapes to item.text
-            const myText = ParserGenUtil.escapeRelevantChars(item.text).trimRight();
+            const myText = ParserGenUtil.escapeRelevantChars(item.text).trimEnd();
             result += `this.output[this.currentLine] += \`${myText} \`;\n`;
         } else if (item instanceof PiOptionalPropertyProjection){
             const myElem = item.property.referred;
@@ -536,7 +541,6 @@ export class WriterTemplate {
                 result += this.makeItemWithConceptType(myElem, item, indent, inOptionalGroup);
             }
         } else if (item instanceof PiEditSuperProjection) {
-            // TODO HIER BEN IK
             // take care of named projection
             if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
                 // find the projection that we need and add it to the extra list
@@ -592,7 +596,6 @@ export class WriterTemplate {
             }
             const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
             const joinType = this.getJoinType(item);
-            // TODO adjust to tables
             if (!item.listInfo.isTable) { // it is a list not table
                 // add escapes to joinText
                 let myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
@@ -702,8 +705,6 @@ export class WriterTemplate {
                             result += `this.unparseReferenceList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
                         }
                     }
-                } else {
-                    // TODO adjust for tables
                 }
             } else {
                 let myCall: string = "";

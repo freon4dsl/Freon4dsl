@@ -2,7 +2,6 @@ import { TestParserEnvironment } from "../environment/gen/TestParserEnvironment"
 import { FileHandler } from "../../utils/FileHandler";
 import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, PrimsWithKeywordTest } from "../language/gen";
 
-
 describe("Parser properties of type", () => {
     const reader = TestParserEnvironment.getInstance().reader;
     const writer = TestParserEnvironment.getInstance().writer;
