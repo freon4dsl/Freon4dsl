@@ -29,7 +29,7 @@
 	};
 
 	const handleCancel = () => {
-		console.log("Cancel called ");
+		// console.log("Cancel called ");
 		$toBeDeleted = null;
 		$deleteUnitDialogVisible = false;
 	}
