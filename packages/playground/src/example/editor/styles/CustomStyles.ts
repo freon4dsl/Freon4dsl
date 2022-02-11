@@ -84,19 +84,26 @@ export const editorStyle: PiEditorStyle = {
         light: {
             gridcellEven:  { "background-color": "#eee", border: "1px lightgrey solid"},
             gridcellOdd:  { "background-color": "#fff", border: "1px lightgrey solid"},
-            text: { color: "black"}
+            text: {
+                color: "black",
+                margin: "1px"
+            },
+            select: {
+                margin: "1px"
+            }
+
         },
         dark: {
             gridcellEven:  { "background-color": "darkblue", border: "1px lightgrey solid"},
             gridcellOdd:  { "background-color": "darkblue", border: "1px lightgrey solid"},
             text: {
                 "background-color": "darkblue",
-                margin: "2px"
+                margin: "1px"
 
             },
             select: {
                 "background-color": "darkblue",
-                margin: "2px"
+                margin: "1px"
             }
         }
     },
@@ -104,18 +111,24 @@ export const editorStyle: PiEditorStyle = {
         light: {
             gridcellEven:  { "background-color": "#eee", border: "1px lightgrey solid"},
             gridcellOdd:  { "background-color": "#fff", border: "1px lightgrey solid"},
-            text: { color: "black"}
+            text: {
+                color: "black",
+                margin: "1px"
+            },
+            select: {
+                margin: "1px"
+            }
         },
         dark: {
             gridcellEven:  { "background-color": "darkblue", border: "1px lightgrey solid"},
             gridcellOdd:  { "background-color": "darkblue", border: "1px lightgrey solid"},
             text: {
                 "background-color": "darkblue",
-                margin: "2px"
+                margin: "1px"
             },
             select: {
                 "background-color": "darkblue",
-                margin: "2px"
+                margin: "1px"
             },
             grid: {
                 "background-color": "darkblue"
