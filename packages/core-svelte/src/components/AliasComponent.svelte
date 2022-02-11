@@ -20,7 +20,7 @@
         KEY_ARROW_DOWN,
         KEY_ARROW_UP,
         KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT, styleToCSS, conceptStyle,
-        type SelectOption
+        type SelectOption, PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
     import { action, autorun, runInAction } from "mobx";
     import { clickOutside } from "./clickOutside";
@@ -231,8 +231,15 @@
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
                         console.log("Keyboard shortcut in AliasComponentg ===============")
-                        PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
-                        e.stopPropagation();
+                        const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(e), choiceBox, editor);
+                        if( cmd !== PI_NULL_COMMAND) {
+                            let postAction: PiPostAction;
+                            runInAction( () => {
+                                postAction = cmd.execute(choiceBox, toPiKey(e), editor);
+                            });
+                            if(!!postAction) { postAction(); }
+                            e.stopPropagation();
+                        }
                     }
                     break;
             }

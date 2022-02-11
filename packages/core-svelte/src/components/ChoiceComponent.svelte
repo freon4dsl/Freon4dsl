@@ -19,10 +19,18 @@
         KEY_TAB,
         KEY_ARROW_DOWN,
         KEY_ARROW_UP,
-        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT
+        KEY_SPACEBAR,
+        KEY_ESCAPE,
+        KEY_DELETE,
+        KEY_ARROW_LEFT,
+        KEY_BACKSPACE,
+        KEY_ARROW_RIGHT,
+        PiCommand,
+        PI_NULL_COMMAND,
+        PiPostAction
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
-    import { action, autorun } from "mobx";
+    import { action, autorun, runInAction } from "mobx";
     import { clickOutside } from "./clickOutside";
     import { afterUpdate, onMount } from "svelte";
     import { writable } from 'svelte/store';
@@ -177,7 +185,14 @@
                 case KEY_ENTER:
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
-                        PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
+                        const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(e), choiceBox, editor);
+                        if( cmd !== PI_NULL_COMMAND) {
+                            let postAction: PiPostAction;
+                            runInAction( () => {
+                                postAction = cmd.execute(choiceBox, toPiKey(e), editor);
+                            });
+                            if(!!postAction) { postAction(); }
+                        }
                         e.stopPropagation();
                     }
                     break;

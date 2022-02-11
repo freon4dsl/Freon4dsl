@@ -81,7 +81,7 @@
     }
 
     function box(box: Box): Box {
-        console.log("render box " + box.role);
+        LOGGER.log("render box " + box.role);
         return box;
     }
 </script>

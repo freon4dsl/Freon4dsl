@@ -1,10 +1,13 @@
 <script lang="ts">
-    import { conceptStyle, GridCellBox, isMetaKey, KEY_ENTER, PiUtils, styleToCSS, toPiKey,
-        type GridBox, type PiEditor } from "@projectit/core";
+    import {
+        conceptStyle, GridCellBox, isMetaKey, KEY_ENTER, PiUtils, styleToCSS, toPiKey,
+        type GridBox, type PiEditor, PiCommand, PI_NULL_COMMAND, PiPostAction
+    } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
+    import { choiceBox } from "./AliasComponent.svelte";
     import { AUTO_LOGGER, ChangeNotifier, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import GridCellComponent from "./GridCellComponent.svelte";
-    import { autorun } from "mobx";
+    import { autorun, runInAction } from "mobx";
     import { writable, type Writable } from "svelte/store";
 
     export let gridBox: GridBox;
@@ -30,12 +33,21 @@
     const onKeydown = (event: KeyboardEvent) => {
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === KEY_ENTER) {
-            const isKeyboardShortcutForThis = PiUtils.handleKeyboardShortcut(piKey, gridBox, editor);
-            if (!isKeyboardShortcutForThis) {
-                if (event.key === KEY_ENTER) {
-                    return;
-                }
+            const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), gridBox, editor);
+            if( cmd !== PI_NULL_COMMAND) {
+                let postAction: PiPostAction;
+                runInAction( () => {
+                    postAction = cmd.execute(gridBox, toPiKey(event), editor);
+                });
+                if(!!postAction) { postAction(); }
+            }
+            else {
+                // if (!isKeyboardShortcutForThis) {
+                    if (event.key === KEY_ENTER) {
+                        return;
+                    }
 
+                // }
             }
         }
 
