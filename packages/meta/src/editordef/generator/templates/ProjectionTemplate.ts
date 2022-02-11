@@ -367,14 +367,14 @@ export class ProjectionTemplate {
                 "${property.name}",
                 this.rootProjection.getTableDefinition("${property.type.referred.name}").headers,
                 this.rootProjection.getTableDefinition("${property.type.referred.name}").cells,
-                ExampleEnvironment.getInstance().editor)`;
+                ${Names.environment(language)}.getInstance().editor)`;
         } else {
             return `TableUtil.tableBoxRowOriented(
                 ${elementVarName},
                 "${property.name}",
                 this.rootProjection.getTableDefinition("${property.type.referred.name}").headers,
                 this.rootProjection.getTableDefinition("${property.type.referred.name}").cells,
-                ExampleEnvironment.getInstance().editor)`;
+                ${Names.environment(language)}.getInstance().editor)`;
         }
     }
 
