@@ -83,13 +83,13 @@
     };
 
     const deleteUnit = (unit: PiNamedElement) => {
-        console.log("delete unit called: " + unit.name);
+        // console.log("delete unit called: " + unit.name);
         $toBeDeleted = unit;
         $deleteUnitDialogVisible = true;
     };
 
     const exportUnit = (unit: PiNamedElement) => {
-        console.log("export unit called:" + unit.name);
+        // console.log("export unit called:" + unit.name);
         // do not try to export a unit with errors
         // parsing and unparsing will not proceed correctly
         if ($modelErrors.length > 0) {

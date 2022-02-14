@@ -52,7 +52,7 @@
 		color: "var(--theme-colors-color)"
 	};
 	const handleCancel = () => {
-		console.log("Cancel called, model selected: " + internalSelected);
+		// console.log("Cancel called, model selected: " + internalSelected);
 		// only close when a model has been selected
 		if (!$initializing) {
 			$modelNames = [];

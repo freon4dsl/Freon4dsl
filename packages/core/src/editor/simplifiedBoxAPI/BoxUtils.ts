@@ -223,11 +223,11 @@ export class BoxUtils {
                     return null;
                 }
             },
-            (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
-                console.log("==> SET selected option for property " + propertyName + " of " + element["name"] + " to " + option?.label);
+             (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
+                // L.log("==> SET selected option for property " + propertyName + " of " + element["name"] + " to " + option?.label);
                 if (!!option) {
-                    console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
-                    runInAction(() => {
+                    // console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
+                    runInAction( () => {
                         setFunc(option.label);
                     });
                 } else {
@@ -467,7 +467,7 @@ export class BoxUtils {
 }
 
 function isNumber(currentText: string, key: string, index: number): KeyPressAction {
-    console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof [" + typeof currentText + "] key [" + key + "] index [" + index + "]");
+    // console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof ["+ typeof currentText + "] key [" + key + "] index [" + index + "]");
     if (isNaN(Number(key))) {
         if (index === currentText.length) {
             return KeyPressAction.GOTO_NEXT;

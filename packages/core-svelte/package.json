@@ -1,6 +1,6 @@
 {
   "name": "@projectit/core-svelte",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -18,7 +18,7 @@
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
   "dependencies": {
-    "@projectit/core": "0.2.0",
+    "@projectit/core": "0.3.0",
     "click-outside": "1.0.4",
     "mobx": "6.3.3",
     "tslib": "^2.3.0"

@@ -91,13 +91,13 @@
 
     // save unit menuitem
     const saveUnit = () => {
-        console.log("FileMenu.saveUnit: " + $currentUnitName);
+        // console.log("FileMenu.saveUnit: " + $currentUnitName);
         EditorCommunication.getInstance().saveCurrentUnit();
     }
 
     // delete model menuitem
     const deleteModel = () => {
-        console.log("FileMenu.deleteModel");
+        // console.log("FileMenu.deleteModel");
         // get list of models from server
         serverCommunication.loadModelList((names: string[]) => {
             // if list not empty, show dialog

@@ -68,18 +68,14 @@ export const editorStyle: PiEditorStyle = {
         dark: {
             label: {
                 color: "white",
-                "background-color": "black"
+                "background-color": "darkblue"
             },
             text: {
-                color: "white",
-                "background-color": "black"
-            },
-            alias: {
-                color: "white",
-                "background-color": "black"
+                color: "yellow",
+                "background-color": "darkblue"
             },
             grid: {
-                "background-color": "black"
+                "background-color": "darkblue"
             }
 
         }
@@ -88,22 +84,61 @@ export const editorStyle: PiEditorStyle = {
         light: {
             gridcellEven:  { "background-color": "#eee", border: "1px lightgrey solid"},
             gridcellOdd:  { "background-color": "#fff", border: "1px lightgrey solid"},
-            text: { color: "black"}
+            text: {
+                color: "black",
+                margin: "1px"
+            },
+            select: {
+                margin: "1px"
+            }
+
         },
         dark: {
-            gridcellEven:  { "background-color": "#222", border: "1px lightgrey solid"},
-            gridcellOdd:  { "background-color": "#000", border: "1px lightgrey solid"}
+            gridcellEven:  { "background-color": "darkblue", border: "1px lightgrey solid"},
+            gridcellOdd:  { "background-color": "darkblue", border: "1px lightgrey solid"},
+            text: {
+                "background-color": "darkblue",
+                margin: "1px"
+
+            },
+            select: {
+                "background-color": "darkblue",
+                margin: "1px"
+            }
         }
     },
     Parameter: {
         light: {
             gridcellEven:  { "background-color": "#eee", border: "1px lightgrey solid"},
             gridcellOdd:  { "background-color": "#fff", border: "1px lightgrey solid"},
-            text: { color: "black"}
+            text: {
+                color: "black",
+                margin: "1px"
+            },
+            select: {
+                margin: "1px"
+            }
         },
         dark: {
-            gridcellEven:  { "background-color": "#222", border: "1px lightgrey solid"},
-            gridcellOdd:  { "background-color": "#000", border: "1px lightgrey solid"}
+            gridcellEven:  { "background-color": "darkblue", border: "1px lightgrey solid"},
+            gridcellOdd:  { "background-color": "darkblue", border: "1px lightgrey solid"},
+            text: {
+                "background-color": "darkblue",
+                margin: "1px"
+            },
+            select: {
+                "background-color": "darkblue",
+                margin: "1px"
+            },
+            grid: {
+                "background-color": "darkblue"
+            },
+            list: {
+                "background-color": "darkblue"
+            },
+            label: {
+                "background-color": "darkblue"
+            }
         }
     },
     // For concept Attribute
@@ -111,19 +146,46 @@ export const editorStyle: PiEditorStyle = {
         light: {
             label: {
                 "font-weight": "bold",
-                color: "darkmagenta"
+                color: "darkmagenta",
             },
             text: {
                 color: "green"
             },
            list: {
-                color: "yellow"
+                color: "yellow",
+               "margin-top": "4px",
+               display: "inline-block"
             }
         },
         dark: {
             label: {
                 "font-weight": "normal",
-                color: "white"
+                color: "white",
+                background: "darkblue",
+                "background-color": "darkblue"
+            },
+            text: {
+                color: "yellow",
+                "background-color": "darkblue"
+            },
+            list: {
+                color: "yellow",
+                "margin-top": "4px",
+                display: "inline-block",
+                "background-color": "darkblue"
+            },
+            grid:
+                {
+                    "background-color": "darkblue"
+                },
+            gridcellNeutral: {
+                "background-color": "darkblue"
+            },
+            gridcellEven: {
+                "background-color": "darkblue"
+            },
+            gridcellOdd: {
+                "background-color": "darkblue"
             }
         }
     }

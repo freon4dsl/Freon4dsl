@@ -53,7 +53,6 @@
                 return true;
             case KEY_ENTER:
                 if (index >= 0 && index < options.length) {
-                    console.log("DropDown ENTER")
                     e.stopPropagation();
                     dispatcher("pi-ItemSelected", options[index]);
                     return true;

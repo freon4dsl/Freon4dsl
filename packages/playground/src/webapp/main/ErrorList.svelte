@@ -63,7 +63,7 @@
     }
 
     const itemSelected = (item: PiError) => {
-        console.log("item clicked: " + item.message);
+        // console.log("item clicked: " + item.message);
         EditorCommunication.getInstance().errorSelected(item);
     }
 

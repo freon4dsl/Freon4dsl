@@ -11,7 +11,7 @@ function myStore(theme: Object) {
 
     let value = theme;
     const newSet = (themeObject: Object) => {
-        console.log("setting theme to " + JSON.stringify(themeObject));
+        // console.log("setting theme to " + JSON.stringify(themeObject));
         const editor: PiEditor = editorEnvironment.editor;
         editor.theme = themeObject["name"];
         set(themeObject);

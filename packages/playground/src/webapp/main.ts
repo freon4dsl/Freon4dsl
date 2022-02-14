@@ -27,7 +27,7 @@ PiLogger.mute("Language");
 
 PiLogger.mute("ExampleScoper");
 
-// PiLogger.muteAllLogs()
+PiLogger.muteAllLogs()
 
 const app = new App({
 	target: document.body,

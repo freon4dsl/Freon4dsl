@@ -1,7 +1,7 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
-    import { autorun } from "mobx";
+    import { autorun, runInAction } from "mobx";
     import {
         KEY_BACKSPACE,
         KEY_DELETE,
@@ -9,24 +9,36 @@
         KEY_ARROW_LEFT,
         KEY_ARROW_RIGHT,
         KEY_ARROW_UP,
-        KEY_ENTER, KEY_SPACEBAR,
+        KEY_ENTER,
+        KEY_SPACEBAR,
         KEY_TAB,
         EVENT_LOG,
         isMetaKey,
-        KeyPressAction, PiUtils,
+        KeyPressAction,
+        PiUtils,
         TextBox,
         PiEditor,
         toPiKey,
         isAliasTextBox,
-        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox, KEY_ESCAPE, styleToCSS, conceptStyle, SelectBox
+        PiCaret,
+        PiCaretPosition,
+        PiLogger,
+        isPrintable,
+        AliasBox,
+        KEY_ESCAPE,
+        styleToCSS,
+        conceptStyle,
+        SelectBox,
+        PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
+    import { choiceBox } from "./AliasComponent.svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
     const LOGGER = new PiLogger("TextComponent");
     // Is this component currently being edited by the user?
     export let isEditing: boolean = false;
-    export let textBox ; // new TextBox(null, "role:", () => "Editable textbox", (v: string) => { });
+    export let textBox: TextBox ; // new TextBox(null, "role:", () => "Editable textbox", (v: string) => { });
     export let editor: PiEditor;
 
     export let getText = (): string => {
@@ -154,15 +166,22 @@
         }
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === KEY_ENTER) {
-            console.log("Keyboard shortcut in TextComponentg ===============")
-            const isKeyboardShortcutForThis = PiUtils.handleKeyboardShortcut(piKey, textBox, editor);
-            if (!isKeyboardShortcutForThis) {
+            // To Be Sure save the current text
+            let value = currentText();
+            const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
+            if( cmd !== PI_NULL_COMMAND) {
+                let postAction: PiPostAction;
+                runInAction( () => {
+                     textBox.setText(value);
+                    postAction = cmd.execute(textBox, toPiKey(event), editor);
+                });
+                if(!!postAction) { postAction(); }
+            } else {
                 LOGGER.log("Key not handled for element " + textBox.element);
                 if (event.key === KEY_ENTER) {
                     LOGGER.log("   ENTER, so propagate");
-                    return;
+                    event["action"] = () => textBox.setText(value);
                 }
-
             }
         }
     };
