@@ -134,7 +134,7 @@ TupleLiteralExp {
 
 VariableDeclaration {
 @projection normal
-    [$self.name} : ${self.type.name} [?= ${self.initExpression}]]
+    [${self.name} : ${self.type.name} [?= ${self.initExpression}]]
 //    isIteratorVar: boolean;
 }
 
