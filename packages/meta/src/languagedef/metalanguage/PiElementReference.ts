@@ -7,14 +7,6 @@ import { ParseLocation } from "../../utils";
  */
 export class PiElementReference<T extends PiLangElement> {
 
-    // TODO remove this method in favour of the next one
-    public static createNamed<T extends PiLangElement>(name: string, typeName: PiLangConceptType): PiElementReference<T> {
-        const result = new PiElementReference(null, typeName);
-        result.name = name;
-        result.typeName = typeName;
-        return result;
-    }
-
     public static create<T extends PiLangElement>(name: string | T, typeName: PiLangConceptType): PiElementReference<T> {
         const result = new PiElementReference(null, typeName);
         if (typeof name === "string") {

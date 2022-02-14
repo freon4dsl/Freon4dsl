@@ -1,6 +1,6 @@
-editor XXX for language ExpressionLibrary
+editor default
 
 GroupedExpression {
-    @projection [( ${self.inner} )]
-    @symbol "()"
+    [( ${self.inner} )]
+    symbol = "()"
 }

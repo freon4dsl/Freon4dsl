@@ -14,3 +14,12 @@ export function metaTypeForExtension (extension: string) {
     }
     return "";
 }
+
+export function allExtensionsToString() : string {
+    let result: string = '';
+    for (let [key, value] of editorEnvironment.fileExtensions) {
+        result += value + ", ";
+    }
+    // TODO remove last comma
+    return result;
+}

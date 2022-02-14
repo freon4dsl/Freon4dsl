@@ -1,34 +1,34 @@
 ////////////////////////////////////
 //       Numeric Expressions
 ////////////////////////////////////
-editor XXX for language ExpressionLibrary
+editor default
 
 // <ABS> | <MINUS_PREFIX>
 
 AbsExpression {
-    @projection default [| ${self.expr} |]
-    @symbol "||"
+    [\| ${self.expr} \|]
+    symbol = "||"
 }
 
 PrefixMinusExpression {
-    @projection default [- ${self.expr}]
-    @symbol "- prefix"
+    [- ${self.expr}]
+    symbol = "- prefix"
 }
 
 // <PLUS> | <MINUS> | <MULTIPLY> | <DIVIDE> |
 
 PlusExpression {
-    @symbol "+"
+    symbol = "+"
 }
 
 MinusExpression {
-    @symbol "-"
+    symbol = "-"
 }
 
 MultiplyExpression {
-    @symbol "*"
+    symbol = "*"
 }
 
 DivideExpression {
-    @symbol "/"
+    symbol = "/"
 }

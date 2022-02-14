@@ -1,32 +1,30 @@
-editor StartEditor for language Demo
+editor default
 
 DemoAttribute {
-    @projection attribuut [ ${self.name} : ${self.declaredType} = ${self.somePrimAttr}]
+    [ ${self.name} : ${self.declaredType} = ${self.somePrimAttr}]
 }
 
 DemoEntity  {
-@projection [${self.name} base ${self.baseEntity @vertical @separator [, ]}
+[
+${self.name} base ${self.baseEntity vertical separator [, ]}
     start
-        ${self.attributes @vertical @separator [, ]}
+        ${self.attributes vertical separator [, ]}
     end
 ]
 }
 
 DemoNumberLiteralExpression {
-    @projection normal
         [${self.value}]
 }
 
 DemoStringLiteralExpression {
-    @projection DemoStringLiteralExpression
         [
         '${self.value}'
         ]
-    @trigger "'"
+    trigger = "'"
 }
 
 DemoIfExpression {
-    @projection DemoIfExpression
         [
         if (${self.condition}) then
                   ${self.whenTrue}
@@ -34,66 +32,60 @@ DemoIfExpression {
            ${self.whenFalse}
         endif
         ]
-
-    @trigger "if"
-    @symbol "if"
+    trigger = "if"
+    symbol = "if"
 }
 
 //DemoIfExpression {
-//    @projection DemoIfExpression
 //        [
 //        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
 //        ]
-//
-//    @trigger "if"
-//    @symbol "if"
+//    trigger = "if"
+//    symbol = "if"
 //}
 
 DemoPlusExpression {
-    @symbol "+"
+    symbol = "+"
 }
 
 DemoMultiplyExpression {
-    @symbol "*"
+    symbol = "*"
 }
 
 DemoDivideExpression {
-    @symbol "/"
+    symbol = "/"
 }
 DemoLessThenExpression {
-    @symbol "<"
+    symbol = "<"
 }
 DemoOrExpression {
-    @symbol "or"
+    symbol = "or"
 }
 
 //DemoEntity {
-//    @trigger "entity"
+//    trigger = "entity"
 //}
 
 //DemoFunctionCallExpression {
-//    @projection gewoon
 //        [
 //        ${self.name} (  )
 //        ]
-//    @trigger "function2"
+//    trigger = "function2"
 //}
 
 DemoFunctionCallExpression {
-    @projection DemoFunctionCallExpression
         [
         CALL ${self.functionDefinition} (  )
         ]
-    @trigger "function"
+    trigger = "function"
 }
 
 DemoUnit {
-    @projection DemoUnit
         [
         unit ${self.name} {
         main: ${self.main}
         unit wide functions:
-            ${self.functions @horizontal @separator [\n] }
+            ${self.functions horizontal }
         }
         ]
 }

@@ -32,7 +32,7 @@
     import { Button, Icon, Menu, Menuitem } from "svelte-mui";
     import arrowDropDown from "../assets/icons/svg/arrow_drop_down.svg";
     import type { MenuItem } from "../webapp-ts-utils/MenuUtils";
-    import { metaTypeForExtension } from "../webapp-ts-utils/MenuUtils";
+    import { allExtensionsToString, metaTypeForExtension } from "../webapp-ts-utils/MenuUtils";
     import { EditorCommunication } from "../editor/EditorCommunication";
 
     import {
@@ -129,7 +129,7 @@
             //     }
             // });
             // to check whether the file is recognisable as a model unit, we examine the file extension
-            const extension: string = file.name.slice(-4);
+            const extension: string = file.name.split(".").pop();
             let metaType: string = metaTypeForExtension(extension);
             // if the right extension has been found, continue
             if (metaType.length > 0) {
@@ -148,7 +148,8 @@
                     setUserMessage(reader.error.message);
                 };
             } else {
-                setUserMessage(`File ${file.name} does not have the right (extension) type.`);
+                setUserMessage(`File ${file.name} does not have the right (extension) type.
+                 Found: ${extension}, expected one of: ${allExtensionsToString()}.`);
             }
         }
     }

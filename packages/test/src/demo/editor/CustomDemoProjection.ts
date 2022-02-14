@@ -5,12 +5,12 @@ import {
     Box,
     createDefaultExpressionBox,
     KeyPressAction,
-    TextBox, BoxFactory, PiTableDefinition
+    TextBox, BoxFactory, PiTableDefinition, PiCompositeProjection
 } from "@projectit/core";
 import { DemoNumberLiteralExpression } from "../language/gen";
 
 export class CustomDemoProjection implements PiProjection {
-    rootProjection: PiProjection;
+    rootProjection: PiCompositeProjection;
     name: string = "manual";
 
     constructor(name?: string) {

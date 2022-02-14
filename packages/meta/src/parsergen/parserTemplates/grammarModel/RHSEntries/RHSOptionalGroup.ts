@@ -13,7 +13,8 @@ export class RHSOptionalGroup extends RHSPropEntry {
 
     toGrammar(): string {
         if (this.subs.length > 1) {
-            return `( ${this.subs.map(sub => `${sub.toGrammar()}`).join(" ")} )?\n\t`;
+            // no need for newline between subs and closing ')?'
+            return `( ${this.subs.map(sub => `${sub.toGrammar()}`).join(" ").trimEnd()} )?\n\t`;
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
             if (first.isList) {

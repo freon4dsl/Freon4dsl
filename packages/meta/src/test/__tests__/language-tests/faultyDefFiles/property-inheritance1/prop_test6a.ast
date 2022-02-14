@@ -1,0 +1,87 @@
+// 2. all props defined in a classifier should be different from the props of its super concepts/interfaces
+//      except when their types conform, then props of the sub should be marked 'implementedInBase' - but only if
+//      base is a concept
+
+// this test ...
+language YYYY
+model Y {
+    name: identifier;
+    unit: Yunit;
+}
+
+modelunit Yunit {
+    public name: identifier;
+    part1: Right;
+    part2: Wrong;
+}
+
+concept Right implements Base2 {
+    name1: boolean;
+    name2: Type1;
+    reference name3: Type2;
+    name4: Type3;
+}
+
+concept Wrong implements Base2 {
+    name1: number;
+    name2: Type2;
+    reference name3: Type3;
+    name4: Type1;
+}
+
+interface Base2 base Base_Base2, Base_Base1 {
+    name1: boolean;
+    name2: Type1;
+    reference name3: Type2;
+    name4: Type3;
+}
+
+interface Base_Base1 {
+    name1: boolean;
+    name2: SuperSuperType1;
+    reference name3: SuperSuperType2;
+    name4: SuperSuperType3;
+}
+
+interface Base_Base2 {
+    name1: boolean;
+    name2: SuperType1;
+    reference name3: SuperType2;
+    name4: SuperType3;
+}
+
+concept Type1 base SuperType1 {
+    name: identifier;
+}
+
+concept Type2 base SuperType2 {
+    name: identifier;
+}
+
+concept Type3 base SuperType3 {
+    name: identifier;
+}
+
+concept SuperType1 base SuperSuperType1 {
+    name: identifier;
+}
+
+concept SuperType2 base SuperSuperType2 {
+    name: identifier;
+}
+
+concept SuperType3 base SuperSuperType3 {
+    name: identifier;
+}
+
+concept SuperSuperType1 {
+    name: identifier;
+}
+
+concept SuperSuperType2 {
+    name: identifier;
+}
+
+concept SuperSuperType3 {
+    name: identifier;
+}

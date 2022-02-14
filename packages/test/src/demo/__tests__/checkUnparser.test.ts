@@ -8,13 +8,15 @@ import {
     DemoAttribute,
     DemoFunction,
     DemoVariable,
-    PiElementReference
+    PiElementReference, DemoAttributeType
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import { DemoValidator } from "../validator/gen";
 import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
+import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
+import { PiNamedElement } from "@projectit/core";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
@@ -75,7 +77,7 @@ describe("Testing Unparser", () => {
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
             result = unparser.writeToString(multiplyExpression, 0, false);
             result = result.replace(new RegExp("\\s+","gm"), " ");
-            expect(result).toBe("1 + 2 * DemoVariableRef appliedfeature variable Person");
+            expect(result).toBe("1 + 2 * DemoVariableRef { variable Person }");
         });
 
         test('\'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"\'', () => {
@@ -89,7 +91,7 @@ describe("Testing Unparser", () => {
             // determine(AAP: TEST1) : TEST2 = "Hello Demo" + "Goodbye" has been created
             // unparse using a short notation
             result = unparser.writeToString(determine, 0, true);
-            expect(result).toBe("DemoFunction determine");
+            expect(result).toBe("DemoFunction determine {");
             // unparse using a long notation
             result = unparser.writeToString(determine);
             expect(result).toMatchSnapshot();
@@ -97,28 +99,47 @@ describe("Testing Unparser", () => {
 
         test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 }", () => {
             let result: string = "";
+            let myType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
             const personEnt = DemoEntity.create({ name: "Person" });
-            const age = DemoAttribute.create({ name: "age" });
+            const age = DemoAttribute.create({ name: "age", declaredType: myType });
 
-            const personName = DemoAttribute.create({ name: "name" });
+            myType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+            const personName = DemoAttribute.create({ name: "name", declaredType: myType });
             personEnt.attributes.push(age);
             personEnt.attributes.push(personName);
-            const first = DemoFunction.create({ name: "first" });
-            const resultvar = DemoVariable.create({ name: "Resultvar" });
+            myType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+            const first = DemoFunction.create({ name: "first", declaredType: myType });
+            const myEntType = PiElementReference.create<DemoEntity>("someOtherEntity", "DemoEntity");
+            const resultvar = DemoVariable.create({ name: "Resultvar", declaredType: myEntType });
             first.parameters.push(resultvar);
             first.expression = MakePlusExp("5", "24");
             personEnt.functions.push(first);
 
-            // add types to the model elements
-            // personName.declaredType = DemoAttributeType.String;
-            // age.declaredType = DemoAttributeType.Boolean;
-            // first.declaredType = DemoAttributeType.Boolean;
-            // Resultvar.declaredType = DemoAttributeType.Boolean;
-            // Person { unitName, age, first(Resultvar) = 5 + 24 }
-
-            result = unparser.writeToString(personEnt, 0, true);
-            expect(result).toBe("DemoEntity Person");
-            // expect(result).toBe("DemoEntity Person{ age : Boolean, unitName : String, first( Resultvar : Boolean ): Boolean = 5 + 24}");
+            result = unparser.writeToString(personEnt, 0, false);
+            // console.log(result)
+            expect(result).toBe("DemoEntity Person {\n" +
+                "    baseInterface_attr 0\n" +
+                "    simpleprop \"\"\n" +
+                "    x \"\"\n" +
+                "    attributes\n" +
+                "        age : Boolean\n" +
+                "        name : String\n" +
+                "    entAttributes\n" +
+                "\n" +
+                "    functions\n" +
+                "        DemoFunction first {\n" +
+                "            expression 5 + 24\n" +
+                "            parameters\n" +
+                "                DemoVariable Resultvar {\n" +
+                "                    declaredType someOtherEntity\n" +
+                "                }\n" +
+                "            declaredType Boolean\n" +
+                "        }\n" +
+                "    int_attrs\n" +
+                "\n" +
+                "    int_functions\n" +
+                "\n" +
+                "}");
         });
 
         test("complete example model with simple attribute types", () => {

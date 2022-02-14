@@ -2,6 +2,8 @@ import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
+import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
+import { PiEditUnit } from "../editordef/metalanguage";
 
 const LOGGER = new MetaLogger("ProjectItGenerateEditor"); // .mute();
 
@@ -23,13 +25,16 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
         this.editorGenerator.outputfolder = this.outputFolder;
         this.editorGenerator.language = this.language;
 
-        const editor = new PiEditParser(this.language).parseMulti(this.editFiles);
+        let editor = new PiEditParser(this.language).parseMulti(this.editFiles);
         // This command is being used to generate, specifically and only, the editor,
         // and the reader/writer couple. Therefore we do not generate a default editor when
         // no editor definition is found.
         if (editor === null) {
-            throw new Error("Editor definition could not be parsed, exiting.");
+            editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
         }
+        // add default values for everything that is not present in the editor definition
+        DefaultEditorGenerator.addDefaults(editor);
+
         this.editorGenerator.generate(editor);
     }
 }

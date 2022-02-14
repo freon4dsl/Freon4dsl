@@ -2,6 +2,7 @@ import * as fs from "fs";
 import { Checker } from "./Checker";
 import { Parser } from "pegjs";
 import { LOG2USER } from "./UserLogger";
+import { PiDefinitionElement } from "./PiDefinitionElement";
 
 // the following two types are used to store the location information from the parser
 export type ParseLocation = {
@@ -33,7 +34,7 @@ export class PiParser<DEFINITION> {
 
         // clean the error list from the creator functions
         this.cleanNonFatalParseErrors();
-        // parse Language file
+        // parse definition file
         let model: DEFINITION = null;
         try {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
@@ -42,7 +43,7 @@ export class PiParser<DEFINITION> {
             // syntax error
             const errorstr = `${e} 
                 ${e.location && e.location.start ?
-                    `[file: ${definitionFile}, line ${e.location.start.line}, column ${e.location.start.column}]`
+                    Checker.locationPlus(definitionFile, e.location)
                 :
                     ``}`;
             LOG2USER.error(errorstr);
@@ -78,7 +79,7 @@ export class PiParser<DEFINITION> {
                     // to avoid a newline in the output, we do not put this if-stat in a smart string
                     let location: string = "";
                     if (e.location && e.location.start) {
-                        location = `[file: ${file}, line ${e.location.start.line}, column ${e.location.start.column}]`;
+                        location = Checker.locationPlus(file, e.location);
                     }
                     const errorstr = `${e.message.trimEnd()} ${location}`;
                     LOG2USER.error(errorstr);
@@ -132,5 +133,12 @@ export class PiParser<DEFINITION> {
 
     protected cleanNonFatalParseErrors() {
         // throw Error("PiParser.cleanNonFatalParseErrors should be implemented by its subclasses.");
+    }
+
+    protected location(elem: PiDefinitionElement): string {
+        if (!!elem.location) {
+            return `[file: ${elem.location.filename}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
+        }
+        return `[no location]`;
     }
 }

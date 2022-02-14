@@ -27,6 +27,7 @@ abstract concept PiClassifier base PiLangElement {
     primProperties: PiPrimitiveProperty[];
 }
 concept PiModelDescription base PiClassifier {
+    units: PiUnitDescription[];
 }
 concept PiUnitDescription base PiClassifier {
     fileExtension: string = "";

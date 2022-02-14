@@ -12,7 +12,7 @@ LanguageExpressions_Definition
         });
     }
 
-conceptExps = conceptRef:conceptRef ws curly_begin ws exps:expWithSeparator* curly_end
+conceptExps = conceptRef:classifierReference ws curly_begin ws exps:expWithSeparator* curly_end
     {
         return expCreate.createConceptExps({
           "conceptRef": conceptRef,

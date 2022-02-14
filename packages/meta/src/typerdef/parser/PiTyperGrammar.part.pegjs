@@ -29,8 +29,8 @@ typerRule = itr:isTypeRule   { return itr; }
           / concept:conceptRule  { return concept; }
 
 isTypeRule = isTypeKey curly_begin types:(
-      head:conceptRef
-      tail:(comma_separator v:conceptRef { return v; })*
+      head:classifierReference
+      tail:(comma_separator v:classifierReference { return v; })*
       { return [head].concat(tail); }
     ) curly_end 
 {
@@ -48,7 +48,7 @@ anyTypeRule = anyKey curly_begin statements:statement* curly_end
   })
 }
 
-conceptRule = conceptRef:conceptRef curly_begin statements:statement* curly_end
+conceptRule = conceptRef:classifierReference curly_begin statements:statement* curly_end
 {
   return create.createConceptRule( {
     "conceptRef": conceptRef,

@@ -1,148 +1,76 @@
-editor XXX for language octopus
+editor default
 
 AssociationClassCallExp {
-@projection normal
-    [${self.referredAssociationClass}]
+    [${referredAssociationClass}]
 }
-
 AssociationEndCallExp {
-@projection normal
-    [${self.referredAssociationEnd}]
+    [${referredAssociationEnd}]
 }
-
 AttributeCallExp {
-    @projection normal
-        [${self.referredAttribute}]
+    [${referredAttribute}]
 }
-
 BooleanLiteralExp {
-@projection normal
-    [${self.value}]
+    [${value}]
 }
-
 CollectionItem {
-@projection normal
-    [${self.item}]
+    [${item}]
 }
-
 CollectionLiteralExp {
-@projection normal
-    [Collection { ${self.parts @horizontal @separator[, ]} }]
+    [Collection ${parts horizontal separator[, ]} ]
 }
-
-//CollectionLiteralPart {
-//@projection normal
-//    []}
-
 CollectionRange {
-@projection normal
-    [${self.first} .. ${self.last}]
+    [${first} .. ${last}]
 }
-
 EnumLiteralExp {
-@projection normal
-    [${self.referredEnumLiteral}]
+    [${referredEnumLiteral}]
 }
-
 IfExp {
-@projection normal
-    [if ${self.condition} then ${self.ifExpression} [?else ${self.elseExpression}] endif]
+    [if ${condition} then ${ifExpression} [?else ${elseExpression}] endif]
 }
-
 IntegerLiteralExp {
-@projection normal
-    [${self.value}]
+    [${value}]
 }
-
-//IterateExp {
-//@projection normal
-//    [${self.result}
-//}
-//
-//IteratorExp {
-//@projection normal
-//    [${self.reference}]
-//}
-
 LetExp {
-@projection normal
-    [let ${self.variables @horizontal @separator[, ]}
-    in ${self.inExpression}
+    [
+    let ${variables horizontal separator[, ]}
+    in ${inExpression}
     ]
 }
-
-//ModelPropertyCallExp {
-//@projection normal
-//    []
-//}
-
 NavigationCallExp {
-@projection normal
-    [${self.navigationSource}]
+    [${navigationSource}]
 }
-
-//NumericLiteralExp {
-//@projection normal
-//    []}
-
 OclMessageExp {
-@projection normal
-    [<${self.target}>^^${self.calledOperation}( ${self.args @horizontal @separator[, ]} )]
+    [<${target}>^^${calledOperation}( ${args horizontal separator[, ]} )]
 }
-
 OclStateLiteralExp {
-@projection normal
-    [${self.referredState}]
+    [${referredState}]
 }
-
 OclTypeLiteralExp {
-@projection normal
-    [${self.referredClassifier}]
+    [${referredClassifier}]
 }
-
 OclUndefinedLiteralExp {
-@projection normal
-    [${self.value}]
+    [${value}]
+    trigger = "xxx"
 }
-
 OperationCallExp {
-@projection normal
-    [${self.referredOperation} ( ${self.args @horizontal @separator[, ]} )]
+    [${referredOperation} ( ${args horizontal separator[, ]} )]
 }
-
-//PrimitiveLiteralExp {
-//}
-
 RealLiteralExp {
-@projection normal
-    [${self.value}]
+    [${value}]
 }
-
 StringLiteralExp {
-@projection normal
-    [${self.value}]
+    [${value}]
 }
-
 TupleLiteralExp {
-@projection normal
-// TODO add extra check on .edit file: @horizontal should be within brackets of a list
-    [Tuple { ${self.tupleParts @horizontal @separator[, ] } }]
+    [Tuple ${tupleParts table rows  }]
 }
-
-//UnspecifiedValueExp {
-//}
-
 VariableDeclaration {
-@projection normal
-    [$self.name} : ${self.type.name} [?= ${self.initExpression}]]
-//    isIteratorVar: boolean;
+    [${name} : ${type} [?= ${initExpression}]]
 }
 
 VariableExp {
-@projection normal
-    [${self.referredVariable}]
+    [${referredVariable} [=> OclExpression]]
 }
 OclExpression {
-    @projection normal
-        [${self.appliedProperty}]
+    [[?. ${appliedProperty}]]
 }

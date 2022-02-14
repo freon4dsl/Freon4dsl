@@ -9,19 +9,22 @@ export class ConceptRule extends GrammarRule {
     concept: PiClassifier = null;
     ruleParts: RightHandSideEntry[] = [];
 
-    constructor(concept: PiClassifier) {
+    constructor(concept: PiClassifier, projectionName?: string) {
         super();
         this.concept = concept;
         this.ruleName = Names.classifier(this.concept);
+        if (!!projectionName && projectionName.length > 0) {
+            this.ruleName += "_" + projectionName;
+        }
     }
 
     private propsToSet(): PiProperty[] {
         let xx: PiProperty[] = [];
         for (const part of this.ruleParts) {
             if (part instanceof RHSPropEntry) {
-                xx.push(part.property);
-                // } else if (part instanceof RHSGroup) {
-                //     xx.push(...part.propsToSet());
+                if (!xx.includes(part.property)) {
+                    xx.push(part.property);
+                }
             }
         }
         return xx;
@@ -35,14 +38,14 @@ export class ConceptRule extends GrammarRule {
         //     }
         // });
         // end check
-        let rule = `${Names.classifier(this.concept)} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(" ")}`;
+        let rule = `${this.ruleName} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(" ")}`;
         return rule.trimEnd() + " ;";
     }
 
     toMethod(mainAnalyserName: string): string {
         const myProperties = this.propsToSet();
         return `${ParserGenUtil.makeComment(this.toGrammar())}
-                public transform${this.ruleName} (branch: SPPTBranch) : ${this.ruleName} {
+                public transform${this.ruleName} (branch: SPPTBranch) : ${Names.classifier(this.concept)} {
                     // console.log('transform${this.ruleName} called: ' + branch.name);
                     ${myProperties.map(prop => `let ${ParserGenUtil.internalName(prop.name)}: ${getTypeAsString(prop)}`).join(";\n")}
                     const children = this.${mainAnalyserName}.getChildren(branch);` +  // to avoid an extra newline in the result

@@ -23,15 +23,15 @@ additionKey             = "namespace_addition" rws
 alternativeScopeKey     = "scope" rws
 
 namespaces = isnamespaceKey curly_begin conceptRefs:(
-                                              head:conceptRef
-                                              tail:(comma_separator v:conceptRef { return v; })*
+                                              head:classifierReference
+                                              tail:(comma_separator v:classifierReference { return v; })*
                                               { return [head].concat(tail); }
                                             ) ws curly_end
     { 
         return conceptRefs;
     }
 
-conceptDefinition = name:conceptRef curly_begin nsDef:namespaceAddition? alternativeScope:alternativeScope? curly_end
+conceptDefinition = name:classifierReference curly_begin nsDef:namespaceAddition? alternativeScope:alternativeScope? curly_end
     {
         return create.createScoperConceptDef({
             "conceptRef":name,

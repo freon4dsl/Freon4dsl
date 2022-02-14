@@ -17,16 +17,28 @@ import { PiElementReference } from ".";
 
 export abstract class PiLangExp extends PiLangElement {
     sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
-    // TODO appliedfeature could be moved to SelfExp, is not used elsewhere
     appliedfeature: PiLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
     referredElement: PiElementReference<PiLangElement>;  // refers to the element called 'sourceName'
     location: ParseLocation;                            // holds start and end in the parsed file
     language: PiLanguage;                           // the language for which this expression is defined
 
-    // returns the element to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
+    // returns the property to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
     findRefOfLastAppliedFeature(): PiProperty {
-        // TODO should this method return something else then null, when there is no applied feature???
-        return this.appliedfeature?.findRefOfLastAppliedFeature();
+        if (!!this.language) {
+            if (this.appliedfeature !== undefined) {
+                // console.log(" last of: " + this.appliedfeature.sourceName);
+                return this.appliedfeature.findRefOfLastAppliedFeature();
+            } else {
+                const found: PiLangElement = this.referredElement?.referred;
+                // console.log("found reference: " + found?.name + " of type " + typeof found);
+                if (found instanceof PiProperty) {
+                    return found;
+                }
+            }
+        } else {
+            throw Error("Applied feature cannot be found because language is not set.")
+        }
+        return null;
     }
 
     toPiString(): string {
@@ -100,12 +112,6 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
     referredElement: PiElementReference<PiProperty>;
 
     toPiString(): string {
-        let isRef: boolean = false;
-        if (!!this.referredElement) {
-            const ref = this.referredElement.referred;
-            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
-        }
-        // return this.sourceName + (isRef ? ".referred" : "") + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
     }
 

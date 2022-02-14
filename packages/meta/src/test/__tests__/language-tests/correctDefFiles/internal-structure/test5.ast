@@ -1,0 +1,25 @@
+language test2 // same as test1, but without 'implements'
+
+model ROOT {
+    name: identifier;
+    aa: AA[];
+}
+
+modelunit AA  {
+    public name: identifier;
+    // properties with concept as type
+    AAprop7: BB;
+    file-extension = "aap";
+}
+
+concept BB {
+    // the possibilities for primitive properties
+    BBprop1: string = "prop1Value";
+    BBprop2: string[] = ["prop2Index1", "prop2Index2", "prop2Index3"];
+    BBprop3: number = 24;
+    BBprop4: number[] = [2, 24, 61, 11, 6, 58];
+    BBprop5: boolean = true;
+    BBprop6: boolean[] = [true, false, true, false, false];
+    BBprop7: identifier = "myName";
+    BBprop8: identifier[] = ["prop8Name1", "prop8Name2", "prop8Name3"];
+}

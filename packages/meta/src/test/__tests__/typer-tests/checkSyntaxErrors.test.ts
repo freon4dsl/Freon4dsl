@@ -1,15 +1,18 @@
 import { PiTyperParser } from "../../../typerdef/parser/PiTyperParser";
 import { PiLanguage } from "../../../languagedef/metalanguage";
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
+import { MetaLogger } from "../../../utils";
 
-describe("Checking typer on checking errors", () => {
+describe("Checking typer on syntax errors", () => {
     const testdir = "src/test/__tests__/typer-tests/faultyDefFiles/syntax-errors/";
     let parser: PiTyperParser;
     let language: PiLanguage;
+    MetaLogger.muteAllLogs();
+    MetaLogger.muteAllErrors();
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/test/__tests__/typer-tests/test-language.ast");
+            language = new LanguageParser().parse("src/test/__tests__/commonAstFiles/test-language.ast");
             parser = new PiTyperParser(language);
         } catch (e) {
             console.log("Language could not be read");
@@ -24,7 +27,7 @@ describe("Checking typer on checking errors", () => {
         } catch (e) {
             expect(e.message).toBe(`syntax error: SyntaxError: Expected "abstract", "conformsto", "equalsto", "infertype", or "}" but "c" found.`
                 + " \n                "
-                +`[file: src/test/__tests__/typer-tests/faultyDefFiles/syntax-errors/test1.type, line 6, column 5]`);
+                +`[file: test1.type, line: 6, column: 5]`);
         }
     });
 

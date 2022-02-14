@@ -1,0 +1,44 @@
+editor default
+// when only table projections for a classifier are defined,
+// a 'normal' list projection should be generated
+
+AAAAAA  {[
+    // properties with concept as type
+    ${AAprop8 table } // type BB
+    // properties with interface as type
+    ${AAprop12 table } // type DD
+]}
+
+BB {
+table [ // base CC
+    // properties with concept as type
+    ${BBprop8 table } |
+    ${BBprop10 } |
+    // properties with interface as type
+    ${BBprop12 table } |
+    ${BBprop14 }
+]}
+
+CC {
+table[
+    // properties with concept as type
+    ${CCprop8 table } |
+    ${CCprop10 } |
+    // properties with interface as type
+    ${CCprop12 table } |
+    ${CCprop14 }
+]}
+
+DD {
+table [
+    ${DDprop1} |
+    ${DDprop3} |
+    ${DDprop5}
+]}
+
+FF {
+table [
+    ${FFprop1} |
+    ${FFprop3} |
+    ${FFprop5}
+]}

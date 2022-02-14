@@ -1,0 +1,10 @@
+editor default
+
+BB {[
+    [? ${BBprop8} ${BBprop10} ]
+    [?
+        ${BBprop11}
+        ${BBprop12}
+        ${BBprop14}
+    ]
+]}

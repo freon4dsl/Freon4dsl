@@ -15,11 +15,6 @@
                "$typename": "Attribute",
                "name": "asde",
                "declaredType": "Integer"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "",
-               "declaredType": null
             }
          ],
          "methods": [
@@ -62,11 +57,6 @@
                   {
                      "$typename": "Parameter",
                      "name": "aaaaaa",
-                     "declaredType": null
-                  },
-                  {
-                     "$typename": "Parameter",
-                     "name": "",
                      "declaredType": null
                   }
                ],
