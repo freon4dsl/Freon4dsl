@@ -1,4 +1,4 @@
-editor OndersteBoven
+editor OndersteBoven precedence 5
 
 ExampleUnit {
         [

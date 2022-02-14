@@ -3,7 +3,6 @@ import {
     PiEditParsedProjectionIndent,
     PiEditProjection,
     PiEditProjectionLine,
-    PiEditProjectionText,
     PiOptionalPropertyProjection
 } from "../metalanguage";
 import { EditorDefaults } from "../metalanguage/EditorDefaults";
@@ -116,9 +115,10 @@ export class PiEditParseUtil {
     private static normalizeIndent(indent: PiEditParsedProjectionIndent): void {
         let spaces = 0;
         for (const char of indent.indent) {
-            // TODO change calculation based on spaces for the tab
             if (char === "\t") {
-                spaces += EditorDefaults.standardIndent;
+                // calculate based on spaces before the tab
+                const spacesBeforeTab: number = spaces % EditorDefaults.standardIndent;
+                spaces += EditorDefaults.standardIndent - spacesBeforeTab;
             } else if (char === " ") {
                 spaces += 1;
             }

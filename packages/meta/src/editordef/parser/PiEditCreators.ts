@@ -100,6 +100,9 @@ export function createProjectionGroup(data: Partial<PiEditProjectionGroup>): PiE
     if (!!data.name) {
         result.name = data.name;
     }
+    if (data.precedence != null && data.precedence !== undefined) { // precedence may be 0, "!!data.precedence" would return false
+        result.precedence = data.precedence;
+    }
     if (!!data.standardBooleanProjection) {
         result.standardBooleanProjection = data.standardBooleanProjection;
     }

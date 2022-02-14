@@ -27,7 +27,7 @@ export enum PiEditProjectionDirection {
 export enum ListJoinType {
     NONE = "NONE",
     Terminator = "Terminator",  // the accompanying string is placed after each list element
-    Separator = "Separator",    // the accompanying string is placed between each list element
+    Separator = "Separator",    // the accompanying string is placed between list elements
     Initiator = "Initiator"     // the accompanying string is placed before each list element
 }
 
@@ -42,8 +42,19 @@ export class PiEditUnit extends PiDefinitionElement {
         return this.projectiongroups.find(group => group.name == Names.defaultProjectionName);
     }
 
+    /**
+     * Returns a list of all projection groups except the default group, sorted by their precendence.
+     * Highest presence first!
+     */
     getAllNonDefaultProjectiongroups(): PiEditProjectionGroup[] {
-        return this.projectiongroups.filter(group => group.name !== Names.defaultProjectionName);
+        const result = this.projectiongroups.filter(group => group.name !== Names.defaultProjectionName);
+        result.sort ( (a, b) => {
+            return b.precedence - a.precedence;
+        });
+        result.forEach(g => {
+            console.log(`group ${g.name} has precendence ${g.precedence}`);
+        })
+        return result;
     }
 
     findProjectionsForType(cls: PiClassifier): PiEditClassifierProjection[] {
@@ -104,6 +115,7 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
     standardReferenceSeparator: string = null;      // may only be present in default group
     extras: ExtraClassifierInfo[] = null;           // may only be present in default group
     owningDefinition: PiEditUnit;
+    precedence: number;
 
     findProjectionsForType(cls: PiClassifier): PiEditClassifierProjection[] {
         return this.projections.filter(con => con.classifier.referred === cls);

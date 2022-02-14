@@ -43,28 +43,40 @@ export class PiEditChecker extends Checker<PiEditUnit> {
      */
     public check(editUnit: PiEditUnit): void {
         LOGGER.log("checking editUnit");
+        // reset global(s)
+        this.propsWithTableProjection = [];
+
+        // get the language against which this editor definition should be checked and resolve all references
         if (this.language === null || this.language === undefined) {
             throw new Error(`Editor definition checker does not known the language.`);
         }
         editUnit.language = this.language;
-
-        this.propsWithTableProjection = [];
         this.resolveReferences(editUnit);
 
+        // do a 'normal' check of all projections groups
         for (const group of editUnit.projectiongroups) {
             this.checkProjectionGroup(group, editUnit);
         }
+
+        // check whether all properties that need a table projection can find it
         this.checkPropsWithTableProjection(editUnit);
+
+        // check uniqueness of names and precedence
         let names: string[] = [];
+        let precedences: number[] = [0]; // 0 is the number for the default group, which is always present
         editUnit.projectiongroups.forEach(group => {
             this.checkUniqueNameOfProjectionGroup(names, group);
+            this.checkUniquePrecendenceOfProjectionGroup(precedences, group);
             group.owningDefinition = editUnit;
-        })
-        this.simpleCheck(true, ``);
+        });
+
+        // warning in case there is no 'default'editor
         this.simpleWarning(!!editUnit.getDefaultProjectiongroup(),
             `No editor with name 'default' found, a default editor will be generated.`);
 
+        // add any messages found by the expression checker
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
+        this.warnings = this.warnings.concat(this.myExpressionChecker.warnings);
     }
 
     private checkUniqueNameOfProjectionGroup(names: string[], group: PiEditProjectionGroup) {
@@ -78,28 +90,55 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkProjectionGroup(projectionGroup: PiEditProjectionGroup, editor: PiEditUnit) {
-        LOGGER.log("checking projectionGroup " + projectionGroup?.name);
-        this.simpleCheck(!!projectionGroup.name, `Editor should have a name, it is empty ${Checker.location(projectionGroup)}.`);
-        for (const projection of projectionGroup.projections) {
-            projection.name = projectionGroup.name;
+    private checkUniquePrecendenceOfProjectionGroup(precendences: number[], group: PiEditProjectionGroup) {
+        // check unique precedence
+        if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
+            if (group.name !== Names.defaultProjectionName && precendences.includes(group.precedence)) {
+                this.simpleCheck(false,
+                    `Projection group with precedence '${group.precedence}' already exists ${Checker.location(group)}.`);
+            } else {
+                precendences.push(group.precedence);
+            }
+        } else {
+            // add a generated precedence, if it is not present
+            if (group.name === Names.defaultProjectionName ) {
+                group.precedence = 0;
+            } else {
+                group.precedence = Math.max(...precendences) + 1;
+                precendences.push(group.precedence);
+            }
+        }
+    }
+
+    private checkProjectionGroup(group: PiEditProjectionGroup, editor: PiEditUnit) {
+        LOGGER.log("checking projectionGroup " + group?.name);
+        this.simpleCheck(!!group.name, `Editor should have a name, it is empty ${Checker.location(group)}.`);
+        for (const projection of group.projections) {
+            projection.name = group.name;
             this.checkProjection(projection, editor);
         }
-        if (!!projectionGroup.extras) {
-            projectionGroup.extras = this.checkAndMergeExtras(projectionGroup.extras);
+        if (!!group.extras) {
+            group.extras = this.checkAndMergeExtras(group.extras);
         }
-        // only 'default' projectionGroup may define standardBooleanProjection, and referenceSeparator
-        if (projectionGroup.name !== Names.defaultProjectionName){
-            this.simpleCheck(!projectionGroup.standardBooleanProjection,
-                `Only the 'default' projectionGroup may define a standard Boolean projection ${Checker.location(projectionGroup.standardBooleanProjection)}.`);
-            this.simpleCheck(!projectionGroup.standardReferenceSeparator,
-                `Only the 'default' projectionGroup may define a standard reference separator ${Checker.location(projectionGroup)}.`);
+        // special requirements for the 'default' projectionGroup
+        if (group.name !== Names.defaultProjectionName){
+            this.simpleCheck(!group.standardBooleanProjection,
+                `Only the 'default' projectionGroup may define a standard Boolean projection ${Checker.location(group.standardBooleanProjection)}.`);
+            this.simpleCheck(!group.standardReferenceSeparator,
+                `Only the 'default' projectionGroup may define a standard reference separator ${Checker.location(group)}.`);
+            if (group.precedence !== null && group.precedence !== undefined) {
+                this.simpleCheck(group.precedence !== 0, `Only the 'default' projectionGroup may have precedence 0 ${Checker.location(group)}.`);
+            }
+        } else {
+            if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
+                this.simpleCheck(group.precedence === 0, `The 'default' projectionGroup must have precedence 0 ${Checker.location(group)}.`);
+            }
         }
         const classifiersWithNormalProj: PiClassifier[] = [];
         const classifiersWithTableProj: PiClassifier[] = [];
         // every classifier may have only one 'normal' projection in a group
         // every classifier may have only one 'table' projection in a group
-        projectionGroup.projections.forEach(proj => {
+        group.projections.forEach(proj => {
             if (proj instanceof PiEditTableProjection) {
                 const myCls = proj.classifier.referred;
                 if (!!myCls) {
@@ -361,7 +400,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
 
     private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: PiClassifier, editor: PiEditUnit) {
         LOGGER.log("checking optional projection for " + cls?.name);
-        // TODO when a primitive property is in an optional group is will not be shown when it has the default value for that property
+        // TODO when a primitive property is in an optional group it will not be shown when it has the default value for that property
         // TODO add check on boolean prop with one keyword => should not be within optional group
         const propProjections: PiEditPropertyProjection[] = [];
         let nrOfItems = 0;

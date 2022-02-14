@@ -3,19 +3,19 @@
     let expCreate = require("../../languagedef/parser/ExpressionCreators");
 }
 
-// TODO make order of things more flexible
 Editor_Definition = group:projectionGroup
 {
     return creator.createEditUnit(group);
 }
 
-projectionGroup = ws "editor" ws name:var ws
+projectionGroup = ws "editor" ws name:var ws num:("precedence" ws n:numberliteral ws {return n;})?
         x:standardBooleanProjection? ws
         y:standardReferenceSeparator? ws
         projections:classifierProjection* ws
 {
     return creator.createProjectionGroup({
         "name"                          : name,
+        "precedence"                    : num !== undefined && num !== null ? Number.parseInt(num, 10) : undefined, // the default for parseInt is not (!) the decimal system,
         "standardBooleanProjection"     : x,
         "standardReferenceSeparator"    : y,
         "projections"                   : projections,
@@ -72,7 +72,7 @@ projectionChoice = p:projection t:tableProjection?
     };
 }
 
-/* rules that make order of extra info flexible */
+/* rules that makes order of extra info flexible */
 extraClassifierInfo = trigger:trigger
               sub:extraChoiceSub1?
 {

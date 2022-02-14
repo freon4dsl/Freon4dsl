@@ -43,9 +43,18 @@ export class PiEditParser extends PiParser<PiEditUnit> {
                             if (!!found.extras && !!group.extras) {
                                 found.extras.push(...group.extras);
                             }
+                            if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
+                                if (found.precedence !== null && found.precedence !== undefined) {
+                                    if (group.precedence !== found.precedence) {
+                                        this.checker.errors.push(`Precendence of ${group.name} in ${Checker.location(group)} is not equal to the one found in ${Checker.location(found)}.`)
+                                    }
+                                } else {
+                                    found.precedence = group.precedence;
+                                }
+                            }
                         } else {
                             // group with this name is not yet encountered,
-                            // add it to the definition
+                            // add it to the editor definition
                             // and add it to the map
                             projectionGroupsByName.set(group.name, group);
                             result.projectiongroups.push(group);

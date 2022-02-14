@@ -4,7 +4,6 @@ import { makeIndent } from "../GrammarUtils";
 import { ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
-    // TODO make this class work!
     private trueKeyword: string = "";
     private falseKeyword: string = "";
 

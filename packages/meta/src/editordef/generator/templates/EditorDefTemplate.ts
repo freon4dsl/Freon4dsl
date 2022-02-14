@@ -50,16 +50,10 @@ export class EditorDefTemplate {
             export function initializeProjections(rootProjection: PiCompositeProjection) {
                 for (const p of projectitConfiguration.customProjection) {
                     rootProjection.addProjection(p);
-                }
-                
-                let projectionGroup: PiProjection = null;               
-                ${editorDef.getAllNonDefaultProjectiongroups().map(group => `
-                projectionGroup = new ${Names.projection(group)}();
-                rootProjection.addProjection(projectionGroup);
-                `).join("")}
-
-                const projectionDefault = new ${Names.projection(editorDef.getDefaultProjectiongroup())}();
-                rootProjection.addProjection(projectionDefault);
+                }         
+                ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
+                `rootProjection.addProjection(new ${Names.projection(group)}());`).join("\n")}
+                rootProjection.addProjection(new ${Names.projection(editorDef.getDefaultProjectiongroup())}());
             }    
             
             /**

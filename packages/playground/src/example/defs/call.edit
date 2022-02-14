@@ -1,4 +1,4 @@
-editor CALLOUT
+editor CALLOUT precedence 20
 
 Attribute {
     [ Attribute named \"${name}\" has type ${declaredType} ]

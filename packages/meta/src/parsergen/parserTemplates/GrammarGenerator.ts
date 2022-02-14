@@ -40,15 +40,13 @@ export class GrammarGenerator {
         return grammar;
     }
 
-
-
     private createGrammarRules(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: PiLanguage) {
         // generate the rules for each unit
         for (const unitAnalyser of myLanguageAnalyser.unitAnalysers) {
             this.createRulesPerAnalyser(grammar, projectionGroup, unitAnalyser, language);
         }
         // do the same for the common analyser
-        this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser, language);
+        this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser.commonAnalyser, language);
     }
 
     private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, analyser: PiAnalyser, language: PiLanguage) {

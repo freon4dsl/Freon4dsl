@@ -6,9 +6,8 @@ import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPartEntry extends RHSPropEntry {
     private projectionName: string;
-
-    // TODO remove optionality of last argument
-    constructor(prop: PiProperty, projectionName?: string) {
+    
+    constructor(prop: PiProperty, projectionName: string) {
         super(prop);
         this.isList = false;
         this.projectionName = projectionName;

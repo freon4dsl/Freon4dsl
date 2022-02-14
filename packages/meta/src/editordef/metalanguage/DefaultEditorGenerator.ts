@@ -57,6 +57,9 @@ export class DefaultEditorGenerator {
         if (!defaultGroup.extras) {
             defaultGroup.extras = [];
         }
+        if (!defaultGroup.precedence) {
+            defaultGroup.precedence = 0;
+        }
 
         // add defaults for binary expressions
         DefaultEditorGenerator.defaultsForBinaryExpressions(editor.language, defaultGroup);

@@ -60,8 +60,7 @@ export class EditorCommunication {
         if (nameList[0] !== "default") {
             // find index
             const i = nameList.indexOf("default");
-            // if already at start, nothing to do
-            // else remove old occurrency, if existing
+            // remove old occurrency
             if (i > 0) {
                 nameList.splice( i, 1 );
             }

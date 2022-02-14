@@ -1,4 +1,4 @@
-editor shortTables
+editor shortTables precedence 3
 
 Parameter {
     table [

@@ -13,7 +13,6 @@ export class RHSBooleanWithSingleKeyWord extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        // TODO check the need for the closing '?' because this can be within an optional group
         return `'${this.keyword}'?` + this.doNewline();
     }
 
