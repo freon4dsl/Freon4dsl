@@ -17,13 +17,13 @@ interface BaseType {
 interface Type base BaseType {
 }
 
-public concept Entity implements Type {
+concept Entity implements Type {
     attributes: Attribute[];
     methods: Method[];
     reference baseEntity?: Entity;
 }
 
-public concept Method {
+concept Method {
     public name: identifier;
     reference declaredType : Type;
     body: ExExpression;

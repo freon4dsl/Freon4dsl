@@ -12,6 +12,7 @@ import {
 } from "./PiLanguage";
 import { PiElementReference } from "./PiElementReference";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
+import { CheckerHelper } from "./CheckerHelper";
 
 export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
 
@@ -52,6 +53,14 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             // A has part b: B and B has part a: A and both are mandatory
             // Note: this can be done only after checking for circular inheritance, because we need to look at allParts.
             this.checkInfiniteLoops(language);
+            // Check wether the classifier needs to be public.
+            // Note: this can be done only after checking for circular inheritance, because we need to look at allProperties
+            language.conceptsAndInterfaces().forEach(con => {
+                // if there is a single property that is public, then the concept is public as well
+                if (con.allProperties().some(prop => prop.isPublic)) {
+                    con.isPublic = true;
+                }
+            });
         }
     }
 
@@ -151,23 +160,9 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
     }
 
     private checkLimitedConceptAgain(piLimitedConcept: PiLimitedConcept) {
-        let nameProperty: PiPrimitiveProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
-        // if 'name' property is not present, create it.
-        if ( !nameProperty ) {
-            nameProperty = new PiPrimitiveProperty();
-            nameProperty.name = "name";
-            nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
-            nameProperty.isPart = true;
-            nameProperty.isList = false;
-            nameProperty.isOptional = false;
-            nameProperty.isPublic = false;
-            nameProperty.isStatic = false;
-            nameProperty.owningConcept = piLimitedConcept;
-            piLimitedConcept.primProperties.push(nameProperty);
-        } else {
-            this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
-                `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${this.location(piLimitedConcept)}.`);
-        }
+        // check name property => needs to be done in the second phase, because allProperties() is used
+        CheckerHelper.checkOrCreateNameProperty(piLimitedConcept, this);
+
         this.simpleCheck(piLimitedConcept.allParts().length === 0,
             `A limited concept may not inherit or implement non-primitive parts ${this.location(piLimitedConcept)}.`);
         this.simpleCheck(piLimitedConcept.allReferences().length === 0,
@@ -175,12 +170,24 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
 
         // checking the predefined instances => here, because now we know that the definition of the limited concept is complete
         const names: string[] = [];
+        const baseNames: string[] = [];
+        if (!!piLimitedConcept.base) { // if there is a base limited concept add all names of instances
+            const myBase = piLimitedConcept.base.referred;
+            if (myBase instanceof PiLimitedConcept) {
+                baseNames.push(...myBase.allInstances().map(inst => inst.name));
+            }
+        }
         piLimitedConcept.instances.forEach(inst => {
             if (names.includes(inst.name)) {
                 this.simpleCheck(false,
                     `Instance with name '${inst.name}' already exists ${this.location(inst)}.`);
             } else {
-                names.push(inst.name);
+                if (baseNames.includes((inst.name))) {
+                    this.simpleCheck(false,
+                        `Instance with name '${inst.name}' already exists in the base concept ${this.location(inst)}.`);
+                } else {
+                    names.push(inst.name);
+                }
             }
             this.checkInstance(inst);
         });

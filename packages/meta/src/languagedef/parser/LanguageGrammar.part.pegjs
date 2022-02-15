@@ -49,10 +49,9 @@ unit = isUnit:unitKey name:var
         });
     }
 
-concept = isPublic:publicKey? abs:abstractKey? conceptKey name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
+concept = abs:abstractKey? conceptKey name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
     {
         return create.createConcept({
-            "isPublic": (!!isPublic),
             "isAbstract": (!!abs),
             "name": name,
             "base": base,
@@ -62,10 +61,10 @@ concept = isPublic:publicKey? abs:abstractKey? conceptKey name:var rws base:conc
         });
     }
 
-limited = isPublic:publicKey? limitedKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* instances:instance* curly_end
+limited = abs:abstractKey? limitedKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* instances:instance* curly_end
     {
         return create.createLimitedConcept({
-            "isPublic": (!!isPublic),
+            "isAbstract": (!!abs),
             "name": name,
             "base": base,
             "interfaces": implementedInterfaces,
@@ -75,10 +74,9 @@ limited = isPublic:publicKey? limitedKey ws name:var rws base:conceptbase? ws im
         });
     }
 
-interface = isPublic:publicKey? interfaceKey ws name:var rws base:interfacebase? curly_begin props:property* curly_end
+interface = interfaceKey ws name:var rws base:interfacebase? curly_begin props:property* curly_end
     {
         return create.createInterface({
-            "isPublic": (!!isPublic),
             "name": name,
             "base": base,
             "properties": props,
@@ -86,7 +84,7 @@ interface = isPublic:publicKey? interfaceKey ws name:var rws base:interfacebase?
         });
     }
 
-expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
+expression = abs:abstractKey? binary:binaryKey? expressionKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
                 curly_begin
                     props:property*
                     priority:priority?
@@ -94,7 +92,6 @@ expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKe
     {
         if (!!binary) {
             return create.createBinaryExpressionConcept({
-                "isPublic": (!!isPublic),
                 "isAbstract": (!!abs),
                 "name": name,
                 "base": base,
@@ -105,7 +102,6 @@ expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKe
             });
         } else {
             return create.createExpressionConcept({
-                "isPublic": (!!isPublic),
                 "isAbstract": (!!abs),
                 "name": name,
                 "base": base,

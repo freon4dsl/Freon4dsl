@@ -11,7 +11,7 @@ modelunit DemoUnit {
     public functions: DemoFunction[];
 }
 
-public concept DemoEntity  {
+concept DemoEntity  {
     name: identifier;
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
@@ -38,7 +38,7 @@ expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
 }
 
-public concept DemoFunction {
+concept DemoFunction {
     public name: identifier;
     reference declaredType : DemoAttributeType;
     expression: DemoExpression;

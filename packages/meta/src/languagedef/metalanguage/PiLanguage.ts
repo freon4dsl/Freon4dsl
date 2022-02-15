@@ -105,6 +105,8 @@ export abstract class PiClassifier extends PiLangElement {
 }
 
 export class PiModelDescription extends PiClassifier {
+    isPublic: boolean = true;
+
     unitTypes(): PiUnitDescription[] {
         let result: PiUnitDescription[] = [];
         // all parts of a model are units
@@ -350,6 +352,15 @@ export class PiLimitedConcept extends PiConcept {
 
     findInstance(name: string): PiInstance {
         return this.instances.find(inst => inst.name === name);
+    }
+
+    allInstances(): PiInstance[] {
+        const result: PiInstance[] = [];
+        result.push(...this.instances);
+        if (!!this.base && this.base.referred instanceof PiLimitedConcept) {
+            result.push(...this.base.referred.allInstances());
+        }
+        return result;
     }
 }
 

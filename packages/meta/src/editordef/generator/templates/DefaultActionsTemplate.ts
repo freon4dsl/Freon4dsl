@@ -83,7 +83,7 @@ export class DefaultActionsTemplate {
                                 const firstLiteral: string = item.firstLiteral();
                                 const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
                                 const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.propertyName());
-                                console.log("Looking for [" + optionalPropertyName + "] in [" + ce.concept.referred.name + "]")
+                                // console.log("Looking for [" + optionalPropertyName + "] in [" + ce.concept.referred.name + "]")
                                 const prop: PiProperty =ce.concept.referred.allProperties().find(prop => prop.name === optionalPropertyName);
                                 let rolename: string = "unknown role";
                                 if(prop.isPart) {

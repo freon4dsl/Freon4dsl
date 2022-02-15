@@ -1,4 +1,3 @@
-import { isNullOrUndefined } from "../../utils";
 import {
     PiLanguage,
     PiBinaryExpressionConcept,
@@ -11,9 +10,11 @@ import { MetaLogger } from "../../utils/MetaLogger";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 import { PiLangCheckerPhase2 } from "./PiLangCheckerPhase2";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
+import { CheckerHelper } from "./CheckerHelper";
 
 const LOGGER = new MetaLogger("PiLanguageChecker").mute();
-const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept", "binary", "expression", "concept", "base", "reference", "priority", "implements", "id", "in"];
+const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept",
+    "binary", "expression", "concept", "base", "reference", "priority", "implements", "id", "in"];
 // "in" is reserved word in pegjs
 
 // TODO add check: priority error from parser into checker => only for expression concepts
@@ -56,9 +57,8 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
             error: `There should be a model in your language ${this.location(this.language)}.`,
             whenOk: () => {
                 myModel.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
-                this.simpleCheck( myModel.primProperties.some(prop => prop.name === "name"),
-                    `The model should have a 'name' property ${this.location(myModel)}.`
-                );
+                // check that model has a name property => can be done here, even though allProperties() is used, because models have no base
+                CheckerHelper.checkOrCreateNameProperty(myModel, this);
                 myModel.properties.forEach(part => this.checkConceptProperty(part));
                 this.simpleCheck(myModel.parts().length > 0,
                     `The model should have at least one unit type ${this.location(myModel)}.`);
@@ -71,18 +71,8 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
     private checkUnit(unit: PiUnitDescription) {
         unit.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
         unit.properties.forEach(part => this.checkConceptProperty(part));
-        // check that modelunits have a name property
-        const nameProperty = unit.allPrimProperties().find(p => p.name === "name");
-        this.nestedCheck({
-            check: !!nameProperty,
-            error: `A modelunit should have a 'name' property ${this.location(unit)}.`,
-            whenOk: () => {
-                this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
-                    `A modelunit should have a 'name' property of type 'identifier' ${this.location(unit)}.`);
-                this.simpleCheck( nameProperty.isPublic,
-                    `The name property of a model unit should be public ${this.location(unit)}.`);
-            }
-        });
+        // check that modelunits have a name property => can be done here, even though allProperties() is used, because units have no base
+        CheckerHelper.checkOrCreateNameProperty(unit, this);
     }
 
     private checkConcept(piConcept: PiConcept): void {
@@ -94,19 +84,22 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
 
         if (!!piConcept.base) {
             this.checkClassifierReference(piConcept.base);
-            if (!!piConcept.base.referred) { // error message taken care of by checkClassifierReference
+            const myBase = piConcept.base.referred;
+            if (!!myBase) { // error message taken care of by checkClassifierReference
                 this.nestedCheck({
-                    check: piConcept.base.referred instanceof PiConcept,
+                    check: myBase instanceof PiConcept,
                     error: `Base '${piConcept.base.name}' must be a concept ` +
                         `${this.location(piConcept.base)}.`,
                     whenOk: () => {
+                        this.simpleCheck(!(!(piConcept instanceof PiExpressionConcept) && myBase instanceof PiExpressionConcept),
+                            `A concept may not have an expression as base ${this.location(piConcept.base)}.`);
                         if (piConcept instanceof PiLimitedConcept) {
-                            this.simpleWarning(piConcept.base.referred instanceof PiLimitedConcept, `Base '${piConcept.base.name}' of limited concept is not a limited concept.
-    Only properties that have primitive type may be inherited ` +
-                                `${this.location(piConcept.base)}.`
+                            this.simpleWarning(myBase instanceof PiLimitedConcept,
+                                `Base '${piConcept.base.name}' of limited concept is not a limited concept. ` +
+                                        `Only properties that have primitive type are inherited ${this.location(piConcept.base)}.`
                             );
                         } else {
-                            this.simpleCheck(!(piConcept.base.referred instanceof PiLimitedConcept), `Limited concept '${piConcept.base.name}' cannot be base of an unlimited concept ` +
+                            this.simpleCheck(!(myBase instanceof PiLimitedConcept), `Limited concept '${piConcept.base.name}' cannot be base of an unlimited concept ` +
                                 `${this.location(piConcept.base)}.`
                             );
                         }

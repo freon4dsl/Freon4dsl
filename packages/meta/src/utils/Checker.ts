@@ -62,7 +62,7 @@ export abstract class Checker<DEFINITION> {
         }
     }
 
-    protected location(elem: PiDefinitionElement): string {
+    public location(elem: PiDefinitionElement): string {
         if (!!elem.location) {
             return `[file: ${elem.location.filename}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
         }

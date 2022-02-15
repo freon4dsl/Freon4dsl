@@ -126,6 +126,7 @@ export function createConcept(data: Partial<PiConcept>): PiConcept {
 export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimitedConcept {
     // console.log("createLimitedConcept " + data.name);
     const result = new PiLimitedConcept();
+    result.isAbstract = !!data.isAbstract;
     if (!!data.instances) {
         result.instances = data.instances;
         for (const inst of result.instances) {
@@ -134,19 +135,6 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
         }
     }
     createCommonConceptProps(data, result);
-    // // if 'name' property is not present, create it.
-    // if ( !(!!result.base) && !result.primProperties.some(prop => prop.name === "name") ) {
-    //     const nameProperty = new PiPrimitiveProperty();
-    //     nameProperty.name = "name";
-    //     nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
-    //     nameProperty.isPart = true;
-    //     nameProperty.isList = false;
-    //     nameProperty.isOptional = false;
-    //     nameProperty.isPublic = false;
-    //     nameProperty.isStatic = false;
-    //     nameProperty.owningConcept = result;
-    //     result.primProperties.push(nameProperty);
-    // }
     return result;
 }
 
@@ -176,7 +164,6 @@ export function createInterface(data: Partial<PiInterface>): PiInterface {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    result.isPublic = !!data.isPublic;
     return result;
 }
 
@@ -184,7 +171,6 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
     if (!!data.name) {
         result.name = data.name;
     }
-    result.isPublic = !!data.isPublic;
     if (!!data.base) {
         result.base = data.base;
         result.base.owner = result;
@@ -214,7 +200,6 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
 export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionConcept>): PiBinaryExpressionConcept {
     // console.log("createBinaryExpressionConcept " + data.name);
     const result = new PiBinaryExpressionConcept();
-    result.isPublic = !!data.isPublic;
     result.isAbstract = !!data.isAbstract;
     if ( !!data.priority ) {
         result.priority = data.priority;
@@ -226,7 +211,6 @@ export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionCo
 export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiExpressionConcept {
     // console.log("createExpressionConcept " + data.name);
     const result = new PiExpressionConcept();
-    result.isPublic = !!data.isPublic;
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;

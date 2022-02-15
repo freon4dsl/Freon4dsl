@@ -30,7 +30,7 @@ abstract concept Nothing {
     x: string;
 }
 
-public concept DemoEntity base Nothing implements Type {
+concept DemoEntity base Nothing implements Type {
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
@@ -49,7 +49,7 @@ expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
 }
 
-public concept DemoFunction {
+concept DemoFunction {
     public name: identifier;
     reference declaredType : BaseType;
     expression: DemoExpression;
