@@ -1,0 +1,24 @@
+language test7a
+
+model test {
+    public name: identifier;
+    unit: testUnit;
+}
+
+modelunit testUnit {
+    public name: identifier;
+}
+limited KK base LL {
+    mmInstance1;
+    llInstance3;
+    kkInstance1;
+    kkInstance1;
+}
+
+limited LL base MM {
+    llInstance1; llInstance2; llInstance3;
+}
+
+limited MM {
+    mmInstance1; mmInstance2; mmInstance3;
+}

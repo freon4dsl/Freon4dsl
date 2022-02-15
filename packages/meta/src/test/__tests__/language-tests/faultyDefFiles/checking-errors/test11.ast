@@ -1,4 +1,4 @@
-language test10
+language test11
 
 model test {
     public name: identifier;

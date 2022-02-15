@@ -499,7 +499,7 @@ export class WriterTemplate {
     private makeLine(line: PiEditProjectionLine, inOptionalGroup: boolean): string {
         let result: string = ``;
         if (line.isEmpty()) {
-            result = `this.output[this.currentLine] += "\n";`
+            result = `this.output[this.currentLine] += "\"\n\"";`
         } else {
             line.items.forEach(item => {
                 result += this.makeItem(item, line.indent, inOptionalGroup, line.isOptional());

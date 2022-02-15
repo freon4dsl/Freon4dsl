@@ -1,13 +1,13 @@
 language ExpressionLibrary
 
-concept BooleanLiteral base ExpressionBase {
+expression BooleanLiteral base ExpressionBase {
     value: boolean;
 }
 
-concept NumberLiteral base ExpressionBase {
+expression NumberLiteral base ExpressionBase {
     value: number;
 }
 
-concept StringLiteral base ExpressionBase {
+expression StringLiteral base ExpressionBase {
     value: string;
 }

@@ -12,6 +12,7 @@ import {
 } from "./PiLanguage";
 import { PiElementReference } from "./PiElementReference";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
+import { CheckerHelper } from "./CheckerHelper";
 
 export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
 
@@ -53,6 +54,14 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             // A has part b: B and B has part a: A and both are mandatory
             // Note: this can be done only after checking for circular inheritance, because we need to look at allParts.
             this.checkInfiniteLoops(language);
+            // Check wether the classifier needs to be public.
+            // Note: this can be done only after checking for circular inheritance, because we need to look at allProperties
+            language.conceptsAndInterfaces().forEach(con => {
+                // if there is a single property that is public, then the concept is public as well
+                if (con.allProperties().some(prop => prop.isPublic)) {
+                    con.isPublic = true;
+                }
+            });
         }
     }
 
@@ -291,12 +300,24 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
 
         // checking the predefined instances => here, because now we know that the definition of the limited concept is complete
         const names: string[] = [];
+        const baseNames: string[] = [];
+        if (!!piLimitedConcept.base) { // if there is a base limited concept add all names of instances
+            const myBase = piLimitedConcept.base.referred;
+            if (myBase instanceof PiLimitedConcept) {
+                baseNames.push(...myBase.allInstances().map(inst => inst.name));
+            }
+        }
         piLimitedConcept.instances.forEach(inst => {
             if (names.includes(inst.name)) {
                 this.simpleCheck(false,
                     `Instance with name '${inst.name}' already exists ${Checker.location(inst)}.`);
             } else {
-                names.push(inst.name);
+                if (baseNames.includes((inst.name))) {
+                    this.simpleCheck(false,
+                        `Instance with name '${inst.name}' already exists in the base concept ${Checker.location(inst)}.`);
+                } else {
+                    names.push(inst.name);
+                }
             }
             this.checkInstance(inst);
         });

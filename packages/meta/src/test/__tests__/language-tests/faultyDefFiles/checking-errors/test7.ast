@@ -17,8 +17,8 @@ limited RRRR {
 limited AA base RRRR {
     prop1: string;
     prop2: boolean;
-    instance1 = { s: "text" }        // property 's' does not exist on AA
-    instance2 = { simple: "text" }   // "text" is not of type 'number'
+    instance8 = { s: "text" }        // property 's' does not exist on AA
+    instance9 = { simple: "text" }   // "text" is not of type 'number'
     instance3 = { prop1: "10" }      // is correct: "10" is of type 'string'
     instance4 = { prop2: "false" }   // is correct: "false" is of type 'boolean'
     instance5 = { prop2: "10" }      // "10" is not of type 'boolean'
@@ -27,4 +27,8 @@ limited AA base RRRR {
 
 concept NameNotStringType {
     public name: boolean;
+}
+
+abstract limited BB {
+    bbInstance1; bbInstance2;
 }

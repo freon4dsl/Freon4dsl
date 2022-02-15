@@ -6,9 +6,7 @@ import {
 } from "../../../languagedef/metalanguage";
 import { Roles } from "../../../utils";
 import {
-    PiEditClassifierProjection,
     PiEditProjection,
-    PiEditPropertyProjection,
     PiEditUnit,
     PiOptionalPropertyProjection
 } from "../../metalanguage";

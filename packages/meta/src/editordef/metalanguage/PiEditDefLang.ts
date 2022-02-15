@@ -51,9 +51,9 @@ export class PiEditUnit extends PiDefinitionElement {
         result.sort ( (a, b) => {
             return b.precedence - a.precedence;
         });
-        result.forEach(g => {
-            console.log(`group ${g.name} has precendence ${g.precedence}`);
-        })
+        // result.forEach(g => {
+        //     console.log(`group ${g.name} has precendence ${g.precedence}`);
+        // })
         return result;
     }
 
