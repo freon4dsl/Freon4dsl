@@ -85,6 +85,7 @@ export class ProjectionTemplate {
                 rootProjection: ${Names.PiCompositeProjection};
                 showBrackets: boolean = false;
                 name: string = "${projectionGroup.name}";
+                isEnabled: boolean = true;
 
                 constructor() {
                     makeObservable(this, {

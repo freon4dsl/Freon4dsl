@@ -8,6 +8,7 @@ export class PiCompositeProjection implements PiProjection {
     private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
     private _rootProjection: PiProjection | null = null;
     name: string = "";
+    isEnabled: boolean = true;
 
     set rootProjection(p: PiCompositeProjection) {
         this._rootProjection = p;
@@ -20,17 +21,19 @@ export class PiCompositeProjection implements PiProjection {
         }
         makeObservable<PiCompositeProjection, "projections">(this, {
             projections: observable,
-            projectionToBack: action,
-            projectiontoFront: action,
+            disableProjection: action,
+            enableProjection: action,
             addProjection: action
         });
     }
 
     getBox(element: PiElement): Box {
         for (let p of this.projections.toArray()) {
-            const result: Box = p.element.getBox(element);
-            if (result !== null) {
-                return result;
+            if (p.element.isEnabled) {
+                const result: Box = p.element.getBox(element);
+                if (result !== null) {
+                    return result;
+                }
             }
         }
         // return a default box if nothing has been  found.
@@ -51,9 +54,11 @@ export class PiCompositeProjection implements PiProjection {
 
     getTableDefinition(conceptName: string): PiTableDefinition {
         for (let p of this.projections.toArray()) {
-            const result = p.element.getTableDefinition(conceptName);
-            if (result !== null) {
-                return result;
+            if (p.element.isEnabled) {
+                const result = p.element.getTableDefinition(conceptName);
+                if (result !== null) {
+                    return result;
+                }
             }
         }
         // return a default box if nothing has been found.
@@ -70,14 +75,16 @@ export class PiCompositeProjection implements PiProjection {
         p.rootProjection = this; //(!!this.rootProjection ? this : this.rootProjection);
     }
 
-    projectiontoFront(name: string) {
+    enableProjection(name: string) {
         BoxFactory.clearCaches();
-        this.projections.toFront(name);
+        console.log("Composite: enabling Projection " + name);
+        this.projections.getByName(name).element.isEnabled = true;
     }
 
-    projectionToBack(name: string) {
+    disableProjection(name: string) {
         BoxFactory.clearCaches();
-        this.projections.toBack(name);
+        console.log("Composite: disabling Projection " + name);
+        this.projections.getByName(name).element.isEnabled = false;
     }
 
     projectionNames(): string[] {

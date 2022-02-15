@@ -5,6 +5,7 @@
       {
          "$typename": "Entity",
          "name": "ent1",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
@@ -43,10 +44,17 @@
                   },
                   "appliedfeature": null
                },
-               "parameters": [],
+               "parameters": [
+                  {
+                     "$typename": "Parameter",
+                     "name": "xxx",
+                     "declaredType": "String"
+                  }
+               ],
                "declaredType": "Integer"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": "SomeOther"
       }
    ],
