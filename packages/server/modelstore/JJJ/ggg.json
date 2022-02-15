@@ -5,6 +5,13 @@
       {
          "$typename": "Entity",
          "name": "belastingplichtige",
+         "construc": {
+            "$typename": "Method",
+            "name": "CONSTRUCT",
+            "body": null,
+            "parameters": [],
+            "declaredType": null
+         },
          "attributes": [
             {
                "$typename": "Attribute",
@@ -69,6 +76,7 @@
       {
          "$typename": "Entity",
          "name": "entityNoAttrs",
+         "construc": null,
          "attributes": [],
          "methods": [
             {
@@ -112,6 +120,7 @@
       {
          "$typename": "Entity",
          "name": "entityNoMeths",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",

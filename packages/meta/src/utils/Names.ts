@@ -1,8 +1,9 @@
 import {
-    PiClassifier, PiConcept, PiInterface,
+    PiClassifier, PiConcept, PiInstance, PiInterface,
     PiLanguage, PiPrimitiveProperty
 } from "../languagedef/metalanguage";
 import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
+import { PiEditProjectionGroup } from "../editordef/metalanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -41,6 +42,7 @@ export class Names {
     public static PiEditor:string = "PiEditor";
     // tslint:disable-next-line:variable-name
     public static PiProjection:string = "PiProjection";
+    public static PiCompositeProjection:string = "PiCompositeProjection";
     // tslint:disable-next-line:variable-name
     public static PiModelInitialization:string = "PiModelInitialization";
     // tslint:disable-next-line:variable-name
@@ -57,6 +59,7 @@ export class Names {
     public static styles:string = "projectitStyles";
     public static nameForSelf:string = "self";
     public static initializeLanguage:string = "initializeLanguage";
+    public static defaultProjectionName: string = "default";
     // reserved role names for expressions, use with care.
     // Should remain identical to the definitions in @projectit/core !!
     public static PI_BINARY_EXPRESSION_LEFT:string = "PiBinaryExpression-left";
@@ -104,8 +107,12 @@ export class Names {
         return "Custom" + this.validator(language);
     }
 
-    public static projectionDefault(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "ProjectionDefault";
+    // public static projectionDefault(language: PiLanguage): string {
+    //     return this.startWithUpperCase(language?.name) + "ProjectionDefault";
+    // }
+
+    public static projection(group: PiEditProjectionGroup): string {
+        return "Projection" + this.startWithUpperCase(group.name);
     }
 
     public static customProjection(language: PiLanguage): string {
@@ -228,8 +235,8 @@ export class Names {
         return "get" + Names.classifier(c) + "Box";
     }
 
-    public static tableCellFunction(c: PiClassifier): string {
-        return "get" + Names.classifier(c) + "Cells";
+    public static tabelDefinitionFunction(c: PiClassifier): string {
+        return "get" + Names.classifier(c) + "TableDefinition";
     }
 
     public static writer(language: PiLanguage): string {
@@ -274,5 +281,9 @@ export class Names {
 
     public static binaryProjectionFunction(): string {
         return "_getBinaryExpressionBox";
+    }
+
+    public static instance(instance: PiInstance): string {
+        return instance.name;
     }
 }

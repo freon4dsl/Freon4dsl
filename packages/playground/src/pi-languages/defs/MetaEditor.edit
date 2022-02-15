@@ -1,79 +1,18 @@
-editor First for language PiLanguage  // from: projectit/meta/.../editordef
+editor First
 
 PiEditorDef {
-    @projection
-    [editor ${self.name} for language ${self.languageName}
-    ${self.conceptEditors @vertical}
+    [
+    editor ${name} for language ${languageName}
+    ${conceptEditors vertical}
     ]
 }
 
 PiEditConcept {
-    @projection
-    [${self.concept} {
-    ${self.projection}
-    [?@trigger ${self.trigger}]
-    [?@symbol ${self.operator}]
+    [
+    ${concept} {
+    ${projection}
+    [?trigger ${trigger}]
+    [?symbol ${operator}]
     ]
 }
 
-//PiEditParsedProjectionIndent {
-//    @projection
-//    [${self.indent} ${self.amount}]
-//}
-/*
-PiEditProjectionText implements PiEditProjectionItem {
-    text: string;
-    style: string;
-}
-
-PiEditPropertyProjection implements PiEditProjectionItem {
-    propertyName: string;
-    listJoin: ListJoin;
-    keyword?: string;
-    expression: PiLangExp;
-}
-
-PiEditSubProjection implements PiEditProjectionItem {
-    optional: boolean;
-    items: PiEditProjectionItem[];
-}
-
-PiEditInstanceProjection implements PiEditProjectionItem {
-    keyword: string;
-    expression: PiInstanceExp;
-}
-
-interface PiEditProjectionItem {
-}
-
-PiEditProjectionLine {
-    items: PiEditProjectionItem[];
-    indent: number;
-}
-
-PiEditProjection {
-    name: identifier;
-    conceptEditor?: PiEditConcept;
-    lines: PiEditProjectionLine[];
-}
-
-ListJoin {
-    direction: PiEditProjectionDirection;
-    joinType?: ListJoinType;
-    joinText?: string;
-}
-
-limited PiEditProjectionDirection {
-    name: identifier;
-    NONE = {name:"NONE"}
-    Horizontal = {name:"Horizontal"}
-    Vertical = {name:"Vertical"}
-}
-
-limited ListJoinType {
-    name: identifier;
-    NONE = {name:"NONE"}
-    Terminator = {name:"Terminator"}
-    Separator = {name:"Separator"}
-}
-*/

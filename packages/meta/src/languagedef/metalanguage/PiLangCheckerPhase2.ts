@@ -1,4 +1,4 @@
-import { isNullOrUndefined, LangUtil, Names } from "../../utils";
+import { Checker, isNullOrUndefined, LangUtil, Names } from "../../utils";
 import {
     PiClassifier,
     PiConcept,
@@ -8,7 +8,7 @@ import {
     PiLimitedConcept, PiPrimitiveProperty,
     PiPrimitiveType,
     PiProperty,
-    PiPropertyInstance, PiUnitDescription
+    PiInstanceProperty, PiUnitDescription
 } from "./PiLanguage";
 import { PiElementReference } from "./PiElementReference";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
@@ -30,8 +30,9 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             this.checkUniqueFileExtension(extensions, unit);
         });
         language.concepts.forEach(con => {
-            if (this.checkClassifier(names, con, true)) {
-                // we cannot use a simple assignment, because checking the next concept would set
+             if (this.checkClassifier(names, con)) {
+                // we cannot use a simple assignment, like "foundSomeCircularity = this.checkClassifier(names, con, false)"
+                // because checking the next concept would set
                 // the value of 'foundSomeCircularity' back to false;
                 foundSomeCircularity = true;
             } else {
@@ -44,7 +45,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             }
         });
         language.interfaces.forEach(intf => {
-            if (this.checkClassifier(names, intf, false)) {
+            if (this.checkClassifier(names, intf)) {
                 foundSomeCircularity = true;
             }
         });
@@ -68,7 +69,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         // check unique names, disregarding upper/lower case of first character
         if (names.includes(classifier.name)) {
             this.simpleCheck(false,
-                `Concept or interface with name '${classifier.name}' already exists ${this.location(classifier)}.`);
+                `Concept or interface with name '${classifier.name}' already exists ${Checker.location(classifier)}.`);
         } else {
             names.push(Names.startWithUpperCase(classifier.name));
             names.push(classifier.name);
@@ -101,7 +102,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             }
             if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length == 0) { // could not set default
                 this.simpleCheck(false,
-                    `Could not create a file-extension for '${unit.name}', please provide one ${this.location(unit)}.`);
+                    `Could not create a file-extension for '${unit.name}', please provide one ${Checker.location(unit)}.`);
             } else {
                 extensions.push(unit.fileExtension);
             }
@@ -109,7 +110,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             // check uniqueness
             if (extensions.includes(unit.fileExtension)) {
                 this.simpleCheck(false,
-                    `FileExtension '${unit.fileExtension}' already exists ${this.location(unit)}.`);
+                    `FileExtension '${unit.fileExtension}' already exists ${Checker.location(unit)}.`);
             } else {
                 extensions.push(unit.fileExtension);
             }
@@ -120,53 +121,182 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
      *
      * @param names: all names of classifier that are encountered so far
      * @param classifier: the classifier to check
-     * @param strict: indicates whether properties with the same name and type are allowed
      * @private
      */
-    private checkClassifier(names: string[], classifier: PiClassifier, strict: boolean): boolean {
+    private checkClassifier(names: string[], classifier: PiClassifier): boolean {
         this.checkUniqueNameOfClassifier(names, classifier);
         // check circularity
         const circularNames: string[] = [];
         const isCircular = this.checkCircularInheritance(circularNames, classifier);
         // check that all properties have unique names
-        // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
+        // Note: this can be done only after checking for circular inheritance, because we need to look at all properties,
+        // including those of super classifiers and implemented interfaces.
         if (!isCircular) {
-            this.checkPropertyUniqueNames(classifier, strict);
+            this.checkPropertyInheritance(classifier);
         }
         return isCircular;
     }
 
-    private checkPropertyUniqueNames(classifier: PiClassifier, strict: boolean) {
-        const propnames: string[] = [];
+    private checkPropertyInheritance(classifier: PiClassifier) {
+        // Note that in this check method we cannot use the classifier methods 'implementedProperties', 'allProperties', etc.
+        // Those methods depend on the fact that everything is correct - which should be checked here.
+        // Five aspects to be tested, each numbered.
+        const propsToCheck: PiProperty[] = [];
+        propsToCheck.push(...classifier.primProperties);
+        propsToCheck.push(...classifier.properties);
         const propsDone: PiProperty[] = [];
-        classifier.allProperties().forEach(prop => {
-            if (propnames.includes(prop.name)) {
-                if (strict) {
-                    const previous = propsDone.find(prevProp => prevProp.name === prop.name);
-                    this.simpleCheck(false,
-                        `Property with name '${prop.name}' already exists in ${classifier.name} ${this.location(previous)} and ${this.location(prop)}.`);
-                } else {
-                    // in non-strict mode properties with the same name are allowed, but only if they have the same type
-                    // find the first property with this name
-                    const otherProp = propsDone.find(p => p.name === prop.name);
-                    this.simpleCheck(LangUtil.compareTypes(prop, otherProp),
-                        `Property with name '${prop.name}' but different type already exists in ${classifier.name} ${this.location(prop)} and ${this.location(otherProp)}.`);
-                }
-            } else {
-                propnames.push(prop.name);
-                propsDone.push(prop);
+        propsToCheck.forEach(prop => {
+            // 1. all props defined in this classifier against themselves:
+            // no prop with same name allowed, not even if they have the same type
+            const inSameCls = propsDone.find(prevProp => prevProp.name === prop.name);
+            if (!!inSameCls) {
+                this.simpleCheck(false,
+                    `Property '${prop.name}' already exists in ${classifier.name} ${Checker.location(prop)} and ${Checker.location(inSameCls)}.`);
+            }
+            propsDone.push(prop);
+            // 2. all props defined in this classifier should be different from the props of its super concepts/interfaces
+            //      except when their types conform, then props of the sub should be marked 'implementedInBase' - but only if
+            //      base is a concept
+            if (classifier instanceof PiConcept && !!classifier.base) {
+                this.checkPropsOfBase(classifier.base.referred, prop);
+            } else if (classifier instanceof PiInterface) {
+                classifier.base.forEach(ref => {
+                    const inSuper = this.searchLocalProps(ref.referred, prop);
+                    if (!!inSuper) {
+                        this.simpleCheck(LangUtil.compareTypes(prop, inSuper),
+                            `Property '${prop.name}' with non conforming type already exists in base interface '${ref.name}' ${Checker.location(prop)} and ${Checker.location(inSuper)}.`,);
+                    }
+                });
+            }
+            // 3. all props defined in this concept against props from implemented interfaces: name and type should conform
+            if (classifier instanceof PiConcept) {
+                classifier.allInterfaces().forEach(intf => {
+                    this.checkPropAgainstInterface(intf, prop);
+                });
             }
         });
+        // 4. all props defined in implemented interfaces, that do not have a counterpart in the concept or its supers,
+        //      should not have a name equal to any other, except when their types conform.
+        if (classifier instanceof PiConcept) {
+            const propsDone: PiProperty[] = [];
+            classifier.allInterfaces().forEach(intf => {
+                intf.allProperties().forEach(toBeImplemented => {
+                    const implementedProp = this.findImplementedProperty(toBeImplemented, classifier, false);
+                    if (!implementedProp) { // there is NO counter part in either this concept of its base
+                        const inAnotherInterface = propsDone.find(prevProp => prevProp.name === toBeImplemented.name);
+                        if (!!inAnotherInterface) { // there is a prop with the same name in another interface
+                            // we must check type conformance both ways!
+                            // when types conform: add a new prop with the most specific type to classifier
+                            let virtualProp: PiProperty = null;
+                            if (LangUtil.compareTypes(toBeImplemented, inAnotherInterface)) {
+                                virtualProp = this.makeCopyOfProp(toBeImplemented, classifier);
+                            } else if (LangUtil.compareTypes(inAnotherInterface, toBeImplemented)) {
+                                virtualProp = this.makeCopyOfProp(inAnotherInterface, classifier);
+                            }
+                            // if virtualProp exists, the types did conform to eachother
+                            this.simpleCheck(!!virtualProp,
+                                `Concept '${classifier.name}': property '${toBeImplemented.name}' in '${intf.name}' does not conform to property '${toBeImplemented.name}' in '${inAnotherInterface.owningClassifier.name}' ${Checker.location(classifier)}.`);
+                        }
+                    }
+                    propsDone.push(toBeImplemented);
+                });
+            });
+        }
+        // 5. all properties of super concepts, that are not overwritten in this concept, must conform props of all interfaces
+        if (classifier instanceof PiConcept) {
+            const myBase = classifier.base?.referred;
+            if (!!myBase) {
+                const basePropsToCheck: PiProperty[] = [];
+                basePropsToCheck.push(...myBase.primProperties);
+                basePropsToCheck.push(...myBase.properties);
+                classifier.interfaces.forEach(intf => {
+                    basePropsToCheck.forEach(baseProp => {
+                        if (!this.searchLocalProps(classifier, baseProp)) {
+                            this.checkPropAgainstInterface(intf.referred, baseProp);
+                        }
+                    });
+                });
+            }
+        }
+    }
+
+    private checkPropsOfBase(myBase: PiConcept, prop: PiProperty) {
+        const inSuper = this.searchLocalProps(myBase, prop);
+        if (!!inSuper) {
+            this.nestedCheck({
+                check: LangUtil.compareTypes(prop, inSuper),
+                error: `Property '${prop.name}' with non conforming type already exists in base concept '${myBase.name}' ${Checker.location(prop)} and ${Checker.location(inSuper)}.`,
+                whenOk: () => {
+                    // set the 'implementedInBase' flag
+                    prop.implementedInBase = true;
+                }
+            });
+        } else if (!!myBase.base) {
+            // check base of base
+            this.checkPropsOfBase(myBase.base.referred, prop);
+        }
+    }
+
+    private searchLocalProps(myBase: PiClassifier, prop: PiProperty) {
+        let inSuper: PiProperty = myBase.primProperties.find(prevProp => prevProp.name === prop.name);
+        if (!inSuper) {
+            inSuper = myBase.properties.find(prevProp => prevProp.name === prop.name);
+        }
+        return inSuper;
+    }
+
+    private checkPropAgainstInterface(intf: PiInterface, prop: PiProperty) {
+        let inIntf: PiProperty = intf.primProperties.find(prevProp => prevProp.name === prop.name);
+        if (!inIntf) {
+            inIntf = intf.properties.find(prevProp => prevProp.name === prop.name);
+        }
+        if (!!inIntf) {
+            this.simpleCheck(LangUtil.compareTypes(prop, inIntf),
+                `(Inherited) property '${prop.name}' with non conforming type exists in implemented interface '${intf.name}' ${Checker.location(prop)} and ${Checker.location(inIntf)}.`);
+        }
+    }
+
+    private findImplementedProperty(prop: PiProperty, concept: PiConcept, includeInterfaces: boolean) {
+        const propsToCheck: PiProperty[] = [];
+        propsToCheck.push(...concept.primProperties);
+        propsToCheck.push(...concept.properties);
+        if (includeInterfaces && concept.interfaces.length > 0) {
+            concept.interfaces.forEach(intf => {
+                propsToCheck.push(...intf.referred.allPrimProperties());
+                propsToCheck.push(...intf.referred.allProperties());
+            });
+        }
+        let implementedProp = propsToCheck.find(prevProp => prevProp.name === prop.name);
+        // if not implemented by the concept itself, try its base - recursive -
+        const myBase = concept.base?.referred;
+        if (!implementedProp && !!myBase) {
+            implementedProp = this.findImplementedProperty(prop, myBase, true);
+        }
+        return implementedProp;
     }
 
     private checkLimitedConceptAgain(piLimitedConcept: PiLimitedConcept) {
-        // check name property => needs to be done in the second phase, because allProperties() is used
-        CheckerHelper.checkOrCreateNameProperty(piLimitedConcept, this);
-
+        let nameProperty: PiPrimitiveProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
+        // if 'name' property is not present, create it.
+        if ( !nameProperty ) {
+            nameProperty = new PiPrimitiveProperty();
+            nameProperty.name = "name";
+            nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
+            nameProperty.isPart = true;
+            nameProperty.isList = false;
+            nameProperty.isOptional = false;
+            nameProperty.isPublic = false;
+            nameProperty.isStatic = false;
+            nameProperty.owningClassifier = piLimitedConcept;
+            piLimitedConcept.primProperties.push(nameProperty);
+        } else {
+            this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
+                `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${this.location(piLimitedConcept)}.`);
+        }
         this.simpleCheck(piLimitedConcept.allParts().length === 0,
-            `A limited concept may not inherit or implement non-primitive parts ${this.location(piLimitedConcept)}.`);
+            `A limited concept may not inherit or implement non-primitive parts ${Checker.location(piLimitedConcept)}.`);
         this.simpleCheck(piLimitedConcept.allReferences().length === 0,
-            `A limited concept may not inherit or implement references ${this.location(piLimitedConcept)}.`);
+            `A limited concept may not inherit or implement references ${Checker.location(piLimitedConcept)}.`);
 
         // checking the predefined instances => here, because now we know that the definition of the limited concept is complete
         const names: string[] = [];
@@ -180,7 +310,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         piLimitedConcept.instances.forEach(inst => {
             if (names.includes(inst.name)) {
                 this.simpleCheck(false,
-                    `Instance with name '${inst.name}' already exists ${this.location(inst)}.`);
+                    `Instance with name '${inst.name}' already exists ${Checker.location(inst)}.`);
             } else {
                 if (baseNames.includes((inst.name))) {
                     this.simpleCheck(false,
@@ -198,7 +328,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             // error, already seen this name
             const text: string = circularNames.map(name => name ).join(", ");
             this.simpleCheck(false,
-                `Concept or interface '${con.name}' is part of a forbidden circular inheritance tree (${text}) ${this.location(con)}.`);
+                `Concept or interface '${con.name}' is part of a forbidden circular inheritance tree (${text}) ${Checker.location(con)}.`);
             return true;
         } else {
             // not (yet) found a circularity, check 'base'
@@ -241,7 +371,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
                             if (!bPart.isOptional && !bPart.isList) {
                                 const bPartType = bPart.type.referred;
                                 this.simpleCheck(bPartType !== classifier,
-                                    `Language contains an infinite loop: mandatory part '${aPart.name}' has mandatory property '${bPart.name}' of type ${bPart.type.name} ${this.location(aPart)}.`);
+                                    `Language contains an infinite loop: mandatory part '${aPart.name}' has mandatory property '${bPart.name}' of type ${bPart.type.name} ${Checker.location(aPart)}.`);
                             }
                         });
                     }
@@ -254,49 +384,42 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         this.checkClassifierReference(piInstance.concept);
         this.nestedCheck({
             check: piInstance.concept.referred !== null,
-            error: `Predefined instance '${piInstance.name}' should belong to a concept ${this.location(piInstance)}.`,
+            error: `Predefined instance '${piInstance.name}' should belong to a concept ${Checker.location(piInstance)}.`,
             whenOk: () => {
-                let hasValueForNameProperty: boolean = false;
                 piInstance.props.forEach(p => {
                     this.checkInstanceProperty(p, piInstance.concept.referred);
-                    if (p.name === "name" && (p.value.toString().length !== 0) ) {
-                        hasValueForNameProperty = true;
-                    }
                 });
-                // the following check is not really needed, because this situation is taken care of by the 'createInstance' method in 'LanguageCreators.ts'
-                this.simpleCheck(hasValueForNameProperty,
-                    `Predefined instance '${piInstance.name}' should provide value for property 'name' ${this.location(piInstance)}.`);
             }
         });
     }
 
-    private checkInstanceProperty(piPropertyInstance: PiPropertyInstance, enclosingConcept: PiConcept) {
+    private checkInstanceProperty(piPropertyInstance: PiInstanceProperty, enclosingConcept: PiConcept) {
         const myInstance = piPropertyInstance.owningInstance.referred;
         this.nestedCheck(
             {
                 check: !!myInstance,
-                error: `Property '${piPropertyInstance.name}' should belong to a predefined instance ${this.location(piPropertyInstance)}.`,
+                error: `Property '${piPropertyInstance.name}' should belong to a predefined instance ${Checker.location(piPropertyInstance)}.`,
                 whenOk: () => {
                     // find the property to which this piPropertyInstance refers
                     const myProp = myInstance.concept.referred.allPrimProperties().find(p => p.name === piPropertyInstance.name);
                     this.nestedCheck({
                         check: !!myProp,
-                        error: `Property '${piPropertyInstance.name}' does not exist on concept ${enclosingConcept.name} ${this.location(piPropertyInstance)}.`,
+                        error: `Property '${piPropertyInstance.name}' does not exist on concept ${enclosingConcept.name} ${Checker.location(piPropertyInstance)}.`,
                         whenOk: () => {
                             this.nestedCheck({
                                 check: myProp instanceof PiPrimitiveProperty,
-                                error: `Predefined property '${piPropertyInstance.name}' should have a primitive type ${this.location(piPropertyInstance)}.`,
+                                error: `Predefined property '${piPropertyInstance.name}' should have a primitive type ${Checker.location(piPropertyInstance)}.`,
                                 whenOk: () => {
                                     piPropertyInstance.property = PiElementReference.create<PiProperty>(myProp, "PiProperty");
                                     let myPropType: PiPrimitiveType = myProp.type.referred as PiPrimitiveType;
                                     if (!myProp.isList) {
                                         this.simpleCheck(this.checkValueToType(piPropertyInstance.value, myPropType),
-                                            `Type of '${piPropertyInstance.value}' (${typeof piPropertyInstance.value}) does not fit type (${myPropType.name}) of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
+                                            `Type of '${piPropertyInstance.value}' (${typeof piPropertyInstance.value}) does not fit type (${myPropType.name}) of property '${piPropertyInstance.name}' ${Checker.location(piPropertyInstance)}.`);
                                     } else {
                                         if (!!piPropertyInstance.valueList) {
                                             piPropertyInstance.valueList.forEach(value => {
                                                 this.simpleCheck(this.checkValueToType(value, myPropType),
-                                                    `Type of '${value}' (${typeof value}) does not fit type (${myPropType.name}) of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
+                                                    `Type of '${value}' (${typeof value}) does not fit type (${myPropType.name}) of property '${piPropertyInstance.name}' ${Checker.location(piPropertyInstance)}.`);
                                             });
                                         }
                                     }
@@ -306,5 +429,26 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
                     });
                 }
             });
+    }
+
+    private makeCopyOfProp(property: PiProperty, classifier: PiConcept): PiProperty {
+        let copy: PiProperty = new PiProperty();
+        if (property instanceof PiPrimitiveProperty) {
+            copy = new PiPrimitiveProperty();
+        }
+        copy.name = property.name;
+        copy.isPublic = property.isPublic;
+        copy.isOptional = property.isOptional;
+        copy.isList = property.isList;
+        copy.isPart = property.isPart;
+        copy.implementedInBase = false; // TODO check this: maybe false because the original property might come from an interface
+        copy.type = PiElementReference.create<PiClassifier>(property.type.referred, "PiClassifier");
+        copy.owningClassifier = classifier;
+        if (property instanceof PiPrimitiveProperty) {
+            classifier.primProperties.push(copy as PiPrimitiveProperty);
+        } else {
+            classifier.properties.push(copy);
+        }
+        return copy;
     }
 }

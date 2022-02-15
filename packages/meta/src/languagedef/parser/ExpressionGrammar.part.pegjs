@@ -7,7 +7,10 @@
 
 // the following rules should be part of a parser that wants to use PiLangExpressions.ts
 
-conceptRef = name:var { return expCreate.createClassifierReference( { "name": name, "location":location()}); }
+classifierReference = referredName:var
+{
+    return expCreate.createClassifierReference({"name": referredName, "location": location()})
+}
 
 langExpression = functionExpression:functionExpression  { return functionExpression; }
                / instanceExpression:instanceExpression  { return instanceExpression; }

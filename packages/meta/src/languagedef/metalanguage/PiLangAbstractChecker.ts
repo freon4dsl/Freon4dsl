@@ -35,13 +35,13 @@ export abstract class PiLangAbstractChecker extends Checker<PiLanguage> {
         this.nestedCheck(
             {
                 check: reference.name !== undefined,
-                error: `Concept or interface reference should have a name ${this.location(reference)}.`,
+                error: `Concept or interface reference should have a name ${Checker.location(reference)}.`,
                 whenOk: () => {
 
                     this.nestedCheck(
                         {
                             check: (!!reference.referred),
-                            error: `Reference to ${reference.name} cannot be resolved ${this.location(reference)}.`
+                            error: `Reference to ${reference.name} cannot be resolved ${Checker.location(reference)}.`
                         });
                 }
             });

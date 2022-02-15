@@ -19,28 +19,28 @@ describe("Pi Language Parser", () => {
         }
     });
 
-    // test( " on .scope file", () => {
-    //     try {
-    //         const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.scope");
-    //         const unit1: PiScoperDef = reader.readFromString(input, "PiScoperDef") as PiScoperDef;
-    //         console.log(writer.writeToString(unit1, 0, false));
-    //         // expect(unit1).toMatchSnapshot();
-    //     } catch (e) {
-    //         console.log(e.stack);
-    //         // expect(e).toBeNaN();
-    //     }
-    // });
-    //
-    // test( " on .valid file", () => {
-    //     try {
-    //         const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.valid");
-    //         const unit1: PiValidatorDef = reader.readFromString(input, "PiValidatorDef") as PiValidatorDef;
-    //         console.log(writer.writeToString(unit1, 0, false));
-    //         // expect(unit1).toMatchSnapshot();
-    //     } catch (e) {
-    //         console.log(e.stack);
-    //         // expect(e).toBeNaN();
-    //     }
-    // });
+    test( " on .scope file", () => {
+        try {
+            const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.scope");
+            const unit1: PiScoperDef = reader.readFromString(input, "PiScoperDef") as PiScoperDef;
+            console.log(writer.writeToString(unit1, 0, false));
+            // expect(unit1).toMatchSnapshot();
+        } catch (e) {
+            console.log(e.stack);
+            // expect(e).toBeNaN();
+        }
+    });
+
+    test( " on .valid file", () => {
+        try {
+            const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.valid");
+            const unit1: PiValidatorDef = reader.readFromString(input, "PiValidatorDef") as PiValidatorDef;
+            console.log(writer.writeToString(unit1, 0, false));
+            // expect(unit1).toMatchSnapshot();
+        } catch (e) {
+            console.log(e.stack);
+            // expect(e).toBeNaN();
+        }
+    });
 
 });

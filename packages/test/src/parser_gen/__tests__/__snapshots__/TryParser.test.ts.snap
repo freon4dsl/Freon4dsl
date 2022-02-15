@@ -1,39 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Test the parser : read two units and create a model 1`] = `
-"unit eenNaam { 
-main: entity1 base anotherEntity, 
-                   andAnother, 
+"unit eenNaam {
+main: entity1 base anotherEntity,
+                   andAnother,
                    andYetAnother
-      start 
-          attr1 : type1  = \\"myString\\", 
-          attr2 : type2  = \\"TEKST\\"
-      end 
-unit wide functions: 
-    DemoFunction functionXXX 
-        expression CALL funct555 (  ) 
-        parameters 
-            DemoVariable variableYYY 
+      start
+          attr1 : String = \\"myString\\",
+          attr2 : Integer = \\"TEKST\\"
+      end
+unit wide functions:
+    DemoFunction functionXXX {
+        expression CALL funct555 (  )
+        parameters
+            DemoVariable variableYYY {
                 declaredType entity1
-        declaredType STRING 
+            }
+        declaredType String
+    }
 }"
 `;
 
 exports[`Test the parser : read two units and create a model 2`] = `
-"unit andereNaam { 
-main: entity56 base anotherEntity, 
-                    andAnother, 
+"unit andereNaam {
+main: entity56 base anotherEntity,
+                    andAnother,
                     andYetAnother
-      start 
-          attr78 : type1  = \\"myString\\", 
-          attr9 : type2  = \\"TEKST\\"
-      end 
-unit wide functions: 
-    DemoFunction functionYYY 
-        expression CALL funct555 (  ) 
-        parameters 
-            DemoVariable variableZZZ 
+      start
+          attr78 : Boolean = \\"myString\\",
+          attr9 : String = \\"TEKST\\"
+      end
+unit wide functions:
+    DemoFunction functionYYY {
+        expression CALL funct555 (  )
+        parameters
+            DemoVariable variableZZZ {
                 declaredType entity56
-        declaredType STRING 
+            }
+        declaredType Integer
+    }
 }"
 `;

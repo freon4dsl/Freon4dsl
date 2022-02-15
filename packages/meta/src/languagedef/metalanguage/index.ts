@@ -30,7 +30,7 @@ export {
     PiPrimitiveType,
     PiParameter,
     PiProperty,
-    PiPropertyInstance,
+    PiInstanceProperty,
     PiLanguageChecker,
     PiLangExpressionChecker,
     PiMetaEnvironment,

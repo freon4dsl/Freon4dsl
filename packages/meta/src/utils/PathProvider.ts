@@ -95,9 +95,9 @@ export class PathProvider {
         return EDITOR_FOLDER + "/" + Names.customActions(language);
     }
 
-    public static projectionDefault(language: PiLanguage): string {
-        return EDITOR_GEN_FOLDER + "/" + Names.projectionDefault(language);
-    }
+    // public static projectionDefault(language: PiLanguage): string {
+    //     return EDITOR_GEN_FOLDER + "/" + Names.projectionDefault(language);
+    // }
 
     public static projection(language: PiLanguage): string {
         return EDITOR_GEN_FOLDER + "/" + Names.customProjection(language);

@@ -13,8 +13,8 @@ concept PiEditConcept {
 //    languageEditor: PiEditUnit; // should be self.parent
     reference concept: PiConcept;
     projection: PiEditProjection;
-    trigger?: string;
-    operator?: string; // (used to be 'symbol') only for binary expressions
+    trigger: string;
+    operator: string; // (used to be 'symbol') only for binary expressions
 }
 
 concept PiEditParsedProjectionIndent implements PiEditProjectionItem {

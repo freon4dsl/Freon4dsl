@@ -132,7 +132,7 @@ expression UnspecifiedValueExp base OclExpression {
 
 concept VariableDeclaration implements IModelElement {
     reference type: IClassifier;
-    initExpression: OclExpression;
+    initExpression?: OclExpression;
     isIteratorVar: boolean;
 }
 

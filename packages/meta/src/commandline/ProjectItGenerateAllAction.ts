@@ -17,6 +17,7 @@ import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 import { LOG2USER } from "../utils/UserLogger";
+import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
@@ -130,8 +131,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.validatorGenerator.outputfolder = this.outputFolder;
             this.validatorGenerator.generate(validator);
         } catch (e) {
-            // LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
-            LOG2USER.error("Stopping validator generation because of errors: " + e.message);
+            LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
+            // LOG2USER.error("Stopping validator generation because of errors: " + e.message);
         }
     };
 
@@ -147,8 +148,10 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             if (this.editFiles.length > 0) {
                 editor = new PiEditParser(this.language).parseMulti(this.editFiles);
             } else {
-                editor = this.editorGenerator.createDefaultEditorDefinition();
+                editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
             }
+            // add default values for everything that is not present in the default projection group
+            DefaultEditorGenerator.addDefaults(editor);
 
             this.editorGenerator.generate(editor);
             this.parserGenerator.generate(editor);

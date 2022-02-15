@@ -1,6 +1,6 @@
-import { PiEditInstanceProjection, PiEditUnit } from "../../editordef/metalanguage";
+import { PiEditUnit } from "../../editordef/metalanguage";
 import { PiClassifier, PiLimitedConcept } from "../../languagedef/metalanguage";
-import { langExpToTypeScript } from "../../utils";
+import { Names } from "../../utils";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { LimitedRule } from "./grammarModel/LimitedRule";
 
@@ -15,21 +15,28 @@ export class LimitedMaker {
     branchNames: string[] = [];
     imports: PiClassifier[] = [];
 
-    generateLimitedRules(editUnit: PiEditUnit, limitedConcepts: PiLimitedConcept[]): GrammarRule[] {
+    generateLimitedRules(limitedConcepts: PiLimitedConcept[]): GrammarRule[] {
         let rules: GrammarRule[] = [];
         for (const piClassifier of limitedConcepts) {
-            // first, see if there is a projection defined
-            const conceptEditor = editUnit.findConceptEditor(piClassifier);
             // find the mapping of keywords to predef instances
             // first is the name of the instance, second is the keyword
             let myMap: Map<string, string> = new Map<string, string>();
-            conceptEditor.projection.lines.forEach(line => {
-                line.items.forEach(item => {
-                    // TODO do we allow other projections for limited concepts????
-                    if (item instanceof PiEditInstanceProjection) {
-                        myMap.set(langExpToTypeScript(item.expression), item.keyword);
-                    }
-                })
+            piClassifier.instances.forEach(item => {
+                const myTypeScript: string = `${Names.classifier(piClassifier)}.${Names.instance(item)}`;
+                // set the string to be used to the value of the name property, iff present
+                // else use the typescript name of the instance
+                let myKeyword: string = item.nameProperty().value.toString();
+                if (!myKeyword ) {
+                    console.log("no keyword")
+                }
+                if (myKeyword.length === 0) {
+                    console.log("no lengthy keyword")
+                }
+
+                if (!myKeyword || myKeyword.length === 0) {
+                    myKeyword = Names.instance(item);
+                }
+                myMap.set(myTypeScript, myKeyword);
             });
             rules.push(new LimitedRule(piClassifier, myMap));
             this.imports.push(piClassifier);

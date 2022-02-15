@@ -1,6 +1,5 @@
-
-import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, READER_GEN_FOLDER } from "../../../utils";
+import { PiLanguage } from "../../../languagedef/metalanguage";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 import {
     internalTransformBranch,
     internalTransformLeaf,
@@ -8,15 +7,16 @@ import {
     internalTransformNode,
     internalTransformRefList
 } from "../ParserGenUtil";
-import { GrammarRule } from "./GrammarRule";
-import { refRuleName, refSeparator } from "./GrammarUtils";
-import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
+import { refRuleName } from "./GrammarUtils";
 import { GrammarPart } from "./GrammarPart";
 
 export class GrammarModel {
-    language: PiLanguage = null;
-    parts: GrammarPart[] = [];
-    // private allRuleNames: string[] = [];
+    // these four properties are set by the GrammarGenerator
+    public language: PiLanguage = null;
+    public parts: GrammarPart[] = [];
+    public trueValue: string = 'true';
+    public falseValue: string = 'false';
+    public refSeparator: string = "."; // default reference separator
 
     toGrammar() : string {
         // there is no prettier for the grammar string, therefore we take indentation and
@@ -32,7 +32,7 @@ grammar ${Names.grammar(this.language)} {
                 
 ${this.grammarContent()}   
 
-__pi_reference = [ identifier / '${refSeparator}' ]+ ;
+__pi_reference = [ identifier / '${this.refSeparator}' ]+ ;
         
 // white space and comments
 skip WHITE_SPACE = "\\\\s+" ;
@@ -44,7 +44,7 @@ leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf stringLiteral       = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
 leaf numberLiteral       = "[0-9]+";
-leaf booleanLiteral      = 'false' | 'true';
+leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             
 }\`; // end of grammar`;
     }
@@ -130,14 +130,14 @@ leaf booleanLiteral      = 'false' | 'true';
             }
             
             private ${internalTransformLeaf}(node: SPPTNode): any {
-                let tmp = ((node as SPPTLeaf)?.matchedText).trim();
+                let tmp = ((node as SPPTLeaf)?.nonSkipMatchedText).trim();
                 if (tmp.length > 0) {
                     if (tmp.startsWith('"')) { // stringLiteral, strip the surrounding quotes
                         tmp = tmp.slice(1, tmp.length - 1);
                         return tmp;
-                    } else if (tmp == "false") { // booleanLiteral
+                    } else if (tmp == "${this.falseValue}") { // booleanLiteral
                         return false;
-                    } else if (tmp == "true") { // booleanLiteral
+                    } else if (tmp == "${this.trueValue}") { // booleanLiteral
                         return true;
                     } else if (Number.isInteger(parseInt(tmp))) { // numberLiteral
                         return parseInt(tmp);
@@ -194,7 +194,7 @@ leaf booleanLiteral      = 'false' | 'true';
               
             public transform__pi_reference(branch: SPPTBranch){
                 if (branch.name.includes("multi") || branch.name.includes("List")) {
-                    return this.${internalTransformList}<string>(branch, "${refSeparator}");
+                    return this.${internalTransformList}<string>(branch, "${this.refSeparator}");
                 } else {
                     return this.${internalTransformLeaf}(branch);
                 }
@@ -247,7 +247,7 @@ leaf booleanLiteral      = 'false' | 'true';
                 if (!!children) {
                     for (const child of children) {
                         let refName: any = this.${internalTransformNode}(child);
-                        if (refName !== null && refName !== undefined && refName.length > 0) {
+                        if (refName !== null && refName !== undefined) {
                             if (separator === null || separator === undefined) {
                                 result.push(PiElementReference.create<T>(refName, typeName));
                             } else {

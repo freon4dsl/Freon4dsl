@@ -10,14 +10,7 @@ import {
 import { PiConcept, PiModelDescription } from "../../metalanguage/PiLanguage";
 
 export class ModelTemplate {
-    // the following template is based on assumptions about a 'model'
-    // a model is not abstract
-    // a model is not an expression
-    // a model is not a modelunit
-    // a model may not have a superclass
-    // a model may not implement any interfaces
-    // a model only has parts ??
-    // TODO may a model have other properties than units???
+    // Note: a model may not have other properties than units
     public generateModel(modelDescription: PiModelDescription): string {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);

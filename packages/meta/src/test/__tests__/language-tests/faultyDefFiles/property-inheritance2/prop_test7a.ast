@@ -1,0 +1,105 @@
+// 2. all props defined in a classifier should be different from the props of its super concepts/interfaces
+//      except when their types conform, then props of the sub should be marked 'implementedInBase' - but only if
+//      base is a concept
+
+// this test ...
+language YYYY
+model Y {
+    name: identifier;
+    unit: Yunit;
+}
+
+modelunit Yunit {
+    public name: identifier;
+    part1: Right;
+    part2: Wrong1;
+}
+
+// combi Base2, Base5, Base6 is correct
+concept Right implements Base2, Base5, Base6 {
+}
+
+// combi Base5, Base3 is incorrect, but implemented props
+// are correct against Base5, NOT correct against Base3
+// and props name5 and name6 are not implemented here
+concept Wrong1 implements Base5, Base3 {
+    name1: boolean;
+    name2: Type1;
+    reference name3: Type2;
+    name4: Type3;
+}
+
+interface Base2  {
+    name1: boolean;
+    name2: Type1;
+    reference name3: Type2;
+    name4: Type3;
+}
+
+interface Base5 {
+    name1: boolean;
+    name2: SuperType1;
+    reference name3: SuperType2;
+    name4: SuperType3;
+    name5: Type2;
+    name6: SuperSuperType1;
+}
+
+interface Base6 {
+    name1: boolean;
+    name2: SuperSuperType1;
+    reference name3: SuperSuperType2;
+    name4: SuperSuperType3;
+}
+
+interface Base3 {
+    name1: string;
+    name2: Type3;
+    reference name3: Type1;
+    name4: Type2;
+    name5: SuperType1;
+    name6: Type3;
+}
+
+interface Base4 {
+    name1: identifier;
+    name2: SuperType2;
+    reference name3: SuperType1;
+    name4: SuperType2;
+}
+
+interface Type1 base SuperType1 {
+    name: identifier;
+}
+
+interface Type2 base SuperType2 {
+    name: identifier;
+}
+
+interface Type3 base SuperType3 {
+    name: identifier;
+}
+
+interface SuperType1 base SuperSuperType1 {
+    name: identifier;
+}
+
+interface SuperType2 base SuperSuperType2 {
+    name: identifier;
+}
+
+interface SuperType3 base SuperSuperType3 {
+    name: identifier;
+}
+
+interface SuperSuperType1 {
+    name: identifier;
+}
+
+interface SuperSuperType2 {
+    name: identifier;
+}
+
+interface SuperSuperType3 {
+    name: identifier;
+}

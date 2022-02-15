@@ -13,7 +13,7 @@ import {
     Language,
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
-    PiTableDefinition
+    PiTableDefinition, PiCompositeProjection
 } from "@projectit/core";
 import { OrExpression, SumExpression } from "../language/gen/index";
 import { grid, gridcell, gridcellLast, gridCellOr, mycell, mygrid, or_gridcellFirst } from "./styles/CustomStyles";
@@ -34,7 +34,7 @@ const OPERAND_COLUMN = 2;
  */
 
 export class CustomExampleProjection implements PiProjection {
-    rootProjection: PiProjection;
+    rootProjection: PiCompositeProjection;
     name: string = "manual";
 
     constructor(name?: string) {

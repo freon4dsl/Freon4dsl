@@ -1,5 +1,5 @@
 import { PiLanguage } from "../languagedef/metalanguage";
-import { PiDefinitionElement } from "../utils";
+import { ParseLocation, PiDefinitionElement } from "../utils";
 
 export type NestedCheck = { check: boolean; error: string; whenOk?: () => void };
 
@@ -62,9 +62,18 @@ export abstract class Checker<DEFINITION> {
         }
     }
 
-    public location(elem: PiDefinitionElement): string {
-        if (!!elem.location) {
-            return `[file: ${elem.location.filename}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
+    static location(elem: PiDefinitionElement): string {
+        if (!!elem && !!elem.location) {
+            const shortFileName: string[] = elem.location.filename.split("/");
+            return `[file: ${shortFileName[shortFileName.length - 1]}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
+        }
+        return `[no location]`;
+    }
+
+    static locationPlus(fileName: string, location: ParseLocation) {
+        if (!!location && !!fileName) {
+            const shortFileName: string[] = fileName.split("/");
+            return `[file: ${shortFileName[shortFileName.length - 1]}, line: ${location.start.line}, column: ${location.start.column}]`;
         }
         return `[no location]`;
     }

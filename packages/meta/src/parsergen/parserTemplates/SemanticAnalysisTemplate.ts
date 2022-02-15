@@ -14,7 +14,6 @@ export class SemanticAnalysisTemplate {
     analyse(analyser: UnitAnalyser) {
         this.reset();
         // find which classifiers have possible problems
-        // TODO use subs instead of LangUtil.subConcepts(classifier)
         for (const [classifier, subs] of analyser.interfacesAndAbstractsUsed) {
             if (!((classifier as PiConcept).base)) {
                 let hasProblems: boolean = false;

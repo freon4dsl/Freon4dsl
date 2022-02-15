@@ -25,7 +25,6 @@ export class UnitTemplate {
         const coreImports = this.findMobxImports(unitDescription).concat(["PiModelUnit", "PiUtils"]);
         const metaType = Names.metaType(language);
 
-        // TODO remove unused imports from template
         // Template starts here
         return `
             ${makeImportStatements(needsObservable, coreImports, modelImports)}
@@ -46,7 +45,7 @@ export class UnitTemplate {
                 ${unitDescription.parts().map(p => makePartProperty(p)).join("\n")}
                 ${unitDescription.references().map(p => makeReferenceProperty(p)).join("\n")}     
             
-                ${makeConstructor(false, unitDescription.properties)}
+                ${makeConstructor(false, unitDescription.allProperties())}
                 ${makeBasicMethods(false, metaType,false, true,false, false)}                
             }
             `;

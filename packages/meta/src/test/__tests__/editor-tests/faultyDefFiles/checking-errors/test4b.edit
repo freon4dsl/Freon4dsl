@@ -1,0 +1,24 @@
+editor default
+
+AAAAAA  {[
+    ${AAprop1}
+    ${AAprop2}
+    ${AAprop3}
+    ${AAprop4}
+    ${AAprop5}
+    ${AAprop6}
+   ]
+   trigger = "::"
+}
+
+AAAAAA  {
+table [
+    ${AAprop3} |
+    ${AAprop4} |
+    ${AAprop5} |
+    ${AAprop6}
+   ]
+   symbol = "xx"
+   trigger = "fff"
+}
+

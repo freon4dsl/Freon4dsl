@@ -43,8 +43,7 @@ export class ChoiceRuleMaker {
     }
 
     /**
-     * returns the list of classifiers with all classifiers that have primitive properties
-     * as last
+     * Returns the list of classifiers with all classifiers that have primitive properties as last
      * @param implementors
      * @private
      */
@@ -64,8 +63,4 @@ export class ChoiceRuleMaker {
         result.push(...withPrims);
         return result;
     }
-
-    // private reset() {
-    //     ChoiceRuleMaker.superNames = new Map<PiClassifier, string>();
-    // }
 }

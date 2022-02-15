@@ -19,7 +19,7 @@ interface IModelElementReference {
 	 *  If the model element is an inherited feature, then the value is the classifier that inherits the feature and
 	 *  where the OCl context was encoutered.
 	 */
-    reference surroundingClassifier: IClassifier;
+    reference surroundingClassifier?: IClassifier;
 
     reference feature: IModelElement; // the model element that is referenced.
     isInheritedFeature: boolean; // true if 'getModelElement().getOwner()' is not equal to 'getSurroundingClassifier()'.

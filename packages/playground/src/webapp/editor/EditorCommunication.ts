@@ -60,8 +60,7 @@ export class EditorCommunication {
         if (nameList[0] !== "default") {
             // find index
             const i = nameList.indexOf("default");
-            // if already at start, nothing to do
-            // else remove old occurrency, if existing
+            // remove old occurrency
             if (i > 0) {
                 nameList.splice( i, 1 );
             }
@@ -153,8 +152,8 @@ export class EditorCommunication {
         LOGGER.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
         const unit: PiNamedElement = editorEnvironment.editor.rootElement as PiNamedElement;
         if (!!unit) {
-            if (unit.name && unit.name.length > 0) {
-                await serverCommunication.putModelUnit(this.currentModel.name, this.currentUnit.name, unit);
+            if (unit.name && unit.name.length > 0 && this.currentModel.name && this.currentModel.name.length) {
+                await serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit);
                 currentUnitName.set(unit.name);
                 EditorCommunication.getInstance().setUnitLists();
                 this.hasChanges = false;

@@ -6,7 +6,7 @@ import {
     PiConcept,
     PiLimitedConcept,
     PiProperty,
-    PiPropertyInstance, PiClassifier
+    PiInstanceProperty, PiClassifier
 } from "../../metalanguage";
 import {
     findMobxImports,
@@ -237,7 +237,7 @@ export class ConceptTemplate {
     }
 
     // TODO weave the next method into the template for limited concepts
-    private createInstancePropValue(property: PiPropertyInstance): string {
+    private createInstancePropValue(property: PiInstanceProperty): string {
         const refProperty: PiProperty = property.property?.referred;
         if (!!refProperty && refProperty instanceof PiPrimitiveProperty) { // should always be the case
             const type: PiClassifier = refProperty.type.referred;

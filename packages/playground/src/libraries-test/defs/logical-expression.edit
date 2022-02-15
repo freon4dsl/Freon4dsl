@@ -1,36 +1,36 @@
-editor XXX for language ExpressionLibrary
+editor default
 
 OrExpression {
-    @symbol "or"
+    symbol = "or"
 }
 AndExpression {
-    @symbol "and"
+    symbol = "and"
 }
 XorExpression {
-    @symbol "xor"
+    symbol = "xor"
 }
 LessThenExpression {
-    @symbol "<"
+    symbol = "<"
 }
 LessEqExpression {
-    @symbol "<="
+    symbol = "<="
 }
 GreaterThenExpression {
-    @symbol ">"
+    symbol = ">"
 }
 GreaterEqExpression {
-    @symbol ">="
+    symbol = ">="
 }
 EqualsExpression {
-    @symbol "=="
+    symbol = "=="
 }
 NotEqualsExpression {
-    @symbol "!="
+    symbol = "!="
 }
 ImpliesExpression {
-    @symbol "==>"
+    symbol = "==>"
 }
 NotExpression {
-    @projection [not ${self.inner}]
-    @symbol "not"
+    [not ${self.inner}]
+    symbol = "not"
 }

@@ -15,8 +15,8 @@ modelunit ItemModel {
 abstract concept ModelItem {
     public name: identifier;
     public type: BaseModelItemType;
-    public reference groups?: ModelGroup[];
-    public label?: string;
+    public reference groups: ModelGroup[];
+    public label: string;
 //    state?: StateType;
 }
 

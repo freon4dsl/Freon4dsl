@@ -20,7 +20,6 @@ export class BinaryExpressionRule extends GrammarRule {
     }
 
     toMethod(mainAnalyserName: string): string {
-        // TODO get the right type for 'BinaryExpression' in stead of ${Names.concept(expressionBase)}
         let cases: string[] = [];
         for (const [key, value] of this.symbolToConcept) {
             cases.push(`

@@ -49,7 +49,6 @@ export class UnitAnalyser implements PiAnalyser {
             this.classifiersUsed.push(piClassifier);
             this.analyseProperties(piClassifier, typesDone);
         } else if (piClassifier instanceof PiConcept) {
-            // TODO check for which concepts we need to take findChoices into account
             if (piClassifier instanceof PiLimitedConcept) {
                 this.limitedsReferred.push(piClassifier);
                 this.checkForSubs(piClassifier);
@@ -114,12 +113,11 @@ export class UnitAnalyser implements PiAnalyser {
             implementors = piClassifier.allSubConceptsDirect();
         }
         // limited concepts can only be referenced, so exclude them
-        // TODO check
         implementors = implementors.filter(sub => !(sub instanceof PiLimitedConcept));
         return implementors;
     }
 
-    private reset() {
+    reset() {
         this.unit = null;
         // all concepts in this unit
         this.classifiersUsed = [];

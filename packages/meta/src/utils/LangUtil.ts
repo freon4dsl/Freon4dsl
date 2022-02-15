@@ -1,4 +1,5 @@
 import { PiClassifier, PiConcept, PiElementReference, PiInterface, PiPrimitiveProperty, PiProperty } from "../languagedef/metalanguage/";
+import { refListIncludes } from "./GenerationHelpers";
 
 /**
  * This class contains a series of helper functions over the language.
@@ -193,9 +194,41 @@ export class LangUtil {
      * @param secondProp
      */
     public static compareTypes(firstProp: PiProperty, secondProp: PiProperty): boolean {
-        // find the type names
-        let myType: string = firstProp.type?.referred?.name;
-        let secondType: string = secondProp.type?.referred?.name;
-        return myType === secondType;
+        if (firstProp.isList !== secondProp.isList) {
+            // return false when a list is compared with a non-list
+            return false;
+        }
+
+        let type1: PiClassifier = firstProp.type?.referred;
+        let type2: PiClassifier = secondProp.type?.referred;
+        if (!type1 || !type2 ) {
+            console.log("INTERNAL ERROR: property types are not set: " + firstProp.name + ", " + secondProp.name);
+            return false;
+        }
+
+        // console.log("comparing " + type1.name + " and " + type2.name)
+        if (type1 === type2) {
+            // return true when types are equal
+            // console.log("\t ==> types are equal")
+            return true;
+        }
+        if (type1 instanceof PiConcept) {
+            if (type2 instanceof PiConcept && type2.allSubConceptsRecursive().includes(type1)) {
+                // return true when type1 is subconcept of type2
+                // console.log("\t ==> " + type1.name + " is a sub concept of " + type2.name)
+                return true;
+            } else if (type2 instanceof PiInterface && refListIncludes(type1.interfaces, type2)) {
+                // return true when type1 implements type2
+                // console.log("\t ==> " + type1.name + " implements " + type2.name)
+                return true;
+            }
+        } else if (type1 instanceof PiInterface) {
+            if (type2 instanceof PiInterface && type2.allSubInterfacesRecursive().includes(type1)) {
+                // return true when type1 is subinterface of type2
+                // console.log("\t ==> " + type1.name + " is a sub interface of " + type2.name)
+                return true;
+            }
+        }
+        return false;
     }
 }

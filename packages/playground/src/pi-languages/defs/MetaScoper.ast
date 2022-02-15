@@ -11,8 +11,8 @@ modelunit PiScoperDef {
 
 concept ScopeConceptDef {
     reference conceptRef: PiConcept;
-    namespaceAdditions: PiNamespaceAddition;
-    alternativeScope: PiAlternativeScope;
+    namespaceAdditions?: PiNamespaceAddition;
+    alternativeScope?: PiAlternativeScope;
 }
 
 concept PiNamespaceAddition {

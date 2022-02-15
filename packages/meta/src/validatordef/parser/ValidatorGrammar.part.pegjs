@@ -25,7 +25,7 @@ comparator   = "<=" / "=" / ">=" / ">" / "<"
 modelReferenceStart = "${"
 modelReferenceEnd = "}"
 
-conceptRule = conceptRef:conceptRef curly_begin rules:rule* curly_end
+conceptRule = conceptRef:classifierReference curly_begin rules:rule* curly_end
     {
         return create.createConceptRule({
           "conceptRef": conceptRef,

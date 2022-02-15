@@ -73,9 +73,9 @@ concept SingleAttr base Statement {
     value: AttrValue;
 }
 concept AttrValue {
-     stringValue?: string;
-     numberValue?: number;
-     booleanValue?: boolean;
+     stringValue: string;
+     numberValue: number;
+     booleanValue: boolean;
 }
 
 // underlying concepts
@@ -89,8 +89,8 @@ concept Node {
 concept Edge {
 }
 concept Port {
-    name?: identifier;
-    compass_point: CompassPoint;
+    name: identifier;
+    compass_point?: CompassPoint;
 }
 
 // limited concepts
@@ -99,5 +99,14 @@ limited AttrType {
 }
 
 limited CompassPoint {
-    north; northeast; east; southeast; south; southwest; west; northwest; central; dash;
+        north = { name: "n" }
+        northeast = { name: "ne" }
+        east = { name: "e" }
+        southeast = { name: "se" }
+        south = { name: "s" }
+        southwest = { name: "sw" }
+        west = { name: "w" }
+        northwest = { name: "nw" }
+        central = { name: "c" }
+        dash = { name: "-" }
 }

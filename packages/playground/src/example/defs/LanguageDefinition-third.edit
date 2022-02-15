@@ -1,0 +1,10 @@
+editor Third
+
+Method {
+    [
+        method CALL signature: ${name} ( ${parameters horizontal separator[,]} ): ${declaredType}
+    ]
+}
+Attribute {
+    [ ALLEEN ATTRUIBUUT NAAM: ${name} ]
+}
