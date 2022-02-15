@@ -91,20 +91,15 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                         `${Checker.location(piConcept.base)}.`,
                     whenOk: () => {
                         this.simpleCheck(!(!(piConcept instanceof PiExpressionConcept) && myBase instanceof PiExpressionConcept),
-                            `A concept may not have an expression as base ${this.location(piConcept.base)}.`);
+                            `A concept may not have an expression as base ${Checker.location(piConcept.base)}.`);
                         if (piConcept instanceof PiLimitedConcept) {
-                            this.simpleWarning(piConcept.base.referred instanceof PiLimitedConcept, `Base '${piConcept.base.name}' of limited concept is not a limited concept.
-    Only properties that have primitive type may be inherited ` +
-                                `${Checker.location(piConcept.base)}.`
                             this.simpleWarning(myBase instanceof PiLimitedConcept,
                                 `Base '${piConcept.base.name}' of limited concept is not a limited concept. ` +
-                                        `Only properties that have primitive type are inherited ${this.location(piConcept.base)}.`
+                                        `Only properties that have primitive type are inherited ${Checker.location(piConcept.base)}.`
                             );
                         } else {
-                            this.simpleCheck(!(piConcept.base.referred instanceof PiLimitedConcept), `Limited concept '${piConcept.base.name}' cannot be base of an unlimited concept ` +
-                                `${Checker.location(piConcept.base)}.`
-                            this.simpleCheck(!(myBase instanceof PiLimitedConcept), `Limited concept '${piConcept.base.name}' cannot be base of an unlimited concept ` +
-                                `${this.location(piConcept.base)}.`
+                            this.simpleCheck(!(myBase instanceof PiLimitedConcept),
+                                `Limited concept '${piConcept.base.name}' cannot be base of an unlimited concept ${Checker.location(piConcept.base)}.`
                             );
                         }
                     }
@@ -117,9 +112,14 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
         for (const intf of piConcept.interfaces) {
             this.checkClassifierReference(intf);
             if (!!intf.referred) { // error message taken care of by checkClassifierReference
-                this.simpleCheck(intf.referred instanceof PiInterface, `Concept '${intf.name}' is not an interface ${Checker.location(intf)}.`);
-                // add to the list
-                newInterfaces.push(intf);
+                this.nestedCheck({
+                    check: intf.referred instanceof PiInterface,
+                    error:`Concept '${intf.name}' is not an interface ${Checker.location(intf)}.`,
+                    whenOk: () =>{
+                        // add to the list
+                        newInterfaces.push(intf);
+                    }
+                });
             }
         }
         piConcept.interfaces = newInterfaces;

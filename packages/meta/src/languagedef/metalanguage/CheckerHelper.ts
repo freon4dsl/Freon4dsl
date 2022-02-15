@@ -1,6 +1,7 @@
 import { PiClassifier, PiPrimitiveProperty, PiPrimitiveType } from "./PiLanguage";
 import { PiElementReference } from "./PiElementReference";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
+import { Checker } from "../../utils";
 
 export class CheckerHelper {
     public static checkOrCreateNameProperty(classifier: PiClassifier, checker: PiLangAbstractChecker) {
@@ -15,11 +16,11 @@ export class CheckerHelper {
             nameProperty.isOptional = false;
             nameProperty.isPublic = true;
             nameProperty.isStatic = false;
-            nameProperty.owningConcept = classifier;
+            nameProperty.owningClassifier = classifier;
             classifier.primProperties.push(nameProperty);
         } else {
             checker.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
-                `The 'name' property of '${classifier.name}' should be of type 'identifier' ${checker.location(classifier)}.`);
+                `The 'name' property of '${classifier.name}' should be of type 'identifier' ${Checker.location(classifier)}.`);
         }
     }
 }

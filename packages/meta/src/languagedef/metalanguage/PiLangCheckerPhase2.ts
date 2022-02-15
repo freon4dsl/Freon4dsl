@@ -291,7 +291,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             piLimitedConcept.primProperties.push(nameProperty);
         } else {
             this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
-                `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${this.location(piLimitedConcept)}.`);
+                `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${Checker.location(piLimitedConcept)}.`);
         }
         this.simpleCheck(piLimitedConcept.allParts().length === 0,
             `A limited concept may not inherit or implement non-primitive parts ${Checker.location(piLimitedConcept)}.`);
@@ -314,7 +314,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             } else {
                 if (baseNames.includes((inst.name))) {
                     this.simpleCheck(false,
-                        `Instance with name '${inst.name}' already exists in the base concept ${this.location(inst)}.`);
+                        `Instance with name '${inst.name}' already exists in the base concept ${Checker.location(inst)}.`);
                 } else {
                     names.push(inst.name);
                 }
