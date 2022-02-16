@@ -2,7 +2,20 @@
 import { PiError, PiErrorSeverity } from "@projectit/core";
 import { DemoDefaultWorker } from "../utils/gen/DemoDefaultWorker";
 import { DemoCheckerInterface } from "./gen/DemoValidator";
+import { DemoFunction } from "../language/gen";
 
 export class CustomDemoValidator extends DemoDefaultWorker implements DemoCheckerInterface {
     errorList: PiError[] = [];
+    public execBeforeDemoFunction(modelelement: DemoFunction): boolean {
+        // console.log("DOING customValidation");
+        this.errorList.push(
+            new PiError(
+                `ER IS IETS FLINK MIS MET DIT DING`,
+                modelelement,
+                modelelement.name,
+                PiErrorSeverity.Error
+            )
+        );
+        return false;
+    }
 }
