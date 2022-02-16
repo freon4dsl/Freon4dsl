@@ -1,10 +1,10 @@
-import { PiTyperParser } from "../../../typerdef/parser/PiTyperParser";
-import { PiLanguage } from "../../../languagedef/metalanguage";
-import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../../utils";
+import { PiTyperParser } from "../../typerdef/parser/PiTyperParser";
+import { PiLanguage } from "../../languagedef/metalanguage";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { MetaLogger } from "../../utils";
 
 describe("Checking typer on syntax errors", () => {
-    const testdir = "src/test/__tests__/typer-tests/faultyDefFiles/syntax-errors/";
+    const testdir = "src/__tests__/typer-tests/faultyDefFiles/syntax-errors/";
     let parser: PiTyperParser;
     let language: PiLanguage;
     MetaLogger.muteAllLogs();
@@ -12,7 +12,7 @@ describe("Checking typer on syntax errors", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/test/__tests__/commonAstFiles/test-language.ast");
+            language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
             parser = new PiTyperParser(language);
         } catch (e) {
             console.log("Language could not be read");

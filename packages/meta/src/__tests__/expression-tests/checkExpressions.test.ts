@@ -1,10 +1,10 @@
-import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { LanguageExpressionParser } from "../../../languagedef/parser/LanguageExpressionParser";
-import { PiInstance, PiLangFunctionCallExp, PiLangSelfExp, PiLanguage, PiLimitedConcept } from "../../../languagedef/metalanguage";
-import { MetaLogger } from "../../../utils";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { LanguageExpressionParser } from "../../languagedef/parser/LanguageExpressionParser";
+import { PiInstance, PiLangFunctionCallExp, PiLangSelfExp, PiLanguage, PiLimitedConcept } from "../../languagedef/metalanguage";
+import { MetaLogger } from "../../utils";
 
 describe("Checking expression on referredElement", () => {
-    const testdir = "src/test/__tests__/expression-tests/expressionDefFiles/";
+    const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
     let language: PiLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
