@@ -12,7 +12,7 @@ modelunit ItemModel {
 	public items: ModelItem[];
 }
 
-public abstract concept ModelItem {
+abstract concept ModelItem {
     public name: identifier;
     public type: BaseModelItemType;
     public reference groups: ModelGroup[];
@@ -20,7 +20,7 @@ public abstract concept ModelItem {
 //    state?: StateType;
 }
 
-public concept ModelBaseItem base ModelItem {
+concept ModelBaseItem base ModelItem {
 //    icon?: Icon;
 //    tags?: Tag[];
 //    bindings: Binding[];

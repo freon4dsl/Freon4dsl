@@ -1,0 +1,20 @@
+language test12
+
+model test {
+    public name: identifier;
+    unit: testUnit;
+}
+
+modelunit testUnit {
+    public name: identifier;
+}
+concept testExpressionBase base expressionXX {
+}
+expression expressionXX {
+}
+
+expression expYY base expressionXX {
+}
+
+expression expZZ base testExpressionBase {
+}

@@ -58,7 +58,7 @@ export class StdlibTemplate {
                         if (metatype) {
                             for (const elem of possibles) {
                                 const concept = elem.piLanguageConcept();
-                                if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(elem.piLanguageConcept())) {
+                                if (concept === metatype || Language.getInstance().subConcepts(concept).includes(metatype)) {
                                     return elem;
                                 }
                             }

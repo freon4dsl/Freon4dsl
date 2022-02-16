@@ -13,11 +13,11 @@ modelunit DSunit {
     dsPrivates: DSprivate[];
 }
 
-public interface DSref {
+interface DSref {
     public name: identifier;
 }
 
-public concept DSpublic implements DSref {
+concept DSpublic implements DSref {
     public conceptParts: DSpublic[];
     public reference conceptRefs: DSref[];
     conceptPrivates: DSprivate[];

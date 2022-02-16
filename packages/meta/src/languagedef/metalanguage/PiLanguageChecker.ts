@@ -10,10 +10,12 @@ import { MetaLogger } from "../../utils/MetaLogger";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 import { PiLangCheckerPhase2 } from "./PiLangCheckerPhase2";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
+import { CheckerHelper } from "./CheckerHelper";
 import { Checker } from "../../utils";
 
 const LOGGER = new MetaLogger("PiLanguageChecker").mute();
-const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept", "binary", "expression", "concept", "base", "reference", "priority", "implements", "id", "in"];
+const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept",
+    "binary", "expression", "concept", "base", "reference", "priority", "implements", "id", "in"];
 // "in" is reserved word in pegjs
 
 export class PiLanguageChecker extends PiLangAbstractChecker {
@@ -54,9 +56,8 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
             error: `There should be a model in your language ${Checker.location(this.language)}.`,
             whenOk: () => {
                 myModel.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
-                this.simpleCheck( myModel.primProperties.some(prop => prop.name === "name"),
-                    `The model should have a 'name' property ${Checker.location(myModel)}.`
-                );
+                // check that model has a name property => can be done here, even though allProperties() is used, because models have no base
+                CheckerHelper.checkOrCreateNameProperty(myModel, this);
                 myModel.properties.forEach(part => this.checkConceptProperty(part));
                 this.simpleCheck(myModel.parts().length > 0,
                     `The model should have at least one unit type ${Checker.location(myModel)}.`);
@@ -69,18 +70,8 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
     private checkUnit(unit: PiUnitDescription) {
         unit.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
         unit.properties.forEach(part => this.checkConceptProperty(part));
-        // check that modelunits have a name property
-        const nameProperty = unit.primProperties.find(p => p.name === "name");
-        this.nestedCheck({
-            check: !!nameProperty,
-            error: `A modelunit should have a 'name' property ${Checker.location(unit)}.`,
-            whenOk: () => {
-                this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
-                    `A modelunit should have a 'name' property of type 'identifier' ${Checker.location(unit)}.`);
-                this.simpleCheck( nameProperty.isPublic,
-                    `The name property of a model unit should be public ${Checker.location(unit)}.`);
-            }
-        });
+        // check that modelunits have a name property => can be done here, even though allProperties() is used, because units have no base
+        CheckerHelper.checkOrCreateNameProperty(unit, this);
     }
 
     private checkConcept(piConcept: PiConcept): void {
@@ -92,20 +83,23 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
 
         if (!!piConcept.base) {
             this.checkClassifierReference(piConcept.base);
-            if (!!piConcept.base.referred) { // error message taken care of by checkClassifierReference
+            const myBase = piConcept.base.referred;
+            if (!!myBase) { // error message taken care of by checkClassifierReference
                 this.nestedCheck({
-                    check: piConcept.base.referred instanceof PiConcept,
+                    check: myBase instanceof PiConcept,
                     error: `Base '${piConcept.base.name}' must be a concept ` +
                         `${Checker.location(piConcept.base)}.`,
                     whenOk: () => {
+                        this.simpleCheck(!(!(piConcept instanceof PiExpressionConcept) && myBase instanceof PiExpressionConcept),
+                            `A concept may not have an expression as base ${Checker.location(piConcept.base)}.`);
                         if (piConcept instanceof PiLimitedConcept) {
-                            this.simpleWarning(piConcept.base.referred instanceof PiLimitedConcept, `Base '${piConcept.base.name}' of limited concept is not a limited concept.
-    Only properties that have primitive type may be inherited ` +
-                                `${Checker.location(piConcept.base)}.`
+                            this.simpleWarning(myBase instanceof PiLimitedConcept,
+                                `Base '${piConcept.base.name}' of limited concept is not a limited concept. ` +
+                                        `Only properties that have primitive type are inherited ${Checker.location(piConcept.base)}.`
                             );
                         } else {
-                            this.simpleCheck(!(piConcept.base.referred instanceof PiLimitedConcept), `Limited concept '${piConcept.base.name}' cannot be base of an unlimited concept ` +
-                                `${Checker.location(piConcept.base)}.`
+                            this.simpleCheck(!(myBase instanceof PiLimitedConcept),
+                                `Limited concept '${piConcept.base.name}' cannot be base of an unlimited concept ${Checker.location(piConcept.base)}.`
                             );
                         }
                     }
@@ -118,9 +112,14 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
         for (const intf of piConcept.interfaces) {
             this.checkClassifierReference(intf);
             if (!!intf.referred) { // error message taken care of by checkClassifierReference
-                this.simpleCheck(intf.referred instanceof PiInterface, `Concept '${intf.name}' is not an interface ${Checker.location(intf)}.`);
-                // add to the list
-                newInterfaces.push(intf);
+                this.nestedCheck({
+                    check: intf.referred instanceof PiInterface,
+                    error:`Concept '${intf.name}' is not an interface ${Checker.location(intf)}.`,
+                    whenOk: () =>{
+                        // add to the list
+                        newInterfaces.push(intf);
+                    }
+                });
             }
         }
         piConcept.interfaces = newInterfaces;

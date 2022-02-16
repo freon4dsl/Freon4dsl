@@ -1,18 +1,18 @@
-import { PiBinaryExpressionConcept, PiClassifier, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
-import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../../utils";
-import { PiEditParser } from "../../../editordef/parser/PiEditParser";
+import { PiBinaryExpressionConcept, PiClassifier, PiLanguage, PiLimitedConcept, PiProperty } from "../../languagedef/metalanguage";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { Checker, MetaLogger } from "../../utils";
+import { PiEditParser } from "../../editordef/parser/PiEditParser";
 import {
     ListJoinType,
     PiEditClassifierProjection,
     PiEditProjection, PiEditProjectionDirection,
     PiEditPropertyProjection, PiEditTableProjection,
     PiEditUnit
-} from "../../../editordef/metalanguage";
-import { DefaultEditorGenerator } from "../../../editordef/metalanguage/DefaultEditorGenerator";
+} from "../../editordef/metalanguage";
+import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
 
 describe("Checking PiEditUnit: ", () => {
-    const testdir = "src/test/__tests__/editor-tests/correctDefFiles/";
+    const testdir = "src/__tests__/editor-tests/correctDefFiles/";
     let parser: PiEditParser;
     let language: PiLanguage;
     let checker: Checker<PiEditUnit>;
@@ -22,7 +22,7 @@ describe("Checking PiEditUnit: ", () => {
     function readFile(parseFile: string): PiEditUnit {
         // read the language file (.ast)
         try {
-            language = new LanguageParser().parse("src/test/__tests__/commonAstFiles/test-language.ast");
+            language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
             parser = new PiEditParser(language);
             checker = parser.checker;
         } catch (e) {

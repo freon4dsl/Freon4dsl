@@ -210,9 +210,9 @@ limited limitedWithBase base limitedConcept1 {
     eersteB = { extraProp1 : "xxx"}
     tweedeB = { extraProp2 : 1247}
     derdeB = { extraProp3 : false}
-    FOURTH;     // TODO issue 120: maybe we should give a warning that this is the same name as in the base concept
+    FIFTH;
 }
 
-limited limitedWithInheritanceTree base limitedWithBase { TREE1; TREE2; THIRD; }
+limited limitedWithInheritanceTree base limitedWithBase { TREE1; TREE2; SIXTH; }
 
 limited limitedWithInterface implements interfaceWithPrimProps { limIntf1; limIntf2; }
