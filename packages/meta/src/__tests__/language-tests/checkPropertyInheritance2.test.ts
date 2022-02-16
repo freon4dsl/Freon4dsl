@@ -1,9 +1,10 @@
-import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../../utils";
-import { PiLanguage } from "../../../languagedef/metalanguage";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { MetaLogger } from "../../utils";
+import { PiLanguage } from "../../languagedef/metalanguage";
 
+// The same tests as in property-inheritance1, only now all property types are interfaces
 describe("Checking property inheritance", () => {
-    const testdir = "src/test/__tests__/language-tests/faultyDefFiles/property-inheritance1/";
+    const testdir = "src/__tests__/language-tests/faultyDefFiles/property-inheritance2/";
     const parser = new LanguageParser();
     const checker = parser.checker;
     MetaLogger.muteAllErrors();

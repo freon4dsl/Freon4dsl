@@ -1,11 +1,11 @@
-import { PiLanguage } from "../../../languagedef/metalanguage";
-import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../../utils";
-import { PiEditParser } from "../../../editordef/parser/PiEditParser";
-import { PiEditUnit } from "../../../editordef/metalanguage";
+import { PiLanguage } from "../../languagedef/metalanguage";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { Checker, MetaLogger } from "../../utils";
+import { PiEditParser } from "../../editordef/parser/PiEditParser";
+import { PiEditUnit } from "../../editordef/metalanguage";
 
 describe("Checking editor definition ", () => {
-    const testdir = "src/test/__tests__/editor-tests/faultyDefFiles/checking-errors/";
+    const testdir = "src/__tests__/editor-tests/faultyDefFiles/checking-errors/";
     let parser: PiEditParser;
     let language: PiLanguage;
     let checker: Checker<PiEditUnit>;
@@ -14,7 +14,7 @@ describe("Checking editor definition ", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/test/__tests__/commonAstFiles/test-language.ast");
+            language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
             parser = new PiEditParser(language);
             checker = parser.checker;
         } catch (e) {

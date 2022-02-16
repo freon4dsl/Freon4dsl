@@ -1,9 +1,9 @@
-import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { LanguageExpressionParser } from "../../../languagedef/parser/LanguageExpressionParser";
-import { MetaLogger } from "../../../utils";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { LanguageExpressionParser } from "../../languagedef/parser/LanguageExpressionParser";
+import { MetaLogger } from "../../utils";
 
 describe("Checking expression parser on syntax errors", () => {
-    const testdir = "src/test/__tests__/expression-tests/expressionDefFiles/";
+    const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 

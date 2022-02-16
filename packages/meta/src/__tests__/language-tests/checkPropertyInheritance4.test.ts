@@ -1,9 +1,9 @@
-import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../../utils";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { MetaLogger } from "../../utils";
 
 // The same tests as in property-inheritance1, only now some property types are lists
 describe("Checking property inheritance on lists", () => {
-    const testdir = "src/test/__tests__/language-tests/faultyDefFiles/property-inheritance4/";
+    const testdir = "src/__tests__/language-tests/faultyDefFiles/property-inheritance4/";
     const parser = new LanguageParser();
     const checker = parser.checker;
     MetaLogger.muteAllErrors();
