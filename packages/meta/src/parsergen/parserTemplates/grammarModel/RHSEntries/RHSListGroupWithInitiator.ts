@@ -3,7 +3,6 @@ import { RHSPropEntry } from "./RHSPropEntry";
 import { PiProperty } from "../../../../languagedef/metalanguage";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
-import { ParseHelpers } from "@projectit/playground/dist/utils/ParseHelpers";
 
 export class RHSListGroupWithInitiator extends RHSPropPartWithSeparator {
     // `("joinText" propTypeName)*`
