@@ -1,6 +1,5 @@
 editor default
 
-referenceSeparator [::]
 
 OclPart {
         [

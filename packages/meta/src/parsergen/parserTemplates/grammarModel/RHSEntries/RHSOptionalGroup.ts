@@ -2,6 +2,7 @@ import { RHSPropEntry } from "./RHSPropEntry";
 import { RightHandSideEntry } from "./RightHandSideEntry";
 import { PiProperty } from "../../../../languagedef/metalanguage";
 import { makeIndent } from "../GrammarUtils";
+import { RHSBooleanWithSingleKeyWord } from "./RHSBooleanWithSingleKeyWord";
 
 export class RHSOptionalGroup extends RHSPropEntry {
     private subs: RightHandSideEntry[] = [];
@@ -17,7 +18,7 @@ export class RHSOptionalGroup extends RHSPropEntry {
             return `( ${this.subs.map(sub => `${sub.toGrammar()}`).join(" ").trimEnd()} )?\n\t`;
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
-            if (first.isList) {
+            if (first.isList || first instanceof RHSBooleanWithSingleKeyWord) {
                 return `${first.toGrammar()}` + this.doNewline(); // no need for the extra '?'
             } else {
                 return `${first.toGrammar()}?` + this.doNewline();

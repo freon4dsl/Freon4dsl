@@ -2,9 +2,9 @@ language graphviz_dot
 
 model xx {
     public name: identifier;
-    units: yy[];
+    units: unitA[];
 }
-modelunit yy {
+modelunit unitA {
     public name: identifier;
     public graph: AbstractGraph;
 }
@@ -14,8 +14,7 @@ abstract concept AbstractGraph {
     statements: Statement[];
 }
 concept Graph base AbstractGraph {
-}
-concept DiGraph base AbstractGraph {
+    isDiGraph: boolean;
 }
 // statements
 abstract concept Statement {

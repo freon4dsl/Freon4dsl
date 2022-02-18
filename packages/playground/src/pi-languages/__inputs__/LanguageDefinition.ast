@@ -1,17 +1,14 @@
 language Example
 
-// TODO because the chars '['and ']' can not yet be escaped in the .edit file,
-// here they are replaced by '(' and ')'
-
 model Demo {
     name: identifier;
-    units: ExampleUnit();
+    units: ExampleUnit[];
 }
 
 modelunit ExampleUnit {
     public name: identifier;
-    public entities: Entity();
-    public methods: Method();
+    public entities: Entity[];
+    public methods: Method[];
     file-extension = "exm";
 }
 interface BaseType {
@@ -21,8 +18,8 @@ interface Type base BaseType {
 }
 
 concept Entity implements Type {
-    attributes: Attribute();
-    methods: Method();
+    attributes: Attribute[];
+    methods: Method[];
     reference baseEntity?: Entity;
 }
 
@@ -30,7 +27,7 @@ concept Method {
     public name: identifier;
     reference declaredType : Type;
     body: ExExpression;
-    parameters: Parameter();
+    parameters: Parameter[];
 }
 
 concept Attribute {
@@ -111,7 +108,7 @@ expression SumExpression base ExExpression {
 
 expression MethodCallExpression base ExExpression {
     reference methodDefinition: Method;
-    args: ExExpression();
+    args: ExExpression[];
 }
 
 expression IfExpression base ExExpression {

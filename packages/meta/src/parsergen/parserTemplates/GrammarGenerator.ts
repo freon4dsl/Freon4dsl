@@ -71,7 +71,7 @@ export class GrammarGenerator {
             groupForBinaries = projectionGroup.owningDefinition.getDefaultProjectiongroup();
         }
         if (analyser.binaryConceptsUsed.length > 0) {
-            grammarPart.rules.push(binaryExpMaker.generateBinaryExpressions(language, groupForBinaries, analyser.binaryConceptsUsed));
+            grammarPart.rules.push(...binaryExpMaker.generateBinaryExpressions(language, groupForBinaries, analyser.binaryConceptsUsed));
         }
 
         // create parse rules and syntax analysis methods for the limited concepts

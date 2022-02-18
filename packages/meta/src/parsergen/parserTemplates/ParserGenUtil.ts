@@ -1,8 +1,22 @@
 import { PiEditClassifierProjection, PiEditProjection, PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
 import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
-import { PiClassifier } from "../../languagedef/metalanguage";
+import { PiBinaryExpressionConcept, PiClassifier, PiExpressionConcept } from "../../languagedef/metalanguage";
+import { findExpressionBase } from "../../utils";
 
 export class ParserGenUtil {
+
+    // find all expression bases for all binaries
+    static findAllExpressionBases(list: PiBinaryExpressionConcept[]): PiExpressionConcept[] {
+        const bases: PiExpressionConcept[] = [];
+        list.forEach(impl => {
+            const expBase = findExpressionBase(impl as PiBinaryExpressionConcept);
+            if (bases.indexOf(expBase) === -1) {
+                // add if not present
+                bases.push(expBase);
+            }
+        });
+        return bases;
+    }
 
     /**
      * Returns either the projection group named 'parser' ot, if that one is not present,

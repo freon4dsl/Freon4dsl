@@ -1,0 +1,12 @@
+language TyTest
+
+interface Exp {
+}
+
+concept SimpleExp1 implements Exp {
+    xx: number;
+}
+
+concept SimpleExp2 implements Exp {
+    xx: number;
+}

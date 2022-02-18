@@ -1,12 +1,11 @@
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { Checker, Names, PiParser } from "../../utils";
-
-const editorParser = require("./PiEditGrammar");
 import { setCurrentFileName as editFileName } from "./PiEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 import { ExtraClassifierInfo, PiEditProjectionGroup, PiEditUnit } from "../metalanguage/PiEditDefLang";
 import { PiEditChecker } from "../metalanguage/PiEditChecker";
-import { DefaultEditorGenerator } from "../metalanguage/DefaultEditorGenerator";
+
+const editorParser = require("./PiEditGrammar");
 
 export class PiEditParser extends PiParser<PiEditUnit> {
     language: PiLanguage;
@@ -42,6 +41,24 @@ export class PiEditParser extends PiParser<PiEditUnit> {
                             found.projections.push(...group.projections);
                             if (!!found.extras && !!group.extras) {
                                 found.extras.push(...group.extras);
+                            }
+                            if (group.standardReferenceSeparator) {
+                                if (found.standardReferenceSeparator) {
+                                    if (group.standardReferenceSeparator !== found.standardReferenceSeparator) {
+                                        this.checker.errors.push(`Reference separator in ${Checker.location(group)} is not equal to the one found in ${Checker.location(found)}.`)
+                                    }
+                                } else {
+                                    found.standardReferenceSeparator = group.standardReferenceSeparator;
+                                }
+                            }
+                            if (group.standardBooleanProjection) {
+                                if (found.standardBooleanProjection) {
+                                    if (group.standardBooleanProjection !== found.standardBooleanProjection) {
+                                        this.checker.errors.push(`Boolean projection in ${Checker.location(group.standardBooleanProjection)} is not equal to the one found in ${Checker.location(found.standardBooleanProjection)}.`)
+                                    }
+                                } else {
+                                    found.standardBooleanProjection = group.standardBooleanProjection;
+                                }
                             }
                             if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
                                 if (found.precedence !== null && found.precedence !== undefined) {

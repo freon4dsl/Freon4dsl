@@ -26,8 +26,11 @@ export class SuperChoiceRule extends GrammarRule {
                 // exclude binary expression concepts
                 rule = `${(this.ruleName)} = ${implementorsNoBinaries.map(implementor =>
                     `${this.getTypeCallExcludeSelf(implementor)} `).join("\n    | ")}`;
-                // add the special binary concept rule as choice
-                rule += `\n    | ${BinaryExpMaker.specialBinaryRuleName} ;`;
+                // add the special binary concept rule(s) as choice
+                const expBases = ParserGenUtil.findAllExpressionBases(this.implementors.filter(sub => sub instanceof PiBinaryExpressionConcept) as PiBinaryExpressionConcept[]);
+                expBases.forEach(base => {
+                    rule += `\n    | ${BinaryExpMaker.getBinaryRuleName(base)} ;`;
+                });
             } else {
                 // normal choice rule
                 rule = `${(this.ruleName)} = ${this.implementors.map(implementor =>
