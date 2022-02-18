@@ -62,6 +62,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         this.checkPropsWithTableProjection(editUnit);
 
         // check uniqueness of names and precedence
+        LOGGER.log("checking uniqueness of names and precedence");
         let names: string[] = [];
         let precedences: number[] = [0]; // 0 is the number for the default group, which is always present
         editUnit.projectiongroups.forEach(group => {
@@ -70,6 +71,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             group.owningDefinition = editUnit;
         });
 
+        LOGGER.log("finalize checking");
         // warning in case there is no 'default'editor
         this.simpleWarning(!!editUnit.getDefaultProjectiongroup(),
             `No editor with name 'default' found, a default editor will be generated.`);

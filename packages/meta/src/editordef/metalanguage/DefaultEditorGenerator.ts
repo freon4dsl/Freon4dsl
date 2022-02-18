@@ -110,6 +110,7 @@ export class DefaultEditorGenerator {
             // find or create the extra info
             DefaultEditorGenerator.addExtraDefaults(defaultGroup, con, language);
         }
+        // console.log("defaultsForInterfaces done ");
     }
 
     private static defaultClassifierProjection(con: PiClassifier, language: PiLanguage): PiEditProjection {
@@ -238,7 +239,7 @@ export class DefaultEditorGenerator {
     }
 
     private static defaultsForUnit(language: PiLanguage, defaultGroup: PiEditProjectionGroup) {
-        // console.log("classifiersToDo: " + classifiersToDo.map(c => c.name).join(', '))
+        // console.log("defaultsForUnit: " + language.units.map(c => c.name).join(', '))
         for (const con of language.units) {
             // Find or create the projection, and its properties
             let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionsForType(con)[0];
