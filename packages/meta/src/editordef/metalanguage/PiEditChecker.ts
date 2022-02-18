@@ -19,7 +19,7 @@ import {
     PiOptionalPropertyProjection,
     ExtraClassifierInfo,
     PiEditProjectionLine,
-    ListJoinType
+    ListJoinType, PiEditProjectionText, PiEditProjectionItem
 } from "./PiEditDefLang";
 import { MetaLogger } from "../../utils";
 import { PiElementReference } from "../../languagedef/metalanguage";
@@ -238,7 +238,6 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                         `A limited concept cannot have a projection, it can only be used as reference ${Checker.location(projection)}.`);
                 } else {
                     if (projection instanceof PiEditProjection) {
-
                         this.checkNormalProjection(projection, myClassifier, editor);
                     } else if (projection instanceof PiEditTableProjection) {
                         this.checkTableProjection(projection, myClassifier, editor);
@@ -284,8 +283,14 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     projection.lines.forEach(line => {
                         this.checkLine(line, cls, editor);
                     });
+                    const first: PiEditProjectionItem = projection.lines[0]?.items[0];
+                    if (first instanceof PiEditProjectionText) {
+                        this.simpleWarning(first.text.trimEnd() !== "?",
+                            `The main projection may never be optional ${Checker.location(projection)}.`);
+                    }
                 }
             });
+
         }
     }
 

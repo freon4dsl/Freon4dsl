@@ -1,0 +1,41 @@
+language test4
+
+model TEST {
+    unit: TEST_CHOICES;
+}
+modelunit TEST_CHOICES {
+    a: aa;
+    b: bb;
+    c: cc;
+    d: dd;
+    e: ee;
+    f: ff;
+}
+
+abstract concept aa {
+    aaPart: yy;
+}
+
+concept bb base aa {
+}
+
+concept cc base dd {
+}
+
+concept dd base aa implements yy {
+}
+
+concept ee implements xx {
+}
+
+concept ff base cc {
+}
+
+interface yy {
+}
+
+interface xx base yy, zz {
+}
+
+interface zz {
+}

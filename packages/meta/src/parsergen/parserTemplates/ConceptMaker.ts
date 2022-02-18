@@ -1,5 +1,5 @@
 import {
-    ListJoinType, PiEditClassifierProjection,
+    ListJoinType,
     PiEditProjection, PiEditProjectionGroup,
     PiEditProjectionItem,
     PiEditProjectionLine,
@@ -52,8 +52,10 @@ export class ConceptMaker {
         for (const piConcept of conceptsUsed) {
             // all methods in this class depend on the fact that only non-table projections are passes as parameter!!
             let projection: PiEditProjection = ParserGenUtil.findNonTableProjection(projectionGroup, piConcept);
-            // generate a grammar rule entry
-            rules.push(this.generateProjection(piConcept, projection, false));
+            if (!!projection) {
+                // generate a grammar rule entry
+                rules.push(this.generateProjection(piConcept, projection, false));
+            }
         }
         for (const projection of this.namedProjections) {
             // generate a grammar rule entry
@@ -229,7 +231,7 @@ export class ConceptMaker {
             } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                 return new RHSPrimListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
             } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
-                const sub1 = new RHSRefEntry(prop);
+                const sub1 = new RHSPrimEntry(prop);
                 return new RHSPrimListGroupWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
             } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                 const sub1 = new RHSPrimEntry(prop);

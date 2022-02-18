@@ -1,12 +1,11 @@
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { Checker, Names, PiParser } from "../../utils";
-
-const editorParser = require("./PiEditGrammar");
 import { setCurrentFileName as editFileName } from "./PiEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 import { ExtraClassifierInfo, PiEditProjectionGroup, PiEditUnit } from "../metalanguage/PiEditDefLang";
 import { PiEditChecker } from "../metalanguage/PiEditChecker";
-import { DefaultEditorGenerator } from "../metalanguage/DefaultEditorGenerator";
+
+const editorParser = require("./PiEditGrammar");
 
 export class PiEditParser extends PiParser<PiEditUnit> {
     language: PiLanguage;

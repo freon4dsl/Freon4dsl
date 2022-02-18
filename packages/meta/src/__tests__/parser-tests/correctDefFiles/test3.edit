@@ -1,0 +1,25 @@
+editor default
+
+TEST_LISTS {[
+    ${a}
+    ${b}
+    ${c}
+    ${d}
+    ${e}
+    ${f}
+    ${g}
+    ${h}
+]}
+// list part properties
+aa {[${partList}]} // joinType === NONE
+bb {[${partList separator[%]}]}
+cc {[${partList terminator[%]}]}
+dd {[${partList initiator[%]}]}
+
+// list reference properties
+ee {[${refList}]} // joinType === NONE
+ff {[${refList separator[%]}]}
+gg {[${refList terminator[%]}]}
+hh {[${refList initiator[%]}]}
+
+someConcept {[${name} : ${prop}]}
