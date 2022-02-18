@@ -1,7 +1,5 @@
 editor default 
 
-referenceSeparator [.]
-
 UmlPart {
         [${self.umlPackage}]
 }

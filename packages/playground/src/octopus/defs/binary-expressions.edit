@@ -3,6 +3,9 @@ editor default
 PlusExpression {
     symbol = "+"
 }
+MinusExpression {
+    symbol = "-"
+}
 MultiplyExpression {
     symbol = "*"
 }

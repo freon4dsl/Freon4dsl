@@ -57,6 +57,7 @@ export abstract class PiClassifier extends PiLangElement {
     language: PiLanguage;
     isPublic: boolean;
     properties: PiProperty[] = [];
+    // TODO remove this attribute and make it a function on 'properties'
     primProperties: PiPrimitiveProperty[] = [];
 
     parts(): PiConceptProperty[] {

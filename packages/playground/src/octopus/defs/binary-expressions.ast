@@ -16,6 +16,10 @@ binary expression PlusExpression base BinaryExpression {
     priority = 4;
 }
 
+binary expression MinusExpression base BinaryExpression {
+    priority = 4;
+}
+
 binary expression DivideExpression base BinaryExpression {
     priority = 8;
 }

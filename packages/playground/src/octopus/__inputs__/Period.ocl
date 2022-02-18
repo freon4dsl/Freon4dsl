@@ -8,7 +8,9 @@
 package Book
 
 context Period
-def: getNrOfNonworkingDays = nrOfDays - nrOfWorkingDays
 def: getNrOfNonworkingDays(): Integer = nrOfDays - nrOfWorkingDays
 
-endpackage --Book
+context Period
+def: someAttribute = nrOfDays + nrOfWorkingDays
+
+endpackage //Book

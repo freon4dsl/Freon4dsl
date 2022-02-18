@@ -42,6 +42,24 @@ export class PiEditParser extends PiParser<PiEditUnit> {
                             if (!!found.extras && !!group.extras) {
                                 found.extras.push(...group.extras);
                             }
+                            if (group.standardReferenceSeparator) {
+                                if (found.standardReferenceSeparator) {
+                                    if (group.standardReferenceSeparator !== found.standardReferenceSeparator) {
+                                        this.checker.errors.push(`Reference separator in ${Checker.location(group)} is not equal to the one found in ${Checker.location(found)}.`)
+                                    }
+                                } else {
+                                    found.standardReferenceSeparator = group.standardReferenceSeparator;
+                                }
+                            }
+                            if (group.standardBooleanProjection) {
+                                if (found.standardBooleanProjection) {
+                                    if (group.standardBooleanProjection !== found.standardBooleanProjection) {
+                                        this.checker.errors.push(`Boolean projection in ${Checker.location(group.standardBooleanProjection)} is not equal to the one found in ${Checker.location(found.standardBooleanProjection)}.`)
+                                    }
+                                } else {
+                                    found.standardBooleanProjection = group.standardBooleanProjection;
+                                }
+                            }
                             if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
                                 if (found.precedence !== null && found.precedence !== undefined) {
                                     if (group.precedence !== found.precedence) {
