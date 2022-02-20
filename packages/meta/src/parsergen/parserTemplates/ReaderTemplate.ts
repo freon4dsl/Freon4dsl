@@ -62,7 +62,12 @@ export class ReaderTemplate {
                         throw new Error(mess);
                     }
                     try {
-                        let asm = this.parser.processForGoal(null, startRule, sentence, AutomatonKind_api.LOOKAHEAD_1);
+                    let asm;
+                        if (startRule.length > 0) {
+                            asm = this.parser.processForGoal(null, startRule, sentence, AutomatonKind_api.LOOKAHEAD_1);
+                        } else {
+                            asm = this.parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
+                        }
                         model = asm as ${Names.modelunit(language)};
                         const semAnalyser = new ${className}();
                         semAnalyser.correct(model);

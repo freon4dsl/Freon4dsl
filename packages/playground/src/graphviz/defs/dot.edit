@@ -1,16 +1,11 @@
 editor default
 
-yy {[
+unitA {[
     ${self.graph}
 ]}
 
 Graph {[
-    [?${self.strict [STRICT]}] GRAPH [?${self.name}]{
-    ${self.statements vertical terminator [; ]}
-    }
-]}
-DiGraph {[
-    [?${self.strict [STRICT]}] DIGRAPH [?${self.name}] {
+    [?${self.strict [STRICT]}] ${isDiGraph [ DIGRAPH | GRAPH ]} [?${self.name}]{
     ${self.statements vertical terminator [; ]}
     }
 ]}

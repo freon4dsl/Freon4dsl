@@ -19,13 +19,30 @@ export class RHSListGroupWithInitiator extends RHSPropPartWithSeparator {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        return `// RHSListGroupWithInitiator  
-            if (!${nodeName}[${index}].isEmptyMatch) {          
-                ${ParserGenUtil.internalName(this.property.name)} = [];
-                for (const subNode of ${nodeName}[${index}].nonSkipChildren.toArray()) {
-                    ${ParserGenUtil.internalName(this.property.name)}.push(this.${mainAnalyserName}.${internalTransformNode}(this.${mainAnalyserName}.getGroup(subNode).nonSkipChildren.toArray()[1]));
+        return `
+        // RHSListGroupWithInitiator
+        if (!${nodeName}[${index}].isEmptyMatch) {
+            ${ParserGenUtil.internalName(this.property.name)} = [];
+            const group = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
+            if (group !== ${nodeName}[${index}]) {
+                for (const child of ${nodeName}[${index}].nonSkipChildren.toArray()) {
+                    ${ParserGenUtil.internalName(this.property.name)}.push(this.${mainAnalyserName}.${internalTransformNode}(child.nonSkipChildren.toArray()[1]));
                 }
-            }`;
+            } else {
+                for (const child of ${nodeName}) {
+                    ${ParserGenUtil.internalName(this.property.name)}.push(this.${mainAnalyserName}.${internalTransformNode}(child.nonSkipChildren.toArray()[1]));
+                }
+            }
+        } // end RHSListGroupWithInitiator
+        `;
+        // return `
+        //     // RHSListGroupWithInitiator
+        //     if (!${nodeName}[${index}].isEmptyMatch) {
+        //         ${ParserGenUtil.internalName(this.property.name)} = [];
+        //         for (const subNode of ${nodeName}[${index}].nonSkipChildren.toArray()) {
+        //             ${ParserGenUtil.internalName(this.property.name)}.push(this.${mainAnalyserName}.${internalTransformNode}(this.${mainAnalyserName}.getGroup(subNode).nonSkipChildren.toArray()[1]));
+        //         }
+        //     }`;
     }
 
     toString(depth: number): string {

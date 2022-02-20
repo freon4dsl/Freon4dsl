@@ -124,7 +124,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                         throw e;
                     } else {
                         // add more info to the error message 
-                        throw new Error(\`Syntax error in "\${node?.matchedText}": \${e.message}\`);
+                        throw new Error(\`Syntax error in "\${node?.matchedText.trimEnd()}": \${e.message}\`);
                     }
                 }
             }
@@ -160,13 +160,14 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
              * Generic method to get the children of a branch. Throws an error if no children can be found.
              */
             public getChildren(branch: SPPTBranch): any {
-                let children: any = null;
-                try {
-                    return branch.nonSkipChildren.toArray();
-                } catch (e) {
-                    throw new Error(\`Cannot follow branch: \${e.message} (\${branch.matchedText})\`);
+                if (!!branch && !!branch.nonSkipChildren) {
+                    try {
+                        return branch.nonSkipChildren.toArray();
+                    } catch (e) {
+                        throw new Error(\`Cannot follow branch: \${e.message} (\${branch.matchedText.trimEnd()})\`);
+                    }
                 }
-                return children;
+                return null;
             }
 
             /**

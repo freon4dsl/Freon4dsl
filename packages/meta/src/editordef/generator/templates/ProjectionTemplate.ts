@@ -38,13 +38,11 @@ export class ProjectionTemplate {
     private falseKeyword: string = "false";
 
     generateProjectionGroup(language: PiLanguage, projectionGroup: PiEditProjectionGroup, relativePath: string): string {
-
+        // console.log("generateProjectionGroup " + projectionGroup.name);
         // binary concepts are only handled in the default projection group
         let binaryConcepts: PiConcept[] = [];
         if (projectionGroup.name === Names.defaultProjectionName) {
              binaryConcepts = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept));
-            // sort the concepts such that base concepts come last
-            binaryConcepts = sortConceptsWithBase(binaryConcepts, language.findExpressionBase());
         }
 
         // reset the table projections, then remember all table projections

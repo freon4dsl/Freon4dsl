@@ -1,4 +1,4 @@
-import { Names } from "../../../utils";
+import { findExpressionBase, Names } from "../../../utils";
 import {
     PiPrimitiveProperty,
     PiBinaryExpressionConcept,
@@ -88,7 +88,7 @@ export class ConceptTemplate {
         const hasReferences = concept.implementedReferences().length > 0;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const isAbstract = concept.isAbstract;
-        const baseExpressionName = Names.concept(concept.language.findExpressionBase());
+        const baseExpressionName = Names.concept(findExpressionBase(concept));
         const abstract = concept.isAbstract ? "abstract" : "";
         const needsObservable = concept.implementedPrimProperties().length > 0;
         const coreImports = findMobxImports(hasSuper, concept).concat(["PiBinaryExpression", "PiUtils"]);

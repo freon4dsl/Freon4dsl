@@ -1,0 +1,20 @@
+editor default
+
+unitB {
+    [${typeDefs}]
+}
+unitA {
+    [${lines initiator [LINE]}]
+}
+unitC {
+    [${lines initiator [LINE]} ${exp}]
+}
+Line {
+    [${expression} : ${type} ;]
+}
+//SimpleLine1 {
+//    [${expression} : ${type} ;]
+//}
+//SimpleLine2 {
+//    [${expression} : ${type} ;]
+//}

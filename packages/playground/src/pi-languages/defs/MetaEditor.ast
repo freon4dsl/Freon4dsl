@@ -30,7 +30,7 @@ concept PiEditProjectionText implements PiEditProjectionItem {
 concept PiEditPropertyProjection implements PiEditProjectionItem {
     propertyName: string;
     listJoin: ListJoin;
-    keyword?: string;
+    keyword: string;
     expression: PiLangExp;
 }
 
@@ -61,7 +61,7 @@ concept PiEditProjection {
 concept ListJoin {
     direction: PiEditProjectionDirection;
     joinType?: ListJoinType;
-    joinText?: string;
+    joinText: string;
 }
 
 limited PiEditProjectionDirection {

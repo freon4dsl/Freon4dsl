@@ -1,0 +1,28 @@
+language test1
+model TEST {
+    unit: TEST_PRIMS;
+}
+modelunit TEST_PRIMS {
+    a: aa;
+    b: bb;
+    c: cc;
+    d: dd;
+    e: ee;
+    f: ff;
+    g: gg;
+    h: hh;
+    j: jj;
+}
+concept aa {singleBool: boolean;}
+// with double keyword
+concept bb {doubleBool: boolean;}
+// mandatory, not in optional group
+concept cc {mandatoryPrim: number;}
+// optional, or in optional group
+concept dd {optionalPrim: number;}
+concept ee {primInOptionalGroup: number;}
+// list, no join type
+concept ff {primList: number[];}
+concept gg {primList: number[];}
+concept hh {primList: number[];}
+concept jj {primList: number[];}

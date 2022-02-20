@@ -3,7 +3,7 @@ language PiLanguage
 // begin structure definition
 modelunit PiStructureDef {
     public name: identifier;
-    public modelConcept?: PiModelDescription;
+    public modelConcept: PiModelDescription;
     public units: PiUnitDescription[];
     public concepts: PiConcept[];
     public interfaces: PiInterface[];
@@ -24,10 +24,10 @@ abstract concept PiClassifier base PiLangElement {
     reference owningLanguage: PiStructureDef;
     isPublic: boolean;
     properties: PiProperty[];
-    primProperties: PiPrimitiveProperty[];
+    //primProperties: PiPrimitiveProperty[];
 }
 concept PiModelDescription base PiClassifier {
-    units: PiUnitDescription[];
+    properties: PiProperty[];
 }
 concept PiUnitDescription base PiClassifier {
     fileExtension: string = "";
