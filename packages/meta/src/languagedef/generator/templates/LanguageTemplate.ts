@@ -47,7 +47,7 @@ export class LanguageTemplate {
                     ${language.modelConcept.allParts().map(prop =>
                         `model.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${Names.classifier(prop.type.referred)}",
+                                        type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
                                         propertyType: "part"
@@ -56,7 +56,7 @@ export class LanguageTemplate {
                     ${language.modelConcept.allReferences().map(prop =>
                         `model.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${Names.classifier(prop.type.referred)}",
+                                        type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
                                         propertyType: "reference"
@@ -86,7 +86,7 @@ export class LanguageTemplate {
                             ${modelunit.allParts().map(prop =>
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${Names.classifier(prop.type.referred)}",
+                                        type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
                                         propertyType: "part"
@@ -95,7 +95,7 @@ export class LanguageTemplate {
                             ${modelunit.allReferences().map(prop =>
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${Names.classifier(prop.type.referred)}",
+                                        type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
                                         propertyType: "reference"
@@ -130,7 +130,7 @@ export class LanguageTemplate {
                     ${concept.allParts().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${Names.classifier(prop.type.referred)}",
+                                type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "part"
@@ -139,7 +139,7 @@ export class LanguageTemplate {
                     ${concept.allReferences().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${Names.classifier(prop.type.referred)}",
+                                type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "reference"
@@ -169,7 +169,7 @@ export class LanguageTemplate {
                 ${intface.allParts().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${Names.classifier(prop.type.referred)}",
+                                type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "part"
@@ -178,7 +178,7 @@ export class LanguageTemplate {
                 ${intface.allReferences().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${Names.classifier(prop.type.referred)}",
+                                type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "reference"

@@ -20,7 +20,7 @@ export class InterfaceTemplate {
 
         const imports = Array.from(
             new Set(
-                intf.properties.map(p => Names.classifier(p.type.referred))
+                intf.properties.map(p => Names.classifier(p.type))
                     .concat(intf.base.map ( elem => Names.interface(elem.referred) ))
                     .filter(name => !(name === myName))
                     .filter(r => r !== null && (r.length > 0))
@@ -53,12 +53,12 @@ export class InterfaceTemplate {
     generatePartProperty(property: PiConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : ${Names.classifier(property.type.referred)}${arrayType}; ${comment}`;
+        return `${property.name} : ${Names.classifier(property.type)}${arrayType}; ${comment}`;
     }
 
     generateReferenceProperty(property: PiConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
+        return `${property.name} : PiElementReference<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
     }
 }

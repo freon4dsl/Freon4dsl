@@ -7,7 +7,7 @@ import {
     makePrimitiveProperty,
     makeReferenceProperty, makeStaticCreateMethod
 } from "./ConceptUtils";
-import { PiModelDescription, PiUnitDescription } from "../../metalanguage/PiLanguage";
+import { PiUnitDescription } from "../../metalanguage/PiLanguage";
 
 export class UnitTemplate {
     // the following template is based on assumptions about a 'unit'
@@ -55,8 +55,8 @@ export class UnitTemplate {
         const hasReferences = unitDescription.references().length > 0;
         return Array.from(
             new Set(
-                unitDescription.parts().map(part => Names.classifier(part.type.referred))
-                    .concat(unitDescription.references().map(part => Names.classifier(part.type.referred)))
+                unitDescription.parts().map(part => Names.classifier(part.type))
+                    .concat(unitDescription.references().map(part => Names.classifier(part.type)))
                     .concat(Names.metaType(unitDescription.language))
                     .concat(hasReferences ? (Names.PiElementReference) : null)
                     .filter(name => !(name === myName))

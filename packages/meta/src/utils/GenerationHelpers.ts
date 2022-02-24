@@ -186,7 +186,7 @@ export function propertyToTypeScriptWithoutReferred(prop : PiProperty): string {
  */
 function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
     let isRef: boolean = false;
-    const ref = exp.referredElement?.referred;
+    const ref = exp.__referredElement?.referred;
     if (!!ref) { // should be present, otherwise it is an incorrect model
         // now see whether it is marked in the .ast file as 'reference'
         isRef = (ref instanceof PiConceptProperty) && !ref.isPart && !ref.isList;
@@ -200,7 +200,7 @@ function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
  * @param con
  */
 export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
-    return con.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
+    return con.allPrimProperties().find(p => p.name === "name" && p.type === PiPrimitiveType.identifier);
 }
 
 /**
@@ -210,7 +210,7 @@ export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
  */
 export function hasNameProperty (piClassifier: PiClassifier): boolean {
     if (!!piClassifier) {
-        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.type.referred === PiPrimitiveType.identifier) ) {
+        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.type === PiPrimitiveType.identifier) ) {
             return true;
         }
     }
@@ -221,7 +221,7 @@ export function hasNameProperty (piClassifier: PiClassifier): boolean {
  * Returns the type of the property 'prop' without taking into account 'isList' or 'isPart'
  */
 export function getBaseTypeAsString(property: PiProperty): string {
-    const myType = property.type.referred;
+    const myType = property.type;
     if (property instanceof PiPrimitiveProperty) {
         if (myType === PiPrimitiveType.identifier) {
             return "string";

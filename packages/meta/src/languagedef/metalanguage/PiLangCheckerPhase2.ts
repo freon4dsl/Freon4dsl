@@ -12,7 +12,6 @@ import {
 } from "./PiLanguage";
 import { PiElementReference } from "./PiElementReference";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
-import { CheckerHelper } from "./CheckerHelper";
 
 export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
 
@@ -281,7 +280,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         if ( !nameProperty ) {
             nameProperty = new PiPrimitiveProperty();
             nameProperty.name = "name";
-            nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
+            nameProperty.type = PiPrimitiveType.identifier;
             nameProperty.isPart = true;
             nameProperty.isList = false;
             nameProperty.isOptional = false;
@@ -290,7 +289,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             nameProperty.owningClassifier = piLimitedConcept;
             piLimitedConcept.primProperties.push(nameProperty);
         } else {
-            this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
+            this.simpleCheck(nameProperty.type === PiPrimitiveType.identifier,
                 `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${Checker.location(piLimitedConcept)}.`);
         }
         this.simpleCheck(piLimitedConcept.allParts().length === 0,
@@ -365,11 +364,11 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         language.conceptsAndInterfaces().forEach(classifier => {
             classifier.allParts().forEach(aPart => {
                 if (!aPart.isPrimitive && !aPart.isOptional && !aPart.isList) {
-                    const aPartType = aPart.type.referred;
+                    const aPartType = aPart.type;
                     if (!!aPartType) {
                         aPartType.allParts().forEach(bPart => {
                             if (!bPart.isOptional && !bPart.isList) {
-                                const bPartType = bPart.type.referred;
+                                const bPartType = bPart.type;
                                 this.simpleCheck(bPartType !== classifier,
                                     `Language contains an infinite loop: mandatory part '${aPart.name}' has mandatory property '${bPart.name}' of type ${bPart.type.name} ${Checker.location(aPart)}.`);
                             }
@@ -411,7 +410,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
                                 error: `Predefined property '${piPropertyInstance.name}' should have a primitive type ${Checker.location(piPropertyInstance)}.`,
                                 whenOk: () => {
                                     piPropertyInstance.property = PiElementReference.create<PiProperty>(myProp, "PiProperty");
-                                    let myPropType: PiPrimitiveType = myProp.type.referred as PiPrimitiveType;
+                                    let myPropType: PiPrimitiveType = myProp.type as PiPrimitiveType;
                                     if (!myProp.isList) {
                                         this.simpleCheck(this.checkValueToType(piPropertyInstance.value, myPropType),
                                             `Type of '${piPropertyInstance.value}' (${typeof piPropertyInstance.value}) does not fit type (${myPropType.name}) of property '${piPropertyInstance.name}' ${Checker.location(piPropertyInstance)}.`);
@@ -442,7 +441,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         copy.isList = property.isList;
         copy.isPart = property.isPart;
         copy.implementedInBase = false; // TODO check this: maybe false because the original property might come from an interface
-        copy.type = PiElementReference.create<PiClassifier>(property.type.referred, "PiClassifier");
+        copy.type = property.type;
         copy.owningClassifier = classifier;
         if (property instanceof PiPrimitiveProperty) {
             classifier.primProperties.push(copy as PiPrimitiveProperty);

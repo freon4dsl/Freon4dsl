@@ -33,26 +33,26 @@ describe("Checking generation of virtual props", () => {
         const rightOne = model?.concepts.find(concept => concept.name === "Right");
         const found = rightOne.primProperties.find(prop => prop.name === "name1");
         expect(!!found).toEqual(true);
-        expect(found.type.referred.name).toBe("boolean");
+        expect(found.type.name).toBe("boolean");
 
         // check all other properties
         for (let index= 2; index<5; index++) {
             const found = rightOne.properties.find(prop => prop.name === "name" + index);
-            // console.log("found" + index + ": " + found?.name + ": " + found?.type.referred.name);
+            // console.log("found" + index + ": " + found?.name + ": " + found?.type.name);
             expect(!!found).toEqual(true);
         }
         rightOne.properties.forEach(prop => {
             switch (prop.name) {
                 case "name2": {
-                    expect(prop.type.referred.name).toBe("Type1");
+                    expect(prop.type.name).toBe("Type1");
                     break;
                 }
                 case "name3": {
-                    expect(prop.type.referred.name).toBe("Type2");
+                    expect(prop.type.name).toBe("Type2");
                     break;
                 }
                 case "name4": {
-                    expect(prop.type.referred.name).toBe("Type3");
+                    expect(prop.type.name).toBe("Type3");
                     break;
                 }
             }
@@ -66,26 +66,26 @@ describe("Checking generation of virtual props", () => {
         const rightOne = model?.concepts.find(concept => concept.name === "Right");
         const found = rightOne.primProperties.find(prop => prop.name === "name1");
         expect(!!found).toEqual(true);
-        expect(found.type.referred.name).toBe("boolean");
+        expect(found.type.name).toBe("boolean");
 
         // check all other properties
         for (let index= 2; index<5; index++) {
             const found = rightOne.properties.find(prop => prop.name === "name" + index);
-            // console.log("found" + index + ": " + found?.name + ": " + found?.type.referred.name);
+            // console.log("found" + index + ": " + found?.name + ": " + found?.type.name);
             expect(!!found).toEqual(true);
         }
         rightOne.properties.forEach(prop => {
             switch (prop.name) {
                 case "name2": {
-                    expect(prop.type.referred.name).toBe("Type1");
+                    expect(prop.type.name).toBe("Type1");
                     break;
                 }
                 case "name3": {
-                    expect(prop.type.referred.name).toBe("Type2");
+                    expect(prop.type.name).toBe("Type2");
                     break;
                 }
                 case "name4": {
-                    expect(prop.type.referred.name).toBe("Type3");
+                    expect(prop.type.name).toBe("Type3");
                     break;
                 }
             }
@@ -102,7 +102,7 @@ describe("Checking generation of virtual props", () => {
         // the prim prop should be in 'RightBase'
         found = rightOne.base.referred.primProperties.find(prop => prop.name === "name1");
         expect(!!found).toEqual(true);
-        expect(found.type.referred.name).toBe("boolean");
+        expect(found.type.name).toBe("boolean");
 
         // check all other properties
         const otherProps: PiProperty[] = [];
@@ -116,15 +116,15 @@ describe("Checking generation of virtual props", () => {
         otherProps.forEach(prop => {
             switch (prop.name) {
                 case "name2": {
-                    expect(prop.type.referred.name).toBe("SuperType1");
+                    expect(prop.type.name).toBe("SuperType1");
                     break;
                 }
                 case "name3": {
-                    expect(prop.type.referred.name).toBe("SuperType2");
+                    expect(prop.type.name).toBe("SuperType2");
                     break;
                 }
                 case "name4": {
-                    expect(prop.type.referred.name).toBe("Type3");
+                    expect(prop.type.name).toBe("Type3");
                     break;
                 }
             }

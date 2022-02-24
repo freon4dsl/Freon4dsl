@@ -328,7 +328,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     private checkBooleanPropertyProjection(item: PiEditPropertyProjection, myProp: PiProperty) {
         LOGGER.log("checking boolean property projection: " + myProp?.name);
         this.nestedCheck({
-            check: myProp instanceof PiPrimitiveProperty && myProp.type.referred === PiPrimitiveType.boolean,
+            check: myProp instanceof PiPrimitiveProperty && myProp.type === PiPrimitiveType.boolean,
             error: `Property '${myProp.name}' may not have a keyword projection, because it is not of boolean type ${Checker.location(item)}.`,
             whenOk: () => {
                 this.nestedCheck({check: !myProp.isList,
@@ -479,7 +479,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         LOGGER.log("checking properties that have a TableProjection");
         for (const projection of this.propsWithTableProjection) {
             const myprop = projection.property.referred;
-            const propEditor = editor.findTableProjectionsForType(myprop.type.referred);
+            const propEditor = editor.findTableProjectionsForType(myprop.type);
             this.simpleWarning(propEditor !== null && propEditor !== undefined,
                 `No table projection defined for '${myprop.name}', it will be shown as a table with a single column ${Checker.location(projection)}.`);
         }
@@ -522,7 +522,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                                 check: !myProp.isPrimitive && myProp.isPart,
                                 error: `Named projections are only allowed for non-primitive part properties ${Checker.location(item)}.`,
                                 whenOk: () => {
-                                    const propType = myProp.type.referred;
+                                    const propType = myProp.type;
                                     this.checkProjectionName(item.projectionName, propType, item, editor);
                                 }
                             });

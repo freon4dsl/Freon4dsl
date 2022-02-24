@@ -226,8 +226,8 @@ export class ConceptTemplate {
             new Set(
                 concept.interfaces.map(i => Names.interface(i.referred))
                     .concat((concept.base ? Names.concept(concept.base.referred) : null))
-                    .concat(concept.implementedParts().map(part => Names.classifier(part.type.referred)))
-                    .concat(concept.implementedReferences().map(part => Names.classifier(part.type.referred)))
+                    .concat(concept.implementedParts().map(part => Names.classifier(part.type)))
+                    .concat(concept.implementedReferences().map(part => Names.classifier(part.type)))
                     .concat(Names.metaType(concept.language))
                     .concat(hasReferences ? (Names.PiElementReference) : null)
                     .filter(name => !(name === myName))
@@ -240,7 +240,7 @@ export class ConceptTemplate {
     private createInstancePropValue(property: PiInstanceProperty): string {
         const refProperty: PiProperty = property.property?.referred;
         if (!!refProperty && refProperty instanceof PiPrimitiveProperty) { // should always be the case
-            const type: PiClassifier = refProperty.type.referred;
+            const type: PiClassifier = refProperty.type;
             if (refProperty.isList) {
                 return `[ ${property.valueList.map(value =>
                     `${(type === PiPrimitiveType.string || type === PiPrimitiveType.identifier) ? `"${value}"` : `${value}` }`

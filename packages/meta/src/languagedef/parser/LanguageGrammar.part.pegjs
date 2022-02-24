@@ -115,16 +115,15 @@ expression = abs:abstractKey? binary:binaryKey? expressionKey ws name:var rws ba
 property = part:partProperty      { return part; }
          / ref:referenceProperty  { return ref; }
 
-partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? colon_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
+partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? colon_separator ws type:classifierReference isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
     {
-        let ref =  create.createClassifierReference({"name": type, "location": location()});
         return create.createPartOrPrimProperty({
             "isPublic": (!!isPublic),
             "name": name,
             "isOptional": (isOptional?true:false),
             "isList": (isList?true:false),
             "initialValue": initialvalue,
-            "type": ref,
+            "typeReference": type,
             "location": location()
         });
     }
@@ -133,7 +132,7 @@ referenceProperty = isPublic:publicKey? referenceKey ws name:var ws isOptional:o
     { return create.createReferenceProperty({
         "isPublic": (!!isPublic),
         "name": name,
-        "type": type,
+        "typeReference": type,
         "isOptional": (isOptional?true:false),
         "isList": (isList?true:false),
         "location": location()
