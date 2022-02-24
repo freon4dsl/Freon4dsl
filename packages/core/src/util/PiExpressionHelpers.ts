@@ -74,8 +74,8 @@ export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, 
 
     const rightConceptName = Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("right")?.type;
     const leftConceptName = Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("left")?.type;
-    console.log("RIGHT CONCEPT for "+ exp.piLanguageConcept()  + " is " + Language.getInstance().classifier(exp.piLanguageConcept()) );
-    console.log("            ===> " + Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("right") + " is " + rightConceptName);
+    // console.log("RIGHT CONCEPT for "+ exp.piLanguageConcept()  + " is " + Language.getInstance().classifier(exp.piLanguageConcept()) );
+    // console.log("            ===> " + Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("right") + " is " + rightConceptName);
     result.addChildren([
         (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : BoxFactory.alias(exp, PI_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left", conceptName: leftConceptName  })),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
