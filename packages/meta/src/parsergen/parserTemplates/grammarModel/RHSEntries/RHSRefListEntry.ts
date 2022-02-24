@@ -15,7 +15,7 @@ export class RHSRefListEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        const propType: string = Names.classifier(this.property.type.referred);
+        const propType: string = Names.classifier(this.property.type);
         const baseType: string = getBaseTypeAsString(this.property);
         return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformRefList}<${baseType}>(${nodeName}[${index}], '${propType}'); // RHSRefListEntry\n`;
     }

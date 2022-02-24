@@ -1,7 +1,7 @@
 import {
     PiClassifier,
     PiConcept,
-    PiConceptProperty,
+    PiConceptProperty, PiExpressionConcept,
     PiInterface, PiLangElement,
     PiLanguage,
     PiPrimitiveProperty,
@@ -46,27 +46,39 @@ export function sortConceptsWithBase(piconcepts: PiConcept[] | PiElementReferenc
     return _internalSort(piconcepts, newList).filter(c => c !== baseConcept);
 }
 
-function _internalSort(piconcepts: PiConcept[] | PiElementReference<PiConcept>[], newList): PiConcept[] {
-    for (const c of piconcepts) {
+function _internalSort(original: PiConcept[] | PiElementReference<PiConcept>[], newList: PiConcept[]): PiConcept[] {
+    let remaining: PiConcept[] = [];
+    for (const c of original) {
         // without base must be last
         const concept = (c instanceof PiElementReference ? c.referred : c);
         if (!concept.base) {
             newList.push(concept);
+        } else {
+            remaining.push(concept);
         }
     }
 
-    while (newList.length < piconcepts.length) {
-        for (const c of piconcepts) {
-            const concept = (c instanceof PiElementReference ? c.referred : c);
-            if (!newList.includes(concept)) { // concept is already in the list
-                const base = concept.base?.referred;
-                if (base) {
-                    if (newList.indexOf(base) > -1) { // base of the concept is already in the list
-                        newList.push(concept);
-                    }
+    let itemsToGo: number = remaining.length;
+    while (itemsToGo > 0) {
+        for (const concept of remaining) {
+            const base = concept.base?.referred; // the remaining ones should have a base
+            if (!!base) {
+                if (newList.indexOf(base) > -1) { // base of the concept is already in the list
+                    // console.log("adding " + concept.name);
+                    newList.push(concept);
+                    remaining.splice(remaining.indexOf(concept),1);
                 }
             }
         }
+        // see whether we should continue
+        // do not continue if (1) there are no remaining concepts
+        // (2) we were not able to push any remaining concept in the last go
+        if (remaining.length === 0 || remaining.length === itemsToGo) {
+            newList.push(...remaining); // push the last few remaining concepts to the new list
+            remaining = [];
+        }
+        itemsToGo = remaining.length;
+        // console.log("====> items to go: " + itemsToGo);
     }
     return newList.reverse();
 }
@@ -174,7 +186,7 @@ export function propertyToTypeScriptWithoutReferred(prop : PiProperty): string {
  */
 function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
     let isRef: boolean = false;
-    const ref = exp.referredElement?.referred;
+    const ref = exp.__referredElement?.referred;
     if (!!ref) { // should be present, otherwise it is an incorrect model
         // now see whether it is marked in the .ast file as 'reference'
         isRef = (ref instanceof PiConceptProperty) && !ref.isPart && !ref.isList;
@@ -188,7 +200,7 @@ function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
  * @param con
  */
 export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
-    return con.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
+    return con.allPrimProperties().find(p => p.name === "name" && p.type === PiPrimitiveType.identifier);
 }
 
 /**
@@ -198,7 +210,7 @@ export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
  */
 export function hasNameProperty (piClassifier: PiClassifier): boolean {
     if (!!piClassifier) {
-        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.type.referred === PiPrimitiveType.identifier) ) {
+        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.type === PiPrimitiveType.identifier) ) {
             return true;
         }
     }
@@ -209,7 +221,7 @@ export function hasNameProperty (piClassifier: PiClassifier): boolean {
  * Returns the type of the property 'prop' without taking into account 'isList' or 'isPart'
  */
 export function getBaseTypeAsString(property: PiProperty): string {
-    const myType = property.type.referred;
+    const myType = property.type;
     if (property instanceof PiPrimitiveProperty) {
         if (myType === PiPrimitiveType.identifier) {
             return "string";
@@ -255,4 +267,12 @@ export function createImports(language: PiLanguage): string {
     return `${tmp.map(c =>
         `${c}`
     ).join(", ")}`;
+}
+
+export function findExpressionBase(exp: PiExpressionConcept): PiExpressionConcept {
+    if (!!exp.base && exp.base.referred instanceof PiExpressionConcept) {
+        return findExpressionBase(exp.base.referred);
+    } else {
+        return exp;
+    }
 }

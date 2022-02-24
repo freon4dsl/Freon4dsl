@@ -51,21 +51,21 @@ interface IClassifier base IPackagableElement {
     invariants: OclExpression[];
 }
 
-//concept CollectionType {
-//    reference elementType: IClassifier;
-//    metatype: CollectionMetaType;
-//    isSet: boolean;
-//    isOrderedSet: boolean;
-//    isBag: boolean;
-//    isSequence: boolean;
-//}
-//limited CollectionMetaType {
-//    COLLECTION 		= { name: "Collection" }
-//    SET 			= { name: "Set" }
-//    ORDEREDSET 		= { name: "OrderedSet" }
-//    BAG 			= { name: "Bag" }
-//    SEQUENCE 		= { name: "Sequence" }
-//}
+concept CollectionType {
+    reference elementType: IClassifier;
+    metatype: CollectionMetaType;
+    isSet: boolean;
+    isOrderedSet: boolean;
+    isBag: boolean;
+    isSequence: boolean;
+}
+limited CollectionMetaType {
+    COLLECTION 		= { name: "Collection" }
+    SET 			= { name: "Set" }
+    ORDEREDSET 		= { name: "OrderedSet" }
+    BAG 			= { name: "Bag" }
+    SEQUENCE 		= { name: "Sequence" }
+}
 concept DataType implements IClassifier {
 }
 concept EnumerationType base DataType {

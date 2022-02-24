@@ -87,12 +87,12 @@ export class UnitAnalyser implements PiAnalyser {
 
     private analyseProperties(piClassifier: PiClassifier, typesDone: PiClassifier[]) {
         piClassifier.allParts().forEach(part => {
-            const type = part.type.referred;
+            const type = part.type;
             this.analyseUnitPriv(type, typesDone);
         });
         // and add all types of references to typesReferred
         piClassifier.allReferences().forEach(ref => {
-            const type = ref.type.referred;
+            const type = ref.type;
             if (type instanceof PiLimitedConcept && !this.limitedsReferred.includes(type)) {
                 this.limitedsReferred.push(type);
             }

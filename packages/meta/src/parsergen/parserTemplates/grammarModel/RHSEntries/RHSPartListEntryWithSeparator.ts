@@ -11,7 +11,7 @@ export class RHSPartListEntryWithSeparator extends RHSPropPartWithSeparator {
     }
 
     toGrammar(): string {
-        return `[ ${getTypeCall(this.property.type.referred)} / '${this.separatorText}' ]*` + this.doNewline();
+        return `[ ${getTypeCall(this.property.type)} / '${this.separatorText}' ]*` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

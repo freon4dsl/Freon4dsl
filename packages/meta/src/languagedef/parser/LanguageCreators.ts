@@ -236,17 +236,19 @@ function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty
 
 // we parse all props as primitive properties because they can have an extra attribute: 'initialValue'
 export function createPartOrPrimProperty(data: Partial<PiPrimitiveProperty>): PiProperty {
-    // console.log("createPartOrPrimProperty " + data.name + " "+ data.type + " "+ data.typeName);
+    // console.log("createPartOrPrimProperty " + data.name + " "+ data.typeReference + " "+ data.typeName);
+    // Note that we use 'data.typeReference', because at this stage we only have the name of the type, not the object itself.
     let result: PiProperty;
     // In the following we ignore data.initialValue for Part Properties (i.e. props where the type is a Concept).
     // But we do add an error message to the list of non-fatal parse errors.
     // This list of errors is added to the list of checking errors in the parse functions in PiParser.
-    if (!!data.type) {
-        // NOTE that the following check can NOT be '.type.referred === PiPrimitiveType.identifier' etc.
-        // '.type.referred' is determine by the scoper, which does not function when not all concepts are known AND
+    if (!!data.typeReference) {
+        // NOTE that the following check can NOT be '.typeReference.referred === PiPrimitiveType.identifier' etc.
+        // '.typeReference.referred' is determine by the scoper, which does not function when not all concepts are known AND
         // the language attribute of the concepts has been set. The latter is done in 'createLanguage', which is called
         // after this function is called!!
-        if (data.type.name === "string" || data.type.name === "boolean" || data.type.name === "number" || data.type.name === "identifier") {
+        const refName = data.typeReference.name; 
+        if (refName === "string" || refName === "boolean" || refName === "number" || refName === "identifier") {
             const primitiveProperty = new PiPrimitiveProperty();
             // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
             // we are not interested in its value, only whether it is present
@@ -267,8 +269,7 @@ export function createPartOrPrimProperty(data: Partial<PiPrimitiveProperty>): Pi
             }
             result = conceptProperty;
         }
-        result.type = data.type;
-        result.type.owner = result;
+        result.typeReference = data.typeReference;
     }
     result.isPart = true;
     createCommonPropertyAttrs(data, result);
@@ -280,9 +281,8 @@ export function createReferenceProperty(data: Partial<PiConceptProperty>): PiCon
     const result = new PiConceptProperty();
     result.isPart = false;
     createCommonPropertyAttrs(data, result);
-    if (!!data.type) {
-        result.type = data.type;
-        result.type.owner = result;
+    if (!!data.typeReference) {
+        result.typeReference = data.typeReference;
     }
     return result;
 }

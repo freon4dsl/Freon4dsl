@@ -596,7 +596,7 @@ export class WriterTemplate {
         const elemStr = propertyToTypeScript(item.property.referred);
         if (myElem.isList) {
             let isIdentifier: string = "false";
-            if (myElem.type.referred === PiPrimitiveType.identifier) {
+            if (myElem.type === PiPrimitiveType.identifier) {
                 isIdentifier = "true";
             }
             const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
@@ -614,7 +614,7 @@ export class WriterTemplate {
             }
         } else {
             let myCall: string;
-            const myType: PiClassifier = myElem.type.referred;
+            const myType: PiClassifier = myElem.type;
             if (myType === PiPrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
             } else if (myType === PiPrimitiveType.boolean) {
@@ -675,7 +675,7 @@ export class WriterTemplate {
     private makeItemWithConceptType(myElem: PiProperty, item: PiEditPropertyProjection, indent: number, inOptionalGroup: boolean) {
         // the property has a concept as type, thus we need to call its unparse method
         let result: string = "";
-        const type = myElem.type.referred;
+        const type = myElem.type;
         let nameOfUnparseMethod: string = "unparse";
         let typeCast: string = '';
         if (!!type) {

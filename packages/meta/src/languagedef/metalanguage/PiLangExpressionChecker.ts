@@ -13,7 +13,7 @@ import { PiLanguage, PiClassifier, PiProperty, PiLimitedConcept, PiInstance, PiL
 import { MetaLogger } from "../../utils/MetaLogger";
 
 const LOGGER = new MetaLogger("PiLangExpressionChecker").mute();
-const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof"];
+const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof", "commonSuperTypeOf"];
 const containerKeyword: string = "container";
 
 export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
@@ -126,7 +126,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
                                             `${Checker.location(langExp)}.`
                                 );
                                 if (!!foundInstance) {
-                                    langExp.referredElement = PiElementReference.create<PiInstance>(foundInstance, "PiInstance");
+                                    langExp.__referredElement = PiElementReference.create<PiInstance>(foundInstance, "PiInstance");
                                 }
                             }
                         });
@@ -139,8 +139,8 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     // self.XXX
     private checkSelfExpression(langExp: PiLangSelfExp, enclosingConcept: PiClassifier) {
         LOGGER.log("checkSelfExpression " + langExp?.toPiString());
-        langExp.referredElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiConcept");
-        langExp.referredElement.owner = langExp;
+        langExp.__referredElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiConcept");
+        langExp.__referredElement.owner = langExp;
         if (this.strictUseOfSelf) {
             this.nestedCheck(
                 {
@@ -163,8 +163,8 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
             check: langExp.sourceName === containerKeyword,
             error: `Expression should start with 'self' ${Checker.location(langExp)}.`,
             whenOk: () => {
-                langExp.referredElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiConcept");
-                langExp.referredElement.owner = langExp;
+                langExp.__referredElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiConcept");
+                langExp.__referredElement.owner = langExp;
             }
         });
     }
@@ -211,20 +211,19 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
 
         for (const e of enclosingConcept.allProperties()) {
             if (e.name === feat.sourceName) {
-                feat.referredElement = PiElementReference.create<PiProperty>(e, "PiProperty");
-                feat.referredElement.owner = feat;
+                feat.referredElement = e;
             }
         }
         this.nestedCheck({
-            check: !!feat.referredElement && !!feat.referredElement.referred,
+            check: !!feat.referredElement,
             error: `Cannot find property '${feat.sourceName}' in '${enclosingConcept.name}' ${Checker.location(feat)}.`,
             whenOk: () => {
                 if (!!feat.appliedfeature) {
-                    this.simpleCheck(!feat.referredElement.referred.isList,
+                    this.simpleCheck(!feat.referredElement.isList,
                         `List property '${feat.referredElement.name}' should not have an applied expression (.${feat.appliedfeature.toPiString()})` +
                         ` ${Checker.location(feat)}.`);
                     feat.appliedfeature.language = feat.language;
-                    this.checkAppliedFeatureExp(feat.appliedfeature, feat.referredElement.referred.type.referred);
+                    this.checkAppliedFeatureExp(feat.appliedfeature, feat.referredElement.type);
                 }
             }
         });

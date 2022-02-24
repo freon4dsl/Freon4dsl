@@ -2,21 +2,42 @@ import { PiBinaryExpressionConcept, PiClassifier, PiExpressionConcept, PiLanguag
 import { PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { BinaryExpressionRule } from "./grammarModel/BinaryExpressionRule";
+import { findExpressionBase } from "../../utils";
 
 export class BinaryExpMaker {
-    static specialBinaryRuleName = `__pi_binary_expression`;
+    private static specialBinaryRuleName = `__pi_binary_`;
     imports: PiClassifier[] = [];
 
-    public generateBinaryExpressions(language:PiLanguage, projectionGroup: PiEditProjectionGroup, binaryConceptsUsed: PiBinaryExpressionConcept[]): GrammarRule {
-        // common information
-        const expressionBase: PiExpressionConcept = language.findExpressionBase();
-        const editDefs: Map<PiClassifier, string> = this.findEditDefs(binaryConceptsUsed, projectionGroup);
-        const branchName = BinaryExpMaker.specialBinaryRuleName;
+    public static getBinaryRuleName(expBase:PiExpressionConcept) {
+        return BinaryExpMaker.specialBinaryRuleName + expBase.name;
+    }
 
-        this.imports.push(expressionBase);
-        this.imports.push(...binaryConceptsUsed);
+    public generateBinaryExpressions(language:PiLanguage, projectionGroup: PiEditProjectionGroup, binaryConceptsUsed: PiBinaryExpressionConcept[]): GrammarRule[] {
+        const result: GrammarRule[] = [];
 
-        return new BinaryExpressionRule(branchName, expressionBase, editDefs);
+        // in case there are multiple expression hierarchies, we need to group the binaries based on their expressionBase
+        const groups: Map<PiExpressionConcept, PiBinaryExpressionConcept[]> = new Map<PiBinaryExpressionConcept, PiBinaryExpressionConcept[]>();
+        binaryConceptsUsed.forEach(bin => {
+            const expBase: PiExpressionConcept = findExpressionBase(bin);
+            if (groups.has(expBase)) {
+                groups.get(expBase).push(bin);
+            } else {
+                groups.set(expBase, [bin]);
+            }
+        });
+
+        groups.forEach((binaries: PiBinaryExpressionConcept[], expBase: PiExpressionConcept) => {
+            // common information
+            const editDefs: Map<PiClassifier, string> = this.findEditDefs(binaries, projectionGroup);
+            const branchName = BinaryExpMaker.getBinaryRuleName(expBase);
+
+            this.imports.push(expBase);
+            this.imports.push(...binaries);
+
+            result.push( new BinaryExpressionRule(branchName, expBase, editDefs));
+        })
+
+        return result;
     }
 
     private findEditDefs(binaryConceptsUsed: PiBinaryExpressionConcept[], projectionGroup: PiEditProjectionGroup): Map<PiClassifier, string> {

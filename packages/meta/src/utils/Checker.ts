@@ -1,5 +1,6 @@
 import { PiLanguage } from "../languagedef/metalanguage";
 import { ParseLocation, PiDefinitionElement } from "../utils";
+import * as path from "path";
 
 export type NestedCheck = { check: boolean; error: string; whenOk?: () => void };
 
@@ -64,16 +65,26 @@ export abstract class Checker<DEFINITION> {
 
     static location(elem: PiDefinitionElement): string {
         if (!!elem && !!elem.location) {
-            const shortFileName: string[] = elem.location.filename.split("/");
-            return `[file: ${shortFileName[shortFileName.length - 1]}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
+            const shortFileName: string = this.getShortFileName(elem.location.filename);
+            return `[file: ${shortFileName}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
         }
         return `[no location]`;
     }
 
+    private static getShortFileName(filename: string): string {
+        let names: string[] = [];
+        if (filename.includes("\\")) {
+            names = filename.split("\\");
+        } else if (filename.includes("/")) {
+            names = filename.split("/");
+        }
+        return names[names.length - 1];
+    }
+
     static locationPlus(fileName: string, location: ParseLocation) {
         if (!!location && !!fileName) {
-            const shortFileName: string[] = fileName.split("/");
-            return `[file: ${shortFileName[shortFileName.length - 1]}, line: ${location.start.line}, column: ${location.start.column}]`;
+            const shortFileName: string = this.getShortFileName(fileName);
+            return `[file: ${shortFileName}, line: ${location.start.line}, column: ${location.start.column}]`;
         }
         return `[no location]`;
     }

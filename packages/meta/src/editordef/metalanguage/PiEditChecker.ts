@@ -19,7 +19,7 @@ import {
     PiOptionalPropertyProjection,
     ExtraClassifierInfo,
     PiEditProjectionLine,
-    ListJoinType
+    ListJoinType, PiEditProjectionText, PiEditProjectionItem
 } from "./PiEditDefLang";
 import { MetaLogger } from "../../utils";
 import { PiElementReference } from "../../languagedef/metalanguage";
@@ -62,6 +62,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         this.checkPropsWithTableProjection(editUnit);
 
         // check uniqueness of names and precedence
+        LOGGER.log("checking uniqueness of names and precedence");
         let names: string[] = [];
         let precedences: number[] = [0]; // 0 is the number for the default group, which is always present
         editUnit.projectiongroups.forEach(group => {
@@ -70,6 +71,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             group.owningDefinition = editUnit;
         });
 
+        LOGGER.log("finalize checking");
         // warning in case there is no 'default'editor
         this.simpleWarning(!!editUnit.getDefaultProjectiongroup(),
             `No editor with name 'default' found, a default editor will be generated.`);
@@ -238,7 +240,6 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                         `A limited concept cannot have a projection, it can only be used as reference ${Checker.location(projection)}.`);
                 } else {
                     if (projection instanceof PiEditProjection) {
-
                         this.checkNormalProjection(projection, myClassifier, editor);
                     } else if (projection instanceof PiEditTableProjection) {
                         this.checkTableProjection(projection, myClassifier, editor);
@@ -284,8 +285,14 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     projection.lines.forEach(line => {
                         this.checkLine(line, cls, editor);
                     });
+                    const first: PiEditProjectionItem = projection.lines[0]?.items[0];
+                    if (first instanceof PiEditProjectionText) {
+                        this.simpleWarning(first.text.trimEnd() !== "?",
+                            `The main projection may never be optional ${Checker.location(projection)}.`);
+                    }
                 }
             });
+
         }
     }
 
@@ -321,7 +328,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     private checkBooleanPropertyProjection(item: PiEditPropertyProjection, myProp: PiProperty) {
         LOGGER.log("checking boolean property projection: " + myProp?.name);
         this.nestedCheck({
-            check: myProp instanceof PiPrimitiveProperty && myProp.type.referred === PiPrimitiveType.boolean,
+            check: myProp instanceof PiPrimitiveProperty && myProp.type === PiPrimitiveType.boolean,
             error: `Property '${myProp.name}' may not have a keyword projection, because it is not of boolean type ${Checker.location(item)}.`,
             whenOk: () => {
                 this.nestedCheck({check: !myProp.isList,
@@ -472,7 +479,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         LOGGER.log("checking properties that have a TableProjection");
         for (const projection of this.propsWithTableProjection) {
             const myprop = projection.property.referred;
-            const propEditor = editor.findTableProjectionsForType(myprop.type.referred);
+            const propEditor = editor.findTableProjectionsForType(myprop.type);
             this.simpleWarning(propEditor !== null && propEditor !== undefined,
                 `No table projection defined for '${myprop.name}', it will be shown as a table with a single column ${Checker.location(projection)}.`);
         }
@@ -515,7 +522,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                                 check: !myProp.isPrimitive && myProp.isPart,
                                 error: `Named projections are only allowed for non-primitive part properties ${Checker.location(item)}.`,
                                 whenOk: () => {
-                                    const propType = myProp.type.referred;
+                                    const propType = myProp.type;
                                     this.checkProjectionName(item.projectionName, propType, item, editor);
                                 }
                             });

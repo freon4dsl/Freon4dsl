@@ -38,13 +38,11 @@ export class ProjectionTemplate {
     private falseKeyword: string = "false";
 
     generateProjectionGroup(language: PiLanguage, projectionGroup: PiEditProjectionGroup, relativePath: string): string {
-
+        // console.log("generateProjectionGroup " + projectionGroup.name);
         // binary concepts are only handled in the default projection group
         let binaryConcepts: PiConcept[] = [];
         if (projectionGroup.name === Names.defaultProjectionName) {
              binaryConcepts = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept));
-            // sort the concepts such that base concepts come last
-            binaryConcepts = sortConceptsWithBase(binaryConcepts, language.findExpressionBase());
         }
 
         // reset the table projections, then remember all table projections
@@ -387,15 +385,15 @@ export class ProjectionTemplate {
             return `TableUtil.tableBoxColumnOriented(
                 ${elementVarName},
                 "${property.name}",
-                this.rootProjection.getTableDefinition("${property.type.referred.name}").headers,
-                this.rootProjection.getTableDefinition("${property.type.referred.name}").cells,
+                this.rootProjection.getTableDefinition("${property.type.name}").headers,
+                this.rootProjection.getTableDefinition("${property.type.name}").cells,
                 ${Names.environment(language)}.getInstance().editor)`;
         } else {
             return `TableUtil.tableBoxRowOriented(
                 ${elementVarName},
                 "${property.name}",
-                this.rootProjection.getTableDefinition("${property.type.referred.name}").headers,
-                this.rootProjection.getTableDefinition("${property.type.referred.name}").cells,
+                this.rootProjection.getTableDefinition("${property.type.name}").headers,
+                this.rootProjection.getTableDefinition("${property.type.name}").cells,
                 ${Names.environment(language)}.getInstance().editor)`;
         }
     }
@@ -419,7 +417,7 @@ export class ProjectionTemplate {
     }
 
     private generateReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
-        const featureType = Names.classifier(appliedFeature.type.referred);
+        const featureType = Names.classifier(appliedFeature.type);
         this.addToIfNotPresent(this.modelImports, featureType);
         this.addToIfNotPresent(this.modelImports, Names.PiElementReference);
         this.addToIfNotPresent(this.coreImports, "BoxUtils");
@@ -468,7 +466,7 @@ export class ProjectionTemplate {
     private singlePrimitivePropertyProjection(property: PiPrimitiveProperty, element: string, boolInfo?: BoolKeywords): string {
         this.addToIfNotPresent(this.coreImports, "BoxUtils");
         const listAddition: string = `${property.isList ? `, index` : ``}`;
-        switch (property.type.referred) {
+        switch (property.type) {
             case PiPrimitiveType.string:
             case PiPrimitiveType.identifier:
                 return `BoxUtils.textBox(${element}, "${property.name}"${listAddition})`;

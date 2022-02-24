@@ -44,15 +44,6 @@ export class PiLanguage extends PiLangElement {
         return result;
     }
 
-    findExpressionBase(): PiExpressionConcept {
-        // TODO rethink the inheritance structure of expressions: should binaries always inherit from expression, and more questions!
-        // TODO the following depends on the order of concepts in the .ast file
-        const result = this.concepts.find(c => {
-            return c instanceof PiExpressionConcept && (!!c.base ? !(c.base.referred instanceof PiExpressionConcept) : true);
-        });
-        return result as PiExpressionConcept;
-    }
-
     findBasicType(name:string): PiClassifier {
         return PiPrimitiveType.find(name);
     }
@@ -66,6 +57,7 @@ export abstract class PiClassifier extends PiLangElement {
     language: PiLanguage;
     isPublic: boolean;
     properties: PiProperty[] = [];
+    // TODO remove this attribute and make it a function on 'properties'
     primProperties: PiPrimitiveProperty[] = [];
 
     parts(): PiConceptProperty[] {
@@ -104,7 +96,7 @@ export abstract class PiClassifier extends PiLangElement {
 
     // TODO use this method in favour of nameProperty()
     identifierNameProperty(): PiPrimitiveProperty {
-        return this.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
+        return this.allPrimProperties().find(p => p.name === "name" && p.type === PiPrimitiveType.identifier);
     }
 }
 
@@ -115,7 +107,7 @@ export class PiModelDescription extends PiClassifier {
         let result: PiUnitDescription[] = [];
         // all parts of a model are units
         for (const intf of this.parts()) {
-            result = result.concat(intf.type.referred as PiUnitDescription);
+            result = result.concat(intf.type as PiUnitDescription);
         }
         return result;
     }
@@ -391,12 +383,26 @@ export class PiProperty extends PiLangElement {
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
     implementedInBase: boolean = false;
-    type: PiElementReference<PiClassifier>;
+    private __type: PiElementReference<PiClassifier>;
     owningClassifier: PiClassifier;
 
     get isPrimitive(): boolean {
         return false;
     };
+    get type(): PiClassifier {
+        return this.__type?.referred;
+    }
+    set type(t: PiClassifier) {
+        this.__type = PiElementReference.create<PiClassifier>(t, "PiClassifier");
+        this.__type.owner = this;
+    }
+    get typeReference(): PiElementReference<PiClassifier> { // only used by PiLanguageChecker
+        return this.__type;
+    }
+    set typeReference(t : PiElementReference<PiClassifier>) { // only used by PiLanguageChecker
+        this.__type = t;
+        this.__type.owner = this;
+    }
 }
 
 export class PiConceptProperty extends PiProperty {

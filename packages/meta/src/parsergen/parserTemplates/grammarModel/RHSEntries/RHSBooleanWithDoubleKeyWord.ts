@@ -15,8 +15,6 @@ export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        // no need for the closing '?' because this is always within an optional group
-        // e.g [?${self.primBoolean [<BOOL>]}]
         return `( '${this.trueKeyword}' | '${this.falseKeyword}' )` + this.doNewline();
     }
 

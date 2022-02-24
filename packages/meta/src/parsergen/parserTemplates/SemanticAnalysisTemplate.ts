@@ -20,14 +20,14 @@ export class SemanticAnalysisTemplate {
                 for (const sub of subs) {
                     if (sub instanceof PiConcept) {
                         for (const ref of sub.allReferences()) {
-                            if (analyser.classifiersUsed.includes(ref.type.referred)){
+                            if (analyser.classifiersUsed.includes(ref.type)){
                                 this.addProblem(sub);
                                 hasProblems = true;
                             }
                         }
                     }
                     for (const prim of sub.allPrimProperties()) {
-                        if (prim.type.referred == PiPrimitiveType.boolean) {
+                        if (prim.type == PiPrimitiveType.boolean) {
                             this.exprWithBooleanProp.set(sub, prim);
                         }
                     }
@@ -161,7 +161,7 @@ export class SemanticAnalysisTemplate {
             if (!poss.isAbstract) {
                 let toBeCreated: string = Names.classifier(poss);
                 for (const ref of poss.allReferences().filter(prop => !prop.isList)) {
-                    let type: PiClassifier = ref.type.referred;
+                    let type: PiClassifier = ref.type;
                     let metatype: string = Names.classifier(type);
                     this.addToImports(type);
                     let propName: string = ref.name;

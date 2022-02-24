@@ -29,13 +29,11 @@ concept ModelElementReference {
 
 concept OclContext implements IModelElement {
     owningModelelement: ModelElementReference; // the element to which the OCL expression is attached.
-    isDefinition: boolean; // true if the OCL expression defines an attribute or operation.
-    reference definedOperation?: Operation; // the operation that is defined in the OCL expression using the
-                                            // def construct.
-    reference definedAttribute?: Attribute; // the attribute that is defined in the OCL expression using the
-                                            // def construct.
-    expression: OclExpression; // The OCL expression itself.
-    usageType: OclUsageType; // The role that the OCL plays. E.g. invariant, precondition, init expression, derivation rule, etc.
+    isDefinition: boolean;          // true if the OCL expression defines an attribute or operation.
+    definedOperation?: Operation;   // the operation that is defined in the OCL expression using the def construct.
+    definedAttribute?: Attribute;   // the attribute that is defined in the OCL expression using the def construct.
+    expression: OclExpression;      // The OCL expression itself.
+    usageType: OclUsageType;        // The role that the OCL plays. E.g. invariant, precondition, init expression, derivation rule, etc.
 }
 
 limited OclUsageType { inv; pre; post; init; derive; body; def; }

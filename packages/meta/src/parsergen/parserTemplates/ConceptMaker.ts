@@ -1,5 +1,5 @@
 import {
-    ListJoinType, PiEditClassifierProjection,
+    ListJoinType,
     PiEditProjection, PiEditProjectionGroup,
     PiEditProjectionItem,
     PiEditProjectionLine,
@@ -37,6 +37,7 @@ import {
     RHSPrimListGroup, RHSListGroupWithInitiator, RHSPrimListGroupWithInitiator, RHSBooleanWithDoubleKeyWord
 } from "./grammarModel";
 import { LOG2USER } from "../../utils/UserLogger";
+import { RHSBinaryExp } from "./grammarModel/RHSEntries/RHSBinaryExp";
 
 
 export class ConceptMaker {
@@ -52,8 +53,10 @@ export class ConceptMaker {
         for (const piConcept of conceptsUsed) {
             // all methods in this class depend on the fact that only non-table projections are passes as parameter!!
             let projection: PiEditProjection = ParserGenUtil.findNonTableProjection(projectionGroup, piConcept);
-            // generate a grammar rule entry
-            rules.push(this.generateProjection(piConcept, projection, false));
+            if (!!projection) {
+                // generate a grammar rule entry
+                rules.push(this.generateProjection(piConcept, projection, false));
+            }
         }
         for (const projection of this.namedProjections) {
             // generate a grammar rule entry
@@ -112,7 +115,7 @@ export class ConceptMaker {
         const prop: PiProperty = item.property.referred;
         let result: RHSPropEntry = null;
         if (!!prop) {
-            const propType: PiClassifier = prop.type.referred; // more efficient to determine referred only once
+            const propType: PiClassifier = prop.type; // more efficient to determine referred only once
             this.imports.push(propType);
             // take care of named projections
             let myProjName: string = null;
@@ -126,8 +129,7 @@ export class ConceptMaker {
             } else if (propType instanceof PiLimitedConcept) {
                 result = this.makeLimitedProp(prop, item, inOptionalGroup);
             } else if (propType instanceof PiBinaryExpressionConcept) {
-                console.log("asking for a binary: " + propType.name);
-                // TODO what to do with PiBinaryExpressionConcept as propType
+                result = new RHSBinaryExp(prop, propType);
             } else {
                 if (!prop.isList) {
                     result = this.makeSingleProperty(prop, myProjName, inOptionalGroup);
@@ -229,7 +231,7 @@ export class ConceptMaker {
             } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                 return new RHSPrimListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
             } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
-                const sub1 = new RHSRefEntry(prop);
+                const sub1 = new RHSPrimEntry(prop);
                 return new RHSPrimListGroupWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
             } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                 const sub1 = new RHSPrimEntry(prop);

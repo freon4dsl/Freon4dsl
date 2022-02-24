@@ -1,5 +1,7 @@
 editor default
 
+referenceSeparator [::]
+
 AssociationClassCallExp {
     [${self.referredAssociationClass}]
 }

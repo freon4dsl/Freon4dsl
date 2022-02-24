@@ -1,4 +1,4 @@
-import { PiClassifier, PiConcept, PiElementReference, PiInterface, PiPrimitiveProperty, PiProperty } from "../languagedef/metalanguage/";
+import { PiClassifier, PiConcept, PiElementReference, PiInterface, PiProperty } from "../languagedef/metalanguage/";
 import { refListIncludes } from "./GenerationHelpers";
 
 /**
@@ -117,7 +117,7 @@ export class LangUtil {
      * @param piInterface
      */
     public static findImplementorsDirect(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
-        let implementors : PiConcept[] = [];
+        let implementors : PiConcept[];
         const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
         const allConcepts = myInterface.language.concepts;
         implementors = allConcepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
@@ -131,7 +131,7 @@ export class LangUtil {
      * @param piInterface
      */
     public static findImplementorsRecursive(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
-        let implementors : PiConcept[] = [];
+        let implementors : PiConcept[];
         const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
         const allConcepts = myInterface.language.concepts;
         implementors = allConcepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
@@ -199,8 +199,8 @@ export class LangUtil {
             return false;
         }
 
-        let type1: PiClassifier = firstProp.type?.referred;
-        let type2: PiClassifier = secondProp.type?.referred;
+        let type1: PiClassifier = firstProp.type;
+        let type2: PiClassifier = secondProp.type;
         if (!type1 || !type2 ) {
             console.log("INTERNAL ERROR: property types are not set: " + firstProp.name + ", " + secondProp.name);
             return false;

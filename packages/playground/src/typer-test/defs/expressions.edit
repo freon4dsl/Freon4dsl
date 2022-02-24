@@ -1,0 +1,9 @@
+editor default
+
+SimpleExp1 {
+    [${xx}]
+}
+
+SimpleExp2 {
+    [${xx}]
+}

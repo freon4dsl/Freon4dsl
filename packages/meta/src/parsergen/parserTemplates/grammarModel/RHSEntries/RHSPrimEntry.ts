@@ -10,7 +10,7 @@ export class RHSPrimEntry extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        return `${getPrimCall(this.property.type.referred)}` + this.doNewline();
+        return `${getPrimCall(this.property.type)}` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

@@ -2,7 +2,7 @@ import { RHSPropEntry } from "./RHSPropEntry";
 import { PiProperty } from "../../../../languagedef/metalanguage";
 import { getTypeCall, makeIndent } from "../GrammarUtils";
 import { getBaseTypeAsString } from "../../../../utils";
-import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil";
+import { internalTransformList, internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPartListEntry extends RHSPropEntry {
     constructor(prop: PiProperty) {
@@ -12,12 +12,20 @@ export class RHSPartListEntry extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        return `${getTypeCall(this.property.type.referred)}*` + this.doNewline();
+        return `${getTypeCall(this.property.type)}*` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(${nodeName}[${index}]); // RHSPartListEntry\n`;
+        return `// RHSPartListEntry
+        if (children[${index}].name !== "${getTypeCall(this.property.type)}") {
+            ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(${nodeName}[${index}]); 
+        } else { // special case: only when this entry is the single rhs entry of this rule
+            ${ParserGenUtil.internalName(this.property.name)} = [];
+            for (const child of children) {
+                ${ParserGenUtil.internalName(this.property.name)}.push(this.${mainAnalyserName}.${internalTransformNode}(child));
+            }
+        }`
     }
 
     toString(depth: number): string {

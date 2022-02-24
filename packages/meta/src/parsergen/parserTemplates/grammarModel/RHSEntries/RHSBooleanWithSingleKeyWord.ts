@@ -6,7 +6,7 @@ import { ParserGenUtil } from "../../ParserGenUtil";
 export class RHSBooleanWithSingleKeyWord extends RHSPropEntry {
     private keyword: string = "";
 
-    constructor(prop: PiPrimitiveProperty, keyword) {
+    constructor(prop: PiPrimitiveProperty, keyword: string) {
         super(prop);
         this.keyword = keyword;
         this.isList = false;

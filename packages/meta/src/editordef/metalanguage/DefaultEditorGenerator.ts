@@ -110,6 +110,7 @@ export class DefaultEditorGenerator {
             // find or create the extra info
             DefaultEditorGenerator.addExtraDefaults(defaultGroup, con, language);
         }
+        // console.log("defaultsForInterfaces done ");
     }
 
     private static defaultClassifierProjection(con: PiClassifier, language: PiLanguage): PiEditProjection {
@@ -133,7 +134,7 @@ export class DefaultEditorGenerator {
         // add all properties on the next lines
         for (const prop of con.allProperties().filter((p => p !== nameProp))) {
             // add the type if it is an interface to the list to be genereated later
-            const propType = prop.type.referred;
+            const propType = prop.type;
             if (propType instanceof  PiInterface) {
                 this.interfacesUsed.push(propType);
             }
@@ -238,7 +239,7 @@ export class DefaultEditorGenerator {
     }
 
     private static defaultsForUnit(language: PiLanguage, defaultGroup: PiEditProjectionGroup) {
-        // console.log("classifiersToDo: " + classifiersToDo.map(c => c.name).join(', '))
+        // console.log("defaultsForUnit: " + language.units.map(c => c.name).join(', '))
         for (const con of language.units) {
             // Find or create the projection, and its properties
             let foundProjection: PiEditClassifierProjection = defaultGroup.findProjectionsForType(con)[0];

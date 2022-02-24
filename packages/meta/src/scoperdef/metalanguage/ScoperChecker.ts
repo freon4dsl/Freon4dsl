@@ -8,8 +8,7 @@ import {
     PiClassifier
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
-import { LangUtil } from "../../utils";
-import { MetaLogger } from "../../utils/MetaLogger";
+import { LangUtil, MetaLogger } from "../../utils";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
@@ -69,10 +68,10 @@ export class ScoperChecker extends Checker<PiScopeDef> {
                     const xx: PiProperty = exp.findRefOfLastAppliedFeature();
                     if (!!xx) {
                         this.nestedCheck({
-                            check: (!!xx.type.referred && (xx.type.referred instanceof PiConcept || xx.type.referred instanceof PiUnitDescription)),
+                            check: (!!xx.type && (xx.type instanceof PiConcept || xx.type instanceof PiUnitDescription)),
                             error: `A namespace addition should refer to a concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`,
                             whenOk: () => {
-                                this.simpleCheck(this.myNamespaces.includes(xx.type.referred),
+                                this.simpleCheck(this.myNamespaces.includes(xx.type),
                                     `A namespace addition should refer to a namespace concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`);
                             }
                         });
