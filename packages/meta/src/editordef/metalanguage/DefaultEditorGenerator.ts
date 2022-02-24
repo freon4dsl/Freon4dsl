@@ -134,7 +134,7 @@ export class DefaultEditorGenerator {
         // add all properties on the next lines
         for (const prop of con.allProperties().filter((p => p !== nameProp))) {
             // add the type if it is an interface to the list to be genereated later
-            const propType = prop.type.referred;
+            const propType = prop.type;
             if (propType instanceof  PiInterface) {
                 this.interfacesUsed.push(propType);
             }

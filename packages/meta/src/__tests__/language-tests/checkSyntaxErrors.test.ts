@@ -57,7 +57,7 @@ describe("Checking language parser on syntax errors", () => {
         try {
             parser.parse(parseFile);
         } catch (e) {
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected ";" or "=" but "p" found.`
+            expect(e.message).toBe(`syntax error: SyntaxError: Expected ";", "=", or "[]" but "p" found.`
                 + " \n                "
                 +`[file: test6.ast, line: 11, column: 5]`);
         }

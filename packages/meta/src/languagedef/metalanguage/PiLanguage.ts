@@ -1,5 +1,6 @@
 import { PiElementReference } from "./internal";
 import { PiDefinitionElement } from "../../utils/PiDefinitionElement";
+import { OrType } from "@projectit/playground/dist/typer-test/language/gen/OrType";
 
 // root of the inheritance structure of all elements in a language definition
 export abstract class PiLangElement extends PiDefinitionElement {
@@ -96,7 +97,7 @@ export abstract class PiClassifier extends PiLangElement {
 
     // TODO use this method in favour of nameProperty()
     identifierNameProperty(): PiPrimitiveProperty {
-        return this.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
+        return this.allPrimProperties().find(p => p.name === "name" && p.type === PiPrimitiveType.identifier);
     }
 }
 
@@ -107,7 +108,7 @@ export class PiModelDescription extends PiClassifier {
         let result: PiUnitDescription[] = [];
         // all parts of a model are units
         for (const intf of this.parts()) {
-            result = result.concat(intf.type.referred as PiUnitDescription);
+            result = result.concat(intf.type as PiUnitDescription);
         }
         return result;
     }
@@ -383,12 +384,26 @@ export class PiProperty extends PiLangElement {
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
     implementedInBase: boolean = false;
-    type: PiElementReference<PiClassifier>;
+    private __type: PiElementReference<PiClassifier>;
     owningClassifier: PiClassifier;
 
     get isPrimitive(): boolean {
         return false;
     };
+    get type(): PiClassifier {
+        return this.__type?.referred;
+    }
+    set type(t: PiClassifier) {
+        this.__type = PiElementReference.create<PiClassifier>(t, "PiClassifier");
+        this.__type.owner = this;
+    }
+    get typeReference(): PiElementReference<PiClassifier> { // only used by PiLanguageChecker
+        return this.__type;
+    }
+    set typeReference(t : PiElementReference<PiClassifier>) { // only used by PiLanguageChecker
+        this.__type = t;
+        this.__type.owner = this;
+    }
 }
 
 export class PiConceptProperty extends PiProperty {

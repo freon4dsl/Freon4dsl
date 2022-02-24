@@ -115,7 +115,7 @@ export class ConceptMaker {
         const prop: PiProperty = item.property.referred;
         let result: RHSPropEntry = null;
         if (!!prop) {
-            const propType: PiClassifier = prop.type.referred; // more efficient to determine referred only once
+            const propType: PiClassifier = prop.type; // more efficient to determine referred only once
             this.imports.push(propType);
             // take care of named projections
             let myProjName: string = null;

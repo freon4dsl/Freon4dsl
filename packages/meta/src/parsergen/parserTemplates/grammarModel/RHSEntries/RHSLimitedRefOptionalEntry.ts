@@ -11,7 +11,7 @@ export class RHSLimitedRefOptionalEntry extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        return `${getTypeCall(this.property.type.referred)}?` + this.doNewline();
+        return `${getTypeCall(this.property.type)}?` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

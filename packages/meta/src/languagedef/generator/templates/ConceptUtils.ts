@@ -33,7 +33,7 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
     const comment = "// implementation of " + property.name;
     const arrayType = property.isList ? "[]" : "";
     let initializer = "";
-    const myType: PiClassifier = property.type.referred;
+    const myType: PiClassifier = property.type;
     if (!property.isList) {
         switch (myType) {
             case PiPrimitiveType.identifier: {
@@ -72,16 +72,16 @@ export function makePartProperty(property: PiConceptProperty): string {
     // const decorator = property.isList ? "@observablelistpart" : "@observablepart";
     const arrayType = property.isList ? "[]" : "";
     const initializer = "";
-    // return `${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
-    return `${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
+    // return `${decorator} ${property.name} : ${Names.classifier(property.type)}${arrayType} ${initializer}; ${comment}`;
+    return `${property.name} : ${Names.classifier(property.type)}${arrayType} ${initializer}; ${comment}`;
 }
 
 export function makeReferenceProperty(property: PiConceptProperty): string {
     const comment = "// implementation of reference '" + property.name + "'";
     // const decorator = property.isList ? "@observablelistpart" : "@observablepart";
     const arrayType = property.isList ? "[]" : "";
-    // return `${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
-    return `${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
+    // return `${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
+    return `${property.name} : PiElementReference<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
 }
 
 export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): string {

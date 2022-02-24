@@ -32,7 +32,7 @@ export class PiLangScoper {
             result = this.language.findClassifier(name);
         } else if (typeName === "PiProperty" || typeName === "PiPrimitiveProperty" || typeName === "PiConceptProperty") {
             if (owner instanceof PiLangAppliedFeatureExp) {
-                const xx = owner.sourceExp.referredElement?.referred;
+                const xx = owner.sourceExp.__referredElement?.referred;
                 if (!(!!xx)) {
                     LOGGER.error(`Incorrect use of applied feature, source expression has unknown reference: '${owner.sourceExp.sourceName}'.`);
                 }

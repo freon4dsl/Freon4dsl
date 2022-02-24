@@ -38,7 +38,7 @@ export class NamesCollectorTemplate {
 
         ${commentBefore}
         public execBefore${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean {
-            ${language.modelConcept.allParts().map(part => hasNameProperty(part.type?.referred) ?
+            ${language.modelConcept.allParts().map(part => hasNameProperty(part.type) ?
         (part.isList ?
             `for (const z of modelelement.${part.name}) { this.addIfTypeOK(z);  }`
             : `this.addIfTypeOK(modelelement.${part.name});`)
@@ -49,7 +49,7 @@ export class NamesCollectorTemplate {
         ${language.units.map(unit =>
             `${commentBefore}
             public execBefore${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean {
-                ${unit.allParts().map(part => hasNameProperty(part.type?.referred) ?
+                ${unit.allParts().map(part => hasNameProperty(part.type) ?
                 (part.isList ?
                     `for (const z of modelelement.${part.name}) { this.addIfTypeOK(z);  }`
                     : `this.addIfTypeOK(modelelement.${part.name});`)
@@ -62,7 +62,7 @@ export class NamesCollectorTemplate {
         ${language.concepts.map(concept =>
             `${commentBefore}
             public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
-                ${concept.allParts().map(part => hasNameProperty(part.type?.referred) ?
+                ${concept.allParts().map(part => hasNameProperty(part.type) ?
                     (part.isList ?
                         `for (const z of modelelement.${part.name}) { this.addIfTypeOK(z);  }`
                         : `this.addIfTypeOK(modelelement.${part.name});`)

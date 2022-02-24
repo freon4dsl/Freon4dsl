@@ -97,11 +97,11 @@ export class DefaultActionsTemplate {
                                 // TODO Check for lists (everywhere)
                                 rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
                             } else if (prop.isPrimitive) {
-                                if( prop.type.referred === PiPrimitiveType.number) {
+                                if( prop.type === PiPrimitiveType.number) {
                                     rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox")
-                                } else if( prop.type.referred === PiPrimitiveType.string) {
+                                } else if( prop.type === PiPrimitiveType.string) {
                                     rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox")
-                                } else if( prop.type.referred === PiPrimitiveType.boolean) {
+                                } else if( prop.type === PiPrimitiveType.boolean) {
                                     rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox")
                                 }
                             } else {
@@ -133,7 +133,7 @@ export class DefaultActionsTemplate {
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
         allClassifiers.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
-                const referredConcept = reference.type.referred;
+                const referredConcept = reference.type;
                 const extras = editorDef.findExtrasForType(referredConcept);
                 const trigger = (!!extras && !!extras.trigger) ? extras.trigger : reference.name;
                 result += `PiCustomAction.create(

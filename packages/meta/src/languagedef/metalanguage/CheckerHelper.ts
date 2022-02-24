@@ -10,7 +10,7 @@ export class CheckerHelper {
         if (!nameProperty) {
             nameProperty = new PiPrimitiveProperty();
             nameProperty.name = "name";
-            nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
+            nameProperty.type = PiPrimitiveType.identifier;
             nameProperty.isPart = true;
             nameProperty.isList = false;
             nameProperty.isOptional = false;
@@ -19,7 +19,7 @@ export class CheckerHelper {
             nameProperty.owningClassifier = classifier;
             classifier.primProperties.push(nameProperty);
         } else {
-            checker.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
+            checker.simpleCheck(nameProperty.type === PiPrimitiveType.identifier,
                 `The 'name' property of '${classifier.name}' should be of type 'identifier' ${Checker.location(classifier)}.`);
         }
     }
