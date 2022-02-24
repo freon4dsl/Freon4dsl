@@ -1,6 +1,5 @@
 import { PiElementReference } from "./internal";
 import { PiDefinitionElement } from "../../utils/PiDefinitionElement";
-import { OrType } from "@projectit/playground/dist/typer-test/language/gen/OrType";
 
 // root of the inheritance structure of all elements in a language definition
 export abstract class PiLangElement extends PiDefinitionElement {
