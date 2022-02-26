@@ -292,7 +292,7 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
         if (!!this.boolInfo) {
             extraText = `\n/* boolean */ ${this.boolInfo}`;
         }
-        return `\${ ${this.expression.toPiString()} /* ${this.property?.referred ?
+        return `\${ ${this.expression? this.expression.toPiString() : ``} /* ${this.property?.referred ?
             `found ${this.property?.referred?.name}` :
             `not found ${this.property?.name}`} */ }${extraText}`;
     }
@@ -307,7 +307,9 @@ export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
     public findPropertyProjection(): PiEditPropertyProjection {
         let result: PiEditPropertyProjection = null;
         this.lines.forEach(l => {
-            result = l.items.find(item => item instanceof PiEditPropertyProjection) as PiEditPropertyProjection;
+            if (!result) {
+                result = l.items.find(item => item instanceof PiEditPropertyProjection) as PiEditPropertyProjection;
+            }
         });
         return result;
     }
