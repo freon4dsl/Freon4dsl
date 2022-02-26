@@ -1,0 +1,8 @@
+typer xxx for language PiLanguage
+//Self {
+//    infertype self.ancestor(PiTypeClassifierRule).myClassifier;
+//}
+//
+//TypePropertyRef {
+//    infertype self.p.type;
+//}

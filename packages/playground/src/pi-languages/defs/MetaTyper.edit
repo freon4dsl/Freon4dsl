@@ -1,0 +1,76 @@
+editor default
+
+referenceSeparator [::::]
+
+// begin typer definition
+PiTyperDef {[
+    typer
+    istype { ${self.types horizontal separator [, ]} }
+    [?${self.anyTypeRule}]
+    ${self.classifierRules vertical}
+    ]}
+
+PitConformanceOrEqualsRule {[
+    ${self.myClassifier} {
+        ${self.myRules}
+    }
+]}
+
+PitAnyTypeRule {[
+    anytype {
+        ${self.myRules}
+    }
+    ]}
+
+PitXXX {
+    [ ${self.kind} [? ${self.other} ] [? ${self.exp} ] ;]
+}
+
+PitOtherType {[
+    ${self.otherType} where {
+        ${self.conditions terminator[;]}
+    }
+]}
+
+PitInferenceRule {[
+    ${self.myClassifier} {
+        ${self.isAbstract [abstract]} infertype [? ${self.exp} ] [? ${self.other} ] ;
+    }
+]}
+
+PitLimitedRule {[
+    ${self.myClassifier} {
+        ${self.statements terminator[; ]}
+    }
+]}
+
+PitStatement {
+    [${self.left} ${self.operand} ${self.right}]
+}
+
+PitFunctionCallExp {
+    [${self.functionName} ( ${self.arguments horizontal separator[, ]} )[?.${self.applied}]]
+}
+PitSelfExp {
+    [self . ${self.applied}]
+}
+PitPropertyRef {
+    [${self.p}.${self.applied}]
+}
+
+PitPropertyCallExp {
+    [${self.myProperty}[?.${self.applied}]]
+}
+
+PitInstanceRef {
+    [[?${self.myLimited}:]${self.myInstance}]
+}
+
+PitAnytypeRef {
+    [anytype]
+}
+
+PitProperty {
+    [${self.name} : ${self.type}]
+}
+// end typer definition

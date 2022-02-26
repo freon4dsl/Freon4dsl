@@ -1,0 +1,5 @@
+validator yyy for language PiLanguage
+
+PitInstanceRef {  // LimitedType:Instance12 of Instance12
+    // self.myLimited.instances.includes( self.myInstance );
+}

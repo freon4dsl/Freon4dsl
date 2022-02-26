@@ -1,0 +1,20 @@
+rules
+
+modelunit PitrDef {
+    if (!anyTypeRule) {
+        self.anyTypeRule = self.classifierRules.find(rule => rule.myClassifier.name === "anytype")
+    }
+    // typeroot should be set
+}
+
+PitInstanceRef {  // LimitedType:Instance12 or Instance12
+    if (!self.myLimited) {
+        self.myLimited = ancestor(PitLimitedRule).myClassifier;
+    }
+}
+
+PitProperty {
+    if (!self.owningConcept) {
+        self.owningConcept = ancestor(PitClassifierRule).myClassifier;
+    }
+}

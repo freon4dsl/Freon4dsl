@@ -1,0 +1,106 @@
+language TyTest
+
+// MODEL
+model TyTest {
+    public unitA: unitA;
+    public unitB: unitB;
+}
+// type definitions
+modelunit unitB {
+    typeDefs: Type[];
+    file-extension = "types";
+}
+// expressions and their types
+modelunit unitA {
+    lines: Line[];
+    file-extension = "expr";
+}
+modelunit unitC {
+    lines: Line[];
+    exp: SimpleExp1;
+    file-extension = "tmp";
+}
+// ALL INTERFACES
+interface Exp {
+}
+
+interface Type { // base BaseType {
+    public name: identifier;
+}
+//
+//interface BaseType {
+//}
+///
+concept Line {
+    expr: Exp;
+    type: TypeDeclaration;
+}
+
+// EXPRESSIONS
+concept SimpleExp1 implements Exp {
+    xx: number;
+}
+
+concept SimpleExp2 implements Exp {
+    xx: number;
+}
+
+concept NamedExp implements Exp {
+    myType: NamedType;
+}
+
+concept PlusExp implements Exp {
+    left: Exp;
+    right: Exp;
+}
+
+concept UnitLiteral implements Exp {
+    // 62 kilogram, or 112 miles
+    inner: SimpleExp1;
+    unit: UnitKind;
+}
+
+concept GenericLiteral implements Exp {
+    // Set{ 12, 14, 16, 18 }
+    content: Exp[];
+    kind: GenericKind;
+}
+
+// TYPES
+
+
+limited PredefinedType implements Type { Simple1; Simple2; ANY; NULL; }
+
+concept NamedType implements Type {
+}
+
+abstract concept TypeDeclaration {
+}
+
+concept SimpleType base TypeDeclaration {
+    reference type: Type; // anything but GenericType or UnitOfMeasurement
+}
+
+concept GenericType base TypeDeclaration {
+    innerType: TypeDeclaration;
+    kind: GenericKind; // is it a set, sequence, bag, or anything else
+}
+
+limited GenericKind { Set; Sequence; Bag; Collection; }
+
+concept UnitOfMeasurement base TypeDeclaration {
+    baseType: PredefinedType;
+    unit: UnitKind; // is it measured in km, kWh, grams, or anything else
+}
+limited UnitKind { Meters; Grams; kWh; Hours; }
+
+
+//concept OrType implements Type { // represents "one of", e.g. string|string[]
+//    reference inners: Type[];
+//}
+//
+//concept AndType implements Type { // represents "all of", e.g. Comparable&Serializable
+//    reference inners: Type[];
+//}
+
+

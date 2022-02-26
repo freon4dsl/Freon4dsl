@@ -2,40 +2,89 @@ language PiLanguage
 
 // begin typer definition
 modelunit PiTyperDef {
-    public name: identifier;
-//}
-//concept PiTypeDefinition {
-//    location: ParseLocation;
-//    name: identifier;
-    languageName: string;
-    reference language: PiStructureDef;
-    typerRules: PiTypeRule[];
-    classifierRules: PiTypeClassifierRule[];
-    reference typeroot: PiClassifier;
+    name: identifier = "TYPER";
+    location?: PiParseLocation;
     reference types: PiClassifier[];
+    anyTypeRule?: PitAnyTypeRule;
+    classifierRules: PitClassifierRule[];
+    reference typeroot?: PiClassifier;
     file-extension = "type";
 }
 
-abstract concept PiTypeRule base PiLangElement {
-//    location: ParseLocation;
-}
-concept PiTypeIsTypeRule base PiTypeRule {
-    reference types: PiClassifier[];
+limited PitStatementKind {
+    EQUALS = {name: "equalsto"}
+    CONFORMS = {name: "conformsto"}
 }
 
-concept PiTypeAnyTypeRule base PiTypeRule {
-    statements: PiTypeStatement[];
+concept PitAnyTypeRule {
+    myRules: PitXXX[];
 }
 
-concept PiTypeClassifierRule base PiTypeRule {
-    reference conceptRef: PiClassifier;
-    statements: PiTypeStatement[];
+abstract concept PitClassifierRule {
+    reference myClassifier: PiClassifier;
 }
 
-concept PiTypeStatement {
-//    location: ParseLocation;
-    statementtype: string;
-    exp: PiLangExp;
+concept PitConformanceOrEqualsRule base PitClassifierRule {
+    myRules: PitXXX[];
+}
+
+concept PitXXX {
+    kind: PitStatementKind;
+    exp?: PitExp;
+    other?: PitOtherType;
+}
+
+concept PitOtherType {
+    otherType: PitProperty; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
+    conditions: PitStatement[];
+}
+
+concept PitInferenceRule base PitClassifierRule {
     isAbstract: boolean;
+    exp?: PitExp;
+    other?: PitOtherType;
+}
+
+concept PitLimitedRule base PitClassifierRule {
+    statements: PitStatement[];
+}
+
+concept PitStatement {
+    left: PitExp;
+    right: PitExp;
+    operand: PitStatementKind; // either 'equalsto' or 'conformsto'
+}
+
+abstract concept PitExp {
+}
+interface Applied {
+}
+concept PitFunctionCallExp base PitExp implements Applied {
+    functionName: identifier;
+    arguments: PitExp[];
+    applied?: Applied;
+}
+concept PitSelfExp base PitExp {
+    applied: Applied;
+}
+concept PitPropertyRef {
+    reference p: PitProperty;
+    applied: Applied;
+}
+
+concept PitPropertyCallExp base PitExp implements Applied {
+    reference myProperty: PiProperty;
+    applied?: Applied;
+}
+
+concept PitInstanceRef base PitExp {
+    reference myLimited?: PiLimitedConcept; // self.myLimited = self.limited ?? ancestor(PitLimitedRule).myClassifier;
+    reference myInstance: PiInstance;
+}
+
+concept PitAnytypeRef base PitExp {
+}
+
+concept PitProperty base PiProperty {
 }
 // end typer definition
