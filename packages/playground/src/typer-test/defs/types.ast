@@ -1,31 +1,44 @@
 language TyTest
 
-interface Type {
+interface Type { // base BaseType {
     name: identifier;
 }
+//
+//interface BaseType {
+//}
 
-limited SimpleType implements Type { Simple1; Simple2; }
+limited PredefinedType implements Type { Simple1; Simple2; ANY; NULL; }
 
 concept NamedType implements Type {
 }
 
-concept GenericType implements Type {
-    reference innerType: Type;
+abstract concept TypeDeclaration {
+}
+
+concept SimpleType base TypeDeclaration {
+    reference type: Type; // anything but GenericType or UnitOfMeasurement
+}
+
+concept GenericType base TypeDeclaration {
+    innerType: TypeDeclaration;
     kind: GenericKind; // is it a set, sequence, bag, or anything else
 }
 
 limited GenericKind { Set; Sequence; Bag; Collection; }
 
-concept OrType implements Type { // represents "one of", e.g. string|string[]
-    reference inners: Type[];
-}
-
-concept AndType implements Type { // represents "all of", e.g. Comparable&Serializable
-    reference inners: Type[];
-}
-
-concept UnitOfMeasurement implements Type {
-    reference baseType: SimpleType;
+concept UnitOfMeasurement base TypeDeclaration {
+    baseType: PredefinedType;
     unit: UnitKind; // is it measured in km, kWh, grams, or anything else
 }
 limited UnitKind { Meters; Grams; kWh; Hours; }
+
+
+//concept OrType implements Type { // represents "one of", e.g. string|string[]
+//    reference inners: Type[];
+//}
+//
+//concept AndType implements Type { // represents "all of", e.g. Comparable&Serializable
+//    reference inners: Type[];
+//}
+
+

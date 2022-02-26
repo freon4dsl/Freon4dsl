@@ -12,8 +12,9 @@ describe("Pi Language Parser", () => {
 
     test( " on .ast file", () => {
         try {
+            const completeModel: PiLanguage = new PiLanguage();
             const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.ast");
-            const unit1: PiStructureDef = reader.readFromString(input, "PiStructureDef") as PiStructureDef;
+            const unit1: PiStructureDef = reader.readFromString(input, "PiStructureDef", completeModel) as PiStructureDef;
             console.log(writer.writeToString(unit1, 0, false));
             // expect(unit1).toMatchSnapshot();
         } catch (e) {
@@ -24,8 +25,9 @@ describe("Pi Language Parser", () => {
 
     test( " on .scope file", () => {
         try {
+            const completeModel: PiLanguage = new PiLanguage();
             const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.scope");
-            const unit1: PiScoperDef = reader.readFromString(input, "PiScoperDef") as PiScoperDef;
+            const unit1: PiScoperDef = reader.readFromString(input, "PiScoperDef", completeModel) as PiScoperDef;
             console.log(writer.writeToString(unit1, 0, false));
             // expect(unit1).toMatchSnapshot();
         } catch (e) {
@@ -36,8 +38,9 @@ describe("Pi Language Parser", () => {
 
     test( " on .valid file", () => {
         try {
+            const completeModel: PiLanguage = new PiLanguage();
             const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.valid");
-            const unit1: PiValidatorDef = reader.readFromString(input, "PiValidatorDef") as PiValidatorDef;
+            const unit1: PiValidatorDef = reader.readFromString(input, "PiValidatorDef", completeModel) as PiValidatorDef;
             console.log(writer.writeToString(unit1, 0, false));
             // expect(unit1).toMatchSnapshot();
         } catch (e) {
@@ -48,18 +51,18 @@ describe("Pi Language Parser", () => {
 
     test( " on .type file", () => {
         try {
+            const completeModel: PiLanguage = new PiLanguage();
             const languageStr = fileHandler.stringFromFile("src/pi-languages/__inputs__/typer-test/types.ast");
-            const langUnit: PiStructureDef = reader.readFromString(languageStr, "PiStructureDef") as PiStructureDef;
+            const langUnit: PiStructureDef = reader.readFromString(languageStr, "PiStructureDef", completeModel) as PiStructureDef;
+            // completeModel.addUnit(langUnit);
+
             const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/typer-test/type-rules.type");
-            const typeUnit: PiTyperDef = reader.readFromString(input, "PiTyperDef") as PiTyperDef;
+            const typeUnit: PiTyperDef = reader.readFromString(input, "PiTyperDef", completeModel) as PiTyperDef;
 
             // const conc = langUnit.concepts.find(x => x.name ==="SimpleExp1");
             // expect (conc).not.toBeNull();
             // expect (conc).not.toBeUndefined();
-
-            const completeModel: PiLanguage = new PiLanguage();
-            completeModel.addUnit(langUnit);
-            completeModel.addUnit(typeUnit);
+            // completeModel.addUnit(typeUnit);
             // console.log(`visible in langUnit: ${scoper.getVisibleElements(langUnit).map(elem => `${elem.name}`).join(", ")}`);
             // console.log(`visible in typeUnit: ${scoper.getVisibleElements(typeUnit).map(elem => `${elem.name}`).join(", ")}`);
             // console.log(`visible in complete model: ${scoper.getVisibleElements(completeModel).map(elem => `${elem.name}`).join(", ")}`);

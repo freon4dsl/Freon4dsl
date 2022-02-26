@@ -5,6 +5,8 @@ import { UnitAnalyser } from "./UnitAnalyser";
 
 // first call 'analyse' then the other methods as they depend on the global variables to be set
 
+// TODO rethink semantic analysis => should be done on whole model
+// why is common unit not included???
 export class SemanticAnalysisTemplate {
     imports: PiClassifier[] = [];
     possibleProblems: PiConcept[] = [];
@@ -12,11 +14,12 @@ export class SemanticAnalysisTemplate {
     private exprWithBooleanProp: Map<PiClassifier, PiPrimitiveProperty> = new Map<PiClassifier, PiPrimitiveProperty>();
 
     analyse(analyser: UnitAnalyser) {
-        this.reset();
+        // this.reset();
         // find which classifiers have possible problems
         for (const [classifier, subs] of analyser.interfacesAndAbstractsUsed) {
             if (!((classifier as PiConcept).base)) {
                 let hasProblems: boolean = false;
+                let subsWithSingleReference: PiConcept[] = [];
                 for (const sub of subs) {
                     if (sub instanceof PiConcept) {
                         for (const ref of sub.allReferences()) {
@@ -25,12 +28,26 @@ export class SemanticAnalysisTemplate {
                                 hasProblems = true;
                             }
                         }
+                        // find all concepts that have a single non-optional reference, and possibly other optional props
+                        // the parsing will render a rule thatmatches when only one reference is present
+                        // these references need to be checked against their expected (meta)types.
+                        const nonOptionals = sub.allProperties().filter(prop => !prop.isOptional);
+                        if (nonOptionals.length === 1 && !nonOptionals[0].isPart) {
+                            subsWithSingleReference.push(sub);
+                        }
                     }
                     for (const prim of sub.allPrimProperties()) {
                         if (prim.type == PiPrimitiveType.boolean) {
                             this.exprWithBooleanProp.set(sub, prim);
                         }
                     }
+                }
+                if (subsWithSingleReference.length > 1) { // a single one will not result in problems
+                    subsWithSingleReference.forEach(sub => {
+                        // console.log("adding problem for " + sub.name);
+                        this.addProblem(sub);
+                    });
+                    hasProblems = true;
                 }
                 if (hasProblems) {
                     this.addSuper(classifier);

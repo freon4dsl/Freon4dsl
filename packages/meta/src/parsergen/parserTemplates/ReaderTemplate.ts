@@ -1,7 +1,6 @@
-import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
+import {  PiLanguage } from "../../languagedef/metalanguage";
 import { PiEditUnit } from "../../editordef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, READER_GEN_FOLDER } from "../../utils";
-import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../utils";
 
 export class ReaderTemplate {
 
@@ -10,7 +9,7 @@ export class ReaderTemplate {
      * to handle every modelunit in the language.
      */
     public generateReader(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
-        const className: string = Names.semanticAnalyser(language);
+        const semanticAnalyser: string = Names.semanticAnalyser(language);
 
         // Template starts here
         return `
@@ -19,10 +18,10 @@ export class ReaderTemplate {
         import LanguageProcessor = net.akehurst.language.api.processor.LanguageProcessor;
         import Agl = net.akehurst.language.agl.processor.Agl;
         import AutomatonKind_api = net.akehurst.language.api.processor.AutomatonKind_api;
-        import { ${Names.modelunit(language)}, ModelUnitMetaType } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${Names.modelunit(language)}, ModelUnitMetaType, ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
-        import { ${className} } from "./${className}";
+        import { ${semanticAnalyser} } from "./${semanticAnalyser}";
         
         /**
         *   Class ${Names.reader(language)} is a wrapper for the various parsers of
@@ -38,7 +37,7 @@ export class ReaderTemplate {
              * @param sentence
              * @param metatype
              */
-            readFromString(sentence: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
+            readFromString(sentence: string, metatype: ModelUnitMetaType, model: ${Names.classifier(language.modelConcept)}): ${Names.modelunit(language)} {
                 let startRule: string = "";
                 // choose the correct parser                
                 ${language.units.map(unit =>
@@ -47,38 +46,41 @@ export class ReaderTemplate {
                     }`).join(" else ")}
                     
                 // parse the input
-                let model: ${Names.modelunit(language)} = null;
+                let unit: ${Names.modelunit(language)} = null;
                 if (this.parser) {
                     try {
-                        if (startRule.length > 0) {
-                            let sppt = this.parser.parseForGoal(startRule, sentence, AutomatonKind_api.LOOKAHEAD_1);
-                        } else {
-                            let sppt = this.parser.parse(sentence);
-                        }
-                    } catch (e) {
-                        // strip the error message, otherwise it's too long for the webapp 
-                        let mess = e.message.replace("Could not match goal,", "Parse error");
-                        console.log(mess);
-                        throw new Error(mess);
-                    }
-                    try {
-                    let asm;
+                        let asm;
                         if (startRule.length > 0) {
                             asm = this.parser.processForGoal(null, startRule, sentence, AutomatonKind_api.LOOKAHEAD_1);
                         } else {
                             asm = this.parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
                         }
-                        model = asm as ${Names.modelunit(language)};
-                        const semAnalyser = new ${className}();
-                        semAnalyser.correct(model);
+                        unit = asm as ${Names.modelunit(language)};
                     } catch (e) {
-                        console.log(e.message);
-                        throw e;
-                    }                  
+                        // strip the error message, otherwise it's too long for the webapp
+                        let mess = e.message.replace("Could not match goal,", "Parse error");
+                        console.log(mess);
+                        throw new Error(mess);
+                    }
+                    // do semantic analysis taking into account the whole model, because references could be pointing anywhere
+                    if (!!model) {
+                        try {
+                            if (model.getUnits().filter(existing => existing.name === unit.name).length > 0) {
+                                throw new Error(\`Unit named '\${unit.name}' already exists.\`);
+                            } else {
+                                model.addUnit(unit);
+                                const semAnalyser = new ${semanticAnalyser}();
+                                semAnalyser.correct(unit);
+                            }
+                        } catch (e) {
+                            console.log(e.message);
+                            throw e;
+                        }
+                    }              
                 } else {
                     throw new Error(\`No parser for \${metatype} available: grammar incorrect.\`);
                 }
-                return model;        
+                return unit;        
             }
         }
         `;

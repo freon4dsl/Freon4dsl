@@ -9,7 +9,7 @@ describe("Test the parser", () => {
         const fileHandler = new FileHandler();
 
         let input = fileHandler.stringFromFile("src/parser_gen/__tests__/ParserInput1.txt");
-        const unit1: DemoUnit = reader.readFromString(input, "DemoUnit") as DemoUnit;
+        const unit1: DemoUnit = reader.readFromString(input, "DemoUnit", new Demo()) as DemoUnit;
 
         unit1.main?.baseEntity.forEach(ent => {
             expect(ent).not.toBeUndefined();
@@ -21,7 +21,7 @@ describe("Test the parser", () => {
         });
 
         input = fileHandler.stringFromFile("src/parser_gen/__tests__/ParserInput2.txt");
-        const unit2: DemoUnit = reader.readFromString(input, "DemoUnit") as DemoUnit;
+        const unit2: DemoUnit = reader.readFromString(input, "DemoUnit", new Demo()) as DemoUnit;
         //
         unit2.main?.baseEntity.forEach(ent => {
             expect(ent).not.toBeUndefined();

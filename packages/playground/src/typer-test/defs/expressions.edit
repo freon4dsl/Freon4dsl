@@ -7,3 +7,24 @@ SimpleExp1 {
 SimpleExp2 {
     [${xx}]
 }
+
+NamedExp {
+    [ NAMED expr of type ${myType}]
+}
+
+//OrExpression {
+//    [ OR expression of ${first} and ${second}]
+//}
+//
+//AndExpression {
+//    [ AND expression of ${first} and ${second}]
+//}
+
+UnitLiteral {
+    [ UNIT expression of ${inner} with unit ${unit}]
+}
+
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    [ GENERIC expression of ${content} with kind ${kind}]
+}

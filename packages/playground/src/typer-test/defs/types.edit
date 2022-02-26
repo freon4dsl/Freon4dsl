@@ -6,13 +6,13 @@ GenericType {
     [type ${kind}<${innerType}>;]
 }
 
-OrType { // represents "one of", e.g. string|string[]
-    [type OR<${inners horizontal separator[, ]}>;]
-}
-
-AndType { // represents "all of", e.g. Comparable&Serializable
-    [type AND<${inners horizontal separator[, ]}>;]
-}
+//OrType { // represents "one of", e.g. string|string[]
+//    [type OR<${inners horizontal separator[\| ]}>;]
+//}
+//
+//AndType { // represents "all of", e.g. Comparable&Serializable
+//    [type AND<${inners horizontal separator[& ]}>;]
+//}
 
 UnitOfMeasurement {
     [type ${baseType}<${unit}>;]

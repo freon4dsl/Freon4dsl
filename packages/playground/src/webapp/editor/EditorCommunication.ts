@@ -320,12 +320,21 @@ export class EditorCommunication {
         // save the old current unit, if there is one
         this.saveCurrentUnit();
         let elem: PiNamedElement = null;
-        elem = editorEnvironment.reader.readFromString(content, metaType) as PiNamedElement;
-        if (elem) {
-            if (this.currentModel.getUnits().filter(unit => unit.name === elem.name).length > 0) {
-                setUserMessage(`Unit named '${elem.name}' already exists.`, severityType.error);
-                return;
-            }
+        try {
+            // the following also adds the new unit to the model
+            elem = editorEnvironment.reader.readFromString(content, metaType, this.currentModel) as PiNamedElement;
+            // add the new unit to the navigator
+            this.setUnitLists();
+            // set elem in editor
+            this.showUnitAndErrors(elem);
+        } catch (e) {
+            setUserMessage(e.message, severityType.error);
+        }
+        // if (elem) {
+        //     if (this.currentModel.getUnits().filter(unit => unit.name === elem.name).length > 0) {
+        //         setUserMessage(`Unit named '${elem.name}' already exists.`, severityType.error);
+        //         return;
+        //     }
 
             // TODO find way to get interface without use of the server, because of concurrency error
             // swap old unit with its interface in the in-memory model
@@ -340,12 +349,10 @@ export class EditorCommunication {
             //     });
 
             // add the new unit to the current model
-            this.currentModel.addUnit(elem);
-            // add the new unit to the navigator
-            this.setUnitLists();
-            // set elem in editor
-            this.showUnitAndErrors(elem);
-        }
+            // this.currentModel.addUnit(elem);
+
+        // }
+
     }
 
     /**

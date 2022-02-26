@@ -20,16 +20,17 @@ modelunit unitC {
     file-extension = "tmp";
 }
 concept Line {
-    expression: Exp;
-    reference type: Type;
+    expr: Exp;
+    type: TypeDeclaration;
 }
+
 //concept SimpleLine1 base Line {
 //       expression: SimpleExp1;
-//       type: SimpleType;
+//       type: PredefinedType;
 //}
 //concept SimpleLine2 base Line {
 //       expression: SimpleExp2;
-//       type: SimpleType;
+//       type: PredefinedType;
 //}
 //concept NamedLine1 base Line {
 //       expression: NamedExp1;

@@ -10,7 +10,7 @@ unitC {
     [${lines initiator [LINE]} ${exp}]
 }
 Line {
-    [${expression} : ${type} ;]
+    [${expr} : ${type} ;]
 }
 //SimpleLine1 {
 //    [${expression} : ${type} ;]

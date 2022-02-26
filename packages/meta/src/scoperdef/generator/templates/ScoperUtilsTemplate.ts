@@ -10,6 +10,7 @@ export class ScoperUtilsTemplate {
         const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
         // also process the units that are not explicitly marked as namespace
         language.units.forEach(unit => {
+            // TODO check this and change the documentation
             if (!concreteNamespaces.includes(unit)) {
                 concreteNamespaces.push(unit);
             }
