@@ -23,7 +23,7 @@ ExampleUnit {
         unit ${name} {
             ${entities vertical }
         unit level methods:
-            ${methods table rows}
+            ${methods vertical}
         }
         ]
 }
@@ -35,7 +35,8 @@ Method {
     ]
 }
 Parameter {
-    [${name} : ${declaredType}]
+     [${name} : ${declaredType}]
+    table [${name} | ${declaredType}]
 }
 MethodCallExpression {
     [CALL ${methodDefinition} ( ${args horizontal separator[,] } )]

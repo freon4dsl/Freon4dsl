@@ -88,6 +88,7 @@ export class ProjectionTemplate {
                 constructor() {
                     makeObservable(this, {
                         showBrackets: observable,
+                        isEnabled: observable,
                     });
                 }
 
