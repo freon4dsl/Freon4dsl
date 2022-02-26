@@ -250,7 +250,7 @@ export class BoxUtils {
         if (selectable !== undefined && selectable !== null && selectable) {
             _selectable = true;
         }
-        const roleName: string = RoleProvider.label(element, uid);
+        const roleName: string = RoleProvider.label(element, uid) + "-" + content;
         return BoxFactory.label(element, roleName, content, {
             selectable: _selectable
         });

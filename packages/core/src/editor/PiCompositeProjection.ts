@@ -1,18 +1,20 @@
 import { observable, makeObservable, action } from "mobx";
 import { PiElement } from "../language";
-import { Box, BoxFactory, LabelBox, OrderedList, PiProjection } from "./internal";
+import { Box, BoxFactory, LabelBox, PiProjection } from "./internal";
 import { PiTableDefinition } from "./PiTables";
 import { Language } from "../storage";
 
 export class PiCompositeProjection implements PiProjection {
-    private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
+    private projections: Map<string, PiProjection> = new Map<string, PiProjection>();
     private _rootProjection: PiProjection | null = null;
     name: string = "";
     isEnabled: boolean = true;
 
     set rootProjection(p: PiCompositeProjection) {
         this._rootProjection = p;
-        this.projections.toArray().forEach(child => (child.element.rootProjection = p));
+        for(let child of this.projections.values()) {
+            child.rootProjection = p;
+        }
     }
 
     constructor(name?: string) {
@@ -28,9 +30,9 @@ export class PiCompositeProjection implements PiProjection {
     }
 
     getBox(element: PiElement): Box {
-        for (let p of this.projections.toArray()) {
-            if (p.element.isEnabled) {
-                const result: Box = p.element.getBox(element);
+        for (let p of this.projections.values()) {
+            if (p.isEnabled) {
+                const result: Box = p.getBox(element);
                 if (result !== null) {
                     return result;
                 }
@@ -41,9 +43,9 @@ export class PiCompositeProjection implements PiProjection {
     }
 
     getNamedBox(element: PiElement, projectionName: string): Box {
-        const proj = this.projections.getByName(projectionName);
+        const proj = this.projections.get(projectionName);
         if (!!proj) {
-            const result: Box = proj.element.getBox(element);
+            const result: Box = proj.getBox(element);
             if (result !== null) {
                 return result;
             }
@@ -53,9 +55,9 @@ export class PiCompositeProjection implements PiProjection {
     }
 
     getTableDefinition(conceptName: string): PiTableDefinition {
-        for (let p of this.projections.toArray()) {
-            if (p.element.isEnabled) {
-                const result = p.element.getTableDefinition(conceptName);
+        for (let p of this.projections.values()) {
+            if (p.isEnabled) {
+                const result = p.getTableDefinition(conceptName);
                 if (result !== null) {
                     return result;
                 }
@@ -71,24 +73,24 @@ export class PiCompositeProjection implements PiProjection {
     }
 
     addProjection(p: PiProjection) {
-        this.projections.add(p.name, p);
+        this.projections.set(p.name, p);
         p.rootProjection = this; //(!!this.rootProjection ? this : this.rootProjection);
     }
 
     enableProjection(name: string) {
         BoxFactory.clearCaches();
         console.log("Composite: enabling Projection " + name);
-        this.projections.getByName(name).element.isEnabled = true;
+        this.projections.get(name).isEnabled = true;
     }
 
     disableProjection(name: string) {
         BoxFactory.clearCaches();
         console.log("Composite: disabling Projection " + name);
-        this.projections.getByName(name).element.isEnabled = false;
+        this.projections.get(name).isEnabled = false;
     }
 
     projectionNames(): string[] {
-        return this.projections.toArray().map(p => p.name);
+        return Array.from(this.projections.keys());
     }
 
     checkSuper(nameOfSuper: string, elementName: string ): boolean {
