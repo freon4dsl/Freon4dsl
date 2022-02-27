@@ -71,6 +71,7 @@
                "declaredType": "Integer"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": null
       },
       {
@@ -115,6 +116,7 @@
                "declaredType": "Boolean"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": null
       },
       {
@@ -139,6 +141,7 @@
             }
          ],
          "methods": [],
+         "listOfReferences": [],
          "baseEntity": null
       }
    ],

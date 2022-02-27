@@ -30,20 +30,17 @@
     });
 
     let text: string;
-    autorun( () => {
-        text = label.getLabel();
-        AUTO_LOGGER.log("LabelComponent ["+ text + "]")
-    });
-
     const onFocusHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("onFocus for box " + label.role);
     }
     const onBlurHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("onBlur for box " + label.role);
     }
-
     let style: string;
+
     autorun( () => {
+        text = label.getLabel();
+        AUTO_LOGGER.log("LabelComponent ["+ text + "]")
         $: style = styleToCSS(conceptStyle(editor.style, editor.theme, label.element.piLanguageConcept(), "label", label.style));
     });
 </script>

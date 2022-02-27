@@ -20,9 +20,9 @@
         } else {
             // perform the action associated with the menu item
             if (checked[id]) {
-                EditorCommunication.getInstance().unsetProjection(menuItem.title);
+                EditorCommunication.getInstance().disableProjection(menuItem.title);
             } else {
-                EditorCommunication.getInstance().setProjection(menuItem.title);
+                EditorCommunication.getInstance().enableProjection(menuItem.title);
             }
         }
         $leftPanelVisible = false;
@@ -39,11 +39,7 @@
     //
     $projectionNames.map((name, index) => {
         menuItems.push ({ title: name, action: myAction, id: index });
-        // if (index === 0) {
-            checked.push(true);
-        // } else {
-        //     checked.push(false);
-        // }
+        checked.push(true);
     });
 </script>
 

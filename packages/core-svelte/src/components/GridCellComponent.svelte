@@ -15,8 +15,6 @@
      import { autorun, runInAction } from "mobx";
     import { afterUpdate } from "svelte";
     import { writable, type Writable } from "svelte/store";
-     import { choiceBox } from "./AliasComponent.svelte";
-
     import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import { isOdd } from "./util";

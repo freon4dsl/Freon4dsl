@@ -32,7 +32,6 @@
         PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { choiceBox } from "./AliasComponent.svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
     const LOGGER = new PiLogger("TextComponent");
