@@ -2,6 +2,7 @@ import { PiLanguageEnvironment } from "../environment/gen/PiLanguageEnvironment"
 import { FileHandler } from "./FileHandler";
 import { PiStructureDef, PiValidatorDef, PiScoperDef, PiTyperDef, PiElementReference, PiLanguage } from "../language/gen";
 import { PiError } from "@projectit/core";
+import { StructurePrint } from "./StructurePrint";
 
 describe("Pi Language Parser", () => {
     const reader = PiLanguageEnvironment.getInstance().reader;
@@ -54,27 +55,27 @@ describe("Pi Language Parser", () => {
             const completeModel: PiLanguage = new PiLanguage();
             const languageStr = fileHandler.stringFromFile("src/pi-languages/__inputs__/typer-test/types.ast");
             const langUnit: PiStructureDef = reader.readFromString(languageStr, "PiStructureDef", completeModel) as PiStructureDef;
-            // completeModel.addUnit(langUnit);
 
             const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/typer-test/type-rules.type");
             const typeUnit: PiTyperDef = reader.readFromString(input, "PiTyperDef", completeModel) as PiTyperDef;
 
-            // const conc = langUnit.concepts.find(x => x.name ==="SimpleExp1");
-            // expect (conc).not.toBeNull();
-            // expect (conc).not.toBeUndefined();
-            // completeModel.addUnit(typeUnit);
+            const conc = langUnit.concepts.find(x => x.name ==="SimpleExp1");
+            expect (conc).not.toBeNull();
+            expect (conc).not.toBeUndefined();
             // console.log(`visible in langUnit: ${scoper.getVisibleElements(langUnit).map(elem => `${elem.name}`).join(", ")}`);
             // console.log(`visible in typeUnit: ${scoper.getVisibleElements(typeUnit).map(elem => `${elem.name}`).join(", ")}`);
             // console.log(`visible in complete model: ${scoper.getVisibleElements(completeModel).map(elem => `${elem.name}`).join(", ")}`);
 
             const errors: PiError[] = validator.validate(typeUnit);
-            // expect(errors.length).toBe(1);
+            // expect(errors.length).toBe(0);
             console.log("found " + errors.length + " errors");
             errors.forEach(e => {
-                // expect(e.reportedOn).toBe(mult.right);
                 console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
             });
 
+            expect(typeUnit.types.length).toBe(3);
+            expect(typeUnit.anyTypeRule).not.toBeNull();
+            // new StructurePrint().print(typeUnit);
             // console.log(writer.writeToString(unit1, 0, false));
             // expect(unit1).toMatchSnapshot();
         } catch (e) {

@@ -55,7 +55,8 @@ UnitLiteral {
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype x:GenericType where {
-        typeOf(x.innerType) equalsto typeOf(self.content);
+        //typeOf(x.innerType) equalsto typeOf(self.content);
+        x.innerType equalsto self.content;
         x.kind equalsto self.kind;
     };
 }
@@ -63,7 +64,7 @@ GenericLiteral {
 // Which types are 'equal' to each other?
 NamedType {
     equalsto aa:NamedType where {
-            aa.name equalsto self.name;
+            aa.naame equalsto self.name;
         };
 }
 
@@ -87,9 +88,9 @@ GenericKind {
 }
 
 UnitOfMeasurement {
-    equalsto x:UnitOfMeasurement where {
-            x.innerType equalsto self.innerType;
-            x.unit equalsto self.unit;
+    equalsto aap:UnitOfMeasurement where {
+            aap.baseType equalsto self.baseType;
+            aap.unit equalsto self.unit;
         };
     conformsto rr:UnitOfMeasurement where {
             self.baseType conformsto rr.baseType;

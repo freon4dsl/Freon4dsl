@@ -29,7 +29,7 @@ export class PiTyperPartTemplate {
         // TODO should equalsType return true when one of the type is ANY, or is this up to the lang developer?
         // Template starts here
         return `
-        import { ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${typerInterfaceName}, Language } from "${PROJECTITCORE}";
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${language.concepts.map(concept => `
                 ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";       
@@ -88,6 +88,19 @@ export class PiTyperPartTemplate {
             public isType(elem: ${allLangConcepts}): boolean | null { // entries for all types marked as @isType
                 ${this.makeIsType(allTypeConcepts)}
             } 
+            
+            private ancestor(elem: ${allLangConcepts}, ancestorType: string): ${allLangConcepts} {
+                const myContainer = elem.piContainer()?.container;
+                if (!!myContainer) {
+                    const concept = myContainer.piLanguageConcept();
+                    if (concept === ancestorType || Language.getInstance().subConcepts(ancestorType).includes(concept)) {
+                        return myContainer;
+                    } else {
+                        return this.ancestor(myContainer, ancestorType);
+                    }
+                }
+                return null;
+            }   
         }`;
     }
 
@@ -98,7 +111,7 @@ export class PiTyperPartTemplate {
 
         // Template starts here
         return `
-        import { ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${typerInterfaceName}, Language } from "${PROJECTITCORE}";
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         
         export class ${generatedClassName} implements ${typerInterfaceName} {
@@ -131,7 +144,20 @@ export class PiTyperPartTemplate {
              */
             public isType(elem: ${allLangConcepts}): boolean | null {
                 return false;
-            }      
+            }  
+            
+            private ancestor(elem: ${allLangConcepts}, ancestorType: string): ${allLangConcepts} {
+                const myContainer = elem.piContainer()?.container;
+                if (!!myContainer) {
+                    const concept = myContainer.piLanguageConcept();
+                    if (concept === ancestorType || Language.getInstance().subConcepts(ancestorType).includes(concept)) {
+                        return myContainer;
+                    } else {
+                        return this.ancestor(myContainer, ancestorType);
+                    }
+                }
+                return null;
+            }    
         }`;
     }
 

@@ -57,9 +57,9 @@ concept PitStatement {
 
 abstract concept PitExp {
 }
-interface Applied {
+abstract concept Applied base PitExp {
 }
-concept PitFunctionCallExp base PitExp implements Applied {
+concept PitFunctionCallExp base Applied {
     functionName: identifier;
     arguments: PitExp[];
     applied?: Applied;
@@ -67,12 +67,12 @@ concept PitFunctionCallExp base PitExp implements Applied {
 concept PitSelfExp base PitExp {
     applied: Applied;
 }
-concept PitPropertyRef {
+concept PitPropertyRef base PitExp {
     reference p: PitProperty;
     applied: Applied;
 }
 
-concept PitPropertyCallExp base PitExp implements Applied {
+concept PitPropertyCallExp base Applied {
     reference myProperty: PiProperty;
     applied?: Applied;
 }

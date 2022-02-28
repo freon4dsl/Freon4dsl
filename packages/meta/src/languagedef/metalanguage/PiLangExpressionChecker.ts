@@ -13,7 +13,7 @@ import { PiLanguage, PiClassifier, PiProperty, PiLimitedConcept, PiInstance, PiL
 import { MetaLogger } from "../../utils/MetaLogger";
 
 const LOGGER = new MetaLogger("PiLangExpressionChecker").mute();
-const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof", "commonSuperTypeOf"];
+const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof", "commonSuperTypeOf", "ancestor"];
 const containerKeyword: string = "container";
 
 export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
@@ -163,7 +163,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
             check: langExp.sourceName === containerKeyword,
             error: `Expression should start with 'self' ${Checker.location(langExp)}.`,
             whenOk: () => {
-                langExp.__referredElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiConcept");
+                langExp.__referredElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiClassifier");
                 langExp.__referredElement.owner = langExp;
             }
         });
@@ -178,6 +178,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
             check: !!functionName,
             error: `${langExp.sourceName} is not a valid function ${Checker.location(langExp)}.`,
             whenOk: () => {
+                let functionType: PiClassifier = null;
                 if (langExp.sourceName === validFunctionNames[2]) { // "typeof"
                     this.nestedCheck({
                         check: langExp.actualparams.length === 1,
@@ -186,6 +187,29 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
                         whenOk: () => langExp.actualparams?.forEach( p => {
                                 p.language = this.language;
                                 this.checkLangExp(p, enclosingConcept);
+                                functionType = p.findRefOfLastAppliedFeature()?.type;
+                            }
+                        )}
+                    );
+                } else if (langExp.sourceName === validFunctionNames[4]) { // "ancestor"
+                    this.nestedCheck({
+                        check: langExp.actualparams.length === 1,
+                        error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 1 parameter, ` +
+                            `found ${langExp.actualparams.length} ${Checker.location(langExp)}.`,
+                        whenOk: () => langExp.actualparams?.forEach( p => {
+                                p.language = this.language;
+                                // TODO should check the param: it should be one of the classifiers in the language
+                                const foundClassifier = this.language.findClassifier(p.sourceName);
+                                this.nestedCheck({
+                                    check: !!foundClassifier,
+                                    error: `Cannot find reference to ${p.sourceName} ${Checker.location(langExp)}`,
+                                    whenOk: () => {
+                                        functionType = foundClassifier;
+                                        p.__referredElement = PiElementReference.create<PiClassifier>(foundClassifier, "PiClassifier");
+                                        p.__referredElement.owner = p;
+                                    }
+                                });
+                                // TODO add this to checkConceptExpression
                             }
                         )}
                     );
@@ -197,9 +221,15 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
                         whenOk: () => langExp.actualparams?.forEach( p => {
                                 p.language = this.language;
                                 this.checkLangExp(p, enclosingConcept);
+                                // TODO set functionType
                             }
                         )}
                     );
+                }
+                // TODO the following is not yet correct
+                if (!!langExp.appliedfeature && !!functionType) {
+                    langExp.appliedfeature.language = langExp.language;
+                    this.checkAppliedFeatureExp(langExp.appliedfeature, functionType);
                 }
             }
         });

@@ -297,7 +297,7 @@ export class ScoperTemplate {
             }
             result = `let container = ${actualParamToGenerate};
                 if (!!container) {
-                    let newScopeElement = this.myTyper.inferType(${actualParamToGenerate});
+                    let newScopeElement = this.myTyper.inferType(container);
                     return ${Names.namespace(language)}.create(newScopeElement);
                 }`;
         } else {

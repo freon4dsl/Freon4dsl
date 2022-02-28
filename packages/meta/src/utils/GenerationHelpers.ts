@@ -143,9 +143,17 @@ export function langExpToTypeScript(exp: PiLangExp): string {
     if (exp instanceof PiLangSelfExp) {
         result = `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
-        result = `this.${exp.sourceName} (${exp.actualparams.map(
-            param => `${langExpToTypeScript(param)}`
-        ).join(", ")})`;
+        if (exp.sourceName === 'ancestor') {
+            const metaType: string = langExpToTypeScript(exp.actualparams[0]); // there is always 1 param to this function
+            result = `this.ancestor(modelelement, "${metaType}") as ${metaType}`;
+        } else {
+            result = `this.${exp.sourceName} (${exp.actualparams.map(
+                param => `${langExpToTypeScript(param)}`
+            ).join(", ")})`;
+        }
+        if (!!exp.appliedfeature) {
+            result = `(${result}).${langExpToTypeScript(exp.appliedfeature)}`;
+        }
     } else if (exp instanceof PiLangAppliedFeatureExp) {
         // TODO this should be replaced by special getters and setters for reference properties
         // and the unparser should be adjusted to this

@@ -1,0 +1,8 @@
+scoper XX for language PiLanguage
+
+isnamespace { PitClassifierRule }
+
+PitPropertyCallExp {
+    scope = typeof( container );
+    // TODO give error message if no type for container is defined!!!
+}

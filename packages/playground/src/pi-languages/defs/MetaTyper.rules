@@ -1,6 +1,6 @@
 rules
 
-modelunit PitrDef {
+modelunit PiTyperDef {
     if (!anyTypeRule) {
         self.anyTypeRule = self.classifierRules.find(rule => rule.myClassifier.name === "anytype")
     }
