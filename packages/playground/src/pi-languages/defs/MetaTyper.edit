@@ -22,7 +22,7 @@ PitAnyTypeRule {[
     }
     ]}
 
-PitXXX {
+PitSingleRule {
     [ ${self.kind} [? ${self.other} ] [? ${self.exp} ] ;]
 }
 

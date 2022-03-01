@@ -3,7 +3,7 @@ import {
     PitExp,
     PitStatement,
     PitStatementKind,
-    PitXXX,
+    PitSingleRule,
     PitSelfExp,
     PitLimitedRule,
     PitOtherType,
@@ -136,8 +136,8 @@ export class StructurePrint extends PiLanguageDefaultWorker {
         return false;
     }
 
-    execBeforePitXXX(modelelement: PitXXX): boolean {
-        this.output += "\nPitXXX: " + modelelement.kind.name
+    execBeforePitSingleRule(modelelement: PitSingleRule): boolean {
+        this.output += "\nPitSingleRule: " + modelelement.kind.name
         return false;
     }
 }

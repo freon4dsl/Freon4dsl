@@ -1,5 +1,38 @@
 validator yyy for language PiLanguage
 
-PitInstanceRef {  // LimitedType:Instance12 of Instance12
-    // self.myLimited.instances.includes( self.myInstance );
+PiTyperDef {
+    // 1. No two classifier-rules for the same classifier
+    // Should be: with the same kind: infertype, equals, conforms.
+    isunique myClassifier in self.classifierRules;
 }
+
+//PitInferenceRule {
+//    // 2. An abstract rule may not be defined.
+//    self.isAbstract implies isempty(self.exp) and isempty(self.other);
+//    // 2.1. Non-abstract rules should define something.
+//    not self.isAbstract implies not isempty(self.exp) or not isempty(self.other);
+//    // 2.2. Non-abstract rules should have either an expression or an PitSingleRule.
+//    not self.isAbstract and not isempty(self.exp) implies isempty(self.other);
+//    not self.isAbstract and not isempty(self.other) implies isempty(self.exp);
+//    // 3. No inference rule for concepts that are types.
+//    not ancestor(PiTyperDef).types.includes(self.myClassifier);
+//    // 4. An inference rule should result in a type.
+//    not isempty self.exp implies ancestor(PiTyperDef).types.includes(typeof(self.exp));
+//    not isempty self.other implies ancestor(PiTyperDef).types.includes(typeof(self.other));
+//}
+//
+//PitConformanceOrEqualsRule {
+//    // 5. No equals or conforms rules for non-types.
+//    ancestor(PiTyperDef).types.includes(self.myClassifier);
+//}
+//
+//PitFunctionCallExp {
+//    // 7. The only functions that may be used are: typeof(1 param), commonSuperType(2 params (or list?)),
+//    //   ancestor(1 param).
+//    self.functionName == "typeof"
+//        or self.functionName == "commonSuperType"
+//        or self.functionName == "ancestor";
+//    self.functionName == "typeof" or self.functionName == "ancestor"
+//        implies self.arguments.length == 1;
+//    self.functionName == "commonSuperType" implies self.arguments.length == 2;
+//}

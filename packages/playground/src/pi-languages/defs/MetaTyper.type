@@ -9,3 +9,10 @@ PitSelfExp {
     infertype ancestor(PitClassifierRule).myClassifier;
 }
 
+PitFunctionCallExp {
+    infertype self.returnType;
+}
+
+PitOtherType {
+    infertype self.otherType.type;
+}

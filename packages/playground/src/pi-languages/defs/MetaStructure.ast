@@ -32,7 +32,7 @@ abstract concept PiClassifier base PiLangElement implements Type {
     //primProperties: PiPrimitiveProperty[];
 }
 concept PiModelDescription base PiClassifier {
-    properties: PiProperty[];
+    isPublic: boolean = true;
 }
 concept PiUnitDescription base PiClassifier {
     fileExtension: string = "";

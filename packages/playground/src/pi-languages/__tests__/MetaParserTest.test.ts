@@ -66,6 +66,14 @@ describe("Pi Language Parser", () => {
             // console.log(`visible in typeUnit: ${scoper.getVisibleElements(typeUnit).map(elem => `${elem.name}`).join(", ")}`);
             // console.log(`visible in complete model: ${scoper.getVisibleElements(completeModel).map(elem => `${elem.name}`).join(", ")}`);
 
+            // result with PiClassifier as type and PiConcept additional namespace:
+            // visible in typeUnit: NONE, Horizontal, Vertical, NONE, Terminator, Separator, string, boolean, number, identifier, equalsto, conformsto, =, >, >=, <, <=, TyTest, TYPER, TyTest, unitB, unitA, unitC, Line, SimpleExp1, SimpleExp2, NamedExp, PlusExp, UnitLiteral, GenericLiteral, PredefinedType, NamedType, TypeDeclaration, SimpleType, GenericType, GenericKind, UnitOfMeasurement, UnitKind, Exp, Type, unitA, unitB, typeDefs, lines, lines, exp, name
+            // result without PiClassifier as type and PiConcept additional namespace:
+            // visible in typeUnit: NONE, Horizontal, Vertical, NONE, Terminator, Separator, string, boolean, number, identifier, equalsto, conformsto, =, >, >=, <, <=, TyTest, TYPER, TyTest, unitB, unitA, unitC, Line, SimpleExp1, SimpleExp2, NamedExp, PlusExp, UnitLiteral, GenericLiteral, PredefinedType, NamedType, TypeDeclaration, SimpleType, GenericType, GenericKind, UnitOfMeasurement, UnitKind, Exp, Type, unitA, unitB, typeDefs, lines, lines, exp, expr, type, xx, xx, myType, left, right, inner, unit, content, kind, Simple1, Simple2, ANY, NULL, name, type, innerType, kind, Set, Sequence, Bag, Collection, baseType, unit, Meters, Grams, kWh, Hours, name
+
+            // const simpleExpRule = typeUnit.classifierRules.find(rule => rule.myClassifier.name === "SimpleExp1");
+            // console.log(`visible in simpleExpRule: ${scoper.getVisibleElements(simpleExpRule).map(elem => `${elem.name}`).join(", ")}`);
+
             const errors: PiError[] = validator.validate(typeUnit);
             // expect(errors.length).toBe(0);
             console.log("found " + errors.length + " errors");

@@ -13,7 +13,6 @@ PredefinedType {
     NULL conformsto anytype;
 }
 // TODO if there is no top of inheritance tree, then we generate one???
-// TODO What about number, string, boolean???
 
 // Which type does an expression have?
 Exp {
@@ -28,8 +27,7 @@ SimpleExp2 {
 }
 
 NamedExp {
-//    infertype self.myType;
-infertype ;
+    infertype self.myType;
 }
 
 PlusExp {
@@ -55,8 +53,7 @@ UnitLiteral {
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype x:GenericType where {
-        //typeOf(x.innerType) equalsto typeOf(self.content);
-        x.innerType equalsto self.content;
+        typeOf(x.innerType) equalsto typeOf(self.content);
         x.kind equalsto self.kind;
     };
 }
@@ -64,7 +61,7 @@ GenericLiteral {
 // Which types are 'equal' to each other?
 NamedType {
     equalsto aa:NamedType where {
-            aa.naame equalsto self.name;
+            aa.name equalsto self.name;
         };
 }
 

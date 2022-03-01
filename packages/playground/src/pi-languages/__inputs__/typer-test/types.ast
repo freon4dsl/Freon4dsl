@@ -72,7 +72,6 @@ concept GenericLiteral implements Exp {
 limited PredefinedType implements Type { Simple1; Simple2; ANY; NULL; }
 
 concept NamedType implements Type {
-    name: identifier;
 }
 
 abstract concept TypeDeclaration {

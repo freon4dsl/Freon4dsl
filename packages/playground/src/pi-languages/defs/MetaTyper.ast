@@ -17,7 +17,7 @@ limited PitStatementKind {
 }
 
 concept PitAnyTypeRule {
-    myRules: PitXXX[];
+    myRules: PitSingleRule[];
 }
 
 abstract concept PitClassifierRule {
@@ -25,10 +25,10 @@ abstract concept PitClassifierRule {
 }
 
 concept PitConformanceOrEqualsRule base PitClassifierRule {
-    myRules: PitXXX[];
+    myRules: PitSingleRule[];
 }
 
-concept PitXXX {
+concept PitSingleRule {
     kind: PitStatementKind;
     exp?: PitExp;
     other?: PitOtherType;
@@ -62,6 +62,8 @@ abstract concept Applied base PitExp {
 concept PitFunctionCallExp base Applied {
     functionName: identifier;
     arguments: PitExp[];
+    // TODO do we need a returnType?
+    reference returnType?: PiClassifier;
     applied?: Applied;
 }
 concept PitSelfExp base PitExp {
