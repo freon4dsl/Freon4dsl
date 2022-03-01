@@ -1,6 +1,6 @@
 import { PiLanguageEnvironment } from "../environment/gen/PiLanguageEnvironment";
 import { FileHandler } from "./FileHandler";
-import { PiStructureDef, PiValidatorDef, PiScoperDef, PiTyperDef, PiElementReference, PiLanguage } from "../language/gen";
+import { PiStructureDef, PiValidatorDef, PiScoperDef, PiTyperDef, PiLanguage } from "../language/gen";
 import { PiError } from "@projectit/core";
 import { StructurePrint } from "./StructurePrint";
 

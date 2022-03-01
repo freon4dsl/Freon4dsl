@@ -96,7 +96,7 @@ PiInstance {
     = {
         ${propertyDefs vertical separator [,]}
     }
-    ] ;
+    ]
     ]
 }
 PiPropertyInstance {
