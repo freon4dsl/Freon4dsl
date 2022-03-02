@@ -1,6 +1,5 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
 import { PiCompositeProjection, PiError, PiLogger, PiModel, PiNamedElement } from "@projectit/core";
-// import { ServerCommunication } from "../server/ServerCommunication";
 import { get } from "svelte/store";
 import {
     currentModelName,
@@ -193,7 +192,7 @@ export class EditorCommunication {
      * @private
      */
     private setUnitLists() {
-        console.log("setUnitLists");
+        LOGGER.log("setUnitLists");
         const newUnitList: PiNamedElement[][] = [];
         for (const name of editorEnvironment.unitNames) {
             newUnitList.push(this.currentModel.getUnitsForType(name));
@@ -426,11 +425,11 @@ export class EditorCommunication {
      * Makes sure that the editor show the current unit using the projections selected by the user
      * @param name
      */
-    setProjection(name: string): void {
-        LOGGER.log("setting Projection " + name);
+    enableProjection(name: string): void {
+        LOGGER.log("enabling Projection " + name);
         const proj = editorEnvironment.editor.projection;
         if (proj instanceof PiCompositeProjection) {
-            proj.projectiontoFront(name);
+            proj.enableProjection(name);
         }
     }
 
@@ -438,11 +437,11 @@ export class EditorCommunication {
      * Makes sure that the editor show the current unit using the projections selected or unselected by the user
      * @param name
      */
-    unsetProjection(name: string): void {
-        LOGGER.log("unsetting Projection " + name);
+    disableProjection(name: string): void {
+        LOGGER.log("disabling Projection " + name);
         const proj = editorEnvironment.editor.projection;
         if (proj instanceof PiCompositeProjection) {
-            proj.projectionToBack(name);
+            proj.disableProjection(name);
         }
     }
 

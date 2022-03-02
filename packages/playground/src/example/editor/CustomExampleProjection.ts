@@ -36,6 +36,7 @@ const OPERAND_COLUMN = 2;
 export class CustomExampleProjection implements PiProjection {
     rootProjection: PiCompositeProjection;
     name: string = "manual";
+    isEnabled: boolean = true;
 
     constructor(name?: string) {
         if (!!name) {

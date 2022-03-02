@@ -23,5 +23,6 @@ export interface PiProjection {
 
     rootProjection: PiCompositeProjection;
     name: string;
+    isEnabled: boolean;
 }
 // end::PiProjection[]

@@ -5,6 +5,7 @@
       {
          "$typename": "Entity",
          "name": "TaxPayer",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
@@ -30,6 +31,7 @@
                "declaredType": null
             }
          ],
+         "listOfReferences": [],
          "baseEntity": null
       }
    ],

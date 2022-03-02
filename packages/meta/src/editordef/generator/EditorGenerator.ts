@@ -58,13 +58,7 @@ export class EditorGenerator {
         // Set relative path to get the imports right
         const relativePath = "../../";
 
-        // Generate the default projection
-        // LOGGER.log(`Generating projection default: ${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`);
-        // const projectionfileDefault = Helpers.pretty(projection.generateProjectionDefault(this.language, editDef, relativePath),
-        //     "Projection Default", generationStatus);
-        // fs.writeFileSync(`${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`, projectionfileDefault);
-
-        // Generate the other projection groups
+        // Generate the projection groups
         editDef.projectiongroups.forEach(group => {
             LOGGER.log(`Generating projection group: ${this.editorGenFolder}/${Names.projection(group)}.ts`);
             const projectionfile = Helpers.pretty(projection.generateProjectionGroup(this.language, group, relativePath),
