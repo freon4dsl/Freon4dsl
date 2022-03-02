@@ -21,53 +21,53 @@ modelunit unitC {
     file-extension = "tmp";
 }
 // ALL INTERFACES
-interface Exp {
-}
-
 interface Type { // base BaseType {
     public name: identifier;
 }
 //
 //interface BaseType {
 //}
-///
+
+// ALL  CONCEPTS
+abstract expression Exp {
+}
+
 concept Line {
     expr: Exp;
     type: TypeDeclaration;
 }
 
 // EXPRESSIONS
-concept SimpleExp1 implements Exp {
+expression SimpleExp1 base Exp {
     xx: number;
 }
 
-concept SimpleExp2 implements Exp {
+expression SimpleExp2 base Exp {
     xx: number;
 }
 
-concept NamedExp implements Exp {
+expression NamedExp base Exp {
     myType: NamedType;
 }
 
-concept PlusExp implements Exp {
+expression PlusExp base Exp {
     left: Exp;
     right: Exp;
 }
 
-concept UnitLiteral implements Exp {
+expression UnitLiteral base Exp {
     // 62 kilogram, or 112 miles
     inner: SimpleExp1;
     unit: UnitKind;
 }
 
-concept GenericLiteral implements Exp {
+expression GenericLiteral base Exp {
     // Set{ 12, 14, 16, 18 }
     content: Exp[];
     kind: GenericKind;
 }
 
 // TYPES
-
 
 limited PredefinedType implements Type { Simple1; Simple2; ANY; NULL; }
 

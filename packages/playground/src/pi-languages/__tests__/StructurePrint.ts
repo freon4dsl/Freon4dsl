@@ -6,7 +6,6 @@ import {
     PitSingleRule,
     PitSelfExp,
     PitLimitedRule,
-    PitOtherType,
     PitProperty,
     PitPropertyCallExp,
     PitPropertyRef,
@@ -17,8 +16,7 @@ import {
     PitAnyTypeRule,
     PitClassifierRule,
     PitConformanceOrEqualsRule,
-    Applied,
-    PiInstance
+    Applied, PitWhereExp
 } from "../language/gen";
 import { PiLanguageDefaultWorker, PiLanguageWalker } from "../utils/gen";
 
@@ -79,13 +77,12 @@ export class StructurePrint extends PiLanguageDefaultWorker {
     // }
 
     execBeforePitFunctionCallExp(modelelement: PitFunctionCallExp): boolean {
-        this.output += "\nPitFunctionCallExp: " + modelelement.functionName;
+        this.output += "\nPitFunctionCallExp: " + modelelement.calledFunction;
         return false;
     }
 
     execBeforePitInferenceRule(modelelement: PitInferenceRule): boolean {
         this.output += "\nPitInferenceRule: " + modelelement.myClassifier.name;
-        this.output += "\n\tisAbstract: " + modelelement.isAbstract;
         return false;
     }
 
@@ -99,8 +96,8 @@ export class StructurePrint extends PiLanguageDefaultWorker {
         return false;
     }
 
-    execBeforePitOtherType(modelelement: PitOtherType): boolean {
-        this.output += "\nPitOtherType: ";
+    execBeforePitWhereExp(modelelement: PitWhereExp): boolean {
+        this.output += "\nPitWhereExp: ";
         return false;
     }
 

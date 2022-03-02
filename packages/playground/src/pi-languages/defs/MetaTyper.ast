@@ -5,6 +5,7 @@ modelunit PiTyperDef {
     name: identifier = "TYPER";
     location?: PiParseLocation;
     reference types: PiClassifier[];
+    reference conceptsWithType: PiClassifier[];
     anyTypeRule?: PitAnyTypeRule;
     classifierRules: PitClassifierRule[];
     reference typeroot?: PiClassifier;
@@ -23,30 +24,19 @@ concept PitAnyTypeRule {
 abstract concept PitClassifierRule {
     reference myClassifier: PiClassifier;
 }
-
 concept PitConformanceOrEqualsRule base PitClassifierRule {
     myRules: PitSingleRule[];
+}
+concept PitInferenceRule base PitClassifierRule {
+    exp: PitExp;
+}
+concept PitLimitedRule base PitClassifierRule {
+    statements: PitStatement[];
 }
 
 concept PitSingleRule {
     kind: PitStatementKind;
-    exp?: PitExp;
-    other?: PitOtherType;
-}
-
-concept PitOtherType {
-    otherType: PitProperty; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
-    conditions: PitStatement[];
-}
-
-concept PitInferenceRule base PitClassifierRule {
-    isAbstract: boolean;
-    exp?: PitExp;
-    other?: PitOtherType;
-}
-
-concept PitLimitedRule base PitClassifierRule {
-    statements: PitStatement[];
+    exp: PitExp;
 }
 
 concept PitStatement {
@@ -55,16 +45,12 @@ concept PitStatement {
     operand: PitStatementKind; // either 'equalsto' or 'conformsto'
 }
 
+// expressions used in type def
 abstract concept PitExp {
 }
-abstract concept Applied base PitExp {
-}
-concept PitFunctionCallExp base Applied {
-    functionName: identifier;
-    arguments: PitExp[];
-    // TODO do we need a returnType?
-    reference returnType?: PiClassifier;
-    applied?: Applied;
+concept PitWhereExp base PitExp {
+    otherType: PitProperty; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
+    conditions: PitStatement[];
 }
 concept PitSelfExp base PitExp {
     applied: Applied;
@@ -73,20 +59,35 @@ concept PitPropertyRef base PitExp {
     reference p: PitProperty;
     applied: Applied;
 }
+concept PitInstanceRef base PitExp {
+    reference myLimited?: PiLimitedConcept;
+    reference myInstance: PiInstance;
+}
+concept PitAnytypeRef base PitExp {
+}
 
+abstract concept Applied base PitExp {
+}
+concept PitFunctionCallExp base Applied {
+    calledFunction: identifier;
+    // reference calledFunction: PitFunction;
+    reference returnType?: PiClassifier;
+    arguments: PitExp[];
+    applied?: Applied;
+}
 concept PitPropertyCallExp base Applied {
     reference myProperty: PiProperty;
     applied?: Applied;
 }
 
-concept PitInstanceRef base PitExp {
-    reference myLimited?: PiLimitedConcept; // self.myLimited = self.limited ?? ancestor(PitLimitedRule).myClassifier;
-    reference myInstance: PiInstance;
-}
-
-concept PitAnytypeRef base PitExp {
-}
-
 concept PitProperty base PiProperty {
+}
+limited PitFunction {
+    name: identifier;
+    numberOfArguments: number;
+    // TODO do we need a returnType? It can NOT have PiClassifier as type!!
+    // reference returnType: PiClassifier;
+    commonSuperType = { numberOfArguments: 2 }
+    typeof = { numberOfArguments: 1 }
 }
 // end typer definition

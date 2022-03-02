@@ -2,22 +2,19 @@ scoper XX for language PiLanguage
 
 isnamespace { PitClassifierRule, PiClassifier, PitInstanceRef }
 
-PitPropertyCallExp {
+Applied {
     scope = typeof( container );
-    // TODO give error message if no type for container is defined!!!
 }
 
 PitInstanceRef {
     namespace_addition = self.myLimited;
 }
 
-PitLimitedRule {
+PitLimitedRule { // TODO This addition should be on PitClassifierRule, but that results in a MobX cycle
     namespace_addition = self.myClassifier;
 }
 
-// TODO the following two namespace-additions can only be added when PiClassifier is a namespace, but
-// then PiLimitedConcept also becomes a namespace. This means that the limited instances are no
-// longer visible to all.
+// scope rules for PiStructureDef
 PiConcept {
     namespace_addition = self.interfaces + self.base;
 }

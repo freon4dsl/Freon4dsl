@@ -35,4 +35,5 @@ PiTyperDef {
 //    self.functionName == "typeof" or self.functionName == "ancestor"
 //        implies self.arguments.length == 1;
 //    self.functionName == "commonSuperType" implies self.arguments.length == 2;
+// 8. if 'container'is used as param to typeof(), give error message if no type rule for container is defined!!!
 //}

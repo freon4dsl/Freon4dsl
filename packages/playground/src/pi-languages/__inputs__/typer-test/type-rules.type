@@ -1,23 +1,21 @@
 typer
 
 // What are types?
-istype { Type, GenericType, UnitOfMeasurement }
+istype { Type, TypeDeclaration }
+
+// Which concepts have a type?
+hastype { Exp }
 
 // What are the top and bottom types?
-// PredefinedType:ANY is the least specific type
 anytype {
-    conformsto PredefinedType:ANY;
+    conformsto PredefinedType:ANY; // PredefinedType:ANY is the least specific type
 }
 
 PredefinedType {
-    NULL conformsto anytype;
+    NULL conformsto anytype; // PredefinedType:NULL is the most specific type
 }
-// TODO if there is no top of inheritance tree, then we generate one???
 
 // Which type does an expression have?
-Exp {
-    abstract infertype ; // Every instance that implements Exp has a type
-}
 SimpleExp1 {
     infertype PredefinedType:Simple1;
 }
@@ -32,14 +30,6 @@ NamedExp {
 
 PlusExp {
     infertype commonSuperType(self.left, self. right);
-}
-
-TypeDeclaration {
-    abstract infertype ; // Every instance that implements Exp has a type
-}
-
-SimpleType {
-    infertype self.type;
 }
 
 UnitLiteral {
@@ -59,6 +49,10 @@ GenericLiteral {
 }
 
 // Which types are 'equal' to each other?
+SimpleType {
+    equalsto self.type;
+}
+
 NamedType {
     equalsto aa:NamedType where {
             aa.name equalsto self.name;

@@ -81,7 +81,7 @@ describe("Pi Language Parser", () => {
                 console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
             });
 
-            expect(typeUnit.types.length).toBe(3);
+            expect(typeUnit.types.length).toBe(2);
             expect(typeUnit.anyTypeRule).not.toBeNull();
             // new StructurePrint().print(typeUnit);
             // console.log(writer.writeToString(unit1, 0, false));

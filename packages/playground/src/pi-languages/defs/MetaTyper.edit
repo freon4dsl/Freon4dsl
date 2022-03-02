@@ -6,6 +6,7 @@ referenceSeparator [::::]
 PiTyperDef {[
     typer
     istype { ${self.types horizontal separator [, ]} }
+    hastype { ${self.conceptsWithType horizontal separator [, ]} }
     [?${self.anyTypeRule}]
     ${self.classifierRules vertical}
     ]}
@@ -23,10 +24,10 @@ PitAnyTypeRule {[
     ]}
 
 PitSingleRule {
-    [ ${self.kind} [? ${self.other} ] [? ${self.exp} ] ;]
+    [ ${self.kind} ${self.exp} ;]
 }
 
-PitOtherType {[
+PitWhereExp {[
     ${self.otherType} where {
         ${self.conditions terminator[;]}
     }
@@ -34,7 +35,7 @@ PitOtherType {[
 
 PitInferenceRule {[
     ${self.myClassifier} {
-        ${self.isAbstract [abstract]} infertype [? ${self.exp} ] [? ${self.other} ] ;
+        infertype ${self.exp} ;
     }
 ]}
 
@@ -49,7 +50,7 @@ PitStatement {
 }
 
 PitFunctionCallExp {
-    [${self.functionName} ( ${self.arguments horizontal separator[, ]} )[?.${self.applied}]]
+    [${self.calledFunction} ( ${self.arguments horizontal separator[, ]} )[?.${self.applied}]]
 }
 PitSelfExp {
     [self . ${self.applied}]

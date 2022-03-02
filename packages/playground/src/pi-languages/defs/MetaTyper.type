@@ -13,6 +13,6 @@ PitFunctionCallExp {
     infertype self.returnType;
 }
 
-PitOtherType {
+PitWhereExp {
     infertype self.otherType.type;
 }
