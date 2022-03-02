@@ -422,11 +422,13 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 this.nestedCheck({check: propProjections.length === 1,
                     error: `There should be (only) one property within an optional projection, found ${propProjections.length} ${Checker.location(item)}.`,
                     whenOk: () => {
-                        // find the optional property and set item.property
-                        const myprop = propProjections[0].property.referred;
-                        this.simpleCheck(myprop.isOptional || myprop.isList || myprop.isPrimitive,
-                            `Property '${myprop.name}' is not a list, nor optional or primitive, therefore it may not be within an optional projection ${Checker.location(propProjections[0])}.`)
-                        item.property = this.copyReference(propProjections[0].property);
+                        if (!!propProjections[0].property) { // error message already doen in checkPropProjection
+                            // find the optional property and set item.property
+                            const myprop = propProjections[0].property.referred;
+                            this.simpleCheck(myprop.isOptional || myprop.isList || myprop.isPrimitive,
+                                `Property '${myprop.name}' is not a list, nor optional or primitive, therefore it may not be within an optional projection ${Checker.location(propProjections[0])}.`);
+                            item.property = this.copyReference(propProjections[0].property);
+                        }
                     }
                 });
             }
