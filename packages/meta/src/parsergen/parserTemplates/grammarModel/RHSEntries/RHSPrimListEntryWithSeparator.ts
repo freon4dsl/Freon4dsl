@@ -11,7 +11,7 @@ export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
     }
 
     toGrammar(): string {
-        return `[ ${getPrimCall(this.property.type.referred)} / '${this.separatorText}' ]*` + this.doNewline();
+        return `[ ${getPrimCall(this.property.type)} / '${this.separatorText}' ]*` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

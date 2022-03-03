@@ -91,7 +91,7 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     private getCreateElementOption(propertyName: string, conceptName: string, concept: Concept): SelectOption {
-        console.log("AliasBox.createElementAction proeprty: " + propertyName + " concept " + conceptName);
+        LOGGER.log("AliasBox.createElementAction proeprty: " + propertyName + " concept " + conceptName);
         return {
             id: conceptName,
             label: concept.trigger,

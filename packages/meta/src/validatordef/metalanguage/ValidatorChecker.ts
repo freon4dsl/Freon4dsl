@@ -25,7 +25,7 @@ import {
     ValidationSeverity,
     ValidNameRule
 } from "./ValidatorDefLang";
-import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
+import { PiPrimitiveType } from "../../languagedef/metalanguage";
 
 const LOGGER = new MetaLogger("ValidatorChecker").mute();
 const equalsTypeName = "equalsType";
@@ -123,7 +123,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         // check if found property is of type 'identifier'
         if (!!tr.property) {
             const myProp = tr.property.findRefOfLastAppliedFeature();
-            this.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.type.referred === PiPrimitiveType.identifier,
+            this.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.type === PiPrimitiveType.identifier,
                 `Validname rule expression '${tr.property.toPiString()}' should have type 'identifier' ${Checker.location(tr.property)}.`);
         }
     }
@@ -181,9 +181,9 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                         // test if type1 is a number
                     } else {
                         // compare both types
-                        const type1 = tr.exp1.findRefOfLastAppliedFeature()?.type.referred;
+                        const type1 = tr.exp1.findRefOfLastAppliedFeature()?.type;
                         this.simpleCheck(type1 !== null, `Cannot find the type of ${tr.exp1.toPiString()} ${Checker.location(tr)}.`);
-                        const type2 = tr.exp2.findRefOfLastAppliedFeature()?.type.referred;
+                        const type2 = tr.exp2.findRefOfLastAppliedFeature()?.type;
                         this.simpleCheck(type2 !== null, `Cannot find the type of ${tr.exp2.toPiString()} ${Checker.location(tr)}.`);
                         if (type1 !== null && type2 !== null) {
                             this.simpleCheck(type1 === type2, `Types of expression rule '${tr.toPiString()}' should be equal ${Checker.location(tr)}.`);
@@ -208,7 +208,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                                 check: myProp.isList,
                                 error: `Isunique rule cannot be applied to a property that is not a list (${myProp.name}) ${Checker.location(tr.list)}.`,
                                 whenOk: () => {
-                                    const myType = myProp.type?.referred;
+                                    const myType = myProp.type;
                                     this.nestedCheck(
                                         {
                                             check: !!myType,

@@ -1,8 +1,9 @@
 import { KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestprojectEnvironment } from "../environment/gen/TestprojectEnvironment";
+import { TestprojectStdlib } from "../stdlib/gen/TestprojectStdlib";
 
 describe("Checking stdlib for Demo", () => {
-    let stdlib = TestprojectEnvironment.getInstance().stdlib;
+    let stdlib: TestprojectStdlib = TestprojectEnvironment.getInstance().stdlib as TestprojectStdlib;
     // The stdlib contains the following elements
     // ZZ.ZZinstance1
     // XX.XXinstance1
@@ -50,4 +51,12 @@ describe("Checking stdlib for Demo", () => {
         expect(stdlib.find("CC1", "XX")).toBeNull();
         expect(stdlib.find("CC2", "TestLimited")).toBeNull();
     });
+
+    test("all custom additions to the stdlib can be found", () => {
+        expect(stdlib.find("EXTRA1", "AA")).not.toBeNull();
+        expect(stdlib.find("EXTRA2", "AA")).not.toBeNull();
+        expect(stdlib.find("EXTRA1", "BB")).not.toBeNull();
+        expect(stdlib.find("EXTRA2", "BB")).not.toBeNull();
+    });
+
 });

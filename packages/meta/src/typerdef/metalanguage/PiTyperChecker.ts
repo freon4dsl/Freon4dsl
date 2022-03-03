@@ -1,12 +1,13 @@
 import { Checker } from "../../utils";
-import { PiLanguage,
+import {
+    PiLanguage,
     PiConcept,
     PiClassifier,
     PiInterface,
-    PiLangExpressionChecker,
-     } from "../../languagedef/metalanguage";
+    PiLangExpressionChecker, PiElementReference
+} from "../../languagedef/metalanguage";
 import { PiTypeDefinition, PiTypeRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeClassifierRule, PiTypeStatement } from "./PiTyperDefLang";
-import { MetaLogger, LangUtil } from "../../utils";
+import { MetaLogger } from "../../utils";
 
 const LOGGER = new MetaLogger("PiTyperChecker").mute();
 const infertypeName = "infertype";
@@ -49,6 +50,10 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
                 }
             });
 
+        // when everything has been checked we can check even more ...
+        // let's find the top of the type hierarchy, if present
+        this.findTypeRoot(definition);
+
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
    }
 
@@ -85,43 +90,43 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
 
     private checkIsTypeRule(rule: PiTypeIsTypeRule) {
         LOGGER.log("Checking checkIsTypeRule '" + rule.toPiString() + "'");
-        let first = true;
-        let typeroot: PiClassifier = null;
+        // let first = true;
+        // let typeroot: PiClassifier = null;
         for (const t of rule.types) {
             this.myExpressionChecker.checkClassifierReference(t);
             if (!!t.referred) { // error message given by myExpressionChecker
                 this.typeConcepts.push(t.referred);
-                if (first) {
-                    this.definition.typeroot = t;
-                    typeroot = t.referred;
-                    first = false;
-                    this.definition.types.push(t);
-                } else {
-                    // check the new type against the root of the type hierarchy
-                    // there are two assumptions: (1) the typeroot is the common super concept of all types
-                    // or (2) the typeroot is an interface that is implemented by all types
-                    if (typeroot instanceof PiConcept) { // check (1)
-                        const base = LangUtil.superConcepts(t.referred);
-                        this.nestedCheck({
-                            check: base.includes(typeroot),
-                            error: `The root type concept (${typeroot.name}) should be a base concept of '${t.referred.name}' `
-                                + `[line: ${t.location?.start.line}, column: ${t.location?.start.column}].`,
-                            whenOk: () => {
-                                this.definition.types.push(t);
-                            }
-                        });
-                    } else if (typeroot instanceof PiInterface) { // check (2)
-                        const base = LangUtil.superInterfaces(t.referred);
-                        this.nestedCheck({
-                            check: base.includes(typeroot),
-                            error: `The root type interface (${typeroot.name}) should be implemented by '${t.referred.name}' `
-                                + `[line: ${t.location?.start.line}, column: ${t.location?.start.column}].`,
-                            whenOk: () => {
-                                this.definition.types.push(t);
-                            }
-                        });
-                    }
-                }
+                // if (first) {
+                //     this.definition.typeroot = t;
+                //     typeroot = t.referred;
+                //     first = false;
+                //     this.definition.types.push(t);
+                // } else {
+                //     // check the new type against the root of the type hierarchy
+                //     // there are two assumptions: (1) the typeroot is the common super concept of all types
+                //     // or (2) the typeroot is an interface that is implemented by all types
+                //     if (typeroot instanceof PiConcept) { // check (1)
+                //         const base = LangUtil.superConcepts(t.referred);
+                //         this.nestedCheck({
+                //             check: base.includes(typeroot),
+                //             error: `The root type concept (${typeroot.name}) should be a base concept of '${t.referred.name}' `
+                //                 + `[line: ${t.location?.start.line}, column: ${t.location?.start.column}].`,
+                //             whenOk: () => {
+                //                 this.definition.types.push(t);
+                //             }
+                //         });
+                //     } else if (typeroot instanceof PiInterface) { // check (2)
+                //         const base = LangUtil.superInterfaces(t.referred);
+                //         this.nestedCheck({
+                //             check: base.includes(typeroot),
+                //             error: `The root type interface (${typeroot.name}) should be implemented by '${t.referred.name}' `
+                //                 + `[line: ${t.location?.start.line}, column: ${t.location?.start.column}].`,
+                //             whenOk: () => {
+                //                 this.definition.types.push(t);
+                //             }
+                //         });
+                //     }
+                // }
             }
         }
 
@@ -172,5 +177,86 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         }
         definition.typerRules = newTypeRules;
         definition.classifierRules = conceptRules;
+    }
+
+    private findTypeRoot(definition: PiTypeDefinition) {
+        const foundbaseConcepts: PiConcept[] = [];
+        const foundbaseInterfaces: PiInterface[] = [];
+        this.typeConcepts.forEach(type => {
+            if (type instanceof PiInterface ) {
+                this.addListIfNotPresent(foundbaseInterfaces, this.findBaseInterfaces(type));
+            } else if (type instanceof PiConcept) {
+                this.addIfNotPresent(foundbaseConcepts, this.findBaseConcept(type));
+            }
+        });
+        // see whether any of the concepts implement one of the interfaces
+        // if so we can skip the concept
+        const remaining: PiConcept[] = [];
+        foundbaseConcepts.forEach(concept => {
+            let canSkip: boolean = false;
+            concept.allInterfaces().forEach(intf => {
+               if (foundbaseInterfaces.includes(intf)) {
+                   canSkip = true;
+               }
+            });
+            if (!canSkip) {
+                remaining.push(concept);
+            }
+        });
+        // now we have found all base classifiers
+        if (foundbaseInterfaces.length + remaining.length > 1) { // there are multiple base types
+            // create a new type as super of all of them
+
+        } else {
+            // console.log("interfaces: " + foundbaseInterfaces.map(i => i.name).join(", "))
+            // console.log("concepts: " + remaining.map(i => i.name).join(", "))
+            let baseType: PiClassifier = null;
+            if (foundbaseInterfaces.length === 1) {
+                baseType = foundbaseInterfaces[0];
+            } else if (remaining.length === 1) {
+                baseType = remaining[0];
+            }
+            if (!!baseType) {
+                definition.typeroot = PiElementReference.create<PiClassifier>(baseType, "PiClassifier");
+                definition.typeroot.owner = this.language;
+            } else {
+                console.log ("Internal error: no type root found");
+            }
+        }
+    }
+
+    private addIfNotPresent(list: PiClassifier[], toBeAdded: PiClassifier) {
+        if (!list.includes(toBeAdded)) { // add if not present
+            list.push(toBeAdded);
+        }
+    }
+
+    private addListIfNotPresent(list: PiClassifier[], toBeAdded: PiClassifier[]) {
+        toBeAdded.forEach(added => {
+            if (!list.includes(added)) { // add if not present
+                list.push(added);
+            }
+        })
+    }
+
+    private findBaseConcept(concept: PiConcept): PiConcept {
+        if (!!concept.base && concept.base.referred instanceof PiConcept) {
+            return this.findBaseConcept(concept.base.referred);
+        } else {
+            return concept;
+        }
+    }
+
+    private findBaseInterfaces(piInterface: PiInterface): PiInterface[] {
+        // console.log("doing interface " + piInterface.name);
+        const result: PiInterface[] = [];
+        if (piInterface.base.length > 0) {
+            piInterface.base.forEach(b => {
+                this.addListIfNotPresent(result, this.findBaseInterfaces(b.referred));
+            });
+        } else {
+            this.addIfNotPresent(result, piInterface);
+        }
+        return result;
     }
 }

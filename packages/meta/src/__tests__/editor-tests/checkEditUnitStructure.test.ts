@@ -1,4 +1,4 @@
-import { PiBinaryExpressionConcept, PiClassifier, PiLanguage, PiLimitedConcept, PiProperty } from "../../languagedef/metalanguage";
+import { PiBinaryExpressionConcept, PiClassifier, PiLanguage, PiLimitedConcept } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker, MetaLogger } from "../../utils";
 import { PiEditParser } from "../../editordef/parser/PiEditParser";
@@ -6,7 +6,7 @@ import {
     ListJoinType,
     PiEditClassifierProjection,
     PiEditProjection, PiEditProjectionDirection,
-    PiEditPropertyProjection, PiEditTableProjection,
+    PiEditPropertyProjection,
     PiEditUnit
 } from "../../editordef/metalanguage";
 import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
@@ -144,7 +144,7 @@ describe("Checking PiEditUnit: ", () => {
         classifiersToTest.forEach(c => {
             c.allProperties().filter(prop => prop.isList).forEach(prop => {
                 // property type should have a non-table projection
-                const propType = prop.type.referred;
+                const propType = prop.type;
                 if (!prop.isPrimitive && prop.isPart && !(propType instanceof PiLimitedConcept)) {
                     const projections: PiEditClassifierProjection[] = editor.findProjectionsForType(propType);
                     const xx = projections.find(proj => proj instanceof PiEditProjection);

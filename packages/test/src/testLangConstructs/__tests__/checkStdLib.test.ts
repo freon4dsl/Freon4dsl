@@ -1,8 +1,9 @@
 import { LangConstructsEnvironment } from "../environment/gen/LangConstructsEnvironment";
 import { LimitedConcept1, LimitedWithBase, LimitedWithInheritanceTree, LimitedWithInterface } from "../language/gen";
+import { LangConstructsStdlib } from "../stdlib/gen/LangConstructsStdlib";
 
 describe("Checking stdlib for Lang Constructs", () => {
-    let stdlib = LangConstructsEnvironment.getInstance().stdlib;
+    let stdlib: LangConstructsStdlib = LangConstructsEnvironment.getInstance().stdlib as LangConstructsStdlib;
     // The stdlib contains the following elements
     // LimitedConcept1.FIRST
     // LimitedConcept1.SECOND
@@ -68,13 +69,13 @@ describe("Checking stdlib for Lang Constructs", () => {
     });
 
     test("finding predefined instances with wrong metatype should return null", () => {
-        expect(stdlib.find("FIRST", "limitedWithInterface")).toBeNull();
-        expect(stdlib.find("SECOND", "limitedWithInterface")).toBeNull();
+        expect(stdlib.find("FIRST", "LimitedWithInterface")).toBeNull();
+        expect(stdlib.find("SECOND", "LimitedWithInterface")).toBeNull();
         expect(stdlib.find("THIRD", "LimitedWithInterface")).toBeNull();
         expect(stdlib.find("FOURTH", "LimitedWithInterface")).toBeNull();
         expect(stdlib.find("eersteB", "LimitedWithInterface")).toBeNull();
         expect(stdlib.find("tweedeB", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("derdeB", "limitedWithInterface")).toBeNull();
+        expect(stdlib.find("derdeB", "LimitedWithInterface")).toBeNull();
         expect(stdlib.find("FOURTH", "LimitedWithInterface")).toBeNull();
         expect(stdlib.find("TREE1", "LimitedWithInterface")).toBeNull();
         expect(stdlib.find("TREE2", "LimitedWithInterface")).toBeNull();

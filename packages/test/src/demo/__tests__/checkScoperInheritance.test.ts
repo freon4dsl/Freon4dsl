@@ -1,5 +1,5 @@
 import { DemoScoper } from "../scoper/gen/DemoScoper";
-import { DemoModel, DemoFunction, DemoEntity, Demo } from "../language/gen";
+import { DemoEntity, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("testing Scoper", () => {

@@ -1,13 +1,12 @@
 import { Names, PROJECTITCORE } from "../../../utils";
 import {
-    findMobxImports,
     makeBasicMethods,
     makeBasicProperties, makeConstructor,
     makePartProperty,
     makePrimitiveProperty,
     makeStaticCreateMethod
 } from "./ConceptUtils";
-import { PiConcept, PiModelDescription } from "../../metalanguage/PiLanguage";
+import { PiModelDescription } from "../../metalanguage/PiLanguage";
 
 export class ModelTemplate {
     // Note: a model may not have other properties than units
@@ -81,12 +80,12 @@ export class ModelTemplate {
                     }
                     // we must store the interface in the same place as the old unit, which info is held in PiContainer()
                     ${modelDescription.parts().map(part =>
-            `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
+            `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
                                 ${part.isList ?
-                `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)});
-                                this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type.referred)});`
+                `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)});
+                                this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type)});`
                 :
-                `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)};`}
+                `this.${part.name} = newUnit as ${Names.classifier(part.type)};`}
                             } else`
         ).join(" ")}                    
                     {
@@ -106,11 +105,11 @@ export class ModelTemplate {
                             // TODO this depends on the fact the only one part of the model concept has the same type, should we allow differently???
                             switch (myMetatype) {
                             ${language.modelConcept.allParts().map(part =>
-            `case "${Names.classifier(part.type.referred)}": {
+            `case "${Names.classifier(part.type)}": {
                                     ${part.isList ?
-                `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});`
+                `this.${part.name}.push(newUnit as ${Names.classifier(part.type)});`
                 :
-                `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`
+                `this.${part.name} = newUnit as ${Names.classifier(part.type)}`
             }
                                     return true;
                                 }`).join("\n")}
@@ -129,9 +128,9 @@ export class ModelTemplate {
                             const myMetatype = oldUnit.piLanguageConcept();
                             switch (myMetatype) {
                             ${language.modelConcept.allParts().map(part =>
-            `case "${Names.classifier(part.type.referred)}": {
+            `case "${Names.classifier(part.type)}": {
                                     ${part.isList ?
-                `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)}), 1);`
+                `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)}), 1);`
                 :
                 `this.${part.name} = null;`
             }
@@ -151,12 +150,12 @@ export class ModelTemplate {
                 newUnit(typename: ${Names.metaType(language)}) : ${Names.modelunit(language)}  {
                     switch (typename) {
                         ${language.modelConcept.allParts().map(part =>
-            `case "${Names.classifier(part.type.referred)}": {
-                                const unit: ${Names.classifier(part.type.referred)} = new ${Names.classifier(part.type.referred)}();
+            `case "${Names.classifier(part.type)}": {
+                                const unit: ${Names.classifier(part.type)} = new ${Names.classifier(part.type)}();
                                     ${part.isList ?
-                `this.${part.name}.push(unit as ${Names.classifier(part.type.referred)});`
+                `this.${part.name}.push(unit as ${Names.classifier(part.type)});`
                 :
-                `this.${part.name} = unit as ${Names.classifier(part.type.referred)}`
+                `this.${part.name} = unit as ${Names.classifier(part.type)}`
             }
                                     return unit;
                                 }`
@@ -175,7 +174,9 @@ export class ModelTemplate {
             `${part.isList ?
                 `result = result.concat(this.${part.name});`
                 :
-                `result.push(this.${part.name});`
+                `if (!!this.${part.name}) {
+                    result.push(this.${part.name});
+                 }`
             }`).join("\n")}
                         return result;
                     }
@@ -187,11 +188,11 @@ export class ModelTemplate {
                         switch (type) {
                         ${language.modelConcept.allParts().map(part =>
             `${part.isList ?
-                `case "${Names.classifier(part.type.referred)}": {
+                `case "${Names.classifier(part.type)}": {
                                     return this.${part.name};
                                 }`
                 :
-                `case "${Names.classifier(part.type.referred)}": {
+                `case "${Names.classifier(part.type)}": {
                                     let result : ${Names.modelunit(language)}[] = [];
                                     result.push(this.${part.name});
                                     return result;
@@ -206,7 +207,7 @@ export class ModelTemplate {
     private findModelImports(modelDescription: PiModelDescription, myName: string): string[] {
         return Array.from(
             new Set(
-                modelDescription.parts().map(part => Names.classifier(part.type.referred))
+                modelDescription.parts().map(part => Names.classifier(part.type))
                     .concat(Names.metaType(modelDescription.language))
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))

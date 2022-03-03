@@ -11,11 +11,11 @@ export class RHSLimitedRefListWithSeparator extends RHSPropPartWithSeparator {
     }
 
     toGrammar(): string {
-        return `[ ${getTypeCall(this.property.type.referred)} / '${this.separatorText}' ]*` + this.doNewline();
+        return `[ ${getTypeCall(this.property.type)} / '${this.separatorText}' ]*` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        const propType: string = Names.classifier(this.property.type.referred);
+        const propType: string = Names.classifier(this.property.type);
         const baseType: string = getBaseTypeAsString(this.property);
         return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformRefList}<${baseType}>(${nodeName}[${index}], '${propType}', '${this.separatorText}'); // RHSLimitedRefListEntryWithSeparator\n`;
     }

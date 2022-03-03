@@ -6,12 +6,11 @@ import {
     PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept,
     PiElementReference, PiMetaEnvironment, PiPrimitiveType, PiModelDescription, PiUnitDescription
 } from "./internal";
-import { MetaLogger } from "../../utils/MetaLogger";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 import { PiLangCheckerPhase2 } from "./PiLangCheckerPhase2";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
 import { CheckerHelper } from "./CheckerHelper";
-import { Checker } from "../../utils";
+import { Checker, MetaLogger } from "../../utils";
 
 const LOGGER = new MetaLogger("PiLanguageChecker").mute();
 const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept",
@@ -140,7 +139,7 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                 check: !!left,
                 error: `Binary expression concept ${piConcept.name} should have a left part ${Checker.location(piConcept)}.`,
                 whenOk: () => {
-                    this.simpleCheck(!!left && left.type.referred instanceof PiExpressionConcept,
+                    this.simpleCheck(!!left && left.type instanceof PiExpressionConcept,
                         `Concept ${piConcept.name}.left should be an expression concept ${Checker.location(piConcept)}.`);
                 }
             });
@@ -149,7 +148,7 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                 check: !!right,
                 error: `Binary expression concept ${piConcept.name} should have a right part ${Checker.location(piConcept)}.`,
                 whenOk: () => {
-                    this.simpleCheck(!!right && right.type.referred instanceof PiExpressionConcept,
+                    this.simpleCheck(!!right && right.type instanceof PiExpressionConcept,
                         `Concept ${piConcept.name}.right should be an expression concept ${Checker.location(piConcept)}.`);
                 }
             });
@@ -192,8 +191,8 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                 check: !!piProperty.type,
                 error: `Element '${piProperty.name}' should have a type ${Checker.location(piProperty)}.`,
                 whenOk: () => {
-                    this.checkClassifierReference(piProperty.type);
-                    const realType = piProperty.type.referred;
+                    this.checkClassifierReference(piProperty.typeReference);
+                    const realType = piProperty.type;
                     if (!!realType) { // error message handled by checkClassifierReference
                         const owningClassifier = piProperty.owningClassifier;
                         this.checkPropertyType(piProperty, realType);
@@ -204,13 +203,13 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                         if (isUnit && piProperty.isPart) {
                             this.simpleCheck(
                                 owningClassifier instanceof PiModelDescription,
-                                `Modelunit '${realType.name}' may be used as reference only in a non-model concept ${Checker.location(piProperty.type)}.`);
+                                `Modelunit '${realType.name}' may be used as reference only in a non-model concept ${Checker.location(piProperty.typeReference)}.`);
                         }
                         // check use of non-unit types in model concept
                         if (owningClassifier instanceof PiModelDescription) {
                             this.simpleCheck(
                                 isUnit,
-                                `Type of property '${piProperty.name}' should be a modelunit ${Checker.location(piProperty.type)}.`);
+                                `Type of property '${piProperty.name}' should be a modelunit ${Checker.location(piProperty.typeReference)}.`);
                         }
                         // TODO review the rules around 'public'
                         // if (piProperty.isPart && piProperty.isPublic) {
@@ -247,13 +246,13 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
             } else {
                 if (!piProperty.isPart) {
                     // it is a reference, so check whether the type has a name by which it can be referred
-                    const nameProperty = realType.nameProperty();
+                    const nameProperty: PiPrimitiveProperty = realType.nameProperty();
                     this.nestedCheck({
                         check: !!nameProperty,
-                        error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ${Checker.location(piProperty.type)}.`,
+                        error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ${Checker.location(piProperty.typeReference)}.`,
                         whenOk: () => {
-                            this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
-                                `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'identifier' ${Checker.location(piProperty.type)}.`);
+                            this.simpleCheck(nameProperty.type === PiPrimitiveType.identifier,
+                                `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'identifier' ${Checker.location(piProperty.typeReference)}.`);
                         }
                     });
                 }
@@ -266,10 +265,10 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
         this.checkPropertyName(element);
         this.nestedCheck(
             {
-                check: !!element.type,
+                check: !!element.typeReference,
                 error: `Property '${element.name}' should have a type ${Checker.location(element)}.`,
                 whenOk: () => {
-                    let myType = element.type.referred;
+                    let myType = element.type; // there is a type reference, now check whether this reference resolves to a primitive type
                     this.checkPrimitiveType(myType, element);
                     if (element.isOptional) {
                         this.simpleWarning(false,
@@ -340,6 +339,4 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
         piInterface.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
         piInterface.properties.forEach(part => this.checkConceptProperty(part));
     }
-
-
 }

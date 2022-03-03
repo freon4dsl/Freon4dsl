@@ -14,7 +14,7 @@ export class RHSPartOptionalEntry extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        return `${getTypeCall(this.property.type.referred, this.projectionName)}?` + this.doNewline();
+        return `${getTypeCall(this.property.type, this.projectionName)}?` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
