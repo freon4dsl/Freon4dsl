@@ -1,5 +1,5 @@
 import { PiLanguage, PiLimitedConcept } from "../../metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
+import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, PROJECTIT_FOLDER } from "../../../utils";
 
 export class StdlibTemplate {
     limitedConceptNames: string[] = [];
@@ -13,6 +13,7 @@ export class StdlibTemplate {
         import { ${Names.metaType(language)}, 
                     ${this.limitedConceptNames.map(name => `${name}`).join(", ") } 
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { projectitConfiguration } from "${relativePath}${PROJECTIT_FOLDER}/ProjectitConfiguration";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.
@@ -41,6 +42,9 @@ export class StdlibTemplate {
              */          
             private constructor() {
                 ${this.constructorText}
+                for (const lib of projectitConfiguration.customStdLibs) {
+                    this.elements.push(...lib.elements);
+                }
             }  
             
             /**
@@ -72,6 +76,18 @@ export class StdlibTemplate {
         }`;
     }
 
+    generateCustomStdlibClass(language: PiLanguage): string {
+        return `
+        import { PiNamedElement, PiStdlib } from "@projectit/core";
+
+        export class ${Names.customStdlib(language)} implements PiStdlib {
+            // add all your extra predefined instances here
+            get elements(): PiNamedElement[] {
+                return [];
+            }
+        }`;
+    }
+
     private makeTexts(language) {
         language.concepts.filter(con => con instanceof PiLimitedConcept).map(limitedConcept => {
             const myName = Names.concept(limitedConcept);
@@ -79,5 +95,11 @@ export class StdlibTemplate {
             this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x =>
                 `this.elements.push(${myName}.${x.name});`).join("\n ")}`);
         });
+    }
+
+    generateIndex(language: PiLanguage) {
+        return `
+        export * from "./${Names.customStdlib(language)}";
+        `;
     }
 }

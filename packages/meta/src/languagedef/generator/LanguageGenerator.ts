@@ -164,6 +164,14 @@ export class LanguageGenerator {
         const utilIndexFile = Helpers.pretty(languageIndexTemplate.generateUtilsIndex(language), "Utils Index", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/index.ts`, utilIndexFile);
 
+        LOGGER.log(`Generating custom stdlib: ${this.stdlibFolder}/${Names.customStdlib(language)}.ts`);
+        const customFile = Helpers.pretty(stdlibTemplate.generateCustomStdlibClass(language), "Custom Stdlib Class", generationStatus);
+        Helpers.generateManualFile(`${this.stdlibFolder}/${Names.customStdlib(language)}.ts`, customFile, "Custom Stdlib Class");
+
+        LOGGER.log(`Generating stdlib index: ${this.stdlibFolder}/index.ts`);
+        const indexFile = Helpers.pretty(stdlibTemplate.generateIndex(language), "Stdlib Index Class", generationStatus);
+        Helpers.generateManualFile(`${this.stdlibFolder}/index.ts`, indexFile, "Stdlib Index Class");
+
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.info(`Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {

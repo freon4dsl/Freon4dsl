@@ -208,8 +208,8 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
             // create a new type as super of all of them
 
         } else {
-            console.log("interfaces: " + foundbaseInterfaces.map(i => i.name).join(", "))
-            console.log("concepts: " + remaining.map(i => i.name).join(", "))
+            // console.log("interfaces: " + foundbaseInterfaces.map(i => i.name).join(", "))
+            // console.log("concepts: " + remaining.map(i => i.name).join(", "))
             let baseType: PiClassifier = null;
             if (foundbaseInterfaces.length === 1) {
                 baseType = foundbaseInterfaces[0];
