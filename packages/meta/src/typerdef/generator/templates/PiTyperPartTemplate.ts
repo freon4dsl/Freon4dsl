@@ -90,7 +90,7 @@ export class PiTyperPartTemplate {
             } 
             
             private ancestor(elem: ${allLangConcepts}, ancestorType: string): ${allLangConcepts} {
-                const myContainer = elem.piContainer()?.container;
+                const myContainer: ${allLangConcepts} = elem.piContainer()?.container as ${allLangConcepts};
                 if (!!myContainer) {
                     const concept = myContainer.piLanguageConcept();
                     if (concept === ancestorType || Language.getInstance().subConcepts(ancestorType).includes(concept)) {
@@ -147,7 +147,7 @@ export class PiTyperPartTemplate {
             }  
             
             private ancestor(elem: ${allLangConcepts}, ancestorType: string): ${allLangConcepts} {
-                const myContainer = elem.piContainer()?.container;
+                const myContainer: ${allLangConcepts} = elem.piContainer()?.container as ${allLangConcepts};
                 if (!!myContainer) {
                     const concept = myContainer.piLanguageConcept();
                     if (concept === ancestorType || Language.getInstance().subConcepts(ancestorType).includes(concept)) {

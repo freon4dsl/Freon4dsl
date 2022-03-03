@@ -1,9 +1,10 @@
 import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestprojectScoper } from "../scoper/gen";
 import { TestprojectEnvironment } from "../environment/gen/TestprojectEnvironment";
+import { TestprojectStdlib } from "../stdlib/gen/TestprojectStdlib";
 
 describe("Checking stdlib for Demo", () => {
-    let stdlib = TestprojectEnvironment.getInstance().stdlib;
+    let stdlib: TestprojectStdlib = TestprojectEnvironment.getInstance().stdlib as TestprojectStdlib;
     // The stdlib contains the following elements
     // ZZ.ZZinstance1
     // XX.XXinstance1
@@ -57,7 +58,7 @@ describe("Checking scoper for testproject", () => {
     let model: BB;
     let super1: AA;
     let super2: AA;
-    let ZZinstance1: ZZ = TestprojectEnvironment.getInstance().stdlib.find("ZZinstance1", "ZZ") as ZZ;
+    let ZZinstance1: ZZ = (TestprojectEnvironment.getInstance().stdlib as TestprojectStdlib).find("ZZinstance1", "ZZ") as ZZ;
 
     beforeEach( ()=> {
 

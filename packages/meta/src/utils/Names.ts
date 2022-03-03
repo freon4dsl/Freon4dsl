@@ -107,6 +107,10 @@ export class Names {
         return "Custom" + this.validator(language);
     }
 
+    public static customStdlib(language: PiLanguage): string {
+        return "Custom" + this.stdlib(language);
+    }
+
     // public static projectionDefault(language: PiLanguage): string {
     //     return this.startWithUpperCase(language?.name) + "ProjectionDefault";
     // }
@@ -286,4 +290,5 @@ export class Names {
     public static instance(instance: PiInstance): string {
         return instance.name;
     }
+
 }

@@ -1,5 +1,6 @@
 import { DemoAttributeType } from "../language/gen";
 import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
+import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 
 // limited DemoAttributeType implements Type {
 //     name: string;
@@ -13,7 +14,7 @@ import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 
 
 describe("Checking stdlib for Demo", () => {
-    let stdlib = DemoEnvironment.getInstance().stdlib;
+    let stdlib: DemoStdlib = DemoEnvironment.getInstance().stdlib as DemoStdlib;
 
     test("all predefined instances of limited concepts should be found", () => {
         expect(stdlib.find("String")).toBe(DemoAttributeType.String);

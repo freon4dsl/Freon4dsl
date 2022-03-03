@@ -11,9 +11,9 @@ export class ScoperUtilsTemplate {
         // also process the units that are not explicitly marked as namespace
         language.units.forEach(unit => {
             // TODO check this and change the documentation
-            // if (!concreteNamespaces.includes(unit)) {
-            //     concreteNamespaces.push(unit);
-            // }
+            if (!concreteNamespaces.includes(unit)) {
+                concreteNamespaces.push(unit);
+            }
         });
 
         // Template starts here

@@ -88,11 +88,11 @@ concept PiPropertyInstance base PiLangElement {
 concept PiFunction base PiLangElement {
     reference language: PiStructureDef;
     formalparams: PiParameter[];
-    reference returnType: PiClassifier;
+    reference returnType: Type;
 }
 
 concept PiParameter base PiLangElement {
-    reference type: PiClassifier;
+    reference type: Type;
 }
 // the basic types in the pi-languages
 abstract concept PiPrimitiveValue {

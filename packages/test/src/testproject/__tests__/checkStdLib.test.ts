@@ -1,8 +1,9 @@
 import { KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestprojectEnvironment } from "../environment/gen/TestprojectEnvironment";
+import { TestprojectStdlib } from "../stdlib/gen/TestprojectStdlib";
 
 describe("Checking stdlib for Demo", () => {
-    let stdlib = TestprojectEnvironment.getInstance().stdlib;
+    let stdlib: TestprojectStdlib = TestprojectEnvironment.getInstance().stdlib as TestprojectStdlib;
     // The stdlib contains the following elements
     // ZZ.ZZinstance1
     // XX.XXinstance1
