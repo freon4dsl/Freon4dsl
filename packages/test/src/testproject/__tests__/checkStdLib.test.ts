@@ -51,4 +51,12 @@ describe("Checking stdlib for Demo", () => {
         expect(stdlib.find("CC1", "XX")).toBeNull();
         expect(stdlib.find("CC2", "TestLimited")).toBeNull();
     });
+
+    test("all custom additions to the stdlib can be found", () => {
+        expect(stdlib.find("EXTRA1", "AA")).not.toBeNull();
+        expect(stdlib.find("EXTRA2", "AA")).not.toBeNull();
+        expect(stdlib.find("EXTRA1", "BB")).not.toBeNull();
+        expect(stdlib.find("EXTRA2", "BB")).not.toBeNull();
+    });
+
 });

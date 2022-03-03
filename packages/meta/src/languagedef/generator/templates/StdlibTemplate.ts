@@ -81,8 +81,10 @@ export class StdlibTemplate {
         import { PiNamedElement, PiStdlib } from "@projectit/core";
 
         export class ${Names.customStdlib(language)} implements PiStdlib {
-            // add all your extra predefined instances to this.elements
-            elements: PiNamedElement[] = [];
+            // add all your extra predefined instances here
+            get elements(): PiNamedElement[] {
+                return [];
+            }
         }`;
     }
 
