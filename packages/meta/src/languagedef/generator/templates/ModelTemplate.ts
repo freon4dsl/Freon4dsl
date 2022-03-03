@@ -174,7 +174,9 @@ export class ModelTemplate {
             `${part.isList ?
                 `result = result.concat(this.${part.name});`
                 :
-                `result.push(this.${part.name});`
+                `if (!!this.${part.name}) {
+                    result.push(this.${part.name});
+                 }`
             }`).join("\n")}
                         return result;
                     }
