@@ -94,13 +94,27 @@ export class ConceptMaker {
             list.forEach((item) => {
                 if (item instanceof PiOptionalPropertyProjection) {
                     let subs: RightHandSideEntry[] = [];
+                    let propIndex: number = 0; // the index in the list of parts in the optional group
+                    let foundIndex: boolean = false;
                     item.lines.forEach(line => {
-                        subs.push(...this.addItems(line.items, true));
+                        const subParts = this.addItems(line.items, true);
+                        subParts.forEach((part, index) => {
+                            if (part instanceof RHSPropEntry && part.property === item.property.referred) {
+                                propIndex += index;
+                                foundIndex = true;
+                            }
+                            subs.push(part);
+                        });
+                        if (!foundIndex) {
+                            propIndex += subParts.length;
+                        }
                     })
-                    parts.push(new RHSOptionalGroup(item.property.referred, subs));
+                    parts.push(new RHSOptionalGroup(item.property.referred, subs, propIndex));
                 } else if (item instanceof PiEditPropertyProjection) {
                     const propPart = this.makePropPart(item, inOptionalGroup);
-                    if (!!propPart) parts.push(propPart);
+                    if (!!propPart) {
+                        parts.push(propPart);
+                    }
                 } else if (item instanceof PiEditProjectionText) {
                     parts.push(...this.makeTextPart(item));
                 } else if (item instanceof PiEditSuperProjection) {

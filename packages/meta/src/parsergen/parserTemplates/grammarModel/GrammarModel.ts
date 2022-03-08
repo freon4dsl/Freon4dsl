@@ -180,11 +180,11 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 while (!stop) {
                     let nextOne: any = null;
                     try {
-                        nextOne = group.nonSkipChildren.toArray()[0]; 
+                        nextOne = group.nonSkipChildren?.toArray()[0]; 
                     } catch (e) {
                         throw new Error(\`Cannot follow group: \${e.message} (\${group.matchedText})\`);
                     }
-                    if (!nextOne.name.includes("multi") && !nextOne.name.includes("group")) {
+                    if (!nextOne || (!nextOne.name.includes("multi") && !nextOne.name.includes("group"))) {
                         stop = true; // found a branch with actual content, return its parent!
                     } else {
                         group = nextOne;
