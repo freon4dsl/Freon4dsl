@@ -72,12 +72,12 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
         this.nestedCheck(
             {
                 check: reference.name !== undefined,
-                error: `Concept reference should have a name ${Checker.location(reference)}.`,
+                error: `Classifier reference should have a name ${Checker.location(reference)}.`,
                 whenOk: () => {
                     this.nestedCheck(
                     {
                         check: reference.referred !== undefined,
-                        error: `Concept reference to '${reference.name}' cannot be resolved ${Checker.location(reference)}.`
+                        error: `Reference to classifier '${reference.name}' cannot be resolved ${Checker.location(reference)}.`
                     });
                 }
             });

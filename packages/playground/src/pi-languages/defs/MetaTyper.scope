@@ -1,12 +1,12 @@
 scoper XX for language PiLanguage
 
-isnamespace { PitClassifierRule, PiClassifier, PitInstanceRef }
+isnamespace { PitClassifierRule, PiClassifier, PitInstanceExp }
 
-Applied {
+PitAppliedExp {
     scope = typeof( container );
 }
 
-PitInstanceRef {
+PitInstanceExp {
     namespace_addition = self.myLimited;
 }
 

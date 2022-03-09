@@ -1,6 +1,5 @@
 import {
     PiTyperDef,
-    PitExp,
     PitStatement,
     PitStatementKind,
     PitSingleRule,
@@ -8,15 +7,13 @@ import {
     PitLimitedRule,
     PitProperty,
     PitPropertyCallExp,
-    PitPropertyRef,
-    PitAnytypeRef,
     PitInferenceRule,
-    PitInstanceRef,
+    PitInstanceExp,
     PitFunctionCallExp,
     PitAnyTypeRule,
     PitClassifierRule,
     PitConformanceOrEqualsRule,
-    Applied, PitWhereExp
+    PitAppliedExp, PitWhereExp, PitAnytypeExp
 } from "../language/gen";
 import { PiLanguageDefaultWorker, PiLanguageWalker } from "../utils/gen";
 
@@ -37,18 +34,14 @@ export class StructurePrint extends PiLanguageDefaultWorker {
         console.log(this.output);
     }
 
-    execBeforeApplied(modelelement: Applied): boolean {
-        this.output += "\nApplied: ";
+    execBeforePitAppliedExp(modelelement: PitAppliedExp): boolean {
+        this.output += "\nPitAppliedExp: ";
         return false;
     }
 
-    // execBeforePiInstance(modelelement: PiInstance): boolean {
-    //     return false;
-    // }
-
     execBeforePiTyperDef(modelelement: PiTyperDef): boolean {
         this.output += "PiTyperDef: " + modelelement.name;
-        this.output += `\n\ttypes: {${modelelement.types.map(t => t.referred.name).join(", ")}}`;
+        this.output += `\n\ttypes: {${modelelement.types.map(t => t.name).join(", ")}}`;
         return false;
     }
 
@@ -57,8 +50,8 @@ export class StructurePrint extends PiLanguageDefaultWorker {
         return false;
     }
 
-    execBeforePitAnytypeRef(modelelement: PitAnytypeRef): boolean {
-        this.output += "\nPitAnytypeRef: ";
+    execBeforePitAnytypeExp(modelelement: PitAnytypeExp): boolean {
+        this.output += "\nPitAnytypeExp: ";
         return false;
     }
 
@@ -86,7 +79,7 @@ export class StructurePrint extends PiLanguageDefaultWorker {
         return false;
     }
 
-    execBeforePitInstanceRef(modelelement: PitInstanceRef): boolean {
+    execBeforePitInstanceExp(modelelement: PitInstanceExp): boolean {
         this.output += "\nPitInstanceRef: " + modelelement.myLimited?.name + ":" + modelelement.myInstance.name;
         return false;
     }
@@ -108,12 +101,7 @@ export class StructurePrint extends PiLanguageDefaultWorker {
     }
 
     execBeforePitPropertyCallExp(modelelement: PitPropertyCallExp): boolean {
-        this.output += "\nPitPropertyCallExp: " + modelelement.myProperty.name + ": " + modelelement.myProperty.referred?.type.referred?.name;
-        return false;
-    }
-
-    execBeforePitPropertyRef(modelelement: PitPropertyRef): boolean {
-        this.output += "\nPitPropertyRef: " + modelelement.p.name + ": " + modelelement.p.referred?.type.referred?.name;
+        this.output += "\nPitPropertyCallExp: " + modelelement.property.name + ": " + modelelement.property.referred?.type.referred?.name;
         return false;
     }
 
@@ -124,7 +112,6 @@ export class StructurePrint extends PiLanguageDefaultWorker {
 
     execBeforePitStatement(modelelement: PitStatement): boolean {
         this.output += "\nPitStatement: ";
-        this.output += "\n\toperand: " + modelelement.operand.name;
         return false;
     }
 

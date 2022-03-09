@@ -33,54 +33,50 @@ concept PitInferenceRule base PitClassifierRule {
 concept PitLimitedRule base PitClassifierRule {
     statements: PitStatement[];
 }
-
 concept PitSingleRule {
     kind: PitStatementKind;
     exp: PitExp;
 }
-
-concept PitStatement {
-    left: PitExp;
-    right: PitExp;
-    operand: PitStatementKind; // either 'equalsto' or 'conformsto'
+concept PitProperty base PiProperty {
 }
 
 // expressions used in type def
-abstract concept PitExp {
+abstract expression PitExp {
 }
-concept PitWhereExp base PitExp {
-    otherType: PitProperty; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
-    conditions: PitStatement[];
+abstract expression PitAppliedExp base PitExp {
+    source?: PitExp;
 }
-concept PitSelfExp base PitExp {
-    applied: Applied;
+expression PitSelfExp base PitExp {
 }
-concept PitPropertyRef base PitExp {
-    reference p: PitProperty;
-    applied: Applied;
+expression PitAnytypeExp base PitExp {
 }
-concept PitInstanceRef base PitExp {
+expression PitPropertyCallExp base PitAppliedExp {
+    reference property: PitProperty;
+}
+expression PitInstanceExp base PitExp {
     reference myLimited?: PiLimitedConcept;
     reference myInstance: PiInstance;
 }
-concept PitAnytypeRef base PitExp {
+expression PitWhereExp base PitExp {
+    otherType: PitProperty; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
+    conditions: PitStatement[];
 }
-
-abstract concept Applied base PitExp {
+abstract binary expression PitStatement base PitExp {
+    left: PitExp;
+    right: PitExp;
+//    operand: PitStatementKind; // either 'equalsto' or 'conformsto'
 }
-concept PitFunctionCallExp base Applied {
+binary expression PitEquals base PitStatement {
+    priority = 8;
+}
+binary expression PitConforms base PitStatement {
+    priority = 4;
+}
+expression PitFunctionCallExp base PitExp {
     calledFunction: identifier;
     // reference calledFunction: PitFunction;
     reference returnType?: PiClassifier;
     arguments: PitExp[];
-    applied?: Applied;
-}
-concept PitPropertyCallExp base Applied {
-    reference myProperty: PiProperty;
-    applied?: Applied;
-}
-
-concept PitProperty base PiProperty {
 }
 limited PitFunction {
     name: identifier;

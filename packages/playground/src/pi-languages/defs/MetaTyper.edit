@@ -10,68 +10,55 @@ PiTyperDef {[
     [?${self.anyTypeRule}]
     ${self.classifierRules vertical}
     ]}
-
 PitConformanceOrEqualsRule {[
     ${self.myClassifier} {
         ${self.myRules}
     }
 ]}
-
 PitAnyTypeRule {[
     anytype {
         ${self.myRules}
     }
     ]}
-
 PitSingleRule {
     [ ${self.kind} ${self.exp} ;]
 }
-
-PitWhereExp {[
-    ${self.otherType} where {
-        ${self.conditions terminator[;]}
-    }
-]}
-
 PitInferenceRule {[
     ${self.myClassifier} {
         infertype ${self.exp} ;
     }
 ]}
-
 PitLimitedRule {[
     ${self.myClassifier} {
         ${self.statements terminator[; ]}
     }
 ]}
-
-PitStatement {
-    [${self.left} ${self.operand} ${self.right}]
-}
-
-PitFunctionCallExp {
-    [${self.calledFunction} ( ${self.arguments horizontal separator[, ]} )[?.${self.applied}]]
-}
 PitSelfExp {
-    [self . ${self.applied}]
+    [self]
 }
-PitPropertyRef {
-    [${self.p}.${self.applied}]
-}
-
-PitPropertyCallExp {
-    [${self.myProperty}[?.${self.applied}]]
-}
-
-PitInstanceRef {
-    [[?${self.myLimited}:]${self.myInstance}]
-}
-
-PitAnytypeRef {
+PitAnytypeExp {
     [anytype]
 }
-
+PitPropertyCallExp {
+    [[?${source}.]${property}]
+}
+PitWhereExp {[
+    ${self.otherType} where {
+        ${self.conditions terminator[;]}
+    }
+]}
+PitEquals {
+    symbol = "equalsto"
+}
+PitConforms {
+    symbol = "conformsto"
+}
+PitInstanceExp {
+    [[?${myLimited}:]${myInstance}]
+}
 PitProperty {
     [${self.name} : ${self.type}]
 }
-// end typer definition
+PitFunctionCallExp {
+    [${self.calledFunction} ( ${self.arguments horizontal separator[, ]} )]
+}

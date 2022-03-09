@@ -113,20 +113,24 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
         
             public ${internalTransformNode}(node: SPPTNode): any {
-                try {
-                    if (node.isLeaf) {
-                        return this.${internalTransformLeaf}(node);
-                    } else if (node.isBranch) {
-                        return this.${internalTransformBranch}(node as SPPTBranch);
+                if (!!node) {
+                    try {
+                        if (node.isLeaf) {
+                            return this.${internalTransformLeaf}(node);
+                        } else if (node.isBranch) {
+                            return this.${internalTransformBranch}(node as SPPTBranch);
+                        }
+                    } catch (e) {
+                        if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${className}")) {
+                            throw e;
+                        } else {
+                            // add more info to the error message 
+                            throw new Error(\`Syntax error in "\${node?.matchedText.trimEnd()}": \${e.message}\`);
+                        }
+                        // console.log(e.message + e.stack);
                     }
-                } catch (e) {
-                    if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${className}")) {
-                        throw e;
-                    } else {
-                        // add more info to the error message 
-                        throw new Error(\`Syntax error in "\${node?.matchedText.trimEnd()}": \${e.message}\`);
-                    }
-                    // console.log(e.message + e.stack);
+                } else {
+                    return null;
                 }
             }
             

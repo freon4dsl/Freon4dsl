@@ -1,5 +1,5 @@
-import { PiLangElement, PiLangConceptType, PiMetaEnvironment } from "./internal";
-import { ParseLocation } from "../../utils";
+import { PiLangElement, PiMetaEnvironment } from "./internal";
+import { ParseLocation, PiDefinitionElement } from "../../utils";
 
 /**
  * Implementation for a (named) reference in ProjectIt.
@@ -7,7 +7,7 @@ import { ParseLocation } from "../../utils";
  */
 export class PiElementReference<T extends PiLangElement> {
 
-    public static create<T extends PiLangElement>(name: string | T, typeName: PiLangConceptType): PiElementReference<T> {
+    public static create<T extends PiLangElement>(name: string | T, typeName: string): PiElementReference<T> {
         const result = new PiElementReference(null, typeName);
         if (typeof name === "string") {
             result.name = name;
@@ -25,10 +25,10 @@ export class PiElementReference<T extends PiLangElement> {
     public location: ParseLocation;
 
     // Need for the scoper to work
-    private typeName: PiLangConceptType;
+    private typeName: string;
     private scoper = PiMetaEnvironment.metascoper;
 
-    private constructor(referredElement: T, typeName: PiLangConceptType) {
+    private constructor(referredElement: T, typeName: string) {
         // super();
         this.referred = referredElement;
         this.typeName = typeName;
