@@ -13,8 +13,12 @@ export class ParseHelpers {
             result += ParseHelpers.printLeaf(node as SPPTLeaf, indent);
         } else if (node.isBranch) {
             result += ParseHelpers.printBranch(node as SPPTBranch, indent);
+        } else if (Array.isArray(node)) {
+            node.forEach(n => {
+                result += ParseHelpers.printTree(n, indent) + "\n";
+            })
         } else {
-            result += 'UNKNOWN node TYPE: ' + typeof node;
+            result += 'UNKNOWN node TYPE: ' + node.constructor.name + ' (' + node.matchedText?.trimEnd() + ')';
         }
         return result;
     }
