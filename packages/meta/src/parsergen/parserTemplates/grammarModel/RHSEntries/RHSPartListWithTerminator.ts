@@ -4,7 +4,7 @@ import { PiProperty } from "../../../../languagedef/metalanguage";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
 
-export class RHSListGroup extends RHSPropPartWithSeparator {
+export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
     // (propTypeName 'joinText' )*
     private entry: RHSPropEntry;
     private isSingleEntry: boolean;
@@ -17,7 +17,7 @@ export class RHSListGroup extends RHSPropPartWithSeparator {
     }
 
     toGrammar(): string {
-        return `( ${this.entry.toGrammar()} '${this.separatorText}' )*\n\t`;
+        return `( ${this.entry.toGrammar()} '${this.separatorText}' )*` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

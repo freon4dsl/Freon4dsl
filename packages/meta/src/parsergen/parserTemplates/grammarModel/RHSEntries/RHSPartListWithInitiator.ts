@@ -4,7 +4,7 @@ import { PiProperty } from "../../../../languagedef/metalanguage";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
 
-export class RHSListGroupWithInitiator extends RHSPropPartWithSeparator {
+export class RHSPartListWithInitiator extends RHSPropPartWithSeparator {
     // `("joinText" propTypeName)*`
     private entry: RHSPropEntry;
 
@@ -15,12 +15,12 @@ export class RHSListGroupWithInitiator extends RHSPropPartWithSeparator {
     }
 
     toGrammar(): string {
-        return `( '${this.separatorText}' ${this.entry.toGrammar()} )*\n\t`;
+        return `( '${this.separatorText}' ${this.entry.toGrammar()} )*` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         return `
-        // RHSListGroupWithInitiator
+        // RHSPartListWithInitiator
         if (!${nodeName}[${index}].isEmptyMatch) {
             ${ParserGenUtil.internalName(this.property.name)} = [];
             const group = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
@@ -33,16 +33,8 @@ export class RHSListGroupWithInitiator extends RHSPropPartWithSeparator {
                     ${ParserGenUtil.internalName(this.property.name)}.push(this.${mainAnalyserName}.${internalTransformNode}(child.nonSkipChildren.toArray()[1]));
                 }
             }
-        } // end RHSListGroupWithInitiator
+        } // end RHSPartListWithInitiator
         `;
-        // return `
-        //     // RHSListGroupWithInitiator
-        //     if (!${nodeName}[${index}].isEmptyMatch) {
-        //         ${ParserGenUtil.internalName(this.property.name)} = [];
-        //         for (const subNode of ${nodeName}[${index}].nonSkipChildren.toArray()) {
-        //             ${ParserGenUtil.internalName(this.property.name)}.push(this.${mainAnalyserName}.${internalTransformNode}(this.${mainAnalyserName}.getGroup(subNode).nonSkipChildren.toArray()[1]));
-        //         }
-        //     }`;
     }
 
     toString(depth: number): string {

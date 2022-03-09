@@ -126,6 +126,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                         // add more info to the error message 
                         throw new Error(\`Syntax error in "\${node?.matchedText.trimEnd()}": \${e.message}\`);
                     }
+                    // console.log(e.message + e.stack);
                 }
             }
             
