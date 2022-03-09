@@ -1,6 +1,5 @@
 import { PiLanguage } from "../languagedef/metalanguage";
 import { ParseLocation, PiDefinitionElement } from "../utils";
-import * as path from "path";
 
 export type NestedCheck = { check: boolean; error: string; whenOk?: () => void };
 
