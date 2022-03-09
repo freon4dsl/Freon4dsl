@@ -72,7 +72,7 @@ projectionChoice = p:projection t:tableProjection?
     };
 }
 
-/* rules that makes order of extra info flexible */
+/* rules that make the order of extra info flexible */
 extraClassifierInfo = trigger:trigger
               sub:extraChoiceSub1?
 {
