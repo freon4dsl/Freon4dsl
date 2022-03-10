@@ -4,7 +4,7 @@ import {
     PiClassifier,
     PiLangExpressionChecker,
     PiElementReference,
-    PiLimitedConcept, PiProperty
+    PiLimitedConcept, PiProperty, PiInterface
 } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 import {
@@ -25,6 +25,7 @@ import {
     PitWhereExp,
     PiTyperDef
 } from "../new-metalanguage";
+import { ParserGenUtil } from "../../parsergen/parserTemplates/ParserGenUtil";
 
 const LOGGER = new MetaLogger("NewPiTyperChecker"); //.mute();
 const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof", "commonSuperType", "ancestor"];
@@ -53,7 +54,7 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
 
         this.checkTypeReferences(definition.__types_references);
         this.checkTypeReferences(definition.__conceptsWithType_references);
-        // from now on we can use the getters types and conceptsWithType!
+        // from now on we can use the getters 'types' and 'conceptsWithType'!
         // all references that cannot be found are filtered out!
 
         // add all concepts that are types or have a type, because they inherit
@@ -63,22 +64,33 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
 
         if (!!definition.anyTypeRule) {
             this.checkAnyTypeRule(definition.anyTypeRule);
-        }
-        let anyTypeRuleIndex: number = -1;
-        definition.classifierRules.forEach((rule, index) => {
-            // anyTypeRule looks like PitConformanceOrEqualsRule, therefore we must
-            // check the following
-            if (!definition.anyTypeRule && rule.__myClassifier.name === 'anytype' && rule instanceof PitConformanceOrEqualsRule) {
-                definition.anyTypeRule = rule;
-                anyTypeRuleIndex = index;
-                this.checkAnyTypeRule(rule);
-            } else {
-                this.checkClassifierRule(rule);
+        } else {
+            // maybe one of the PitConformanceOrEqualsRules is actually a PitAnyTypeRule
+            // check this and make the neccessary changes
+            let anyTypeRuleIndex: number = -1;
+            definition.classifierRules.forEach((rule, index) => {
+                if (rule.__myClassifier.name === "anytype" && rule instanceof PitConformanceOrEqualsRule) {
+                    // TODO ask David about other way of parsing
+                    // make a copy of the information into an object of another class
+                    const newRule: PitAnyTypeRule = new PitAnyTypeRule();
+                    newRule.myRules = rule.myRules;
+                    newRule.location = rule.location;
+                    // set the new rule
+                    definition.anyTypeRule = newRule;
+                    this.checkAnyTypeRule(newRule);
+                    // remember the location of the incorrect rule
+                    anyTypeRuleIndex = index;
+                }
+            });
+            // remove the found incorrect PitConformanceOrEqualsRule
+            if (anyTypeRuleIndex > -1) {
+                definition.classifierRules.splice(anyTypeRuleIndex, 1);
             }
-        });
-        if (anyTypeRuleIndex > -1) {
-            definition.classifierRules.splice(anyTypeRuleIndex, 1);
         }
+
+        definition.classifierRules.forEach((rule, index) => {
+            this.checkClassifierRule(rule);
+        });
 
         // when everything has been checked we can do even more ...
         // let's find the top of the type hierarchy, if present
@@ -93,15 +105,25 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
             t.owner = this.language;
             this.myExpressionChecker.checkClassifierReference(t);
             if (!!t.referred) { // error message given by myExpressionChecker
-                this.typeConcepts.push(t.referred);
+                this.nestedCheck({
+                    check: !this.typeConcepts.includes(t.referred),
+                    error: `Concept or interface '${t.name}' occurs more than once in this list ${Checker.location(t)}.`,
+                    whenOk: () => {
+                        this.typeConcepts.push(t.referred);
+                    }
+                });
             }
         }
     }
 
     private addInheritedConcepts(types: PiClassifier[]): PiClassifier[] {
+        LOGGER.log("addInheritedConcepts to: '" + types.map(t => t.name).join(", ") + "'");
         const result: PiClassifier[] = [];
         types.forEach((t: PiClassifier) => {
-            result.push(...LangUtil.superClassifiers(t));
+            ParserGenUtil.addListIfNotPresent<PiClassifier>(result, LangUtil.subConcepts(t));
+            if (t instanceof PiInterface) {
+                ParserGenUtil.addListIfNotPresent<PiClassifier>(result, LangUtil.findImplementorsRecursive(t));
+            }
         });
         result.push(...types);
         return result;
@@ -143,12 +165,16 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
     }
 
     private checkInferenceRule(rule: PitInferenceRule, classifier: PiClassifier) {
+        this.simpleCheck(this.definition.conceptsWithType.includes(classifier),
+            `Concept or interface '${classifier.name}' is not marked 'hasType', therefore it cannot have an infertype rule ${Checker.location(rule)}.`);
         rule.exp = this.changeInstanceToPropCallExp(rule.exp, classifier);
         this.checkPitExp(rule.exp, classifier);
     }
 
 
     private checkConformanceOrEqualsRule(rule: PitConformanceOrEqualsRule, classifier: PiClassifier) {
+        this.simpleCheck(this.definition.types.includes(classifier),
+            `Concept or interface '${classifier.name}' is not marked 'isType', therefore it cannot have a conforms or equals rule ${Checker.location(rule)}.`);
         for (const stat of rule.myRules) {
             this.checkSingleRule(stat, classifier);
         }
@@ -196,7 +222,7 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
     }
 
     private checkPitExp(exp: PitExp, classifier: PiClassifier, surroundingExp?: PitWhereExp) {
-        // console.log("Checking PitExp '" + exp.toPiString() + "'");
+        // LOGGER.log("Checking PitExp '" + exp.toPiString() + "'");
         exp.language = this.language;
         if (exp instanceof PitAnytypeExp ) {
             // nothing to check
@@ -206,64 +232,77 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
         } else if (exp instanceof PitFunctionCallExp) {
             this.checkFunctionCallExpression(exp, classifier, surroundingExp);
         } else if (exp instanceof PitPropertyCallExp ) {
-            if (!!exp.source) {
-                exp.source = this.changeInstanceToPropCallExp(exp.source, classifier);
-                this.checkPitExp(exp.source, classifier, surroundingExp);
-                exp.__property.owner = exp.source.type;
-            } else {
-                if (!!surroundingExp) {
-                    // use the surrounding PitWhereExp, because there an extra prop is defined
-                    if (exp.__property.name === surroundingExp.otherType.name) {
-                        exp.property = surroundingExp.otherType;
-                    }
-                }
-            }
-            this.nestedCheck({
-                check: !!exp.property,
-                error: `Cannot find property '${exp.__property.name}' ${Checker.location(exp.__property)}.`,
-                whenOk: () => {
-                    if (!!exp.source) {
-                        exp.source = this.changeInstanceToPropCallExp(exp.source, classifier);
-                        this.checkPitExp(exp.source, classifier, surroundingExp);
-                    }
-                }
-            });
+            this.checkPropertyCallExp(exp, classifier, surroundingExp);
         } else if (exp instanceof PitInstanceExp) {
-            exp.__myInstance.owner = this.language;
-            if (!!exp.__myLimited) {
-                exp.__myLimited.owner = this.language;
-                this.simpleCheck(
-                    !!exp.myLimited,
-                    `Cannot find limited concept '${exp.__myLimited.name}' ${Checker.location(exp.__myLimited)}.`);
-            } else {
-                // use the enclosing classifier as limited concept
-                if (classifier instanceof PiLimitedConcept) {
-                    exp.myLimited = classifier;
+            this.checkInstanceExp(exp, classifier);
+        } else if (exp instanceof PitWhereExp) {
+            this.checkWhereExp(exp, classifier);
+        }
+    }
+
+    private checkWhereExp(exp: PitWhereExp, classifier: PiClassifier) {
+        exp.otherType.refType.owner = this.language; // the type of the new property must be declared within the language
+        this.nestedCheck({
+            check: !!exp.otherType.type,
+            error: `Cannot find type '${exp.otherType.refType.name}' ${Checker.location(exp.otherType.refType)}.`,
+            whenOk: () => {
+                this.simpleCheck(this.definition.types.includes(exp.otherType.type),
+                    `Concept or interface '${exp.otherType.refType.name}' is not marked 'isType' ${Checker.location(exp.otherType.refType)}.`);
+                exp.conditions.forEach(cond => {
+                    this.checkStatement(cond, classifier, exp);
+                });
+            }
+        });
+    }
+
+    private checkInstanceExp(exp: PitInstanceExp, classifier: PiClassifier | PiLimitedConcept) {
+        exp.__myInstance.owner = this.language;
+        if (!!exp.__myLimited) {
+            exp.__myLimited.owner = this.language;
+            this.simpleCheck(
+                !!exp.myLimited,
+                `Cannot find limited concept '${exp.__myLimited.name}' ${Checker.location(exp.__myLimited)}.`);
+        } else {
+            // use the enclosing classifier as limited concept
+            if (classifier instanceof PiLimitedConcept) {
+                exp.myLimited = classifier;
+            }
+        }
+        this.nestedCheck({
+            check: !!exp.myInstance,
+            error: `Cannot find instance '${exp.__myInstance.name}' of '${exp.__myLimited?.name}' ${Checker.location(exp.__myInstance)}.`,
+            whenOk: () => {
+                this.simpleCheck(!!exp.myLimited.findInstance(exp.__myInstance.name),
+                    `Instance '${exp.__myInstance.name}' is not of type '${exp.__myLimited.name}' ${Checker.location(exp.__myInstance)}.`);
+            }
+        });
+    }
+
+    private checkPropertyCallExp(exp: PitPropertyCallExp, classifier: PiClassifier, surroundingExp: PitWhereExp) {
+        if (!!exp.source) {
+            exp.source = this.changeInstanceToPropCallExp(exp.source, classifier);
+            this.checkPitExp(exp.source, classifier, surroundingExp);
+            exp.__property.owner = exp.source.type;
+        } else {
+            if (!!surroundingExp) {
+                // use the surrounding PitWhereExp, because there an extra prop is defined
+                if (exp.__property.name === surroundingExp.otherType.name) {
+                    exp.property = surroundingExp.otherType;
                 }
             }
-            this.nestedCheck({
-                check: !!exp.myInstance,
-                error: `Cannot find instance '${exp.__myInstance.name}' of '${exp.__myLimited?.name}' ${Checker.location(exp.__myInstance)}.`,
-                whenOk: () => {
-                    this.simpleCheck(!!exp.myLimited.findInstance(exp.__myInstance.name),
-                        `Instance '${exp.__myInstance.name}' is not of type '${exp.__myLimited.name}' ${Checker.location(exp.__myInstance)}.`);
-                }
-            });
-        } else if (exp instanceof PitWhereExp) {
-            exp.otherType.refType.owner = this.language; // the type of the new property must be declared within the language
-            this.nestedCheck({
-                check: !!exp.otherType.type,
-                error: `Cannot find type '${exp.otherType.refType.name}' ${Checker.location(exp.otherType.refType)}.`,
-                whenOk: () => {
-                    exp.conditions.forEach(cond => {
-                        this.checkStatement(cond, classifier, exp);
-                    });
-                }
-            });
         }
-        // console.log("Checking PitExp '" + exp.toPiString() + "', found type '" + exp.type?.name + "'");
+        this.nestedCheck({
+            check: !!exp.property,
+            error: `Cannot find property '${exp.__property.name}' ${Checker.location(exp.__property)}.`,
+            whenOk: () => {
+                if (!!exp.source) {
+                    exp.source = this.changeInstanceToPropCallExp(exp.source, classifier);
+                    this.checkPitExp(exp.source, classifier, surroundingExp);
+                }
+            }
+        });
     }
-    
+
     private checkFunctionCallExpression(langExp: PitFunctionCallExp, enclosingConcept: PiClassifier, surroundingExp: PitWhereExp) {
         LOGGER.log("checkFunctionCallExpression " + langExp?.toPiString());
         // TODO what about returnType?

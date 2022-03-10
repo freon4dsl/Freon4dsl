@@ -30,7 +30,6 @@ import {
     PitConforms
 } from "../new-metalanguage";
 import { PiTyperSyntaxAnalyser } from "./PiTyperSyntaxAnalyser";
-import { Type } from "@projectit/playground/dist/pi-languages/language/gen";
 
 export class PiTyperDefSyntaxAnalyserPart {
     mainAnalyser: PiTyperSyntaxAnalyser;

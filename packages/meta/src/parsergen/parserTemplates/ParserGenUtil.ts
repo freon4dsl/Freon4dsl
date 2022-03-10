@@ -50,10 +50,16 @@ export class ParserGenUtil {
         return myProjection;
     }
 
-    static addIfNotPresent(namedProjections: PiEditClassifierProjection[], addition: PiEditClassifierProjection) {
-        if (!namedProjections.includes(addition)) {
-            namedProjections.push(addition);
+    static addIfNotPresent<T>(list: T[], addition: T) {
+        if (!list.includes(addition)) {
+            list.push(addition);
         }
+    }
+
+    static addListIfNotPresent<T>(list: T[], additionsList: T[]) {
+        additionsList.forEach(extra => {
+            ParserGenUtil.addIfNotPresent<T>(list, extra);
+        })
     }
 
     /**
