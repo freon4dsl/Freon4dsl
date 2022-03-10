@@ -62,7 +62,7 @@ describe("Testing Default Scoper", () => {
     test("names in model with 3 units of depth 2, without unit interfaces", () => {
         const model: DSmodel = creator.createModel(3, 2);
         let visibleNames = scoper.getVisibleNames(model.units[0]);
-        // the only names that may be visible are the names of all model units, plus all names within the own unit
+         // the only names that may be visible are the names of all model units, plus all names within the own unit
         // the latter all contain the name of unit
         let namesToTest = creator.allNames.filter(name => name.includes(model.units[0].name) || name === model.units[1].name || name === model.units[2].name);
         for (const x of namesToTest) {

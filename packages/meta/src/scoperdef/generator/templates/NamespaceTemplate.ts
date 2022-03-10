@@ -34,10 +34,9 @@ export class NamespaceTemplate {
 
         // Template starts here
         return `
-        import { ${piNamedElementClassName}, Language } from "${PROJECTITCORE}";
+        import { ${piNamedElementClassName}, Language, CollectNamesWorker, LanguageWalker, PiElement } from "${PROJECTITCORE}";
         import { ${allLangConcepts}, ${langConceptType}, ${this.imports.map(ref => `${ref}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.walker(language)}";
-        import { isNameSpace } from "./${Names.scoperUtils(language)}";
         import { ${Names.namesCollector(language)} } from "./${Names.namesCollector(language)}";
               
         const anymetatype = "_$anymetatype";
@@ -179,18 +178,22 @@ export class NamespaceTemplate {
         let result: string = "";
         // let generatedConcepts: PiConcept[] = [];
         result += `// set up the 'worker' of the visitor pattern
-                const myNamesCollector = new ${Names.namesCollector(language)}();
+                // const myNamesCollector = new ${Names.namesCollector(language)}();
+                const myNamesCollector = new CollectNamesWorker();
                 myNamesCollector.namesList = result;
                 if (!!metatype) {
                     myNamesCollector.metatype = metatype;
                 }
  
                 // set up the 'walker of the visitor pattern
-                const myWalker = new ${Names.walker(language)}();
+                // const myWalker = new ${Names.walker(language)}();
+                const myWalker = new LanguageWalker();
                 myWalker.myWorkers.push( myNamesCollector );
                 
                 // collect the elements from the namespace, but not from any child namespace
-                myWalker.walk(this._myElem, (elem: ${Names.allConcepts(language)})=> { return !isNameSpace(elem); } );`;
+                myWalker.walk(this._myElem, (elem: PiElement)=> { 
+                    return !Language.getInstance().classifier(elem.piLanguageConcept()).isNamespace; 
+                } );`;
         // for (let piConcept of scopedef.namespaces) {
         //     let myClassifier = piConcept.referred;
         //     result += `// based on namespace '${myClassifier.name}'\n`;

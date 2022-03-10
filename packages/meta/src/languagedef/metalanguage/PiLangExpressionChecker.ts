@@ -155,10 +155,10 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
         }
     }
 
-    // something.XXX -- may not occur, except when the expression is 'container'
+    // something.XXX -- may not occur, except when the expression is 'owner'
     private checkConceptExpression(langExp: PiLangConceptExp, enclosingConcept: PiClassifier) {
         LOGGER.log("checkConceptExpression " + langExp?.toPiString());
-        // check if the keyword 'container' was used
+        // check if the keyword 'owner' was used
         this .nestedCheck( {
             check: langExp.sourceName === containerKeyword,
             error: `Expression should start with 'self' ${Checker.location(langExp)}.`,

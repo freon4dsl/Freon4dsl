@@ -12,7 +12,7 @@ export class RefCreator extends ScoperTestDefaultWorker {
      * @param modelelement
      */
     public execBeforeDSunit(modelelement: DSunit): boolean {
-        const modelName = (modelelement.piContainer().container as DSmodel).name;
+        const modelName = (modelelement.piOwnerDescriptor().owner as DSmodel).name;
         const unitName = modelelement.name;
         modelelement.dsPublics.forEach(pub => {
             this.references.push(PiElementReference.create<DSref>([unitName, pub.name], "DSref"));
@@ -36,7 +36,7 @@ export class RefCreator extends ScoperTestDefaultWorker {
     }
 
     private createCorrect(modelelement: DSpublic) {
-        const grandparentName = (modelelement.piContainer().container as DSmodel).name;
+        const grandparentName = (modelelement.piOwnerDescriptor().owner as DSmodel).name;
         const parentName = modelelement.name;
         modelelement.conceptParts.forEach(pub => {
             this.references.push(PiElementReference.create<DSref>([grandparentName, parentName, pub.name], "DSref"));
@@ -51,7 +51,7 @@ export class RefCreator extends ScoperTestDefaultWorker {
     }
 
     private createInCorrect(modelelement: DSpublic) {
-        const grandparentName = (modelelement.piContainer().container as DSmodel).name;
+        const grandparentName = (modelelement.piOwnerDescriptor().owner as DSmodel).name;
         const parentName = modelelement.name;
         modelelement.conceptParts.forEach(pub => {
             this.references.push(PiElementReference.create<DSref>([parentName, pub.name, grandparentName], "DSref"));

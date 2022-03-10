@@ -90,9 +90,9 @@ export class SemanticAnalysisTemplate {
                                     newObject[prop.name] = toBeReplaced[prop.name];
                                 }
                             });
-                            let parent: PiElement = toBeReplaced.piContainer().container;
-                            const propName: string = toBeReplaced.piContainer().propertyName;
-                            const propIndex: number = toBeReplaced.piContainer().propertyIndex;
+                            let parent: PiElement = toBeReplaced.piOwnerDescriptor().owner;
+                            const propName: string = toBeReplaced.piOwnerDescriptor().propertyName;
+                            const propIndex: number = toBeReplaced.piOwnerDescriptor().propertyIndex;
                             if (propIndex !== undefined) {
                                 parent[propName].splice(propIndex, 1, newObject);
                             } else {

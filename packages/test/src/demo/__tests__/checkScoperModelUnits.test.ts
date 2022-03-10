@@ -1,5 +1,6 @@
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoModel, Demo } from "../language/gen";
+import { initializeScoperDef } from "../scoper/gen/index";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 import { DemoUnitCreator } from "./DemoUnitCreator";
@@ -12,6 +13,7 @@ describe("testing Scoper on model units", () => {
         let scoper = DemoEnvironment.getInstance().scoper;
         let stdlib = DemoStdlib.getInstance();
         initializeLanguage();    // needed for conversion to json
+        initializeScoperDef();
 
         test("visible elements in model", () => {
             let vi = scoper.getVisibleNames(model);
@@ -64,12 +66,14 @@ describe("testing Scoper on model units", () => {
         });
 
         test("visible elements in units in JSON model", () => {
+            initializeScoperDef();
             let readModel = new DemoUnitCreator().modelToJsonToModel();
             const unit1 = readModel.models[0];      // a 'complete' unit
             const unit2 = readModel.models[1];      // a 'unit interface'
             expect(unit2.entities.length).toBe(0);  // entities are not public
 
             let vi = scoper.getVisibleNames(unit1);
+
             expect(vi.length).toBe(11);
             for (let e of unit2.entities) {
                 expect(vi).not.toContain(e.name);

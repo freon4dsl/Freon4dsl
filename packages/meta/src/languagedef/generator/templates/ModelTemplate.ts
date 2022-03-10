@@ -75,12 +75,12 @@ export class ModelTemplate {
                     if ( oldUnit.piLanguageConcept() !== newUnit.piLanguageConcept()) {
                         return false;
                     }
-                    if ( oldUnit.piContainer().container !== this) {
+                    if ( oldUnit.piOwnerDescriptor().owner !== this) {
                         return false;
                     }
                     // we must store the interface in the same place as the old unit, which info is held in PiContainer()
                     ${modelDescription.parts().map(part =>
-            `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
+            `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.piOwnerDescriptor().propertyName === "${part.name}" ) {
                                 ${part.isList ?
                 `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)});
                                 this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type)});`

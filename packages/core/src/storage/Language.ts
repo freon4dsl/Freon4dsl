@@ -5,44 +5,57 @@ import { isNullOrUndefined, PiLogger } from "../util";
 const LOGGER = new PiLogger("Language");
 
 // TODO see if other types need to be added
-export type PropertyType = "primitive" | "part" | "reference";
+export type PropertyKind = "primitive" | "part" | "reference";
 
 export type Property = {
     name: string;
     type: string;
     isList: boolean;
     isPublic: boolean;
-    propertyType: PropertyType;
+    propertyType: PropertyKind;
 };
 export type Model = {
     typeName: string;
+    isNamespace?: boolean;
+    isNamedElement?: boolean;
+    subConceptNames?: string[];
     properties: Map<string, Property>;
     constructor: () => PiElement;
 };
 export type ModelUnit = {
     typeName: string;
+    isNamespace?: boolean;
+    isNamedElement?: boolean;
+    subConceptNames?: string[];
     fileExtension: string;
     properties: Map<string, Property>;
     constructor: () => PiElement;
 };
 export type Concept = {
+    typeName: string;
     isAbstract: boolean;
     isPublic: boolean;
-    typeName: string;
+    isNamespace?: boolean;
+    isNamedElement?: boolean;
     baseName: string;
     subConceptNames: string[];
-    trigger: string;
-    referenceShortcut?: ReferenceShortcut;
     properties: Map<string, Property>;
     constructor: () => PiElement;
+    // Used by editor, therefore only in Concept
+    trigger: string;
+    referenceShortcut?: ReferenceShortcut;
 };
 
 export type Interface = {
-    isPublic: boolean;
     typeName: string;
+    isPublic: boolean;
+    isNamespace?: boolean;
+    isNamedElement?: boolean;
     subConceptNames: string[];
     properties: Map<string, Property>;
 };
+
+export type Classifier = Model | ModelUnit | Concept | Interface;
 
 export class Language {
     private static theInstance: Language = null;
@@ -71,7 +84,7 @@ export class Language {
     }
 
     concept(typeName: string): Concept {
-        // console.log("Language find concept " + typeName + " ==> " + this.concepts.get(typeName));
+        // console.log("Language find concept " + typeName);
         return this.concepts.get(typeName);
     }
 
@@ -79,7 +92,7 @@ export class Language {
         return this.interfaces.get(typeName);
     }
 
-    classifier(typeName: string): ModelUnit | Concept | Interface {
+    classifier(typeName: string): Classifier {
         let concept1 = this.concepts.get(typeName);
         if (!!concept1) {
             return concept1;
@@ -91,9 +104,15 @@ export class Language {
                 let unit1 = this.units.get(typeName);
                 if (!!unit1) {
                     return unit1;
+                } else {
+                    let model = this.models.get(typeName);
+                    if(!! model){
+                        return model;
+                    }
                 }
             }
         }
+        console.log("RETURNINGN NULL FOR " + typeName)
         return null;
     }
 
@@ -138,6 +157,43 @@ export class Language {
         return myType?.properties.values();
     }
 
+    public getPropertiesOfKind(typename: string, ptype: PropertyKind): Property[]  {
+        let classifier: Classifier;
+        if( typename === "RulesModel"){
+            // console.log("looking for model")
+            classifier = Language.getInstance().model(typename)
+        } else {
+            // console.log("looking for classifier")
+            classifier = Language.getInstance().classifier(typename);
+        }
+        // console.log("Classifier is " + classifier + " for " + typename)
+        const foundProperties: Property[] = [];
+        for( const prop of classifier.properties.values()){
+            if( prop.propertyType === ptype) {
+                foundProperties.push(prop)
+            }
+        }
+        return foundProperties
+    }
+
+    /**
+     * Return the value of `prop' in `element'.
+     * For ease of use, always returns a list, even is the property is not a list.
+     * @param element
+     * @param prop
+     */
+    public getPropertyValue(element: PiElement, prop: Property): PiElement[] {
+        if( prop.isList){
+            return element[prop.name];
+        } else {
+            const value = element[prop.name];
+            if( !!value) {
+                return [value];
+            } else {
+                return [];
+            }
+        }
+    }
     createModel(typeName: string): PiElement {
         return this.models.get(typeName).constructor();
     }
@@ -161,10 +217,12 @@ export class Language {
 
     addModel(model: Model) {
         this.models.set(model.typeName, model);
+        model.subConceptNames = [];
     }
 
     addUnit(unit: ModelUnit) {
         this.units.set(unit.typeName, unit);
+        unit.subConceptNames = [];
     }
 
     /**

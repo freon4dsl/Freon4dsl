@@ -18,9 +18,10 @@ export class ScoperTemplate {
     generateIndex(language: PiLanguage): string {
         return `
         export * from "./${Names.scoper(language)}";
-        export * from "./${Names.scoperUtils(language)}";
+        // export * from "./${Names.scoperUtils(language)}";
         export * from "./${Names.namespace(language)}";
         export * from "./${Names.namesCollector(language)}";
+        export * from "./${Names.scoperDef(language)}";
         `;
     }
 
@@ -48,12 +49,11 @@ export class ScoperTemplate {
         return `
         import { ${allLangConcepts}, ${langConceptType},
                     ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref =>
-                        `${Names.concept(ref)}`).join(", ")}${this.alternativeScopeImports} 
+                        `${Names.classifier(ref)}`).join(", ")}${this.alternativeScopeImports} 
                 } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger, Language } from "${PROJECTITCORE}"
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
-        import { isNameSpace } from "./${Names.scoperUtils(language)}";
         ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }          
                                    
         const LOGGER = new PiLogger("${generatedClassName}");  
@@ -81,7 +81,7 @@ export class ScoperTemplate {
                         // search the next name of pathname in the namespace of 'previousFound'
                         // but do not use the metatype information, because only the element with the last of the pathname will have the correct type
                         found = this.getFromVisibleElements(previousFound, pathname[index]);
-                        if (found === null || found === undefined || !isNameSpace(found as ${allLangConcepts})) {
+                        if (found === null || found === undefined || !Language.getInstance().classifier(found.piLanguageConcept()).isNamespace) {
                             return null;
                         }
                         previousFound = found as ${allLangConcepts};
@@ -97,24 +97,24 @@ export class ScoperTemplate {
             }
  
             private isPublic(found: PiNamedElement) : boolean {
-                // find the information about whether this element is public or private within its parent from the its container:
+                // find the information about whether this element is public or private within its parent from the its owner:
                 // 1. check the language description to find the concept description of the parent
                 // 2. from the parent find the property description with the right name
                 // 3. check whether the found property is public
                 if (found === null || found === undefined) {
                     return false;
                 }
-                const container = found.piContainer();
-                if (container === null || container === undefined) {
+                const ownerDescriptor = found.piOwnerDescriptor();
+                if (ownerDescriptor === null || ownerDescriptor === undefined) {
                     return false;
                 }
-                const metaType: string = container.container.piLanguageConcept();
+                const metaType: string = ownerDescriptor.owner.piLanguageConcept();
                 if (metaType === "${Names.classifier(language.modelConcept)}" ) {
                     return true; // model only has units as properties, all units are public
                 } else ${language.units.map(u => ` if (metaType === "${Names.classifier(u)}") {
-                    return Language.getInstance().unit(metaType).properties.get(container.propertyName).isPublic;
+                    return Language.getInstance().unit(metaType).properties.get(ownerDescriptor.propertyName).isPublic;
                 } else`).join("")} {
-                    return Language.getInstance().concept(metaType).properties.get(container.propertyName).isPublic;
+                    return Language.getInstance().concept(metaType).properties.get(ownerDescriptor.propertyName).isPublic;
                 }
             }   
                     
@@ -203,7 +203,7 @@ export class ScoperTemplate {
                 if (modelelement === null) {
                     return null;
                 }
-                if (isNameSpace(modelelement)) {
+                if (Language.getInstance().classifier(modelelement.piLanguageConcept()).isNamespace) {
                     return ${namespaceClassName}.create(modelelement);
                 } else {
                     return this.findNearestNamespace(this.getParent(modelelement));
@@ -216,10 +216,10 @@ export class ScoperTemplate {
              */
             private getParent(modelelement: ${allLangConcepts}): ${allLangConcepts} {
                 let parent: ${allLangConcepts} = null;
-                if (modelelement.piContainer() !== null) {
-                    if (modelelement.piContainer().container !== null) {
-                        // if (modelelement.piContainer().container instanceof ${allLangConcepts}) {
-                        parent = modelelement.piContainer().container as ${allLangConcepts};
+                if (modelelement.piOwnerDescriptor() !== null) {
+                    if (modelelement.piOwnerDescriptor().owner !== null) {
+                        // if (modelelement.piOwnerDescriptor().owner instanceof ${allLangConcepts}) {
+                        parent = modelelement.piOwnerDescriptor().owner as ${allLangConcepts};
                         // }
                     }
                 }
@@ -291,12 +291,12 @@ export class ScoperTemplate {
             let actualParamToGenerate: string = "";
             // we know that typeof has exactly 1 actual parameter
             if ( expression.actualparams[0].sourceName === "container" ) {
-                actualParamToGenerate = `modelelement.piContainer().container as ${allLangConcepts}`;
+                actualParamToGenerate = `modelelement.piOwnerDescriptor().owner as ${allLangConcepts}`;
             } else {
                 actualParamToGenerate = langExpToTypeScript(expression.actualparams[0]);
             }
-            result = `let container = ${actualParamToGenerate};
-                if (!!container) {
+            result = `let owner = ${actualParamToGenerate};
+                if (!!owner) {
                     let newScopeElement = this.myTyper.inferType(${actualParamToGenerate});
                     return ${Names.namespace(language)}.create(newScopeElement);
                 }`;

@@ -1,5 +1,5 @@
 import { makeObservable, observable } from "mobx";
-import { PiContainerDescriptor } from "../PiContainerDescriptor";
+import { PiOwnerDescriptor } from "../PiOwnerDescriptor";
 import { PiElement } from "../PiElement";
 import { model } from "./MobxModelDecorators";
 
@@ -8,7 +8,7 @@ import { model } from "./MobxModelDecorators";
  *  The decorators will set the values of these properties correctly at each change.
  */
 export interface DecoratedModelElement {
-    container: PiElement | null;
+    owner: PiElement | null;
     propertyName: string;
     propertyIndex: number | undefined;
 }
@@ -19,22 +19,22 @@ export interface DecoratedModelElement {
  */
 // @model
 export class    MobxModelElementImpl implements DecoratedModelElement {
-    container: PiElement | null = null;
+    owner: PiElement | null = null;
     propertyName: string = "";
     propertyIndex: number | undefined = undefined;
 
     constructor() {
         makeObservable(this, {
-            container: observable,
+            owner: observable,
             propertyName: observable,
             propertyIndex: observable
         })
     }
-    piContainer(): PiContainerDescriptor {
-        const container = this.container as PiElement;
-        return this.container
+    piOwnerDescriptor(): PiOwnerDescriptor {
+        const owner = this.owner as PiElement;
+        return this.owner
             ? {
-                  container: container,
+                  owner: owner,
                   propertyName: this.propertyName!,
                   propertyIndex: this.propertyIndex
               }

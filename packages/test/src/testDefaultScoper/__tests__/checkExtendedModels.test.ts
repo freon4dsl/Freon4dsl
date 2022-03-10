@@ -1,4 +1,5 @@
 import { DSmodel, DSref, PiElementReference } from "../language/gen";
+import { initializeScoperDef } from "../scoper/gen/index";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { ScoperTestEnvironment } from "../environment/gen/ScoperTestEnvironment";
 import * as fs from "fs";
@@ -25,8 +26,8 @@ function printDifference(creator: SimpleModelCreator, visibleNames: string[]) {
 }
 
 describe("Testing Default Scoper", () => {
-    const creator = new ExtendedModelCreator();
     const environment = ScoperTestEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
+    const creator = new ExtendedModelCreator();
     const scoper = environment.scoper;
     const unparser = environment.writer;
 
@@ -48,6 +49,10 @@ describe("Testing Default Scoper", () => {
         // print("found errors", errorMessages);
         // TODO type-check in validator does not take interfaces into account
         // expect (errors.length).toBe(0);
+        // console.log("ERROR FOUND")
+        // errors.forEach(e => {
+        //    console.log("Error: " + e.locationdescription + ": " + e.message)
+        // });
         expect (errors.length).toBe(168);
     });
 
@@ -73,6 +78,8 @@ describe("Testing Default Scoper", () => {
         otherUnit.dsRefs.push(ref2);
         otherUnit.dsRefs.push(ref3);
         otherUnit.dsRefs.push(ref4);
+        // console.log("!!" + JSON.stringify(model, ["$typename", "conceptRefs", "dsRefs", "name", "dsPublics", "dsPrivates", "conceptParts", "conceptPrivates", "units", "imports" ], 4));
+
         // try to resolve them
         expect(ref1.referred).toBeNull();
         expect(ref2.referred?.name).toBe("public2_OF_unit1_OF_model");
