@@ -232,7 +232,9 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             });
         } else if (!!myBase.base) {
             // check base of base
-            this.checkPropsOfBase(myBase.base.referred, prop);
+            if (myBase.base instanceof PiConcept) { // if error is made, base could be an interface
+                this.checkPropsOfBase(myBase.base.referred, prop);
+            }
         }
     }
 
