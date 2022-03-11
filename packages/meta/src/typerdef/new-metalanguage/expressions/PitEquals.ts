@@ -15,6 +15,9 @@ export class PitEquals extends PitStatement {
         if (!!data.right) {
             result.right = data.right;
         }
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
         return result;
     }
     toPiString(): string {

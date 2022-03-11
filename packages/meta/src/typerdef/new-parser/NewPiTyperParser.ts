@@ -8,10 +8,12 @@ import { NewPiTyperChecker } from "./NewPiTyperChecker";
 export class NewPiTyperParser {
     public language: PiLanguage;
     public checker: NewPiTyperChecker;
+    private reader: PiTyperReader;
 
     constructor(language: PiLanguage) {
         this.language = language;
         this.checker = new NewPiTyperChecker(language);
+        this.reader = new PiTyperReader();
     }
 
     parse(filePath: string): PiTyperDef {
@@ -20,11 +22,11 @@ export class NewPiTyperParser {
             throw new Error("File not found: " + filePath);
         }
         const languageStr: string = fs.readFileSync(filePath, { encoding: "utf8" });
-        const typeDefinition: PiTyperDef = new PiTyperReader().readFromString(languageStr) as PiTyperDef;
+        const typeDefinition: PiTyperDef = this.reader.readFromString(languageStr, filePath) as PiTyperDef;
         if (!typeDefinition) {
             throw new Error("Error in parsing type definition.");
         } else {
-            // console.log(typeDefinition.toPiString());
+            // console.log(typeDefinition.classifierRules.map(r => "found rule at " + r.agl_location?.line))
             this.runChecker(typeDefinition);
             return typeDefinition;
         }

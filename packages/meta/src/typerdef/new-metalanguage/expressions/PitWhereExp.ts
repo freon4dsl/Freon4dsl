@@ -17,6 +17,9 @@ export class PitWhereExp extends PitExp {
         if (!!data.conditions) {
             data.conditions.forEach(x => result.conditions.push(x));
         }
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
         return result;
     }
     otherType: PitProperty; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'

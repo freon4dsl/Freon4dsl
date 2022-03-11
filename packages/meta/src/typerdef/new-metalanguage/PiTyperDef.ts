@@ -32,6 +32,9 @@ export class PiTyperDef extends PiDefinitionElement {
         if (!!data.__conceptsWithType_references) {
             data.__conceptsWithType_references.forEach(x => result.__conceptsWithType_references.push(x));
         }
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
         return result;
     }
     name: string; // temporarily added to conform to PiLangElement TODO remove when scoping changes

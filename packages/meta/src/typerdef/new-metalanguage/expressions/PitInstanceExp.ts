@@ -21,6 +21,9 @@ export class PitInstanceExp extends PitExp {
         if (!!data.__myInstance) {
             result.__myInstance = data.__myInstance;
         }
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
         return result;
     }
     __myLimited?: PiElementReference<PiLimitedConcept>;

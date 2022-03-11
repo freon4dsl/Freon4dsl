@@ -60,11 +60,11 @@ describe("Checking new typer", () => {
             const errors: string[] = parser.checker.errors;
             // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
             expect(e.message).toBe(`checking errors (5).`);
-            expect(errors.includes("Concept or interface 'Type' occurs more than once in this list [no location].")).toBeTruthy();
-            expect(errors.includes("Concept or interface 'Exp' occurs more than once in this list [no location].")).toBeTruthy();
-            expect(errors.includes("Cannot find instance 'Simp' of 'PredefinedType' [no location].")).toBeTruthy();
-            expect(errors.includes("Cannot find property 'base' [no location].")).toBeTruthy();
-            expect(errors.includes("Cannot find property 'inn' [no location].")).toBeTruthy();
+            expect(errors.includes("Concept or interface 'Type' occurs more than once in this list [file: type-rules1.type, line: 4, column: 10].")).toBeTruthy();
+            expect(errors.includes("Concept or interface 'Exp' occurs more than once in this list [file: type-rules1.type, line: 7, column: 11].")).toBeTruthy();
+            expect(errors.includes("Cannot find instance 'Simp' of 'PredefinedType' [file: type-rules1.type, line: 20, column: 30].")).toBeTruthy();
+            expect(errors.includes("Cannot find property 'base' [file: type-rules1.type, line: 38, column: 21].")).toBeTruthy();
+            expect(errors.includes("Cannot find property 'inn' [file: type-rules1.type, line: 38, column: 47].")).toBeTruthy();
         }
     });
 
@@ -78,17 +78,17 @@ describe("Checking new typer", () => {
                 expect(typeUnit.anyTypeRule).not.toBeNull();
             }
         } catch (e) {
-            // console.log(e.message + e.stack);
+            // console.log(e.stack);
             const errors: string[] = parser.checker.errors;
             // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
             expect(e.message).toBe(`checking errors (7).`);
-            expect(errors.includes("Concept or interface 'SimpleType' is not marked 'hasType', therefore it cannot have an infertype rule [no location].")).toBeTruthy();
-            expect(errors.includes("Concept or interface 'SimpleExp1' is not marked 'isType', therefore it cannot have a conforms or equals rule [no location].")).toBeTruthy();
-            expect(errors.includes("Cannot find property 'type' [no location].")).toBeTruthy();
-            expect(errors.includes("Cannot find property 'innerType' [no location].")).toBeTruthy();
-            expect(errors.includes("Cannot find property 'kind' [no location].")).toBeTruthy();
-            expect(errors.includes("Concept or interface 'GenericLiteral' is not marked 'isType' [no location].")).toBeTruthy();
-            expect(errors.includes("Cannot find property 'innerType' [no location].")).toBeTruthy();
+            expect(errors.includes("Concept or interface 'SimpleType' is not marked 'hasType', therefore it cannot have an infertype rule [file: type-rules2.type, line: 19, column: 1].")).toBeTruthy();
+            expect(errors.includes("Concept or interface 'SimpleExp1' is not marked 'isType', therefore it cannot have a conforms or equals rule [file: type-rules2.type, line: 52, column: 1].")).toBeTruthy();
+            expect(errors.includes("Cannot find property 'type' [file: type-rules2.type, line: 53, column: 19].")).toBeTruthy();
+            expect(errors.includes("Cannot find property 'innerType' [file: type-rules2.type, line: 64, column: 15].")).toBeTruthy();
+            expect(errors.includes("Cannot find property 'kind' [file: type-rules2.type, line: 65, column: 15].")).toBeTruthy();
+            expect(errors.includes("Concept or interface 'GenericLiteral' is not marked 'isType' [file: type-rules2.type, line: 67, column: 18].")).toBeTruthy();
+            expect(errors.includes("Cannot find property 'innerType' [file: type-rules2.type, line: 69, column: 41].")).toBeTruthy();
         }
     });
 });

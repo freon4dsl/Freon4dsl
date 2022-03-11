@@ -20,6 +20,9 @@ export class PitSingleRule extends PiDefinitionElement {
         if (!!data.kind) {
             result.kind = data.kind;
         }
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
         return result;
     }
     __kind: PiElementReference<PitStatementKind>;

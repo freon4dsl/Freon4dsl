@@ -18,6 +18,9 @@ export class PitConceptRule extends PitClassifierRule {
         if (!!data.__myClassifier) {
             result.__myClassifier = data.__myClassifier;
         }
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
         return result;
     }
     statements: PitStatement[] = [];

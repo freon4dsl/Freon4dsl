@@ -74,7 +74,7 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
                     // make a copy of the information into an object of another class
                     const newRule: PitAnyTypeRule = new PitAnyTypeRule();
                     newRule.myRules = rule.myRules;
-                    newRule.location = rule.location;
+                    newRule.agl_location = rule.agl_location;
                     // set the new rule
                     definition.anyTypeRule = newRule;
                     this.checkAnyTypeRule(newRule);

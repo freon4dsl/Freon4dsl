@@ -22,6 +22,9 @@ export class PitFunctionCallExp extends PitAppliedExp {
         if (!!data.returnType) {
             result.returnType = data.returnType;
         }
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
         return result;
     }
     calledFunction: string;

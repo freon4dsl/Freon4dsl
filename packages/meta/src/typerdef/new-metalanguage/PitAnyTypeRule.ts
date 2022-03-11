@@ -12,6 +12,9 @@ export class PitAnyTypeRule extends PiDefinitionElement {
         if (!!data.myRules) {
             data.myRules.forEach(x => result.myRules.push(x));
         }
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
         return result;
     }
     myRules: PitSingleRule[] = [];

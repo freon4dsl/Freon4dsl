@@ -1,5 +1,5 @@
 import { PiLangElement, PiMetaEnvironment } from "./internal";
-import { ParseLocation, PiDefinitionElement } from "../../utils";
+import { ParseLocation, PiDefinitionElement, PiParseLocation } from "../../utils";
 
 /**
  * Implementation for a (named) reference in ProjectIt.
@@ -23,6 +23,7 @@ export class PiElementReference<T extends PiLangElement> {
 
     public owner: PiLangElement;
     public location: ParseLocation;
+    public agl_location: PiParseLocation;
 
     // Need for the scoper to work
     private typeName: string;

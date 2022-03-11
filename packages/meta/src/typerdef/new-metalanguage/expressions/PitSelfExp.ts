@@ -8,7 +8,11 @@ export class PitSelfExp extends PitExp {
      * @param data
      */
     static create(data: Partial<PitSelfExp>): PitSelfExp {
-        return new PitSelfExp();
+        const result: PitSelfExp = new PitSelfExp();
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
+        return result;
     }
     _myType: PiClassifier;
     toPiString(): string {

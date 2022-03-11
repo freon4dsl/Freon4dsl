@@ -9,7 +9,11 @@ export class PitAnytypeExp extends PitExp {
      * @param data
      */
     static create(data: Partial<PitAnytypeExp>): PitAnytypeExp {
-        return new PitAnytypeExp();
+        const result: PitAnytypeExp = new PitAnytypeExp();
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
+        return result;
     }
 
     constructor() {

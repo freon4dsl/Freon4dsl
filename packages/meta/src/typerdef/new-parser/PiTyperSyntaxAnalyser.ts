@@ -7,6 +7,7 @@ import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
 import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
 import { PiTyperDefSyntaxAnalyserPart } from ".";
 import { PiElementReference, PiLangElement } from "../../languagedef/metalanguage";
+import { PiParseLocation } from "../../utils";
 
 /**
  *   Class MetaTyperSyntaxAnalyser is the main syntax analyser.
@@ -16,6 +17,7 @@ import { PiElementReference, PiLangElement } from "../../languagedef/metalanguag
  */
 export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
     locationMap: any;
+    filename: string;
     private _unit_PiTyperDef_analyser: PiTyperDefSyntaxAnalyserPart = new PiTyperDefSyntaxAnalyserPart(this);
 
     clear(): void {
@@ -172,8 +174,15 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
         } else if (typeof referred === "string" && (referred as string).length == 0) {
             throw new Error(`Syntax error in "${branch?.parent?.matchedText}": cannot create empty reference`);
         } else {
-            return PiElementReference.create<T>(referred, typeName);
+            return this.makePiElementReferenceWithLocation(referred, typeName, branch);
         }
+    }
+
+    private makePiElementReferenceWithLocation<T extends PiLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
+        const result = PiElementReference.create<T>(referred, typeName);
+        const location = PiParseLocation.create({ filename: this.filename, line: branch.location.line, column: branch.location.column });
+        result.agl_location = location;
+        return result;
     }
 
     /**
@@ -214,10 +223,10 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
                 let refName: any = this.transformSharedPackedParseTreeNode(child);
                 if (refName !== null && refName !== undefined) {
                     if (separator === null || separator === undefined) {
-                        result.push(PiElementReference.create<T>(refName, typeName));
+                        result.push(this.makePiElementReferenceWithLocation(refName, typeName, branch));
                     } else {
                         if (refName !== separator) {
-                            result.push(PiElementReference.create<T>(refName, typeName));
+                            result.push(this.makePiElementReferenceWithLocation(refName, typeName, branch));
                         }
                     }
                 }

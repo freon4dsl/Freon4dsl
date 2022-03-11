@@ -18,6 +18,9 @@ export class PitPropertyCallExp extends PitAppliedExp {
         if (!!data.source) {
             result.source = data.source;
         }
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
         return result;
     }
     __property: PiElementReference<PiProperty>;

@@ -4,7 +4,7 @@ import { Parser } from "pegjs";
 import { LOG2USER } from "./UserLogger";
 import { PiDefinitionElement } from "./PiDefinitionElement";
 
-// the following two types are used to store the location information from the parser
+// The following two types are used to store the location information from the PEGJS parser
 export type ParseLocation = {
     filename: string;
     start: Location;
@@ -16,6 +16,29 @@ export type Location = {
     line: number;
     column: number;
 };
+
+/**
+ * This class is used to store the location information from the AGL parser.
+ */
+export class PiParseLocation {
+    filename: string;
+    line: number;
+    column: number;
+
+    static create(data: Partial<PiParseLocation>): PiParseLocation {
+        const result = new PiParseLocation();
+        if (!!data.filename) {
+            result.filename = data.filename;
+        }
+        if (!!data.line) {
+            result.line = data.line;
+        }
+        if (!!data.column) {
+            result.column = data.column;
+        }
+        return result;
+    }
+}
 
 /**
  * Generic Parser, subclasses need to initialize the parser, checker and msg fields.

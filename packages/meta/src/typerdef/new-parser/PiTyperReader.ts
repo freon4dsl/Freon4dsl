@@ -12,7 +12,8 @@ import { PiTyperSyntaxAnalyser } from "./PiTyperSyntaxAnalyser";
  *   modelunits.
  */
 export class PiTyperReader {
-    parser: LanguageProcessor = Agl.processorFromString(MetaTyperGrammarStr, new PiTyperSyntaxAnalyser(), null, null);
+    analyser: PiTyperSyntaxAnalyser = new PiTyperSyntaxAnalyser();
+    parser: LanguageProcessor = Agl.processorFromString(MetaTyperGrammarStr, this.analyser, null, null);
 
     /**
      * Parses and performs a syntax analysis on 'sentence'. If 'sentence' is correct,
@@ -20,7 +21,8 @@ export class PiTyperReader {
      * otherwise an error wil be thrown containing the parse or analysis error.
      * @param sentence
      */
-    readFromString(sentence: string): PiTyperDef {
+    readFromString(sentence: string, sourceFileName: string): PiTyperDef {
+        this.analyser.filename = sourceFileName;
         let startRule: string = "PiTyperDef";
 
         // parse the input

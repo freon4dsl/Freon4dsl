@@ -63,9 +63,14 @@ export abstract class Checker<DEFINITION> {
     }
 
     static location(elem: PiDefinitionElement): string {
-        if (!!elem && !!elem.location) {
-            const shortFileName: string = this.getShortFileName(elem.location.filename);
-            return `[file: ${shortFileName}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
+        if (!!elem) {
+            if (!!elem.location) {
+                const shortFileName: string = this.getShortFileName(elem.location.filename);
+                return `[file: ${shortFileName}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
+            } else if (!!elem.agl_location) {
+                const shortFileName: string = this.getShortFileName(elem.agl_location.filename);
+                return `[file: ${shortFileName}, line: ${elem.agl_location.line}, column: ${elem.agl_location.column}]`;
+            }
         }
         return `[no location]`;
     }
