@@ -128,9 +128,9 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
         const storedValue = !!storedObserver ? storedObserver.get() : null;
         // Clean owner of current part
         if (!!storedValue) {
-            storedValue.owner = null;
-            storedValue.propertyName = "";
-            storedValue.propertyIndex = undefined;
+            storedValue.$$owner = null;
+            storedValue.$$propertyName = "";
+            storedValue.$$propertyIndex = undefined;
         }
         if (!!storedObserver) {
             runInAction( () => {
@@ -141,19 +141,19 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
             storedObserver = this[privatePropertyKey];
         }
         if (val !== null && val !== undefined) {
-            if (val.owner !== undefined && val.owner !== null) {
-                if (val.propertyIndex !== undefined) {
+            if (val.$$owner !== undefined && val.$$owner !== null) {
+                if (val.$$propertyIndex !== undefined) {
                     // Clean new value from its containing list
-                    (val.owner as any)[val.propertyName].splice(val.propertyIndex, 1);
+                    (val.$$owner as any)[val.$$propertyName].splice(val.$$propertyIndex, 1);
                 } else {
                     // Clean new value from its owner
-                    (val.owner as any)[MODEL_PREFIX + val.propertyName] = null;
+                    (val.$$owner as any)[MODEL_PREFIX + val.$$propertyName] = null;
                 }
             }
             // Set owner
-            val.owner = this;
-            val.propertyName = propertyKey.toString();
-            val.propertyIndex = undefined;
+            val.$$owner = this;
+            val.$$propertyName = propertyKey.toString();
+            val.$$propertyIndex = undefined;
         }
     };
 
@@ -213,23 +213,23 @@ function willChange(
                 // TODO if there is no need to do anything, why not change the condition to this if-statement
             } else {
                 if (!!newValue) {
-                    if (!!newValue.owner) {
+                    if (!!newValue.$$owner) {
                         // cleanup old owner reference of new value
-                        if (newValue.propertyIndex !== undefined) {
-                            (newValue.owner as any)[newValue.propertyName][newValue.propertyIndex] = null;
+                        if (newValue.$$propertyIndex !== undefined) {
+                            (newValue.$$owner as any)[newValue.$$propertyName][newValue.$$propertyIndex] = null;
                         } else {
-                            (newValue.owner as any)[newValue.propertyName] = null;
+                            (newValue.$$owner as any)[newValue.$$propertyName] = null;
                         }
                     }
-                    newValue.owner = oldValue.owner;
-                    newValue.propertyName = oldValue.propertyName;
-                    newValue.propertyIndex = oldValue.propertyIndex;
+                    newValue.$$owner = oldValue.$$owner;
+                    newValue.$$propertyName = oldValue.$$propertyName;
+                    newValue.$$propertyIndex = oldValue.$$propertyIndex;
                 }
 
                 // Cleanup owner reference of old value
-                oldValue.owner = null;
-                oldValue.propertyName = "";
-                oldValue.propertyIndex = undefined;
+                oldValue.$$owner = null;
+                oldValue.$$propertyName = "";
+                oldValue.$$propertyIndex = undefined;
             }
             break;
         case "splice":
@@ -242,17 +242,17 @@ function willChange(
                 // cleanup old owner reference of new value
                 const element = added[i];
                 if (!!element) {
-                    if (!!element.owner) {
-                        if (element.propertyIndex !== undefined) {
-                            (element.owner as any)[element.propertyName][element.propertyIndex] = null;
+                    if (!!element.$$owner) {
+                        if (element.$$propertyIndex !== undefined) {
+                            (element.$$owner as any)[element.$$propertyName][element.$$propertyIndex] = null;
                         } else {
-                            (element.owner as any)[element.propertyName] = null;
+                            (element.$$owner as any)[element.$$propertyName] = null;
                         }
                     }
                     // set the owner properties for inserted elements
-                    element.owner = (change.object as any)[MODEL_CONTAINER];
-                    element.propertyName = (change.object as any)[MODEL_NAME];
-                    element.propertyIndex = index + Number(i);
+                    element.$$owner = (change.object as any)[MODEL_CONTAINER];
+                    element.$$propertyName = (change.object as any)[MODEL_NAME];
+                    element.$$propertyIndex = index + Number(i);
                 }
             }
             for (let num = 0; num < removedCount; num++) {
@@ -268,15 +268,15 @@ function willChange(
                     index = index[0];
                 }
                 rr = num + index;
-                change.object[rr].owner = null;
-                change.object[rr].propertyName = "";
-                change.object[rr].propertyIndex = undefined;
+                change.object[rr].$$owner = null;
+                change.object[rr].$$propertyName = "";
+                change.object[rr].$$propertyIndex = undefined;
             }
             // Update all other indices
             for (let above = index; above < change.object.length; above++) {
                 const aboveElement = change.object[above];
-                if (aboveElement.propertyIndex !== undefined) {
-                    aboveElement.propertyIndex += addedCount - removedCount;
+                if (aboveElement.$$propertyIndex !== undefined) {
+                    aboveElement.$$propertyIndex += addedCount - removedCount;
                 }
             }
             break;

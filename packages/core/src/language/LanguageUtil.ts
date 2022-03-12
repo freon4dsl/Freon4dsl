@@ -28,6 +28,10 @@ export function ownerOfType(element: PiElement, typename: string, exact?: boolea
     return null;
 }
 
+/**
+ * Returns the modelunit that owns this `element'
+ * @param element
+ */
 export function modelUnit(element: PiElement): PiElement {
     let parent = element.piOwnerDescriptor()?.owner;
     while (!!parent) {

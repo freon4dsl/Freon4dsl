@@ -35,18 +35,13 @@ export class NamespaceTemplate {
         // Template starts here
         return `
         import { ${piNamedElementClassName}, Language, CollectNamesWorker, LanguageWalker, PiElement } from "${PROJECTITCORE}";
-        import { ${allLangConcepts}, ${langConceptType}, ${this.imports.map(ref => `${ref}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.walker(language)}";
-        import { ${Names.namesCollector(language)} } from "./${Names.namesCollector(language)}";
-              
-        const anymetatype = "_$anymetatype";
 
         /**
          * Class ${generatedClassName} is a wrapper for a model element that is a namespace (as defined in the scoper definition).
          * It provides the implementation of the algorithm used to search for all names that are visible in the namespace.
          */
         export class ${generatedClassName} {
-            private static allNamespaces: Map< ${allLangConcepts}, ${generatedClassName}> = new Map();
+            private static allNamespaces: Map< PiElement, ${generatedClassName}> = new Map();
             static doNotSearch: string = null;
             
             /**
@@ -54,7 +49,7 @@ export class NamespaceTemplate {
              * The type of element 'elem' should be marked as namespace in the scoper definition.
              * @param elem
              */
-            public static create(elem: ${allLangConcepts}): ${generatedClassName} {
+            public static create(elem: PiElement): ${generatedClassName} {
                 if (this.allNamespaces.has(elem)) {
                     return this.allNamespaces.get(elem);
                 } else {
@@ -83,10 +78,9 @@ export class NamespaceTemplate {
                 ${generatedClassName}.doNotSearch = elem;
             }
     
-            private _myElem: ${allLangConcepts};
-            private searchList: string[] = [];
+            public _myElem: PiElement;
                         
-            private constructor(elem: ${allLangConcepts}) {
+            private constructor(elem: PiElement) {
                 this._myElem = elem;
             }
             
@@ -94,25 +88,11 @@ export class NamespaceTemplate {
              * Returns all elements that are visible in this namespace, including those from additional namespaces
              * as defined in the scoper definition.
              */
-            public getVisibleElements(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
+            public getVisibleElements(metatype?: string): ${piNamedElementClassName}[] {
                 let result: ${piNamedElementClassName}[] = [];
         
-                // check whether we are already searching this namespace for a certain type
-                if (this.searchingFor(metatype)) {
-                    return [];
-                }
-        
-                // do it
                 result = this.getInternalVisibleElements(metatype);
-        
-                // do additional namespaces
-                if (this.hasAdditionalNamespace()) {
-                    // join the results
-                    ${generatedClassName}.joinResultsWithShadowing(this.addAdditionalNamespaces(metatype), result);
-                }
-        
-                // at end clean searchlist
-                this.cleanSearchList(metatype);
+       
                 return result;
             }
  
@@ -120,56 +100,11 @@ export class NamespaceTemplate {
              * Returns the elements that are visible in this namespace only, without regard for additional namespaces
              * @param metatype
              */       
-            private getInternalVisibleElements(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
+            private getInternalVisibleElements(metatype?: string): ${piNamedElementClassName}[] {
                 const result: ${piNamedElementClassName}[] = [];       
                 // for now we push all parts, later public/private annotations can be taken into account 
                 ${myIfStatement}       
                 return result;
-            }
-            
-      
-            /**
-             * Returns true if there are additional namespaces defined for 'this._myElem' in the scoper definition
-             */
-            private hasAdditionalNamespace() {
-                ${this.hasAdditionalNamespacetext}
-                return false;
-            }
-            
-            /**
-             * Adds the results of the search in additional namespaces as defined in the scoper definition
-             * @param metatype
-             */
-            private addAdditionalNamespaces(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
-                const result: ${piNamedElementClassName}[] = [];
-                ${this.getAdditionalNamespacetext}
-                return result;
-            }
-            
-            /**
-             * Returns true if a search in this namespace is already in progress for 'metatype'
-             * @param metatype
-             */
-            private searchingFor(metatype?: ${langConceptType}): boolean {
-                const type: string = (!!metatype ? metatype : anymetatype);
-                if (this.searchList.includes(type)) {
-                    return true;
-                } else {
-                    this.searchList.push(type);
-                }
-                return false;
-            }
-        
-             /**
-             * Removes the 'metatype' from the list of searches that are in progress  
-             * @param metatype
-             */
-            private cleanSearchList(metatype?: ${langConceptType}) {
-                const type: string = (!!metatype ? metatype : anymetatype);
-                const index = this.searchList.indexOf(type);
-                if (index > -1) {
-                    this.searchList.splice(index, 1);
-                }
             }
         }`;
     }

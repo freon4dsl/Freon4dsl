@@ -1,16 +1,15 @@
 import { makeObservable, observable } from "mobx";
 import { PiOwnerDescriptor } from "../PiOwnerDescriptor";
 import { PiElement } from "../PiElement";
-import { model } from "./MobxModelDecorators";
 
 /**
  *  An element using the decorators should implement this interface.
  *  The decorators will set the values of these properties correctly at each change.
  */
 export interface DecoratedModelElement {
-    owner: PiElement | null;
-    propertyName: string;
-    propertyIndex: number | undefined;
+    $$owner: PiElement | null;
+    $$propertyName: string;
+    $$propertyIndex: number | undefined;
 }
 
 /**
@@ -19,24 +18,29 @@ export interface DecoratedModelElement {
  */
 // @model
 export class    MobxModelElementImpl implements DecoratedModelElement {
-    owner: PiElement | null = null;
-    propertyName: string = "";
-    propertyIndex: number | undefined = undefined;
+    $$owner: PiElement | null = null;
+    $$propertyName: string = "";
+    $$propertyIndex: number | undefined = undefined;
 
     constructor() {
         makeObservable(this, {
-            owner: observable,
-            propertyName: observable,
-            propertyIndex: observable
+            $$owner: observable,
+            $$propertyName: observable,
+            $$propertyIndex: observable
         })
     }
+
+    piOwner(): PiElement {
+        return this.$$owner;
+    }
+
     piOwnerDescriptor(): PiOwnerDescriptor {
-        const owner = this.owner as PiElement;
-        return this.owner
+        const owner = this.$$owner as PiElement;
+        return this.$$owner
             ? {
                   owner: owner,
-                  propertyName: this.propertyName!,
-                  propertyIndex: this.propertyIndex
+                  propertyName: this.$$propertyName!,
+                  propertyIndex: this.$$propertyIndex
               }
             : null;
     }

@@ -10,6 +10,8 @@ export interface PiElement {
 
     piLanguageConcept(): string;
 
+    piOwner(): PiElement;
+
     piOwnerDescriptor(): PiOwnerDescriptor;
 
     piIsModel(): boolean;

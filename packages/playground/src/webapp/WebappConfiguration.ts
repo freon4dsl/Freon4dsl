@@ -9,8 +9,8 @@ import { ServerCommunication } from "./server/ServerCommunication";
 // export const editorEnvironment: PiEnvironment = TestParserEnvironment.getInstance();
 // import { OctopusEnvironment } from "../octopus/environment/gen/OctopusEnvironment";
 // export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
-import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
-export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+// import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
+// export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
 // import { ExpressionLibraryEnvironment } from "../libraries-test/environment/gen/ExpressionLibraryEnvironment";
 // export const editorEnvironment: PiEnvironment = ExpressionLibraryEnvironment.getInstance();
@@ -35,8 +35,8 @@ export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance()
 // import { HDMLEnvironment } from "../HDML/environment/gen/HDMLEnvironment";
 // export const editorEnvironment: PiEnvironment = HDMLEnvironment.getInstance();
 
-// import { RulesLanguageEnvironment } from "../rules-language/environment/gen/RulesLanguageEnvironment";
-// export const editorEnvironment: PiEnvironment = RulesLanguageEnvironment.getInstance();
+import { RulesLanguageEnvironment } from "../rules-language/environment/gen/RulesLanguageEnvironment";
+export const editorEnvironment: PiEnvironment = RulesLanguageEnvironment.getInstance();
 
 /**
  * The one and only reference to the server on which the models are stored

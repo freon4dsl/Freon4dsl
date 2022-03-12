@@ -26,7 +26,7 @@ describe("Demo Model", () => {
 
             for (let i = 0; i < 4; i++) {
                 const f1: DemoEntity = model.entities[i];
-                expect(f1.owner).toBe(model);
+                expect(f1.piOwner()).toBe(model);
                 expect(f1.name).not.toBeNull();
             }
         });
@@ -34,7 +34,7 @@ describe("Demo Model", () => {
         test("entity functions should be set correctly", () => {
             for (let i of model.entities) {
                 for (let f of i.functions) {
-                    expect(f.owner).toBe(i);
+                    expect(f.piOwner()).toBe(i);
                     checkFunctionDef(f, i);
                 }
             }
@@ -44,7 +44,7 @@ describe("Demo Model", () => {
             for (let i of model.entities) {
                 for (let a of i.attributes) {
                     expect(a.name).not.toBeNull();
-                    expect(a.owner).toBe(i);
+                    expect(a.piOwner()).toBe(i);
                 }
             }
         });
@@ -53,8 +53,8 @@ describe("Demo Model", () => {
 
 function checkFunctionDef(f1: DemoFunction, owner: DemoEveryConcept) {
     expect(f1.name).not.toBeNull();
-    expect(f1.expression.owner).toBe(f1);
-    expect(f1.owner).toBe(owner);
-    expect((f1.expression as any).owner).toBeTruthy();
+    expect(f1.expression.piOwner()).toBe(f1);
+    expect(f1.piOwner()).toBe(owner);
+    expect((f1.expression as any).$$owner).toBeTruthy();
     expect(f1.expression.piOwnerDescriptor().owner).toBe(f1);
 }

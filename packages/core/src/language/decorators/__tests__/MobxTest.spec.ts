@@ -104,17 +104,17 @@ describe("Mobx Model", () => {
         });
 
         it("of children should be set at start", () => {
-            expect(element.owner).toBe(root);
-            expect(element.propertyName).toBe("element");
-            expect(root.element.propertyIndex).toBe(undefined);
+            expect(element.$$owner).toBe(root);
+            expect(element.$$propertyName).toBe("element");
+            expect(root.element.$$propertyIndex).toBe(undefined);
 
-            expect(part1.propertyIndex).toBe(0);
-            expect(part1.owner).toBe(element);
-            expect(part1.propertyName).toBe("manyPart");
+            expect(part1.$$propertyIndex).toBe(0);
+            expect(part1.$$owner).toBe(element);
+            expect(part1.$$propertyName).toBe("manyPart");
 
-            expect(part2.propertyIndex).toBe(1);
-            expect(part2.owner).toBe(element);
-            expect(part2.propertyName).toBe("manyPart");
+            expect(part2.$$propertyIndex).toBe(1);
+            expect(part2.$$owner).toBe(element);
+            expect(part2.$$propertyName).toBe("manyPart");
 
             expect(element.singlePart).toBe(part3);
         });
@@ -123,73 +123,73 @@ describe("Mobx Model", () => {
             root.element = null;
 
             expect(root.element).toBe(null);
-            expect(element.owner).toBe(null);
-            expect(element.propertyName).toBe("");
-            expect(element.propertyIndex).toBe(undefined);
+            expect(element.$$owner).toBe(null);
+            expect(element.$$propertyName).toBe("");
+            expect(element.$$propertyIndex).toBe(undefined);
             expect(reaktion).toBe(1);
 
             root.element = element;
-            expect(element.owner).toBe(root);
-            expect(element.propertyName).toBe("element");
-            expect(root.element.propertyIndex).toBe(undefined);
+            expect(element.$$owner).toBe(root);
+            expect(element.$$propertyName).toBe("element");
+            expect(root.element.$$propertyIndex).toBe(undefined);
         });
 
         it("should be changed when moved", () => {
             element.singlePart = part1;
 
-            expect(part1.owner).toBe(element);
-            expect(part1.propertyName).toBe("singlePart");
-            expect(part1.propertyIndex).toBe(undefined);
+            expect(part1.$$owner).toBe(element);
+            expect(part1.$$propertyName).toBe("singlePart");
+            expect(part1.$$propertyIndex).toBe(undefined);
 
-            expect(part2.owner).toBe(element);
-            expect(part2.propertyName).toBe("manyPart");
-            expect(part2.propertyIndex).toBe(0);
+            expect(part2.$$owner).toBe(element);
+            expect(part2.$$propertyName).toBe("manyPart");
+            expect(part2.$$propertyIndex).toBe(0);
 
-            expect(part3.owner).toBe(null);
-            expect(part3.propertyName).toBe("");
-            expect(part3.propertyIndex).toBe(undefined);
+            expect(part3.$$owner).toBe(null);
+            expect(part3.$$propertyName).toBe("");
+            expect(part3.$$propertyIndex).toBe(undefined);
         });
         it("should be changed when element is assigned to array", () => {
             element.manyPart.splice(0, 0, part3);
 
             expect(element.singlePart).toBe(null);
 
-            expect(part1.owner).toBe(element);
-            expect(part1.propertyName).toBe("manyPart");
-            expect(part1.propertyIndex).toBe(1);
+            expect(part1.$$owner).toBe(element);
+            expect(part1.$$propertyName).toBe("manyPart");
+            expect(part1.$$propertyIndex).toBe(1);
 
-            expect(part2.owner).toBe(element);
-            expect(part2.propertyName).toBe("manyPart");
-            expect(part2.propertyIndex).toBe(2);
+            expect(part2.$$owner).toBe(element);
+            expect(part2.$$propertyName).toBe("manyPart");
+            expect(part2.$$propertyIndex).toBe(2);
 
-            expect(part3.owner).toBe(element);
-            expect(part3.propertyName).toBe("manyPart");
-            expect(part3.propertyIndex).toBe(0);
+            expect(part3.$$owner).toBe(element);
+            expect(part3.$$propertyName).toBe("manyPart");
+            expect(part3.$$propertyIndex).toBe(0);
         });
         it("should be changed when array is cleared", () => {
             element.manyPart.splice(0, 2);
 
-            expect(part1.owner).toBe(null);
-            expect(part1.propertyName).toBe("");
-            expect(part1.propertyIndex).toBe(undefined);
+            expect(part1.$$owner).toBe(null);
+            expect(part1.$$propertyName).toBe("");
+            expect(part1.$$propertyIndex).toBe(undefined);
 
-            expect(part2.owner).toBe(null);
-            expect(part2.propertyName).toBe("");
-            expect(part2.propertyIndex).toBe(undefined);
+            expect(part2.$$owner).toBe(null);
+            expect(part2.$$propertyName).toBe("");
+            expect(part2.$$propertyIndex).toBe(undefined);
 
             expect(element.manyPart.length).toBe(0);
         });
         it("should be changed when array element assigned null", () => {
             element.manyPart[0] = null;
 
-            expect(part1.owner).toBe(null);
-            expect(part1.propertyName).toBe("");
-            expect(part1.propertyIndex).toBe(undefined);
+            expect(part1.$$owner).toBe(null);
+            expect(part1.$$propertyName).toBe("");
+            expect(part1.$$propertyIndex).toBe(undefined);
             expect(element.manyPart[0]).toBe(null);
 
-            expect(part2.owner).toBe(element);
-            expect(part2.propertyName).toBe("manyPart");
-            expect(part2.propertyIndex).toBe(1);
+            expect(part2.$$owner).toBe(element);
+            expect(part2.$$propertyName).toBe("manyPart");
+            expect(part2.$$propertyIndex).toBe(1);
             expect(element.manyPart[1]).toBe(part2);
 
             expect(element.manyPart.length).toBe(2);
@@ -207,36 +207,36 @@ describe("Mobx Model", () => {
             expect(element.manyPart.length).toBe(3);
             expect(element.manyPart[0]).toBe(null);
 
-            expect(part1.owner).toBe(element);
-            expect(part1.propertyName).toBe("manyPart");
-            expect(part1.propertyIndex).toBe(1);
+            expect(part1.$$owner).toBe(element);
+            expect(part1.$$propertyName).toBe("manyPart");
+            expect(part1.$$propertyIndex).toBe(1);
 
-            expect(part2.owner).toBe(element);
-            expect(part2.propertyName).toBe("manyPart");
-            expect(part2.propertyIndex).toBe(2);
+            expect(part2.$$owner).toBe(element);
+            expect(part2.$$propertyName).toBe("manyPart");
+            expect(part2.$$propertyIndex).toBe(2);
         });
         it("should be changed when array element is removed", () => {
             element.manyPart.splice(0, 1);
 
-            expect(part1.owner).toBe(null);
-            expect(part1.propertyName).toBe("");
-            expect(part1.propertyIndex).toBe(undefined);
+            expect(part1.$$owner).toBe(null);
+            expect(part1.$$propertyName).toBe("");
+            expect(part1.$$propertyIndex).toBe(undefined);
 
-            expect(part2.owner).toBe(element);
-            expect(part2.propertyName).toBe("manyPart");
-            expect(part2.propertyIndex).toBe(0);
+            expect(part2.$$owner).toBe(element);
+            expect(part2.$$propertyName).toBe("manyPart");
+            expect(part2.$$propertyIndex).toBe(0);
 
             expect(element.manyPart.length).toBe(1);
         });
 
         function checkUnchanged() {
-            expect(part1.propertyIndex).toBe(0);
-            expect(part1.owner).toBe(element);
-            expect(part1.propertyName).toBe("manyPart");
+            expect(part1.$$propertyIndex).toBe(0);
+            expect(part1.$$owner).toBe(element);
+            expect(part1.$$propertyName).toBe("manyPart");
 
-            expect(part2.propertyIndex).toBe(1);
-            expect(part2.owner).toBe(element);
-            expect(part2.propertyName).toBe("manyPart");
+            expect(part2.$$propertyIndex).toBe(1);
+            expect(part2.$$owner).toBe(element);
+            expect(part2.$$propertyName).toBe("manyPart");
         }
     });
 });

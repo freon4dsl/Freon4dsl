@@ -1,7 +1,7 @@
 /**
  * This worker class collects all visible names in the model.
  */
-import { LanguageWorker, PiElement, PiNamedElement } from "../language/index";
+import { LanguageWorker, PiElement, PiModelUnit, PiNamedElement } from "../language/index";
 import { Language, Property } from "../storage/index";
 
 export class CollectNamesWorker implements LanguageWorker {
@@ -9,6 +9,8 @@ export class CollectNamesWorker implements LanguageWorker {
     namesList: PiNamedElement[] = [];
     // 'metatype' may or may not be set; if set any named element is included only if it conforms to this type
     metatype: string;
+    // The modelunit where the names search started.
+    modelunit: PiModelUnit;
 
     execBefore(modelelement: PiElement): boolean {
         // find child properties

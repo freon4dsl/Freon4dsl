@@ -193,7 +193,7 @@ export class DemoModelCreator {
     }
 
     public createIncorrectModel(): Demo {
-        let model: Demo = Demo.create({name:"InCorrectModel"});
+        let model: Demo = Demo.create({name:"InCorrectModel"}); // , models: [DemoModel.create({name: "DemoModel_1"})]});
         let unit: DemoModel = DemoModel.create({name: "DemoModel_1"});
         model.models.push(unit);
 
