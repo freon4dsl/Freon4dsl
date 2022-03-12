@@ -1,0 +1,14 @@
+UnitA correctOnes
+
+12 : NUMBER;
+"string" : STRING;
+2345: NUMBER;
+"this is a large string": STRING;
+true : BOOLEAN;
+false: BOOLEAN;
+
+Set{ true, true, false } : Set<BOOLEAN>;
+Bag { Set { 12, 13, 14 }, Set { 12, 13, 14, 15, 16 } } : Bag<Set<NUMBER>>;
+
+124 Meters : Meters;
+45 kWh : kWh;

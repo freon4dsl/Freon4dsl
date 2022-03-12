@@ -1,19 +1,68 @@
 editor default
 
-NamedType { [type ${name};] }
+referenceSeparator [::]
 
-GenericType {
-    [type ${kind}<${innerType}>;]
+unitB {
+    [
+    UnitB ${name}
+    ${typeDefs terminator[;]}
+    ]
+}
+unitA {
+    [
+    UnitA ${name}
+    ${lines terminator[;]}
+    ]
 }
 
-//OrType { // represents "one of", e.g. string|string[]
-//    [type OR<${inners horizontal separator[\| ]}>;]
-//}
-//
-//AndType { // represents "all of", e.g. Comparable&Serializable
-//    [type AND<${inners horizontal separator[& ]}>;]
-//}
+ExpWithType {
+    [${expr} : ${type}]
+}
+
+// EXPRESSIONS
+NumberLiteral {
+    [${xx}]
+}
+
+StringLiteral {
+    [${xx}]
+}
+
+BooleanLiteral {
+    [${xx}]
+}
+
+NamedExp {
+    [(${inner} as ${myType})]
+}
+
+PlusExp {
+    [${left} + ${right}]
+}
+
+UnitLiteral {
+    // 62 kilogram, or 112 miles
+    [${inner} ${unit}]
+}
+
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    [${kind}{ ${content horizontal separator[,]} }]
+}
+
+// TYPES
+NamedType {
+    [${name}]
+}
+
+SimpleType {
+    [${type}] // anything but GenericType or UnitOfMeasurement
+}
+
+GenericType {
+    [${kind}< ${innerType} >]
+}
 
 UnitOfMeasurement {
-    [type ${baseType}<${unit}>;]
+    [${unit}]
 }

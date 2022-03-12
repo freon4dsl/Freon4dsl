@@ -1,0 +1,13 @@
+validator xx for language TyTest
+
+//ExpWithType {
+//    typecheck equalsType (self.expr, self.type)
+//        {
+//            message: "Type of ${self.expr} should be XXXX, found [ ${self.type} ].",
+//            severity: error
+//        };
+//}
+//
+////GenericLiteral {
+////    typecheck conformsTo (self.content);
+////}

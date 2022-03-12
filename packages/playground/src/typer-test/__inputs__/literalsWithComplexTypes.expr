@@ -1,0 +1,8 @@
+UnitA expressionsWithTypes
+
+12 : kWh;
+456 : Collection<Grams>;
+"string" : Set<Bag<Hours>>;
+true : Meters;
+100 : Set<BOOLEAN>;
+"string" : Bag<Set<NUMBER>>;

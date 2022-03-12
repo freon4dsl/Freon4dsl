@@ -1,18 +1,82 @@
 language TyTest
 
+// MODEL
+model TyTest {
+    public unitA: unitA[];
+    public unitB: unitB;
+}
+// type definitions
+modelunit unitB {
+    typeDefs: TypeDeclaration[];
+    file-extension = "types";
+}
+// expressions and their types
+modelunit unitA {
+    lines: ExpWithType[];
+    file-extension = "expr";
+}
+// ALL INTERFACES
 interface Type { // base BaseType {
-    name: identifier;
+    public name: identifier;
 }
 //
 //interface BaseType {
 //}
 
-limited PredefinedType implements Type { Simple1; Simple2; ANY; NULL; }
+// ALL  CONCEPTS
+abstract expression Exp {
+}
+
+concept ExpWithType {
+    expr: Exp;
+    type: TypeDeclaration;
+}
+
+// EXPRESSIONS
+expression NumberLiteral base Exp {
+    xx: number;
+}
+
+expression StringLiteral base Exp {
+    xx: string;
+}
+
+expression BooleanLiteral base Exp {
+    xx: boolean;
+}
+
+expression NamedExp base Exp {
+    inner: Exp;
+    myType: NamedType;
+}
+
+expression PlusExp base Exp {
+    left: Exp;
+    right: Exp;
+}
+
+expression UnitLiteral base Exp {
+    // 62 kilogram, or 112 miles
+    inner: NumberLiteral;
+    unit: UnitKind;
+}
+
+expression GenericLiteral base Exp {
+    // Set{ 12, 14, 16, 18 }
+    content: Exp[];
+    kind: GenericKind;
+}
+
+// TYPES
+
+limited PredefinedType implements Type { NUMBER; BOOLEAN; STRING; ANY; NULL; }
 
 concept NamedType implements Type {
 }
 
 abstract concept TypeDeclaration {
+    // for now we add a name, but types could be nameless
+//    name: identifier = "TypeDeclaration";
 }
 
 concept SimpleType base TypeDeclaration {
@@ -27,7 +91,7 @@ concept GenericType base TypeDeclaration {
 limited GenericKind { Set; Sequence; Bag; Collection; }
 
 concept UnitOfMeasurement base TypeDeclaration {
-    baseType: PredefinedType;
+    reference baseType: PredefinedType;
     unit: UnitKind; // is it measured in km, kWh, grams, or anything else
 }
 limited UnitKind { Meters; Grams; kWh; Hours; }

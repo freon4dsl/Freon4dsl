@@ -42,6 +42,7 @@ concept PitProperty base PiProperty {
 
 // expressions used in type def
 abstract expression PitExp {
+//    appliedFeature?: PitAppliedExp;
 }
 abstract expression PitAppliedExp base PitExp {
     source?: PitExp;

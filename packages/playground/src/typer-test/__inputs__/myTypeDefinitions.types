@@ -1,8 +1,12 @@
-type NamedType1;
-type NamedType2;
-type Set<NamedType1>;
-type OR<NamedType1, Simple1>;
-type AND<NamedType1, Simple1, Simple2>;
-type Simple1<kWh>;
+UnitB someName
+NamedType1;
+NamedType2;
+Set<NamedType1>;
+//OR<NamedType1, Simple1>;
+//AND<NamedType1, Simple1, Simple2>;
+kWh;
+Meters;
+Bag<Hours>;
+Collection<Set<Sequence<kWh>>>;
+Bag<Set<NamedTyped2>>;
 
-// type Bag<Set<NamedTyped2>>;
