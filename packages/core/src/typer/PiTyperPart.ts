@@ -1,8 +1,8 @@
 import { PiElement } from "../language";
+import { PiTyper } from "./PiTyper";
 
 // Part of the ProjectIt Framework.
 
-// tag::typer-interface[]
 /**
  * This interface is being used to implement the three-tier approach.
  * Both the generated and custom type providers should implement this interface.
@@ -13,6 +13,12 @@ import { PiElement } from "../language";
  * this method should return 'null'.
  */
 export interface PiTyperPart {
+
+    /**
+     * TODO comment
+     */
+    mainTyper: PiTyper;
+
     /**
      * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
      * @param modelelement
@@ -48,4 +54,3 @@ export interface PiTyperPart {
      */
     isType(elem: PiElement): boolean | null;
 }
-// end::typer-interface[]
