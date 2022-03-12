@@ -73,9 +73,6 @@ export class ScoperTemplate {
             ${generateAlternativeScopes ? `myTyper: ${typerClassName};` : ``}
     
             public resolvePathName(basePosition: ${allLangConcepts}, doNotSearch: string, pathname: string[], metatype?: ${langConceptType}): ${Names.PiNamedElement} {
-                // basePosition itself may be an additional namespace; 
-                // if so, do not search this namespace, as this will result in a (mobx) cycle
-                ${namespaceClassName}.doNotSearch = doNotSearch;
                 // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
                 let elementsFromBasePosition: ${Names.PiNamedElement}[] = this.getVisibleElements(basePosition);
                 // start the loop over the set of names in the pathname
@@ -98,8 +95,6 @@ export class ScoperTemplate {
                         return null;
                     }
                 }
-                // do not forget to clear 'doNotSearch'; it is a static and might be used again!
-                ${namespaceClassName}.doNotSearch = null;
                 return found;
             }
  
@@ -372,23 +367,19 @@ export class ScoperTemplate {
             }
             result = result.concat(`
             // generated based on '${expression.toPiString()}'
-            if (${generatedClassName}.doNotSearch !== '${myRef.name}') {
             for (let ${loopVar} of element.${expression.appliedfeature.toPiString()}) {
                 if (!!${loopVarExtended}) {
                     result.push(${loopVarExtended});
                     // let extraNamespace = ${generatedClassName}.create(${loopVarExtended});
                     // ${generatedClassName}.joinResultsWithShadowing(extraNamespace.getVisibleElements(metatype), result);
                 }
-            }
             }`);
         } else {
             // TODO check use of toPiString()
             result = result.concat(`
                // generated based on '${expression.toPiString()}' 
-               if (${generatedClassName}.doNotSearch !== '${myRef.name}') {
-                   if (!!element.${expression.appliedfeature.toPiString()}) {
-                       result.push(element.${expression.appliedfeature.toPiString()}.referred);
-                   }
+               if (!!element.${expression.appliedfeature.toPiString()}) {
+                   result.push(element.${expression.appliedfeature.toPiString()}.referred);
                }`);
         }
         return result;

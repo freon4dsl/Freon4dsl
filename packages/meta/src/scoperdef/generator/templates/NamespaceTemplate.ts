@@ -42,7 +42,6 @@ export class NamespaceTemplate {
          */
         export class ${generatedClassName} {
             private static allNamespaces: Map< PiElement, ${generatedClassName}> = new Map();
-            static doNotSearch: string = null;
             
             /**
              * This method ensures that every element in the model has one and only one associated namespace object.
@@ -72,10 +71,6 @@ export class NamespaceTemplate {
                         result.push(elem);
                     }
                 });
-            }
-
-            set doNotSearch(elem: string) {
-                ${generatedClassName}.doNotSearch = elem;
             }
     
             public _myElem: PiElement;
@@ -243,23 +238,19 @@ export class NamespaceTemplate {
             }
             result = result.concat(`
             // generated based on '${expression.toPiString()}'
-            if (${generatedClassName}.doNotSearch !== '${myRef.name}') {
             for (let ${loopVar} of this._myElem.${expression.appliedfeature.toPiString()}) {
                 if (!!${loopVarExtended}) {
                     let extraNamespace = ${generatedClassName}.create(${loopVarExtended});
                     ${generatedClassName}.joinResultsWithShadowing(extraNamespace.getVisibleElements(metatype), result);
                 }
-            }
             }`);
         } else {
             // TODO check use of toPiString()
             result = result.concat(`
                // generated based on '${expression.toPiString()}' 
-               if (${generatedClassName}.doNotSearch !== '${myRef.name}') {
                if (!!this._myElem.${expression.appliedfeature.toPiString()}) {
                    let extraNamespace = ${generatedClassName}.create(this._myElem.${langExpToTypeScript(expression.appliedfeature)});
                    ${generatedClassName}.joinResultsWithShadowing(extraNamespace.getVisibleElements(metatype), result);               
-               }
                }`);
         }
         return result;
