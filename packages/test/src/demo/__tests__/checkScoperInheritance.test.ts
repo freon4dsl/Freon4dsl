@@ -1,7 +1,5 @@
-import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoEntity, Demo } from "../language/gen";
-import { printModel1 } from "../utils/index";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("testing Scoper", () => {
