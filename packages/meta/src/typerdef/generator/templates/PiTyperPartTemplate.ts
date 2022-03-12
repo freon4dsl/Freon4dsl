@@ -34,7 +34,8 @@ export class PiTyperPartTemplate {
         import { ${language.concepts.map(concept => `
                 ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";       
         import { ${language.interfaces.map(intf => `
-                ${intf.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";       
+                ${intf.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";  
+        import { ${Names.typer(language)} } from "./${Names.typer(language)}";     
 
         /**
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
@@ -42,14 +43,26 @@ export class PiTyperPartTemplate {
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
             defaultType: ${rootType} = ${defaultType};
+            mainTyper: ${Names.typer(language)};
 
             /**
              * See interface 
              */
             public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
                 ${this.makeEqualsStatement()}
-                if ( this.inferType(elem1) === this.inferType(elem2)) return true;
-                return false;
+                let $type1: TyTestEveryConcept;
+                if (!this.mainTyper.isType(elem1)) {
+                    $type1 = this.mainTyper.inferType(elem1);
+                } else {
+                    $type1 = elem1;
+                }
+                let $type2: TyTestEveryConcept;
+                if (!this.mainTyper.isType(elem2)) {
+                    $type2 = this.mainTyper.inferType(elem2);
+                } else {
+                    $type2 = elem2;
+                }
+                return $type1 === $type2;
             }
             
             /**
@@ -113,8 +126,10 @@ export class PiTyperPartTemplate {
         return `
         import { ${typerInterfaceName}, Language } from "${PROJECTITCORE}";
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${Names.typer(language)} } from "./${Names.typer(language)}";
         
         export class ${generatedClassName} implements ${typerInterfaceName} {
+            mainTyper: ${Names.typer(language)};
             /**
              * See interface 
              */
@@ -125,7 +140,19 @@ export class PiTyperPartTemplate {
              * See interface 
              */
             public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
-                return true;
+                let $type1: TyTestEveryConcept;
+                if (!this.mainTyper.isType(elem1)) {
+                    $type1 = this.mainTyper.inferType(elem1);
+                } else {
+                    $type1 = elem1;
+                }
+                let $type2: TyTestEveryConcept;
+                if (!this.mainTyper.isType(elem2)) {
+                    $type2 = this.mainTyper.inferType(elem2);
+                } else {
+                    $type2 = elem2;
+                }
+                return $type1 === $type2;
             }
             /**
              * See interface 

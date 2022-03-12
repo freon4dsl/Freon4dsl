@@ -203,7 +203,7 @@ function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
 }
 
 /**
- * Returns the property of 'con' that is called 'name' and has as type 'string', i.e. the property that
+ * Returns the property of 'con' that is called 'name' and has as type 'identifier', i.e. the property that
  * represents the name of the concept.
  * @param con
  */
@@ -213,7 +213,7 @@ export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
 
 /**
  * Returns true if 'piClasssifier' has a property that respresents it name, i.e. a property
- * that is called 'name' and has as type 'string'.
+ * that is called 'name' and has as type 'identifier'.
  * @param piClassifier
  */
 export function hasNameProperty (piClassifier: PiClassifier): boolean {
@@ -223,6 +223,15 @@ export function hasNameProperty (piClassifier: PiClassifier): boolean {
         }
     }
     return false;
+}
+
+/**
+ * Returns true if 'p' is called 'name' and has as type 'identifier', i.e. the property
+ * represents the name of a concept.
+ * @param con
+ */
+export function isNameProp(p: PiProperty): boolean {
+    return p.name === "name" && p.type === PiPrimitiveType.identifier;
 }
 
 /**

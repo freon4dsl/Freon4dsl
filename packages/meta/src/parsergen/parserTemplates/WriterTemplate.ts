@@ -187,10 +187,12 @@ export class WriterTemplate {
              * @param modelelement
              */
             public writeNameOnly(modelelement: ${allLangConceptsName}): string {
+                if (!modelelement) return '';
                 ${this.makeWriteOnly(language)}
             }
         
             private unparse(modelelement: ${allLangConceptsName}, short: boolean) {
+                if (!modelelement) return;
                 switch (modelelement.piLanguageConcept()) {
                 ${conceptsToUnparse.map(concept =>
                 `case "${Names.classifier(concept)}": this.unparse${Names.classifier(concept)}(modelelement as ${Names.classifier(concept)}, short);

@@ -1,15 +1,15 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_FOLDER } from "../../../utils";
 import { PiLanguage } from "../../../languagedef/metalanguage";
-import { PiTypeDefinition } from "../../metalanguage";
-import { TyperGenUtils } from "./TyperGenUtils";
+import { PiTyperDef } from "../../new-metalanguage";
 
 export class PiTyperTemplate {
     language: PiLanguage;
 
-    generateTyper(language: PiLanguage, typerdef: PiTypeDefinition, relativePath: string): string {
+    generateTyper(language: PiLanguage, typerdef: PiTyperDef, relativePath: string): string {
         this.language = language;
         const allLangConcepts: string = Names.allConcepts(language);
-        const rootType = TyperGenUtils.getTypeRoot(language, typerdef);
+        // const rootType = TyperGenUtils.getTypeRoot(language, typerdef);
+        const rootType = null;
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.PiTyper;
@@ -18,11 +18,8 @@ export class PiTyperTemplate {
 
         return `
         import { ${typerInterfaceName} } from "${PROJECTITCORE}";
-        ${ rootType !== allLangConcepts ?
-        `import { ${allLangConcepts}, ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";`
-        : 
-        `import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";`
-        }      
+
+        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
         import { ${defaultTyperName} } from "./${defaultTyperName}";
                 

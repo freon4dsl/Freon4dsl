@@ -35,7 +35,7 @@ PlusExp {
 UnitLiteral {
     // 62 kilogram, or 112 miles
     infertype x:UnitOfMeasurement where {
-                  x.baseType equalsto typeof(self.inner);
+                  typeof(x.baseType) equalsto typeof(self.inner);
                   x.unit equalsto self.unit;
               };
 }

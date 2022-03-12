@@ -2,8 +2,9 @@
 // this leads to a load error
 // import { PiErrorSeverity } from "@projectit/core";
 // import { PiErrorSeverity } from "../../../../core/src/validator/PiValidator";
-import { Checker, PiErrorSeverity, MetaLogger } from "../../utils";
+import { Checker, PiErrorSeverity, MetaLogger, isNameProp, langExpToTypeScript } from "../../utils";
 import {
+    PiClassifier,
     PiConcept,
     PiLangAppliedFeatureExp,
     PiLangExpressionChecker,
@@ -20,7 +21,7 @@ import {
     ExpressionRule,
     IsuniqueRule,
     NotEmptyRule,
-    PiValidatorDef, ValidationMessage,
+    PiValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText,
     ValidationRule,
     ValidationSeverity,
     ValidNameRule
@@ -91,7 +92,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             tr.severity.severity = PiErrorSeverity.ToDo;
         }
         if (!!tr.message) {
-            this.checkValidationMessage(tr.message);
+            this.checkValidationMessage(tr.message, enclosingConcept);
         }
     }
 
@@ -261,8 +262,17 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         }
     }
 
-    private checkValidationMessage(message: ValidationMessage) {
-        this.simpleCheck(!!message.content && !!message.content[0],
-            `User defined error message should have a value ${Checker.location(message)}.`);
+    private checkValidationMessage(message: ValidationMessage, enclosingConcept: PiClassifier) {
+        this.nestedCheck({check: !!message.content && !!message.content[0],
+            error: `User defined error message should have a value ${Checker.location(message)}.`,
+            whenOk: () => {
+                message.content.forEach(part => {
+                    // console.log("found " + part.toPiString());
+                    if (part instanceof ValidationMessageReference) {
+                        this.myExpressionChecker.checkLangExp(part.expression, enclosingConcept);
+                    }
+                })
+            }
+        });
     }
 }
