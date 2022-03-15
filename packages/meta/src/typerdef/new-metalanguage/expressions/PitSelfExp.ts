@@ -1,5 +1,5 @@
 import { PitExp } from "./PitExp";
-import { PiClassifier } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiElementReference } from "../../../languagedef/metalanguage";
 
 export class PitSelfExp extends PitExp {
     /**
@@ -14,14 +14,7 @@ export class PitSelfExp extends PitExp {
         }
         return result;
     }
-    _myType: PiClassifier;
     toPiString(): string {
         return `self`;
-    }
-    get type(): PiClassifier {
-        return this._myType;
-    }
-    set type(cls: PiClassifier) {
-        this._myType = cls;
     }
 }

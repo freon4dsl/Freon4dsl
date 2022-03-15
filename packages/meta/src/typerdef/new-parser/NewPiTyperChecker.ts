@@ -26,6 +26,7 @@ import {
     PiTyperDef
 } from "../new-metalanguage";
 import { ParserGenUtil } from "../../parsergen/parserTemplates/ParserGenUtil";
+import { CommonSuperTypeUtil } from "../../utils/common-super/CommonSuperTypeUtil";
 
 const LOGGER = new MetaLogger("NewPiTyperChecker"); //.mute();
 const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof", "commonSuperType", "ancestor"];
@@ -104,7 +105,7 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
 
         // when everything has been checked we can do even more ...
         // let's find the top of the type hierarchy, if present
-        // this.findTypeRoot(definition);
+        definition.typeRoot = this.findTypeRoot(definition);
 
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
     }
@@ -178,6 +179,7 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
             `Concept or interface '${classifier.name}' is not marked 'hasType', therefore it cannot have an infertype rule ${Checker.location(rule)}.`);
         rule.exp = this.changeInstanceToPropCallExp(rule.exp, classifier);
         this.checkPitExp(rule.exp, classifier);
+        rule.returnType = rule.exp.returnType;
     }
 
 
@@ -239,9 +241,10 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
         exp.language = this.language;
         if (exp instanceof PitAnytypeExp ) {
             // nothing to check
+            exp.returnType = PiClassifier.ANY;
         } else if (exp instanceof PitSelfExp) {
             // nothing to check
-            exp._myType = classifier;
+            exp.returnType = classifier;
         } else if (exp instanceof PitFunctionCallExp) {
             this.checkFunctionCallExpression(exp, classifier, surroundingExp);
         } else if (exp instanceof PitPropertyCallExp ) {
@@ -264,6 +267,7 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
                 exp.conditions.forEach(cond => {
                     this.checkStatement(cond, classifier, exp);
                 });
+                exp.returnType = exp.otherType.type;
             }
         });
     }
@@ -281,6 +285,7 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
                 exp.myLimited = classifier;
             }
         }
+        exp.returnType = exp.myLimited;
         this.nestedCheck({
             check: !!exp.myInstance,
             error: `Cannot find instance '${exp.__myInstance.name}' of '${exp.__myLimited?.name}' ${Checker.location(exp.__myInstance)}.`,
@@ -301,78 +306,82 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
         if (!!exp.source) {
             exp.source = this.changeInstanceToPropCallExp(exp.source, classifier);
             this.checkPitExp(exp.source, classifier, surroundingExp, surroundingAllowed);
-            exp.__property.owner = exp.source.type;
+            // TODO check ownership!
+            exp.__property.owner = exp.source.returnType;
         } else {
-            let text: string = Checker.location(exp);
-            if (text === "[no location]") {
-                console.log("found no location for exp: " + exp.toPiString())
-            }
-            text = Checker.location(exp.__property);
-            if (text === "[no location]") {
-                console.log("found no location for property: " + exp.__property.name)
-            }
             if (!!surroundingExp) {
                 // use the surrounding PitWhereExp, because there an extra prop is defined
                 if (exp.__property.name === surroundingExp.otherType.name) {
-                    this.simpleCheck(surroundingAllowed,
-                        `Reference to property '${exp.__property.name}' is not allowed ${Checker.location(exp.__property)}.`);
-                    errMessDone = true;
+                    if (!surroundingAllowed) {
+                        this.simpleCheck(
+                            false,
+                            `Reference to property '${exp.__property.name}' is not allowed ${Checker.location(exp.__property)}.`
+                        );
+                        errMessDone = true;
+                    }
                     exp.property = surroundingExp.otherType;
+                    exp.returnType = exp.property.type;
                 }
+                // console.log(exp.toPiString() + " using surrounding exp: " + exp.property.name)
             }
         }
+
         if (!errMessDone) {
-            this.simpleCheck(
-                !!exp.property,
-                `Cannot find property '${exp.__property.name}' ${Checker.location(exp.__property)}.`
-            );
+            this.nestedCheck({
+                check: !!exp.property,
+                error: `Cannot find property '${exp.__property.name}' ${Checker.location(exp.__property)}.`,
+                whenOk: () => {
+                    exp.returnType = exp.property.type;
+                }
+            });
         }
     }
 
-    private checkFunctionCallExpression(langExp: PitFunctionCallExp, enclosingConcept: PiClassifier, surroundingExp: PitWhereExp) {
-        LOGGER.log("checkFunctionCallExpression " + langExp?.toPiString());
-        // TODO what about returnType?
-        const functionName = validFunctionNames.find(name => name === langExp.calledFunction);
+    private checkFunctionCallExpression(exp: PitFunctionCallExp, enclosingConcept: PiClassifier, surroundingExp: PitWhereExp) {
+        LOGGER.log("checkFunctionCallExpression " + exp?.toPiString());
+        this.checkArguments(exp, enclosingConcept, surroundingExp);
+        // the returntype is always calcalated base on the common super type of the arguments
+        this.findReturnType(exp);
+        const functionName = validFunctionNames.find(name => name === exp.calledFunction);
         this.nestedCheck({
             check: !!functionName,
-            error: `${langExp.calledFunction} is not a valid function ${Checker.location(langExp)}.`,
+            error: `${exp.calledFunction} is not a valid function ${Checker.location(exp)}.`,
             whenOk: () => {
-                if (langExp.calledFunction === validFunctionNames[2]) { // "typeof"
+                if (exp.calledFunction === validFunctionNames[2]) { // "typeof"
                     this.nestedCheck({
-                        check: langExp.arguments.length === 1,
+                        check: exp.actualParameters.length === 1,
                         error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 1 parameter, ` +
-                            `found ${langExp.arguments.length} ${Checker.location(langExp)}.`,
-                        whenOk: () => {
-                            this.checkArguments(langExp, enclosingConcept, surroundingExp);
-                            // langExp.returnType = this.definition.typeRoot;
-                        }
+                            `found ${exp.actualParameters.length} ${Checker.location(exp)}.`
                     });
-                } else if (langExp.calledFunction === validFunctionNames[4]) { // "ancestor"
+                } else if (exp.calledFunction === validFunctionNames[4]) { // "ancestor"
                     this.nestedCheck({
-                        check: langExp.arguments.length === 1,
+                        check: exp.actualParameters.length === 1,
                         error: `Function '${functionName}' in '${enclosingConcept.name}' should have 1 parameter, ` +
-                            `found ${langExp.arguments.length} ${Checker.location(langExp)}.`,
-                        whenOk: () => {
-                            this.checkArguments(langExp, enclosingConcept, surroundingExp);
-                        }
+                            `found ${exp.actualParameters.length} ${Checker.location(exp)}.`
                     });
                 } else {
                     this.nestedCheck({
-                        check: langExp.arguments.length === 2,
+                        check: exp.actualParameters.length === 2,
                         error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 2 parameters, ` +
-                            `found ${langExp.arguments.length} ${Checker.location(langExp)}.`,
-                        whenOk: () => {
-                            this.checkArguments(langExp, enclosingConcept, surroundingExp);
-                        }
+                            `found ${exp.actualParameters.length} ${Checker.location(exp)}.`
                     });
                 }
             }
         });
     }
 
+    private findReturnType(exp: PitFunctionCallExp) {
+        const possibles: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(exp.actualParameters.map(par => par.returnType));
+        if (possibles.length === 1) {
+            exp.returnType = possibles[0];
+        } else {
+            exp.returnType = PiClassifier.ANY;
+        }
+    }
+
     private checkArguments(langExp: PitFunctionCallExp, enclosingConcept: PiClassifier, surroundingExp: PitWhereExp) {
         const newArgs: PitExp[] = [];
-        langExp.arguments.forEach(p => {
+        langExp.actualParameters.forEach(p => {
                 newArgs.push(this.changeInstanceToPropCallExp(p, enclosingConcept));
             }
         );
@@ -380,5 +389,14 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
                 this.checkPitExp(p, enclosingConcept, surroundingExp, false);
             }
         );
+    }
+
+    private findTypeRoot(definition: PiTyperDef): PiClassifier {
+        const possibles: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(definition.types);
+        if (possibles.length === 1) {
+            return possibles[0];
+        } else {
+            return PiClassifier.ANY;
+        }
     }
 }

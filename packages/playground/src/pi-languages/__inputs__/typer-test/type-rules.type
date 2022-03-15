@@ -43,7 +43,7 @@ UnitLiteral {
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype x:GenericType where {
-        typeOf(x.innerType) equalsto typeOf(self.content);
+        x.innerType equalsto typeOf(self.content);
         x.kind equalsto self.kind;
     };
 }

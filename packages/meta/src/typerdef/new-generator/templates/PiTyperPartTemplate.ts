@@ -219,14 +219,14 @@ export class PiTyperPartTemplate {
         if (exp instanceof PitAnytypeExp) {
             return "any";
         } else if (exp instanceof PitFunctionCallExp) {
-            let argumentsStr: string = exp.arguments.map(arg => `${this.makeTypeScriptForExp(arg)}`).join(", ");
+            let argumentsStr: string = exp.actualParameters.map(arg => `${this.makeTypeScriptForExp(arg)}`).join(", ");
             return `${this.makeSourceTypeScript(exp)}${exp.calledFunction}(${argumentsStr})`;
         } else if (exp instanceof PitPropertyCallExp) {
             return `${this.makeSourceTypeScript(exp)}${exp.property.name}`;
         } else if (exp instanceof PitInstanceExp) {
             return Names.concept(exp.myLimited) + ":" + Names.instance(exp.myInstance);
         } else if (exp instanceof PitSelfExp) {
-            return `(modelelement as ${Names.classifier(exp.type)}).`;
+            return `(modelelement as ${Names.classifier(exp.returnType)}).`;
         } else if (exp instanceof PitConforms) {
             return `${conformsFunctionName}(${this.makeTypeScriptForExp(exp.left)}, ${this.makeTypeScriptForExp(exp.right)})`;
         } else if (exp instanceof PitEquals) {

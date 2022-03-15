@@ -243,7 +243,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         __arguments = this.mainAnalyser.transformSharedPackedParseTreeList<PitExp>(children[2], ","); // RHSPartListWithSeparator
 
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitFunctionCallExp.create({ calledFunction: __calledFunction, arguments: __arguments, agl_location: location });
+        return PitFunctionCallExp.create({ calledFunction: __calledFunction, actualParameters: __arguments, agl_location: location });
     }
 
     /**

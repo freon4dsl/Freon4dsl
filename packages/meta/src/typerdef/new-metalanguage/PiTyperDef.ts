@@ -40,6 +40,7 @@ export class PiTyperDef extends PiDefinitionElement {
     name: string; // temporarily added to conform to PiLangElement TODO remove when scoping changes
     language: PiLanguage;
     __types_references: PiElementReference<PiClassifier>[] = [];
+    __typeRoot: PiElementReference<PiClassifier> = null;
     __conceptsWithType_references: PiElementReference<PiClassifier>[] = [];
     anyTypeRule?: PitAnyTypeRule;
     classifierRules: PitClassifierRule[] = [];
@@ -89,5 +90,17 @@ export class PiTyperDef extends PiDefinitionElement {
             xx.owner = this.language;
             this.__conceptsWithType_references.push(xx);
         });
+    }
+    get typeRoot(): PiClassifier {
+        if (!!this.__typeRoot && !!this.__typeRoot.referred) {
+            return this.__typeRoot.referred;
+        }
+        return null;
+    }
+    set typeRoot(cls: PiClassifier) {
+        if (!!cls) {
+            this.__typeRoot = PiElementReference.create<PiClassifier>(cls, "PiClassifier");
+            this.__typeRoot.owner = this.language;
+        }
     }
 }

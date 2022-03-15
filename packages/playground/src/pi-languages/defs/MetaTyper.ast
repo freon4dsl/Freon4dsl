@@ -28,6 +28,7 @@ concept PitConformanceOrEqualsRule base PitClassifierRule {
     myRules: PitSingleRule[];
 }
 concept PitInferenceRule base PitClassifierRule {
+    reference returnType: PiClassifier;
     exp: PitExp;
 }
 concept PitLimitedRule base PitClassifierRule {
