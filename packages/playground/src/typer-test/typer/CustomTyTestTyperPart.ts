@@ -76,7 +76,7 @@ export class CustomTyTestTyperPart implements PiTyperPart {
                 });
             }
         } else if (modelelement.piLanguageConcept() === "SimpleType") {
-            console.log("inferType of SimpleType: " + writer.writeToString(modelelement))
+            // console.log("inferType of SimpleType: " + writer.writeToString(modelelement))
             return (modelelement as SimpleType).type.referred;
         }
         return null;
@@ -89,27 +89,27 @@ export class CustomTyTestTyperPart implements PiTyperPart {
         const type1: TyTestEveryConcept = this.mainTyper.inferType(elem1);
         const type2: TyTestEveryConcept = this.mainTyper.inferType(elem2);
         if (type1 === null) {
-            console.log("found null type for "+ writer.writeToString(elem1) + ', ' + elem1.piLanguageConcept());
+            // console.log("found null type for "+ writer.writeToString(elem1) + ', ' + elem1.piLanguageConcept());
             return false;
         }
         if (type2 === null) {
-            console.log("found null type for "+ writer.writeToString(elem2) + ', ' + elem2.piLanguageConcept());
+            // console.log("found null type for "+ writer.writeToString(elem2) + ', ' + elem2.piLanguageConcept());
             return false;
         }
-        console.log("found type1: " + writer.writeToString(type1) + ', type2: ' + writer.writeToString(type2));
+        // console.log("found type1: " + writer.writeToString(type1) + ', type2: ' + writer.writeToString(type2));
         if (type1.piLanguageConcept() !== type2.piLanguageConcept()) {
-            console.log("language concepts wrong: " + type1.piLanguageConcept() + ", " + type2.piLanguageConcept())
+            // console.log("language concepts wrong: " + type1.piLanguageConcept() + ", " + type2.piLanguageConcept())
             return false;
         }
         if (type1.piLanguageConcept() === "SimpleType"){
             // equalsto self.type;
-            console.log("simpleType")
+            // console.log("simpleType")
             return this.mainTyper.equalsType((type1 as SimpleType).type.referred, (type2 as SimpleType).type.referred);
         } else if (type1.piLanguageConcept() === "NamedType"){
             // equalsto aa:NamedType where {
             //     aa.name equalsto self.name;
             // };
-            console.log("NamedType")
+            // console.log("NamedType")
             return (type1 as NamedType).name === (type2 as NamedType).name;
         } else if (type1.piLanguageConcept() === "GenericType"){
             // equalsto x:GenericType where {
@@ -118,7 +118,7 @@ export class CustomTyTestTyperPart implements PiTyperPart {
             // };
             const condition1: boolean = this.mainTyper.equalsType((type1 as GenericType).innerType, (type2 as GenericType).innerType);
             const condition2: boolean = (type1 as GenericType).kind.referred === (type2 as GenericType).kind.referred;
-            console.log("GenericType: " + writer.writeToString(elem1) + condition1 + ", " + condition2);
+            // console.log("GenericType: " + writer.writeToString(elem1) + condition1 + ", " + condition2);
             return condition1 && condition2;
         } else if (type1.piLanguageConcept() === "UnitOfMeasurement"){
             // equalsto aap:UnitOfMeasurement where {
@@ -127,7 +127,7 @@ export class CustomTyTestTyperPart implements PiTyperPart {
             // };
             const condition1: boolean = this.mainTyper.equalsType((type1 as UnitOfMeasurement).baseType.referred, (type2 as UnitOfMeasurement).baseType.referred);
             const condition2: boolean = (type1 as UnitOfMeasurement).unit === (type2 as UnitOfMeasurement).unit;
-            console.log("UnitOfMeasurement " + writer.writeToString(elem1) + condition1 + ", " + condition2);
+            // console.log("UnitOfMeasurement " + writer.writeToString(elem1) + condition1 + ", " + condition2);
             return condition1 && condition2;
         } else if (type1.piLanguageConcept() === "PredefinedType"){
             return type1 === type2;

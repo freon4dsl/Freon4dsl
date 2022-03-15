@@ -64,5 +64,5 @@ GenericType {
 }
 
 UnitOfMeasurement {
-    [${unit}]
+    [${unit}< $<baseType} >]
 }
