@@ -39,7 +39,7 @@ export class CustomTyTestTyperPart implements PiTyperPart {
             return this.mainTyper.inferType((modelelement as NamedExp).myType);
         } else if (modelelement.piLanguageConcept() === "PlusExp") {
             //     infertype commonSuperType(self.left, self. right);
-            return this.mainTyper.commonSuperType((modelelement as PlusExp).left, (modelelement as PlusExp). right);
+            // return this.mainTyper.commonSuperType((modelelement as PlusExp).left, (modelelement as PlusExp). right);
         } else if (modelelement.piLanguageConcept() === "UnitLiteral") {
             //     infertype x:UnitOfMeasurement where {
             //         x.baseType equalsto typeof(self.inner);

@@ -97,11 +97,10 @@ describe ("Testing Typer Ideas", () => {
             const errors: PiError[] = validator.validate(unit1);
             expect(errors.find(e => e.message === "Type Set < BOOLEAN > of [Set { true, true, false }] is not equal to Set < NUMBER >")).toBeTruthy();
             expect(errors.find(e => e.message === "Type Bag < Set < NUMBER > > of [Bag { Set { 12, 13, 14 }, Sequence { \"string\", \"Str\", \"STRING\" } }] is not equal to Bag < Sequence < NUMBER > >")).toBeTruthy();
-            expect(errors.find(e => e.message === "Type Meters of [124 Meters] is not equal to kWh")).toBeTruthy();
-            expect(errors.find(e => e.message === "Reference 'kWh' should have type 'Type', but found type(s) [UnitKind]")).toBeTruthy();
-            expect(errors.length).toBe(4);
+            expect(errors.find(e => e.message === "Type Meters < NUMBER > of [124 Meters] is not equal to kWh < NUMBER >")).toBeTruthy();
+            expect(errors.length).toBe(3);
 
-            // console.log(errors.map(e => e.message).join("\n"));
+            console.log(errors.map(e => e.message).join("\n"));
         }
     });
 
