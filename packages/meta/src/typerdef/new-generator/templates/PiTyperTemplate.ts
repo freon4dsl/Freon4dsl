@@ -8,11 +8,14 @@ export class PiTyperTemplate {
     generateTyper(language: PiLanguage, typerdef: PiTyperDef, relativePath: string): string {
         this.language = language;
         const allLangConcepts: string = Names.allConcepts(language);
-        // const rootType = TyperGenUtils.getTypeRoot(language, typerdef);
-        const rootType = null;
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.PiTyper;
+
+        let rootType: string = allLangConcepts;
+        if (!!typerdef) {
+            rootType = Names.classifier(typerdef.typeRoot);
+        }
 
         // Template starts here
 
@@ -28,7 +31,13 @@ export class PiTyperTemplate {
          * otherwise this class implements the default typer.
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
-
+            private generatedTyper: ${defaultTyperName};
+        
+            constructor() {
+                this.generatedTyper = new ${defaultTyperName}();
+                this.generatedTyper.mainTyper = this;
+            }
+            
             /**
              * See interface 
              */
@@ -41,7 +50,7 @@ export class PiTyperTemplate {
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return new ${defaultTyperName}().equalsType(elem1, elem2);
+                return this.generatedTyper.equalsType(elem1, elem2);
             }
             
             /**
@@ -56,7 +65,7 @@ export class PiTyperTemplate {
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return new ${defaultTyperName}().inferType(modelelement);
+                return this.generatedTyper.inferType(modelelement);
             }
             
             /**
@@ -71,7 +80,7 @@ export class PiTyperTemplate {
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return new ${defaultTyperName}().conformsTo(elem1, elem2);
+                return this.generatedTyper.conformsTo(elem1, elem2);
             }
             
             /**
@@ -86,7 +95,7 @@ export class PiTyperTemplate {
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return new ${defaultTyperName}().conformList(typelist1, typelist2);
+                return this.generatedTyper.conformList(typelist1, typelist2);
             }
 
             /**
@@ -101,7 +110,7 @@ export class PiTyperTemplate {
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return new ${defaultTyperName}().isType(elem);
+                return this.generatedTyper.isType(elem);
             } 
         }`;
     }

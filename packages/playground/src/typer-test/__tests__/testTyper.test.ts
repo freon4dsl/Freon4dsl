@@ -100,7 +100,7 @@ describe ("Testing Typer Ideas", () => {
             expect(errors.find(e => e.message === "Type Meters < NUMBER > of [124 Meters] is not equal to kWh < NUMBER >")).toBeTruthy();
             expect(errors.length).toBe(3);
 
-            console.log(errors.map(e => e.message).join("\n"));
+            // console.log(errors.map(e => e.message).join("\n"));
         }
     });
 

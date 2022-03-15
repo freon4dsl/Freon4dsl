@@ -4,6 +4,7 @@ import { PiLanguage } from "../../languagedef/metalanguage";
 import { PiTyperDef } from "../new-metalanguage";
 import { PiTyperReader } from "./PiTyperReader";
 import { NewPiTyperChecker } from "./NewPiTyperChecker";
+import { Checker } from "../../utils";
 
 export class NewPiTyperParser {
     public language: PiLanguage;
@@ -49,5 +50,39 @@ export class NewPiTyperParser {
         } else {
             throw new Error("parser does not return a language definition.");
         }
+    }
+
+    parseMulti(filePaths: string[]): PiTyperDef {
+        // for now we only read one file TODO extend this
+        console.log("found file paths: " + filePaths)
+        if (filePaths.length > 0) {
+            return this.parse(filePaths[0]);
+        } else {
+            return null;
+        }
+        // let submodels: PiTyperDef[] = [];
+        //
+        // // read the files and parse them separately
+        // for (const file of filePaths) {
+        //     if (!fs.existsSync(file)) {
+        //         LOG2USER.error("definition file '" + file + "' does not exist, exiting.");
+        //         throw new Error("definition file '" + file + "' does not exist, exiting.");
+        //     } else {
+        //         const languageStr: string = fs.readFileSync(file, { encoding: "utf8" });
+        //         const typeDefinition: PiTyperDef = this.reader.readFromString(languageStr, file) as PiTyperDef;
+        //         if (!!typeDefinition) {
+        //             submodels.push(typeDefinition);
+        //         }
+        //     }
+        // }
+        //
+        // // combine the submodels into one
+        // const model: PiTyperDef = this.merge(submodels);
+        //
+        // // run the checker
+        // this.runChecker(model);
+        //
+        // // return the model
+        // return model;
     }
 }

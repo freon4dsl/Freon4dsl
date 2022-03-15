@@ -2,7 +2,6 @@ import { PiLanguage } from "../languagedef/metalanguage";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
-import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
 import { FileWatcher } from "../utils/FileWatcher";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
@@ -12,12 +11,14 @@ import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 import { LOG2USER } from "../utils/UserLogger";
 import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
+import { NewPiTyperGenerator } from "../typerdef/new-generator/NewPiTyperGenerator";
+import { PiTyperDef } from "../typerdef/new-metalanguage";
+import { NewPiTyperParser } from "../typerdef/new-parser";
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
@@ -27,7 +28,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
     protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
-    protected typerGenerator: PiTyperGenerator = new PiTyperGenerator();
+    protected typerGenerator: NewPiTyperGenerator = new NewPiTyperGenerator();
     protected language: PiLanguage;
 
     public constructor() {
@@ -90,17 +91,17 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     private generateTyper = () => {
         LOG2USER.info("Generating typer");
-        let typer: PiTypeDefinition;
+        let typer: PiTyperDef;
         try {
             if (this.typerFiles.length > 0) {
-                typer = new PiTyperParser(this.language).parseMulti(this.typerFiles);
+                typer = new NewPiTyperParser(this.language).parseMulti(this.typerFiles);
             }
             this.typerGenerator.language = this.language;
             this.typerGenerator.outputfolder = this.outputFolder;
             this.typerGenerator.generate(typer);
         } catch (e) {
-            // LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
-            LOG2USER.error("Stopping typer generation because of errors: " + e.message);
+            LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
+            // LOG2USER.error("Stopping typer generation because of errors: " + e.message);
         }
     };
 

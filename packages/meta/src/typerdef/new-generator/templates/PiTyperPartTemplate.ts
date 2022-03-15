@@ -44,23 +44,19 @@ export class PiTyperPartTemplate {
              * See interface 
              */
             public inferType(modelelement: ${allLangConcepts}): ${allLangConcepts} | null {
+                if (this.mainTyper.isType(modelelement)) {
+                    return modelelement;
+                }
                 return null;
             }
             /**
              * See interface 
              */
             public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
-                let $type1: TyTestEveryConcept;
-                if (!this.mainTyper.isType(elem1)) {
-                    $type1 = this.mainTyper.inferType(elem1);
-                } else {
-                    $type1 = elem1;
-                }
-                let $type2: TyTestEveryConcept;
-                if (!this.mainTyper.isType(elem2)) {
-                    $type2 = this.mainTyper.inferType(elem2);
-                } else {
-                    $type2 = elem2;
+                const $type1: ${allLangConcepts} = this.mainTyper.inferType(elem1);
+                const $type2: ${allLangConcepts} = this.mainTyper.inferType(elem2);
+                if ($type1.piLanguageConcept() !== $type2.piLanguageConcept()) {
+                    return false;
                 }
                 return $type1 === $type2;
             }
@@ -109,32 +105,29 @@ export class PiTyperPartTemplate {
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
             mainTyper: ${Names.typer(language)};
-
-            /**
-             * See interface 
-             */
-            public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
-                let $type1: TyTestEveryConcept;
-                if (!this.mainTyper.isType(elem1)) {
-                    $type1 = this.mainTyper.inferType(elem1);
-                } else {
-                    $type1 = elem1;
-                }
-                let $type2: TyTestEveryConcept;
-                if (!this.mainTyper.isType(elem2)) {
-                    $type2 = this.mainTyper.inferType(elem2);
-                } else {
-                    $type2 = elem2;
-                }
-                return $type1 === $type2;
-            }
             
             /**
              * See interface 
              */        
             public inferType(modelelement: ${allLangConcepts}): ${rootType} | null {
                 ${this.makeInferType(typerdef)}
+                if (this.mainTyper.isType(modelelement)) {
+                    return modelelement;
+                }
                 return this.defaultType;
+            }
+            
+            /**
+             * See interface 
+             */
+            public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
+                ${this.makeEqualsType(typerdef)}
+                const $type1: ${allLangConcepts} = this.mainTyper.inferType(elem1);
+                const $type2: ${allLangConcepts} = this.mainTyper.inferType(elem2);
+                if ($type1.piLanguageConcept() !== $type2.piLanguageConcept()) {
+                    return false;
+                }
+                return $type1 === $type2;
             }
             
             /**
@@ -162,7 +155,7 @@ export class PiTyperPartTemplate {
              * See interface 
              */        
             public isType(elem: ${allLangConcepts}): boolean | null { // entries for all types marked 'isType'
-                ${this.makeIsType(typerdef.conceptsWithType)}
+                ${this.makeIsType(typerdef.types)}
             } 
         }`;
     }
@@ -184,14 +177,14 @@ export class PiTyperPartTemplate {
     private makeInferType(typerDef: PiTyperDef): string {
         let result: string = '';
         // make entry for all concepts that have an inferType rule
-        const inferRules: PitInferenceRule[] = typerDef.classifierRules.filter(rule =>
-                    rule instanceof PitInferenceRule) as PitInferenceRule[];
-
-        result = inferRules.map(conRule => {
-            `if (modelelement.piLanguageConcept() === ${conRule.myClassifier.name}) {
-                return ${this.makeInferExp(conRule.exp)};
-             }`
-        }).join(" else ");
+        // const inferRules: PitInferenceRule[] = typerDef.classifierRules.filter(rule =>
+        //             rule instanceof PitInferenceRule) as PitInferenceRule[];
+        //
+        // result = inferRules.map(conRule => {
+        //     `if (modelelement.piLanguageConcept() === ${conRule.myClassifier.name}) {
+        //         return ${this.makeInferExp(conRule.exp)};
+        //      }`
+        // }).join(" else ");
 
         // add entry for all types that do not have an inferType rule
         return result;
@@ -243,5 +236,9 @@ export class PiTyperPartTemplate {
             sourceStr = this.makeTypeScriptForExp(exp.source);
         }
         return sourceStr;
+    }
+
+    private makeEqualsType(typerdef: PiTyperDef): string {
+        return '';
     }
 }
