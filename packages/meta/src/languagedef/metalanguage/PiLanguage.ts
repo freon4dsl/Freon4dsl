@@ -57,12 +57,14 @@ export abstract class PiClassifier extends PiLangElement {
     private static __ANY: PiClassifier = null;
 
     static get ANY(): PiClassifier {
-        if (this.__ANY === null) {
-            this.__ANY = new PiConcept();
-            const nameProp: PiPrimitiveProperty = new PiPrimitiveProperty();
-            nameProp.name = "ANY";
-            nameProp.type = PiPrimitiveType.identifier;
-            this.__ANY.properties.push(nameProp);
+        if (PiClassifier.__ANY === null || PiClassifier.__ANY === undefined) {
+            PiClassifier.__ANY = new PiConcept();
+            PiClassifier.__ANY.name = "ANY";
+            // TODO check whether this needs a name property
+            // const nameProp: PiPrimitiveProperty = new PiPrimitiveProperty();
+            // nameProp.name = "ANY";
+            // nameProp.type = PiPrimitiveType.identifier;
+            // PiClassifier.__ANY.properties.push(nameProp);
         }
         return this.__ANY;
     }

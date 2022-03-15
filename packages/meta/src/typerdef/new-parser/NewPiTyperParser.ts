@@ -54,7 +54,6 @@ export class NewPiTyperParser {
 
     parseMulti(filePaths: string[]): PiTyperDef {
         // for now we only read one file TODO extend this
-        console.log("found file paths: " + filePaths)
         if (filePaths.length > 0) {
             return this.parse(filePaths[0]);
         } else {

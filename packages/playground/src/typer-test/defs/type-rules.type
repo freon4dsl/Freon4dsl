@@ -17,7 +17,7 @@ PredefinedType {
 
 // Which type does an expression have?
 NumberLiteral {
-    inferType PredefinedType:NUMBER;
+    infertype PredefinedType:NUMBER;
 }
 
 StringLiteral {

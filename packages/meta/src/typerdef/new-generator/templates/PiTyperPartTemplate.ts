@@ -1,14 +1,15 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortConcepts, langExpToTypeScript } from "../../../utils";
-import { PiConcept, PiInterface, PiLanguage, PiLangExp, PiLangSelfExp, PiClassifier } from "../../../languagedef/metalanguage";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { PiConcept, PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
 import {
     PiTyperDef,
-    PitClassifierRule,
-    PitAnyTypeRule,
     PitInferenceRule,
     PitExp,
     PitInstanceExp,
     PitAnytypeExp, PitFunctionCallExp, PitPropertyCallExp, PitSelfExp, PitStatement, PitWhereExp, PitConforms, PitEquals, PitAppliedExp
 } from "../../new-metalanguage";
+import { TyperGenUtils } from "./TyperGenUtils";
+import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
+import { PiElementReference } from "@projectit/playground/dist/typer-test/language/gen";
 
 const inferFunctionName: string = "inferType";
 const conformsFunctionName: string = "conformsTo";
@@ -17,6 +18,7 @@ const equalsFunctionName: string = "equalsType";
 export class PiTyperPartTemplate {
     typerdef: PiTyperDef;
     language: PiLanguage;
+    imports: string[] = []; // holds all names of classes from PiLanguage that need to be imported
 
     generateTyperPart(language: PiLanguage, typerdef: PiTyperDef, relativePath: string): string {
         if (!!typerdef) {
@@ -84,20 +86,15 @@ export class PiTyperPartTemplate {
     private generateFromDefinition(typerdef: PiTyperDef, language: PiLanguage, relativePath: string) {
         this.typerdef = typerdef;
         this.language = language;
-        const rootType = null;
+        let rootType = TyperGenUtils.getTypeRoot(language, typerdef);
         const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.PiTyperPart;
 
+        // TODO see if we need a default type to return from inferType
+
         // Template starts here
-        return `
-        import { ${typerInterfaceName}, Language } from "${PROJECTITCORE}";
-        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${language.concepts.map(concept => `
-                ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";       
-        import { ${language.interfaces.map(intf => `
-                ${intf.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";       
-        import { ${Names.typer(language)} } from "./${Names.typer(language)}";
+        const baseClass = `
         
         /**
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
@@ -114,7 +111,7 @@ export class PiTyperPartTemplate {
                 if (this.mainTyper.isType(modelelement)) {
                     return modelelement;
                 }
-                return this.defaultType;
+                return null;
             }
             
             /**
@@ -158,18 +155,27 @@ export class PiTyperPartTemplate {
                 ${this.makeIsType(typerdef.types)}
             } 
         }`;
+
+        const imports = `import { ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${allLangConcepts}, ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.typer(language)} } from "./${Names.typer(language)}";`;
+
+        return imports + baseClass;
     }
 
     private makeIsType(allTypes: PiClassifier[]) {
         let result: string = "";
         // add statements for all concepts that are marked 'isType'
-        for (const type of allTypes) {
-            if (type instanceof PiConcept) { // should be the case for all elements of allTypes
-                result = result.concat(`if (elem instanceof ${Names.concept(type)}) {
-                                    return true;
-                                }`);
-            }
-        }
+        // all elements of allTypes should be PiConcepts
+        const myList: PiConcept[] = allTypes.filter(t => t instanceof PiConcept) as PiConcept[];
+        myList.forEach(type => {
+            ParserGenUtil.addIfNotPresent(this.imports, Names.concept(type));
+        });
+        result = `${myList.map(type => 
+            `if (elem instanceof ${Names.concept(type)}) {
+                return true;
+            }`
+        ).join(' else ')}`;
         result = result.concat(`return false;`);
         return result;
     }
@@ -177,53 +183,122 @@ export class PiTyperPartTemplate {
     private makeInferType(typerDef: PiTyperDef): string {
         let result: string = '';
         // make entry for all concepts that have an inferType rule
-        // const inferRules: PitInferenceRule[] = typerDef.classifierRules.filter(rule =>
-        //             rule instanceof PitInferenceRule) as PitInferenceRule[];
-        //
-        // result = inferRules.map(conRule => {
-        //     `if (modelelement.piLanguageConcept() === ${conRule.myClassifier.name}) {
-        //         return ${this.makeInferExp(conRule.exp)};
-        //      }`
-        // }).join(" else ");
+        const inferRules: PitInferenceRule[] = typerDef.classifierRules.filter(rule =>
+                    rule instanceof PitInferenceRule) as PitInferenceRule[];
+
+        result = `${inferRules.map(conRule => 
+            `if (modelelement.piLanguageConcept() === "${conRule.myClassifier.name}") {
+                return ${this.makeInferExp(conRule.exp)};
+             }`
+            ).join(" else ")}`;
 
         // add entry for all types that do not have an inferType rule
         return result;
     }
 
     private makeInferExp(exp: PitExp): string {
+        ParserGenUtil.addIfNotPresent(this.imports, "PiElementReference");
         if (exp instanceof PitPropertyCallExp) {
-            return `${inferFunctionName}(${this.makeTypeScriptForExp(exp)})`;
+            // use common super type, because the argument to inferType is a list
+            let argStr: string = this.makeTypeScriptForExp(exp);
+            if (exp.property.isList) {
+                argStr = `this.mainTyper.commonSuperType(${argStr})`;
+            }
+            return `this.mainTyper.${inferFunctionName}(${argStr})`;
         } else if (exp instanceof PitWhereExp) {
             let type = exp.otherType.type;
+            const conditionStr: string[] = [];
             exp.conditions.forEach(cond => {
                 // which part of the condition refers to 'otherType'
-                // otherTypePart = cond.left.
-            })
+                let otherTypePart: PitExp;
+                let knownTypePart: PitExp;
+                let baseSource = cond.left.baseSource();
+                if (baseSource instanceof PitPropertyCallExp && baseSource.property === exp.otherType) {
+                    otherTypePart = cond.left;
+                    knownTypePart = cond.right;
+                } else {
+                    baseSource = cond.right.baseSource();
+                    if (baseSource instanceof PitPropertyCallExp && baseSource.property === exp.otherType) {
+                        otherTypePart = cond.right;
+                        knownTypePart = cond.left;
+                    }
+                }
+                // strip the source from otherTypePart
+                otherTypePart = this.removeBaseSource(otherTypePart);
+                // see whether we need a PiElementReference
+                let appliedExp: PitPropertyCallExp;
+                if (otherTypePart instanceof PitPropertyCallExp) {
+                    appliedExp = otherTypePart;
+                }
+                let myString: string;
+                if (!!appliedExp && !appliedExp.property.isPart) { // found a reference
+                    const myTypeStr = Names.classifier(appliedExp.property.type);
+                    ParserGenUtil.addIfNotPresent(this.imports, myTypeStr);
+                    myString = `PiElementReference.create(${this.makeTypeScriptForExp(knownTypePart)} as ${myTypeStr}, "${myTypeStr}")`;
+                } else {
+                    myString = this.makeTypeScriptForExp(knownTypePart);
+                }
+                //
+                const result: string = `${appliedExp.property.name}: ${myString}`;
+                conditionStr.push(result);
+            });
+
+            ParserGenUtil.addIfNotPresent(this.imports, Names.classifier(type));
             return `${Names.classifier(type)}.create({
-                baseType: PiElementReference.create(this.inferType((modelelement as UnitLiteral).inner) as PredefinedType, "PredefinedType"),
-                unit: (modelelement as UnitLiteral).unit
+                ${conditionStr.map(cond => cond).join(",\n")}
             })`;
         } else {
             return this.makeTypeScriptForExp(exp);
         }
     }
 
-    private makeTypeScriptForExp(exp: PitExp): string {
+    private removeBaseSource(otherTypePart: PitExp | PitAppliedExp): PitAppliedExp {
+        // console.log("removing base Source: " + otherTypePart.toPiString());
+        if (otherTypePart instanceof PitAppliedExp && !!otherTypePart.source) {
+            if (!(otherTypePart.source instanceof PitAppliedExp)) {
+                return this.removeBaseSource(otherTypePart.source);
+            } else {
+                otherTypePart.source = null;
+                // console.log("remove returns: " + otherTypePart.toPiString());
+                return otherTypePart;
+            }
+        }
+        console.log("remove returns: null" );
+        return null;
+    }
+
+    private makeTypeScriptForExp(exp: PitExp, noSource?: boolean): string {
         if (exp instanceof PitAnytypeExp) {
             return "any";
         } else if (exp instanceof PitFunctionCallExp) {
             let argumentsStr: string = exp.actualParameters.map(arg => `${this.makeTypeScriptForExp(arg)}`).join(", ");
-            return `${this.makeSourceTypeScript(exp)}${exp.calledFunction}(${argumentsStr})`;
+            if (exp.calledFunction === 'typeof') {
+                // we know that typeof has a single argument
+                if (exp.actualParameters[0] instanceof PitPropertyCallExp && exp.actualParameters[0].property.isList) { // use common super type, because the argument to inferType is a list
+                    argumentsStr = `this.mainTyper.commonSuperType(${argumentsStr})`;
+                }
+                return `this.mainTyper.inferType(${argumentsStr})`;
+            } else if (exp.calledFunction === 'commonSuperType') {
+                return `this.mainTyper.commonSuperType([${argumentsStr}])`;
+            } else {
+                return `${this.makeSourceTypeScript(exp)}${exp.calledFunction}(${argumentsStr})`;
+            }
         } else if (exp instanceof PitPropertyCallExp) {
-            return `${this.makeSourceTypeScript(exp)}${exp.property.name}`;
+            let refText: string = '';
+            if (!exp.property.isPart) {
+                refText = ".referred";
+            }
+            return `${this.makeSourceTypeScript(exp)}${exp.property.name}${refText}`;
         } else if (exp instanceof PitInstanceExp) {
-            return Names.concept(exp.myLimited) + ":" + Names.instance(exp.myInstance);
+            ParserGenUtil.addIfNotPresent(this.imports, Names.concept(exp.myLimited));
+            return Names.concept(exp.myLimited) + "." + Names.instance(exp.myInstance);
         } else if (exp instanceof PitSelfExp) {
-            return `(modelelement as ${Names.classifier(exp.returnType)}).`;
+            ParserGenUtil.addIfNotPresent(this.imports, Names.classifier(exp.returnType));
+            return `(modelelement as ${Names.classifier(exp.returnType)})`;
         } else if (exp instanceof PitConforms) {
-            return `${conformsFunctionName}(${this.makeTypeScriptForExp(exp.left)}, ${this.makeTypeScriptForExp(exp.right)})`;
+            return `this.mainTyper.${conformsFunctionName}(${this.makeTypeScriptForExp(exp.left)}, ${this.makeTypeScriptForExp(exp.right)})`;
         } else if (exp instanceof PitEquals) {
-            return `${equalsFunctionName}(${this.makeTypeScriptForExp(exp.left)}, ${this.makeTypeScriptForExp(exp.right)})`;
+            return `this.mainTyper.${equalsFunctionName}(${this.makeTypeScriptForExp(exp.left)}, ${this.makeTypeScriptForExp(exp.right)})`;
         } else if (exp instanceof PitWhereExp) {
             // no common typescript for all occcurences of whereExp
         }
@@ -233,7 +308,7 @@ export class PiTyperPartTemplate {
     private makeSourceTypeScript(exp: PitAppliedExp) {
         let sourceStr: string = "";
         if (!!exp.source) {
-            sourceStr = this.makeTypeScriptForExp(exp.source);
+            sourceStr = this.makeTypeScriptForExp(exp.source) + ".";
         }
         return sourceStr;
     }

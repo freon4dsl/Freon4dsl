@@ -27,4 +27,8 @@ export class PitAnytypeExp extends PitExp {
     get type(): PiClassifier {
         return PitAnytypeExp.anyType;
     }
+
+    baseSource(): PitExp {
+        return this;
+    }
 }

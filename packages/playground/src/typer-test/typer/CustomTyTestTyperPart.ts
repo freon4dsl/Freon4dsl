@@ -39,7 +39,7 @@ export class CustomTyTestTyperPart implements PiTyperPart {
             return this.mainTyper.inferType((modelelement as NamedExp).myType);
         } else if (modelelement.piLanguageConcept() === "PlusExp") {
             //     infertype commonSuperType(self.left, self. right);
-            // return this.mainTyper.commonSuperType((modelelement as PlusExp).left, (modelelement as PlusExp). right);
+            return this.mainTyper.commonSuperType([(modelelement as PlusExp).left, (modelelement as PlusExp). right]);
         } else if (modelelement.piLanguageConcept() === "UnitLiteral") {
             //     infertype x:UnitOfMeasurement where {
             //         x.baseType equalsto typeof(self.inner);
@@ -75,9 +75,10 @@ export class CustomTyTestTyperPart implements PiTyperPart {
                     kind: $kind
                 });
             }
-        } else if (modelelement.piLanguageConcept() === "SimpleType") {
-            // console.log("inferType of SimpleType: " + writer.writeToString(modelelement))
-            return (modelelement as SimpleType).type.referred;
+        // TODO see whether the loss of the following is important
+        // } else if (modelelement.piLanguageConcept() === "SimpleType") {
+        //     // console.log("inferType of SimpleType: " + writer.writeToString(modelelement))
+        //     return (modelelement as SimpleType).type.referred;
         }
         return null;
     }

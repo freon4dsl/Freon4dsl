@@ -348,6 +348,7 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
             error: `${exp.calledFunction} is not a valid function ${Checker.location(exp)}.`,
             whenOk: () => {
                 if (exp.calledFunction === validFunctionNames[2]) { // "typeof"
+                    // TODO extra check: may not have source
                     this.nestedCheck({
                         check: exp.actualParameters.length === 1,
                         error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 1 parameter, ` +

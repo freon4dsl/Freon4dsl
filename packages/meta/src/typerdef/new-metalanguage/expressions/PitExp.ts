@@ -18,4 +18,9 @@ export abstract class PitExp extends PiLangElement {
             this.__returnType.owner = this.language;
         }
     }
+
+    baseSource(): PitExp {
+        console.log("baseSource() SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PitExp'");
+        return null;
+    }
 }

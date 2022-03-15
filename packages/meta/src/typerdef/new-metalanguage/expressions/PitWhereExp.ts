@@ -32,4 +32,8 @@ export class PitWhereExp extends PitExp {
     get type(): PiClassifier {
         return this.otherType.type;
     }
+    baseSource(): PitExp {
+        return this;
+    }
+
 }

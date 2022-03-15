@@ -6,4 +6,8 @@ export abstract class PitStatement extends PitExp {
     toPiString(): string {
         return `SHOULD BE IMPLEMENTED BY SUBCLASSES OF PitStatement`;
     }
+    baseSource(): PitExp {
+        return this;
+    }
+
 }

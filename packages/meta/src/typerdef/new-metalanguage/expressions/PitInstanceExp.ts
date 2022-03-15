@@ -65,5 +65,8 @@ export class PitInstanceExp extends PitExp {
     get type(): PiClassifier {
         return this.myLimited;
     }
+    baseSource(): PitExp {
+        return this;
+    }
 
 }
