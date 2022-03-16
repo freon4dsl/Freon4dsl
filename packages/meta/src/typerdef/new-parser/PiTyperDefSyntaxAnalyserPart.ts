@@ -42,8 +42,8 @@ export class PiTyperDefSyntaxAnalyserPart {
     /**
      * Method to transform branches that match the following rule:
      * PiTyperDef = 'typer'
-     *	 'istype' '\{' [ __pi_reference / ',' ]* '}'
-     *	 'hastype' '\{' [ __pi_reference / ',' ]* '}'
+     *	 ( 'istype' '\{' [ __pi_reference / ',' ]* '}' )?
+     *	 ( 'hastype' '\{' [ __pi_reference / ',' ]* '}' )?
      *	 PitAnyTypeRule?
      *	 PitClassifierRule* ;
      * @param branch
@@ -56,16 +56,27 @@ export class PiTyperDefSyntaxAnalyserPart {
         let __anyTypeRule: PitAnyTypeRule;
         let __classifierRules: PitClassifierRule[];
         const children = this.mainAnalyser.getChildren(branch);
-        __types = this.mainAnalyser.transformSharedPackedParseTreeRefList<PiClassifier>(children[3], "PiClassifier", ","); // RHSRefListWithSeparator
-        __conceptsWithType = this.mainAnalyser.transformSharedPackedParseTreeRefList<PiClassifier>(children[7], "PiClassifier", ","); // RHSRefListWithSeparator
-
-        if (!children[9].isEmptyMatch) {
+        if (!children[1].isEmptyMatch) {
             // RHSOptionalGroup
-            const _optBranch = this.mainAnalyser.getChildren(children[9]);
+            const _optGroup = this.mainAnalyser.getGroup(children[1]);
+            const _propItem = this.mainAnalyser.getChildren(_optGroup);
+
+            __types = this.mainAnalyser.transformSharedPackedParseTreeRefList<PiClassifier>(_propItem[2], "PiClassifier", ","); // RHSRefListWithSeparator
+        }
+        if (!children[2].isEmptyMatch) {
+            // RHSOptionalGroup
+            const _optGroup = this.mainAnalyser.getGroup(children[2]);
+            const _propItem = this.mainAnalyser.getChildren(_optGroup);
+
+            __conceptsWithType = this.mainAnalyser.transformSharedPackedParseTreeRefList<PiClassifier>(_propItem[2], "PiClassifier", ","); // RHSRefListWithSeparator
+        }
+        if (!children[3].isEmptyMatch) {
+            // RHSOptionalGroup
+            const _optBranch = this.mainAnalyser.getChildren(children[3]);
             __anyTypeRule = this.mainAnalyser.transformSharedPackedParseTreeNode(_optBranch[0]); // RHSPartEntry
         } // RHSPartListEntry
-        if (children[10].name !== "PitClassifierRule") {
-            __classifierRules = this.mainAnalyser.transformSharedPackedParseTreeList<PitClassifierRule>(children[10]);
+        if (children[4].name !== "PitClassifierRule") {
+            __classifierRules = this.mainAnalyser.transformSharedPackedParseTreeList<PitClassifierRule>(children[4]);
         } else {
             // special case: only when this entry is the single rhs entry of this rule
             __classifierRules = [];

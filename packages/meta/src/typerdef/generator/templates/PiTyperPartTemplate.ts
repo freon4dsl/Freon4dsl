@@ -50,13 +50,13 @@ export class PiTyperPartTemplate {
              */
             public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
                 ${this.makeEqualsStatement()}
-                let $type1: TyTestEveryConcept;
+                let $type1: ${allLangConcepts};
                 if (!this.mainTyper.isType(elem1)) {
                     $type1 = this.mainTyper.inferType(elem1);
                 } else {
                     $type1 = elem1;
                 }
-                let $type2: TyTestEveryConcept;
+                let $type2: ${allLangConcepts};
                 if (!this.mainTyper.isType(elem2)) {
                     $type2 = this.mainTyper.inferType(elem2);
                 } else {
@@ -140,13 +140,13 @@ export class PiTyperPartTemplate {
              * See interface 
              */
             public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
-                let $type1: TyTestEveryConcept;
+                let $type1: ${allLangConcepts};
                 if (!this.mainTyper.isType(elem1)) {
                     $type1 = this.mainTyper.inferType(elem1);
                 } else {
                     $type1 = elem1;
                 }
-                let $type2: TyTestEveryConcept;
+                let $type2: ${allLangConcepts};
                 if (!this.mainTyper.isType(elem2)) {
                     $type2 = this.mainTyper.inferType(elem2);
                 } else {

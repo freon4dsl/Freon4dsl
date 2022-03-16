@@ -9,8 +9,8 @@ grammar MetaTyperGrammar {
                 
 // rules for "PiTyperDef"
 PiTyperDef = 'typer'
-	 'istype' '\{' [ __pi_reference / ',' ]* '}'
-	 'hastype' '\{' [ __pi_reference / ',' ]* '}'
+	 ( 'istype' '\{' [ __pi_reference / ',' ]* '}' )?
+	 ( 'hastype' '\{' [ __pi_reference / ',' ]* '}' )?
 	 PitAnyTypeRule?
 	 PitClassifierRule* ;
 

@@ -5,8 +5,8 @@ referenceSeparator [::::]
 // begin typer definition
 PiTyperDef {[
     typer
-    istype { ${self.types horizontal separator [, ]} }
-    hastype { ${self.conceptsWithType horizontal separator [, ]} }
+    [?istype { ${self.types horizontal separator [, ]} }]
+    [?hastype { ${self.conceptsWithType horizontal separator [, ]} }]
     [?${self.anyTypeRule}]
     ${self.classifierRules vertical}
     ]}

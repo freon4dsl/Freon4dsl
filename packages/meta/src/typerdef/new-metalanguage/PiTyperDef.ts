@@ -38,9 +38,9 @@ export class PiTyperDef extends PiDefinitionElement {
         return result;
     }
     name: string; // temporarily added to conform to PiLangElement TODO remove when scoping changes
-    language: PiLanguage;
+    language: PiLanguage; // set by checker
+    __typeRoot: PiElementReference<PiClassifier> = null; // calculated by checker
     __types_references: PiElementReference<PiClassifier>[] = [];
-    __typeRoot: PiElementReference<PiClassifier> = null;
     __conceptsWithType_references: PiElementReference<PiClassifier>[] = [];
     anyTypeRule?: PitAnyTypeRule;
     classifierRules: PitClassifierRule[] = [];

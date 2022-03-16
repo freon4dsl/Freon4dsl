@@ -182,7 +182,6 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
         rule.returnType = rule.exp.returnType;
     }
 
-
     private checkConformanceOrEqualsRule(rule: PitConformanceOrEqualsRule, classifier: PiClassifier) {
         this.simpleCheck(this.definition.types.includes(classifier),
             `Concept or interface '${classifier.name}' is not marked 'isType', therefore it cannot have a conforms or equals rule ${Checker.location(rule)}.`);
@@ -215,7 +214,19 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
         this.checkPitExp(stat.left, classifier, surroundingExp);
         stat.right = this.changeInstanceToPropCallExp(stat.right, classifier);
         this.checkPitExp(stat.right, classifier, surroundingExp);
-        // TODO check on type conformance of left and right side
+        // check type conformance of left and right side
+        // TODO returnType of expression should also include isList and isReferred, commonSuperType should handle these
+        const type1: PiClassifier = stat.right.returnType;
+        const type2: PiClassifier = stat.left.returnType;
+        if (!!type1 && !!type2) { // either of these can be undefined when an earlier error has occurred
+            if (type1 !== PiClassifier.ANY && type2 !== PiClassifier.ANY) {
+                const possibles: PiClassifier[] = CommonSuperTypeUtil.commonSuperType([type1, type2]);
+                this.simpleCheck(
+                    possibles.length > 0,
+                    `Types of '${type1.name}' and '${type2.name}' do not conform ${Checker.location(stat)}.`
+                );
+            }
+        }
         // TODO check use of function calls on property of whereExp
     }
 
@@ -257,6 +268,7 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
     }
 
     private checkWhereExp(exp: PitWhereExp, classifier: PiClassifier) {
+        // LOGGER.log("Checking PitWhereExp '" + exp.toPiString() + "'");
         exp.otherType.refType.owner = this.language; // the type of the new property must be declared within the language
         this.nestedCheck({
             check: !!exp.otherType.type,
