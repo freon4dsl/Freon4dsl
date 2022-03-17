@@ -153,7 +153,7 @@ export class ScoperTemplate {
                                     this.getVisibleElementsIntern(elem, result, visitedNamespaces, metatype, true);
                                 }
                         }
-                        modelelement = this.getParent(modelelement);
+                        modelelement = modelelement.piOwner();
                         nearestNamespace = doSurrouding ? this.findNearestNamespace(modelelement) : null;
                     }
                 } else {
@@ -208,26 +208,10 @@ export class ScoperTemplate {
                 if (Language.getInstance().classifier(modelelement.piLanguageConcept()).isNamespace) {
                     return ${namespaceClassName}.create(modelelement);
                 } else {
-                    return this.findNearestNamespace(this.getParent(modelelement));
+                    return this.findNearestNamespace(modelelement.piOwner());
                 }
             }
-               
-            /**
-             * Returns the element in the abstract syntax tree that contains 'modelelement'.
-             * @param modelelement
-             */
-            private getParent(modelelement: PiElement): PiElement {
-                let parent: PiElement = null;
-                if (modelelement.piOwnerDescriptor() !== null) {
-                    if (modelelement.piOwnerDescriptor().owner !== null) {
-                        // if (modelelement.piOwnerDescriptor().owner instanceof ${allLangConcepts}) {
-                        parent = modelelement.piOwnerDescriptor().owner ;
-                        // }
-                    }
-                }
-                return parent;
-            }
-        
+
              /**
              * Returns the namespace to be used as alternative scope for 'modelelement'.
              * @param modelelement
