@@ -12,7 +12,7 @@ import {
     findMobxImports,
     makeBasicMethods,
     makeBasicProperties,
-    makeConstructor,
+    makeConstructor, makeConvenienceMethods,
     makeImportStatements,
     makePartProperty,
     makePrimitiveProperty,
@@ -74,7 +74,8 @@ export class ConceptTemplate {
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
                               
                 ${makeConstructor(hasSuper, concept.implementedProperties())}
-                ${makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)}                                   
+                ${makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)}    
+                ${makeConvenienceMethods(concept.references())}                               
             }
         `;
     }

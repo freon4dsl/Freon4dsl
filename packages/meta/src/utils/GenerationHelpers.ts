@@ -158,7 +158,9 @@ export function langExpToTypeScript(exp: PiLangExp): string {
         // TODO this should be replaced by special getters and setters for reference properties
         // and the unparser should be adjusted to this
         const isRef = isReferenceProperty(exp);
-        result = exp.sourceName + (isRef ? "?.referred" : "")
+        // result = exp.sourceName + (isRef ? "?.referred" : "")
+        //     + (exp.appliedfeature ? (`?.${langExpToTypeScript(exp.appliedfeature)}`) : "");
+        result = (isRef ? Names.refName(exp.referredElement) : exp.sourceName )
             + (exp.appliedfeature ? (`?.${langExpToTypeScript(exp.appliedfeature)}`) : "");
     } else if (exp instanceof PiInstanceExp) {
         result = `${exp.sourceName}.${exp.instanceName}`;
