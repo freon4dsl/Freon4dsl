@@ -69,19 +69,57 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
 
 export function makePartProperty(property: PiConceptProperty): string {
     const comment = "// implementation of part '" + property.name + "'";
-    // const decorator = property.isList ? "@observablelistpart" : "@observablepart";
     const arrayType = property.isList ? "[]" : "";
-    const initializer = "";
-    // return `${decorator} ${property.name} : ${Names.classifier(property.type)}${arrayType} ${initializer}; ${comment}`;
-    return `${property.name} : ${Names.classifier(property.type)}${arrayType} ${initializer}; ${comment}`;
+    return `${property.name} : ${Names.classifier(property.type)}${arrayType}; ${comment}`;
 }
 
 export function makeReferenceProperty(property: PiConceptProperty): string {
     const comment = "// implementation of reference '" + property.name + "'";
-    // const decorator = property.isList ? "@observablelistpart" : "@observablepart";
     const arrayType = property.isList ? "[]" : "";
-    // return `${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
     return `${property.name} : PiElementReference<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
+}
+
+export function makeConvenienceMethods(list: PiConceptProperty[]): string {
+    let result: string = '';
+    for (const property of list) {
+        if (!property.isPart) {
+            const propType: string = Names.classifier(property.type);
+            if (!property.isList) {
+                result += `
+            /**
+             * Convenience method for reference '${property.name}'.
+             * Instead of returning a 'PiElementReference<${propType}>' object,
+             * it returns the referred '${propType}' object, if it can be found.
+             */
+            get ${Names.refName(property)}(): ${propType} {
+                if (!!this.${property.name}) {
+                    return this.${property.name}.referred;
+                }
+                return null;
+            }`;
+            } else {
+                result += `
+            /**
+             * Convenience method for reference '${property.name}'.
+             * Instead of returning a list of 'PiElementReference<${propType}>' objects, it 
+             * returns a list of referred '${propType}' objects, if the references can be resolved.
+             *
+             * Note that when some references cannot be resolved, the length of this list is 
+             * different to the length of '${property.name}'.
+             */
+            get ${Names.refName(property)}(): readonly ${propType}[] {
+                const result: ${propType}[] = [];
+                for (const $part of this.${property.name}) {
+                    if (!!$part.referred) {
+                        result.push($part.referred);
+                    }
+                }
+                return result;
+            }`;
+            }
+        }
+    }
+    return result;
 }
 
 export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): string {

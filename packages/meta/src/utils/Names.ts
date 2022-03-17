@@ -1,6 +1,6 @@
 import {
     PiClassifier, PiConcept, PiInstance, PiInterface,
-    PiLanguage, PiPrimitiveProperty
+    PiLanguage, PiPrimitiveProperty, PiProperty
 } from "../languagedef/metalanguage";
 import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 import { PiEditProjectionGroup } from "../editordef/metalanguage";
@@ -230,7 +230,7 @@ export class Names {
 
     public static startWithUpperCase(word: string): string {
         if (!!word) {
-            return word[0].toUpperCase() + word.substr(1);
+            return word[0].toUpperCase() + word.substring(1);
         }
         return "";
     }
@@ -291,4 +291,7 @@ export class Names {
         return instance.name;
     }
 
+    public static refName(property: PiProperty): string {
+        return  "$" + property.name;
+    }
 }
