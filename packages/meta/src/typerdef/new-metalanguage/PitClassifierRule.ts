@@ -3,9 +3,6 @@ import { PiClassifier, PiElementReference } from "../../languagedef/metalanguage
 
 export abstract class PitClassifierRule extends PiDefinitionElement {
     __myClassifier: PiElementReference<PiClassifier>;
-    toPiString(): string {
-        return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PitClassifierRule'";
-    }
     get myClassifier(): PiClassifier {
         if (!!this.__myClassifier && !!this.__myClassifier.referred) {
             return this.__myClassifier.referred;
@@ -17,5 +14,8 @@ export abstract class PitClassifierRule extends PiDefinitionElement {
             this.__myClassifier = PiElementReference.create<PiClassifier>(cls, "PiClassifier");
             // this.__myClassifier.owner = this.language;
         }
+    }
+    toPiString(): string {
+        return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PitClassifierRule'";
     }
 }

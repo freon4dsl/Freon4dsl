@@ -1,7 +1,6 @@
 export * from "./expressions";
 export * from "./PitAnyTypeRule";
 export * from "./PitClassifierRule";
-export * from "./PitConceptRule";
 export * from "./PitConformanceOrEqualsRule";
 export * from "./PitInferenceRule";
 export * from "./PitLimitedRule";

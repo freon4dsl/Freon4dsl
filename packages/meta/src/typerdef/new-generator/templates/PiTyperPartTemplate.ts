@@ -281,7 +281,7 @@ export class PiTyperPartTemplate {
             } else if (exp.calledFunction === 'commonSuperType') {
                 return `this.mainTyper.commonSuperType([${argumentsStr}])`;
             } else {
-                return `${this.makeSourceTypeScript(exp)}${exp.calledFunction}(${argumentsStr})`;
+                return `${exp.calledFunction}(${argumentsStr})`;
             }
         } else if (exp instanceof PitPropertyCallExp) {
             let refText: string = '';

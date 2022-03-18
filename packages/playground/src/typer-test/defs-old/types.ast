@@ -74,22 +74,17 @@ limited PredefinedType implements Type { NUMBER; BOOLEAN; STRING; ANY; NULL; }
 concept NamedType implements Type {
 }
 
-abstract concept TypeDeclaration implements Type {
+abstract concept TypeDeclaration {
     // for now we add a name, but types could be nameless
 //    name: identifier = "TypeDeclaration";
 }
 
-concept SimpleTypeDecl base TypeDeclaration {
+concept SimpleType base TypeDeclaration {
     reference type: Type; // anything but GenericType or UnitOfMeasurement
 }
 
-concept GenericTypeDecl base TypeDeclaration {
+concept GenericType base TypeDeclaration {
     innerType: TypeDeclaration;
-    kind: GenericKind; // is it a set, sequence, bag, or anything else
-}
-
-concept GenericType {
-    innerType: Type;
     kind: GenericKind; // is it a set, sequence, bag, or anything else
 }
 

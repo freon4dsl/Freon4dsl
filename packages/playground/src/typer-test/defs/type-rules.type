@@ -1,10 +1,10 @@
 typer
 
 // What are types?
-istype { Type, TypeDeclaration }
+istype { Type, GenericType, UnitOfMeasurement }
 
 // Which concepts have a type?
-hastype { Exp }
+hastype { Exp, SimpleTypeDecl, GenericTypeDecl }
 
 // What are the top and bottom types?
 anytype {
@@ -33,7 +33,7 @@ NamedExp {
 }
 
 PlusExp {
-    infertype commonSuperType(self.left, self. right);
+    infertype Type = commonSuperType(self.left, self. right);
 }
 
 UnitLiteral {
@@ -51,12 +51,18 @@ GenericLiteral {
         x.kind equalsto self.kind;
     };
 }
-
-// Which types are 'equal' to each other?
-SimpleType {
-    equalsto self.type;
+SimpleTypeDecl {
+    infertype self.type;
 }
 
+GenericTypeDecl {
+    infertype x:GenericType where {
+        x.innerType equalsto typeof(self.innerType);
+        x.kind equalsto self.kind;
+    };
+}
+
+// Which types are 'equal' to each other?
 NamedType {
     equalsto aa:NamedType where {
             aa.name equalsto self.name;

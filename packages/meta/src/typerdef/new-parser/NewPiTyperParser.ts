@@ -43,10 +43,14 @@ export class NewPiTyperParser {
                 LOG2USER.error("definition file '" + file + "' does not exist, exiting.");
                 throw new Error("definition file '" + file + "' does not exist, exiting.");
             }
-            const languageStr: string = fs.readFileSync(file, { encoding: "utf8" });
-            const typeDefinition: PiTyperDef = this.reader.readFromString(languageStr, file) as PiTyperDef;
-            if (!!typeDefinition) {
-                submodels.push(typeDefinition);
+            try {
+                const languageStr: string = fs.readFileSync(file, { encoding: "utf8" });
+                const typeDefinition: PiTyperDef = this.reader.readFromString(languageStr, file) as PiTyperDef;
+                if (!!typeDefinition) {
+                    submodels.push(typeDefinition);
+                }
+            } catch (e) {
+                throw new Error("In file " + file + ": " + e.message);
             }
         }
 

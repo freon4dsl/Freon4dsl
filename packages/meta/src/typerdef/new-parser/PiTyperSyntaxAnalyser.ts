@@ -93,6 +93,8 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
             return this._unit_PiTyperDef_analyser.transformPitInstanceExp(branch);
         } else if ("PitWhereExp" == brName) {
             return this._unit_PiTyperDef_analyser.transformPitWhereExp(branch);
+        } else if ("PitExpWithType" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitExpWithType(branch);
         } else if ("PitFunctionCallExp" == brName) {
             return this._unit_PiTyperDef_analyser.transformPitFunctionCallExp(branch);
         } else if ("PitConformanceOrEqualsRule" == brName) {

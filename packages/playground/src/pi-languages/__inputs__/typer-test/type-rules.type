@@ -29,7 +29,7 @@ NamedExp {
 }
 
 PlusExp {
-    infertype commonSuperType(self.left, self. right);
+    infertype (commonSuperType(self.left, self. right) as Type);
 }
 
 UnitLiteral {

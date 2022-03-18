@@ -21,7 +21,6 @@ export {
     PitLimitedRule,
     PitInferenceRule,
     PitConformanceOrEqualsRule,
-    PitConceptRule,
     PiTyperDef,
     PitAnyTypeRule,
     PitStatementKind,

@@ -28,7 +28,7 @@ concept PitConformanceOrEqualsRule base PitClassifierRule {
     myRules: PitSingleRule[];
 }
 concept PitInferenceRule base PitClassifierRule {
-    reference returnType: PiClassifier;
+    reference returnType?: PiClassifier;
     exp: PitExp;
 }
 concept PitLimitedRule base PitClassifierRule {
@@ -47,6 +47,10 @@ abstract expression PitExp {
 }
 abstract expression PitAppliedExp base PitExp {
     source?: PitExp;
+}
+expression PitExpWithType base PitExp {
+    reference expectedType: PiClassifier;
+    inner: PitExp;
 }
 expression PitSelfExp base PitExp {
 }

@@ -22,6 +22,8 @@ PitSingleRule = PitStatementKind PitExp ';' ;
 
 PitPropertyCallExp = (PitExp '.')? __pi_reference ;
 
+PitExpWithType = '(' PitExp 'as' __pi_reference ')' ;
+
 PitSelfExp = 'self' ;
 
 PitAnytypeExp = 'anytype' ;
@@ -48,6 +50,7 @@ PitLimitedRule = __pi_reference '\{'
 	 '}' ;
 
 PitExp = PitAppliedExp 
+    | PitExpWithType 
     | PitSelfExp 
     | PitAnytypeExp 
     | PitWhereExp 

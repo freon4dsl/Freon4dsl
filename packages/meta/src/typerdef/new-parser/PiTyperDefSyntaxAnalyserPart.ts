@@ -31,6 +31,7 @@ import {
 } from "../new-metalanguage";
 import { PiTyperSyntaxAnalyser } from "./PiTyperSyntaxAnalyser";
 import { PiParseLocation } from "../../utils";
+import { PitExpWithType } from "../new-metalanguage/expressions/PitExpWithType";
 
 export class PiTyperDefSyntaxAnalyserPart {
     mainAnalyser: PiTyperSyntaxAnalyser;
@@ -330,6 +331,24 @@ export class PiTyperDefSyntaxAnalyserPart {
         });
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
         return PitLimitedRule.create({ __myClassifier: __myClassifier, statements: __statements, agl_location: location });
+    }
+
+    /**
+     * Method to transform branches that match the following rule:
+     * PitExpWithType = '(' PitExp 'as' __pi_reference ')' ;
+     * @param branch
+     * @private
+     */
+    public transformPitExpWithType(branch: SPPTBranch): PitExpWithType {
+        // console.log('transformPitExpWithType called: ' + branch.name);
+        let __inner: PitExp;
+        let __expectedType: PiElementReference<PiClassifier>;
+        const children = this.mainAnalyser.getChildren(branch);
+        __inner = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPartEntry
+        __expectedType = this.mainAnalyser.piElemRef<PiClassifier>(children[3], "PiClassifier"); // RHSRefEntry
+
+        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
+        return PitExpWithType.create({ inner: __inner, __expectedType: __expectedType, agl_location: location });
     }
 
     /**

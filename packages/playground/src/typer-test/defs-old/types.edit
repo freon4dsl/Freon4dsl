@@ -55,11 +55,11 @@ NamedType {
     [${name}]
 }
 
-SimpleTypeDecl {
+SimpleType {
     [${type}] // anything but GenericType or UnitOfMeasurement
 }
 
-GenericTypeDecl {
+GenericType {
     [${kind}< ${innerType} >]
 }
 

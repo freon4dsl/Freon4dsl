@@ -1,8 +1,6 @@
-import { PitAppliedExp } from "./PitAppliedExp";
-import { PiClassifier, PiElementReference } from "../../../languagedef/metalanguage";
 import { PitExp } from "./PitExp";
 
-export class PitFunctionCallExp extends PitAppliedExp {
+export class PitFunctionCallExp extends PitExp {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -32,7 +30,4 @@ export class PitFunctionCallExp extends PitAppliedExp {
     toPiString(): string {
         return `${this.calledFunction}( ${this.actualParameters.map((arg => arg.toPiString())).join(", ")} )`;
     }
-    // get type(): PiClassifier {
-    //     return this.returnType;
-    // }
 }
