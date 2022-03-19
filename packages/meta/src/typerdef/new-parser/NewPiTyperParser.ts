@@ -50,6 +50,7 @@ export class NewPiTyperParser {
                     submodels.push(typeDefinition);
                 }
             } catch (e) {
+                console.log(e.stack);
                 throw new Error("In file " + file + ": " + e.message);
             }
         }

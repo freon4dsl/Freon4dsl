@@ -8,7 +8,7 @@ PitPropertyCallExp {
     infertype self.property.type; // TODO error message when this expression does not result in one of the types mentioned in istype{}
 }
 PitSelfExp {
-    infertype ancestor(PitClassifierRule).myClassifier;
+    infertype ownerOfType(PitClassifierRule).myClassifier;
 }
 
 PitExpWithType {

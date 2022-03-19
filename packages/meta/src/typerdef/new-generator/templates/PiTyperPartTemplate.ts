@@ -108,9 +108,6 @@ export class PiTyperPartTemplate {
              */        
             public inferType(modelelement: ${allLangConcepts}): ${rootType} | null {
                 ${this.makeInferType(typerdef)}
-                if (this.mainTyper.isType(modelelement)) {
-                    return modelelement;
-                }
                 return null;
             }
             
@@ -182,17 +179,25 @@ export class PiTyperPartTemplate {
 
     private makeInferType(typerDef: PiTyperDef): string {
         let result: string = '';
-        // make entry for all concepts that have an inferType rule
-        const inferRules: PitInferenceRule[] = typerDef.classifierRules.filter(rule =>
-                    rule instanceof PitInferenceRule) as PitInferenceRule[];
+        if (!!typerDef.classifierRules) {
+            // make entry for all concepts that have an inferType rule
+            const inferRules: PitInferenceRule[] = typerDef.classifierRules.filter(rule =>
+                rule instanceof PitInferenceRule) as PitInferenceRule[];
 
-        result = `${inferRules.map(conRule => 
-            `if (modelelement.piLanguageConcept() === "${conRule.myClassifier.name}") {
+            result = `${inferRules.map(conRule =>
+                `if (modelelement.piLanguageConcept() === "${conRule.myClassifier.name}") {
                 return ${this.makeInferExp(conRule.exp)};
              }`
             ).join(" else ")}`;
 
-        // add entry for all types that do not have an inferType rule
+            // add entry for all types that do not have an inferType rule
+            if (result.length > 0) { // include an else if we already have an if-statement
+                result += " else ";
+            }
+            result += `if (this.mainTyper.isType(modelelement)) {
+                return modelelement;
+            }`;
+        }
         return result;
     }
 

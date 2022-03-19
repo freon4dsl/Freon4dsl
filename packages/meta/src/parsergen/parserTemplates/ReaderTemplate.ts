@@ -59,8 +59,12 @@ export class ReaderTemplate {
                     } catch (e) {
                         // strip the error message, otherwise it's too long for the webapp
                         let mess = e.message.replace("Could not match goal,", "Parse error");
-                        console.log(mess);
-                        throw new Error(mess);
+                        if (!!mess && mess.length() > 0) {
+                            console.log(mess);
+                            throw new Error(mess);
+                        } else {
+                            throw e;
+                        }
                     }
                     // do semantic analysis taking into account the whole model, because references could be pointing anywhere
                     if (!!model) {

@@ -1,3 +1,4 @@
+// FROM defs-old
 typer
 
 // What are types?
@@ -33,13 +34,13 @@ NamedExp {
 }
 
 PlusExp {
-    infertype commonSuperType(self.left, self. right);
+    infertype (commonSuperType(self.left, self. right) as Type);
 }
 
 UnitLiteral {
     // 62 kilogram, or 112 miles
     infertype x:UnitOfMeasurement where {
-                  x.baseType equalsto typeof(self.inner);
+                  x.baseType equalsto (typeof(self.inner) as Type);
                   x.unit equalsto self.unit;
               };
 }
@@ -47,7 +48,7 @@ UnitLiteral {
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype x:GenericType where {
-        x.innerType equalsto typeof(self.content);
+        x.innerType equalsto (typeof(self.content) as Type);
         x.kind equalsto self.kind;
     };
 }

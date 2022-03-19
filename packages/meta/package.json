@@ -41,6 +41,8 @@
   "dependencies": {
     "@rushstack/ts-command-line": "4.7.8",
     "pegjs": "^0.10.0",
+    "net.akehurst.language-agl-processor": "4.0.0-rc.5",
+    "kotlin": "^1.5.21",
     "tslib": "^2.3.0"
   },
   "publishConfig": {

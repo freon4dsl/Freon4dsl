@@ -207,6 +207,10 @@ export class LangUtil {
         }
 
         // console.log("comparing " + type1.name + " and " + type2.name)
+        return LangUtil.conforms(type1, type2);
+    }
+
+    public static conforms(type1: PiClassifier, type2: PiClassifier) {
         if (type1 === type2) {
             // return true when types are equal
             // console.log("\t ==> types are equal")

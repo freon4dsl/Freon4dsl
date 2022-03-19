@@ -14,6 +14,7 @@ import { PiTyperSyntaxAnalyser } from "./PiTyperSyntaxAnalyser";
 export class PiTyperReader {
     analyser: PiTyperSyntaxAnalyser = new PiTyperSyntaxAnalyser();
     parser: LanguageProcessor = Agl.processorFromString(MetaTyperGrammarStr, this.analyser, null, null);
+    // parser: LanguageProcessor = Agl.processorFromString(MetaTyperGrammarStr, null, null, null);
 
     /**
      * Parses and performs a syntax analysis on 'sentence'. If 'sentence' is correct,
@@ -21,12 +22,12 @@ export class PiTyperReader {
      * otherwise an error wil be thrown containing the parse or analysis error.
      * @param sentence
      */
-    readFromString(sentence: string, sourceFileName: string): PiTyperDef {
+    readFromString(sentence: string, sourceFileName: string): Object {
         this.analyser.filename = sourceFileName;
         let startRule: string = "PiTyperDef";
 
         // parse the input
-        let unit: PiTyperDef = null;
+        let unit: Object = null;
         if (this.parser) {
             try {
                 if (startRule.length > 0) {
@@ -36,9 +37,13 @@ export class PiTyperReader {
                 }
             } catch (e) {
                 // strip the error message, otherwise it's too long for the webapp
-                let mess = e.message.replace("Could not match goal,", "Parse error");
-                // console.log(mess);
-                throw new Error(mess);
+                // console.log(e.message);
+                let mess = e.message?.replace("Could not match goal,", "Parse error");
+                if (!!mess && mess.length() > 0) {
+                    throw new Error(mess);
+                } else {
+                    throw e;
+                }
             }
             // do semantic analysis taking into account the whole model, because references could be pointing anywhere
             // if (!!model) {

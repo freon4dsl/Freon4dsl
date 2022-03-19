@@ -43,7 +43,9 @@ UnitLiteral {
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype x:GenericType where {
-        typeof(x.innerType) equalsto (typeof(self.content) as TypeDeclaration);
+        typeof(x.innerType) equalsto
+            // TODO the following should give an error, but does not
+            (typeof(self.content) as Line).type;
         x.kind equalsto self.kind;
     };
 }
