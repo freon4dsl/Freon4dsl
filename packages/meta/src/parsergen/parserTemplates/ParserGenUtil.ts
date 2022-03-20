@@ -50,18 +50,6 @@ export class ParserGenUtil {
         return myProjection;
     }
 
-    static addIfNotPresent<T>(list: T[], addition: T) {
-        if (!list.includes(addition)) {
-            list.push(addition);
-        }
-    }
-
-    static addListIfNotPresent<T>(list: T[], additionsList: T[]) {
-        additionsList.forEach(extra => {
-            ParserGenUtil.addIfNotPresent<T>(list, extra);
-        })
-    }
-
     /**
      * Creates a name to be used internally in the parser/unparser, to avoid name classes with user
      * defined names.

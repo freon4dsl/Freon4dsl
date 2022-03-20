@@ -1,10 +1,12 @@
+// FROM defs-new
+
 typer
 
 // What are types?
-istype { Type, TypeDeclaration }
+istype { Type, GenericType, UnitOfMeasurement }
 
 // Which concepts have a type?
-hastype { Exp }
+hastype { Exp, SimpleTypeDecl, GenericTypeDecl }
 
 // What are the top and bottom types?
 anytype {
@@ -12,16 +14,20 @@ anytype {
 }
 
 PredefinedType {
-    OtherPredefinedType:NULL conformsto NULL; // PredefinedType:NULL is the most specific type
+    PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
 }
 
 // Which type does an expression have?
-SimpleExp1 {
-    infertype PredefinedType:Simple1;
+NumberLiteral {
+    infertype PredefinedType:NUMBER;
 }
 
-SimpleExp2 {
-    infertype PredefinedType:Simple2;
+StringLiteral {
+    infertype PredefinedType:STRING;
+}
+
+BooleanLiteral {
+    infertype PredefinedType:BOOLEAN;
 }
 
 NamedExp {
@@ -35,7 +41,7 @@ PlusExp {
 UnitLiteral {
     // 62 kilogram, or 112 miles
     infertype x:UnitOfMeasurement where {
-                  x.baseType equalsto (typeof(self.inner) as PredefinedType);
+                  x.baseType equalsto (typeof(self.inner) as Type);
                   x.unit equalsto self.unit;
               };
 }
@@ -43,16 +49,22 @@ UnitLiteral {
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype x:GenericType where {
-        x.innerType equalsto (typeof(self.content) as TypeDeclaration);
+        x.innerType equalsto (typeof(self.content) as Type);
+        x.kind equalsto self.kind;
+    };
+}
+SimpleTypeDecl {
+    infertype self.type;
+}
+
+GenericTypeDecl {
+    infertype x:GenericType where {
+        x.innerType equalsto (typeof(self.innerType) as Type);
         x.kind equalsto self.kind;
     };
 }
 
 // Which types are 'equal' to each other?
-SimpleType {
-    equalsto self.type;
-}
-
 NamedType {
     equalsto aa:NamedType where {
             aa.name equalsto self.name;

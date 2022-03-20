@@ -2,18 +2,23 @@ language TyTest
 
 // MODEL
 model TyTest {
-    public unitA: unitA[];
+    public unitA: unitA;
     public unitB: unitB;
 }
 // type definitions
 modelunit unitB {
-    typeDefs: TypeDeclaration[];
+    typeDefs: Type[];
     file-extension = "types";
 }
 // expressions and their types
 modelunit unitA {
-    lines: ExpWithType[];
+    lines: Line[];
     file-extension = "expr";
+}
+modelunit unitC {
+    lines: Line[];
+    exp: SimpleExp1;
+    file-extension = "tmp";
 }
 // ALL INTERFACES
 interface Type { // base BaseType {
@@ -27,26 +32,21 @@ interface Type { // base BaseType {
 abstract expression Exp {
 }
 
-concept ExpWithType {
+concept Line {
     expr: Exp;
     type: TypeDeclaration;
 }
 
 // EXPRESSIONS
-expression NumberLiteral base Exp {
+expression SimpleExp1 base Exp {
     xx: number;
 }
 
-expression StringLiteral base Exp {
-    xx: string;
-}
-
-expression BooleanLiteral base Exp {
-    xx: boolean;
+expression SimpleExp2 base Exp {
+    xx: number;
 }
 
 expression NamedExp base Exp {
-    inner: Exp;
     myType: NamedType;
 }
 
@@ -57,7 +57,7 @@ expression PlusExp base Exp {
 
 expression UnitLiteral base Exp {
     // 62 kilogram, or 112 miles
-    inner: NumberLiteral;
+    inner: SimpleExp1;
     unit: UnitKind;
 }
 
@@ -69,34 +69,28 @@ expression GenericLiteral base Exp {
 
 // TYPES
 
-limited PredefinedType implements Type { NUMBER; BOOLEAN; STRING; ANY; NULL; }
+limited OtherPredefinedType implements Type { NULL; }
+limited PredefinedType implements Type { Simple1; Simple2; ANY; NULL; }
 
 concept NamedType implements Type {
 }
 
-abstract concept TypeDeclaration implements Type {
-    // for now we add a name, but types could be nameless
-//    name: identifier = "TypeDeclaration";
+abstract concept TypeDeclaration {
 }
 
-concept SimpleTypeDecl base TypeDeclaration {
+concept SimpleType base TypeDeclaration {
     reference type: Type; // anything but GenericType or UnitOfMeasurement
 }
 
-concept GenericTypeDecl base TypeDeclaration {
+concept GenericType base TypeDeclaration {
     innerType: TypeDeclaration;
-    kind: GenericKind; // is it a set, sequence, bag, or anything else
-}
-
-concept GenericType {
-    innerType: Type;
     kind: GenericKind; // is it a set, sequence, bag, or anything else
 }
 
 limited GenericKind { Set; Sequence; Bag; Collection; }
 
 concept UnitOfMeasurement base TypeDeclaration {
-    reference baseType: PredefinedType;
+    baseType: PredefinedType;
     unit: UnitKind; // is it measured in km, kWh, grams, or anything else
 }
 limited UnitKind { Meters; Grams; kWh; Hours; }

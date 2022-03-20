@@ -5,11 +5,10 @@ import {
     PitInferenceRule,
     PitExp,
     PitInstanceExp,
-    PitAnytypeExp, PitFunctionCallExp, PitPropertyCallExp, PitSelfExp, PitStatement, PitWhereExp, PitConforms, PitEquals, PitAppliedExp
+    PitAnytypeExp, PitFunctionCallExp, PitPropertyCallExp, PitSelfExp, PitWhereExp, PitConforms, PitEquals, PitAppliedExp
 } from "../../new-metalanguage";
 import { TyperGenUtils } from "./TyperGenUtils";
-import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
-import { PiElementReference } from "@projectit/playground/dist/typer-test/language/gen";
+import { ListUtil } from "../../../utils";
 
 const inferFunctionName: string = "inferType";
 const conformsFunctionName: string = "conformsTo";
@@ -166,7 +165,7 @@ export class PiTyperPartTemplate {
         // all elements of allTypes should be PiConcepts
         const myList: PiConcept[] = allTypes.filter(t => t instanceof PiConcept) as PiConcept[];
         myList.forEach(type => {
-            ParserGenUtil.addIfNotPresent(this.imports, Names.concept(type));
+            ListUtil.addIfNotPresent(this.imports, Names.concept(type));
         });
         result = `${myList.map(type => 
             `if (elem instanceof ${Names.concept(type)}) {
@@ -202,7 +201,7 @@ export class PiTyperPartTemplate {
     }
 
     private makeInferExp(exp: PitExp): string {
-        ParserGenUtil.addIfNotPresent(this.imports, "PiElementReference");
+        ListUtil.addIfNotPresent(this.imports, "PiElementReference");
         if (exp instanceof PitPropertyCallExp) {
             // use common super type, because the argument to inferType is a list
             let argStr: string = this.makeTypeScriptForExp(exp);
@@ -238,7 +237,7 @@ export class PiTyperPartTemplate {
                 let myString: string;
                 if (!!appliedExp && !appliedExp.property.isPart) { // found a reference
                     const myTypeStr = Names.classifier(appliedExp.property.type);
-                    ParserGenUtil.addIfNotPresent(this.imports, myTypeStr);
+                    ListUtil.addIfNotPresent(this.imports, myTypeStr);
                     myString = `PiElementReference.create(${this.makeTypeScriptForExp(knownTypePart)} as ${myTypeStr}, "${myTypeStr}")`;
                 } else {
                     myString = this.makeTypeScriptForExp(knownTypePart);
@@ -248,7 +247,7 @@ export class PiTyperPartTemplate {
                 conditionStr.push(result);
             });
 
-            ParserGenUtil.addIfNotPresent(this.imports, Names.classifier(type));
+            ListUtil.addIfNotPresent(this.imports, Names.classifier(type));
             return `${Names.classifier(type)}.create({
                 ${conditionStr.map(cond => cond).join(",\n")}
             })`;
@@ -295,10 +294,10 @@ export class PiTyperPartTemplate {
             }
             return `${this.makeSourceTypeScript(exp)}${exp.property.name}${refText}`;
         } else if (exp instanceof PitInstanceExp) {
-            ParserGenUtil.addIfNotPresent(this.imports, Names.concept(exp.myLimited));
+            ListUtil.addIfNotPresent(this.imports, Names.concept(exp.myLimited));
             return Names.concept(exp.myLimited) + "." + Names.instance(exp.myInstance);
         } else if (exp instanceof PitSelfExp) {
-            ParserGenUtil.addIfNotPresent(this.imports, Names.classifier(exp.returnType));
+            ListUtil.addIfNotPresent(this.imports, Names.classifier(exp.returnType));
             return `(modelelement as ${Names.classifier(exp.returnType)})`;
         } else if (exp instanceof PitConforms) {
             return `this.mainTyper.${conformsFunctionName}(${this.makeTypeScriptForExp(exp.left)}, ${this.makeTypeScriptForExp(exp.right)})`;

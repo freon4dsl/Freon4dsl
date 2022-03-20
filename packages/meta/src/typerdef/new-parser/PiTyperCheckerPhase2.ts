@@ -1,4 +1,4 @@
-import { Checker, LangUtil, MetaLogger } from "../../utils";
+import { Checker, LangUtil, ListUtil, MetaLogger } from "../../utils";
 import {
     PitAnytypeExp,
     PitClassifierRule,
@@ -7,13 +7,14 @@ import {
     PitLimitedRule, PitPropertyCallExp, PitSelfExp, PitSingleRule, PitStatement, PitWhereExp,
     PiTyperDef
 } from "../new-metalanguage";
-import { PiClassifier, PiConcept, PiElementReference, PiInterface, PiLimitedConcept, PiProperty } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiInterface } from "../../languagedef/metalanguage";
 import { CommonSuperTypeUtil } from "../../utils/common-super/CommonSuperTypeUtil";
-import { validFunctionNames } from "./NewPiTyperChecker";
+import { validFunctionNames } from "./NewPiTyperCheckerPhase1";
 import { PitExpWithType } from "../new-metalanguage/expressions/PitExpWithType";
-import { ParserGenUtil } from "../../parsergen/parserTemplates/ParserGenUtil";
 
 const LOGGER = new MetaLogger("PiTyperCheckerPhase2"); //.mute();
+
+// TODO clean up this code
 
 export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
     definition: PiTyperDef;
@@ -74,9 +75,9 @@ export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
         this.checkPitExp(stat.left, rule);
         this.checkPitExp(stat.right, rule);
         // check type conformance of left and right side
-        // TODO returnType of expression should also include isList and isReferred, commonSuperType should handle these
-        const type1: PiClassifier = stat.right.returnType;
-        const type2: PiClassifier = stat.left.returnType;
+        // TODO returnType of expression should also include isList, commonSuperType should handle this
+        const type1: PiClassifier = stat.left.returnType;
+        const type2: PiClassifier = stat.right.returnType;
         if (!!type1 && !!type2) { // either of these can be undefined when an earlier error has occurred
             if (type1 !== PiClassifier.ANY && type2 !== PiClassifier.ANY) {
                 const possibles: PiClassifier[] = CommonSuperTypeUtil.commonSuperType([type1, type2]);
@@ -90,6 +91,14 @@ export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
 
     private checkPitExp(exp: PitExp, rule: PitClassifierRule, expectedType?: PiClassifier) {
         // LOGGER.log("Checking PitExp '" + exp.toPiString() + "'");
+        if (!!expectedType) {
+            const found = this.definition.types.find(t => t === expectedType);
+            if (!found) {
+                console.log("All types: " + this.definition.types.map(t => t.name).join(", ") + ", expectedType: " + expectedType.name)
+                this.simpleCheck(false, `Expected type ${expectedType.name} is not marked 'isType' ${Checker.location(exp)}`);
+                expectedType = null;
+            }
+        }
         if (exp instanceof PitAnytypeExp ) {
         } else if (exp instanceof PitSelfExp) {
         } else if (exp instanceof PitExpWithType) {
@@ -118,18 +127,17 @@ export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
     }
 
     private checkFunctionCallExpression(exp: PitFunctionCallExp, rule: PitClassifierRule, expectedType: PiClassifier) {
-        console.log("checkFunctionCallExpression " + exp?.toPiString());
+        // console.log("checkFunctionCallExpression " + exp?.toPiString());
         this.checkArguments(exp, rule);
 
         const functionName = validFunctionNames.find(name => name === exp.calledFunction);
         if (exp.calledFunction === validFunctionNames[0]) { // "typeof"
-            this.nestedCheck({
-                check: !!expectedType,
-                error: `Function '${validFunctionNames[0]}' should have an expected type ${Checker.location(exp)}.`,
-                whenOk: () => {
-                    this.checkTypeOfCall(exp, rule, expectedType);
-                }
-            });
+            if (!!expectedType) {
+                this.checkTypeOfCall(exp, rule, expectedType);
+            } else {
+                exp.returnType = this.findTypeOfCall(exp, rule);
+            }
+            // TODO see if recursiveness has been implemented correctly
         } else if (exp.calledFunction === validFunctionNames[1]) { // "commonSuperType"
         } else if (exp.calledFunction === validFunctionNames[2]) { // "ownerOfType"
             const argType: PiClassifier = exp.actualParameters[0].returnType;
@@ -151,16 +159,78 @@ export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
                 whenOk: () => {
                     // find inferenceRules for argType or its subtypes
                     const rules: PitInferenceRule[] = this.findInferenceRulesFor(argType);
-                    for (const rule of rules) {
-                        this.simpleCheck(LangUtil.conforms(rule.returnType, expectedType),
-                            `Result '${rule.returnType.name}' (from ${rule.myClassifier.name}) of '${exp.toPiString()}' does not conform to expected type (${expectedType.name}) ${Checker.location(exp)}.`);
-                    }
                     if (rules.length === 0) {
-                        this.simpleCheck(false, `Cannot find inferType rule(s) for '${argType.name}' ${Checker.location(exp)}.`);
+                        if (this.definition.types.includes(argType)) { // no inferType rule found, but the argument is marked 'isType'
+                            this.simpleCheck(LangUtil.conforms(argType, expectedType),
+                                `Result '${argType.name}' (from ${rule.myClassifier.name}) of '${exp.toPiString()}' does not conform to expected type (${expectedType.name}) ${Checker.location(exp)}.`);
+                        } else {
+                            this.simpleCheck(false, `Cannot find inferType rule(s) for '${exp.actualParameters[0].toPiString()}' (of type '${argType.name}') ${Checker.location(exp)}.`);
+                        }
+                    } else {
+                        for (const rule of rules) {
+                            // console.log("\t Does " + rule.returnType.name + " conform to " + expectedType.name + ": " + LangUtil.conforms(rule.returnType, expectedType))
+                            this.simpleCheck(LangUtil.conforms(rule.returnType, expectedType),
+                                `Result '${rule.returnType.name}' (from ${rule.myClassifier.name}) of '${exp.toPiString()}' does not conform to expected type (${expectedType.name}) ${Checker.location(exp)}.`);
+                        }
                     }
                 }
             });
         }
+    }
+
+    private findTypeOfCall(exp: PitFunctionCallExp, rule: PitClassifierRule): PiClassifier {
+        // console.log("checking " + exp.toPiString());
+        let result: PiClassifier = null;
+        let argType: PiClassifier = exp.actualParameters[0].returnType;
+        if (!!argType) {
+            this.nestedCheck({
+                check: rule.myClassifier !== argType,
+                error: `Definition of rule for '${argType.name}' is circular ${Checker.location(exp)}.`,
+                whenOk: () => {
+                    const rules: PitInferenceRule[] = this.findInferenceRulesFor(argType);
+                    if (rules.length === 0) {
+                        if (this.definition.types.includes(argType)) { // no inferType rule found, but the argument is marked 'isType'
+                            result = argType;
+                        } else {
+                            this.simpleCheck(false, `Cannot find inferType rule(s) for '${exp.actualParameters[0].toPiString()}' (of type '${argType.name}') ${Checker.location(exp)}.`);
+                        }
+                    } else {
+                        const xx: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(rules.map(rule => rule.returnType));
+                        // console.log("found metatype(s) of typeof: " + xx.map(t => t.name).join(","));
+                        if (!!xx && xx.length > 0) {
+                            result = xx[0];
+                        }
+                    }
+                }
+            });
+        }
+        return result;
+    }
+
+    private findTypesRecusive(argType: PiClassifier): PiClassifier[] {
+        const result: PiClassifier[] = [];
+        const rules: PitInferenceRule[] = this.findInferenceRulesFor(argType);
+        if (rules.length === 0) {
+            // No inferType rule found, but the argument is marked 'isType'.
+            // Note that classifiers marked 'isType' may also have an inference rule,
+            // therefore this check needs to be done after searching for inference rules!
+            if (this.definition.types.includes(argType)) {
+                result.push(argType);
+            }
+        } else {
+            const xx: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(rules.map(rule => rule.returnType));
+            // console.log("found metatype(s) of typeof: " + xx.map(t => t.name).join(","));
+            if (!!xx && xx.length > 0) {
+                result.push(...xx);
+                for (const t of xx){
+                    const extra: PiClassifier[] = this.findTypesRecusive(t);
+                    if (!!extra && extra.length > 0) {
+                        result.push(...extra);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     private findInferenceRulesFor(argType: PiClassifier): PitInferenceRule[] {
@@ -171,9 +241,9 @@ export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
         } else { // not found, search for rules on subtypes of argType
             const subtypes: PiClassifier[] = [];
             if (argType instanceof PiConcept) {
-                ParserGenUtil.addListIfNotPresent(subtypes, argType.allSubConceptsRecursive());
+                ListUtil.addListIfNotPresent(subtypes, argType.allSubConceptsRecursive());
             } else if (argType instanceof PiInterface) {
-                ParserGenUtil.addListIfNotPresent(subtypes, argType.allSubInterfacesRecursive());
+                ListUtil.addListIfNotPresent(subtypes, argType.allSubInterfacesRecursive());
             }
             for (const subtype of subtypes) {
                 // console.log("searching for rule on subtype: " + subtype.name)
@@ -181,6 +251,16 @@ export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
                 if (!!foundRule && foundRule instanceof PitInferenceRule) {
                     result.push(foundRule);
                 }
+            }
+        }
+        // TODO resursiveness!!! more than second layer
+        for (const r of result) {
+            const secondLayer = this.findInferenceRulesFor(r.returnType);
+            if (secondLayer.length > 0) {
+                // console.log("found second layer: " + secondLayer.map(e => e.myClassifier.name).join(", "));
+                secondLayer.forEach(e => {
+                    ListUtil.addListIfNotPresent(result, this.findInferenceRulesFor(e.myClassifier));
+                });
             }
         }
         return result;

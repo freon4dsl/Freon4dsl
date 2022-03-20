@@ -59,7 +59,7 @@ export class ReaderTemplate {
                     } catch (e) {
                         // strip the error message, otherwise it's too long for the webapp
                         let mess = e.message.replace("Could not match goal,", "Parse error");
-                        if (!!mess && mess.length() > 0) {
+                        if (!!mess && mess.length > 0) {
                             console.log(mess);
                             throw new Error(mess);
                         } else {

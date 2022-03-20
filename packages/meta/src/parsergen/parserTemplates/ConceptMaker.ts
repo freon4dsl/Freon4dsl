@@ -44,6 +44,7 @@ import {
     RHSBinExpListWithSeparator, RHSBinExpListWithTerminator
 } from "./grammarModel";
 import { LOG2USER } from "../../utils/UserLogger";
+import { ListUtil } from "../../utils";
 
 
 export class ConceptMaker {
@@ -144,7 +145,7 @@ export class ConceptMaker {
             // take care of named projections
             let myProjName: string = null;
             if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
-                ParserGenUtil.addIfNotPresent<PiEditProjection>(this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName));
+                ListUtil.addIfNotPresent<PiEditProjection>(this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName));
                 myProjName = item.projectionName;
             }
             //

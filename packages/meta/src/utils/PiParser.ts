@@ -51,7 +51,7 @@ export class PiParser<DEFINITION> {
         // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
             LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");
-            throw new Error("file not found.");
+            throw new Error("file '" + definitionFile + "' not found.");
         }
         const langSpec: string = fs.readFileSync(definitionFile, { encoding: "utf8" });
 

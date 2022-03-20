@@ -24,15 +24,15 @@ import {
     PitWhereExp,
     PiTyperDef
 } from "../new-metalanguage";
-import { ParserGenUtil } from "../../parsergen/parserTemplates/ParserGenUtil";
-import { PiTyperCheckerPhase2 } from "./PyTyperCheckerPhase2";
+import { ListUtil } from "../../utils/ListUtil";
+import { PiTyperCheckerPhase2 } from "./PiTyperCheckerPhase2";
 import { PitExpWithType } from "../new-metalanguage/expressions/PitExpWithType";
 import { PitClassifierCallExp } from "../new-metalanguage/expressions/PitClassifierCallExp";
 
 const LOGGER = new MetaLogger("NewPiTyperChecker"); //.mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];
 
-export class NewPiTyperChecker extends Checker<PiTyperDef> {
+export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
     definition: PiTyperDef;
     myExpressionChecker: PiLangExpressionChecker;
     typeConcepts: PiClassifier[] = [];         // all concepts marked as 'isType'
@@ -44,6 +44,7 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
         this.myExpressionChecker = new PiLangExpressionChecker(this.language);
     }
 
+    // TODO clean up this code
     public check(definition: PiTyperDef): void {
         // MetaLogger.unmuteAllLogs();
         this.definition = definition;
@@ -59,10 +60,11 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
         // from now on we can use the getters 'types' and 'conceptsWithType'!
         // all references that cannot be found are filtered out!
 
-        // add all concepts that are types or have a type, because they inherit
+        // add all classifiers that are types or have a type, because they inherit
         // from a concept or interface that is a type, or has a type
-        definition.types = this.addInheritedConcepts(definition.types);
-        definition.conceptsWithType = this.addInheritedConcepts(definition.conceptsWithType);
+        definition.types = this.addInheritedClassifiers(definition.types);
+        // console.log("found types: " + definition.types.map(t => t.name).join(", "))
+        definition.conceptsWithType = this.addInheritedClassifiers(definition.conceptsWithType);
 
         if (!!definition.anyTypeRule) {
             this.checkAnyTypeRule(definition.anyTypeRule);
@@ -119,10 +121,10 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
         const phase2: PiTyperCheckerPhase2 = new PiTyperCheckerPhase2(this.language);
         phase2.check(definition);
         if (phase2.hasErrors()) {
-            this.errors.concat(phase2.errors);
+            this.errors.push(...phase2.errors);
         }
         if (phase2.hasWarnings()) {
-            this.warnings.concat(phase2.warnings);
+            this.warnings.push(...phase2.warnings);
         }
     }
 
@@ -145,15 +147,13 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
         }
     }
 
-    private addInheritedConcepts(types: PiClassifier[]): PiConcept[] {
+    private addInheritedClassifiers(types: PiClassifier[]): PiClassifier[] {
         // LOGGER.log("addInheritedConcepts to: '" + types.map(t => t.name).join(", ") + "'");
-        const result: PiConcept[] = [];
+        const result: PiClassifier[] = [];
+        result.push(...types);
         if (!!types) {
             types.forEach((t: PiClassifier) => {
-                ParserGenUtil.addListIfNotPresent<PiClassifier>(result, LangUtil.subConceptsIncludingSelf(t));
-                if (t instanceof PiInterface) {
-                    ParserGenUtil.addListIfNotPresent<PiClassifier>(result, LangUtil.findImplementorsRecursive(t));
-                }
+                ListUtil.addListIfNotPresent<PiClassifier>(result, LangUtil.findAllImplementorsAndSubs(t));
             });
         }
         return result;
@@ -317,6 +317,9 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
     }
 
     private checkPropertyCallExp(exp: PitPropertyCallExp, classifier: PiClassifier, surroundingExp?: PitWhereExp, surroundingAllowed?: boolean) {
+        // if (classifier.name === "GenericLiteral") {
+        //     console.log("checking property call " + exp.toPiString());
+        // }
         // The parameter surroundingAllowed is present to be able to give better errors messages.
         // It indicates whether or not the property from the surrounding whereExp may be used.
         if (surroundingAllowed === null || surroundingAllowed === undefined) {
@@ -324,11 +327,17 @@ export class NewPiTyperChecker extends Checker<PiTyperDef> {
         }
         let errMessDone: boolean = false;
         if (!!exp.source) {
+            // if (classifier.name === "GenericLiteral") {
+            //     console.log("source: " + exp.source.toPiString() + ", " + exp.source.constructor.name);
+            // }
             exp.source = this.changeInstanceToPropCallExp(exp.source, classifier);
             this.checkPitExp(exp.source, classifier, surroundingExp, surroundingAllowed);
             // TODO check ownership!
             exp.__property.owner = exp.source.returnType;
         } else {
+            // if (classifier.name === "GenericLiteral") {
+            //     console.log("found type: " + exp.__property?.owner?.name);
+            // }
             if (!!surroundingExp) {
                 // use the surrounding PitWhereExp, because there an extra prop is defined
                 if (exp.__property.name === surroundingExp.otherType.name) {

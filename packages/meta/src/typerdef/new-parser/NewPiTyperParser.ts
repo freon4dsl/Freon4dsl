@@ -3,19 +3,17 @@ import { LOG2USER } from "../../utils/UserLogger";
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { PiTyperDef } from "../new-metalanguage";
 import { PiTyperReader } from "./PiTyperReader";
-import { NewPiTyperChecker } from "./NewPiTyperChecker";
-import { PiTypeDefinition } from "../metalanguage";
+import { NewPiTyperCheckerPhase1 } from "./NewPiTyperCheckerPhase1";
 import { Checker } from "../../utils";
-import { rowStyle } from "@projectit/playground/dist/example/editor/styles/CustomStyles";
 
 export class NewPiTyperParser {
     public language: PiLanguage;
-    public checker: NewPiTyperChecker;
+    public checker: NewPiTyperCheckerPhase1;
     private reader: PiTyperReader;
 
     constructor(language: PiLanguage) {
         this.language = language;
-        this.checker = new NewPiTyperChecker(language);
+        this.checker = new NewPiTyperCheckerPhase1(language);
         this.reader = new PiTyperReader();
     }
 

@@ -220,30 +220,36 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
     }
 
     private checkPropsOfBase(myBase: PiConcept, prop: PiProperty) {
-        const inSuper = this.searchLocalProps(myBase, prop);
-        if (!!inSuper) {
-            this.nestedCheck({
-                check: LangUtil.compareTypes(prop, inSuper),
-                error: `Property '${prop.name}' with non conforming type already exists in base concept '${myBase.name}' ${Checker.location(prop)} and ${Checker.location(inSuper)}.`,
-                whenOk: () => {
-                    // set the 'implementedInBase' flag
-                    prop.implementedInBase = true;
+        if (!!myBase && !!prop) {
+            const inSuper = this.searchLocalProps(myBase, prop);
+            if (!!inSuper) {
+                this.nestedCheck({
+                    check: LangUtil.compareTypes(prop, inSuper),
+                    error: `Property '${prop.name}' with non conforming type already exists in base concept '${myBase.name}' ${Checker.location(prop)} and ${Checker.location(inSuper)}.`,
+                    whenOk: () => {
+                        // set the 'implementedInBase' flag
+                        prop.implementedInBase = true;
+                    }
+                });
+            } else if (!!myBase.base) {
+                // check base of base
+                if (myBase.base instanceof PiConcept) { // if error is made, base could be an interface
+                    this.checkPropsOfBase(myBase.base.referred, prop);
                 }
-            });
-        } else if (!!myBase.base) {
-            // check base of base
-            if (myBase.base instanceof PiConcept) { // if error is made, base could be an interface
-                this.checkPropsOfBase(myBase.base.referred, prop);
             }
         }
     }
 
     private searchLocalProps(myBase: PiClassifier, prop: PiProperty) {
-        let inSuper: PiProperty = myBase.primProperties.find(prevProp => prevProp.name === prop.name);
-        if (!inSuper) {
-            inSuper = myBase.properties.find(prevProp => prevProp.name === prop.name);
+        if (!!myBase && !!prop) {
+            let inSuper: PiProperty = myBase.primProperties.find(prevProp => prevProp.name === prop.name);
+            if (!inSuper) {
+                inSuper = myBase.properties.find(prevProp => prevProp.name === prop.name);
+            }
+            return inSuper;
+        } else {
+            return null;
         }
-        return inSuper;
     }
 
     private checkPropAgainstInterface(intf: PiInterface, prop: PiProperty) {

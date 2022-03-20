@@ -39,7 +39,7 @@ export class PiTyperReader {
                 // strip the error message, otherwise it's too long for the webapp
                 // console.log(e.message);
                 let mess = e.message?.replace("Could not match goal,", "Parse error");
-                if (!!mess && mess.length() > 0) {
+                if (!!mess && mess.length > 0) {
                     throw new Error(mess);
                 } else {
                     throw e;
