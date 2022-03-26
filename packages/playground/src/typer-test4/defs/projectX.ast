@@ -1,0 +1,77 @@
+language projectX
+
+model XX {
+    units: XXunit[];
+}
+
+modelunit XXunit {
+    namedConcepts: NamedType[];
+    lines: ExpWithType[];
+    file-extension = "xxx";
+}
+
+concept ExpWithType {
+    expr: Exp;
+    reference type: TopType;
+}
+
+// definitions of types
+interface TopType {
+name: identifier;
+}
+
+concept NamedType implements TopType {
+    name: identifier;
+}
+
+limited PredefinedType base NamedType { NUMBER; BOOLEAN; STRING; ANY; NULL; }
+
+concept GenericType implements TopType {
+    reference baseType: TopType;
+    kind: GenericKind; // is it a set, sequence, bag, or anything else
+}
+limited GenericKind { Set; Sequence; Bag; Collection; }
+
+concept UnitOfMeasurement implements TopType {
+    reference baseType: PredefinedType; // is always NUMBER!!
+    unit: UnitKind; // is it measured in km, kWh, grams, or anything else
+}
+limited UnitKind { Meters; Grams; kWh; Hours; }
+
+// definitions of expressions
+abstract expression Exp {
+}
+
+expression NumberLiteral base Exp {
+    xx: number;
+}
+
+expression StringLiteral base Exp {
+    xx: string;
+}
+
+expression BooleanLiteral base Exp {
+    xx: boolean;
+}
+
+expression NamedExp base Exp {
+    inner: Exp;
+    myType: NamedType;
+}
+
+expression PlusExp base Exp {
+    left: Exp;
+    right: Exp;
+}
+
+expression UnitLiteral base Exp {
+    // 62 kilogram, or 112 miles
+    inner: NumberLiteral;
+    unit: UnitKind;
+}
+
+expression GenericLiteral base Exp {
+    // Set{ 12, 14, 16, 18 }
+    content: Exp[];
+    kind: GenericKind;
+}

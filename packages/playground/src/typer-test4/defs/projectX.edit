@@ -2,15 +2,10 @@ editor default
 
 referenceSeparator [::]
 
-unitB {
-    [
-    UnitB ${name}
-    ${typeDefs terminator[;]}
-    ]
-}
-unitA {
+XXunit {
     [
     UnitA ${name}
+    [?concepts ${namedConcepts horizontal separator [,]} ;]
     ${lines terminator[;]}
     ]
 }
@@ -55,12 +50,8 @@ NamedType {
     [${name}]
 }
 
-SimpleTypeDecl {
-    [${type}] // anything but GenericType or UnitOfMeasurement
-}
-
-GenericTypeDecl {
-    [${kind}< ${innerType} >]
+GenericType {
+    [${kind}< ${baseType} >]
 }
 
 UnitOfMeasurement {
