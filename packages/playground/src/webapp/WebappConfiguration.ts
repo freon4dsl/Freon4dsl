@@ -9,7 +9,7 @@ import { ServerCommunication } from "./server/ServerCommunication";
 // export const editorEnvironment: PiEnvironment = TestParserEnvironment.getInstance();
 // import { OctopusEnvironment } from "../octopus/environment/gen/OctopusEnvironment";
 // export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
-import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
+import { ExampleEnvironment } from "../example/projectit/gen/ExampleEnvironment";
 export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
 // import { ExpressionLibraryEnvironment } from "../libraries-test/environment/gen/ExpressionLibraryEnvironment";

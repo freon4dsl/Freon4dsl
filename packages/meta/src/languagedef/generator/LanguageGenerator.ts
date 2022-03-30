@@ -2,8 +2,8 @@ import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import {
     CONFIGURATION_FOLDER,
-    ENVIRONMENT_FOLDER,
-    ENVIRONMENT_GEN_FOLDER,
+    PROJECTIT_FOLDER,
+    PROJECTIT_GEN_FOLDER,
     GenerationStatus,
     Helpers,
     LANGUAGE_FOLDER,
@@ -182,11 +182,11 @@ export class LanguageGenerator {
     private getFolderNames() {
         this.languageGenFolder = this.outputfolder + "/" + LANGUAGE_GEN_FOLDER;
         this.utilsGenFolder = this.outputfolder + "/" + LANGUAGE_UTILS_GEN_FOLDER;
-        this.environmentGenFolder = this.outputfolder + "/" + ENVIRONMENT_GEN_FOLDER;
+        this.environmentGenFolder = this.outputfolder + "/" + PROJECTIT_GEN_FOLDER;
         this.stdlibGenFolder = this.outputfolder + "/" + STDLIB_GEN_FOLDER;
         this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
         this.utilsFolder = this.outputfolder + "/" + LANGUAGE_UTILS_FOLDER;
-        this.environmentFolder = this.outputfolder + "/" + ENVIRONMENT_FOLDER;
+        this.environmentFolder = this.outputfolder + "/" + PROJECTIT_FOLDER;
         this.stdlibFolder = this.outputfolder + "/" + STDLIB_FOLDER;
         this.configurationFolder = this.outputfolder + "/" + CONFIGURATION_FOLDER;
     }

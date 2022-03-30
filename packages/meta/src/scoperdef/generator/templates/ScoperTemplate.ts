@@ -4,7 +4,7 @@ import {
     LANGUAGE_GEN_FOLDER,
     PROJECTITCORE,
     TYPER_GEN_FOLDER,
-    ENVIRONMENT_GEN_FOLDER,
+    PROJECTIT_GEN_FOLDER,
     langExpToTypeScript,
     replaceInterfacesWithImplementors
 } from "../../../utils";
@@ -52,7 +52,7 @@ export class ScoperTemplate {
                 } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger, Language } from "${PROJECTITCORE}"
-        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
+        import { ${Names.environment(language)} } from "${relativePath}${PROJECTIT_GEN_FOLDER}/${Names.environment(language)}";
         import { isNameSpace } from "./${Names.scoperUtils(language)}";
         ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }          
                                    
