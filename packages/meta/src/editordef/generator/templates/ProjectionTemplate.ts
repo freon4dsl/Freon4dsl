@@ -9,7 +9,7 @@ import {
     PiPrimitiveType,
     PiProperty
 } from "../../../languagedef/metalanguage";
-import { ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, Roles, sortConceptsWithBase } from "../../../utils";
+import { CONFIGURATION_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, Roles, sortConceptsWithBase } from "../../../utils";
 import {
     BoolKeywords,
     ListInfo,
@@ -187,7 +187,7 @@ export class ProjectionTemplate {
             : ``}             
             
             ${this.envImports.length > 0 
-                ? `import { ${this.envImports.map(c => `${c}`).join(", ")} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";`
+                ? `import { ${this.envImports.map(c => `${c}`).join(", ")} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";`
                 : ``}          
             `;
         return importsText + coreText;

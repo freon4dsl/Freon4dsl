@@ -1,5 +1,5 @@
 import { DemoAttributeType } from "../language/gen";
-import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 
 // limited DemoAttributeType implements Type {
