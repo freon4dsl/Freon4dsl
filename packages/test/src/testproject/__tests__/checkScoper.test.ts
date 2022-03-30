@@ -1,6 +1,6 @@
 import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestprojectScoper } from "../scoper/gen";
-import { TestprojectEnvironment } from "../environment/gen/TestprojectEnvironment";
+import { TestprojectEnvironment } from "../config/gen/TestprojectEnvironment";
 import { TestprojectStdlib } from "../stdlib/gen/TestprojectStdlib";
 
 describe("Checking stdlib for Demo", () => {

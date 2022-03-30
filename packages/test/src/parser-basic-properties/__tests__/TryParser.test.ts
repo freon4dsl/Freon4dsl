@@ -1,4 +1,4 @@
-import { TestParserEnvironment } from "../environment/gen/TestParserEnvironment";
+import { TestParserEnvironment } from "../config/gen/TestParserEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, PrimsWithKeywordTest } from "../language/gen";
 

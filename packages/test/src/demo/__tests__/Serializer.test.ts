@@ -1,4 +1,4 @@
-import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoEntity, DemoFunction, DemoModel } from "../language/gen";
 import { GenericModelSerializer } from "@projectit/core";
 import { JsonModelCreator } from "./JsonModelCreator";

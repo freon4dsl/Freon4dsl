@@ -1,5 +1,5 @@
 import { FileHandler } from "../../utils/FileHandler";
-import { ParserOnConceptsEnvironment } from "../environment/gen/ParserOnConceptsEnvironment";
+import { ParserOnConceptsEnvironment } from "../config/gen/ParserOnConceptsEnvironment";
 import { ExpressionTest } from "../language/gen";
 
 describe("Parser concepts of type", () => {

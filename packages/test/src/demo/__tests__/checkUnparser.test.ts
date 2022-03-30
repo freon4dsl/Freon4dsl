@@ -13,7 +13,7 @@ import {
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import { DemoValidator } from "../validator/gen";
-import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 
 

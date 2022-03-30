@@ -1,4 +1,4 @@
-import { VehiclesEnvironment } from "../environment/gen/VehiclesEnvironment";
+import { VehiclesEnvironment } from "../config/gen/VehiclesEnvironment";
 import { VehicleUnit } from "../language/gen";
 import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions";
 
