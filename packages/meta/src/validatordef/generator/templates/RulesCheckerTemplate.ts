@@ -2,7 +2,7 @@
 // this leads to a load error
 // import { PiErrorSeverity } from "@projectit/core";
 import {
-    PROJECTIT_GEN_FOLDER,
+    CONFIGURATION_GEN_FOLDER,
     langExpToTypeScript,
     LANGUAGE_GEN_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
@@ -46,7 +46,7 @@ export class RulesCheckerTemplate {
         return `
         import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${Names.environment(language)} } from "${relativePath}${PROJECTIT_GEN_FOLDER}/${Names.environment(language)}";
+        import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
         import { reservedWordsInTypescript } from "./ReservedWords";         

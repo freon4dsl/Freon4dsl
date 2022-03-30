@@ -1,5 +1,5 @@
 import { PiLanguage, PiLimitedConcept } from "../../metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, PROJECTIT_FOLDER } from "../../../utils";
+import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, CONFIGURATION_FOLDER } from "../../../utils";
 
 export class StdlibTemplate {
     limitedConceptNames: string[] = [];
@@ -13,7 +13,7 @@ export class StdlibTemplate {
         import { ${Names.metaType(language)}, 
                     ${this.limitedConceptNames.map(name => `${name}`).join(", ") } 
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { projectitConfiguration } from "${relativePath}${PROJECTIT_FOLDER}/ProjectitConfiguration";
+        import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.
