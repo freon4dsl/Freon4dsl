@@ -3,6 +3,7 @@ import { PiBinaryExpression } from "./PiBinaryExpression";
 import { PiElement } from "./PiElement";
 import { PiExpression } from "./PiExpression";
 import { PiModel } from "./PiModel";
+import { PiModelUnit } from "./PiModelUnit";
 
 export function isPiModel(element: PiElement): element is PiModel {
     return !!element && element.piIsModel && element.piIsModel();
@@ -32,11 +33,11 @@ export function ownerOfType(element: PiElement, typename: string, exact?: boolea
  * Returns the modelunit that owns this `element'
  * @param element
  */
-export function modelUnit(element: PiElement): PiElement {
+export function modelUnit(element: PiElement): PiModelUnit {
     let parent = element.piOwnerDescriptor()?.owner;
     while (!!parent) {
         if (parent.piIsUnit()) {
-            return parent;
+            return parent as PiModelUnit;
         } else {
             parent = parent.piOwnerDescriptor()?.owner;
         }
