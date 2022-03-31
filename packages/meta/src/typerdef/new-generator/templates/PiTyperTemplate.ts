@@ -13,12 +13,17 @@ export class PiTyperTemplate {
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.PiTyper;
         let rootType = TyperGenUtils.getTypeRoot(language, typerdef);
+        let langImports: string;
+        if (rootType === allLangConcepts) {
+            langImports = allLangConcepts;
+        } else {
+            langImports = `${allLangConcepts}, ${rootType}`;
+        }
         // Template starts here
-
         return `
         import { ${typerInterfaceName} } from "${PROJECTITCORE}";
 
-        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${langImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
         import { ${defaultTyperName} } from "./${defaultTyperName}";
                 
@@ -110,7 +115,15 @@ export class PiTyperTemplate {
             } 
             
             public commonSuperType(elem: ${allLangConcepts}[]): ${rootType} {
-                return null;
+                for (const typer of projectitConfiguration.customTypers) {
+                    typer.mainTyper = this;
+                    let result: ${rootType} = typer.commonSuperType(elem) as ${rootType};
+                    if (!!result) {
+                        return result;
+                    }
+                }
+                // no result from custom typers => use the generated typer
+                return this.generatedTyper.commonSuperType(elem);
             }
         }`;
     }

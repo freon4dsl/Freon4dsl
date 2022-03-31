@@ -1,4 +1,4 @@
-typer XXX for language ExpressionLibrary
+typer
 
 OrExpression {
     infertype BASIC_TYPE:Boolean;

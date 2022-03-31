@@ -15,6 +15,17 @@ import { PitExpWithType } from "../new-metalanguage/expressions/PitExpWithType";
 const LOGGER = new MetaLogger("PiTyperCheckerPhase2"); //.mute();
 
 // TODO clean up this code
+// TODO check on multiple stats with same prop in WhereExp
+// For example:
+// GenericLiteral {
+//     // Set{ 12, 14, 16, 18 }
+//     infertype x:GenericType where {
+//         // the following results in a compile error, but not in a checker error
+//         x.baseType equalsto (typeof(self.content) as Type);
+//         // x.baseType equalsto typeof(self.content);
+//         x.kind equalsto self.kind;
+//     };
+// }
 
 export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
     definition: PiTyperDef;
@@ -87,6 +98,8 @@ export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
                 );
             }
         }
+        // TODO make sure that only one of the conditions refers to the 'otherType' of the where clause
+        // TODO switch conditions such that the part that refers to the 'otherType' of the where clause is always the left one
     }
 
     private checkPitExp(exp: PitExp, rule: PitClassifierRule, expectedType?: PiClassifier) {

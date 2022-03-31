@@ -1,7 +1,7 @@
 ////////////////////////////////////
 //       Numeric Expressions
 ////////////////////////////////////
-typer XX for language ExpressionLibrary
+typer
 
 // <ABS> | <MINUS_PREFIX>
 

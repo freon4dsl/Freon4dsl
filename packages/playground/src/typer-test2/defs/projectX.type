@@ -1,0 +1,91 @@
+typer
+
+// What are types?
+istype { TopType }
+
+// Which concepts have a type?
+hastype { Exp }
+
+// What are the top and bottom types?
+anytype {
+    conformsto PredefinedType:ANY; // PredefinedType:ANY is the least specific type
+}
+
+PredefinedType {
+    PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
+}
+
+// Which type does an expression have?
+NumberLiteral {
+    infertype PredefinedType:NUMBER;
+}
+
+StringLiteral {
+    infertype PredefinedType:STRING;
+}
+
+BooleanLiteral {
+    infertype PredefinedType:BOOLEAN;
+}
+
+NamedExp {
+    infertype self.myType;
+}
+
+PlusExp {
+    infertype commonSuperType(self.left, self.right);
+}
+
+UnitLiteral {
+    // 62 kilogram, or 112 miles
+    infertype x:UnitOfMeasurement where {
+                  x.baseType equalsto typeof(self.inner);
+                  x.unit equalsto self.unit;
+              };
+}
+
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    infertype x:GenericType where {
+        // TODO the following results in a compile error, but not in a checker error
+        x.baseType equalsto (typeof(self.content) as Type);
+        // x.baseType equalsto typeof(self.content);
+        x.kind equalsto self.kind;
+    };
+}
+
+// Which types are 'equal' to each other?
+//NamedType {
+//    equalsto aa:NamedType where {
+//            aa.name equalsto self.name;
+//        };
+//}
+
+GenericType {
+    equalsto x:GenericType where {
+            x.baseType equalsto self.baseType;
+            x.kind equalsto self.kind;
+        };
+    conformsto x:GenericType where {
+            // both conditions must be true
+            self.baseType conformsto x.baseType;
+            self.kind conformsto x.kind;
+        };
+}
+
+GenericKind {
+    Set conformsto Collection;
+    Sequence conformsto Bag;
+    Bag conformsto Collection;
+}
+
+UnitOfMeasurement {
+    equalsto aap:UnitOfMeasurement where {
+            aap.baseType equalsto self.baseType;
+            aap.unit equalsto self.unit;
+        };
+    conformsto rr:UnitOfMeasurement where {
+            self.baseType conformsto rr.baseType;
+            self.unit equalsto rr.unit;
+        };
+}

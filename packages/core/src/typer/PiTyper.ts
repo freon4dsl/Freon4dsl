@@ -1,4 +1,5 @@
 import { PiElement } from "../language";
+import { ProjectXEveryConcept, Type } from "@projectit/playground/dist/typer-test/language/gen";
 
 // Part of the ProjectIt Framework.
 
@@ -38,5 +39,11 @@ export interface PiTyper {
      * @param elem
      */
     isType(elem: PiElement): boolean;
+
+    /**
+     * Returns the common super type of all elements in typelist
+     * @param typelist
+     */
+    commonSuperType(typelist: PiElement[]): PiElement;
 }
 // end::typer-interface[]

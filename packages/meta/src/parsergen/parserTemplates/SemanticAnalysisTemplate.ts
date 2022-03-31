@@ -139,7 +139,7 @@ export class SemanticAnalysisTemplate {
             } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
             import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
             import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
-            import { PiNamedElement } from "@projectit/core";
+            import { PiNamedElement, Language } from "@projectit/core";
             
             export class ${className} extends ${Names.defaultWorker(language)} implements ${Names.workerInterface(language)} {
                 changesToBeMade: Map<${everyConceptName}, ${everyConceptName}> = null;
@@ -171,6 +171,7 @@ export class SemanticAnalysisTemplate {
             `;
     }
 
+    // TODO if there are possibles, but still the metatype is not correct, do not make a replacement
     private makeReplacementIfStat(): string {
         // TODO add replacement of properties that are lists
         let result: string = '';
@@ -182,14 +183,14 @@ export class SemanticAnalysisTemplate {
                     let metatype: string = Names.classifier(type);
                     this.addToImports(type);
                     let propName: string = ref.name;
-                    result += `if (metatype === "${metatype}") {
+                    result += `if (metatype === "${metatype}" || Language.getInstance().subConcepts("${metatype}").includes(metatype)) {
                         replacement = ${toBeCreated}.create({ ${propName}: PiElementReference.create<${metatype}>(referredElem.name, metatype) });
                     } else `;
                 }
             }
         }
         if (result.length > 0) {
-            result += `{ throw new Error("Semantic analysis error: cannot replace reference.") }`
+            result += `{ throw new Error("Semantic analysis error: cannot replace reference: " + referredElem.name + " of type " + metatype + "." ) }`
         }
         return result;
     }

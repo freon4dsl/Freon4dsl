@@ -1,0 +1,85 @@
+language projectX
+
+model XX {
+    units: XXunit[];
+}
+
+modelunit XXunit {
+    lines: ExpWithType[];
+    file-extension = "xxx";
+}
+
+concept ExpWithType {
+    expr: Exp;
+    type: TypeUsage;
+}
+
+// definitions of types
+abstract concept TypeUsage implements Type { // where a type can be used either a referred type of or declared type is correct
+}
+
+concept TypeRef base TypeUsage  {
+    reference type: NamedType;
+}
+
+abstract concept TypeDecl base TypeUsage {
+}
+
+interface Type {
+}
+
+concept NamedType implements Type {
+    name: identifier;
+}
+
+limited PredefinedType base NamedType { NUMBER; BOOLEAN; STRING; ANY; NULL; }
+
+concept GenericType base TypeDecl {
+    baseType: TypeUsage;
+    kind: GenericKind; // is it a set, sequence, bag, or anything else
+}
+limited GenericKind { Set; Sequence; Bag; Collection; }
+
+concept UnitOfMeasurement base TypeDecl {
+    reference baseType: PredefinedType; // is always NUMBER!!
+    unit: UnitKind; // is it measured in km, kWh, grams, or anything else
+}
+limited UnitKind { Meters; Grams; kWh; Hours; }
+
+// definitions of expressions
+abstract expression Exp {
+}
+
+expression NumberLiteral base Exp {
+    xx: number;
+}
+
+expression StringLiteral base Exp {
+    xx: string;
+}
+
+expression BooleanLiteral base Exp {
+    xx: boolean;
+}
+
+expression NamedExp base Exp {
+    inner: Exp;
+    myType: NamedType;
+}
+
+expression PlusExp base Exp {
+    left: Exp;
+    right: Exp;
+}
+
+expression UnitLiteral base Exp {
+    // 62 kilogram, or 112 miles
+    inner: NumberLiteral;
+    unit: UnitKind;
+}
+
+expression GenericLiteral base Exp {
+    // Set{ 12, 14, 16, 18 }
+    content: Exp[];
+    kind: GenericKind;
+}

@@ -49,7 +49,14 @@ export class CustomTyperPartTemplate {
              */
             public isType(elem: ${allLangConcepts}): boolean | null {
                 return null;
-            }      
+            }  
+            /**
+             * Returns the common super type of all elements in typelist
+             * @param typelist
+             */
+            public commonSuperType(typelist: ${allLangConcepts}[]): ${allLangConcepts} | null {
+                return null;
+            }       
         }`;
     }
 }

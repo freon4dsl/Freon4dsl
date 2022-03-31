@@ -51,6 +51,7 @@ UnitLiteral {
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype x:GenericType where {
+        // TODO the following results in a compile error, but not in a checker error
         x.baseType equalsto (typeof(self.content) as Type);
         x.kind equalsto self.kind;
     };

@@ -53,4 +53,10 @@ export interface PiTyperPart {
      * @param elem
      */
     isType(elem: PiElement): boolean | null;
+
+    /**
+     * Returns the common super type of all elements in typelist
+     * @param typelist
+     */
+    commonSuperType(typelist: PiElement[]): PiElement | null;
 }

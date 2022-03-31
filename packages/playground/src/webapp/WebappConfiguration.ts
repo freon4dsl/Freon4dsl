@@ -10,8 +10,9 @@ import { ServerCommunication } from "./server/ServerCommunication";
 // import { OctopusEnvironment } from "../octopus/environment/gen/OctopusEnvironment";
 // export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
 import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
-export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
-
+// export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+import { ProjectXEnvironment } from "../typer-test4/environment/gen/ProjectXEnvironment";
+export const editorEnvironment: PiEnvironment = ProjectXEnvironment.getInstance();
 // import { ExpressionLibraryEnvironment } from "../libraries-test/environment/gen/ExpressionLibraryEnvironment";
 // export const editorEnvironment: PiEnvironment = ExpressionLibraryEnvironment.getInstance();
 

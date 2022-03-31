@@ -1,0 +1,44 @@
+typer
+
+// What are types?
+istype { Type }
+
+BooleanLiteral {
+    infertype PredefinedType:BOOLEAN;
+}
+
+NamedExp {
+    infertype self.myType;
+}
+
+PlusExp {
+    infertype (commonSuperType(self.left, self. right) as NamedType);
+}
+
+TypeRef {
+    infertype self.type;
+}
+
+UnitLiteral {
+    // 62 kilogram, or 112 miles
+    infertype x:UnitOfMeasurement where {
+                  x.baseType equalsto (typeof(self.inner) as PredefinedType);
+                  x.unit equalsto self.unit;
+              };
+}
+
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    infertype x:GenericType where {
+        x.baseType equalsto (typeof(self.content) as Type);
+        x.kind equalsto self.kind;
+    };
+}
+
+GenericKind {
+    Set conformsto Collection;
+    Sequence conformsto Bag;
+    Bag conformsto Collection;
+    // Collection;
+}
+
