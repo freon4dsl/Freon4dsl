@@ -29,6 +29,8 @@
     "pi-languages": "bash ../../scripts/projectit-dev.sh -v all -d src/pi-languages/defs -o src/pi-languages",
     "taxrules": 	"bash ../../scripts/projectit-dev.sh all -d src/taxrules/defs -o src/taxrules",
     "typer-test5":      "bash ../../scripts/projectit-dev.sh -v all -d src/typer-test5/defs -o src/typer-test5",
+    "typer-test6":      "bash ../../scripts/projectit-dev.sh -v all -d src/typer-test6/defs -o src/typer-test6",
+    "typer-test7":      "bash ../../scripts/projectit-dev.sh -v all -d src/typer-test7/defs -o src/typer-test7",
     "all-examples": "yarn calculator && yarn example && yarn graphviz && yarn heating && yarn json && yarn libraries && yarn mps-expressions && yarn octopus && yarn openhab && yarn pi-languages && yarn rules && yarn taxrules && yarn typer-test",
     "clean-graphviz":	  "bash ../../scripts/projectit-dev.sh clean-it -f -d src/graphviz/defs -o src/graphviz",
     "clean-example": 	  "bash ../../scripts/projectit-dev.sh clean-it -d src/example/defs -o src/example",

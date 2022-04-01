@@ -1,4 +1,4 @@
-import { Checker, LangUtil, ListUtil, MetaLogger } from "../../utils";
+import { Checker, LangUtil, ListUtil, MetaLogger, PiDefinitionElement } from "../../utils";
 import {
     PitAnytypeExp,
     PitClassifierRule,
@@ -11,6 +11,7 @@ import { PiClassifier, PiConcept, PiInterface } from "../../languagedef/metalang
 import { CommonSuperTypeUtil } from "../../utils/common-super/CommonSuperTypeUtil";
 import { validFunctionNames } from "./NewPiTyperCheckerPhase1";
 import { PitExpWithType } from "../new-metalanguage/expressions/PitExpWithType";
+import { PiTyperCheckerPhase3 } from "./PiTyperCheckerPhase3";
 
 const LOGGER = new MetaLogger("PiTyperCheckerPhase2"); //.mute();
 
@@ -44,6 +45,14 @@ export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
             definition.classifierRules.forEach((rule, index) => {
                 this.checkClassifierRule(rule);
             });
+            const phase3: PiTyperCheckerPhase3 = new PiTyperCheckerPhase3(this.language);
+            phase3.check(definition);
+            if (phase3.hasErrors()) {
+                this.errors.push(...phase3.errors);
+            }
+            if (phase3.hasWarnings()) {
+                this.warnings.push(...phase3.warnings);
+            }
         }
     }
 
@@ -85,33 +94,22 @@ export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
         // LOGGER.log("Checking checkStatement '" + stat.toPiString() + "'");
         this.checkPitExp(stat.left, rule);
         this.checkPitExp(stat.right, rule);
-        // check type conformance of left and right side
-        // TODO returnType of expression should also include isList, commonSuperType should handle this
-        const type1: PiClassifier = stat.left.returnType;
-        const type2: PiClassifier = stat.right.returnType;
-        if (!!type1 && !!type2) { // either of these can be undefined when an earlier error has occurred
-            if (type1 !== PiClassifier.ANY && type2 !== PiClassifier.ANY) {
-                const possibles: PiClassifier[] = CommonSuperTypeUtil.commonSuperType([type1, type2]);
-                this.simpleCheck(
-                    possibles.length > 0,
-                    `Types of '${type1.name}' and '${type2.name}' do not conform ${Checker.location(stat)}.`
-                );
-            }
-        }
         // TODO make sure that only one of the conditions refers to the 'otherType' of the where clause
         // TODO switch conditions such that the part that refers to the 'otherType' of the where clause is always the left one
     }
 
-    private checkPitExp(exp: PitExp, rule: PitClassifierRule, expectedType?: PiClassifier) {
-        // LOGGER.log("Checking PitExp '" + exp.toPiString() + "'");
-        if (!!expectedType) {
-            const found = this.definition.types.find(t => t === expectedType);
-            if (!found) {
-                console.log("All types: " + this.definition.types.map(t => t.name).join(", ") + ", expectedType: " + expectedType.name)
-                this.simpleCheck(false, `Expected type ${expectedType.name} is not marked 'isType' ${Checker.location(exp)}`);
-                expectedType = null;
+    private doTypesConform(type1: PiClassifier, type2: PiClassifier): boolean {
+        if (!!type1 && !!type2) { // either of these can be undefined when an earlier error has occurred
+            if (type1 !== PiClassifier.ANY && type2 !== PiClassifier.ANY) {
+                const possibles: PiClassifier[] = CommonSuperTypeUtil.commonSuperType([type1, type2]);
+                return possibles.length > 0;
             }
         }
+        return false;
+    }
+
+    private checkPitExp(exp: PitExp, rule: PitClassifierRule, expectedType?: PiClassifier) {
+        // LOGGER.log("Checking PitExp '" + exp.toPiString() + "'");
         if (exp instanceof PitAnytypeExp ) {
         } else if (exp instanceof PitSelfExp) {
         } else if (exp instanceof PitExpWithType) {

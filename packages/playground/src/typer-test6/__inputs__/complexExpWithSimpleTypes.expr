@@ -1,0 +1,13 @@
+UnitA expressionsWithTypes
+
+Set{ true, true, false } : BOOLEAN;
+
+/*
+
+Sequence { true, 12 } : STRING;
+Bag { Set { 12, 13, 14 }, Sequence { "string", "Str", "STRING" } } : NUMBER;
+Set { 12, 13, 14 } : NUMBER;
+Bag { Set { 12, 13, 14 }, Set { 2, 3, 4 } } : NUMBER;
+Bag { Set { Set { 2, 3, 4 }, Set { 12, 13, 14 } }, Set { Set { 2, 3, 4 } } } : NUMBER;
+Set { } : STRING;
+*/

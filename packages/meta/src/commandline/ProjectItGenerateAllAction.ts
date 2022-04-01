@@ -94,7 +94,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     }
 
     private generateTyper = () => {
-        LOG2USER.info("Generating typer");
+        console.info("Generating typer");
         let typer: PiTyperDef;
         try {
             if (this.typerFiles.length > 0) {
