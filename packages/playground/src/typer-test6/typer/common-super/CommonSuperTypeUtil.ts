@@ -2,7 +2,7 @@ import { OrderedList } from "./OrderedList";
 import { ProjectXTyper } from "../gen";
 import { ProjectXEnvironment } from "../../environment/gen/ProjectXEnvironment";
 import { PiType } from "../extras/PiType";
-import { TypeRef } from "../../language/gen";
+// import { TypeRef } from "../../language/gen";
 
 
 // algorithm from https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla
@@ -27,18 +27,18 @@ export class CommonSuperTypeUtil {
         return [];
     }
 
-    private static printOrderedList(comment: string, rollingIntersect: OrderedList<PiType>) {
-        let result: string = '';
-        result += comment;
-        for (const piClassifier of rollingIntersect) {
-            if (piClassifier.internal instanceof TypeRef) {
-                result += "\t" + piClassifier.internal.$type.name
-            } else {
-                result += "\t" + piClassifier.internal.constructor.name;
-            }
-        }
-        console.log(result);
-    }
+    // private static printOrderedList(comment: string, rollingIntersect: OrderedList<PiType>) {
+    //     let result: string = '';
+    //     result += comment;
+    //     for (const piClassifier of rollingIntersect) {
+    //         if (piClassifier.internal instanceof TypeRef) {
+    //             result += "\t" + piClassifier.internal.$type.name
+    //         } else {
+    //             result += "\t" + piClassifier.internal.constructor.name;
+    //         }
+    //     }
+    //     console.log(result);
+    // }
 
     /**
      * Breath first search for supers of 'inCls'.
@@ -60,7 +60,7 @@ export class CommonSuperTypeUtil {
                 nextLevel = new OrderedList<PiType>();
                 for (const elem of thisLevel) {
                     const supers: PiType[] = (typer as ProjectXTyper).getSuperTypes(elem);
-                    console.log(`found supers for ${writer.writeToString(elem.internal)} [${elem.internal.piLanguageConcept()}] : ${supers.map(sup => `${writer.writeToString(sup.internal)} [${sup.internal.piLanguageConcept()}] `)}`)
+                    // console.log(`found supers for ${writer.writeToString(elem.internal)} [${elem.internal.piLanguageConcept()}] : ${supers.map(sup => `${writer.writeToString(sup.internal)} [${sup.internal.piLanguageConcept()}]`).join(", ")}`)
                     for (const super1 of supers) {
                         nextLevel.add(super1);
                     }

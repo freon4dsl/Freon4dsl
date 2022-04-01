@@ -1,7 +1,6 @@
 import { PiType } from "../extras/PiType";
 import { ProjectXTyper } from "../gen";
 
-
 export class OrderedList<T extends PiType> implements Iterable<T> {
     protected elements: T[] = [];
     typer: ProjectXTyper;
@@ -30,19 +29,17 @@ export class OrderedList<T extends PiType> implements Iterable<T> {
      * @param list
      */
     retainAll(list: OrderedList<T>) {
-        const toBeRemoved: number [] = []; // the indexes of elements that need to be removed
+        const toRetain: T[] = [];
         this.elements.forEach((old, index) => {
-            if (!list.includes(old)) {
-                toBeRemoved.push(index);
+            if (list.includes(old)) {
+                toRetain.push(old);
             }
         });
-        // console.log("Before removing: " + this.elements.map(elem => elem.name).join(", "));
-        // In order to avoid errors because of the splice() method doing a re-indexing,
-        // we loop over the list of indexes backwards
-        for (let i = toBeRemoved.length-1; i >= 0 ; i--) {
-            this.elements.splice(toBeRemoved[i], 1);
-            // console.log("After removing nr[" + toBeRemoved[i-1] + "] : " + this.elements.map(elem => elem.name).join(", "));
-        }
+        // console.log("Comparing [" +
+        // this.elements.map(el => el.toPiString()).join(", ") + "] with [" +
+        // list.elements.map(el => el.toPiString()).join(", ") + "]"
+        // + "\n\tRESULT: " + toRetain.map(el => el.toPiString()).join(", "));
+        this.elements = toRetain;
     }
 
     length(): number {
@@ -54,7 +51,6 @@ export class OrderedList<T extends PiType> implements Iterable<T> {
     }
 
     includes(p: T): boolean {
-        // console.log("SSSSSSSSSSSSSSSSSSS")
         if (!this.typer) {
             this.typer = new ProjectXTyper();
         }

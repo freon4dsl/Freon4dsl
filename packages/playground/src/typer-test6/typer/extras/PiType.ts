@@ -1,4 +1,5 @@
 import { PiContainerDescriptor, PiElement, PiNamedElement } from "@projectit/core";
+import { ProjectXEnvironment } from "../../environment/gen/ProjectXEnvironment";
 
 class NamedElement implements PiNamedElement {
     name: string = "ANY_TYPE";
@@ -44,4 +45,8 @@ export class PiType {
     }
 
     static ANY: PiType = PiType.create({internal: new NamedElement()})
+
+    toPiString(): string {
+        return "PiType<" + ProjectXEnvironment.getInstance().writer.writeToString(this.internal) + ">";
+    }
 }
