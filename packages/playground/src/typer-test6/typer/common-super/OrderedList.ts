@@ -1,5 +1,5 @@
-import { PiType } from "../extras/PiType";
 import { ProjectXTyper } from "../gen";
+import { PiType } from "@projectit/core";
 
 export class OrderedList<T extends PiType> implements Iterable<T> {
     protected elements: T[] = [];

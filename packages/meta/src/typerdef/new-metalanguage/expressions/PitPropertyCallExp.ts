@@ -46,4 +46,8 @@ export class PitPropertyCallExp extends PitAppliedExp {
     get type(): PiClassifier {
         return this.property?.type;
     }
+
+    get isList(): boolean {
+        return this.property.isList;
+    }
 }

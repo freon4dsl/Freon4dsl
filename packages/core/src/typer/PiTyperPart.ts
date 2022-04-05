@@ -1,5 +1,7 @@
 import { PiElement } from "../language";
 import { PiTyper } from "./PiTyper";
+import { PiType } from "./PiType";
+
 
 // Part of the ProjectIt Framework.
 
@@ -15,48 +17,47 @@ import { PiTyper } from "./PiTyper";
 export interface PiTyperPart {
 
     /**
-     * TODO comment
+     * A reference to the main typer of which this typer part is a part.
      */
     mainTyper: PiTyper;
+
+    /**
+     * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
+     * @param modelelement
+     */
+    isType(modelelement: PiElement): boolean | null;
 
     /**
      * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
      * @param modelelement
      */
-    inferType(modelelement: PiElement): PiElement | null;
+    inferType(modelelement: PiElement): PiType | null;
 
     /**
-     * Returns true if the type that inferType(elem1) returns equals the type inferType(elem2) returns.
+     * Returns true if type1 equals type2.
      * This is a strict equal.
-     * @param elem1
-     * @param elem2
+     * @param type1
+     * @param type2
      */
-    equalsType(elem1: PiElement, elem2: PiElement): boolean | null;
+    equals(type1: PiType, type2: PiType): boolean | null;
 
     /**
-     * Returns true if the type that inferType(elem1) returns conforms to the type inferType(elem2) returns, according to
-     * the type rules in the Typer definition. The direction is elem2 conforms to elem1.
-     * @param elem1
-     * @param elem2
+     * Returns true if type1 conforms to type2. The direction is type1 conforms to type2.
+     * @param type1
+     * @param type2
      */
-    conformsTo(elem1: PiElement, elem2: PiElement): boolean | null;
+    conforms(type1: PiType, type2: PiType): boolean | null;
 
     /**
      * Returns true if all types in typelist1 conform to the types in typelist2, in the given order.
      * @param typelist1
      * @param typelist2
      */
-    conformList(typelist1: PiElement[], typelist2: PiElement[]): boolean | null;
+    conformsList(typelist1: PiType[], typelist2: PiType[]): boolean | null;
 
     /**
-     * Returns true if 'elem' is marked as 'type' in the Typer definition.
-     * @param elem
-     */
-    isType(elem: PiElement): boolean | null;
-
-    /**
-     * Returns the common super type of all elements in typelist
+     * Returns the common super type of all types in typelist
      * @param typelist
      */
-    commonSuperType(typelist: PiElement[]): PiElement | null;
+    commonSuper(typelist: PiType[]): PiType | null;
 }

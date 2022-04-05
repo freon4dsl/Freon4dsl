@@ -1,51 +1,63 @@
 typer
 
 // What are types?
-istype { Type }
+istype { TypeUsage }
 
 // Which concepts have a type?
-hastype { Exp, TypeRef }
+hastype { Exp, NamedType }
 
 // What are the top and bottom types?
-anytype {
-    conformsto PredefinedType:ANY; // PredefinedType:ANY is the least specific type
-}
+//anytype {
+//    conformsto x:TypeRef where {
+//        x.type equalsto PredefinedType:ANY; // PredefinedType:ANY is the least specific type
+//    } ;
+//}
 
-PredefinedType {
-    PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
-}
+//PredefinedType {
+//    PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
+//}
 
 // Which type does an expression have?
 NumberLiteral {
-    infertype PredefinedType:NUMBER;
+    infertype x:TypeRef where {
+        x.type equalsto PredefinedType:NUMBER;
+    } ;
 }
 
 StringLiteral {
-    infertype PredefinedType:STRING;
+    infertype x:TypeRef where {
+        x.type equalsto PredefinedType:STRING;
+    } ;
 }
 
 BooleanLiteral {
-    infertype PredefinedType:BOOLEAN;
+    infertype x:TypeRef where {
+        x.type equalsto PredefinedType:BOOLEAN;
+    } ;
+}
+
+NamedType {
+    infertype x:TypeRef where {
+        x.type equalsto self;
+    } ;
 }
 
 NamedExp {
-    infertype self.myType;
+    infertype x:TypeRef where {
+        x.type equalsto self.myType;
+    } ;
 }
 
 PlusExp {
     infertype commonSuperType(self.left, self.right);
 }
 
-TypeRef {
-    infertype self.type;
-}
-
 UnitLiteral {
     // 62 kilogram, or 112 miles
     infertype x:UnitOfMeasurement where {
-                  x.baseType equalsto typeof(self.inner);
-                  x.unit equalsto self.unit;
-              };
+        x.baseType equalsto (typeof(self.inner) as TypeRef).type;
+        x.unit equalsto self.unit;
+    };
 }
 
 GenericLiteral {
@@ -64,6 +76,12 @@ GenericLiteral {
 //            aa.name equalsto self.name;
 //        };
 //}
+
+TypeRef {
+    equalsto tt:TypeRef where {
+        tt.type equalsto self.type;
+    } ;
+}
 
 GenericType {
     equalsto x:GenericType where {

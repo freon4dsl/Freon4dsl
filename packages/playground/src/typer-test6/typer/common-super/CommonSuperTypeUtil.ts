@@ -1,7 +1,7 @@
 import { OrderedList } from "./OrderedList";
 import { ProjectXTyper } from "../gen";
 import { ProjectXEnvironment } from "../../environment/gen/ProjectXEnvironment";
-import { PiType } from "../extras/PiType";
+import { PiType } from "@projectit/core";
 // import { TypeRef } from "../../language/gen";
 
 

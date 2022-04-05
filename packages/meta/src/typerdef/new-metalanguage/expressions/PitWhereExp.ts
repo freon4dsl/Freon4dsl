@@ -2,6 +2,10 @@ import { PitProperty } from "../PitProperty";
 import { PitExp } from "./PitExp";
 import { PitStatement } from "./PitStatement";
 import { PiClassifier, PiPrimitiveType } from "../../../languagedef/metalanguage";
+import { PitPropertyCallExp } from "./PitPropertyCallExp";
+import { TyperGenUtils } from "../../new-generator/templates/TyperGenUtils";
+import { PitEquals } from "./PitEquals";
+import { PitConforms } from "./PitConforms";
 
 export class PitWhereExp extends PitExp {
     /**
@@ -34,6 +38,39 @@ export class PitWhereExp extends PitExp {
     }
     baseSource(): PitExp {
         return this;
+    }
+
+    /**
+     * Returns the conditions of the expressions such that the part that refers to the extra variable
+     * is always the left.
+     */
+    sortedConditions(): PitStatement[] {
+        const result: PitStatement[] = [];
+        this.conditions.forEach(cond => {
+            // which part of the condition refers to 'otherType'
+            let otherTypePart: PitExp;
+            let knownTypePart: PitExp;
+            let baseSource = cond.left.baseSource();
+            if (baseSource instanceof PitPropertyCallExp && baseSource.property === this.otherType) {
+                otherTypePart = cond.left;
+                knownTypePart = cond.right;
+            } else {
+                baseSource = cond.right.baseSource();
+                if (baseSource instanceof PitPropertyCallExp && baseSource.property === this.otherType) {
+                    otherTypePart = cond.right;
+                    knownTypePart = cond.left;
+                }
+            }
+            // strip the source from part that refers to the extra variable
+            otherTypePart = TyperGenUtils.removeBaseSource(otherTypePart);
+            // return a new condition with the knownTypePart always as the right
+            if (cond instanceof PitEquals) {
+                result.push(PitEquals.create({left: otherTypePart, right: knownTypePart}));
+            } else if (cond instanceof PitConforms) {
+                result.push(PitConforms.create({left: otherTypePart, right: knownTypePart}));
+            }
+        });
+        return result;
     }
 
 }

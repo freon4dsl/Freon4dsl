@@ -44,6 +44,12 @@ concept UnitOfMeasurement base TypeDecl {
 limited UnitKind { Meters; Grams; kWh; Hours; }
 
 // definitions of expressions
+
+expression UnitLiteral base Exp {
+    // 62 kilogram, or 112 miles
+    inner: NumberLiteral;
+    unit: UnitKind;
+}
 abstract expression Exp {
 }
 
@@ -69,11 +75,6 @@ expression PlusExp base Exp {
     right: Exp;
 }
 
-expression UnitLiteral base Exp {
-    // 62 kilogram, or 112 miles
-    inner: NumberLiteral;
-    unit: UnitKind;
-}
 
 expression GenericLiteral base Exp {
     // Set{ 12, 14, 16, 18 }

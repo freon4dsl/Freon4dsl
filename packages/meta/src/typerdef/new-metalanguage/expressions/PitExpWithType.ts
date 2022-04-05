@@ -43,6 +43,6 @@ export class PitExpWithType extends PitExp  {
         return null;
     }
     toPiString(): string {
-        return `(${this.inner} as ${this.__expectedType.name})`;
+        return `(${this.inner.toPiString()} as ${this.__expectedType.name})`;
     }
 }

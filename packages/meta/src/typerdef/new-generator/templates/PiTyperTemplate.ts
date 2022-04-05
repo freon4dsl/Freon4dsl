@@ -21,7 +21,7 @@ export class PiTyperTemplate {
         }
         // Template starts here
         return `
-        import { ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { PiElement, PiType, ${typerInterfaceName} } from "${PROJECTITCORE}";
 
         import { ${langImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
@@ -38,29 +38,31 @@ export class PiTyperTemplate {
                 this.generatedTyper = new ${defaultTyperName}();
                 this.generatedTyper.mainTyper = this;
             }
-            
+                        
             /**
-             * See interface 
-             */
-            public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean {
+             * Returns true if 'modelelement' is marked as 'isType' in the Typer definition
+             * @param modelelement
+             */    
+            public isType(modelelement: PiElement): boolean { // entries for all types marked as @isType
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: boolean = typer.equalsType(elem1, elem2);
-                    if (result !== null) {
+                    let result: boolean = typer.isType(modelelement);
+                    if (result) {
                         return result;
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return this.generatedTyper.equalsType(elem1, elem2);
-            }
-            
+                return this.generatedTyper.isType(modelelement);
+            } 
+
             /**
-             * See interface 
-             */        
-            public inferType(modelelement: ${allLangConcepts}): ${rootType} {
+             * Returns the type of 'modelelement' according to the type rules in the Typer Definition
+             * @param modelelement
+             */   
+            public inferType(modelelement: PiElement): PiType {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: ${rootType} = typer.inferType(modelelement) as ${rootType};
+                    let result: PiType = typer.inferType(modelelement);
                     if (result !== null) {
                         return result;
                     }
@@ -68,62 +70,150 @@ export class PiTyperTemplate {
                 // no result from custom typers => use the generated typer
                 return this.generatedTyper.inferType(modelelement);
             }
-            
+                        
             /**
-             * See interface 
+             * Returns true if the type that inferType(elem1) returns equals the type inferType(elem2) returns.
+             * This is a strict equal.
+             * @param elem1
+             * @param elem2
              */
-            public conformsTo(elem1: ${rootType}, elem2: ${rootType}): boolean {
-                for (const typer of projectitConfiguration.customTypers) {
-                    typer.mainTyper = this;
-                    let result: boolean = typer.conformsTo(elem1, elem2);
-                    if (result !== null) {
-                        return result;
-                    }
-                }
-                // no result from custom typers => use the generated typer
-                return this.generatedTyper.conformsTo(elem1, elem2);
-            }
-            
-            /**
-             * See interface 
-             */
-            public conformList(typelist1: ${rootType}[], typelist2: ${rootType}[]): boolean {
-                for (const typer of projectitConfiguration.customTypers) {
-                    typer.mainTyper = this;
-                    let result: boolean = typer.conformList(typelist1, typelist2);
-                    if (result !== null) {
-                        return result;
-                    }
-                }
-                // no result from custom typers => use the generated typer
-                return this.generatedTyper.conformList(typelist1, typelist2);
-            }
+            public equalsType(elem1: PiElement, elem2: PiElement): boolean {
+                if (!elem1 || !elem2) return false;
 
-            /**
-             * See interface 
-             */        
-            public isType(elem: ${allLangConcepts}): boolean { // entries for all types marked as @isType
+                const $type1: PiType = this.inferType(elem1);
+                const $type2: PiType = this.inferType(elem2);
+                if (!$type1 || !$type2) return false;
+                
+                return this.equals($type1, $type2);
+            }
+            
+             /**
+             * Returns true if type1 equals type2.
+             * This is a strict equal.
+             * @param type1
+             * @param type2
+             */
+            public equals(type1: PiType, type2: PiType): boolean {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: boolean = typer.isType(elem);
+                    let result: boolean = typer.equals(type1, type2);
                     if (result) {
                         return result;
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return this.generatedTyper.isType(elem);
-            } 
+                return this.generatedTyper.equals(type1, type2);
+            }
+        
+            /**
+             * Returns true if the type that inferType(elem1) returns conforms to the type inferType(elem2) returns, according to
+             * the type rules in the Typer definition. The direction is elem1 conforms to elem2.
+             * @param elem1
+             * @param elem2
+             */
+            public conformsType(elem1: PiElement, elem2: PiElement): boolean {
+                if (!elem1 || !elem2) return false;
+        
+                const $type1: PiType = this.inferType(elem1);
+                const $type2: PiType = this.inferType(elem2);
+                if (!$type1 || !$type2) return false;
+        
+                return this.conforms($type1, $type2);
+            }
             
-            public commonSuperType(elem: ${allLangConcepts}[]): ${rootType} {
+            /**
+             * Returns true if type1 conforms to type2. The direction is type1 conforms to type2.
+             * @param type1
+             * @param type2
+             */
+            public conforms(type1: PiType, type2: PiType): boolean {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: ${rootType} = typer.commonSuperType(elem) as ${rootType};
+                    let result: boolean = typer.conforms(type1, type2);
+                    if (result !== null) {
+                        return result;
+                    }
+                }
+                // no result from custom typers => use the generated typer
+                return this.generatedTyper.conforms(type1, type2);
+            }
+            
+            /**
+             * Returns true if all types of the elements in elemlist1 conform to the types of the elements in elemlist2, in the given order.
+             * @param elemlist1
+             * @param elemlist2
+             */
+            public conformsListType(elemlist1: PiElement[], elemlist2: PiElement[]): boolean {
+                if (!elemlist1 || !elemlist2) return false;
+                if (elemlist1.length !== elemlist2.length) return false;
+        
+                const $typelist1: PiType[] = this.elementListToTypeList(elemlist1);
+                const $typelist2: PiType[] = this.elementListToTypeList(elemlist2);
+                if ($typelist1.length === 0 || $typelist2.length === 0) return false;
+                if ($typelist1.length !== $typelist2.length) return false;
+        
+                return this.conformsList($typelist1, $typelist2);
+            }
+
+            /**
+             * Returns true if all types in typelist1 conform to the types in typelist2, in the given order.
+             * @param typelist1
+             * @param typelist2
+             */
+            public conformsList(typelist1: PiType[], typelist2: PiType[]): boolean {
+                for (const typer of projectitConfiguration.customTypers) {
+                    typer.mainTyper = this;
+                    let result: boolean = typer.conformsList(typelist1, typelist2);
+                    if (result !== null) {
+                        return result;
+                    }
+                }
+                // no result from custom typers => use the generated typer
+                return this.generatedTyper.conformsList(typelist1, typelist2);
+            }
+
+            /**
+             * Returns the common super type of all elements in elemlist
+             * @param elemlist
+             */            
+            public commonSuperType(elemlist: PiElement[]): PiType {
+                if (!elemlist ) return null;
+                if (elemlist.length === 0 ) return null;
+        
+                const $typelist: PiType[] = this.elementListToTypeList(elemlist);
+                if ($typelist.length === 0) return null;
+        
+                return this.commonSuper($typelist);
+            }
+        
+            /**
+             * Returns the common super type of all types in typelist
+             * @param typelist
+             */
+            public commonSuper(typelist: PiType[]): PiType {
+                for (const typer of projectitConfiguration.customTypers) {
+                    typer.mainTyper = this;
+                    let result: PiType = typer.commonSuper(typelist);
                     if (!!result) {
                         return result;
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return this.generatedTyper.commonSuperType(elem);
+                return this.generatedTyper.commonSuper(typelist);
+            }
+            
+            private elementListToTypeList(inlist: PiElement[]): PiType[] {
+                const typelist: PiType[] = [];
+                for (const elem of inlist) {
+                    this.addIfNotPresent(typelist, this.inferType(elem));
+                }
+                return typelist;
+            }
+            
+            private addIfNotPresent<T>(list: T[], addition: T) {
+                if (!!addition && !list.includes(addition)) {
+                    list.push(addition);
+                }
             }
         }`;
     }

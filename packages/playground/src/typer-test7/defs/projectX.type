@@ -58,6 +58,10 @@ UnitLiteral {
         x.baseType equalsto (typeof(self.inner) as TypeRef).type;
         x.unit equalsto self.unit;
     };
+//    infertype x:TypeRef where {
+//        x.type equalsto PredefinedType:BOOLEAN;
+//    } ;
+
 }
 
 GenericLiteral {

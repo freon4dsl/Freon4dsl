@@ -3,6 +3,7 @@ import { PiClassifier, PiElementReference, PiLangElement, PiLanguage } from "../
 export abstract class PitExp extends PiLangElement {
     language: PiLanguage;
     __returnType: PiElementReference<PiClassifier>;
+
     toPiString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PitExp'";
     }
@@ -22,5 +23,9 @@ export abstract class PitExp extends PiLangElement {
     baseSource(): PitExp {
         console.log("baseSource() SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PitExp'");
         return null;
+    }
+
+    get isList(): boolean {
+        return false;
     }
 }

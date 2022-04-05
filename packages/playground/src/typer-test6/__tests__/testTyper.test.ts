@@ -46,7 +46,7 @@ describe ("Testing Typer Ideas", () => {
             expect(errors.find(e => e.message === "Type 'BOOLEAN' of [true] is not equal to STRING")).toBeTruthy();
             expect(errors.find(e => e.message === "Type 'BOOLEAN' of [true] is not equal to NUMBER")).toBeTruthy();
 
-            console.log(errors.map(e => e.message).join("\n"));
+            // console.log(errors.map(e => e.message).join("\n"));
         }
     });
 
@@ -64,7 +64,7 @@ describe ("Testing Typer Ideas", () => {
             expect(errors.find(e => e.message === "Type 'NUMBER' of [100] is not equal to Set < BOOLEAN >")).toBeTruthy();
             expect(errors.find(e => e.message === "Type 'STRING' of [\"string\"] is not equal to Bag < Set < NUMBER > >")).toBeTruthy();
 
-            console.log(errors.map(e => e.message).join("\n"));
+            // console.log(errors.map(e => e.message).join("\n"));
         }
     });
 
@@ -82,8 +82,8 @@ describe ("Testing Typer Ideas", () => {
             expect(errors.find(e => e.message === "Type 'Set < NUMBER >' of [Set { 12, 13, 14 }] is not equal to NUMBER")).toBeTruthy();
             expect(errors.find(e => e.message === "Type 'Bag < Set < NUMBER > >' of [Bag { Set { 12, 13, 14 }, Set { 2, 3, 4 } }] is not equal to NUMBER")).toBeTruthy();
             expect(errors.find(e => e.message === "Type 'Bag < Set < Set < NUMBER > > >' of [Bag { Set { Set { 2, 3, 4 }, Set { 12, 13, 14 } }, Set { Set { 2, 3, 4 } } }] is not equal to NUMBER")).toBeTruthy();
-            // expect(errors.find(e => e.message === "Type 'Set < ANY >' of [Set { }] is not equal to STRING")).toBeTruthy();
-            console.log(errors.map(e => e.message).join("\n"));
+            expect(errors.find(e => e.message === "Type 'Set < ANY >' of [Set { }] is not equal to STRING")).toBeTruthy();
+            // console.log(errors.map(e => e.message).join("\n"));
         }
     });
 
@@ -93,10 +93,10 @@ describe ("Testing Typer Ideas", () => {
         expect(unit1).not.toBeNull();
         if (!!unit1) {
             const errors: PiError[] = validator.validate(unit1);
-            // expect(errors.find(e => e.message === "Type 'Set < BOOLEAN >' of [Set { true, true, false }] is not equal to Set < NUMBER >")).toBeTruthy();
-            // expect(errors.find(e => e.message === "Type 'Bag < >' of [Bag { Set { 12, 13, 14 }, Sequence { \"string\", \"Str\", \"STRING\" } }] is not equal to Bag < Sequence < NUMBER > >")).toBeTruthy();
-            // expect(errors.find(e => e.message === "Type 'Meters < NUMBER >' of [124 Meters] is not equal to kWh < NUMBER >")).toBeTruthy();
-            // expect(errors.length).toBe(3);
+            expect(errors.find(e => e.message === "Type 'Set < BOOLEAN >' of [Set { true, true, false }] is not equal to Set < NUMBER >")).toBeTruthy();
+            expect(errors.find(e => e.message === "Type 'Bag < Collection < STRING > >' of [Bag { Set { 12, 13, 14 }, Sequence { \"string\", \"Str\", \"STRING\" } }] is not equal to Bag < Sequence < NUMBER > >")).toBeTruthy();
+            expect(errors.find(e => e.message === "Type 'Meters < NUMBER >' of [124 Meters] is not equal to kWh < NUMBER >")).toBeTruthy();
+            expect(errors.length).toBe(3);
 
             console.log(errors.map(e => e.message).join("\n"));
         }
@@ -110,7 +110,7 @@ describe ("Testing Typer Ideas", () => {
             const errors: PiError[] = validator.validate(unit1);
             expect(errors.length).toBe(0);
 
-            console.log(errors.map(e => e.message).join("\n"));
+            // console.log(errors.map(e => e.message).join("\n"));
         }
     });
 });
