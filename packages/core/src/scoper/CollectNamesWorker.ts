@@ -10,7 +10,11 @@ export class CollectNamesWorker implements LanguageWorker {
     // 'metatype' may or may not be set; if set any named element is included only if it conforms to this type
     metatype: string;
     // The modelunit where the names search started.
-    modelunit: PiModelUnit;
+    startModelunit: PiModelUnit;
+
+    constructor(modelunit: PiModelUnit) {
+        this.startModelunit = modelunit;
+    }
 
     execBefore(modelelement: PiElement): boolean {
         // find child properties
