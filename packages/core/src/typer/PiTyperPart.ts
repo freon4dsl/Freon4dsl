@@ -60,4 +60,10 @@ export interface PiTyperPart {
      * @param typelist
      */
     commonSuper(typelist: PiType[]): PiType | null;
+
+    /**
+     * Returns all super types as defined in the typer definition.
+     * @param type
+     */
+    getSuperTypes(type: PiType): PiType[] | null;
 }

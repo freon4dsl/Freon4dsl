@@ -46,7 +46,7 @@ UnitLiteral {
 
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
-    infertype x:GenericType where {
+    infertype x:TT_GenericType where {
         // TODO the following results in a compile error, but not in a checker error
         // x.baseType equalsto (typeof(self.content) as Type);
         x.baseType equalsto typeof(self.content); // the typeof of a list === commonSuperType(list)
@@ -60,6 +60,9 @@ GenericLiteral {
 //            aa.name equalsto self.name;
 //        };
 //}
+type GenericType {
+
+}
 
 GenericType {
     equalsto x:GenericType where {

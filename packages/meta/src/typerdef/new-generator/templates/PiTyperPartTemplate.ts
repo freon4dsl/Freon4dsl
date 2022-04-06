@@ -1,10 +1,20 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiConcept, PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
-import { PiTyperDef } from "../../new-metalanguage";
+import {
+    PitClassifierRule,
+    PitConformanceOrEqualsRule,
+    PitConforms,
+    PitLimitedRule,
+    PitSingleRule,
+    PitStatement,
+    PitStatementKind,
+    PiTyperDef
+} from "../../new-metalanguage";
 import { ListUtil } from "../../../utils";
 import { EqualsMaker } from "./EqualsMaker";
 import { TyperGenUtils } from "./TyperGenUtils";
 import { InferMaker } from "./InferMaker";
+import { SuperTypeMaker } from "./SuperTypeMaker";
 
 export class PiTyperPartTemplate {
     typerdef: PiTyperDef;
@@ -97,6 +107,7 @@ export class PiTyperPartTemplate {
         const typerInterfaceName: string = Names.PiTyperPart;
         const equalsMaker: EqualsMaker = new EqualsMaker();
         const inferMaker: InferMaker = new InferMaker();
+        const superTypeMaker: SuperTypeMaker = new SuperTypeMaker();
 
         // TODO see if we need a default type to return from inferType
 
@@ -188,7 +199,15 @@ export class PiTyperPartTemplate {
             public commonSuper(typelist: PiType[]): PiType | null {
                 return null;
             }
-            
+
+            /**
+             * Returns all super types as defined in the typer definition.
+             * @param type
+             */
+            public getSuperTypes(type: PiType): PiType[] {
+                ${superTypeMaker.makeSuperTypes(typerdef, "type", this.imports)}
+            }
+                        
             ${inferMaker.extraMethods.map(meth => meth).join("\n\n")}
             
             private metaTypeOk(element: PiElement, requestedType: string): boolean {
@@ -233,6 +252,4 @@ export class PiTyperPartTemplate {
         result = result.concat(`return false;`);
         return result;
     }
-
-
 }

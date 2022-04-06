@@ -69,7 +69,7 @@ export class InferMaker {
                 ${subs.map(s => `if (toBeCopied.piLanguageConcept() === "${Names.classifier(s)}") {
                     result = ${Names.classifier(s)}.create({
                         ${s.allProperties().map(prop =>
-                    `${prop.name}:${this.makeCopyEntry(prop, Names.classifier(s))}`).join(",\n")}
+                    `${prop.name}:${TyperGenUtils.makeCopyEntry(prop, "toBeCopied", Names.classifier(s))}`).join(",\n")}
                     });
                 }`).join(" else ")}
                 return result;
@@ -257,16 +257,6 @@ export class InferMaker {
         return result;
     }
 
-    private makeCopyEntry(prop: PiProperty, toBeCopiedTypeName: string): string {
-        // TODO lists
-        const typeName: string = Names.classifier(prop.type);
-        if (prop.isPart) {
-            return `this.makeCopyOf${typeName}((toBeCopied as ${toBeCopiedTypeName}).${prop.name})`;
-        } else {
-            return `PiElementReference.create<${typeName}>((toBeCopied as ${toBeCopiedTypeName}).\$${prop.name}, "${typeName}")`;
-        }
-        return '';
-    }
 }
 
 

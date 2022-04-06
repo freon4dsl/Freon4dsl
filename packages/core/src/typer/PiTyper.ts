@@ -74,5 +74,11 @@ export interface PiTyper {
      * @param typelist
      */
     commonSuper(typelist: PiType[]): PiType;
+
+    /**
+     * Returns all super types as defined in the typer definition.
+     * @param type
+     */
+    getSuperTypes(type: PiType): PiType[];
 }
 // end::typer-interface[]

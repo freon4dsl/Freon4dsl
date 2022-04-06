@@ -3,6 +3,10 @@ typer
 // What are types?
 istype { TypeUsage }
 
+//type AAP {
+//    noot: Mies;
+//    piet: Kleppe;
+//}
 // Which concepts have a type?
 hastype { Exp, NamedType }
 
@@ -85,6 +89,9 @@ TypeRef {
     equalsto tt:TypeRef where {
         tt.type equalsto self.type;
     } ;
+    conformsto tt:TypeRef where {
+        tt.type conformsto self.type;
+    } ;
 }
 
 GenericType {
@@ -113,5 +120,11 @@ UnitOfMeasurement {
     conformsto rr:UnitOfMeasurement where {
             self.baseType conformsto rr.baseType;
             self.unit equalsto rr.unit;
+            // self.unit equalsto rr.unit; TODO this should result in an error message
         };
+}
+
+PredefinedType {
+    NUMBER conformsto STRING;
+    BOOLEAN conformsto STRING;
 }

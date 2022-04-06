@@ -13,7 +13,7 @@ import {
 } from "../../new-metalanguage";
 import { ListUtil, Names } from "../../../utils";
 import { PitExpWithType } from "../../new-metalanguage/expressions/PitExpWithType";
-import { PiClassifier, PiLanguage } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiLanguage, PiProperty } from "../../../languagedef/metalanguage";
 
 const conformsFunctionName: string = "conformsTo";
 const equalsFunctionName: string = "equalsType";
@@ -102,5 +102,16 @@ export class TyperGenUtils {
         }
         console.log("remove returns: null" );
         return null;
+    }
+
+    static makeCopyEntry(prop: PiProperty, toBeCopiedName: string, toBeCopiedTypeName: string): string {
+        // TODO lists
+        const typeName: string = Names.classifier(prop.type);
+        if (prop.isPart) {
+            return `this.makeCopyOf${typeName}((${toBeCopiedName} as ${toBeCopiedTypeName}).${prop.name})`;
+        } else {
+            return `PiElementReference.create<${typeName}>((${toBeCopiedName} as ${toBeCopiedTypeName}).\$${prop.name}, "${typeName}")`;
+        }
+        return '';
     }
 }

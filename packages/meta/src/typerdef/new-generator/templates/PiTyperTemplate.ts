@@ -202,6 +202,28 @@ export class PiTyperTemplate {
                 return this.generatedTyper.commonSuper(typelist);
             }
             
+            /**
+             * Returns all super types as defined in the typer definition.
+             * @param type
+             */
+            public getSuperTypes(type: PiType): PiType[] {
+                for (const typer of projectitConfiguration.customTypers) {
+                    typer.mainTyper = this;
+                    let result: PiType = typer.getSuperTypes(typelist);
+                    if (!!result) {
+                        return result;
+                    }
+                }
+                // no result from custom typers => use the generated typer
+                return this.generatedTyper.getSuperTypes(typelist);
+            }
+
+            /**
+             * Returns a list of types: one for each element of 'inlist',
+             * if this type is not yet present in the result.
+             * @param inlist
+             * @private
+             */            
             private elementListToTypeList(inlist: PiElement[]): PiType[] {
                 const typelist: PiType[] = [];
                 for (const elem of inlist) {
@@ -215,6 +237,7 @@ export class PiTyperTemplate {
                     list.push(addition);
                 }
             }
+            
         }`;
     }
 
@@ -230,5 +253,4 @@ export class PiTyperTemplate {
         export * from "./${Names.customTyper(language)}";
         `;
     }
-
 }
