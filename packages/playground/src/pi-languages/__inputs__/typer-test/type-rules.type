@@ -3,6 +3,11 @@ typer
 // What are types?
 istype { Type, TypeDeclaration }
 
+type AAP {
+    prop1: string;
+    prop2: Type;
+}
+
 // Which concepts have a type?
 hastype { Exp }
 
@@ -29,7 +34,7 @@ NamedExp {
 }
 
 PlusExp {
-    infertype (commonSuperType(self.left, self. right) as Type);
+    infertype commonSuperType(self.left, self. right);
 }
 
 UnitLiteral {

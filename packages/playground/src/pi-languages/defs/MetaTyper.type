@@ -13,23 +13,26 @@ PitSelfExp {
     infertype PiPrimitiveType:boolean;
 }
 
-PitExpWithType {
-    infertype self.expectedType;
+PitVarCallExp {
+    infertype self.variable.type;
 }
 
+PitCreateExp {
+    infertype self.type;
+}
 PitFunctionCallExp {
     infertype self.returnType;
 }
 
 PitWhereExp {
-    infertype self.otherType.type;
+    infertype self.variable.type;
 }
 
 PitAnytypeExp {
     // TODO this rule should be different
     infertype PiPrimitiveType:boolean;
 }
-PitInstanceExp {
+PitLimitedInstanceExp {
     // TODO this rule should be different
     infertype PiPrimitiveType:boolean;
 }

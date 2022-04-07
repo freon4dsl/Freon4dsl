@@ -1,18 +1,18 @@
 scoper XX for language PiLanguage
 
-isnamespace { PitClassifierRule, PiClassifier, PitInstanceExp }
+isnamespace { PitClassifierSpec, PiClassifier, PitLimitedInstanceExp }
 
-PitAppliedExp {
-    scope = typeof( container );
+PitPropertyCallExp {
+    scope = typeof( self.source );
 }
 
-PitInstanceExp {
+PitLimitedInstanceExp {
     namespace_addition = self.myLimited;
 }
 
-PitLimitedRule { // TODO This addition should be on PitClassifierRule, but that results in a MobX cycle
-    namespace_addition = self.myClassifier;
-}
+//PitLimitedRule { // TODO This addition should be on PitClassifierRule, but that results in a MobX cycle
+//    namespace_addition = self.myClassifier;
+//}
 
 // scope rules for PiStructureDef
 PiConcept {

@@ -2,7 +2,6 @@ import { PiLanguageEnvironment } from "../environment/gen/PiLanguageEnvironment"
 import { FileHandler } from "./FileHandler";
 import { PiStructureDef, PiValidatorDef, PiScoperDef, PiTyperDef, PiLanguage } from "../language/gen";
 import { PiError } from "@projectit/core";
-import { StructurePrint } from "./StructurePrint";
 
 describe("Pi Language Parser", () => {
     const reader = PiLanguageEnvironment.getInstance().reader;
@@ -78,7 +77,7 @@ describe("Pi Language Parser", () => {
             // });
 
             expect(typeUnit.types.length).toBe(2);
-            expect(typeUnit.anyTypeRule).not.toBeNull();
+            expect(typeUnit.anyTypeSpec).not.toBeNull();
             // new StructurePrint().print(typeUnit);
             console.log(writer.writeToString(typeUnit, 0, false));
             // expect(unit1).toMatchSnapshot();

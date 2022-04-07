@@ -1,40 +1,56 @@
 editor default
 
-referenceSeparator [::::]
+referenceSeparator [::]
 
 // begin typer definition
 PiTyperDef {[
     typer
     [?istype { ${self.types horizontal separator [, ]} }]
+    ${self.typeConcepts}
     [?hastype { ${self.conceptsWithType horizontal separator [, ]} }]
-    [?${self.anyTypeRule}]
-    ${self.classifierRules vertical}
+    [?${self.anyTypeSpec}]
+    ${self.classifierSpecs vertical}
     ]}
-PitConformanceOrEqualsRule {[
-    ${self.myClassifier} {
-        ${self.myRules}
+PitTypeConcept {[
+    type ${self.name} [?base ${self.base}] {
+        ${self.properties terminator[;]}
     }
 ]}
-PitAnyTypeRule {[
-    anytype {
-        ${self.myRules}
-    }
-    ]}
-PitSingleRule {
-    [ ${self.kind} ${self.exp} ;]
+PitProperty {
+    [${self.name} : ${self.type}]
 }
-PitInferenceRule {[
+PitClassifierSpec {[
     ${self.myClassifier} {
-        infertype ${self.exp};
+        ${self.rules}
     }
 ]}
-PitLimitedRule {[
-    ${self.myClassifier} {
-        ${self.statements terminator[; ]}
+PitAnyTypeSpec {[
+    anytype {
+        ${self.rules}
     }
 ]}
-PitExpWithType {
-    [(${self.inner} as ${self.expectedType})]
+PitInferenceRule {
+    [infertype ${self.exp};]
+}
+PitConformanceRule {
+    [conformsto ${self.exp};]
+}
+PitEqualsRule {
+    [equalsto ${self.exp};]
+}
+PitLimitedRule {
+    [${self.exp};]
+}
+PitVarDecl {
+    [${self.name} : ${self.type}]
+}
+PitPropInstance {
+    [${self.property} : ${self.value}]
+}
+
+// expressions
+PitPropertyCallExp {
+    [${source}.${property}]
 }
 PitSelfExp {
     [self]
@@ -42,11 +58,20 @@ PitSelfExp {
 PitAnytypeExp {
     [anytype]
 }
-PitPropertyCallExp {
-    [[?${source}.]${property}]
+PitVarCallExp {
+    [${self.variable}]
+}
+PitCreateExp {
+    [${self.type} { ${self.propertyDefs separator[,] } }]
+}
+PitFunctionCallExp {
+    [${self.calledFunction} ( ${self.arguments horizontal separator[, ]} )]
+}
+PitLimitedInstanceExp {
+    [[?${myLimited}:]${myInstance}]
 }
 PitWhereExp {[
-    ${self.otherType} where {
+    ${self.variable} where {
         ${self.conditions terminator[;]}
     }
 ]}
@@ -55,13 +80,4 @@ PitEquals {
 }
 PitConforms {
     symbol = "conformsto"
-}
-PitInstanceExp {
-    [[?${myLimited}:]${myInstance}]
-}
-PitProperty {
-    [${self.name} : ${self.type}]
-}
-PitFunctionCallExp {
-    [${self.calledFunction} ( ${self.arguments horizontal separator[, ]} )]
 }

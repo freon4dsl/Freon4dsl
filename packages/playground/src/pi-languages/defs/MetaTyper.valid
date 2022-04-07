@@ -3,7 +3,7 @@ validator yyy for language PiLanguage
 PiTyperDef {
     // 1. No two classifier-rules for the same classifier
     // Should be: with the same kind: infertype, equals, conforms.
-    isunique myClassifier in self.classifierRules;
+    isunique myClassifier in self.classifierSpecs;
 }
 
 //PitInferenceRule {

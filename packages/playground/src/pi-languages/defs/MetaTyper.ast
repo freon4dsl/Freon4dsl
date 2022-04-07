@@ -6,90 +6,87 @@ modelunit PiTyperDef {
     location?: PiParseLocation;
     reference types: PiClassifier[];
     reference conceptsWithType: PiClassifier[];
-    anyTypeRule?: PitAnyTypeRule;
-    classifierRules: PitClassifierRule[];
+    typeConcepts: PitTypeConcept[];
+    anyTypeSpec?: PitAnyTypeSpec;
+    classifierSpecs: PitClassifierSpec[];
     reference typeroot?: PiClassifier;
     file-extension = "type";
 }
-
-limited PitStatementKind {
-    EQUALS = {name: "equalsto"}
-    CONFORMS = {name: "conformsto"}
-}
-
-concept PitAnyTypeRule {
-    myRules: PitSingleRule[];
-}
-
-abstract concept PitClassifierRule {
-    reference myClassifier: PiClassifier;
-}
-concept PitConformanceOrEqualsRule base PitClassifierRule {
-    myRules: PitSingleRule[];
-}
-concept PitInferenceRule base PitClassifierRule {
-    reference returnType?: PiClassifier;
-    exp: PitExp;
-}
-concept PitLimitedRule base PitClassifierRule {
-    statements: PitStatement[];
-}
-concept PitSingleRule {
-    kind: PitStatementKind;
-    exp: PitExp;
+concept PitTypeConcept base PiClassifier {
+    properties: PitProperty[];
+    reference base?: PiClassifier;
 }
 concept PitProperty base PiProperty {
 }
+concept PitClassifierSpec {
+    reference myClassifier: PiClassifier;
+    rules: PitTypeRule[];
+}
+concept PitAnyTypeSpec {
+    rules: PitTypeRule[];
+}
+abstract concept PitTypeRule {
+    exp: PitExp;
+}
+concept PitInferenceRule base PitTypeRule {
+    reference returnType?: PiClassifier; // not parsed, set by the checker
+}
+concept PitConformanceRule base PitTypeRule {
+}
+concept PitEqualsRule base PitTypeRule {
+}
+concept PitLimitedRule base PitTypeRule {
+}
+concept PitVarDecl {
+    name: identifier;
+    reference type: PitTypeConcept;
+}
+concept PitPropInstance base PiLangElement {
+    reference property: PiProperty;
+    value: PitExp;
+}
 
-// expressions used in type def
+// expressions
 abstract expression PitExp {
-//    appliedFeature?: PitAppliedExp;
 }
-abstract expression PitAppliedExp base PitExp {
-    source?: PitExp;
-}
-expression PitExpWithType base PitExp {
-    reference expectedType: PiClassifier;
-    inner: PitExp;
+expression PitPropertyCallExp base PitExp {
+    source: PitExp;
+    reference property: PitProperty;
 }
 expression PitSelfExp base PitExp {
 }
 expression PitAnytypeExp base PitExp {
 }
-expression PitPropertyCallExp base PitAppliedExp {
-    reference property: PitProperty;
+expression PitVarCallExp base PitExp {
+    reference variable: PitVarDecl;
 }
-expression PitInstanceExp base PitExp {
+expression PitCreateExp base PitExp {
+    reference type: PiClassifier;
+    propertyDefs: PitPropInstance[];
+}
+expression PitFunctionCallExp base PitExp {
+    calledFunction: identifier;
+    reference returnType?: PiClassifier; // not parsed, set by checker
+    arguments: PitExp[];
+}
+expression PitLimitedInstanceExp base PitExp {
     reference myLimited?: PiLimitedConcept;
     reference myInstance: PiInstance;
 }
 expression PitWhereExp base PitExp {
-    otherType: PitProperty; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
-    conditions: PitStatement[];
+    variable: PitVarDecl; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
+    conditions: PitBinaryExp[];
 }
-abstract binary expression PitStatement base PitExp {
+abstract binary expression PitBinaryExp base PitExp {
     left: PitExp;
     right: PitExp;
-//    operand: PitStatementKind; // either 'equalsto' or 'conformsto'
+//    operand: PitBinaryExpKind; // either 'equalsto' or 'conformsto'
 }
-binary expression PitEquals base PitStatement {
+binary expression PitEquals base PitBinaryExp {
     priority = 8;
 }
-binary expression PitConforms base PitStatement {
+binary expression PitConforms base PitBinaryExp {
     priority = 4;
 }
-expression PitFunctionCallExp base PitExp {
-    calledFunction: identifier;
-    // reference calledFunction: PitFunction;
-    reference returnType?: PiClassifier;
-    arguments: PitExp[];
-}
-limited PitFunction {
-    name: identifier;
-    numberOfArguments: number;
-    // TODO do we need a returnType? It can NOT have PiClassifier as type!!
-    // reference returnType: PiClassifier;
-    commonSuperType = { numberOfArguments: 2 }
-    typeof = { numberOfArguments: 1 }
-}
+
 // end typer definition
