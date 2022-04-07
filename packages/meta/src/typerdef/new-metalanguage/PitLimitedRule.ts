@@ -1,7 +1,6 @@
-import { PitStatement } from "./expressions";
-import { PitClassifierRule } from "./PitClassifierRule";
+import { PitTypeRule } from "./PitTypeRule";
 
-export class PitLimitedRule extends PitClassifierRule {
+export class PitLimitedRule extends PitTypeRule {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -9,24 +8,17 @@ export class PitLimitedRule extends PitClassifierRule {
      */
     static create(data: Partial<PitLimitedRule>): PitLimitedRule {
         const result = new PitLimitedRule();
-        if (!!data.statements) {
-            data.statements.forEach(x => result.statements.push(x));
-        }
-        if (!!data.myClassifier) {
-            result.myClassifier = data.myClassifier;
-        }
-        if (!!data.__myClassifier) {
-            result.__myClassifier = data.__myClassifier;
+        if (!!data.exp) {
+            result.exp = data.exp;
         }
         if (data.agl_location) {
             result.agl_location = data.agl_location;
         }
         return result;
     }
-    statements: PitStatement[] = [];
+    readonly $typename: string = "PitLimitedRule"; // holds the metatype in the form of a string
+
     toPiString(): string {
-        return `${this.__myClassifier.name} { 
-            ${this.statements.map( t => t.toPiString() ).join("\n")}
-             }`;
+        return `${this.exp.toPiString()}`;
     }
 }

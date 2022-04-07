@@ -5,15 +5,16 @@
  */
 
 export {
-    PitExp,
-    PitWhereExp,
-    PitInstanceExp,
-    PitAppliedExp,
-    PitPropertyCallExp,
-    PitSelfExp,
-    PitFunctionCallExp,
-    PitStatement,
     PitAnytypeExp,
     PitConforms,
-    PitEquals
+    PitEquals,
+    PitExp,
+    PitFunctionCallExp,
+    PitLimitedInstanceExp,
+    PitPropertyCallExp,
+    PitSelfExp,
+    PitWhereExp,
+    PitVarCallExp,
+    PitCreateExp,
+    PitBinaryExp,
 } from "./internal";

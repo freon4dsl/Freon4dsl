@@ -1,9 +1,11 @@
 import { PiDefinitionElement } from "../../utils";
 import { PiClassifier, PiElementReference, PiLanguage } from "../../languagedef/metalanguage";
-import { PitAnyTypeRule } from "./PitAnyTypeRule";
-import { PitClassifierRule } from "./PitClassifierRule";
+import { PitTypeConcept } from "./PitTypeConcept";
+import { PitClassifierSpec } from "./PitClassifierSpec";
+import { PitAnyTypeSpec } from "./PitAnyTypeSpec";
 
 export class PiTyperDef extends PiDefinitionElement {
+    language: PiLanguage;
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -14,11 +16,14 @@ export class PiTyperDef extends PiDefinitionElement {
         if (!!data.location) {
             result.location = data.location;
         }
-        if (!!data.anyTypeRule) {
-            result.anyTypeRule = data.anyTypeRule;
+        if (!!data.typeConcepts) {
+            data.typeConcepts.forEach(x => result.typeConcepts.push(x));
         }
-        if (!!data.classifierRules) {
-            data.classifierRules.forEach(x => result.classifierRules.push(x));
+        if (!!data.anyTypeSpec) {
+            result.anyTypeSpec = data.anyTypeSpec;
+        }
+        if (!!data.classifierSpecs) {
+            data.classifierSpecs.forEach(x => result.classifierSpecs.push(x));
         }
         if (!!data.types) {
             data.types.forEach(x => result.types.push(x));
@@ -26,56 +31,35 @@ export class PiTyperDef extends PiDefinitionElement {
         if (!!data.conceptsWithType) {
             data.conceptsWithType.forEach(x => result.conceptsWithType.push(x));
         }
-        if (!!data.__types_references) {
-            data.__types_references.forEach(x => result.__types_references.push(x));
+        if (!!data.typeRoot) {
+            result.typeRoot = data.typeRoot;
         }
-        if (!!data.__conceptsWithType_references) {
-            data.__conceptsWithType_references.forEach(x => result.__conceptsWithType_references.push(x));
-        }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (!!data.__typeRoot) {
+            result.__typeRoot = data.__typeRoot;
         }
         return result;
     }
-    name: string; // temporarily added to conform to PiLangElement TODO remove when scoping changes
-    language: PiLanguage; // set by checker
-    __typeRoot: PiElementReference<PiClassifier> = null; // calculated by checker
-    __types_references: PiElementReference<PiClassifier>[] = [];
-    __conceptsWithType_references: PiElementReference<PiClassifier>[] = [];
-    anyTypeRule?: PitAnyTypeRule;
-    classifierRules: PitClassifierRule[] = [];
 
-    toPiString(): string {
-        return `
-        typer
-        istype { ${this.__types_references.map( t => t.name ).join(", ")} }
-        hastype { ${this.__conceptsWithType_references.map( t => t.name ).join(", ") } }
-        ${this.anyTypeRule.toPiString()}
-        ${this.classifierRules.map(r => r.toPiString()).join("\n")}`
-    }
-
-    get types(): PiClassifier[] {
-        const result: PiClassifier[] = [];
-        for (const ref of this.__types_references) {
-            if (!!ref.referred) {
-                result.push(ref.referred);
-            }
-        }
-        return result;
-    }
+    typeConcepts: PitTypeConcept[]; // implementation of part 'typeConcepts'
+    anyTypeSpec: PitAnyTypeSpec; // implementation of part 'anyTypeSpec'
+    classifierSpecs: PitClassifierSpec[]; // implementation of part 'classifierSpecs'
+    __types: PiElementReference<PiClassifier>[]; // implementation of reference 'types'
+    __conceptsWithType: PiElementReference<PiClassifier>[]; // implementation of reference 'conceptsWithType'
+    __typeRoot: PiElementReference<PiClassifier>; // implementation of reference 'typeroot'
+    readonly $typename: string = "PiTyperDef"; // holds the metatype in the form of a string
 
     set types(newTypes: PiClassifier[]) {
-        this.__types_references = [];
+        this.__types = [];
         newTypes.forEach(t => {
             const xx = PiElementReference.create<PiClassifier>(t, "PiClassifier");
             xx.owner = this.language;
-            this.__types_references.push(xx);
+            this.__types.push(xx);
         });
     }
 
     get conceptsWithType(): PiClassifier[] {
         const result: PiClassifier[] = [];
-        for (const ref of this.__conceptsWithType_references) {
+        for (const ref of this.__conceptsWithType) {
             if (!!ref.referred) {
                 result.push(ref.referred);
             }
@@ -84,11 +68,11 @@ export class PiTyperDef extends PiDefinitionElement {
     }
 
     set conceptsWithType(newTypes: PiClassifier[]) {
-        this.__conceptsWithType_references = [];
+        this.__conceptsWithType = [];
         newTypes.forEach(t => {
             const xx = PiElementReference.create<PiClassifier>(t, "PiClassifier");
             xx.owner = this.language;
-            this.__conceptsWithType_references.push(xx);
+            this.__conceptsWithType.push(xx);
         });
     }
     get typeRoot(): PiClassifier {
@@ -102,5 +86,14 @@ export class PiTyperDef extends PiDefinitionElement {
             this.__typeRoot = PiElementReference.create<PiClassifier>(cls, "PiClassifier");
             this.__typeRoot.owner = this.language;
         }
+    }
+    toPiString(): string{
+        return `typer
+        istype { ${this.types.map(t => t.name).join(", ")}
+        ${this.typeConcepts.map(con => con.toPiString()).join("\n")}
+        hastype { ${this.conceptsWithType.map(t => t.name).join(", ")}
+        ${this.anyTypeSpec?.toPiString()}
+        ${this.classifierSpecs.map(con => con.toPiString()).join("\n")}
+        `;
     }
 }

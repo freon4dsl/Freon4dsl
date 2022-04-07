@@ -1,9 +1,10 @@
 import { PitExp } from "./expressions/PitExp";
-import { PitClassifierRule } from "./PitClassifierRule";
 import { PiClassifier, PiElementReference } from "../../languagedef/metalanguage";
+import { PitTypeRule } from "./PitTypeRule";
 
-export class PitInferenceRule extends PitClassifierRule {
-    __returnType: PiElementReference<PiClassifier>;
+
+export class PitInferenceRule extends PitTypeRule {
+
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -14,20 +15,16 @@ export class PitInferenceRule extends PitClassifierRule {
         if (!!data.exp) {
             result.exp = data.exp;
         }
-        if (!!data.myClassifier) {
-            result.myClassifier = data.myClassifier;
-        }
-        if (!!data.__myClassifier) {
-            result.__myClassifier = data.__myClassifier;
-        }
         if (data.agl_location) {
             result.agl_location = data.agl_location;
         }
         return result;
     }
-    exp: PitExp;
+    readonly $typename: string = "PitInferenceRule"; // holds the metatype in the form of a string
+
+    __returnType: PiElementReference<PiClassifier>;    exp: PitExp;
     toPiString(): string {
-        return `${this.__myClassifier.name} { infertype ${this.exp.toPiString()} }`;
+        return `infertype ${this.exp.toPiString()}`;
     }
     get returnType(): PiClassifier {
         if (!!this.__returnType && !!this.__returnType.referred) {

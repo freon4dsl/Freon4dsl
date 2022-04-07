@@ -1,18 +1,16 @@
 import {
     PitAnytypeExp,
-    PitAppliedExp,
     PitConforms,
     PitEquals,
     PitExp,
     PitFunctionCallExp,
-    PitInstanceExp,
+    PitLimitedInstanceExp,
     PitPropertyCallExp,
     PitSelfExp,
     PitWhereExp,
     PiTyperDef
 } from "../../new-metalanguage";
 import { ListUtil, Names } from "../../../utils";
-import { PitExpWithType } from "../../new-metalanguage/expressions/PitExpWithType";
 import { PiClassifier, PiLanguage, PiProperty } from "../../../languagedef/metalanguage";
 
 const conformsFunctionName: string = "conformsTo";
@@ -45,9 +43,10 @@ export class TyperGenUtils {
             if (noSource) { // replace the name of the property by the parameter 'varName'
                 return `${exp.property.name}${refText}`;
             } else {
-                return `${this.makeSourceTypeScript(exp, varName, imports)}${exp.property.name}${refText}`;
+                // return `${this.makeSourceTypeScript(exp, varName, imports)}${exp.property.name}${refText}`;
+                return ''
             }
-        } else if (exp instanceof PitInstanceExp) {
+        } else if (exp instanceof PitLimitedInstanceExp) {
             ListUtil.addIfNotPresent(imports, Names.concept(exp.myLimited));
             return Names.concept(exp.myLimited) + "." + Names.instance(exp.myInstance);
         } else if (exp instanceof PitSelfExp) {
@@ -63,21 +62,17 @@ export class TyperGenUtils {
             return `this.mainTyper.${equalsFunctionName}(${this.makeTypeScriptForExp(exp.left, leftVarName, imports)}, ${this.makeTypeScriptForExp(exp.right, rightVarName, imports)})`;
         } else if (exp instanceof PitWhereExp) {
             // no common typescript for all occcurences of whereExp
-        } else if (exp instanceof PitExpWithType) {
-            // TODO see if we really need a class PiExpWithType
-            // console.log("returning empty for " + exp.toPiString() + " of type " + exp.constructor.name);
-            return `(${this.makeTypeScriptForExp(exp.inner, varName, imports)} as ${Names.classifier(exp.expectedType)})`;
         }
         return '';
     }
 
-    public static makeSourceTypeScript(exp: PitAppliedExp, varName: string, imports: string[]) {
-        let sourceStr: string = "";
-        if (!!exp.source) {
-            sourceStr = this.makeTypeScriptForExp(exp.source, varName, imports) + ".";
-        }
-        return sourceStr;
-    }
+    // public static makeSourceTypeScript(exp: PitApplied, varName: string, imports: string[]) {
+    //     let sourceStr: string = "";
+    //     if (!!exp.source) {
+    //         sourceStr = this.makeTypeScriptForExp(exp.source, varName, imports) + ".";
+    //     }
+    //     return sourceStr;
+    // }
 
     static getTypeRoot(language: PiLanguage, typerdef: PiTyperDef) {
         let rootType: string = Names.allConcepts(language);
@@ -89,20 +84,20 @@ export class TyperGenUtils {
         return rootType;
     }
 
-    static removeBaseSource(otherTypePart: PitExp | PitAppliedExp): PitAppliedExp {
-        // console.log("removing base Source: " + otherTypePart.toPiString());
-        if (otherTypePart instanceof PitAppliedExp && !!otherTypePart.source) {
-            if (!(otherTypePart.source instanceof PitAppliedExp)) {
-                return this.removeBaseSource(otherTypePart.source);
-            } else {
-                otherTypePart.source = null;
-                // console.log("remove returns: " + otherTypePart.toPiString());
-                return otherTypePart;
-            }
-        }
-        console.log("remove returns: null" );
-        return null;
-    }
+    // static removeBaseSource(otherTypePart: PitExp | PitAppliedExp): PitAppliedExp {
+    //     // console.log("removing base Source: " + otherTypePart.toPiString());
+    //     if (otherTypePart instanceof PitAppliedExp && !!otherTypePart.source) {
+    //         if (!(otherTypePart.source instanceof PitAppliedExp)) {
+    //             return this.removeBaseSource(otherTypePart.source);
+    //         } else {
+    //             otherTypePart.source = null;
+    //             // console.log("remove returns: " + otherTypePart.toPiString());
+    //             return otherTypePart;
+    //         }
+    //     }
+    //     console.log("remove returns: null" );
+    //     return null;
+    // }
 
     static makeCopyEntry(prop: PiProperty, toBeCopiedName: string, toBeCopiedTypeName: string): string {
         // TODO lists

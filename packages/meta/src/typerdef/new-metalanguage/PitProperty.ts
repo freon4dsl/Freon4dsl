@@ -26,17 +26,22 @@ export class PitProperty extends PiProperty {
         if (!!data.location) {
             result.location = data.location;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
-        }
         if (!!data.refType) {
             result.refType = data.refType;
         }
         if (!!data.type) {
             result.type = data.type;
         }
+        if (data.agl_location) {
+            result.agl_location = data.agl_location;
+        }
+        // if (!!data.owningConcept) {
+        //     result.owningConcept = data.owningConcept;
+        // }
         return result;
     }
+    readonly $typename: string = "PitProperty"; // holds the metatype in the form of a string
+
     refType: PiElementReference<PiClassifier>;
 
     get type(): PiClassifier {

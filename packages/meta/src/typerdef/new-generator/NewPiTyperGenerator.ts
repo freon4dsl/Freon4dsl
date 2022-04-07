@@ -22,8 +22,7 @@ export class NewPiTyperGenerator {
         }
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
-        const name = typerdef ? typerdef.name + " " : "";
-        LOGGER.log("Generating typer: " + name + "in folder " + this.typerGenFolder);
+        LOGGER.log("Generating typer in folder " + this.typerGenFolder);
 
         const typer = new PiTyperTemplate();
         const customPart = new CustomTyperPartTemplate();

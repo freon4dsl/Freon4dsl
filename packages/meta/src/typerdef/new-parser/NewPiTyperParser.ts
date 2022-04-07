@@ -87,16 +87,17 @@ export class NewPiTyperParser {
             let result: PiTyperDef = submodels[0];
             submodels.forEach((sub, index) => {
                 if (index > 0) {
-                    result.__types_references.push(...sub.__types_references);
-                    result.__conceptsWithType_references.push(...sub.__conceptsWithType_references);
-                    if (!!sub.anyTypeRule) {
-                        if (!result.anyTypeRule) {
-                            result.anyTypeRule = sub.anyTypeRule;
+                    result.__types.push(...sub.__types);
+                    result.typeConcepts.push(...sub.typeConcepts);
+                    result.__conceptsWithType.push(...sub.__conceptsWithType);
+                    if (!!sub.anyTypeSpec) {
+                        if (!result.anyTypeSpec) {
+                            result.anyTypeSpec = sub.anyTypeSpec;
                         } else {
-                            this.checker.errors.push(`Found a second anytype rule in ${Checker.location(sub.anyTypeRule)}, the first one is in ${Checker.location(result.anyTypeRule)}.`)
+                            this.checker.errors.push(`Found a second anytype rule in ${Checker.location(sub.anyTypeSpec)}, the first one is in ${Checker.location(result.anyTypeSpec)}.`)
                         }
                     }
-                    result.classifierRules.push(...sub.classifierRules);
+                    result.classifierSpecs.push(...sub.classifierSpecs);
                 }
             });
             return result;

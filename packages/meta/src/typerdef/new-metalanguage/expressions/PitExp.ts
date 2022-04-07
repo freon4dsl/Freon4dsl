@@ -1,8 +1,10 @@
-import { PiClassifier, PiElementReference, PiLangElement, PiLanguage } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiElementReference, PiLanguage } from "../../../languagedef/metalanguage";
+import { PiDefinitionElement } from "../../../utils";
 
-export abstract class PitExp extends PiLangElement {
+export abstract class PitExp extends PiDefinitionElement {
     language: PiLanguage;
     __returnType: PiElementReference<PiClassifier>;
+    readonly $typename: string = "PitExp"; // holds the metatype in the form of a string
 
     toPiString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PitExp'";

@@ -5,33 +5,36 @@ import {
     PiElementReference,
     PiClassifier,
     PiLimitedConcept,
-    PiInstance
+    PiInstance, PiProperty
 } from "../../languagedef/metalanguage";
 import {
     PiTyperDef,
-    PitAnyTypeRule,
-    PitSingleRule,
+    PitAnyTypeSpec,
     PitPropertyCallExp,
     PitSelfExp,
     PitAnytypeExp,
-    PitInstanceExp,
+    PitLimitedInstanceExp,
     PitWhereExp,
     PitFunctionCallExp,
-    PitConformanceOrEqualsRule,
     PitInferenceRule,
     PitLimitedRule,
-    PitClassifierRule,
-    PitStatementKind,
     PitExp,
     PitProperty,
-    PitStatement,
-    PitAppliedExp,
     PitEquals,
     PitConforms
 } from "../new-metalanguage";
 import { PiTyperSyntaxAnalyser } from "./PiTyperSyntaxAnalyser";
 import { PiParseLocation } from "../../utils";
-import { PitExpWithType } from "../new-metalanguage/expressions/PitExpWithType";
+import { PitTypeConcept } from "../new-metalanguage/PitTypeConcept";
+import { PitClassifierSpec } from "../new-metalanguage/PitClassifierSpec";
+import { PitTypeRule } from "../new-metalanguage/PitTypeRule";
+import { PitVarCallExp } from "../new-metalanguage/expressions/PitVarCallExp";
+import { PitVarDecl } from "../new-metalanguage/PitVarDecl";
+import { PitCreateExp } from "../new-metalanguage/expressions/PitCreateExp";
+import { PitPropInstance } from "../new-metalanguage/PitPropInstance";
+import { PitBinaryExp } from "../new-metalanguage/expressions/PitBinaryExp";
+import { PitConformanceRule } from "../new-metalanguage/PitConformanceRule";
+import { PitEqualsRule } from "../new-metalanguage/PitEqualsRule";
 
 export class PiTyperDefSyntaxAnalyserPart {
     mainAnalyser: PiTyperSyntaxAnalyser;
@@ -44,18 +47,20 @@ export class PiTyperDefSyntaxAnalyserPart {
      * Method to transform branches that match the following rule:
      * PiTyperDef = 'typer'
      *	 ( 'istype' '\{' [ __pi_reference / ',' ]* '}' )?
+     *	 PitTypeConcept*
      *	 ( 'hastype' '\{' [ __pi_reference / ',' ]* '}' )?
-     *	 PitAnyTypeRule?
-     *	 PitClassifierRule* ;
+     *	 PitAnyTypeSpec?
+     *	 PitClassifierSpec* ;
      * @param branch
      * @private
      */
     public transformPiTyperDef(branch: SPPTBranch): PiTyperDef {
         // console.log('transformPiTyperDef called: ' + branch.name);
         let __types: PiElementReference<PiClassifier>[];
+        let __typeConcepts: PitTypeConcept[];
         let __conceptsWithType: PiElementReference<PiClassifier>[];
-        let __anyTypeRule: PitAnyTypeRule;
-        let __classifierRules: PitClassifierRule[];
+        let __anyTypeSpec: PitAnyTypeSpec;
+        let __classifierSpecs: PitClassifierSpec[];
         const children = this.mainAnalyser.getChildren(branch);
         if (!children[1].isEmptyMatch) {
             // RHSOptionalGroup
@@ -63,79 +68,122 @@ export class PiTyperDefSyntaxAnalyserPart {
             const _propItem = this.mainAnalyser.getChildren(_optGroup);
 
             __types = this.mainAnalyser.transformSharedPackedParseTreeRefList<PiClassifier>(_propItem[2], "PiClassifier", ","); // RHSRefListWithSeparator
+        } // RHSPartListEntry
+        if (children[2].name !== "PitTypeConcept") {
+            __typeConcepts = this.mainAnalyser.transformSharedPackedParseTreeList<PitTypeConcept>(children[2]);
+        } else {
+            // special case: only when this entry is the single rhs entry of this rule
+            __typeConcepts = [];
+            for (const child of children) {
+                __typeConcepts.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
+            }
         }
-        if (!children[2].isEmptyMatch) {
+        if (!children[3].isEmptyMatch) {
             // RHSOptionalGroup
-            const _optGroup = this.mainAnalyser.getGroup(children[2]);
+            const _optGroup = this.mainAnalyser.getGroup(children[3]);
             const _propItem = this.mainAnalyser.getChildren(_optGroup);
 
             __conceptsWithType = this.mainAnalyser.transformSharedPackedParseTreeRefList<PiClassifier>(_propItem[2], "PiClassifier", ","); // RHSRefListWithSeparator
         }
-        if (!children[3].isEmptyMatch) {
+        if (!children[4].isEmptyMatch) {
             // RHSOptionalGroup
-            const _optBranch = this.mainAnalyser.getChildren(children[3]);
-            __anyTypeRule = this.mainAnalyser.transformSharedPackedParseTreeNode(_optBranch[0]); // RHSPartEntry
+            const _optBranch = this.mainAnalyser.getChildren(children[4]);
+            __anyTypeSpec = this.mainAnalyser.transformSharedPackedParseTreeNode(_optBranch[0]); // RHSPartEntry
         } // RHSPartListEntry
-        if (children[4].name !== "PitClassifierRule") {
-            __classifierRules = this.mainAnalyser.transformSharedPackedParseTreeList<PitClassifierRule>(children[4]);
+        if (children[5].name !== "PitClassifierSpec") {
+            __classifierSpecs = this.mainAnalyser.transformSharedPackedParseTreeList<PitClassifierSpec>(children[5]);
         } else {
             // special case: only when this entry is the single rhs entry of this rule
-            __classifierRules = [];
+            __classifierSpecs = [];
             for (const child of children) {
-                __classifierRules.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
+                __classifierSpecs.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
             }
         }
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
         return PiTyperDef.create({
-            __types_references: __types,
-            __conceptsWithType_references: __conceptsWithType,
-            anyTypeRule: __anyTypeRule,
-            classifierRules: __classifierRules,
+            __types: __types,
+            typeConcepts: __typeConcepts,
+            __conceptsWithType: __conceptsWithType,
+            anyTypeSpec: __anyTypeSpec,
+            classifierSpecs: __classifierSpecs,
             agl_location: location
         });
     }
 
     /**
      * Method to transform branches that match the following rule:
-     * PitAnyTypeRule = 'anytype' '\{'
-     *	 PitSingleRule*
+     * PitTypeConcept = 'type' identifier ( 'base' __pi_reference )?
+     *	 '\{'
+     *	 ( PitProperty ';' )*
      *	 '}' ;
      * @param branch
      * @private
      */
-    public transformPitAnyTypeRule(branch: SPPTBranch): PitAnyTypeRule {
-        // console.log('transformPitAnyTypeRule called: ' + branch.name);
-        let __myRules: PitSingleRule[];
-        const children = this.mainAnalyser.getChildren(branch); // RHSPartListEntry
-        if (children[2].name !== "PitSingleRule") {
-            __myRules = this.mainAnalyser.transformSharedPackedParseTreeList<PitSingleRule>(children[2]);
-        } else {
-            // special case: only when this entry is the single rhs entry of this rule
-            __myRules = [];
-            for (const child of children) {
-                __myRules.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
+    public transformPitTypeConcept(branch: SPPTBranch): PitTypeConcept {
+        // console.log('transformPitTypeConcept called: ' + branch.name);
+        let __name: string;
+        let __base: PiElementReference<PiClassifier>;
+        let __properties: PitProperty[];
+        const children = this.mainAnalyser.getChildren(branch);
+        __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPrimEntry
+
+        if (!children[2].isEmptyMatch) {
+            // RHSOptionalGroup
+            const _optGroup = this.mainAnalyser.getGroup(children[2]);
+            const _propItem = this.mainAnalyser.getChildren(_optGroup);
+            __base = this.mainAnalyser.piElemRef<PiClassifier>(_propItem[1], "PiClassifier"); // RHSRefEntry
+        } // RHSListGroup
+        __properties = [];
+        const _myList = this.mainAnalyser.getChildren(children[4]);
+        _myList.forEach(subNode => {
+            const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(subNode.nonSkipChildren?.toArray()[0]);
+            if (!!_transformed) {
+                __properties.push(_transformed);
             }
-        }
+        });
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitAnyTypeRule.create({ myRules: __myRules, agl_location: location });
+        return PitTypeConcept.create({ name: __name, __base: __base, properties: __properties, agl_location: location });
     }
 
     /**
      * Method to transform branches that match the following rule:
-     * PitSingleRule = PitStatementKind PitExp ';' ;
+     * PitAnyTypeSpec = 'anytype' '\{'
+     *	 PitTypeRule*
+     *	 '}' ;
      * @param branch
      * @private
      */
-    public transformPitSingleRule(branch: SPPTBranch): PitSingleRule {
-        // console.log('transformPitSingleRule called: ' + branch.name);
-        let __kind: PiElementReference<PitStatementKind>;
+    public transformPitAnyTypeSpec(branch: SPPTBranch): PitAnyTypeSpec {
+        // console.log('transformPitAnyTypeSpec called: ' + branch.name);
+        let __rules: PitTypeRule[];
+        const children = this.mainAnalyser.getChildren(branch); // RHSPartListEntry
+        if (children[2].name !== "PitTypeRule") {
+            __rules = this.mainAnalyser.transformSharedPackedParseTreeList<PitTypeRule>(children[2]);
+        } else {
+            // special case: only when this entry is the single rhs entry of this rule
+            __rules = [];
+            for (const child of children) {
+                __rules.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
+            }
+        }
+        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
+        return PitAnyTypeSpec.create({ rules: __rules, agl_location: location });
+    }
+
+    /**
+     * Method to transform branches that match the following rule:
+     * PitInferenceRule = 'infertype' PitExp ';' ;
+     * @param branch
+     * @private
+     */
+    public transformPitInferenceRule(branch: SPPTBranch): PitInferenceRule {
+        // console.log('transformPitInferenceRule called: ' + branch.name);
         let __exp: PitExp;
         const children = this.mainAnalyser.getChildren(branch);
-        __kind = this.mainAnalyser.piElemRef<PitStatementKind>(children[0], "PitStatementKind"); // RHSLimitedRefEntry
         __exp = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPartEntry
 
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitSingleRule.create({ __kind: __kind, exp: __exp, agl_location: location });
+        return PitInferenceRule.create({ exp: __exp, agl_location: location });
     }
 
     /**
@@ -149,13 +197,8 @@ export class PiTyperDefSyntaxAnalyserPart {
         let __source: PitExp;
         let __property: PiElementReference<PitProperty>;
         const children = this.mainAnalyser.getChildren(branch);
-        if (!children[0].isEmptyMatch) {
-            // RHSOptionalGroup
-            const _optGroup = this.mainAnalyser.getGroup(children[0]);
-            const _propItem = this.mainAnalyser.getChildren(_optGroup);
-            __source = this.mainAnalyser.transformSharedPackedParseTreeNode(_propItem[0]); // RHSPartEntry
-        }
-        __property = this.mainAnalyser.piElemRef<PitProperty>(children[1], "PitProperty"); // RHSRefEntry
+        __source = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
+        __property = this.mainAnalyser.piElemRef<PitProperty>(children[2], "PitProperty"); // RHSRefEntry
 
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
         return PitPropertyCallExp.create({ source: __source, __property: __property, agl_location: location });
@@ -191,53 +234,54 @@ export class PiTyperDefSyntaxAnalyserPart {
 
     /**
      * Method to transform branches that match the following rule:
-     * PitInstanceExp = ( __pi_reference ':' )?
-     *	 __pi_reference ;
+     * PitVarCallExp = __pi_reference ;
      * @param branch
      * @private
      */
-    public transformPitInstanceExp(branch: SPPTBranch): PitInstanceExp {
-        // console.log('transformPitInstanceExp called: ' + branch.name);
-        let __myLimited: PiElementReference<PiLimitedConcept>;
-        let __myInstance: PiElementReference<PiInstance>;
+    public transformPitVarCallExp(branch: SPPTBranch): PitVarCallExp {
+        // console.log('transformPitVarCallExp called: ' + branch.name);
+        let __variable: PiElementReference<PitVarDecl>;
         const children = this.mainAnalyser.getChildren(branch);
-        if (!children[0].isEmptyMatch) {
-            // RHSOptionalGroup
-            const _optGroup = this.mainAnalyser.getGroup(children[0]);
-            const _propItem = this.mainAnalyser.getChildren(_optGroup);
-            __myLimited = this.mainAnalyser.piElemRef<PiLimitedConcept>(_propItem[0], "PiLimitedConcept"); // RHSRefEntry
-        }
-        __myInstance = this.mainAnalyser.piElemRef<PiInstance>(children[1], "PiInstance"); // RHSRefEntry
+        __variable = this.mainAnalyser.piElemRef<PitVarDecl>(children[0], "PitVarDecl"); // RHSRefEntry
 
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitInstanceExp.create({ __myLimited: __myLimited, __myInstance: __myInstance, agl_location: location });
+        return PitVarCallExp.create({ __variable: __variable, agl_location: location });
     }
 
     /**
      * Method to transform branches that match the following rule:
-     * PitWhereExp = PitProperty 'where' '\{'
-     *	 ( __pi_binary_PitExp ';' )*
-     *	 '}' ;
+     * PitCreateExp = __pi_reference '\{' [ PitPropInstance / ',' ]* '}' ;
      * @param branch
      * @private
      */
-    public transformPitWhereExp(branch: SPPTBranch): PitWhereExp {
-        // console.log('transformPitWhereExp called: ' + branch.name);
-        let __otherType: PitProperty;
-        let __conditions: PitStatement[];
+    public transformPitCreateExp(branch: SPPTBranch): PitCreateExp {
+        // console.log('transformPitCreateExp called: ' + branch.name);
+        let __type: PiElementReference<PiClassifier>;
+        let __propertyDefs: PitPropInstance[];
         const children = this.mainAnalyser.getChildren(branch);
-        __otherType = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
-        // RHSBinExpListWithTerminator
-        __conditions = [];
-        const _myList = this.mainAnalyser.getChildren(children[3]);
-        _myList.forEach(subNode => {
-            const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(subNode.nonSkipChildren?.toArray()[0]);
-            if (!!_transformed) {
-                __conditions.push(_transformed);
-            }
-        });
+        __type = this.mainAnalyser.piElemRef<PiClassifier>(children[0], "PiClassifier"); // RHSRefEntry
+        __propertyDefs = this.mainAnalyser.transformSharedPackedParseTreeList<PitPropInstance>(children[2], ","); // RHSPartListWithSeparator
+
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitWhereExp.create({ otherType: __otherType, conditions: __conditions, agl_location: location });
+        return PitCreateExp.create({ __type: __type, propertyDefs: __propertyDefs, agl_location: location });
+    }
+
+    /**
+     * Method to transform branches that match the following rule:
+     * PitPropInstance = __pi_reference ':' PitExp ;
+     * @param branch
+     * @private
+     */
+    public transformPitPropInstance(branch: SPPTBranch): PitPropInstance {
+        // console.log('transformPitPropInstance called: ' + branch.name);
+        let __property: PiElementReference<PiProperty>;
+        let __value: PitExp;
+        const children = this.mainAnalyser.getChildren(branch);
+        __property = this.mainAnalyser.piElemRef<PiProperty>(children[0], "PiProperty"); // RHSRefEntry
+        __value = this.mainAnalyser.transformSharedPackedParseTreeNode(children[2]); // RHSPartEntry
+
+        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
+        return PitPropInstance.create({ __property: __property, value: __value, agl_location: location });
     }
 
     /**
@@ -260,103 +304,189 @@ export class PiTyperDefSyntaxAnalyserPart {
 
     /**
      * Method to transform branches that match the following rule:
-     * PitConformanceOrEqualsRule = __pi_reference '\{'
-     *	 PitSingleRule*
-     *	 '}' ;
+     * PitLimitedInstanceExp = ( __pi_reference ':' )?
+     *	 __pi_reference ;
      * @param branch
      * @private
      */
-    public transformPitConformanceOrEqualsRule(branch: SPPTBranch): PitConformanceOrEqualsRule {
-        // console.log('transformPitConformanceOrEqualsRule called: ' + branch.name);
-        let __myClassifier: PiElementReference<PiClassifier>;
-        let __myRules: PitSingleRule[];
+    public transformPitLimitedInstanceExp(branch: SPPTBranch): PitLimitedInstanceExp {
+        // console.log('transformPitLimitedInstanceExp called: ' + branch.name);
+        let __myLimited: PiElementReference<PiLimitedConcept>;
+        let __myInstance: PiElementReference<PiInstance>;
         const children = this.mainAnalyser.getChildren(branch);
-        __myClassifier = this.mainAnalyser.piElemRef<PiClassifier>(children[0], "PiClassifier"); // RHSRefEntry
-        // RHSPartListEntry
-        if (children[2].name !== "PitSingleRule") {
-            __myRules = this.mainAnalyser.transformSharedPackedParseTreeList<PitSingleRule>(children[2]);
-        } else {
-            // special case: only when this entry is the single rhs entry of this rule
-            __myRules = [];
-            for (const child of children) {
-                __myRules.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
-            }
+        if (!children[0].isEmptyMatch) {
+            // RHSOptionalGroup
+            const _optGroup = this.mainAnalyser.getGroup(children[0]);
+            const _propItem = this.mainAnalyser.getChildren(_optGroup);
+            __myLimited = this.mainAnalyser.piElemRef<PiLimitedConcept>(_propItem[0], "PiLimitedConcept"); // RHSRefEntry
         }
+        __myInstance = this.mainAnalyser.piElemRef<PiInstance>(children[1], "PiInstance"); // RHSRefEntry
+
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitConformanceOrEqualsRule.create({ __myClassifier: __myClassifier, myRules: __myRules, agl_location: location });
+        return PitLimitedInstanceExp.create({ __myLimited: __myLimited, __myInstance: __myInstance, agl_location: location });
     }
 
     /**
      * Method to transform branches that match the following rule:
-     * PitInferenceRule = __pi_reference '\{'
-     *	 'infertype' PitExp ';'
-     *	 '}' ;
-     * @param branch
-     * @private
-     */
-    public transformPitInferenceRule(branch: SPPTBranch): PitInferenceRule {
-        // console.log('transformPitInferenceRule called: ' + branch.name);
-        let __myClassifier: PiElementReference<PiClassifier>;
-        let __exp: PitExp;
-        const children = this.mainAnalyser.getChildren(branch);
-        __myClassifier = this.mainAnalyser.piElemRef<PiClassifier>(children[0], "PiClassifier"); // RHSRefEntry
-        __exp = this.mainAnalyser.transformSharedPackedParseTreeNode(children[3]); // RHSPartEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitInferenceRule.create({ __myClassifier: __myClassifier, exp: __exp, agl_location: location });
-    }
-
-    /**
-     * Method to transform branches that match the following rule:
-     * PitLimitedRule = __pi_reference '\{'
+     * PitWhereExp = PitVarDecl 'where' '\{'
      *	 ( __pi_binary_PitExp ';' )*
      *	 '}' ;
      * @param branch
      * @private
      */
-    public transformPitLimitedRule(branch: SPPTBranch): PitLimitedRule {
-        // console.log('transformPitLimitedRule called: ' + branch.name);
-        let __myClassifier: PiElementReference<PiClassifier>;
-        let __statements: PitStatement[];
+    public transformPitWhereExp(branch: SPPTBranch): PitWhereExp {
+        // console.log('transformPitWhereExp called: ' + branch.name);
+        let __variable: PitVarDecl;
+        let __conditions: PitBinaryExp[];
         const children = this.mainAnalyser.getChildren(branch);
-        __myClassifier = this.mainAnalyser.piElemRef<PiClassifier>(children[0], "PiClassifier"); // RHSRefEntry
+        __variable = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
         // RHSBinExpListWithTerminator
-        __statements = [];
-        const _myList = this.mainAnalyser.getChildren(children[2]);
+        __conditions = [];
+        const _myList = this.mainAnalyser.getChildren(children[3]);
         _myList.forEach(subNode => {
             const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(subNode.nonSkipChildren?.toArray()[0]);
             if (!!_transformed) {
-                __statements.push(_transformed);
+                __conditions.push(_transformed);
             }
         });
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitLimitedRule.create({ __myClassifier: __myClassifier, statements: __statements, agl_location: location });
+        return PitWhereExp.create({ variable: __variable, conditions: __conditions, agl_location: location });
     }
 
     /**
      * Method to transform branches that match the following rule:
-     * PitExpWithType = '(' PitExp 'as' __pi_reference ')' ;
+     * PitVarDecl = identifier ':' __pi_reference ;
      * @param branch
      * @private
      */
-    public transformPitExpWithType(branch: SPPTBranch): PitExpWithType {
-        // console.log('transformPitExpWithType called: ' + branch.name);
-        let __inner: PitExp;
-        let __expectedType: PiElementReference<PiClassifier>;
+    public transformPitVarDecl(branch: SPPTBranch): PitVarDecl {
+        // console.log('transformPitVarDecl called: ' + branch.name);
+        let __name: string;
+        let __type: PiElementReference<PitTypeConcept>;
         const children = this.mainAnalyser.getChildren(branch);
-        __inner = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPartEntry
-        __expectedType = this.mainAnalyser.piElemRef<PiClassifier>(children[3], "PiClassifier"); // RHSRefEntry
+        __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
+        __type = this.mainAnalyser.piElemRef<PitTypeConcept>(children[2], "PitTypeConcept"); // RHSRefEntry
 
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitExpWithType.create({ inner: __inner, __expectedType: __expectedType, agl_location: location });
+        return PitVarDecl.create({ name: __name, __type: __type, agl_location: location });
     }
 
     /**
      * Method to transform branches that match the following rule:
-     * PitExp = PitAppliedExp
+     * PitConformanceRule = 'conformsto' PitExp ';' ;
+     * @param branch
+     * @private
+     */
+    public transformPitConformanceRule(branch: SPPTBranch): PitConformanceRule {
+        // console.log('transformPitConformanceRule called: ' + branch.name);
+        let __exp: PitExp;
+        const children = this.mainAnalyser.getChildren(branch);
+        __exp = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPartEntry
+
+        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
+        return PitConformanceRule.create({ exp: __exp, agl_location: location });
+    }
+
+    /**
+     * Method to transform branches that match the following rule:
+     * PitEqualsRule = 'equalsto' PitExp ';' ;
+     * @param branch
+     * @private
+     */
+    public transformPitEqualsRule(branch: SPPTBranch): PitEqualsRule {
+        // console.log('transformPitEqualsRule called: ' + branch.name);
+        let __exp: PitExp;
+        const children = this.mainAnalyser.getChildren(branch);
+        __exp = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPartEntry
+
+        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
+        return PitEqualsRule.create({ exp: __exp, agl_location: location });
+    }
+
+    /**
+     * Method to transform branches that match the following rule:
+     * PitLimitedRule = PitExp ';' ;
+     * @param branch
+     * @private
+     */
+    public transformPitLimitedRule(branch: SPPTBranch): PitLimitedRule {
+        // console.log('transformPitLimitedRule called: ' + branch.name);
+        let __exp: PitExp;
+        const children = this.mainAnalyser.getChildren(branch);
+        __exp = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
+
+        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
+        return PitLimitedRule.create({ exp: __exp, agl_location: location });
+    }
+
+    /**
+     * Method to transform branches that match the following rule:
+     * PitClassifierSpec = __pi_reference '\{'
+     *	 PitTypeRule*
+     *	 '}' ;
+     * @param branch
+     * @private
+     */
+    public transformPitClassifierSpec(branch: SPPTBranch): PitClassifierSpec {
+        // console.log('transformPitClassifierSpec called: ' + branch.name);
+        let __myClassifier: PiElementReference<PiClassifier>;
+        let __rules: PitTypeRule[];
+        const children = this.mainAnalyser.getChildren(branch);
+        __myClassifier = this.mainAnalyser.piElemRef<PiClassifier>(children[0], "PiClassifier"); // RHSRefEntry
+        // RHSPartListEntry
+        if (children[2].name !== "PitTypeRule") {
+            __rules = this.mainAnalyser.transformSharedPackedParseTreeList<PitTypeRule>(children[2]);
+        } else {
+            // special case: only when this entry is the single rhs entry of this rule
+            __rules = [];
+            for (const child of children) {
+                __rules.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
+            }
+        }
+        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
+        return PitClassifierSpec.create({ __myClassifier: __myClassifier, rules: __rules, agl_location: location });
+    }
+
+    /**
+     * Method to transform branches that match the following rule:
+     * PitProperty = identifier ':' __pi_reference ;
+     * @param branch
+     * @private
+     */
+    public transformPitProperty(branch: SPPTBranch): PitProperty {
+        // console.log('transformPitProperty called: ' + branch.name);
+        let __name: string;
+        let __type: PiElementReference<PiClassifier>;
+        const children = this.mainAnalyser.getChildren(branch);
+        __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
+        __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "Type"); // RHSRefEntry
+
+        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
+        return PitProperty.create({ name: __name, refType: __type, agl_location: location });
+    }
+
+    /**
+     * Method to transform branches that match the following rule:
+     * PitTypeRule = PitInferenceRule
+     *    | PitConformanceRule
+     *    | PitEqualsRule
+     *    | PitLimitedRule  ;
+     * @param branch
+     * @private
+     */
+    public transformPitTypeRule(branch: SPPTBranch): PitTypeRule {
+        // console.log('transformPitTypeRule called: ' + branch.name);
+        return this.mainAnalyser.transformSharedPackedParseTreeNode(branch.nonSkipChildren.toArray()[0]);
+    }
+
+    /**
+     * Method to transform branches that match the following rule:
+     * PitExp = PitPropertyCallExp
      *    | PitSelfExp
      *    | PitAnytypeExp
-     *    | PitInstanceExp
+     *    | PitVarCallExp
+     *    | PitCreateExp
+     *    | PitLimitedInstanceExp
      *    | PitWhereExp
      *    | PitFunctionCallExp
      *    | __pi_binary_PitExp ;
@@ -365,30 +495,6 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPitExp(branch: SPPTBranch): PitExp {
         // console.log('transformPitExp called: ' + branch.name);
-        return this.mainAnalyser.transformSharedPackedParseTreeNode(branch.nonSkipChildren.toArray()[0]);
-    }
-
-    /**
-     * Method to transform branches that match the following rule:
-     * PitAppliedExp = PitPropertyCallExp  ;
-     * @param branch
-     * @private
-     */
-    public transformPitAppliedExp(branch: SPPTBranch): PitAppliedExp {
-        // console.log('transformPitAppliedExp called: ' + branch.name);
-        return this.mainAnalyser.transformSharedPackedParseTreeNode(branch.nonSkipChildren.toArray()[0]);
-    }
-
-    /**
-     * Method to transform branches that match the following rule:
-     * PitClassifierRule = PitConformanceOrEqualsRule
-     *    | PitInferenceRule
-     *    | PitLimitedRule  ;
-     * @param branch
-     * @private
-     */
-    public transformPitClassifierRule(branch: SPPTBranch): PitClassifierRule {
-        // console.log('transformPitClassifierRule called: ' + branch.name);
         return this.mainAnalyser.transformSharedPackedParseTreeNode(branch.nonSkipChildren.toArray()[0]);
     }
 
@@ -429,41 +535,5 @@ export class PiTyperDefSyntaxAnalyserPart {
             first = combined;
         }
         return first;
-    }
-
-    /**
-     * Method to transform branches that match the following rule:
-     * PitStatementKind = 'equalsto'
-     *	| 'conformsto' ;
-     * @param branch
-     * @private
-     */
-    public transformPitStatementKind(branch: SPPTBranch): PitStatementKind {
-        let choice = branch.nonSkipMatchedText;
-        if (choice == "equalsto") {
-            return PitStatementKind.EQUALS;
-        } else if (choice == "conformsto") {
-            return PitStatementKind.CONFORMS;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Method to transform branches that match the following rule:
-     * PitProperty = identifier ':' __pi_reference ;
-     * @param branch
-     * @private
-     */
-    public transformPitProperty(branch: SPPTBranch): PitProperty {
-        // console.log('transformPitProperty called: ' + branch.name);
-        let __name: string;
-        let __type: PiElementReference<PiClassifier>;
-        const children = this.mainAnalyser.getChildren(branch);
-        __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
-        __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "PiClassifier"); // RHSRefEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitProperty.create({ name: __name, refType: __type, agl_location: location });
     }
 }

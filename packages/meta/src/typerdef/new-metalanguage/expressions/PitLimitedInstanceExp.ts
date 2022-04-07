@@ -1,14 +1,14 @@
 import { PitExp } from "./PitExp";
 import { PiClassifier, PiElementReference, PiInstance, PiLimitedConcept } from "../../../languagedef/metalanguage";
 
-export class PitInstanceExp extends PitExp {
+export class PitLimitedInstanceExp extends PitExp {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
      * @param data
      */
-    static create(data: Partial<PitInstanceExp>): PitInstanceExp {
-        const result = new PitInstanceExp();
+    static create(data: Partial<PitLimitedInstanceExp>): PitLimitedInstanceExp {
+        const result = new PitLimitedInstanceExp();
         if (!!data.myLimited) {
             result.myLimited = data.myLimited;
         }
@@ -26,6 +26,8 @@ export class PitInstanceExp extends PitExp {
         }
         return result;
     }
+    readonly $typename: string = "PitLimitedInstanceExp"; // holds the metatype in the form of a string
+
     __myLimited?: PiElementReference<PiLimitedConcept>;
     __myInstance: PiElementReference<PiInstance>;
     toPiString(): string {
@@ -65,8 +67,8 @@ export class PitInstanceExp extends PitExp {
     get type(): PiClassifier {
         return this.myLimited;
     }
-    baseSource(): PitExp {
-        return this;
-    }
+    // baseSource(): PitExp {
+    //     return this;
+    // }
 
 }

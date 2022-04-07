@@ -25,8 +25,11 @@ export class PitFunctionCallExp extends PitExp {
         }
         return result;
     }
+    readonly $typename: string = "PitFunctionCallExp"; // holds the metatype in the form of a string
+
     calledFunction: string;
     actualParameters: PitExp[] = [];
+
     toPiString(): string {
         return `${this.calledFunction}( ${this.actualParameters.map((arg => arg.toPiString())).join(", ")} )`;
     }

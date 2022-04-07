@@ -3,6 +3,8 @@ import { PiClassifier, PiConcept } from "../../../languagedef/metalanguage";
 
 export class PitAnytypeExp extends PitExp {
     static anyType: PiClassifier = new PiConcept();
+    readonly $typename: string = "PitAnytypeExp"; // holds the metatype in the form of a string
+
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -24,11 +26,12 @@ export class PitAnytypeExp extends PitExp {
     toPiString(): string {
         return `anytype`;
     }
+
     get type(): PiClassifier {
         return PitAnytypeExp.anyType;
     }
 
-    baseSource(): PitExp {
-        return this;
-    }
+    // baseSource(): PitExp {
+    //     return this;
+    // }
 }

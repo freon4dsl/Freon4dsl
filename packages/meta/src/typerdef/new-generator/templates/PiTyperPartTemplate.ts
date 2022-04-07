@@ -1,13 +1,6 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiConcept, PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
 import {
-    PitClassifierRule,
-    PitConformanceOrEqualsRule,
-    PitConforms,
-    PitLimitedRule,
-    PitSingleRule,
-    PitStatement,
-    PitStatementKind,
     PiTyperDef
 } from "../../new-metalanguage";
 import { ListUtil } from "../../../utils";

@@ -77,40 +77,46 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
         let brName: string = branch.name;
         if ("PiTyperDef" == brName) {
             return this._unit_PiTyperDef_analyser.transformPiTyperDef(branch);
-        } else if ("PitAnyTypeRule" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitAnyTypeRule(branch);
-        } else if ("PitSingleRule" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitSingleRule(branch);
-        } else if ("PitAppliedExp" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitAppliedExp(branch);
+        } else if ("PitTypeConcept" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitTypeConcept(branch);
+        } else if ("PitAnyTypeSpec" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitAnyTypeSpec(branch);
+        } else if ("PitInferenceRule" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitInferenceRule(branch);
+        } else if ("PitPropertyCallExp" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitPropertyCallExp(branch);
         } else if ("PitSelfExp" == brName) {
             return this._unit_PiTyperDef_analyser.transformPitSelfExp(branch);
         } else if ("PitAnytypeExp" == brName) {
             return this._unit_PiTyperDef_analyser.transformPitAnytypeExp(branch);
-        } else if ("PitPropertyCallExp" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitPropertyCallExp(branch);
-        } else if ("PitInstanceExp" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitInstanceExp(branch);
-        } else if ("PitWhereExp" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitWhereExp(branch);
-        } else if ("PitExpWithType" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitExpWithType(branch);
+        } else if ("PitVarCallExp" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitVarCallExp(branch);
+        } else if ("PitCreateExp" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitCreateExp(branch);
+        } else if ("PitPropInstance" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitPropInstance(branch);
         } else if ("PitFunctionCallExp" == brName) {
             return this._unit_PiTyperDef_analyser.transformPitFunctionCallExp(branch);
-        } else if ("PitConformanceOrEqualsRule" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitConformanceOrEqualsRule(branch);
-        } else if ("PitInferenceRule" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitInferenceRule(branch);
+        } else if ("PitLimitedInstanceExp" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitLimitedInstanceExp(branch);
+        } else if ("PitWhereExp" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitWhereExp(branch);
+        } else if ("PitVarDecl" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitVarDecl(branch);
+        } else if ("PitConformanceRule" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitConformanceRule(branch);
+        } else if ("PitEqualsRule" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitEqualsRule(branch);
         } else if ("PitLimitedRule" == brName) {
             return this._unit_PiTyperDef_analyser.transformPitLimitedRule(branch);
+        } else if ("PitClassifierSpec" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitClassifierSpec(branch);
+        } else if ("PitTypeRule" == brName) {
+            return this._unit_PiTyperDef_analyser.transformPitTypeRule(branch);
         } else if ("PitExp" == brName) {
             return this._unit_PiTyperDef_analyser.transformPitExp(branch);
-        } else if ("PitClassifierRule" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitClassifierRule(branch);
         } else if ("__pi_binary_PitExp" == brName) {
             return this._unit_PiTyperDef_analyser.transform__pi_binary_PitExp(branch);
-        } else if ("PitStatementKind" == brName) {
-            return this._unit_PiTyperDef_analyser.transformPitStatementKind(branch);
         } else if ("PitProperty" == brName) {
             return this._unit_PiTyperDef_analyser.transformPitProperty(branch);
         } else if ("__pi_reference" == brName) {

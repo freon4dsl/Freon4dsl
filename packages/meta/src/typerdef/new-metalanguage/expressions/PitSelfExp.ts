@@ -1,5 +1,4 @@
 import { PitExp } from "./PitExp";
-import { PiClassifier, PiElementReference } from "../../../languagedef/metalanguage";
 
 export class PitSelfExp extends PitExp {
     /**
@@ -14,11 +13,13 @@ export class PitSelfExp extends PitExp {
         }
         return result;
     }
+    readonly $typename: string = "PitSelfExp"; // holds the metatype in the form of a string
+
     toPiString(): string {
         return `self`;
     }
-    baseSource(): PitExp {
-        return this;
-    }
+    // baseSource(): PitExp {
+    //     return this;
+    // }
 
 }

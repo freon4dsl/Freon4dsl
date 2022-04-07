@@ -1,7 +1,7 @@
-import { PitStatement } from "./PitStatement";
 import { PiClassifier, PiPrimitiveType } from "../../../languagedef/metalanguage";
+import { PitBinaryExp } from "./PitBinaryExp";
 
-export class PitConforms extends PitStatement {
+export class PitConforms extends PitBinaryExp {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -20,6 +20,8 @@ export class PitConforms extends PitStatement {
         }
         return result;
     }
+    readonly $typename: string = "PitConforms"; // holds the metatype in the form of a string
+
     toPiString(): string {
         return `${this.left.toPiString()} conformsto ${this.right.toPiString()};`;
     }

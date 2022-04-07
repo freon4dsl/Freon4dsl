@@ -10,71 +10,76 @@ grammar MetaTyperGrammar {
 // rules for "PiTyperDef"
 PiTyperDef = 'typer'
 	 ( 'istype' '\{' [ __pi_reference / ',' ]* '}' )?
+	 PitTypeConcept*
 	 ( 'hastype' '\{' [ __pi_reference / ',' ]* '}' )?
-	 PitAnyTypeRule?
-	 PitClassifierRule* ;
+	 PitAnyTypeSpec?
+	 PitClassifierSpec* ;
 
-PitAnyTypeRule = 'anytype' '\{'
-	 PitSingleRule*
+PitTypeConcept = 'type' identifier ( 'base' __pi_reference )?
+	 '\{'
+	 ( PitProperty ';' )*
 	 '}' ;
 
-PitSingleRule = PitStatementKind PitExp ';' ;
+PitAnyTypeSpec = 'anytype' '\{'
+	 PitTypeRule*
+	 '}' ;
 
-PitPropertyCallExp = (PitExp '.')? __pi_reference ;
+PitInferenceRule = 'infertype' PitExp ';' ;
 
-PitExpWithType = '(' PitExp 'as' __pi_reference ')' ;
+PitPropertyCallExp = PitExp '.' __pi_reference ;
 
 PitSelfExp = 'self' ;
 
 PitAnytypeExp = 'anytype' ;
 
-PitInstanceExp = ( __pi_reference ':' )?
-	 __pi_reference ;
+PitVarCallExp = __pi_reference ;
 
-PitWhereExp = PitProperty 'where' '\{'
-	 ( __pi_binary_PitExp ';' )*
-	 '}' ;
+PitCreateExp = __pi_reference '\{' [ PitPropInstance / ',' ]* '}' ;
+
+PitPropInstance = __pi_reference ':' PitExp ;
 
 PitFunctionCallExp = identifier '(' [ PitExp / ',' ]* ')' ;
 
-PitConformanceOrEqualsRule = __pi_reference '\{'
-	 PitSingleRule*
-	 '}' ;
+PitLimitedInstanceExp = ( __pi_reference ':' )?
+	 __pi_reference ;
 
-PitInferenceRule = __pi_reference '\{'
-	 'infertype' PitExp ';'
-	 '}' ;
-
-PitLimitedRule = __pi_reference '\{'
+PitWhereExp = PitVarDecl 'where' '\{'
 	 ( __pi_binary_PitExp ';' )*
 	 '}' ;
 
-PitExp = PitAppliedExp 
-    | PitExpWithType 
+PitVarDecl = identifier ':' __pi_reference ;
+
+PitConformanceRule = 'conformsto' PitExp ';' ;
+
+PitEqualsRule = 'equalsto' PitExp ';' ;
+
+PitLimitedRule = PitExp ';' ;
+
+PitClassifierSpec = __pi_reference '\{'
+	 PitTypeRule*
+	 '}' ;
+
+PitTypeRule = PitInferenceRule 
+    | PitConformanceRule 
+    | PitEqualsRule 
+    | PitLimitedRule  ;
+
+PitExp = PitPropertyCallExp 
     | PitSelfExp 
     | PitAnytypeExp 
+    | PitVarCallExp 
+    | PitCreateExp 
+    | PitLimitedInstanceExp 
     | PitWhereExp 
     | PitFunctionCallExp 
-    | PitInstanceExp 
     | __pi_binary_PitExp ;
-
-PitAppliedExp = PitPropertyCallExp  ;
-
-PitClassifierRule = PitConformanceOrEqualsRule 
-    | PitInferenceRule 
-    | PitLimitedRule  ;
 
 __pi_binary_PitExp = [PitExp / __pi_binary_operator]2+ ;
 leaf __pi_binary_operator = 'conformsto' | 'equalsto' ;
 
-PitStatementKind = 'equalsto'
-	| 'conformsto' ;
-	
 PitProperty = identifier ':' __pi_reference ;
 
-// common rules   
-
-__pi_reference = [ identifier / '::::' ]+ ;
+__pi_reference = [ identifier / '::' ]+ ;
         
 // white space and comments
 skip WHITE_SPACE = "\\s+" ;

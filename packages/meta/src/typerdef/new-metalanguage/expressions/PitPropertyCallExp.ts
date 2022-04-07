@@ -1,7 +1,7 @@
-import { PitAppliedExp } from "./PitAppliedExp";
 import { PiClassifier, PiElementReference, PiProperty } from "../../../languagedef/metalanguage";
+import { PitExp } from "./PitExp";
 
-export class PitPropertyCallExp extends PitAppliedExp {
+export class PitPropertyCallExp extends PitExp {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -23,6 +23,9 @@ export class PitPropertyCallExp extends PitAppliedExp {
         }
         return result;
     }
+    readonly $typename: string = "PitPropertyCallExp"; // holds the metatype in the form of a string
+
+    source: PitExp; // implementation of part 'source'
     __property: PiElementReference<PiProperty>;
     toPiString(): string {
         let sourceStr: string = '';
