@@ -19,7 +19,7 @@ export class PitAnyTypeSpec extends PiDefinitionElement {
     }
     readonly $typename: string = "PitAnyTypeSpec"; // holds the metatype in the form of a string
 
-    rules: PitTypeRule[]; // implementation of part 'rules'
+    rules: PitTypeRule[] = []; // implementation of part 'rules'
 
     toPiString(): string {
         return `anytype { ${this.rules.map( t => t.toPiString() ).join("\n")} }`;

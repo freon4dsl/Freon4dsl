@@ -54,8 +54,7 @@ export class PitTypeConcept extends PiClassifier {
         }
     }
     toPiString(): string {
-        return 'type ' + this.name + (!!this.base ? 'base ' + this.base.name : '') + " { " +
-            this.properties.map(p => p.toPiString()).join(";") +
-        + " } "
+        return 'type ' + this.name + (!!this.__base ? 'base ' + this.__base.name : '') + " {\n\t" +
+            this.properties.map(p => p.toPiString()).join(";\n\t") + "\n} "
     }
 }

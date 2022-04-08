@@ -25,6 +25,6 @@ export class PitConformanceRule extends PitTypeRule {
 
     readonly $typename: string = "PitConformanceRule"; // holds the metatype in the form of a string
     toPiString(): string {
-        return "conformsto " + this.exp.toPiString();
+        return "conformsto " + this.exp.toPiString() + ";";
     }
 }

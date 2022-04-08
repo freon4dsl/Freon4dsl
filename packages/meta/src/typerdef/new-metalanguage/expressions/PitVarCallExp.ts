@@ -39,6 +39,6 @@ export class PitVarCallExp extends PiDefinitionElement {
     }
 
     toPiString(): string {
-        return this.variable.name;
+        return this.__variable.name;
     }
 }

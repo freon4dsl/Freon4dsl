@@ -3,6 +3,11 @@ typer
 // What are types?
 istype { Type }
 
+type AAP {
+    prop1: PredefinedType;
+    prop2: AAP;
+}
+
 // Which concepts have a type?
 hastype { Exp, TypeRef }
 
@@ -33,7 +38,7 @@ NamedExp {
 }
 
 PlusExp {
-    infertype (commonSuperType(self.left, self. right) as NamedType);
+    infertype commonSuperType(self.left, self. right);
 }
 
 TypeRef {
@@ -43,7 +48,7 @@ TypeRef {
 UnitLiteral {
     // 62 kilogram, or 112 miles
     infertype x:UnitOfMeasurement where {
-                  x.baseType equalsto (typeof(self.inner) as PredefinedType);
+                  x.baseType equalsto typeof(self.inner);
                   x.unit equalsto self.unit;
               };
 }
@@ -52,7 +57,7 @@ GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype x:GenericType where {
         // TODO the following results in a compile error, but not in a checker error
-        x.baseType equalsto (typeof(self.content) as Type);
+        x.baseType equalsto typeof(self.content);
         x.kind equalsto self.kind;
     };
 }

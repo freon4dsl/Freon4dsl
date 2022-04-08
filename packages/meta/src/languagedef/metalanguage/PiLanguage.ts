@@ -426,6 +426,9 @@ export class PiProperty extends PiLangElement {
     owningClassifier: PiClassifier;
 
     get isPrimitive(): boolean {
+        if (this.type instanceof PiPrimitiveType) {
+            return true;
+        }
         return false;
     };
     get type(): PiClassifier {

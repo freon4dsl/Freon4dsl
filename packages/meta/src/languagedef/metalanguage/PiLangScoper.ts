@@ -11,7 +11,6 @@ import {
 } from "./internal";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { Checker, PiDefinitionElement } from "../../utils";
-// import { PitWhereExp } from "../../typerdef/new-metalanguage";
 
 const LOGGER = new MetaLogger("PiLangScoper"); // .mute();
 const anyElement = "_$anyElement";
@@ -48,14 +47,6 @@ export class PiLangScoper {
                     result = tmp;
                 }
             });
-        } else if (typeName === "PitProperty" ) {
-            if (owner instanceof PiClassifier) {
-                result = owner.allProperties().filter(prop => prop.name === name)[0];
-            // } else if (owner instanceof PitWhereExp) {
-            //     if (owner.otherType.name === name) {
-            //         result = owner.otherType;
-            //     }
-            }
         } else {
             let ownerDescriptor: string;
             if (owner instanceof PiLangElement) {

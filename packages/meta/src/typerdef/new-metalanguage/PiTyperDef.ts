@@ -31,6 +31,12 @@ export class PiTyperDef extends PiDefinitionElement {
         if (!!data.conceptsWithType) {
             data.conceptsWithType.forEach(x => result.conceptsWithType.push(x));
         }
+        if (!!data.__types) {
+            data.__types.forEach(x => result.__types.push(x));
+        }
+        if (!!data.__conceptsWithType) {
+            data.__conceptsWithType.forEach(x => result.__conceptsWithType.push(x));
+        }
         if (!!data.typeRoot) {
             result.typeRoot = data.typeRoot;
         }
@@ -40,13 +46,23 @@ export class PiTyperDef extends PiDefinitionElement {
         return result;
     }
 
-    typeConcepts: PitTypeConcept[]; // implementation of part 'typeConcepts'
+    typeConcepts: PitTypeConcept[] = []; // implementation of part 'typeConcepts'
     anyTypeSpec: PitAnyTypeSpec; // implementation of part 'anyTypeSpec'
-    classifierSpecs: PitClassifierSpec[]; // implementation of part 'classifierSpecs'
-    __types: PiElementReference<PiClassifier>[]; // implementation of reference 'types'
-    __conceptsWithType: PiElementReference<PiClassifier>[]; // implementation of reference 'conceptsWithType'
+    classifierSpecs: PitClassifierSpec[] = []; // implementation of part 'classifierSpecs'
+    __types: PiElementReference<PiClassifier>[] = []; // implementation of reference 'types'
+    __conceptsWithType: PiElementReference<PiClassifier>[] = []; // implementation of reference 'conceptsWithType'
     __typeRoot: PiElementReference<PiClassifier>; // implementation of reference 'typeroot'
     readonly $typename: string = "PiTyperDef"; // holds the metatype in the form of a string
+
+    get types(): PiClassifier[] {
+        const result: PiClassifier[] = [];
+        for (const ref of this.__types) {
+            if (!!ref.referred) {
+                result.push(ref.referred);
+            }
+        }
+        return result;
+    }
 
     set types(newTypes: PiClassifier[]) {
         this.__types = [];
@@ -89,11 +105,10 @@ export class PiTyperDef extends PiDefinitionElement {
     }
     toPiString(): string{
         return `typer
-        istype { ${this.types.map(t => t.name).join(", ")}
-        ${this.typeConcepts.map(con => con.toPiString()).join("\n")}
-        hastype { ${this.conceptsWithType.map(t => t.name).join(", ")}
-        ${this.anyTypeSpec?.toPiString()}
-        ${this.classifierSpecs.map(con => con.toPiString()).join("\n")}
-        `;
+istype { ${this.__types.map(t => t.name).join(", ")} }
+${this.typeConcepts.map(con => con.toPiString()).join("\n")}
+hastype { ${this.__conceptsWithType.map(t => t.name).join(", ")} }
+${this.anyTypeSpec?.toPiString()}
+${this.classifierSpecs.map(con => con.toPiString()).join("\n")}`;
     }
 }

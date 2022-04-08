@@ -32,7 +32,7 @@ export class PitClassifierSpec extends PiDefinitionElement {
     readonly $typename: string = "PitClassifierSpec"; // holds the metatype in the form of a string
     $id: string; // a unique identifier
 
-    rules: PitTypeRule[]; // implementation of part 'rules'
+    rules: PitTypeRule[] = []; // implementation of part 'rules'
     __myClassifier: PiElementReference<PiClassifier>; // implementation of reference 'myClassifier'
 
     /**
@@ -47,6 +47,6 @@ export class PitClassifierSpec extends PiDefinitionElement {
         return null;
     }
     toPiString(): string {
-        return this.__myClassifier.name + " { " + this.rules.map(r => r.toPiString()).join("\n") + "\n} ";
+        return this.__myClassifier.name + " {\n\t" + this.rules.map(r => r.toPiString()).join("\n\t") + "\n} ";
     }
 }

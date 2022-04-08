@@ -19,6 +19,6 @@ export class PitLimitedRule extends PitTypeRule {
     readonly $typename: string = "PitLimitedRule"; // holds the metatype in the form of a string
 
     toPiString(): string {
-        return `${this.exp.toPiString()}`;
+        return `${this.exp.toPiString()};`;
     }
 }

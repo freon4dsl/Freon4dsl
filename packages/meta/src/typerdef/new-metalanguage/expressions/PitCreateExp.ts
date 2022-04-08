@@ -31,7 +31,7 @@ export class PitCreateExp extends PitExp  {
 
     readonly $typename: string = "PitCreateExp"; // holds the metatype in the form of a string
 
-    propertyDefs: PitPropInstance[]; // implementation of part 'propertyDefs'
+    propertyDefs: PitPropInstance[] = []; // implementation of part 'propertyDefs'
     __type: PiElementReference<PiClassifier>; // implementation of reference 'type'
 
      /**
@@ -46,6 +46,6 @@ export class PitCreateExp extends PitExp  {
         return null;
     }
     toPiString(): string {
-        return this.type + " { " + this.propertyDefs.map(p => p.toPiString()).join(",\n") + '\n} ';
+        return this.__type.name + " { " + this.propertyDefs.map(p => p.toPiString()).join(",\n") + '\n} ';
     }
 }

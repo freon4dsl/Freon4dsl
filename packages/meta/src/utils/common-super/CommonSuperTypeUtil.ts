@@ -23,11 +23,12 @@ export class CommonSuperTypeUtil {
         return [];
     }
 
-    private static printOrderedList(comment: string, rollingIntersect: OrderedList<PiClassifier>) {
-        console.log(comment);
-        for (const piClassifier of rollingIntersect) {
-            console.log("\t" + piClassifier.name);
+    private static printOrderedList(comment: string, list: OrderedList<PiClassifier>) {
+        let result: string = comment;
+        for (const piClassifier of list) {
+            result += "\t" + piClassifier.name;
         }
+        console.log(result);
     }
 
     /**

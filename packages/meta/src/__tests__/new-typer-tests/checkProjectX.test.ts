@@ -1,8 +1,8 @@
 import { NewPiTyperParser } from "../../typerdef/new-parser";
-import { PiLanguage, PiLimitedConcept } from "../../languagedef/metalanguage";
+import { PiLanguage } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { PitInferenceRule, PiTyperDef } from "../../typerdef/new-metalanguage";
+import { PitClassifierSpec, PitInferenceRule, PiTyperDef } from "../../typerdef/new-metalanguage";
 
 describe("Checking new typer", () => {
     const testdir = "src/__tests__/new-typer-tests/correctDefFiles/";
@@ -41,26 +41,34 @@ describe("Checking new typer", () => {
             } catch (e) {
                 console.log(e.stack);
                 const errors: string[] = parser.checker.errors;
-                // expect(errors.length).toBe(0);
+                expect(errors.length).toBe(0);
                 console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
             }
 
             expect(typeUnit).not.toBeNull();
             expect(typeUnit).not.toBeUndefined();
+            console.log(typeUnit.toPiString());
+
             expect(typeUnit.types.length).toBe(8);
             expect(typeUnit.conceptsWithType.length).toBe(9);
             // console.log(typeUnit.conceptsWithType.map(t => t.name).join(", "))
-            expect(typeUnit.anyTypeRule).not.toBeNull();
+            expect(typeUnit.anyTypeSpec).not.toBeNull();
 
-            const stringLitRule = typeUnit.classifierRules.find(rule => rule.myClassifier.name === "StringLiteral");
+            const stringLitRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "StringLiteral");
             expect(stringLitRule).not.toBeNull();
-            expect(stringLitRule instanceof PitInferenceRule).toBeTruthy();
-            expect((stringLitRule as PitInferenceRule).returnType.name).toBe(predefType.name);
+            expect(stringLitRule instanceof PitClassifierSpec).toBeTruthy();
+            const inferOfStringLit = (stringLitRule as PitClassifierSpec).rules.find(r => r instanceof PitInferenceRule);
+            expect(inferOfStringLit).not.toBeNull();
+            // expect(inferOfStringLit.returnType).not.toBeNull();
+            // expect(inferOfStringLit.returnType.name).toBe(predefType.name);
 
-            const plusExpRule = typeUnit.classifierRules.find(rule => rule.myClassifier.name === "PlusExp");
+            const plusExpRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "PlusExp");
             expect(plusExpRule).not.toBeNull();
-            expect(plusExpRule instanceof PitInferenceRule).toBeTruthy();
-            expect((plusExpRule as PitInferenceRule).returnType).toBe(namedType);
+            expect(plusExpRule instanceof PitClassifierSpec).toBeTruthy();
+            const inferOfPlusExp = (plusExpRule as PitClassifierSpec).rules.find(r => r instanceof PitInferenceRule);
+            expect(inferOfPlusExp).not.toBeNull();
+            // expect(inferOfPlusExp.returnType).not.toBeNull();
+            // expect(inferOfPlusExp.returnType.name).toBe(predefType.name);
             }
     });
 
@@ -84,7 +92,7 @@ describe("Checking new typer", () => {
             } catch (e) {
                 console.log(e.stack);
                 const errors: string[] = parser.checker.errors;
-                // expect(errors.length).toBe(0);
+                expect(errors.length).toBe(0);
                 console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
             }
 
@@ -93,17 +101,23 @@ describe("Checking new typer", () => {
             expect(typeUnit.types.length).toBe(8);
             expect(typeUnit.conceptsWithType.length).toBe(9);
             // console.log(typeUnit.conceptsWithType.map(t => t.name).join(", "))
-            expect(typeUnit.anyTypeRule).not.toBeNull();
+            expect(typeUnit.anyTypeSpec).not.toBeNull();
 
-            const stringLitRule = typeUnit.classifierRules.find(rule => rule.myClassifier.name === "StringLiteral");
+            const stringLitRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "StringLiteral");
             expect(stringLitRule).not.toBeNull();
-            expect(stringLitRule instanceof PitInferenceRule).toBeTruthy();
-            expect((stringLitRule as PitInferenceRule).returnType.name).toBe(predefType.name);
+            expect(stringLitRule instanceof PitClassifierSpec).toBeTruthy();
+            const inferOfStringLit = (stringLitRule as PitClassifierSpec).rules.find(r => r instanceof PitInferenceRule);
+            expect(inferOfStringLit).not.toBeNull();
+            // expect(inferOfStringLit.returnType).not.toBeNull();
+            // expect(inferOfStringLit.returnType.name).toBe(predefType.name);
 
-            const plusExpRule = typeUnit.classifierRules.find(rule => rule.myClassifier.name === "PlusExp");
+            const plusExpRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "PlusExp");
             expect(plusExpRule).not.toBeNull();
-            expect(plusExpRule instanceof PitInferenceRule).toBeTruthy();
-            expect((plusExpRule as PitInferenceRule).returnType).toBe(namedType);
+            expect(plusExpRule instanceof PitClassifierSpec).toBeTruthy();
+            const inferOfPlusExp = (plusExpRule as PitClassifierSpec).rules.find(r => r instanceof PitInferenceRule);
+            expect(inferOfPlusExp).not.toBeNull();
+            // expect(inferOfPlusExp.returnType).not.toBeNull();
+            // expect(inferOfPlusExp.returnType.name).toBe(predefType.name);
         }
     });
 });

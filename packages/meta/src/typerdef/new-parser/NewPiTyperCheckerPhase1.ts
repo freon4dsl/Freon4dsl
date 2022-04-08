@@ -4,7 +4,7 @@ import {
     PiClassifier,
     PiLangExpressionChecker,
     PiElementReference,
-    PiLimitedConcept, PiProperty,  PiConcept
+    PiLimitedConcept, PiProperty
 } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 import {
@@ -18,7 +18,6 @@ import {
     PiTyperDef
 } from "../new-metalanguage";
 import { ListUtil } from "../../utils/ListUtil";
-import { PiTyperCheckerPhase2 } from "./PiTyperCheckerPhase2";
 import { CommonSuperTypeUtil } from "../../utils/common-super/CommonSuperTypeUtil";
 import { PitTypeConcept } from "../new-metalanguage/PitTypeConcept";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
@@ -39,7 +38,6 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         this.myExpressionChecker = new PiLangExpressionChecker(this.language);
     }
 
-    // TODO clean up this code
     public check(definition: PiTyperDef): void {
         // MetaLogger.unmuteAllLogs();
         this.definition = definition;
@@ -49,6 +47,8 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
             throw new Error(`Typer checker does not known the language.`);
         }
         definition.language = this.language;
+        // Note: this should be done first, otherwise the references will not be resolved
+        // PiMetaEnvironment.metascoper.typer = this.definition;
 
         this.checkTypeReferences(definition.__types);
         this.checkTypeReferences(definition.__conceptsWithType);
@@ -60,9 +60,11 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         definition.types = this.addInheritedClassifiers(definition.types);
         // console.log("found types: " + definition.types.map(t => t.name).join(", "))
         definition.conceptsWithType = this.addInheritedClassifiers(definition.conceptsWithType);
+        // console.log("found HAS types: " + definition.conceptsWithType.map(t => t.name).join(", "))
 
         // check all the type concepts
         this.checkTypeConcepts(this.definition.typeConcepts);
+        // console.log(this.definition.toPiString());
 
         if (!!definition.anyTypeSpec) {
             // this.checkAnyTypeRule(definition.anyTypeSpec);
@@ -126,14 +128,14 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         // lets find the return types of each rule, and check type conformance in the rules
         // let's find the top of the type hierarchy, if present
 
-        const phase2: PiTyperCheckerPhase2 = new PiTyperCheckerPhase2(this.language);
-        phase2.check(definition);
-        if (phase2.hasErrors()) {
-            this.errors.push(...phase2.errors);
-        }
-        if (phase2.hasWarnings()) {
-            this.warnings.push(...phase2.warnings);
-        }
+        // const phase2: PiTyperCheckerPhase2 = new PiTyperCheckerPhase2(this.language);
+        // phase2.check(definition);
+        // if (phase2.hasErrors()) {
+        //     this.errors.push(...phase2.errors);
+        // }
+        // if (phase2.hasWarnings()) {
+        //     this.warnings.push(...phase2.warnings);
+        // }
     }
 
     private checkTypeReferences(types: PiElementReference<PiClassifier>[]) {

@@ -1,5 +1,5 @@
 import { PiLangElement, PiMetaEnvironment } from "./internal";
-import { ParseLocation, PiDefinitionElement, PiParseLocation } from "../../utils";
+import { ParseLocation, PiParseLocation } from "../../utils";
 
 /**
  * Implementation for a (named) reference in ProjectIt.

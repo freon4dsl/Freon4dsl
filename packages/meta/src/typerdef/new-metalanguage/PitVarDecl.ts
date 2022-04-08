@@ -47,6 +47,6 @@ export class PitVarDecl extends PiDefinitionElement {
     }
 
     toPiString(): string {
-        return this.name + ' : ' + this.type.name;
+        return this.name + ' : ' + this.__type.name;
     }
 }

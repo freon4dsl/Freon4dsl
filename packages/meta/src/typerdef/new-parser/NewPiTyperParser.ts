@@ -83,6 +83,7 @@ export class NewPiTyperParser {
     }
 
     private merge(submodels: PiTyperDef[]) {
+        console.log("begin merge")
         if (submodels.length > 0) {
             let result: PiTyperDef = submodels[0];
             submodels.forEach((sub, index) => {

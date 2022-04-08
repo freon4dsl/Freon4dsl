@@ -22,21 +22,8 @@ export class PitInferenceRule extends PitTypeRule {
     }
     readonly $typename: string = "PitInferenceRule"; // holds the metatype in the form of a string
 
-    __returnType: PiElementReference<PiClassifier>;    exp: PitExp;
     toPiString(): string {
-        return `infertype ${this.exp.toPiString()}`;
+        return `infertype ${this.exp.toPiString()};`;
     }
-    get returnType(): PiClassifier {
-        if (!!this.__returnType && !!this.__returnType.referred) {
-            return this.__returnType.referred;
-        }
-        return null;
-    }
-    set returnType(cls: PiClassifier) {
-        if (!!cls) {
-            this.__returnType = PiElementReference.create<PiClassifier>(cls, "PiClassifier");
-            // TODO owner of PiElementReference
-            // this.__returnType.owner = this.language;
-        }
-    }
+
 }

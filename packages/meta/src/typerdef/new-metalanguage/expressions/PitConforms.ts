@@ -23,7 +23,7 @@ export class PitConforms extends PitBinaryExp {
     readonly $typename: string = "PitConforms"; // holds the metatype in the form of a string
 
     toPiString(): string {
-        return `${this.left.toPiString()} conformsto ${this.right.toPiString()};`;
+        return `${this.left.toPiString()} conformsto ${this.right.toPiString()}`;
     }
     get type(): PiClassifier {
         return PiPrimitiveType.boolean;

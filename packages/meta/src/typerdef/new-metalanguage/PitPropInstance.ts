@@ -52,6 +52,6 @@ export class PitPropInstance extends PiDefinitionElement {
         return null;
     }
     toPiString(): string {
-        return this.property.name + " : " +this.value.toPiString();
+        return this.__property.name + " : " +this.value.toPiString();
     }
 }

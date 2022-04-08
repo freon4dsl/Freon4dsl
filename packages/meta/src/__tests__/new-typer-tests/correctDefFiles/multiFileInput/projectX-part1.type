@@ -12,7 +12,7 @@ NamedExp {
 }
 
 PlusExp {
-    infertype (commonSuperType(self.left, self. right) as NamedType);
+    infertype commonSuperType(self.left, self. right);
 }
 
 TypeRef {
@@ -22,7 +22,7 @@ TypeRef {
 UnitLiteral {
     // 62 kilogram, or 112 miles
     infertype x:UnitOfMeasurement where {
-                  x.baseType equalsto (typeof(self.inner) as PredefinedType);
+                  x.baseType equalsto typeof(self.inner);
                   x.unit equalsto self.unit;
               };
 }
@@ -30,7 +30,7 @@ UnitLiteral {
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype x:GenericType where {
-        x.baseType equalsto (typeof(self.content) as Type);
+        x.baseType equalsto typeof(self.content);
         x.kind equalsto self.kind;
     };
 }

@@ -26,6 +26,6 @@ export class PitEqualsRule extends PitTypeRule {
 
     readonly $typename: string = "PitEqualsRule"; // holds the metatype in the form of a string
     toPiString(): string {
-        return "equalsto " + this.exp.toPiString();
+        return "equalsto " + this.exp.toPiString() + ";";
     }
 }

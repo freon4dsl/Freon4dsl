@@ -1,9 +1,5 @@
 import { PitExp } from "./PitExp";
 import { PiClassifier } from "../../../languagedef/metalanguage";
-import { PitPropertyCallExp } from "./PitPropertyCallExp";
-import { TyperGenUtils } from "../../new-generator/templates/TyperGenUtils";
-import { PitEquals } from "./PitEquals";
-import { PitConforms } from "./PitConforms";
 import { PitVarDecl } from "../PitVarDecl";
 import { PitBinaryExp } from "./PitBinaryExp";
 
@@ -33,15 +29,15 @@ export class PitWhereExp extends PitExp {
 
     toPiString(): string {
         return `${this.variable.toPiString()} where {
-                ${this.conditions.map(cond => cond.toPiString()).join("\n")}
-            }`;
+        ${this.conditions.map(cond => cond.toPiString()).join("\n\t\t")}
+    }`;
     }
     get type(): PiClassifier {
         return this.variable.type;
     }
-    baseSource(): PitExp {
-        return this;
-    }
+    // baseSource(): PitExp {
+    //     return this;
+    // }
 
     /**
      * Returns the conditions of the expressions such that the part that refers to the extra variable
