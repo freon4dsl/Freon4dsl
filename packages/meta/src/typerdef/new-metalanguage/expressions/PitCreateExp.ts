@@ -46,6 +46,6 @@ export class PitCreateExp extends PitExp  {
         return null;
     }
     toPiString(): string {
-        return this.__type.name + " { " + this.propertyDefs.map(p => p.toPiString()).join(",\n") + '\n} ';
+        return this.__type.name + " {\n\t\t" + this.propertyDefs.map(p => p.toPiString()).join(",\n\t\t") + '\n\t} ';
     }
 }

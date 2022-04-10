@@ -1,7 +1,7 @@
-import { PiDefinitionElement } from "../../utils";
+import { PiTyperElement } from "./PiTyperElement";
 import { PitTypeRule } from "./PitTypeRule";
 
-export class PitAnyTypeSpec extends PiDefinitionElement {
+export class PitAnyTypeSpec extends PiTyperElement {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.

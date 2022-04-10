@@ -20,8 +20,8 @@ import {
     PitLimitedRule,
     PitExp,
     PitProperty,
-    PitEquals,
-    PitConforms
+    PitEqualsExp,
+    PitConformsExp
 } from "../new-metalanguage";
 import { PiTyperSyntaxAnalyser } from "./PiTyperSyntaxAnalyser";
 import { PiParseLocation } from "../../utils";
@@ -195,10 +195,10 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitPropertyCallExp(branch: SPPTBranch): PitPropertyCallExp {
         // console.log('transformPitPropertyCallExp called: ' + branch.name);
         let __source: PitExp;
-        let __property: PiElementReference<PitProperty>;
+        let __property: PiElementReference<PiProperty>;
         const children = this.mainAnalyser.getChildren(branch);
         __source = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
-        __property = this.mainAnalyser.piElemRef<PitProperty>(children[2], "PitProperty"); // RHSRefEntry
+        __property = this.mainAnalyser.piElemRef<PiProperty>(children[2], "PiProperty"); // RHSRefEntry
 
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
         return PitPropertyCallExp.create({ source: __source, __property: __property, agl_location: location });
@@ -362,10 +362,10 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitVarDecl(branch: SPPTBranch): PitVarDecl {
         // console.log('transformPitVarDecl called: ' + branch.name);
         let __name: string;
-        let __type: PiElementReference<PitTypeConcept>;
+        let __type: PiElementReference<PiClassifier>;
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
-        __type = this.mainAnalyser.piElemRef<PitTypeConcept>(children[2], "PitTypeConcept"); // RHSRefEntry
+        __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "PiClassifier"); // RHSRefEntry
 
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
         return PitVarDecl.create({ name: __name, __type: __type, agl_location: location });
@@ -521,11 +521,11 @@ export class PiTyperDefSyntaxAnalyserPart {
             const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
             switch (operator) {
                 case "equalsto": {
-                    combined = PitEquals.create({ left: first, right: second, agl_location: location });
+                    combined = PitEqualsExp.create({ left: first, right: second, agl_location: location });
                     break;
                 }
                 case "conformsto": {
-                    combined = PitConforms.create({ left: first, right: second, agl_location: location });
+                    combined = PitConformsExp.create({ left: first, right: second, agl_location: location });
                     break;
                 }
                 default: {

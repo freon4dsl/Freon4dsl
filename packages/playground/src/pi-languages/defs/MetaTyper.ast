@@ -39,7 +39,7 @@ concept PitLimitedRule base PitTypeRule {
 }
 concept PitVarDecl {
     name: identifier;
-    reference type: PitTypeConcept;
+    reference type: PiClassifier;
 }
 concept PitPropInstance base PiLangElement {
     reference property: PiProperty;
@@ -51,7 +51,7 @@ abstract expression PitExp {
 }
 expression PitPropertyCallExp base PitExp {
     source: PitExp;
-    reference property: PitProperty;
+    reference property: PiProperty;
 }
 expression PitSelfExp base PitExp {
 }

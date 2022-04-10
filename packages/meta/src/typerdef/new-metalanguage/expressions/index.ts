@@ -6,8 +6,8 @@
 
 export {
     PitAnytypeExp,
-    PitConforms,
-    PitEquals,
+    PitConformsExp,
+    PitEqualsExp,
     PitExp,
     PitFunctionCallExp,
     PitLimitedInstanceExp,

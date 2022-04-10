@@ -47,9 +47,9 @@ TypeRef {
 
 UnitLiteral {
     // 62 kilogram, or 112 miles
-    infertype x:UnitOfMeasurement where {
-                  x.baseType equalsto typeof(self.inner);
-                  x.unit equalsto self.unit;
+    infertype UnitOfMeasurement {
+                  baseType: typeof(self.inner),
+                  unit: self.unit
               };
 }
 

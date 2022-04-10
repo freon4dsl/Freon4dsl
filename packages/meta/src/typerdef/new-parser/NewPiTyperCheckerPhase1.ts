@@ -4,16 +4,18 @@ import {
     PiClassifier,
     PiLangExpressionChecker,
     PiElementReference,
-    PiLimitedConcept, PiProperty
+    PiLimitedConcept, PiProperty, PiPrimitiveType, PiMetaEnvironment, PiInstance, PiConcept
 } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 import {
+    PitAnytypeExp,
+    PitAnyTypeSpec, PitClassifierSpec, PitConformanceRule,
     PitExp,
     PitFunctionCallExp,
     PitInferenceRule,
     PitLimitedInstanceExp,
     PitLimitedRule, PitProperty,
-    PitPropertyCallExp,
+    PitPropertyCallExp, PitSelfExp, PitTypeRule,
     PitWhereExp,
     PiTyperDef
 } from "../new-metalanguage";
@@ -22,6 +24,10 @@ import { CommonSuperTypeUtil } from "../../utils/common-super/CommonSuperTypeUti
 import { PitTypeConcept } from "../new-metalanguage/PitTypeConcept";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 import { piReservedWords } from "../../languagedef/metalanguage/PiLanguageChecker";
+import { PitEqualsRule } from "../new-metalanguage/PitEqualsRule";
+import { PitBinaryExp, PitCreateExp, PitVarCallExp } from "../new-metalanguage/expressions";
+import { PitScoper } from "./PitScoper";
+import { PitOwnerSetter } from "./PitOwnerSetter";
 
 const LOGGER = new MetaLogger("NewPiTyperChecker"); //.mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];
@@ -47,9 +53,13 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
             throw new Error(`Typer checker does not known the language.`);
         }
         definition.language = this.language;
-        // Note: this should be done first, otherwise the references will not be resolved
-        // PiMetaEnvironment.metascoper.typer = this.definition;
 
+        // To be able to find references in the type defintion to nodes other than those form the language
+        // we need an extra scoper, and we need to set the opposites of all 'parts': their owning nodes
+        PiMetaEnvironment.metascoper.extraScopers.push(new PitScoper(definition));
+        PitOwnerSetter.setNodeOwners(definition);
+
+        // now we can start checking
         this.checkTypeReferences(definition.__types);
         this.checkTypeReferences(definition.__conceptsWithType);
         // from now on we can use the getters 'types' and 'conceptsWithType'!
@@ -67,7 +77,7 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         // console.log(this.definition.toPiString());
 
         if (!!definition.anyTypeSpec) {
-            // this.checkAnyTypeRule(definition.anyTypeSpec);
+            this.checkAnyTypeRule(definition.anyTypeSpec);
         } else {
             // if (!!definition.classifierSpecs) {
             //     // maybe one of the PitConformanceOrEqualsRules is actually a PitAnyTypeRule
@@ -94,32 +104,31 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
             // }
         }
 
+        // check all specs independently, add check whether there is more than one spec for this classifier
+        // collect all classifiers for which a spec is defined
+        const allClassifiers: PiClassifier[] = [];
         if (!!definition.classifierSpecs) {
-            definition.classifierSpecs.forEach((rule, index) => {
-                // this.checkClassifierRule(rule);
+            definition.classifierSpecs.forEach((spec, index) => {
+                this.checkClassifierSpec(spec);
+                if (!allClassifiers.includes(spec.myClassifier)) {
+                    allClassifiers.push(spec.myClassifier);
+                } else {
+                    this.simpleCheck(false, `There may be only one specification for a concept or interface ${Checker.location(spec)}.`);
+                }
             });
         }
 
+        // check whether there is a spec for all classifiers marked 'hasType'
         if (!!definition.conceptsWithType) {
-            // definition.conceptsWithType.forEach(con => {
-            //     if (con instanceof PiConcept && !con.isAbstract) {
-            //         let conRule = definition.classifierSpecs.find(rule => rule.__myClassifier.name === con.name && rule instanceof PitInferenceRule);
-            //         if (!conRule) { // try finding rules for a superclsssifier
-            //             const supers: PiClassifier[] = LangUtil.superClassifiers(con);
-            //             for (const super1 of supers) {
-            //                 const rule: PitClassifierRule = definition.classifierSpecs.find(rule => rule.__myClassifier.name === super1.name && rule instanceof PitInferenceRule);
-            //                 if (!!rule) {
-            //                     conRule = rule;
-            //                 }
-            //             }
-            //         }
-            //         // TODO no error when there is a rule for a superclass
-            //         this.simpleCheck(
-            //             !!conRule,
-            //             `Concept '${con.name}' is marked 'hasType', but has no 'inferType' rule ${Checker.location(definition)}.`
-            //         );
-            //     }
-            // });
+            definition.conceptsWithType.forEach(con => {
+                if (con instanceof PiConcept && !con.isAbstract) {
+                    let rule = this.findSpecForConcept(con);
+                    this.simpleCheck(
+                        !!rule?.rules.find(r => r instanceof PitInferenceRule),
+                        `Concept '${con.name}' is marked 'hasType', but has no 'inferType' rule ${Checker.location(definition)}.`
+                    );
+                }
+            });
         }
 
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
@@ -138,11 +147,21 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         // }
     }
 
+    private findSpecForConcept(con: PiConcept) {
+        let rule: PitClassifierSpec = this.definition.classifierSpecs.find(spec => spec.myClassifier === con);
+        if (!rule) { // try finding rules for a superclassifier
+            const supers: PiClassifier[] = LangUtil.superClassifiers(con);
+            for (const super1 of supers) {
+                rule = this.definition.classifierSpecs.find(rule => rule.myClassifier === super1);
+            }
+        }
+        return rule;
+    }
+
     private checkTypeReferences(types: PiElementReference<PiClassifier>[]) {
         // LOGGER.log("Checking types: '" + types.map(t => t.name).join(", ") + "'");
         if (!!types) {
             for (const t of types) {
-                t.owner = this.language;
                 this.myExpressionChecker.checkClassifierReference(t);
                 if (!!t.referred) { // error message given by myExpressionChecker
                     this.nestedCheck({
@@ -169,135 +188,146 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         return result;
     }
 
-    // private checkAnyTypeRule(rule: PitAnyTypeSpec) {
-    //     // LOGGER.log("Checking anyTypeSpec '" + rule.toPiString() + "'");
-    //     rule.myRules.forEach(stat => {
-    //         // check the statement, using the overall model as enclosing concept
-    //         this.checkSingleRule(stat, this.language.modelConcept);
-    //     });
-    // }
+    private checkAnyTypeRule(spec: PitAnyTypeSpec) {
+        // LOGGER.log("Checking anyTypeSpec '" + spec.toPiString() + "'");
+        spec.rules.forEach(rule => {
+            // check the rule, using the overall model as enclosing concept
+            this.checkTypeRule(rule, this.language.modelConcept);
+        });
+    }
 
-    // private checkClassifierRule(rule: PitClassifierRule) {
-    //     // LOGGER.log("Checking PitClassifierRule '" + rule.toPiString() + "'");
-    //     this.myExpressionChecker.checkClassifierReference(rule.__myClassifier);
-    //     rule.__myClassifier.owner = this.language;
-    //     if (!!rule.__myClassifier.referred) { // error message done by myExpressionChecker
-    //         const classifier: PiClassifier = rule.myClassifier;
-    //         // see whether there are two or more rules for one concept or interface
-    //         this.nestedCheck({
-    //             check: !this.conceptsWithRules.includes(classifier),
-    //             error: `Only one rule allowed per concept or interface ${Checker.location(rule)}.`,
-    //             whenOk: () => {
-    //                 this.conceptsWithRules.push(classifier);
-    //                 // now check the rule itself
-    //                 if (rule instanceof PitInferenceRule) {
-    //                     this.checkInferenceRule(rule, classifier);
-    //                 } else if (rule instanceof PitConformanceOrEqualsRule) {
-    //                     this.checkConformanceOrEqualsRule(rule, classifier);
-    //                 } else if (rule instanceof PitLimitedRule) {
-    //                     this.checkLimitedRule(rule, classifier);
-    //                 }
-    //             }
-    //         });
-    //     }
-    // }
+    private checkClassifierSpec(spec: PitClassifierSpec) {
+        this.myExpressionChecker.checkClassifierReference(spec.__myClassifier);
+        if (!!spec.myClassifier) {
+            spec.rules.forEach(rule => {
+                // check the rule, using the overall model as enclosing concept
+                this.checkTypeRule(rule, spec.myClassifier);
+            });
+        }
+    }
 
-    private checkInferenceRule(rule: PitInferenceRule, classifier: PiClassifier) {
-        this.simpleCheck(this.definition.conceptsWithType.includes(classifier),
-            `Concept or interface '${classifier.name}' is not marked 'hasType', therefore it cannot have an infertype rule ${Checker.location(rule)}.`);
-        rule.exp = this.changeInstanceToPropCallExp(rule.exp, classifier);
-        this.checkPitExp(rule.exp, classifier);
+    private checkTypeRule(rule: PitTypeRule, enclosingConcept: PiClassifier) {
+        if (rule instanceof PitInferenceRule) {
+            this.checkInferenceRule(rule, enclosingConcept);
+        } else if (rule instanceof PitConformanceRule) {
+            this.checkConformanceRule(rule, enclosingConcept);
+        } else if (rule instanceof PitEqualsRule) {
+            this.checkEqualsRule(rule, enclosingConcept);
+        } else if (rule instanceof PitLimitedRule) {
+            this.checkLimitedRule(rule, enclosingConcept);
+        }
+        this.checkPitExp(rule.exp, enclosingConcept);
         rule.returnType = rule.exp.returnType;
     }
 
-    private checkLimitedRule(rule: PitLimitedRule, classifier: PiClassifier) {
-        this.checkPitExp(rule.exp, classifier);
+    private checkInferenceRule(rule: PitInferenceRule, enclosingConcept: PiClassifier) {
+        this.simpleCheck(enclosingConcept !== this.language.modelConcept,
+            `'Anytype' cannot have an infertype rule ${Checker.location(rule)}.`);
+        this.simpleCheck(this.definition.conceptsWithType.includes(enclosingConcept),
+            `Concept or interface '${enclosingConcept.name}' is not marked 'hastype', therefore it cannot have an infertype rule ${Checker.location(rule)}.`);
+        // rule.exp = this.changeInstanceToPropCallExp(rule.exp, enclosingConcept);
     }
 
-    // private checkStatement(stat: PitStatement, classifier: PiClassifier, surroundingExp?: PitWhereExp) {
-    //     // LOGGER.log("Checking checkStatement '" + stat.toPiString() + "'");
-    //     stat.left = this.changeInstanceToPropCallExp(stat.left, classifier);
-    //     this.checkPitExp(stat.left, classifier, surroundingExp);
-    //     stat.right = this.changeInstanceToPropCallExp(stat.right, classifier);
-    //     this.checkPitExp(stat.right, classifier, surroundingExp);
-    //     // TODO check use of function calls on property of whereExp
-    // }
+    private checkConformanceRule(rule: PitConformanceRule, enclosingConcept: PiClassifier) {
+        if (enclosingConcept !== this.language.modelConcept) {
+            this.simpleCheck(this.definition.types.includes(enclosingConcept),
+                `Concept or interface '${enclosingConcept.name}' is not marked 'istype', therefore it cannot have a conformance rule ${Checker.location(rule)}.`);
+        }
+    }
 
-    private changeInstanceToPropCallExp(exp: PitExp, classifier: PiClassifier): PitExp {
-        // TODO this should be handled in Semantic Analysis Phase of parser
-        let result: PitExp = exp;
-        if (exp instanceof PitLimitedInstanceExp) {
-            if (!exp.__myLimited) {
-                if (!(classifier instanceof PiLimitedConcept)) {
-                    // console.log("FOUND PitInstanceExp, but suspect it is a PitPropertyCallExp: " + exp.toPiString())
-                    result = new PitPropertyCallExp();
-                    result.agl_location = exp.agl_location;
-                    (result as PitPropertyCallExp).__property =
-                        PiElementReference.create<PiProperty>(exp.__myInstance.name, "PiProperty");
-                    (result as PitPropertyCallExp).__property.agl_location = exp.__myInstance.agl_location;
-                }
+    private checkEqualsRule(rule: PitEqualsRule, enclosingConcept: PiClassifier) {
+        if (enclosingConcept !== this.language.modelConcept) {
+            this.simpleCheck(this.definition.types.includes(enclosingConcept),
+                `Concept or interface '${enclosingConcept.name}' is not marked 'istype', therefore it cannot have an equals rule ${Checker.location(rule)}.`);
+        }
+    }
+
+    private checkLimitedRule(rule: PitLimitedRule, enclosingConcept: PiClassifier) {
+        // LOGGER.log("Checking limited rule '" + rule.toPiString() + "' for " + enclosingConcept.name );
+        this.simpleCheck(enclosingConcept instanceof PiLimitedConcept,
+            `This type of rule may only be used for limited concepts ${Checker.location(rule)}.`);
+        // remedy possible parse error, TODO find better solution
+        if (rule.exp instanceof PitBinaryExp) {
+            if (rule.exp.left instanceof PitVarCallExp) {
+                rule.exp.left = this.changeVarCallIntoInstanceExp(rule.exp.left);
+            }
+            if (rule.exp.right instanceof PitVarCallExp) {
+                rule.exp.right = this.changeVarCallIntoInstanceExp(rule.exp.right);
             }
         }
+    }
+
+    private changeVarCallIntoInstanceExp(myVarCall: PitVarCallExp): PitLimitedInstanceExp {
+        const result: PitLimitedInstanceExp = new PitLimitedInstanceExp();
+        result.owner = myVarCall.owner;
+        result.__myInstance = PiElementReference.create<PiInstance>(myVarCall.__variable.name, "PiInstance");
+        result.__myInstance.owner = result;
+        result.agl_location = myVarCall.agl_location;
         return result;
     }
 
-    private checkPitExp(exp: PitExp, classifier: PiClassifier, surroundingExp?: PitWhereExp, surroundingAllowed?: boolean) {
-        // LOGGER.log("Checking PitExp '" + exp.toPiString() + "'");
+    private checkPitExp(exp: PitExp, enclosingConcept: PiClassifier, surroundingExp?: PitWhereExp, surroundingAllowed?: boolean) {
+        // console.log("Checking PitExp '" + exp.toPiString() + "'");
         exp.language = this.language;
-        // if (exp instanceof PitAnytypeExp ) {
-        //     // nothing to check
-        //     exp.returnType = PiClassifier.ANY;
-        // } else if (exp instanceof PitSelfExp) {
-        //     // nothing to check
-        //     exp.returnType = classifier;
-        // } else if (exp instanceof PitExpWithType) {
-        //     this.checkPitExp(exp.inner, classifier, surroundingExp, surroundingAllowed);
-        //     // console.log("checking " + exp.inner.returnType?.name + " against " + exp.expectedType.name)
-        //     if (!!exp.inner.returnType) {
-        //         this.simpleWarning(
-        //             LangUtil.conforms(exp.inner.returnType, exp.expectedType),
-        //             `Expected type '${exp.expectedType.name}', but found type '${exp.inner.returnType.name}' ${Checker.location(exp)}.`);
-        //     }
-        //     exp.returnType = exp.expectedType;
-        // } else if (exp instanceof PitFunctionCallExp) {
-        //     this.checkFunctionCallExpression(exp, classifier, surroundingExp);
-        //     // exp.returnType cannot be set, because this depends on the inferType rules.
-        //     // But we do know that it should be one of the classifiers marked 'isType'.
-        //     // So, if there is a common base type for them all, we use this as return type.
-        //     exp.returnType = this.functionReturnType();
-        // } else if (exp instanceof PitPropertyCallExp ) {
-        //     this.checkPropertyCallExp(exp, classifier, surroundingExp, surroundingAllowed);
-        //     exp.returnType = exp.property?.type;
-        // } else if (exp instanceof PitLimitedInstanceExp) {
-        //     this.checkInstanceExp(exp, classifier);
-        //     exp.returnType = exp.myLimited;
-        // } else if (exp instanceof PitWhereExp) {
-        //     exp.returnType = exp.otherType?.type;
-        //     this.checkWhereExp(exp, classifier);
-        // }
+        if (exp instanceof PitAnytypeExp ) {
+            // nothing to check
+            exp.returnType = PiClassifier.ANY;
+        } else if (exp instanceof PitBinaryExp) {
+            this.checkBinaryExp(exp, enclosingConcept, surroundingExp);
+            exp.returnType = PiPrimitiveType.boolean;
+        } else if (exp instanceof PitCreateExp) {
+            this.checkCreateExp(exp, enclosingConcept);
+            exp.returnType = exp.type;
+        } else if (exp instanceof PitFunctionCallExp) {
+            this.checkFunctionCallExpression(exp, enclosingConcept, surroundingExp);
+        } else if (exp instanceof PitLimitedInstanceExp) {
+            this.checkInstanceExp(exp, enclosingConcept);
+            exp.returnType = exp.myLimited;
+        } else if (exp instanceof PitPropertyCallExp ) {
+            this.checkPropertyCallExp(exp, enclosingConcept, surroundingExp, surroundingAllowed);
+        } else if (exp instanceof PitSelfExp) {
+            // nothing to check
+            exp.returnType = enclosingConcept;
+        } else if (exp instanceof PitVarCallExp) {
+            this.checkVarCallExp(exp);
+        } else if (exp instanceof PitWhereExp) {
+            this.checkWhereExp(exp, enclosingConcept);
+        }
+    }
+
+    private checkBinaryExp(exp: PitBinaryExp, enclosingConcept: PiClassifier, surroundingExp?: PitWhereExp) {
+        // LOGGER.log("Checking PitBinaryExp '" + exp.toPiString() + "'");
+        this.checkPitExp(exp.left, enclosingConcept, surroundingExp);
+        this.checkPitExp(exp.right, enclosingConcept, surroundingExp);
+    }
+
+    private checkCreateExp(exp: PitCreateExp, classifier: PiClassifier, surroundingExp?: PitWhereExp) {
+        // LOGGER.log("Checking PitCreateExp '" + exp.toPiString() + "'");
+        this.checkClassifierReference(exp.__type, false);
+        exp.propertyDefs.forEach(propDef => {
+            this.simpleCheck(!!propDef.property,
+               `Cannot find property '${propDef.__property.name}' ${Checker.location(propDef.__property)}.`);
+            this.checkPitExp(propDef.value, classifier, surroundingExp);
+        });
     }
 
     private checkWhereExp(exp: PitWhereExp, classifier: PiClassifier) {
         // LOGGER.log("Checking PitWhereExp '" + exp.toPiString() + "'");
-        // exp.otherType.refType.owner = this.language; // the type of the new property must be declared within the language
-        // this.nestedCheck({
-        //     check: !!exp.otherType.type,
-        //     error: `Cannot find type '${exp.otherType.refType.name}' ${Checker.location(exp.otherType.refType)}.`,
-        //     whenOk: () => {
-        //         this.simpleCheck(this.definition.types.includes(exp.otherType.type),
-        //             `Concept or interface '${exp.otherType.refType.name}' is not marked 'isType' ${Checker.location(exp.otherType.refType)}.`);
-        //         exp.conditions.forEach(cond => {
-        //             this.checkStatement(cond, classifier, exp);
-        //         });
-        //         // exp.returnType = exp.otherType.type;
-        //     }
-        // });
+        this.nestedCheck({
+            check: !!exp.variable.type,
+            error: `Cannot find type '${exp.variable.__type.name}' ${Checker.location(exp.variable.__type)}.`,
+            whenOk: () => {
+                // check all conditions of the where expression
+                exp.conditions.forEach(cond => {
+                    this.checkBinaryExp(cond, classifier, exp);
+                });
+                exp.returnType = exp.variable.type;
+            }
+        });
     }
 
     private checkInstanceExp(exp: PitLimitedInstanceExp, classifier: PiClassifier) {
-        exp.__myInstance.owner = this.language;
         if (!!exp.__myLimited) {
-            exp.__myLimited.owner = this.language;
             this.simpleCheck(
                 !!exp.myLimited,
                 `Cannot find limited concept '${exp.__myLimited.name}' ${Checker.location(exp.__myLimited)}.`);
@@ -307,7 +337,6 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
                 exp.myLimited = classifier;
             }
         }
-        // exp.returnType = exp.myLimited;
         this.nestedCheck({
             check: !!exp.myInstance,
             error: `Cannot find instance '${exp.__myInstance.name}' of '${exp.__myLimited?.name}' ${Checker.location(exp.__myInstance)}.`,
@@ -318,63 +347,30 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         });
     }
 
-    private checkPropertyCallExp(exp: PitPropertyCallExp, classifier: PiClassifier, surroundingExp?: PitWhereExp, surroundingAllowed?: boolean) {
-        // if (classifier.name === "GenericLiteral") {
-        //     console.log("checking property call " + exp.toPiString());
-        // }
-        // The parameter surroundingAllowed is present to be able to give better errors messages.
-        // It indicates whether or not the property from the surrounding whereExp may be used.
-        if (surroundingAllowed === null || surroundingAllowed === undefined) {
-            surroundingAllowed = true;
-        }
-        let errMessDone: boolean = false;
-        let owningClassifier: PiClassifier = null;
+    private checkPropertyCallExp(exp: PitPropertyCallExp, enclosingConcept: PiClassifier, surroundingExp?: PitWhereExp, surroundingAllowed?: boolean) {
+        // console.log("Checking PitPropertyCallExp '" + exp.toPiString() + "'");
         if (!!exp.source) {
-            // if (classifier.name === "GenericLiteral") {
-            //     console.log("source: " + exp.source.toPiString() + ", " + exp.source.constructor.name);
-            // }
-            exp.source = this.changeInstanceToPropCallExp(exp.source, classifier);
-            this.checkPitExp(exp.source, classifier, surroundingExp, surroundingAllowed);
-            exp.__property.owner = exp.source.returnType;
-            owningClassifier = exp.source.returnType;
-            if (exp.source instanceof PitFunctionCallExp){
-                errMessDone = true; // we do not yet know the return type, therefore we cannot give a correct error message
-                this.simpleCheck(
-                    false,
-                    `Return type of '${exp.source.toPiString()}' cannot be determined, please add an 'as'-clause ${Checker.location(exp.__property)}.`
-                );
-            }
-        } else {
-            // if (classifier.name === "GenericLiteral") {
-            //     console.log("found type: " + exp.__property?.owner?.name);
-            // }
-            // if (!!surroundingExp) {
-            //     owningClassifier = surroundingExp.otherType.type;
-            //     // use the surrounding PitWhereExp, because there an extra prop is defined
-            //     if (exp.__property.name === surroundingExp.otherType.name) {
-            //         if (!surroundingAllowed) {
-            //             this.simpleCheck(
-            //                 false,
-            //                 `Reference to property '${exp.__property.name}' is not allowed ${Checker.location(exp.__property)}.`
-            //             );
-            //             errMessDone = true;
-            //         }
-            //         exp.property = surroundingExp.otherType;
-            //         // exp.returnType = exp.property.type;
-            //     }
-            //     // console.log(exp.toPiString() + " using surrounding exp: " + exp.property.name)
-            // }
-        }
-
-        if (!errMessDone) {
+            this.checkPitExp(exp.source, enclosingConcept, surroundingExp, surroundingAllowed);
+            // console.log("found source: " + exp.source.toPiString() + " of type " + exp.source.returnType.name);
             this.nestedCheck({
                 check: !!exp.property,
-                error: `Cannot find property '${exp.__property.name}' in classifier '${owningClassifier?.name}' ${Checker.location(exp.__property)}.`,
+                error: `Cannot find property '${exp.__property.name}' in classifier '${exp.source.returnType?.name}' ${Checker.location(exp.__property)}.`,
                 whenOk: () => {
-                    // exp.returnType = exp.property.type;
+                    exp.returnType = exp.property.type;
                 }
             });
         }
+    }
+
+    private checkVarCallExp(exp: PitVarCallExp) {
+        // LOGGER.log("Checking checkVarCallExp '" + exp.toPiString() + "'");
+        this.nestedCheck({
+            check: !!exp.variable,
+            error: `Cannot find reference to ${exp.__variable.name} ${Checker.location(exp.__variable)}.`,
+            whenOk: () => {
+                exp.returnType = exp.variable.type;
+            }
+        });
     }
 
     private checkFunctionCallExpression(exp: PitFunctionCallExp, enclosingConcept: PiClassifier, surroundingExp: PitWhereExp) {
@@ -393,6 +389,10 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
                             `found ${exp.actualParameters.length} ${Checker.location(exp)}.`,
                         whenOk: () => {
                             this.checkArguments(exp, enclosingConcept, surroundingExp);
+                            // The value of 'exp.returnType' cannot be exactly determined, because this depends on the inferType rules.
+                            // But we do know that it should be one of the classifiers marked 'isType'.
+                            // So, if there is a common base type for them all, we use this as return type.
+                            exp.returnType = this.definition.typeRoot();
                         }
                     });
                 } else if (exp.calledFunction === validFunctionNames[1]) { // "commonSuperType"
@@ -402,6 +402,10 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
                             `found ${exp.actualParameters.length} ${Checker.location(exp)}.`,
                         whenOk: () => {
                             this.checkArguments(exp, enclosingConcept, surroundingExp);
+                            // The value of 'exp.returnType' cannot be exactly determined, because this depends on the inferType rules.
+                            // But we do know that it should be one of the classifiers marked 'isType'.
+                            // So, if there is a common base type for them all, we use this as return type.
+                            exp.returnType = this.definition.typeRoot();
                         }
                     });
                 } else if (exp.calledFunction === validFunctionNames[2]) { // "ownerOfType"
@@ -410,7 +414,7 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
                         error: `Function '${functionName}' in '${enclosingConcept.name}' should have 1 parameter, ` +
                             `found ${exp.actualParameters.length} ${Checker.location(exp)}.`,
                         whenOk: () => {
-                            // the returntype is calcalated based on the common super type of the arguments
+                            // The returntype is calcalated based on the common super type of the arguments
                             this.setReturntoArgumentType(exp);
                         }
                     });
@@ -433,45 +437,12 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         // // console.log("returnType is: " + exp.returnType.name);
     }
 
-    private changeInstanceToClassifierExp(exp: PitExp): PitExp {
-        // TODO this should be handled in Semantic Analysis Phase of parser
-        let result: PitExp = exp;
-        // if (exp instanceof PitLimitedInstanceExp) {
-        //     if (!exp.__myLimited) { // a single reference is found
-        //         const classifier: PiClassifier = this.language.findClassifier(exp.__myInstance.name);
-        //         if (!!classifier) {
-        //             // console.log("FOUND PitInstanceExp, but suspect it is a PitClassifierCallExp: " + exp.toPiString())
-        //             result = new PitClassifierCallExp();
-        //             result.agl_location = exp.agl_location;
-        //             (result as PitClassifierCallExp).__myClassifier =
-        //                 PiElementReference.create<PiClassifier>(exp.__myInstance.name, "PiClassifier");
-        //             (result as PitClassifierCallExp).__myClassifier.agl_location = exp.__myInstance.agl_location;
-        //         }
-        //     }
-        // }
-        return result;
-    }
-
     private checkArguments(langExp: PitFunctionCallExp, enclosingConcept: PiClassifier, surroundingExp: PitWhereExp) {
         const newArgs: PitExp[] = [];
-        langExp.actualParameters.forEach(p => {
-                newArgs.push(this.changeInstanceToPropCallExp(p, enclosingConcept));
-            }
-        );
         newArgs.forEach(p => {
                 this.checkPitExp(p, enclosingConcept, surroundingExp, false);
             }
         );
-    }
-
-    private functionReturnType(): PiClassifier {
-        const possibleTypes: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(this.definition.types);
-        if (possibleTypes.length === 1) {
-            return possibleTypes[0];
-        } else {
-            console.log("cannot find a common base type for the functions, found: " + possibleTypes.map(pos => pos.name).join(", "))
-        }
-        return undefined;
     }
 
     private checkTypeConcepts(typeConcepts: PitTypeConcept[]) {
@@ -505,7 +476,7 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         }
     }
 
-    private checkTypeConceptProperty(piProperty: PitProperty, piConcept: PitTypeConcept): void {
+    private checkTypeConceptProperty(piProperty: PiProperty, piConcept: PitTypeConcept): void {
         LOGGER.log("Checking type concept property '" + piProperty.name + "'");
         // set all unused properties of this class
         piProperty.isOptional = false;
@@ -518,7 +489,11 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
             `Property may not have a name that is equal to a reserved word in TypeScript ('${piProperty.name}') ${Checker.location(piProperty)}.`);
         // (4) the types of the properties must be known, either as classifiers in the AST,
         //      or as type concepts
-        this.checkClassifierReference(piProperty.refType, false);
+        if (piProperty instanceof PitProperty) {
+            this.checkClassifierReference(piProperty.refType, false);
+        } else {
+            this.myExpressionChecker.checkClassifierReference(piProperty.typeReference);
+        }
         // (5) property names must be unique within one concept
         // TODO finish checks
         // (6) check inherited props on rules layed out in languagedef checker

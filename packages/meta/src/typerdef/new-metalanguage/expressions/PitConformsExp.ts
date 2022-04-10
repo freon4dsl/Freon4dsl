@@ -1,14 +1,14 @@
 import { PiClassifier, PiPrimitiveType } from "../../../languagedef/metalanguage";
 import { PitBinaryExp } from "./PitBinaryExp";
 
-export class PitEquals extends PitBinaryExp {
+export class PitConformsExp extends PitBinaryExp {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
      * @param data
      */
-    static create(data: Partial<PitEquals>): PitEquals {
-        const result = new PitEquals();
+    static create(data: Partial<PitConformsExp>): PitConformsExp {
+        const result = new PitConformsExp();
         if (!!data.left) {
             result.left = data.left;
         }
@@ -20,10 +20,10 @@ export class PitEquals extends PitBinaryExp {
         }
         return result;
     }
-    readonly $typename: string = "PitEquals"; // holds the metatype in the form of a string
+    readonly $typename: string = "PitConforms"; // holds the metatype in the form of a string
 
     toPiString(): string {
-        return `${this.left.toPiString()} equalsto ${this.right.toPiString()};`;
+        return `${this.left.toPiString()} conformsto ${this.right.toPiString()}`;
     }
     get type(): PiClassifier {
         return PiPrimitiveType.boolean;

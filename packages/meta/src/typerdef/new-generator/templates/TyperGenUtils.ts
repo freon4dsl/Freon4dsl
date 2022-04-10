@@ -1,7 +1,7 @@
 import {
     PitAnytypeExp,
-    PitConforms,
-    PitEquals,
+    PitConformsExp,
+    PitEqualsExp,
     PitExp,
     PitFunctionCallExp,
     PitLimitedInstanceExp,
@@ -52,11 +52,11 @@ export class TyperGenUtils {
         } else if (exp instanceof PitSelfExp) {
             ListUtil.addIfNotPresent(imports, Names.classifier(exp.returnType));
             return `(${varName} as ${Names.classifier(exp.returnType)})`;
-        } else if (exp instanceof PitConforms) {
+        } else if (exp instanceof PitConformsExp) {
             const leftVarName: string = "left";
             const rightVarName: string = "right";
             return `this.mainTyper.${conformsFunctionName}(${this.makeTypeScriptForExp(exp.left, leftVarName, imports)}, ${this.makeTypeScriptForExp(exp.right, rightVarName, imports)})`;
-        } else if (exp instanceof PitEquals) {
+        } else if (exp instanceof PitEqualsExp) {
             const leftVarName: string = "left";
             const rightVarName: string = "right";
             return `this.mainTyper.${equalsFunctionName}(${this.makeTypeScriptForExp(exp.left, leftVarName, imports)}, ${this.makeTypeScriptForExp(exp.right, rightVarName, imports)})`;
@@ -77,8 +77,8 @@ export class TyperGenUtils {
     static getTypeRoot(language: PiLanguage, typerdef: PiTyperDef) {
         let rootType: string = Names.allConcepts(language);
         if (!!typerdef && !!typerdef.typeRoot) {
-            if (typerdef.typeRoot !== PiClassifier.ANY) {
-                rootType = Names.classifier(typerdef.typeRoot);
+            if (typerdef.typeRoot() !== PiClassifier.ANY) {
+                rootType = Names.classifier(typerdef.typeRoot());
             }
         }
         return rootType;

@@ -15,8 +15,13 @@ import { Checker, PiDefinitionElement } from "../../utils";
 const LOGGER = new MetaLogger("PiLangScoper"); // .mute();
 const anyElement = "_$anyElement";
 
+export interface PiMetaScoper {
+    getFromVisibleElements(owner: PiDefinitionElement, name: string, typeName: string): PiLangElement;
+}
+
 export class PiLangScoper {
     public language: PiLanguage;
+    extraScopers: PiMetaScoper[] = [];
 
     public getFromVisibleElements(owner: PiDefinitionElement, name: string, typeName: string): PiLangElement {
         let result: PiLangElement;
@@ -31,6 +36,7 @@ export class PiLangScoper {
         } else if (typeName === "PiClassifier" ) {
             result = this.language.findClassifier(name);
         } else if (typeName === "PiProperty" || typeName === "PiPrimitiveProperty" || typeName === "PiConceptProperty") {
+            // console.log("PiLangScoper searching for property " + name);
             if (owner instanceof PiLangAppliedFeatureExp) {
                 const xx = owner.sourceExp.__referredElement?.referred;
                 if (!(!!xx)) {
@@ -47,14 +53,23 @@ export class PiLangScoper {
                     result = tmp;
                 }
             });
-        } else {
-            let ownerDescriptor: string;
-            if (owner instanceof PiLangElement) {
-                ownerDescriptor = owner.name;
-            } else {
-                ownerDescriptor = Checker.location(owner);
+        }
+        if (!result) { // try the scoper for another meta language (e.g. typer)
+            for (const scoper of this.extraScopers) {
+                const xxx = scoper.getFromVisibleElements(owner, name, typeName);
+                if (!!xxx) {
+                    result = xxx;
+                }
             }
-            console.error("NO calculation found for " + name + ", owner: " + ownerDescriptor + ", type:" + typeName);
+            // if (!result) {
+            //     let ownerDescriptor: string;
+            //     if (owner instanceof PiLangElement) {
+            //         ownerDescriptor = owner.name;
+            //     } else {
+            //         ownerDescriptor = Checker.location(owner);
+            //     }
+            //     console.error("NO calculation found for " + name + ", owner: " + ownerDescriptor + ", type:" + typeName);
+            // }
         }
         return result;
     }

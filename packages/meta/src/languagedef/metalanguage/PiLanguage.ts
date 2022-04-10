@@ -445,6 +445,9 @@ export class PiProperty extends PiLangElement {
         this.__type = t;
         this.__type.owner = this;
     }
+    toPiString(): string {
+        return this.name + ": " + this.__type.name;
+    }
 }
 
 export class PiConceptProperty extends PiProperty {

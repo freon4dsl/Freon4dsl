@@ -6,6 +6,7 @@
 
 export {
     PiTyperDef,
+    PiTyperElement,
     PitClassifierSpec,
     PitAnyTypeSpec,
     PitTypeRule,
@@ -16,7 +17,7 @@ export {
     PitProperty,
     PitPropInstance,
     PitLimitedRule,
-    PitEquals,
+    PitEqualsExp,
     PitExp,
     PitWhereExp,
     PitLimitedInstanceExp,
@@ -24,5 +25,5 @@ export {
     PitSelfExp,
     PitFunctionCallExp,
     PitAnytypeExp,
-    PitConforms
+    PitConformsExp
 } from "./internal";

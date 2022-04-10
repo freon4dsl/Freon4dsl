@@ -1,6 +1,6 @@
 import {
 
-    PitConforms, PitExp,
+    PitConformsExp, PitExp,
     PitLimitedRule,
 PitWhereExp,
     PiTyperDef

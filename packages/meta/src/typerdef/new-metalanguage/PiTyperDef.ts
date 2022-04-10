@@ -1,10 +1,11 @@
-import { PiDefinitionElement } from "../../utils";
+import { PiTyperElement } from "./PiTyperElement";
 import { PiClassifier, PiElementReference, PiLanguage } from "../../languagedef/metalanguage";
 import { PitTypeConcept } from "./PitTypeConcept";
 import { PitClassifierSpec } from "./PitClassifierSpec";
 import { PitAnyTypeSpec } from "./PitAnyTypeSpec";
+import { CommonSuperTypeUtil } from "../../utils/common-super/CommonSuperTypeUtil";
 
-export class PiTyperDef extends PiDefinitionElement {
+export class PiTyperDef extends PiTyperElement {
     language: PiLanguage;
     /**
      * A convenience method that creates an instance of this class
@@ -37,12 +38,6 @@ export class PiTyperDef extends PiDefinitionElement {
         if (!!data.__conceptsWithType) {
             data.__conceptsWithType.forEach(x => result.__conceptsWithType.push(x));
         }
-        if (!!data.typeRoot) {
-            result.typeRoot = data.typeRoot;
-        }
-        if (!!data.__typeRoot) {
-            result.__typeRoot = data.__typeRoot;
-        }
         return result;
     }
 
@@ -51,7 +46,8 @@ export class PiTyperDef extends PiDefinitionElement {
     classifierSpecs: PitClassifierSpec[] = []; // implementation of part 'classifierSpecs'
     __types: PiElementReference<PiClassifier>[] = []; // implementation of reference 'types'
     __conceptsWithType: PiElementReference<PiClassifier>[] = []; // implementation of reference 'conceptsWithType'
-    __typeRoot: PiElementReference<PiClassifier>; // implementation of reference 'typeroot'
+    private __typeRoot: PiClassifier;
+    private typeRootHasBeenCalculated: boolean = false;
     readonly $typename: string = "PiTyperDef"; // holds the metatype in the form of a string
 
     get types(): PiClassifier[] {
@@ -91,18 +87,17 @@ export class PiTyperDef extends PiDefinitionElement {
             this.__conceptsWithType.push(xx);
         });
     }
-    get typeRoot(): PiClassifier {
-        if (!!this.__typeRoot && !!this.__typeRoot.referred) {
-            return this.__typeRoot.referred;
+    typeRoot(): PiClassifier {
+        if (this.typeRootHasBeenCalculated) {
+            return this.__typeRoot;
+        } else { // get the common super type of all types, if possible
+            const list = CommonSuperTypeUtil.commonSuperType(this.types);
+            this.__typeRoot = list.length > 0 ? list[0] : null;
+            this.typeRootHasBeenCalculated = true;
         }
         return null;
     }
-    set typeRoot(cls: PiClassifier) {
-        if (!!cls) {
-            this.__typeRoot = PiElementReference.create<PiClassifier>(cls, "PiClassifier");
-            this.__typeRoot.owner = this.language;
-        }
-    }
+
     toPiString(): string{
         return `typer
 istype { ${this.__types.map(t => t.name).join(", ")} }

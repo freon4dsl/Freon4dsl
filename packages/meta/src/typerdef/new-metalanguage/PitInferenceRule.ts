@@ -1,7 +1,4 @@
-import { PitExp } from "./expressions/PitExp";
-import { PiClassifier, PiElementReference } from "../../languagedef/metalanguage";
 import { PitTypeRule } from "./PitTypeRule";
-
 
 export class PitInferenceRule extends PitTypeRule {
 

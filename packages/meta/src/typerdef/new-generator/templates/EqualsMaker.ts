@@ -1,5 +1,5 @@
 import {
-    PitEquals,
+    PitEqualsExp,
     PitExp, PitPropertyCallExp,
 
     PitWhereExp,

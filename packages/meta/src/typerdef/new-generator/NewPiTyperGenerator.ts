@@ -62,9 +62,9 @@ export class NewPiTyperGenerator {
         Helpers.generateManualFile(`${this.typerFolder}/index.ts`, typerIndexFile, "Typer Index");
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(`Generated typer '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated typer with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated typer ${name}`);
+            LOGGER.info(`Succesfully generated typer`);
         }
     }
 

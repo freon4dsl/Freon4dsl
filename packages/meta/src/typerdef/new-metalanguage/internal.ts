@@ -1,3 +1,4 @@
+export * from "./PiTyperElement";
 export * from "./expressions";
 export * from "./PitAnyTypeSpec";
 export * from "./PitInferenceRule";
