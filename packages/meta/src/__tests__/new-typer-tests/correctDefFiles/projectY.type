@@ -1,0 +1,122 @@
+typer
+
+// What are types?
+istype { TopType }
+
+type TT_GenericType {
+    base: PiType;
+    kind: GenericKind;
+}
+
+type TT_MeasurementType {
+    base: PiType;
+    unit: UnitKind;
+}
+
+// Which concepts have a type?
+hastype { Exp, TypeUsage }
+
+// What are the top and bottom types?
+anytype {
+    conformsto PredefinedType:ANY; // PredefinedType:ANY is the least specific type
+}
+
+PredefinedType {
+    PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
+}
+
+// Which type does an expression have?
+TypeRef {
+    infertype self.type;
+}
+
+GenericType {
+//    infertype x:TT_GenericType where {
+//        x.base equalsto typeof(self.baseType);
+//        x.kind equalsto self.kind;
+//    }
+    infertype TT_GenericType {
+        base: typeof(self.baseType),
+// of:  base: self.baseType,
+        kind: self.kind
+    };
+}
+
+UnitOfMeasurement {
+    infertype TT_MeasurementType {
+        base: typeof(self.baseType),
+        unit: self.unit
+    };
+}
+
+NumberLiteral {
+    infertype PredefinedType:NUMBER;
+}
+
+StringLiteral {
+    infertype PredefinedType:STRING;
+}
+
+BooleanLiteral {
+    infertype PredefinedType:BOOLEAN;
+}
+
+NamedExp {
+    infertype self.myType;
+}
+
+PlusExp {
+    infertype commonSuperType(self.left, self.right);
+}
+
+UnitLiteral {
+    // 62 kilogram, or 112 miles
+    infertype TT_MeasurementType {
+                  base: typeof(self.inner),
+                  unit: self.unit
+              };
+}
+
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    infertype TT_GenericType {
+        base: typeof(self.content),
+        kind: GenericKind:Collection
+    };
+}
+
+// Which types are 'equal' to each other?
+NamedType {
+    equalsto aa:NamedType where {
+            aa.name equalsto self.name;
+        };
+}
+
+TT_GenericType {
+    equalsto x:TT_GenericType where {
+            x.base equalsto self.base;
+            x.kind equalsto self.kind;
+        };
+    conformsto base:TT_GenericType where {
+            // both conditions must be true
+            self.base conformsto base.base;
+            self.kind conformsto base.kind;
+        };
+}
+
+GenericKind {
+    Set conformsto Collection;
+    Sequence conformsto Bag;
+    Bag conformsto Collection;
+}
+
+TT_MeasurementType {
+    equalsto aap:TT_MeasurementType where {
+            aap.base equalsto self.base;
+            aap.unit equalsto self.unit;
+        };
+    conformsto rr:TT_MeasurementType where {
+            self.base conformsto rr.base;
+            self.unit equalsto rr.unit;
+        };
+}

@@ -1,12 +1,15 @@
 import { PiTyperElement } from "./PiTyperElement";
-import { PiClassifier, PiElementReference, PiLanguage } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiElementReference, PiLanguage, PiProperty } from "../../languagedef/metalanguage";
 import { PitTypeConcept } from "./PitTypeConcept";
 import { PitClassifierSpec } from "./PitClassifierSpec";
 import { PitAnyTypeSpec } from "./PitAnyTypeSpec";
 import { CommonSuperTypeUtil } from "../../utils/common-super/CommonSuperTypeUtil";
+import { PitProperty } from "./PitProperty";
 
 export class PiTyperDef extends PiTyperElement {
     language: PiLanguage;
+    static piType: PiClassifier = this.makePiType();
+
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -46,6 +49,7 @@ export class PiTyperDef extends PiTyperElement {
     classifierSpecs: PitClassifierSpec[] = []; // implementation of part 'classifierSpecs'
     __types: PiElementReference<PiClassifier>[] = []; // implementation of reference 'types'
     __conceptsWithType: PiElementReference<PiClassifier>[] = []; // implementation of reference 'conceptsWithType'
+    // properties: PitProperty[] = [];
     private __typeRoot: PiClassifier;
     private typeRootHasBeenCalculated: boolean = false;
     readonly $typename: string = "PiTyperDef"; // holds the metatype in the form of a string
@@ -105,5 +109,16 @@ ${this.typeConcepts.map(con => con.toPiString()).join("\n")}
 hastype { ${this.__conceptsWithType.map(t => t.name).join(", ")} }
 ${this.anyTypeSpec?.toPiString()}
 ${this.classifierSpecs.map(con => con.toPiString()).join("\n")}`;
+    }
+
+    private static makePiType(): PiConcept {
+        const result: PiConcept = new PiConcept();
+        result.name = "PiType";
+        // internal: PiElement
+        const prop: PiProperty = new PiProperty();
+        prop.name = "internal";
+        prop.typeReference = PiElementReference.create<PiClassifier>("PiElement", "PiClassifier");
+        result.properties.push(prop);
+        return result;
     }
 }

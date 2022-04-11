@@ -39,14 +39,14 @@ GenericType {
         base: typeof(self.baseType),
 // of:  base: self.baseType,
         kind: self.kind
-    }
+    };
 }
 
 UnitOfMeasurement {
     infertype TT_MeasurementType {
         base: typeof(self.baseType),
         unit: self.unit
-    }
+    };
 }
 
 NumberLiteral {
@@ -72,7 +72,7 @@ PlusExp {
 UnitLiteral {
     // 62 kilogram, or 112 miles
     infertype TT_MeasurementType {
-                  baseType: typeof(self.inner),
+                  base: typeof(self.inner),
                   unit: self.unit
               };
 }
@@ -81,16 +81,16 @@ GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype TT_GenericType {
         base: typeof(self.content),
-        kind: Collection
+        kind: GenericKind:Collection
     };
 }
 
 // Which types are 'equal' to each other?
-//NamedType {
-//    equalsto aa:NamedType where {
-//            aa.name equalsto self.name;
-//        };
-//}
+NamedType {
+    equalsto aa:NamedType where {
+            aa.name equalsto self.name;
+        };
+}
 
 TT_GenericType {
     equalsto x:TT_GenericType where {
@@ -112,11 +112,11 @@ GenericKind {
 
 TT_MeasurementType {
     equalsto aap:TT_MeasurementType where {
-            aap.baseType equalsto self.baseType;
+            aap.base equalsto self.base;
             aap.unit equalsto self.unit;
         };
     conformsto rr:TT_MeasurementType where {
-            self.baseType conformsto rr.baseType;
+            self.base conformsto rr.base;
             self.unit equalsto rr.unit;
         };
 }

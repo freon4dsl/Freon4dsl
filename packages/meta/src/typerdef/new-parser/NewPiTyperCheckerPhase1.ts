@@ -230,14 +230,22 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
 
     private checkConformanceRule(rule: PitConformanceRule, enclosingConcept: PiClassifier) {
         if (enclosingConcept !== this.language.modelConcept) {
-            this.simpleCheck(this.definition.types.includes(enclosingConcept),
+            this.simpleCheck(this.isMarkedIsType(enclosingConcept),
                 `Concept or interface '${enclosingConcept.name}' is not marked 'istype', therefore it cannot have a conformance rule ${Checker.location(rule)}.`);
         }
     }
 
+    private isMarkedIsType(enclosingConcept: PiClassifier): boolean {
+        let isTypeConcept: boolean = this.definition.types.includes(enclosingConcept);
+        if (!isTypeConcept && enclosingConcept instanceof PitTypeConcept) {
+            isTypeConcept = this.definition.typeConcepts.includes(enclosingConcept);
+        }
+        return isTypeConcept;
+    }
+
     private checkEqualsRule(rule: PitEqualsRule, enclosingConcept: PiClassifier) {
         if (enclosingConcept !== this.language.modelConcept) {
-            this.simpleCheck(this.definition.types.includes(enclosingConcept),
+            this.simpleCheck(this.isMarkedIsType(enclosingConcept),
                 `Concept or interface '${enclosingConcept.name}' is not marked 'istype', therefore it cannot have an equals rule ${Checker.location(rule)}.`);
         }
     }
@@ -304,6 +312,9 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
     private checkCreateExp(exp: PitCreateExp, classifier: PiClassifier, surroundingExp?: PitWhereExp) {
         // LOGGER.log("Checking PitCreateExp '" + exp.toPiString() + "'");
         this.checkClassifierReference(exp.__type, false);
+        // console.log("TYPE of Create: " + exp.__type.name + ", " + exp.__type.owner + ", " + exp.type?.name);
+        // this.myExpressionChecker.checkClassifierReference(exp.__type);
+        // console.log("TYPE: " + exp.type?.name + " with props: " + exp.type?.allProperties().map(p => p.name).join(", "))
         exp.propertyDefs.forEach(propDef => {
             this.simpleCheck(!!propDef.property,
                `Cannot find property '${propDef.__property.name}' ${Checker.location(propDef.__property)}.`);
@@ -477,7 +488,7 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
     }
 
     private checkTypeConceptProperty(piProperty: PiProperty, piConcept: PitTypeConcept): void {
-        LOGGER.log("Checking type concept property '" + piProperty.name + "'");
+        // LOGGER.log("Checking type concept property '" + piProperty.name + "'");
         // set all unused properties of this class
         piProperty.isOptional = false;
         piProperty.isPart = true;
@@ -500,15 +511,13 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
     }
 
     private checkClassifierReference(refType: PiElementReference<PiClassifier>, typeConceptRequired: boolean) {
-        let foundTypeConcept: PiClassifier = this.definition.typeConcepts.find(c => c.name === refType.name);
-        if (!typeConceptRequired && !foundTypeConcept) { // try the language
-            foundTypeConcept = this.language.conceptsAndInterfaces().find(c => c.name === refType.name);
-        }
         this.nestedCheck({
-            check: !!foundTypeConcept,
+            check: !!refType.referred,
             error: `Cannot find reference to ${refType.name} ${Checker.location(refType)}.`,
             whenOk: () => {
-                refType.referred = foundTypeConcept;
+                if (typeConceptRequired) {
+                    this.simpleCheck(refType.referred instanceof PitTypeConcept, `Only type concepts allowed ${Checker.location(refType)}.`);
+                }
             }
         });
     }

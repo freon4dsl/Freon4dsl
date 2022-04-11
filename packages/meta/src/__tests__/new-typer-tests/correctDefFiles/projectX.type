@@ -63,11 +63,11 @@ GenericLiteral {
 }
 
 // Which types are 'equal' to each other?
-//NamedType {
-//    equalsto aa:NamedType where {
-//            aa.name equalsto self.name;
-//        };
-//}
+NamedType {
+    equalsto aa:NamedType where {
+            aa.name equalsto self.name;
+        };
+}
 
 GenericType {
     equalsto x:GenericType where {

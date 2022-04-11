@@ -1,6 +1,8 @@
-import { PiClassifier, PiElementReference, PiProperty } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConceptProperty, PiElementReference, PiProperty } from "../../languagedef/metalanguage";
+import { PitTypeConcept } from "./PitTypeConcept";
 
-export class PitProperty extends PiProperty {
+export class PitProperty extends PiConceptProperty {
+    owner: PitTypeConcept;
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -10,15 +12,23 @@ export class PitProperty extends PiProperty {
         const result = new PitProperty();
         if (!!data.isPublic) {
             result.isPublic = data.isPublic;
+        } else {
+            result.isPublic = false;
         }
         if (!!data.isOptional) {
             result.isOptional = data.isOptional;
+        } else {
+            result.isOptional = false;
         }
         if (!!data.isList) {
             result.isList = data.isList;
+        } else {
+            result.isList = false;
         }
         if (!!data.isPart) {
             result.isPart = data.isPart;
+        } else {
+            result.isPart = true;
         }
         if (!!data.name) {
             result.name = data.name;

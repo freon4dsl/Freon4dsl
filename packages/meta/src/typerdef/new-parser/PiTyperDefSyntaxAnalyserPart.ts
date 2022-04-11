@@ -459,7 +459,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         let __type: PiElementReference<PiClassifier>;
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
-        __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "Type"); // RHSRefEntry
+        __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "PiClassifier"); // RHSRefEntry
 
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
         return PitProperty.create({ name: __name, refType: __type, agl_location: location });

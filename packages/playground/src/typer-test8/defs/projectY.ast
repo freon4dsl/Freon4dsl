@@ -1,4 +1,4 @@
-language projectX
+language projectY
 
 model XX {
     units: XXunit[];

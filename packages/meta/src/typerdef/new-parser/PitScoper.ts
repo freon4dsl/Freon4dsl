@@ -1,7 +1,7 @@
 import { PiMetaScoper } from "../../languagedef/metalanguage/PiLangScoper";
 import { PiClassifier, PiLangElement } from "../../languagedef/metalanguage";
 import { PitBinaryExp, PitCreateExp, PitPropertyCallExp, PitVarCallExp, PitWhereExp } from "../new-metalanguage/expressions";
-import { PitTypeConcept, PiTyperDef, PiTyperElement } from "../new-metalanguage";
+import { PitProperty, PitTypeConcept, PiTyperDef, PiTyperElement } from "../new-metalanguage";
 import { PiDefinitionElement } from "../../utils";
 
 export class PitScoper implements PiMetaScoper {
@@ -12,18 +12,15 @@ export class PitScoper implements PiMetaScoper {
     }
 
     getFromVisibleElements(owner: PiDefinitionElement, name: string, typeName: string): PiLangElement {
-        if (name === "prop1") {
-            console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
-        }
         let result: PiLangElement;
-        if (owner instanceof PiTyperElement) {
+        // if (name === "TT_GenericType") {
+        //     console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
+        // }
+        if (owner instanceof PitProperty || owner instanceof PiTyperElement ) { // PitProperty does not inherited from PiTyperElement!!
             if (typeName === "PiProperty") {
                 let nameSpace: PiClassifier;
                 if (owner instanceof PitCreateExp) {
                     nameSpace = owner.type;
-                    if (name === "prop1") {
-                        console.log("namespace: " + nameSpace?.constructor.name + ", props: " + nameSpace.allProperties().map(p => p.name).join(", "));
-                    }
                 } else if (owner instanceof PitPropertyCallExp) {
                     nameSpace = owner.source.returnType;
                 }
@@ -37,11 +34,16 @@ export class PitScoper implements PiMetaScoper {
                     }
                 }
             } else if (typeName === "PitTypeConcept" || typeName === "PiClassifier") {
-                result = this.definition.typeConcepts.find(con => con.name === name);
-            } else {
+                if (name === "PiType") {
+                    result = PiTyperDef.piType;
+                } else { // search the typeConcepts only, 'normal' classifiers will have been found already by PiLangScoper
+                    result = this.definition.typeConcepts.find(con => con.name === name);
+                }
             }
         }
-        // console.log("NEW SCOPER RESULT: " + result.name + ": " + result.constructor.name);
+        // if (name === "TT_GenericType") {
+        //     console.log("NEW SCOPER RESULT: " + result?.name + ": " + result?.constructor.name);
+        // }
         return result;
     }
 

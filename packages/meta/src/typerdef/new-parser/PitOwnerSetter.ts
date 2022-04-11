@@ -2,7 +2,7 @@ import {
     PitAnytypeExp,
     PitExp,
     PitFunctionCallExp,
-    PitLimitedInstanceExp,
+    PitLimitedInstanceExp, PitProperty,
     PitPropertyCallExp, PitSelfExp,
     PitWhereExp,
     PiTyperDef, PiTyperElement
@@ -11,12 +11,21 @@ import { PitBinaryExp, PitCreateExp, PitVarCallExp } from "../new-metalanguage/e
 
 export class PitOwnerSetter {
     static setNodeOwners(typeDef: PiTyperDef) {
+        typeDef.typeConcepts.forEach(con => {
+            con.properties.forEach(prop => {
+                if (prop instanceof PitProperty) {
+                    prop.owner = con;
+                    prop.refType.owner = prop;
+                }
+            });
+        });
         typeDef.classifierSpecs.forEach(spec => {
             spec.rules.forEach(rule => {
                 this.setOwner(rule.exp, rule);
                 rule.owner = spec;
             });
             spec.owner = typeDef;
+            spec.__myClassifier.owner = spec;
         });
     }
 
@@ -27,6 +36,7 @@ export class PitOwnerSetter {
             this.setOwner(exp.left, exp);
             this.setOwner(exp.right, exp);
         } else if (exp instanceof PitCreateExp) {
+            exp.__type.owner = exp;
             exp.propertyDefs.forEach(propDef => {
                 this.setOwner(propDef.value, propDef);
                 propDef.__property.owner = exp;
@@ -47,6 +57,7 @@ export class PitOwnerSetter {
             exp.__variable.owner = exp;
         } else if (exp instanceof PitWhereExp) {
             exp.variable.owner = exp;
+            exp.variable.__type.owner = exp.variable;
             exp.conditions.forEach(cond => {
                 this.setOwner(cond, exp);
             })
