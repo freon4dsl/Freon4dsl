@@ -13,7 +13,7 @@ export class PitScoper implements PiMetaScoper {
 
     getFromVisibleElements(owner: PiDefinitionElement, name: string, typeName: string): PiLangElement {
         let result: PiLangElement;
-        // if (name === "TT_GenericType") {
+        // if (name === "baseType") {
         //     console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
         // }
         if (owner instanceof PitProperty || owner instanceof PiTyperElement ) { // PitProperty does not inherited from PiTyperElement!!
@@ -34,14 +34,14 @@ export class PitScoper implements PiMetaScoper {
                     }
                 }
             } else if (typeName === "PitTypeConcept" || typeName === "PiClassifier") {
-                if (name === "PiType") {
-                    result = PiTyperDef.piType;
+                if (name === "PiType" || name === "FreonType") {
+                    result = PiTyperDef.freonType;
                 } else { // search the typeConcepts only, 'normal' classifiers will have been found already by PiLangScoper
                     result = this.definition.typeConcepts.find(con => con.name === name);
                 }
             }
         }
-        // if (name === "TT_GenericType") {
+        // if (name === "baseType") {
         //     console.log("NEW SCOPER RESULT: " + result?.name + ": " + result?.constructor.name);
         // }
         return result;

@@ -449,8 +449,7 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
     }
 
     private checkArguments(langExp: PitFunctionCallExp, enclosingConcept: PiClassifier, surroundingExp: PitWhereExp) {
-        const newArgs: PitExp[] = [];
-        newArgs.forEach(p => {
+        langExp.actualParameters.forEach(p => {
                 this.checkPitExp(p, enclosingConcept, surroundingExp, false);
             }
         );
@@ -478,8 +477,8 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
                 names.push(piConcept.name);
             }
             // (3) base concept, if present, must be known within 'typeConcepts'
-            if (!!piConcept.__base) {
-                this.checkClassifierReference(piConcept.__base, true);
+            if (!!piConcept.base) {
+                this.checkClassifierReference(piConcept.base, true);
             }
 
             // check the properties

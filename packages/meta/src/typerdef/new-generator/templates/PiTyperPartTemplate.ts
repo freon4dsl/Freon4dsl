@@ -1,6 +1,7 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../../utils";
 import { PiConcept, PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
 import {
+    PitTypeConcept,
     PiTyperDef
 } from "../../new-metalanguage";
 import { ListUtil } from "../../../utils";
@@ -12,7 +13,8 @@ import { SuperTypeMaker } from "./SuperTypeMaker";
 export class PiTyperPartTemplate {
     typerdef: PiTyperDef;
     language: PiLanguage;
-    imports: string[] = []; // holds all names of classes from PiLanguage that need to be imported
+    imports: string[] = [];
+    importedClassifiers: PiClassifier[] = []; // holds all classifiers that need to be imported, either from LANGUAGE_GEN_FOLDER, or from TYPER_CONCEPTS_FOLDER
 
     generateTyperPart(language: PiLanguage, typerdef: PiTyperDef, relativePath: string): string {
         if (!!typerdef) {
@@ -131,13 +133,9 @@ export class PiTyperPartTemplate {
                 if (modelelement instanceof PiType) {
                     return modelelement;
                 }
-        
-                let inner: PiElement = null;
-                ${inferMaker.makeInferType(typerdef, allLangConcepts, rootType, "modelelement", this.imports)}
-                if (!!inner) {
-                    return PiType.create({ internal: inner });
-                }
-                return null;
+                let result: PiType = null;
+                ${inferMaker.makeInferType(typerdef, allLangConcepts, rootType, "modelelement", this.importedClassifiers)}
+                return result;
             }
 
             /**
@@ -147,14 +145,8 @@ export class PiTyperPartTemplate {
              * @param type2
              */
             public equals(type1: PiType, type2: PiType): boolean | null {
-                const internal1 = type1?.internal;
-                const internal2 = type2?.internal;
-                if (!internal1 || !internal2) return false;
-                if (internal1.piLanguageConcept() !== internal2.piLanguageConcept()) {
-                    return false;
-                }
-                
-                ${equalsMaker.makeEqualsType(typerdef, "internal1", "internal2", this.imports)}
+                if (!type1 || !type1.internal || !type2 || !type2.internal) return false;  
+                ${equalsMaker.makeEqualsType(typerdef, "type1", "type2", this.importedClassifiers)}
                 return type1.internal === type2.internal;
             }
             
@@ -199,6 +191,7 @@ export class PiTyperPartTemplate {
              */
             public getSuperTypes(type: PiType): PiType[] {
                 ${superTypeMaker.makeSuperTypes(typerdef, "type", this.imports)}
+                return [];
             }
                         
             ${inferMaker.extraMethods.map(meth => meth).join("\n\n")}
@@ -222,8 +215,18 @@ export class PiTyperPartTemplate {
             }
         }`;
 
+        const typeConceptImports: string [] = [];
+        this.importedClassifiers.forEach(cls => {
+           if (cls instanceof PitTypeConcept) {
+               ListUtil.addIfNotPresent(typeConceptImports, Names.classifier(cls));
+           } else {
+               ListUtil.addIfNotPresent(this.imports, Names.classifier(cls));
+           }
+        });
+
         const imports = `import { ${typerInterfaceName}, PiType, PiElement, Language } from "${PROJECTITCORE}";
         import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}
         import { ${Names.typer(language)} } from "./${Names.typer(language)}";`;
 
         return imports + baseClass;

@@ -5,7 +5,7 @@ import {
     PiElementReference,
     PiClassifier,
     PiLimitedConcept,
-    PiInstance, PiProperty
+    PiInstance, PiProperty, PiConcept
 } from "../../languagedef/metalanguage";
 import {
     PiTyperDef,
@@ -122,7 +122,7 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitTypeConcept(branch: SPPTBranch): PitTypeConcept {
         // console.log('transformPitTypeConcept called: ' + branch.name);
         let __name: string;
-        let __base: PiElementReference<PiClassifier>;
+        let __base: PiElementReference<PiConcept>;
         let __properties: PitProperty[];
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPrimEntry
@@ -131,7 +131,7 @@ export class PiTyperDefSyntaxAnalyserPart {
             // RHSOptionalGroup
             const _optGroup = this.mainAnalyser.getGroup(children[2]);
             const _propItem = this.mainAnalyser.getChildren(_optGroup);
-            __base = this.mainAnalyser.piElemRef<PiClassifier>(_propItem[1], "PiClassifier"); // RHSRefEntry
+            __base = this.mainAnalyser.piElemRef<PiConcept>(_propItem[1], "PiConcept"); // RHSRefEntry
         } // RHSListGroup
         __properties = [];
         const _myList = this.mainAnalyser.getChildren(children[4]);
@@ -142,7 +142,7 @@ export class PiTyperDefSyntaxAnalyserPart {
             }
         });
         const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitTypeConcept.create({ name: __name, __base: __base, properties: __properties, agl_location: location });
+        return PitTypeConcept.create({ name: __name, base: __base, properties: __properties, agl_location: location });
     }
 
     /**

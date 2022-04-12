@@ -8,7 +8,7 @@ import { PitProperty } from "./PitProperty";
 
 export class PiTyperDef extends PiTyperElement {
     language: PiLanguage;
-    static piType: PiClassifier = this.makePiType();
+    static freonType: PiClassifier = this.makePiType();
 
     /**
      * A convenience method that creates an instance of this class
