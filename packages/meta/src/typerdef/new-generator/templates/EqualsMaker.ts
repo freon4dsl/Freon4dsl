@@ -22,8 +22,8 @@ export class EqualsMaker {
         });
         // make an entry for each rule
         equalsRules.map(conRule => {
-            const isType: boolean = typerDef.types.includes(conRule.owner.myClassifier);
-            allRules.push(`if (${leftVarName}.internal.piLanguageConcept() === "${Names.classifier(conRule.owner.myClassifier)}") {
+            const isType: boolean = NewTyperGenUtils.isType(conRule.owner.myClassifier);
+            allRules.push(`if (${isType ? `${leftVarName}.$typename` : `${leftVarName}.internal?.piLanguageConcept()`} === "${Names.classifier(conRule.owner.myClassifier)}") {
                 ${this.makeEqualsForExp(conRule.exp, leftVarName, rightVarName, isType, imports)};
             }`);
             });
@@ -39,14 +39,14 @@ export class EqualsMaker {
                 let leftStr: string;
                 let rightStr: string;
                 if (!isType) {
-                    leftStr = NewTyperGenUtils.makeExpAsElement(cond.left, leftVarName, imports);
-                    rightStr = NewTyperGenUtils.makeExpAsElement(cond.right, rightVarName, imports);
-                } else {
                     leftStr = NewTyperGenUtils.makeExpAsElement(cond.left, leftVarName + ".internal", imports);
                     rightStr = NewTyperGenUtils.makeExpAsElement(cond.right, rightVarName + ".internal", imports);
+                } else {
+                    leftStr = NewTyperGenUtils.makeExpAsElement(cond.left, leftVarName, imports);
+                    rightStr = NewTyperGenUtils.makeExpAsElement(cond.right, rightVarName, imports);
                 }
-                if (this.typerdef.types.includes(cond.left.returnType)) {
-                    allConditions.push(`const condition${index+1}: boolean = this.mainTyper.equalsType(${leftStr}, ${rightStr});`)
+                if (NewTyperGenUtils.isType(cond.left.returnType)) {
+                    allConditions.push(`const condition${index+1}: boolean = this.mainTyper.equals(${leftStr}, ${rightStr});`)
                 } else {
                     allConditions.push(`const condition${index+1}: boolean = ${leftStr} === ${rightStr};`);
                 }

@@ -1,13 +1,11 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../../utils";
 import { PiConcept, PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
-import {
-    PitTypeConcept,
-    PiTyperDef
-} from "../../new-metalanguage";
+import { PiTyperDef } from "../../new-metalanguage";
 import { ListUtil } from "../../../utils";
 import { EqualsMaker } from "./EqualsMaker";
 import { InferMaker } from "./InferMaker";
 import { SuperTypeMaker } from "./SuperTypeMaker";
+import { NewTyperGenUtils } from "./NewTyperGenUtils";
 
 export class PiTyperPartTemplate {
     typerdef: PiTyperDef;
@@ -152,7 +150,7 @@ export class PiTyperPartTemplate {
              * @param type2
              */
             public equals(type1: PiType, type2: PiType): boolean | null {
-                if (!type1 || !type1.internal || !type2 || !type2.internal) return false;  
+                if (!type1 || !type2 ) return false;  
                 ${equalsMaker.makeEqualsType(typerdef, "type1", "type2", this.importedClassifiers)}
                 return type1.internal === type2.internal;
             }
@@ -235,11 +233,14 @@ export class PiTyperPartTemplate {
 
         const typeConceptImports: string [] = [];
         this.importedClassifiers.forEach(cls => {
-           if (cls instanceof PitTypeConcept) {
-               ListUtil.addIfNotPresent(typeConceptImports, Names.classifier(cls));
-           } else {
-               ListUtil.addIfNotPresent(this.imports, Names.classifier(cls));
-           }
+            if (NewTyperGenUtils.isType(cls)) {
+                if (cls.name !== "PiType") {
+                    ListUtil.addIfNotPresent(typeConceptImports, Names.classifier(cls));
+                }
+            } else {
+                ListUtil.addIfNotPresent(this.imports, Names.classifier(cls));
+            }
+
         });
 
         ListUtil.addIfNotPresent(this.imports, "PiElementReference");

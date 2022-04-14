@@ -24,6 +24,7 @@ anytype {
 
 PredefinedType {
     PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
+    NUMBER conformsto STRING;
 }
 
 // Which type does an expression have?

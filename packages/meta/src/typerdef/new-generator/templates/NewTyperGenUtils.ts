@@ -20,8 +20,18 @@ const commonSuperName: string= 'commonSuperType';
 export class NewTyperGenUtils {
     static types: PiClassifier[] = [];
 
+    public static isType(cls: PiClassifier): boolean {
+        if (cls.name === "PiType") {
+            return true;
+        } else if (cls instanceof PitTypeConcept) {
+            return true;
+        }
+        return false;
+        // return this.types.includes(cls);
+    }
+
     public static makeExpAsTypeOrElement(exp: PitExp, varName: string, imports: PiClassifier[]): string {
-        if (NewTyperGenUtils.types.includes(exp.returnType)) {
+        if (NewTyperGenUtils.isType(exp.returnType)) {
             return NewTyperGenUtils.makeExpAsType(exp, varName, imports);
         } else {
             return NewTyperGenUtils.makeExpAsElement(exp, varName, imports);

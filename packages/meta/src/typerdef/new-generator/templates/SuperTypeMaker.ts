@@ -99,15 +99,15 @@ export class SuperTypeMaker {
                     for (const partA of rhs${i}) {
                         result.push(
                             ${typeName}.create({
-                                ${propAToBeChanged}: ${NewTyperGenUtils.makeExpAsTypeOrElement(myConditions[i].right, "partA", imports)},
+                                ${propAToBeChanged}: ${this.makeCondition(myConditions[i].right, "partA", imports)},
                                 ${propsANotToBeChanged.map(name => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
                             })
                         );
                         for (const partB of rhs${j}) {
                             result.push(
-                                ${typeName}.create({
-                                    ${propBToBeChanged}: ${NewTyperGenUtils.makeExpAsTypeOrElement(myConditions[j].right, "partB", imports)},
-                                    ${propAToBeChanged}: ${NewTyperGenUtils.makeExpAsTypeOrElement(myConditions[i].right, "partA", imports)},
+                                ${typeName}.create({                                   
+                                    ${propAToBeChanged}: ${this.makeCondition(myConditions[i].right, "partA", imports)},
+                                    ${propBToBeChanged}: ${this.makeCondition(myConditions[j].right, "partB", imports)},
                                     ${propsANotToBeChanged.filter(name => name !== propBToBeChanged).map(name => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
                                 })
                             );
@@ -116,7 +116,7 @@ export class SuperTypeMaker {
                     for (const partB of rhs${j}) {
                         result.push(
                             ${typeName}.create({
-                                ${propBToBeChanged}: ${NewTyperGenUtils.makeExpAsTypeOrElement(myConditions[j].right, "partB", imports)},
+                                ${propBToBeChanged}: ${this.makeCondition(myConditions[j].right, "partB", imports)},
                                 ${propsBNotToBeChanged.map(name => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
                             })
                         );
@@ -134,5 +134,16 @@ export class SuperTypeMaker {
             return left.property.name;
         }
         return "unknown";
+    }
+
+    private makeCondition(right: PitExp, partName: string, imports: PiClassifier[]): string {
+        const isType: boolean = NewTyperGenUtils.isType(right.returnType);
+        console.log("Generating for " + right.toPiString() + ": " + isType)
+        ListUtil.addIfNotPresent(imports, right.returnType);
+        if (isType) {
+            return `(${partName} as ${Names.classifier(right.returnType)})`;
+        } else {
+            return `${partName}.internal as ${Names.classifier(right.returnType)}`;
+        }
     }
 }

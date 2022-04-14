@@ -66,6 +66,13 @@ export class PiType {
 
     readonly $typename: string = "PiType";
     toPiString(writer: PiWriter): string {
-        return "PiType[ " + writer.writeToString(this.internal) + " ]";
+        if (!!this.internal ) {
+            if (this.internal === PiType.ANY) {
+                return "PiType[ ANY ]";
+            } else {
+                return "PiType[ " + writer.writeToString(this.internal) + " ]";
+            }
+        }
+        return "PiType[ unknown ]";
     }
 }

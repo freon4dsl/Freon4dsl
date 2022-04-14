@@ -3,7 +3,7 @@ import {
     PiTyperDef
 } from "../../new-metalanguage";
 import { Names } from "../../../utils";
-import { PiClassifier } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiLimitedConcept } from "../../../languagedef/metalanguage";
 import { NewTyperGenUtils } from "./NewTyperGenUtils";
 
 export class InferMaker {
@@ -14,26 +14,30 @@ export class InferMaker {
     public makeInferType(typerDef: PiTyperDef, allLangConcepts: string, rootType: string, varName: string, imports: PiClassifier[]): string {
         NewTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
-        let result: string = "";
+        let result: string[] = [];
         // find all infertype rules
         const inferRules: PitInferenceRule[] = [];
         typerDef.classifierSpecs.forEach(spec => {
             inferRules.push(...(spec.rules.filter(r => r instanceof PitInferenceRule)))
         });
         // make an entry for all classifiers that have an infertype rule
-        result = `${inferRules.map(conRule =>
-            `if (${varName}.piLanguageConcept() === "${Names.classifier(conRule.owner.myClassifier)}") {
+        inferRules.forEach(conRule =>
+            result.push(`if (${varName}.piLanguageConcept() === "${Names.classifier(conRule.owner.myClassifier)}") {
                 result = ${NewTyperGenUtils.makeExpAsType(conRule.exp, varName, imports)};
-             }`
-        ).join(" else ")}`;
-        // add an entry for all types that do not have an inferType rule
-        if (result.length > 0) { // include an else only if we already have an if-statement
-            result += " else ";
-        }
-        result += `if (this.mainTyper.isType(${varName})) {
+             }`)
+        );
+        // add an entry for all limited concepts
+        const allLimited = typerDef.language.concepts.filter(con => con instanceof PiLimitedConcept) as PiLimitedConcept[];
+        allLimited.map(lim =>
+            result.push(`if (${varName}.piLanguageConcept() === "${Names.classifier(lim)}") {
+                result = PiType.create({ internal: modelelement });
+             }`)
+        );
+        // add an entry for classifiers that do not have an inferType rule
+        result.push(`if (this.mainTyper.isType(${varName})) {
                 result = PiType.create({ internal: ${varName} });
-            }`;
-        return result;
+            }`);
+        return result.map(r => r).join(" else ");
     }
 
     // // for all elements in toBeCopied add a method to extraMethods

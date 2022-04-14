@@ -25,15 +25,15 @@ export class CommonSuperTypeUtil {
         return [];
     }
 
-    // private static printOrderedList(comment: string, rollingIntersect: OrderedList<PiType>) {
+    // private static printOrderedList(comment: string, rollingIntersect: TypeOrderedList<PiType>) {
     //     let result: string = '';
     //     result += comment;
     //     for (const piClassifier of rollingIntersect) {
-    //         if (piClassifier.internal instanceof TypeRef) {
-    //             result += "\t" + piClassifier.internal.$type.name
-    //         } else {
-    //             result += "\t" + piClassifier.internal.constructor.name;
-    //         }
+    //         // if (piClassifier.internal instanceof PiType) {
+    //         //     result += "\t" + piClassifier.internal.toPiString()
+    //         // } else {
+    //             result += "\t" + piClassifier.constructor.name;
+    //         // }
     //     }
     //     console.log(result);
     // }

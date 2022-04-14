@@ -34,10 +34,6 @@ export class TypeOrderedList<T extends PiType> implements Iterable<T> {
                 toRetain.push(old);
             }
         });
-        // console.log("Comparing [" +
-        // this.elements.map(el => el.toPiString()).join(", ") + "] with [" +
-        // list.elements.map(el => el.toPiString()).join(", ") + "]"
-        // + "\n\tRESULT: " + toRetain.map(el => el.toPiString()).join(", "));
         this.elements = toRetain;
     }
 
