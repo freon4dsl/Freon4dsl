@@ -1,4 +1,4 @@
-import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
+import { PiConcept, PiLanguage, PiPrimitiveType } from "../../../languagedef/metalanguage";
 import { PitTypeConcept, PiTyperDef } from "../../new-metalanguage";
 import {
     makeBasicProperties,
@@ -15,7 +15,7 @@ export class PiTypeConceptMaker {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.classifier(concept.base.referred) : this.piTypeName;
-        const coreImports: string[] = ["PiUtils"];
+        const coreImports: string[] = ["PiUtils", "PiWriter"];
         if (!hasSuper) {
             coreImports.push(this.piTypeName);
         }
@@ -36,9 +36,33 @@ export class PiTypeConceptMaker {
                 ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                               
-                ${this.makeConstructor(hasSuper)}                             
+                ${this.makeConstructor(hasSuper)}      
+                
+                toPiString(writer: PiWriter): string {
+                    // take into account indentation
+                    return ${this.makeToPiString(myName, concept)};
+                }                       
             }
         `;
+    }
+
+    private makeToPiString(myName: string, concept: PitTypeConcept): string {
+        const props: string[] = [];
+        concept.allProperties().forEach(prop => {
+            if (prop.type instanceof PiPrimitiveType) {
+                props.push(`${prop.name}: \${this.${prop.name}}`);
+            } else if (prop.type instanceof PitTypeConcept) {
+                props.push(`${prop.name}: \${this.${prop.name}?.toPiString(writer)}`);
+            } else {
+                props.push(`${prop.name}: \${writer.writeToString(this.${prop.name})}`);
+            }
+        });
+        // take into account indentation
+        let result: string = `${myName} [ 
+    ${props.map(p => `${p}`).join(",\n\t")} 
+]`;
+        result = "\`" + result + "\`";
+        return result;
     }
 
     private makeImportStatements(relativePath: string, importsFromCore: string[], modelImports: string[], typeImports: string[]): string {
@@ -67,7 +91,7 @@ export class PiTypeConceptMaker {
         // return the names of all property types that are not PitTypeConcepts
         const result: string[] = [];
         concept.implementedParts().forEach(part => {
-            if (!(part.type instanceof PitTypeConcept) && part.type.name != this.piTypeName) {
+            if (!(part.type instanceof PitTypeConcept) && part.type.name != this.piTypeName && !(part.type instanceof PiPrimitiveType)) {
                 result.push(Names.classifier(part.type));
             }
         });
@@ -81,7 +105,7 @@ export class PiTypeConceptMaker {
             result.push(Names.classifier(concept.base.referred));
         }
         concept.implementedParts().forEach(part => {
-            if (part.type instanceof PitTypeConcept) {
+            if (part.type instanceof PitTypeConcept && part.type.name != this.piTypeName) {
                 result.push(Names.classifier(part.type));
             }
         });

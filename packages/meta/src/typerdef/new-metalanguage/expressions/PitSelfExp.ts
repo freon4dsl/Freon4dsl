@@ -18,8 +18,8 @@ export class PitSelfExp extends PitExp {
     toPiString(): string {
         return `self`;
     }
-    // baseSource(): PitExp {
-    //     return this;
-    // }
 
+    baseSource(): PitExp {
+        return this;
+    }
 }

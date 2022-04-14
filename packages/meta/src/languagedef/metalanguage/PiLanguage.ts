@@ -38,9 +38,9 @@ export class PiLanguage extends PiLangElement {
         if (result === undefined) {
             result = this.findUnitDescription(name);
         }
-        // if (result === undefined) {
-        //     result = this.findBasicType(name);
-        // }
+        if (result === undefined) {
+            result = this.findBasicType(name);
+        }
         return result;
     }
 

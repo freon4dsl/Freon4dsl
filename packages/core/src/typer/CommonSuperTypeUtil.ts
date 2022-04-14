@@ -1,8 +1,6 @@
-import { OrderedList } from "./OrderedList";
-import { ProjectXTyper } from "../gen";
-import { ProjectXEnvironment } from "../../environment/gen/ProjectXEnvironment";
+import { TypeOrderedList } from "./TypeOrderedList";
 import { PiType } from "@projectit/core";
-// import { TypeRef } from "../../language/gen";
+import { PiTyper } from "./PiTyper";
 
 
 // algorithm from https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla
@@ -13,14 +11,14 @@ import { PiType } from "@projectit/core";
 
 export class CommonSuperTypeUtil {
 
-    public static commonSuperType(inList: PiType[]): PiType[] {
+    public static commonSuperType(inList: PiType[], typer: PiTyper): PiType[] {
         if (!!inList && inList.length > 0) {
             // start with the supers from the first element
-            const rollingIntersect: OrderedList<PiType> = this.getSupers(inList[0]);
+            const rollingIntersect: TypeOrderedList<PiType> = this.getSupers(inList[0], typer);
             // intersect with the next
             for (let i = 1; i < inList.length; i++) {
                 // this.printOrderedList("rollingIntersect at " + i.toString(), rollingIntersect);
-                rollingIntersect.retainAll(this.getSupers(inList[i]));
+                rollingIntersect.retainAll(this.getSupers(inList[i], typer), typer);
             }
             return rollingIntersect.toArray();
         }
@@ -45,24 +43,22 @@ export class CommonSuperTypeUtil {
      * @param inCls
      * @private
      */
-    private static getSupers(inCls: PiType): OrderedList<PiType>  {
-        const typer: ProjectXTyper = new ProjectXTyper();
-        const classes: OrderedList<PiType> = new OrderedList<PiType>();
-        const writer = ProjectXEnvironment.getInstance().writer;
+    private static getSupers(inCls: PiType, typer: PiTyper): TypeOrderedList<PiType>  {
+        const classes: TypeOrderedList<PiType> = new TypeOrderedList<PiType>();
         if (!!inCls) {
-            let nextLevel: OrderedList<PiType> = new OrderedList<PiType>();
-            nextLevel.add(inCls);
+            let nextLevel: TypeOrderedList<PiType> = new TypeOrderedList<PiType>();
+            nextLevel.add(inCls, typer);
             // this.printOrderedList("nextLevel: ", nextLevel );
             while (nextLevel.length() > 0) {
-                classes.addAll(nextLevel);
-                const thisLevel: OrderedList<PiType> = new OrderedList<PiType>();
-                thisLevel.addAll(nextLevel);
-                nextLevel = new OrderedList<PiType>();
+                classes.addAll(nextLevel, typer);
+                const thisLevel: TypeOrderedList<PiType> = new TypeOrderedList<PiType>();
+                thisLevel.addAll(nextLevel, typer);
+                nextLevel = new TypeOrderedList<PiType>();
                 for (const elem of thisLevel) {
-                    const supers: PiType[] = (typer as ProjectXTyper).getSuperTypes(elem);
+                    const supers: PiType[] = typer.getSuperTypes(elem);
                     // console.log(`found supers for ${writer.writeToString(elem.internal)} [${elem.internal.piLanguageConcept()}] : ${supers.map(sup => `${writer.writeToString(sup.internal)} [${sup.internal.piLanguageConcept()}]`).join(", ")}`)
                     for (const super1 of supers) {
-                        nextLevel.add(super1);
+                        nextLevel.add(super1, typer);
                     }
                 }
             }

@@ -52,6 +52,7 @@ export class PitProperty extends PiConceptProperty {
     }
     readonly $typename: string = "PitProperty"; // holds the metatype in the form of a string
 
+    // TODO remove this in favor of PiProperty.typeReference
     refType: PiElementReference<PiClassifier>;
 
     get type(): PiClassifier {

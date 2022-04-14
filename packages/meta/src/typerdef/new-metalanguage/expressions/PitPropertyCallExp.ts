@@ -53,4 +53,8 @@ export class PitPropertyCallExp extends PitExp {
     get isList(): boolean {
         return this.property.isList;
     }
+
+    baseSource(): PitExp {
+        return this.source.baseSource();
+    }
 }

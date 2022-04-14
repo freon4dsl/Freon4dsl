@@ -1,26 +1,25 @@
-import { ProjectXTyper } from "../gen";
 import { PiType } from "@projectit/core";
+import { PiTyper } from "./PiTyper";
+// TODO see what the difference are between this class and OrderList in core/src/editor/simplifiedBoxAPI
 
-export class OrderedList<T extends PiType> implements Iterable<T> {
+export class TypeOrderedList<T extends PiType> implements Iterable<T> {
     protected elements: T[] = [];
-    typer: ProjectXTyper;
 
     toArray(): T[] {
         return  this.elements;
     }
 
-    add(p: T) {
-        if (!this.typer) {
-            this.typer = new ProjectXTyper();
-        }
-        if (!this.elements.find(e => (this.typer as ProjectXTyper).equals(e, p))) {
-            this.elements.push(p);
+    add(p: T, typer: PiTyper) {
+        if (!!typer) {
+            if (!this.elements.find(e => typer.equals(e, p))) {
+                this.elements.push(p);
+            }
         }
     }
 
-    addAll(list: OrderedList<T>) {
+    addAll(list: TypeOrderedList<T>, typer: PiTyper) {
         for (const t of list) {
-            this.add(t);
+            this.add(t, typer);
         }
     }
 
@@ -28,10 +27,10 @@ export class OrderedList<T extends PiType> implements Iterable<T> {
      * Retains only the elements that are contained in the "list".
      * @param list
      */
-    retainAll(list: OrderedList<T>) {
+    retainAll(list: TypeOrderedList<T>, typer: PiTyper) {
         const toRetain: T[] = [];
         this.elements.forEach((old, index) => {
-            if (list.includes(old)) {
+            if (list.includes(old, typer)) {
                 toRetain.push(old);
             }
         });
@@ -50,14 +49,13 @@ export class OrderedList<T extends PiType> implements Iterable<T> {
         return this.elements[index];
     }
 
-    includes(p: T): boolean {
-        if (!this.typer) {
-            this.typer = new ProjectXTyper();
-        }
+    includes(p: T, typer: PiTyper): boolean {
         let result: boolean = false;
-        for (const elem of this.elements) {
-            if (this.typer.equals(elem, p)) {
-                result = true;
+        if (!!typer) {
+            for (const elem of this.elements) {
+                if (typer.equals(elem, p)) {
+                    result = true;
+                }
             }
         }
         return result;
@@ -71,9 +69,9 @@ export class OrderedList<T extends PiType> implements Iterable<T> {
 
 export class OrderedListIterator<T extends PiType> implements Iterator<T> {
     private index = 0;
-    private list: OrderedList<T>;
+    private list: TypeOrderedList<T>;
 
-    constructor(list: OrderedList<T>) {
+    constructor(list: TypeOrderedList<T>) {
         this.list = list;
     }
 

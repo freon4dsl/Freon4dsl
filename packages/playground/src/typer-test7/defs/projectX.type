@@ -23,32 +23,32 @@ hastype { Exp, NamedType }
 
 // Which type does an expression have?
 NumberLiteral {
-    infertype x:TypeRef where {
-        x.type equalsto PredefinedType:NUMBER;
+    infertype TypeRef {
+        type: PredefinedType:NUMBER
     } ;
 }
 
 StringLiteral {
-    infertype x:TypeRef where {
-        x.type equalsto PredefinedType:STRING;
+    infertype TypeRef {
+        type: PredefinedType:STRING
     } ;
 }
 
 BooleanLiteral {
-    infertype x:TypeRef where {
-        x.type equalsto PredefinedType:BOOLEAN;
+    infertype TypeRef {
+        type: PredefinedType:BOOLEAN
     } ;
 }
 
 NamedType {
-    infertype x:TypeRef where {
-        x.type equalsto self;
+    infertype TypeRef {
+        type: self
     } ;
 }
 
 NamedExp {
-    infertype x:TypeRef where {
-        x.type equalsto self.myType;
+    infertype TypeRef {
+        type: self.myType
     } ;
 }
 
@@ -58,9 +58,9 @@ PlusExp {
 
 UnitLiteral {
     // 62 kilogram, or 112 miles
-    infertype x:UnitOfMeasurement where {
-        x.baseType equalsto (typeof(self.inner) as TypeRef).type;
-        x.unit equalsto self.unit;
+    infertype UnitOfMeasurement {
+        baseType: typeof(self.inner).type,
+        unit: self.unit
     };
 //    infertype x:TypeRef where {
 //        x.type equalsto PredefinedType:BOOLEAN;
@@ -70,11 +70,11 @@ UnitLiteral {
 
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
-    infertype x:GenericType where {
+    infertype GenericType {
         // TODO the following results in a compile error, but not in a checker error
         // x.baseType equalsto (typeof(self.content) as Type);
-        x.baseType equalsto typeof(self.content);
-        x.kind equalsto self.kind;
+        baseType: typeof(self.content),
+        kind: self.kind
     };
 }
 

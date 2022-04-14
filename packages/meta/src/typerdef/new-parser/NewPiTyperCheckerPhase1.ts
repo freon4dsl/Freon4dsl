@@ -122,9 +122,16 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         if (!!definition.conceptsWithType) {
             definition.conceptsWithType.forEach(con => {
                 if (con instanceof PiConcept && !con.isAbstract) {
-                    let rule = this.findSpecForConcept(con);
+                    let foundRule: PitInferenceRule;
+                    // see if there is a spec for this concept with an infertype rule
+                    this.findSpecsForConcept(con).forEach(spec => {
+                        const rule: PitTypeRule = spec.rules.find(r => r instanceof PitInferenceRule);
+                        if (!!rule) {
+                            foundRule = rule as PitInferenceRule;
+                        }
+                    });
                     this.simpleCheck(
-                        !!rule?.rules.find(r => r instanceof PitInferenceRule),
+                        !!foundRule,
                         `Concept '${con.name}' is marked 'hasType', but has no 'inferType' rule ${Checker.location(definition)}.`
                     );
                 }
@@ -147,15 +154,15 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         // }
     }
 
-    private findSpecForConcept(con: PiConcept) {
-        let rule: PitClassifierSpec = this.definition.classifierSpecs.find(spec => spec.myClassifier === con);
-        if (!rule) { // try finding rules for a superclassifier
-            const supers: PiClassifier[] = LangUtil.superClassifiers(con);
-            for (const super1 of supers) {
-                rule = this.definition.classifierSpecs.find(rule => rule.myClassifier === super1);
-            }
+    private findSpecsForConcept(con: PiConcept): PitClassifierSpec[] {
+        let result: PitClassifierSpec[] = [];
+        ListUtil.addIfNotPresent(result, this.definition.classifierSpecs.find(spec => spec.myClassifier === con));
+        // try finding specs for a superclassifier
+        const supers: PiClassifier[] = LangUtil.superClassifiers(con);
+        for (const super1 of supers) {
+            ListUtil.addIfNotPresent(result, this.definition.classifierSpecs.find(spec => spec.myClassifier === super1));
         }
-        return rule;
+        return result;
     }
 
     private checkTypeReferences(types: PiElementReference<PiClassifier>[]) {
@@ -225,6 +232,7 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
             `'Anytype' cannot have an infertype rule ${Checker.location(rule)}.`);
         this.simpleCheck(this.definition.conceptsWithType.includes(enclosingConcept),
             `Concept or interface '${enclosingConcept.name}' is not marked 'hastype', therefore it cannot have an infertype rule ${Checker.location(rule)}.`);
+        this.simpleCheck(!(rule.exp instanceof PitWhereExp), `A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' ${Checker.location(rule)}.`);
         // rule.exp = this.changeInstanceToPropCallExp(rule.exp, enclosingConcept);
     }
 
@@ -316,9 +324,29 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         // this.myExpressionChecker.checkClassifierReference(exp.__type);
         // console.log("TYPE: " + exp.type?.name + " with props: " + exp.type?.allProperties().map(p => p.name).join(", "))
         exp.propertyDefs.forEach(propDef => {
-            this.simpleCheck(!!propDef.property,
-               `Cannot find property '${propDef.__property.name}' ${Checker.location(propDef.__property)}.`);
             this.checkPitExp(propDef.value, classifier, surroundingExp);
+            this.nestedCheck({
+                check:!!propDef.property,
+                error:`Cannot find property '${propDef.__property.name}' ${Checker.location(propDef.__property)}.`,
+                whenOk: () => {
+                    const propType: PiClassifier = propDef.property.type;
+                    const valueType: PiClassifier = propDef.value.returnType;
+                    let doesConform: boolean = false;
+                    if (propType.name !== "PiType") {
+                        const typeCheck: PiClassifier[] = CommonSuperTypeUtil.commonSuperType([propType, valueType]);
+                        doesConform = typeCheck.length > 0 && typeCheck[0] === propType;
+                    } else {
+                        // valueType conforms to PiType if
+                        if (valueType instanceof PitTypeConcept) { // (1) it is a TypeConcept
+                            doesConform = this.definition.typeConcepts.includes(valueType);
+                        } else { // (2) it is marked 'isType'
+                            doesConform = this.definition.types.includes(valueType);
+                        }
+                    }
+                    this.simpleCheck(doesConform,
+                        `Type of '${propDef.value.toPiString()}' (${valueType?.name}) does not conform to ${propType.name} ${Checker.location(propDef)}.`);
+                }
+            });
         });
     }
 

@@ -6,6 +6,7 @@ istype { TopType }
 type TT_GenericType {
     base: PiType;
     kind: GenericKind;
+//    extra: boolean;
 }
 
 type TT_MeasurementType {
@@ -81,7 +82,7 @@ GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype TT_GenericType {
         base: typeof(self.content),
-        kind: GenericKind:Collection
+        kind: self.kind
     };
 }
 
@@ -106,7 +107,7 @@ TT_GenericType {
 
 GenericKind {
     Set conformsto Collection;
-    Sequence conformsto Bag;
+    Sequence conformsto Collection;
     Bag conformsto Collection;
 }
 

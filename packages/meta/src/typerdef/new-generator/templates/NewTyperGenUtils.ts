@@ -1,14 +1,14 @@
 import {
-    PitAnytypeExp,
+    PitAnytypeExp, PitClassifierSpec, PitConformanceRule, PitConformsExp, PitEqualsExp,
     PitExp,
     PitFunctionCallExp,
     PitLimitedInstanceExp,
-    PitPropertyCallExp,
-    PitSelfExp,
-    PitWhereExp
+    PitPropertyCallExp, PitPropInstance,
+    PitSelfExp, PitTypeConcept,
+    PitWhereExp, PiTyperDef
 } from "../../new-metalanguage";
 import { ListUtil, Names } from "../../../utils";
-import { PiClassifier } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiElementReference, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
 import { PitBinaryExp, PitCreateExp, PitVarCallExp } from "../../new-metalanguage/expressions";
 
 const inferFunctionName: string = "inferType";
@@ -31,21 +31,26 @@ export class NewTyperGenUtils {
     public static makeExpAsType(exp: PitExp, varName: string, imports: PiClassifier[]): string {
         let result: string = "";
         if (exp instanceof PitAnytypeExp) {
-            result = `PiType.create({ internal: PiType.ANY_TYPE });`;
+            result = `PiType.ANY_TYPE`;
         } else if (exp instanceof PitBinaryExp) {
             result = "null /* PitBinaryExp */";
         } else if (exp instanceof PitCreateExp) {
             ListUtil.addIfNotPresent(imports, exp.type);
             result = `${Names.classifier(exp.type)}.create({
-                ${exp.propertyDefs.map(prop => `${prop.property.name}: ${NewTyperGenUtils.makeExpAsTypeOrElement(prop.value, varName, imports)}`)}
-            })`;
+                ${exp.propertyDefs.map(prop => `${prop.property.name}: ${NewTyperGenUtils.makePropValue(prop, varName, imports)}`)}
+            }) /* PitCreateExp */`;
+            if (this.types.includes(exp.type)) {
+                // the 'create' makes an object that is an AST concept, not a PitTypeConcept
+                // therefore we need to wrap it in a PiType object
+                result = `PiType.create({ internal: ${result} }) /* PitCreateExp */`;
+            }
         } else if (exp instanceof PitFunctionCallExp) {
             if (exp.calledFunction === typeofName) {
                 const myParam: PitExp = exp.actualParameters[0];
                 if (myParam instanceof PitPropertyCallExp && myParam.property.isList) {
-                    result = `this.mainTyper.commonSuperType(${NewTyperGenUtils.makeExpAsElement(myParam, varName, imports)})`;
+                    result = `this.mainTyper.commonSuperType(${NewTyperGenUtils.makeExpAsElement(myParam, varName, imports)}) /* PitFunctionCallExp */`;
                 } else {
-                    result = `this.mainTyper.${inferFunctionName}(${NewTyperGenUtils.makeExpAsElement(myParam, varName, imports)})`;
+                    result = `this.mainTyper.${inferFunctionName}(${NewTyperGenUtils.makeExpAsElement(myParam, varName, imports)}) /* PitFunctionCallExp */`;
                 }
             } else if (exp.calledFunction === commonSuperName) {
                 // TODO params that are lists themselves
@@ -54,17 +59,21 @@ export class NewTyperGenUtils {
                 result = "null /* PitFunctionCallExp */"
             }
         } else if (exp instanceof PitLimitedInstanceExp) {
-            result = `PiType.create({ internal: ${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)} })`;
+            result = `PiType.create({ internal: ${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)} }) /* PitLimitedInstanceExp */`;
         } else if (exp instanceof PitPropertyCallExp) {
             if (exp.property.isList) {
                 // use common super type, because the argument to inferType is a list
-                result = `this.mainTyper.commonSuper(${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)})`;
+                result = `this.mainTyper.commonSuper(${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)}) /* PitPropertyCallExp */`;
             } else {
-                result = `this.mainTyper.${inferFunctionName}(${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)})`;
+                if (exp.property.type instanceof PitTypeConcept) {
+                    result = `${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)} /* PitPropertyCallExp */`;
+                } else {
+                    result = `this.mainTyper.${inferFunctionName}(${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)}) /* PitPropertyCallExp */`;
+                }
             }
         } else if (exp instanceof PitSelfExp) {
             ListUtil.addIfNotPresent(imports, exp.returnType);
-            result = `PiType.create({ internal: ${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)} })`;
+            result = `PiType.create({ internal: ${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)} }) /* PitSelfExp */`;
         } else if (exp instanceof PitVarCallExp) {
             result = "null /* PitVarCallExp */";
         } else if (exp instanceof PitWhereExp) {
@@ -107,6 +116,29 @@ export class NewTyperGenUtils {
             result = "PitWhereExp";
         }
         return result;
+    }
+
+    public static makePropValue(propExp: PitPropInstance, varName: string, imports: PiClassifier[]): string {
+        let result: string = NewTyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, imports);
+        if (!propExp.property.isPart) { // it is a reference, wrap it in a PiElementReference
+            // TODO find solution for this import, currently it is imported always
+            // ListUtil.addIfNotPresent(imports, "PiElementReference");
+            const typeName: string = Names.classifier(propExp.property.type);
+            ListUtil.addIfNotPresent(imports, propExp.property.type);
+            result = `PiElementReference.create<${typeName}>(${result}, "${typeName}")`;
+        }
+        return result;
+    }
+
+    public static makeCopyEntry(prop: PiProperty, toBeCopiedName: string, toBeCopiedTypeName: string): string {
+        // TODO lists
+        const typeName: string = Names.classifier(prop.type);
+        if (prop.isPart) {
+            return `this.makeCopyOf${typeName}((${toBeCopiedName} as ${toBeCopiedTypeName}).${prop.name})`;
+        } else {
+            return `PiElementReference.create<${typeName}>((${toBeCopiedName} as ${toBeCopiedTypeName}).\$${prop.name}, "${typeName}")`;
+        }
+        return '';
     }
 
 }

@@ -47,4 +47,8 @@ export class PitVarCallExp extends PitExp {
     toPiString(): string {
         return this.__variable.name;
     }
+
+    baseSource(): PitExp {
+        return this;
+    }
 }

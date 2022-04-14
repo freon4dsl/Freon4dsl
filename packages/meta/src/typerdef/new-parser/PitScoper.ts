@@ -13,9 +13,9 @@ export class PitScoper implements PiMetaScoper {
 
     getFromVisibleElements(owner: PiDefinitionElement, name: string, typeName: string): PiLangElement {
         let result: PiLangElement;
-        // if (name === "baseType") {
-        //     console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
-        // }
+        if (name === "base2" ) {
+            console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
+        }
         if (owner instanceof PitProperty || owner instanceof PiTyperElement ) { // PitProperty does not inherited from PiTyperElement!!
             if (typeName === "PiProperty") {
                 let nameSpace: PiClassifier;

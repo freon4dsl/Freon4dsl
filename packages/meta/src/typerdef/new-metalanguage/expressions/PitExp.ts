@@ -24,8 +24,8 @@ export abstract class PitExp extends PiTyperElement {
     }
 
     baseSource(): PitExp {
-        console.log("baseSource() SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PitExp'");
-        return null;
+        console.log("baseSource() SHOULD BE IMPLEMENTED BY SUBCLASS OF PitExp: " + this.constructor.name);
+        return this;
     }
 
     get isList(): boolean {

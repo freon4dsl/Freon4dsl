@@ -43,6 +43,10 @@ export class CustomTyperPartTemplate {
             commonSuper(typelist: PiType[]): PiType | null {
                 return null;
             }    
+            
+            public getSuperTypes(type: PiType): PiType[] | null {
+                return null;
+            } 
         }`;
     }
 }

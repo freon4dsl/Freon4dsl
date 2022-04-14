@@ -92,14 +92,13 @@ export class PiTyperDef extends PiTyperElement {
         });
     }
     typeRoot(): PiClassifier {
-        if (this.typeRootHasBeenCalculated) {
-            return this.__typeRoot;
-        } else { // get the common super type of all types, if possible
+        if (!this.typeRootHasBeenCalculated) {
+            // get the common super type of all types, if possible
             const list = CommonSuperTypeUtil.commonSuperType(this.types);
             this.__typeRoot = list.length > 0 ? list[0] : null;
             this.typeRootHasBeenCalculated = true;
         }
-        return null;
+        return this.__typeRoot;
     }
 
     toPiString(): string{
@@ -111,8 +110,8 @@ ${this.anyTypeSpec?.toPiString()}
 ${this.classifierSpecs.map(con => con.toPiString()).join("\n")}`;
     }
 
-    private static makePiType(): PiConcept {
-        const result: PiConcept = new PiConcept();
+    private static makePiType(): PitTypeConcept {
+        const result: PitTypeConcept = new PitTypeConcept();
         result.name = "PiType";
         // internal: PiElement
         const prop: PiProperty = new PiProperty();

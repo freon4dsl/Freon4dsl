@@ -6,7 +6,6 @@ import {
 } from "../../new-metalanguage";
 import { ListUtil } from "../../../utils";
 import { EqualsMaker } from "./EqualsMaker";
-import { TyperGenUtils } from "./TyperGenUtils";
 import { InferMaker } from "./InferMaker";
 import { SuperTypeMaker } from "./SuperTypeMaker";
 
@@ -87,14 +86,22 @@ export class PiTyperPartTemplate {
              */
             public commonSuper(typelist: PiType[]): PiType | null {
                 return null;
-            }        
+            }   
+            
+            /**
+             * Returns all super types as defined in the typer definition.
+             * @param type
+             */
+            public getSuperTypes(type: PiType): PiType[] | null {
+                return [];
+            }     
         }`;
     }
 
     private generateFromDefinition(typerdef: PiTyperDef, language: PiLanguage, relativePath: string) {
         this.typerdef = typerdef;
         this.language = language;
-        let rootType = TyperGenUtils.getTypeRoot(language, typerdef);
+        let rootType = Names.classifier(typerdef.typeRoot());
         ListUtil.addIfNotPresent(this.imports, rootType);
         const allLangConcepts: string = Names.allConcepts(language);
         ListUtil.addIfNotPresent(this.imports, allLangConcepts);
@@ -157,13 +164,21 @@ export class PiTyperPartTemplate {
              */
             public conforms(type1: PiType, type2: PiType): boolean | null {
                 if (!type1 || !type2) return null;
-                // TODO implement this
-                if ( this.equals(type1, type2) ) return true;
-                return false;
+                let result: boolean = false;
+                if (this.equals(type1, type2)) {
+                    result = true;
+                } else {
+                    this.getSuperTypes(type1).forEach(super1 => {
+                       if (this.equals(super1, type2)) {
+                           result = true;
+                       }
+                    });
+                }
+                return result;
             }
             
             /**
-             * Returns true if all types in typelist1 conform to the types in typelist2, in the given order.
+             * Returns true if all types in typelist1 conform to the types in typelist2, pairswise, in the given order.
              * @param typelist1
              * @param typelist2
              */
@@ -182,6 +197,10 @@ export class PiTyperPartTemplate {
              * @param typelist
              */
             public commonSuper(typelist: PiType[]): PiType | null {
+                const result: PiType[] = CommonSuperTypeUtil.commonSuperType(typelist, this.mainTyper);        
+                if (!!result && result.length > 0) {
+                    return result[0];
+                }
                 return null;
             }
 
@@ -190,8 +209,7 @@ export class PiTyperPartTemplate {
              * @param type
              */
             public getSuperTypes(type: PiType): PiType[] {
-                ${superTypeMaker.makeSuperTypes(typerdef, "type", this.imports)}
-                return [];
+                ${superTypeMaker.makeSuperTypes(typerdef, "type", this.importedClassifiers)}
             }
                         
             ${inferMaker.extraMethods.map(meth => meth).join("\n\n")}
@@ -224,7 +242,8 @@ export class PiTyperPartTemplate {
            }
         });
 
-        const imports = `import { ${typerInterfaceName}, PiType, PiElement, Language } from "${PROJECTITCORE}";
+        ListUtil.addIfNotPresent(this.imports, "PiElementReference");
+        const imports = `import { ${typerInterfaceName}, PiType, PiElement, Language, CommonSuperTypeUtil } from "${PROJECTITCORE}";
         import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}
         import { ${Names.typer(language)} } from "./${Names.typer(language)}";`;

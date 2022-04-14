@@ -64,6 +64,7 @@ export class PiType {
     static ANY: PiNamedElement = NamedElement.getInstance();
     static ANY_TYPE: PiType = PiType.create({internal: PiType.ANY});
 
+    readonly $typename: string = "PiType";
     toPiString(writer: PiWriter): string {
         return "PiType[ " + writer.writeToString(this.internal) + " ]";
     }

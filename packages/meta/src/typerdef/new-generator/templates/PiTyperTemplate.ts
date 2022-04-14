@@ -1,7 +1,6 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_FOLDER } from "../../../utils";
-import { PiClassifier, PiLanguage } from "../../../languagedef/metalanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage";
 import { PiTyperDef } from "../../new-metalanguage";
-import { TyperGenUtils } from "./TyperGenUtils";
 
 export class PiTyperTemplate {
     language: PiLanguage;
@@ -12,7 +11,7 @@ export class PiTyperTemplate {
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.PiTyper;
-        let rootType = TyperGenUtils.getTypeRoot(language, typerdef);
+        let rootType = Names.classifier(typerdef.typeRoot());
         let langImports: string;
         if (rootType === allLangConcepts) {
             langImports = allLangConcepts;
@@ -209,13 +208,13 @@ export class PiTyperTemplate {
             public getSuperTypes(type: PiType): PiType[] {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: PiType = typer.getSuperTypes(typelist);
+                    let result: PiType[] = typer.getSuperTypes(type);
                     if (!!result) {
                         return result;
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return this.generatedTyper.getSuperTypes(typelist);
+                return this.generatedTyper.getSuperTypes(type);
             }
 
             /**
