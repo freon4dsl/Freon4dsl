@@ -36,11 +36,11 @@ export class SuperTypeMaker {
         let astRules: string[] = [];
         sortedTypes.forEach( type => {
             // find the equalsRule, if present
+            const myType: string = Names.classifier(type);
             const foundRule: PitEqualsRule = conformanceRules.find(conRule => conRule.owner.myClassifier === type);
             if (!!foundRule) {
-                const myType: string = Names.classifier(type);
                 if (!NewTyperGenUtils.isType(foundRule.owner.myClassifier)) {
-                    astRules.push(`if (elem.piLanguageConcept() === "${myType}") {
+                    astRules.push(`if (this.metaTypeOk(elem, "${myType}")) {
 
                     }`);
                 }
@@ -49,7 +49,7 @@ export class SuperTypeMaker {
                 if (!!foundLimitedSpec) {
                     // make sub-entry for limited spec
                     const conformsExps: PitBinaryExp[] = foundLimitedSpec.rules.filter(r => r.exp instanceof PitConformsExp).map(r => r.exp as PitConformsExp);
-                    astRules.push(`if (elem.piLanguageConcept() === "${type}") {
+                    astRules.push(`if (this.metaTypeOk(elem, "${myType}")) {
                             ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
                         }`);
                     limitedSpecs.splice(limitedSpecs.indexOf(foundLimitedSpec), 1);
@@ -58,9 +58,9 @@ export class SuperTypeMaker {
         });
         // make sub-entries for remaining limited specs
         limitedSpecs.map(spec => {
-            const isType: boolean = typerdef.types.includes(spec.myClassifier);
+            const myType: string = Names.classifier(spec.myClassifier);
             const conformsExps: PitBinaryExp[] = spec.rules.filter(r => r.exp instanceof PitConformsExp).map(r => r.exp as PitConformsExp);
-            astRules.push(`if (elem.piLanguageConcept() === "${Names.classifier(spec.myClassifier)}") {
+            astRules.push(`if (this.metaTypeOk(elem, "${myType}")) {
                 ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
             }`);
         });
