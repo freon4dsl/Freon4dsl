@@ -47,19 +47,21 @@ export class NewPiTyperGenerator {
         let relativePath = "../../";
 
         //  Generate typer
-        typerdef.typeConcepts.forEach(con => {
-            LOGGER.log(`Generating type concept: ${this.typerConceptsFolder}/${Names.classifier(con)}.ts`);
-            const typeConceptFile = Helpers.pretty(typeConceptMaker.generateTypeConcept(this.language, con, relativePath + "../"), "Type Concept", generationStatus);
-            fs.writeFileSync(`${this.typerConceptsFolder}/${Names.classifier(con)}.ts`, typeConceptFile);
-        });
+        if (!!typerdef && typerdef.typeConcepts.length > 0 ) {
+            typerdef.typeConcepts.forEach(con => {
+                LOGGER.log(`Generating type concept: ${this.typerConceptsFolder}/${Names.classifier(con)}.ts`);
+                const typeConceptFile = Helpers.pretty(typeConceptMaker.generateTypeConcept(this.language, con, relativePath + "../"), "Type Concept", generationStatus);
+                fs.writeFileSync(`${this.typerConceptsFolder}/${Names.classifier(con)}.ts`, typeConceptFile);
+            });
 
-        LOGGER.log(`Generating type concept index: ${this.typerConceptsFolder}/index.ts`);
-        const typeConceptIndexFile = Helpers.pretty(typeConceptMaker.makeIndexFile(typerdef), "Type Concept Index", generationStatus);
-        fs.writeFileSync(`${this.typerConceptsFolder}/index.ts`, typeConceptIndexFile);
+            LOGGER.log(`Generating type concept index: ${this.typerConceptsFolder}/index.ts`);
+            const typeConceptIndexFile = Helpers.pretty(typeConceptMaker.makeIndexFile(typerdef), "Type Concept Index", generationStatus);
+            fs.writeFileSync(`${this.typerConceptsFolder}/index.ts`, typeConceptIndexFile);
 
-        LOGGER.log(`Generating type concept index: ${this.typerConceptsFolder}/internal.ts`);
-        const typeConceptInternalFile = Helpers.pretty(typeConceptMaker.makeInternalFile(typerdef), "Type Concept Internal", generationStatus);
-        fs.writeFileSync(`${this.typerConceptsFolder}/internal.ts`, typeConceptInternalFile);
+            LOGGER.log(`Generating type concept index: ${this.typerConceptsFolder}/internal.ts`);
+            const typeConceptInternalFile = Helpers.pretty(typeConceptMaker.makeInternalFile(typerdef), "Type Concept Internal", generationStatus);
+            fs.writeFileSync(`${this.typerConceptsFolder}/internal.ts`, typeConceptInternalFile);
+        }
 
         LOGGER.log(`Generating typer: ${this.typerGenFolder}/${Names.typer(this.language)}.ts`);
         const typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class", generationStatus);

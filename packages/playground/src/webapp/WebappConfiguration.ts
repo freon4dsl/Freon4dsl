@@ -11,8 +11,8 @@ import { ServerCommunication } from "./server/ServerCommunication";
 // export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
 import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
 // export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
-import { ProjectXEnvironment } from "../typer-test6/environment/gen/ProjectXEnvironment";
-export const editorEnvironment: PiEnvironment = ProjectXEnvironment.getInstance();
+import { ProjectYEnvironment } from "../typer-test8/environment/gen/ProjectYEnvironment";
+export const editorEnvironment: PiEnvironment = ProjectYEnvironment.getInstance();
 // import { ExpressionLibraryEnvironment } from "../libraries-test/environment/gen/ExpressionLibraryEnvironment";
 // export const editorEnvironment: PiEnvironment = ExpressionLibraryEnvironment.getInstance();
 

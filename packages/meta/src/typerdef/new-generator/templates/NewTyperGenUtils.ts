@@ -30,69 +30,82 @@ export class NewTyperGenUtils {
         // return this.types.includes(cls);
     }
 
-    public static makeExpAsTypeOrElement(exp: PitExp, varName: string, imports: PiClassifier[]): string {
+    public static makeExpAsTypeOrElement(exp: PitExp, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
         if (NewTyperGenUtils.isType(exp.returnType)) {
-            return NewTyperGenUtils.makeExpAsType(exp, varName, imports);
+            return NewTyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
         } else {
-            return NewTyperGenUtils.makeExpAsElement(exp, varName, imports);
+            return NewTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports);
         }
     }
 
-    public static makeExpAsType(exp: PitExp, varName: string, imports: PiClassifier[]): string {
+    public static makeExpAsType(exp: PitExp, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
         let result: string = "";
         if (exp instanceof PitAnytypeExp) {
-            result = `PiType.ANY_TYPE`;
+            result = `AstType.ANY_TYPE`;
         } else if (exp instanceof PitBinaryExp) {
             result = "null /* PitBinaryExp */";
         } else if (exp instanceof PitCreateExp) {
             ListUtil.addIfNotPresent(imports, exp.type);
+            // result = `${Names.classifier(exp.type)}.create({
+            //     ${exp.propertyDefs.map(prop => `${prop.property.name}: ${NewTyperGenUtils.makePropValue(prop, varName, varIsType, imports)}`)}
+            // }) /* PitCreateExp A */`;
             result = `${Names.classifier(exp.type)}.create({
-                ${exp.propertyDefs.map(prop => `${prop.property.name}: ${NewTyperGenUtils.makePropValue(prop, varName, imports)}`)}
-            }) /* PitCreateExp */`;
+                ${exp.propertyDefs.map(prop => `${prop.property.name}: ${NewTyperGenUtils.makePropValue(prop, varName, varIsType, imports)}`)}
+            }) /* PitCreateExp A */`;
             if (this.types.includes(exp.type)) {
                 // the 'create' makes an object that is an AST concept, not a PitTypeConcept
                 // therefore we need to wrap it in a PiType object
-                result = `PiType.create({ internal: ${result} }) /* PitCreateExp */`;
+                result = `AstType.create({ astElement: ${result} }) /* PitCreateExp B */`;
             }
         } else if (exp instanceof PitFunctionCallExp) {
             if (exp.calledFunction === typeofName) {
                 const myParam: PitExp = exp.actualParameters[0];
                 if (myParam instanceof PitPropertyCallExp && myParam.property.isList) {
-                    result = `this.mainTyper.commonSuperType(${NewTyperGenUtils.makeExpAsElement(myParam, varName, imports)}) /* PitFunctionCallExp */`;
+                    result = `this.mainTyper.commonSuperType(${NewTyperGenUtils.makeExpAsElement(myParam, varName, varIsType, imports)}) /* PitFunctionCallExp A */`;
                 } else {
-                    result = `this.mainTyper.${inferFunctionName}(${NewTyperGenUtils.makeExpAsElement(myParam, varName, imports)}) /* PitFunctionCallExp */`;
+                    result = `this.mainTyper.${inferFunctionName}(${NewTyperGenUtils.makeExpAsElement(myParam, varName, varIsType, imports)}) /* PitFunctionCallExp B */`;
                 }
             } else if (exp.calledFunction === commonSuperName) {
                 // TODO params that are lists themselves
-                result = `this.mainTyper.commonSuperType([${exp.actualParameters.map(par => `${NewTyperGenUtils.makeExpAsElement(par, varName, imports)}`). join(", ")}])`;
+                result = `this.mainTyper.commonSuperType([${exp.actualParameters.map(par => `${NewTyperGenUtils.makeExpAsElement(par, varName, varIsType, imports)}`). join(", ")}])`;
             } else {
                 result = "null /* PitFunctionCallExp */"
             }
         } else if (exp instanceof PitLimitedInstanceExp) {
-            result = `PiType.create({ internal: ${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)} }) /* PitLimitedInstanceExp */`;
+            result = `AstType.create({ astElement: ${NewTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} }) /* PitLimitedInstanceExp */`;
         } else if (exp instanceof PitPropertyCallExp) {
             if (exp.property.isList) {
                 // use common super type, because the argument to inferType is a list
-                result = `this.mainTyper.commonSuper(${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)}) /* PitPropertyCallExp */`;
+                result = `this.mainTyper.commonSuper(${NewTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)}) /* PitPropertyCallExp A */`;
             } else {
-                if (exp.property.type instanceof PitTypeConcept) {
-                    result = `${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)} /* PitPropertyCallExp */`;
-                } else {
-                    result = `this.mainTyper.${inferFunctionName}(${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)}) /* PitPropertyCallExp */`;
+                try {
+                    if (NewTyperGenUtils.isType(exp.returnType)) {
+                        result = `${NewTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} /* PitPropertyCallExp B */`;
+                    } else {
+                        if (varName === "modelelement" && varIsType) {
+                            throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
+                        }
+                        if (varName !== "modelelement" && !varIsType) {
+                            throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
+                        }
+                        result = `this.mainTyper.${inferFunctionName}(${NewTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)}) /* PitPropertyCallExp C */`;
+                    }
+                } catch (e) {
+                    console.log(e.stack)
                 }
             }
         } else if (exp instanceof PitSelfExp) {
             ListUtil.addIfNotPresent(imports, exp.returnType);
-            result = `PiType.create({ internal: ${NewTyperGenUtils.makeExpAsElement(exp, varName, imports)} }) /* PitSelfExp */`;
+            result = `AstType.create({ astElement: ${NewTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} }) /* PitSelfExp B */`;
         } else if (exp instanceof PitVarCallExp) {
-            result = "null /* PitVarCallExp */";
+            result = "null /* PitVarCallExp B */";
         } else if (exp instanceof PitWhereExp) {
-            result = "null /* PitWhereExp */";
+            result = "null /* PitWhereExp B */";
         }
         return result;
     }
 
-    public static makeExpAsElement(exp: PitExp, varName: string, imports: PiClassifier[]): string {
+    public static makeExpAsElement(exp: PitExp, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
         let result: string = "";
         if (exp instanceof PitAnytypeExp) {
             result = "PiType.ANY";
@@ -102,9 +115,9 @@ export class NewTyperGenUtils {
             result = "PitCreateExp";
         } else if (exp instanceof PitFunctionCallExp) {
             if (exp.calledFunction === typeofName) {
-                result = NewTyperGenUtils.makeExpAsType(exp, varName, imports);
+                result = NewTyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
             } else if (exp.calledFunction === commonSuperName) {
-                result = NewTyperGenUtils.makeExpAsType(exp, varName, imports);
+                result = NewTyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
             } else {
                 result = "PitFunctionCallExp";
             }
@@ -112,30 +125,34 @@ export class NewTyperGenUtils {
             ListUtil.addIfNotPresent(imports, exp.myLimited);
             result = exp.myLimited.name + "." + exp.myInstance.name;
         } else if (exp instanceof PitPropertyCallExp) {
-            result = NewTyperGenUtils.makeExpAsElement(exp.source, varName, imports);
+            result = NewTyperGenUtils.makeExpAsElement(exp.source, varName, varIsType, imports);
             result += "." + exp.property.name;
             if (!exp.property.isPart) {
                 result += ".referred";
             }
         } else if (exp instanceof PitSelfExp) {
             ListUtil.addIfNotPresent(imports, exp.returnType);
-            result = `(${varName} as ${Names.classifier(exp.returnType)})`;
+            result = `(${varName} as ${Names.classifier(exp.returnType)}) /* PitSelfExp A */`;
         } else if (exp instanceof PitVarCallExp) {
-            result = `(${varName} as ${Names.classifier(exp.returnType)})`;
+            if (varIsType) {
+                result = `(${varName} as ${Names.classifier(exp.returnType)}) /* PitVarCallExp A1 */`;
+            } else {
+                result = `(${varName} as ${Names.classifier(exp.returnType)}) /* PitVarCallExp A2 */`;
+            }
         } else if (exp instanceof PitWhereExp) {
             result = "PitWhereExp";
         }
         return result;
     }
 
-    public static makePropValue(propExp: PitPropInstance, varName: string, imports: PiClassifier[]): string {
-        let result: string = NewTyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, imports);
+    public static makePropValue(propExp: PitPropInstance, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
+        let result: string= NewTyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, varIsType, imports);
         if (!propExp.property.isPart) { // it is a reference, wrap it in a PiElementReference
             // TODO find solution for this import, currently it is imported always
             // ListUtil.addIfNotPresent(imports, "PiElementReference");
             const typeName: string = Names.classifier(propExp.property.type);
             ListUtil.addIfNotPresent(imports, propExp.property.type);
-            result = `PiElementReference.create<${typeName}>(${result}, "${typeName}")`;
+            result = `PiElementReference.create<${typeName}>(${result}, "${typeName}") /* PropValue */ `;
         }
         return result;
     }

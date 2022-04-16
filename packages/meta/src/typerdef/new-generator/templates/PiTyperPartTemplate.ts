@@ -99,7 +99,7 @@ export class PiTyperPartTemplate {
     private generateFromDefinition(typerdef: PiTyperDef, language: PiLanguage, relativePath: string) {
         this.typerdef = typerdef;
         this.language = language;
-        let rootType = Names.classifier(typerdef.typeRoot());
+        let rootType = Names.classifier(typerdef?.typeRoot());
         ListUtil.addIfNotPresent(this.imports, rootType);
         const allLangConcepts: string = Names.allConcepts(language);
         ListUtil.addIfNotPresent(this.imports, allLangConcepts);
@@ -135,9 +135,6 @@ export class PiTyperPartTemplate {
              */
             public inferType(modelelement: PiElement): PiType | null {
                 if (!modelelement) return null;
-                if (modelelement instanceof PiType) {
-                    return modelelement;
-                }
                 let result: PiType = null;
                 ${inferMaker.makeInferType(typerdef, allLangConcepts, rootType, "modelelement", this.importedClassifiers)}
                 return result;
@@ -152,7 +149,7 @@ export class PiTyperPartTemplate {
             public equals(type1: PiType, type2: PiType): boolean | null {
                 if (!type1 || !type2 ) return false;  
                 ${equalsMaker.makeEqualsType(typerdef, "type1", "type2", this.importedClassifiers)}
-                return type1.internal === type2.internal;
+                return false;
             }
             
             /**
@@ -229,6 +226,16 @@ export class PiTyperPartTemplate {
                 }
                 return result;
             }
+            
+            private getElemFromAstType(type: PiType, metatype: string): PiElement {
+                if (type.$typename === "AstType") {
+                    const astElement: PiElement = (type as AstType).astElement;
+                    if (astElement.piLanguageConcept() === metatype || Language.getInstance().subConcepts(metatype).includes(astElement.piLanguageConcept())) {
+                        return astElement;
+                    }
+                }
+                return null;
+            }
         }`;
 
         const typeConceptImports: string [] = [];
@@ -244,7 +251,7 @@ export class PiTyperPartTemplate {
         });
 
         ListUtil.addIfNotPresent(this.imports, "PiElementReference");
-        const imports = `import { ${typerInterfaceName}, PiType, PiElement, Language, CommonSuperTypeUtil } from "${PROJECTITCORE}";
+        const imports = `import { ${typerInterfaceName}, PiType, AstType, PiElement, Language, CommonSuperTypeUtil } from "${PROJECTITCORE}";
         import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}
         import { ${Names.typer(language)} } from "./${Names.typer(language)}";`;

@@ -23,19 +23,19 @@ export class InferMaker {
         // make an entry for all classifiers that have an infertype rule
         inferRules.forEach(conRule =>
             result.push(`if (${varName}.piLanguageConcept() === "${Names.classifier(conRule.owner.myClassifier)}") {
-                result = ${NewTyperGenUtils.makeExpAsType(conRule.exp, varName, imports)};
+                result = ${NewTyperGenUtils.makeExpAsType(conRule.exp, varName, false, imports)};
              }`)
         );
         // add an entry for all limited concepts
         const allLimited = typerDef.language.concepts.filter(con => con instanceof PiLimitedConcept) as PiLimitedConcept[];
         allLimited.map(lim =>
             result.push(`if (${varName}.piLanguageConcept() === "${Names.classifier(lim)}") {
-                result = PiType.create({ internal: modelelement });
+                result = AstType.create({ astElement: modelelement });
              }`)
         );
         // add an entry for classifiers that do not have an inferType rule
         result.push(`if (this.mainTyper.isType(${varName})) {
-                result = PiType.create({ internal: ${varName} });
+                result = AstType.create({ astElement: ${varName} });
             }`);
         return result.map(r => r).join(" else ");
     }

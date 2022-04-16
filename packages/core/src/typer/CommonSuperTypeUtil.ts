@@ -1,5 +1,5 @@
 import { TypeOrderedList } from "./TypeOrderedList";
-import { PiType } from "@projectit/core";
+import { PiType } from "./PiType";
 import { PiTyper } from "./PiTyper";
 
 

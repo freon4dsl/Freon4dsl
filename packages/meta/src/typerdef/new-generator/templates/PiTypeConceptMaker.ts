@@ -9,13 +9,13 @@ import {
 import { LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
 
 export class PiTypeConceptMaker {
-    piTypeName: string = "PiType";
+    piTypeName: string = "AstType";
 
     generateTypeConcept(language: PiLanguage, concept: PitTypeConcept, relativePath: string): string {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.classifier(concept.base.referred) : this.piTypeName;
-        const coreImports: string[] = ["PiUtils", "PiWriter"];
+        const coreImports: string[] = ["PiUtils", "PiWriter", "PiType"];
         if (!hasSuper) {
             coreImports.push(this.piTypeName);
         }
@@ -105,7 +105,7 @@ export class PiTypeConceptMaker {
             result.push(Names.classifier(concept.base.referred));
         }
         concept.implementedParts().forEach(part => {
-            if (part.type instanceof PitTypeConcept && part.type.name != this.piTypeName) {
+            if (part.type instanceof PitTypeConcept && part.type.name != "PiType") {
                 result.push(Names.classifier(part.type));
             }
         });

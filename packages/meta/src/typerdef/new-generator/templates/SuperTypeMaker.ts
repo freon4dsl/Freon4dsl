@@ -29,21 +29,42 @@ export class SuperTypeMaker {
                 }
             }
         });
-        // make an entry for each rule
-        let allRules: string[] = [];
-        conformanceRules.map(rule => {
-            const isType: boolean = typerdef.types.includes(rule.owner.myClassifier);
-            allRules.push(`if (${!isType ? `${typevarName}` : `${typevarName}.internal`}.$typename === "${Names.classifier(rule.owner.myClassifier)}") {                
-                ${this.makeSuperForExp(rule.exp, typevarName, imports)}
+        // make sub-entries for each rule defined for an ast-element
+        let astRules: string[] = [];
+        conformanceRules.map(conRule => {
+            const myType: string = Names.classifier(conRule.owner.myClassifier);
+            if (!NewTyperGenUtils.isType(conRule.owner.myClassifier)) {
+                astRules.push(`if (elem.piLanguageConcept() === "${myType}") {
+
             }`);
+            }
         });
+        // make sub-entries for each limited spec
         limitedSpecs.map(spec => {
             const isType: boolean = typerdef.types.includes(spec.myClassifier);
             const conformsExps: PitBinaryExp[] = spec.rules.filter(r => r.exp instanceof PitConformsExp).map(r => r.exp as PitConformsExp);
-            allRules.push(`if (${typevarName}.internal.piLanguageConcept() === "${Names.classifier(spec.myClassifier)}") {
-                ${this.makeSuperTypeForLimited(conformsExps, `${typevarName}.internal`, imports)}
+            astRules.push(`if (elem.piLanguageConcept() === "${Names.classifier(spec.myClassifier)}") {
+                ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
             }`);
         });
+        let allRules: string[] = [];
+        // combine the sub-entries into one
+        allRules.push(`if (${typevarName}.$typename === "AstType") {
+                        const elem: PiElement = (type as AstType).astElement;
+                        ${astRules.map(r => r).join(" else ")}
+                        else {
+                            return [];
+                        }
+                } `)
+        // make an entry for each rule that is not defined for an ast-element
+        conformanceRules.map(rule => {
+            if (NewTyperGenUtils.isType(rule.owner.myClassifier)) {
+                allRules.push(`if (${typevarName}.$typename === "${Names.classifier(rule.owner.myClassifier)}") {                
+                ${this.makeSuperForExp(rule.exp, typevarName, imports)}
+            }`);
+            }
+        });
+
 
         // return all rules with a common preamble
         return `if (!${typevarName}) {
@@ -54,11 +75,12 @@ export class SuperTypeMaker {
         return result;`;
     }
 
-    private makeSuperTypeForLimited(binaryExps: PitBinaryExp[], varName: string, imports: PiClassifier[]): string {
+    private makeSuperTypeForLimited(binaryExps: PitBinaryExp[], varName: string, varIsType: boolean, imports: PiClassifier[]): string {
         let result: string = "";
+
         binaryExps.map(stat =>
-            result += `if (${varName} === ${NewTyperGenUtils.makeExpAsElement(stat.left, varName, imports)} ){
-                return [${NewTyperGenUtils.makeExpAsType(stat.right, varName, imports)}];
+            result += `if (${varName} === ${NewTyperGenUtils.makeExpAsElement(stat.left, varName, varIsType, imports)} ){
+                return [${NewTyperGenUtils.makeExpAsType(stat.right, varName, varIsType, imports)}];
             }`
         ).join(" else ");
         return result;
@@ -68,19 +90,18 @@ export class SuperTypeMaker {
         if (exp instanceof PitWhereExp) {
             return this.makeWhereExp(exp, typevarName, imports);
         } else {
-            return NewTyperGenUtils.makeExpAsType(exp, typevarName, imports)
+            return NewTyperGenUtils.makeExpAsType(exp, typevarName, false, imports)
         }
     }
 
     public makeWhereExp(exp: PitWhereExp, varName: string, imports: PiClassifier[]): string {
-        // TODO move this to class SuperTypeMaker
         let result: string = '/* PitWhereExp */\n';
         const myConditions = exp.sortedConditions();
         myConditions.forEach((cond, index) => {
             if (cond instanceof PitConformsExp) {
-                result += `const rhs${index}: PiType[] = this.getSuperTypes(${NewTyperGenUtils.makeExpAsType(cond.right, varName, imports)});\n`;
+                result += `const rhs${index}: PiType[] = this.getSuperTypes(${NewTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)});\n`;
             } else if (cond instanceof PitEqualsExp) {
-                result += `const rhs${index}: PiType[] = [${NewTyperGenUtils.makeExpAsType(cond.right, varName, imports)}];\n`;
+                result += `const rhs${index}: PiType[] = [${NewTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}];\n`;
             }
         });
         if (myConditions.length > 1) {
@@ -89,38 +110,48 @@ export class SuperTypeMaker {
             result += `/* make cartesian product of all conditions */`;
             for (let i = 0; i < myConditions.length; i++) {
                 const propAToBeChanged: string = this.getPropNameFromExp(myConditions[i].left);
+                const propA_isAstElement: boolean = !NewTyperGenUtils.isType(myConditions[i].left.returnType);
+                const propA_typeName: string = Names.classifier(myConditions[i].left.returnType);
                 const propsANotToBeChanged: string[] = cls.allProperties().map(prop => prop.name).filter(name => name !== propAToBeChanged);
                 for (let j = i + 1; j < myConditions.length; j++) {
-                    const typeName = Names.classifier(cls);
-                    const propBToBeChanged: string = this.getPropNameFromExp(myConditions[j].left);
-                    const propsBNotToBeChanged: string[] = cls.allProperties().map(prop => prop.name).filter(name => name !== propBToBeChanged);
-                    result += `
+                    if (NewTyperGenUtils.isType(cls)) {
+                        const typeName = Names.classifier(cls);
+                        const propBToBeChanged: string = this.getPropNameFromExp(myConditions[j].left);
+                        const propB_isAstElement: boolean = !NewTyperGenUtils.isType(myConditions[j].left.returnType);
+                        const propB_typeName: string = Names.classifier(myConditions[j].left.returnType);
+                        const propsBNotToBeChanged: string[] = cls.allProperties().map(prop => prop.name).filter(name => name !== propBToBeChanged);
+                        result += `
                     /* do rhs${i} times rhs${j} */
                     for (const partA of rhs${i}) {
+                        ${propA_isAstElement ? `const elemA = this.getElemFromAstType(partA, "${propA_typeName}");` : ``}
                         result.push(
                             ${typeName}.create({
-                                ${propAToBeChanged}: ${this.makeCondition(myConditions[i].right, "partA", imports)},
+                                ${propAToBeChanged}: ${this.makeCondition(myConditions[i].right, `${propA_isAstElement ? `elemA` : `partA`}`, imports)},
                                 ${propsANotToBeChanged.map(name => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
                             })
                         );
                         for (const partB of rhs${j}) {
+                            ${propB_isAstElement ? `const elemB = this.getElemFromAstType(partB, "${propB_typeName}");` : ``}
+                            ${propA_isAstElement ? `const elemA = this.getElemFromAstType(partA, "${propA_typeName}");` : ``}
                             result.push(
                                 ${typeName}.create({                                   
-                                    ${propAToBeChanged}: ${this.makeCondition(myConditions[i].right, "partA", imports)},
-                                    ${propBToBeChanged}: ${this.makeCondition(myConditions[j].right, "partB", imports)},
+                                    ${propAToBeChanged}: ${this.makeCondition(myConditions[i].right, `${propA_isAstElement ? `elemA` : `partA`}`, imports)},
+                                    ${propBToBeChanged}: ${this.makeCondition(myConditions[j].right, `${propB_isAstElement ? `elemB` : `partB`}`, imports)},
                                     ${propsANotToBeChanged.filter(name => name !== propBToBeChanged).map(name => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
                                 })
                             );
                         }                        
                     }
                     for (const partB of rhs${j}) {
+                        ${propB_isAstElement ? `const elemB = this.getElemFromAstType(partB, "GenericKind");` : ``}
                         result.push(
                             ${typeName}.create({
-                                ${propBToBeChanged}: ${this.makeCondition(myConditions[j].right, "partB", imports)},
+                                ${propBToBeChanged}: ${this.makeCondition(myConditions[j].right, `${propB_isAstElement ? `elemB` : `partB`}`, imports)},
                                 ${propsBNotToBeChanged.map(name => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
                             })
                         );
                     }`;
+                    }
                 }
             }
         } else {
@@ -137,13 +168,7 @@ export class SuperTypeMaker {
     }
 
     private makeCondition(right: PitExp, partName: string, imports: PiClassifier[]): string {
-        const isType: boolean = NewTyperGenUtils.isType(right.returnType);
-        console.log("Generating for " + right.toPiString() + ": " + isType)
         ListUtil.addIfNotPresent(imports, right.returnType);
-        if (isType) {
-            return `(${partName} as ${Names.classifier(right.returnType)})`;
-        } else {
-            return `${partName}.internal as ${Names.classifier(right.returnType)}`;
-        }
+        return `(${partName} as ${Names.classifier(right.returnType)})`;
     }
 }

@@ -205,10 +205,10 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type " + this.myWriter.writeNameOnly(this.typer.inferType(${langExpToTypeScript(r.type1)})) + " of [" + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) + 
+            message = `"Type " + this.typer.inferType(${langExpToTypeScript(r.type1)})?.toPiString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) + 
                          "] does not conform to " + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type2)})`;
         }
-        return `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
+        return `if (!this.typer.conformsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                  }`;

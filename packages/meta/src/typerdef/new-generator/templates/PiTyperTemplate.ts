@@ -11,18 +11,16 @@ export class PiTyperTemplate {
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.PiTyper;
-        let rootType = Names.classifier(typerdef.typeRoot());
-        let langImports: string;
-        if (rootType === allLangConcepts) {
-            langImports = allLangConcepts;
-        } else {
-            langImports = `${allLangConcepts}, ${rootType}`;
+        let rootType: string;
+        if (!!typerdef) {
+            rootType = Names.classifier(typerdef.typeRoot());
         }
+
         // Template starts here
         return `
         import { PiElement, PiType, ${typerInterfaceName} } from "${PROJECTITCORE}";
 
-        import { ${langImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
         import { ${defaultTyperName} } from "./${defaultTyperName}";
                 
@@ -42,7 +40,7 @@ export class PiTyperTemplate {
              * Returns true if 'modelelement' is marked as 'isType' in the Typer definition
              * @param modelelement
              */    
-            public isType(modelelement: PiElement): boolean { // entries for all types marked as @isType
+            public isType(modelelement: PiElement): boolean { 
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.isType(modelelement);
@@ -71,7 +69,7 @@ export class PiTyperTemplate {
             }
                         
             /**
-             * Returns true if the type that inferType(elem1) returns equals the type inferType(elem2) returns.
+             * Returns true if the type that inferType(elem1) returns equals the type that inferType(elem2) returns.
              * This is a strict equal.
              * @param elem1
              * @param elem2
@@ -96,7 +94,7 @@ export class PiTyperTemplate {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.equals(type1, type2);
-                    if (result) {
+                    if (result !== null && result !== undefined) {
                         return result;
                     }
                 }
@@ -105,7 +103,7 @@ export class PiTyperTemplate {
             }
         
             /**
-             * Returns true if the type that inferType(elem1) returns conforms to the type inferType(elem2) returns, according to
+             * Returns true if the type that inferType(elem1) returns conforms to the type that inferType(elem2) returns, according to
              * the type rules in the Typer definition. The direction is elem1 conforms to elem2.
              * @param elem1
              * @param elem2
@@ -138,7 +136,8 @@ export class PiTyperTemplate {
             }
             
             /**
-             * Returns true if all types of the elements in elemlist1 conform to the types of the elements in elemlist2, in the given order.
+             * Returns true if all types of the elements in elemlist1 conform to the types of the elements in elemlist2, 
+             * pairwise, in the given order.
              * @param elemlist1
              * @param elemlist2
              */
@@ -155,7 +154,7 @@ export class PiTyperTemplate {
             }
 
             /**
-             * Returns true if all types in typelist1 conform to the types in typelist2, in the given order.
+             * Returns true if all types in typelist1 conform to the types in typelist2, pairwise, in the given order.
              * @param typelist1
              * @param typelist2
              */
@@ -202,7 +201,7 @@ export class PiTyperTemplate {
             }
             
             /**
-             * Returns all super types as defined in the typer definition.
+             * Returns all super types as defined by the conformance rules in the typer definition.
              * @param type
              */
             public getSuperTypes(type: PiType): PiType[] {

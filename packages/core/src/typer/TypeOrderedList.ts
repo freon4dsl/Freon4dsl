@@ -1,4 +1,4 @@
-import { PiType } from "@projectit/core";
+import { PiType } from "./PiType";
 import { PiTyper } from "./PiTyper";
 // TODO see what the difference are between this class and OrderList in core/src/editor/simplifiedBoxAPI
 

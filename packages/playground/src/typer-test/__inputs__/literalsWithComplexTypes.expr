@@ -1,8 +1,0 @@
-UnitA expressionsWithTypes
-
-12 : kWh<NUMBER>;
-456 : Collection<Grams<NUMBER>>;
-"string" : Set<Bag<Hours<NUMBER>>>;
-true : Meters<NUMBER>;
-100 : Set<BOOLEAN>;
-"string" : Bag<Set<NUMBER>>;

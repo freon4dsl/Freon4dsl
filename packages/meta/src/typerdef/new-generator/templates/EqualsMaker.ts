@@ -20,31 +20,45 @@ export class EqualsMaker {
         typerDef.classifierSpecs.forEach(spec => {
             equalsRules.push(...spec.rules.filter(r => r instanceof PitEqualsRule));
         });
-        // make an entry for each rule
+        // make sub-entries for each rule defined for an ast-element
+        let astRules: string[] = [];
         equalsRules.map(conRule => {
-            const isType: boolean = NewTyperGenUtils.isType(conRule.owner.myClassifier);
-            allRules.push(`if (${isType ? `${leftVarName}.$typename` : `${leftVarName}.internal?.piLanguageConcept()`} === "${Names.classifier(conRule.owner.myClassifier)}") {
-                ${this.makeEqualsForExp(conRule.exp, leftVarName, rightVarName, isType, imports)};
+            const myType: string = Names.classifier(conRule.owner.myClassifier);
+            if (!NewTyperGenUtils.isType(conRule.owner.myClassifier)) {
+                astRules.push(`if ((${leftVarName} as AstType).astElement.piLanguageConcept() === "${myType}") {
+                    const elem1: ${myType} = (${leftVarName} as AstType).astElement as ${myType};
+                    const elem2: ${myType} = (${rightVarName} as AstType).astElement as ${myType};
+                    if (!!elem1 && !!elem2) {
+                        ${this.makeEqualsForExp(conRule.exp, "elem1", "elem2", false, imports)};
+                    }
             }`);
-            });
+            }
+        });
+        // combine the sub-entries into one
+        allRules.push(`if (${leftVarName}.$typename === "AstType") {
+                        ${astRules.map(r => r).join(" else ")}
+                        else {
+                            return (${leftVarName} as AstType).astElement === (${rightVarName} as AstType).astElement;
+                        }
+                } `)
+        // make an entry for each rule that is not defined for an ast-element
+        equalsRules.map(conRule => {
+            if (NewTyperGenUtils.isType(conRule.owner.myClassifier)) {
+                allRules.push(`if (${leftVarName}.$typename === "${Names.classifier(conRule.owner.myClassifier)}") {
+                    ${this.makeEqualsForExp(conRule.exp, leftVarName, rightVarName, true, imports)};
+                }`);
+            }
+        });
         return allRules.map(r => r).join(" else ");
     }
 
-    private makeEqualsForExp(exp: PitExp, leftVarName: string, rightVarName: string, isType: boolean, imports: PiClassifier[]): string {
+    private makeEqualsForExp(exp: PitExp, leftVarName: string, rightVarName: string, varIsType: boolean, imports: PiClassifier[]): string {
         if (exp instanceof PitWhereExp) {
             const allConditions: string[] = [];
             let returnStr: string = '';
-            // exp.sortedConditions().forEach((cond, index) => {
-            exp.conditions.forEach((cond, index) => {
-                let leftStr: string;
-                let rightStr: string;
-                if (!isType) {
-                    leftStr = NewTyperGenUtils.makeExpAsElement(cond.left, leftVarName + ".internal", imports);
-                    rightStr = NewTyperGenUtils.makeExpAsElement(cond.right, rightVarName + ".internal", imports);
-                } else {
-                    leftStr = NewTyperGenUtils.makeExpAsElement(cond.left, leftVarName, imports);
-                    rightStr = NewTyperGenUtils.makeExpAsElement(cond.right, rightVarName, imports);
-                }
+            exp.sortedConditions().forEach((cond, index) => {
+                const leftStr: string = NewTyperGenUtils.makeExpAsElement(cond.left, leftVarName, varIsType, imports);
+                const rightStr: string = NewTyperGenUtils.makeExpAsElement(cond.right, rightVarName, varIsType, imports);
                 if (NewTyperGenUtils.isType(cond.left.returnType)) {
                     allConditions.push(`const condition${index+1}: boolean = this.mainTyper.equals(${leftStr}, ${rightStr});`)
                 } else {

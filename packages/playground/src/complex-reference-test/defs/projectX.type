@@ -1,0 +1,90 @@
+typer
+
+// What are types?
+istype { TopType }
+
+// Which concepts have a type?
+hastype { Exp }
+
+// What are the top and bottom types?
+anytype {
+    conformsto PredefinedType:ANY; // PredefinedType:ANY is the least specific type
+}
+
+PredefinedType {
+    PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
+    NUMBER conformsto STRING;
+}
+
+// Which type does an expression have?
+NumberLiteral {
+    infertype PredefinedType:NUMBER;
+}
+
+StringLiteral {
+    infertype PredefinedType:STRING;
+}
+
+BooleanLiteral {
+    infertype PredefinedType:BOOLEAN;
+}
+
+NamedExp {
+    infertype self.myType;
+}
+
+PlusExp {
+    infertype commonSuperType(self.left, self.right);
+}
+
+UnitLiteral {
+    // 62 kilogram, or 112 miles
+    infertype TT_MeasurementType {
+                  base: typeof(self.inner),
+                  unit: self.unit
+              };
+}
+
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    infertype TT_GenericType {
+        base: typeof(self.content),
+        kind: self.kind
+    };
+}
+
+// Which types are 'equal' to each other?
+NamedType {
+    equalsto aa:NamedType where {
+            aa.name equalsto self.name;
+        };
+}
+
+TT_GenericType {
+    equalsto x:TT_GenericType where {
+            x.base equalsto self.base;
+            x.kind equalsto self.kind;
+        };
+    conformsto y:TT_GenericType where {
+            // both conditions must be true
+            self.base conformsto y.base;
+            self.kind conformsto y.kind;
+        };
+}
+
+GenericKind {
+    Set conformsto Collection;
+    Sequence conformsto Collection;
+    Bag conformsto Collection;
+}
+
+TT_MeasurementType {
+    equalsto aap:TT_MeasurementType where {
+            aap.base equalsto self.base;
+            aap.unit equalsto self.unit;
+        };
+    conformsto rr:TT_MeasurementType where {
+            self.base conformsto rr.base;
+            self.unit equalsto rr.unit;
+        };
+}
