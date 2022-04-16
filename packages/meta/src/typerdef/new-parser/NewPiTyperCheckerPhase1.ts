@@ -78,30 +78,6 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
 
         if (!!definition.anyTypeSpec) {
             this.checkAnyTypeRule(definition.anyTypeSpec);
-        } else {
-            // if (!!definition.classifierSpecs) {
-            //     // maybe one of the PitConformanceOrEqualsRules is actually a PitAnyTypeRule
-            //     // check this and make the neccessary changes
-            //     let anyTypeSpecIndex: number = -1;
-            //     definition.classifierSpecs.forEach((rule, index) => {
-            //         if (rule.__myClassifier.name === "anytype" && rule instanceof PitConformanceOrEqualsRule) {
-            //             // TODO ask David about other way of parsing
-            //             // make a copy of the information into an object of another class
-            //             const newRule: PitAnyTypeSpec = new PitAnyTypeSpec();
-            //             newRule.rules = rule.rules;
-            //             newRule.agl_location = rule.agl_location;
-            //             // set the new rule
-            //             definition.anyTypeSpec = newRule;
-            //             this.checkAnyTypeRule(newRule);
-            //             // remember the location of the incorrect rule
-            //             anyTypeSpecIndex = index;
-            //         }
-            //     });
-            //     // remove the found incorrect PitConformanceOrEqualsRule
-            //     if (anyTypeSpecIndex > -1) {
-            //         definition.classifierSpecs.splice(anyTypeSpecIndex, 1);
-            //     }
-            // }
         }
 
         // check all specs independently, add check whether there is more than one spec for this classifier
@@ -332,12 +308,14 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
                     const propType: PiClassifier = propDef.property.type;
                     const valueType: PiClassifier = propDef.value.returnType;
                     let doesConform: boolean = false;
-                    if (propType.name !== "PiType") {
+                    if (propType !== PiTyperDef.freonType) {
                         const typeCheck: PiClassifier[] = CommonSuperTypeUtil.commonSuperType([propType, valueType]);
                         doesConform = typeCheck.length > 0 && typeCheck[0] === propType;
                     } else {
                         // valueType conforms to PiType if
-                        if (valueType instanceof PitTypeConcept) { // (1) it is a TypeConcept
+                        if (valueType === PiTyperDef.freonType) { // (0) it is equal to PiType
+                            doesConform = true;
+                        } else if (valueType instanceof PitTypeConcept ) { // (1) it is a TypeConcept, or
                             doesConform = this.definition.typeConcepts.includes(valueType);
                         } else { // (2) it is marked 'isType'
                             doesConform = this.definition.types.includes(valueType);
@@ -428,10 +406,7 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
                             `found ${exp.actualParameters.length} ${Checker.location(exp)}.`,
                         whenOk: () => {
                             this.checkArguments(exp, enclosingConcept, surroundingExp);
-                            // The value of 'exp.returnType' cannot be exactly determined, because this depends on the inferType rules.
-                            // But we do know that it should be one of the classifiers marked 'isType'.
-                            // So, if there is a common base type for them all, we use this as return type.
-                            exp.returnType = this.definition.typeRoot();
+                            exp.returnType = PiTyperDef.freonType;
                         }
                     });
                 } else if (exp.calledFunction === validFunctionNames[1]) { // "commonSuperType"
@@ -441,10 +416,7 @@ export class NewPiTyperCheckerPhase1 extends Checker<PiTyperDef> {
                             `found ${exp.actualParameters.length} ${Checker.location(exp)}.`,
                         whenOk: () => {
                             this.checkArguments(exp, enclosingConcept, surroundingExp);
-                            // The value of 'exp.returnType' cannot be exactly determined, because this depends on the inferType rules.
-                            // But we do know that it should be one of the classifiers marked 'isType'.
-                            // So, if there is a common base type for them all, we use this as return type.
-                            exp.returnType = this.definition.typeRoot();
+                            exp.returnType = PiTyperDef.freonType;
                         }
                     });
                 } else if (exp.calledFunction === validFunctionNames[2]) { // "ownerOfType"

@@ -7,7 +7,7 @@ import {
     PitSelfExp, PitTypeConcept,
     PitWhereExp, PiTyperDef
 } from "../../new-metalanguage";
-import { ListUtil, Names } from "../../../utils";
+import { LangUtil, ListUtil, Names } from "../../../utils";
 import { PiClassifier, PiElementReference, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
 import { PitBinaryExp, PitCreateExp, PitVarCallExp } from "../../new-metalanguage/expressions";
 
@@ -20,6 +20,37 @@ const commonSuperName: string= 'commonSuperType';
 export class NewTyperGenUtils {
     static types: PiClassifier[] = [];
 
+    /**
+     * Sorts the types such that any type comes before its super concept or interface
+     **/
+    // TODO move to LangUtils or GenerationUtils, it is usuable there
+    public static sortTypes(): PiClassifier[] {
+        const result: PiClassifier[] = [];
+        const remaining: PiClassifier[] = [];
+        remaining.push(...this.types);
+        while (remaining.length > 0) {
+            remaining.forEach(cls => {
+                const supers = LangUtil.superClassifiers(cls);
+                let hasSuperInList: boolean = false;
+                supers.forEach(superCls => {
+                    if (remaining.includes(superCls)) {
+                        hasSuperInList = true;
+                    }
+                });
+                if (!hasSuperInList) {
+                    result.push(cls);
+                }
+            });
+            result.forEach(cls => {
+                const indexInRemaining: number = remaining.indexOf(cls)
+                if (indexInRemaining >= 0) {
+                    remaining.splice(indexInRemaining, 1);
+                }
+            })
+        }
+        return result.reverse();
+    }
+
     public static isType(cls: PiClassifier): boolean {
         if (cls.name === "PiType") {
             return true;
@@ -27,7 +58,6 @@ export class NewTyperGenUtils {
             return true;
         }
         return false;
-        // return this.types.includes(cls);
     }
 
     public static makeExpAsTypeOrElement(exp: PitExp, varName: string, varIsType: boolean, imports: PiClassifier[]): string {

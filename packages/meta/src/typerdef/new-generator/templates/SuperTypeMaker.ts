@@ -8,6 +8,7 @@ import { NewTyperGenUtils } from "./NewTyperGenUtils";
 import { ListUtil, Names } from "../../../utils";
 import { PiClassifier, PiLimitedConcept } from "../../../languagedef/metalanguage";
 import { PitBinaryExp } from "../../new-metalanguage/expressions";
+import { PitEqualsRule } from "../../new-metalanguage/PitEqualsRule";
 
 export class SuperTypeMaker {
     typerdef: PiTyperDef;
@@ -29,17 +30,33 @@ export class SuperTypeMaker {
                 }
             }
         });
+        // sort the types such that any type comes before its super type
+        const sortedTypes = NewTyperGenUtils.sortTypes();
         // make sub-entries for each rule defined for an ast-element
         let astRules: string[] = [];
-        conformanceRules.map(conRule => {
-            const myType: string = Names.classifier(conRule.owner.myClassifier);
-            if (!NewTyperGenUtils.isType(conRule.owner.myClassifier)) {
-                astRules.push(`if (elem.piLanguageConcept() === "${myType}") {
+        sortedTypes.forEach( type => {
+            // find the equalsRule, if present
+            const foundRule: PitEqualsRule = conformanceRules.find(conRule => conRule.owner.myClassifier === type);
+            if (!!foundRule) {
+                const myType: string = Names.classifier(type);
+                if (!NewTyperGenUtils.isType(foundRule.owner.myClassifier)) {
+                    astRules.push(`if (elem.piLanguageConcept() === "${myType}") {
 
-            }`);
+                    }`);
+                }
+            } else {
+                const foundLimitedSpec = limitedSpecs.find(spec => spec.myClassifier === type);
+                if (!!foundLimitedSpec) {
+                    // make sub-entry for limited spec
+                    const conformsExps: PitBinaryExp[] = foundLimitedSpec.rules.filter(r => r.exp instanceof PitConformsExp).map(r => r.exp as PitConformsExp);
+                    astRules.push(`if (elem.piLanguageConcept() === "${type}") {
+                            ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
+                        }`);
+                    limitedSpecs.splice(limitedSpecs.indexOf(foundLimitedSpec), 1);
+                }
             }
         });
-        // make sub-entries for each limited spec
+        // make sub-entries for remaining limited specs
         limitedSpecs.map(spec => {
             const isType: boolean = typerdef.types.includes(spec.myClassifier);
             const conformsExps: PitBinaryExp[] = spec.rules.filter(r => r.exp instanceof PitConformsExp).map(r => r.exp as PitConformsExp);
@@ -47,6 +64,7 @@ export class SuperTypeMaker {
                 ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
             }`);
         });
+
         let allRules: string[] = [];
         // combine the sub-entries into one
         allRules.push(`if (${typevarName}.$typename === "AstType") {

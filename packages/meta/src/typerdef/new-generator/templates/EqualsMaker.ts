@@ -20,20 +20,37 @@ export class EqualsMaker {
         typerDef.classifierSpecs.forEach(spec => {
             equalsRules.push(...spec.rules.filter(r => r instanceof PitEqualsRule));
         });
+        // sort the types such that any type comes before its super type
+        const sortedTypes = NewTyperGenUtils.sortTypes();
         // make sub-entries for each rule defined for an ast-element
         let astRules: string[] = [];
-        equalsRules.map(conRule => {
-            const myType: string = Names.classifier(conRule.owner.myClassifier);
-            if (!NewTyperGenUtils.isType(conRule.owner.myClassifier)) {
-                astRules.push(`if ((${leftVarName} as AstType).astElement.piLanguageConcept() === "${myType}") {
+        sortedTypes.forEach( type => {
+            // find the equalsRule, if present
+            const foundRule: PitEqualsRule = equalsRules.find(conRule => conRule.owner.myClassifier === type);
+            if (!!foundRule) {
+                const myType: string = Names.classifier(type);
+                astRules.push(`if (this.metaTypeOk((${leftVarName} as AstType).astElement, "${myType}")) {
                     const elem1: ${myType} = (${leftVarName} as AstType).astElement as ${myType};
                     const elem2: ${myType} = (${rightVarName} as AstType).astElement as ${myType};
                     if (!!elem1 && !!elem2) {
-                        ${this.makeEqualsForExp(conRule.exp, "elem1", "elem2", false, imports)};
+                        ${this.makeEqualsForExp(foundRule.exp, "elem1", "elem2", false, imports)};
                     }
-            }`);
+                }`);
             }
         });
+        //
+        // equalsRules.map(conRule => {
+        //     const myType: string = Names.classifier(conRule.owner.myClassifier);
+        //     if (!NewTyperGenUtils.isType(conRule.owner.myClassifier)) {
+        //         astRules.push(`if (this.metaTypeOk((${leftVarName} as AstType).astElement, "${myType}")) {
+        //             const elem1: ${myType} = (${leftVarName} as AstType).astElement as ${myType};
+        //             const elem2: ${myType} = (${rightVarName} as AstType).astElement as ${myType};
+        //             if (!!elem1 && !!elem2) {
+        //                 ${this.makeEqualsForExp(conRule.exp, "elem1", "elem2", false, imports)};
+        //             }
+        //     }`);
+        //     }
+        // });
         // combine the sub-entries into one
         allRules.push(`if (${leftVarName}.$typename === "AstType") {
                         ${astRules.map(r => r).join(" else ")}
