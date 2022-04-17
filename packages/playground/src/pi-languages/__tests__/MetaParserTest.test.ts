@@ -10,7 +10,7 @@ describe("Pi Language Parser", () => {
     const scoper = PiLanguageEnvironment.getInstance().scoper;
     const fileHandler = new FileHandler();
 
-    test( " on .ast file", () => {
+    test.skip( " on .ast file", () => {
         try {
             const completeModel: PiLanguage = new PiLanguage();
             const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.ast");
@@ -23,7 +23,7 @@ describe("Pi Language Parser", () => {
         }
     });
 
-    test( " on .scope file", () => {
+    test.skip( " on .scope file", () => {
         try {
             const completeModel: PiLanguage = new PiLanguage();
             const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.scope");
@@ -36,7 +36,7 @@ describe("Pi Language Parser", () => {
         }
     });
 
-    test( " on .valid file", () => {
+    test.skip( " on .valid file", () => {
         try {
             const completeModel: PiLanguage = new PiLanguage();
             const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.valid");

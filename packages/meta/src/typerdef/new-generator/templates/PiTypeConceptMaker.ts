@@ -9,15 +9,16 @@ import {
 import { LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
 
 export class PiTypeConceptMaker {
-    piTypeName: string = "AstType";
+    piTypeName: string = "PiType";
 
     generateTypeConcept(language: PiLanguage, concept: PitTypeConcept, relativePath: string): string {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
-        const extendsClass = hasSuper ? Names.classifier(concept.base.referred) : this.piTypeName;
-        const coreImports: string[] = ["PiUtils", "PiWriter", "PiType"];
+        const extendsClass = hasSuper ? `extends ${Names.classifier(concept.base.referred)}` : `implements ${this.piTypeName}`;
+        const coreImports: string[] = ["PiUtils", "PiWriter" ];
         if (!hasSuper) {
             coreImports.push(this.piTypeName);
+            coreImports.push("PiElement");
         }
         const modelImports: string[] = this.findModelImports(concept, language);
         const typeImports: string[] = this.findTypeImports(concept, hasSuper);
@@ -29,7 +30,7 @@ export class PiTypeConceptMaker {
             /**
              * Class ${myName} is the implementation of the type concept with the same name in the typer definition file.
              */            
-            export class ${myName} extends ${extendsClass} {
+            export class ${myName} ${extendsClass} {
                 ${makeStaticCreateMethod(concept, myName)}
                             
                 ${makeBasicProperties("string", myName, hasSuper)}
@@ -41,7 +42,11 @@ export class PiTypeConceptMaker {
                 toPiString(writer: PiWriter): string {
                     // take into account indentation
                     return ${this.makeToPiString(myName, concept)};
-                }                       
+                }                  
+                
+                ${!hasSuper ? `toAstElement(): PiElement {
+                    return null;
+                }` : ``}                    
             }
         `;
     }
@@ -76,7 +81,6 @@ export class PiTypeConceptMaker {
     private makeConstructor(hasSuper: boolean): string {
         return `constructor(id?: string) {
                     ${!hasSuper ? `
-                        super();
                         if (!!id) { 
                             this.$id = id;
                         } else {

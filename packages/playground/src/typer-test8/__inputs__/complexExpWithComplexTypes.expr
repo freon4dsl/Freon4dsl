@@ -1,4 +1,4 @@
-UnitA expressionsWithTypes
+UnitA complexExpWithComplexTypes
 
 Set{ true, true, false } : Set<NUMBER>;
 Bag { Set { 12, 13, 14 }, Sequence { "string", "Str", "STRING" } } : Bag<Sequence<NUMBER>>;

@@ -295,12 +295,13 @@ export class ScoperTemplate {
             } else {
                 actualParamToGenerate = langExpToTypeScript(expression.actualparams[0]);
             }
-            // TODO check the use of the typer here, "inferType" could result
-            // in something else then PiType, in which case ".internal" cannot be used
             result = `let container = ${actualParamToGenerate};
                 if (!!container) {
-                    let newScopeElement = this.myTyper.inferType(container).internal;
-                    return ${Names.namespace(language)}.create(newScopeElement as ${allLangConcepts});
+                    let newScopeElement = this.myTyper.inferType(container).toAstElement();
+                    // 'newScopeElement' could be null, when the type found by the typer does not correspond to an AST element
+                    if (!!newScopeElement) {
+                        return ${Names.namespace(language)}.create(newScopeElement as ${allLangConcepts});
+                    }
                 }`;
         } else {
             // normal case: the expression is an ordinary expression over the language

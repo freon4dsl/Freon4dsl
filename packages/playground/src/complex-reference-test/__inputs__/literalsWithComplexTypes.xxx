@@ -1,9 +1,0 @@
-UnitA literalsWithComplexTypes
-
-34: NUMBER;
-12 : kWh<NUMBER>;
-100 : Set<BOOLEAN>;
-456 : Collection<Grams<NUMBER>>;
-"string" : Set<Bag<Hours<NUMBER>>>;
-true : Meters<NUMBER>;
-"string" : Bag<Set<NUMBER>>;

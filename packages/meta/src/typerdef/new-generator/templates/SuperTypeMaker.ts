@@ -31,16 +31,16 @@ export class SuperTypeMaker {
             }
         });
         // sort the types such that any type comes before its super type
-        const sortedTypes = NewTyperGenUtils.sortTypes();
+        const sortedTypes = NewTyperGenUtils.sortTypes(typerdef.types);
         // make sub-entries for each rule defined for an ast-element
-        let astRules: string[] = [];
+        let astSubRules: string[] = [];
         sortedTypes.forEach( type => {
             // find the equalsRule, if present
             const myType: string = Names.classifier(type);
             const foundRule: PitEqualsRule = conformanceRules.find(conRule => conRule.owner.myClassifier === type);
             if (!!foundRule) {
                 if (!NewTyperGenUtils.isType(foundRule.owner.myClassifier)) {
-                    astRules.push(`if (this.metaTypeOk(elem, "${myType}")) {
+                    astSubRules.push(`if (this.metaTypeOk(elem, "${myType}")) {
 
                     }`);
                 }
@@ -49,7 +49,7 @@ export class SuperTypeMaker {
                 if (!!foundLimitedSpec) {
                     // make sub-entry for limited spec
                     const conformsExps: PitBinaryExp[] = foundLimitedSpec.rules.filter(r => r.exp instanceof PitConformsExp).map(r => r.exp as PitConformsExp);
-                    astRules.push(`if (this.metaTypeOk(elem, "${myType}")) {
+                    astSubRules.push(`if (this.metaTypeOk(elem, "${myType}")) {
                             ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
                         }`);
                     limitedSpecs.splice(limitedSpecs.indexOf(foundLimitedSpec), 1);
@@ -60,7 +60,7 @@ export class SuperTypeMaker {
         limitedSpecs.map(spec => {
             const myType: string = Names.classifier(spec.myClassifier);
             const conformsExps: PitBinaryExp[] = spec.rules.filter(r => r.exp instanceof PitConformsExp).map(r => r.exp as PitConformsExp);
-            astRules.push(`if (this.metaTypeOk(elem, "${myType}")) {
+            astSubRules.push(`if (this.metaTypeOk(elem, "${myType}")) {
                 ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
             }`);
         });
@@ -69,12 +69,11 @@ export class SuperTypeMaker {
         // combine the sub-entries into one
         allRules.push(`if (${typevarName}.$typename === "AstType") {
                         const elem: PiElement = (type as AstType).astElement;
-                        ${astRules.map(r => r).join(" else ")}
-                        else {
+                        ${astSubRules.map(r => r).join(" else ")}${astSubRules.length > 0 ? `else {` : ``}
                             return [];
-                        }
+                        ${astSubRules.length > 0 ? `}` : ``}
                 } `)
-        // make an entry for each rule that is not defined for an ast-element
+        // make an entry for each rule that is defined for a type concept
         conformanceRules.map(rule => {
             if (NewTyperGenUtils.isType(rule.owner.myClassifier)) {
                 allRules.push(`if (${typevarName}.$typename === "${Names.classifier(rule.owner.myClassifier)}") {                

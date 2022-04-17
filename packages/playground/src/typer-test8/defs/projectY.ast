@@ -6,7 +6,7 @@ model XX {
 
 modelunit XXunit {
     lines: ExpWithType[];
-    file-extension = "xxx";
+    file-extension = "expr";
 }
 
 concept ExpWithType {

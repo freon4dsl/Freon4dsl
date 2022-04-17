@@ -56,9 +56,18 @@ DemoLessThenExpression {
 DemoOrExpression {
     symbol = "or"
 }
-
-
-
+DemoEqualsExpression {
+    symbol = "=="
+}
+DemoAndExpression {
+    symbol = "and"
+}
+DemoVariableRef {
+    [${self.variable}]
+}
+DemoVariable {
+    [${self.name} : ${self.declaredType}]
+}
 DemoEntity {
     trigger = "entity"
 }

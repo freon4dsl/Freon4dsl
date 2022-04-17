@@ -37,21 +37,21 @@ PlusExp {
     infertype commonSuperType(self.left, self. right);
 }
 
-UnitLiteral {
-    // 62 kilogram, or 112 miles
-    infertype x:UnitOfMeasurement where {
-                  x.baseType equalsto typeOf(self.inner);
-                  x.unit equalsto self.unit;
-              };
-}
+//UnitLiteral {
+//    // 62 kilogram, or 112 miles
+//    infertype x:UnitOfMeasurement where {
+//                  x.baseType equalsto typeOf(self.inner);
+//                  x.unit equalsto self.unit;
+//              };
+//}
 
-GenericLiteral {
-    // Set{ 12, 14, 16, 18 }
-    infertype x:GenericType where {
-        x.innerType equalsto typeOf(self.content);
-        x.kind equalsto self.kind;
-    };
-}
+//GenericLiteral {
+//    // Set{ 12, 14, 16, 18 }
+//    infertype x:GenericType where {
+//        x.innerType equalsto typeOf(self.content);
+//        x.kind equalsto self.kind;
+//    };
+//}
 
 // Which types are 'equal' to each other?
 SimpleType {
@@ -64,35 +64,35 @@ NamedType {
         };
 }
 
-GenericType {
-    equalsto x:GenericType where {
-            x.innerType equalsto self.innerType;
-            x.kind equalsto self.kind;
-        };
-    conformsto x:GenericType where {
-            // both conditions must be true
-            self.innerType conformsto x.innerType;
-            self.kind conformsto x.kind;
-        };
-}
-
-GenericKind {
-    Set conformsto Collection;
-    Sequence conformsto Bag;
-    Bag conformsto Collection;
-    // Collection;
-}
-
-UnitOfMeasurement {
-    equalsto aap:UnitOfMeasurement where {
-            aap.baseType equalsto self.baseType;
-            aap.unit equalsto self.unit;
-        };
-    conformsto rr:UnitOfMeasurement where {
-            self.baseType conformsto rr.baseType;
-            self.unit equalsto rr.unit;
-        };
-}
+//GenericType {
+//    equalsto x:GenericType where {
+//            x.innerType equalsto self.innerType;
+//            x.kind equalsto self.kind;
+//        };
+//    conformsto x:GenericType where {
+//            // both conditions must be true
+//            self.innerType conformsto x.innerType;
+//            self.kind conformsto x.kind;
+//        };
+//}
+//
+//GenericKind {
+//    Set conformsto Collection;
+//    Sequence conformsto Bag;
+//    Bag conformsto Collection;
+//    // Collection;
+//}
+//
+//UnitOfMeasurement {
+//    equalsto aap:UnitOfMeasurement where {
+//            aap.baseType equalsto self.baseType;
+//            aap.unit equalsto self.unit;
+//        };
+//    conformsto rr:UnitOfMeasurement where {
+//            self.baseType conformsto rr.baseType;
+//            self.unit equalsto rr.unit;
+//        };
+//}
 
 //OrType { // represents "one of", e.g. string|string[]
 //    conformsto rr:OrType where {

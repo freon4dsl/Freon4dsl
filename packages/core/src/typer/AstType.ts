@@ -1,6 +1,7 @@
 import { PiContainerDescriptor, PiElement, PiNamedElement } from "../language";
 import { PiWriter } from "../writer";
-import { PiType } from "../../dist";
+import { PiType } from "./PiType";
+
 
 class NamedElement implements PiNamedElement {
     name: string = "ANY";
@@ -66,6 +67,7 @@ export class AstType implements PiType {
     static ANY_TYPE: AstType = AstType.create({astElement: AstType.ANY});
 
     readonly $typename: string = "AstType";
+
     toPiString(writer: PiWriter): string {
         if (!!this.astElement ) {
             if (this.astElement === AstType.ANY) {
@@ -75,5 +77,9 @@ export class AstType implements PiType {
             }
         }
         return "AstType[ unknown ]";
+    }
+
+    toAstElement(): PiElement {
+        return this.astElement;
     }
 }

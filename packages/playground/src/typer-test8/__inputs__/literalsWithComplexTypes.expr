@@ -1,4 +1,4 @@
-UnitA expressionsWithTypes
+UnitA literalsWithComplexTypes
 
 12 : kWh<NUMBER>;
 456 : Collection<Grams<NUMBER>>;

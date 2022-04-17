@@ -101,6 +101,7 @@ export class NewPiTyperGenerator {
     }
 
     clean(force: boolean) {
+        // TODO error " ProjectItCleanAction: ERROR: Stopping typer cleansing because of errors: EPERM: operation not permitted, unlink 'src\testNoParserAvailable\typer\gen\type-concepts' "
         this.getFolderNames();
         Helpers.deleteDirAndContent(this.typerGenFolder);
         if (force) {

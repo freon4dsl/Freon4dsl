@@ -5,6 +5,7 @@ import {
 import { Names } from "../../../utils";
 import { PiClassifier, PiLimitedConcept } from "../../../languagedef/metalanguage";
 import { NewTyperGenUtils } from "./NewTyperGenUtils";
+import { PitEqualsRule } from "../../new-metalanguage/PitEqualsRule";
 
 export class InferMaker {
     extraMethods: string[] = [];
@@ -20,16 +21,23 @@ export class InferMaker {
         typerDef.classifierSpecs.forEach(spec => {
             inferRules.push(...(spec.rules.filter(r => r instanceof PitInferenceRule)))
         });
+        // sort the types such that any type comes before its super type
+        const sortedTypes = NewTyperGenUtils.sortTypes(typerDef.conceptsWithType);
         // make an entry for all classifiers that have an infertype rule
-        inferRules.forEach(conRule =>
-            result.push(`if (${varName}.piLanguageConcept() === "${Names.classifier(conRule.owner.myClassifier)}") {
-                result = ${NewTyperGenUtils.makeExpAsType(conRule.exp, varName, false, imports)};
+        sortedTypes.forEach( type => {
+            // find the equalsRule, if present
+            const foundRule: PitEqualsRule = inferRules.find(conRule => conRule.owner.myClassifier === type);
+            if (!!foundRule) {
+                result.push(`if (this.metaTypeOk(${varName}, "${Names.classifier(foundRule.owner.myClassifier)}")) {
+                result = ${NewTyperGenUtils.makeExpAsType(foundRule.exp, varName, false, imports)};
              }`)
-        );
+            }
+        });
+
         // add an entry for all limited concepts
         const allLimited = typerDef.language.concepts.filter(con => con instanceof PiLimitedConcept) as PiLimitedConcept[];
         allLimited.map(lim =>
-            result.push(`if (${varName}.piLanguageConcept() === "${Names.classifier(lim)}") {
+            result.push(`if (this.metaTypeOk(${varName}, "${Names.classifier(lim)}")) {
                 result = AstType.create({ astElement: modelelement });
              }`)
         );

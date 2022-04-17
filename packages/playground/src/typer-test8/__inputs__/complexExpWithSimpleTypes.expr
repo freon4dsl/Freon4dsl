@@ -1,4 +1,4 @@
-UnitA expressionsWithTypes
+UnitA complexExpWithSimpleTypes
 
 Set{ true, true, false } : BOOLEAN;
 Sequence { true, 12 } : STRING;

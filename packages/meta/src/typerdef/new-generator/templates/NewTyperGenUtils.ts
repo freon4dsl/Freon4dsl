@@ -24,10 +24,10 @@ export class NewTyperGenUtils {
      * Sorts the types such that any type comes before its super concept or interface
      **/
     // TODO move to LangUtils or GenerationUtils, it is usuable there
-    public static sortTypes(): PiClassifier[] {
+    public static sortTypes(toBeSorted: PiClassifier[]): PiClassifier[] {
         const result: PiClassifier[] = [];
         const remaining: PiClassifier[] = [];
-        remaining.push(...this.types);
+        remaining.push(...toBeSorted);
         while (remaining.length > 0) {
             remaining.forEach(cls => {
                 const supers = LangUtil.superClassifiers(cls);
