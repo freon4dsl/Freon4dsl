@@ -1,13 +1,19 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortConcepts, langExpToTypeScript } from "../../../utils";
-import { PiConcept, PiInterface, PiLanguage, PiLangExp, PiLangSelfExp } from "../../../languagedef/metalanguage";
-import { PiTypeDefinition, PiTypeClassifierRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../metalanguage";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../../utils";
+import { PiConcept, PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
+import { PiTyperDef } from "../../metalanguage";
+import { ListUtil } from "../../../utils";
+import { EqualsMaker } from "./EqualsMaker";
+import { InferMaker } from "./InferMaker";
+import { SuperTypeMaker } from "./SuperTypeMaker";
 import { TyperGenUtils } from "./TyperGenUtils";
 
 export class PiTyperPartTemplate {
-    typerdef: PiTypeDefinition;
+    typerdef: PiTyperDef;
     language: PiLanguage;
+    imports: string[] = [];
+    importedClassifiers: PiClassifier[] = []; // holds all classifiers that need to be imported, either from LANGUAGE_GEN_FOLDER, or from TYPER_CONCEPTS_FOLDER
 
-    generateTyperPart(language: PiLanguage, typerdef: PiTypeDefinition, relativePath: string): string {
+    generateTyperPart(language: PiLanguage, typerdef: PiTyperDef, relativePath: string): string {
         if (!!typerdef) {
             return this.generateFromDefinition(typerdef, language, relativePath);
         } else {
@@ -15,328 +21,258 @@ export class PiTyperPartTemplate {
         }
     }
 
-    private generateFromDefinition(typerdef: PiTypeDefinition, language: PiLanguage, relativePath: string) {
-        this.typerdef = typerdef;
-        this.language = language;
-        const rootType = TyperGenUtils.getTypeRoot(language, typerdef);
-        const allLangConcepts: string = Names.allConcepts(language);
-        const generatedClassName: string = Names.typerPart(language);
+    private generateDefault(language: PiLanguage, relativePath: string): string {
+        // const allLangConcepts: string = Names.allConcepts(language);
         const typerInterfaceName: string = Names.PiTyperPart;
-        const defaultType: string = this.findDefaultType();
-        const allTypeConcepts: PiConcept[] = this.findAllConceptsThatAreTypes();
+        const generatedClassName: string = Names.typerPart(language);
 
-        // TODO make if-else-statement instead of lots of if-statements in inferType
-        // TODO should equalsType return true when one of the type is ANY, or is this up to the lang developer?
         // Template starts here
         return `
-        import { ${typerInterfaceName}, Language } from "${PROJECTITCORE}";
-        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${language.concepts.map(concept => `
-                ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";       
-        import { ${language.interfaces.map(intf => `
-                ${intf.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";  
-        import { ${Names.typer(language)} } from "./${Names.typer(language)}";     
+        import { PiElement, PiType, PiTyper, PiTyperPart } from "${PROJECTITCORE}";
+        import { ${Names.typer(language)} } from "./${Names.typer(language)}";
+        
+        export class ${generatedClassName} implements ${typerInterfaceName} {
+            mainTyper: ${Names.typer(language)};
+            
+            /**
+             * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
+             * @param modelelement
+             */
+            public isType(modelelement: PiElement): boolean | null {
+                return false;
+            }
+        
+            /**
+             * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
+             * @param modelelement
+             */
+            public inferType(modelelement: PiElement): PiType | null {
+                return null;
+            }
+        
+            /**
+             * Returns true if type1 equals type2.
+             * This is a strict equal.
+             * @param type1
+             * @param type2
+             */
+            public equals(type1: PiType, type2: PiType): boolean | null {
+                return false;
+            }
+        
+            /**
+             * Returns true if type1 conforms to type2. The direction is type1 conforms to type2.
+             * @param type1
+             * @param type2
+             */
+            public conforms(type1: PiType, type2: PiType): boolean | null {
+                return false;
+            }
+        
+            /**
+             * Returns true if all types in typelist1 conform to the types in typelist2, in the given order.
+             * @param typelist1
+             * @param typelist2
+             */
+            public conformsList(typelist1: PiType[], typelist2: PiType[]): boolean | null {
+                return false;
+            }
+        
+            /**
+             * Returns the common super type of all types in typelist
+             * @param typelist
+             */
+            public commonSuper(typelist: PiType[]): PiType | null {
+                return null;
+            }   
+            
+            /**
+             * Returns all super types as defined in the typer definition.
+             * @param type
+             */
+            public getSuperTypes(type: PiType): PiType[] | null {
+                return [];
+            }     
+        }`;
+    }
 
+    private generateFromDefinition(typerdef: PiTyperDef, language: PiLanguage, relativePath: string) {
+        this.typerdef = typerdef;
+        this.language = language;
+        let rootType = Names.classifier(typerdef?.typeRoot());
+        ListUtil.addIfNotPresent(this.imports, rootType);
+        const allLangConcepts: string = Names.allConcepts(language);
+        ListUtil.addIfNotPresent(this.imports, allLangConcepts);
+        const generatedClassName: string = Names.typerPart(language);
+        const typerInterfaceName: string = Names.PiTyperPart;
+        const equalsMaker: EqualsMaker = new EqualsMaker();
+        const inferMaker: InferMaker = new InferMaker();
+        const superTypeMaker: SuperTypeMaker = new SuperTypeMaker();
+
+        // TODO see if we need a default type to return from inferType
+
+        // Template starts here
+        const baseClass = `
+        
         /**
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
          * otherwise this class implements the default typer.
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
-            defaultType: ${rootType} = ${defaultType};
             mainTyper: ${Names.typer(language)};
 
             /**
-             * See interface 
+             * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
+             * @param modelelement
              */
-            public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
-                ${this.makeEqualsStatement()}
-                let $type1: ${allLangConcepts};
-                if (!this.mainTyper.isType(elem1)) {
-                    $type1 = this.mainTyper.inferType(elem1);
-                } else {
-                    $type1 = elem1;
-                }
-                let $type2: ${allLangConcepts};
-                if (!this.mainTyper.isType(elem2)) {
-                    $type2 = this.mainTyper.inferType(elem2);
-                } else {
-                    $type2 = elem2;
-                }
-                return $type1 === $type2;
+            public isType(modelelement: PiElement): boolean | null {
+                ${this.makeIsType(typerdef.types)}
             }
-            
+                        
             /**
-             * See interface 
-             */        
-            public inferType(modelelement: ${allLangConcepts}): ${rootType} | null {
-                ${this.makeInferenceStatements(allTypeConcepts)}
-                return this.defaultType;
-            }
-            
-            /**
-             * See interface 
+             * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
+             * @param modelelement
              */
-            public conformsTo(elem1: ${rootType}, elem2: ${rootType}): boolean | null {
-                ${this.makeConformsStatements()}
-                if ( this.equalsType(elem1, elem2) ) return true;
-                return false;
-            }
-            
-            /**
-             * See interface 
-             */
-            public conformList(typelist1: ${rootType}[], typelist2: ${rootType}[]): boolean | null {
-                if (typelist1.length !== typelist2.length) return false;
-                let result: boolean = true;
-                for (let index in typelist1) {
-                    result = this.conformsTo(typelist1[index], typelist2[index]);
-                    if (result == false) return result;
-                }
+            public inferType(modelelement: PiElement): PiType | null {
+                if (!modelelement) return null;
+                let result: PiType = null;
+                ${inferMaker.makeInferType(typerdef, allLangConcepts, rootType, "modelelement", this.importedClassifiers)}
                 return result;
             }
 
             /**
-             * See interface 
-             */        
-            public isType(elem: ${allLangConcepts}): boolean | null { // entries for all types marked as @isType
-                ${this.makeIsType(allTypeConcepts)}
-            } 
-            
-            private ancestor(elem: ${allLangConcepts}, ancestorType: string): ${allLangConcepts} {
-                const myContainer: ${allLangConcepts} = elem.piContainer()?.container as ${allLangConcepts};
-                if (!!myContainer) {
-                    const concept = myContainer.piLanguageConcept();
-                    if (concept === ancestorType || Language.getInstance().subConcepts(ancestorType).includes(concept)) {
-                        return myContainer;
-                    } else {
-                        return this.ancestor(myContainer, ancestorType);
-                    }
-                }
-                return null;
-            }   
-        }`;
-    }
-
-    generateDefault(language: PiLanguage, relativePath: string): string {
-        const allLangConcepts: string = Names.allConcepts(language);
-        const typerInterfaceName: string = Names.PiTyperPart;
-        const generatedClassName: string = Names.typerPart(language);
-
-        // Template starts here
-        return `
-        import { ${typerInterfaceName}, Language } from "${PROJECTITCORE}";
-        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        import { ${Names.typer(language)} } from "./${Names.typer(language)}";
-        
-        export class ${generatedClassName} implements ${typerInterfaceName} {
-            mainTyper: ${Names.typer(language)};
-            /**
-             * See interface 
+             * Returns true if type1 equals type2.
+             * This is a strict equal.
+             * @param type1
+             * @param type2
              */
-            public inferType(modelelement: ${allLangConcepts}): ${allLangConcepts} | null {
-                return null;
-            }
-            /**
-             * See interface 
-             */
-            public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
-                let $type1: ${allLangConcepts};
-                if (!this.mainTyper.isType(elem1)) {
-                    $type1 = this.mainTyper.inferType(elem1);
-                } else {
-                    $type1 = elem1;
-                }
-                let $type2: ${allLangConcepts};
-                if (!this.mainTyper.isType(elem2)) {
-                    $type2 = this.mainTyper.inferType(elem2);
-                } else {
-                    $type2 = elem2;
-                }
-                return $type1 === $type2;
-            }
-            /**
-             * See interface 
-             */
-            public conformsTo(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
-                return true;
-            }
-            /**
-             * See interface 
-             */
-            public conformList(typelist1: ${allLangConcepts}[], typelist2: ${allLangConcepts}[]): boolean | null {
-                return true;
-            }
-            /**
-             * See interface 
-             */
-            public isType(elem: ${allLangConcepts}): boolean | null {
+            public equals(type1: PiType, type2: PiType): boolean | null {
+                if (!type1 || !type2 ) return false;  
+                ${equalsMaker.makeEqualsType(typerdef, "type1", "type2", this.importedClassifiers)}
                 return false;
-            }  
+            }
             
-            private ancestor(elem: ${allLangConcepts}, ancestorType: string): ${allLangConcepts} {
-                const myContainer: ${allLangConcepts} = elem.piContainer()?.container as ${allLangConcepts};
-                if (!!myContainer) {
-                    const concept = myContainer.piLanguageConcept();
-                    if (concept === ancestorType || Language.getInstance().subConcepts(ancestorType).includes(concept)) {
-                        return myContainer;
-                    } else {
-                        return this.ancestor(myContainer, ancestorType);
+            /**
+             * Returns true if type1 conforms to type2. The direction is type1 conforms to type2.
+             * @param type1
+             * @param type2
+             */
+            public conforms(type1: PiType, type2: PiType): boolean | null {
+                if (!type1 || !type2) return null;
+                let result: boolean = false;
+                if (this.equals(type1, type2)) {
+                    result = true;
+                } else {
+                    this.getSuperTypes(type1).forEach(super1 => {
+                       if (this.equals(super1, type2)) {
+                           result = true;
+                       }
+                    });
+                }
+                return result;
+            }
+            
+            /**
+             * Returns true if all types in typelist1 conform to the types in typelist2, pairswise, in the given order.
+             * @param typelist1
+             * @param typelist2
+             */
+            public conformsList(typelist1: PiType[], typelist2: PiType[]): boolean | null {
+                if (typelist1.length !== typelist2.length) return false;
+                let result: boolean = true;
+                for (let index in typelist1) {
+                    result = this.conforms(typelist1[index], typelist2[index]);
+                    if (result == false) return result;
+                }
+                return result;
+            }
+        
+            /**
+             * Returns the common super type of all types in typelist
+             * @param typelist
+             */
+            public commonSuper(typelist: PiType[]): PiType | null {
+                const result: PiType[] = CommonSuperTypeUtil.commonSuperType(typelist, this.mainTyper);        
+                if (!!result && result.length > 0) {
+                    return result[0];
+                }
+                return null;
+            }
+
+            /**
+             * Returns all super types as defined in the typer definition.
+             * @param type
+             */
+            public getSuperTypes(type: PiType): PiType[] {
+                ${superTypeMaker.makeSuperTypes(typerdef, "type", this.importedClassifiers)}
+            }
+                        
+            ${inferMaker.extraMethods.map(meth => meth).join("\n\n")}
+            
+            private metaTypeOk(element: PiElement, requestedType: string): boolean {
+                const metatype = element.piLanguageConcept();
+                if (metatype === requestedType || Language.getInstance().subConcepts(requestedType).includes(metatype)) {
+                    return true;
+                }
+                return false;
+            }
+            
+            private typeOf(myArg: PiElement | PiElement[]): PiType {
+                let result: PiType;
+                if (Array.isArray(myArg)) {
+                    result = this.mainTyper.commonSuperType(myArg);
+                } else {
+                    result = this.mainTyper.inferType(myArg);
+                }
+                return result;
+            }
+            
+            private getElemFromAstType(type: PiType, metatype: string): PiElement {
+                if (type.$typename === "AstType") {
+                    const astElement: PiElement = (type as AstType).astElement;
+                    if (astElement.piLanguageConcept() === metatype || Language.getInstance().subConcepts(metatype).includes(astElement.piLanguageConcept())) {
+                        return astElement;
                     }
                 }
                 return null;
-            }    
+            }
         }`;
+
+        const typeConceptImports: string [] = [];
+        this.importedClassifiers.forEach(cls => {
+            if (TyperGenUtils.isType(cls)) {
+                if (cls.name !== "PiType") {
+                    ListUtil.addIfNotPresent(typeConceptImports, Names.classifier(cls));
+                }
+            } else {
+                ListUtil.addIfNotPresent(this.imports, Names.classifier(cls));
+            }
+
+        });
+
+        ListUtil.addIfNotPresent(this.imports, "PiElementReference");
+        const imports = `import { ${typerInterfaceName}, PiType, AstType, PiElement, Language, CommonSuperTypeUtil } from "${PROJECTITCORE}";
+        import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}
+        import { ${Names.typer(language)} } from "./${Names.typer(language)}";`;
+
+        return imports + baseClass;
     }
 
-    private findDefaultType(): string {
-        const result: string = "null";
-        for (const tr of this.typerdef.typerRules) {
-            if (tr instanceof PiTypeAnyTypeRule) {
-                for (const stat of tr.statements) {
-                    if (stat.statementtype === "conformsto" || stat.statementtype === "equalsto") {
-                        return `${this.makeTypeExp(stat.exp)}`;
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    private makeConformsStatements(): string {
-        let result: string = "";
-        for (const tr of this.typerdef.typerRules ) {
-            if (tr instanceof PiTypeClassifierRule) {
-                const myConceptName = tr.conceptRef.name;
-                for (const stat of tr.statements) {
-                    if (stat.statementtype === "conformsto") {
-                        result = result.concat(`if ( this.inferType(elem1) instanceof ${myConceptName}) {
-                            return true;
-                        }`);
-                    }
-                }
-            }
-            if (tr instanceof PiTypeAnyTypeRule) {
-                // console.log(" rule: " + tr.toPiString());
-                for (const stat of tr.statements) {
-                    // console.log(" stat: " + stat.toPiString());
-                    if ( stat.statementtype === "conformsto" ) {
-                        // console.log(" stat.statementtype: " + stat.statementtype);
-                        result = result.concat(`if ( this.inferType(elem2) === ${this.makeTypeExp(stat.exp)}) {
-                            return true;
-                        }`);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    private makeInferenceStatements(allTypes: PiConcept[]): string {
-        // TODO check what to do with PiTypeAnyTypeRule
-        let result: string = "";
-        // first add statements for all concepts that are marked 'isType'
-        for (const type of allTypes) {
-            result = result.concat(`if (modelelement instanceof ${Names.concept(type)}) {
-                                    return modelelement;
-                                }`);
-        }
-
-        // next, add statements for every 'infertype' rule in the typer definition
-        // beware of the order in which the statements are generated, because subclasses need to overwrite their super
-        // and thus their statement needs to come before the super statement
-        const myList = this.sortConceptRules(this.typerdef.classifierRules);
-        for (const tr of myList) {
-            const myConceptName = tr.conceptRef.name;
-            for (const stat of tr.statements) {
-                 if ( stat.statementtype === "infertype" && !stat.isAbstract) {
-                    result = result.concat(`if (modelelement instanceof ${myConceptName}) {
-                            return ${this.makeTypeExp(stat.exp)};
-                        }`);
-                }
-            }
-        }
-        return result;
-    }
-
-    private sortConceptRules(conceptRules: PiTypeClassifierRule[]): PiTypeClassifierRule[] {
-        const sortedConceptRules: PiTypeClassifierRule[] = [];
-        const sortedClasses = sortConcepts(this.language.concepts);
-        for (const piclass of sortedClasses) {
-            // find conceptRule for this piclass
-            let myRule: PiTypeClassifierRule = null;
-            for (const rule of conceptRules) {
-                if (piclass === rule.conceptRef.referred) {
-                    myRule = rule;
-                }
-            }
-            // if found push rule
-            if (!!myRule) {
-                sortedConceptRules.push(myRule);
-            }
-        }
-        return sortedConceptRules;
-    }
-
-    private makeIsType(allTypes: PiConcept[]): string {
+    private makeIsType(allTypes: PiClassifier[]) {
         let result: string = "";
         // add statements for all concepts that are marked 'isType'
-        for (const type of allTypes) {
-            result = result.concat(`if (elem instanceof ${Names.concept(type)}) {
-                                    return true;
-                                }`);
-        }
+        // all elements of allTypes should be PiConcepts
+        const myList: PiConcept[] = allTypes.filter(t => t instanceof PiConcept) as PiConcept[];
+        myList.forEach(type => {
+            ListUtil.addIfNotPresent(this.imports, Names.concept(type));
+        });
+        result = `${myList.map(type => 
+            `if (modelelement instanceof ${Names.concept(type)}) {
+                return true;
+            }`
+        ).join(' else ')}`;
         result = result.concat(`return false;`);
         return result;
-    }
-
-    /**
-     * Returns a list of all concepts that are marked 'isType',
-     * including all concepts that implement an interface marked 'isType'
-     */
-    private findAllConceptsThatAreTypes(): PiConcept[] {
-        let allTypes: PiConcept[] = [];
-        for (const tr of this.typerdef.typerRules) {
-            if (tr instanceof PiTypeIsTypeRule) {
-                for (const type of tr.types) {
-                    const realType = type.referred;
-                    if (!!realType && (realType instanceof PiInterface)) {
-                        const yy = realType as PiInterface;
-                        // add all concepts that implement this interface
-                        this.language.concepts.filter(con => con.allInterfaces().some(intf => intf === yy )).map (implementor => {
-                            if (!allTypes.includes(implementor)) {
-                                allTypes.push(implementor);
-                            }
-                        });
-                    } else if (!!realType && (realType instanceof PiConcept)) {
-                        if (!allTypes.includes(realType)) {
-                            allTypes.push(realType);
-                        }
-                    }
-                }
-            }
-        }
-        return allTypes;
-    }
-
-    private makeEqualsStatement(): string {
-        for (const rule of this.typerdef.typerRules) {
-            // TODO check makeEqualsStatement
-            if (rule instanceof PiTypeClassifierRule) {
-                for (const stat of rule.statements) {
-                    if (stat.statementtype === "equalsto") {
-                        return `${langExpToTypeScript(stat.exp)}`;
-                    }
-                }
-            }
-        }
-        return "";
-    }
-
-    private makeTypeExp(exp: PiLangExp): string {
-        if (exp instanceof PiLangSelfExp) {
-            return `this.inferType(modelelement.${langExpToTypeScript(exp.appliedfeature)})`;
-        } else {
-            return `${langExpToTypeScript(exp)}`;
-        }
     }
 }

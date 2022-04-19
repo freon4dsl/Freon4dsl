@@ -229,6 +229,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
                     whenOk: () => {
                         // set the 'implementedInBase' flag
                         prop.implementedInBase = true;
+                        // console.log(`IN CHECKER: ${prop.name} is owned by ${prop.owningClassifier.name}: ${prop.implementedInBase}`)
                     }
                 });
             } else if (!!myBase.base) {

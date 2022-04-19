@@ -19,9 +19,9 @@ import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorG
 // import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
 // import { PiTypeDefinition } from "../typerdef/metalanguage";
 // import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
-import { NewPiTyperGenerator } from "../typerdef/new-generator/NewPiTyperGenerator";
-import { PiTyperDef } from "../typerdef/new-metalanguage";
-import { NewPiTyperParser } from "../typerdef/new-parser";
+import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
+import { PiTyperDef } from "../typerdef/metalanguage";
+import { PiTyperParser } from "../typerdef/parser";
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
@@ -32,7 +32,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
     // protected typerGenerator: PiTyperGenerator = new PiTyperGenerator();
-    protected typerGenerator: NewPiTyperGenerator = new NewPiTyperGenerator();
+    protected typerGenerator: PiTyperGenerator = new PiTyperGenerator();
     protected language: PiLanguage;
 
     public constructor() {
@@ -98,7 +98,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         let typer: PiTyperDef;
         try {
             if (this.typerFiles.length > 0) {
-                typer = new NewPiTyperParser(this.language).parseMulti(this.typerFiles);
+                typer = new PiTyperParser(this.language).parseMulti(this.typerFiles);
             }
             this.typerGenerator.language = this.language;
             this.typerGenerator.outputfolder = this.outputFolder;

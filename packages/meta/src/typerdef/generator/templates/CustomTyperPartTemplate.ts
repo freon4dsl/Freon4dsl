@@ -1,16 +1,16 @@
 import { PiLanguage } from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
+import { Names, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
 
 export class CustomTyperPartTemplate {
     generateCustomTyperPart(language: PiLanguage, relativePath: string): string {
-        const allLangConcepts: string = Names.allConcepts(language);
+        // const allLangConcepts: string = Names.allConcepts(language);
         const typerInterfaceName: string = Names.PiTyperPart;
         const generatedClassName: string = Names.customTyper(language);
 
+        // TODO add comments to generated class
         // Template starts here
         return `
-        import { ${typerInterfaceName} } from "${PROJECTITCORE}";
-        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { PiElement, PiType, PiTyper, PiTyperPart } from "${PROJECTITCORE}";
         import { ${Names.typer(language)} } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
         
         /**
@@ -20,36 +20,33 @@ export class CustomTyperPartTemplate {
         export class ${generatedClassName} implements ${typerInterfaceName} {
             mainTyper: ${Names.typer(language)};
         
-            /**
-             * See interface 
-             */
-            public inferType(modelelement: ${allLangConcepts}): ${allLangConcepts} | null {
+            isType(elem: PiElement): boolean | null {
                 return null;
             }
-            /**
-             * See interface 
-             */
-            public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
+        
+            inferType(modelelement: PiElement): PiType | null {
                 return null;
             }
-            /**
-             * See interface 
-             */
-            public conformsTo(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean | null {
+        
+            equals(type1: PiType, type2: PiType): boolean | null {
                 return null;
             }
-            /**
-             * See interface 
-             */
-            public conformList(typelist1: ${allLangConcepts}[], typelist2: ${allLangConcepts}[]): boolean | null {
+        
+            conforms(type1: PiType, type2: PiType): boolean | null {
                 return null;
             }
-            /**
-             * See interface 
-             */
-            public isType(elem: ${allLangConcepts}): boolean | null {
+               
+            conformsList(typelist1: PiType[], typelist2: PiType[]): boolean | null {
                 return null;
-            }      
+            }
+        
+            commonSuper(typelist: PiType[]): PiType | null {
+                return null;
+            }    
+            
+            public getSuperTypes(type: PiType): PiType[] | null {
+                return null;
+            } 
         }`;
     }
 }
