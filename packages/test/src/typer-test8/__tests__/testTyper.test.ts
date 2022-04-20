@@ -1,6 +1,6 @@
 import { GenericModelSerializer, PiError } from "@projectit/core";
 import { ProjectYModelUnitType, XXunit, XX } from "../language/gen";
-import { ProjectYEnvironment } from "../environment/gen/ProjectYEnvironment";
+import { ProjectYEnvironment } from "../config/gen/ProjectYEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 
 const writer = ProjectYEnvironment.getInstance().writer;

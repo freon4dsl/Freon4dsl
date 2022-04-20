@@ -15,7 +15,6 @@ import {
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
-import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 
 describe("Testing Validator", () => {
     const model: Demo = new DemoModelCreator().createIncorrectModel();

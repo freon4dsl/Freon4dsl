@@ -4,7 +4,7 @@ import { ProjectYDefaultWorker } from "../utils/gen/ProjectYDefaultWorker";
 import { ProjectYCheckerInterface } from "./gen/ProjectYValidator";
 import { ExpWithType } from "../language/gen";
 import { ProjectYTyper } from "../typer/gen";
-import { ProjectYEnvironment } from "../environment/gen/ProjectYEnvironment";
+import { ProjectYEnvironment } from "../config/gen/ProjectYEnvironment";
 
 export class CustomProjectYValidator extends ProjectYDefaultWorker implements ProjectYCheckerInterface {
     errorList: PiError[] = [];
