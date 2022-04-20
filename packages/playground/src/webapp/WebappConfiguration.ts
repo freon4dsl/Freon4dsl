@@ -5,36 +5,37 @@ import { ServerCommunication } from "./server/ServerCommunication";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-// import { TestParserEnvironment } from "../parser-test/environment/gen/TestParserEnvironment";
+// import { TestParserEnvironment } from "../parser-test/config/gen/TestParserEnvironment";
 // export const editorEnvironment: PiEnvironment = TestParserEnvironment.getInstance();
-// import { OctopusEnvironment } from "../octopus/environment/gen/OctopusEnvironment";
+// import { OctopusEnvironment } from "../octopus/config/gen/OctopusEnvironment";
 // export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
-import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
+import { ExampleEnvironment } from "../example/config/gen/ExampleEnvironment";
 export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
-// import { ExpressionLibraryEnvironment } from "../libraries-test/environment/gen/ExpressionLibraryEnvironment";
+
+// import { ExpressionLibraryEnvironment } from "../libraries-test/config/gen/ExpressionLibraryEnvironment";
 // export const editorEnvironment: PiEnvironment = ExpressionLibraryEnvironment.getInstance();
 
-// import { CalculatorEnvironment } from "../calculator/environment/gen/CalculatorEnvironment";
+// import { CalculatorEnvironment } from "../calculator/config/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();
 
-// import { HeatEnvironment } from "../heating/environment/gen/HeatEnvironment";
+// import { HeatEnvironment } from "../heating/config/gen/HeatEnvironment";
 // export const editorEnvironment: PiEnvironment = HeatEnvironment.getInstance();
 
-// import { TaxRulesEnvironment } from "../taxrules/environment/gen/TaxRulesEnvironment";
+// import { TaxRulesEnvironment } from "../taxrules/config/gen/TaxRulesEnvironment";
 // export const editorEnvironment: PiEnvironment = TaxRulesEnvironment.getInstance();
 
-// import { PiLanguageEnvironment } from "../pi-languages/environment/gen/PiLanguageEnvironment";
+// import { PiLanguageEnvironment } from "../pi-languages/config/gen/PiLanguageEnvironment";
 // export const editorEnvironment: PiEnvironment = PiLanguageEnvironment.getInstance();
 
 // export const editorEnvironment: PiEnvironment = JsonEnvironment.getInstance();
 
-// import { OpenhabEnvironment } from "../openhab/environment/gen/OpenhabEnvironment";
+// import { OpenhabEnvironment } from "../openhab/config/gen/OpenhabEnvironment";
 // export const editorEnvironment: PiEnvironment = OpenhabEnvironment.getInstance();
 
-// import { HDMLEnvironment } from "../HDML/environment/gen/HDMLEnvironment";
+// import { HDMLEnvironment } from "../HDML/config/gen/HDMLEnvironment";
 // export const editorEnvironment: PiEnvironment = HDMLEnvironment.getInstance();
 
-// import { RulesLanguageEnvironment } from "../rules-language/environment/gen/RulesLanguageEnvironment";
+// import { RulesLanguageEnvironment } from "../rules-language/config/gen/RulesLanguageEnvironment";
 // export const editorEnvironment: PiEnvironment = RulesLanguageEnvironment.getInstance();
 
 /**

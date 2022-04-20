@@ -1,4 +1,4 @@
-import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
+import { OctopusEnvironment } from "../config/gen/OctopusEnvironment";
 import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions";
 import { OctopusModel } from "../language/gen";
 

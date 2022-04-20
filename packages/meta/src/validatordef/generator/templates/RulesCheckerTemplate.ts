@@ -2,7 +2,7 @@
 // this leads to a load error
 // import { PiErrorSeverity } from "@projectit/core";
 import {
-    ENVIRONMENT_GEN_FOLDER,
+    CONFIGURATION_GEN_FOLDER,
     langExpToTypeScript,
     LANGUAGE_GEN_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
@@ -10,7 +10,7 @@ import {
     PiErrorSeverity,
     PROJECTITCORE, getBaseTypeAsString, isNameProp
 } from "../../../utils";
-import { PiConcept, PiLangExp, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { PiConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -46,7 +46,7 @@ export class RulesCheckerTemplate {
         return `
         import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
+        import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
         import { reservedWordsInTypescript } from "./ReservedWords";         

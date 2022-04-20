@@ -1,6 +1,6 @@
 import { DSmodel } from "../language/gen";
 import { SimpleModelCreator } from "./ModelCreator";
-import { ScoperTestEnvironment } from "../environment/gen/ScoperTestEnvironment";
+import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";

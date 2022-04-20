@@ -1,4 +1,4 @@
-import { LangConstructsEnvironment } from "../environment/gen/LangConstructsEnvironment";
+import { LangConstructsEnvironment } from "../config/gen/LangConstructsEnvironment";
 import { LimitedConcept1, LimitedWithBase, LimitedWithInheritanceTree, LimitedWithInterface } from "../language/gen";
 import { LangConstructsStdlib } from "../stdlib/gen/LangConstructsStdlib";
 

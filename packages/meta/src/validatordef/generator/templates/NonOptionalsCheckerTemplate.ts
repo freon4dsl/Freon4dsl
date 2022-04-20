@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
 import { PiLanguage, PiClassifier, PiPrimitiveType } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
@@ -31,7 +31,7 @@ export class NonOptionalsCheckerTemplate {
         return `
         import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
+        import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
 

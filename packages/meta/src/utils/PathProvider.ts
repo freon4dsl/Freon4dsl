@@ -4,8 +4,8 @@ import { Names } from "./Names";
 // files need to be generated into folders ...
 export const LANGUAGE_FOLDER = "language";
 export const LANGUAGE_GEN_FOLDER = "language/gen";
-export const ENVIRONMENT_FOLDER = "environment";
-export const ENVIRONMENT_GEN_FOLDER = "environment/gen";
+// export const ENVIRONMENT_FOLDER = "environment";
+// export const ENVIRONMENT_GEN_FOLDER = "environment/gen";
 export const LANGUAGE_UTILS_FOLDER = "utils";
 export const LANGUAGE_UTILS_GEN_FOLDER = "utils/gen";
 export const EDITOR_FOLDER = "editor";
@@ -23,7 +23,8 @@ export const WRITER_FOLDER = "writer";
 export const WRITER_GEN_FOLDER = "writer/gen";
 export const READER_FOLDER = "reader";
 export const READER_GEN_FOLDER = "reader/gen";
-export const PROJECTIT_FOLDER = "projectit";
+export const CONFIGURATION_FOLDER = "config";
+export const CONFIGURATION_GEN_FOLDER = "config/gen";
 export const RESERVED_WORDS_ORIGIN = "../meta/src/validatordef/generator/templates"; // the folder in which the to-be-copied files can be found
 export const STYLES_ORIGIN = "../meta/src/editordef/generator/templates/styles";     // the folder in which the to-be-copied files can be found
 export const STYLES_FOLDER = EDITOR_FOLDER + "/styles";     // the folder to which the style files should be copied
@@ -35,7 +36,6 @@ export const validatorInterface = PROJECTITCORE;
 export const errorClass = PROJECTITCORE;
 export const piNamedElement = PROJECTITCORE;
 export const EDITORSTYLES = STYLES_FOLDER + "/styles";
-export const CONFIGURATION_FOLDER = "projectit";
 /**
  * Defines all paths to files and folders that are used in the generation, to ensure they are identical
  * at each usage.

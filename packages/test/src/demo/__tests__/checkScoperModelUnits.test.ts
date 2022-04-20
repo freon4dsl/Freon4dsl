@@ -4,7 +4,7 @@ import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 import { DemoUnitCreator } from "./DemoUnitCreator";
 import { initializeLanguage } from "../language/gen/DemoLanguage";
-import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 
 describe("testing Scoper on model units", () => {
     describe("Scoper.getVisibleElements from DemoModel with Units", () => {

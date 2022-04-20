@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
 import { PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
@@ -28,7 +28,7 @@ export class ReferenceCheckerTemplate {
         return `
         import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${overallTypeName}, ${Names.PiElementReference}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${environmentName} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${environmentName}";
+        import { ${environmentName} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${environmentName}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
 

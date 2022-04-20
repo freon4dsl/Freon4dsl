@@ -1,6 +1,6 @@
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
-import { Demo, DemoModel } from "../language/gen";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
+import { DemoModel } from "../language/gen";
 import { FileHandler } from "../../utils/FileHandler";
 
 describe("Testing Parser", () => {
