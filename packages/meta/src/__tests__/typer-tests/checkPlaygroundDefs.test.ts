@@ -55,10 +55,12 @@ describe("Checking new typer", () => {
             }
         } catch (e) {
             // expect(e).toBeNaN();
-            console.log(e.stack);
+            // console.log(e.stack);
             const errors: string[] = parser.checker.errors;
-            // expect(errors.length).toBe(0);
-            console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+            expect(errors.length).toBe(2);
+            // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+            expect(errors.includes("A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type, line: 41, column: 5].")).toBeTruthy();
+            expect(errors.includes("A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type, line: 49, column: 5].")).toBeTruthy();
         }
     });
 });

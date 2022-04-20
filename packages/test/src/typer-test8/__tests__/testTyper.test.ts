@@ -47,7 +47,7 @@ describe ("Testing Typer on", () => {
             expect(errors.find(e => e.message === "Type 'AstType[ BOOLEAN ]' of [true] is not equal to STRING")).toBeTruthy();
             expect(errors.find(e => e.message === "Type 'AstType[ BOOLEAN ]' of [true] is not equal to NUMBER")).toBeTruthy();
 
-            console.log(errors.map(e => e.message).join("\n"));
+            // console.log(errors.map(e => e.message).join("\n"));
         }
     });
 
@@ -93,7 +93,7 @@ describe ("Testing Typer on", () => {
             expect(errors.find(e => e.message.endsWith("of [Bag { Set { 12, 13, 14 }, Set { 2, 3, 4 } }] is not equal to NUMBER"))).toBeTruthy();
             expect(errors.find(e => e.message.endsWith("of [Bag { Set { Set { 2, 3, 4 }, Set { 12, 13, 14 } }, Set { Set { 2, 3, 4 } } }] is not equal to NUMBER"))).toBeTruthy();
             expect(errors.find(e => e.message.endsWith("of [Set { }] is not equal to STRING"))).toBeTruthy();
-            console.log(errors.map(e => e.message).join("\n"));
+            // console.log(errors.map(e => e.message).join("\n"));
         }
     });
 
@@ -109,7 +109,7 @@ describe ("Testing Typer on", () => {
             expect(errors.find(e => e.message.endsWith("of [124 Meters] is not equal to kWh < NUMBER >"))).toBeTruthy();
             expect(errors.length).toBe(3);
 
-            console.log(errors.map(e => e.message).join("\n"));
+            // console.log(errors.map(e => e.message).join("\n"));
         }
     });
 
@@ -119,9 +119,9 @@ describe ("Testing Typer on", () => {
         expect(unit1).not.toBeNull();
         if (!!unit1) {
             const errors: PiError[] = validator.validate(unit1);
-            // expect(errors.length).toBe(0);
+            expect(errors.length).toBe(0);
 
-            console.log(errors.map(e => e.message).join("\n"));
+            // console.log(errors.map(e => e.message).join("\n"));
         }
     });
 });
