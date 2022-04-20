@@ -75,14 +75,6 @@ export abstract class PiClassifier extends PiLangElement {
     // TODO remove this attribute and make it a function on 'properties'
     primProperties: PiPrimitiveProperty[] = [];
 
-    isInterface(): boolean {
-        return false;
-    }
-
-    isConcept(): boolean {
-        return false;
-    }
-
     parts(): PiConceptProperty[] {
         return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart) as PiConceptProperty[];
     }
@@ -143,14 +135,6 @@ export class PiUnitDescription extends PiClassifier {
 
 export class PiInterface extends PiClassifier {
     base: PiElementReference<PiInterface>[] = [];
-
-    isInterface(): boolean {
-        return true;
-    }
-
-    isConcept(): boolean {
-        return false;
-    }
 
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = []; // return a new array
@@ -218,14 +202,6 @@ export class PiConcept extends PiClassifier {
     isAbstract: boolean = false;
     base: PiElementReference<PiConcept>;
     interfaces: PiElementReference<PiInterface>[] = []; // the interfaces that this concept implements
-
-    isInterface(): boolean {
-        return false;
-    }
-
-    isConcept(): boolean {
-        return true;
-    }
 
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.implementedPrimProperties();

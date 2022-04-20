@@ -10,7 +10,7 @@ import {
     PiPrimitiveType, PiLimitedConcept
 } from "./internal";
 import { MetaLogger } from "../../utils/MetaLogger";
-import { Checker, PiDefinitionElement } from "../../utils";
+import { PiDefinitionElement } from "../../utils";
 
 const LOGGER = new MetaLogger("PiLangScoper"); // .mute();
 const anyElement = "_$anyElement";
@@ -36,7 +36,6 @@ export class PiLangScoper {
         } else if (typeName === "PiClassifier" ) {
             result = this.language.findClassifier(name);
         } else if (typeName === "PiProperty" || typeName === "PiPrimitiveProperty" || typeName === "PiConceptProperty") {
-            // console.log("PiLangScoper searching for property " + name);
             if (owner instanceof PiLangAppliedFeatureExp) {
                 const xx = owner.sourceExp.__referredElement?.referred;
                 if (!(!!xx)) {
@@ -61,15 +60,6 @@ export class PiLangScoper {
                     result = xxx;
                 }
             }
-            // if (!result) {
-            //     let ownerDescriptor: string;
-            //     if (owner instanceof PiLangElement) {
-            //         ownerDescriptor = owner.name;
-            //     } else {
-            //         ownerDescriptor = Checker.location(owner);
-            //     }
-            //     console.error("NO calculation found for " + name + ", owner: " + ownerDescriptor + ", type:" + typeName);
-            // }
         }
         return result;
     }
