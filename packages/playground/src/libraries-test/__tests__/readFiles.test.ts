@@ -1,7 +1,7 @@
 import { GenericModelSerializer } from "@projectit/core";
 import { FileHandler } from "./FileHandler";
 import { ExpressionLibraryEnvironment } from "../environment/gen/ExpressionLibraryEnvironment";
-import { ExpressionLibraryModelUnitType, ModelUnitMetaType } from "../language/gen";
+import { ExpressionLibraryModelUnitType, LIB_USAGE, ModelUnitMetaType } from "../language/gen";
 
 const writer = ExpressionLibraryEnvironment.getInstance().writer;
 const reader = ExpressionLibraryEnvironment.getInstance().reader;
@@ -13,7 +13,7 @@ function compareReadAndWrittenOclParts(path: string) {
     expect(unit1).not.toBeNull();
     let result: string = writer.writeToString(unit1, 0, false);
     expect(result.length).toBeGreaterThan(0);
-    const unit2 = reader.readFromString(result, "LibUnit");
+    const unit2 = reader.readFromString(result, "LibUnit", new LIB_USAGE());
     // simply comparing the units does not work because the id properties of the two units
     // are not the same, therefore we use the hack of checking whether both units in JSON
     // format are the same
@@ -25,7 +25,7 @@ function compareReadAndWrittenOclParts(path: string) {
 function readFromFile(filepath: string, metatype: ModelUnitMetaType): ExpressionLibraryModelUnitType {
     // read language file
     const langSpec = handler.stringFromFile(filepath);
-    return reader.readFromString(langSpec, metatype) as ExpressionLibraryModelUnitType;
+    return reader.readFromString(langSpec, metatype, new LIB_USAGE()) as ExpressionLibraryModelUnitType;
 }
 
 describe("Testing Parser for expression library", () => {

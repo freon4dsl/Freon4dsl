@@ -76,7 +76,7 @@ describe("Testing Unparser", () => {
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
             result = unparser.writeToString(multiplyExpression, 0, false);
             result = result.replace(new RegExp("\\s+","gm"), " ");
-            expect(result).toBe("1 + 2 * DemoVariableRef { variable Person }");
+            expect(result).toBe("1 + 2 * Person");
         });
 
         test('\'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"\'', () => {
@@ -129,9 +129,7 @@ describe("Testing Unparser", () => {
                 "        DemoFunction first {\n" +
                 "            expression 5 + 24\n" +
                 "            parameters\n" +
-                "                DemoVariable Resultvar {\n" +
-                "                    declaredType someOtherEntity\n" +
-                "                }\n" +
+                "                Resultvar : someOtherEntity\n" +
                 "            declaredType Boolean\n" +
                 "        }\n" +
                 "    int_attrs\n" +

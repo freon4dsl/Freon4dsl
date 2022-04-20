@@ -2,14 +2,14 @@
 
 exports[`Parser concepts of type  Expression  1`] = `
 ExpressionTest {
-  "$id": "ID-10",
+  "$id": "ID-11",
   "$typename": "ExpressionTest",
   "_PI_binEx": Array [
     PlusEx {
-      "$id": "ID-4",
+      "$id": "ID-5",
       "$typename": "PlusEx",
       "_PI_left": StringLiteralEx {
-        "$id": "ID-2",
+        "$id": "ID-3",
         "$typename": "StringLiteralEx",
         "container": [Circular],
         "propertyIndex": undefined,
@@ -17,7 +17,7 @@ ExpressionTest {
         "value": "literal1",
       },
       "_PI_right": StringLiteralEx {
-        "$id": "ID-3",
+        "$id": "ID-4",
         "$typename": "StringLiteralEx",
         "container": [Circular],
         "propertyIndex": undefined,
@@ -29,13 +29,13 @@ ExpressionTest {
       "propertyName": "binEx",
     },
     MultiplyEx {
-      "$id": "ID-9",
+      "$id": "ID-10",
       "$typename": "MultiplyEx",
       "_PI_left": DivideEx {
-        "$id": "ID-7",
+        "$id": "ID-8",
         "$typename": "DivideEx",
         "_PI_left": NumberLiteralEx {
-          "$id": "ID-5",
+          "$id": "ID-6",
           "$typename": "NumberLiteralEx",
           "container": [Circular],
           "propertyIndex": undefined,
@@ -43,7 +43,7 @@ ExpressionTest {
           "value": 109,
         },
         "_PI_right": StringLiteralEx {
-          "$id": "ID-6",
+          "$id": "ID-7",
           "$typename": "StringLiteralEx",
           "container": [Circular],
           "propertyIndex": undefined,
@@ -55,7 +55,7 @@ ExpressionTest {
         "propertyName": "left",
       },
       "_PI_right": BooleanLiteralEx {
-        "$id": "ID-8",
+        "$id": "ID-9",
         "$typename": "BooleanLiteralEx",
         "container": [Circular],
         "propertyIndex": undefined,
@@ -68,9 +68,17 @@ ExpressionTest {
     },
   ],
   "_PI_normalEx": Array [],
-  "container": null,
+  "container": TestConceptsModel {
+    "$id": "ID-2",
+    "$typename": "TestConceptsModel",
+    "_PI_expr": [Circular],
+    "container": null,
+    "name": "",
+    "propertyIndex": undefined,
+    "propertyName": "",
+  },
   "name": "simpleExpressions",
   "propertyIndex": undefined,
-  "propertyName": "",
+  "propertyName": "expr",
 }
 `;

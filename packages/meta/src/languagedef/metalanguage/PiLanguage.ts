@@ -38,9 +38,9 @@ export class PiLanguage extends PiLangElement {
         if (result === undefined) {
             result = this.findUnitDescription(name);
         }
-        // if (result === undefined) {
-        //     result = this.findBasicType(name);
-        // }
+        if (result === undefined) {
+            result = this.findBasicType(name);
+        }
         return result;
     }
 
@@ -54,6 +54,21 @@ export class PiLanguage extends PiLangElement {
 }
 
 export abstract class PiClassifier extends PiLangElement {
+    private static __ANY: PiClassifier = null;
+
+    static get ANY(): PiClassifier {
+        if (PiClassifier.__ANY === null || PiClassifier.__ANY === undefined) {
+            PiClassifier.__ANY = new PiConcept();
+            PiClassifier.__ANY.name = "ANY";
+            // TODO check whether this needs a name property
+            // const nameProp: PiPrimitiveProperty = new PiPrimitiveProperty();
+            // nameProp.name = "ANY";
+            // nameProp.type = PiPrimitiveType.identifier;
+            // PiClassifier.__ANY.properties.push(nameProp);
+        }
+        return this.__ANY;
+    }
+
     language: PiLanguage;
     isPublic: boolean;
     properties: PiProperty[] = [];
@@ -387,6 +402,9 @@ export class PiProperty extends PiLangElement {
     owningClassifier: PiClassifier;
 
     get isPrimitive(): boolean {
+        if (this.type instanceof PiPrimitiveType) {
+            return true;
+        }
         return false;
     };
     get type(): PiClassifier {
@@ -402,6 +420,9 @@ export class PiProperty extends PiLangElement {
     set typeReference(t : PiElementReference<PiClassifier>) { // only used by PiLanguageChecker
         this.__type = t;
         this.__type.owner = this;
+    }
+    toPiString(): string {
+        return this.name + ": " + this.__type.name;
     }
 }
 

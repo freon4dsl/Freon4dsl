@@ -47,7 +47,7 @@ export class MetaLogger {
     }
 
     warning(msg: LogMessage) {
-        if (this.active) {
+        if (this.active && !MetaLogger.muteAll) {
             this.logToConsole(MetaLogger.FgYellow, this.message(msg));
         }
     }

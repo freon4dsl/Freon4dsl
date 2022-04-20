@@ -7,5 +7,6 @@ export * from "./PathProvider";
 export * from "./PiDefinitionElement";
 export * from "./PiErrorSeverity";
 export * from "./LangUtil";
+export * from "./ListUtil";
 export * from "./PiParser";
 export * from "./Roles";

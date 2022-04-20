@@ -22,6 +22,7 @@ export class BinaryExpressionRule extends GrammarRule {
     toMethod(mainAnalyserName: string): string {
         let cases: string[] = [];
         for (const [key, value] of this.symbolToConcept) {
+            // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
             cases.push(`
                 case '${value}': {
                     combined = ${Names.classifier(key)}.create({left: first, right: second});

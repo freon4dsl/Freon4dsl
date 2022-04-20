@@ -297,8 +297,11 @@ export class ScoperTemplate {
             }
             result = `let container = ${actualParamToGenerate};
                 if (!!container) {
-                    let newScopeElement = this.myTyper.inferType(${actualParamToGenerate});
-                    return ${Names.namespace(language)}.create(newScopeElement);
+                    let newScopeElement = this.myTyper.inferType(container).toAstElement();
+                    // 'newScopeElement' could be null, when the type found by the typer does not correspond to an AST element
+                    if (!!newScopeElement) {
+                        return ${Names.namespace(language)}.create(newScopeElement as ${allLangConcepts});
+                    }
                 }`;
         } else {
             // normal case: the expression is an ordinary expression over the language

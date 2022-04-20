@@ -12,10 +12,10 @@ describe("Checking language parser on syntax errors", () => {
         try {
             parser.parse(parseFile);
         } catch (e) {
-            console.log(e.message);
-            // expect(e.message).toBe(`syntax error: SyntaxError: Expected variable but "{" found.`
-            //     + " \n                "
-            //     +`[file: test1.ast, line: 2, column: 8]`);
+            // console.log(e.message);
+            expect(e.message).toBe(`syntax error: SyntaxError: Expected variable but "{" found.`
+                + " \n                "
+                +`[file: test1.ast, line: 2, column: 8]`);
         }
     });
 

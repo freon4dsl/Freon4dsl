@@ -56,10 +56,11 @@ functionExpression = sourceName:var round_begin actualparams:(
       tail:(comma_separator v:langExpression { return v; })*
       { return [head].concat(tail); }
     )?
-    round_end {
+    round_end appliedfeature:dotExpression? {
   return expCreate.createFunctionCall ({
     "sourceName": sourceName,
     "actualparams": actualparams,
+    "appliedfeature": appliedfeature,
     "location": location()
   })
 }

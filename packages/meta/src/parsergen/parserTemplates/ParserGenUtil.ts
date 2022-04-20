@@ -50,12 +50,6 @@ export class ParserGenUtil {
         return myProjection;
     }
 
-    static addIfNotPresent(namedProjections: PiEditClassifierProjection[], addition: PiEditClassifierProjection) {
-        if (!namedProjections.includes(addition)) {
-            namedProjections.push(addition);
-        }
-    }
-
     /**
      * Creates a name to be used internally in the parser/unparser, to avoid name classes with user
      * defined names.

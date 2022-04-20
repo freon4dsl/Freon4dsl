@@ -24,7 +24,7 @@ import {
     RHSPartEntry,
     RHSPartOptionalEntry,
     RHSPartListEntry,
-    RHSPartListEntryWithSeparator,
+    RHSPartListWithSeparator,
     RHSRefEntry,
     RHSRefOptionalEntry,
     RHSRefListEntry,
@@ -33,11 +33,18 @@ import {
     RHSLimitedRefOptionalEntry,
     RHSLimitedRefListEntry,
     RHSLimitedRefListWithSeparator,
-    RHSListGroup,
-    RHSPrimListGroup, RHSListGroupWithInitiator, RHSPrimListGroupWithInitiator, RHSBooleanWithDoubleKeyWord
+    RHSPartListWithTerminator,
+    RHSPrimListGroup,
+    RHSPartListWithInitiator,
+    RHSPrimListGroupWithInitiator,
+    RHSBooleanWithDoubleKeyWord,
+    RHSBinaryExp,
+    RHSBinExpList,
+    RHSBinExpListWithInitiator,
+    RHSBinExpListWithSeparator, RHSBinExpListWithTerminator
 } from "./grammarModel";
 import { LOG2USER } from "../../utils/UserLogger";
-import { RHSBinaryExp } from "./grammarModel/RHSEntries/RHSBinaryExp";
+import { ListUtil } from "../../utils";
 
 
 export class ConceptMaker {
@@ -72,15 +79,16 @@ export class ConceptMaker {
         } else {
             rule = new ConceptRule(piConcept);
         }
+        const isSingleEntry: boolean = (projection.lines.length !== 1 ? false : true);
         for (const l of projection.lines) {
-            rule.ruleParts.push(...this.doLine(l, false));
+            rule.ruleParts.push(...this.doLine(l, false, isSingleEntry));
         }
         this.checkRule(rule);
         return rule;
     }
 
-    private doLine(line: PiEditProjectionLine, inOptionalGroup: boolean): RightHandSideEntry[] {
-        const subs = this.addItems(line.items, inOptionalGroup);
+    private doLine(line: PiEditProjectionLine, inOptionalGroup: boolean, isSingleEntry: boolean): RightHandSideEntry[] {
+        const subs = this.addItems(line.items, inOptionalGroup, isSingleEntry);
         if (!!subs && !!subs[subs.length - 1] ) {
             // to manage the layout of the grammar, we set 'addNewLineToGrammar' of the last entry in the line
             subs[subs.length - 1].addNewLineToGrammar = true;
@@ -88,19 +96,36 @@ export class ConceptMaker {
         return subs;
     }
 
-    private addItems(list: PiEditProjectionItem[], inOptionalGroup: boolean): RightHandSideEntry[] {
+    private addItems(list: PiEditProjectionItem[], inOptionalGroup: boolean, isSingleEntry: boolean): RightHandSideEntry[] {
         let parts: RightHandSideEntry[] = [];
+        if (!!list && list.length !== 1) {
+            isSingleEntry = false;
+        }
         if (!!list && list.length > 0) {
             list.forEach((item) => {
                 if (item instanceof PiOptionalPropertyProjection) {
                     let subs: RightHandSideEntry[] = [];
+                    let propIndex: number = 0; // the index in the list of parts in the optional group
+                    let foundIndex: boolean = false;
                     item.lines.forEach(line => {
-                        subs.push(...this.addItems(line.items, true));
+                        const subParts = this.addItems(line.items, true, isSingleEntry);
+                        subParts.forEach((part, index) => {
+                            if (part instanceof RHSPropEntry && part.property === item.property.referred) {
+                                propIndex += index;
+                                foundIndex = true;
+                            }
+                            subs.push(part);
+                        });
+                        if (!foundIndex) {
+                            propIndex += subParts.length;
+                        }
                     })
-                    parts.push(new RHSOptionalGroup(item.property.referred, subs));
+                    parts.push(new RHSOptionalGroup(item.property.referred, subs, propIndex));
                 } else if (item instanceof PiEditPropertyProjection) {
-                    const propPart = this.makePropPart(item, inOptionalGroup);
-                    if (!!propPart) parts.push(propPart);
+                    const propPart = this.makePropPart(item, inOptionalGroup, isSingleEntry);
+                    if (!!propPart) {
+                        parts.push(propPart);
+                    }
                 } else if (item instanceof PiEditProjectionText) {
                     parts.push(...this.makeTextPart(item));
                 } else if (item instanceof PiEditSuperProjection) {
@@ -111,7 +136,7 @@ export class ConceptMaker {
         return parts;
     }
 
-    private makePropPart(item: PiEditPropertyProjection, inOptionalGroup: boolean): RHSPropEntry {
+    private makePropPart(item: PiEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
         const prop: PiProperty = item.property.referred;
         let result: RHSPropEntry = null;
         if (!!prop) {
@@ -120,28 +145,43 @@ export class ConceptMaker {
             // take care of named projections
             let myProjName: string = null;
             if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
-                ParserGenUtil.addIfNotPresent(this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName));
+                ListUtil.addIfNotPresent<PiEditProjection>(this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName));
                 myProjName = item.projectionName;
             }
             //
             if (prop instanceof PiPrimitiveProperty) {
                 result = this.makePrimitiveProperty(prop, propType, item, inOptionalGroup);
             } else if (propType instanceof PiLimitedConcept) {
-                result = this.makeLimitedProp(prop, item, inOptionalGroup);
+                result = this.makeLimitedProp(prop, item, inOptionalGroup, isSingleEntry);
             } else if (propType instanceof PiBinaryExpressionConcept) {
-                result = new RHSBinaryExp(prop, propType);
+                if (!prop.isList) {
+                    result = new RHSBinaryExp(prop, propType); // __pi_binary_propTypeName
+                } else {
+                    let joinText = this.makeListJoinText(item.listInfo?.joinText);
+                    if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+                        result = new RHSBinExpList(prop, propType); // __pi_binary_propTypeName*
+                    } else if (item.listInfo?.joinType === ListJoinType.Separator) {
+                        result = new RHSBinExpListWithSeparator(prop, propType, joinText); // [ __pi_binary_propTypeName / "joinText" ]
+                    } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
+                        const sub1 = new RHSPartEntry(prop, item.projectionName);
+                        result = new RHSBinExpListWithInitiator(prop, propType, sub1, joinText); // `("joinText" __pi_binary_propTypeName)*`
+                    } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
+                        const sub1 = new RHSPartEntry(prop, item.projectionName);
+                        result = new RHSBinExpListWithTerminator(prop, propType, sub1, joinText, isSingleEntry); // `(__pi_binary_propTypeName 'joinText' )*`
+                    }
+                }
             } else {
                 if (!prop.isList) {
                     result = this.makeSingleProperty(prop, myProjName, inOptionalGroup);
                 } else {
-                    result = this.makeListProperty(prop, item);
+                    result = this.makeListProperty(prop, item, isSingleEntry);
                 }
             }
         }
         return result;
     }
 
-    private makeListProperty(prop: PiProperty, item: PiEditPropertyProjection): RHSPropEntry {
+    private makeListProperty(prop: PiProperty, item: PiEditPropertyProjection, isSingleEntry: boolean): RHSPropEntry {
         let result: RHSPropEntry;
         if (prop.isPart) {
             // (list, part, optionality not relevant)
@@ -149,13 +189,13 @@ export class ConceptMaker {
             if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
                 result = new RHSPartListEntry(prop); // propTypeName*
             } else if (item.listInfo?.joinType === ListJoinType.Separator) {
-                result = new RHSPartListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
+                result = new RHSPartListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
             } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
                 const sub1 = new RHSPartEntry(prop, item.projectionName);
-                result = new RHSListGroupWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
+                result = new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
             } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                 const sub1 = new RHSPartEntry(prop, item.projectionName);
-                result = new RHSListGroup(prop, sub1, joinText); // `(${propTypeName} '${joinText}' )* /* option C */`
+                result = new RHSPartListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName 'joinText' )*`
             }
         } else if (!prop.isPart) {
             // (list, reference, optionality not relevant)
@@ -166,10 +206,10 @@ export class ConceptMaker {
                 result = new RHSRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
             } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
                 const sub1 = new RHSRefEntry(prop);
-                result = new RHSListGroupWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
+                result = new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
             } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                 const sub1 = new RHSRefEntry(prop);
-                result = new RHSListGroup(prop, sub1, joinText); // `(propTypeName "joinText")*`
+                result = new RHSPartListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName "joinText")*`
             }
         }
         return result;
@@ -265,13 +305,14 @@ export class ConceptMaker {
         let subs: RightHandSideEntry[] = [];
         // find the projection that we need
         let myProjection: PiEditProjection = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
+        const isSingleEntry: boolean = (myProjection.lines.length !== 1 ? false : true);
         myProjection.lines.forEach(line => {
-            subs.push(...this.addItems(line.items, inOptionalGroup));
+            subs.push(...this.addItems(line.items, inOptionalGroup, isSingleEntry));
         });
         return subs;
     }
 
-    private makeLimitedProp(prop: PiProperty, item: PiEditPropertyProjection, inOptionalGroup: boolean): RHSPropEntry {
+    private makeLimitedProp(prop: PiProperty, item: PiEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
         if (!prop.isList) {
             if (!prop.isOptional || inOptionalGroup) {
                 return new RHSLimitedRefEntry(prop);
@@ -286,10 +327,10 @@ export class ConceptMaker {
                 return new RHSLimitedRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
             } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
                 const sub1 = new RHSLimitedRefEntry(prop);
-                return new RHSListGroupWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
+                return new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
             } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                 const sub1 = new RHSLimitedRefEntry(prop);
-                return new RHSListGroup(prop, sub1, joinText); // `(propTypeName 'joinText' )*`
+                return new RHSPartListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName 'joinText' )*`
             }
         }
         return null;

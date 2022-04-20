@@ -86,7 +86,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
         import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
         import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
-        import { ${Names.PiNamedElement} } from "@projectit/core";
+        import { ${Names.PiNamedElement}, PiParseLocation } from "@projectit/core";
         import { ${this.parts.map(part => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from ".";
         import { PiElementReference } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         
@@ -97,6 +97,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         *   
         */
         export class ${className} implements SyntaxAnalyser {
+            filename: string = "";
             locationMap: any;
             ${this.parts.map(part => `private ${this.getPartAnalyserName(part)}: ${Names.unitAnalyser(this.language, part.unit)} = new ${Names.unitAnalyser(this.language, part.unit)}(this)`).join(";\n")}
         
@@ -113,19 +114,24 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
         
             public ${internalTransformNode}(node: SPPTNode): any {
-                try {
-                    if (node.isLeaf) {
-                        return this.${internalTransformLeaf}(node);
-                    } else if (node.isBranch) {
-                        return this.${internalTransformBranch}(node as SPPTBranch);
+                if (!!node) {
+                    try {
+                        if (node.isLeaf) {
+                            return this.${internalTransformLeaf}(node);
+                        } else if (node.isBranch) {
+                            return this.${internalTransformBranch}(node as SPPTBranch);
+                        }
+                    } catch (e) {
+                        if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${className}")) {
+                            throw e;
+                        } else {
+                            // add more info to the error message 
+                            throw new Error(\`Syntax error in "\${node?.matchedText.trimEnd()}": \${e.message}\`);
+                        }
+                        // console.log(e.message + e.stack);
                     }
-                } catch (e) {
-                    if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${className}")) {
-                        throw e;
-                    } else {
-                        // add more info to the error message 
-                        throw new Error(\`Syntax error in "\${node?.matchedText.trimEnd()}": \${e.message}\`);
-                    }
+                } else {
+                    return null;
                 }
             }
             
@@ -180,11 +186,11 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 while (!stop) {
                     let nextOne: any = null;
                     try {
-                        nextOne = group.nonSkipChildren.toArray()[0]; 
+                        nextOne = group.nonSkipChildren?.toArray()[0]; 
                     } catch (e) {
                         throw new Error(\`Cannot follow group: \${e.message} (\${group.matchedText})\`);
                     }
-                    if (!nextOne.name.includes("multi") && !nextOne.name.includes("group")) {
+                    if (!nextOne || (!nextOne.name.includes("multi") && !nextOne.name.includes("group"))) {
                         stop = true; // found a branch with actual content, return its parent!
                     } else {
                         group = nextOne;
@@ -260,6 +266,15 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                     }
                 }
                 return result;
+            }
+            
+            public location(branch: SPPTBranch): PiParseLocation {
+                const location = PiParseLocation.create({
+                    filename: this.filename,
+                    line: branch.location.line,
+                    column: branch.location.column
+                });
+                return location;
             }
         }`;
         // end Template

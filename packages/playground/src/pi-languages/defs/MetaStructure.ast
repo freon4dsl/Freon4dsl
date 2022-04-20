@@ -2,11 +2,11 @@ language PiLanguage
 
 // begin structure definition
 modelunit PiStructureDef {
-    public name: identifier;
-    public modelConcept: PiModelDescription;
-    public units: PiUnitDescription[];
-    public concepts: PiConcept[];
-    public interfaces: PiInterface[];
+    name: identifier;
+    modelConcept: PiModelDescription;
+    units: PiUnitDescription[];
+    concepts: PiConcept[];
+    interfaces: PiInterface[];
     file-extension = "ast";
 }
 
@@ -14,20 +14,25 @@ modelunit PiStructureDef {
 interface Type {
     name: identifier;
 }
-
+concept PiParseLocation {
+    filename: string;
+    column: number;
+    line: number;
+}
+// end extras
 abstract concept PiLangElement {
-    // location: ParseLocation
+    location?: PiParseLocation;
     name: identifier;
     // piMetaName: string; not yet implemented
 }
-abstract concept PiClassifier base PiLangElement {
+abstract concept PiClassifier base PiLangElement implements Type {
     reference owningLanguage: PiStructureDef;
     isPublic: boolean;
     properties: PiProperty[];
     //primProperties: PiPrimitiveProperty[];
 }
 concept PiModelDescription base PiClassifier {
-    properties: PiProperty[];
+    isPublic: boolean = true;
 }
 concept PiUnitDescription base PiClassifier {
     fileExtension: string = "";
@@ -57,7 +62,7 @@ abstract concept PiProperty base PiLangElement {
     isPart: boolean; // if false then it is a reference property
     reference type: Type;
     // TODO see how we address the following
-    reference owningConcept: PiClassifier;
+    reference owningConcept?: PiClassifier;
 }
 concept PiConceptProperty base PiProperty {
     // TODO see how we address the following
@@ -83,11 +88,11 @@ concept PiPropertyInstance base PiLangElement {
 concept PiFunction base PiLangElement {
     reference language: PiStructureDef;
     formalparams: PiParameter[];
-    reference returnType: PiClassifier;
+    reference returnType: Type;
 }
 
 concept PiParameter base PiLangElement {
-    reference type: PiClassifier;
+    reference type: Type;
 }
 // the basic types in the pi-languages
 abstract concept PiPrimitiveValue {

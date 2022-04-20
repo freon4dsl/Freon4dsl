@@ -159,11 +159,11 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             if (classifier instanceof PiConcept && !!classifier.base) {
                 this.checkPropsOfBase(classifier.base.referred, prop);
             } else if (classifier instanceof PiInterface) {
-                classifier.base.forEach(ref => {
-                    const inSuper = this.searchLocalProps(ref.referred, prop);
+                classifier.base.forEach(intfRef => {
+                    const inSuper = this.searchLocalProps(intfRef.referred, prop);
                     if (!!inSuper) {
                         this.simpleCheck(LangUtil.compareTypes(prop, inSuper),
-                            `Property '${prop.name}' with non conforming type already exists in base interface '${ref.name}' ${Checker.location(prop)} and ${Checker.location(inSuper)}.`,);
+                            `Property '${prop.name}' with non conforming type already exists in base interface '${intfRef.name}' ${Checker.location(prop)} and ${Checker.location(inSuper)}.`,);
                     }
                 });
             }
@@ -201,7 +201,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
                 });
             });
         }
-        // 5. all properties of super concepts, that are not overwritten in this concept, must conform props of all interfaces
+        // 5. all properties of super concepts, that are not overwritten in this concept, must conform. Idem props of all interfaces.
         if (classifier instanceof PiConcept) {
             const myBase = classifier.base?.referred;
             if (!!myBase) {
@@ -220,19 +220,24 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
     }
 
     private checkPropsOfBase(myBase: PiConcept, prop: PiProperty) {
-        const inSuper = this.searchLocalProps(myBase, prop);
-        if (!!inSuper) {
-            this.nestedCheck({
-                check: LangUtil.compareTypes(prop, inSuper),
-                error: `Property '${prop.name}' with non conforming type already exists in base concept '${myBase.name}' ${Checker.location(prop)} and ${Checker.location(inSuper)}.`,
-                whenOk: () => {
-                    // set the 'implementedInBase' flag
-                    prop.implementedInBase = true;
+        if (!!myBase && !!prop) {
+            const inSuper = this.searchLocalProps(myBase, prop);
+            if (!!inSuper) {
+                this.nestedCheck({
+                    check: LangUtil.compareTypes(prop, inSuper),
+                    error: `Property '${prop.name}' with non conforming type already exists in base concept '${myBase.name}' ${Checker.location(prop)} and ${Checker.location(inSuper)}.`,
+                    whenOk: () => {
+                        // set the 'implementedInBase' flag
+                        prop.implementedInBase = true;
+
+                    }
+                });
+            } else if (!!myBase.base) {
+                // check base of base
+                if (myBase.base.referred instanceof PiConcept) { // if error is made, base could be an interface
+                    this.checkPropsOfBase(myBase.base.referred, prop);
                 }
-            });
-        } else if (!!myBase.base) {
-            // check base of base
-            this.checkPropsOfBase(myBase.base.referred, prop);
+            }
         }
     }
 

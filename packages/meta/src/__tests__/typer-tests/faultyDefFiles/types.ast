@@ -1,0 +1,107 @@
+language TyTest
+
+// MODEL
+model TyTest {
+    public unitA: unitA;
+    public unitB: unitB;
+}
+// type definitions
+modelunit unitB {
+    typeDefs: Type[];
+    file-extension = "types";
+}
+// expressions and their types
+modelunit unitA {
+    lines: Line[];
+    file-extension = "expr";
+}
+modelunit unitC {
+    lines: Line[];
+    exp: SimpleExp1;
+    file-extension = "tmp";
+}
+// ALL INTERFACES
+interface Type { // base BaseType {
+    public name: identifier;
+}
+//
+//interface BaseType {
+//}
+
+// ALL  CONCEPTS
+abstract expression Exp {
+}
+
+concept Line {
+    expr: Exp;
+    type: TypeDeclaration;
+}
+
+// EXPRESSIONS
+expression SimpleExp1 base Exp {
+    xx: number;
+}
+
+expression SimpleExp2 base Exp {
+    xx: number;
+}
+
+expression NamedExp base Exp {
+    myType: NamedType;
+}
+
+expression PlusExp base Exp {
+    left: Exp;
+    right: Exp;
+}
+
+expression UnitLiteral base Exp {
+    // 62 kilogram, or 112 miles
+    inner: SimpleExp1;
+    unit: UnitKind;
+}
+
+expression GenericLiteral base Exp {
+    // Set{ 12, 14, 16, 18 }
+    content: Exp[];
+    kind: GenericKind;
+}
+
+// TYPES
+
+limited OtherPredefinedType implements Type { NULL; }
+limited PredefinedType implements Type { Simple1; Simple2; ANY; NULL; }
+
+concept NamedType implements Type {
+}
+
+abstract concept TypeDeclaration {
+}
+
+concept SimpleType base TypeDeclaration {
+    reference type: Type; // anything but GenericType or UnitOfMeasurement
+}
+
+concept GenericType base TypeDeclaration {
+    innerType: TypeDeclaration;
+    kind: GenericKind; // is it a set, sequence, bag, or anything else
+}
+
+limited GenericKind { Set; Sequence; Bag; Collection; }
+
+concept UnitOfMeasurement base TypeDeclaration {
+    baseType: PredefinedType;
+    unit: UnitKind; // is it measured in km, kWh, grams, or anything else
+}
+limited UnitKind { Meters; Grams; kWh; Hours; }
+
+
+//concept OrType implements Type { // represents "one of", e.g. string|string[]
+//    reference inners: Type[];
+//}
+//
+//concept AndType implements Type { // represents "all of", e.g. Comparable&Serializable
+//    reference inners: Type[];
+//}
+
+

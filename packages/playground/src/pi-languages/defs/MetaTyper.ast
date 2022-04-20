@@ -2,40 +2,91 @@ language PiLanguage
 
 // begin typer definition
 modelunit PiTyperDef {
-    public name: identifier;
-//}
-//concept PiTypeDefinition {
-//    location: ParseLocation;
-//    name: identifier;
-    languageName: string;
-    reference language: PiStructureDef;
-    typerRules: PiTypeRule[];
-    classifierRules: PiTypeClassifierRule[];
-    reference typeroot: PiClassifier;
+    name: identifier = "TYPER";
+    location?: PiParseLocation;
     reference types: PiClassifier[];
+    reference conceptsWithType: PiClassifier[];
+    typeConcepts: PitTypeConcept[];
+    anyTypeSpec?: PitAnyTypeSpec;
+    classifierSpecs: PitClassifierSpec[];
+    reference typeroot?: PiClassifier;
     file-extension = "type";
 }
+concept PitTypeConcept base PiConcept {
+    properties: PitProperty[];
+    reference base?: PiConcept;
+}
+concept PitProperty base PiProperty {
+}
+concept PitClassifierSpec {
+    reference myClassifier: PiClassifier;
+    rules: PitTypeRule[];
+}
+concept PitAnyTypeSpec {
+    rules: PitTypeRule[];
+}
+abstract concept PitTypeRule {
+    exp: PitExp;
+}
+concept PitInferenceRule base PitTypeRule {
+    reference returnType?: PiClassifier; // not parsed, set by the checker
+}
+concept PitConformanceRule base PitTypeRule {
+}
+concept PitEqualsRule base PitTypeRule {
+}
+concept PitLimitedRule base PitTypeRule {
+}
+concept PitVarDecl {
+    name: identifier;
+    reference type: PiClassifier;
+}
+concept PitPropInstance base PiLangElement {
+    reference property: PiProperty;
+    value: PitExp;
+}
 
-abstract concept PiTypeRule base PiLangElement {
-//    location: ParseLocation;
+// expressions
+abstract expression PitExp {
 }
-concept PiTypeIsTypeRule base PiTypeRule {
-    reference types: PiClassifier[];
+expression PitPropertyCallExp base PitExp {
+    source: PitExp;
+    reference property: PiProperty;
+}
+expression PitSelfExp base PitExp {
+}
+expression PitAnytypeExp base PitExp {
+}
+expression PitVarCallExp base PitExp {
+    reference variable: PitVarDecl;
+}
+expression PitCreateExp base PitExp {
+    reference type: PiClassifier;
+    propertyDefs: PitPropInstance[];
+}
+expression PitFunctionCallExp base PitExp {
+    calledFunction: identifier;
+    reference returnType?: PiClassifier; // not parsed, set by checker
+    arguments: PitExp[];
+}
+expression PitLimitedInstanceExp base PitExp {
+    reference myLimited?: PiLimitedConcept;
+    reference myInstance: PiInstance;
+}
+expression PitWhereExp base PitExp {
+    variable: PitVarDecl; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
+    conditions: PitBinaryExp[];
+}
+abstract binary expression PitBinaryExp base PitExp {
+    left: PitExp;
+    right: PitExp;
+//    operand: PitBinaryExpKind; // either 'equalsto' or 'conformsto'
+}
+binary expression PitEquals base PitBinaryExp {
+    priority = 8;
+}
+binary expression PitConforms base PitBinaryExp {
+    priority = 4;
 }
 
-concept PiTypeAnyTypeRule base PiTypeRule {
-    statements: PiTypeStatement[];
-}
-
-concept PiTypeClassifierRule base PiTypeRule {
-    reference conceptRef: PiClassifier;
-    statements: PiTypeStatement[];
-}
-
-concept PiTypeStatement {
-//    location: ParseLocation;
-    statementtype: string;
-    exp: PiLangExp;
-    isAbstract: boolean;
-}
 // end typer definition

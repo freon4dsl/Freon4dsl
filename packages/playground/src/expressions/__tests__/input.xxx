@@ -1,0 +1,13 @@
+sss.www.yyy.zzz.rrr;
+self;
+rrr;
+self.qqq;
+PiPrimitiveType:identifier;
+x:GenericType where {
+    x.kind equalsto self.kind;
+};
+commonSuperType(self.rr, self.yy).www;
+x:GenericType where {
+    typeOf(x.innerType) equalsto typeOf(self.content);
+    x.kind equalsto PiPrimitiveType:identifier;
+};
