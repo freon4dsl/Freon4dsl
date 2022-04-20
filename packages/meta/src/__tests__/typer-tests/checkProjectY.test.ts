@@ -7,7 +7,7 @@ import { PitClassifierSpec, PitInferenceRule, PiTyperDef } from "../../typerdef/
 function testTypeUnit(typeUnit: PiTyperDef) {
     expect(typeUnit).not.toBeNull();
     expect(typeUnit).not.toBeUndefined();
-    console.log(typeUnit?.toPiString());
+    // console.log(typeUnit?.toPiString());
     expect(typeUnit.types.length).toBe(3);
     expect(typeUnit.conceptsWithType.length).toBe(13);
     // console.log(typeUnit.conceptsWithType.map(t => t.name).join(", "))
@@ -65,15 +65,15 @@ describe("Checking new typer", () => {
                     typeUnit = parser.parse(testdir + "projectY.type");
                 }
             } catch (e) {
-                console.log(e.stack);
+                // console.log(e.stack);
                 const errors: string[] = parser.checker.errors;
-                // expect(errors.length).toBe(0);
-                console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+                expect(errors.length).toBe(0);
+                // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
             }
 
             expect(typeUnit).not.toBeNull();
             expect(typeUnit).not.toBeUndefined();
-            console.log(typeUnit?.toPiString());
+            // console.log(typeUnit?.toPiString());
             testTypeUnit(typeUnit);
         }
     });
@@ -96,10 +96,10 @@ describe("Checking new typer", () => {
                             testdir + "multiFileInput/projectY-part2.type"]);
                 }
             } catch (e) {
-                console.log(e.stack);
+                // console.log(e.stack);
                 const errors: string[] = parser.checker.errors;
-                // expect(errors.length).toBe(0);
-                console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+                expect(errors.length).toBe(0);
+                // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
             }
             testTypeUnit(typeUnit);
         }
