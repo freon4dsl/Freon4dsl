@@ -36,6 +36,12 @@ import { PitBinaryExp } from "../metalanguage/expressions/PitBinaryExp";
 import { PitConformanceRule } from "../metalanguage/PitConformanceRule";
 import { PitEqualsRule } from "../metalanguage/PitEqualsRule";
 
+/**
+ * This class is the (mainly) generated syntax analyser that reforms the parsed
+ * typer definition into instances of our metamodel.
+ * The differences are: (1) a parse location is added,
+ * (2) the names of PiElementReferences are adjusted.
+ */
 export class PiTyperDefSyntaxAnalyserPart {
     mainAnalyser: PiTyperSyntaxAnalyser;
 
@@ -99,14 +105,14 @@ export class PiTyperDefSyntaxAnalyserPart {
                 __classifierSpecs.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
             }
         }
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
+        
         return PiTyperDef.create({
             __types: __types,
             typeConcepts: __typeConcepts,
             __conceptsWithType: __conceptsWithType,
             anyTypeSpec: __anyTypeSpec,
             classifierSpecs: __classifierSpecs,
-            agl_location: location
+            agl_location: this.mainAnalyser.location(branch)
         });
     }
 
@@ -141,9 +147,10 @@ export class PiTyperDefSyntaxAnalyserPart {
                 __properties.push(_transformed);
             }
         });
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitTypeConcept.create({ name: __name, base: __base, properties: __properties, agl_location: location });
+        return PitTypeConcept.create({ name: __name, base: __base, properties: __properties, agl_location: this.mainAnalyser.location(branch) });
     }
+
+
 
     /**
      * Method to transform branches that match the following rule:
@@ -166,8 +173,7 @@ export class PiTyperDefSyntaxAnalyserPart {
                 __rules.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
             }
         }
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitAnyTypeSpec.create({ rules: __rules, agl_location: location });
+        return PitAnyTypeSpec.create({ rules: __rules, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -181,9 +187,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         let __exp: PitExp;
         const children = this.mainAnalyser.getChildren(branch);
         __exp = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPartEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitInferenceRule.create({ exp: __exp, agl_location: location });
+        return PitInferenceRule.create({ exp: __exp, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -199,9 +203,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __source = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
         __property = this.mainAnalyser.piElemRef<PiProperty>(children[2], "PiProperty"); // RHSRefEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitPropertyCallExp.create({ source: __source, __property: __property, agl_location: location });
+        return PitPropertyCallExp.create({ source: __source, __property: __property, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -214,8 +216,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         // console.log('transformPitSelfExp called: ' + branch.name);
 
         const children = this.mainAnalyser.getChildren(branch);
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitSelfExp.create({ agl_location: location });
+        return PitSelfExp.create({ agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -228,8 +229,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         // console.log('transformPitAnytypeExp called: ' + branch.name);
 
         const children = this.mainAnalyser.getChildren(branch);
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitAnytypeExp.create({ agl_location: location });
+        return PitAnytypeExp.create({ agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -243,9 +243,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         let __variable: PiElementReference<PitVarDecl>;
         const children = this.mainAnalyser.getChildren(branch);
         __variable = this.mainAnalyser.piElemRef<PitVarDecl>(children[0], "PitVarDecl"); // RHSRefEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitVarCallExp.create({ __variable: __variable, agl_location: location });
+        return PitVarCallExp.create({ __variable: __variable, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -261,9 +259,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __type = this.mainAnalyser.piElemRef<PiClassifier>(children[0], "PiClassifier"); // RHSRefEntry
         __propertyDefs = this.mainAnalyser.transformSharedPackedParseTreeList<PitPropInstance>(children[2], ","); // RHSPartListWithSeparator
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitCreateExp.create({ __type: __type, propertyDefs: __propertyDefs, agl_location: location });
+        return PitCreateExp.create({ __type: __type, propertyDefs: __propertyDefs, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -279,9 +275,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __property = this.mainAnalyser.piElemRef<PiProperty>(children[0], "PiProperty"); // RHSRefEntry
         __value = this.mainAnalyser.transformSharedPackedParseTreeNode(children[2]); // RHSPartEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitPropInstance.create({ __property: __property, value: __value, agl_location: location });
+        return PitPropInstance.create({ __property: __property, value: __value, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -297,9 +291,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __calledFunction = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
         __arguments = this.mainAnalyser.transformSharedPackedParseTreeList<PitExp>(children[2], ","); // RHSPartListWithSeparator
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitFunctionCallExp.create({ calledFunction: __calledFunction, actualParameters: __arguments, agl_location: location });
+        return PitFunctionCallExp.create({ calledFunction: __calledFunction, actualParameters: __arguments, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -321,9 +313,7 @@ export class PiTyperDefSyntaxAnalyserPart {
             __myLimited = this.mainAnalyser.piElemRef<PiLimitedConcept>(_propItem[0], "PiLimitedConcept"); // RHSRefEntry
         }
         __myInstance = this.mainAnalyser.piElemRef<PiInstance>(children[1], "PiInstance"); // RHSRefEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitLimitedInstanceExp.create({ __myLimited: __myLimited, __myInstance: __myInstance, agl_location: location });
+        return PitLimitedInstanceExp.create({ __myLimited: __myLimited, __myInstance: __myInstance, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -349,8 +339,7 @@ export class PiTyperDefSyntaxAnalyserPart {
                 __conditions.push(_transformed);
             }
         });
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitWhereExp.create({ variable: __variable, conditions: __conditions, agl_location: location });
+        return PitWhereExp.create({ variable: __variable, conditions: __conditions, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -366,9 +355,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
         __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "PiClassifier"); // RHSRefEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitVarDecl.create({ name: __name, __type: __type, agl_location: location });
+        return PitVarDecl.create({ name: __name, __type: __type, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -382,9 +369,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         let __exp: PitExp;
         const children = this.mainAnalyser.getChildren(branch);
         __exp = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPartEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitConformanceRule.create({ exp: __exp, agl_location: location });
+        return PitConformanceRule.create({ exp: __exp, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -398,9 +383,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         let __exp: PitExp;
         const children = this.mainAnalyser.getChildren(branch);
         __exp = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPartEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitEqualsRule.create({ exp: __exp, agl_location: location });
+        return PitEqualsRule.create({ exp: __exp, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -414,9 +397,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         let __exp: PitExp;
         const children = this.mainAnalyser.getChildren(branch);
         __exp = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitLimitedRule.create({ exp: __exp, agl_location: location });
+        return PitLimitedRule.create({ exp: __exp, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -443,8 +424,7 @@ export class PiTyperDefSyntaxAnalyserPart {
                 __rules.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
             }
         }
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitClassifierSpec.create({ __myClassifier: __myClassifier, rules: __rules, agl_location: location });
+        return PitClassifierSpec.create({ __myClassifier: __myClassifier, rules: __rules, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -460,9 +440,7 @@ export class PiTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
         __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "PiClassifier"); // RHSRefEntry
-
-        const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
-        return PitProperty.create({ name: __name, refType: __type, agl_location: location });
+        return PitProperty.create({ name: __name, refType: __type, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
@@ -518,14 +496,14 @@ export class PiTyperDefSyntaxAnalyserPart {
             let operator = this.mainAnalyser.transformSharedPackedParseTreeNode(children[index++]);
             let second = this.mainAnalyser.transformSharedPackedParseTreeNode(children[index++]);
             let combined: PitExp = null;
-            const location = PiParseLocation.create({filename: this.mainAnalyser.filename, line: branch.location.line, column: branch.location.column});
+            
             switch (operator) {
                 case "equalsto": {
-                    combined = PitEqualsExp.create({ left: first, right: second, agl_location: location });
+                    combined = PitEqualsExp.create({ left: first, right: second, agl_location: this.mainAnalyser.location(branch) });
                     break;
                 }
                 case "conformsto": {
-                    combined = PitConformsExp.create({ left: first, right: second, agl_location: location });
+                    combined = PitConformsExp.create({ left: first, right: second, agl_location: this.mainAnalyser.location(branch) });
                     break;
                 }
                 default: {

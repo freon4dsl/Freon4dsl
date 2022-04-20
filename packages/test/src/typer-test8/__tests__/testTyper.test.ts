@@ -1,7 +1,7 @@
 import { GenericModelSerializer, PiError } from "@projectit/core";
-import { FileHandler } from "../../octopus/__tests__/FileHandler";
 import { ProjectYModelUnitType, XXunit, XX } from "../language/gen";
 import { ProjectYEnvironment } from "../environment/gen/ProjectYEnvironment";
+import { FileHandler } from "../../utils/FileHandler";
 
 const writer = ProjectYEnvironment.getInstance().writer;
 const reader = ProjectYEnvironment.getInstance().reader;
@@ -30,7 +30,8 @@ function compareReadAndWrittenFiles(path: string) {
     }
 }
 
-describe ("Testing Typer Ideas", () => {
+describe ("Testing Typer on", () => {
+    // TODO make an input file in which a number of NamedTypes are created and used
 
     test ("literal expressions", () => {
         const model = new XX();

@@ -11,7 +11,9 @@ import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallEx
 import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
 import { PiPrimitiveType } from "../languagedef/metalanguage/PiLanguage";
 import { Names } from "./Names";
+import { LangUtil } from "./LangUtil";
 
+// TODO make this a class with static methods
 /**
  * This function sorts the list of PiConcepts in such a way that
  * when a concept has a base concept, this base concept comes after the concept.
@@ -24,6 +26,7 @@ import { Names } from "./Names";
  *
  * @param piconcepts: the list of concepts to be sorted
  */
+// TODO see if this can be replaced by "sortTypes"
 export function sortConcepts(piconcepts: PiConcept[] | PiElementReference<PiConcept>[]): PiConcept[] {
     const newList: PiConcept[] = [];
     return _internalSort(piconcepts, newList);
@@ -81,6 +84,36 @@ function _internalSort(original: PiConcept[] | PiElementReference<PiConcept>[], 
         // console.log("====> items to go: " + itemsToGo);
     }
     return newList.reverse();
+}
+
+/**
+ * Sorts the types such that any type comes before its super concept or interface
+ **/
+export function sortTypes(toBeSorted: PiClassifier[]): PiClassifier[] {
+    const result: PiClassifier[] = [];
+    const remaining: PiClassifier[] = [];
+    remaining.push(...toBeSorted);
+    while (remaining.length > 0) {
+        remaining.forEach(cls => {
+            const supers = LangUtil.superClassifiers(cls);
+            let hasSuperInList: boolean = false;
+            supers.forEach(superCls => {
+                if (remaining.includes(superCls)) {
+                    hasSuperInList = true;
+                }
+            });
+            if (!hasSuperInList) {
+                result.push(cls);
+            }
+        });
+        result.forEach(cls => {
+            const indexInRemaining: number = remaining.indexOf(cls)
+            if (indexInRemaining >= 0) {
+                remaining.splice(indexInRemaining, 1);
+            }
+        })
+    }
+    return result.reverse();
 }
 
 /**

@@ -1,4 +1,4 @@
-import { PiTyperParser } from "../../typerdef/parser";
+import { PiTyperMerger } from "../../typerdef/parser";
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
@@ -34,7 +34,7 @@ describe("Checking new typer", () => {
     const testdir = "src/__tests__/typer-tests/correctDefFiles/";
     const langParser = new LanguageParser();
 
-    let parser: PiTyperParser;
+    let parser: PiTyperMerger;
     let language: PiLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
@@ -42,7 +42,7 @@ describe("Checking new typer", () => {
     beforeEach(() => {
         try {
             language = langParser.parse(testdir + "projectY.ast");
-            parser = new PiTyperParser(language);
+            parser = new PiTyperMerger(language);
         } catch (e) {
             console.log("Language could not be read: " + e.stack);
             // console.log("found errors in .ast: " + langParser.checker.errors.map(e => e).join("\n"));

@@ -3,15 +3,19 @@ import { MetaLogger } from "../../utils/MetaLogger";
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { PiTyperDef } from "../metalanguage";
 import { GenerationStatus, Helpers, Names, TYPER_FOLDER, TYPER_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../utils";
-import { PiTyperTemplate } from "./templates/PiTyperTemplate";
-import { PiTyperPartTemplate } from "./templates/PiTyperPartTemplate";
-import { CustomTyperPartTemplate } from "./templates/CustomTyperPartTemplate";
+import { FreonTyperTemplate } from "./templates/FreonTyperTemplate";
+import { FreonTyperPartTemplate } from "./templates/FreonTyperPartTemplate";
+import { FreonCustomTyperPartTemplate } from "./templates/FreonCustomTyperPartTemplate";
 import { LOG2USER } from "../../utils/UserLogger";
-import { PiTypeConceptMaker } from "./templates/PiTypeConceptMaker";
+import { FreonTypeConceptMaker } from "./templates/FreonTypeConceptMaker";
 
-const LOGGER = new MetaLogger("PiTyperGenerator").mute();
+const LOGGER = new MetaLogger("FreonTyperGenerator").mute();
 
-export class PiTyperGenerator {
+/**
+ * This class generates the implementation for a typer definition.
+ * It generates a set of files in a number of folders.
+ */
+export class FreonTyperGenerator {
     public outputfolder: string = ".";
     public language: PiLanguage;
     protected typerGenFolder: string;
@@ -27,10 +31,10 @@ export class PiTyperGenerator {
         this.getFolderNames();
         LOGGER.log("Generating typer in folder " + this.typerGenFolder);
 
-        const typer = new PiTyperTemplate();
-        const typeConceptMaker = new PiTypeConceptMaker();
-        const customPart = new CustomTyperPartTemplate();
-        const typerPart = new PiTyperPartTemplate();
+        const typer = new FreonTyperTemplate();
+        const typeConceptMaker = new FreonTypeConceptMaker();
+        const customPart = new FreonCustomTyperPartTemplate();
+        const typerPart = new FreonTyperPartTemplate();
 
         // Prepare folders
         Helpers.createDirIfNotExisting(this.typerFolder);
@@ -79,7 +83,6 @@ export class PiTyperGenerator {
         relativePath = "../";
 
         LOGGER.log(`Generating custom typerPart: ${this.typerFolder}/index.ts`);
-        // TODO this default should return false in all cases
         const customTyperFile = Helpers.pretty(customPart.generateCustomTyperPart(this.language, relativePath), "Custom TyperPart", generationStatus);
         Helpers.generateManualFile(`${this.typerFolder}/${Names.customTyper(this.language)}.ts`, customTyperFile, "Custom TyperPart");
 
@@ -103,6 +106,7 @@ export class PiTyperGenerator {
     clean(force: boolean) {
         // TODO error " ProjectItCleanAction: ERROR: Stopping typer cleansing because of errors: EPERM: operation not permitted, unlink 'src\testNoParserAvailable\typer\gen\type-concepts' "
         this.getFolderNames();
+        Helpers.deleteDirAndContent(this.typerConceptsFolder);
         Helpers.deleteDirAndContent(this.typerGenFolder);
         if (force) {
             Helpers.deleteFile(`${this.typerFolder}/index.ts`);

@@ -8,7 +8,7 @@ import {
 } from "../../../languagedef/generator/templates/ConceptUtils";
 import { LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
 
-export class PiTypeConceptMaker {
+export class FreonTypeConceptMaker {
     piTypeName: string = "PiType";
 
     generateTypeConcept(language: PiLanguage, concept: PitTypeConcept, relativePath: string): string {

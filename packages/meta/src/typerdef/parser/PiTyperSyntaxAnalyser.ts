@@ -242,4 +242,13 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
         }
         return result;
     }
+
+    public location(branch: net.akehurst.language.api.sppt.SPPTBranch) {
+        const location = PiParseLocation.create({
+            filename: this.filename,
+            line: branch.location.line,
+            column: branch.location.column
+        });
+        return location;
+    }
 }

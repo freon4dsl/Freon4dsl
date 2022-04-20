@@ -3,16 +3,19 @@ import {
     PitWhereExp,
     PiTyperDef
 } from "../../metalanguage";
-import { Names } from "../../../utils";
-import { TyperGenUtils } from "./TyperGenUtils";
+import { Names, sortTypes } from "../../../utils";
+import { FreonTyperGenUtils } from "./FreonTyperGenUtils";
 import { PitEqualsRule } from "../../metalanguage/PitEqualsRule";
 import { PiClassifier } from "../../../languagedef/metalanguage";
 
-export class EqualsMaker {
+/**
+ * This class generates the code for the 'equalsto' entries in the .type file.
+ */
+export class FreonTypeEqualsMaker {
     typerdef: PiTyperDef = null;
 
     public makeEqualsType(typerDef: PiTyperDef, leftVarName: string, rightVarName: string, imports: PiClassifier[]): string {
-        TyperGenUtils.types = typerDef.types;
+        FreonTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
         let allRules: string[] = [];
         // find all equals rules
@@ -21,7 +24,7 @@ export class EqualsMaker {
             equalsRules.push(...spec.rules.filter(r => r instanceof PitEqualsRule));
         });
         // sort the types such that any type comes before its super type
-        const sortedTypes = TyperGenUtils.sortTypes(typerDef.types);
+        const sortedTypes = sortTypes(typerDef.types);
         // make sub-entries for each rule defined for an ast-element
         let astSubRules: string[] = [];
         sortedTypes.forEach( type => {
@@ -46,7 +49,7 @@ export class EqualsMaker {
                 } `)
         // make an entry for each rule that is not defined for an ast-element
         equalsRules.map(conRule => {
-            if (TyperGenUtils.isType(conRule.owner.myClassifier)) {
+            if (FreonTyperGenUtils.isType(conRule.owner.myClassifier)) {
                 allRules.push(`if (${leftVarName}.$typename === "${Names.classifier(conRule.owner.myClassifier)}") {
                     ${this.makeEqualsForExp(conRule.exp, leftVarName, rightVarName, true, imports)};
                 }`);
@@ -60,9 +63,9 @@ export class EqualsMaker {
             const allConditions: string[] = [];
             let returnStr: string = '';
             exp.sortedConditions().forEach((cond, index) => {
-                const leftStr: string = TyperGenUtils.makeExpAsElement(cond.left, leftVarName, varIsType, imports);
-                const rightStr: string = TyperGenUtils.makeExpAsElement(cond.right, rightVarName, varIsType, imports);
-                if (TyperGenUtils.isType(cond.left.returnType)) {
+                const leftStr: string = FreonTyperGenUtils.makeExpAsElement(cond.left, leftVarName, varIsType, imports);
+                const rightStr: string = FreonTyperGenUtils.makeExpAsElement(cond.right, rightVarName, varIsType, imports);
+                if (FreonTyperGenUtils.isType(cond.left.returnType)) {
                     allConditions.push(`const condition${index+1}: boolean = this.mainTyper.equals(${leftStr}, ${rightStr});`)
                 } else {
                     allConditions.push(`const condition${index+1}: boolean = ${leftStr} === ${rightStr};`);

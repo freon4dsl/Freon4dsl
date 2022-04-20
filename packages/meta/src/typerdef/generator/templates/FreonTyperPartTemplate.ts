@@ -2,12 +2,12 @@ import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from
 import { PiConcept, PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
 import { PiTyperDef } from "../../metalanguage";
 import { ListUtil } from "../../../utils";
-import { EqualsMaker } from "./EqualsMaker";
-import { InferMaker } from "./InferMaker";
-import { SuperTypeMaker } from "./SuperTypeMaker";
-import { TyperGenUtils } from "./TyperGenUtils";
+import { FreonTypeEqualsMaker } from "./FreonTypeEqualsMaker";
+import { FreonTypeInferMaker } from "./FreonTypeInferMaker";
+import { FreonSuperTypeMaker } from "./FreonSuperTypeMaker";
+import { FreonTyperGenUtils } from "./FreonTyperGenUtils";
 
-export class PiTyperPartTemplate {
+export class FreonTyperPartTemplate {
     typerdef: PiTyperDef;
     language: PiLanguage;
     imports: string[] = [];
@@ -17,11 +17,11 @@ export class PiTyperPartTemplate {
         if (!!typerdef) {
             return this.generateFromDefinition(typerdef, language, relativePath);
         } else {
-            return this.generateDefault(language, relativePath);
+            return this.generateDefault(language);
         }
     }
 
-    private generateDefault(language: PiLanguage, relativePath: string): string {
+    private generateDefault(language: PiLanguage): string {
         // const allLangConcepts: string = Names.allConcepts(language);
         const typerInterfaceName: string = Names.PiTyperPart;
         const generatedClassName: string = Names.typerPart(language);
@@ -105,9 +105,9 @@ export class PiTyperPartTemplate {
         ListUtil.addIfNotPresent(this.imports, allLangConcepts);
         const generatedClassName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.PiTyperPart;
-        const equalsMaker: EqualsMaker = new EqualsMaker();
-        const inferMaker: InferMaker = new InferMaker();
-        const superTypeMaker: SuperTypeMaker = new SuperTypeMaker();
+        const equalsMaker: FreonTypeEqualsMaker = new FreonTypeEqualsMaker();
+        const inferMaker: FreonTypeInferMaker = new FreonTypeInferMaker();
+        const superTypeMaker: FreonSuperTypeMaker = new FreonSuperTypeMaker();
 
         // TODO see if we need a default type to return from inferType
 
@@ -240,7 +240,7 @@ export class PiTyperPartTemplate {
 
         const typeConceptImports: string [] = [];
         this.importedClassifiers.forEach(cls => {
-            if (TyperGenUtils.isType(cls)) {
+            if (FreonTyperGenUtils.isType(cls)) {
                 if (cls.name !== "PiType") {
                     ListUtil.addIfNotPresent(typeConceptImports, Names.classifier(cls));
                 }
@@ -260,7 +260,7 @@ export class PiTyperPartTemplate {
     }
 
     private makeIsType(allTypes: PiClassifier[]) {
-        let result: string = "";
+        let result: string;
         // add statements for all concepts that are marked 'isType'
         // all elements of allTypes should be PiConcepts
         const myList: PiConcept[] = allTypes.filter(t => t instanceof PiConcept) as PiConcept[];

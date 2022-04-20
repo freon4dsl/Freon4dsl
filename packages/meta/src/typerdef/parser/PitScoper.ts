@@ -1,9 +1,14 @@
 import { PiMetaScoper } from "../../languagedef/metalanguage/PiLangScoper";
 import { PiClassifier, PiLangElement } from "../../languagedef/metalanguage";
-import { PitBinaryExp, PitCreateExp, PitPropertyCallExp, PitVarCallExp, PitWhereExp } from "../metalanguage/expressions";
+import { PitCreateExp, PitPropertyCallExp, PitVarCallExp, PitWhereExp } from "../metalanguage/expressions";
 import { PitProperty, PitTypeConcept, PiTyperDef, PiTyperElement } from "../metalanguage";
 import { PiDefinitionElement } from "../../utils";
 
+/**
+ * This class makes sure that references to parts of the typer definition can be found.
+ * It is called by PiLangScoper, when it is added to its 'extraScopers'. The latter is
+ * done by the typer checker.
+ */
 export class PitScoper implements PiMetaScoper {
     definition: PiTyperDef;
 
@@ -41,9 +46,6 @@ export class PitScoper implements PiMetaScoper {
                 }
             }
         }
-        // if (name === "baseType") {
-        //     console.log("NEW SCOPER RESULT: " + result?.name + ": " + result?.constructor.name);
-        // }
         return result;
     }
 

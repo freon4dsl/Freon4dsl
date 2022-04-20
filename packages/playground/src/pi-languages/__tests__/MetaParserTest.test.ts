@@ -65,20 +65,19 @@ describe("Pi Language Parser", () => {
             // console.log(`visible in typeUnit: ${scoper.getVisibleElements(typeUnit).map(elem => `${elem.name}`).join(", ")}`);
             // console.log(`visible in complete model: ${scoper.getVisibleElements(completeModel).map(elem => `${elem.name}`).join(", ")}`);
 
-            // const simpleExpRule = typeUnit.classifierRules.find(rule => rule.myClassifier.name === "SimpleExp1");
+            const simpleExpRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "SimpleExp1");
             // console.log(`visible in simpleExpRule: ${scoper.getVisibleElements(simpleExpRule).map(elem => `${elem.name}`).join(", ")}`);
 
             const errors: PiError[] = validator.validate(typeUnit);
             // TODO MetaType.scope and .valid are not yet adjusted to the new structure in MetaType.ast
             // expect(errors.length).toBe(0);
-            // console.log("found " + errors.length + " errors");
-            // errors.forEach(e => {
-            //     console.log(e.message + " IN " + e.locationdescription + " of severity " + e.severity)
-            // });
+            console.log("found " + errors.length + " errors");
+            errors.forEach(e => {
+                console.log(e.message + " in '" + e.locationdescription + "' of severity '" + e.severity + "'")
+            });
 
             expect(typeUnit.types.length).toBe(2);
             expect(typeUnit.anyTypeSpec).not.toBeNull();
-            // new StructurePrint().print(typeUnit);
             console.log(writer.writeToString(typeUnit, 0, false));
             // expect(unit1).toMatchSnapshot();
         } catch (e) {

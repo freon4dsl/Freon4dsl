@@ -6,7 +6,11 @@ import { PiTyperReader } from "./PiTyperReader";
 import { PiTyperCheckerPhase1 } from "./PiTyperCheckerPhase1";
 import { Checker } from "../../utils";
 
-export class PiTyperParser {
+/**
+ * This class parses one of more .type files and merges them into a single PiTyperDef object, which is then
+ * checker by the PiTyperCheckerPhase1.
+ */
+export class PiTyperMerger {
     public language: PiLanguage;
     public checker: PiTyperCheckerPhase1;
     private reader: PiTyperReader;

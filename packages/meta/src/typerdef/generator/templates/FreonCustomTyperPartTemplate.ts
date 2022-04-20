@@ -1,7 +1,7 @@
 import { PiLanguage } from "../../../languagedef/metalanguage";
 import { Names, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
 
-export class CustomTyperPartTemplate {
+export class FreonCustomTyperPartTemplate {
     generateCustomTyperPart(language: PiLanguage, relativePath: string): string {
         // const allLangConcepts: string = Names.allConcepts(language);
         const typerInterfaceName: string = Names.PiTyperPart;

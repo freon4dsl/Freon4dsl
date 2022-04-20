@@ -1,20 +1,23 @@
 import {
     PitClassifierSpec,
     PitConformanceRule, PitConformsExp, PitEqualsExp, PitExp,
-    PitLimitedRule, PitPropertyCallExp, PitWhereExp,
+    PitPropertyCallExp, PitWhereExp,
     PiTyperDef
 } from "../../metalanguage";
-import { TyperGenUtils } from "./TyperGenUtils";
-import { ListUtil, Names } from "../../../utils";
+import { FreonTyperGenUtils } from "./FreonTyperGenUtils";
+import { ListUtil, Names, sortTypes } from "../../../utils";
 import { PiClassifier, PiLimitedConcept } from "../../../languagedef/metalanguage";
 import { PitBinaryExp } from "../../metalanguage/expressions";
 import { PitEqualsRule } from "../../metalanguage/PitEqualsRule";
 
-export class SuperTypeMaker {
+/**
+ * This class generates the code for all 'conformsto' entries in the .type file.
+ */
+export class FreonSuperTypeMaker {
     typerdef: PiTyperDef;
 
     public makeSuperTypes(typerdef: PiTyperDef, typevarName: string, imports: PiClassifier[]): string {
-        TyperGenUtils.types = typerdef.types;
+        FreonTyperGenUtils.types = typerdef.types;
         this.typerdef = typerdef;
         // Find all conformsto rules, which are (1) all PitConformanceRules,
         // and (2) all PitLimitedRules that have a 'PitConforms' statement.
@@ -31,7 +34,7 @@ export class SuperTypeMaker {
             }
         });
         // sort the types such that any type comes before its super type
-        const sortedTypes = TyperGenUtils.sortTypes(typerdef.types);
+        const sortedTypes = sortTypes(typerdef.types);
         // make sub-entries for each rule defined for an ast-element
         let astSubRules: string[] = [];
         sortedTypes.forEach( type => {
@@ -39,7 +42,7 @@ export class SuperTypeMaker {
             const myType: string = Names.classifier(type);
             const foundRule: PitEqualsRule = conformanceRules.find(conRule => conRule.owner.myClassifier === type);
             if (!!foundRule) {
-                if (!TyperGenUtils.isType(foundRule.owner.myClassifier)) {
+                if (!FreonTyperGenUtils.isType(foundRule.owner.myClassifier)) {
                     astSubRules.push(`if (this.metaTypeOk(elem, "${myType}")) {
 
                     }`);
@@ -75,7 +78,7 @@ export class SuperTypeMaker {
                 } `)
         // make an entry for each rule that is defined for a type concept
         conformanceRules.map(rule => {
-            if (TyperGenUtils.isType(rule.owner.myClassifier)) {
+            if (FreonTyperGenUtils.isType(rule.owner.myClassifier)) {
                 allRules.push(`if (${typevarName}.$typename === "${Names.classifier(rule.owner.myClassifier)}") {                
                 ${this.makeSuperForExp(rule.exp, typevarName, imports)}
             }`);
@@ -96,8 +99,8 @@ export class SuperTypeMaker {
         let result: string = "";
 
         binaryExps.map(stat =>
-            result += `if (${varName} === ${TyperGenUtils.makeExpAsElement(stat.left, varName, varIsType, imports)} ){
-                return [${TyperGenUtils.makeExpAsType(stat.right, varName, varIsType, imports)}];
+            result += `if (${varName} === ${FreonTyperGenUtils.makeExpAsElement(stat.left, varName, varIsType, imports)} ){
+                return [${FreonTyperGenUtils.makeExpAsType(stat.right, varName, varIsType, imports)}];
             }`
         ).join(" else ");
         return result;
@@ -107,7 +110,7 @@ export class SuperTypeMaker {
         if (exp instanceof PitWhereExp) {
             return this.makeWhereExp(exp, typevarName, imports);
         } else {
-            return TyperGenUtils.makeExpAsType(exp, typevarName, false, imports)
+            return FreonTyperGenUtils.makeExpAsType(exp, typevarName, false, imports)
         }
     }
 
@@ -116,9 +119,9 @@ export class SuperTypeMaker {
         const myConditions = exp.sortedConditions();
         myConditions.forEach((cond, index) => {
             if (cond instanceof PitConformsExp) {
-                result += `const rhs${index}: PiType[] = this.getSuperTypes(${TyperGenUtils.makeExpAsType(cond.right, varName, true, imports)});\n`;
+                result += `const rhs${index}: PiType[] = this.getSuperTypes(${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)});\n`;
             } else if (cond instanceof PitEqualsExp) {
-                result += `const rhs${index}: PiType[] = [${TyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}];\n`;
+                result += `const rhs${index}: PiType[] = [${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}];\n`;
             }
         });
         if (myConditions.length > 1) {
@@ -127,14 +130,14 @@ export class SuperTypeMaker {
             result += `/* make cartesian product of all conditions */`;
             for (let i = 0; i < myConditions.length; i++) {
                 const propAToBeChanged: string = this.getPropNameFromExp(myConditions[i].left);
-                const propA_isAstElement: boolean = !TyperGenUtils.isType(myConditions[i].left.returnType);
+                const propA_isAstElement: boolean = !FreonTyperGenUtils.isType(myConditions[i].left.returnType);
                 const propA_typeName: string = Names.classifier(myConditions[i].left.returnType);
                 const propsANotToBeChanged: string[] = cls.allProperties().map(prop => prop.name).filter(name => name !== propAToBeChanged);
                 for (let j = i + 1; j < myConditions.length; j++) {
-                    if (TyperGenUtils.isType(cls)) {
+                    if (FreonTyperGenUtils.isType(cls)) {
                         const typeName = Names.classifier(cls);
                         const propBToBeChanged: string = this.getPropNameFromExp(myConditions[j].left);
-                        const propB_isAstElement: boolean = !TyperGenUtils.isType(myConditions[j].left.returnType);
+                        const propB_isAstElement: boolean = !FreonTyperGenUtils.isType(myConditions[j].left.returnType);
                         const propB_typeName: string = Names.classifier(myConditions[j].left.returnType);
                         const propsBNotToBeChanged: string[] = cls.allProperties().map(prop => prop.name).filter(name => name !== propBToBeChanged);
                         result += `
@@ -168,6 +171,8 @@ export class SuperTypeMaker {
                             })
                         );
                     }`;
+                    } else {
+                        // TODO see how types that are AST nodes should be handled
                     }
                 }
             }
@@ -177,7 +182,7 @@ export class SuperTypeMaker {
         return result;
     }
 
-    public getPropNameFromExp(left: PitExp): string {
+    private getPropNameFromExp(left: PitExp): string {
         if (left instanceof PitPropertyCallExp) {
             return left.property.name;
         }

@@ -11,6 +11,6 @@ export {
     PiTyperReader,
     PiTyperCheckerPhase1,
     PiTyperCheckerPhase2,
-    PiTyperParser,
+    PiTyperMerger,
 } from "./internal";
 

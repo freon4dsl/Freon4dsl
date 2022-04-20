@@ -12,9 +12,9 @@ modelunit PiTyperDef {
     reference typeroot?: PiClassifier;
     file-extension = "type";
 }
-concept PitTypeConcept base PiClassifier {
+concept PitTypeConcept base PiConcept {
     properties: PitProperty[];
-    reference base?: PiClassifier;
+    reference base?: PiConcept;
 }
 concept PitProperty base PiProperty {
 }

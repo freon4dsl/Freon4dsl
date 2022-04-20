@@ -2,12 +2,16 @@ import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_FOLDER } from 
 import { PiLanguage } from "../../../languagedef/metalanguage";
 import { PiTyperDef } from "../../metalanguage";
 
-export class PiTyperTemplate {
+/**
+ * This class generates the main typer, the one that hanldes the switch between the generated typer and the custom
+ * typer(s). It also generates the indexes for the 'gen' folder and the folder with the custom typer.
+ */
+export class FreonTyperTemplate {
     language: PiLanguage;
 
     generateTyper(language: PiLanguage, typerdef: PiTyperDef, relativePath: string): string {
         this.language = language;
-        const allLangConcepts: string = Names.allConcepts(language);
+        // const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.PiTyper;

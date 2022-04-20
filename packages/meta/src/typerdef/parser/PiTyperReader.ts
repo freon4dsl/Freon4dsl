@@ -14,7 +14,6 @@ import { PiTyperSyntaxAnalyser } from "./PiTyperSyntaxAnalyser";
 export class PiTyperReader {
     analyser: PiTyperSyntaxAnalyser = new PiTyperSyntaxAnalyser();
     parser: LanguageProcessor = Agl.processorFromString(MetaTyperGrammarStr, this.analyser, null, null);
-    // parser: LanguageProcessor = Agl.processorFromString(MetaTyperGrammarStr, null, null, null);
 
     /**
      * Parses and performs a syntax analysis on 'sentence'. If 'sentence' is correct,
@@ -45,6 +44,7 @@ export class PiTyperReader {
                     throw e;
                 }
             }
+            // TODO semantic analysis has been skipped for now, but there are parse errors that are handled in the checker ('checkLimitedRule')
             // do semantic analysis taking into account the whole model, because references could be pointing anywhere
             // if (!!model) {
             //     try {

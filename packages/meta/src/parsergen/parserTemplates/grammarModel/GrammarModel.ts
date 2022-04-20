@@ -86,7 +86,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
         import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
         import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
-        import { ${Names.PiNamedElement} } from "@projectit/core";
+        import { ${Names.PiNamedElement}, PiParseLocation } from "@projectit/core";
         import { ${this.parts.map(part => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from ".";
         import { PiElementReference } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         
@@ -97,6 +97,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         *   
         */
         export class ${className} implements SyntaxAnalyser {
+            filename: string = "";
             locationMap: any;
             ${this.parts.map(part => `private ${this.getPartAnalyserName(part)}: ${Names.unitAnalyser(this.language, part.unit)} = new ${Names.unitAnalyser(this.language, part.unit)}(this)`).join(";\n")}
         
@@ -265,6 +266,15 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                     }
                 }
                 return result;
+            }
+            
+            public location(branch: SPPTBranch): PiParseLocation {
+                const location = PiParseLocation.create({
+                    filename: this.filename,
+                    line: branch.location.line,
+                    column: branch.location.column
+                });
+                return location;
             }
         }`;
         // end Template

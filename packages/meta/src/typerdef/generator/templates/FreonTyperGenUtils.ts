@@ -17,39 +17,8 @@ const equalsFunctionName: string = "equalsType";
 const typeofName: string = 'typeof';
 const commonSuperName: string= 'commonSuperType';
 
-export class TyperGenUtils {
+export class FreonTyperGenUtils {
     static types: PiClassifier[] = [];
-
-    /**
-     * Sorts the types such that any type comes before its super concept or interface
-     **/
-    // TODO move to LangUtils or GenerationUtils, it is usuable there
-    public static sortTypes(toBeSorted: PiClassifier[]): PiClassifier[] {
-        const result: PiClassifier[] = [];
-        const remaining: PiClassifier[] = [];
-        remaining.push(...toBeSorted);
-        while (remaining.length > 0) {
-            remaining.forEach(cls => {
-                const supers = LangUtil.superClassifiers(cls);
-                let hasSuperInList: boolean = false;
-                supers.forEach(superCls => {
-                    if (remaining.includes(superCls)) {
-                        hasSuperInList = true;
-                    }
-                });
-                if (!hasSuperInList) {
-                    result.push(cls);
-                }
-            });
-            result.forEach(cls => {
-                const indexInRemaining: number = remaining.indexOf(cls)
-                if (indexInRemaining >= 0) {
-                    remaining.splice(indexInRemaining, 1);
-                }
-            })
-        }
-        return result.reverse();
-    }
 
     public static isType(cls: PiClassifier): boolean {
         if (cls.name === "PiType") {
@@ -61,10 +30,10 @@ export class TyperGenUtils {
     }
 
     public static makeExpAsTypeOrElement(exp: PitExp, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
-        if (TyperGenUtils.isType(exp.returnType)) {
-            return TyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
+        if (FreonTyperGenUtils.isType(exp.returnType)) {
+            return FreonTyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
         } else {
-            return TyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports);
+            return FreonTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports);
         }
     }
 
@@ -80,7 +49,7 @@ export class TyperGenUtils {
             //     ${exp.propertyDefs.map(prop => `${prop.property.name}: ${TyperGenUtils.makePropValue(prop, varName, varIsType, imports)}`)}
             // }) /* PitCreateExp A */`;
             result = `${Names.classifier(exp.type)}.create({
-                ${exp.propertyDefs.map(prop => `${prop.property.name}: ${TyperGenUtils.makePropValue(prop, varName, varIsType, imports)}`)}
+                ${exp.propertyDefs.map(prop => `${prop.property.name}: ${FreonTyperGenUtils.makePropValue(prop, varName, varIsType, imports)}`)}
             }) /* PitCreateExp A */`;
             if (this.types.includes(exp.type)) {
                 // the 'create' makes an object that is an AST concept, not a PitTypeConcept
@@ -91,26 +60,26 @@ export class TyperGenUtils {
             if (exp.calledFunction === typeofName) {
                 const myParam: PitExp = exp.actualParameters[0];
                 if (myParam instanceof PitPropertyCallExp && myParam.property.isList) {
-                    result = `this.mainTyper.commonSuperType(${TyperGenUtils.makeExpAsElement(myParam, varName, varIsType, imports)}) /* PitFunctionCallExp A */`;
+                    result = `this.mainTyper.commonSuperType(${FreonTyperGenUtils.makeExpAsElement(myParam, varName, varIsType, imports)}) /* PitFunctionCallExp A */`;
                 } else {
-                    result = `this.mainTyper.${inferFunctionName}(${TyperGenUtils.makeExpAsElement(myParam, varName, varIsType, imports)}) /* PitFunctionCallExp B */`;
+                    result = `this.mainTyper.${inferFunctionName}(${FreonTyperGenUtils.makeExpAsElement(myParam, varName, varIsType, imports)}) /* PitFunctionCallExp B */`;
                 }
             } else if (exp.calledFunction === commonSuperName) {
                 // TODO params that are lists themselves
-                result = `this.mainTyper.commonSuperType([${exp.actualParameters.map(par => `${TyperGenUtils.makeExpAsElement(par, varName, varIsType, imports)}`). join(", ")}])`;
+                result = `this.mainTyper.commonSuperType([${exp.actualParameters.map(par => `${FreonTyperGenUtils.makeExpAsElement(par, varName, varIsType, imports)}`). join(", ")}])`;
             } else {
                 result = "null /* PitFunctionCallExp */"
             }
         } else if (exp instanceof PitLimitedInstanceExp) {
-            result = `AstType.create({ astElement: ${TyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} }) /* PitLimitedInstanceExp */`;
+            result = `AstType.create({ astElement: ${FreonTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} }) /* PitLimitedInstanceExp */`;
         } else if (exp instanceof PitPropertyCallExp) {
             if (exp.property.isList) {
                 // use common super type, because the argument to inferType is a list
-                result = `this.mainTyper.commonSuper(${TyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)}) /* PitPropertyCallExp A */`;
+                result = `this.mainTyper.commonSuper(${FreonTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)}) /* PitPropertyCallExp A */`;
             } else {
                 try {
-                    if (TyperGenUtils.isType(exp.returnType)) {
-                        result = `${TyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} /* PitPropertyCallExp B */`;
+                    if (FreonTyperGenUtils.isType(exp.returnType)) {
+                        result = `${FreonTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} /* PitPropertyCallExp B */`;
                     } else {
                         if (varName === "modelelement" && varIsType) {
                             throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
@@ -118,7 +87,7 @@ export class TyperGenUtils {
                         if (varName !== "modelelement" && !varIsType) {
                             throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
                         }
-                        result = `this.mainTyper.${inferFunctionName}(${TyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)}) /* PitPropertyCallExp C */`;
+                        result = `this.mainTyper.${inferFunctionName}(${FreonTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)}) /* PitPropertyCallExp C */`;
                     }
                 } catch (e) {
                     console.log(e.stack)
@@ -126,7 +95,7 @@ export class TyperGenUtils {
             }
         } else if (exp instanceof PitSelfExp) {
             ListUtil.addIfNotPresent(imports, exp.returnType);
-            result = `AstType.create({ astElement: ${TyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} }) /* PitSelfExp B */`;
+            result = `AstType.create({ astElement: ${FreonTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} }) /* PitSelfExp B */`;
         } else if (exp instanceof PitVarCallExp) {
             result = "null /* PitVarCallExp B */";
         } else if (exp instanceof PitWhereExp) {
@@ -145,9 +114,9 @@ export class TyperGenUtils {
             result = "PitCreateExp";
         } else if (exp instanceof PitFunctionCallExp) {
             if (exp.calledFunction === typeofName) {
-                result = TyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
+                result = FreonTyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
             } else if (exp.calledFunction === commonSuperName) {
-                result = TyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
+                result = FreonTyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
             } else {
                 result = "PitFunctionCallExp";
             }
@@ -155,7 +124,7 @@ export class TyperGenUtils {
             ListUtil.addIfNotPresent(imports, exp.myLimited);
             result = exp.myLimited.name + "." + exp.myInstance.name;
         } else if (exp instanceof PitPropertyCallExp) {
-            result = TyperGenUtils.makeExpAsElement(exp.source, varName, varIsType, imports);
+            result = FreonTyperGenUtils.makeExpAsElement(exp.source, varName, varIsType, imports);
             result += "." + exp.property.name;
             if (!exp.property.isPart) {
                 result += ".referred";
@@ -176,7 +145,7 @@ export class TyperGenUtils {
     }
 
     public static makePropValue(propExp: PitPropInstance, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
-        let result: string= TyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, varIsType, imports);
+        let result: string= FreonTyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, varIsType, imports);
         if (!propExp.property.isPart) { // it is a reference, wrap it in a PiElementReference
             // TODO find solution for this import, currently it is imported always
             // ListUtil.addIfNotPresent(imports, "PiElementReference");

@@ -9,6 +9,11 @@ import {
 } from "../metalanguage";
 import { PitBinaryExp, PitCreateExp, PitVarCallExp } from "../metalanguage/expressions";
 
+/**
+ * This class sets the 'owner' property of all nodes in a parsed PiTyperDef.
+ * The 'owner' is the node that contains the node in question, similar to
+ * 'container' in PiElement at the model level.
+ */
 export class PitOwnerSetter {
     static setNodeOwners(typeDef: PiTyperDef) {
         typeDef.typeConcepts.forEach(con => {

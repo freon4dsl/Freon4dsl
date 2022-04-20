@@ -32,6 +32,10 @@ import { PitOwnerSetter } from "./PitOwnerSetter";
 const LOGGER = new MetaLogger("NewPiTyperChecker"); //.mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];
 
+/**
+ * This class is the main checker for the typer definition. It can be augmented by a phase 2 checker,
+ * if needed.
+ */
 export class PiTyperCheckerPhase1 extends Checker<PiTyperDef> {
     definition: PiTyperDef;
     myExpressionChecker: PiLangExpressionChecker;
@@ -119,6 +123,7 @@ export class PiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         // when everything has been checked we can do even more ...
         // lets find the return types of each rule, and check type conformance in the rules
         // let's find the top of the type hierarchy, if present
+        // TODO see what needs to be implemented in phase 2
 
         // const phase2: PiTyperCheckerPhase2 = new PiTyperCheckerPhase2(this.language);
         // phase2.check(definition);
@@ -392,7 +397,7 @@ export class PiTyperCheckerPhase1 extends Checker<PiTyperDef> {
 
     private checkFunctionCallExpression(exp: PitFunctionCallExp, enclosingConcept: PiClassifier, surroundingExp: PitWhereExp) {
         // LOGGER.log("checkFunctionCallExpression " + exp?.toPiString());
-        // TODO extra check: may not have source
+        // TODO extra check: PitFunctionCallExp may not have a source
 
         const functionName = validFunctionNames.find(name => name === exp.calledFunction);
         this.nestedCheck({

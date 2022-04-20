@@ -13,7 +13,7 @@ const LOGGER = new MetaLogger("PiTyperCheckerPhase2"); //.mute();
 //     infertype x:GenericType where {
 //         // the following results in a compile error, but not in a checker error
 //         x.baseType equalsto (typeof(self.content) as Type);
-//         // x.baseType equalsto typeof(self.content);
+//         x.baseType equalsto typeof(self.content);
 //         x.kind equalsto self.kind;
 //     };
 // }
@@ -35,14 +35,6 @@ export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
         //     definition.classifierSpecs.forEach((rule, index) => {
         //         this.checkClassifierRule(rule);
         //     });
-        //     const phase3: PiTyperCheckerPhase3 = new PiTyperCheckerPhase3(this.language);
-        //     phase3.check(definition);
-        //     if (phase3.hasErrors()) {
-        //         this.errors.push(...phase3.errors);
-        //     }
-        //     if (phase3.hasWarnings()) {
-        //         this.warnings.push(...phase3.warnings);
-        //     }
         // }
     }
 

@@ -2,11 +2,11 @@ import { PiLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
 import { PiTyperDef } from "../../typerdef/metalanguage";
-import { PiTyperParser } from "../../typerdef/parser/PiTyperParser";
+import { PiTyperMerger } from "../../typerdef/parser/PiTyperMerger";
 
 describe("Checking new typer", () => {
     const testdir = "src/__tests__/typer-tests/faultyDefFiles/";
-    let parser: PiTyperParser;
+    let parser: PiTyperMerger;
 
     let language: PiLanguage;
     MetaLogger.muteAllLogs();
@@ -15,7 +15,7 @@ describe("Checking new typer", () => {
     beforeEach(() => {
         try {
             language = new LanguageParser().parse(testdir + "types.ast");
-            parser = new PiTyperParser(language);
+            parser = new PiTyperMerger(language);
         } catch (e) {
             console.log("Language could not be read: " + e.stack);
         }
