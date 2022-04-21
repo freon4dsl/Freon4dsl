@@ -1,3 +1,4 @@
+import { PiUtils } from "@projectit/core";
 import { TestParserEnvironment } from "../config/gen/TestParserEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, PrimsWithKeywordTest, TestParserModel } from "../language/gen";
@@ -6,6 +7,11 @@ describe("Parser properties of type", () => {
     const reader = TestParserEnvironment.getInstance().reader;
     const writer = TestParserEnvironment.getInstance().writer;
     const fileHandler = new FileHandler();
+
+    beforeEach(() => {
+        // Ensure that ID's of created elements do not change.
+        PiUtils.resetId();
+    });
 
     test( " Primitive ", () => {
         try {

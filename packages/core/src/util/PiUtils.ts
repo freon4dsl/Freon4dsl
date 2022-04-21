@@ -16,6 +16,14 @@ let LATEST_ID = 0;
 const LOGGER = new PiLogger("PiUtils");
 
 export class PiUtils {
+
+    /**
+     * Resets the ID, so the same ID can now appear twice.
+     * Use only in tests to ensure the ID's there always start at 0
+     */
+    static resetId(): void {
+        LATEST_ID = 0;
+    }
     /**
      *
      */
