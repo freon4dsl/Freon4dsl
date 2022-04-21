@@ -34,7 +34,7 @@ export class NamespaceTemplate {
 
         // Template starts here
         return `
-        import { ${piNamedElementClassName}, Language, CollectNamesWorker, LanguageWalker, PiElement } from "${PROJECTITCORE}";
+        import { ${piNamedElementClassName}, PiModelUnit, Language, CollectNamesWorker, LanguageWalker, PiElement } from "${PROJECTITCORE}";
 
         /**
          * Class ${generatedClassName} is a wrapper for a model element that is a namespace (as defined in the scoper definition).
@@ -83,10 +83,10 @@ export class NamespaceTemplate {
              * Returns all elements that are visible in this namespace, including those from additional namespaces
              * as defined in the scoper definition.
              */
-            public getVisibleElements(metatype?: string): ${piNamedElementClassName}[] {
+            public getVisibleElements(origin: PiModelUnit, metatype?: string): ${piNamedElementClassName}[] {
                 let result: ${piNamedElementClassName}[] = [];
         
-                result = this.getInternalVisibleElements(metatype);
+                result = this.getInternalVisibleElements(origin, metatype);
        
                 return result;
             }
@@ -95,7 +95,7 @@ export class NamespaceTemplate {
              * Returns the elements that are visible in this namespace only, without regard for additional namespaces
              * @param metatype
              */       
-            private getInternalVisibleElements(metatype?: string): ${piNamedElementClassName}[] {
+            private getInternalVisibleElements(origin: PiModelUnit, metatype?: string): ${piNamedElementClassName}[] {
                 const result: ${piNamedElementClassName}[] = [];       
                 // for now we push all parts, later public/private annotations can be taken into account 
                 ${myIfStatement}       
@@ -109,7 +109,7 @@ export class NamespaceTemplate {
         // let generatedConcepts: PiConcept[] = [];
         result += `// set up the 'worker' of the visitor pattern
                 // const myNamesCollector = new ${Names.namesCollector(language)}();
-                const myNamesCollector = new CollectNamesWorker();
+                const myNamesCollector = new CollectNamesWorker(origin);
                 myNamesCollector.namesList = result;
                 if (!!metatype) {
                     myNamesCollector.metatype = metatype;

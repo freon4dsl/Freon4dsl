@@ -25,8 +25,8 @@ export class ScoperTemplate {
         return `
         export * from "./${Names.scoper(language)}";
         // export * from "./${Names.scoperUtils(language)}";
-        export * from "./${Names.namespace(language)}";
-        export * from "./${Names.namesCollector(language)}";
+        // export * from "./${Names.namespace(language)}";
+        // export * from "./${Names.namesCollector(language)}";
         export * from "./${Names.scoperDef(language)}";
         `;
     }
@@ -58,8 +58,8 @@ export class ScoperTemplate {
                     ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref =>
                         `${Names.classifier(ref)}`).join(", ")}${this.alternativeScopeImports} 
                 } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${namespaceClassName} } from "./${namespaceClassName}";
-        import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger, Language, PiElement } from "${PROJECTITCORE}"
+        // import { ${namespaceClassName} } from "./${namespaceClassName}";
+        import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger, Language, PiElement, PiModelUnit, FreonNamespace, modelUnit } from "${PROJECTITCORE}"
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }          
                                    
@@ -72,11 +72,11 @@ export class ScoperTemplate {
         export class ${generatedClassName} implements ${scoperInterfaceName} {
             ${generateAlternativeScopes ? `myTyper: ${typerClassName};` : ``}
     
-            public resolvePathName(basePosition: ${allLangConcepts}, doNotSearch: string, pathname: string[], metatype?: ${langConceptType}): ${Names.PiNamedElement} {
+            public resolvePathName(basePosition: PiElement, doNotSearch: string, pathname: string[], metatype?: ${langConceptType}): ${Names.PiNamedElement} {
                 // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
                 let elementsFromBasePosition: ${Names.PiNamedElement}[] = this.getVisibleElements(basePosition);
                 // start the loop over the set of names in the pathname
-                let previousFound: ${allLangConcepts} = basePosition;
+                let previousFound: PiElement = basePosition;
                 let found: ${Names.PiNamedElement} = null;
                 for (let index = 0; index < pathname.length; index++) {
                     if (index === pathname.length - 1) { // it is the last name in the path, use 'metatype'
@@ -88,7 +88,7 @@ export class ScoperTemplate {
                         if (found === null || found === undefined || !Language.getInstance().classifier(found.piLanguageConcept()).isNamespace) {
                             return null;
                         }
-                        previousFound = found as ${allLangConcepts};
+                        previousFound = found;
                     }
                     // check if 'found' is public or 'found' is in the namespace of the basePosition
                     if (!this.isPublic(found) && !elementsFromBasePosition.includes(found)) {
@@ -125,16 +125,17 @@ export class ScoperTemplate {
              */
             public getVisibleElements(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): PiNamedElement[] {
                 ${generateAlternativeScopes ? `this.myTyper = ${Names.environment(language)}.getInstance().typer as ${typerClassName};` : ``}
-                const visitedNamespaces: ${namespaceClassName}[] = [];
+                const visitedNamespaces: FreonNamespace[] = [];
                 const result: ${Names.PiNamedElement}[] = [].concat(this.getElementsFromStdlib(metatype));
                 this.getVisibleElementsIntern(modelelement, result, visitedNamespaces, metatype, excludeSurrounding);
                 return result;
             }
 
-            private getVisibleElementsIntern(modelelement: PiElement, result: ${Names.PiNamedElement}[], visitedNamespaces: ${namespaceClassName}[], metatype?: string, excludeSurrounding?: boolean): void {
+            private getVisibleElementsIntern(modelelement: PiElement, result: ${Names.PiNamedElement}[], visitedNamespaces: FreonNamespace[], metatype?: string, excludeSurrounding?: boolean): void {
                 if (!!modelelement) {
+                    const origin: PiModelUnit = modelUnit(modelelement)
                     let doSurrouding: boolean = !(!(excludeSurrounding === undefined) && excludeSurrounding);
-                    let nearestNamespace: ${namespaceClassName};
+                    let nearestNamespace: FreonNamespace;
                     // first, see if we need to use an alternative scope/namespace
                     if (this.hasAlternativeScope(modelelement)) {
                         nearestNamespace = this.getAlternativeScope(modelelement);
@@ -147,7 +148,7 @@ export class ScoperTemplate {
                    while (!!nearestNamespace) {
                         // Second, get the elements from the found namespace
                         if( !visitedNamespaces.includes(nearestNamespace)) {
-                            ${namespaceClassName}.joinResultsWithShadowing(nearestNamespace.getVisibleElements(metatype), result);
+                            FreonNamespace.joinResultsWithShadowing(nearestNamespace.getVisibleElements(origin, metatype), result);
                             visitedNamespaces.push(nearestNamespace);
                                 for (const elem of this.additionalNamespaces(nearestNamespace._myElem)) {
                                     this.getVisibleElementsIntern(elem, result, visitedNamespaces, metatype, true);
@@ -201,12 +202,12 @@ export class ScoperTemplate {
              * Returns the enclosing namespace for 'modelelement'.
              * @param modelelement
              */
-            private findNearestNamespace(modelelement: PiElement): ${namespaceClassName} {
+            private findNearestNamespace(modelelement: PiElement): FreonNamespace {
                 if (modelelement === null) {
                     return null;
                 }
                 if (Language.getInstance().classifier(modelelement.piLanguageConcept()).isNamespace) {
-                    return ${namespaceClassName}.create(modelelement);
+                    return FreonNamespace.create(modelelement);
                 } else {
                     return this.findNearestNamespace(modelelement.piOwner());
                 }
@@ -216,7 +217,7 @@ export class ScoperTemplate {
              * Returns the namespace to be used as alternative scope for 'modelelement'.
              * @param modelelement
              */
-            private getAlternativeScope(modelelement: PiElement): ${namespaceClassName} {
+            private getAlternativeScope(modelelement: PiElement): FreonNamespace {
                 ${this.getAlternativeScopeText}
                 return null;
             }
@@ -383,7 +384,7 @@ export class ScoperTemplate {
             result = `let owner = ${actualParamToGenerate};
                 if (!!owner) {
                     let newScopeElement = this.myTyper.inferType(${actualParamToGenerate});
-                    return ${Names.namespace(language)}.create(newScopeElement);
+                    return FreonNamespace.create(newScopeElement);
                 }`;
         } else {
             // normal case: the expression is an ordinary expression over the language

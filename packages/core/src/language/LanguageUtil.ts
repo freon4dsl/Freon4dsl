@@ -34,12 +34,12 @@ export function ownerOfType(element: PiElement, typename: string, exact?: boolea
  * @param element
  */
 export function modelUnit(element: PiElement): PiModelUnit {
-    let parent = element.piOwnerDescriptor()?.owner;
-    while (!!parent) {
-        if (parent.piIsUnit()) {
-            return parent as PiModelUnit;
+    let current = element;
+    while (!!current) {
+        if (current.piIsUnit()) {
+            return current as PiModelUnit;
         } else {
-            parent = parent.piOwnerDescriptor()?.owner;
+            current = current.piOwnerDescriptor()?.owner;
         }
     }
     // No modelunit found, element is standalone

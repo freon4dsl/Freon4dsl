@@ -1,7 +1,7 @@
 /**
  * This worker class collects all visible names in the model.
  */
-import { LanguageWorker, PiElement, PiModelUnit, PiNamedElement } from "../language/index";
+import { LanguageWorker, modelUnit, PiElement, PiModelUnit, PiNamedElement } from "../language/index";
 import { Language, Property } from "../storage/index";
 
 export class CollectNamesWorker implements LanguageWorker {
@@ -9,11 +9,17 @@ export class CollectNamesWorker implements LanguageWorker {
     namesList: PiNamedElement[] = [];
     // 'metatype' may or may not be set; if set any named element is included only if it conforms to this type
     metatype: string;
-    // The modelunit where the names search started.
-    startModelunit: PiModelUnit;
+    // The modelunit where the names search started, needed to decide what is public/private.
+    origin: PiModelUnit;
 
-    constructor(modelunit: PiModelUnit) {
-        this.startModelunit = modelunit;
+    constructor(origin: PiModelUnit) {
+        this.origin = origin;
+    }
+
+    private isVisible(element: PiElement, property: Property): boolean {
+        // return true;
+        const owningUnit = modelUnit(element);
+        return (owningUnit == null) || (this.origin === owningUnit) || property.isPublic;
     }
 
     execBefore(modelelement: PiElement): boolean {
@@ -22,10 +28,8 @@ export class CollectNamesWorker implements LanguageWorker {
         const partProperties: Property[] = Language.getInstance().getPropertiesOfKind(modelelement.piLanguageConcept(), "part");
         // walk children
         for(const prop of partProperties){
-            if( Language.getInstance().classifier(prop.type).isNamedElement && this.hasLookedForType(prop) ) {
-                for (const part of Language.getInstance().getPropertyValue(modelelement, prop) as PiNamedElement[]) {
-                    this.namesList.push(part);
-                }
+            if( Language.getInstance().classifier(prop.type).isNamedElement && this.hasLookedForType(prop) && this.isVisible(modelelement, prop)) {
+                this.namesList.push(...Language.getInstance().getPropertyValue(modelelement, prop) as PiNamedElement[]);
             }
         }
         return false;

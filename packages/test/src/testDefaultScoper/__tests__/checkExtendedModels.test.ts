@@ -35,13 +35,14 @@ describe("Testing Default Scoper", () => {
         const model: DSmodel = creator.createModel(1, 3 );
         // run the scoper to test all names in the model
         const visibleNames = scoper.getVisibleNames( model.getUnits()[0] );
-        // print("names in model of depth 3: ", visibleNames);
+
+        // There is only one modelunit, so all names should be visible
         for (const x of creator.allNames) {
             expect(visibleNames).toContain(x);
         }
         // run the validator to see if the references are ok
-        const validator = environment.validator;
-        const errors = validator.validate(model);
+        // const validator = environment.validator;
+        // const errors = validator.validate(model);
         // const errorMessages: string[] = [];
         // errors.forEach(mess => {
         //     errorMessages.push(mess.message + " in " + mess.locationdescription);
@@ -53,7 +54,7 @@ describe("Testing Default Scoper", () => {
         // errors.forEach(e => {
         //    console.log("Error: " + e.locationdescription + ": " + e.message)
         // });
-        expect (errors.length).toBe(168);
+        // expect (errors.length).toBe(168);
     });
 
     test("references in model with 2 units of depth 2, no interfaces", () => {
@@ -78,7 +79,6 @@ describe("Testing Default Scoper", () => {
         otherUnit.dsRefs.push(ref2);
         otherUnit.dsRefs.push(ref3);
         otherUnit.dsRefs.push(ref4);
-        // console.log("!!" + JSON.stringify(model, ["$typename", "conceptRefs", "dsRefs", "name", "dsPublics", "dsPrivates", "conceptParts", "conceptPrivates", "units", "imports" ], 4));
 
         // try to resolve them
         expect(ref1.referred).toBeNull();
@@ -95,6 +95,7 @@ describe("Testing Default Scoper", () => {
         // try to resolve them
         expect(ref1.referred?.name).toBe("private9_OF_unit1_OF_model");
         expect(ref2.referred?.name).toBe("public2_OF_unit1_OF_model");
+        // Next two are incorrect pathnames because second part is not a namespace
         expect(ref3.referred).toBeNull();
         expect(ref4.referred).toBeNull();
     });

@@ -24,6 +24,7 @@ export type Model = {
 };
 export type ModelUnit = {
     typeName: string;
+    // isPublic?: boolean;
     isNamespace?: boolean;
     isNamedElement?: boolean;
     subConceptNames?: string[];
@@ -130,7 +131,7 @@ export class Language {
     }
 
     classifierProperty(typeName: string, propertyName: string): Property {
-        LOGGER.log("CLASSIFIERPROPRTY " + typeName + "." + propertyName);
+        // LOGGER.log("CLASSIFIERPROPRTY " + typeName + "." + propertyName);
         let concept1 = this.concepts.get(typeName);
         if (!!concept1) {
             return concept1.properties.get(propertyName);
@@ -142,6 +143,11 @@ export class Language {
                 let unit1 = this.units.get(typeName);
                 if (!!unit1) {
                     return unit1.properties.get(propertyName);
+                }  else {
+                    let model = this.models.get(typeName);
+                    if( !!model){
+                        return model.properties.get(propertyName);
+                    }
                 }
             }
         }
@@ -157,16 +163,13 @@ export class Language {
         return myType?.properties.values();
     }
 
+    /**
+     * Get all properties of kind "kind" of classifier "typename"
+     * @param typename
+     * @param ptype
+     */
     public getPropertiesOfKind(typename: string, ptype: PropertyKind): Property[]  {
-        let classifier: Classifier;
-        if( typename === "RulesModel"){
-            // console.log("looking for model")
-            classifier = Language.getInstance().model(typename)
-        } else {
-            // console.log("looking for classifier")
-            classifier = Language.getInstance().classifier(typename);
-        }
-        // console.log("Classifier is " + classifier + " for " + typename)
+        let classifier: Classifier = Language.getInstance().classifier(typename);
         const foundProperties: Property[] = [];
         for( const prop of classifier.properties.values()){
             if( prop.propertyType === ptype) {
