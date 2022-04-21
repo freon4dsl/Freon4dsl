@@ -47,15 +47,12 @@ export class IndexTemplate {
         language.units.map(c =>
             tmp.push(Names.classifier(c))
         );
-        // TODO should be sorting interfaces as well, I think
-        language.interfaces.map(c =>
-            tmp.push(Names.interface(c))
+        // The exports need to be sorted such that base concepts/interfaces are exported before the
+        // concepts/interfaces that are extending them.
+        GenerationUtil.sortClassifiers(language.interfaces).map(c =>
+            tmp.push(Names.classifier(c))
         );
-
-        // The exports need to be sorted such that base concepts are exported before the
-        // concepts that are extending them.
-        // Function 'sortConcepts' provides a sorting mechanism, but its result needs to be reversed.
-        GenerationUtil.sortConceptsOrRefs(language.concepts).reverse().map(c =>
+        GenerationUtil.sortConceptsOrRefs(language.concepts).map(c =>
             tmp.push(Names.concept(c))
         );
 
