@@ -1,8 +1,6 @@
 import { PiElement } from "../language";
 
 // Part of the ProjectIt Framework.
-// TODO change tags
-// tag::writer-interface[]
 export interface PiWriter {
 
     /**
@@ -38,4 +36,3 @@ export interface PiWriter {
      */
     writeNameOnly(modelelement: PiElement): string;
 }
-// end::writer-interface[]

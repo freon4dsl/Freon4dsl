@@ -1,6 +1,5 @@
 import { PiType } from "./PiType";
 import { PiTyper } from "./PiTyper";
-// TODO see what the difference are between this class and OrderList in core/src/editor/simplifiedBoxAPI
 
 export class TypeOrderedList<T extends PiType> implements Iterable<T> {
     protected elements: T[] = [];
