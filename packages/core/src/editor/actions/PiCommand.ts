@@ -128,11 +128,11 @@ export class PiCreateSiblingCommand extends PiCommand {
             console.error("PiCreateSiblingCommand: Unexpected new element undefined");
             return EMPTY_POST_ACTION;
         }
-        const container = box.element.piContainer();
-        if (Language.getInstance().classifierProperty(container.container.piLanguageConcept(), container.propertyName).isList) {
-            container.container[container.propertyName].splice(container.propertyIndex + 1, 0, newElement);
+        const ownerDescriptor = box.element.piOwnerDescriptor();
+        if (Language.getInstance().classifierProperty(ownerDescriptor.owner.piLanguageConcept(), ownerDescriptor.propertyName).isList) {
+            ownerDescriptor.owner[ownerDescriptor.propertyName].splice(ownerDescriptor.propertyIndex + 1, 0, newElement);
         } else {
-            container.container[container.propertyName] = newElement;
+            ownerDescriptor.owner[ownerDescriptor.propertyName] = newElement;
         }
         if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
             newElement[this.referenceShortcut.propertyName] = Language.getInstance().referenceCreator(trigger, this.referenceShortcut.conceptName);

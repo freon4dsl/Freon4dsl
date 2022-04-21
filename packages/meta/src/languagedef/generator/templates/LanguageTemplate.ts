@@ -32,6 +32,7 @@ export class LanguageTemplate {
             function describe${Names.classifier(language.modelConcept)}(): Model {
                     const model =             {
                         typeName: "${Names.classifier(language.modelConcept)}",
+                        isNamespace: true,
                         constructor: () => { return new ${Names.classifier(language.modelConcept)}(); },
                         properties: new Map< string, Property>(),
                     }
@@ -70,6 +71,7 @@ export class LanguageTemplate {
                 function describe${Names.classifier(modelunit)}(): ModelUnit {
                     const modelunit =             {
                         typeName: "${Names.classifier(modelunit)}",
+                        isNamedElement: true,
                         fileExtension: "${modelunit.fileExtension}",
                         constructor: () => { return new ${Names.classifier(modelunit)}(); },
                         properties: new Map< string, Property>(),
@@ -112,6 +114,7 @@ export class LanguageTemplate {
                         typeName: "${Names.concept(concept)}",
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
+                        isNamedElement: ${concept.implementedPrimProperties().some(p => p.name === "name")},
                         trigger: "${Names.concept(concept)}",
                         constructor: () => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}()`}; },
                         properties: new Map< string, Property>(),
@@ -154,6 +157,7 @@ export class LanguageTemplate {
                     const intface =             {
                         typeName: "${Names.interface(intface)}",
                         isPublic: ${intface.isPublic},
+                        isNamedElement: ${intface.allPrimProperties().some(p => p.name === "name")},
                         properties: new Map< string, Property>(),
                         subConceptNames: [${LangUtil.subConcepts(intface).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
                     }

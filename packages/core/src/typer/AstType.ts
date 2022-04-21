@@ -1,4 +1,4 @@
-import { PiContainerDescriptor, PiElement, PiNamedElement } from "../language";
+import { PiOwnerDescriptor, PiElement, PiNamedElement } from "../language";
 import { PiWriter } from "../writer";
 import { PiType } from "./PiType";
 
@@ -23,7 +23,11 @@ class NamedElement implements PiNamedElement {
     private constructor() {
     }
 
-    piContainer(): PiContainerDescriptor {
+    piOwner(): PiElement {
+        return undefined;
+    }
+
+    piOwnerDescriptor(): PiOwnerDescriptor {
         return undefined;
     }
 

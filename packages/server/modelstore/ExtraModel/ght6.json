@@ -5,6 +5,7 @@
       {
          "$typename": "Entity",
          "name": "Aasss-p",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
@@ -63,11 +64,13 @@
                "declaredType": "Boolean"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": "Mies"
       },
       {
          "$typename": "Entity",
          "name": "Mies",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
@@ -76,6 +79,7 @@
             }
          ],
          "methods": [],
+         "listOfReferences": [],
          "baseEntity": null
       }
    ],

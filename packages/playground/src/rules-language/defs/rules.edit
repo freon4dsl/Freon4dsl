@@ -2,8 +2,8 @@ editor default
 
 Rules {
     [
-    Using data from ${self.imports vertical separator [\|\|\|\|]}
-
+    Using data from ${self.imports}
+        entity: ${self.forEntity}
         ${self.Rules vertical }
     ]
 }

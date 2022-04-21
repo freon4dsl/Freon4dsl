@@ -9,7 +9,7 @@ import {
 } from "../languagedef/metalanguage/";
 import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp } from "../languagedef/metalanguage";
 import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
-import { PiPrimitiveType } from "../languagedef/metalanguage/PiLanguage";
+import { PiPrimitiveType, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 import { Names } from "./Names";
 import { LangUtil } from "./LangUtil";
 
@@ -145,8 +145,8 @@ export function refListIncludes(list: PiElementReference<PiLangElement>[],
  *
  * @param classifiers
  */
-export function replaceInterfacesWithImplementors(classifiers: PiClassifier[] | PiElementReference<PiClassifier>[]): PiConcept[] {
-    const result: PiConcept[] = [];
+export function replaceInterfacesWithImplementors(classifiers: PiClassifier[] | PiElementReference<PiClassifier>[]): PiClassifier[] {
+    const result: PiClassifier[] = [];
     for (const ref of classifiers) {
         const myClassifier = (ref instanceof PiElementReference ? ref.referred : ref);
         if (myClassifier instanceof PiInterface) {
@@ -158,6 +158,10 @@ export function replaceInterfacesWithImplementors(classifiers: PiClassifier[] | 
                 }
             }
         } else if (myClassifier instanceof PiConcept) {
+            if (!result.includes(myClassifier)) {
+                result.push(myClassifier);
+            }
+        } else if (myClassifier instanceof PiUnitDescription) {
             if (!result.includes(myClassifier)) {
                 result.push(myClassifier);
             }

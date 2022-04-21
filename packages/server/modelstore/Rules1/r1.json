@@ -17,6 +17,7 @@
          "description": "fewfwe",
          "IfStatement": {
             "$typename": "IfStatement",
+            "name": "",
             "Condition": {
                "$typename": "And",
                "left": {
@@ -59,10 +60,6 @@
          }
       }
    ],
-   "imports": [
-      "House",
-      "Entities",
-      "AAA"
-   ],
+   "imports": "House",
    "forEntity": "Building"
 }

@@ -111,14 +111,14 @@ export class AliasBox extends AbstractChoiceBox {
      * @private
      */
     private addReferenceShortcuts(concept: Concept, result: SelectOption[], editor: PiEditor) {
-        // Create the new element for this behavior inside a dummy and then point the container to the
+        // Create the new element for this behavior inside a dummy and then point the owner to the
         // current element.  This way the new element is not part of the model and will not trigger mobx
         // reactions. But the scoper can be used to find available references, because the scoper only
-        // needs the container.
+        // needs the owner.
         const self: AliasBox = this;
         runInAction(() => {
             const newElement = concept.constructor();
-            newElement["container"] = this.element;
+            newElement["owner"] = this.element;
             result.push(...
                 editor.environment
                     .scoper.getVisibleNames(newElement, concept.referenceShortcut.conceptName)

@@ -71,7 +71,7 @@ export class EditorGenerator {
         const defaultActionsFile = Helpers.pretty(defaultActions.generate(this.language, editDef, relativePath), "DefaultActions", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`, defaultActionsFile);
 
-        LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
+        LOGGER.log(`Generating editor language definition: ${this.editorGenFolder}/index.ts`);
         const editorDefFile = Helpers.pretty(editorDefTemplate.generateEditorDef(this.language, editDef, relativePath), "Editor Definition", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/EditorDef.ts`, editorDefFile);
 

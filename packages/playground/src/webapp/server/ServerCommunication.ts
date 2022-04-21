@@ -128,6 +128,7 @@ export class ServerCommunication implements IServerCommunication {
                 } catch (e) {
                     LOGGER.error(this, "loadModelUnit, " + e.message);
                     setUserMessage(e.message);
+                    console.log(e.stack);
                 }
             }
         }

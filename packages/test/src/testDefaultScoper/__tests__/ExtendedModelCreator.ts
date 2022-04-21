@@ -1,7 +1,5 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit, PiElementReference } from "../language/gen";
 import { GenericModelSerializer } from "@projectit/core";
-import { ScoperTestWalker } from "../utils/gen";
-import { RefCreator } from "./RefCreator";
 
 // This class creates a model like SimpleModelCreator,
 // but adds more extensive references
@@ -38,7 +36,6 @@ export class ExtendedModelCreator {
             modelUnits.push(this.createUnit("model", depth));
         }
         const model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
-        this.makeAllReferences(model);
         // add references
         for (let i = 0; i < nrOfUnits; i++) {
             this.addReferencesToUnit(modelUnits[i]);
@@ -76,7 +73,6 @@ export class ExtendedModelCreator {
             }
         }
         const model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
-        this.makeAllReferences(model);
         // add references
         for (let i = 0; i < nrOfUnits; i++) {
             this.addReferencesToUnit(modelUnits[i]);
@@ -139,20 +135,5 @@ export class ExtendedModelCreator {
             const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(ref.pathname, "DSref");
             part.conceptRefs.push(someReference);
         }
-    }
-
-    private makeAllReferences(model: DSmodel) {
-        const walker: ScoperTestWalker = new ScoperTestWalker();
-        const worker: RefCreator = new RefCreator();
-        walker.myWorkers.push(worker);
-        walker.walk(model, () => {
-            return true;
-        });
-        // let printStr: string = "All references in the model are:\n";
-        // worker.references.sort().forEach(ref => {
-        //    printStr += ref.pathnameToString("/") + "\n";
-        // });
-        // console.log(printStr);
-        this.allReferences = worker.references;
     }
 }

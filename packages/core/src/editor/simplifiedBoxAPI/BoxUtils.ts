@@ -2,7 +2,7 @@ import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../language";
 import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes";
 import { BehaviorExecutionResult, createKeyboardShortcutForList2, PiUtils } from "../../util";
-import { Language, PropertyType } from "../../storage";
+import { Language, PropertyKind } from "../../storage";
 import { PiEditor } from "../PiEditor";
 import { PiProjection } from "../PiProjection";
 import { PiScoper } from "../../scoper";
@@ -461,7 +461,7 @@ export class BoxUtils {
         let property = element[propertyName];
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
-        const isPart: PropertyType = propInfo.propertyType;
+        const isPart: PropertyKind = propInfo.propertyType;
         return { property, isList, isPart };
     }
 }

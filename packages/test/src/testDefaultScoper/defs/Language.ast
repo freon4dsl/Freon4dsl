@@ -2,7 +2,7 @@ language ScoperTest
 
 model DSmodel {
     name: identifier;
-    units: DSunit[];
+    public units: DSunit[];
 }
 
 modelunit DSunit {
@@ -24,8 +24,11 @@ concept DSpublic implements DSref {
 }
 
 concept DSprivate implements DSref {
-    conceptParts: DSpublic[];
+    public conceptParts: DSpublic[];
     conceptPrivates: DSprivate[];
     reference conceptRefs: DSref[];
+}
+
+concept Dummy {
 }
 

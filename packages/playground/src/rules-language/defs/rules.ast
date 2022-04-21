@@ -8,7 +8,7 @@ model RulesModel {
 
 modelunit Rules {
     public name: identifier;
-    reference imports: Data[];
+    reference imports: Data;
     reference forEntity: Entity;
     public Rules: Rule[];
 }
@@ -30,6 +30,7 @@ concept IfThenElseRule base Rule {
 }
 
 concept IfStatement base Statement {
+    name: string;
     Condition: RuleExpression;
     ThenStatements: Statement[];
     ElseStatements: Statement[];
