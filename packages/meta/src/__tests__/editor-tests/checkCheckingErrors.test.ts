@@ -101,14 +101,16 @@ describe("Checking editor definition ", () => {
             expect(checker.errors.includes("There should be (only) one property within an optional projection, found 3 [file: test6.edit, line: 5, column: 5].")).toBeTruthy();
         }
     });
+
     test("limited concepts have no projection", () => {
         try {
             parser.parse(testdir + "test7.edit");
         } catch (e) {
             // console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            expect(e.message).toBe(`checking errors (1).`);
+            expect(e.message).toBe(`checking errors (2).`);
             expect(checker.errors.includes("A limited concept cannot have a projection, it can only be used as reference [file: test7.edit, line: 3, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("An optional boolean property is not allowed within an optional projection [file: test7.edit, line: 12, column: 8].")).toBeTruthy();
         }
     });
     test("table projection is allowed for part properties only", () => {

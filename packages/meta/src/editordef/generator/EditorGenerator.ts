@@ -77,7 +77,7 @@ export class EditorGenerator {
 
         // the following do not need the relativePath for imports
         LOGGER.log(`Generating actions: ${this.editorGenFolder}/${Names.actions(this.language)}.ts`);
-        const actionsFile = Helpers.pretty(actions.generate(this.language, editDef), "Actions", generationStatus);
+        const actionsFile = Helpers.pretty(actions.generate(this.language), "Actions", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/${Names.actions(this.language)}.ts`, actionsFile);
 
         LOGGER.log(`Generating custom actions: ${this.editorFolder}${Names.customActions(this.language)}.ts`);
