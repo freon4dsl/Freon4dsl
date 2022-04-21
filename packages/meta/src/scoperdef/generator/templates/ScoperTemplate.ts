@@ -5,8 +5,7 @@ import {
     PROJECTITCORE,
     TYPER_GEN_FOLDER,
     CONFIGURATION_GEN_FOLDER,
-    langExpToTypeScript,
-    replaceInterfacesWithImplementors
+    GenerationUtil
 } from "../../../utils";
 import { PiScopeDef } from "../../metalanguage";
 
@@ -47,7 +46,7 @@ export class ScoperTemplate {
         // Template starts here
         return `
         import { ${allLangConcepts}, ${langConceptType},
-                    ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref =>
+                    ${GenerationUtil.replaceInterfacesWithImplementors(scopedef.namespaces).map(ref =>
                         `${Names.concept(ref)}`).join(", ")}${this.alternativeScopeImports} 
                 } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${namespaceClassName} } from "./${namespaceClassName}";
@@ -285,15 +284,15 @@ export class ScoperTemplate {
     }
 
     private altScopeExpToTypeScript(expression: PiLangExp, allLangConcepts: string, language: PiLanguage): string {
-        let result = "";
+        let result;
         // special case: the expression refers to 'typeof'
         if (expression instanceof PiLangFunctionCallExp && expression.sourceName === "typeof") {
-            let actualParamToGenerate: string = "";
+            let actualParamToGenerate: string;
             // we know that typeof has exactly 1 actual parameter
             if ( expression.actualparams[0].sourceName === "container" ) {
                 actualParamToGenerate = `modelelement.piContainer().container as ${allLangConcepts}`;
             } else {
-                actualParamToGenerate = langExpToTypeScript(expression.actualparams[0]);
+                actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0]);
             }
             result = `let container = ${actualParamToGenerate};
                 if (!!container) {
@@ -305,7 +304,7 @@ export class ScoperTemplate {
                 }`;
         } else {
             // normal case: the expression is an ordinary expression over the language
-            result = langExpToTypeScript(expression);
+            result = GenerationUtil.langExpToTypeScript(expression);
         }
         return result;
     }

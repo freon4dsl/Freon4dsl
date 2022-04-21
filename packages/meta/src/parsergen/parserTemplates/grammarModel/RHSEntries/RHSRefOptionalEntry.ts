@@ -1,6 +1,6 @@
 import { RHSPropEntry } from "./RHSPropEntry";
 import { PiProperty } from "../../../../languagedef/metalanguage";
-import { getBaseTypeAsString } from "../../../../utils";
+import { GenerationUtil } from "../../../../utils";
 import { makeIndent, refRuleName } from "../GrammarUtils";
 import { ParserGenUtil } from "../../ParserGenUtil";
 
@@ -15,7 +15,7 @@ export class RHSRefOptionalEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        const baseType: string = getBaseTypeAsString(this.property);
+        const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         return `// RHSRefOptionalEntry
             if (!${nodeName}[${index}].isEmptyMatch) {
                 // take the first element of the group that represents the optional part  

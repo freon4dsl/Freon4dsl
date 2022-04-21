@@ -1,6 +1,8 @@
-import { Names, PROJECTITCORE, getBaseTypeAsString } from "../../../utils";
+import { Names, PROJECTITCORE, GenerationUtil } from "../../../utils";
 import { PiClassifier, PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty } from "../../metalanguage";
 import { PiPrimitiveType } from "../../metalanguage/PiLanguage";
+
+// TODO make class with static methods
 
 export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[] {
     const mobxImports: string[] = ["model"];
@@ -64,7 +66,7 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
             initializer = "= []";
         }
     }
-    return `${property.name} : ${getBaseTypeAsString(property)}${arrayType} ${initializer}; \t${comment}`;
+    return `${property.name} : ${GenerationUtil.getBaseTypeAsString(property)}${arrayType} ${initializer}; \t${comment}`;
 }
 
 export function makePartProperty(property: PiConceptProperty): string {

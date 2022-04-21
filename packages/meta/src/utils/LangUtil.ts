@@ -1,6 +1,5 @@
 import { PiClassifier, PiConcept, PiElementReference, PiInterface, PiProperty } from "../languagedef/metalanguage/";
-import { refListIncludes } from "./GenerationHelpers";
-import { ListUtil } from "./ListUtil";
+import { GenerationUtil } from "./GenerationUtil";
 
 /**
  * This class contains a series of helper functions over the language.
@@ -274,7 +273,7 @@ export class LangUtil {
 
     private static doesImplement(concept: PiConcept, interf: PiInterface): boolean {
         let result: boolean = false;
-        if (refListIncludes(concept.interfaces, interf)) {
+        if (GenerationUtil.refListIncludes(concept.interfaces, interf)) {
             // return true when type1 implements type2
             // console.log("\t ==> " + concept.name + " implements " + interf.name)
             result = true;

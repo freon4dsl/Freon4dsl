@@ -1,4 +1,4 @@
-import { findExpressionBase, Names } from "../../../utils";
+import { GenerationUtil, Names } from "../../../utils";
 import {
     PiPrimitiveProperty,
     PiBinaryExpressionConcept,
@@ -89,7 +89,7 @@ export class ConceptTemplate {
         const hasReferences = concept.implementedReferences().length > 0;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const isAbstract = concept.isAbstract;
-        const baseExpressionName = Names.concept(findExpressionBase(concept));
+        const baseExpressionName = Names.concept(GenerationUtil.findExpressionBase(concept));
         const abstract = concept.isAbstract ? "abstract" : "";
         const needsObservable = concept.implementedPrimProperties().length > 0;
         const coreImports = findMobxImports(hasSuper, concept).concat(["PiBinaryExpression", "PiUtils"]);
@@ -167,11 +167,8 @@ export class ConceptTemplate {
 
 
 // the folowing template is based on assumptions about a limited concept.
-    // a limited has a name property
-    // a limited is not an expression ???
     // a limited does not have any non-prim properties
     // a limited does not have any references
-    // the base of a limited is also a limited
     private generateLimited(concept: PiLimitedConcept): string {
         const language = concept.language;
         const myName = Names.concept(concept);
@@ -237,7 +234,6 @@ export class ConceptTemplate {
         );
     }
 
-    // TODO weave the next method into the template for limited concepts
     private createInstancePropValue(property: PiInstanceProperty): string {
         const refProperty: PiProperty = property.property?.referred;
         if (!!refProperty && refProperty instanceof PiPrimitiveProperty) { // should always be the case

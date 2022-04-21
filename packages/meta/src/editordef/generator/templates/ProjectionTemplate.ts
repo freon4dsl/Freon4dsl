@@ -2,14 +2,14 @@ import {
     PiBinaryExpressionConcept,
     PiClassifier, PiConcept,
     PiConceptProperty,
-    PiExpressionConcept, PiInterface,
+    PiExpressionConcept,
     PiLanguage,
     PiLimitedConcept,
     PiPrimitiveProperty,
     PiPrimitiveType,
     PiProperty
 } from "../../../languagedef/metalanguage";
-import { CONFIGURATION_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, Roles, sortConceptsWithBase } from "../../../utils";
+import { CONFIGURATION_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, Roles } from "../../../utils";
 import {
     BoolKeywords,
     ListInfo,

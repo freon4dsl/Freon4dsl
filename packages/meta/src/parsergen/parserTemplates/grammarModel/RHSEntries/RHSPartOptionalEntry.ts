@@ -1,7 +1,7 @@
 import { RHSPropEntry } from "./RHSPropEntry";
 import { PiProperty } from "../../../../languagedef/metalanguage";
 import { getTypeCall, makeIndent } from "../GrammarUtils";
-import { getBaseTypeAsString } from "../../../../utils";
+import { GenerationUtil } from "../../../../utils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPartOptionalEntry extends RHSPropEntry {
@@ -18,7 +18,7 @@ export class RHSPartOptionalEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        getBaseTypeAsString(this.property);
+        GenerationUtil.getBaseTypeAsString(this.property);
         return `// RHSPartOptionalEntry
             if (!${nodeName}[${index}].isEmptyMatch) {
                 // take the first element of the group that represents the optional part  

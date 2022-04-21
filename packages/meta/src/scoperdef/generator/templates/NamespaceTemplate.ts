@@ -1,7 +1,7 @@
 import { PiConcept, PiConceptProperty, PiInterface, PiLangExp, PiLanguage } from "../../../languagedef/metalanguage";
 import { PiScopeDef, ScopeConceptDef } from "../../metalanguage";
 import {
-    langExpToTypeScript,
+    GenerationUtil,
     LANGUAGE_GEN_FOLDER,
     Names,
     PROJECTITCORE,
@@ -30,7 +30,7 @@ export class NamespaceTemplate {
         const langConceptType: string = Names.metaType(language);
         const generatedClassName: string = Names.namespace(language);
         const piNamedElementClassName: string = Names.PiNamedElement;
-        const myIfStatement = this.createIfStatement(scopedef, language);
+        const myIfStatement = this.createIfStatement(language);
 
         // Template starts here
         return `
@@ -175,7 +175,7 @@ export class NamespaceTemplate {
         }`;
     }
 
-    private createIfStatement(scopedef: PiScopeDef, language: PiLanguage): string {
+    private createIfStatement(language: PiLanguage): string {
         let result: string = "";
         // let generatedConcepts: PiConcept[] = [];
         result += `// set up the 'worker' of the visitor pattern
@@ -319,7 +319,7 @@ export class NamespaceTemplate {
                // generated based on '${expression.toPiString()}' 
                if (${generatedClassName}.doNotSearch !== '${myRef.name}') {
                if (!!this._myElem.${expression.appliedfeature.toPiString()}) {
-                   let extraNamespace = ${generatedClassName}.create(this._myElem.${langExpToTypeScript(expression.appliedfeature)});
+                   let extraNamespace = ${generatedClassName}.create(this._myElem.${GenerationUtil.langExpToTypeScript(expression.appliedfeature)});
                    ${generatedClassName}.joinResultsWithShadowing(extraNamespace.getVisibleElements(metatype), result);               
                }
                }`);

@@ -2,7 +2,7 @@ import { PiBinaryExpressionConcept, PiClassifier, PiExpressionConcept, PiLanguag
 import { PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { BinaryExpressionRule } from "./grammarModel/BinaryExpressionRule";
-import { findExpressionBase } from "../../utils";
+import { GenerationUtil } from "../../utils";
 
 export class BinaryExpMaker {
     private static specialBinaryRuleName = `__pi_binary_`;
@@ -18,7 +18,7 @@ export class BinaryExpMaker {
         // in case there are multiple expression hierarchies, we need to group the binaries based on their expressionBase
         const groups: Map<PiExpressionConcept, PiBinaryExpressionConcept[]> = new Map<PiBinaryExpressionConcept, PiBinaryExpressionConcept[]>();
         binaryConceptsUsed.forEach(bin => {
-            const expBase: PiExpressionConcept = findExpressionBase(bin);
+            const expBase: PiExpressionConcept = GenerationUtil.findExpressionBase(bin);
             if (groups.has(expBase)) {
                 groups.get(expBase).push(bin);
             } else {

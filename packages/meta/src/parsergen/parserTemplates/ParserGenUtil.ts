@@ -1,7 +1,8 @@
-import { PiEditClassifierProjection, PiEditProjection, PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
+import { PiEditProjection, PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
 import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
 import { PiBinaryExpressionConcept, PiClassifier, PiExpressionConcept } from "../../languagedef/metalanguage";
-import { findExpressionBase } from "../../utils";
+import { GenerationUtil } from "../../utils";
+
 
 export class ParserGenUtil {
 
@@ -9,7 +10,7 @@ export class ParserGenUtil {
     static findAllExpressionBases(list: PiBinaryExpressionConcept[]): PiExpressionConcept[] {
         const bases: PiExpressionConcept[] = [];
         list.forEach(impl => {
-            const expBase = findExpressionBase(impl as PiBinaryExpressionConcept);
+            const expBase = GenerationUtil.findExpressionBase(impl as PiBinaryExpressionConcept);
             if (bases.indexOf(expBase) === -1) {
                 // add if not present
                 bases.push(expBase);
