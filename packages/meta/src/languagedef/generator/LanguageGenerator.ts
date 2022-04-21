@@ -2,8 +2,7 @@ import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import {
     CONFIGURATION_FOLDER,
-    ENVIRONMENT_FOLDER,
-    ENVIRONMENT_GEN_FOLDER,
+    CONFIGURATION_GEN_FOLDER,
     GenerationStatus,
     Helpers,
     LANGUAGE_FOLDER,
@@ -38,13 +37,12 @@ const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
     public outputfolder: string = ".";
     private languageGenFolder: string;
-    private environmentGenFolder: string;
     private utilsGenFolder: string;
     private stdlibGenFolder: string;
     private configurationFolder: string;
+    private configurationGenFolder: string;
     private languageFolder: string;
     private utilsFolder: string;
-    private environmentFolder: string;
     private stdlibFolder: string;
 
     generate(language: PiLanguage): void {
@@ -69,15 +67,15 @@ export class LanguageGenerator {
         const configurationTemplate = new ConfigurationTemplate();
 
         // Prepare folders
-        Helpers.createDirIfNotExisting(this.languageGenFolder);
-        Helpers.createDirIfNotExisting(this.utilsGenFolder);
-        Helpers.createDirIfNotExisting(this.environmentGenFolder);
-        Helpers.createDirIfNotExisting(this.stdlibGenFolder);
         Helpers.createDirIfNotExisting(this.configurationFolder);
+        Helpers.createDirIfNotExisting(this.languageGenFolder);
+        Helpers.createDirIfNotExisting(this.configurationGenFolder);
+        Helpers.createDirIfNotExisting(this.utilsGenFolder);
+        Helpers.createDirIfNotExisting(this.stdlibGenFolder);
         // do not delete files in configurationFolder, because these may contain user edits
         Helpers.deleteFilesInDir(this.languageGenFolder, generationStatus);
+        Helpers.deleteFilesInDir(this.configurationGenFolder, generationStatus);
         Helpers.deleteFilesInDir(this.utilsGenFolder, generationStatus);
-        Helpers.deleteFilesInDir(this.environmentGenFolder, generationStatus);
         Helpers.deleteFilesInDir(this.stdlibGenFolder, generationStatus);
 
         // set relative path to get the imports right
@@ -139,9 +137,9 @@ export class LanguageGenerator {
         const structureFile = Helpers.pretty(languageTemplate.generateLanguage(language), "Language Structure", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/${Names.language(language)}.ts`, structureFile);
 
-        LOGGER.log(`Generating language environment: ${this.environmentGenFolder}/${Names.environment(language)}.ts`);
+        LOGGER.log(`Generating language environment: ${this.configurationGenFolder}/${Names.environment(language)}.ts`);
         const environmentFile = Helpers.pretty(environmentTemplate.generateEnvironment(language, relativePath), "Language Environment", generationStatus);
-        fs.writeFileSync(`${this.environmentGenFolder}/${Names.environment(language)}.ts`, environmentFile);
+        fs.writeFileSync(`${this.configurationGenFolder}/${Names.environment(language)}.ts`, environmentFile);
 
         LOGGER.log(`Generating standard library: ${this.stdlibGenFolder}/${Names.stdlib(language)}.ts`);
         const stdlibFile = Helpers.pretty(stdlibTemplate.generateStdlibClass(language, relativePath), "Language Standard Library", generationStatus);
@@ -182,24 +180,22 @@ export class LanguageGenerator {
     private getFolderNames() {
         this.languageGenFolder = this.outputfolder + "/" + LANGUAGE_GEN_FOLDER;
         this.utilsGenFolder = this.outputfolder + "/" + LANGUAGE_UTILS_GEN_FOLDER;
-        this.environmentGenFolder = this.outputfolder + "/" + ENVIRONMENT_GEN_FOLDER;
+        this.configurationGenFolder = this.outputfolder + "/" + CONFIGURATION_GEN_FOLDER;
         this.stdlibGenFolder = this.outputfolder + "/" + STDLIB_GEN_FOLDER;
         this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
         this.utilsFolder = this.outputfolder + "/" + LANGUAGE_UTILS_FOLDER;
-        this.environmentFolder = this.outputfolder + "/" + ENVIRONMENT_FOLDER;
-        this.stdlibFolder = this.outputfolder + "/" + STDLIB_FOLDER;
         this.configurationFolder = this.outputfolder + "/" + CONFIGURATION_FOLDER;
+        this.stdlibFolder = this.outputfolder + "/" + STDLIB_FOLDER;
     }
 
     clean(force: boolean) {
         this.getFolderNames();
         Helpers.deleteDirAndContent(this.languageGenFolder);
         Helpers.deleteDirAndContent(this.utilsGenFolder);
-        Helpers.deleteDirAndContent(this.environmentGenFolder);
+        Helpers.deleteDirAndContent(this.configurationGenFolder);
         Helpers.deleteDirAndContent(this.stdlibGenFolder);
         Helpers.deleteDirIfEmpty(this.languageFolder);
         Helpers.deleteDirIfEmpty(this.utilsFolder);
-        Helpers.deleteDirIfEmpty(this.environmentFolder);
         Helpers.deleteDirIfEmpty(this.stdlibFolder);
         if (force) {
             Helpers.deleteFile(`${this.configurationFolder}/${Names.configuration()}.ts`);

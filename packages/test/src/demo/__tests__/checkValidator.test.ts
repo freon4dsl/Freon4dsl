@@ -190,10 +190,14 @@ describe("Testing Validator", () => {
 
     test("complete example model", () => {
         let errors: PiError[] = [];
+        // model.models.forEach(mm =>
+        //     console.log(DemoEnvironment.getInstance().writer.writeToString(mm))
+        // );
         errors = validator.validate(model, true);
         // errors.forEach(e =>
         //     console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
         // );
-        expect(errors.length).toBe(25);
+        // TODO check every one of the messages
+        expect(errors.length).toBe(23);
     });
 });

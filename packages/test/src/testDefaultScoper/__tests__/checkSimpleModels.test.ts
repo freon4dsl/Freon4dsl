@@ -1,6 +1,6 @@
 import { DSmodel } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
-import { ScoperTestEnvironment } from "../environment/gen/ScoperTestEnvironment";
+import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";
@@ -40,23 +40,6 @@ describe("Testing Default Scoper", () => {
             }
             expect(visibleNames).toContain(x);
         }
-        // // run unparser to inspect model
-        // const unparsed: string = unparser.writeToString(model, 0, false);
-        // const path: string = "./unparsedGeneratedModel.txt";
-        // if (!fs.existsSync(path)) {
-        //     fs.writeFileSync(path, unparsed);
-        // } else {
-        //     console.log(this, "test-unparser: user file " + path + " already exists, skipping it.");
-        // }
-        // // run the validator to see if the references are ok
-        // const validator = environment.validator;
-        // const errors = validator.validate(model);
-        // const errorMessages: string[] = [];
-        // errors.forEach(mess => {
-        //     errorMessages.push(mess.message + " in " + mess.locationdescription);
-        // });
-        // // print("found errors", errorMessages);
-        // expect (errors.length).toBe(0);
     });
 
     test("names in model with 3 units of depth 2, without unit interfaces", () => {

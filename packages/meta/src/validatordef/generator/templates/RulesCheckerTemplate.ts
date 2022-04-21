@@ -2,13 +2,13 @@
 // this leads to a load error
 // import { PiErrorSeverity } from "@projectit/core";
 import {
-    ENVIRONMENT_GEN_FOLDER,
+    CONFIGURATION_GEN_FOLDER,
     langExpToTypeScript,
     LANGUAGE_GEN_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     PiErrorSeverity,
-    PROJECTITCORE, getBaseTypeAsString
+    PROJECTITCORE, getBaseTypeAsString, isNameProp
 } from "../../../utils";
 import { PiConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import {
@@ -46,7 +46,7 @@ export class RulesCheckerTemplate {
         return `
         import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
+        import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
         import { reservedWordsInTypescript } from "./ReservedWords";         
@@ -205,10 +205,10 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type " + this.myWriter.writeNameOnly(this.typer.inferType(${langExpToTypeScript(r.type1)})) + " of [" + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) + 
+            message = `"Type " + this.typer.inferType(${langExpToTypeScript(r.type1)})?.toPiString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) + 
                          "] does not conform to " + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type2)})`;
         }
-        return `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
+        return `if (!this.typer.conformsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                  }`;
@@ -264,9 +264,13 @@ export class RulesCheckerTemplate {
                 if (cont instanceof ValidationMessageText) {
                     // console.log("FOUND message text: '" + cont.value + "'");
                     result += `${cont.value}`;
-                } else if (cont instanceof  ValidationMessageReference) {
-                    // console.log("FOUND message expression: '" + cont.expression.toPiString() + "'");
-                    result += `\${${langExpToTypeScript(cont.expression)}}`;
+                } else if (cont instanceof ValidationMessageReference) {
+                    if (cont.expression.findRefOfLastAppliedFeature() instanceof PiPrimitiveProperty) {
+                        result += `\${${langExpToTypeScript(cont.expression)}}`;
+                    } else {
+                        // console.log("FOUND message expression: '" + cont.expression.toPiString() + "'");
+                        result += `\${this.myWriter.writeToString(${langExpToTypeScript(cont.expression)})}`;
+                    }
                 }
                 if (index < numberOfparts - 1) {
                     result += " ";

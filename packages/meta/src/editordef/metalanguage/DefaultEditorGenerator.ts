@@ -226,13 +226,13 @@ export class DefaultEditorGenerator {
     private static addExtras(foundExtraInfo: ExtraClassifierInfo, con: PiClassifier) {
         // default for referenceShortcut is not needed
         if (!foundExtraInfo.trigger) {
-            if (foundExtraInfo.symbol) { // is there is a symbol defined then the trigger is equal to the symbol
+            if (!!foundExtraInfo.symbol) { // if there is a symbol defined then the trigger is equal to the symbol
                 foundExtraInfo.trigger = foundExtraInfo.symbol;
             } else {
                 foundExtraInfo.trigger = Names.classifier(con);
             }
         }
-        // only binary expression need a symbol
+        // only binary expressions need a symbol
         if (con instanceof PiBinaryExpressionConcept && !foundExtraInfo.symbol) {
             foundExtraInfo.symbol = Names.classifier(con);
         }

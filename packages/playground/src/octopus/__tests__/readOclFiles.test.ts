@@ -1,7 +1,7 @@
 import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
 import { FileHandler } from "./FileHandler";
 import { GenericModelSerializer } from "@projectit/core";
-import { ModelUnitMetaType, OctopusModelUnitType } from "../language/gen";
+import { ModelUnitMetaType, OctopusModel, OctopusModelUnitType } from "../language/gen";
 
 const writer = OctopusEnvironment.getInstance().writer;
 const reader = OctopusEnvironment.getInstance().reader;
@@ -13,7 +13,7 @@ function compareReadAndWrittenOclParts(path: string) {
         const unit1 = readFromFile(path, "OclPart");
         let result: string = writer.writeToString(unit1, 0, false);
         expect(result.length).toBeGreaterThan(0);
-        const unit2 = reader.readFromString(result, "OclPart");
+        const unit2 = reader.readFromString(result, "OclPart", new OctopusModel());
         // simply comparing the units does not work because the id properties of the two units
         // are not the same, therefore we use the hack of checking whether both units in JSON
         // format are the same
@@ -29,7 +29,7 @@ function compareReadAndWrittenOclParts(path: string) {
 function readFromFile(filepath: string, metatype: ModelUnitMetaType): OctopusModelUnitType {
     // read language file
     const langSpec = handler.stringFromFile(filepath);
-    return reader.readFromString(langSpec, metatype) as OctopusModelUnitType;
+    return reader.readFromString(langSpec, metatype, new OctopusModel()) as OctopusModelUnitType;
 }
 
 describe("Testing Parser for OCl part", () => {

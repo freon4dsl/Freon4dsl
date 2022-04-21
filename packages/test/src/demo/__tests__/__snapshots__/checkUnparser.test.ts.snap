@@ -4,9 +4,7 @@ exports[`Testing Unparser Unparse DemoModel Instance 'determine(AAP : TEST1) : T
 "DemoFunction determine {
     expression ' \\"Hello Demo\\" ' + ' \\"Goodbye\\" '
     parameters
-        DemoVariable AAP {
-            declaredType TEST1
-        }
+        AAP : TEST1
     declaredType TEST2
 }"
 `;
@@ -153,9 +151,7 @@ entities:
             DemoFunction requestClean {
                 expression 5 + 24
                 parameters
-                    DemoVariable cleaningCompany {
-                        declaredType Company
-                    }
+                    cleaningCompany : Company
                 declaredType Integer
             }
         int_attrs
@@ -176,9 +172,7 @@ entities:
             DemoFunction doClean {
                 expression 5 + 24
                 parameters
-                    DemoVariable at {
-                        declaredType Company
-                    }
+                    at : Company
                 declaredType Integer
             }
         int_attrs

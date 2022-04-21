@@ -13,7 +13,7 @@ import { CheckerHelper } from "./CheckerHelper";
 import { Checker, MetaLogger } from "../../utils";
 
 const LOGGER = new MetaLogger("PiLanguageChecker").mute();
-const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept",
+export const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept",
     "binary", "expression", "concept", "base", "reference", "priority", "implements", "id", "in"];
 // "in" is reserved word in pegjs
 

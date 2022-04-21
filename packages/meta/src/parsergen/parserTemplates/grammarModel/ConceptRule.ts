@@ -44,6 +44,7 @@ export class ConceptRule extends GrammarRule {
 
     toMethod(mainAnalyserName: string): string {
         const myProperties = this.propsToSet();
+        // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
         return `${ParserGenUtil.makeComment(this.toGrammar())}
                 public transform${this.ruleName} (branch: SPPTBranch) : ${Names.classifier(this.concept)} {
                     // console.log('transform${this.ruleName} called: ' + branch.name);

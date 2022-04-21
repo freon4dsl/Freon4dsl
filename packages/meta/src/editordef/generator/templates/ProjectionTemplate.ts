@@ -9,7 +9,7 @@ import {
     PiPrimitiveType,
     PiProperty
 } from "../../../languagedef/metalanguage";
-import { ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, Roles, sortConceptsWithBase } from "../../../utils";
+import { CONFIGURATION_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, Roles, sortConceptsWithBase } from "../../../utils";
 import {
     BoolKeywords,
     ListInfo,
@@ -27,6 +27,7 @@ import {
     PiOptionalPropertyProjection
 } from "../../metalanguage";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
+import { LOG2USER } from "../../../utils/UserLogger";
 
 export class ProjectionTemplate {
     private tableProjections: PiEditTableProjection[] = []; // holds all table projections during the generation of a single projection group
@@ -187,7 +188,7 @@ export class ProjectionTemplate {
             : ``}             
             
             ${this.envImports.length > 0 
-                ? `import { ${this.envImports.map(c => `${c}`).join(", ")} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";`
+                ? `import { ${this.envImports.map(c => `${c}`).join(", ")} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";`
                 : ``}          
             `;
         return importsText + coreText;
@@ -310,19 +311,24 @@ export class ProjectionTemplate {
 
     private generateOptionalProjection(optional: PiOptionalPropertyProjection, elementVarName: string, mainBoxLabel: string, language: PiLanguage): string {
         const propertyProjection: PiEditPropertyProjection = optional.findPropertyProjection();
-        const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.property.name);
-        const myLabel = `${mainBoxLabel}-optional-${optionalPropertyName}`;
+        if (!!propertyProjection) {
+            const optionalPropertyName = propertyProjection.property.name;
+            const myLabel = `${mainBoxLabel}-optional-${optionalPropertyName}`;
 
         // reuse the general method to handle lines
         let result = this.generateLines(optional.lines, elementVarName, myLabel, language, 2);
 
-        // surround with optional box
-        this.addToIfNotPresent(this.coreImports, "BoxFactory");
-        result = `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
+            // surround with optional box, and add "BoxFactory" to imports
+            this.addToIfNotPresent(this.coreImports, "BoxFactory");
+            result = `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
                 ${result},
                 false, "<+>"
             )`
-        return result;
+            return result;
+        } else {
+            LOG2USER.error("INTERNAL ERROR: no property found in optional projection.");
+        }
+        return "";
     }
 
     /**

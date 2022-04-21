@@ -95,7 +95,7 @@ export class ReaderWriterGenerator {
             this.makeFile(message, generatedFilePath, analyserContent, generationStatus);
         });
 
-        // get the semantic analyser and write it to file
+        // Get the semantic analyser and write it to file
         generatedFilePath = `${this.readerGenFolder}/${Names.semanticAnalyser(this.language)}.ts`;
         indexContent += `export * from "./${Names.semanticAnalyser(this.language)}";\n`;
         generatedContent  = analyser.getRefCorrectorContent(this.language, relativePath);

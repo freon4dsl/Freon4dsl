@@ -1,11 +1,14 @@
 import { PiClassifier, PiConcept, PiElementReference, PiInterface, PiProperty } from "../languagedef/metalanguage/";
 import { refListIncludes } from "./GenerationHelpers";
+import { ListUtil } from "./ListUtil";
 
 /**
  * This class contains a series of helper functions over the language.
  * Note that a number of similar functions can be found in PiLanguage.ts.
  */
 export class LangUtil {
+    // TODO check all methods on correctness with regard to interface/concept distiction
+
     /**
      * Returns the set of all concepts that are the base of 'self' recursively.
      * @param self
@@ -82,6 +85,20 @@ export class LangUtil {
                 LangUtil.superClassifiersRecursive(i.referred, result);
             }
         }
+    }
+
+    /**
+     * Returns all concepts that 'self' is a super interface of, recursive. Param 'self' is NOT included in the result.
+     * @param self
+     */
+    public static subInterfaces(self: PiInterface): PiInterface[] {
+        const result: PiInterface[] = [];
+        for (const cls of self.language.interfaces) {
+            if (LangUtil.superClassifiers(cls).includes(self)) {
+                result.push(cls);
+            }
+        }
+        return result;
     }
 
     /**
@@ -188,6 +205,27 @@ export class LangUtil {
         return result;
     }
 
+    // TODO check whether this is a better implementation
+    // private findAllImplementorsAndSubs(t: PiClassifier): PiClassifier[] {
+    //     const result: PiClassifier[] = [];
+    //     if (t instanceof PiConcept) {
+    //         ListUtil.addListIfNotPresent<PiClassifier>(result, LangUtil.subConcepts(t));
+    //     } else if (t instanceof PiInterface) {
+    //         const implementors = LangUtil.findImplementorsRecursive(t);
+    //         ListUtil.addListIfNotPresent<PiClassifier>(result, implementors);
+    //         for (const implementor of implementors) {
+    //             ListUtil.addListIfNotPresent<PiClassifier>(result, this.findAllSubs(implementor));
+    //         }
+    //
+    //         const subInterfaces = LangUtil.subInterfaces(t);
+    //         ListUtil.addListIfNotPresent<PiClassifier>(result, subInterfaces);
+    //         for (const subInterface of subInterfaces) {
+    //             ListUtil.addListIfNotPresent<PiClassifier>(result, this.findAllSubs(subInterface));
+    //         }
+    //     }
+    //     return result;
+    // }
+
     /**
      * Returns true if the names of the types of both parameters are equal.
      * @param firstProp
@@ -207,6 +245,10 @@ export class LangUtil {
         }
 
         // console.log("comparing " + type1.name + " and " + type2.name)
+        return LangUtil.conforms(type1, type2);
+    }
+
+    public static conforms(type1: PiClassifier, type2: PiClassifier) {
         if (type1 === type2) {
             // return true when types are equal
             // console.log("\t ==> types are equal")
@@ -217,10 +259,8 @@ export class LangUtil {
                 // return true when type1 is subconcept of type2
                 // console.log("\t ==> " + type1.name + " is a sub concept of " + type2.name)
                 return true;
-            } else if (type2 instanceof PiInterface && refListIncludes(type1.interfaces, type2)) {
-                // return true when type1 implements type2
-                // console.log("\t ==> " + type1.name + " implements " + type2.name)
-                return true;
+            } else if (type2 instanceof PiInterface) {
+                return this.doesImplement(type1, type2);
             }
         } else if (type1 instanceof PiInterface) {
             if (type2 instanceof PiInterface && type2.allSubInterfacesRecursive().includes(type1)) {
@@ -230,5 +270,23 @@ export class LangUtil {
             }
         }
         return false;
+    }
+
+    private static doesImplement(concept: PiConcept, interf: PiInterface): boolean {
+        let result: boolean = false;
+        if (refListIncludes(concept.interfaces, interf)) {
+            // return true when type1 implements type2
+            // console.log("\t ==> " + concept.name + " implements " + interf.name)
+            result = true;
+        } else {
+            // see if one of the base classes of type1 implements type2
+            for (const super1 of this.superConcepts(concept)) {
+                if (this.doesImplement(super1, interf)) {
+                    // console.log("\t ==> " + super1.name + " implements " + interf.name)
+                    result = true;
+                }
+            }
+        }
+        return result;
     }
 }

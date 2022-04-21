@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { PiBinaryExpressionConcept, PiLanguage } from "../../languagedef/metalanguage";
 import { Checker, Names, PiParser } from "../../utils";
 import { setCurrentFileName as editFileName } from "./PiEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
@@ -39,7 +39,10 @@ export class PiEditParser extends PiParser<PiEditUnit> {
                             // merge all info into this group
                             const found = projectionGroupsByName.get(group.name);
                             found.projections.push(...group.projections);
-                            if (!!found.extras && !!group.extras) {
+                            if (!!group.extras) {
+                                if (!found.extras) {
+                                    found.extras = [];
+                                }
                                 found.extras.push(...group.extras);
                             }
                             if (group.standardReferenceSeparator) {

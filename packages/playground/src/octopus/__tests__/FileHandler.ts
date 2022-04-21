@@ -29,4 +29,5 @@ export class FileHandler {
         }
         fs.writeFileSync(filepath, output);
     }
+
 }

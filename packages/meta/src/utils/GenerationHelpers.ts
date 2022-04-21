@@ -11,7 +11,9 @@ import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallEx
 import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
 import { PiPrimitiveType, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 import { Names } from "./Names";
+import { LangUtil } from "./LangUtil";
 
+// TODO make this a class with static methods
 /**
  * This function sorts the list of PiConcepts in such a way that
  * when a concept has a base concept, this base concept comes after the concept.
@@ -24,6 +26,7 @@ import { Names } from "./Names";
  *
  * @param piconcepts: the list of concepts to be sorted
  */
+// TODO see if this can be replaced by "sortTypes"
 export function sortConcepts(piconcepts: PiConcept[] | PiElementReference<PiConcept>[]): PiConcept[] {
     const newList: PiConcept[] = [];
     return _internalSort(piconcepts, newList);
@@ -81,6 +84,36 @@ function _internalSort(original: PiConcept[] | PiElementReference<PiConcept>[], 
         // console.log("====> items to go: " + itemsToGo);
     }
     return newList.reverse();
+}
+
+/**
+ * Sorts the types such that any type comes before its super concept or interface
+ **/
+export function sortTypes(toBeSorted: PiClassifier[]): PiClassifier[] {
+    const result: PiClassifier[] = [];
+    const remaining: PiClassifier[] = [];
+    remaining.push(...toBeSorted);
+    while (remaining.length > 0) {
+        remaining.forEach(cls => {
+            const supers = LangUtil.superClassifiers(cls);
+            let hasSuperInList: boolean = false;
+            supers.forEach(superCls => {
+                if (remaining.includes(superCls)) {
+                    hasSuperInList = true;
+                }
+            });
+            if (!hasSuperInList) {
+                result.push(cls);
+            }
+        });
+        result.forEach(cls => {
+            const indexInRemaining: number = remaining.indexOf(cls)
+            if (indexInRemaining >= 0) {
+                remaining.splice(indexInRemaining, 1);
+            }
+        })
+    }
+    return result.reverse();
 }
 
 /**
@@ -147,14 +180,24 @@ export function langExpToTypeScript(exp: PiLangExp): string {
     if (exp instanceof PiLangSelfExp) {
         result = `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
-        result = `this.${exp.sourceName} (${exp.actualparams.map(
-            param => `${langExpToTypeScript(param)}`
-        ).join(", ")})`;
+        if (exp.sourceName === 'ancestor') {
+            const metaType: string = langExpToTypeScript(exp.actualparams[0]); // there is always 1 param to this function
+            result = `this.ancestor(modelelement, "${metaType}") as ${metaType}`;
+        } else {
+            result = `this.${exp.sourceName} (${exp.actualparams.map(
+                param => `${langExpToTypeScript(param)}`
+            ).join(", ")})`;
+        }
+        if (!!exp.appliedfeature) {
+            result = `(${result}).${langExpToTypeScript(exp.appliedfeature)}`;
+        }
     } else if (exp instanceof PiLangAppliedFeatureExp) {
         // TODO this should be replaced by special getters and setters for reference properties
         // and the unparser should be adjusted to this
         const isRef = isReferenceProperty(exp);
-        result = exp.sourceName + (isRef ? "?.referred" : "")
+        // result = exp.sourceName + (isRef ? "?.referred" : "")
+        //     + (exp.appliedfeature ? (`?.${langExpToTypeScript(exp.appliedfeature)}`) : "");
+        result = (isRef ? Names.refName(exp.referredElement) : exp.sourceName )
             + (exp.appliedfeature ? (`?.${langExpToTypeScript(exp.appliedfeature)}`) : "");
     } else if (exp instanceof PiInstanceExp) {
         result = `${exp.sourceName}.${exp.instanceName}`;
@@ -199,7 +242,7 @@ function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
 }
 
 /**
- * Returns the property of 'con' that is called 'name' and has as type 'string', i.e. the property that
+ * Returns the property of 'con' that is called 'name' and has as type 'identifier', i.e. the property that
  * represents the name of the concept.
  * @param con
  */
@@ -209,7 +252,7 @@ export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
 
 /**
  * Returns true if 'piClasssifier' has a property that respresents it name, i.e. a property
- * that is called 'name' and has as type 'string'.
+ * that is called 'name' and has as type 'identifier'.
  * @param piClassifier
  */
 export function hasNameProperty (piClassifier: PiClassifier): boolean {
@@ -219,6 +262,15 @@ export function hasNameProperty (piClassifier: PiClassifier): boolean {
         }
     }
     return false;
+}
+
+/**
+ * Returns true if 'p' is called 'name' and has as type 'identifier', i.e. the property
+ * represents the name of a concept.
+ * @param con
+ */
+export function isNameProp(p: PiProperty): boolean {
+    return p.name === "name" && p.type === PiPrimitiveType.identifier;
 }
 
 /**

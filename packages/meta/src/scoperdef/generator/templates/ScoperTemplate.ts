@@ -10,7 +10,7 @@ import {
     LANGUAGE_GEN_FOLDER,
     PROJECTITCORE,
     TYPER_GEN_FOLDER,
-    ENVIRONMENT_GEN_FOLDER,
+    CONFIGURATION_GEN_FOLDER,
     langExpToTypeScript,
     replaceInterfacesWithImplementors, LangUtil
 } from "../../../utils";
@@ -60,7 +60,7 @@ export class ScoperTemplate {
                 } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         // import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger, Language, PiElement, PiModelUnit, FreonNamespace, modelUnit } from "${PROJECTITCORE}"
-        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
+        import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }          
                                    
         const LOGGER = new PiLogger("${generatedClassName}");  
@@ -383,8 +383,11 @@ export class ScoperTemplate {
             }
             result = `let owner = ${actualParamToGenerate};
                 if (!!owner) {
-                    let newScopeElement = this.myTyper.inferType(${actualParamToGenerate});
-                    return FreonNamespace.create(newScopeElement);
+                    let newScopeElement = this.myTyper.inferType(owner).toAstElement();
+                    // 'newScopeElement' could be null, when the type found by the typer does not correspond to an AST element
+                    if (!!newScopeElement) {
+                        return FreonNamespace.create(newScopeElement);
+                    }
                 }`;
         } else {
             // normal case: the expression is an ordinary expression over the language

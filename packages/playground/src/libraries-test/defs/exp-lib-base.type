@@ -1,10 +1,9 @@
-typer XX for language ExpressionLibrary
+typer
 
 istype { ROOT_TYPE, BASIC_TYPE }
 
-ExpressionBase {
-    abstract infertype  ;
-}
+hastype { ExpressionBase }
+
 ComparisonExpression {
     infertype BASIC_TYPE:Boolean;
 }

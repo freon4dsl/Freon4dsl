@@ -77,7 +77,7 @@ PiBinaryExpressionConcept {
 PiLimitedConcept {
     [
     [=> PiClassifier] ${isAbstract [abstract]} limited ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
-        ${properties vertical terminator [;]}
+        [?${properties vertical terminator [;]}]
         ${instances vertical }
     }
     ]
@@ -92,9 +92,11 @@ PiPrimitiveProperty {
 
 PiInstance {
     [
-    ${name} = {
+    ${name} [?
+    = {
         ${propertyDefs vertical separator [,]}
     }
+    ] ;
     ]
 }
 PiPropertyInstance {

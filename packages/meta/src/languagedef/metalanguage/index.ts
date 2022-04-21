@@ -5,7 +5,6 @@
  */
 
 export {
-    PiLangConceptType,
     PiLangEveryConcept,
     PiLanguage,
     PiLangElement,

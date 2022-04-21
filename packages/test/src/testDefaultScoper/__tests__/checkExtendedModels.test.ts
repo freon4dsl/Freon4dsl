@@ -1,7 +1,7 @@
 import { DSmodel, DSref, PiElementReference } from "../language/gen";
 import { initializeScoperDef } from "../scoper/gen/index";
 import { SimpleModelCreator } from "./SimpleModelCreator";
-import { ScoperTestEnvironment } from "../environment/gen/ScoperTestEnvironment";
+import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";
 import * as fs from "fs";
 import { ExtendedModelCreator } from "./ExtendedModelCreator";
 

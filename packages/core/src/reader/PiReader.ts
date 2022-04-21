@@ -1,4 +1,4 @@
-import { PiElement } from "../language";
+import { PiElement, PiModel } from "../language";
 
 // tag::reader-interface[]
 export interface PiReader {
@@ -8,6 +8,6 @@ export interface PiReader {
      * @param input
      * @param metatype
      */
-    readFromString(input: string, metatype: string): PiElement;
+    readFromString(input: string, metatype: string, model: PiModel): PiElement;
 }
 // end::reader-interface[]

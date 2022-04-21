@@ -30,16 +30,25 @@ export class ValidationSeverity extends PiDefinitionElement {
 
 export class ValidationMessage extends PiDefinitionElement {
     content: ValidationMessagePart[] = [];
+    toPiString(): string {
+        return this.content.map(p => p.toPiString()).join(" ");
+    }
 }
 
 export type ValidationMessagePart = ValidationMessageText | ValidationMessageReference;
 
 export class ValidationMessageText extends PiDefinitionElement {
     value: string;
+    toPiString(): string {
+        return this.value;
+    }
 }
 
 export class ValidationMessageReference extends PiDefinitionElement {
     expression: PiLangExp;
+    toPiString(): string {
+        return this.expression.toPiString();
+    }
 }
 
 export abstract class ValidationRule extends PiDefinitionElement {

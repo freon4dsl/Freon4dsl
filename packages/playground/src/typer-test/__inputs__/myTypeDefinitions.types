@@ -1,8 +1,0 @@
-type NamedType1;
-type NamedType2;
-type Set<NamedType1>;
-type OR<NamedType1, Simple1>;
-type AND<NamedType1, Simple1, Simple2>;
-type Simple1<kWh>;
-
-// type Bag<Set<NamedTyped2>>;
