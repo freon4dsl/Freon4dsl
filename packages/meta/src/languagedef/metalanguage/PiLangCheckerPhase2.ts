@@ -5,10 +5,12 @@ import {
     PiInstance,
     PiInterface,
     PiLanguage,
-    PiLimitedConcept, PiPrimitiveProperty,
+    PiLimitedConcept,
+    PiPrimitiveProperty,
     PiPrimitiveType,
     PiProperty,
-    PiInstanceProperty, PiUnitDescription
+    PiInstanceProperty,
+    PiUnitDescription, PiModelDescription
 } from "./PiLanguage";
 import { PiElementReference } from "./PiElementReference";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
@@ -181,9 +183,9 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             classifier.allInterfaces().forEach(intf => {
                 intf.allProperties().forEach(toBeImplemented => {
                     const implementedProp = this.findImplementedProperty(toBeImplemented, classifier, false);
-                    if (!implementedProp) { // there is NO counter part in either this concept of its base
+                    if (!implementedProp) { // there is NO counter part in either this concept or its base
                         const inAnotherInterface = propsDone.find(prevProp => prevProp.name === toBeImplemented.name);
-                        if (!!inAnotherInterface) { // there is a prop with the same name in another interface
+                        if (!!inAnotherInterface) { // there is a prop with the same name in another implemented interface
                             // we must check type conformance both ways!
                             // when types conform: add a new prop with the most specific type to classifier
                             let virtualProp: PiProperty = null;
@@ -355,8 +357,8 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
                 }
                 return result;
             } else {
-                // does not occur, PiConcept and PiInterface are the only subclasses of PiClassifier
-                // TODO add unit
+                // Does not occur: PiConcept, PiInterface, PiModelUnit, and PiModel are the only subclasses of PiClassifier,
+                // and the last two do not have supers.
                 console.log("INTERNAL ERROR: UNIT NOT HANDLED");
                 return false;
             }
@@ -445,7 +447,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         copy.isOptional = property.isOptional;
         copy.isList = property.isList;
         copy.isPart = property.isPart;
-        copy.implementedInBase = false; // TODO check this: maybe false because the original property might come from an interface
+        copy.implementedInBase = false; // false because the original property comes from an interface
         copy.type = property.type;
         copy.owningClassifier = classifier;
         if (property instanceof PiPrimitiveProperty) {

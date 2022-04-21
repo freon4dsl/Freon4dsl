@@ -6,8 +6,6 @@ import { GenerationUtil } from "./GenerationUtil";
  * Note that a number of similar functions can be found in PiLanguage.ts.
  */
 export class LangUtil {
-    // TODO check all methods on correctness with regard to interface/concept distiction
-
     /**
      * Returns the set of all concepts that are the base of 'self' recursively.
      * @param self
@@ -93,7 +91,7 @@ export class LangUtil {
     public static subInterfaces(self: PiInterface): PiInterface[] {
         const result: PiInterface[] = [];
         for (const cls of self.language.interfaces) {
-            if (LangUtil.superClassifiers(cls).includes(self)) {
+            if (LangUtil.superInterfaces(cls).includes(self)) {
                 result.push(cls);
             }
         }
@@ -101,7 +99,8 @@ export class LangUtil {
     }
 
     /**
-     * Returns all concepts that 'self' is a super class of, recursive. Param 'self' is NOT included in the result.
+     * Returns all concepts of which 'self' is a super class, or 'self' is an implemented interface, recursive.
+     * Param 'self' is NOT included in the result.
      * @param self
      */
     public static subConcepts(self: PiClassifier): PiConcept[] {
@@ -115,7 +114,8 @@ export class LangUtil {
     }
 
     /**
-     * Returns all concepts that 'self' is a super class of, recursive. Param 'self' is included in the result.
+     * Returns all concepts of which 'self' is a super class, or 'self' is an implemented interface, recursive.
+     * Param 'self' IS included in the result.
      * @param self
      */
     public static subConceptsIncludingSelf(self: PiClassifier): PiConcept[] {
@@ -133,11 +133,8 @@ export class LangUtil {
      * @param piInterface
      */
     public static findImplementorsDirect(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
-        let implementors : PiConcept[];
         const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
-        const allConcepts = myInterface.language.concepts;
-        implementors = allConcepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
-        return implementors;
+        return myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
     }
 
     /**
@@ -147,14 +144,12 @@ export class LangUtil {
      * @param piInterface
      */
     public static findImplementorsRecursive(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
-        let implementors : PiConcept[];
         const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
-        const allConcepts = myInterface.language.concepts;
-        implementors = allConcepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
+        let implementors : PiConcept[] = this.findImplementorsDirect(myInterface);
 
         // add implementors of sub-interfaces
         for (const sub of myInterface.allSubInterfacesRecursive()) {
-            const extraImplementors = allConcepts.filter(con => con.interfaces.some(intf => intf.referred === sub));
+            const extraImplementors = myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === sub));
             for (const concept of extraImplementors) {
                 if (!implementors.includes(concept)) {
                     implementors.push(concept);
@@ -205,18 +200,18 @@ export class LangUtil {
     }
 
     // TODO check whether this is a better implementation
-    // private findAllImplementorsAndSubs(t: PiClassifier): PiClassifier[] {
+    // private findAllImplementorsAndSubs(myClassifier: PiClassifier): PiClassifier[] {
     //     const result: PiClassifier[] = [];
-    //     if (t instanceof PiConcept) {
-    //         ListUtil.addListIfNotPresent<PiClassifier>(result, LangUtil.subConcepts(t));
-    //     } else if (t instanceof PiInterface) {
-    //         const implementors = LangUtil.findImplementorsRecursive(t);
+    //     if (myClassifier instanceof PiConcept) {
+    //         ListUtil.addListIfNotPresent<PiClassifier>(result, LangUtil.subConcepts(myClassifier));
+    //     } else if (myClassifier instanceof PiInterface) {
+    //         const implementors = LangUtil.findImplementorsRecursive(myClassifier);
     //         ListUtil.addListIfNotPresent<PiClassifier>(result, implementors);
     //         for (const implementor of implementors) {
     //             ListUtil.addListIfNotPresent<PiClassifier>(result, this.findAllSubs(implementor));
     //         }
     //
-    //         const subInterfaces = LangUtil.subInterfaces(t);
+    //         const subInterfaces = LangUtil.subInterfaces(myClassifier);
     //         ListUtil.addListIfNotPresent<PiClassifier>(result, subInterfaces);
     //         for (const subInterface of subInterfaces) {
     //             ListUtil.addListIfNotPresent<PiClassifier>(result, this.findAllSubs(subInterface));

@@ -49,10 +49,10 @@ export class IndexTemplate {
         );
         // The exports need to be sorted such that base concepts/interfaces are exported before the
         // concepts/interfaces that are extending them.
-        GenerationUtil.sortClassifiers(language.interfaces).map(c =>
+        GenerationUtil.sortClassifiers(language.interfaces).reverse().map(c =>
             tmp.push(Names.classifier(c))
         );
-        GenerationUtil.sortConceptsOrRefs(language.concepts).map(c =>
+        GenerationUtil.sortConceptsOrRefs(language.concepts).reverse().map(c =>
             tmp.push(Names.concept(c))
         );
 

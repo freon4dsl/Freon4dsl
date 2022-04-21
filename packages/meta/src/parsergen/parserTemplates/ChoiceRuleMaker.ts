@@ -1,5 +1,5 @@
 import { PiClassifier, PiConcept} from "../../languagedef/metalanguage";
-import { Names } from "../../utils";
+import { LangUtil, Names } from "../../utils";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { ChoiceRule } from "./grammarModel/ChoiceRule";
 import { SuperChoiceRule } from "./grammarModel/SuperChoiceRule";
@@ -17,7 +17,7 @@ export class ChoiceRuleMaker {
         for (const [piClassifier, subs] of interfacesAndAbstractsUsed) {
             const branchName = Names.classifier(piClassifier);
             // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
-            let implementors = this.sortImplementors(subs);
+            let implementors = this.sortImplementorsOnPrimitiveProps(subs);
             this.imports.push(piClassifier);
             rules.push(new ChoiceRule(branchName, piClassifier, implementors));
         }
@@ -35,7 +35,7 @@ export class ChoiceRuleMaker {
             // that rule gets the least priority in the parser
             implementors.push(piClassifier);
             // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
-            implementors.push(...this.sortImplementors(subs));
+            implementors.push(...this.sortImplementorsOnPrimitiveProps(subs));
             this.imports.push(piClassifier);
             rules.push(new SuperChoiceRule(branchName, piClassifier, implementors));
         }
@@ -47,9 +47,7 @@ export class ChoiceRuleMaker {
      * @param implementors
      * @private
      */
-    private sortImplementors(implementors: PiClassifier[]): PiClassifier[] {
-        // TODO should be done recursively!!!
-        // TODO if this works then the ref-correction can be done differently
+    private sortImplementorsOnPrimitiveProps(implementors: PiClassifier[]): PiClassifier[] {
         let result: PiClassifier[] = [];
         let withPrims: PiClassifier[] = [];
         for (const concept of implementors) {

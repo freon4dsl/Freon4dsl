@@ -26,7 +26,7 @@ describe("Checking language parser on checking errors", () => {
             // checker.errors.forEach(err => console.log(err));
             expect(e.message).toBe(`checking errors (12).`);
             expect(checker.errors.includes("The model should have at least one unit type [file: test2.ast, line: 3, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Type 'number' cannot be used as a reference, because it has no name property [file: test2.ast, line: 10, column: 19].")).toBeTruthy();
+            expect(checker.errors.includes("Type 'number' cannot be used as a reference, because it has no property 'name: identifier' [file: test2.ast, line: 10, column: 19].")).toBeTruthy();
             expect(checker.errors.includes("A non-abstract limited concept must have instances [file: test2.ast, line: 14, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('string') [file: test2.ast, line: 19, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('number') [file: test2.ast, line: 21, column: 1].")).toBeTruthy();
@@ -116,9 +116,9 @@ describe("Checking language parser on checking errors", () => {
         } catch (e) {
             // console.log(checker.errors.map(err => err));
             expect(e.message).toBe(`checking errors (15).`);
-            expect(checker.errors.includes("Type 'NoName' cannot be used as a reference, because it has no name property [file: test7.ast, line: 4, column: 24].")).toBeTruthy();
+            expect(checker.errors.includes("Type 'NoName' cannot be used as a reference, because it has no property 'name: identifier' [file: test7.ast, line: 4, column: 24].")).toBeTruthy();
             expect(checker.errors.includes("Type of property 'refProp' should be a modelunit [file: test7.ast, line: 4, column: 24].")).toBeTruthy();
-            expect(checker.errors.includes("Type 'NameNotStringType' cannot be used as a reference, because its name property is not of type 'identifier' [file: test7.ast, line: 5, column: 25].")).toBeTruthy();
+            expect(checker.errors.includes("Type 'NameNotStringType' cannot be used as a reference, because it has no property 'name: identifier' [file: test7.ast, line: 5, column: 25].")).toBeTruthy();
             expect(checker.errors.includes("Type of property 'refProp2' should be a modelunit [file: test7.ast, line: 5, column: 25].")).toBeTruthy();
             expect(checker.errors.includes("The model should have at least one unit type [file: test7.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("All properties of a model must be parts, not references [file: test7.ast, line: 3, column: 1].")).toBeTruthy();
