@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { PiElementReferenceM } from "./PiElementReferenceM";
 import { observablelistpart, observablelistreference, observablepart, observablereference } from "../MobxModelDecorators";
-import { DecoratedModelElement, MobxModelElementImpl } from "../DecoratedModelElement";
+import { MobxModelElementImpl } from "../DecoratedModelElement";
 import { makeObservable, observable } from "mobx";
 
 export class MobxTestElement extends MobxModelElementImpl {
