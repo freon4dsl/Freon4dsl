@@ -1,4 +1,3 @@
-import { printModel1 } from "../../demo/utils/index";
 import { DSmodel } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { ScoperTestEnvironment } from "../environment/gen/ScoperTestEnvironment";

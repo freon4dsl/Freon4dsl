@@ -1,4 +1,3 @@
-import { printModel1 } from "../utils/Utils";
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoModel, DemoFunction, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
@@ -13,7 +12,6 @@ describe("testing Scoper", () => {
             done();
         });
 
-        // console.log(printModel1(model));
         test("visible elements in model and unit", () => {
             let vi = scoper.getVisibleNames(model);
             console.log("VI: " + vi);

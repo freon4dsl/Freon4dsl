@@ -10,7 +10,7 @@ describe("First test in core-svelte", () => {
         expect(true).not.toBe(false);
     });
 
-    test("says 'hello world!'", () => {
+    test.skip("says 'hello world!'", () => {
         const myTextBox = new TextBox(null, "role", () => "Hello world!", (v: string) => {
             return;
         });
