@@ -1,5 +1,5 @@
 export * from "./Checker";
-export * from "./Helpers";
+export * from "./FileUtil";
 export * from "./MetaLogger";
 export * from "./GenerationUtil";
 export * from "./Names";

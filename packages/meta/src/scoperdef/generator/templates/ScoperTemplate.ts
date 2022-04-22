@@ -11,21 +11,19 @@ import {
     PROJECTITCORE,
     TYPER_GEN_FOLDER,
     CONFIGURATION_GEN_FOLDER,
-    GenerationUtil
+    GenerationUtil, LangUtil, ListUtil
 } from "../../../utils";
 import { PiScopeDef, ScopeConceptDef } from "../../metalanguage";
 
 export class ScoperTemplate {
+    languageImports: string[] = []; // holds the names of all classifiers that need to be imported from the generated language structure
     hasAlternativeScopeText: string = "";
     getAlternativeScopeText: string = "";
-    alternativeScopeImports: string = "";
+    getAdditionalNamespacetext = "";
 
     generateIndex(language: PiLanguage): string {
         return `
         export * from "./${Names.scoper(language)}";
-        // export * from "./${Names.scoperUtils(language)}";
-        // export * from "./${Names.namespace(language)}";
-        // export * from "./${Names.namesCollector(language)}";
         export * from "./${Names.scoperDef(language)}";
         `;
     }
@@ -33,12 +31,9 @@ export class ScoperTemplate {
     generateScoper(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
         this.hasAlternativeScopeText = "";
         this.getAlternativeScopeText = "";
-        this.alternativeScopeImports = "";
 
-        const allLangConcepts: string = Names.allConcepts(language);
         const langConceptType: string = Names.metaType(language);
         const generatedClassName: string = Names.scoper(language);
-        const namespaceClassName: string = Names.namespace(language);
         const scoperInterfaceName: string = Names.PiScoper;
         const typerClassName: string = Names.typer(language);
 
@@ -50,18 +45,12 @@ export class ScoperTemplate {
                 generateAlternativeScopes = true;
             }
         }
+        // add the necessary names to the imports
+        ListUtil.addIfNotPresent(this.languageImports, langConceptType);
+        // console.log("Adding 222: " + langConceptType + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
 
-        // Template starts here
-        return `
-        import { ${allLangConcepts}, ${langConceptType},
-                    ${GenerationUtil.replaceInterfacesWithImplementors(scopedef.namespaces).map(ref =>
-                        `${Names.classifier(ref)}`).join(", ")}${this.alternativeScopeImports} 
-                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        // import { ${namespaceClassName} } from "./${namespaceClassName}";
-        import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger, Language, PiElement, PiModelUnit, FreonNamespace, modelUnit } from "${PROJECTITCORE}"
-        import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
-        ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }          
-                                   
+        // Template starts here - without imports, they are calculated while creating this text and added later
+        const templateBody: string = `
         const LOGGER = new PiLogger("${generatedClassName}");  
         
         /**
@@ -254,6 +243,15 @@ export class ScoperTemplate {
 
             }
         }`;
+
+        // now we have enough information to create the correct imports
+        const templateImports: string = `
+        import { ${scoperInterfaceName}, ${Names.PiNamedElement}, PiLogger, Language, PiElement, PiModelUnit, FreonNamespace, modelUnit } from "${PROJECTITCORE}"
+        import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
+        ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }  `;
+
+        return templateImports + templateBody;
     }
 
     private makeAdditionalNamespaceTexts(scopedef: PiScopeDef, language: PiLanguage) {
@@ -261,41 +259,38 @@ export class ScoperTemplate {
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceAdditions) {
                 const myClassifier = def.conceptRef.referred;
-                let isDone: boolean = false;
+                // let isDone: boolean = false;
                 const comment = "// based on namespace addition for " + myClassifier.name + "\n";
+                ListUtil.addIfNotPresent(this.languageImports, myClassifier.name); // TODO
                 if (myClassifier instanceof PiInterface) {
                     for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
-                        if ( !generatedConcepts.includes(implementor)) {
-                            isDone = true;
-                        }
-                        this.makeAdditionalNamespaceTextsForConcept(implementor, def, language, isDone, comment);
+                        // if ( !generatedConcepts.includes(implementor)) {
+                        //     isDone = true;
+                        // }
+                        this.makeAdditionalNamespaceTextsForConcept(implementor, def, language, comment);
                         generatedConcepts.push(implementor);
-                        this.imports.push(Names.concept(implementor));
+                        ListUtil.addIfNotPresent(this.languageImports, Names.concept(implementor));
+                        // console.log("Adding 666: " + Names.classifier(implementor) + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
                     }
                 } else {
-                    if ( !generatedConcepts.includes(myClassifier)) {
-                        isDone = true;
-                    }
-                    this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, language, isDone, comment);
+                    // if ( !generatedConcepts.includes(myClassifier)) {
+                    //     isDone = true;
+                    // }
+                    this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, language, comment);
                     generatedConcepts.push(myClassifier);
-                    this.imports.push(Names.classifier(myClassifier));
+                    ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
+                    // console.log("Adding 555: " + Names.classifier(myClassifier) + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
                 }
             }
         }
     }
 
-    imports: string[] = [];
-    getAdditionalNamespacetext = "";
-    additionalNamespaceImports = "";
-    // hasAdditionalNamespacetext = "";
-
-    private makeAdditionalNamespaceTextsForConcept(piConcept: PiConcept, def: ScopeConceptDef, language: PiLanguage, isDone: boolean, comment: string) {
+    private makeAdditionalNamespaceTextsForConcept(piConcept: PiConcept, def: ScopeConceptDef, language: PiLanguage, comment: string) {
         const typeName = Names.concept(piConcept);
         // we are adding to three textstrings
         // first, to the import statements
-        if (isDone) { // do this only if the concept has not yet been imported (indicated by isDone)
-            this.additionalNamespaceImports = this.additionalNamespaceImports.concat(", " + typeName);
-        }
+        ListUtil.addIfNotPresent(this.languageImports, typeName);
+        // console.log("Adding 333: " + typeName + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
 
         // second, to the 'getAlternativeScope' method
         // Do this always, because the expression can be different for a concrete concept
@@ -310,7 +305,6 @@ export class ScoperTemplate {
             `}\n`);
     }
 
-
     private makeAlternativeScopeTexts(scopedef: PiScopeDef, language: PiLanguage) {
         const allLangConcepts: string = Names.allConcepts(language);
         for (const def of scopedef.scopeConceptDefs) {
@@ -318,7 +312,8 @@ export class ScoperTemplate {
                 const conceptName = def.conceptRef.referred.name;
                 // we are adding to three textstrings
                 // first, to the import statements
-                this.alternativeScopeImports = this.alternativeScopeImports.concat(", " + conceptName);
+                ListUtil.addIfNotPresent(this.languageImports, Names.classifier(def.conceptRef.referred));
+                // console.log("Adding 444: " + Names.classifier(def.conceptRef.referred)  + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
 
                 // second, to the 'hasAlternativeScope' method
                 this.hasAlternativeScopeText = this.hasAlternativeScopeText.concat(
@@ -330,7 +325,7 @@ export class ScoperTemplate {
                 this.getAlternativeScopeText = this.getAlternativeScopeText.concat(
                     `if (!!modelelement && modelelement instanceof ${conceptName}) {
                         // use alternative scope '${def.alternativeScope.expression.toPiString()}'
-                        ${this.altScopeExpToTypeScript(def.alternativeScope.expression, allLangConcepts, language)}
+                        ${this.altScopeExpToTypeScript(def.alternativeScope.expression, allLangConcepts)}
                     }`);
             }
         }
@@ -369,7 +364,7 @@ export class ScoperTemplate {
         return result;
     }
 
-    private altScopeExpToTypeScript(expression: PiLangExp, allLangConcepts: string, language: PiLanguage): string {
+    private altScopeExpToTypeScript(expression: PiLangExp, allLangConcepts: string): string {
         let result;
         // special case: the expression refers to 'typeof'
         if (expression instanceof PiLangFunctionCallExp && expression.sourceName === "typeof") {
@@ -377,6 +372,7 @@ export class ScoperTemplate {
             // we know that typeof has exactly 1 actual parameter
             if ( expression.actualparams[0].sourceName === "container" ) {
                 actualParamToGenerate = `modelelement.piOwnerDescriptor().owner as ${allLangConcepts}`;
+                ListUtil.addIfNotPresent(this.languageImports, allLangConcepts);
             } else {
                 actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0]);
             }

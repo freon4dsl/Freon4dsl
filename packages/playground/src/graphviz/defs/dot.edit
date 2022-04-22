@@ -5,7 +5,7 @@ unitA {[
 ]}
 
 Graph {[
-    [?${self.strict [STRICT]}] ${isDiGraph [ DIGRAPH | GRAPH ]} [?${self.name}]{
+    ${self.strict [STRICT]} ${isDiGraph [ DIGRAPH | GRAPH ]} [?${self.name}]{
     ${self.statements vertical terminator [; ]}
     }
 ]}

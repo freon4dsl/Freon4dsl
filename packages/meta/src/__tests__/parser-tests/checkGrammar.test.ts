@@ -1,6 +1,6 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { PiLanguage } from "../../languagedef/metalanguage";
-import { Helpers, MetaLogger } from "../../utils";
+import { FileUtil, MetaLogger } from "../../utils";
 import { ReaderWriterGenerator } from "../../parsergen/ReaderWriterGenerator";
 import { PiEditParser } from "../../editordef/parser/PiEditParser";
 import * as fs from "fs";
@@ -20,11 +20,11 @@ describe("Checking parser generation", () => {
 
     afterAll(() => {
         // TODO make recursive version of deleteDirAndContent
-        Helpers.deleteDirAndContent(outputDir + "reader/gen/");
-        Helpers.deleteDirAndContent(outputDir + "writer/gen/");
-        Helpers.deleteDirAndContent(outputDir + "reader/");
-        Helpers.deleteDirAndContent(outputDir + "writer/");
-        Helpers.deleteDirAndContent(outputDir);
+        FileUtil.deleteDirAndContent(outputDir + "reader/gen/");
+        FileUtil.deleteDirAndContent(outputDir + "writer/gen/");
+        FileUtil.deleteDirAndContent(outputDir + "reader/");
+        FileUtil.deleteDirAndContent(outputDir + "writer/");
+        FileUtil.deleteDirAndContent(outputDir);
     });
 
     test("on primitives", () => {

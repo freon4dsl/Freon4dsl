@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { MetaLogger } from "../utils";
 import { PiLanguage } from "../languagedef/metalanguage";
-import { GenerationStatus, Helpers, Names, READER_FOLDER, READER_GEN_FOLDER, WRITER_FOLDER, WRITER_GEN_FOLDER } from "../utils";
+import { GenerationStatus, FileUtil, Names, READER_FOLDER, READER_GEN_FOLDER, WRITER_FOLDER, WRITER_GEN_FOLDER } from "../utils";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates";
 import { net } from "net.akehurst.language-agl-processor";
@@ -40,10 +40,10 @@ export class ReaderWriterGenerator {
         const grammarGenerator = new GrammarGenerator();
 
         // Prepare folders
-        Helpers.createDirIfNotExisting(this.writerGenFolder);
-        Helpers.deleteFilesInDir(this.writerGenFolder, generationStatus);
-        Helpers.createDirIfNotExisting(this.readerGenFolder);
-        Helpers.deleteFilesInDir(this.readerGenFolder, generationStatus);
+        FileUtil.createDirIfNotExisting(this.writerGenFolder);
+        FileUtil.deleteFilesInDir(this.writerGenFolder, generationStatus);
+        FileUtil.createDirIfNotExisting(this.readerGenFolder);
+        FileUtil.deleteFilesInDir(this.readerGenFolder, generationStatus);
 
         // set relative path to get the imports right
         const relativePath = "../../";
@@ -146,15 +146,15 @@ export class ReaderWriterGenerator {
 
     private makeFile(generationMessage: string, generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {
         LOGGER.log(`Generating ${generationMessage}: ${generatedFilePath}`);
-        generatedContent = Helpers.pretty(generatedContent, `${generatedFilePath}`, generationStatus);
+        generatedContent = FileUtil.pretty(generatedContent, `${generatedFilePath}`, generationStatus);
         fs.writeFileSync(`${generatedFilePath}`, generatedContent);
     }
 
     clean(force: boolean) {
         this.getFolderNames();
-        Helpers.deleteDirAndContent(this.writerGenFolder);
-        Helpers.deleteDirAndContent(this.readerGenFolder);
-        Helpers.deleteDirIfEmpty(this.writerFolder);
-        Helpers.deleteDirIfEmpty(this.readerFolder);
+        FileUtil.deleteDirAndContent(this.writerGenFolder);
+        FileUtil.deleteDirAndContent(this.readerGenFolder);
+        FileUtil.deleteDirIfEmpty(this.writerFolder);
+        FileUtil.deleteDirIfEmpty(this.readerFolder);
     }
 }

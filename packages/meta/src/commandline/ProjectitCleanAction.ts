@@ -10,7 +10,7 @@ import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
 import { MetaLogger } from "../utils/MetaLogger";
-import { GenerationStatus, Helpers } from "../utils";
+import { GenerationStatus, FileUtil } from "../utils";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { PiLanguage } from "../languagedef/metalanguage";
 
@@ -163,7 +163,7 @@ export class ProjectItCleanAction extends CommandLineAction {
         }
         const generationStatus = new GenerationStatus();
         let languageFiles: string[] = [];
-        const myFileSet: string[] = Helpers.findFiles(this.defFolder, generationStatus);
+        const myFileSet: string[] = FileUtil.findFiles(this.defFolder, generationStatus);
         if (myFileSet.length > 0) {
             for (const filename of myFileSet) {
                 if (/\.ast$/.test(filename)) {

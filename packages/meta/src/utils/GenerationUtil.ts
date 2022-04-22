@@ -10,6 +10,7 @@ import {
 import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp, PiElementReference, PiPrimitiveType } from "../languagedef/metalanguage";
 import { Names } from "./Names";
 import { LangUtil } from "./LangUtil";
+import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 
 export class GenerationUtil {
 
@@ -98,8 +99,8 @@ export class GenerationUtil {
      *
      * @param classifiers
      */
-    public static replaceInterfacesWithImplementors(classifiers: PiClassifier[] | PiElementReference<PiClassifier>[]): PiConcept[] {
-        const result: PiConcept[] = [];
+    public static replaceInterfacesWithImplementors(classifiers: PiClassifier[] | PiElementReference<PiClassifier>[]): PiClassifier[] {
+        const result: PiClassifier[] = [];
         for (const ref of classifiers) {
             const myClassifier = (ref instanceof PiElementReference ? ref.referred : ref);
             if (myClassifier instanceof PiInterface) {
@@ -110,7 +111,7 @@ export class GenerationUtil {
                         result.push(implementor);
                     }
                 }
-            } else if (myClassifier instanceof PiConcept) {
+            } else {
                 if (!result.includes(myClassifier)) {
                     result.push(myClassifier);
                 }
