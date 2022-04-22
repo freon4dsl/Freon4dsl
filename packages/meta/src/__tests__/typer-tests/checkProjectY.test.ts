@@ -71,9 +71,7 @@ describe("Checking new typer", () => {
                 // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
             }
 
-            expect(typeUnit).not.toBeNull();
-            expect(typeUnit).not.toBeUndefined();
-            // console.log(typeUnit?.toPiString());
+           // console.log(typeUnit?.toPiString());
             testTypeUnit(typeUnit);
         }
     });
