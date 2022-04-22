@@ -2,7 +2,7 @@ import * as fs from "fs";
 import parserTypeScript = require("prettier/parser-typescript");
 import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new MetaLogger("FileHelpers").mute();
+const LOGGER = new MetaLogger("FileUtil").mute();
 const prettier = require("prettier/standalone");
 const path = require("path");
 
@@ -14,7 +14,7 @@ export function isNullOrUndefined(obj: Object | null | undefined): obj is null |
     return obj === undefined || obj === null;
 }
 
-export class Helpers {
+export class FileUtil {
     public static generateManualFile(pathName: string, contents: string, message: string) {
         if (!fs.existsSync(pathName)) {
             fs.writeFileSync(pathName, contents);

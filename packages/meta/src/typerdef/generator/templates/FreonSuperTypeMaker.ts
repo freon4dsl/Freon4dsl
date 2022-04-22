@@ -5,7 +5,7 @@ import {
     PiTyperDef
 } from "../../metalanguage";
 import { FreonTyperGenUtils } from "./FreonTyperGenUtils";
-import { ListUtil, Names, sortTypes } from "../../../utils";
+import { ListUtil, Names, GenerationUtil } from "../../../utils";
 import { PiClassifier, PiLimitedConcept } from "../../../languagedef/metalanguage";
 import { PitBinaryExp } from "../../metalanguage/expressions";
 import { PitEqualsRule } from "../../metalanguage/PitEqualsRule";
@@ -34,7 +34,7 @@ export class FreonSuperTypeMaker {
             }
         });
         // sort the types such that any type comes before its super type
-        const sortedTypes = sortTypes(typerdef.types);
+        const sortedTypes = GenerationUtil.sortClassifiers(typerdef.types);
         // make sub-entries for each rule defined for an ast-element
         let astSubRules: string[] = [];
         sortedTypes.forEach( type => {

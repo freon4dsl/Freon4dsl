@@ -30,6 +30,7 @@ const LOGGER = new MetaLogger("PiEditChecker").mute();
 export class PiEditChecker extends Checker<PiEditUnit> {
     myExpressionChecker: PiLangExpressionChecker;
     private propsWithTableProjection: PiEditPropertyProjection[] = [];
+    private booleanPropsInOptional: PiEditPropertyProjection[] = [];
 
     constructor(language: PiLanguage) {
         super(language);
@@ -407,8 +408,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
 
     private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: PiClassifier, editor: PiEditUnit) {
         LOGGER.log("checking optional projection for " + cls?.name);
-        // TODO when a primitive property is in an optional group it will not be shown when it has the default value for that property
-        // TODO add check on boolean prop with one keyword => should not be within optional group
+
         const propProjections: PiEditPropertyProjection[] = [];
         let nrOfItems = 0;
         this.nestedCheck({ check: item.lines.length > 0,
@@ -422,11 +422,19 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 this.nestedCheck({check: propProjections.length === 1,
                     error: `There should be (only) one property within an optional projection, found ${propProjections.length} ${Checker.location(item)}.`,
                     whenOk: () => {
-                        if (!!propProjections[0].property) { // error message already doen in checkPropProjection
+                        if (!!propProjections[0].property) { // error message already done in checkPropProjection
                             // find the optional property and set item.property
                             const myprop = propProjections[0].property.referred;
                             this.simpleCheck(myprop.isOptional || myprop.isList || myprop.isPrimitive,
                                 `Property '${myprop.name}' is not a list, nor optional or primitive, therefore it may not be within an optional projection ${Checker.location(propProjections[0])}.`);
+                            if (myprop.isPrimitive && myprop.type === PiPrimitiveType.boolean) {
+                                // when a primitive property is in an optional group, it will not be shown when it has the default value for that property
+                                // a property of boolean type with one keyword should not be within optional group
+                                if (!!propProjections[0].boolInfo) {
+                                    this.simpleCheck(!!propProjections[0].boolInfo.falseKeyword,
+                                        `An optional boolean property is not allowed within an optional projection ${Checker.location(propProjections[0])}.`)
+                                }
+                            }
                             item.property = this.copyReference(propProjections[0].property);
                         }
                     }

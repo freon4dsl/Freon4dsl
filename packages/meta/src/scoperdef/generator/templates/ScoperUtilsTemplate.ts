@@ -1,12 +1,12 @@
-import { LANGUAGE_GEN_FOLDER, Names, LangUtil, replaceInterfacesWithImplementors } from "../../../utils";
-import { PiClassifier, PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
+import { LANGUAGE_GEN_FOLDER, Names, GenerationUtil } from "../../../utils";
+import { PiClassifier, PiLanguage } from "../../../languagedef/metalanguage";
 import { PiScopeDef } from "../../metalanguage";
 
 export class ScoperUtilsTemplate {
 
     generateScoperUtils(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts(language);
-        const concreteNamespaces: PiClassifier[] = replaceInterfacesWithImplementors(scopedef.namespaces);
+        const concreteNamespaces: PiClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scopedef.namespaces);
         const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
         // also process the units that are not explicitly marked as namespace
         language.units.forEach(unit => {

@@ -15,6 +15,9 @@ export class PiListInfo {
 }
 
 export class BoxUtils {
+    static separatorName: string = "Separator";
+    static terminatorName: string = "Terminator";
+    static initiatorName: string = "Initiator";
 
     /**
      * Returns a textBox for property named 'propertyName' within 'element'.
@@ -402,8 +405,7 @@ export class BoxUtils {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
             const byName: boolean = !!projectionName && projectionName.length > 0;
             if (listJoin !== null && listJoin !== undefined) {
-                // TODO make constant of strings "Separator" and .., and add "Initiator"
-                if (listJoin.type === "Separator") {
+                if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
                         return BoxFactory.horizontalList(element, roleName, [
                             (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
@@ -412,10 +414,16 @@ export class BoxUtils {
                     } else {
                         return (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem));
                     }
-                } else if (listJoin.type === "Terminator") {
+                } else if (listJoin.type === this.terminatorName) {
                     return BoxFactory.horizontalList(element, roleName, [
                         (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
+                    ]);
+                } else if (listJoin.type === this.initiatorName) {
+                    // TODO test "Initiator"
+                    return BoxFactory.horizontalList(element, roleName, [
+                        BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
+                        (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem))
                     ]);
                 }
             } else {
@@ -434,8 +442,7 @@ export class BoxUtils {
                 return BehaviorExecutionResult.EXECUTED;
             };
             if (listJoin !== null && listJoin !== undefined) {
-                // TODO constants
-                if (listJoin.type === "Separator") {
+                if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
                         return BoxFactory.horizontalList(element, roleName, [
                             BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
@@ -444,10 +451,16 @@ export class BoxUtils {
                     } else {
                         return BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index);
                     }
-                } else if (listJoin.type === "Terminator") {
+                } else if (listJoin.type === this.terminatorName) {
                     return BoxFactory.horizontalList(element, roleName, [
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
+                    ]);
+                } else if (listJoin.type === this.initiatorName) {
+                    // TODO test this code
+                    return BoxFactory.horizontalList(element, roleName, [
+                        BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
+                        BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index)
                     ]);
                 }
             } else {

@@ -60,11 +60,6 @@ export abstract class PiClassifier extends PiLangElement {
         if (PiClassifier.__ANY === null || PiClassifier.__ANY === undefined) {
             PiClassifier.__ANY = new PiConcept();
             PiClassifier.__ANY.name = "ANY";
-            // TODO check whether this needs a name property
-            // const nameProp: PiPrimitiveProperty = new PiPrimitiveProperty();
-            // nameProp.name = "ANY";
-            // nameProp.type = PiPrimitiveType.identifier;
-            // PiClassifier.__ANY.properties.push(nameProp);
         }
         return this.__ANY;
     }
@@ -74,6 +69,11 @@ export abstract class PiClassifier extends PiLangElement {
     properties: PiProperty[] = [];
     // TODO remove this attribute and make it a function on 'properties'
     primProperties: PiPrimitiveProperty[] = [];
+    // get primProperties(): PiPrimitiveProperty[] {
+    //     return this.properties.filter(prop => prop instanceof PiPrimitiveProperty) as PiPrimitiveProperty[];
+    //     // of
+    //     return this.properties.filter(prop => prop.type instanceof PiPrimitiveType) as PiPrimitiveProperty[];
+    // }
 
     parts(): PiConceptProperty[] {
         return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart) as PiConceptProperty[];
@@ -106,11 +106,6 @@ export abstract class PiClassifier extends PiLangElement {
     }
 
     nameProperty(): PiPrimitiveProperty {
-        return this.allPrimProperties().find(p => p.name === "name");
-    }
-
-    // TODO use this method in favour of nameProperty()
-    identifierNameProperty(): PiPrimitiveProperty {
         return this.allPrimProperties().find(p => p.name === "name" && p.type === PiPrimitiveType.identifier);
     }
 }
@@ -512,7 +507,6 @@ export class PiPrimitiveType extends PiConcept {
             case "identifier" : return this.identifier;
             case "number" : return this.number;
         }
-        // TODO see whether we need to return null?
         return this.$piANY;
     }
 

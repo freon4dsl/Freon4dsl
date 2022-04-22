@@ -13,7 +13,6 @@ import {
 
 export class DefaultActionsTemplate {
 
-    // TODO generate the correct class comment for DefaultActions
     generate(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
         const modelImports: string[] = language.conceptsAndInterfaces().map(c => `${Names.classifier(c)}`)
             .concat(language.units.map(u => `${Names.classifier(u)}`));
@@ -44,9 +43,13 @@ export class DefaultActionsTemplate {
             import { PiElementReference, ${modelImports.join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
              /**
-             * This module implements all default actions for the editor.
-             * These default actions are merged with custom actions.
-             */ 
+             * This module implements the actions available to the user in the editor.
+             * These are the default actions. They are merged with the default and 
+             * custom editor parts in a three-way manner. For each modelelement, 
+             * (1) if a custom build creator/behavior is present, this is used,
+             * (2) if a creator/behavior based on the editor definition is present, this is used,
+             * (3) if neither (1) nor (2) yields a result, the default is used.  
+             */  
             export const BINARY_EXPRESSION_CREATORS: PiCreateBinaryExpressionAction[] = [
                 ${language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
             `PiCreateBinaryExpressionAction.create({

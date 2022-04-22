@@ -1,9 +1,8 @@
 import { GrammarRule } from "./GrammarRule";
 import { PiClassifier, PiProperty } from "../../../languagedef/metalanguage";
-import { getTypeAsString, Names } from "../../../utils";
+import { GenerationUtil, Names } from "../../../utils";
 import { ParserGenUtil } from "../ParserGenUtil";
-import { RightHandSideEntry } from "./RHSEntries/RightHandSideEntry";
-import { RHSPropEntry } from "./RHSEntries/RHSPropEntry";
+import { RightHandSideEntry, RHSPropEntry } from "./RHSEntries/";
 
 export class ConceptRule extends GrammarRule {
     concept: PiClassifier = null;
@@ -48,7 +47,7 @@ export class ConceptRule extends GrammarRule {
         return `${ParserGenUtil.makeComment(this.toGrammar())}
                 public transform${this.ruleName} (branch: SPPTBranch) : ${Names.classifier(this.concept)} {
                     // console.log('transform${this.ruleName} called: ' + branch.name);
-                    ${myProperties.map(prop => `let ${ParserGenUtil.internalName(prop.name)}: ${getTypeAsString(prop)}`).join(";\n")}
+                    ${myProperties.map(prop => `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)}`).join(";\n")}
                     const children = this.${mainAnalyserName}.getChildren(branch);` +  // to avoid an extra newline in the result
             `${this.ruleParts.map((part, index) => `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}      
                     return ${Names.classifier(this.concept)}.create({${myProperties.map(prop => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}});

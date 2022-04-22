@@ -1,5 +1,5 @@
 import { PitInferenceRule,PiTyperDef } from "../../metalanguage";
-import { Names, sortTypes } from "../../../utils";
+import { Names, GenerationUtil } from "../../../utils";
 import { PiClassifier, PiLimitedConcept } from "../../../languagedef/metalanguage";
 import { FreonTyperGenUtils } from "./FreonTyperGenUtils";
 import { PitEqualsRule } from "../../metalanguage/PitEqualsRule";
@@ -22,7 +22,7 @@ export class FreonTypeInferMaker {
             inferRules.push(...(spec.rules.filter(r => r instanceof PitInferenceRule)))
         });
         // sort the types such that any type comes before its super type
-        const sortedTypes = sortTypes(typerDef.conceptsWithType);
+        const sortedTypes = GenerationUtil.sortClassifiers(typerDef.conceptsWithType);
         // make an entry for all classifiers that have an infertype rule
         sortedTypes.forEach( type => {
             // find the equalsRule, if present

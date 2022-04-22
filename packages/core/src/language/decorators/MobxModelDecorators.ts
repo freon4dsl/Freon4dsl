@@ -208,10 +208,7 @@ function willChange(
         case "update":
             const newValue = change.newValue;
             const oldValue = change.object[change.index];
-            if (newValue === oldValue) {
-                // new object at index
-                // TODO if there is no need to do anything, why not change the condition to this if-statement
-            } else {
+            if (newValue !== oldValue) {
                 if (!!newValue) {
                     if (!!newValue.$$owner) {
                         // cleanup old owner reference of new value

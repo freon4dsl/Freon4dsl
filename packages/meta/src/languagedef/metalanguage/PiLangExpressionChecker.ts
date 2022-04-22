@@ -198,7 +198,6 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
                             `found ${langExp.actualparams.length} ${Checker.location(langExp)}.`,
                         whenOk: () => langExp.actualparams?.forEach( p => {
                                 p.language = this.language;
-                                // TODO should check the param: it should be one of the classifiers in the language
                                 const foundClassifier = this.language.findClassifier(p.sourceName);
                                 this.nestedCheck({
                                     check: !!foundClassifier,
@@ -209,7 +208,6 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
                                         p.__referredElement.owner = p;
                                     }
                                 });
-                                // TODO add this to checkConceptExpression
                             }
                         )}
                     );

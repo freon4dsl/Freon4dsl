@@ -2,15 +2,14 @@
 // this leads to a load error
 // import { PiErrorSeverity } from "@projectit/core";
 import {
-    CONFIGURATION_GEN_FOLDER,
-    langExpToTypeScript,
+    CONFIGURATION_GEN_FOLDER, GenerationUtil,
     LANGUAGE_GEN_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     PiErrorSeverity,
-    PROJECTITCORE, getBaseTypeAsString, isNameProp
+    PROJECTITCORE
 } from "../../../utils";
-import { PiConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -28,7 +27,6 @@ import {
 import { ValidationUtils } from "../ValidationUtils";
 
 export class RulesCheckerTemplate {
-    done: PiConcept[] = [];
 
     generateRulesChecker(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
@@ -94,21 +92,16 @@ export class RulesCheckerTemplate {
             }
         }    
         `;
-
-        this.done = [];
-
     }
 
     private createImports(language: PiLanguage): string {
-        let result: string =
-            `${language.concepts?.map(concept => `
+        return `${language.concepts?.map(concept => `
                 ${Names.concept(concept)}`).concat(
                     language.interfaces?.map(intf => `
                 ${Names.interface(intf)}`).concat(
                         language.units?.map(intf => `
                 ${Names.classifier(intf)}`).join(", ")))
             }`;
-        return result;
     }
 
     private createRules(ruleSet: ConceptRuleSet): string {
@@ -177,7 +170,7 @@ export class RulesCheckerTemplate {
         if (message.length === 0) {
             message = `"'${r.toPiString()}' is false"`;
         }
-        return `if (!(${langExpToTypeScript(r.exp1)} ${r.comparator} ${langExpToTypeScript(r.exp2)})) {
+        return `if (!(${GenerationUtil.langExpToTypeScript(r.exp1)} ${r.comparator} ${GenerationUtil.langExpToTypeScript(r.exp2)})) {
                     this.errorList.push( new PiError( ${message}, modelelement, ${locationdescription}, ${severity} ));   
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
@@ -185,9 +178,9 @@ export class RulesCheckerTemplate {
 
     private makeValidNameRule(r: ValidNameRule, locationdescription: string, severity: string, message: string) {
         if (message.length === 0) {
-            message = `"'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier"`;
+            message = `"'" + ${GenerationUtil.langExpToTypeScript(r.property)} + "' is not a valid identifier"`;
         }
-        return `if (!this.isValidName(${langExpToTypeScript(r.property)})) {
+        return `if (!this.isValidName(${GenerationUtil.langExpToTypeScript(r.property)})) {
                     this.errorList.push( new PiError( ${message}, modelelement, ${locationdescription}, ${severity} ));                         
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
@@ -197,7 +190,7 @@ export class RulesCheckerTemplate {
         if (message.length === 0) {
             message = `"List '${r.property.toPiString()}' may not be empty"`;
         }
-        return `if (${langExpToTypeScript(r.property)}.length == 0) {
+        return `if (${GenerationUtil.langExpToTypeScript(r.property)}.length == 0) {
                     this.errorList.push(new PiError(${message}, modelelement, ${locationdescription}, ${severity}));
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
@@ -205,22 +198,22 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type " + this.typer.inferType(${langExpToTypeScript(r.type1)})?.toPiString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) + 
-                         "] does not conform to " + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type2)})`;
+            message = `"Type " + this.typer.inferType(${GenerationUtil.langExpToTypeScript(r.type1)})?.toPiString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1)}) + 
+                         "] does not conform to " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2)})`;
         }
-        return `if (!this.typer.conformsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
-                    this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
+        return `if (!this.typer.conformsType(${GenerationUtil.langExpToTypeScript(r.type1)}, ${GenerationUtil.langExpToTypeScript(r.type2)})) {
+                    this.errorList.push(new PiError(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                  }`;
     }
 
     private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type of ["+ this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) 
-                        + "] should equal " + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type2)})`;
+            message = `"Type of ["+ this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1)}) 
+                        + "] should equal " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2)})`;
         }
-        return `if (!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
-                    this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
+        return `if (!this.typer.equalsType(${GenerationUtil.langExpToTypeScript(r.type1)}, ${GenerationUtil.langExpToTypeScript(r.type2)})) {
+                    this.errorList.push(new PiError(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
     }
@@ -230,16 +223,16 @@ export class RulesCheckerTemplate {
         const listName = rule.list.appliedfeature.toPiString();
         const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
         const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
-        const listpropertyTypeName = getBaseTypeAsString(referredListproperty);
-        const listpropertyTypescript = langExpToTypeScript(rule.listproperty.appliedfeature);
+        const listpropertyTypeName = GenerationUtil.getBaseTypeAsString(referredListproperty);
+        const listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature);
         if (message.length === 0) {
             message = `"The value of property '${listpropertyName}' is not unique in list '${listName}'"`;
         }
         return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
-        ${langExpToTypeScript(rule.list)}.forEach((elem, index) => {
+        ${GenerationUtil.langExpToTypeScript(rule.list)}.forEach((elem, index) => {
             if ((elem === undefined) || (elem === null)) {
                 this.errorList.push(new PiError(\`Element[\$\{index\}] of property '${listName}' has no value\`,
-                 ${langExpToTypeScript(rule.list)}[index],
+                 ${GenerationUtil.langExpToTypeScript(rule.list)}[index],
                  ${locationdescription},
                  ${severity}));
                     ${rule.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
@@ -248,7 +241,7 @@ export class RulesCheckerTemplate {
                     ${uniquelistName}.push(elem.${listpropertyTypescript});
                 } else {
                     this.errorList.push(new PiError(${message},
-                     ${langExpToTypeScript(rule.list)}[index],
+                     ${GenerationUtil.langExpToTypeScript(rule.list)}[index],
                      ${locationdescription},
                      ${severity}));                }
                     ${rule.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
@@ -266,10 +259,10 @@ export class RulesCheckerTemplate {
                     result += `${cont.value}`;
                 } else if (cont instanceof ValidationMessageReference) {
                     if (cont.expression.findRefOfLastAppliedFeature() instanceof PiPrimitiveProperty) {
-                        result += `\${${langExpToTypeScript(cont.expression)}}`;
+                        result += `\${${GenerationUtil.langExpToTypeScript(cont.expression)}}`;
                     } else {
                         // console.log("FOUND message expression: '" + cont.expression.toPiString() + "'");
-                        result += `\${this.myWriter.writeToString(${langExpToTypeScript(cont.expression)})}`;
+                        result += `\${this.myWriter.writeToString(${GenerationUtil.langExpToTypeScript(cont.expression)})}`;
                     }
                 }
                 if (index < numberOfparts - 1) {

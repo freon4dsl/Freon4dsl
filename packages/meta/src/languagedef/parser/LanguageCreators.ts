@@ -184,10 +184,6 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
     }
     if (!!data.properties) {
         for (const prop of data.properties) {
-            // if (result.name === "Type2"){
-            //     console.log("parsed: " + data.properties.map(p => p.name).join(", "))
-            // }
-            // TODO check whether this distinction can be removed
             if (prop instanceof PiPrimitiveProperty) {
                 result.primProperties.push(prop);
             } else {

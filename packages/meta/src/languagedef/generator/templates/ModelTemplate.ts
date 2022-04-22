@@ -1,11 +1,5 @@
 import { Names, PROJECTITCORE } from "../../../utils";
-import {
-    makeBasicMethods,
-    makeBasicProperties, makeConstructor,
-    makePartProperty,
-    makePrimitiveProperty,
-    makeStaticCreateMethod
-} from "./ConceptUtils";
+import { ConceptUtils } from "./ConceptUtils";
 import { PiModelDescription } from "../../metalanguage/PiLanguage";
 
 export class ModelTemplate {
@@ -31,14 +25,14 @@ export class ModelTemplate {
             @model
             export class ${myName} extends ${extendsClass} implements PiModel {     
             
-                ${makeStaticCreateMethod(modelDescription, myName)}
+                ${ConceptUtils.makeStaticCreateMethod(modelDescription, myName)}
                                       
-                ${makeBasicProperties(metaType, myName, false)}
-                ${modelDescription.primProperties.map(p => makePrimitiveProperty(p)).join("\n")}
-                ${modelDescription.parts().map(p => makePartProperty(p)).join("\n")}
+                ${ConceptUtils.makeBasicProperties(metaType, myName, false)}
+                ${modelDescription.primProperties.map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
+                ${modelDescription.parts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
 
-                ${makeConstructor(false, modelDescription.properties)}            
-                ${makeBasicMethods(false, metaType,true, false,false, false)}
+                ${ConceptUtils.makeConstructor(false, modelDescription.properties)}            
+                ${ConceptUtils.makeBasicMethods(false, metaType,true, false,false, false)}
                 
                 /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.

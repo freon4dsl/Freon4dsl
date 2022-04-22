@@ -11,6 +11,8 @@ const handler = new FileHandler();
 const metatype: string = "XXunit";
 const testdir = "src/typer-test8/__inputs__/";
 
+// TODO test the PlusExp and introduce some NamedTypes
+
 function compareReadAndWrittenFiles(path: string) {
     try {
         const model = new XX();

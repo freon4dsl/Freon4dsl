@@ -2,7 +2,7 @@ import { RHSPropEntry } from "./RHSPropEntry";
 import { PiBinaryExpressionConcept, PiProperty } from "../../../../languagedef/metalanguage";
 import { makeIndent } from "../GrammarUtils";
 import { BinaryExpMaker } from "../../BinaryExpMaker";
-import { findExpressionBase } from "../../../../utils";
+import { GenerationUtil } from "../../../../utils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBinExpListWithInitiator extends RHSPropEntry {
@@ -19,7 +19,7 @@ export class RHSBinExpListWithInitiator extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        return `( '${this.separatorText}' ${BinaryExpMaker.getBinaryRuleName(findExpressionBase(this.type))} )*` + this.doNewline();
+        return `( '${this.separatorText}' ${BinaryExpMaker.getBinaryRuleName(GenerationUtil.findExpressionBase(this.type))} )*` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

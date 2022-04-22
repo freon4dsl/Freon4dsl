@@ -1,11 +1,6 @@
 import { PiConcept, PiLanguage, PiPrimitiveType } from "../../../languagedef/metalanguage";
 import { PitTypeConcept, PiTyperDef } from "../../metalanguage";
-import {
-    makeBasicProperties,
-    makePartProperty,
-    makePrimitiveProperty,
-    makeStaticCreateMethod
-} from "../../../languagedef/generator/templates/ConceptUtils";
+import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils";
 import { LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
 
 export class FreonTypeConceptMaker {
@@ -31,11 +26,11 @@ export class FreonTypeConceptMaker {
              * Class ${myName} is the implementation of the type concept with the same name in the typer definition file.
              */            
             export class ${myName} ${extendsClass} {
-                ${makeStaticCreateMethod(concept, myName)}
+                ${ConceptUtils.makeStaticCreateMethod(concept, myName)}
                             
-                ${makeBasicProperties("string", myName, hasSuper)}
-                ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
-                ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
+                ${ConceptUtils.makeBasicProperties("string", myName, hasSuper)}
+                ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
+                ${concept.implementedParts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
                               
                 ${this.makeConstructor(hasSuper)}      
                 

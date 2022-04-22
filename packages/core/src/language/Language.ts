@@ -1,7 +1,6 @@
-import { ReferenceShortcut } from "../editor/index";
-import { PiElement } from "../language/PiElement";
+import { ReferenceShortcut } from "../editor";
+import { PiElement } from "./PiElement";
 import { isNullOrUndefined, PiLogger } from "../util";
-// TODO move this file to ../language
 const LOGGER = new PiLogger("Language");
 
 // TODO see if other types need to be added

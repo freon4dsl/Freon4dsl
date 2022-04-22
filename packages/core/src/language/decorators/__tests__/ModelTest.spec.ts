@@ -1,4 +1,4 @@
-// import { BinExpression, Expression, ModelContext } from "./Model";
+// import { ModelContext } from "./MobxModel";
 // import { observe, reaction } from "mobx";
 
 // TODO remove or improve this test

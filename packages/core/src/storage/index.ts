@@ -1,2 +1,2 @@
-export * from "./Language";
+export * from "../language/Language";
 export * from "./GenericModelSerializer";

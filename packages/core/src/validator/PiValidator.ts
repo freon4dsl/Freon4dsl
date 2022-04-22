@@ -24,7 +24,7 @@ export class PiError {
     message: string;                        // human-readable error message
     reportedOn: PiElement | PiElement[];    // the model element that does not comply
     locationdescription: string;            // human-readable indication of 'reportedOn'
-    severity: PiErrorSeverity;              // indication of how serious the error is, default is 'ToDo'
+    severity: PiErrorSeverity;              // indication of how serious the error is, default is 'To Do'
 // end::error-interface[]
 // tag::error-interface[]
     constructor(message: string, element: PiElement | PiElement[], locationdescription: string, severity?: PiErrorSeverity) {

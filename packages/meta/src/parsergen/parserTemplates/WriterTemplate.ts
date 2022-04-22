@@ -1,11 +1,9 @@
 import {
-    hasNameProperty,
     LANGUAGE_GEN_FOLDER,
     Names,
     PROJECTITCORE,
-    propertyToTypeScript,
-    propertyToTypeScriptWithoutReferred,
-    ListUtil
+    ListUtil,
+    GenerationUtil
 } from "../../utils";
 import {
     PiBinaryExpressionConcept, PiClassifier,
@@ -520,9 +518,9 @@ export class WriterTemplate {
             result += `this.output[this.currentLine] += \`${myText} \`;\n`;
         } else if (item instanceof PiOptionalPropertyProjection){
             const myElem = item.property.referred;
-            let myTypeScript: string = propertyToTypeScript(myElem);
+            let myTypeScript: string = GenerationUtil.propertyToTypeScript(myElem);
             if (!myElem.isPart) {
-                myTypeScript = propertyToTypeScriptWithoutReferred(item.property.referred);
+                myTypeScript = GenerationUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
             }
             if (myElem.isList) {
                 myTypeScript += " && " + myTypeScript + '.length > 0';
@@ -597,7 +595,7 @@ export class WriterTemplate {
     private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, item: PiEditPropertyProjection, inOptionalGroup: boolean): string {
         // the property is of primitive type
         let result: string = ``;
-        const elemStr = propertyToTypeScript(item.property.referred);
+        const elemStr = GenerationUtil.propertyToTypeScript(item.property.referred);
         if (myElem.isList) {
             let isIdentifier: string = "false";
             if (myElem.type === PiPrimitiveType.identifier) {
@@ -706,11 +704,11 @@ export class WriterTemplate {
                         // Add a space to the join text. This is needed in a text string, not in a projectional editor.
                         const myJoinText: string = (!!item.listInfo.joinText && item.listInfo.joinText.length > 0) ? item.listInfo.joinText + ' ' : '';
                         if (myElem.isPart) {
-                            let myTypeScript: string = propertyToTypeScript(item.property.referred);
+                            let myTypeScript: string = GenerationUtil.propertyToTypeScript(item.property.referred);
                             result += `this.unparseList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short,
                             (modelelement, short) => this.${nameOfUnparseMethod}(modelelement${typeCast}, short) )`;
                         } else {
-                            let myTypeScript: string = propertyToTypeScriptWithoutReferred(item.property.referred);
+                            let myTypeScript: string = GenerationUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
                             result += `this.unparseReferenceList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
                         }
                     }
@@ -719,10 +717,10 @@ export class WriterTemplate {
                 let myCall: string = "";
                 let myTypeScript: string;
                 if (myElem.isPart) {
-                    myTypeScript = propertyToTypeScript(item.property.referred);
+                    myTypeScript = GenerationUtil.propertyToTypeScript(item.property.referred);
                     myCall += `this.${nameOfUnparseMethod}(${myTypeScript}, short) `;
                 } else {
-                    myTypeScript = propertyToTypeScriptWithoutReferred(item.property.referred);
+                    myTypeScript = GenerationUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
                     myCall += `this.unparseReference(${myTypeScript}, short);`;
                 }
                 if (myElem.isOptional && !inOptionalGroup) { // surround the unparse call with an if-statement, because the element may not be present
@@ -758,12 +756,12 @@ export class WriterTemplate {
     private findNamedClassifiers(language: PiLanguage): PiClassifier[] {
         let result: PiClassifier[] = [];
         for( const elem of language.units) {
-            if (hasNameProperty(elem)) {
+            if (GenerationUtil.hasNameProperty(elem)) {
                 result.push(elem);
             }
         }
         for( const elem of language.concepts) {
-            if (hasNameProperty(elem)) {
+            if (GenerationUtil.hasNameProperty(elem)) {
                 result.push(elem);
             }
         }

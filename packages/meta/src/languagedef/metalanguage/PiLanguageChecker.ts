@@ -227,7 +227,6 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                     }
                     // optionality for lists is ignored
                     if (piProperty.isList && piProperty.isOptional) {
-                        // TODO get wording of error message right
                         this.simpleWarning(false,
                             `Property '${piProperty.name}' is a list and therefore always optional, optionality will be ignored ${Checker.location(piProperty)}.`);
                         piProperty.isOptional = false;
@@ -249,7 +248,7 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                     const nameProperty: PiPrimitiveProperty = realType.nameProperty();
                     this.nestedCheck({
                         check: !!nameProperty,
-                        error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ${Checker.location(piProperty.typeReference)}.`,
+                        error: `Type '${realType.name}' cannot be used as a reference, because it has no property 'name: identifier' ${Checker.location(piProperty.typeReference)}.`,
                         whenOk: () => {
                             this.simpleCheck(nameProperty.type === PiPrimitiveType.identifier,
                                 `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'identifier' ${Checker.location(piProperty.typeReference)}.`);

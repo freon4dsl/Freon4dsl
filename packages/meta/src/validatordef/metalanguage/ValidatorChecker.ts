@@ -1,8 +1,4 @@
-// Note that the following imports cannot be from "@projectit/core", because
-// this leads to a load error
-// import { PiErrorSeverity } from "@projectit/core";
-// import { PiErrorSeverity } from "../../../../core/src/validator/PiValidator";
-import { Checker, PiErrorSeverity, MetaLogger, isNameProp, langExpToTypeScript } from "../../utils";
+import { Checker, PiErrorSeverity, MetaLogger } from "../../utils";
 import {
     PiClassifier,
     PiConcept,
@@ -21,7 +17,9 @@ import {
     ExpressionRule,
     IsuniqueRule,
     NotEmptyRule,
-    PiValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText,
+    PiValidatorDef,
+    ValidationMessage,
+    ValidationMessageReference,
     ValidationRule,
     ValidationSeverity,
     ValidNameRule

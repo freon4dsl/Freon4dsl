@@ -108,7 +108,7 @@ notEmptyRule = notEmptyKey property:langExpression ws extra:ruleExtras? {
   })
 }
 
-// TODO chnage this grammar rule into something else then a function call
+// TODO change this grammar rule into something else than a function call
 typeEqualsRule = typecheckKey "equalsType" round_begin type1:langExpression comma_separator type2:langExpression round_end extra:ruleExtras? {
   return create.createTypeEqualsRule( {
     "type1": type1,
@@ -119,7 +119,7 @@ typeEqualsRule = typecheckKey "equalsType" round_begin type1:langExpression comm
   });
 }
 
-// TODO chnage this grammar rule into something else then a function call
+// TODO change this grammar rule into something else than a function call
 typeConformsRule = typecheckKey "conformsTo" round_begin type1:langExpression comma_separator type2:langExpression round_end extra:ruleExtras? {
   return create.createTypeConformsRule( {
     "type1": type1,

@@ -1,6 +1,7 @@
 import { PiClassifier, PiLanguage, PiPrimitiveType, PiPrimitiveValue } from "./PiLanguage";
 import { PiElementReference } from "./PiElementReference";
 import { Checker } from "../../utils";
+import { to_number } from "svelte/internal";
 
 export abstract class PiLangAbstractChecker extends Checker<PiLanguage> {
     /**
@@ -15,16 +16,8 @@ export abstract class PiLangAbstractChecker extends Checker<PiLanguage> {
         } else if (type === PiPrimitiveType.string && typeof value === "string") {
             return true;
         } else if (type === PiPrimitiveType.number  && typeof value === "number") {
-            // TODO add the following check
-            //     if (!isNaN(Number(value)) ) {
-            //         return true;
-            //     }
             return true;
         } else if (type === PiPrimitiveType.boolean  && typeof value === "boolean") {
-            // TODO add the following check
-            //     if ((value === "false" || value === "true")) {
-            //         return true;
-            //     }
             return true;
         }
         return false;

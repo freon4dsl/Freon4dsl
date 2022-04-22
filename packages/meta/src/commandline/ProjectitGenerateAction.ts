@@ -1,5 +1,5 @@
 import { CommandLineAction, CommandLineStringParameter, ICommandLineActionOptions } from "@rushstack/ts-command-line";
-import { GenerationStatus, Helpers } from "../utils";
+import { GenerationStatus, FileUtil } from "../utils";
 
 /**
  * Generic generator action. The only option defined here is the -o flag for the output folder.
@@ -54,7 +54,7 @@ export abstract class ProjectItGenerateAction extends CommandLineAction {
             throw new Error("No definitions folder, exiting.");
         }
         const generationStatus = new GenerationStatus();
-        const myFileSet: string[] = Helpers.findFiles(this.defFolder.value, generationStatus);
+        const myFileSet: string[] = FileUtil.findFiles(this.defFolder.value, generationStatus);
         if (myFileSet.length === 0) {
             throw new Error("No files found in '" + this.defFolder.value + "', exiting.");
         }

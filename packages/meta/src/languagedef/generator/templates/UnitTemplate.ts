@@ -1,12 +1,5 @@
 import { Names } from "../../../utils";
-import {
-    makeBasicMethods,
-    makeBasicProperties, makeConstructor,
-    makeImportStatements,
-    makePartProperty,
-    makePrimitiveProperty,
-    makeReferenceProperty, makeStaticCreateMethod
-} from "./ConceptUtils";
+import { ConceptUtils } from "./ConceptUtils";
 import { PiUnitDescription } from "../../metalanguage/PiLanguage";
 
 export class UnitTemplate {
@@ -27,7 +20,7 @@ export class UnitTemplate {
 
         // Template starts here
         return `
-            ${makeImportStatements(needsObservable, coreImports, modelImports)}
+            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
             
             /**
              * Class ${myName} is the implementation of the model unit with the same name in the language definition file.
@@ -37,16 +30,16 @@ export class UnitTemplate {
             @model
             export class ${myName} extends ${extendsClass} implements PiModelUnit {
             
-                ${makeStaticCreateMethod(unitDescription, myName)}
+                ${ConceptUtils.makeStaticCreateMethod(unitDescription, myName)}
                 
                 fileExtension: string;                        
-                ${makeBasicProperties(metaType, myName, false)}
-                ${unitDescription.primProperties.map(p => makePrimitiveProperty(p)).join("\n")}
-                ${unitDescription.parts().map(p => makePartProperty(p)).join("\n")}
-                ${unitDescription.references().map(p => makeReferenceProperty(p)).join("\n")}     
+                ${ConceptUtils.makeBasicProperties(metaType, myName, false)}
+                ${unitDescription.primProperties.map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
+                ${unitDescription.parts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
+                ${unitDescription.references().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}     
             
-                ${makeConstructor(false, unitDescription.allProperties())}
-                ${makeBasicMethods(false, metaType,false, true,false, false)}                
+                ${ConceptUtils.makeConstructor(false, unitDescription.allProperties())}
+                ${ConceptUtils.makeBasicMethods(false, metaType,false, true,false, false)}                
             }
             `;
     }

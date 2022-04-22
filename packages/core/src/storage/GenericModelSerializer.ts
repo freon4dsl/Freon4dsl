@@ -1,5 +1,5 @@
 import { PiElement } from "../language";
-import { Language, Property } from "./Language";
+import { Language, Property } from "../language/Language";
 import { isNullOrUndefined } from "../util";
 
 /**
@@ -64,7 +64,6 @@ export class GenericModelSerializer {
                         result[property.name].push(value[item]);
                     }
                 } else {
-                    // TODO Add other primitive property types
                     if (property.type === "string" || property.type === "identifier") {
                         this.checkValueToType(value, "string", property);
                     } else if (property.type === "number") {

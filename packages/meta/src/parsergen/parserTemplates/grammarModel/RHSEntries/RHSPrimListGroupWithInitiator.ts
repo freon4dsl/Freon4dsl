@@ -1,7 +1,7 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
 import { RHSPropEntry } from "./RHSPropEntry";
 import { PiProperty } from "../../../../languagedef/metalanguage";
-import { getBaseTypeAsString } from "../../../../utils";
+import { GenerationUtil } from "../../../../utils";
 import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
 
@@ -19,7 +19,7 @@ export class RHSPrimListGroupWithInitiator extends RHSPropPartWithSeparator {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        const baseType: string = getBaseTypeAsString(this.property);
+        const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         return `// RHSPrimListGroupWithInitiator 
             if (!${nodeName}[${index}].isEmptyMatch) {
                 // get the group that represents the optional primitive

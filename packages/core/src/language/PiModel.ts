@@ -1,14 +1,13 @@
-// tag::model-interface[]
 import { PiNamedElement } from "./PiNamedElement";
+import { PiModelUnit } from "./PiModelUnit";
 
 export interface PiModel extends PiNamedElement {
-    // TODO return PiModelUnit instead of PiNamedElement
     /**
      * Finds a unit of this model based on its name and 'metatype'.
      * @param name
      * @param metatype
      */
-    findUnit(name: string, metatype?: string): PiNamedElement;
+    findUnit(name: string, metatype?: string): PiModelUnit;
 
     /**
      * Replaces a model unit by a new one. Used for swapping between complete units and unit public interfaces.
@@ -17,37 +16,37 @@ export interface PiModel extends PiNamedElement {
      * @param oldUnit
      * @param newUnit
      */
-    replaceUnit(oldUnit: PiNamedElement, newUnit: PiNamedElement): boolean;
+    replaceUnit(oldUnit: PiModelUnit, newUnit: PiModelUnit): boolean;
 
     /**
      * Adds a model unit. Returns false if anything goes wrong.
      *
      * @param newUnit
      */
-    addUnit(newUnit: PiNamedElement): boolean;
+    addUnit(newUnit: PiModelUnit): boolean;
 
     /**
      * Removes a model unit. Returns false if anything goes wrong.
      *
      * @param oldUnit
      */
-    removeUnit(oldUnit: PiNamedElement): boolean;
+    removeUnit(oldUnit: PiModelUnit): boolean;
 
     /**
      * Returns an empty model unit of type 'typename' and adds it to this model.
      *
      * @param typename
      */
-    newUnit(typename: string): PiNamedElement;
+    newUnit(typename: string): PiModelUnit;
 
     /**
      * Returns a list of model units.
      */
-    getUnits(): PiNamedElement[];
+    getUnits(): PiModelUnit[];
 
     /**
      * Returns a list of model units of type 'type'.
      */
-    getUnitsForType(type: string): PiNamedElement[];
+    getUnitsForType(type: string): PiModelUnit[];
 }
 // end::model-interface[]

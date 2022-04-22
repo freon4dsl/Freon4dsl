@@ -1,5 +1,5 @@
 import { PiLanguage } from "../../metalanguage";
-import { Names, PROJECTITCORE, LangUtil, getBaseTypeAsString } from "../../../utils";
+import { Names, PROJECTITCORE, LangUtil, GenerationUtil } from "../../../utils";
 
 export class LanguageTemplate {
 
@@ -39,7 +39,7 @@ export class LanguageTemplate {
                     ${language.modelConcept.allPrimProperties().map(prop =>
                         `model.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${getBaseTypeAsString(prop)}",
+                                        type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
                                         propertyType: "primitive"
@@ -79,7 +79,7 @@ export class LanguageTemplate {
                     ${modelunit.allPrimProperties().map(prop =>
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${getBaseTypeAsString(prop)}",
+                                        type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
                                         propertyType: "primitive"
@@ -124,7 +124,7 @@ export class LanguageTemplate {
                     ${concept.allPrimProperties().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${getBaseTypeAsString(prop)}",
+                                type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "primitive"
@@ -164,7 +164,7 @@ export class LanguageTemplate {
                 ${intface.allPrimProperties().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${getBaseTypeAsString(prop)}",
+                                type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "primitive"
