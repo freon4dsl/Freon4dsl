@@ -99,10 +99,10 @@ TT_GenericType {
             x.base equalsto self.base;
             x.kind equalsto self.kind;
         };
-    conformsto base:TT_GenericType where {
+    conformsto other:TT_GenericType where {
             // both conditions must be true
-            self.base conformsto base.base;
-            self.kind conformsto base.kind;
+            self.base conformsto other.base;
+            self.kind conformsto other.kind;
         };
 }
 
