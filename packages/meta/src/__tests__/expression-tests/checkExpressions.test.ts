@@ -107,7 +107,7 @@ describe("Checking expression on referredElement", () => {
                 expect(exp instanceof PiLangFunctionCallExp);
                 expect(exp.__referredElement).toBeUndefined();
                 expect((exp as PiLangFunctionCallExp).actualparams.length > 0 );
-                // every actual parameter should refer to a property, a predefined instance, or to 'container'
+                // every actual parameter should refer to a property, a predefined instance, or to 'owner'
                 (exp as PiLangFunctionCallExp).actualparams.forEach(param => {
                     if (param.sourceName !== "container") {
                         expect(param.__referredElement?.referred).not.toBeNull();

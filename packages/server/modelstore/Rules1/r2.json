@@ -4,16 +4,23 @@
    "Rules": [
       {
          "$typename": "CheckingRule",
-         "name": "",
+         "name": "sqs",
          "description": "",
          "check": {
             "$typename": "AttributeRef",
             "attr": "Name"
          }
+      },
+      {
+         "$typename": "CheckingRule",
+         "name": "",
+         "description": "",
+         "check": {
+            "$typename": "AttributeRef",
+            "attr": null
+         }
       }
    ],
-   "imports": [
-      "Entities"
-   ],
-   "forEntity": "Patient"
+   "imports": "Entities",
+   "forEntity": null
 }

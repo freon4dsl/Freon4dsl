@@ -104,8 +104,8 @@ export class PiReferenceTemplate {
                     return this._PI_referred;
                 } else {
                     return ${Names.environment(language)}.getInstance().scoper.resolvePathName(
-                        this.piContainer().container, 
-                        this.piContainer().propertyName, 
+                        this.piOwnerDescriptor().owner, 
+                        this.piOwnerDescriptor().propertyName, 
                         this._PI_pathname, 
                         this.typeName
                     ) as T;

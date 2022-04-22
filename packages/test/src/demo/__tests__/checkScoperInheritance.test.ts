@@ -54,8 +54,13 @@ describe("testing Scoper", () => {
             ent.attributes.forEach(attr => {
                 expect(vis).toContain(attr.name);
             });
+            if (!!ent.baseEntity) {
+                ent.baseEntity.referred.attributes.forEach(attr => {
+                    expect(vis).toContain(attr.name);
+                });
+            }
             let done: DemoEntity[] = [];
-            done.push(ent);
+            // done.push(ent);
             testInheritedPropsrecursive(ent, vis, done);
             // console.log("visible elements for " + ent.unitName + ":");
             // vis.forEach(n => {console.log(n);});

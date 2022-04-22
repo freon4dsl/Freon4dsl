@@ -1,5 +1,6 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit, PiElementReference } from "../language/gen";
-import { GenericModelSerializer } from "@projectit/core";
+import { GenericModelSerializer, LanguageWalker, PiElement } from "@projectit/core";
+import { RefCreatorWorker } from "./RefCreatorWorker";
 
 export class SimpleModelCreator {
     private breadth = 1;
@@ -32,6 +33,13 @@ export class SimpleModelCreator {
             modelUnits.push(this.createUnit("model", depth));
         }
         // add references, after all names have been created
+        // const result = DSmodel.create({name: "modelOfDepth" + depth, units: modelUnits });
+        // const worker = new RefCreatorWorker(modelUnits);
+        // const myWalker = new LanguageWalker();
+        // myWalker.myWorkers.push(worker);
+        // myWalker.walk(result, (e: PiElement) => true);
+        // return result;
+
         for (let i = 0; i < nrOfUnits; i++) {
             this.addReferencesToUnit(modelUnits[i]);
         }
@@ -114,6 +122,7 @@ export class SimpleModelCreator {
 
     private addReferencesToUnit(dSunit: DSunit) {
         const referedNames = this.allNames;
+
         for (let i = 0; i < this.breadth * 2; i++) {
             const index = this.makeReferenceIndex();
             if (!!this.allNames[index] && this.allNames[index].length > 0) {
@@ -153,6 +162,56 @@ export class SimpleModelCreator {
             result = this.makeReferenceIndex();
         }
         this.numberOfRefs += 1;
+        return result;
+    }
+
+    static IN = "    ";
+    public DSmodelToString(model: DSmodel): string {
+        let result: string = "";
+        let indent = "";
+        for (const unit of model.units){
+            result += "unit: " + unit.name + "\n";
+            for(const part of unit.dsPublics) {
+                result += this.DSpublicToString(indent + SimpleModelCreator.IN, part)
+            }
+            for(const priv of unit.dsPrivates) {
+                result += this.DSprivateToString(indent + SimpleModelCreator.IN, priv)
+            }
+            for (const ref of unit.dsRefs) {
+                result += indent + SimpleModelCreator.IN + "reference " + ref.name + '\n';
+            }
+        }
+
+        return result;
+    }
+
+    public DSpublicToString(indent: string, part: DSpublic): string {
+        let result: string = "";
+        result += indent + "public part " + part.name + "\n";
+        for (const p of part.conceptParts) {
+            result += this.DSpublicToString(indent + SimpleModelCreator.IN, p);
+        }
+        for (const priv of part.conceptPrivates) {
+            result += this.DSprivateToString(indent + SimpleModelCreator.IN, priv);
+        }
+        for (const ref of part.conceptRefs) {
+            result += indent + SimpleModelCreator.IN + "reference " + ref.name + "\n";
+        }
+        return result;
+    }
+
+    public DSprivateToString(indent: string, part: DSprivate): string {
+        let result: string = "";
+        result += indent + "private part " + part.name + "\n";
+        for (const p of part.conceptParts) {
+            result += this.DSpublicToString(indent + SimpleModelCreator.IN, p);
+        }
+        for (const priv of part.conceptPrivates) {
+            result += this.DSprivateToString(indent + SimpleModelCreator.IN, priv);
+        }
+        for (const ref of part.conceptRefs) {
+            result += indent + SimpleModelCreator.IN + "reference " + ref.name + "\n";
+        }
         return result;
     }
 }

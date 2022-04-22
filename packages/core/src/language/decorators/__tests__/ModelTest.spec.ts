@@ -13,7 +13,7 @@ describe("Model", () => {
 });
 
 // describe.skip("Model", () => {
-//     describe("container settings", () => {
+//     describe("owner settings", () => {
 //         const ctx: ModelContext = new ModelContext();
 //         let root: BinExpression;
 //         let left: Expression;
@@ -48,16 +48,16 @@ describe("Model", () => {
 //         });
 //
 //         it("of children should be set at start", () => {
-//             expect(left.container).toBe(root);
+//             expect(left.owner).toBe(root);
 //             expect(left.propertyName).toBe("left");
 //             expect(left.propertyIndex).toBe(undefined);
-//             expect(right.container).toBe(root);
+//             expect(right.owner).toBe(root);
 //             expect(right.propertyName).toBe("right");
 //             expect(right.propertyIndex).toBe(undefined);
-//             expect(exp1.container).toBe(root);
+//             expect(exp1.owner).toBe(root);
 //             expect(exp1.propertyName).toBe("somes");
 //             expect(exp1.propertyIndex).toBe(0);
-//             expect(exp2.container).toBe(root);
+//             expect(exp2.owner).toBe(root);
 //             expect(exp2.propertyName).toBe("somes");
 //             expect(exp2.propertyIndex).toBe(1);
 //         });
@@ -66,7 +66,7 @@ describe("Model", () => {
 //             root.left = null;
 //
 //             expect(root.left).toBe(null);
-//             expect(left.container).toBe(null);
+//             expect(left.owner).toBe(null);
 //             expect(left.propertyName).toBe("");
 //             expect(left.propertyIndex).toBe(undefined);
 //         });
@@ -77,11 +77,11 @@ describe("Model", () => {
 //             expect(root.left).toBe(right);
 //             // expect(root.right).toBe(null);
 //
-//             expect(left.container).toBe(null);
+//             expect(left.owner).toBe(null);
 //             expect(left.propertyName).toBe("");
 //             expect(left.propertyIndex).toBe(undefined);
 //
-//             expect(right.container).toBe(root);
+//             expect(right.owner).toBe(root);
 //             expect(right.propertyName).toBe("left");
 //             expect(right.propertyIndex).toBe(undefined);
 //         });
@@ -91,11 +91,11 @@ describe("Model", () => {
 //
 //             expect(root.left).toBe(exp2);
 //
-//             expect(left.container).toBe(null);
+//             expect(left.owner).toBe(null);
 //             expect(left.propertyName).toBe("");
 //             expect(left.propertyIndex).toBe(undefined);
 //
-//             expect(exp2.container).toBe(root);
+//             expect(exp2.owner).toBe(root);
 //             expect(exp2.propertyName).toBe("left");
 //             expect(exp2.propertyIndex).toBe(undefined);
 //
@@ -108,11 +108,11 @@ describe("Model", () => {
 //
 //             expect(root.left).toBe(exp1);
 //
-//             expect(left.container).toBe(null);
+//             expect(left.owner).toBe(null);
 //             expect(left.propertyName).toBe("");
 //             expect(left.propertyIndex).toBe(undefined);
 //
-//             expect(exp1.container).toBe(root);
+//             expect(exp1.owner).toBe(root);
 //             expect(exp1.propertyName).toBe("left");
 //             expect(exp1.propertyIndex).toBe(undefined);
 //
@@ -125,11 +125,11 @@ describe("Model", () => {
 //
 //             expect(root.left).toBe(null);
 //
-//             expect(left.container).toBe(root);
+//             expect(left.owner).toBe(root);
 //             expect(left.propertyName).toBe("somes");
 //             expect(left.propertyIndex).toBe(0);
 //
-//             expect(exp1.container).toBe(null);
+//             expect(exp1.owner).toBe(null);
 //             expect(exp1.propertyName).toBe("");
 //             expect(exp1.propertyIndex).toBe(undefined);
 //

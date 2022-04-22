@@ -160,8 +160,8 @@ export class ProjectionTemplate {
                         const binBox = createDefaultBinaryBox(exp, symbol, ${Names.environment(language)}.getInstance().editor);
                         if (
                             this.showBrackets &&
-                            !!exp.piContainer().container &&
-                            isPiBinaryExpression(exp.piContainer().container)
+                            !!exp.piOwnerDescriptor().owner &&
+                            isPiBinaryExpression(exp.piOwnerDescriptor().owner)
                         ) {
                             return BoxFactory.horizontalList(exp, "brackets", [
                                 BoxUtils.labelBox(exp, "(", "bracket-open", true),

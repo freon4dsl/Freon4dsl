@@ -11,7 +11,7 @@ import { PiElementReference } from ".";
  *  1. Simple expression: a simple value, currently only numbers
  *  2. Instance expression: an expression that refers to a predefined instance of a limited concept, e.g. DemoAttributeType:Integer
  *  3. Functions expression: an expression that refers to one of the functions that may be used in the typer and/or validator, like 'conformsto'
- *  4. Concept expression: an expression that refers to a keyword, currently only 'container'
+ *  4. Concept expression: an expression that refers to a keyword, currently only 'owner'
  *  5. Self expression: an expression that refers to a property of a classifier, like 'self.age'
  */
 

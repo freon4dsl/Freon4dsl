@@ -61,9 +61,9 @@ export class DemoModelCreator {
         return result;
     }
 
-    private makeIfFunction() {
+    private makeIfFunction(name: string) {
         const ifFunction = DemoFunction.create({
-            name: "SOMETHING",
+            name: name,
             declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")
         });
         ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
@@ -176,11 +176,11 @@ export class DemoModelCreator {
         inheritanceModel.entities.push(racebikeEnt);
 
         // add functions to everything because this part is not optional
-        inheritanceModel.functions.push(this.makeIfFunction());
-        vehicleEnt.functions.push(this.makeIfFunction());
-        carEnt.functions.push(this.makeIfFunction());
-        bikeEnt.functions.push(this.makeIfFunction());
-        racebikeEnt.functions.push(this.makeIfFunction());
+        inheritanceModel.functions.push(this.makeIfFunction("SOME_MODEL"));
+        vehicleEnt.functions.push(this.makeIfFunction("SOME_VEHICLE"));
+        carEnt.functions.push(this.makeIfFunction("SOME_CAR"));
+        bikeEnt.functions.push(this.makeIfFunction("SOME_BIKE"));
+        racebikeEnt.functions.push(this.makeIfFunction("SOME_RACEBIKE"));
         return inheritanceModel;
     }
 
@@ -193,7 +193,7 @@ export class DemoModelCreator {
     }
 
     public createIncorrectModel(): Demo {
-        let model: Demo = Demo.create({name:"InCorrectModel"});
+        let model: Demo = Demo.create({name:"InCorrectModel"}); // , models: [DemoModel.create({name: "DemoModel_1"})]});
         let unit: DemoModel = DemoModel.create({name: "DemoModel_1"});
         model.models.push(unit);
 

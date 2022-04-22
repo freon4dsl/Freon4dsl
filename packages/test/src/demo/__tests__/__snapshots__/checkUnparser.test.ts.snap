@@ -25,7 +25,7 @@ entities:
         entAttributes
 
         functions
-            DemoFunction SOMETHING {
+            DemoFunction SOME_VEHICLE {
                 expression if ( 4 < 80 ) then
                                      87
                            else
@@ -50,7 +50,7 @@ entities:
         entAttributes
 
         functions
-            DemoFunction SOMETHING {
+            DemoFunction SOME_CAR {
                 expression if ( 4 < 80 ) then
                                      87
                            else
@@ -76,7 +76,7 @@ entities:
         entAttributes
 
         functions
-            DemoFunction SOMETHING {
+            DemoFunction SOME_BIKE {
                 expression if ( 4 < 80 ) then
                                      87
                            else
@@ -102,7 +102,7 @@ entities:
         entAttributes
 
         functions
-            DemoFunction SOMETHING {
+            DemoFunction SOME_RACEBIKE {
                 expression if ( 4 < 80 ) then
                                      87
                            else
@@ -119,7 +119,7 @@ entities:
         baseEntity Bike
     }
 model wide functions:
-    DemoFunction SOMETHING {
+    DemoFunction SOME_MODEL {
         expression if ( 4 < 80 ) then
                              87
                    else

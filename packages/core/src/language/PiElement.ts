@@ -1,4 +1,4 @@
-import { PiContainerDescriptor } from "./PiContainerDescriptor";
+import { PiOwnerDescriptor } from "./PiOwnerDescriptor";
 
 /**
  * You can either directly implement these interfaces, or use `Module Augmentation`,
@@ -9,7 +9,9 @@ export interface PiElement {
 
     piLanguageConcept(): string;
 
-    piContainer(): PiContainerDescriptor;
+    piOwner(): PiElement;
+
+    piOwnerDescriptor(): PiOwnerDescriptor;
 
     piIsModel(): boolean;
 

@@ -12,7 +12,7 @@ export const MODEL_NAME = MODEL_PREFIX + "Name";
 
 /**
  * This property decorator can be used to decorate properties of type ModelElement.
- * The objects in such properties will automatically keep a container reference.
+ * The objects in such properties will automatically keep a owner reference.
  *
  * @param {Object} target is the prototype
  * @param {string | symbol} propertyKey
@@ -36,9 +36,9 @@ export function observablereference(target: DecoratedModelElement, propertyKey: 
     //     console.log("SET observablereference observablereference observablereference observablereference");
     //     let storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
     //     const storedValue = storedObserver ? storedObserver.get() : null;
-    //     // Clean container of current part
+    //     // Clean owner of current part
     //     if (storedValue) {
-    //         storedValue.container = null;
+    //         storedValue.owner = null;
     //         storedValue.propertyName = "";
     //         storedValue.propertyIndex = undefined;
     //     }
@@ -49,17 +49,17 @@ export function observablereference(target: DecoratedModelElement, propertyKey: 
     //         storedObserver = this[privatePropertyKey];
     //     }
     //     if (val !== null && val !== undefined) {
-    //         if (val.container !== undefined && val.container !== null) {
+    //         if (val.owner !== undefined && val.owner !== null) {
     //             if (val.propertyIndex !== undefined) {
     //                 // Clean new value from its containing list
-    //                 (val.container as any)[val.propertyName].splice(val.propertyIndex, 1);
+    //                 (val.owner as any)[val.propertyName].splice(val.propertyIndex, 1);
     //             } else {
-    //                 // Clean new value from its container
-    //                 (val.container as any)[MODEL_PREFIX + val.propertyName] = null;
+    //                 // Clean new value from its owner
+    //                 (val.owner as any)[MODEL_PREFIX + val.propertyName] = null;
     //             }
     //         }
-    //         // Set container
-    //         val.container = this;
+    //         // Set owner
+    //         val.owner = this;
     //         val.propertyName = propertyKey.toString();
     //         val.propertyIndex = undefined;
     //     }
@@ -76,7 +76,7 @@ export function observablereference(target: DecoratedModelElement, propertyKey: 
 
 /**
  * This property decorator can be used to decorate properties of type ModelElement.
- * The objects in such properties will automatically keep a container reference.
+ * The objects in such properties will automatically keep a owner reference.
  *
  * @param {Object} target is the prototype
  * @param {string | symbol} propertyKey
@@ -104,7 +104,7 @@ export function model(target: Function) {
 /**
  *
  * This property decorator can be used to decorate properties of type ModelElement.
- * The objects in such properties will automatically keep a container reference.
+ * The objects in such properties will automatically keep a owner reference.
  *
  * @param {Object} target
  * @param {string | symbol} propertyKey
@@ -126,11 +126,11 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
     const setter = function(this: any, val: DecoratedModelElement) {
          let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         const storedValue = !!storedObserver ? storedObserver.get() : null;
-        // Clean container of current part
+        // Clean owner of current part
         if (!!storedValue) {
-            storedValue.container = null;
-            storedValue.propertyName = "";
-            storedValue.propertyIndex = undefined;
+            storedValue.$$owner = null;
+            storedValue.$$propertyName = "";
+            storedValue.$$propertyIndex = undefined;
         }
         if (!!storedObserver) {
             runInAction( () => {
@@ -141,19 +141,19 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
             storedObserver = this[privatePropertyKey];
         }
         if (val !== null && val !== undefined) {
-            if (val.container !== undefined && val.container !== null) {
-                if (val.propertyIndex !== undefined) {
+            if (val.$$owner !== undefined && val.$$owner !== null) {
+                if (val.$$propertyIndex !== undefined) {
                     // Clean new value from its containing list
-                    (val.container as any)[val.propertyName].splice(val.propertyIndex, 1);
+                    (val.$$owner as any)[val.$$propertyName].splice(val.$$propertyIndex, 1);
                 } else {
-                    // Clean new value from its container
-                    (val.container as any)[MODEL_PREFIX + val.propertyName] = null;
+                    // Clean new value from its owner
+                    (val.$$owner as any)[MODEL_PREFIX + val.$$propertyName] = null;
                 }
             }
-            // Set container
-            val.container = this;
-            val.propertyName = propertyKey.toString();
-            val.propertyIndex = undefined;
+            // Set owner
+            val.$$owner = this;
+            val.$$propertyName = propertyKey.toString();
+            val.$$propertyIndex = undefined;
         }
     };
 
@@ -195,8 +195,8 @@ export function observablelistpart(target: Object, propertyKey: string | symbol)
 
 /**
  * Function called when an array element is changed, will ensure
- * that the old element is removed and its container reference is cleared.
- * The new element will have its container reference set correctly.
+ * that the old element is removed and its owner reference is cleared.
+ * The new element will have its owner reference set correctly.
  * @param change
  */
 function willChange(
@@ -210,23 +210,23 @@ function willChange(
             const oldValue = change.object[change.index];
             if (newValue !== oldValue) {
                 if (!!newValue) {
-                    if (!!newValue.container) {
-                        // cleanup old container reference of new value
-                        if (newValue.propertyIndex !== undefined) {
-                            (newValue.container as any)[newValue.propertyName][newValue.propertyIndex] = null;
+                    if (!!newValue.$$owner) {
+                        // cleanup old owner reference of new value
+                        if (newValue.$$propertyIndex !== undefined) {
+                            (newValue.$$owner as any)[newValue.$$propertyName][newValue.$$propertyIndex] = null;
                         } else {
-                            (newValue.container as any)[newValue.propertyName] = null;
+                            (newValue.$$owner as any)[newValue.$$propertyName] = null;
                         }
                     }
-                    newValue.container = oldValue.container;
-                    newValue.propertyName = oldValue.propertyName;
-                    newValue.propertyIndex = oldValue.propertyIndex;
+                    newValue.$$owner = oldValue.$$owner;
+                    newValue.$$propertyName = oldValue.$$propertyName;
+                    newValue.$$propertyIndex = oldValue.$$propertyIndex;
                 }
 
-                // Cleanup container reference of old value
-                oldValue.container = null;
-                oldValue.propertyName = "";
-                oldValue.propertyIndex = undefined;
+                // Cleanup owner reference of old value
+                oldValue.$$owner = null;
+                oldValue.$$propertyName = "";
+                oldValue.$$propertyIndex = undefined;
             }
             break;
         case "splice":
@@ -236,20 +236,20 @@ function willChange(
             const addedCount = added.length;
             const xxx = change.object;
             for (const i in added) {
-                // cleanup old container reference of new value
+                // cleanup old owner reference of new value
                 const element = added[i];
                 if (!!element) {
-                    if (!!element.container) {
-                        if (element.propertyIndex !== undefined) {
-                            (element.container as any)[element.propertyName][element.propertyIndex] = null;
+                    if (!!element.$$owner) {
+                        if (element.$$propertyIndex !== undefined) {
+                            (element.$$owner as any)[element.$$propertyName][element.$$propertyIndex] = null;
                         } else {
-                            (element.container as any)[element.propertyName] = null;
+                            (element.$$owner as any)[element.$$propertyName] = null;
                         }
                     }
-                    // set the container properties for inserted elements
-                    element.container = (change.object as any)[MODEL_CONTAINER];
-                    element.propertyName = (change.object as any)[MODEL_NAME];
-                    element.propertyIndex = index + Number(i);
+                    // set the owner properties for inserted elements
+                    element.$$owner = (change.object as any)[MODEL_CONTAINER];
+                    element.$$propertyName = (change.object as any)[MODEL_NAME];
+                    element.$$propertyIndex = index + Number(i);
                 }
             }
             for (let num = 0; num < removedCount; num++) {
@@ -265,15 +265,15 @@ function willChange(
                     index = index[0];
                 }
                 rr = num + index;
-                change.object[rr].container = null;
-                change.object[rr].propertyName = "";
-                change.object[rr].propertyIndex = undefined;
+                change.object[rr].$$owner = null;
+                change.object[rr].$$propertyName = "";
+                change.object[rr].$$propertyIndex = undefined;
             }
             // Update all other indices
             for (let above = index; above < change.object.length; above++) {
                 const aboveElement = change.object[above];
-                if (aboveElement.propertyIndex !== undefined) {
-                    aboveElement.propertyIndex += addedCount - removedCount;
+                if (aboveElement.$$propertyIndex !== undefined) {
+                    aboveElement.$$propertyIndex += addedCount - removedCount;
                 }
             }
             break;
