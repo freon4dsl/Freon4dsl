@@ -1,4 +1,4 @@
-import { PiElement } from "../language";
+import { PiElement } from "../model";
 import { PiType } from "./PiType";
 
 // Part of the ProjectIt Framework.

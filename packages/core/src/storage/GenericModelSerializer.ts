@@ -1,4 +1,4 @@
-import { PiElement } from "../language";
+import { PiElement } from "../model";
 import { Language, Property } from "../language/Language";
 import { isNullOrUndefined } from "../util";
 

@@ -3,7 +3,7 @@ import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior, PiLogg
 import { PiCreatePartAction } from "../actions/PiCreatePartAction";
 import { triggerToString, PiEditor, TextBox, isProKey } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
-import { PiElement } from "../../language";
+import { PiElement } from "../../model";
 import { runInAction } from "mobx";
 
 const LOGGER = new PiLogger("AliasBox");

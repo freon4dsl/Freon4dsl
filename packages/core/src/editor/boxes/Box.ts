@@ -1,6 +1,6 @@
 import { observable, makeObservable } from "mobx";
 
-import { PiElement } from "../../language";
+import { PiElement } from "../../model";
 import { PiLogger, PiUtils } from "../../util";
 import { PiStyle } from "../PiStyle";
 

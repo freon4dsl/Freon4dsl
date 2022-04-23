@@ -1,7 +1,7 @@
 /**
  * This worker class collects all visible names in the model.
  */
-import { LanguageWorker, modelUnit, PiElement, PiModelUnit, PiNamedElement } from "../language/index";
+import { LanguageWorker, modelUnit, PiElement, PiModelUnit, PiNamedElement } from "../model";
 import { Language, Property } from "../storage/index";
 
 export class CollectNamesWorker implements LanguageWorker {

@@ -1,7 +1,7 @@
 import { Language, Property } from "../storage/index";
 import { PiLogger } from "../util/index";
 import { LanguageWorker } from "./LanguageWorker";
-import { PiElement } from "./PiElement";
+import { PiElement } from "../model";
 
 const LOGGER = new PiLogger("LanguageWalker");
 

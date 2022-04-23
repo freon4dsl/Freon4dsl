@@ -1,5 +1,5 @@
 import { Box, PiCompositeProjection } from "./internal";
-import { PiElement } from "../language";
+import { PiElement } from "../model";
 import { PiTableDefinition } from "./PiTables";
 
 /**

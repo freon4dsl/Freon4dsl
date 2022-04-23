@@ -2,7 +2,7 @@ import { isEqual } from "lodash";
 import { makeObservable, observable, computed, action, trace } from "mobx";
 import { PiEnvironment } from "../environment/PiEnvironment";
 
-import { PiOwnerDescriptor, PiElement } from "../language";
+import { PiOwnerDescriptor, PiElement } from "../model";
 import { PiCaret, wait, PiLogger } from "../util";
 import { PiAction } from "./actions/index";
 import {

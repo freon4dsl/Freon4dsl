@@ -1,5 +1,5 @@
 import { ReferenceShortcut } from "../editor";
-import { PiElement } from "./PiElement";
+import { PiElement } from "../model";
 import { isNullOrUndefined, PiLogger } from "../util";
 const LOGGER = new PiLogger("Language");
 

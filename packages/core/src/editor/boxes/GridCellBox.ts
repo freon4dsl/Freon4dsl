@@ -1,5 +1,5 @@
 import { makeObservable, observable } from "mobx";
-import { PiElement } from "../../language/index";
+import { PiElement } from "../../model";
 import { PiUtils } from "../../util/index";
 import { Box } from "./Box";
 

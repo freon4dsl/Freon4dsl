@@ -1,6 +1,6 @@
 import { observable, makeObservable, computed } from "mobx";
 
-import { PiElement } from "../../language";
+import { PiElement } from "../../model";
 import { Box } from "./internal";
 
 /**

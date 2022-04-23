@@ -1,4 +1,4 @@
-import { PiElement } from "../../language/index";
+import { PiElement } from "../../model";
 import { PiCaret, PiKey } from "../../util/index";
 import { Box } from "../boxes/index";
 import { isProKey, isRegExp, isString } from "../PiAction";
@@ -42,7 +42,7 @@ export function triggerTypeToString(trigger: PiActionTriggerType): string {
 }
 
 /**
- * Abstract supercass for all actions in ProjectIt
+ * Abstract superclass for all actions in ProjectIt
  */
 export abstract class PiAction {
     /**

@@ -1,4 +1,4 @@
-import { PiElement } from "../language";
+import { PiElement } from "../model";
 
 // Part of the ProjectIt Framework.
 // tag::validator-interface[]

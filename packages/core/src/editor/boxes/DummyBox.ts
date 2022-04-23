@@ -1,5 +1,5 @@
 import { MobxModelElementImpl } from "../../language/decorators/DecoratedModelElement";
-import { PiElement } from "../../language/PiElement";
+import { PiElement } from "../../model";
 import { Box } from "./Box";
 
 export class DummyBox extends Box {

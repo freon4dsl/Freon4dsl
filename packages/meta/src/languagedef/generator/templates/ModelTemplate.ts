@@ -22,7 +22,6 @@ export class ModelTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            @model
             export class ${myName} extends ${extendsClass} implements PiModel {     
             
                 ${ConceptUtils.makeStaticCreateMethod(modelDescription, myName)}
@@ -210,7 +209,7 @@ export class ModelTemplate {
     }
 
     private findMobxImports(concept: PiModelDescription): string[] {
-        const mobxImports: string[] = ["model"];
+        const mobxImports: string[] = [];
         mobxImports.push("MobxModelElementImpl");
         if (concept.properties.some(part => part.isList && !part.isPrimitive)) {
             mobxImports.push("observablelistpart");

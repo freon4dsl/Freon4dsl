@@ -1,4 +1,4 @@
-import { PiElement } from "../language/index";
+import { PiElement } from "../model";
 import { Box } from "./boxes/index";
 
 export type PiTableDefinition = {

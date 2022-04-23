@@ -1,4 +1,4 @@
-import { PiOwnerDescriptor, PiElement, PiNamedElement } from "../language";
+import { PiOwnerDescriptor, PiElement, PiNamedElement } from "../model";
 import { PiWriter } from "../writer";
 import { PiType } from "./PiType";
 

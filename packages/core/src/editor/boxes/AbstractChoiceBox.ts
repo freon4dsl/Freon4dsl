@@ -1,5 +1,5 @@
 import { makeObservable, observable } from "mobx";
-import { PiElement } from "../../language";
+import { PiElement } from "../../model";
 import { BehaviorExecutionResult, PiCaret, PiKey, PiUtils } from "../../util";
 import { BoxFactory, PiEditor } from "../internal";
 import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";

@@ -27,7 +27,6 @@ export class UnitTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            @model
             export class ${myName} extends ${extendsClass} implements PiModelUnit {
             
                 ${ConceptUtils.makeStaticCreateMethod(unitDescription, myName)}
@@ -59,7 +58,7 @@ export class UnitTemplate {
     }
 
     private findMobxImports(unitDescription: PiUnitDescription): string[] {
-        const mobxImports: string[] = ["model"];
+        const mobxImports: string[] = [];
         mobxImports.push("MobxModelElementImpl");
         if (unitDescription.properties.some(part => part.isList && !part.isPrimitive)) {
             mobxImports.push("observablelistpart");
