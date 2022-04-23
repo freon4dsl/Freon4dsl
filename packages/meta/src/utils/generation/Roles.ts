@@ -4,7 +4,7 @@ import {
     PiConcept,
     PiConceptProperty,
     PiProperty
-} from "../languagedef/metalanguage";
+} from "../../languagedef/metalanguage";
 import { Names } from "./Names";
 
 export class Roles {

@@ -1,4 +1,4 @@
-import { PiLanguage, PiConcept } from "../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiConcept } from "../../languagedef/metalanguage/PiLanguage";
 import { Names } from "./Names";
 
 // files need to be generated into folders ...

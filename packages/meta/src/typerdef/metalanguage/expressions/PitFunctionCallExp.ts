@@ -33,4 +33,8 @@ export class PitFunctionCallExp extends PitExp {
     toPiString(): string {
         return `${this.calledFunction}( ${this.actualParameters.map((arg => arg.toPiString())).join(", ")} )`;
     }
+
+    baseSource(): PitExp {
+        return super.baseSource();
+    }
 }

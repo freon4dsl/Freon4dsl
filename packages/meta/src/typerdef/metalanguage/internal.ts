@@ -15,3 +15,4 @@ export * from "./PitConformanceRule";
 export * from "./PitProperty";
 export * from "./PitPropInstance";
 export * from "./PitLimitedRule";
+export * from "./PitEqualsRule";

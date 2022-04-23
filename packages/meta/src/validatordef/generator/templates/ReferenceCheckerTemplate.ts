@@ -23,6 +23,7 @@ export class ReferenceCheckerTemplate {
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
         const allMethods: string = `${allClassifiers.map(concept => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}`;
+        // TODO adjust 'makeErrorMessage' to pathnames in PiElementReference
 
         // the template starts here
         return `
@@ -48,7 +49,6 @@ export class ReferenceCheckerTemplate {
             ${allMethods}           
             
             private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.PiElementReference}<${Names.PiNamedElement}>, propertyName: string, locationDescription: string) {
-                // TODO adjust this to pathnames in PiElementReference
                 const scoper = ${environmentName}.getInstance().scoper;
                 const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {

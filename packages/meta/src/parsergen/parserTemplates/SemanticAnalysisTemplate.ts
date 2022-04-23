@@ -73,6 +73,7 @@ export class SemanticAnalysisTemplate {
         const everyConceptName: string = Names.allConcepts(language);
         const className: string = Names.semanticAnalyser(language);
         const refWalkerName: string = Names.semanticWalker(language);
+        // TODO rethink the replacement of all properties of an object and test it
 
         // start Template
         return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
@@ -100,7 +101,6 @@ export class SemanticAnalysisTemplate {
 
                         // now change all ref errors
                         for (const [toBeReplaced, newObject] of changesToBeMade) {
-                            // TODO test the replacement of all properties
                             const myType: Concept = Language.getInstance().concept(toBeReplaced.piLanguageConcept());
                             myType.properties.forEach(prop => {
                                 if (prop.type !== "boolean" && !!toBeReplaced[prop.name]) {

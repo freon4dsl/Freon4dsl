@@ -1,7 +1,7 @@
 // Note that the following import cannot be from "@projectit/core", because
 // this leads to a load error
 // import { PiErrorSeverity } from "@projectit/core";
-import { PiErrorSeverity } from "../../utils/PiErrorSeverity";
+import { PiErrorSeverity } from "../../utils/generation/PiErrorSeverity";
 import { PiDefinitionElement } from "../../utils";
 import { PiLangExp, PiConcept } from "../../languagedef/metalanguage";
 // The next import should be separate and the last of the imports.

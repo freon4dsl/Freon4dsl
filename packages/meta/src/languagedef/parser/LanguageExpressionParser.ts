@@ -1,6 +1,6 @@
 import { PiLanguage } from "../metalanguage/PiLanguage";
-import { PiLangExpressionChecker } from "../metalanguage/PiLangExpressionChecker";
-import { PiParser } from "../../utils/PiParser";
+import { PiLangExpressionChecker } from "../checking/PiLangExpressionChecker";
+import { PiParser } from "../../utils/parsingAndChecking/PiParser";
 import { LanguageExpressionTester } from "./LanguageExpressionTester";
 const pegjsParser = require("./ExpressionGrammar");
 import { setCurrentFileName } from "./ExpressionCreators";

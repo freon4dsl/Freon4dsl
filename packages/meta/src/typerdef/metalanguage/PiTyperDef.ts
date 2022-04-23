@@ -3,7 +3,7 @@ import { PiClassifier, PiConcept, PiElementReference, PiLanguage, PiProperty } f
 import { PitTypeConcept } from "./PitTypeConcept";
 import { PitClassifierSpec } from "./PitClassifierSpec";
 import { PitAnyTypeSpec } from "./PitAnyTypeSpec";
-import { CommonSuperTypeUtil } from "../../utils/common-super/CommonSuperTypeUtil";
+import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
 import { PitProperty } from "./PitProperty";
 
 export class PiTyperDef extends PiTyperElement {
@@ -117,6 +117,7 @@ ${this.classifierSpecs.map(con => con.toPiString()).join("\n")}`;
         const prop: PiProperty = new PiProperty();
         prop.name = "internal";
         prop.typeReference = PiElementReference.create<PiClassifier>("PiElement", "PiClassifier");
+        prop.typeReference.owner = prop;
         result.properties.push(prop);
         return result;
     }

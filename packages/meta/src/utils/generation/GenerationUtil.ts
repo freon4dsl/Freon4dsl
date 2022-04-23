@@ -6,11 +6,11 @@ import {
     PiLanguage,
     PiPrimitiveProperty,
     PiProperty
-} from "../languagedef/metalanguage/";
-import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp, PiElementReference, PiPrimitiveType } from "../languagedef/metalanguage";
+} from "../../languagedef/metalanguage";
+import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp, PiElementReference, PiPrimitiveType } from "../../languagedef/metalanguage";
 import { Names } from "./Names";
 import { LangUtil } from "./LangUtil";
-import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
+import { PiModelDescription, PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
 
 export class GenerationUtil {
 

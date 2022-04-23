@@ -35,13 +35,15 @@ describe("Checking new typer", () => {
             // console.log(e.stack);
             const errors: string[] = parser.checker.errors;
             // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
-            expect(e.message).toBe(`checking errors (6).`);
+            expect(e.message).toBe(`checking errors (8).`);
             expect(errors.includes("Concept or interface 'Type' occurs more than once in this list [file: type-rules1.type, line: 4, column: 10].")).toBeTruthy();
             expect(errors.includes("Concept or interface 'Exp' occurs more than once in this list [file: type-rules1.type, line: 7, column: 11].")).toBeTruthy();
             expect(errors.includes("Cannot find instance 'Simp' of 'PredefinedType' [file: type-rules1.type, line: 20, column: 30].")).toBeTruthy();
             expect(errors.includes("Cannot find property 'inn' in classifier 'UnitLiteral' [file: type-rules1.type, line: 38, column: 37].")).toBeTruthy();
             expect(errors.includes("Cannot find property 'base' [file: type-rules1.type, line: 38, column: 19].")).toBeTruthy();
             expect(errors.includes("Type of 'typeof( self.content )' (PiType) does not conform to TypeDeclaration [file: type-rules1.type, line: 46, column: 9].")).toBeTruthy();
+            expect(errors.includes("Property may not be present twice [file: type-rules1.type, line: 66, column: 13].")).toBeTruthy();
+            expect(errors.includes("Property may not be present twice [file: type-rules1.type, line: 90, column: 32].")).toBeTruthy();
         }
     });
 

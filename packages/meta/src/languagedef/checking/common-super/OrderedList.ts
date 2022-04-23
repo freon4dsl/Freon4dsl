@@ -1,4 +1,4 @@
-import { PiLangElement } from "../../languagedef/metalanguage";
+import { PiLangElement } from "../../metalanguage";
 
 interface InternalElement<T> {
     name: string;

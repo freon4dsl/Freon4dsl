@@ -36,8 +36,8 @@ export class PitProperty extends PiConceptProperty {
         if (!!data.location) {
             result.location = data.location;
         }
-        if (!!data.refType) {
-            result.refType = data.refType;
+        if (!!data.typeReference) {
+            result.typeReference = data.typeReference;
         }
         if (!!data.type) {
             result.type = data.type;
@@ -45,24 +45,14 @@ export class PitProperty extends PiConceptProperty {
         if (data.agl_location) {
             result.agl_location = data.agl_location;
         }
-        // if (!!data.owningConcept) {
-        //     result.owningConcept = data.owningConcept;
+        // if (!!data.owningClassifier) {
+        //     result.owningClassifier = data.owningClassifier;
         // }
         return result;
     }
     readonly $typename: string = "PitProperty"; // holds the metatype in the form of a string
 
-    // TODO remove this in favor of PiProperty.typeReference
-    refType: PiElementReference<PiClassifier>;
-
-    get type(): PiClassifier {
-        return this.refType.referred;
-    }
-
-    set type(t: PiClassifier) {
-        this.refType = PiElementReference.create<PiClassifier>(t, "PiClassifier");
-    }
     toPiString(): string {
-        return this.name + ": " + this.refType.name;
+        return this.name + ": " + this.typeReference.name;
     }
 }

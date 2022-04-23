@@ -96,7 +96,6 @@ export class ModelTemplate {
                     addUnit(newUnit: ${Names.modelunit(language)}): boolean {
                         if (!!newUnit) {
                             const myMetatype = newUnit.piLanguageConcept();
-                            // TODO this depends on the fact the only one part of the model concept has the same type, should we allow differently???
                             switch (myMetatype) {
                             ${language.modelConcept.allParts().map(part =>
             `case "${Names.classifier(part.type)}": {

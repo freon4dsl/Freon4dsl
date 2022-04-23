@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import parserTypeScript = require("prettier/parser-typescript");
-import { MetaLogger } from "../utils/MetaLogger";
+import { MetaLogger } from "../MetaLogger";
 
 const LOGGER = new MetaLogger("FileUtil").mute();
 const prettier = require("prettier/standalone");
