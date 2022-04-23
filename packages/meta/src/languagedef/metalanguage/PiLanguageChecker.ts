@@ -57,9 +57,19 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                 myModel.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
                 // check that model has a name property => can be done here, even though allProperties() is used, because models have no base
                 CheckerHelper.checkOrCreateNameProperty(myModel, this);
-                myModel.properties.forEach(part => this.checkConceptProperty(part));
+                const checkedUnits: PiClassifier[] = [];
+                myModel.properties.forEach(prop => {
+                    this.checkConceptProperty(prop);
+                    // other than 'normal' classifiers, only one property with a certain type is allowed
+                    if (checkedUnits.includes(prop.type)) {
+                        this.simpleCheck(false,
+                            `An entry with this unit type ('${prop.type.name}') already exists ${Checker.location(prop)}.`);
+                    } else {
+                        checkedUnits.push(prop.type);
+                    }
+                });
                 this.simpleCheck(myModel.parts().length > 0,
-                    `The model should have at least one unit type ${Checker.location(myModel)}.`);
+                    `The model should have at least one part ${Checker.location(myModel)}.`);
                 this.simpleCheck(myModel.references().length == 0,
                     `All properties of a model must be parts, not references ${Checker.location(myModel)}.`);
             }
@@ -181,7 +191,6 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                 `A non-abstract limited concept must have instances ${Checker.location(piLimitedConcept)}.`);
         }
     }
-
 
     checkConceptProperty(piProperty: PiProperty): void {
         LOGGER.log("Checking concept property '" + piProperty.name + "'");

@@ -186,10 +186,9 @@ describe("Checking language parser on checking errors", () => {
             parser.parse(testdir + "test12.ast");
         } catch (e) {
             // console.log(checker.errors.map(err => err));
-            expect(e.message).toBe(`checking errors (1).`);
-            checker.errors.forEach(error =>
-                expect(error).toBe("A concept may not have an expression as base [file: test12.ast, line: 11, column: 33].")
-            );
+            expect(e.message).toBe(`checking errors (2).`);
+            expect(checker.errors.includes("An entry with this unit type ('testUnit') already exists [file: test12.ast, line: 6, column: 5]."));
+            expect(checker.errors.includes("A concept may not have an expression as base [file: test12.ast, line: 12, column: 33]."));
         }
     });
 });

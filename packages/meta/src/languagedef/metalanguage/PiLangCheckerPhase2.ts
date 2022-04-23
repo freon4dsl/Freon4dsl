@@ -27,7 +27,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         let foundSomeCircularity: boolean = false;
         const extensions: string[] = [];
         language.units.forEach(unit => {
-            this.checkUniqueNameOfClassifier(names, unit);
+            this.checkUniqueNameOfClassifier(names, unit, true);
             this.checkUniqueFileExtension(extensions, unit);
         });
         language.concepts.forEach(con => {
@@ -66,11 +66,11 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         }
     }
 
-    private checkUniqueNameOfClassifier(names: string[], classifier: PiClassifier) {
+    private checkUniqueNameOfClassifier(names: string[], classifier: PiClassifier, isUnit: boolean) {
         // check unique names, disregarding upper/lower case of first character
         if (names.includes(classifier.name)) {
             this.simpleCheck(false,
-                `Concept or interface with name '${classifier.name}' already exists ${Checker.location(classifier)}.`);
+                `${isUnit ? `Unit` : `Concept or interface`} with name '${classifier.name}' already exists ${Checker.location(classifier)}.`);
         } else {
             names.push(Names.startWithUpperCase(classifier.name));
             names.push(classifier.name);
@@ -125,7 +125,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
      * @private
      */
     private checkClassifier(names: string[], classifier: PiClassifier): boolean {
-        this.checkUniqueNameOfClassifier(names, classifier);
+        this.checkUniqueNameOfClassifier(names, classifier, false);
         // check circularity
         const circularNames: string[] = [];
         const isCircular = this.checkCircularInheritance(circularNames, classifier);
