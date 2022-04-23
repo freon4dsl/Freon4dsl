@@ -4,4 +4,8 @@
  * in order to avoid problem with circular imports.
  */
 
-export * from "./internal";
+export * from "./PiLangCheckerPhase1";
+export * from "./PiLangCheckerPhase2";
+export * from "./PiLangExpressionChecker";
+export * from "./common-super/CommonSuperTypeUtil";
+export * from "./CommonChecker";

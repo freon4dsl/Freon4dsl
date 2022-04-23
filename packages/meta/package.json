@@ -29,7 +29,7 @@
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "build2": "tsc && yarn copy-templates && yarn copy-validtemplates",
     "copy-templates": "cp src/editordef/generator/templates/styles.ts.template ./dist/editordef/generator/templates/styles.ts.template",
-    "copy-validtemplates": "cp src/validatordef/generator/templates/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
+    "copy-validtemplates": "cp src/utils/generation/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",

@@ -1,9 +1,7 @@
-import { Checker, MetaLogger} from "../../utils";
-import {
-    PiTyperDef
-} from "../metalanguage";
+import { CheckerPhase, CheckRunner, MetaLogger } from "../../utils";
+import { PiTyperDef } from "../metalanguage";
 
-const LOGGER = new MetaLogger("PiTyperCheckerPhase2"); //.mute();
+// const LOGGER = new MetaLogger("PiTyperCheckerPhase2"); //.mute();
 
 // TODO clean up this code
 // TODO check on multiple stats with same prop in WhereExp
@@ -18,10 +16,10 @@ const LOGGER = new MetaLogger("PiTyperCheckerPhase2"); //.mute();
 //     };
 // }
 
-export class PiTyperCheckerPhase2 extends Checker<PiTyperDef>{
+export class PiTyperCheckerPhase2 extends CheckerPhase<PiTyperDef> {
     definition: PiTyperDef;
 
-    check(definition: PiTyperDef): void {
+    public check(definition: PiTyperDef, runner: CheckRunner): void {
         // MetaLogger.unmuteAllLogs();
         this.definition = definition;
         // LOGGER.log("Checking typer definition phase 2");

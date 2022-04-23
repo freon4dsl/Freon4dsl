@@ -25,5 +25,9 @@ export {
     PitSelfExp,
     PitFunctionCallExp,
     PitAnytypeExp,
-    PitConformsExp
+    PitConformsExp,
+    PitEqualsRule,
+    PitBinaryExp,
+    PitCreateExp,
+    PitVarCallExp
 } from "./internal";

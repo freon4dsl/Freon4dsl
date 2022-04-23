@@ -7,10 +7,9 @@ import {
     PiInstance,
     PiExpressionConcept,
     PiBinaryExpressionConcept,
-    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveValue, PiPrimitiveType, PiModelDescription, PiUnitDescription
-} from "../metalanguage/PiLanguage";
-import { PiElementReference } from "../metalanguage/PiElementReference";
-import { Checker } from "../../utils";
+    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveType, PiModelDescription, PiUnitDescription, PiElementReference
+} from "../metalanguage";
+import { ParseLocationUtil } from "../../utils";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";
@@ -44,7 +43,7 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
                 if (hasModel) {
                     let location: string = `[no location]`;
                     if (!!con.location) {
-                        location = Checker.locationPlus(currentFileName, con.location);
+                        location = ParseLocationUtil.locationPlus(currentFileName, con.location);
                     }
                     nonFatalParseErrors.push(`There may be only one model in the language definition ${location}.`)
                 } else {
@@ -67,6 +66,17 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
     return result;
 }
 
+function splitProperties(propList: PiProperty[], result: PiClassifier) {
+    for (const prop of propList) {
+        if (prop instanceof PiPrimitiveProperty) {
+            result.primProperties.push(prop);
+        } else {
+            result.properties.push(prop);
+        }
+        prop.owningClassifier = result;
+    }
+}
+
 export function createModel(data: Partial<PiModelDescription>): PiModelDescription {
     // console.log("createModel " + data.name);
     const result = new PiModelDescription();
@@ -74,14 +84,7 @@ export function createModel(data: Partial<PiModelDescription>): PiModelDescripti
         result.name = data.name;
     }
     if (!!data.properties) {
-        for (const prop of data.properties) {
-            if (prop instanceof PiPrimitiveProperty) {
-                result.primProperties.push(prop);
-            } else {
-                result.properties.push(prop);
-            }
-            prop.owningClassifier = result;
-        }
+        splitProperties(data.properties, result);
     }
     if (!!data.location) {
         result.location = data.location;
@@ -152,14 +155,7 @@ export function createInterface(data: Partial<PiInterface>): PiInterface {
         }
     }
     if (!!data.properties) {
-        for (const prop of data.properties) {
-            if (prop instanceof PiPrimitiveProperty) {
-                result.primProperties.push(prop);
-            } else {
-                result.properties.push(prop);
-            }
-            prop.owningClassifier = result;
-        }
+        splitProperties(data.properties, result)
     }
     if (!!data.location) {
         result.location = data.location;
@@ -261,7 +257,7 @@ export function createPartOrPrimProperty(data: Partial<PiPrimitiveProperty>): Pi
             // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
             // we are not interested in its value, only whether it is present
             if (data.initialValue !== null && data.initialValue !== undefined) {
-                nonFatalParseErrors.push(`A non-primitive property may not have an initial value ${Checker.locationPlus(currentFileName, data.location)}.`);
+                nonFatalParseErrors.push(`A non-primitive property may not have an initial value ${ParseLocationUtil.locationPlus(currentFileName, data.location)}.`);
             }
             result = conceptProperty;
         }

@@ -1,8 +1,9 @@
 import * as fs from "fs";
 import { Checker } from "./Checker";
 import { Parser } from "pegjs";
-import { LOG2USER } from "./UserLogger";
-import { PiDefinitionElement } from "./PiDefinitionElement";
+import { LOG2USER } from "../UserLogger";
+import { PiDefinitionElement } from "../PiDefinitionElement";
+import { ParseLocationUtil } from "./ParseLocationUtil";
 
 // The following two types are used to store the location information from the PEGJS parser
 export type ParseLocation = {
@@ -66,7 +67,7 @@ export class PiParser<DEFINITION> {
             // syntax error
             const errorstr = `${e} 
                 ${e.location && e.location.start ?
-                    Checker.locationPlus(definitionFile, e.location)
+                    ParseLocationUtil.locationPlus(definitionFile, e.location)
                 :
                     ``}`;
             LOG2USER.error(errorstr);
@@ -102,7 +103,7 @@ export class PiParser<DEFINITION> {
                     // to avoid a newline in the output, we do not put this if-stat in a smart string
                     let location: string = "";
                     if (e.location && e.location.start) {
-                        location = Checker.locationPlus(file, e.location);
+                        location = ParseLocationUtil.locationPlus(file, e.location);
                     }
                     const errorstr = `${e.message.trimEnd()} ${location}`;
                     LOG2USER.error(errorstr);
@@ -123,6 +124,8 @@ export class PiParser<DEFINITION> {
 
     private runChecker(model: DEFINITION) {
         if (model !== null) {
+            this.checker.errors = [];
+            this.checker.warnings = [];
             this.checker.check(model);
             // this.checker.check makes errorlist empty, thus we must
             // add the non fatal parse errors after the call

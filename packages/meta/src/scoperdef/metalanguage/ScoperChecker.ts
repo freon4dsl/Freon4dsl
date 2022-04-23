@@ -1,9 +1,8 @@
 import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
-import { Checker } from "../../utils";
+import { CheckRunner, Checker } from "../../utils";
 import {
     PiConcept,
     PiLanguage,
-    PiLangExpressionChecker,
     PiProperty,
     PiClassifier
 } from "../../languagedef/metalanguage";
@@ -14,9 +13,14 @@ import { LangUtil, MetaLogger } from "../../utils";
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { PiLangExpressionChecker } from "../../languagedef/checking";
+import { CommonChecker } from "../../languagedef/checking/CommonChecker";
 
 const LOGGER = new MetaLogger("ScoperChecker").mute();
+
+// TODO use ParseLocatonUtil
 export class ScoperChecker extends Checker<PiScopeDef> {
+    runner = new CheckRunner(this.errors, this.warnings);
     myExpressionChecker: PiLangExpressionChecker;
     myNamespaces: PiClassifier[] = [];
 
@@ -32,8 +36,9 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         if ( this.language === null || this.language === undefined ) {
             throw new Error(`Scoper definition checker does not known the language.`);
         }
+        this.runner = new CheckRunner(this.errors, this.warnings);
 
-        this.nestedCheck(
+        this.runner.nestedCheck(
             {
                 check: this.language.name === definition.languageName,
                 error:  `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' ` +
@@ -44,7 +49,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         this.myNamespaces = this.findAllNamespaces(definition.namespaces);
 
         definition.scopeConceptDefs.forEach(def => {
-            this.myExpressionChecker.checkClassifierReference(def.conceptRef);
+            CommonChecker.checkClassifierReference(def.conceptRef, this.runner);
             if (!!def.conceptRef.referred) {
                 if (!!def.namespaceAdditions) {
                     this.checkNamespaceAdditions(def.namespaceAdditions, def.conceptRef.referred);
@@ -59,7 +64,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
 
     private checkNamespaceAdditions(namespaceAddition: PiNamespaceAddition, enclosingConcept: PiConcept) {
         LOGGER.log("Checking namespace definition for " + enclosingConcept?.name);
-        this.nestedCheck({
+        this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
             error: `Cannot add namespaces to a concept that is not a namespace itself [line: ${namespaceAddition.location?.start.line}, column: ${namespaceAddition.location?.start.column}].`,
             whenOk: () => {
@@ -67,11 +72,11 @@ export class ScoperChecker extends Checker<PiScopeDef> {
                     this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
                     const xx: PiProperty = exp.findRefOfLastAppliedFeature();
                     if (!!xx) {
-                        this.nestedCheck({
+                        this.runner.nestedCheck({
                             check: (!!xx.type && (xx.type instanceof PiConcept || xx.type instanceof PiUnitDescription)),
                             error: `A namespace addition should refer to a concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`,
                             whenOk: () => {
-                                this.simpleCheck(this.myNamespaces.includes(xx.type),
+                                this.runner.simpleCheck(this.myNamespaces.includes(xx.type),
                                     `A namespace addition should refer to a namespace concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`);
                             }
                         });
@@ -89,7 +94,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
     private findAllNamespaces(namespaces: PiElementReference<PiClassifier>[]): PiClassifier[] {
         let result: PiClassifier[] = [];
         namespaces.forEach(ref => {
-            this.myExpressionChecker.checkClassifierReference(ref);
+            CommonChecker.checkClassifierReference(ref, this.runner);
             const myClassifier = ref.referred;
             if (!!myClassifier) { // error message handled by checkClassifierReference()
                 result = result.concat(LangUtil.findAllImplementorsAndSubs(myClassifier));

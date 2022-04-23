@@ -3,7 +3,7 @@ import { PiClassifier, PiConcept, PiElementReference, PiLanguage, PiProperty } f
 import { PitTypeConcept } from "./PitTypeConcept";
 import { PitClassifierSpec } from "./PitClassifierSpec";
 import { PitAnyTypeSpec } from "./PitAnyTypeSpec";
-import { CommonSuperTypeUtil } from "../../utils/common-super/CommonSuperTypeUtil";
+import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
 import { PitProperty } from "./PitProperty";
 
 export class PiTyperDef extends PiTyperElement {

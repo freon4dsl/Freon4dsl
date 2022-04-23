@@ -8,7 +8,5 @@ export * from "./PiLangEveryConcept"
 export * from "./PiElementReference";
 export * from "./PiLanguage";
 export * from "./PiLangExpressions";
-export * from "./PiLanguageChecker";
-export * from "./PiLangExpressionChecker";
 export * from "./PiLangScoper";
 export * from "./PiMetaEnvironment";

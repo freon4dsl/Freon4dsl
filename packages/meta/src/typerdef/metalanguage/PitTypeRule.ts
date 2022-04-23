@@ -30,8 +30,7 @@ export abstract class PitTypeRule extends PiTyperElement {
     set returnType(cls: PiClassifier) {
         if (!!cls) {
             this.__returnType = PiElementReference.create<PiClassifier>(cls, "PiClassifier");
-            // TODO owner of PiElementReference
-            // this.__returnType.owner = this.language;
+            this.__returnType.owner = this;
         }
     }
 }

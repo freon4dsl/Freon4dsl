@@ -1,9 +1,9 @@
 import {
     PiClassifier, PiConcept, PiInstance, PiInterface,
     PiLanguage, PiPrimitiveProperty, PiProperty
-} from "../languagedef/metalanguage";
-import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
-import { PiEditProjectionGroup } from "../editordef/metalanguage";
+} from "../../languagedef/metalanguage";
+import { PiModelDescription, PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { PiEditProjectionGroup } from "../../editordef/metalanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical

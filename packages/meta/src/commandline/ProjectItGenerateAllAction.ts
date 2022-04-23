@@ -1,7 +1,7 @@
 import { PiLanguage } from "../languagedef/metalanguage";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
-import { FileWatcher } from "../utils/FileWatcher";
+import { FileWatcher } from "../utils/generation/FileWatcher";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { ScoperParser } from "../scoperdef/parser/ScoperParser";

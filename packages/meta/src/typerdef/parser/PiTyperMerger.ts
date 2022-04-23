@@ -5,6 +5,8 @@ import { PiTyperDef } from "../metalanguage";
 import { PiTyperReader } from "./PiTyperReader";
 import { PiTyperCheckerPhase1 } from "./PiTyperCheckerPhase1";
 import { Checker } from "../../utils";
+import { PiTyperChecker } from "./PiTyperChecker";
+import { ParseLocationUtil } from "../../utils/parsingAndChecking/ParseLocationUtil";
 
 /**
  * This class parses one of more .type files and merges them into a single PiTyperDef object, which is then
@@ -12,12 +14,12 @@ import { Checker } from "../../utils";
  */
 export class PiTyperMerger {
     public language: PiLanguage;
-    public checker: PiTyperCheckerPhase1;
+    public checker: PiTyperChecker;
     private reader: PiTyperReader;
 
     constructor(language: PiLanguage) {
         this.language = language;
-        this.checker = new PiTyperCheckerPhase1(language);
+        this.checker = new PiTyperChecker(language);
         this.reader = new PiTyperReader();
     }
 
@@ -94,7 +96,7 @@ export class PiTyperMerger {
                         if (!result.anyTypeSpec) {
                             result.anyTypeSpec = sub.anyTypeSpec;
                         } else {
-                            this.checker.errors.push(`Found a second anytype rule in ${Checker.location(sub.anyTypeSpec)}, the first one is in ${Checker.location(result.anyTypeSpec)}.`)
+                            this.checker.errors.push(`Found a second anytype rule in ${ParseLocationUtil.location(sub.anyTypeSpec)}, the first one is in ${ParseLocationUtil.location(result.anyTypeSpec)}.`)
                         }
                     }
                     result.classifierSpecs.push(...sub.classifierSpecs);

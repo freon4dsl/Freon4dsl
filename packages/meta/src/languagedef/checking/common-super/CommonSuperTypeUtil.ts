@@ -1,5 +1,5 @@
 import { OrderedList } from "./OrderedList";
-import { PiClassifier, PiConcept, PiInterface } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiInterface } from "../../metalanguage";
 
 // algorithm from https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla
 // 1. Breath First Search of each class hierarchy going "upwards" - result into OrderedList (preserve order + no duplicates).

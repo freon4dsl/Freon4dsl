@@ -1,5 +1,5 @@
 import { PiClassifier, PiConcept, PiElementReference, PiInterface } from "../../languagedef/metalanguage";
-import { CommonSuperTypeUtil } from "../../utils/common-super/CommonSuperTypeUtil";
+import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
 
 function concept(name: string): PiConcept {
     const result: PiConcept = new PiConcept();

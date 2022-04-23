@@ -1,4 +1,4 @@
-import { PiClassifier, PiConcept, PiElementReference, PiInterface, PiProperty } from "../languagedef/metalanguage/";
+import { PiClassifier, PiConcept, PiElementReference, PiInterface, PiProperty } from "../../languagedef/metalanguage";
 import { GenerationUtil } from "./GenerationUtil";
 
 /**
