@@ -87,12 +87,6 @@ export function model1() {
     };
 }
 
-interface ctor {
-    new (...args: any[]): any;
-
-    run: any;
-}
-
 /**
  *
  * This property decorator can be used to decorate properties of type ModelElement.
@@ -224,7 +218,6 @@ function willChange(
             const removedCount: number = change.removedCount;
             const added: DecoratedModelElement[] = change.added;
             const addedCount = added.length;
-            const xxx = change.object;
             for (const i in added) {
                 // cleanup old owner reference of new value
                 const element = added[i];

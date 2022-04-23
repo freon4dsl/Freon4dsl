@@ -1,9 +1,8 @@
 import { ReferenceShortcut } from "../editor";
-import { PiElement } from "../model";
+import { PiElement, PiModel, PiModelUnit } from "../model";
 import { isNullOrUndefined, PiLogger } from "../util";
 const LOGGER = new PiLogger("Language");
 
-// TODO see if other types need to be added
 export type PropertyKind = "primitive" | "part" | "reference";
 
 export type Property = {
@@ -19,7 +18,7 @@ export type Model = {
     isNamedElement?: boolean;
     subConceptNames?: string[];
     properties: Map<string, Property>;
-    constructor: () => PiElement;
+    constructor: () => PiModel;
 };
 export type ModelUnit = {
     typeName: string;
@@ -29,7 +28,7 @@ export type ModelUnit = {
     subConceptNames?: string[];
     fileExtension: string;
     properties: Map<string, Property>;
-    constructor: () => PiElement;
+    constructor: () => PiModelUnit;
 };
 export type Concept = {
     typeName: string;
@@ -67,7 +66,8 @@ export class Language {
         return Language.theInstance;
     }
 
-    private models: Map<string, Model> = new Map<string, Model>();
+    private languageName: string;
+    private pmodel: Model;
     private units: Map<string, ModelUnit> = new Map<string, ModelUnit>();
     private concepts: Map<string, Concept> = new Map<string, Concept>();
     private interfaces: Map<string, Interface> = new Map<string, Interface>();
@@ -75,8 +75,16 @@ export class Language {
     private constructor() {
     }
 
-    model(typeName: string): Model {
-        return this.models.get(typeName);
+    model(): Model {
+        return this.pmodel;
+    }
+
+    modelOfType(typeName: string) {
+        if(!!this.pmodel && (this.pmodel.typeName === typeName)) {
+            return this.pmodel;
+        } else {
+            return null;
+        }
     }
 
     unit(typeName: string): ModelUnit {
@@ -105,7 +113,7 @@ export class Language {
                 if (!!unit1) {
                     return unit1;
                 } else {
-                    let model = this.models.get(typeName);
+                    let model = this.modelOfType(typeName);
                     if(!! model){
                         return model;
                     }
@@ -143,7 +151,7 @@ export class Language {
                 if (!!unit1) {
                     return unit1.properties.get(propertyName);
                 }  else {
-                    let model = this.models.get(typeName);
+                    let model = this.modelOfType(typeName);
                     if( !!model){
                         return model.properties.get(propertyName);
                     }
@@ -196,11 +204,11 @@ export class Language {
             }
         }
     }
-    createModel(typeName: string): PiElement {
-        return this.models.get(typeName).constructor();
+    createModel(): PiModel {
+        return this.pmodel?.constructor();
     }
 
-    createUnit(typeName: string): PiElement {
+    createUnit(typeName: string): PiModelUnit {
         return this.units.get(typeName).constructor();
     }
 
@@ -218,8 +226,10 @@ export class Language {
 
 
     addModel(model: Model) {
-        this.models.set(model.typeName, model);
-        model.subConceptNames = [];
+        if(!!this.pmodel) {
+            console.error("Language: adding model of type " + model?.typeName + " while there is already a model of type " + this.pmodel.typeName);
+        }
+        this.pmodel = model;
     }
 
     addUnit(unit: ModelUnit) {
@@ -237,6 +247,18 @@ export class Language {
 
     addInterface(intface: Interface) {
         this.interfaces.set(intface.typeName, intface);
+    }
+
+    /**
+     * Set Language name
+     * @param typeName
+     */
+    set name(name: string) {
+        this.languageName = name;
+    }
+
+    get name(): string {
+        return this.languageName;
     }
 
     subConcepts(typeName: string): string[] {

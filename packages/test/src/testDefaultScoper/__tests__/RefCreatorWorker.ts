@@ -1,4 +1,4 @@
-import { LanguageWorker, PiElement } from "@projectit/core";
+import { AstWorker, PiElement } from "@projectit/core";
 import { DSprivate, DSpublic, DSref, DSunit, PiElementReference } from "../language/gen/index";
 
 /**
@@ -9,7 +9,7 @@ import { DSprivate, DSpublic, DSref, DSunit, PiElementReference } from "../langu
  *
  * Creates _a_lot_ of references
  */
-export class RefCreatorWorker implements LanguageWorker {
+export class RefCreatorWorker implements AstWorker {
 
     units: DSunit[];
 

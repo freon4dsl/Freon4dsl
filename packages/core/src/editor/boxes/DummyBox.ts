@@ -1,4 +1,4 @@
-import { MobxModelElementImpl } from "../../language/decorators/DecoratedModelElement";
+import { MobxModelElementImpl } from "../../model/decorators/DecoratedModelElement";
 import { PiElement } from "../../model";
 import { Box } from "./Box";
 
