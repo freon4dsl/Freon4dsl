@@ -25,7 +25,7 @@ describe("Checking language parser on checking errors", () => {
         } catch (e) {
             // checker.errors.forEach(err => console.log(err));
             expect(e.message).toBe(`checking errors (12).`);
-            expect(checker.errors.includes("The model should have at least one unit type [file: test2.ast, line: 3, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("The model should have at least one part [file: test2.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Type 'number' cannot be used as a reference, because it has no property 'name: identifier' [file: test2.ast, line: 10, column: 19].")).toBeTruthy();
             expect(checker.errors.includes("A non-abstract limited concept must have instances [file: test2.ast, line: 14, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('string') [file: test2.ast, line: 19, column: 1].")).toBeTruthy();
@@ -46,7 +46,7 @@ describe("Checking language parser on checking errors", () => {
         } catch (e) {
             // console.log(checker.errors.map(err => err));
             expect(e.message).toBe(`checking errors (7).`);
-            expect(checker.errors.includes("The model should have at least one unit type [file: test3.ast, line: 3, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("The model should have at least one part [file: test3.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Base 'AAA' must be a concept [file: test3.ast, line: 9, column: 18].")).toBeTruthy();
             expect(checker.errors.includes("A non-abstract limited concept must have instances [file: test3.ast, line: 17, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Limited concept 'AA' cannot be base of an unlimited concept [file: test3.ast, line: 13, column: 16].")).toBeTruthy();
@@ -69,7 +69,7 @@ describe("Checking language parser on checking errors", () => {
         } catch (e) {
             // checker.errors.forEach(err => console.log(err));
             expect(e.message).toBe(`checking errors (9).`);
-            expect(checker.errors.includes("The model should have at least one unit type [file: test4.ast, line: 7, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("The model should have at least one part [file: test4.ast, line: 7, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [file: test4.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circular inheritance tree (DDD, EEE, FFF, CCC) [file: test4.ast, line: 10, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circular inheritance tree (EEE, FFF, CCC, DDD) [file: test4.ast, line: 13, column: 1].")).toBeTruthy();
@@ -87,7 +87,7 @@ describe("Checking language parser on checking errors", () => {
         } catch (e) {
             // checker.errors.forEach(err => console.log(err));
             expect(e.message).toBe(`checking errors (7).`);
-            expect(checker.errors.includes("The model should have at least one unit type [file: test5.ast, line: 3, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("The model should have at least one part [file: test5.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [file: test5.ast, line: 5, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circular inheritance tree (CCC, DDD, EEE, FFF) [file: test5.ast, line: 8, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circular inheritance tree (DDD, EEE, FFF, CCC) [file: test5.ast, line: 11, column: 1].")).toBeTruthy();
@@ -103,7 +103,7 @@ describe("Checking language parser on checking errors", () => {
         } catch (e) {
             // checker.errors.forEach(err => console.log(err));
             expect(e.message).toBe(`checking errors (4).`);
-            expect(checker.errors.includes("The model should have at least one unit type [file: test6.ast, line: 3, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("The model should have at least one part [file: test6.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Binary expression concept YYY should have a priority [file: test6.ast, line: 5, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Binary expression concept YYY should have a left part [file: test6.ast, line: 5, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Binary expression concept YYY should have a right part [file: test6.ast, line: 5, column: 1].")).toBeTruthy();
@@ -120,7 +120,7 @@ describe("Checking language parser on checking errors", () => {
             expect(checker.errors.includes("Type of property 'refProp' should be a modelunit [file: test7.ast, line: 4, column: 24].")).toBeTruthy();
             expect(checker.errors.includes("Type 'NameNotStringType' cannot be used as a reference, because it has no property 'name: identifier' [file: test7.ast, line: 5, column: 25].")).toBeTruthy();
             expect(checker.errors.includes("Type of property 'refProp2' should be a modelunit [file: test7.ast, line: 5, column: 25].")).toBeTruthy();
-            expect(checker.errors.includes("The model should have at least one unit type [file: test7.ast, line: 3, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("The model should have at least one part [file: test7.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("All properties of a model must be parts, not references [file: test7.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("An abstract limited concept may not have any instances [file: test7.ast, line: 32, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Property 's' does not exist on concept RRRR [file: test7.ast, line: 13, column: 19].")).toBeTruthy();
@@ -152,7 +152,7 @@ describe("Checking language parser on checking errors", () => {
         } catch (e) {
             // checker.errors.forEach(err => console.log(err));
             expect(e.message).toBe(`checking errors (6).`);
-            expect(checker.errors.includes("The model should have at least one unit type [file: test8.ast, line: 21, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("The model should have at least one part [file: test8.ast, line: 21, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Property 'ZZprop7' of limited concept should have primitive type [file: test8.ast, line: 12, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("A non-abstract limited concept must have instances [file: test8.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Property 'ZZprop7' does not exist on concept YY [file: test8.ast, line: 16, column: 21].")).toBeTruthy();
@@ -187,7 +187,7 @@ describe("Checking language parser on checking errors", () => {
         } catch (e) {
             // console.log(checker.errors.map(err => err));
             expect(e.message).toBe(`checking errors (2).`);
-            expect(checker.errors.includes("An entry with this unit type ('testUnit') already exists [file: test12.ast, line: 6, column: 5]."));
+            expect(checker.errors.includes("An entry with this part ('testUnit') already exists [file: test12.ast, line: 6, column: 5]."));
             expect(checker.errors.includes("A concept may not have an expression as base [file: test12.ast, line: 12, column: 33]."));
         }
     });
