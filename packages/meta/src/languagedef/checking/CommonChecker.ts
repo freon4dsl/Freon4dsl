@@ -1,13 +1,13 @@
 import {
     PiClassifier,
     PiConcept,
-    PiElementReference,
+    PiElementReference, PiInterface,
     PiPrimitiveProperty,
     PiPrimitiveType,
     PiPrimitiveValue,
     PiProperty
 } from "../metalanguage";
-import { CheckRunner, ParseLocationUtil } from "../../utils";
+import { CheckRunner, LangUtil, Names, ParseLocationUtil } from "../../utils";
 
 export class CommonChecker {
 
@@ -52,6 +52,17 @@ export class CommonChecker {
         } else {
             runner.simpleCheck(nameProperty.type === PiPrimitiveType.identifier,
                 `The 'name' property of '${classifier.name}' should be of type 'identifier' ${ParseLocationUtil.location(classifier)}.`);
+        }
+    }
+
+    public static checkUniqueNameOfClassifier(names: string[], classifier: PiClassifier, isUnit: boolean, runner: CheckRunner) {
+        // check unique names, disregarding upper/lower case of first character
+        if (names.includes(classifier.name)) {
+            runner.simpleCheck(false,
+                `${isUnit ? `Unit` : `Concept or interface`} with name '${classifier.name}' already exists ${ParseLocationUtil.location(classifier)}.`);
+        } else {
+            names.push(Names.startWithUpperCase(classifier.name));
+            names.push(classifier.name);
         }
     }
 

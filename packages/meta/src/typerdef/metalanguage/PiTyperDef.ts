@@ -117,6 +117,7 @@ ${this.classifierSpecs.map(con => con.toPiString()).join("\n")}`;
         const prop: PiProperty = new PiProperty();
         prop.name = "internal";
         prop.typeReference = PiElementReference.create<PiClassifier>("PiElement", "PiClassifier");
+        prop.typeReference.owner = prop;
         result.properties.push(prop);
         return result;
     }

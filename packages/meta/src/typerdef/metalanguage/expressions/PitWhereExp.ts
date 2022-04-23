@@ -39,41 +39,4 @@ export class PitWhereExp extends PitExp {
     get type(): PiClassifier {
         return this.variable.type;
     }
-    // baseSource(): PitExp {
-    //     return this;
-    // }
-
-    /**
-     * Returns the conditions of the expressions such that the part that refers to the extra variable
-     * is always the left.
-     */
-    sortedConditions(): PitBinaryExp[] {
-        const result: PitBinaryExp[] = [];
-        this.conditions.forEach(cond => {
-            // find out which part of the condition refers to 'variable'
-            let variablePart: PitExp;
-            let knownTypePart: PitExp;
-            let baseSource = cond.left.baseSource();
-            if (baseSource instanceof PitVarCallExp && baseSource.variable === this.variable) {
-                variablePart = cond.left;
-                knownTypePart = cond.right;
-            } else {
-                baseSource = cond.right.baseSource();
-                if (baseSource instanceof PitVarCallExp && baseSource.variable === this.variable) {
-                    variablePart = cond.right;
-                    knownTypePart = cond.left;
-                }
-            }
-            // // strip the source from part that refers to the extra variable
-            // variablePart = TyperGenUtils.removeBaseSource(variablePart);
-            // return a new condition with the knownTypePart always as the right
-            if (cond instanceof PitEqualsExp) {
-                result.push(PitEqualsExp.create({left: variablePart, right: knownTypePart}));
-            } else if (cond instanceof PitConformsExp) {
-                result.push(PitConformsExp.create({left: variablePart, right: knownTypePart}));
-            }
-        });
-        return result;
-    }
-
 }

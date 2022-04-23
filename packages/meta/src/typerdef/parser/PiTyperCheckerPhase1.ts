@@ -487,8 +487,8 @@ export class PiTyperCheckerPhase1 extends CheckerPhase<PiTyperDef>{
         } else {
             CommonChecker.checkClassifierReference(piProperty.typeReference, this.runner);
         }
+        // the following checks are done in phase2
         // (5) property names must be unique within one concept
-        // TODO finish checks
         // (6) check inherited props on rules layed out in languagedef checker
     }
 

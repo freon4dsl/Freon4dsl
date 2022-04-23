@@ -63,6 +63,7 @@ GenericType {
     equalsto x:GenericType where {
             x.innerType equalsto self.innerType;
             x.kind equalsto self.kind;
+            x.kind equalsto self.kind;
         };
     conformsto x:GenericType where {
             // both conditions must be true
@@ -85,6 +86,7 @@ UnitOfMeasurement {
         };
     conformsto rr:UnitOfMeasurement where {
             self.baseType conformsto rr.baseType;
+            self.unit equalsto rr.unit;
             self.unit equalsto rr.unit;
         };
 }
