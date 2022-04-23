@@ -504,11 +504,11 @@ export class ProjectionTemplate {
         // TODO also adjust role '..-hlist' to '..-vlist'?
         this.addToIfNotPresent(this.coreImports, "BoxFactory");
         this.addToIfNotPresent(this.coreImports, "Box");
+        // TODO Create Action for the role to actually add an element.
         return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-hlist",
                             (${element}.${property.name}.map( (item, index)  =>
                                 ${this.singlePrimitivePropertyProjection(property, element, boolInfo)}
                             ) as Box[]).concat( [
-                                // TODO  Create Action for the role to actually add an element.
                                 BoxFactory.alias(${element}, "new-${Roles.property(property)}-hlist", "<+ ${property.name}>")
                             ])
                         )`;

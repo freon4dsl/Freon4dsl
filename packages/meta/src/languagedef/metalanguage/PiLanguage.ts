@@ -409,10 +409,10 @@ export class PiProperty extends PiLangElement {
         this.__type = PiElementReference.create<PiClassifier>(t, "PiClassifier");
         this.__type.owner = this;
     }
-    get typeReference(): PiElementReference<PiClassifier> { // only used by PiLanguageChecker
+    get typeReference(): PiElementReference<PiClassifier> { // only used by PiLanguageChecker and PiTyperChecker
         return this.__type;
     }
-    set typeReference(t : PiElementReference<PiClassifier>) { // only used by PiLanguageChecker
+    set typeReference(t : PiElementReference<PiClassifier>) { // only used by PiLanguageChecker and PiTyperChecker
         this.__type = t;
         this.__type.owner = this;
     }

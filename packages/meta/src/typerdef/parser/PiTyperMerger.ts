@@ -70,10 +70,6 @@ export class PiTyperMerger {
     private runChecker(model: PiTyperDef) {
         if (model !== null) {
             this.checker.check(model);
-            // TODO check whether this is still the case:
-            // this.checker.check makes errorlist empty, thus we must
-            // add the non fatal parse errors after the call
-            // this.checker.errors.push(...this.getNonFatalParseErrors());
             if (this.checker.hasErrors()) {
                 this.checker.errors.forEach(error => LOG2USER.error(`${error}`));
                 throw new Error("checking errors (" + this.checker.errors.length + ").");

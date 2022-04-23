@@ -19,10 +19,10 @@ export class PitTypeConcept extends PiConcept {
         if (!!data.properties) {
             data.properties.forEach(x => {
                 if (x instanceof PitProperty) {
-                    if (x.refType.name === 'boolean' || x.refType.name === 'number' || x.refType.name === 'string') {
+                    if (x.typeReference.name === 'boolean' || x.typeReference.name === 'number' || x.typeReference.name === 'string') {
                         const newProp: PiPrimitiveProperty = new PiPrimitiveProperty();
                         newProp.name = x.name;
-                        newProp.typeReference = x.refType;
+                        newProp.typeReference = x.typeReference;
                         result.primProperties.push(newProp);
                     } else {
                         result.properties.push(x);

@@ -20,7 +20,7 @@ export class PitOwnerSetter {
             con.properties.forEach(prop => {
                 if (prop instanceof PitProperty) {
                     prop.owner = con;
-                    prop.refType.owner = prop;
+                    prop.typeReference.owner = prop;
                 }
             });
         });

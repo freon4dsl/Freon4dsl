@@ -505,7 +505,7 @@ export class PiTyperCheckerPhase1 extends Checker<PiTyperDef> {
         // (4) the types of the properties must be known, either as classifiers in the AST,
         //      or as type concepts
         if (piProperty instanceof PitProperty) {
-            this.checkClassifierReference(piProperty.refType, false);
+            this.checkClassifierReference(piProperty.typeReference, false);
         } else {
             this.myExpressionChecker.checkClassifierReference(piProperty.typeReference);
         }

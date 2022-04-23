@@ -40,6 +40,7 @@ describe("Testing Default Scoper", () => {
         for (const x of creator.allNames) {
             expect(visibleNames).toContain(x);
         }
+        // TODO uncomment this test
         // run the validator to see if the references are ok
         // const validator = environment.validator;
         // const errors = validator.validate(model);
