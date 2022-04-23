@@ -2,13 +2,11 @@ import {
     PitClassifierSpec,
     PitConformanceRule, PitConformsExp, PitEqualsExp, PitExp,
     PitPropertyCallExp, PitWhereExp,
-    PiTyperDef
+    PiTyperDef, PitBinaryExp, PitEqualsRule
 } from "../../metalanguage";
 import { FreonTyperGenUtils } from "./FreonTyperGenUtils";
 import { ListUtil, Names, GenerationUtil } from "../../../utils";
 import { PiClassifier, PiLimitedConcept } from "../../../languagedef/metalanguage";
-import { PitBinaryExp } from "../../metalanguage/expressions";
-import { PitEqualsRule } from "../../metalanguage/PitEqualsRule";
 
 /**
  * This class generates the code for all 'conformsto' entries in the .type file.
@@ -116,7 +114,7 @@ export class FreonSuperTypeMaker {
 
     public makeWhereExp(exp: PitWhereExp, varName: string, imports: PiClassifier[]): string {
         let result: string = '/* PitWhereExp */\n';
-        const myConditions = exp.sortedConditions();
+        const myConditions = exp.conditions;
         myConditions.forEach((cond, index) => {
             if (cond instanceof PitConformsExp) {
                 result += `const rhs${index}: PiType[] = this.getSuperTypes(${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)});\n`;

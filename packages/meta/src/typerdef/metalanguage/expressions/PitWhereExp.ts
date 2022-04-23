@@ -29,7 +29,7 @@ export class PitWhereExp extends PitExp {
 
     readonly $typename: string = "PitWhereExp"; // holds the metatype in the form of a string
     variable: PitVarDecl; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
-    conditions: PitBinaryExp[] = [];
+    conditions: PitBinaryExp[] = []; // are sorted by the checker such that the left side is always the one to refer to the variable
 
     toPiString(): string {
         return `${this.variable.toPiString()} where {

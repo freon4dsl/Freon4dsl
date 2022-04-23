@@ -62,7 +62,7 @@ export class FreonTypeEqualsMaker {
         if (exp instanceof PitWhereExp) {
             const allConditions: string[] = [];
             let returnStr: string = '';
-            exp.sortedConditions().forEach((cond, index) => {
+            exp.conditions.forEach((cond, index) => {
                 const leftStr: string = FreonTyperGenUtils.makeExpAsElement(cond.left, leftVarName, varIsType, imports);
                 const rightStr: string = FreonTyperGenUtils.makeExpAsElement(cond.right, rightVarName, varIsType, imports);
                 if (FreonTyperGenUtils.isType(cond.left.returnType)) {
