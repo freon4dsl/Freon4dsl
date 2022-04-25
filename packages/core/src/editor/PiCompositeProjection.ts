@@ -1,5 +1,5 @@
 import { observable, makeObservable, action } from "mobx";
-import { PiElement } from "../language";
+import { PiElement } from "../ast";
 import { Box, BoxFactory, LabelBox, PiProjection } from "./internal";
 import { PiTableDefinition } from "./PiTables";
 import { Language } from "../storage";
@@ -106,13 +106,14 @@ export class PiCompositeProjection implements PiProjection {
         let result: boolean = false;
         if (!!names && names.length > 0) {
             result = names.includes(elementName);
-            if (!result) { // do recursive
-                myConcept.subConceptNames.forEach(n => {
-                    if (this.checkSuper(n, elementName)) { // to avoid overwriting 'result' with next element
-                        result = true;
-                    }
-                });
-            }
+            // NB Below not needed, as subconcepts includes _all_ subconcepts already.
+            // if (!result) { // do recursive
+            //     myConcept.subConceptNames.forEach(n => {
+            //         if (this.checkSuper(n, elementName)) { // to avoid overwriting 'result' with next element
+            //             result = true;
+            //         }
+            //     });
+            // }
         }
         return result;
     }

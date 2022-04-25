@@ -1,6 +1,5 @@
 import { makeObservable, observable } from "mobx";
-import { PiOwnerDescriptor } from "../PiOwnerDescriptor";
-import { PiElement } from "../PiElement";
+import { PiOwnerDescriptor, PiElement } from "..";
 
 /**
  *  An element using the decorators should implement this interface.
@@ -13,7 +12,7 @@ export interface DecoratedModelElement {
 }
 
 /**
- * Not strictly neccesary, but extending this class provides a quick way to implement
+ * Not strictly necessary, but extending this class provides a quick way to implement
  * the above interface and be able to use the decorators.
  */
 // @model

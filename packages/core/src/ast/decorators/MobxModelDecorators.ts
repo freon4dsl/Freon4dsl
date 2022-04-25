@@ -1,9 +1,7 @@
 import { IObservableValue, IArrayWillChange, IArrayWillSplice, observable, intercept, runInAction } from "mobx";
-// import { ObservableValue } from "mobx";
 import "reflect-metadata";
 
 import { DecoratedModelElement } from "./DecoratedModelElement";
-import { ModelInfo } from "./ModelInfo";
 
 export const MODEL_PREFIX = "_PI_";
 export const MODEL_PREFIX_LENGTH = MODEL_PREFIX.length;
@@ -18,7 +16,6 @@ export const MODEL_NAME = MODEL_PREFIX + "Name";
  * @param {string | symbol} propertyKey
  */
 export function observablereference(target: DecoratedModelElement, propertyKey: string | symbol) {
-    ModelInfo.references.add(target.constructor.name, propertyKey.toString());
     // const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
     //
     // const getter = function(this: any) {
@@ -82,23 +79,12 @@ export function observablereference(target: DecoratedModelElement, propertyKey: 
  * @param {string | symbol} propertyKey
  */
 export function observablelistreference(target: DecoratedModelElement, propertyKey: string | symbol) {
-    ModelInfo.listReferences.add(target.constructor.name, propertyKey.toString());
 }
 
 export function model1() {
     return (constructor: new (...args: any[]) => any) => {
         return constructor;
     };
-}
-
-interface ctor {
-    new (...args: any[]): any;
-
-    run: any;
-}
-
-export function model(target: Function) {
-    ModelInfo.addClass(target.name, target);
 }
 
 /**
@@ -110,7 +96,6 @@ export function model(target: Function) {
  * @param {string | symbol} propertyKey
  */
 export function observablepart(target: DecoratedModelElement, propertyKey: string | symbol) {
-    ModelInfo.parts.add(target.constructor.name, propertyKey.toString());
     const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
 
     const getter = function(this: any) {
@@ -167,7 +152,6 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
 }
 
 export function observablelistpart(target: Object, propertyKey: string | symbol) {
-    ModelInfo.listparts.add(target.constructor.name, propertyKey.toString());
     const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
 
     const getter = function(this: any) {
@@ -234,7 +218,6 @@ function willChange(
             const removedCount: number = change.removedCount;
             const added: DecoratedModelElement[] = change.added;
             const addedCount = added.length;
-            const xxx = change.object;
             for (const i in added) {
                 // cleanup old owner reference of new value
                 const element = added[i];

@@ -14,6 +14,7 @@ export class LanguageTemplate {
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.
              */
              export function initializeLanguage() {
+                Language.getInstance().name = "${language.name}";
                 Language.getInstance().addModel(describe${Names.classifier(language.modelConcept)}());
                 ${language.units.map(concept =>
                     `Language.getInstance().addUnit(describe${Names.classifier(concept)}());`
