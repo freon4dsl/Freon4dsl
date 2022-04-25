@@ -1,9 +1,9 @@
-import { LanguageWorker, PiElement } from "../language";
+import { AstWorker, PiElement } from "../ast";
 
 
-export class ElementSearchWorker implements LanguageWorker {
-    private toFind: Partial<PiElement>;
-    private metatype: string;
+export class ElementSearchWorker implements AstWorker {
+    private readonly toFind: Partial<PiElement>;
+    private readonly metatype: string;
     private result: PiElement[];
 
     constructor(toFind: Partial<PiElement>, metatype: string, result: PiElement[]) {

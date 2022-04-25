@@ -1,5 +1,5 @@
 import { ElementSearchWorker } from "./ElementSearchWorker";
-import { LanguageWalker, PiElement, PiModelUnit } from "../language";
+import { AstWalker, PiElement, PiModelUnit } from "../ast";
 
 export class ElementSearcher {
 
@@ -7,7 +7,7 @@ export class ElementSearcher {
         const result: PiElement[] = [];
 
         // create the walker over the model tree
-        const walker = new LanguageWalker();
+        const walker = new AstWalker();
 
         // create the finder
         let searchWorker = new ElementSearchWorker(toFind, metatype, result);
