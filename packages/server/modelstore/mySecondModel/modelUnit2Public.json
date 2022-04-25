@@ -7,5 +7,10 @@
          "name": "ent45"
       }
    ],
-   "methods": []
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "METHOD12"
+      }
+   ]
 }

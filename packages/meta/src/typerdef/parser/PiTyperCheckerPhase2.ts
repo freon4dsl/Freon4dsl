@@ -173,7 +173,7 @@ export class PiTyperCheckerPhase2 extends CheckerPhase<PiTyperDef> {
                 this.runner.simpleCheck(false,
                     `Property may not be present twice ${ParseLocationUtil.location(variablePart)}.`);
             } else {
-                console.log(`FOUND ${variablePart.property?.name} at ${ParseLocationUtil.location(variablePart)}`)
+                // console.log(`FOUND ${variablePart.property?.name} at ${ParseLocationUtil.location(variablePart)}`)
                 ListUtil.addIfNotPresent(properties, variablePart.property);
             }
         }

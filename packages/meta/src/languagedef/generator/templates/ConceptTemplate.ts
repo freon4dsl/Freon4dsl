@@ -26,6 +26,7 @@ export class ConceptTemplate {
     }
 
     private generateConceptPrivate(concept: PiConcept): string {
+        // TODO clean up imports
         const language = concept.language;
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
@@ -37,7 +38,7 @@ export class ConceptTemplate {
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const implementsPi = (isExpression ? "PiExpression" : (hasName ? "PiNamedElement" : "PiElement"));
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = ConceptUtils.findMobxImports(hasSuper, concept).concat(implementsPi).concat("PiUtils");
+        const coreImports = ConceptUtils.findMobxImports(hasSuper, concept).concat(implementsPi).concat("PiUtils").concat("matchElementList");
         const metaType = Names.metaType(language);
         const modelImports = this.findModelImports(concept, myName, hasReferences);
         const intfaces = Array.from(
@@ -67,7 +68,8 @@ export class ConceptTemplate {
                 ${concept.implementedReferences().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}     
                               
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties())}
-                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)}    
+                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)} 
+                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName)}    
                 ${ConceptUtils.makeConvenienceMethods(concept.references())}                               
             }
         `;
@@ -201,7 +203,8 @@ export class ConceptTemplate {
                 ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
 
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties())}
-                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false,false, false)}                
+                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false,false, false)}    
+                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName)}             
             }
                        
             // Because of mobx we need to generate the initialisations outside of the class,

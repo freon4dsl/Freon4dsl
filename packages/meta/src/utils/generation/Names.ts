@@ -75,6 +75,7 @@ export class Names {
 
     // because the below names are used to generate TypeScript classes
     // they all have to start with an uppercase character
+    static matchUtil: string = "MatchUtil";
     public static configuration() {
         return "ProjectitConfiguration";
     }

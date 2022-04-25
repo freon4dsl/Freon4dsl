@@ -1,7 +1,7 @@
 import { ModelUnitMetaType, OctopusModel, OctopusModelUnitType, UmlPart } from "../language/gen";
 import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
 import { GenericModelSerializer } from "@projectit/core";
-import { FileHandler } from "./FileHandler";
+import { FileHandler } from "../../utils/FileHandler";
 
 const writer = OctopusEnvironment.getInstance().writer;
 const reader = OctopusEnvironment.getInstance().reader;

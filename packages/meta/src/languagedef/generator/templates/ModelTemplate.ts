@@ -8,7 +8,7 @@ export class ModelTemplate {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
-        const coreImports = this.findMobxImports(modelDescription).concat(["PiModel", "Language", "PiUtils"]);
+        const coreImports = this.findMobxImports(modelDescription).concat(["PiModel", "Language", "PiUtils", "matchElementList"]);
         const modelImports = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType(language);
 
@@ -33,6 +33,7 @@ export class ModelTemplate {
 
                 ${ConceptUtils.makeConstructor(false, modelDescription.properties)}            
                 ${ConceptUtils.makeBasicMethods(false, metaType,true, false,false, false)}
+                ${ConceptUtils.makeMatchMethod(false, modelDescription, myName)}
                 
                 /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.

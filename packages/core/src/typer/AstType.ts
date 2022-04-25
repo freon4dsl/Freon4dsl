@@ -54,6 +54,10 @@ class NamedElement implements PiNamedElement {
     piLanguageConcept(): string {
         return "NamedElement";
     }
+
+    match(toBeMatched: Partial<NamedElement>): boolean {
+        return toBeMatched.name === this.name;
+    }
 }
 
 export class AstType implements PiType {

@@ -1,6 +1,7 @@
 import { Names } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
 import { PiUnitDescription } from "../../metalanguage/PiLanguage";
+import { matchElementList } from "@projectit/core";
 
 export class UnitTemplate {
     // the following template is based on assumptions about a 'unit'
@@ -15,7 +16,7 @@ export class UnitTemplate {
         const needsObservable = unitDescription.primProperties.length > 0;
         const extendsClass = "MobxModelElementImpl";
         const modelImports = this.findModelImports(unitDescription, myName);
-        const coreImports = this.findMobxImports(unitDescription).concat(["PiModelUnit", "PiUtils"]);
+        const coreImports = this.findMobxImports(unitDescription).concat(["PiModelUnit", "PiUtils", "matchElementList"]);
         const metaType = Names.metaType(language);
 
         // Template starts here
@@ -39,7 +40,8 @@ export class UnitTemplate {
                 ${unitDescription.references().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}     
             
                 ${ConceptUtils.makeConstructor(false, unitDescription.allProperties())}
-                ${ConceptUtils.makeBasicMethods(false, metaType,false, true,false, false)}                
+                ${ConceptUtils.makeBasicMethods(false, metaType,false, true,false, false)} 
+                ${ConceptUtils.makeMatchMethod(false, unitDescription, myName)}               
             }
             `;
     }

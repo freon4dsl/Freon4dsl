@@ -35,4 +35,8 @@ export class DummyElement extends MobxModelElementImpl implements PiElement {
         return "DummyElement";
     }
 
+    match(toBeMatched: Partial<PiElement>): boolean {
+        return false;
+    }
+
 }
