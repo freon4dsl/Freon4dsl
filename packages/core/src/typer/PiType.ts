@@ -1,5 +1,5 @@
 import { PiWriter } from "../writer";
-import { PiElement } from "../language";
+import { PiElement } from "../ast";
 
 export interface PiType {
     /**

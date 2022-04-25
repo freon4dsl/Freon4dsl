@@ -8,7 +8,7 @@ import {
     PiEditor,
     PiProjection, triggerToString, PiStyle, BoxFactory
 } from "../editor";
-import { PiBinaryExpression, PiExpression } from "../language";
+import { PiBinaryExpression, PiExpression } from "../ast";
 import { Language } from "../storage";
 import {
     PI_BINARY_EXPRESSION_LEFT,

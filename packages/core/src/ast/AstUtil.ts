@@ -1,9 +1,5 @@
 import { Language } from "../storage/index";
-import { PiBinaryExpression } from "./PiBinaryExpression";
-import { PiElement } from "./PiElement";
-import { PiExpression } from "./PiExpression";
-import { PiModel } from "./PiModel";
-import { PiModelUnit } from "./PiModelUnit";
+import { PiBinaryExpression, PiElement, PiExpression, PiModel, PiModelUnit } from "./";
 
 export function isPiModel(element: PiElement): element is PiModel {
     return !!element && element.piIsModel && element.piIsModel();

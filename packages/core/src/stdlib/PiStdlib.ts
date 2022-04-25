@@ -1,4 +1,4 @@
-import { PiNamedElement } from "../language";
+import { PiNamedElement } from "../ast";
 
 // tag::stdlib-interface[]
 export interface PiStdlib {

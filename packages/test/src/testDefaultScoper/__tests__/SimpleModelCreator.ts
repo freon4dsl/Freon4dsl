@@ -1,5 +1,5 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit, PiElementReference } from "../language/gen";
-import { GenericModelSerializer, LanguageWalker, PiElement } from "@projectit/core";
+import { GenericModelSerializer, AstWalker, PiElement } from "@projectit/core";
 import { RefCreatorWorker } from "./RefCreatorWorker";
 
 export class SimpleModelCreator {
@@ -35,7 +35,7 @@ export class SimpleModelCreator {
         // add references, after all names have been created
         // const result = DSmodel.create({name: "modelOfDepth" + depth, units: modelUnits });
         // const worker = new RefCreatorWorker(modelUnits);
-        // const myWalker = new LanguageWalker();
+        // const myWalker = new AstWalker();
         // myWalker.myWorkers.push(worker);
         // myWalker.walk(result, (e: PiElement) => true);
         // return result;

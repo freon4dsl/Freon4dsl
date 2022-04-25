@@ -1,10 +1,10 @@
 /**
  * This worker class collects all visible names in the model.
  */
-import { LanguageWorker, modelUnit, PiElement, PiModelUnit, PiNamedElement } from "../language/index";
+import { AstWorker, modelUnit, PiElement, PiModelUnit, PiNamedElement } from "../ast";
 import { Language, Property } from "../storage/index";
 
-export class CollectNamesWorker implements LanguageWorker {
+export class CollectNamesWorker implements AstWorker {
     // 'namesList' holds the named elements found while traversing the model tree
     namesList: PiNamedElement[] = [];
     // 'metatype' may or may not be set; if set any named element is included only if it conforms to this type

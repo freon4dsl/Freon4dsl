@@ -1,7 +1,5 @@
 import { runInAction } from "mobx";
 import { isRegExp, isString, Box, PiEditor, PiPostAction, PiAction } from "../editor";
-import { PiElement } from "../language/index";
-import { Language } from "../language/Language";
 import { LEFT_MOST, PiLogger } from "./internal";
 
 const LOGGER = new PiLogger("BehaviorUtils");

@@ -13,7 +13,7 @@ import * as console from "console";
 export class ConceptUtils {
 
     public static findMobxImports(hasSuper: boolean, concept: PiConcept): string[] {
-        const mobxImports: string[] = ["model"];
+        const mobxImports: string[] = [];
         if (!hasSuper) {
             mobxImports.push("MobxModelElementImpl");
         }

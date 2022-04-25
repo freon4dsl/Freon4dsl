@@ -55,8 +55,7 @@ export class ConceptTemplate {
              * Class ${myName} is the implementation of the concept with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
-             */            
-            @model
+             */
             export ${abstract} class ${myName} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
             {
                 ${(!isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
@@ -108,7 +107,6 @@ export class ConceptTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            @model
             export ${abstract} class ${myName} extends ${extendsClass} implements PiBinaryExpression${intfaces.map(imp => `, ${imp}`).join("")} {            
                 ${(!isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
                 : ""}
@@ -189,7 +187,6 @@ export class ConceptTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            @model
             export ${abstract} class ${myName} extends ${extendsClass} implements PiNamedElement${intfaces.map(imp => `, ${imp}`).join("")}
             {           
                 ${(!concept.isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`

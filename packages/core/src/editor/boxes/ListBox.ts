@@ -2,7 +2,7 @@ import { observable, makeObservable, action } from "mobx";
 
 import { PiUtils } from "../../util";
 import { Box} from "../internal";
-import { PiElement } from "../../language";
+import { PiElement } from "../../ast";
 
 export enum ListDirection {
     HORIZONTAL = "Horizontal",

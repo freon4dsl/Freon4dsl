@@ -1,21 +1,21 @@
 import { Language, Property } from "../storage/index";
 import { PiLogger } from "../util/index";
-import { LanguageWorker } from "./LanguageWorker";
-import { PiElement } from "./PiElement";
+import { AstWorker } from "./AstWorker";
+import { PiElement } from "./";
 
-const LOGGER = new PiLogger("LanguageWalker");
+const LOGGER = new PiLogger("AstWalker");
 
 /**
- * Class LanguageWalker implements the extended visitor pattern of instances of a Language.
- * This class implements the traversal of the model tree, classes that implement LanguageWorker
+ * Class AstWalker implements the extended visitor pattern of instances of a Language.
+ * This class implements the traversal of the model tree, classes that implement AstWorker
  * are responsible for the actual work being done on the nodes of the tree.
  * Every node is visited twice, once before the visit of its children, and once after this visit.
  *
  * With the use of the parameter 'includeChildren', which takes a function,
  * a very fine-grained control can be taken over which nodes are and are not visited.
  */
-export class LanguageWalker {
-    myWorkers: LanguageWorker[] = []; // the instances that do the actual work on each node of the tree
+export class AstWalker {
+    myWorkers: AstWorker[] = []; // the instances that do the actual work on each node of the tree
 
     /**
      * This method is the entry point of the traversal through the model tree. Each of the workers will be called in
@@ -38,9 +38,9 @@ export class LanguageWalker {
             // find part properties in the language meta definition
             const partProperties: Property[] = Language.getInstance().getPropertiesOfKind(modelelement.piLanguageConcept(), "part");
             // walk all parts
-            for(const prop of partProperties){
-                for(const child of Language.getInstance().getPropertyValue(modelelement, prop)){
-                    if( includeChildren(child)) {
+            for (const prop of partProperties) {
+                for (const child of Language.getInstance().getPropertyValue(modelelement, prop)) {
+                    if (includeChildren(child)) {
                         this.walk(child, includeChildren);
                     }
                 }
