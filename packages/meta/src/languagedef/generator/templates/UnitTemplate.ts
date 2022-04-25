@@ -1,7 +1,6 @@
 import { Names } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
 import { PiUnitDescription } from "../../metalanguage/PiLanguage";
-import { matchElementList } from "@projectit/core";
 
 export class UnitTemplate {
     // the following template is based on assumptions about a 'unit'
