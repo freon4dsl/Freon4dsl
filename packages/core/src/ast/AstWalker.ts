@@ -1,7 +1,7 @@
 import { Language, Property } from "../storage/index";
 import { PiLogger } from "../util/index";
 import { AstWorker } from "./AstWorker";
-import { PiElement } from "../model";
+import { PiElement } from "./";
 
 const LOGGER = new PiLogger("AstWalker");
 
@@ -38,9 +38,9 @@ export class AstWalker {
             // find part properties in the language meta definition
             const partProperties: Property[] = Language.getInstance().getPropertiesOfKind(modelelement.piLanguageConcept(), "part");
             // walk all parts
-            for(const prop of partProperties){
-                for(const child of Language.getInstance().getPropertyValue(modelelement, prop)){
-                    if( includeChildren(child)) {
+            for (const prop of partProperties) {
+                for (const child of Language.getInstance().getPropertyValue(modelelement, prop)) {
+                    if (includeChildren(child)) {
                         this.walk(child, includeChildren);
                     }
                 }

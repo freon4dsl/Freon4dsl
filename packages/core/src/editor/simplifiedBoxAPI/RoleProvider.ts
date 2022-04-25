@@ -1,5 +1,5 @@
 import { Concept, Interface, ModelUnit } from "../../storage";
-import { PiElement } from "../../model";
+import { PiElement } from "../../ast";
 
 export class RoleProvider {
 ß

@@ -1,4 +1,4 @@
-import { PiElement, PiNamedElement } from "../model";
+import { PiElement, PiNamedElement } from "../ast";
 
 // Part of the ProjectIt Framework
 

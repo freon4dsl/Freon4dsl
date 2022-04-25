@@ -1,4 +1,4 @@
-import { PiElement } from "../model";
+import { PiElement } from "../ast";
 import { Box } from "./boxes/index";
 
 export type PiTableDefinition = {

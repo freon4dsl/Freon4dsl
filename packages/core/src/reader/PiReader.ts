@@ -1,4 +1,4 @@
-import { PiElement, PiModel } from "../model";
+import { PiElement, PiModel } from "../ast";
 
 // tag::reader-interface[]
 export interface PiReader {

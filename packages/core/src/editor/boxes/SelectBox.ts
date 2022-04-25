@@ -1,7 +1,7 @@
 import { BehaviorExecutionResult, MatchUtil } from "../../util";
 import { PiEditor, triggerToString } from "../internal";
 import { AbstractChoiceBox, SelectOption, Box } from "./internal";
-import { PiElement } from "../../model";
+import { PiElement } from "../../ast";
 
 export class SelectBox extends AbstractChoiceBox {
     readonly kind = "SelectBox";

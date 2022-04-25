@@ -1,6 +1,6 @@
 import { observable, action, makeObservable } from "mobx";
 import { PiCaretPosition, PiCaret, PiUtils, PiLogger } from "../../util";
-import { PiElement } from "../../model";
+import { PiElement } from "../../ast";
 import { Box } from "./internal";
 
 const LOGGER = new PiLogger("TextBox");

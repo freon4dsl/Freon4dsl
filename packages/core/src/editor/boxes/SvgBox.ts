@@ -1,7 +1,7 @@
 import { observable, makeObservable } from "mobx";
 
 import { PiUtils } from "../../util";
-import { PiElement } from "../../model";
+import { PiElement } from "../../ast";
 import { Box } from "./internal";
 
 export class SvgBox extends Box {

@@ -1,4 +1,4 @@
-import { PiElement } from "../model";
+import { PiElement } from "../ast";
 
 // Part of the ProjectIt Framework.
 export interface PiWriter {

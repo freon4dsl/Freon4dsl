@@ -1,4 +1,4 @@
-import { PiBinaryExpression } from "../../model";
+import { PiBinaryExpression } from "../../ast";
 import { PiLogger, PiUtils } from "../../util";
 import { Box } from "../boxes/index";
 import { PiEditor } from "../PiEditor";

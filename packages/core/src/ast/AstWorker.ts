@@ -2,7 +2,7 @@
  * Interface AstWorker defines the extended visitor pattern of instances of languages.
  * Every node is visited twice, once before the visit of its children, and once after this visit.
  */
-import { PiElement } from "../model";
+import { PiElement } from "./";
 
 export interface AstWorker {
     /**

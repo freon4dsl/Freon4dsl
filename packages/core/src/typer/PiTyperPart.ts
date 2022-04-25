@@ -1,4 +1,4 @@
-import { PiElement } from "../model";
+import { PiElement } from "../ast";
 import { PiTyper } from "./PiTyper";
 import { PiType } from "./PiType";
 

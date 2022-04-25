@@ -1,7 +1,7 @@
 /**
  * This worker class collects all visible names in the model.
  */
-import { AstWorker, modelUnit, PiElement, PiModelUnit, PiNamedElement } from "../model";
+import { AstWorker, modelUnit, PiElement, PiModelUnit, PiNamedElement } from "../ast";
 import { Language, Property } from "../storage/index";
 
 export class CollectNamesWorker implements AstWorker {

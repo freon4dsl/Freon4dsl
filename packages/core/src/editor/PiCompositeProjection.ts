@@ -1,5 +1,5 @@
 import { observable, makeObservable, action } from "mobx";
-import { PiElement } from "../model";
+import { PiElement } from "../ast";
 import { Box, BoxFactory, LabelBox, PiProjection } from "./internal";
 import { PiTableDefinition } from "./PiTables";
 import { Language } from "../storage";

@@ -2,7 +2,7 @@
  * Class Namespace is a wrapper for a model element that is a namespace (as defined in the scoper definition).
  * It provides the implementation of the algorithm used to search for all names that are visible in the namespace.
  */
-import { AstWalker, modelUnit, PiElement, PiModelUnit, PiNamedElement } from "../model";
+import { AstWalker, modelUnit, PiElement, PiModelUnit, PiNamedElement } from "../ast";
 import { Language } from "../storage/index";
 import { CollectNamesWorker } from "./CollectNamesWorker";
 

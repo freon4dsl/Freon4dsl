@@ -1,6 +1,6 @@
 import { computed, observable, makeObservable } from "mobx";
 
-import { PiElement } from "../../model";
+import { PiElement } from "../../ast";
 import { Box, AliasBox, BoxFactory } from "./internal";
 
 export type BoolFunctie = () => boolean;

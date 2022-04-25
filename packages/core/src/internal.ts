@@ -7,7 +7,7 @@
  * concepts that are using them.
  */
 
-export * from "./model";
+export * from "./ast";
 // language holds no dependencies upon other parts
 export * from "./language";
 

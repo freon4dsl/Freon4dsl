@@ -1,4 +1,4 @@
-import { PiBinaryExpression, PiElement } from "../../model";
+import { PiBinaryExpression, PiElement } from "../../ast";
 import { Language } from "../../storage/index";
 import { BTREE, PiCaret, PiCaretPosition } from "../../util/index";
 import { Box } from "../boxes/index";

@@ -1,5 +1,5 @@
 import { makeObservable, observable } from "mobx";
-import { PiOwnerDescriptor, PiElement } from "../../model";
+import { PiOwnerDescriptor, PiElement } from "..";
 
 /**
  *  An element using the decorators should implement this interface.
