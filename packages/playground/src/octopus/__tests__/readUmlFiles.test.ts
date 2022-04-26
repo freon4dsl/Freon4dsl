@@ -1,5 +1,5 @@
-import { ModelUnitMetaType, OctopusModel, OctopusModelUnitType, UmlPart } from "../language/gen";
-import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
+import { OctopusModel, OctopusModelUnitType, UmlPart } from "../language/gen";
+import { OctopusEnvironment } from "../config/gen/OctopusEnvironment";
 import { GenericModelSerializer } from "@projectit/core";
 import { FileHandler } from "../../utils/FileHandler";
 
