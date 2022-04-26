@@ -273,11 +273,9 @@ export class ConceptUtils {
         let result: string = '';
         if (property.isPrimitive) {
             if (property.isList) {
+                // TODO here we known that matchPrimitiveList needs to be imported => add to imports
                 result = `if (result && !!toBeMatched.${property.name}) {
-                                toBeMatched.${property.name}.forEach(x => {
-                                    // TODO
-                                    console.log("LIST")
-                                });
+                                result = result && matchPrimitiveList(this.primListIdentifier, toBeMatched.primListIdentifier);
                           }`
             } else {
                 if (property.type === PiPrimitiveType.string || property.type === PiPrimitiveType.identifier) {
