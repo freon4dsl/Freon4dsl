@@ -6,10 +6,10 @@ import {
     SelectBox,
     SelectOption,
     PiEditor,
-    PiProjection, triggerToString, PiStyle, BoxFactory
+    triggerToString, PiStyle, BoxFactory
 } from "../editor";
 import { PiBinaryExpression, PiExpression } from "../ast";
-import { Language } from "../storage";
+import { Language } from "../language";
 import {
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,

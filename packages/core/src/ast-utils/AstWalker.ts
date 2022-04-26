@@ -1,7 +1,7 @@
-import { Language, Property } from "../storage/index";
-import { PiLogger } from "../util/index";
+import { Language, Property } from "../language";
+import { PiLogger } from "../util";
 import { AstWorker } from "./AstWorker";
-import { PiElement } from "./";
+import { PiElement } from "../ast";
 
 const LOGGER = new PiLogger("AstWalker");
 

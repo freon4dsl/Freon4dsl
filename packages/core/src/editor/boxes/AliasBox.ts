@@ -1,4 +1,4 @@
-import { Concept, Language } from "../../storage/index";
+import { Concept, Language } from "../../language";
 import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior, PiLogger } from "../../util";
 import { PiCreatePartAction } from "../actions/PiCreatePartAction";
 import { triggerToString, PiEditor, TextBox, isProKey } from "../internal";

@@ -1,5 +1,6 @@
 import { ElementSearchWorker } from "./ElementSearchWorker";
-import { AstWalker, PiElement, PiModelUnit } from "../ast";
+import { PiElement, PiModelUnit } from "../ast";
+import { AstWalker } from "../ast-utils";
 
 export class ElementSearcher {
 

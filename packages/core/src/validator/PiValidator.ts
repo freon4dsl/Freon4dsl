@@ -1,7 +1,6 @@
 import { PiElement } from "../ast";
 
 // Part of the ProjectIt Framework.
-// tag::validator-interface[]
 export interface PiValidator {
     /**
      * Returns a list of errors on 'modelelement' according to the validation rules
@@ -13,9 +12,7 @@ export interface PiValidator {
      */
     validate(modelelement: PiElement, includeChildren?: boolean): PiError[];
 }
-// end::validator-interface[]
 
-// tag::error-interface[]
 /**
  * An error consists of a message coupled to the faulty AST node, either a model
  * element or a list of model elements.
@@ -25,8 +22,6 @@ export class PiError {
     reportedOn: PiElement | PiElement[];    // the model element that does not comply
     locationdescription: string;            // human-readable indication of 'reportedOn'
     severity: PiErrorSeverity;              // indication of how serious the error is, default is 'To Do'
-// end::error-interface[]
-// tag::error-interface[]
     constructor(message: string, element: PiElement | PiElement[], locationdescription: string, severity?: PiErrorSeverity) {
         this.message = message;
         this.reportedOn = element;
@@ -39,8 +34,6 @@ export class PiError {
     }
 }
 
-// end::error-interface[]
-// tag::error-interface[]
 export enum PiErrorSeverity {
     Error = "Error",
     Improvement = "Improvement",
@@ -48,4 +41,3 @@ export enum PiErrorSeverity {
     Info = "Info",
     NONE = "NONE"
 }
-// end::error-interface[]

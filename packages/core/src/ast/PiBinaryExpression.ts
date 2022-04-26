@@ -1,4 +1,3 @@
-// tag::binary-expression-interface[]
 import { PiExpression } from "./PiExpression";
 
 export interface PiBinaryExpression extends PiExpression {
@@ -12,4 +11,3 @@ export interface PiBinaryExpression extends PiExpression {
 
     piPriority(): number;
 }
-// end::binary-expression-interface[]

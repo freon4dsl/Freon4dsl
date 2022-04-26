@@ -2,7 +2,7 @@ import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../ast";
 import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes";
 import { BehaviorExecutionResult, createKeyboardShortcutForList2, PiUtils } from "../../util";
-import { Language, PropertyKind } from "../../storage";
+import { Language, PropertyKind } from "../../language";
 import { PiEditor } from "../PiEditor";
 import { PiProjection } from "../PiProjection";
 import { PiScoper } from "../../scoper";

@@ -1,5 +1,5 @@
 import { PiElement } from "../ast";
-import { Language, Property } from "../language/Language";
+import { Language, Property } from "../language";
 import { isNullOrUndefined } from "../util";
 
 /**

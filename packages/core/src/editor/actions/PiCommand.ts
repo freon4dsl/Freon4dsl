@@ -1,7 +1,7 @@
 import { PiBinaryExpression, PiElement } from "../../ast";
-import { Language } from "../../storage/index";
-import { BTREE, PiCaret, PiCaretPosition } from "../../util/index";
-import { Box } from "../boxes/index";
+import { Language } from "../../language";
+import { BTREE, PiCaret, PiCaretPosition } from "../../util";
+import { Box } from "../boxes";
 import { isString } from "../PiAction";
 import { PiEditor } from "../PiEditor";
 import { CustomAction, EMPTY_POST_ACTION, PiActionTrigger, PiPostAction, ReferenceShortcut, triggerToString2 } from "./PiAction";
