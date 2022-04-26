@@ -1,5 +1,5 @@
-import { Language } from "../storage/index";
-import { PiBinaryExpression, PiElement, PiExpression, PiModel, PiModelUnit } from "./";
+import { Language } from "../language";
+import { PiBinaryExpression, PiElement, PiExpression, PiModel, PiModelUnit } from "../ast";
 
 export function isPiModel(element: PiElement): element is PiModel {
     return !!element && element.piIsModel && element.piIsModel();
@@ -58,12 +58,40 @@ export function isSubConcept(src, target: string): boolean {
     return src === target || Language.getInstance().classifier(target).subConceptNames.includes(src);
 }
 
+/**
+ * Returns true if all elements of 'toBeMatched' occur in 'list'.
+ * @param list
+ * @param toBeMatched
+ */
 export function matchElementList(list: PiElement[], toBeMatched: Partial<PiElement>[]): boolean {
     let foundMatch: boolean = true;
     for (const theirs of toBeMatched) {
         let xx: boolean = false;
         for (const mine of list) {
             if (mine.match(theirs)) {
+                xx = true;
+                break;
+            }
+        }
+        foundMatch = foundMatch && xx;
+        if (!foundMatch) {
+            return false;
+        }
+    }
+    return foundMatch;
+}
+
+/**
+ * Returns true if all elements of 'toBeMatched' occur in 'list'.
+ * @param list
+ * @param toBeMatched
+ */
+export function matchPrimitiveList(list: string[] | number[] | boolean[], toBeMatched: string[] | number[] | boolean[]): boolean {
+    let foundMatch: boolean = true;
+    for (const theirs of toBeMatched) {
+        let xx: boolean = false;
+        for (const mine of list) {
+            if (mine === theirs) {
                 xx = true;
                 break;
             }

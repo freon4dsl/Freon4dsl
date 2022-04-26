@@ -120,7 +120,7 @@ export class Language {
                 }
             }
         }
-        console.log("RETURNINGN NULL FOR " + typeName)
+        console.log("RETURNING NULL FOR " + typeName)
         return null;
     }
 
@@ -178,12 +178,14 @@ export class Language {
     public getPropertiesOfKind(typename: string, ptype: PropertyKind): Property[]  {
         let classifier: Classifier = Language.getInstance().classifier(typename);
         const foundProperties: Property[] = [];
-        for( const prop of classifier.properties.values()){
-            if( prop.propertyType === ptype) {
-                foundProperties.push(prop)
+        if (!!classifier) {
+            for (const prop of classifier.properties.values()) {
+                if (prop.propertyType === ptype) {
+                    foundProperties.push(prop);
+                }
             }
         }
-        return foundProperties
+        return foundProperties;
     }
 
     /**
@@ -251,7 +253,7 @@ export class Language {
 
     /**
      * Set Language name
-     * @param typeName
+     * @param name
      */
     set name(name: string) {
         this.languageName = name;

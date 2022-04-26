@@ -1,7 +1,7 @@
-import { Language, Property } from "../storage/index";
-import { PiLogger } from "../util/index";
+import { Language, Property } from "../language";
+import { PiLogger } from "../util";
 import { AstWorker } from "./AstWorker";
-import { PiElement } from "./";
+import { PiElement } from "../ast";
 
 const LOGGER = new PiLogger("AstWalker");
 
@@ -24,9 +24,9 @@ export class AstWalker {
      * method of any of the other workers will be skipped.
      *
      * @param modelelement the top node of the part of the tree to be visited
-     * @param includeChildren if true, the children of 'modelelement' will also be visited
+     * @param includeNode tests every child of 'modelelement', if true, it will also be visited
      */
-    public walk(modelelement: PiElement, includeChildren?: (elem: PiElement) => boolean) {
+    public walk(modelelement: PiElement, includeNode?: (elem: PiElement) => boolean) {
         if (this.myWorkers.length > 0) {
             let stopWalkingThisNode: boolean = false;
             for (const worker of this.myWorkers) {
@@ -40,8 +40,8 @@ export class AstWalker {
             // walk all parts
             for (const prop of partProperties) {
                 for (const child of Language.getInstance().getPropertyValue(modelelement, prop)) {
-                    if (includeChildren(child)) {
-                        this.walk(child, includeChildren);
+                    if (includeNode(child)) {
+                        this.walk(child, includeNode);
                     }
                 }
             }

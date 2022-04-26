@@ -1,9 +1,10 @@
 import { runInAction } from "mobx";
 import { PiLogger } from "./internal";
 // the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
-import { PiKey } from "./Keys";
+// import { PiKey } from "./Keys";
 import { Box, isProKey, PI_NULL_COMMAND, PiActionTrigger, PiCommand, PiEditor } from "../editor";
-import { PiOwnerDescriptor, PiElement, PiExpression, isPiExpression } from "../ast";
+import { PiOwnerDescriptor, PiElement, PiExpression } from "../ast";
+import { isPiExpression } from "../ast-utils";
 
 export type BooleanCallback = () => boolean;
 export type DynamicBoolean = BooleanCallback | boolean;

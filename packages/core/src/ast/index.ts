@@ -6,7 +6,4 @@ export * from "./PiOwnerDescriptor";
 export * from "./PiExpression";
 export * from "./PiModel";
 export * from "./PiModelUnit";
-export * from "./AstWorker";
-export * from "./AstWalker";
-export * from "./AstUtil";
 export * from "./decorators";

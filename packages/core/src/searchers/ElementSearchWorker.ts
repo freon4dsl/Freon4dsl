@@ -1,4 +1,5 @@
-import { AstWorker, PiElement } from "../ast";
+import { PiElement } from "../ast";
+import { AstWorker } from "../ast-utils";
 
 
 export class ElementSearchWorker implements AstWorker {

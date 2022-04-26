@@ -2,7 +2,7 @@ import { observable, makeObservable, action } from "mobx";
 import { PiElement } from "../ast";
 import { Box, BoxFactory, LabelBox, PiProjection } from "./internal";
 import { PiTableDefinition } from "./PiTables";
-import { Language } from "../storage";
+import { Language } from "../language";
 
 export class PiCompositeProjection implements PiProjection {
     private projections: Map<string, PiProjection> = new Map<string, PiProjection>();

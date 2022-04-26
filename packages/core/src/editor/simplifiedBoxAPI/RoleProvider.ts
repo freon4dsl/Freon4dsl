@@ -1,4 +1,4 @@
-import { Concept, Interface, ModelUnit } from "../../storage";
+import { Concept, Interface, ModelUnit } from "../../language";
 import { PiElement } from "../../ast";
 
 export class RoleProvider {

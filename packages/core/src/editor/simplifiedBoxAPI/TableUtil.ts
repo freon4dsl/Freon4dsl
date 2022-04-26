@@ -16,7 +16,7 @@ import { PiElement } from "../../ast";
 import * as Keys from "../../util/Keys";
 import { MetaKey, PiKey } from "../../util/Keys";
 import { NBSP, PiLogger, PiUtils } from "../../util";
-import { Language } from "../../storage";
+import { Language } from "../../language";
 import { RoleProvider } from "./RoleProvider";
 
 // headerStyle and rowStyle are the default styles for a table
