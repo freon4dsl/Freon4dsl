@@ -68,7 +68,7 @@
 <enddatatype>
 <associations>
  + Appendix.nextApp [0..1]    <->  + Appendix.prevApp [0..1]   ;
- + Chapter.prevChap [0..1]    <->  + Appendix.nextApp [0..1]   ;
+ + Chapter.prevChap [1..1]    <->  + Appendix.nextApp [0..1]   ;
  + Prependix.prevPrep [0..1]    <->  + Chapter.nextChap [0..1]   ;
  + Prependix.nextPrep [0..1]    <->  + Prependix.prevPrep [0..1]   ;
  + Chapter.nextChap [0..1]    <->  + Chapter.prevChap [0..1]   ;

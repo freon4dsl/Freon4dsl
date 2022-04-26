@@ -1,5 +1,5 @@
 import { GenericModelSerializer } from "@projectit/core";
-import { FileHandler } from "../../octopus/__tests__/FileHandler";
+import { FileHandler } from "../../utils/FileHandler";
 import { ExpTestEnvironment } from "../environment/gen/ExpTestEnvironment";
 import { ExpTestModelUnitType, Test, Unit1 } from "../language/gen";
 

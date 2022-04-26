@@ -19,6 +19,7 @@ export * from "./editor";
 export * from "./environment";
 export * from "./reader";
 export * from "./scoper";
+export * from "./searchers";
 export * from "./storage";
 export * from "./stdlib";
 export * from "./typer";

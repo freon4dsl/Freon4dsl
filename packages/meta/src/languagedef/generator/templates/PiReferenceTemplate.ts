@@ -118,6 +118,14 @@ export class PiReferenceTemplate {
                 }
                 this._PI_referred = referredElement;
             }
+            
+            /**
+             * Returns true if this reference has the same name as 'toBeMatched'.
+             * @param toBeMatched
+             */
+            match(toBeMatched: Partial<PiElementReference<T>>): boolean {
+                return toBeMatched.name === this.name;
+            }
         }`;
     }
 }

@@ -1,5 +1,14 @@
 import { Names, PROJECTITCORE, GenerationUtil } from "../../../utils";
-import { PiClassifier, PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty, PiPrimitiveType } from "../../metalanguage";
+import {
+    PiClassifier,
+    PiConcept,
+    PiConceptProperty,
+    PiPrimitiveProperty,
+    PiProperty,
+    PiPrimitiveType,
+    PiInterface
+} from "../../metalanguage";
+import * as console from "console";
 
 export class ConceptUtils {
 
@@ -18,10 +27,12 @@ export class ConceptUtils {
     }
 
     public static makeImportStatements(needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
+        // TODO remove or change the import for MatchUtil
         return `
             ${needsObservable ? `import { observable, makeObservable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
             import { ${modelImports.join(", ")} } from "./internal";
+            import { MatchUtil } from "../../utils/gen";
             `;
     }
 
@@ -233,6 +244,75 @@ export class ConceptUtils {
         }
                     return result;
                 }`;
+    }
+
+    public static makeMatchMethod(hasSuper: boolean, concept: PiClassifier, myName: string): string {
+        let propsToDo: PiProperty[] = [];
+        if (hasSuper && concept instanceof PiConcept) {
+            propsToDo = (concept as PiConcept).implementedProperties();
+        } else if (hasSuper && concept instanceof PiInterface) {
+            propsToDo = (concept as PiInterface).properties;
+        } else {
+            propsToDo = concept.allProperties();
+        }
+        return `/**
+                 * Matches a partial instance of this class to this object
+                 * based on the properties defined in the partial.
+                 * @param toBeMatched
+                 */
+                public match(toBeMatched: Partial<${myName}>): boolean {
+                    ${hasSuper ? `let result: boolean = super.match(toBeMatched);` : `let result: boolean = true;`}
+                    ${propsToDo.map(property => 
+                        `${this.makeMatchEntry(property)}`
+                    ).join("\n")}
+                    return result;
+                }`;
+    }
+
+    private static makeMatchEntry(property: PiProperty): string {
+        let result: string = '';
+        if (property.isPrimitive) {
+            if (property.isList) {
+                result = `if (result && !!toBeMatched.${property.name}) {
+                                toBeMatched.${property.name}.forEach(x => {
+                                    // TODO
+                                    console.log("LIST")
+                                });
+                          }`
+            } else {
+                if (property.type === PiPrimitiveType.string || property.type === PiPrimitiveType.identifier) {
+                    result = `if (result && toBeMatched.${property.name} !== null && toBeMatched.${property.name} !== undefined && toBeMatched.${property.name}.length > 0) { 
+                                result = result && this.${property.name} === toBeMatched.${property.name};
+                          }`;
+                } else {
+                    result = `if (result && toBeMatched.${property.name} !== null && toBeMatched.${property.name} !== undefined) { 
+                                result = result && this.${property.name} === toBeMatched.${property.name};
+                          }`;
+                }
+            }
+        } else if (property.isList) {
+            if (property.isPart) {
+                // TODO here we known that matchElementList needs to be imported => add to imports
+                result = `if (result && !!toBeMatched.${property.name}) {
+                              result = result && matchElementList(this.${property.name}, toBeMatched.${property.name});
+                          }`
+            } else {
+                // TODO here we known that MatchUtil.matchReferenceList needs to be imported => add to imports
+                // TODO here we known that Names.classifier(property.type) needs to be imported => add to imports
+                // result = `if (!!toBeMatched.${property.name}) {
+                //               MatchUtil.matchReferenceList<${Names.classifier(property.type)}>(this.${property.name}, toBeMatched.${property.name});
+                //           }`
+                result = `if (result && !!toBeMatched.${property.name}) {
+                              result = result && MatchUtil.matchReferenceList(this.${property.name}, toBeMatched.${property.name});
+                          }`
+            }
+        } else {
+            // same for both parts and references
+            result = `if (result && !!toBeMatched.${property.name}) { 
+                                result = result && this.${property.name}.match(toBeMatched.${property.name});
+                            }`;
+        }
+        return result;
     }
 }
 

@@ -5,6 +5,13 @@
       {
          "$typename": "Entity",
          "name": "ent45",
+         "construc": {
+            "$typename": "Method",
+            "name": "CONSTRUCTOR",
+            "body": null,
+            "parameters": [],
+            "declaredType": "ent45"
+         },
          "attributes": [
             {
                "$typename": "Attribute",
@@ -13,8 +20,17 @@
             }
          ],
          "methods": [],
+         "listOfReferences": [],
          "baseEntity": null
       }
    ],
-   "methods": []
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "METHOD12",
+         "body": null,
+         "parameters": [],
+         "declaredType": "String"
+      }
+   ]
 }

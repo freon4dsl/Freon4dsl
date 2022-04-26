@@ -57,3 +57,21 @@ export function isExactConcept(src, target: string): boolean {
 export function isSubConcept(src, target: string): boolean {
     return src === target || Language.getInstance().classifier(target).subConceptNames.includes(src);
 }
+
+export function matchElementList(list: PiElement[], toBeMatched: Partial<PiElement>[]): boolean {
+    let foundMatch: boolean = true;
+    for (const theirs of toBeMatched) {
+        let xx: boolean = false;
+        for (const mine of list) {
+            if (mine.match(theirs)) {
+                xx = true;
+                break;
+            }
+        }
+        foundMatch = foundMatch && xx;
+        if (!foundMatch) {
+            return false;
+        }
+    }
+    return foundMatch;
+}

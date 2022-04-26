@@ -20,4 +20,6 @@ export interface PiElement {
     piIsExpression(): boolean;
 
     piIsBinaryExpression(): boolean;
+
+    match(toBeMatched: Partial<PiElement>): boolean;
 }
