@@ -275,7 +275,7 @@ export class ConceptUtils {
             if (property.isList) {
                 // TODO here we known that matchPrimitiveList needs to be imported => add to imports
                 result = `if (result && !!toBeMatched.${property.name}) {
-                                result = result && matchPrimitiveList(this.primListIdentifier, toBeMatched.primListIdentifier);
+                                result = result && matchPrimitiveList(this.${property.name}, toBeMatched.${property.name});
                           }`
             } else {
                 if (property.type === PiPrimitiveType.string || property.type === PiPrimitiveType.identifier) {
