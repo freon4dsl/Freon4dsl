@@ -1,8 +1,8 @@
 import { PiElement } from "../ast";
-import { AstWorker } from "../ast-utils";
 import { PiWriter } from "../writer";
+import { SearchWorker } from "./SearchWorker";
 
-export class StringSearchWorker implements AstWorker {
+export class StringSearchWorker implements SearchWorker {
     private readonly toFind: string;
     private readonly writer: PiWriter;
     private readonly metatype: string;

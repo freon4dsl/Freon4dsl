@@ -10,6 +10,8 @@ import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemp
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate";
 import { LOG2USER } from "../../utils/UserLogger";
 
+// TODO use new AstWalker and AstWorker
+
 const LOGGER = new MetaLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
