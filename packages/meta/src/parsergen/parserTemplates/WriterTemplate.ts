@@ -26,8 +26,9 @@ import {
 } from "../../editordef/metalanguage";
 import { PiPrimitiveType } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
-
 import { PiEditProjectionGroup } from "../../editordef/metalanguage";
+
+// TODO more preconditions should be added to avoid null pointer errors
 
 export class WriterTemplate {
     private currentProjectionGroup: PiEditProjectionGroup = null;
@@ -216,21 +217,23 @@ export class WriterTemplate {
              *
             */
             private unparseReference(modelelement: PiElementReference<PiNamedElement>, short: boolean) {
-                const type: PiNamedElement = modelelement.referred;
-                if (!!type) {
-                    ${limitedConcepts.length > 0 
-                    ? 
-                        `${limitedConcepts.map((lim, index) =>
-                        `${index == 0 ? `` : `} else `}if (type instanceof ${Names.concept(lim)}) {
-                            this.unparse${Names.concept(lim)}(type, short);`).join("")}
-                        } else {
-                            this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";
-                        }`
-                    :
-                        `this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";`
+                if (!!modelelement) {
+                    const type: PiNamedElement = modelelement.referred;
+                    if (!!type) {
+                        ${limitedConcepts.length > 0 
+                        ? 
+                            `${limitedConcepts.map((lim, index) =>
+                            `${index == 0 ? `` : `} else `}if (type instanceof ${Names.concept(lim)}) {
+                                this.unparse${Names.concept(lim)}(type, short);`).join("")}
+                            } else {
+                                this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";
+                            }`
+                        :
+                            `this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";`
+                        }
+                    } else {
+                        this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";
                     }
-                } else {
-                    this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";
                 }
             }
        

@@ -1,17 +1,18 @@
 <!-- copied from https://github.com/sveltejs/svelte-repl/blob/master/src/SplitPane.svelte -->
-<!-- with three changes: -->
+<!-- with these changes: -->
 <!-- verbatim inclusion of function clamp (line 23) -->
 <!-- change of border value in '.pane' (line 108) -->
 <!-- change of background color in '.divider::after' (line 127) -->
+<!-- added initial values to all export let variables -->
 <script>
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
-    export let type;
+    export let type = 'vertical'; /* difference with original */
     export let pos = 50;
     export let fixed = false;
     export let buffer = 42;
-    export let min;
-    export let max;
+    export let min = 10; /* difference with original */
+    export let max = 100; /* difference with original */
     let w;
     let h;
     $: size = type === 'vertical' ? h : w;

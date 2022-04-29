@@ -1,5 +1,15 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiCompositeProjection, PiError, PiErrorSeverity, PiLogger, PiModel, PiModelUnit, PiNamedElement } from "@projectit/core";
+import {
+    PiCompositeProjection,
+    PiElement,
+    PiError,
+    PiErrorSeverity,
+    PiLogger,
+    PiModel,
+    PiModelUnit,
+    PiNamedElement,
+    Searcher
+} from "@projectit/core";
 import { get } from "svelte/store";
 import {
     currentModelName,
@@ -12,9 +22,9 @@ import {
     units,
     unitTypes
 } from "../webapp-ts-utils/WebappStore";
-import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
 import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 import { editorEnvironment, serverCommunication } from "../WebappConfiguration";
+import { conceptNames, modelErrors, searchResults, searchResultsOpen } from "../webapp-ts-utils/InfoPanelStore";
 
 const LOGGER = new PiLogger("EditorCommunication"); // .mute();
 
@@ -43,6 +53,8 @@ export class EditorCommunication {
         fileExtensions.set(tmp);
         // projectionNames are the same for every model in the language
         EditorCommunication.setProjectionNames();
+        conceptNames.set(["Attr", "Mthod"]);
+        // TODO conceptNames.set(editorEnvironment.conceptNames);
     }
 
     /**
@@ -76,7 +88,6 @@ export class EditorCommunication {
     /**
      * Creates a new model
      * @param modelName
-     * @param unitName
      */
     newModel(modelName: string) {
         LOGGER.log("new model called: " + modelName);
@@ -193,7 +204,7 @@ export class EditorCommunication {
      */
     private setUnitLists() {
         LOGGER.log("setUnitLists");
-        const newUnitList: PiNamedElement[][] = [];
+        const newUnitList: PiModelUnit[][] = [];
         for (const name of editorEnvironment.unitNames) {
             newUnitList.push(this.currentModel.getUnitsForType(name));
         }
@@ -213,8 +224,7 @@ export class EditorCommunication {
         // save the old current unit, if there is one
         this.saveCurrentUnit();
         // create new model instance in memory and set its name
-        const model: PiModel = editorEnvironment.newModel(modelName);
-        this.currentModel = model;
+        this.currentModel = editorEnvironment.newModel(modelName);
         currentModelName.set(modelName);
         // fill the new model with the units loaded from the server
         serverCommunication.loadUnitList(modelName, (unitNames: string[]) => {
@@ -397,17 +407,12 @@ export class EditorCommunication {
     }
 
     /**
-     * When an error in the errorlist is selected, the editor jumps to the faulty element.
-     * @param error
+     * When an error in the errorlist is selected, or a search result is selected, the editor jumps to the faulty element.
+     * @param item
      */
-    errorSelected(error: PiError) {
-        LOGGER.log("Error selected: '" + error.message + "', location:  '" + error.locationdescription + "'");
-        // TODO test this when editor setFocus is fully implemented
-        if (Array.isArray(error.reportedOn)) {
-            editorEnvironment.editor.selectElement(error.reportedOn[0]);
-        } else {
-            editorEnvironment.editor.selectElement(error.reportedOn);
-        }
+    selectElement(item: PiElement) {
+        LOGGER.log("Item selected");
+        editorEnvironment.editor.selectElement(item);
     }
 
     /**
@@ -474,15 +479,36 @@ export class EditorCommunication {
         return undefined;
     }
 
-    findText() {
-        // TODO implement replace()
+    findText(stringToFind: string) {
         LOGGER.log("findText called");
-        return undefined;
+        const searcher = new Searcher();
+        const results: PiElement[] = searcher.findString(stringToFind, this.currentUnit, editorEnvironment.writer);
+        if (!results || results.length === 0) {
+            // TODO message when there are no results
+        }
+        searchResults.set(results);
+        searchResultsOpen.set(true);
     }
 
-    findElement() {
-        // TODO implement replace()
-        LOGGER.log("findElement called");
-        return undefined;
+    findStructure(elemToMatch: Partial<PiElement>) {
+        LOGGER.log("findStructure called");
+        const searcher = new Searcher();
+        const results: PiElement[] = searcher.findStructure(elemToMatch, this.currentUnit);
+        if (!results || results.length === 0) {
+            // TODO message when there are no results
+        }
+        searchResults.set(results);
+        searchResultsOpen.set(true);
+    }
+
+    findNamedElement(nameToFind: string, metatypeSelected: string){
+        LOGGER.log("findNamedElement called");
+        const searcher = new Searcher();
+        const results: PiElement[] = searcher.findNamedElement(nameToFind, this.currentUnit, metatypeSelected);
+        if (!results || results.length === 0) {
+            // TODO message when there are no results
+        }
+        searchResults.set(results);
+        searchResultsOpen.set(true);
     }
 }

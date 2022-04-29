@@ -23,15 +23,9 @@
                 <span class={sortedBy === index ? "underline" : ""}>{column}</span>
             </div>
         {/each}
-        {#each $modelErrors as item}
+        {#each $searchResults as item}
             <div class="item" on:click={() => itemSelected(item)}>
-                {item.message}
-            </div>
-            <div class="item" on:click={() => itemSelected(item)}>
-                {item.locationdescription}
-            </div>
-            <div class="item" on:click={() => itemSelected(item)}>
-                {item.severity}
+                {showItem(item)}
             </div>
         {/each}
     </div>
@@ -44,11 +38,11 @@
     import arrowDown from "../../webapp/assets/icons/svg/arrow_downward.svg";
     import import_export from "../../webapp/assets/icons/svg/import_export_24px.svg";
 
-    import { sortErrors, modelErrors } from "../webapp-ts-utils/InfoPanelStore";
-    import { PiError } from "@projectit/core";
+    import { searchResults, sortResults } from "../webapp-ts-utils/InfoPanelStore";
     import { EditorCommunication } from "../editor/EditorCommunication";
+    import { PiElement, PiNamedElement } from "@projectit/core";
 
-    let headers: string[] = [ "Error message", "Location", "Severity"];
+    let headers: string[] = [ "Search results" ];
 
     let sortedBy: number = 0; // stores the column id by which the table is currently sorted, minus means unsorted
     let asc = false;
@@ -58,15 +52,21 @@
         asc = sortedBy === index ? !asc : false;
         sortedBy = index;
         // console.log("columnId: " + index);
-        $modelErrors = sortErrors($modelErrors, index, asc);
+        $searchResults = sortResults($searchResults, index, asc);
     }
 
-    const itemSelected = (item: PiError) => {
+    const itemSelected = (item: PiElement) => {
         // console.log("item clicked: " + item.message);
-        if (Array.isArray(item.reportedOn)) {
-            EditorCommunication.getInstance().selectElement(item.reportedOn[0]);
+        EditorCommunication.getInstance().selectElement(item);
+    }
+
+    const showItem = (item: PiElement): string => {
+        const nameProp = item["name"];
+        if (nameProp) {
+            return item.piLanguageConcept() + ": " + nameProp;
         } else {
-            EditorCommunication.getInstance().selectElement(item.reportedOn);
+            // TODO find owner that is named
+            return item.piLanguageConcept() + ": " + "unnamed";
         }
     }
 
@@ -75,7 +75,7 @@
 <style>
     .list {
         display: grid;
-        grid-template-columns: auto 180px 150px;
+        grid-template-columns: auto;
         grid-gap: 1px;
         max-width: 100%;
         margin: 0 auto;

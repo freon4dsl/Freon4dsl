@@ -378,7 +378,7 @@ export class ScoperTemplate {
             }
             result = `let owner = ${actualParamToGenerate};
                 if (!!owner) {
-                    let newScopeElement = this.myTyper.inferType(owner).toAstElement();
+                    let newScopeElement = this.myTyper.inferType(owner)?.toAstElement();
                     // 'newScopeElement' could be null, when the type found by the typer does not correspond to an AST element
                     if (!!newScopeElement) {
                         return FreonNamespace.create(newScopeElement);

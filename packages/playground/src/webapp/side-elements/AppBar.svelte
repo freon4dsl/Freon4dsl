@@ -20,7 +20,7 @@
 	{:else}
 		<!-- normally, the MenuGroup and a long title are shown-->
 		<MenuGroup/>
-		<div class="title">ProjectIt Environment for language <i>{$languageName}</i></div>
+		<div class="title">ProjectIt Environment for Language <i>{$languageName}</i></div>
 	{/if}
 
 	<ThemeToggle />
