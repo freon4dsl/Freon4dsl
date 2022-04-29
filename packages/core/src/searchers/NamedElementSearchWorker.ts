@@ -37,11 +37,11 @@ export class NamedElementSearchWorker implements SearchWorker {
         let valueOfNameProp = modelelement["name"];
         if (valueOfNameProp !== null && valueOfNameProp !== undefined && typeof valueOfNameProp === "string" && valueOfNameProp.length > 0) {
             if (!this.caseSensitive) {
-                if (valueOfNameProp.toLowerCase() === this.nameToFind.toLowerCase()) {
+                if (valueOfNameProp.toLowerCase().includes(this.nameToFind.toLowerCase())) {
                     this.result.push(modelelement);
                 }
             } else {
-                if (valueOfNameProp === this.nameToFind) {
+                if (valueOfNameProp.includes(this.nameToFind)) {
                     this.result.push(modelelement);
                 }
             }

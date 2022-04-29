@@ -1,5 +1,5 @@
 <!-- --bg-panel and --divider are parameters set by the svelte-mui library -->
-<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)" bind:visible={$deleteModelDialogVisible} on:keydown={handleKeydown}>
+<Dialog style={dialogStyle} bind:visible={$deleteModelDialogVisible} on:keydown={handleKeydown}>
 	<div slot="title" class="title">Delete model</div>
 
 	<div class="content">
@@ -14,7 +14,7 @@
 		{/each}
 	</div>
 
-	<div slot="actions" class="actions center">
+	<div slot="actions" class="actions">
 		<Button style="color:var(--theme-colors-secondary_button_text)" on:click={() => handleCancel()}>Cancel</Button>
 		<Button style="color:var(--theme-colors-primary_button_text)" on:click={() => handleSubmit()}>Submit</Button>
 	</div>
@@ -27,8 +27,9 @@
 
 <script lang="ts">
 	import {Button, Dialog, Radio} from 'svelte-mui';
-	import { currentModelName, deleteModelDialogVisible, modelNames } from "../webapp-ts-utils/WebappStore";
-	import { serverCommunication } from "../WebappConfiguration";
+	import { currentModelName, deleteModelDialogVisible, modelNames } from "../../webapp-ts-utils/WebappStore";
+	import { serverCommunication } from "../../WebappConfiguration";
+	import { dialogStyle } from "../StyleConstants";
 
 	let props = {
 		right: false,
@@ -45,17 +46,21 @@
 	}
 
 	const handleSubmit = () => {
-		// console.log("Submit called, model to be deleted: " + modelToBeDeleted);
+		// console.log("DeleteModel.Submit called, model to be deleted: " + modelToBeDeleted);
 		serverCommunication.deleteModel(modelToBeDeleted);
 		modelToBeDeleted = "";
 		$deleteModelDialogVisible = false;
 	}
 
 	const handleKeydown = (event) => {
-		switch (event.keyCode) {
-			case 13: { // Enter key
-				handleSubmit();
-				break;
+		if ($deleteModelDialogVisible) {
+			switch (event.keyCode) {
+				case 13: { // Enter key
+					event.stopPropagation();
+					event.preventDefault();
+					handleSubmit();
+					break;
+				}
 			}
 		}
 	}
@@ -67,6 +72,9 @@
 		margin-bottom: 1rem;
 		font-size: 13px;
 		color: var(--theme-colors-accent);
+	}
+	.actions {
+		float: right;
 	}
 	.title {
 		color: var(--theme-colors-inverse_color);

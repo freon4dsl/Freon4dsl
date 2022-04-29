@@ -15,6 +15,9 @@
 <NewUnitDialog />
 <DeleteUnitDialog />
 <DeleteModelDialog />
+<FindTextDialog />
+<FindStructureDialog />
+<FindNamedElementDialog />
 
 <UserMessage />
 
@@ -32,7 +35,7 @@
 					</section>
 
 					<section class="splitpane-section" slot=b>
-						<ErrorList/>
+						<InfoPanel/>
 					</section>
 				</SplitPane>
 			</div>
@@ -57,7 +60,7 @@
 					</section>
 
 					<section class="splitpane-section" slot=b>
-						<ErrorList/>
+						<InfoPanel/>
 					</section>
 				</SplitPane>
 			</div>
@@ -75,19 +78,22 @@
 	import LeftPanel from "./side-elements/LeftPanel.svelte";
 	import RightPanel from "./side-elements/HelpPanel.svelte";
 	import UserMessage from "./side-elements/UserMessage.svelte";
-	import OpenModelDialog from "./menu/OpenModelDialog.svelte";
-	import NewUnitDialog from "./menu/NewUnitDialog.svelte";
+	import OpenModelDialog from "./menu/file-dialogs/OpenModelDialog.svelte";
+	import NewUnitDialog from "./menu/file-dialogs/NewUnitDialog.svelte";
 
 	import { miniWindow, modelNames, openModelDialogVisible } from "./webapp-ts-utils/WebappStore";
 	import { EditorCommunication } from "./editor/EditorCommunication";
 	import ThemeContext from "./theming/ThemeContext.svelte";
 	import SplitPane from "./main/SplitPane.svelte";
 	import Navigator from "./main/Navigator.svelte";
-	import ErrorList from "./main/ErrorList.svelte";
+	import InfoPanel from "./main/InfoPanel.svelte";
 	import EditorGrid from "./main/EditorGrid.svelte";
-	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
-	import DeleteModelDialog from "./menu/DeleteModelDialog.svelte";
+	import DeleteUnitDialog from "./menu/file-dialogs/DeleteUnitDialog.svelte";
+	import DeleteModelDialog from "./menu/file-dialogs/DeleteModelDialog.svelte";
 	import { serverCommunication } from "./WebappConfiguration";
+	import FindTextDialog from "./menu/edit-dialogs/FindTextDialog.svelte";
+	import FindStructureDialog from "./menu/edit-dialogs/FindStructureDialog.svelte";
+	import FindNamedElementDialog from "./menu/edit-dialogs/FindNamedElementDialog.svelte";
 
 	const MAX_WIDTH_SMALL_VIEWPORT = 600;
 

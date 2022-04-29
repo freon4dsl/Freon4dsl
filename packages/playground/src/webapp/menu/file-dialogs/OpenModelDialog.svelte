@@ -1,6 +1,5 @@
 <!-- --bg-panel and --divider are parameters set by the svelte-mui library -->
-<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)"
-		bind:modal={modal}
+<Dialog style={dialogStyle}
 		bind:visible={$openModelDialogVisible}
 		on:keydown={handleKeydown}>
 	<div slot="title" class="title">Open or new model:</div>
@@ -37,10 +36,10 @@
 		modelNames,
 		openModelDialogVisible,
 		initializing
-	} from "../webapp-ts-utils/WebappStore";
-	import {EditorCommunication} from "../editor/EditorCommunication";
+	} from "../../webapp-ts-utils/WebappStore";
+	import {EditorCommunication} from "../../editor/EditorCommunication";
+	import { dialogStyle } from "../StyleConstants";
 
-	let modal: boolean = true; // TODO from FileMenu modal must be set to false
 	let internalSelected: string = "";
 	let newName: string = "";
 	let localErrorMessage: string = "";
@@ -63,6 +62,7 @@
 	}
 
 	const handleSubmit = () => {
+		// console.log("OpenModel.Submit called");
 		let comm = EditorCommunication.getInstance();
 		if (newNameOk()) {
 			comm.newModel(newName);
@@ -74,12 +74,14 @@
 	}
 
 	const handleKeydown = (event) => {
-		switch (event.keyCode) {
-			case 13: { // on Enter key try to submit
-				event.stopPropagation();
-				event.preventDefault();
-				handleSubmit();
-				break;
+		if ($openModelDialogVisible) {
+			switch (event.keyCode) {
+				case 13: { // on Enter key try to submit
+					event.stopPropagation();
+					event.preventDefault();
+					handleSubmit();
+					break;
+				}
 			}
 		}
 	}
@@ -119,6 +121,9 @@
 		margin-bottom: 1rem;
 		font-size: 13px;
 		color: var(--theme-colors-color);
+	}
+	.actions {
+		float: right;
 	}
 	.title {
 		color: var(--theme-colors-inverse_color);

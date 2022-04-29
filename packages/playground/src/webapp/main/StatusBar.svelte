@@ -25,7 +25,7 @@
 
 <script lang="ts">
     import { currentUnitName } from "../webapp-ts-utils/WebappStore";
-    import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
+    import { modelErrors } from "../webapp-ts-utils/InfoPanelStore";
     import { Icon } from "svelte-mui";
     import error from "../assets/icons/svg/error.svg";
     import check from "../assets/icons/svg/check_circle.svg";

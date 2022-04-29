@@ -31,7 +31,7 @@
             {
                "$typename": "Attribute",
                "name": "attr4",
-               "declaredType": "entity1"
+               "declaredType": "entityNoAttrs"
             },
             {
                "$typename": "Attribute",

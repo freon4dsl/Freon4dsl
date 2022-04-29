@@ -1,8 +1,8 @@
 import {Writable, writable} from 'svelte/store';
-import { PiNamedElement } from "@projectit/core";
+import { PiModelUnit } from "@projectit/core";
 
 // info about ProjectIt
-export const versionNumber = "0.1.1";
+export const versionNumber = "0.3.0";
 
 // info about the language
 export let unitTypes: Writable<string[]> = writable<string[]>([]);
@@ -22,8 +22,8 @@ export let currentUnitName: Writable<string> = writable<string>('');
 export let modelNames: Writable<string[]> = writable<string[]>([]);
 export let unitNames: Writable<string[]> = writable<string[]>([]);
 
-export let units: Writable<Array<PiNamedElement[]>> = writable<Array<PiNamedElement[]>>(null);
-export let toBeDeleted: Writable<PiNamedElement> = writable<PiNamedElement>(null);
+export let units: Writable<Array<PiModelUnit[]>> = writable<Array<PiModelUnit[]>>(null);
+export let toBeDeleted: Writable<PiModelUnit> = writable<PiModelUnit>(null);
 
 // info about the error in the working of the webapp that needs to be shown to the user
 // this is shown in a snackbar on top of the page, and should not be confused
@@ -49,12 +49,13 @@ export let miniWindow: Writable<boolean> = writable<boolean>(false);
 export let leftPanelVisible: Writable<boolean> = writable<boolean>(false);
 export let rightPanelVisible: Writable<boolean> = writable<boolean>(false);
 
+// variables for the FileMenu
 export let openModelDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let newUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let deleteUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let deleteModelDialogVisible: Writable<boolean> = writable<boolean>(false);
 
-
-
-
-
+// variables for the EditMenu
+export let findTextDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let findStructureDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let findNamedDialogVisible: Writable<boolean> = writable<boolean>(false);

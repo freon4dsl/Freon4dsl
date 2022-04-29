@@ -14,7 +14,7 @@ export class Searcher {
      * @param toFind
      * @param metatype
      */
-    findStructure(toBeSearched: PiElement, toFind: Partial<PiElement>, metatype?: string): PiElement[] {
+    findStructure(toFind: Partial<PiElement>, toBeSearched: PiElement, metatype?: string): PiElement[] {
         if (!!toFind && !!toBeSearched) {
             // create the finder
             let searchWorker = new StructureSearchWorker(toFind, metatype);

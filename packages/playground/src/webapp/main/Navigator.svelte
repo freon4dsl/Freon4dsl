@@ -6,25 +6,16 @@
             <li class="type-name">Unit Type <i>{name}</i>
                 <ul class="bullet-list">
                     {#each myUnits[index] as unit}
-                        <Menu style="border-radius: 2px; margin: 0px; color: var(--theme-colors-color); background-color: var(--theme-colors-inverse_color)" origin="top left" dy="50px">
+                        <Menu style={menuStyle} origin="top left" dy="50px">
                             <div class="item-name" slot="activator">
                                 <li>{unit.name}</li>
                             </div>
 
-                            <Menuitem style="font-size: var(--pi-menuitem-font-size);
-                                    margin: 4px 10px;
-                                    padding: 2px;
-                                    height: 18px;"
+                            <Menuitem style={menuItemStyle}
                                       on:click={() => openUnit(unit)}>Open</Menuitem>
-                            <Menuitem style="font-size: var(--pi-menuitem-font-size);
-                                    margin: 4px 10px;
-                                    padding: 2px;
-                                    height: 18px;"
+                            <Menuitem style={menuItemStyle}
                                       on:click={() => exportUnit(unit)}>Export</Menuitem>
-                            <Menuitem style="font-size: var(--pi-menuitem-font-size);
-                                    margin: 4px 10px;
-                                    padding: 2px;
-                                    height: 18px;"
+                            <Menuitem style={menuItemStyle}
                                       on:click={() => deleteUnit(unit)}>Delete</Menuitem>
 
                         </Menu>
@@ -37,7 +28,7 @@
 </div>
 
 <script lang="ts">
-    import type { PiNamedElement } from "@projectit/core";
+    import type { PiModelUnit } from "@projectit/core";
     import { Menu, Menuitem } from "svelte-mui";
     import {
         currentModelName,
@@ -46,17 +37,19 @@
         units,
         unitTypes
     } from "../webapp-ts-utils/WebappStore";
-    import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
+    import { modelErrors } from "../webapp-ts-utils/InfoPanelStore";
     import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
     import { EditorCommunication } from "../editor/EditorCommunication";
+    import { menuStyle, menuItemStyle } from "../menu/StyleConstants";
+
 
     // initialize myUnits to something that will not break the app
-    let myUnits: Array<PiNamedElement[]> = [];
+    let myUnits: Array<PiModelUnit[]> = [];
     myUnits[0] = [];
     // set myUnits when model units are found
     $: if ($units) {
         // there are units, so fill the local data structure
-        $units.forEach((xx: PiNamedElement[], index) => {
+        $units.forEach((xx: PiModelUnit[], index) => {
             // apparantly an empty array is represented as null
             // therefore this test to see if there is not a null value somewhere
             let empty: boolean = true;
@@ -78,17 +71,17 @@
         })
     }
 
-    const openUnit = (unit: PiNamedElement) => {
+    const openUnit = (unit: PiModelUnit) => {
         EditorCommunication.getInstance().openModelUnit(unit);
     };
 
-    const deleteUnit = (unit: PiNamedElement) => {
+    const deleteUnit = (unit: PiModelUnit) => {
         // console.log("delete unit called: " + unit.name);
         $toBeDeleted = unit;
         $deleteUnitDialogVisible = true;
     };
 
-    const exportUnit = (unit: PiNamedElement) => {
+    const exportUnit = (unit: PiModelUnit) => {
         // console.log("export unit called:" + unit.name);
         // do not try to export a unit with errors
         // parsing and unparsing will not proceed correctly
@@ -129,6 +122,18 @@
 </script>
 
 <style>
+    .menu {
+        border-radius: 2px;
+        margin: 0px;
+        color: var(--theme-colors-color);
+        background-color: var(--theme-colors-inverse_color);
+    }
+    .menuItem {
+        font-size: var(--pi-menuitem-font-size);
+        margin: 4px 10px;
+        padding: 2px;
+        height: 18px;
+    }
     .navigator {
         color: var(--theme-colors-color);
         font-size: var(--pi-error-font-size);

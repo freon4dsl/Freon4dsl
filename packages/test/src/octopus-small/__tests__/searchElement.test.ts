@@ -31,7 +31,7 @@ describe("Testing Search Structure", () => {
     test("search all associations in Book", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
-            const found: PiElement[] = searcher.findStructure(myUnit, {}, "Association");
+            const found: PiElement[] = searcher.findStructure({}, myUnit, "Association");
             expect (found.length).toBe(5);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -45,7 +45,7 @@ describe("Testing Search Structure", () => {
             // make the partial to be found
             const toBeFound: PiElement = AssociationEnd.create({ name: "prevChap", multiplicity: MultiplicityKind.create({ lowerBound: 1})});
             // search for it
-            const found: PiElement[] = searcher.findStructure(myUnit, toBeFound, "AssociationEnd");
+            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "AssociationEnd");
             expect (found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -59,7 +59,7 @@ describe("Testing Search Structure", () => {
             // make the partial to be found
             const toBeFound: PiElement = AssociationClass.create({ name: 'ChapterDependency' });
             // search for it
-            const found: PiElement[] = searcher.findStructure(myUnit, toBeFound, "AssociationClass");
+            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
             expect (found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -74,7 +74,7 @@ describe("Testing Search Structure", () => {
             const attrToBeFound: Attribute = Attribute.create({ name: "sameAuthor" });
             const toBeFound: PiElement = AssociationClass.create({ attributes: [attrToBeFound] });
             // search for it
-            const found: PiElement[] = searcher.findStructure(myUnit, toBeFound, "AssociationClass");
+            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
             expect (found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -90,7 +90,7 @@ describe("Testing Search Structure", () => {
             const endToBeFound: AssociationEnd = AssociationEnd.create({ baseType: refToBeFound });
             const toBeFound: PiElement = AssociationClass.create({ end1: endToBeFound });
             // search for it
-            const found: PiElement[] = searcher.findStructure(myUnit, toBeFound, "AssociationClass");
+            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
             expect (found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -104,7 +104,7 @@ describe("Testing Search Structure", () => {
             // make the partial to be found
             const toBeFound: PiElement = UmlClass.create({ name: "Chapter" });
             // search for it
-            const found: PiElement[] = searcher.findStructure(myUnit, toBeFound, "UmlClass");
+            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "UmlClass");
             expect (found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -119,7 +119,7 @@ describe("Testing Search Structure", () => {
             const attrToBeFound: Attribute = Attribute.create({ name: "autor" }); // typo in name!!!
             const toBeFound: PiElement = UmlClass.create({ name: "Chapter", attributes: [attrToBeFound] });
             // search for it
-            const found: PiElement[] = searcher.findStructure(myUnit, toBeFound, "UmlClass");
+            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "UmlClass");
             expect (found.length).toBe(0);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -134,7 +134,7 @@ describe("Testing Search Structure", () => {
             const refToBeFound: PiElementReference<IClassifier> = PiElementReference.create<IClassifier>("Boolean", "IClassifier");
             const toBeFound: Attribute = Attribute.create({ type: refToBeFound });
             // search for it
-            const found: PiElement[] = searcher.findStructure(myUnit, toBeFound, "Attribute");
+            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "Attribute");
             expect (found.length).toBe(3);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {

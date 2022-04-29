@@ -1,4 +1,4 @@
-<Menu style="border-radius: 2px; background-color: var(--theme-colors-inverse_color)" origin="top left" dy="50px">
+<Menu style={menuStyle}>
 		<span slot="activator" style="margin-right: 0px; display:block;">
 			<Button {...props}  title="File menu">{activatorTitle} <Icon> <svelte:component this={arrowDropDown}/> </Icon></Button>
 		</span>
@@ -6,10 +6,7 @@
     <div class="menu-list">
         {#each menuItems as item (item.id)}
             <!-- style needs to be added here, not as class -->
-            <Menuitem style="font-size: var(--pi-menuitem-font-size);
-                    margin: 4px 10px;
-                    padding: 2px;
-                    height: 28px;"
+            <Menuitem style={menuItemStyle}
                       on:click={() => handleClick(item.id)}>
                 {item.title}
             </Menuitem>
@@ -48,6 +45,7 @@
     } from "../webapp-ts-utils/WebappStore";
     import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
     import { serverCommunication } from "../WebappConfiguration";
+    import { menuStyle, menuItemStyle } from "./StyleConstants";
 
     // variables for the file import
     let file_selector;
