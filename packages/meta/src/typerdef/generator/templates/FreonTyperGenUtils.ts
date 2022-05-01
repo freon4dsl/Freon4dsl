@@ -125,9 +125,9 @@ export class FreonTyperGenUtils {
             result = exp.myLimited.name + "." + exp.myInstance.name;
         } else if (exp instanceof PitPropertyCallExp) {
             result = FreonTyperGenUtils.makeExpAsElement(exp.source, varName, varIsType, imports);
-            result += "." + exp.property.name;
+            result += "?." + exp.property.name;
             if (!exp.property.isPart) {
-                result += ".referred";
+                result += "?.referred";
             }
         } else if (exp instanceof PitSelfExp) {
             ListUtil.addIfNotPresent(imports, exp.returnType);

@@ -12,8 +12,6 @@ describe("testing Scoper on model units", () => {
         let model: Demo = new DemoModelCreator().createModelWithMultipleUnits();
         let scoper = DemoEnvironment.getInstance().scoper;
         let stdlib = DemoStdlib.getInstance();
-        initializeLanguage();    // needed for conversion to json
-        initializeScoperDef();
 
         test("visible elements in model", () => {
             let vi = scoper.getVisibleNames(model);

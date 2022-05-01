@@ -218,7 +218,7 @@ export class WriterTemplate {
             */
             private unparseReference(modelelement: PiElementReference<PiNamedElement>, short: boolean) {
                 if (!!modelelement) {
-                    const type: PiNamedElement = modelelement.referred;
+                    const type: PiNamedElement = modelelement?.referred;
                     if (!!type) {
                         ${limitedConcepts.length > 0 
                         ? 

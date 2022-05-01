@@ -8,9 +8,9 @@ describe("testing Scoper", () => {
         let model: Demo = new DemoModelCreator().createIncorrectModel();
         let scoper = new DemoScoper();
 
-        beforeEach(done => {
-            done();
-        });
+        // beforeEach(done => {
+        //     done();
+        // });
 
         test("visible elements in model and unit", () => {
             let vi = scoper.getVisibleNames(model);
@@ -102,9 +102,9 @@ describe("testing Scoper", () => {
         let model: Demo = new DemoModelCreator().createIncorrectModel();
         let scoper = new DemoScoper();
 
-        beforeEach(done => {
-            done();
-        });
+        // beforeEach(done => {
+        //     done();
+        // });
 
         test("isInscope 'InCorrectModel'", () => {
             let nameTotest: string = "InCorrectModel";

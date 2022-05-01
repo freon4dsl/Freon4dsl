@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { action, runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../ast";
 import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes";
 import { BehaviorExecutionResult, createKeyboardShortcutForList2, PiUtils } from "../../util";
@@ -37,11 +37,11 @@ export class BoxUtils {
         if (property !== undefined && property !== null && typeof property === "string") {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "textbox", index);
             if (isList && this.checkList(isList, index, propertyName)) {
-                result = BoxFactory.text(element, roleName, () => element[propertyName][index], (v: string) => (element[propertyName][index] = v), {
+                result = BoxFactory.text(element, roleName, () => element[propertyName][index], (v: string) => runInAction( () => {(element[propertyName][index] = v)}), {
                     placeHolder: `<${propertyName}>`
                 });
             } else {
-                result = BoxFactory.text(element, roleName, () => element[propertyName], (v: string) => (element[propertyName] = v), {
+                result = BoxFactory.text(element, roleName, () => element[propertyName], (v: string) => runInAction( () => {(element[propertyName] = v)}), {
                     placeHolder: `<${propertyName}>`
                 });
             }
@@ -73,7 +73,7 @@ export class BoxUtils {
                     element,
                     roleName,
                     () => element[propertyName][index].toString(),
-                    (v: string) => (element[propertyName][index] = Number.parseInt(v)),
+                    (v: string) => runInAction( () => {(element[propertyName][index] = Number.parseInt(v))}),
                     {
                         placeHolder: `<${propertyName}>`,
                         keyPressAction: (currentText: string, key: string, index: number) => {
@@ -85,7 +85,7 @@ export class BoxUtils {
                     element,
                     roleName,
                     () => element[propertyName].toString(),
-                    (v: string) => (element[propertyName] = Number.parseInt(v)),
+                    (v: string) => runInAction( () => {(element[propertyName] = Number.parseInt(v))}),
                     {
                         placeHolder: `<${propertyName}>`,
                         keyPressAction: (currentText: string, key: string, index: number) => {

@@ -143,11 +143,11 @@ export class ProjectionTemplate {
                 ${!!binaryConcepts && binaryConcepts.length > 0 && projectionGroup.name === Names.defaultProjectionName
                     // only add these two methods when there are binary concepts, i.e. only for the default projection group
                     ?
-                    `private ${Names.binaryProjectionFunction()} (element: ${Names.allConcepts(language)}) {
+                    `private ${Names.binaryProjectionFunction()} (element: PiBinaryExpression) {
                         switch( element.piLanguageConcept() ){
                                 ${binaryConcepts.map(c =>
                                     `case "${Names.classifier(c)}": 
-                                            return this.createBinaryBox(element as ${Names.classifier(c)}, "${projectionGroup.findExtrasForType(c).symbol}");
+                                            return this.createBinaryBox(element, "${projectionGroup.findExtrasForType(c).symbol}");
                                     `).join("")}
                         }
                         return null;
