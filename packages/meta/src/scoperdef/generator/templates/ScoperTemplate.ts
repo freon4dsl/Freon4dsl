@@ -341,6 +341,7 @@ export class ScoperTemplate {
         const loopVar: string = "loopVariable";
         let loopVarExtended = loopVar;
         if (myRef.isList) {
+            // TODO additionalNamespacesVisitied should also be done for listy references
             if (myRef instanceof PiConceptProperty) {
                 if (!myRef.isPart) {
                     loopVarExtended = loopVarExtended.concat(".referred");
@@ -363,7 +364,10 @@ export class ScoperTemplate {
                if (!!${namespaceExpression}) {
                   if (!this.additionalNamespacesVisited.includes(${namespaceExpression})){
                      this.additionalNamespacesVisited.push(${namespaceExpression});
-                     result.push(${namespaceExpression}.referred);
+                     const referred = ${namespaceExpression}.referred;
+                     if(!!referred) { 
+                        result.push(${namespaceExpression}.referred);
+                     }
                      this.additionalNamespacesVisited.pop();
                   }
                }`);
