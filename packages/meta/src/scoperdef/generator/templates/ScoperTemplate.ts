@@ -16,7 +16,7 @@ import {
 import { PiScopeDef, ScopeConceptDef } from "../../metalanguage";
 
 export class ScoperTemplate {
-    languageImports: string[] = []; // holds the names of all classifiers that need to be imported from the generated language structure
+    languageImports: string[] = ["PiElementReference"]; // holds the names of all classifiers that need to be imported from the generated language structure
     hasAlternativeScopeText: string = "";
     getAlternativeScopeText: string = "";
     getAdditionalNamespacetext = "";
@@ -59,6 +59,8 @@ export class ScoperTemplate {
          */      
         export class ${generatedClassName} implements ${scoperInterfaceName} {
             ${generateAlternativeScopes ? `myTyper: ${typerClassName};` : ``}
+            // Added to avoid loop when searching for additional namespaces
+            additionalNamespacesVisited: PiElementReference<PiNamedElement>[] = [];
     
             public resolvePathName(basePosition: PiElement, doNotSearch: string, pathname: string[], metatype?: ${langConceptType}): ${Names.PiNamedElement} {
                 // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
@@ -138,8 +140,8 @@ export class ScoperTemplate {
                         if( !visitedNamespaces.includes(nearestNamespace)) {
                             FreonNamespace.joinResultsWithShadowing(nearestNamespace.getVisibleElements(origin, metatype), result);
                             visitedNamespaces.push(nearestNamespace);
-                                for (const elem of this.additionalNamespaces(nearestNamespace._myElem)) {
-                                    this.getVisibleElementsIntern(elem, result, visitedNamespaces, metatype, true);
+                                for (const additionalNamespace of this.additionalNamespaces(nearestNamespace._myElem)) {
+                                    this.getVisibleElementsIntern(additionalNamespace, result, visitedNamespaces, metatype, true);
                                 }
                         }
                         modelelement = modelelement.piOwner();
@@ -355,10 +357,15 @@ export class ScoperTemplate {
             }`);
         } else {
             // TODO check use of toPiString()
+            const namespaceExpression = `element.${expression.appliedfeature.toPiString()}`;
             result = result.concat(`
                // generated based on '${expression.toPiString()}' 
-               if (!!element.${expression.appliedfeature.toPiString()}) {
-                   result.push(element.${expression.appliedfeature.toPiString()}.referred);
+               if (!!${namespaceExpression}) {
+                  if (!this.additionalNamespacesVisited.includes(${namespaceExpression})){
+                     this.additionalNamespacesVisited.push(${namespaceExpression});
+                     result.push(${namespaceExpression}.referred);
+                     this.additionalNamespacesVisited.pop();
+                  }
                }`);
         }
         return result;
@@ -371,8 +378,7 @@ export class ScoperTemplate {
             let actualParamToGenerate: string;
             // we know that typeof has exactly 1 actual parameter
             if ( expression.actualparams[0].sourceName === "container" ) {
-                actualParamToGenerate = `modelelement.piOwnerDescriptor().owner as ${allLangConcepts}`;
-                ListUtil.addIfNotPresent(this.languageImports, allLangConcepts);
+                actualParamToGenerate = `modelelement.piOwnerDescriptor().owner`;
             } else {
                 actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0]);
             }
