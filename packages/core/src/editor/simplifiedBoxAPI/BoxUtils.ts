@@ -141,11 +141,13 @@ export class BoxUtils {
                     }
                 },
                 (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
-                    if (option.id === labels.yes) {
-                        element[propertyName][index] = true;
-                    } else if (option.id === labels.no) {
-                        element[propertyName][index] = false;
-                    }
+                    runInAction( () => {
+                        if (option.id === labels.yes) {
+                            element[propertyName][index] = true;
+                        } else if (option.id === labels.no) {
+                            element[propertyName][index] = false;
+                        }
+                    });
                     return BehaviorExecutionResult.NULL;
                 }
             );
@@ -163,11 +165,13 @@ export class BoxUtils {
                     }
                 },
                 (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
-                    if (option.id === labels.yes) {
-                        element[propertyName] = true;
-                    } else if (option.id === labels.no) {
-                        element[propertyName] = false;
-                    }
+                    runInAction( () => {
+                        if (option.id === labels.yes) {
+                            element[propertyName] = true;
+                        } else if (option.id === labels.no) {
+                            element[propertyName] = false;
+                        }
+                    });
                     return BehaviorExecutionResult.NULL;
                 }
             );
@@ -234,7 +238,9 @@ export class BoxUtils {
                         setFunc(option.label);
                     });
                 } else {
-                    element[propertyName] = null;
+                    runInAction( () => {
+                        element[propertyName] = null;
+                    });
                 }
                 return BehaviorExecutionResult.EXECUTED;
             },
@@ -474,7 +480,7 @@ export class BoxUtils {
         let property = element[propertyName];
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
-        const isPart: PropertyKind = propInfo.propertyType;
+        const isPart: PropertyKind = propInfo.propertyKind;
         return { property, isList, isPart };
     }
 }

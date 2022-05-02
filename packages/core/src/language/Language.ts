@@ -10,7 +10,7 @@ export type Property = {
     type: string;
     isList: boolean;
     isPublic: boolean;
-    propertyType: PropertyKind;
+    propertyKind: PropertyKind;
 };
 export type Model = {
     typeName: string;
@@ -180,7 +180,7 @@ export class Language {
         const foundProperties: Property[] = [];
         if (!!classifier) {
             for (const prop of classifier.properties.values()) {
-                if (prop.propertyType === ptype) {
+                if (prop.propertyKind === ptype) {
                     foundProperties.push(prop);
                 }
             }

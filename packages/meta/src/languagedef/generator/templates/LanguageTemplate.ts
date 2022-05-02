@@ -43,7 +43,7 @@ export class LanguageTemplate {
                                         type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "primitive"
+                                        propertyKind: "primitive"
                                     });`
                     ).join("\n")}
                     ${language.modelConcept.allParts().map(prop =>
@@ -52,7 +52,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "part"
+                                        propertyKind: "part"
                                     });`
                     ).join("\n")}
                     ${language.modelConcept.allReferences().map(prop =>
@@ -61,7 +61,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "reference"
+                                        propertyKind: "reference"
                                     });`
                        ).join("\n")}
                         return model;
@@ -83,7 +83,7 @@ export class LanguageTemplate {
                                         type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "primitive"
+                                        propertyKind: "primitive"
                                     });`
                     ).join("\n")}
                             ${modelunit.allParts().map(prop =>
@@ -92,7 +92,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "part"
+                                        propertyKind: "part"
                                     });`
                     ).join("\n")}
                             ${modelunit.allReferences().map(prop =>
@@ -101,7 +101,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "reference"
+                                        propertyKind: "reference"
                                     });`
                     ).join("\n")}
                         return modelunit;
@@ -128,7 +128,7 @@ export class LanguageTemplate {
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "primitive"
+                                propertyKind: "primitive"
                             });`
                     ).join("\n")}
                     ${concept.allParts().map(prop =>
@@ -137,7 +137,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "part"
+                                propertyKind: "part"
                             });`
                     ).join("\n")}
                     ${concept.allReferences().map(prop =>
@@ -146,7 +146,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "reference"
+                                propertyKind: "reference"
                             });`
                     ).join("\n")}
                 return concept;
@@ -168,7 +168,7 @@ export class LanguageTemplate {
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "primitive"
+                                propertyKind: "primitive"
                             });`
                 ).join("\n")}
                 ${intface.allParts().map(prop =>
@@ -177,7 +177,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "part"
+                                propertyKind: "part"
                             });`
                 ).join("\n")}
                 ${intface.allReferences().map(prop =>
@@ -186,7 +186,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "reference"
+                                propertyKind: "reference"
                             });`
                 ).join("\n")}
                 return intface;
