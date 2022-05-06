@@ -6,4 +6,6 @@ import type { Writable } from 'svelte/store';
 export let initializing: Writable<boolean> = writable<boolean>(true);
 export let openModelDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let deleteModelDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let deleteUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let newUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 

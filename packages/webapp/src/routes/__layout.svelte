@@ -3,22 +3,20 @@
 	import type { TopAppBarComponentDev } from "@smui/top-app-bar";
 	import TopAppBar, { Row, Section, AutoAdjust } from "@smui/top-app-bar";
 	import IconButton from "@smui/icon-button";
-	import type { MenuComponentDev } from "@smui/menu";
-	import { Label, Icon } from "@smui/common";
+	import { Icon } from "@smui/common";
 	import { Svg } from "@smui/common/elements";
 	import { mdiGithub, mdiWeb, mdiWeatherNight, mdiWeatherSunny, mdiHelp, mdiMenu } from "@mdi/js";
 	import EditMenu from "../components/menus/EditMenu.svelte";
-	import { drawerOpen } from "../stores/DrawerStore.ts";
+	import { drawerOpen } from "../stores/DrawerStore";
 	import { openModelDialogVisible } from "../stores/DialogStore";
-	import OpenModelDialog from "../components/dialogs/OpenModelDialog.svelte";
+	import OpenModelDialog from "../components/dialogs/file-dialogs/OpenModelDialog.svelte";
 	import { onMount } from "svelte";
 	import { serverCommunication } from "../config/WebappConfiguration";
 	import { modelNames } from "../stores/ServerStore";
 	import FileMenu from "../components/menus/FileMenu.svelte";
-	import DeleteModelDialog from "../components/dialogs/DeleteModelDialog.svelte";
-
-	let menu: MenuComponentDev;
-	let active = "Home";
+	import DeleteModelDialog from "../components/dialogs/file-dialogs/DeleteModelDialog.svelte";
+	import NewUnitDialog from "../components/dialogs/file-dialogs/NewUnitDialog.svelte";
+	import ViewMenu from "../components/menus/ViewMenu.svelte";
 
 	// Theming
 	let topAppBar: TopAppBarComponentDev;
@@ -64,8 +62,9 @@
 			</IconButton>
 			<FileMenu/>
 			<EditMenu/>
+			<ViewMenu/>
 		</Section>
-		<Section align='center'>
+		<Section>
 			<Button>Freon App</Button>
 		</Section>
 		<Section align="end" toolbar>
@@ -101,6 +100,7 @@
 
 <OpenModelDialog/>
 <DeleteModelDialog/>
+<NewUnitDialog/>
 
 <style>
 	.main-frame {

@@ -45,9 +45,9 @@
     import Radio from '@smui/radio';
     import Textfield from '@smui/textfield';
     import HelperText from '@smui/textfield/helper-text';
-    import { modelNames } from "../../stores/ServerStore";
-    import { initializing, openModelDialogVisible } from "../../stores/DialogStore";
-    import { setUserMessage } from "../../stores/UserMessageStore";
+    import { modelNames } from "../../../stores/ServerStore";
+    import { initializing, openModelDialogVisible } from "../../../stores/DialogStore";
+    import { setUserMessage } from "../../../stores/UserMessageStore";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -95,7 +95,7 @@
         if (newName === internalSelected) {
             return false; // one of the existing models is selected, this is ok => not invalid
         } else {
-            if (!newName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
+            if (!newName.match(/^[a-z,A-Z][a-z,A-Z0-9_]*$/)) {
                 helperText = "Name may contain only characters and numbers, and must start with a character.";
                 return true;
             } else {

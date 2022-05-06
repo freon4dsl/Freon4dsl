@@ -8,6 +8,9 @@
 				<Item on:SMUI:action={() => (handleClick(item.id))}>
 					<Text>{item.title}</Text>
 				</Item>
+				{#if item.id === 2}
+				<Separator />
+				{/if}
 			{/each}
 		</List>
 	</Menu>
@@ -21,12 +24,13 @@
 <script lang="ts">
 	import type { MenuComponentDev } from '@smui/menu';
 	import Menu from '@smui/menu';
-	import List, { Item, Text } from '@smui/list';
+	import List, { Item, Separator, Text } from '@smui/list';
 	import Button, { Label } from '@smui/button';
 	import { currentUnitName } from "../../stores/ModelStore.ts";
 	import { MenuItem } from "../../ts-utils/MenuItem";
 	import { fileExtensions } from "../../stores/LanguageStore";
-	import { deleteModelDialogVisible, openModelDialogVisible } from "../../stores/DialogStore";
+	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../../stores/DialogStore";
+	import { setUserMessage } from "../../stores/UserMessageStore";
 
 	// variables for the file import
 	let file_selector;
@@ -67,14 +71,16 @@
         // serverCommunication.loadUnitList($currentModelName, (names: string[]) => {
         //     // list may be empty => this is the first unit to be stored
         //     $unitNames = names;
-        //     $newUnitDialogVisible = true;
+            $newUnitDialogVisible = true;
         // });
+		console.log("FileMenu.newUnit: " + $newUnitDialogVisible);
     }
 
     // save unit menuitem
     const saveUnit = () => {
         console.log("FileMenu.saveUnit: " + $currentUnitName);
         // EditorCommunication.getInstance().saveCurrentUnit();
+		setUserMessage(`Unit '${$currentUnitName}' saved.`);
     }
 
     // delete model menuitem
@@ -143,10 +149,10 @@
 
 	let menuItems: MenuItem[] = [
 		{title: "New or Open Model", action: changeModel, id: 1},
+		{title: 'Delete Model', action: deleteModel, id: 2},
 		{title: 'New Unit', action: newUnit, id: 3},
-		{title: 'Save Current Unit', action: saveUnit, id: 5},
-		{title: 'Delete Model', action: deleteModel, id: 6},
-		{title: '(Experimental) Import Unit(s)...', action: importUnit, id: 7},
+		{title: 'Save Current Unit', action: saveUnit, id: 4},
+		{title: '(Experimental) Import Unit(s)...', action: importUnit, id: 5},
 	];
 </script>
 

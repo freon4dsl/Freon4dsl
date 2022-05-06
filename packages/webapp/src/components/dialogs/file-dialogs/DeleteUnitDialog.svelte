@@ -1,12 +1,12 @@
 <Dialog
-		bind:open={$deleteModelDialogVisible}
+		bind:open={$deleteUnitDialogVisible}
 		aria-labelledby="event-title"
 		aria-describedby="event-content"
 		on:SMUIDialog:closed={closeHandler}
 >
 	<Title id="event-title">Delete model</Title>
 	<Content id="event-content">
-		Sure you want to delete model {$currentModelName}?
+		Sure you want to delete unit {$currentUnitName}?
 	</Content>
 	<Actions>
 		<Button color="secondary" variant="raised" action={cancelStr}>
@@ -22,8 +22,8 @@
 <script lang="ts">
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import Button, { Label } from '@smui/button';
-	import { currentModelName } from "../../stores/ModelStore";
-	import { deleteModelDialogVisible } from "../../stores/DialogStore";
+	import { currentUnitName } from "../../../stores/ModelStore";
+	import { deleteUnitDialogVisible } from "../../../stores/DialogStore";
 
 	const cancelStr: string = "cancel";
 	const submitStr: string = "submit";
@@ -43,6 +43,7 @@
 				response = "Ok, well, we'll keep it then.";
 				break;
 		}
+		console.log(response);
 	}
 
 	const handleCancel = () => {
