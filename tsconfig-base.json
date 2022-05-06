@@ -15,6 +15,9 @@
       ],
       "@projectit/server/*": [
         "packages/server/src/*"
+      ],
+      "@projectit/webapp/*": [
+        "packages/webapp/src/*"
       ]
     }
   }

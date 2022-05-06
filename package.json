@@ -70,6 +70,7 @@
     "packages/meta",
     "packages/playground",
     "packages/test",
-    "packages/server"
+    "packages/server",
+    "packages/webapp"
   ]
 }
