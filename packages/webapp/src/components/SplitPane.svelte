@@ -34,7 +34,6 @@
     onMount(() => {
         height = window.innerHeight - 88; // margins plus top-app-bar
         width = window.innerWidth;
-        console.log('height: ' + height + ', width: ' + width)
     })
 
     /* difference with original */
@@ -51,7 +50,6 @@
 
     function setPos(event) {
         const { top, left } = refs.container.getBoundingClientRect();
-        console.log("top: " + (event.clientY - top) + ", left: " + left + ", width: " + window.innerWidth );
         const px = type === 'vertical'
             ? (event.clientY - top)
             : (event.clientX - left);

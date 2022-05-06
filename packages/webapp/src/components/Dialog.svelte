@@ -1,5 +1,5 @@
 <Dialog
-	bind:open
+	bind:open={dialogOpen}
 	aria-labelledby="event-title"
 	aria-describedby="event-content"
 	on:SMUIDialog:closed={closeHandler}
@@ -18,7 +18,7 @@
 	</Actions>
 </Dialog>
 
-<Button on:click={() => (open = true)}>
+<Button on:click={() => (dialogOpen = true)}>
 	<Label>Open Dialog</Label>
 </Button>
 

@@ -1,60 +1,54 @@
 <script lang="ts">
-	import Button from '@smui/button';
-	import type { TopAppBarComponentDev } from '@smui/top-app-bar';
-	import TopAppBar, { Row, Section, Title, AutoAdjust } from '@smui/top-app-bar';
-	import IconButton from '@smui/icon-button';
-	import type { MenuComponentDev } from '@smui/menu';
-	import { Label, Icon } from '@smui/common';
-	import { Svg, H1 } from '@smui/common/elements';
-	import Dialog, { Content, Actions, InitialFocus } from '@smui/dialog';
-	import { mdiGithub, mdiWeb, mdiWeatherNight, mdiWeatherSunny, mdiHelp, mdiMenu } from '@mdi/js';
-	import EditMenu from '../components/EditMenu.svelte';
-	import { drawerOpen } from '../stores/DrawerStore.ts';
-	import { userMessage, userMessageOpen } from '../stores/UserMessageStore.ts';
+	import Button from "@smui/button";
+	import type { TopAppBarComponentDev } from "@smui/top-app-bar";
+	import TopAppBar, { Row, Section, AutoAdjust } from "@smui/top-app-bar";
+	import IconButton from "@smui/icon-button";
+	import type { MenuComponentDev } from "@smui/menu";
+	import { Label, Icon } from "@smui/common";
+	import { Svg } from "@smui/common/elements";
+	import { mdiGithub, mdiWeb, mdiWeatherNight, mdiWeatherSunny, mdiHelp, mdiMenu } from "@mdi/js";
+	import EditMenu from "../components/EditMenu.svelte";
+	import { drawerOpen } from "../stores/DrawerStore.ts";
+	import { openModelDialogVisible } from "../stores/DialogStore";
+	import OpenModelDialog from "../components/dialogs/OpenModelDialog.svelte";
+	import { onMount } from "svelte";
+	import { serverCommunication } from "../config/WebappConfiguration";
+	import { modelNames } from "../stores/ServerStore";
 
 	let menu: MenuComponentDev;
-	let active = 'Home';
+	let active = "Home";
 
 	// Theming
 	let topAppBar: TopAppBarComponentDev;
 
 	let lightTheme: boolean =
-		typeof window === 'undefined' || window.matchMedia('(prefers-color-scheme: light)').matches;
+			typeof window === "undefined" || window.matchMedia("(prefers-color-scheme: light)").matches;
 
 	function switchTheme() {
 		lightTheme = !lightTheme;
-		let themeLink = document.head.querySelector<HTMLLinkElement>('#theme');
+		let themeLink = document.head.querySelector<HTMLLinkElement>("#theme");
 		if (!themeLink) {
-			themeLink = document.createElement('link');
-			themeLink.rel = 'stylesheet';
-			themeLink.id = 'theme';
+			themeLink = document.createElement("link");
+			themeLink.rel = "stylesheet";
+			themeLink.id = "theme";
 		}
-		themeLink.href = `/smui${lightTheme ? '' : '-dark'}.css`;
+		themeLink.href = `/smui${lightTheme ? "" : "-dark"}.css`;
 		document.head
-			.querySelector<HTMLLinkElement>('link[href$="/smui-dark.css"]')
-			?.insertAdjacentElement('afterend', themeLink);
+				.querySelector<HTMLLinkElement>("link[href$=\"/smui-dark.css\"]")
+				?.insertAdjacentElement("afterend", themeLink);
 	}
 
-	// dialog
-	let dialogOpen = false;
+	onMount(async () => {
+		// get list of models from server
+		await serverCommunication.loadModelList((names: string[]) => {
+			if (names.length > 0) {
+				$modelNames = names;
+			}
+		});
 
-	function closeHandler(e: CustomEvent<{ action: string }>) {
-		switch (e.detail.action) {
-			case 'none':
-				$userMessage = 'Ok, well, you\'re wrong.';
-				break;
-			case 'all':
-				$userMessage = 'You are correct. All dogs are the best dog.';
-				break;
-			default:
-				// This means the user clicked the scrim or pressed Esc to close the dialog.
-				// The actions will be "close".
-				$userMessage = 'It\'s a simple question. You should be able to answer it.';
-				break;
-		}
-		$userMessageOpen = true;
-	}
-
+		// open the app with the open/new model dialog
+		$openModelDialogVisible = true;
+	});
 </script>
 
 
@@ -67,7 +61,7 @@
 				</Icon>
 			</IconButton>
 			<EditMenu/>
-			<Button on:click={() => (dialogOpen = true)}>
+			<Button on:click={() => {$openModelDialogVisible = true;}}>
 				<Label>Open Dialog</Label>
 			</Button>
 		</Section>
@@ -99,32 +93,13 @@
 	</Row>
 </TopAppBar>
 
-
-<Dialog
-	bind:open={dialogOpen}
-	aria-labelledby="event-title"
-	aria-describedby="event-content"
-	on:SMUIDialog:closed={closeHandler}
->
-	<Title id="event-title">The Best Dog</Title>
-	<Content id="event-content">
-		Out of all the dogs, which is the best dog?
-	</Content>
-	<Actions>
-		<Button action="none">
-			<Label>None of Them</Label>
-		</Button>
-		<Button action="all" default use={[InitialFocus]}>
-			<Label>All of Them</Label>
-		</Button>
-	</Actions>
-</Dialog>
-
 <AutoAdjust {topAppBar} >
 		<div class='main-frame'>
 			<slot />
 		</div>
 </AutoAdjust>
+
+<OpenModelDialog/>
 
 <style>
 	.main-frame {
