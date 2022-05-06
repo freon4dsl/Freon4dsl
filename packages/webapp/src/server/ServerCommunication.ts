@@ -7,7 +7,7 @@ import { setUserMessage } from "../stores/UserMessageStore";
 const LOGGER = new PiLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
 
-// the address of our server
+// TODO the address of our server
 // const node_port = process.env.NODE_PORT || 3001;
 // const SERVER_URL = `http://127.0.0.1:${node_port}/`;
 // console.log("NODE_PORT:" + node_port+ "  env " + JSON.stringify(process.env));

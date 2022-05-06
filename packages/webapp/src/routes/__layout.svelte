@@ -7,13 +7,15 @@
 	import { Label, Icon } from "@smui/common";
 	import { Svg } from "@smui/common/elements";
 	import { mdiGithub, mdiWeb, mdiWeatherNight, mdiWeatherSunny, mdiHelp, mdiMenu } from "@mdi/js";
-	import EditMenu from "../components/EditMenu.svelte";
+	import EditMenu from "../components/menus/EditMenu.svelte";
 	import { drawerOpen } from "../stores/DrawerStore.ts";
 	import { openModelDialogVisible } from "../stores/DialogStore";
 	import OpenModelDialog from "../components/dialogs/OpenModelDialog.svelte";
 	import { onMount } from "svelte";
 	import { serverCommunication } from "../config/WebappConfiguration";
 	import { modelNames } from "../stores/ServerStore";
+	import FileMenu from "../components/menus/FileMenu.svelte";
+	import DeleteModelDialog from "../components/dialogs/DeleteModelDialog.svelte";
 
 	let menu: MenuComponentDev;
 	let active = "Home";
@@ -60,10 +62,8 @@
 					<path fill="currentColor" d={mdiMenu} />
 				</Icon>
 			</IconButton>
+			<FileMenu/>
 			<EditMenu/>
-			<Button on:click={() => {$openModelDialogVisible = true;}}>
-				<Label>Open Dialog</Label>
-			</Button>
 		</Section>
 		<Section align='center'>
 			<Button>Freon App</Button>
@@ -100,6 +100,7 @@
 </AutoAdjust>
 
 <OpenModelDialog/>
+<DeleteModelDialog/>
 
 <style>
 	.main-frame {
