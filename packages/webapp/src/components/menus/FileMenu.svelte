@@ -1,8 +1,16 @@
-<div style="min-width: 50px;">
-	<Button on:click={() => menu.setOpen(true)}>
+<div
+		class={Object.keys(anchorClasses).join(' ')}
+		use:Anchor={{addClass: addClass, removeClass: removeClass}}
+		bind:this={anchor}
+>
+	<Button variant="raised" on:click={() => menu.setOpen(true)}>
 		<Label>File</Label>
 	</Button>
-	<Menu bind:this={menu}>
+	<Menu bind:this={menu}
+		  anchor={false}
+		  bind:anchorElement={anchor}
+		  anchorCorner="BOTTOM_LEFT"
+	>
 		<List>
 			{#each menuItems as item (item.id)}
 				<Item on:SMUI:action={() => (handleClick(item.id))}>
@@ -26,6 +34,7 @@
 	import Menu from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
 	import Button, { Label } from '@smui/button';
+	import { Anchor } from '@smui/menu-surface';
 	import { currentUnitName } from "../../stores/ModelStore.ts";
 	import { MenuItem } from "../../ts-utils/MenuItem";
 	import { fileExtensions } from "../../stores/LanguageStore";
@@ -43,6 +52,22 @@
 
 	let menu: MenuComponentDev;
 	let clicked = 'nothing yet';
+
+	// following is used to position the menu
+	let anchor: HTMLDivElement;
+	let anchorClasses: { [k: string]: boolean } = {};
+
+	const addClass = (className) => {
+		if (!anchorClasses[className]) {
+			anchorClasses[className] = true;
+		}
+	}
+	const removeClass = (className) => {
+		if (anchorClasses[className]) {
+			delete anchorClasses[className];
+			anchorClasses = anchorClasses;
+		}
+	}
 
 	// when a menu-item is clicked, this function is executed
     const handleClick = (id: number) => {
@@ -152,7 +177,7 @@
 		{title: 'Delete Model', action: deleteModel, id: 2},
 		{title: 'New Unit', action: newUnit, id: 3},
 		{title: 'Save Current Unit', action: saveUnit, id: 4},
-		{title: '(Experimental) Import Unit(s)...', action: importUnit, id: 5},
+		{title: 'Import Unit(s)...', action: importUnit, id: 5},
 	];
 </script>
 

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Button from "@smui/button";
+	import Button, { Label } from "@smui/button";
 	import type { TopAppBarComponentDev } from "@smui/top-app-bar";
 	import TopAppBar, { Row, Section, AutoAdjust } from "@smui/top-app-bar";
 	import IconButton from "@smui/icon-button";
 	import { Icon } from "@smui/common";
 	import { Svg } from "@smui/common/elements";
-	import { mdiGithub, mdiWeb, mdiWeatherNight, mdiWeatherSunny, mdiHelp, mdiMenu } from "@mdi/js";
+	import { mdiGithub, mdiWeb, mdiWeatherNight, mdiWeatherSunny, mdiHelp, mdiChevronRight, mdiChevronLeft } from "@mdi/js";
 	import EditMenu from "../components/menus/EditMenu.svelte";
 	import { drawerOpen } from "../stores/DrawerStore";
 	import { openModelDialogVisible } from "../stores/DialogStore";
@@ -17,6 +17,7 @@
 	import DeleteModelDialog from "../components/dialogs/file-dialogs/DeleteModelDialog.svelte";
 	import NewUnitDialog from "../components/dialogs/file-dialogs/NewUnitDialog.svelte";
 	import ViewMenu from "../components/menus/ViewMenu.svelte";
+	import { userMessageOpen } from "../stores/UserMessageStore";
 
 	// Theming
 	let topAppBar: TopAppBarComponentDev;
@@ -39,6 +40,8 @@
 	}
 
 	onMount(async () => {
+		// todo initialize language settings
+
 		// get list of models from server
 		await serverCommunication.loadModelList((names: string[]) => {
 			if (names.length > 0) {
@@ -46,8 +49,10 @@
 			}
 		});
 
-		// open the app with the open/new model dialog
-		$openModelDialogVisible = true;
+		if (!$userMessageOpen) {
+			// open the app with the open/new model dialog
+			$openModelDialogVisible = true;
+		}
 	});
 </script>
 
@@ -55,11 +60,12 @@
 <TopAppBar bind:this={topAppBar} variant="standard" dense>
 	<Row>
 		<Section align="start" >
-			<IconButton on:click={() => ($drawerOpen = !$drawerOpen)}>
+			<Button variant="raised" on:click={() => ($drawerOpen = !$drawerOpen)}>
 				<Icon component={Svg} viewBox="0 0 24 24">
-					<path fill="currentColor" d={mdiMenu} />
+					<path fill="currentColor" d={$drawerOpen ? mdiChevronLeft : mdiChevronRight} />
 				</Icon>
-			</IconButton>
+				<Label>Model</Label>
+			</Button>
 			<FileMenu/>
 			<EditMenu/>
 			<ViewMenu/>

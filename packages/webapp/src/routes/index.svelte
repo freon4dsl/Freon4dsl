@@ -4,22 +4,23 @@
 		Header,
 		Title,
 		Subtitle
-	} from '@smui/drawer';
-	import { drawerOpen } from '../stores/DrawerStore';
-	import { Content } from '@smui/card';
-	import DrawerContent from '../components/DrawerContent.svelte';
-	import Mainframe from '../components/Mainframe.svelte';
+	} from "@smui/drawer";
+	import { drawerOpen } from "../stores/DrawerStore";
+	import { Content } from "@smui/card";
+	import Mainframe from "../components/Mainframe.svelte";
+	import ModelInfo from "../components/menus/ModelInfo.svelte";
+	import { currentModelName } from "../stores/ModelStore";
 	// todo restrict height to 100vh
 </script>
 
 <div>
 	<Drawer variant='dismissible' bind:open={$drawerOpen}>
 		<Header>
-			<Title>Super Drawer</Title>
-			<Subtitle>It's the best drawer.</Subtitle>
+			<Title>{$currentModelName}</Title>
+
 		</Header>
 		<Content>
-			<DrawerContent />
+			<ModelInfo />
 		</Content>
 	</Drawer>
 	<AppContent>
