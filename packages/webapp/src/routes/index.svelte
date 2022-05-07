@@ -17,7 +17,6 @@
 	<Drawer variant='dismissible' bind:open={$drawerOpen}>
 		<Header>
 			<Title>{$currentModelName}</Title>
-
 		</Header>
 		<Content>
 			<ModelInfo />
