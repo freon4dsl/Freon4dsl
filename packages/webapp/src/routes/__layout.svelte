@@ -18,6 +18,7 @@
 	import NewUnitDialog from "../components/dialogs/file-dialogs/NewUnitDialog.svelte";
 	import ViewMenu from "../components/menus/ViewMenu.svelte";
 	import { userMessageOpen } from "../stores/UserMessageStore";
+	import { languageName } from "../stores/LanguageStore";
 
 	// Theming
 	let topAppBar: TopAppBarComponentDev;
@@ -66,12 +67,15 @@
 				</Icon>
 				<Label>Model</Label>
 			</Button>
+			<div class="space-right"></div>
 			<FileMenu/>
+			<div class="space-right"></div>
 			<EditMenu/>
+			<div class="space-right"></div>
 			<ViewMenu/>
 		</Section>
 		<Section>
-			<Button>Freon App</Button>
+			<div class="mdc-typography--headline6">Freon Environment for {$languageName}</div>
 		</Section>
 		<Section align="end" toolbar>
 			<IconButton aria-label="GitHub" target="_blank" href="https://github.com/projectit-org/ProjectIt">
@@ -112,4 +116,7 @@
 	.main-frame {
 			margin: 10px;
   }
+	.space-right {
+		margin-right: 6px;
+	}
 </style>

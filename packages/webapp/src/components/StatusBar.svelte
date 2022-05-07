@@ -57,5 +57,6 @@
 		box-sizing: border-box;
 		display: flex;
 		align-items: center;
+		background: teal;
 	}
 </style>

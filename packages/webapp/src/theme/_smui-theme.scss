@@ -7,7 +7,7 @@
 @use '@material/theme/index' as theme with (
   $primary: freon.$freon-primary,
   $secondary: freon.$freon-secondary,
-  $surface: #fff,
+  $surface: color.adjust(color-palette.$grey-50, $blue: +4),
   $background: #fff,
   $error: color-palette.$red-900,
   $on-error: green,

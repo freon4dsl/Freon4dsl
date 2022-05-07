@@ -1,6 +1,6 @@
 <div class='editor-part'>
 	<StatusBar />
-	<Paper elevation={10}>
+	<Paper elevation={2}>
 		<p> text text text
 			Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin
 			literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney
@@ -27,9 +27,9 @@
 			The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32
 			and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form,
 			accompanied by English versions from the 1914 translation by H. Rackham.</p>
-
 
 	</Paper>
+
 </div>
 
 <script lang="ts">
