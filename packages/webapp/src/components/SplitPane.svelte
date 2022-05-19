@@ -112,7 +112,7 @@
 <style>
     .container {
         position: relative;
-        width: calc(100vw - 30px);
+        width: calc(100vw - 20px);
         height: calc(100vh - 78px);
         min-height: 400px;
     }
