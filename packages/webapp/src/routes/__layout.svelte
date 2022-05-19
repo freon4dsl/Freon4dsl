@@ -1,24 +1,38 @@
 <script lang="ts">
+	import { onMount } from "svelte";
+
 	import Button, { Label } from "@smui/button";
 	import type { TopAppBarComponentDev } from "@smui/top-app-bar";
 	import TopAppBar, { Row, Section, AutoAdjust } from "@smui/top-app-bar";
 	import IconButton from "@smui/icon-button";
 	import { Icon } from "@smui/common";
 	import { Svg } from "@smui/common/elements";
+	import Drawer, {
+		AppContent,
+		Header,
+		Title
+	} from "@smui/drawer";
+	import { Content } from "@smui/card";
+
 	import { mdiGithub, mdiWeb, mdiWeatherNight, mdiWeatherSunny, mdiHelp, mdiChevronRight, mdiChevronLeft } from "@mdi/js";
-	import EditMenu from "../components/menus/EditMenu.svelte";
-	import { drawerOpen } from "../stores/DrawerStore";
-	import { openModelDialogVisible } from "../stores/DialogStore";
-	import OpenModelDialog from "../components/dialogs/file-dialogs/OpenModelDialog.svelte";
-	import { onMount } from "svelte";
+
 	import { serverCommunication } from "../config/WebappConfiguration";
-	import { modelNames } from "../stores/ServerStore";
+
+	import EditMenu from "../components/menus/EditMenu.svelte";
 	import FileMenu from "../components/menus/FileMenu.svelte";
+	import ModelInfo from "../components/menus/ModelInfo.svelte";
+	import ViewMenu from "../components/menus/ViewMenu.svelte";
+
+	import OpenModelDialog from "../components/dialogs/file-dialogs/OpenModelDialog.svelte";
 	import DeleteModelDialog from "../components/dialogs/file-dialogs/DeleteModelDialog.svelte";
 	import NewUnitDialog from "../components/dialogs/file-dialogs/NewUnitDialog.svelte";
-	import ViewMenu from "../components/menus/ViewMenu.svelte";
+
+	import { modelNames } from "../stores/ServerStore";
+	import { drawerOpen } from "../stores/DrawerStore";
+	import { openModelDialogVisible } from "../stores/DialogStore";
 	import { userMessageOpen } from "../stores/UserMessageStore";
 	import { languageName } from "../stores/LanguageStore";
+	import { currentModelName } from "../stores/ModelStore";
 
 	// Theming
 	let topAppBar: TopAppBarComponentDev;
@@ -103,8 +117,19 @@
 </TopAppBar>
 
 <AutoAdjust {topAppBar} >
+
 		<div class='main-frame'>
+			<Drawer variant='dismissible' bind:open={$drawerOpen}>
+				<Header>
+					<Title>{$currentModelName}</Title>
+				</Header>
+				<Content>
+					<ModelInfo />
+				</Content>
+			</Drawer>
+			<AppContent>
 			<slot />
+			</AppContent>
 		</div>
 </AutoAdjust>
 
