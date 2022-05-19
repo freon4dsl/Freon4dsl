@@ -11,7 +11,7 @@
     const searchTitle = "Search";
     let active = errorTitle;
 
-    // todo loading of erros and search results should also depend on weather something has changed in the unit shown
+    // todo loading of errors and search results should also depend on weather something has changed in the unit shown
     $: active === errorTitle ? $errorsLoaded = false : $searchResultLoaded = false;
 </script>
 
