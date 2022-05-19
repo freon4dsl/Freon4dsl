@@ -2,6 +2,7 @@
 	"name": "@projectit/webapp",
 	"version": "0.3.0",
 	"license": "MIT",
+	"type": "module",
 	"scripts": {
 		"dev": "svelte-kit dev",
 		"build": "svelte-kit build",
@@ -30,6 +31,7 @@
 		"@smui/form-field": "^6.0.0-beta.16",
 		"@smui/icon-button": "^6.0.0-beta.16",
 		"@smui/layout-grid": "^6.0.0-beta.16",
+		"@smui/linear-progress": "^6.0.0-beta.16",
 		"@smui/menu": "^6.0.0-beta.16",
 		"@smui/menu-surface": "^6.0.0-beta.16",
 		"@smui/radio": "^6.0.0-beta.16",

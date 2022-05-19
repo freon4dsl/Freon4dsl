@@ -32,6 +32,13 @@
 				</Text>
 			</Item>
 			<Separator />
+			<Item on:SMUI:action={() => {console.log('Validate: should load errors'); $errorsLoaded = true}}>
+				<Text>
+					<PrimaryText>Validate</PrimaryText>
+					<SecondaryText>Validate the current model unit.</SecondaryText>
+				</Text>
+			</Item>
+			<Separator />
 			<Item on:SMUI:action={() => (clicked = 'Delete')}>
 				<Text>
 					<PrimaryText>Delete</PrimaryText>
@@ -54,7 +61,7 @@
 		SecondaryText,
 	} from '@smui/list';
 	import Button, { Label } from '@smui/button';
-
+	import { errorsLoaded } from "../../stores/InfoPanelStore";
 	let menu: MenuComponentDev;
 	let clicked = 'nothing yet';
 	let anchor: HTMLDivElement;

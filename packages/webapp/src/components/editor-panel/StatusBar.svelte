@@ -3,8 +3,8 @@
 <script lang="ts">
 	// import { Box, isTextBox } from "@projectit/core";
 	// import { editorEnvironment } from "../WebappConfiguration";
-	import { currentModelName, currentUnitName } from "../stores/ModelStore";
-	import { modelErrors } from "../stores/ValidationStore";
+	import { currentModelName, currentUnitName } from "../../stores/ModelStore";
+	import { modelErrors } from "../../stores/InfoPanelStore";
 	import { mdiCheckCircle, mdiChevronRight, mdiAlertCircle } from '@mdi/js';
 	import { Svg } from '@smui/common/elements';
 	import { Icon } from '@smui/common';

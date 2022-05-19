@@ -140,7 +140,7 @@
     .divider::after {
         content: '';
         position: absolute;
-        background-color: red;
+        background-color: teal;
         /*background-color: var(--theme-colors-slider);         !* difference with original *!*/
     }
     .horizontal {

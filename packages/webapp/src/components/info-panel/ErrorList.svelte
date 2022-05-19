@@ -1,0 +1,99 @@
+<DataTable
+	sortable
+	bind:sort
+	bind:sortDirection
+	on:SMUIDataTable:sorted={handleSort}
+	table$aria-label="Error list"
+	style="width: 100%;"
+>
+	<Head>
+		<Row>
+			<!--
+				Note: whatever you supply to "columnId" is
+				appended with "-status-label" and used as an ID
+				for the hidden label that describes the sort
+				status to screen readers.
+
+				You can localize those labels with the
+				"sortAscendingAriaLabel" and
+				"sortDescendingAriaLabel" props on the DataTable.
+			-->
+			<Cell numeric columnId="id">
+				<!-- For numeric columns, icon comes first. -->
+				<IconButton class="material-icons">arrow_upward</IconButton>
+				<Label></Label>
+			</Cell>
+			<Cell columnId="message" style="width: 100%;">
+				<Label>Message</Label>
+				<!-- For non-numeric columns, icon comes second. -->
+				<IconButton class="material-icons">arrow_upward</IconButton>
+			</Cell>
+			<Cell columnId="locationdescription">
+				<Label>Location</Label>
+				<IconButton class="material-icons">arrow_upward</IconButton>
+			</Cell>
+			<Cell columnId="severity">
+				<Label>Severity</Label>
+				<IconButton class="material-icons">arrow_upward</IconButton>
+			</Cell>
+		</Row>
+	</Head>
+	<Body>
+	{#each $modelErrors as item}
+		<Row on:mousedown={handleClick(item)}>
+			<Cell numeric>{item.id}</Cell>
+			<Cell>{item.message}</Cell>
+			<Cell>{item.locationdescription}</Cell>
+			<Cell>{item.severity}</Cell>
+		</Row>
+	{/each}
+	</Body>
+
+	<LinearProgress
+			indeterminate
+			bind:closed={$errorsLoaded}
+			aria-label="Data is being loaded..."
+			slot="progress"
+	/>
+</DataTable>
+
+<script lang="ts">
+	import DataTable, {
+		Head,
+		Body,
+		Row,
+		Cell,
+		Label
+	} from '@smui/data-table';
+	import type { SortValue } from '@material/data-table'; // should be exported by SMUI, but gives error
+	import IconButton from '@smui/icon-button';
+	import LinearProgress from '@smui/linear-progress';
+	import { errorsLoaded, modelErrors, TempError } from "../../stores/InfoPanelStore";
+
+	// sorting of table
+	let sort: keyof TempError = 'id';
+	let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
+
+	function handleSort() {
+		$modelErrors.sort((a, b) => {
+			const [aVal, bVal] = [a[sort], b[sort]][
+				sortDirection === 'ascending' ? 'slice' : 'reverse'
+				]();
+			if (typeof aVal === 'string' && typeof bVal === 'string') {
+				return aVal.localeCompare(bVal);
+			}
+			return Number(aVal) - Number(bVal);
+		});
+		$modelErrors = $modelErrors;
+	}
+
+	// selection of row
+	function handleClick(item: TempError) {
+		console.log("item clicked: " + item.message);
+		// if (Array.isArray(item.reportedOn)) {
+		// 	// EditorCommunication.getInstance().selectElement(item.reportedOn[0]);
+		// } else {
+		// 	// EditorCommunication.getInstance().selectElement(item.reportedOn);
+		// }
+	}
+</script>

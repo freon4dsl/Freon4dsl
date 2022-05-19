@@ -3,7 +3,6 @@
 @use '@material/theme/color-palette';
 @use 'freon';
 
-// Svelte Colors!
 @use '@material/theme/index' as theme with (
   $primary: freon.$freon-primary,
   $secondary: freon.$freon-secondary,
