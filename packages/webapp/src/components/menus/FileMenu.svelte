@@ -35,13 +35,14 @@
 	import List, { Item, Separator, Text } from '@smui/list';
 	import Button, { Label } from '@smui/button';
 	import { Anchor } from '@smui/menu-surface';
-	import { currentUnitName } from "../../stores/ModelStore";
-	import { MenuItem } from "../../ts-utils/MenuItem";
+	import { currentModelName, currentUnitName, unitNames } from "../../stores/ModelStore";
+	import { allExtensionsToString, MenuItem, metaTypeForExtension } from "../../ts-utils/MenuUtils";
 	import { fileExtensions } from "../../stores/LanguageStore";
 	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../../stores/DialogStore";
 	import { setUserMessage } from "../../stores/UserMessageStore";
 	import { serverCommunication } from "../../config/WebappConfiguration";
 	import { modelNames } from "../../stores/ServerStore";
+	import { EditorCommunication } from "../../language/EditorCommunication";
 
 	// variables for the file import
 	let file_selector;
@@ -95,18 +96,17 @@
     const newUnit = () => {
 		console.log("FileMenu.newUnit");
         // get list of units from server, because new unit may not have the same name as an existing one
-        // serverCommunication.loadUnitList($currentModelName, (names: string[]) => {
-        //     // list may be empty => this is the first unit to be stored
-        //     $unitNames = names;
+        serverCommunication.loadUnitList($currentModelName, (names: string[]) => {
+            // list may be empty => this is the first unit to be stored
+            $unitNames = names;
             $newUnitDialogVisible = true;
-        // });
-		console.log("FileMenu.newUnit: " + $newUnitDialogVisible);
+        });
     }
 
     // save unit menuitem
     const saveUnit = () => {
         console.log("FileMenu.saveUnit: " + $currentUnitName);
-        // EditorCommunication.getInstance().saveCurrentUnit();
+        EditorCommunication.getInstance().saveCurrentUnit();
 		setUserMessage(`Unit '${$currentUnitName}' saved.`);
     }
 
@@ -114,14 +114,14 @@
     const deleteModel = () => {
         console.log("FileMenu.deleteModel");
         // get list of models from server
-        // serverCommunication.loadModelList((names: string[]) => {
-        //     // if list not empty, show dialog
-        //     if (names.length > 0) {
-        //         $modelNames = names;
+        serverCommunication.loadModelList((names: string[]) => {
+            // if list not empty, show dialog
+            if (names.length > 0) {
+                $modelNames = names;
                 $deleteModelDialogVisible = true;
-        //         // console.log("dialog visible is true")
-        //     }
-        // });
+                // console.log("dialog visible is true")
+            }
+        });
     }
 
     // import model unit menuitem
@@ -137,41 +137,41 @@
 			text.push(file.name);
 		}
         console.log("Files to import: " + text.map(f => f).join(", "))
-        // const reader = new FileReader();
+        const reader = new FileReader();
         // todo check whether the name of the unit already exists in the model
-        // for (let file of fileList) {
-        //     // todo async: wait for file to be uploaded before starting next
-        //     // todo do something with progress indicator
-        //     // reader.addEventListener('progress', (event) => {
-        //     //     if (event.loaded && event.total) {
-        //     //         const percent = (event.loaded / event.total) * 100;
-        //     //         console.log(`Progress: ${Math.round(percent)}`);
-        //     //     }
-        //     // });
-        //     // to check whether the file is recognisable as a model unit, we examine the file extension
-        //     const extension: string = file.name.split(".").pop();
-        //     let metaType: string = metaTypeForExtension(extension);
-        //     // if the right extension has been found, continue
-        //     if (metaType.length > 0) {
-        //         reader.readAsText(file);
-        //         reader.onload = function() {
-        //             const text = reader.result;
-        //             if (typeof text == "string") {
-        //                 try {
-        //                     EditorCommunication.getInstance().unitFromFile(reader.result as string, metaType);
-        //                 } catch (e) {
-        //                     setUserMessage(`${e.message}`);
-        //                 }
-        //             }
-        //         };
-        //         reader.onerror = function() {
-        //             setUserMessage(reader.error.message);
-        //         };
-        //     } else {
-        //         setUserMessage(`File ${file.name} does not have the right (extension) type.
-        //          Found: ${extension}, expected one of: ${allExtensionsToString()}.`);
-        //     }
-        // }
+        for (let file of fileList) {
+            // todo async: wait for file to be uploaded before starting next
+            // todo do something with progress indicator
+            // reader.addEventListener('progress', (event) => {
+            //     if (event.loaded && event.total) {
+            //         const percent = (event.loaded / event.total) * 100;
+            //         console.log(`Progress: ${Math.round(percent)}`);
+            //     }
+            // });
+            // to check whether the file is recognisable as a model unit, we examine the file extension
+            const extension: string = file.name.split(".").pop();
+            let metaType: string = metaTypeForExtension(extension);
+            // if the right extension has been found, continue
+            if (metaType.length > 0) {
+                reader.readAsText(file);
+                reader.onload = function() {
+                    const text = reader.result;
+                    if (typeof text == "string") {
+                        try {
+                            EditorCommunication.getInstance().unitFromFile(reader.result as string, metaType);
+                        } catch (e) {
+                            setUserMessage(`${e.message}`);
+                        }
+                    }
+                };
+                reader.onerror = function() {
+                    setUserMessage(reader.error.message);
+                };
+            } else {
+                setUserMessage(`File ${file.name} does not have the right (extension) type.
+                 Found: ${extension}, expected one of: ${allExtensionsToString()}.`);
+            }
+        }
     }
 
 	let menuItems: MenuItem[] = [

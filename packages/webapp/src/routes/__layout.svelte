@@ -20,8 +20,8 @@
 
 	import EditMenu from "../components/menus/EditMenu.svelte";
 	import FileMenu from "../components/menus/FileMenu.svelte";
-	import ModelInfo from "../components/menus/ModelInfo.svelte";
 	import ViewMenu from "../components/menus/ViewMenu.svelte";
+	import ModelInfo from "../components/drawer-panel/ModelInfo.svelte";
 
 	import OpenModelDialog from "../components/dialogs/file-dialogs/OpenModelDialog.svelte";
 	import DeleteModelDialog from "../components/dialogs/file-dialogs/DeleteModelDialog.svelte";
@@ -34,6 +34,10 @@
 	import { languageName } from "../stores/LanguageStore";
 	import { currentModelName } from "../stores/ModelStore";
 	import { EditorCommunication } from "../language/EditorCommunication";
+
+	// import this file to set which loggers will be active
+	import { muteLogs } from "../logging/LoggerSettings";
+	muteLogs();
 
 	// Theming
 	let topAppBar: TopAppBarComponentDev;

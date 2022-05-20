@@ -16,8 +16,9 @@ import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
+    noUnitAvailable,
     units,
-    noUnitAvailable, editorProgressShown
+    editorProgressShown, unitNames
 } from "../stores/ModelStore";
 import {
     fileExtensions,
@@ -110,7 +111,8 @@ export class EditorCommunication {
      * @param unitType
      */
     newUnit(newName: string, unitType: string) {
-        LOGGER.log("new unit called, unitType: " + unitType + ", name: " + newName);
+        LOGGER.log("EditorCommuncation.newUnit: unitType: " + unitType + ", name: " + newName);
+        editorProgressShown.set(true);
 
         // save the old current unit, if there is one
         this.saveCurrentUnit();
@@ -144,19 +146,15 @@ export class EditorCommunication {
      */
     private createNewUnit(newName: string, unitType: string) {
         LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: "+ newName);
-        // save the old current unit, if there is one
-        this.saveCurrentUnit();
         // create a new unit and add it to the current model
         const newUnit = EditorCommunication.getInstance().currentModel.newUnit(unitType);
-        // TODO check whether the next statement is valid in all cases: units should have a name attribute called 'name'
-        newUnit.name = newName;
         if (!!newUnit) {
+            newUnit.name = newName;
             // show the new unit in the editor
             this.showUnitAndErrors(newUnit);
         } else {
             setUserMessage(`Model unit of type '${unitType}' could not be created.`);
         }
-        currentUnitName.set(newName);
     }
 
     /**
@@ -166,13 +164,17 @@ export class EditorCommunication {
         LOGGER.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
         const unit: PiNamedElement = editorEnvironment.editor.rootElement as PiNamedElement;
         if (!!unit) {
-            if (unit.name && unit.name.length > 0 && this.currentModel.name && this.currentModel.name.length) {
-                await serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit);
-                currentUnitName.set(unit.name);
-                EditorCommunication.getInstance().setUnitLists();
-                this.hasChanges = false;
+            if (!!this.currentModel?.name && this.currentModel?.name.length) {
+                if (!!unit.name && unit.name.length > 0) {
+                    await serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit);
+                    currentUnitName.set(unit.name); //just in case the user has changed the name in the editor
+                    EditorCommunication.getInstance().setUnitLists();
+                    this.hasChanges = false;
+                } else {
+                    setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
+                }
             } else {
-                setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
+                LOGGER.log("Internal error: cannot save unit because current model is unknown.");
             }
         } else {
             LOGGER.log("No current model unit");
@@ -197,6 +199,7 @@ export class EditorCommunication {
             modelErrors.set([]);
         }
         // get rid of the name in the navigator
+        currentUnitName.set('');
         this.setUnitLists();
     }
 
@@ -210,7 +213,6 @@ export class EditorCommunication {
         LOGGER.log("setUnitLists");
         units.set(this.currentModel.getUnits());
     }
-    // TODO check all calls to setUnitLists => probably to many
 
     /**
      * Reads the model with name 'modelName' from the server and makes this the current model.
@@ -222,20 +224,20 @@ export class EditorCommunication {
         editorProgressShown.set(true);
         this.resetGlobalVariables();
 
-
         // save the old current unit, if there is one
         this.saveCurrentUnit();
         // create new model instance in memory and set its name
         this.currentModel = editorEnvironment.newModel(modelName);
         currentModelName.set(modelName);
         // fill the new model with the units loaded from the server
-        serverCommunication.loadUnitList(modelName, (unitNames: string[]) => {
+        serverCommunication.loadUnitList(modelName, (localUnitNames: string[]) => {
             // console.log(`callback unitNames: ${unitNames}`);
-            if (unitNames && unitNames.length > 0) {
+            unitNames.set(localUnitNames);
+            if (localUnitNames && localUnitNames.length > 0) {
                 // load the first unit completely and show it
                 // load all others units as interfaces
                 let first: boolean = true;
-                for (const unitName of unitNames) {
+                for (const unitName of localUnitNames) {
                     if (first) {
                         serverCommunication.loadModelUnit( modelName, unitName, (unit: PiModelUnit) => {
                             this.currentModel.addUnit(unit);
@@ -256,7 +258,7 @@ export class EditorCommunication {
     }
 
     /**
-     * When another unit is shown in th editor this function is called.
+     * When another model is shown in the editor this function is called.
      * It resets a series of global variables.
      * @private
      */
@@ -272,6 +274,7 @@ export class EditorCommunication {
      */
     async openModelUnit(newUnit: PiModelUnit) {
         LOGGER.log("openModelUnit called, unitName: " + newUnit.name);
+        // TODO currentUnitName is not updated properly
         if (!!this.currentUnit && newUnit.name === this.currentUnit.name ) {
             // the unit to open is the same as the unit in the editor, so we are doing nothing
             LOGGER.log("openModelUnit doing NOTHING");
@@ -334,10 +337,10 @@ export class EditorCommunication {
         try {
             // the following also adds the new unit to the model
             elem = editorEnvironment.reader.readFromString(content, metaType, this.currentModel) as PiModelUnit;
-            // add the new unit to the navigator
-            this.setUnitLists();
-            // set elem in editor
-            this.showUnitAndErrors(elem);
+            if (!!elem) {
+                // set elem in editor
+                this.showUnitAndErrors(elem);
+            }
         } catch (e) {
             setUserMessage(e.message, severityType.error);
         }
