@@ -48,6 +48,7 @@
     import { modelNames } from "../../../stores/ServerStore";
     import { initializing, openModelDialogVisible } from "../../../stores/DialogStore";
     import { setUserMessage } from "../../../stores/UserMessageStore";
+    import { EditorCommunication } from "../../../language/EditorCommunication";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -60,15 +61,16 @@
     let helperText: string = initialHelperText;
 
     function closeHandler(e: CustomEvent<{ action: string }>) {
+        // console.log("initalizing: " + $initializing);
         switch (e.detail.action) {
             case submitStr:
-                // let comm = EditorCommunication.getInstance();
+                let comm = EditorCommunication.getInstance();
                 if (internalSelected?.length > 0) { // should be checked first, because newName depends on it
-                    // comm.openModel(internalSelected);
+                    comm.openModel(internalSelected);
                     console.log("OPENING EXISTING MODEL: " + newName);
                     $initializing = false;
                 } else if (!newNameInvalid()) {
-                    // comm.newModel(newName);
+                    comm.newModel(newName);
                     console.log("CREATING NEW MODEL: " + newName);
                     $initializing = false;
                 } else {
@@ -82,7 +84,6 @@
                 break;
             default:
                 // This means the user clicked the scrim or pressed Esc to close the dialog.
-                // The actions will be "close".
                 if ($initializing) {
                     setUserMessage("You must select or create a model, before you can start!");
                 }
@@ -105,10 +106,7 @@
     }
 
     function resetVariables() {
-        // if ($initializing) {
-        //     $initializing = false;
-        // }
-        // $modelNames = [];
+        $modelNames = [];
         $openModelDialogVisible = false;
         newName = "";
         internalSelected = "";

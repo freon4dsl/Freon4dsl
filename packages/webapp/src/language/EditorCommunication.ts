@@ -17,7 +17,7 @@ import {
     currentModelName,
     currentUnitName,
     units,
-    noUnitAvailable
+    noUnitAvailable, editorProgressShown
 } from "../stores/ModelStore";
 import {
     fileExtensions,
@@ -94,6 +94,7 @@ export class EditorCommunication {
      */
     newModel(modelName: string) {
         LOGGER.log("new model called: " + modelName);
+        editorProgressShown.set(true);
         // save the old current unit, if there is one
         this.saveCurrentUnit();
         // reset all visible information on the model and unit
@@ -218,7 +219,9 @@ export class EditorCommunication {
      */
     async openModel(modelName: string) {
         LOGGER.log("EditorCommunication.openmodel(" + modelName + ")");
+        editorProgressShown.set(true);
         this.resetGlobalVariables();
+
 
         // save the old current unit, if there is one
         this.saveCurrentUnit();
@@ -403,6 +406,7 @@ export class EditorCommunication {
             this.setUnitLists();
             this.hasChanges = false;
         }
+        editorProgressShown.set(false);
     }
 
     /**

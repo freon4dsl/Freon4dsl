@@ -14,8 +14,14 @@
   $on-secondary: red,
   $on-surface: black
 );
-
+@use '@material/linear-progress/index' as linear-progress;
 @use './app';
+
+// my-colored-bar is used for the progress indicator in the EditorPart component
+.my-colored-bar {
+  @include linear-progress.bar-color(theme.$red-500);
+  @include linear-progress.buffer-color(theme.$red-100);
+}
 
 html,
 body {
