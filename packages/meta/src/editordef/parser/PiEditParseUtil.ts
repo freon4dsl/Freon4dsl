@@ -17,7 +17,7 @@ export class PiEditParseUtil {
      */
     public static normalize(projection: PiEditProjection): void {
         // everything is parsed as one line, now break this line on ParsedNewLines and remove empty lines
-        projection.lines = PiEditParseUtil.normalizeLine(projection.lines[0]);
+        // projection.lines = PiEditParseUtil.normalizeLine(projection.lines[0]);
 
         // find the indentation of the complete projection, which should be ignored
         let ignoredIndent = 0;
@@ -26,18 +26,24 @@ export class PiEditParseUtil {
         projection.lines.forEach(line => {
             const firstItem = line.items[0];
             if (firstItem instanceof PiEditParsedProjectionIndent) {
-                ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
-            }
-            line.items.forEach(item => {
-                if (item instanceof PiOptionalPropertyProjection) {
-                    item.lines.forEach(subLine => {
-                        const firstItem = subLine.items[0];
-                        if (firstItem instanceof PiEditParsedProjectionIndent) {
-                            ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
-                        }
-                    });
+                if(projection.classifier.name === "Entity") {
+                    console.log("ignoredIndent = " + ignoredIndent, "firstItem = " + firstItem.amount);
                 }
-            });
+                ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
+                if(projection.classifier.name === "Entity") {
+                    console.log("ignoredIndent calculted as = " + ignoredIndent);
+                }
+            }
+            // line.items.forEach(item => {
+            //     if (item instanceof PiOptionalPropertyProjection) {
+            //         item.lines.forEach(subLine => {
+            //             const firstItem = subLine.items[0];
+            //             if (firstItem instanceof PiEditParsedProjectionIndent) {
+            //                 ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
+            //             }
+            //         });
+            //     }
+            // });
         });
 
         // determine the indent of each line, while ignoring the 'ignoredIndent'
@@ -75,7 +81,7 @@ export class PiEditParseUtil {
         });
     }
 
-    private static normalizeLine(line: PiEditProjectionLine): PiEditProjectionLine[] {
+    public static normalizeLine(line: PiEditProjectionLine): PiEditProjectionLine[] {
         const result: PiEditProjectionLine[] = [];
         let currentLine = new PiEditProjectionLine();
         // handle an empty projection: error message will be given by the checker
