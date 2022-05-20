@@ -122,7 +122,7 @@ describe("Testing Default Scoper", () => {
             errorMessages.push(mess.message + " in " + mess.locationdescription);
         });
         print("!!! found errors", errorMessages);
-        expect(errors.length).toBe(9);
+        expect(errors.length).toBe(8);
         expect(errorMessages.includes("Cannot find reference 'private30_OF_private28_OF_private24_OF_unit16_OF_model' in dsRefs of unit1_OF_model")).toBeTruthy();
         expect(errorMessages.includes("Cannot find reference 'private27_OF_public25_OF_private24_OF_unit16_OF_model' in dsRefs of unit1_OF_model")).toBeTruthy();
         expect(errorMessages.includes("Cannot find reference 'public29_OF_private28_OF_private24_OF_unit16_OF_model' in conceptRefs of public2_OF_unit1_OF_model")).toBeTruthy();
