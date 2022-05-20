@@ -35,7 +35,7 @@
 	import List, { Item, Separator, Text } from '@smui/list';
 	import Button, { Label } from '@smui/button';
 	import { Anchor } from '@smui/menu-surface';
-	import { currentUnitName } from "../../stores/ModelStore.ts";
+	import { currentUnitName } from "../../stores/ModelStore";
 	import { MenuItem } from "../../ts-utils/MenuItem";
 	import { fileExtensions } from "../../stores/LanguageStore";
 	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../../stores/DialogStore";
