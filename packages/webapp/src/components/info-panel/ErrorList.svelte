@@ -39,9 +39,9 @@
 		</Row>
 	</Head>
 	<Body>
-	{#each $modelErrors as item}
-		<Row on:mousedown={handleClick(item)}>
-			<Cell numeric>{item.id}</Cell>
+	{#each $modelErrors as item, index}
+		<Row on:mousedown={xxx(item)}>
+			<Cell numeric>{index}</Cell>
 			<Cell>{item.message}</Cell>
 			<Cell>{item.locationdescription}</Cell>
 			<Cell>{item.severity}</Cell>
@@ -68,10 +68,11 @@
 	import type { SortValue } from '@material/data-table'; // should be exported by SMUI, but gives error
 	import IconButton from '@smui/icon-button';
 	import LinearProgress from '@smui/linear-progress';
-	import { errorsLoaded, modelErrors, TempError } from "../../stores/InfoPanelStore";
+	import { errorsLoaded, modelErrors } from "../../stores/InfoPanelStore";
+	import type { PiError } from "@projectit/core";
 
 	// sorting of table
-	let sort: keyof TempError = 'id';
+	let sort: keyof PiError = 'message';
 	let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
 
 	function handleSort() {
@@ -88,7 +89,7 @@
 	}
 
 	// selection of row
-	function handleClick(item: TempError) {
+	const handleClick = (item: PiError) => {
 		console.log("item clicked: " + item.message);
 		// if (Array.isArray(item.reportedOn)) {
 		// 	// EditorCommunication.getInstance().selectElement(item.reportedOn[0]);
@@ -96,4 +97,9 @@
 		// 	// EditorCommunication.getInstance().selectElement(item.reportedOn);
 		// }
 	}
+	// todo handleCLick
+	function xxx(e: CustomEvent) {
+		console.log("P+OK: " + e.detail)
+	}
+
 </script>

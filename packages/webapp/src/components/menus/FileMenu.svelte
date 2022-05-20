@@ -40,6 +40,8 @@
 	import { fileExtensions } from "../../stores/LanguageStore";
 	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../../stores/DialogStore";
 	import { setUserMessage } from "../../stores/UserMessageStore";
+	import { serverCommunication } from "../../config/WebappConfiguration";
+	import { modelNames } from "../../stores/ServerStore";
 
 	// variables for the file import
 	let file_selector;
@@ -81,12 +83,12 @@
     const changeModel = () => {
 		console.log("FileMenu.changeModel");
         // get list of models from server
-        // serverCommunication.loadModelList((names: string[]) => {
-        //     if (names.length > 0) {
-        //         $modelNames = names;
-        //     }
+        serverCommunication.loadModelList((names: string[]) => {
+            if (names.length > 0) {
+                $modelNames = names;
+            }
             $openModelDialogVisible = true;
-        // });
+        });
     }
 
     // new unit menuitem

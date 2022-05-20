@@ -4,6 +4,4 @@
 	</h1>
 	<img src="/1000530-oops-emoji-icon-file-hd.png" alt="OOPS" width="200" height="200" >
 	<p class='mdc-typography--body1'>
-Maybe you would like to go back to the
-		<a href="/"><b>main content</b></a>.
 </div>

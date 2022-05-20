@@ -1,9 +1,29 @@
 <div class='editor-part'>
     <StatusBar/>
-    <DummyEditor/>
+    {#if ($noUnitAvailable)}
+        <div class="message">
+        <div class="mdc-typography--subtitle1">
+            Please, select, create, or import Unit to be shown.
+        </div>
+            </div>
+    {:else}
+        <StatusBar/>
+        <div class="editor">
+            <ProjectItComponent editor={editorEnvironment.editor}/>
+        </div>
+    {/if}
 </div>
 
 <script>
     import StatusBar from "./StatusBar.svelte";
-    import DummyEditor from "./DummyEditor.svelte";
+    import { ProjectItComponent } from "@projectit/core-svelte";
+    import { editorEnvironment } from "../../config/WebappConfiguration";
+    import { noUnitAvailable } from "../../stores/ModelStore";
 </script>
+
+<style>
+    .message {
+        margin: 30px;
+        text-align: center;
+    }
+</style>

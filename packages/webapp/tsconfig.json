@@ -18,7 +18,7 @@
 		"sourceMap": true,                              /* Generates corresponding '.map' file. */
 		// "outFile": "./",                             /* Concatenate and emit output to single file. */
 		"outDir": "./dist",                             /* Redirect output structure to the directory. */
-		"rootDir": "./src",                             /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+		//"rootDir": "./src",                             /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
 		// "composite": true,                           /* Enable project compilation */
 		// "tsBuildInfoFile": "./",                     /* Specify file to store incremental compilation information */
 		"removeComments": true,                         /* Do not emit comments to output. */
@@ -28,8 +28,8 @@
 		// "isolatedModules": true,                     /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
 
 		/* Strict Type-Checking Options */
-//		 "strict": true,                              /* Enable all strict type-checking options. */
-//		 "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type. */
+		// "strict": true,                              /* Enable all strict type-checking options. */
+		// "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type. */
 		// "strictNullChecks": true,                    /* Enable strict null checks. */
 		// "strictFunctionTypes": true,                 /* Enable strict checking of function types. */
 		// "strictBindCallApply": true,                 /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
@@ -75,7 +75,7 @@
 		/* Advanced Options */
 		"skipLibCheck": true,                           /* Skip type checking of declaration files. */
 		"forceConsistentCasingInFileNames": true,        /* Disallow inconsistently-cased references to the same file. */
-		"importsNotUsedAsValues": "error",
+		"importsNotUsedAsValues": "preserve",
 		"baseUrl": "./src",
 		"lib": [
 			"dom",

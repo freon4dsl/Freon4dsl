@@ -33,6 +33,7 @@
 	import { userMessageOpen } from "../stores/UserMessageStore";
 	import { languageName } from "../stores/LanguageStore";
 	import { currentModelName } from "../stores/ModelStore";
+	import { EditorCommunication } from "../language/EditorCommunication";
 
 	// Theming
 	let topAppBar: TopAppBarComponentDev;
@@ -55,7 +56,8 @@
 	}
 
 	onMount(async () => {
-		// todo initialize language settings
+		// initialize language settings
+		EditorCommunication.initialize();
 
 		// get list of models from server
 		await serverCommunication.loadModelList((names: string[]) => {
@@ -109,7 +111,7 @@
 			</IconButton>
 			<IconButton aria-label="Theme Toggle" on:click={switchTheme}>
 				<Icon component={Svg} viewBox="0 0 24 24">
-					<path fill="currentColor" d={lightTheme ? mdiWeatherNight : mdiWeatherSunny}}></path>
+					<path fill="currentColor" d={lightTheme ? mdiWeatherNight : mdiWeatherSunny} />
 				</Icon>
 			</IconButton>
 		</Section>

@@ -35,9 +35,9 @@
         </Row>
     </Head>
     <Body>
-    {#each $searchResults as item}
-        <Row on:mousedown={handleClick(item)}>
-            <Cell numeric>{item.id}</Cell>
+    {#each $searchResults as item, index}
+        <Row on:mousedown={xxx(item)}>
+            <Cell numeric>{index}</Cell>
             <Cell>{item.message}</Cell>
             <Cell>{item.locationdescription}</Cell>
         </Row>
@@ -57,10 +57,11 @@
     import type { SortValue } from "@material/data-table"; // should be exported by SMUI, but gives error
     import LinearProgress from "@smui/linear-progress";
     import IconButton from "@smui/icon-button";
-    import { searchResultLoaded, searchResults, TempError } from "../../stores/InfoPanelStore";
+    import { searchResultLoaded, searchResults } from "../../stores/InfoPanelStore";
+    import type { PiError } from "@projectit/core";
 
     // sorting of table
-    let sort: keyof TempError = "id";
+    let sort: keyof PiError = "message";
     let sortDirection: Lowercase<keyof typeof SortValue> = "ascending";
 
     function handleSort() {
@@ -77,8 +78,12 @@
     }
 
     // selection of row
-    function handleClick(item: TempError) {
+    function handleClick(item: PiError) {
         console.log("item clicked: " + item.message);
         // EditorCommunication.getInstance().selectElement(item.reportedOn);
+    }
+    // todo handleCLick
+    function xxx(e: CustomEvent) {
+        console.log("P+OK: " + e.detail)
     }
 </script>
