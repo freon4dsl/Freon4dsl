@@ -19,16 +19,16 @@ import {
     noUnitAvailable,
     units,
     editorProgressShown, unitNames
-} from "../stores/ModelStore";
+} from "../components/stores/ModelStore";
 import {
     fileExtensions,
     languageName,
     projectionNames,
     unitTypes
-} from "../stores/LanguageStore";
-import { setUserMessage, severityType } from "../stores/UserMessageStore";
+} from "../components/stores/LanguageStore";
+import { setUserMessage, SeverityType } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
-import { modelErrors, searchResults, conceptNames, searchTab, activeTab } from "../stores/InfoPanelStore";
+import { modelErrors, searchResults, conceptNames, searchTab, activeTab } from "../components/stores/InfoPanelStore";
 
 const LOGGER = new PiLogger("EditorCommunication"); // .mute();
 
@@ -342,7 +342,7 @@ export class EditorCommunication {
                 this.showUnitAndErrors(elem);
             }
         } catch (e) {
-            setUserMessage(e.message, severityType.error);
+            setUserMessage(e.message, SeverityType.error);
         }
         // if (elem) {
         //     if (this.currentModel.getUnits().filter(unit => unit.name === elem.name).length > 0) {

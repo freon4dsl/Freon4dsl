@@ -38,7 +38,7 @@
     import type { MenuComponentDev } from '@smui/menu';
     import Menu, { SelectionGroup, SelectionGroupIcon } from '@smui/menu';
     import List, { Item, Separator, Text } from '@smui/list';
-    import { projectionNames } from "../../stores/LanguageStore";
+    import { projectionNames } from "../stores/LanguageStore";
     import { Anchor } from '@smui/menu-surface';
 
     let menu: MenuComponentDev;

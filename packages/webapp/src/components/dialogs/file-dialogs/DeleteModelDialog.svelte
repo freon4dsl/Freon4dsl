@@ -22,8 +22,8 @@
 <script lang="ts">
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import Button, { Label } from '@smui/button';
-	import { currentModelName } from "../../../stores/ModelStore";
-	import { deleteModelDialogVisible } from "../../../stores/DialogStore";
+	import { currentModelName } from "../../stores/ModelStore";
+	import { deleteModelDialogVisible } from "../../stores/DialogStore";
 
 	const cancelStr: string = "cancel";
 	const submitStr: string = "submit";

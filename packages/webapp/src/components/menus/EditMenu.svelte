@@ -61,7 +61,7 @@
 		SecondaryText,
 	} from '@smui/list';
 	import Button, { Label } from '@smui/button';
-	import { errorsLoaded } from "../../stores/InfoPanelStore";
+	import { errorsLoaded } from "../stores/InfoPanelStore";
 	let menu: MenuComponentDev;
 	let clicked = 'nothing yet';
 	let anchor: HTMLDivElement;

@@ -45,9 +45,9 @@
     import Radio from '@smui/radio';
     import Textfield from '@smui/textfield';
     import HelperText from '@smui/textfield/helper-text';
-    import { modelNames } from "../../../stores/ServerStore";
-    import { initializing, openModelDialogVisible } from "../../../stores/DialogStore";
-    import { setUserMessage } from "../../../stores/UserMessageStore";
+    import { modelNames } from "../../stores/ServerStore";
+    import { initializing, openModelDialogVisible } from "../../stores/DialogStore";
+    import { setUserMessage } from "../../stores/UserMessageStore";
     import { EditorCommunication } from "../../../language/EditorCommunication";
 
     const cancelStr: string = "cancel";

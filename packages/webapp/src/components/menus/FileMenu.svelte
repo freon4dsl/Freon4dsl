@@ -35,13 +35,13 @@
 	import List, { Item, Separator, Text } from '@smui/list';
 	import Button, { Label } from '@smui/button';
 	import { Anchor } from '@smui/menu-surface';
-	import { currentModelName, currentUnitName, unitNames } from "../../stores/ModelStore";
-	import { allExtensionsToString, MenuItem, metaTypeForExtension } from "../../ts-utils/MenuUtils";
-	import { fileExtensions } from "../../stores/LanguageStore";
-	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../../stores/DialogStore";
-	import { setUserMessage } from "../../stores/UserMessageStore";
+	import { currentModelName, currentUnitName, unitNames } from "../stores/ModelStore";
+	import { allExtensionsToString, MenuItem, metaTypeForExtension } from "../ts-utils/MenuUtils";
+	import { fileExtensions } from "../stores/LanguageStore";
+	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../stores/DialogStore";
+	import { setUserMessage } from "../stores/UserMessageStore";
 	import { serverCommunication } from "../../config/WebappConfiguration";
-	import { modelNames } from "../../stores/ServerStore";
+	import { modelNames } from "../stores/ServerStore";
 	import { EditorCommunication } from "../../language/EditorCommunication";
 
 	// variables for the file import

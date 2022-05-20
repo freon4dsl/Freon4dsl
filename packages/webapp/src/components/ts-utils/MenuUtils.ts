@@ -1,4 +1,4 @@
-import { editorEnvironment } from "../config/WebappConfiguration";
+import { editorEnvironment } from "../../config/WebappConfiguration";
 
 export class MenuItem {
     title: string;

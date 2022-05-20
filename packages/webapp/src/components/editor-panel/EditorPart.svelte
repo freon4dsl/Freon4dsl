@@ -21,7 +21,7 @@
     import StatusBar from "./StatusBar.svelte";
     import { ProjectItComponent } from "@projectit/core-svelte";
     import { editorEnvironment } from "../../config/WebappConfiguration";
-    import { noUnitAvailable, editorProgressShown } from "../../stores/ModelStore";
+    import { noUnitAvailable, editorProgressShown } from "../stores/ModelStore";
 
 </script>
 

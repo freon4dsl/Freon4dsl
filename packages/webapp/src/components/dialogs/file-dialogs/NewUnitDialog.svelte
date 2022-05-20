@@ -38,10 +38,10 @@
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Textfield from "@smui/textfield";
     import HelperText from "@smui/textfield/helper-text";
-    import { unitNames } from "../../../stores/ModelStore";
-    import { newUnitDialogVisible } from "../../../stores/DialogStore";
+    import { unitNames } from "../../stores/ModelStore";
+    import { newUnitDialogVisible } from "../../stores/DialogStore";
 
-    import { unitTypes } from "../../../stores/LanguageStore";
+    import { unitTypes } from "../../stores/LanguageStore";
     import Radio from "@smui/radio";
     import FormField from "@smui/form-field";
     import { EditorCommunication } from "../../../language/EditorCommunication";

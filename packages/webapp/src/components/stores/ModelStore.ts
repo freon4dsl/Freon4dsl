@@ -9,6 +9,7 @@ export let currentUnitName: Writable<string> = writable<string>('');
 export let noUnitAvailable: Writable<boolean> = writable<boolean>(true);
 export let units: Writable<PiModelUnit[]> = writable<PiModelUnit[]>(null);
 export let unitNames: Writable<string[]> = writable<string[]>([]);
+export let toBeDeleted: Writable<PiModelUnit> = writable<PiModelUnit>(null);
 
 export let editorProgressShown: Writable<boolean> = writable<boolean>(false);
 

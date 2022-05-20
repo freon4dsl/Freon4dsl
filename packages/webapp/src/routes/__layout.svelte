@@ -27,12 +27,12 @@
 	import DeleteModelDialog from "../components/dialogs/file-dialogs/DeleteModelDialog.svelte";
 	import NewUnitDialog from "../components/dialogs/file-dialogs/NewUnitDialog.svelte";
 
-	import { modelNames } from "../stores/ServerStore";
-	import { drawerOpen } from "../stores/DrawerStore";
-	import { openModelDialogVisible } from "../stores/DialogStore";
-	import { userMessageOpen } from "../stores/UserMessageStore";
-	import { languageName } from "../stores/LanguageStore";
-	import { currentModelName } from "../stores/ModelStore";
+	import { modelNames } from "../components/stores/ServerStore";
+	import { drawerOpen } from "../components/stores/DrawerStore";
+	import { openModelDialogVisible } from "../components/stores/DialogStore";
+	import { userMessageOpen } from "../components/stores/UserMessageStore";
+	import { languageName } from "../components/stores/LanguageStore";
+	import { currentModelName } from "../components/stores/ModelStore";
 	import { EditorCommunication } from "../language/EditorCommunication";
 
 	// import this file to set which loggers will be active

@@ -2,7 +2,7 @@ import { PiLogger } from "@projectit/core";
 import type { PiNamedElement } from "@projectit/core";
 import { GenericModelSerializer } from "@projectit/core";
 import type { IServerCommunication } from "./IServerCommunication";
-import { setUserMessage } from "../stores/UserMessageStore";
+import { setUserMessage } from "../components/stores/UserMessageStore";
 
 const LOGGER = new PiLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";

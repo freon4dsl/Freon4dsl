@@ -68,7 +68,7 @@
 	import type { SortValue } from '@material/data-table'; // should be exported by SMUI, but gives error
 	import IconButton from '@smui/icon-button';
 	import LinearProgress from '@smui/linear-progress';
-	import { errorsLoaded, modelErrors } from "../../stores/InfoPanelStore";
+	import { errorsLoaded, modelErrors } from "../stores/InfoPanelStore";
 	import type { PiError } from "@projectit/core";
 
 	// sorting of table

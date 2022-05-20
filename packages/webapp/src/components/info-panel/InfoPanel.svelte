@@ -5,7 +5,7 @@
     import Card from "@smui/card";
     import ErrorList from "./ErrorList.svelte";
     import SearchResults from "./SearchResults.svelte";
-    import { errorsLoaded, errorTab, activeTab, searchResultLoaded } from "../../stores/InfoPanelStore";
+    import { errorsLoaded, errorTab, activeTab, searchResultLoaded } from "../stores/InfoPanelStore";
 
     const errorTitle = "Errors";
     const searchTitle = "Search";
