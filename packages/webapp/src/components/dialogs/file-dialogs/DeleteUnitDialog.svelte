@@ -6,7 +6,7 @@
 >
 	<Title id="event-title">Delete model</Title>
 	<Content id="event-content">
-		Sure you want to delete unit {$currentUnitName}?
+		Are you sure you want to delete unit '{$toBeDeleted?.name}'?
 	</Content>
 	<Actions>
 		<Button color="secondary" variant="raised" action={cancelStr}>
@@ -22,8 +22,12 @@
 <script lang="ts">
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import Button, { Label } from '@smui/button';
-	import { currentUnitName } from "../../stores/ModelStore";
+	import { currentModelName, currentUnitName } from "../../stores/ModelStore";
 	import { deleteUnitDialogVisible } from "../../stores/DialogStore";
+	import { toBeDeleted } from "../../stores/ModelStore";
+	import { serverCommunication } from "../../../config/WebappConfiguration";
+	import { EditorCommunication } from "../../../language/EditorCommunication";
+	import { setUserMessage, SeverityType } from "../../stores/UserMessageStore";
 
 	const cancelStr: string = "cancel";
 	const submitStr: string = "submit";
@@ -33,30 +37,22 @@
 		switch (e.detail.action) {
 			case submitStr:
 				response = 'In the trash with it.';
+				EditorCommunication.getInstance().deleteModelUnit($toBeDeleted);
+				setUserMessage("Deleted unit '" + $toBeDeleted.name + "'.", SeverityType.info);
+				$toBeDeleted = null;
 				break;
 			case cancelStr:
 				response = "Ok, well, we'll keep it then.";
+				$toBeDeleted = null;
 				break;
 			default:
 				// This means the user clicked the scrim or pressed Esc to close the dialog.
 				// The actions will be "close".
 				response = "Ok, well, we'll keep it then.";
+				$toBeDeleted = null;
 				break;
 		}
 		console.log(response);
-	}
-
-	const handleCancel = () => {
-		// console.log("Cancel called ");
-		// modelToBeDeleted = "";
-		// $deleteModelDialogVisible = false;
-	}
-
-	const handleSubmit = () => {
-		// console.log("DeleteModel.Submit called, model to be deleted: " + modelToBeDeleted);
-		// serverCommunication.deleteModel(modelToBeDeleted);
-		// modelToBeDeleted = "";
-		// $deleteModelDialogVisible = false;
 	}
 
 </script>

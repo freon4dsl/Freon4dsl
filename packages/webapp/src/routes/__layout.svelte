@@ -14,7 +14,15 @@
 	} from "@smui/drawer";
 	import { Content } from "@smui/card";
 
-	import { mdiGithub, mdiWeb, mdiWeatherNight, mdiWeatherSunny, mdiHelp, mdiChevronRight, mdiChevronLeft } from "@mdi/js";
+	import {
+		mdiGithub,
+		mdiWeb,
+		mdiWeatherNight,
+		mdiWeatherSunny,
+		mdiHelp,
+		mdiChevronRight,
+		mdiChevronLeft
+	} from "@mdi/js";
 
 	import { serverCommunication } from "../config/WebappConfiguration";
 
@@ -37,6 +45,8 @@
 
 	// import this file to set which loggers will be active
 	import { muteLogs } from "../logging/LoggerSettings";
+	import DeleteUnitDialog from "../components/dialogs/file-dialogs/DeleteUnitDialog.svelte";
+
 	muteLogs();
 
 	// Theming
@@ -142,6 +152,7 @@
 <OpenModelDialog/>
 <DeleteModelDialog/>
 <NewUnitDialog/>
+<DeleteUnitDialog/>
 
 <style>
 	.main-frame {

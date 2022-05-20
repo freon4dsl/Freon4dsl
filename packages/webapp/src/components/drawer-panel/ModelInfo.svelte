@@ -67,7 +67,7 @@
     };
 
     const deleteUnit = (index: number) => {
-        // console.log("delete unit called: " + unit.name);
+        // console.log("ModelInfo.deleteUnit: " + $units[index].name);
         $toBeDeleted = $units[index];
         $deleteUnitDialogVisible = true;
     };
