@@ -102,7 +102,10 @@
         </div>
     {:else}
         <div class="verticalList"  on:click>
-            {#each children as box (box.id)}
+            {#each children as box, i (box.id)}
+                {#if i > 0 && i < children.length}
+                    <br/>
+                {/if}
                 <RenderComponent box={box} editor={editor}/>
             {/each}
         </div>
@@ -116,17 +119,17 @@
         --pi-list-background-color: var(--inverse-color);
     }
     .horizontalList {
-        grid-template-rows: var(--pi-list-grid-template-rows);
-        grid-template-columns: var(--pi-list-grid-template-columns);
+        /*grid-template-rows: var(--pi-list-grid-template-rows);*/
+        /*grid-template-columns: var(--pi-list-grid-template-columns);*/
         white-space: nowrap;
         display: inline-block;
         background-color: var(--pi-list-background-color);
     }
 
     .verticalList {
-        grid-template-rows: var(--pi-list-grid-template-rows);
-        grid-template-columns: var(--pi-list-grid-template-columns);
-        display: grid;
+        /*grid-template-rows: var(--pi-list-grid-template-rows);*/
+        /*grid-template-columns: var(--pi-list-grid-template-columns);*/
+        /*display: grid;*/
         background-color: var(--pi-list-background-color);
         /*margin-top: 10px;*/
     }
