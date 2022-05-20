@@ -4,7 +4,7 @@
    "Rules": [
       {
          "$typename": "CheckingRule",
-         "name": "r1",
+         "name": "r21",
          "description": "a rule",
          "check": {
             "$typename": "HasNoValue",
@@ -13,8 +13,8 @@
       },
       {
          "$typename": "IfThenElseRule",
-         "name": "fefewf",
-         "description": "fewfwe",
+         "name": "checkSomeStuff",
+         "description": "A rule",
          "IfStatement": {
             "$typename": "IfStatement",
             "name": "",
@@ -26,7 +26,7 @@
                },
                "right": {
                   "$typename": "CheckingRuleCall",
-                  "rule": "r1"
+                  "rule": "r21"
                }
             },
             "ThenStatements": [

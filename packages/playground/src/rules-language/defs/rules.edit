@@ -2,7 +2,7 @@ editor default
 
 Rules {
     [
-    Using data from ${self.imports}
+    Rules ${self.name} using data from ${self.imports}
         entity: ${self.forEntity}
         ${self.Rules vertical }
     ]

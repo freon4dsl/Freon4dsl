@@ -14,7 +14,9 @@ export class PiLogger {
     static mutedLogs: string[] = [];
     // static shownLogs: string[] = [];
     static mute(t: string): void {
-        this.mutedLogs.push(t);
+        if(!this.mutedLogs.includes(t)) {
+            this.mutedLogs.push(t);
+        }
     }
     static unmute(t: string): void {
         const index = this.mutedLogs.indexOf(t);
