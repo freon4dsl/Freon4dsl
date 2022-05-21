@@ -12,21 +12,33 @@
           anchorCorner="BOTTOM_LEFT"
     >
         <List>
-            {#each options as option}
+            <SelectionGroup>
+                <Item selected={true}>
+                    <SelectionGroupIcon>
+                        <i class="material-icons">check</i>
+                    </SelectionGroupIcon>
+                    <Text>default</Text>
+                </Item>
+            </SelectionGroup>
+            <Separator />
+            {#each allProjections as option}
                 <SelectionGroup>
-                        <Item
-                                on:SMUI:action={() => {if (option.name !== 'default') {option.selected = !option.selected;}  }}
-                                bind:selected={option.selected}
-                        >
-                            <SelectionGroupIcon>
-                                <i class="material-icons">check</i>
-                            </SelectionGroupIcon>
-                            <Text>{option.name}</Text>
-                        </Item>
+                    <Item
+                            on:SMUI:action={() => {if (option.name !== 'default') {option.selected = !option.selected;}  }}
+                            bind:selected={option.selected}
+                    >
+                        <SelectionGroupIcon>
+                            <i class="material-icons">check</i>
+                        </SelectionGroupIcon>
+                        <Text>{option.name}</Text>
+                    </Item>
                 </SelectionGroup>
             {/each}
+            <Separator />
             <Item on:SMUI:action={apply}>
-                <Text>Apply</Text>
+                <Button>
+                    <Label>Apply</Label>
+                </Button>
             </Item>
         </List>
     </Menu>
@@ -34,12 +46,14 @@
 
 
 <script lang="ts">
-    import Button, { Label } from '@smui/button';
-    import type { MenuComponentDev } from '@smui/menu';
-    import Menu, { SelectionGroup, SelectionGroupIcon } from '@smui/menu';
-    import List, { Item, Separator, Text } from '@smui/list';
-    import { projectionNames } from "../stores/LanguageStore";
-    import { Anchor } from '@smui/menu-surface';
+    import Button, { Label } from "@smui/button";
+    import type { MenuComponentDev } from "@smui/menu";
+    import Menu, { SelectionGroup, SelectionGroupIcon } from "@smui/menu";
+    import List, { Item, Separator, Text } from "@smui/list";
+    import { projectionNames, projectionsShown } from "../stores/LanguageStore";
+    import { Anchor } from "@smui/menu-surface";
+    import { EditorCommunication } from "../../language/EditorCommunication";
+
 
     let menu: MenuComponentDev;
     // following is used to position the menu
@@ -50,25 +64,37 @@
         if (!anchorClasses[className]) {
             anchorClasses[className] = true;
         }
-    }
+    };
     const removeClass = (className) => {
         if (anchorClasses[className]) {
             delete anchorClasses[className];
             anchorClasses = anchorClasses;
         }
-    }
+    };
 
-    let options = [];
+    let allProjections = [];
     for (const view of $projectionNames) {
         let selected: boolean = false;
-        if (view === 'default') {
-            selected = true;
+        if (view !== 'default') {
+            if ($projectionsShown.includes(view)) {
+                selected = true;
+            }
+            // todo selected should be stored and retrieved for each view
+            allProjections.push({ name: view, selected: selected });
         }
-        // todo selected should be stored and retrieved for each name
-        options.push({name: view, selected: selected})
     }
 
     function apply() {
-        console.log(options.map(opt => opt.selected ? opt.name : null).join(", "));
+        // store the selection and enable/disable the projection
+        const selection: string [] = [];
+        allProjections.forEach(proj => {
+            if (proj.selected) {
+                selection.push(proj.name);
+                EditorCommunication.getInstance().enableProjection(proj.name);
+            } else {
+                EditorCommunication.getInstance().disableProjection(proj.name);
+            }
+        });
+        $projectionsShown = selection;
     }
 </script>

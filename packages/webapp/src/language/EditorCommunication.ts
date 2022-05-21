@@ -57,6 +57,7 @@ export class EditorCommunication {
         fileExtensions.set(tmp);
         // projectionNames are the same for every model in the language
         EditorCommunication.setProjectionNames();
+        // set the concept names for which a search is possible
         conceptNames.set(["Attr", "Mthod"]);
         // TODO conceptNames.set(editorEnvironment.conceptNames);
     }
@@ -68,20 +69,6 @@ export class EditorCommunication {
     static setProjectionNames() {
         const proj = editorEnvironment.editor.projection;
         let nameList: string[] = proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name];
-        // make sure 'default' is always the first name in the list
-        // to do this, first reverse the order of the names
-        nameList = nameList.reverse();
-        // next, check whether the first is 'default'
-        if (nameList[0] !== "default") {
-            // find index
-            const i = nameList.indexOf("default");
-            // remove old occurrency
-            if (i > 0) {
-                nameList.splice( i, 1 );
-            }
-            // add 'default' as first
-            nameList.unshift( "default" );
-        }
         projectionNames.set(nameList);
     }
 

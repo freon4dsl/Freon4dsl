@@ -95,7 +95,7 @@
 				<!-- make some space for the menus, otherwise an open menu falls behind the drawer-->
 				<div class="drawer-space-right"></div>
 			{/if}
-			<IconButton variant="raised" on:click={() => ($drawerOpen = !$drawerOpen)} size="button">
+			<IconButton variant="raised" on:click={() => ($drawerOpen = !$drawerOpen)}>
 				<Icon component={Svg} viewBox="0 0 24 24">
 					<path fill="currentColor" d={$drawerOpen ? mdiChevronLeft : mdiChevronRight} />
 				</Icon>
