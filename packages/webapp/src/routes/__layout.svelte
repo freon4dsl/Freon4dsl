@@ -91,12 +91,16 @@
 <TopAppBar bind:this={topAppBar} variant="standard" dense>
 	<Row>
 		<Section align="start" >
-			<Button variant="raised" on:click={() => ($drawerOpen = !$drawerOpen)}>
+			{#if $drawerOpen}
+				<!-- make some space for the menus, otherwise an open menu falls behind the drawer-->
+				<div class="drawer-space-right"></div>
+			{/if}
+			<IconButton variant="raised" on:click={() => ($drawerOpen = !$drawerOpen)} size="button">
 				<Icon component={Svg} viewBox="0 0 24 24">
 					<path fill="currentColor" d={$drawerOpen ? mdiChevronLeft : mdiChevronRight} />
 				</Icon>
-				<Label>Model</Label>
-			</Button>
+			</IconButton>
+
 			<div class="space-right"></div>
 			<FileMenu/>
 			<div class="space-right"></div>
@@ -160,5 +164,8 @@
   }
 	.space-right {
 		margin-right: 6px;
+	}
+	.drawer-space-right {
+		margin-right: 220px;
 	}
 </style>
