@@ -8,7 +8,8 @@
                     {#each myUnits as unit, index}
                         {#if unit.piLanguageConcept() === name}
                             <div>
-                                <Item activated={(unit.name === $currentUnitName)} on:SMUI:action={() => menus[index].setOpen(true)}>
+                                <Item activated={(unit.name === $currentUnitName)}
+                                      on:SMUI:action={() => menus[index].setOpen(true)}>
                                     <Text>{unit.name}</Text>
                                 </Item>
                                 <Menu bind:this={menus[index]}>
@@ -45,12 +46,12 @@
 </div>
 
 <script lang="ts">
-    import List, { Group, Item, Text, Separator } from '@smui/list';
+    import List, { Group, Item, Text, Separator } from "@smui/list";
     import { unitTypes } from "../stores/LanguageStore";
     import { currentUnitName, toBeDeleted, units } from "../stores/ModelStore";
-    import type { MenuComponentDev } from '@smui/menu';
+    import type { MenuComponentDev } from "@smui/menu";
     import { Subtitle } from "@smui/drawer";
-    import Menu from '@smui/menu';
+    import Menu from "@smui/menu";
     import { deleteUnitDialogVisible } from "../stores/DialogStore";
     import { EditorCommunication } from "../../language/EditorCommunication";
     import { setUserMessage } from "../stores/UserMessageStore";
@@ -60,7 +61,17 @@
     let menus: MenuComponentDev[] = [];
 
     let myUnits = [];
-    $: myUnits = $units;
+    $: myUnits = !!$units && $units.length > 0
+        ? $units.sort((u1, u2) => {
+            if (u1.name > u2.name) {
+                return 1;
+            }
+            if (u1.name < u2.name) {
+                return -1;
+            }
+            return 0;
+        })
+        : [];
 
     const openUnit = (index: number) => {
         EditorCommunication.getInstance().openModelUnit($units[index]);
@@ -80,7 +91,7 @@
         } else {
             setUserMessage(`Unit '${$units[index].name}' has no changes.`, 0);
         }
-    }
+    };
 
     const exportUnit = (index: number) => {
         // console.log("export unit called:" + unit.name);
@@ -98,7 +109,7 @@
 
         // create a HTML element that contains the text string
         let textFile = null;
-        var data = new Blob([text], {type: 'text/plain'});
+        var data = new Blob([text], { type: "text/plain" });
 
         // If we are replacing a previously generated file we need to
         // manually revoke the object URL to avoid memory leaks.
@@ -108,18 +119,18 @@
         textFile = URL.createObjectURL(data);
 
         // create a link for the download
-        var link = document.createElement('a');
-        link.setAttribute('download', defaultFileName);
+        var link = document.createElement("a");
+        link.setAttribute("download", defaultFileName);
         link.href = textFile;
         document.body.appendChild(link);
 
         // wait for the link to be added to the document
-        window.requestAnimationFrame(function () {
-            var event = new MouseEvent('click');
+        window.requestAnimationFrame(function() {
+            var event = new MouseEvent("click");
             link.dispatchEvent(event);
             document.body.removeChild(link);
         });
-    }
+    };
 </script>
 
 <style>
