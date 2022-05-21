@@ -20,7 +20,7 @@
 
 <span class="status-bar">
 	<div class='mdc-typography--body2'>
-	<IconButton size="button" style="margin-right: -24px; margin-left: -12px;">
+	<IconButton style="margin-right: -24px; margin-left: -12px;">
 		{#if $modelErrors.length > 0}
 			<Icon component={Svg} viewBox='0 0 24 24'>
 				<path d={mdiAlertCircle}/>
@@ -44,7 +44,7 @@
 		</Icon>
 	</IconButton>
 		box: <i>{currentBox?.role} {currentBox?.$id}</i>
-			<IconButton size="button" style="margin-right: -30px; margin-left: -20px;">
+			<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon component={Svg} viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>

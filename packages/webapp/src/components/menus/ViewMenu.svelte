@@ -79,7 +79,6 @@
             if ($projectionsShown.includes(view)) {
                 selected = true;
             }
-            // todo selected should be stored and retrieved for each view
             allProjections.push({ name: view, selected: selected });
         }
     }

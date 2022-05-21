@@ -5,30 +5,22 @@
     import Card from "@smui/card";
     import ErrorList from "./ErrorList.svelte";
     import SearchResults from "./SearchResults.svelte";
-    import { errorsLoaded, errorTab, activeTab, searchResultLoaded } from "../stores/InfoPanelStore";
+    import { errorTab, searchTab, activeTab } from "../stores/InfoPanelStore";
 
-    const errorTitle = "Errors";
-    const searchTitle = "Search";
-    let active = errorTitle;
-
-    // todo loading of errors and search results should also depend on weather something has changed in the unit shown
-    $: active === errorTitle ? $errorsLoaded = false : $searchResultLoaded = false;
-
-    // $: $activeTab === errorTab ? active = errorTitle : active = searchTitle;
 </script>
 
-<TabBar tabs={[errorTitle, searchTitle]} let:tab bind:active>
+<TabBar tabs={[errorTab, searchTab]} let:tab bind:active={$activeTab}>
     <Tab {tab} minWidth>
         <Label>{tab}</Label>
     </Tab>
 </TabBar>
 
 <div class='mdc-typography--body1'>
-    {#if active === errorTitle}
+    {#if $activeTab === errorTab}
         <Card>
             <ErrorList />
         </Card>
-    {:else if active === searchTitle}
+    {:else if $activeTab === searchTab}
         <Card>
             <SearchResults />
         </Card>

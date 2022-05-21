@@ -2,12 +2,8 @@ import { writable } from "svelte/store";
 import type { Writable } from "svelte/store";
 import type { PiError } from "@projectit/core";
 
-// the concepts that can be searched for
-export let conceptNames: Writable<string[]> = writable<string[]>([]);
-
-// todo find a way to show that errors or search results are being loaded
-export let errorsLoaded: Writable<boolean> = writable<boolean>(false); // temp!!
-export let searchResultLoaded: Writable<boolean> = writable<boolean>(true); // temp!!
+export let errorsLoaded: Writable<boolean> = writable<boolean>(true);
+export let searchResultLoaded: Writable<boolean> = writable<boolean>(true);
 
 // the current list of search results that is shown in the editor
 export let searchResults: Writable<PiError[]> = writable<PiError[]>([]);
@@ -15,6 +11,6 @@ export let searchResults: Writable<PiError[]> = writable<PiError[]>([]);
 export let modelErrors: Writable<PiError[]> = writable<PiError[]>([]);
 
 // the currently active tab and constants to indicate the tabs
-export const errorTab = 'errors';
-export const searchTab = 'search';
+export const errorTab = 'Errors';
+export const searchTab = 'Search';
 export let activeTab: Writable<string> = writable<string>(errorTab);

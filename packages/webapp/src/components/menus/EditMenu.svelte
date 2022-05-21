@@ -12,39 +12,15 @@
 			bind:anchorElement={anchor}
 			anchorCorner="BOTTOM_LEFT"
 	>
-		<List twoLine>
-			<Item on:SMUI:action={() => (clicked = 'Cut')}>
-				<Text>
-					<PrimaryText>Cut</PrimaryText>
-					<SecondaryText>Copy to clipboard and remove.</SecondaryText>
-				</Text>
-			</Item>
-			<Item on:SMUI:action={() => (clicked = 'Copy')}>
-				<Text>
-					<PrimaryText>Copy</PrimaryText>
-					<SecondaryText>Copy to clipboard.</SecondaryText>
-				</Text>
-			</Item>
-			<Item on:SMUI:action={() => (clicked = 'Paste')}>
-				<Text>
-					<PrimaryText>Paste</PrimaryText>
-					<SecondaryText>Paste from clipboard.</SecondaryText>
-				</Text>
-			</Item>
-			<Separator />
-			<Item on:SMUI:action={() => {console.log('Validate: should load errors'); $errorsLoaded = true}}>
-				<Text>
-					<PrimaryText>Validate</PrimaryText>
-					<SecondaryText>Validate the current model unit.</SecondaryText>
-				</Text>
-			</Item>
-			<Separator />
-			<Item on:SMUI:action={() => (clicked = 'Delete')}>
-				<Text>
-					<PrimaryText>Delete</PrimaryText>
-					<SecondaryText>Remove item.</SecondaryText>
-				</Text>
-			</Item>
+		<List>
+			{#each menuItems as item (item.id)}
+				<Item on:SMUI:action={() => (handleClick(item.id))}>
+					<Text>{item.title}</Text>
+				</Item>
+				{#if item.id === 2 || item.id === 3}
+					<Separator />
+				{/if}
+			{/each}
 		</List>
 	</Menu>
 </div>
@@ -56,14 +32,21 @@
 	import List, {
 		Item,
 		Separator,
-		Text,
-		PrimaryText,
-		SecondaryText,
+		Text
 	} from '@smui/list';
 	import Button, { Label } from '@smui/button';
-	import { errorsLoaded } from "../stores/InfoPanelStore";
+	import { MenuItem } from "../ts-utils/MenuUtils";
+	import { EditorCommunication } from "../../language/EditorCommunication";
+	import {
+		findNamedDialogVisible,
+		findStructureDialogVisible,
+		findTextDialogVisible
+	} from "../stores/DialogStore";
+
 	let menu: MenuComponentDev;
 	let clicked = 'nothing yet';
+
+	// stuff for posiitoning the menu
 	let anchor: HTMLDivElement;
 	let anchorClasses: { [k: string]: boolean } = {}; // a list of name - boolean pairs
 
@@ -78,4 +61,37 @@
 			anchorClasses = anchorClasses;
 		}
 	}
+
+	// implementation of all actions
+	const findText = () => {
+		$findTextDialogVisible = true;
+		console.log("EditMenu.findText: " + $findTextDialogVisible);
+	}
+
+	const findStructureElement = () => {
+		$findStructureDialogVisible = true;
+	}
+
+	const findNamedElement = () => {
+		$findNamedDialogVisible = true;
+	}
+
+	// when a menu-item is clicked, this function is executed
+	const handleClick = (id: number) => {
+		// find the item that was clicked
+		let menuItem = menuItems.find(item => item.id === id);
+		// perform the action associated with the menu item
+		menuItem.action(id);
+	};
+
+	// all menu items
+	let menuItems : MenuItem[] = [
+		{ title: 'Undo', action: EditorCommunication.getInstance().undo, id: 1 },
+		{ title: 'Redo', action: EditorCommunication.getInstance().redo, id: 2 },
+		{ title: 'Validate', action: EditorCommunication.getInstance().validate, id: 3 },
+		{ title: 'Find Named Element', action: findNamedElement, id: 4 },
+		{ title: 'Find Structure Element', action: findStructureElement, id: 5 },
+		{ title: 'Find Text', action: findText, id: 6 },
+		{ title: 'Replace', action: EditorCommunication.getInstance().replace, id: 7 },
+	];
 </script>

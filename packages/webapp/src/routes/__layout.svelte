@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 
-	import Button, { Label } from "@smui/button";
 	import type { TopAppBarComponentDev } from "@smui/top-app-bar";
 	import TopAppBar, { Row, Section, AutoAdjust } from "@smui/top-app-bar";
 	import IconButton from "@smui/icon-button";
@@ -24,8 +23,6 @@
 		mdiChevronLeft
 	} from "@mdi/js";
 
-	import { serverCommunication } from "../config/WebappConfiguration";
-
 	import EditMenu from "../components/menus/EditMenu.svelte";
 	import FileMenu from "../components/menus/FileMenu.svelte";
 	import ViewMenu from "../components/menus/ViewMenu.svelte";
@@ -34,6 +31,10 @@
 	import OpenModelDialog from "../components/dialogs/file-dialogs/OpenModelDialog.svelte";
 	import DeleteModelDialog from "../components/dialogs/file-dialogs/DeleteModelDialog.svelte";
 	import NewUnitDialog from "../components/dialogs/file-dialogs/NewUnitDialog.svelte";
+	import DeleteUnitDialog from "../components/dialogs/file-dialogs/DeleteUnitDialog.svelte";
+	import FindNamedElementDialog from "../components/dialogs/edit-dialogs/FindNamedElementDialog.svelte";
+	import FindStructureDialog from "../components/dialogs/edit-dialogs/FindStructureDialog.svelte";
+	import FindTextDialog from "../components/dialogs/edit-dialogs/FindTextDialog.svelte";
 
 	import { modelNames } from "../components/stores/ServerStore";
 	import { drawerOpen } from "../components/stores/DrawerStore";
@@ -41,11 +42,12 @@
 	import { userMessageOpen } from "../components/stores/UserMessageStore";
 	import { languageName } from "../components/stores/LanguageStore";
 	import { currentModelName } from "../components/stores/ModelStore";
+
 	import { EditorCommunication } from "../language/EditorCommunication";
+	import { serverCommunication } from "../config/WebappConfiguration";
 
 	// import this file to set which loggers will be active
 	import { muteLogs } from "../logging/LoggerSettings";
-	import DeleteUnitDialog from "../components/dialogs/file-dialogs/DeleteUnitDialog.svelte";
 
 	muteLogs();
 
@@ -157,6 +159,10 @@
 <DeleteModelDialog/>
 <NewUnitDialog/>
 <DeleteUnitDialog/>
+
+<FindNamedElementDialog />
+<FindStructureDialog />
+<FindTextDialog />
 
 <style>
 	.main-frame {

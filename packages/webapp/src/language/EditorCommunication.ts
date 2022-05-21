@@ -23,12 +23,20 @@ import {
 import {
     fileExtensions,
     languageName,
+    conceptNames,
     projectionNames,
     unitTypes
 } from "../components/stores/LanguageStore";
 import { setUserMessage, SeverityType } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
-import { modelErrors, searchResults, conceptNames, searchTab, activeTab } from "../components/stores/InfoPanelStore";
+import {
+    modelErrors,
+    searchResults,
+    searchTab,
+    activeTab,
+    searchResultLoaded,
+    errorTab, errorsLoaded
+} from "../components/stores/InfoPanelStore";
 
 const LOGGER = new PiLogger("EditorCommunication"); // .mute();
 
@@ -463,7 +471,10 @@ export class EditorCommunication {
     validate() {
         // TODO implement validate()
         LOGGER.log("validate called");
+        errorsLoaded.set(false);
+        activeTab.set(errorTab);
         EditorCommunication.getInstance().getErrors();
+        errorsLoaded.set(true);
     }
 
     replace() {
@@ -473,7 +484,10 @@ export class EditorCommunication {
     }
 
     findText(stringToFind: string) {
+        // todo loading of errors and search results should also depend on whether something has changed in the unit shown
         LOGGER.log("findText called");
+        searchResultLoaded.set(false);
+        activeTab.set(searchTab);
         const searcher = new Searcher();
         const results: PiElement[] = searcher.findString(stringToFind, this.currentUnit, editorEnvironment.writer);
         this.showSearchResults(results, stringToFind);
@@ -481,6 +495,8 @@ export class EditorCommunication {
 
     findStructure(elemToMatch: Partial<PiElement>) {
         LOGGER.log("findStructure called");
+        searchResultLoaded.set(false);
+        activeTab.set(searchTab);
         const searcher = new Searcher();
         const results: PiElement[] = searcher.findStructure(elemToMatch, this.currentUnit);
         this.showSearchResults(results, "elemToMatch");
@@ -488,6 +504,8 @@ export class EditorCommunication {
 
     findNamedElement(nameToFind: string, metatypeSelected: string){
         LOGGER.log("findNamedElement called");
+        searchResultLoaded.set(false);
+        activeTab.set(searchTab);
         const searcher = new Searcher();
         const results: PiElement[] = searcher.findNamedElement(nameToFind, this.currentUnit, metatypeSelected);
         this.showSearchResults(results, nameToFind);
@@ -504,6 +522,6 @@ export class EditorCommunication {
             }
         }
         searchResults.set(itemsToShow);
-        activeTab.set(searchTab);
+        searchResultLoaded.set(true);
     }
 }

@@ -51,7 +51,7 @@
 
 	<LinearProgress
 			indeterminate
-			bind:closed={$errorsLoaded}
+			closed="{$errorsLoaded}"
 			aria-label="Data is being loaded..."
 			slot="progress"
 	/>

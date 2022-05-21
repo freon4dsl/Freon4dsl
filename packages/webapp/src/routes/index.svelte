@@ -7,6 +7,8 @@
 
     import { userMessage, userMessageOpen, severity, SeverityType } from "../components/stores/UserMessageStore";
 
+    import { allExtensionsToString } from "../components/ts-utils/MenuUtils";
+
     import SplitPane from "../components/SplitPane.svelte";
     import EditorPart from "../components/editor-panel/EditorPart.svelte";
     import InfoPanel from "../components/info-panel/InfoPanel.svelte";

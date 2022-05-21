@@ -17,9 +17,14 @@ export function metaTypeForExtension (extension: string) {
 
 export function allExtensionsToString() : string {
     let result: string = '';
+    const size: number = editorEnvironment.fileExtensions.size;
+    let i: number = 0;
     for (let [key, value] of editorEnvironment.fileExtensions) {
-        result += value + ", ";
+        result += value;
+        if (i < size - 1) { // only add a comma between, not after, the extensions.
+            result += ", ";
+            i++;
+        }
     }
-    // TODO remove last comma
     return result;
 }
