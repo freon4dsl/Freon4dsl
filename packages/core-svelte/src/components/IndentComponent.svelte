@@ -22,7 +22,7 @@
 
 </script>
 
-<div
+<span
     class="indentStyle"
     tabIndex={0}
     style="{style}"
@@ -30,7 +30,7 @@
     on:blur={onBlur}
 >
     <RenderComponent box={indentBox.child} editor={editor}/>
-</div>
+</span>
 
 <style>
     .indentStyle {

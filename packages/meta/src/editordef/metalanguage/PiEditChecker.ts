@@ -6,6 +6,7 @@ import {
     PiPrimitiveType, PiProperty
 } from "../../languagedef/metalanguage";
 import { Checker, CheckRunner, LangUtil, Names, PiDefinitionElement, ParseLocationUtil} from "../../utils";
+import { PiEditParseUtil } from "../parser/PiEditParseUtil";
 import {
     ListInfo,
     PiEditClassifierProjection,
@@ -296,7 +297,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     }
                 }
             });
-
+            PiEditParseUtil.normalize(projection);
         }
     }
 

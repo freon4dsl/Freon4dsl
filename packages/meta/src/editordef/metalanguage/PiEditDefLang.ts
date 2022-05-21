@@ -6,8 +6,8 @@ import { Names, PiDefinitionElement } from "../../utils";
  * Super type of all elements that may be part of a projection definition
  */
 export type PiEditProjectionItem =
-    PiEditParsedProjectionIndent    // removed after parsing, by PiEditProjectionUtil.normalize()
-    | PiEditParsedNewline           // removed after parsing, by PiEditProjectionUtil.normalize()
+    PiEditParsedProjectionIndent    // removed after parsing, by PiEditParseUtil.normalize()
+    | PiEditParsedNewline           // removed after parsing, by PiEditParseUtil.normalize()
     | PiEditProjectionText
     | PiEditPropertyProjection
     | PiEditSuperProjection ;
@@ -236,7 +236,7 @@ export class ExtraClassifierInfo extends PiDefinitionElement {
  */
 export class PiEditProjectionLine extends PiDefinitionElement {
     items: PiEditProjectionItem[] = [];
-    indent: number = 0; // this number is calculated by PiEditProjectionUtil.normalize()
+    indent: number = 0; // this number is calculated by PiEditParseUtil.normalize()
 
     isEmpty(): boolean {
         return (this.items.every(i => i instanceof PiEditParsedNewline || i instanceof PiEditParsedProjectionIndent)) || this.items.length === 0 ;

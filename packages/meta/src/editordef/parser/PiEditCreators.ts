@@ -201,9 +201,9 @@ export function createProjection(data: Partial<PiEditProjection>): PiEditProject
         result.classifier = data.classifier;
     }
     if (!!data.lines) {
-        result.lines = data.lines;
+        result.lines = PiEditParseUtil.normalizeLine( data.lines[0]  );
         // Now cleanup the parsed projection
-        PiEditParseUtil.normalize(result);
+        // PiEditParseUtil.normalizeLine(result);
     }
     if (!!data.location) {
         result.location = data.location;

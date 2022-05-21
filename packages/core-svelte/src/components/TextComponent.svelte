@@ -402,7 +402,7 @@
         font-family: inherit;
         font-size: inherit;
         font-weight: inherit;
-        padding: inherit;
+        padding: 0px;
         margin: inherit;
         display: inherit;
         white-space: inherit;

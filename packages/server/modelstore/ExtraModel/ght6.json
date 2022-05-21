@@ -16,6 +16,11 @@
                "$typename": "Attribute",
                "name": "asde",
                "declaredType": "Integer"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "rr12",
+               "declaredType": "Boolean"
             }
          ],
          "methods": [
@@ -74,12 +79,20 @@
          "attributes": [
             {
                "$typename": "Attribute",
-               "name": "",
-               "declaredType": null
+               "name": "eeeee",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "ddd",
+               "declaredType": "Boolean"
             }
          ],
          "methods": [],
-         "listOfReferences": [],
+         "listOfReferences": [
+            "",
+            ""
+         ],
          "baseEntity": null
       }
    ],
@@ -97,14 +110,46 @@
             {
                "$typename": "Parameter",
                "name": "",
-               "declaredType": null
+               "declaredType": "Integer"
             },
             {
                "$typename": "Parameter",
                "name": "",
-               "declaredType": null
+               "declaredType": "Mies"
             }
          ],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "sswqdd",
+         "body": null,
+         "parameters": [
+            {
+               "$typename": "Parameter",
+               "name": "",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Parameter",
+               "name": "",
+               "declaredType": "Integer"
+            }
+         ],
+         "declaredType": "String"
+      },
+      {
+         "$typename": "Method",
+         "name": "dqwdwqddwq",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "wdqwdwq eee212e ee21e e12 12 12ee",
+         "body": null,
+         "parameters": [],
          "declaredType": null
       }
    ]
