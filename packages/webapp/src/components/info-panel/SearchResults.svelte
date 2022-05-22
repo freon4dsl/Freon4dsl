@@ -18,10 +18,8 @@
                 "sortAscendingAriaLabel" and
                 "sortDescendingAriaLabel" props on the DataTable.
             -->
-            <Cell numeric columnId="id">
-                <!-- For numeric columns, icon comes first. -->
-                <IconButton class="material-icons">arrow_upward</IconButton>
-                <Label></Label>
+            <Cell checkbox>
+                <Label>Show in Editor</Label>
             </Cell>
             <Cell columnId="message" style="width: 100%;">
                 <Label>Text found</Label>
@@ -36,8 +34,13 @@
     </Head>
     <Body>
     {#each $searchResults as item, index}
-        <Row on:mousedown={xxx(item)}>
-            <Cell numeric>{index}</Cell>
+        <Row>
+            <Cell>
+                <Radio
+                        bind:group={selected}
+                        value={index}
+                />
+            </Cell>
             <Cell>{item.message}</Cell>
             <Cell>{item.locationdescription}</Cell>
         </Row>
@@ -55,10 +58,12 @@
 <script lang="ts">
     import DataTable, { Head, Body, Row, Cell, Label } from "@smui/data-table";
     import type { SortValue } from "@material/data-table"; // should be exported by SMUI, but gives error
+    import Radio from '@smui/radio';
     import LinearProgress from "@smui/linear-progress";
     import IconButton from "@smui/icon-button";
     import { searchResultLoaded, searchResults } from "../stores/InfoPanelStore";
     import type { PiError } from "@projectit/core";
+    import { EditorCommunication } from "../../language/EditorCommunication";
 
     // sorting of table
     let sort: keyof PiError = "message";
@@ -77,13 +82,21 @@
         $searchResults = $searchResults;
     }
 
-    // selection of row
-    function handleClick(item: PiError) {
-        console.log("item clicked: " + item.message);
-        // EditorCommunication.getInstance().selectElement(item.reportedOn);
-    }
-    // todo handleCLick
-    function xxx(e: CustomEvent) {
-        console.log("P+OK: " + e.detail)
+    // selection of row does not function, therefore we use the checkbox option from the SMUI docs
+    // todo look into selection of row in searchlist
+    let selected: number = 0;
+    $: handleClick(selected);
+
+    const handleClick = (index: number) => {
+        console.log("index: " + index);
+        if (!!$searchResults && $searchResults.length > 0) {
+            const item = $searchResults[index];
+            console.log("item clicked: " + item.message);
+            if (Array.isArray(item.reportedOn)) {
+                EditorCommunication.getInstance().selectElement(item.reportedOn[0]);
+            } else {
+                EditorCommunication.getInstance().selectElement(item.reportedOn);
+            }
+        }
     }
 </script>

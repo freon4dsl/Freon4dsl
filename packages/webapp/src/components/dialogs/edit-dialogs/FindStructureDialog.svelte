@@ -49,25 +49,19 @@
 	let metatypeSelected: string = "";
 	const cancelStr: string = "cancel";
 	const submitStr: string = "submit";
-	let response: string = '';
 
 	function closeHandler(e: CustomEvent<{ action: string }>) {
 		switch (e.detail.action) {
 			case submitStr:
-				response = "We'll search for " + metatypeSelected + ".";
 				// todo add real functionality
 				// EditorCommunication.getInstance().findStructure(elemToMatch);
 				break;
 			case cancelStr:
-				response = "Ok, well, we'll do nothing then.";
 				break;
 			default:
 				// This means the user clicked the scrim or pressed Esc to close the dialog.
-				// The actions will be "close".
-				response = "Ok, well, we'll do nothing then.";
 				break;
 		}
-		console.log(response);
 	}
 
 </script>

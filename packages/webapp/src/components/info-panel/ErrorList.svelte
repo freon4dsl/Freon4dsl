@@ -18,10 +18,8 @@
 				"sortAscendingAriaLabel" and
 				"sortDescendingAriaLabel" props on the DataTable.
 			-->
-			<Cell numeric columnId="id">
-				<!-- For numeric columns, icon comes first. -->
-				<IconButton class="material-icons">arrow_upward</IconButton>
-				<Label></Label>
+			<Cell checkbox>
+				<Label>Show in Editor</Label>
 			</Cell>
 			<Cell columnId="message" style="width: 100%;">
 				<Label>Message</Label>
@@ -40,8 +38,13 @@
 	</Head>
 	<Body>
 	{#each $modelErrors as item, index}
-		<Row on:mousedown={xxx(item)}>
-			<Cell numeric>{index}</Cell>
+		<Row >
+			<Cell>
+				<Radio
+						bind:group={selected}
+						value={index}
+				/>
+			</Cell>
 			<Cell>{item.message}</Cell>
 			<Cell>{item.locationdescription}</Cell>
 			<Cell>{item.severity}</Cell>
@@ -66,10 +69,12 @@
 		Label
 	} from '@smui/data-table';
 	import type { SortValue } from '@material/data-table'; // should be exported by SMUI, but gives error
+	import Radio from '@smui/radio';
 	import IconButton from '@smui/icon-button';
 	import LinearProgress from '@smui/linear-progress';
 	import { errorsLoaded, modelErrors } from "../stores/InfoPanelStore";
 	import type { PiError } from "@projectit/core";
+	import { EditorCommunication } from "../../language/EditorCommunication";
 
 	// sorting of table
 	let sort: keyof PiError = 'message';
@@ -88,18 +93,28 @@
 		$modelErrors = $modelErrors;
 	}
 
-	// selection of row
-	const handleClick = (item: PiError) => {
-		console.log("item clicked: " + item.message);
-		// if (Array.isArray(item.reportedOn)) {
-		// 	// EditorCommunication.getInstance().selectElement(item.reportedOn[0]);
-		// } else {
-		// 	// EditorCommunication.getInstance().selectElement(item.reportedOn);
-		// }
-	}
-	// todo handleCLick
-	function xxx(e: CustomEvent) {
-		console.log("P+OK: " + e.detail)
+	// selection of row does not function, therefore we use the checkbox option from the SMUI docs
+	// todo look into selection of row in errorlist
+	let selected: number = 0;
+	$: handleClick(selected);
+
+	const handleClick = (index: number) => {
+		console.log("index: " + index);
+		if (!!$modelErrors && $modelErrors.length > 0) {
+			const item = $modelErrors[index];
+			console.log("item clicked: " + item.message);
+			if (Array.isArray(item.reportedOn)) {
+				EditorCommunication.getInstance().selectElement(item.reportedOn[0]);
+			} else {
+				EditorCommunication.getInstance().selectElement(item.reportedOn);
+			}
+		}
 	}
 
 </script>
+
+<style>
+	.row {
+		background-color: #ffe0b2;
+	}
+</style>

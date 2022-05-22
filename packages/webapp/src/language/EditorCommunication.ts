@@ -518,6 +518,7 @@ export class EditorCommunication {
         } else {
             for (const elem of results) {
                 // message: string, element: PiElement | PiElement[], locationdescription: string, severity?: PiErrorSeverity
+                // todo show some part of the text string instead of the element id
                 itemsToShow.push(new PiError(elem.piId(), elem, elem.piId()));
             }
         }

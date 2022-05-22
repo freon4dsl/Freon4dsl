@@ -1,12 +1,10 @@
 ## Issues that remain to be done in this webapp
 
 1. Names of the concepts that can be searched for should be entered in some config by the lang engineer.
-2. The error list and search results shoudl not have a number, or perhaphs they shoudl have some ID.
+2. The error list and search results should not have a number, or perhaps they should have some ID.
 3. Search for structure should be augmented with a view to enter the structure.
-4. Delete model functionality should be added.
 5. Styling should be improved.
-6. When an item is selected in the info panel (error or search result), the cursor should jump to the corrsponding
-element.
+
 7. Code to import a unit should be moved to other place.
 8. Progress indicator for importing unit.
 9. Add comments on changes in SplitPane.
@@ -20,4 +18,11 @@ element.
 17. Maybe add a context menu to the model name in the navigator (drawer) to add new unit and import new unit.
 18. Make sure the same font-family is used for the app and the editor.
 19. Remove all unneeded console.logs.
-20. Make sure Travis is ok.
+20. Make sure Travis is ok: travis.yml uses node 14.15.4, where svelte-kit expects >= 16. Maybe update yarn as well?
+21. Message on server: "DeprecationWarning: In future versions of Node.js, fs.rmdir(path, { recursive: true }) will be removed. Use fs.rm(path, { recursive: true }) instead"
+
+
+DONE:
+4. Delete model functionality should be added.
+6. When an item is selected in the info panel (error or search result), the cursor should jump to the corrsponding
+   element.

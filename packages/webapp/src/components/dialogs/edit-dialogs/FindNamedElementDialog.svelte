@@ -51,7 +51,6 @@
 
     let stringToFind: string = "";
     let typeSelected: string = "";
-    let response: string = "";
     let nameInvalid: boolean;
     $: nameInvalid = stringToFind.length > 0 ? !!typeSelected ? inputInvalid() : inputInvalid() : false;
 
@@ -60,21 +59,16 @@
     function closeHandler(e: CustomEvent<{ action: string }>) {
         switch (e.detail.action) {
             case submitStr:
-                response = "We'll search for '" + stringToFind +  "' of type '" + typeSelected + "'.";
                 if (!inputInvalid()) {
                     EditorCommunication.getInstance().findNamedElement(stringToFind, typeSelected);
                 }
                 break;
             case cancelStr:
-                response = "Ok, well, we'll do nothing then.";
                 break;
             default:
                 // This means the user clicked the scrim or pressed Esc to close the dialog.
-                // The actions will be "close".
-                response = "Ok, well, we'll do nothing then.";
                 break;
         }
-        console.log(response);
         stringToFind = "";
     }
 
