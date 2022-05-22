@@ -74,7 +74,7 @@
 	import LinearProgress from '@smui/linear-progress';
 	import { errorsLoaded, modelErrors } from "../stores/InfoPanelStore";
 	import type { PiError } from "@projectit/core";
-	import { EditorCommunication } from "../../language/EditorCommunication";
+	import { EditorState } from "../../language/EditorState";
 
 	// sorting of table
 	let sort: keyof PiError = 'message';
@@ -99,22 +99,14 @@
 	$: handleClick(selected);
 
 	const handleClick = (index: number) => {
-		console.log("index: " + index);
 		if (!!$modelErrors && $modelErrors.length > 0) {
 			const item = $modelErrors[index];
-			console.log("item clicked: " + item.message);
 			if (Array.isArray(item.reportedOn)) {
-				EditorCommunication.getInstance().selectElement(item.reportedOn[0]);
+				EditorState.getInstance().selectElement(item.reportedOn[0]);
 			} else {
-				EditorCommunication.getInstance().selectElement(item.reportedOn);
+				EditorState.getInstance().selectElement(item.reportedOn);
 			}
 		}
 	}
 
 </script>
-
-<style>
-	.row {
-		background-color: #ffe0b2;
-	}
-</style>

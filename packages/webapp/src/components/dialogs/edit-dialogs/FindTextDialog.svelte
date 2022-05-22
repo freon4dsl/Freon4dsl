@@ -28,7 +28,7 @@
 	import HelperText from '@smui/textfield/helper-text';
 	import Button, { Label } from '@smui/button';
 	import { findTextDialogVisible } from "../../stores/DialogStore";
-	import { EditorCommunication } from "../../../language/EditorCommunication";
+	import { EditorRequestsHandler } from "../../../language/EditorRequestsHandler";
 
 	let stringToFind: string = "";
 	const cancelStr: string = "cancel";
@@ -38,7 +38,7 @@
 		switch (e.detail.action) {
 			case submitStr:
 				if (!!stringToFind && stringToFind.length > 0) {
-					EditorCommunication.getInstance().findText(stringToFind);
+					EditorRequestsHandler.getInstance().findText(stringToFind);
 				}
 				break;
 			case cancelStr:

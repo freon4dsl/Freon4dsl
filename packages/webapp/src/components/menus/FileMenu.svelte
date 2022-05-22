@@ -36,17 +36,17 @@
 	import Button, { Label } from '@smui/button';
 	import { Anchor } from '@smui/menu-surface';
 	import { currentModelName, currentUnitName, unitNames } from "../stores/ModelStore";
-	import { MenuItem } from "../ts-utils/MenuUtils";
+	import { MenuItem } from "../ts-utils/MenuItem";
 	import { fileExtensions } from "../stores/LanguageStore";
 	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../stores/DialogStore";
 	import { setUserMessage } from "../stores/UserMessageStore";
 	import { serverCommunication } from "../../config/WebappConfiguration";
 	import { modelNames } from "../stores/ServerStore";
-	import { EditorCommunication } from "../../language/EditorCommunication";
+	import { EditorState } from "../../language/EditorState";
 	import { ImportExportHandler } from "../../language/ImportExportHandler";
 
 	// variables for the file import
-	let file_selector;
+	let file_selector: HTMLElement;
 	let file_extensions = `${$fileExtensions.map(entry => `${entry}`).join(", ")}`;
 	let file_selector_props = {
 		type: "file",
@@ -55,18 +55,17 @@
 	};
 
 	let menu: MenuComponentDev;
-	let clicked = 'nothing yet';
 
 	// following is used to position the menu
 	let anchor: HTMLDivElement;
 	let anchorClasses: { [k: string]: boolean } = {};
 
-	const addClass = (className) => {
+	const addClass = (className: string) => {
 		if (!anchorClasses[className]) {
 			anchorClasses[className] = true;
 		}
 	}
-	const removeClass = (className) => {
+	const removeClass = (className: string) => {
 		if (anchorClasses[className]) {
 			delete anchorClasses[className];
 			anchorClasses = anchorClasses;
@@ -83,7 +82,7 @@
 
     // new model menuitem
     const changeModel = () => {
-		console.log("FileMenu.changeModel");
+		// console.log("FileMenu.changeModel");
         // get list of models from server
         serverCommunication.loadModelList((names: string[]) => {
             if (names.length > 0) {
@@ -95,7 +94,7 @@
 
     // new unit menuitem
     const newUnit = () => {
-		console.log("FileMenu.newUnit");
+		// console.log("FileMenu.newUnit");
         // get list of units from server, because new unit may not have the same name as an existing one
         serverCommunication.loadUnitList($currentModelName, (names: string[]) => {
             // list may be empty => this is the first unit to be stored
@@ -106,14 +105,14 @@
 
     // save unit menuitem
     const saveUnit = () => {
-        console.log("FileMenu.saveUnit: " + $currentUnitName);
-        EditorCommunication.getInstance().saveCurrentUnit();
+        // console.log("FileMenu.saveUnit: " + $currentUnitName);
+        EditorState.getInstance().saveCurrentUnit();
 		setUserMessage(`Unit '${$currentUnitName}' saved.`);
     }
 
     // delete model menuitem
     const deleteModel = () => {
-        console.log("FileMenu.deleteModel");
+        // console.log("FileMenu.deleteModel");
         // get list of models from server
         serverCommunication.loadModelList((names: string[]) => {
             // if list not empty, show dialog

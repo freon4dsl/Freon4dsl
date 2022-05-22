@@ -1,11 +1,13 @@
-import { EditorCommunication } from "./EditorCommunication";
+import { EditorState } from "./EditorState";
 import { setUserMessage } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
 import type { PiModelUnit } from "@projectit/core";
+import { editorProgressShown } from "../components/stores/ModelStore";
 
 export class ImportExportHandler {
 
     importUnits(fileList: FileList){
+        editorProgressShown.set(true);
         const reader = new FileReader();
         // todo check whether the name of the unit already exists in the model
         for (let file of fileList) {
@@ -21,7 +23,7 @@ export class ImportExportHandler {
                     const text = reader.result;
                     if (typeof text == "string") {
                         try {
-                            EditorCommunication.getInstance().unitFromFile(reader.result as string, metaType);
+                            EditorState.getInstance().unitFromFile(reader.result as string, metaType);
                         } catch (e) {
                             setUserMessage(`${e.message}`);
                         }
@@ -35,11 +37,12 @@ export class ImportExportHandler {
                  Found: ${extension}, expected one of: ${this.allExtensionsToString()}.`);
             }
         }
+        editorProgressShown.set(false);
     }
 
     async exportUnit(unit: PiModelUnit) {
         // get the complete unit from the server
-        await serverCommunication.loadModelUnit(EditorCommunication.getInstance().currentModel.name, unit.name, (completeUnit: PiModelUnit) => {
+        await serverCommunication.loadModelUnit(EditorState.getInstance().currentModel.name, unit.name, (completeUnit: PiModelUnit) => {
             this._exportUnit(completeUnit);
         });
     }

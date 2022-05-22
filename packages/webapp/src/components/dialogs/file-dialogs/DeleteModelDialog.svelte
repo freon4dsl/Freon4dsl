@@ -49,26 +49,20 @@
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
-    let response: string = "";
     let modelToBeDeleted: string;
 
     function closeHandler(e: CustomEvent<{ action: string }>) {
         switch (e.detail.action) {
             case submitStr:
-                response = "In the trash with it.";
                 serverCommunication.deleteModel(modelToBeDeleted);
                 break;
             default:
                 // This means the user clicked the scrim or pressed Esc to close the dialog.
-                // The actions will be "close".
-                response = "Ok, well, we'll keep it then.";
                 break;
             case cancelStr:
-                response = "Ok, well, we'll keep it then.";
                 break;
         }
         modelToBeDeleted = "";
-        console.log(response);
     }
 
 </script>

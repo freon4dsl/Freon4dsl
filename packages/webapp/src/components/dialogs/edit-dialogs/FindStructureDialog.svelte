@@ -54,7 +54,7 @@
 		switch (e.detail.action) {
 			case submitStr:
 				// todo add real functionality
-				// EditorCommunication.getInstance().findStructure(elemToMatch);
+				// EditorRequestsHandler.getInstance().findStructure(elemToMatch);
 				break;
 			case cancelStr:
 				break;

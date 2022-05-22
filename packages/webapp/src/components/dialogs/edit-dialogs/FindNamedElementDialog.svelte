@@ -42,8 +42,8 @@
     import Radio from "@smui/radio";
     import FormField from "@smui/form-field";
     import { findNamedDialogVisible } from "../../stores/DialogStore";
-    import { EditorCommunication } from "../../../language/EditorCommunication";
     import { conceptNames } from "../../stores/LanguageStore";
+    import { EditorRequestsHandler } from "../../../language/EditorRequestsHandler";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -60,7 +60,7 @@
         switch (e.detail.action) {
             case submitStr:
                 if (!inputInvalid()) {
-                    EditorCommunication.getInstance().findNamedElement(stringToFind, typeSelected);
+                    EditorRequestsHandler.getInstance().findNamedElement(stringToFind, typeSelected);
                 }
                 break;
             case cancelStr:

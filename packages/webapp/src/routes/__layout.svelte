@@ -43,12 +43,11 @@
 	import { languageName } from "../components/stores/LanguageStore";
 	import { currentModelName } from "../components/stores/ModelStore";
 
-	import { EditorCommunication } from "../language/EditorCommunication";
 	import { serverCommunication } from "../config/WebappConfiguration";
+	import { LanguageInitializer } from "../language/LanguageInitializer";
 
 	// import this file to set which loggers will be active
 	import { muteLogs } from "../logging/LoggerSettings";
-
 	muteLogs();
 
 	// Theming
@@ -73,7 +72,7 @@
 
 	onMount(async () => {
 		// initialize language settings
-		EditorCommunication.initialize();
+		LanguageInitializer.initialize();
 
 		// get list of models from server
 		await serverCommunication.loadModelList((names: string[]) => {

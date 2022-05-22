@@ -35,27 +35,26 @@
 		Text
 	} from '@smui/list';
 	import Button, { Label } from '@smui/button';
-	import { MenuItem } from "../ts-utils/MenuUtils";
-	import { EditorCommunication } from "../../language/EditorCommunication";
+	import { MenuItem } from "../ts-utils/MenuItem";
 	import {
 		findNamedDialogVisible,
 		findStructureDialogVisible,
 		findTextDialogVisible
 	} from "../stores/DialogStore";
+	import { EditorRequestsHandler } from "../../language/EditorRequestsHandler";
 
 	let menu: MenuComponentDev;
-	let clicked = 'nothing yet';
 
 	// stuff for posiitoning the menu
 	let anchor: HTMLDivElement;
 	let anchorClasses: { [k: string]: boolean } = {}; // a list of name - boolean pairs
 
-	const addClass = (className) => {
+	const addClass = (className: string) => {
 		if (!anchorClasses[className]) {
 			anchorClasses[className] = true;
 		}
 	}
-	const removeClass = (className) => {
+	const removeClass = (className: string) => {
 		if (anchorClasses[className]) {
 			delete anchorClasses[className];
 			anchorClasses = anchorClasses;
@@ -65,7 +64,6 @@
 	// implementation of all actions
 	const findText = () => {
 		$findTextDialogVisible = true;
-		console.log("EditMenu.findText: " + $findTextDialogVisible);
 	}
 
 	const findStructureElement = () => {
@@ -86,12 +84,12 @@
 
 	// all menu items
 	let menuItems : MenuItem[] = [
-		{ title: 'Undo', action: EditorCommunication.getInstance().undo, id: 1 },
-		{ title: 'Redo', action: EditorCommunication.getInstance().redo, id: 2 },
-		{ title: 'Validate', action: EditorCommunication.getInstance().validate, id: 3 },
+		{ title: 'Undo', action: EditorRequestsHandler.getInstance().undo, id: 1 },
+		{ title: 'Redo', action: EditorRequestsHandler.getInstance().redo, id: 2 },
+		{ title: 'Validate', action: EditorRequestsHandler.getInstance().validate, id: 3 },
 		{ title: 'Find Named Element', action: findNamedElement, id: 4 },
 		{ title: 'Find Structure Element', action: findStructureElement, id: 5 },
 		{ title: 'Find Text', action: findText, id: 6 },
-		{ title: 'Replace', action: EditorCommunication.getInstance().replace, id: 7 },
+		{ title: 'Replace', action: EditorRequestsHandler.getInstance().replace, id: 7 },
 	];
 </script>

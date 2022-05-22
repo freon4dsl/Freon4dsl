@@ -52,7 +52,7 @@
     import List, { Item, Separator, Text } from "@smui/list";
     import { projectionNames, projectionsShown } from "../stores/LanguageStore";
     import { Anchor } from "@smui/menu-surface";
-    import { EditorCommunication } from "../../language/EditorCommunication";
+    import { EditorRequestsHandler } from "../../language/EditorRequestsHandler";
 
 
     let menu: MenuComponentDev;
@@ -60,12 +60,12 @@
     let anchor: HTMLDivElement;
     let anchorClasses: { [k: string]: boolean } = {};
 
-    const addClass = (className) => {
+    const addClass = (className: string) => {
         if (!anchorClasses[className]) {
             anchorClasses[className] = true;
         }
     };
-    const removeClass = (className) => {
+    const removeClass = (className: string) => {
         if (anchorClasses[className]) {
             delete anchorClasses[className];
             anchorClasses = anchorClasses;
@@ -89,9 +89,9 @@
         allProjections.forEach(proj => {
             if (proj.selected) {
                 selection.push(proj.name);
-                EditorCommunication.getInstance().enableProjection(proj.name);
+                EditorRequestsHandler.getInstance().enableProjection(proj.name);
             } else {
-                EditorCommunication.getInstance().disableProjection(proj.name);
+                EditorRequestsHandler.getInstance().disableProjection(proj.name);
             }
         });
         $projectionsShown = selection;

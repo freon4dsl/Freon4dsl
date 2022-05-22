@@ -48,7 +48,7 @@
     import { modelNames } from "../../stores/ServerStore";
     import { initializing, openModelDialogVisible } from "../../stores/DialogStore";
     import { setUserMessage } from "../../stores/UserMessageStore";
-    import { EditorCommunication } from "../../../language/EditorCommunication";
+    import { EditorState } from "../../../language/EditorState";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -64,14 +64,14 @@
         // console.log("initalizing: " + $initializing);
         switch (e.detail.action) {
             case submitStr:
-                let comm = EditorCommunication.getInstance();
+                let comm = EditorState.getInstance();
                 if (internalSelected?.length > 0) { // should be checked first, because newName depends on it
                     comm.openModel(internalSelected);
-                    console.log("OPENING EXISTING MODEL: " + newName);
+                    // console.log("OPENING EXISTING MODEL: " + newName);
                     $initializing = false;
                 } else if (!newNameInvalid()) {
                     comm.newModel(newName);
-                    console.log("CREATING NEW MODEL: " + newName);
+                    // console.log("CREATING NEW MODEL: " + newName);
                     $initializing = false;
                 } else {
                     setUserMessage(`Cannot create model ${newName}, because its name is invalid.`);

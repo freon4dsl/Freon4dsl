@@ -63,7 +63,7 @@
     import IconButton from "@smui/icon-button";
     import { searchResultLoaded, searchResults } from "../stores/InfoPanelStore";
     import type { PiError } from "@projectit/core";
-    import { EditorCommunication } from "../../language/EditorCommunication";
+    import { EditorState } from "../../language/EditorState";
 
     // sorting of table
     let sort: keyof PiError = "message";
@@ -88,14 +88,12 @@
     $: handleClick(selected);
 
     const handleClick = (index: number) => {
-        console.log("index: " + index);
         if (!!$searchResults && $searchResults.length > 0) {
             const item = $searchResults[index];
-            console.log("item clicked: " + item.message);
             if (Array.isArray(item.reportedOn)) {
-                EditorCommunication.getInstance().selectElement(item.reportedOn[0]);
+                EditorState.getInstance().selectElement(item.reportedOn[0]);
             } else {
-                EditorCommunication.getInstance().selectElement(item.reportedOn);
+                EditorState.getInstance().selectElement(item.reportedOn);
             }
         }
     }

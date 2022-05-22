@@ -44,7 +44,7 @@
     import { unitTypes } from "../../stores/LanguageStore";
     import Radio from "@smui/radio";
     import FormField from "@smui/form-field";
-    import { EditorCommunication } from "../../../language/EditorCommunication";
+    import { EditorState } from "../../../language/EditorState";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -60,7 +60,7 @@
         switch (e.detail.action) {
             case submitStr:
                 if (!newNameInvalid()) {
-                    EditorCommunication.getInstance().newUnit(newName, typeSelected);
+                    EditorState.getInstance().newUnit(newName, typeSelected);
                 }
                 break;
             case cancelStr:

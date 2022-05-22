@@ -53,12 +53,10 @@
     import { Subtitle } from "@smui/drawer";
     import Menu from "@smui/menu";
     import { deleteUnitDialogVisible } from "../stores/DialogStore";
-    import { EditorCommunication } from "../../language/EditorCommunication";
+    import { EditorState } from "../../language/EditorState";
     import { setUserMessage } from "../stores/UserMessageStore";
-    import { modelErrors } from "../stores/InfoPanelStore";
     import { ImportExportHandler } from "../../language/ImportExportHandler";
 
-    let activated: boolean = true;
     let menus: MenuComponentDev[] = [];
 
     let myUnits = [];
@@ -75,7 +73,7 @@
         : [];
 
     const openUnit = (index: number) => {
-        EditorCommunication.getInstance().openModelUnit($units[index]);
+        EditorState.getInstance().openModelUnit($units[index]);
     };
 
     const deleteUnit = (index: number) => {
@@ -85,9 +83,9 @@
     };
 
     const saveUnit = (index: number) => {
-        console.log("ModelInfo.saveUnit: " + $units[index].name);
+        // console.log("ModelInfo.saveUnit: " + $units[index].name);
         if ($units[index].name === $currentUnitName) {
-            EditorCommunication.getInstance().saveCurrentUnit();
+            EditorState.getInstance().saveCurrentUnit();
             setUserMessage(`Unit '${$units[index].name}' saved.`, 0);
         } else {
             setUserMessage(`Unit '${$units[index].name}' has no changes.`, 0);

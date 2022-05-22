@@ -1,10 +1,8 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
 import {
-    PiCompositeProjection,
     PiError,
     PiErrorSeverity,
-    PiLogger,
-    Searcher
+    PiLogger
 } from "@projectit/core";
 import type {
     PiElement,
@@ -20,56 +18,21 @@ import {
     units,
     editorProgressShown, unitNames
 } from "../components/stores/ModelStore";
-import {
-    fileExtensions,
-    languageName,
-    conceptNames,
-    projectionNames,
-    unitTypes
-} from "../components/stores/LanguageStore";
 import { setUserMessage, SeverityType } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
 import {
     modelErrors,
-    searchResults,
-    searchTab,
-    activeTab,
-    searchResultLoaded,
-    errorTab, errorsLoaded
 } from "../components/stores/InfoPanelStore";
 
 const LOGGER = new PiLogger("EditorCommunication"); // .mute();
 
-export class EditorCommunication {
-    private static instance: EditorCommunication = null;
-
-    static getInstance(): EditorCommunication {
-        if (EditorCommunication.instance === null) {
-            EditorCommunication.instance = new EditorCommunication();
+export class EditorState {
+    private static instance: EditorState = null;
+    static getInstance(): EditorState {
+        if (EditorState.instance === null) {
+            EditorState.instance = new EditorState();
         }
-        return EditorCommunication.instance;
-    }
-
-    /**
-     * fills the WebappStore with initial values that describe the language
-     */
-    static initialize(): void {
-        languageName.set(editorEnvironment.languageName);
-        // unitTypes are the same for every model in the language
-        unitTypes.set(editorEnvironment.unitNames);
-        // file extensions are the same for every model in the language
-        const tmp: string[] = [];
-        for (const val of editorEnvironment.fileExtensions.values()) {
-            tmp.push(val);
-        }
-        fileExtensions.set(tmp);
-        // projectionNames are the same for every model in the language
-        const proj = editorEnvironment.editor.projection;
-        let nameList: string[] = proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name];
-        projectionNames.set(nameList);
-        // set the concept names for which a search is possible
-        conceptNames.set(["Attr", "Mthod"]);
-        // TODO conceptNames.set(editorEnvironment.conceptNames);
+        return EditorState.instance;
     }
 
     currentUnit: PiModelUnit = null;
@@ -103,7 +66,7 @@ export class EditorCommunication {
         this.resetGlobalVariables();
 
         // save the old current unit, if there is one
-        this.saveCurrentUnit();
+        await this.saveCurrentUnit();
         // create new model instance in memory and set its name
         this.currentModel = editorEnvironment.newModel(modelName);
         currentModelName.set(modelName);
@@ -121,7 +84,7 @@ export class EditorCommunication {
                             this.currentModel.addUnit(unit);
                             this.currentUnit = unit;
                             currentUnitName.set(this.currentUnit.name);
-                            EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
+                            EditorState.getInstance().showUnitAndErrors(this.currentUnit);
                         });
                         first = false;
                     } else {
@@ -151,12 +114,12 @@ export class EditorCommunication {
      * @param newName
      * @param unitType
      */
-    newUnit(newName: string, unitType: string) {
+    async newUnit(newName: string, unitType: string) {
         LOGGER.log("EditorCommuncation.newUnit: unitType: " + unitType + ", name: " + newName);
         editorProgressShown.set(true);
 
         // save the old current unit, if there is one
-        this.saveCurrentUnit();
+        await this.saveCurrentUnit();
 
         // replace the current unit by its interface
         // and create a new unit named 'newName'
@@ -169,7 +132,7 @@ export class EditorCommunication {
                 (oldUnitInterface: PiModelUnit) => {
                     if (!!oldUnitInterface) {
                         // swap current unit with its interface in the in-memory model
-                        EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                        EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
                     }
                     this.createNewUnit(newName, unitType);
                 });
@@ -188,7 +151,7 @@ export class EditorCommunication {
     private createNewUnit(newName: string, unitType: string) {
         LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: "+ newName);
         // create a new unit and add it to the current model
-        const newUnit = EditorCommunication.getInstance().currentModel.newUnit(unitType);
+        const newUnit = EditorState.getInstance().currentModel.newUnit(unitType);
         if (!!newUnit) {
             newUnit.name = newName;
             // show the new unit in the editor
@@ -209,7 +172,7 @@ export class EditorCommunication {
                 if (!!unit.name && unit.name.length > 0) {
                     await serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit);
                     currentUnitName.set(unit.name); //just in case the user has changed the name in the editor
-                    EditorCommunication.getInstance().setUnitLists();
+                    EditorState.getInstance().setUnitLists();
                     this.hasChanges = false;
                 } else {
                     setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
@@ -268,7 +231,7 @@ export class EditorCommunication {
             return;
         }
         // save the old current unit, if there is one
-        this.saveCurrentUnit();
+        await this.saveCurrentUnit();
         // newUnit is stored in the in-memory model as an interface only
         // we must get the full unit from the server and make a swap
         await serverCommunication.loadModelUnit(this.currentModel.name, newUnit.name, (newCompleteUnit: PiModelUnit) => {
@@ -286,26 +249,26 @@ export class EditorCommunication {
      * @private
      */
     private swapInterfaceAndUnits(newCompleteUnit: PiModelUnit, newUnitInterface: PiModelUnit) {
-        if (!!EditorCommunication.getInstance().currentUnit) {
+        if (!!EditorState.getInstance().currentUnit) {
             // get the interface of the current unit from the server
             serverCommunication.loadModelUnitInterface(
-                EditorCommunication.getInstance().currentModel.name,
-                EditorCommunication.getInstance().currentUnit.name,
+                EditorState.getInstance().currentModel.name,
+                EditorState.getInstance().currentUnit.name,
                 (oldUnitInterface: PiModelUnit) => {
                     if (!!newCompleteUnit) { // the new unit which has been retrieved from the server
                         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
                             // swap old unit with its interface in the in-memory model
-                            EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                            EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
                         }
                         // swap the new unit interface with the full unit in the in-memory model
-                        EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
+                        EditorState.getInstance().currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
                         // show the new unit in the editor
                         this.showUnitAndErrors(newCompleteUnit);
                     }
                 });
         } else {
             // swap the new unit interface with the full unit in the in-memory model
-            EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
+            EditorState.getInstance().currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
             // show the new unit in the editor
             this.showUnitAndErrors(newCompleteUnit);
         }
@@ -406,99 +369,5 @@ export class EditorCommunication {
                 modelErrors.set([new PiError("Problem reading model unit: '" + e.message + "'", this.currentUnit, this.currentUnit.name, PiErrorSeverity.Error)]);
             }
         }
-    }
-
-    /**
-     * Makes sure that the editor show the current unit using the projections selected by the user
-     * @param name
-     */
-    enableProjection(name: string): void {
-        LOGGER.log("enabling Projection " + name);
-        const proj = editorEnvironment.editor.projection;
-        if (proj instanceof PiCompositeProjection) {
-            proj.enableProjection(name);
-        }
-    }
-
-    /**
-     * Makes sure that the editor show the current unit using the projections selected or unselected by the user
-     * @param name
-     */
-    disableProjection(name: string): void {
-        LOGGER.log("disabling Projection " + name);
-        const proj = editorEnvironment.editor.projection;
-        if (proj instanceof PiCompositeProjection) {
-            proj.disableProjection(name);
-        }
-    }
-
-    redo() {
-        // TODO implement redo()
-        LOGGER.log("redo called");
-        return undefined;
-    }
-
-    undo() {
-        // TODO implement undo()
-        LOGGER.log("undo called");
-        return undefined;
-    }
-
-    validate() {
-        // TODO implement validate()
-        LOGGER.log("validate called");
-        errorsLoaded.set(false);
-        activeTab.set(errorTab);
-        EditorCommunication.getInstance().getErrors();
-        errorsLoaded.set(true);
-    }
-
-    replace() {
-        // TODO implement replace()
-        LOGGER.log("replace called");
-        return undefined;
-    }
-
-    findText(stringToFind: string) {
-        // todo loading of errors and search results should also depend on whether something has changed in the unit shown
-        LOGGER.log("findText called");
-        searchResultLoaded.set(false);
-        activeTab.set(searchTab);
-        const searcher = new Searcher();
-        const results: PiElement[] = searcher.findString(stringToFind, this.currentUnit, editorEnvironment.writer);
-        this.showSearchResults(results, stringToFind);
-    }
-
-    findStructure(elemToMatch: Partial<PiElement>) {
-        LOGGER.log("findStructure called");
-        searchResultLoaded.set(false);
-        activeTab.set(searchTab);
-        const searcher = new Searcher();
-        const results: PiElement[] = searcher.findStructure(elemToMatch, this.currentUnit);
-        this.showSearchResults(results, "elemToMatch");
-    }
-
-    findNamedElement(nameToFind: string, metatypeSelected: string){
-        LOGGER.log("findNamedElement called");
-        searchResultLoaded.set(false);
-        activeTab.set(searchTab);
-        const searcher = new Searcher();
-        const results: PiElement[] = searcher.findNamedElement(nameToFind, this.currentUnit, metatypeSelected);
-        this.showSearchResults(results, nameToFind);
-    }
-
-    private showSearchResults(results: PiElement[], stringToFind: string) {
-        const itemsToShow: PiError[] = [];
-        if (!results || results.length === 0) {
-            itemsToShow.push(new PiError("No results for " + stringToFind, null, ""));
-        } else {
-            for (const elem of results) {
-                // message: string, element: PiElement | PiElement[], locationdescription: string, severity?: PiErrorSeverity
-                // todo show some part of the text string instead of the element id
-                itemsToShow.push(new PiError(elem.piId(), elem, elem.piId()));
-            }
-        }
-        searchResults.set(itemsToShow);
-        searchResultLoaded.set(true);
     }
 }

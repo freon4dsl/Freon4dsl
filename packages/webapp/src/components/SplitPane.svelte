@@ -134,7 +134,7 @@
     }
     .divider {
         position: absolute;
-        z-index: 100;
+        z-index: 6;  /* z-index of dialog is 7, this one must be lower*/
         display: none;
     }
     .divider::after {
