@@ -56,6 +56,7 @@
     import { EditorCommunication } from "../../language/EditorCommunication";
     import { setUserMessage } from "../stores/UserMessageStore";
     import { modelErrors } from "../stores/InfoPanelStore";
+    import { ImportExportHandler } from "../../language/ImportExportHandler";
 
     let activated: boolean = true;
     let menus: MenuComponentDev[] = [];
@@ -94,42 +95,7 @@
     };
 
     const exportUnit = (index: number) => {
-        // console.log("export unit called:" + unit.name);
-        // do not try to export a unit with errors
-        // parsing and unparsing will not proceed correctly
-        if ($modelErrors.length > 0) {
-            setUserMessage(`Cannot export a unit that has errors`);
-            return;
-        }
-        // create a text string from the unit
-        let text: string = EditorCommunication.getInstance().unitAsText();
-        // get the default file name from the current unit and its unit meta type
-        const fileExtension: string = EditorCommunication.getInstance().unitFileExtension();
-        let defaultFileName: string = $units[index].name + fileExtension;
-
-        // create a HTML element that contains the text string
-        let textFile = null;
-        var data = new Blob([text], { type: "text/plain" });
-
-        // If we are replacing a previously generated file we need to
-        // manually revoke the object URL to avoid memory leaks.
-        if (textFile !== null) {
-            URL.revokeObjectURL(textFile);
-        }
-        textFile = URL.createObjectURL(data);
-
-        // create a link for the download
-        var link = document.createElement("a");
-        link.setAttribute("download", defaultFileName);
-        link.href = textFile;
-        document.body.appendChild(link);
-
-        // wait for the link to be added to the document
-        window.requestAnimationFrame(function() {
-            var event = new MouseEvent("click");
-            link.dispatchEvent(event);
-            document.body.removeChild(link);
-        });
+        new ImportExportHandler().exportUnit($units[index]);
     };
 </script>
 

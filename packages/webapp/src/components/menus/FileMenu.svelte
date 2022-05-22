@@ -36,13 +36,14 @@
 	import Button, { Label } from '@smui/button';
 	import { Anchor } from '@smui/menu-surface';
 	import { currentModelName, currentUnitName, unitNames } from "../stores/ModelStore";
-	import { allExtensionsToString, MenuItem, metaTypeForExtension } from "../ts-utils/MenuUtils";
+	import { MenuItem } from "../ts-utils/MenuUtils";
 	import { fileExtensions } from "../stores/LanguageStore";
 	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../stores/DialogStore";
 	import { setUserMessage } from "../stores/UserMessageStore";
 	import { serverCommunication } from "../../config/WebappConfiguration";
 	import { modelNames } from "../stores/ServerStore";
 	import { EditorCommunication } from "../../language/EditorCommunication";
+	import { ImportExportHandler } from "../../language/ImportExportHandler";
 
 	// variables for the file import
 	let file_selector;
@@ -132,46 +133,7 @@
 
     const process_files = (event) => {
         const fileList: FileList = event.target.files;
-        let text: string[] = [];
-		for (let file of fileList) {
-			text.push(file.name);
-		}
-        console.log("Files to import: " + text.map(f => f).join(", "))
-        const reader = new FileReader();
-        // todo check whether the name of the unit already exists in the model
-        for (let file of fileList) {
-            // todo async: wait for file to be uploaded before starting next
-            // todo do something with progress indicator
-            // reader.addEventListener('progress', (event) => {
-            //     if (event.loaded && event.total) {
-            //         const percent = (event.loaded / event.total) * 100;
-            //         console.log(`Progress: ${Math.round(percent)}`);
-            //     }
-            // });
-            // to check whether the file is recognisable as a model unit, we examine the file extension
-            const extension: string = file.name.split(".").pop();
-            let metaType: string = metaTypeForExtension(extension);
-            // if the right extension has been found, continue
-            if (metaType.length > 0) {
-                reader.readAsText(file);
-                reader.onload = function() {
-                    const text = reader.result;
-                    if (typeof text == "string") {
-                        try {
-                            EditorCommunication.getInstance().unitFromFile(reader.result as string, metaType);
-                        } catch (e) {
-                            setUserMessage(`${e.message}`);
-                        }
-                    }
-                };
-                reader.onerror = function() {
-                    setUserMessage(reader.error.message);
-                };
-            } else {
-                setUserMessage(`File ${file.name} does not have the right (extension) type.
-                 Found: ${extension}, expected one of: ${allExtensionsToString()}.`);
-            }
-        }
+        new ImportExportHandler().importUnits(fileList);
     }
 
 	let menuItems: MenuItem[] = [

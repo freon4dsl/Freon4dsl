@@ -24,5 +24,5 @@
 
 DONE:
 4. Delete model functionality should be added.
-6. When an item is selected in the info panel (error or search result), the cursor should jump to the corrsponding
+6. When an item is selected in the info panel (error or search result), the cursor should jump to the corresponding
    element.

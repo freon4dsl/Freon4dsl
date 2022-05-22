@@ -64,20 +64,12 @@ export class EditorCommunication {
         }
         fileExtensions.set(tmp);
         // projectionNames are the same for every model in the language
-        EditorCommunication.setProjectionNames();
-        // set the concept names for which a search is possible
-        conceptNames.set(["Attr", "Mthod"]);
-        // TODO conceptNames.set(editorEnvironment.conceptNames);
-    }
-
-    /**
-     * Sets the list of projection names in the right order, such that it can
-     * be used in the projection menu.
-     */
-    static setProjectionNames() {
         const proj = editorEnvironment.editor.projection;
         let nameList: string[] = proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name];
         projectionNames.set(nameList);
+        // set the concept names for which a search is possible
+        conceptNames.set(["Attr", "Mthod"]);
+        // TODO conceptNames.set(editorEnvironment.conceptNames);
     }
 
     currentUnit: PiModelUnit = null;
@@ -98,6 +90,60 @@ export class EditorCommunication {
         // create a new model
         this.currentModel = editorEnvironment.newModel(modelName);
         currentModelName.set(this.currentModel.name);
+    }
+
+    /**
+     * Reads the model with name 'modelName' from the server and makes this the current model.
+     * The first unit in the model is shown, if present.
+     * @param modelName
+     */
+    async openModel(modelName: string) {
+        LOGGER.log("EditorCommunication.openmodel(" + modelName + ")");
+        editorProgressShown.set(true);
+        this.resetGlobalVariables();
+
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
+        // create new model instance in memory and set its name
+        this.currentModel = editorEnvironment.newModel(modelName);
+        currentModelName.set(modelName);
+        // fill the new model with the units loaded from the server
+        serverCommunication.loadUnitList(modelName, (localUnitNames: string[]) => {
+            // console.log(`callback unitNames: ${unitNames}`);
+            unitNames.set(localUnitNames);
+            if (localUnitNames && localUnitNames.length > 0) {
+                // load the first unit completely and show it
+                // load all others units as interfaces
+                let first: boolean = true;
+                for (const unitName of localUnitNames) {
+                    if (first) {
+                        serverCommunication.loadModelUnit( modelName, unitName, (unit: PiModelUnit) => {
+                            this.currentModel.addUnit(unit);
+                            this.currentUnit = unit;
+                            currentUnitName.set(this.currentUnit.name);
+                            EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
+                        });
+                        first = false;
+                    } else {
+                        serverCommunication.loadModelUnitInterface(modelName, unitName, (unit: PiModelUnit) => {
+                            this.currentModel.addUnit(unit);
+                            this.setUnitLists();
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * When another model is shown in the editor this function is called.
+     * It resets a series of global variables.
+     * @private
+     */
+    private resetGlobalVariables() {
+        noUnitAvailable.set(true);
+        units.set([]);
+        modelErrors.set([]);
     }
 
     /**
@@ -210,60 +256,6 @@ export class EditorCommunication {
     }
 
     /**
-     * Reads the model with name 'modelName' from the server and makes this the current model.
-     * The first unit in the model is shown, if present.
-     * @param modelName
-     */
-    async openModel(modelName: string) {
-        LOGGER.log("EditorCommunication.openmodel(" + modelName + ")");
-        editorProgressShown.set(true);
-        this.resetGlobalVariables();
-
-        // save the old current unit, if there is one
-        this.saveCurrentUnit();
-        // create new model instance in memory and set its name
-        this.currentModel = editorEnvironment.newModel(modelName);
-        currentModelName.set(modelName);
-        // fill the new model with the units loaded from the server
-        serverCommunication.loadUnitList(modelName, (localUnitNames: string[]) => {
-            // console.log(`callback unitNames: ${unitNames}`);
-            unitNames.set(localUnitNames);
-            if (localUnitNames && localUnitNames.length > 0) {
-                // load the first unit completely and show it
-                // load all others units as interfaces
-                let first: boolean = true;
-                for (const unitName of localUnitNames) {
-                    if (first) {
-                        serverCommunication.loadModelUnit( modelName, unitName, (unit: PiModelUnit) => {
-                            this.currentModel.addUnit(unit);
-                            this.currentUnit = unit;
-                            currentUnitName.set(this.currentUnit.name);
-                            EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
-                        });
-                        first = false;
-                    } else {
-                        serverCommunication.loadModelUnitInterface(modelName, unitName, (unit: PiModelUnit) => {
-                            this.currentModel.addUnit(unit);
-                            this.setUnitLists();
-                        });
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * When another model is shown in the editor this function is called.
-     * It resets a series of global variables.
-     * @private
-     */
-    private resetGlobalVariables() {
-        noUnitAvailable.set(true);
-        units.set([]);
-        modelErrors.set([]);
-    }
-
-    /**
      * Reads the unit called 'newUnit' from the server and shows it in the editor
      * @param newUnit
      */
@@ -362,22 +354,6 @@ export class EditorCommunication {
 
         // }
 
-    }
-
-    /**
-     * Unparses the current model unit to a string, which can be used as content in a
-     * downloadable file.
-     */
-    unitAsText(): string {
-        return editorEnvironment.writer.writeToString(this.currentUnit);
-    }
-
-    /**
-     * Returns the right file extension for the current unit, based on the type of the unit.
-     */
-    unitFileExtension(): string {
-        const unitType = this.currentUnit.piLanguageConcept();
-        return editorEnvironment.fileExtensions.get(unitType);
     }
 
     /**
