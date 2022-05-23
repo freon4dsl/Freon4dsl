@@ -1,5 +1,5 @@
 import { isEqual } from "lodash";
-import { makeObservable, observable, computed, action, trace } from "mobx";
+import { makeObservable, observable, computed, action, trace, runInAction } from "mobx";
 import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiOwnerDescriptor, PiElement } from "../ast";
@@ -348,10 +348,13 @@ export class PiEditor {
         return this.isOnPreviousLine(other, ref);
     }
 
-
     set rootElement(exp: PiElement) {
-        this._rootElement = exp;
-        this.$rootBox = this.projection.getBox(this._rootElement);
+        runInAction( () => {
+            this._rootElement = exp;
+            // this._rootElement = exp;
+            this.$rootBox = this.projection.getBox(this._rootElement);
+        }
+    );
         // if (exp instanceof MobxModelElementImpl) {
         //     exp.owner = this;
         //     exp.propertyIndex = undefined;

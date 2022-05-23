@@ -5,7 +5,10 @@
 import { PiElement, PiModelUnit, PiNamedElement } from "../ast";
 import { AstWalker, modelUnit } from "../ast-utils";
 import { Language } from "../language";
+import { PiLogger } from "../util/index";
 import { CollectNamesWorker } from "./CollectNamesWorker";
+
+const LOGGER = new PiLogger("FreonNamespace").mute();
 
 export class FreonNamespace {
     private static allNamespaces: Map<PiElement, FreonNamespace> = new Map();
@@ -80,10 +83,10 @@ export class FreonNamespace {
 
         // collect the elements from the namespace, but not from any child namespace
         myWalker.walk(this._myElem, (elem: PiElement) => {
-            // console.log("Elem.piOwner() [" + elem.piOwner() + "]" );
-            const sameModelUnit = modelUnit(elem) === origin;
-            return !Language.getInstance().classifier(elem.piLanguageConcept()).isNamespace &&
+            const sameModelUnit = (modelUnit(elem) === origin);
+            const visit = !Language.getInstance().classifier(elem.piLanguageConcept()).isNamespace &&
                 (sameModelUnit || (!!elem.piOwner() && Language.getInstance().classifierProperty(elem.piOwner().piLanguageConcept(), elem.piOwnerDescriptor().propertyName).isPublic));
+            return visit;
         });
         return result;
     }

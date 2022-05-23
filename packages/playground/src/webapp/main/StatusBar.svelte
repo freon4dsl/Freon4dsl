@@ -15,9 +15,9 @@
     <Icon class="icon">
         <svelte:component this={arrowRight} />
     </Icon>
+    elem: <i>{currentBox?.element?.piLanguageConcept()} - {currentBox?.element?.piId()}  </i>
     box: <i>{currentBox?.role} {currentBox?.$id}</i>
     kind: <i>{currentBox?.kind} </i>
-    elem: <i>{currentBox?.element?.piId()} - {currentBox?.element?.piLanguageConcept()} </i>
     (x, y): <i>{(!!currentBox ? Math.round(currentBox.actualX + editorEnvironment.editor.scrollX)
                 + ", " + Math.round(currentBox?.actualY + editorEnvironment.editor.scrollY): "NAN")}
     "{(isTextBox(currentBox) ? currentBox.getText() : "NotTextBox" )}"</i>

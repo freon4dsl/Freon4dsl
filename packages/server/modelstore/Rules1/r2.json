@@ -13,11 +13,32 @@
       },
       {
          "$typename": "CheckingRule",
-         "name": "",
+         "name": "b",
          "description": "",
          "check": {
             "$typename": "AttributeRef",
             "attr": null
+         }
+      },
+      {
+         "$typename": "CheckingRule",
+         "name": "a",
+         "description": "",
+         "check": null
+      },
+      {
+         "$typename": "IfThenElseRule",
+         "name": "",
+         "description": "",
+         "IfStatement": {
+            "$typename": "IfStatement",
+            "name": "",
+            "Condition": {
+               "$typename": "CheckingRuleCall",
+               "rule": null
+            },
+            "ThenStatements": [],
+            "ElseStatements": []
          }
       }
    ],

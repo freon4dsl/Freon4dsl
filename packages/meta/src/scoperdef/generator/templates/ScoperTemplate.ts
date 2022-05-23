@@ -124,7 +124,7 @@ export class ScoperTemplate {
             private getVisibleElementsIntern(modelelement: PiElement, result: ${Names.PiNamedElement}[], visitedNamespaces: FreonNamespace[], metatype?: string, excludeSurrounding?: boolean): void {
                 if (!!modelelement) {
                     const origin: PiModelUnit = modelUnit(modelelement)
-                    let doSurrouding: boolean = !(!(excludeSurrounding === undefined) && excludeSurrounding);
+                    let doSurrouding: boolean = (excludeSurrounding === null || excludeSurrounding === undefined) ? true: !excludeSurrounding;
                     let nearestNamespace: FreonNamespace;
                     // first, see if we need to use an alternative scope/namespace
                     if (this.hasAlternativeScope(modelelement)) {
