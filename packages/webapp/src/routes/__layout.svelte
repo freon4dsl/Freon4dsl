@@ -123,7 +123,7 @@
 					<path fill="currentColor" d={mdiWeb} />
 				</Icon>
 			</IconButton>
-			<IconButton aria-label="Help Page" target="_blank" href="/Help">
+			<IconButton aria-label="Help Page" target="_blank" href="https://www.projectit.org/">
 				<Icon component={Svg} viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiHelp} />
 				</Icon>

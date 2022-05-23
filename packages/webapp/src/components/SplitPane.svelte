@@ -16,25 +16,18 @@
     export let max = 100; /* difference with original */
     let w;
     let h;
-    let wa;
-    let ha;
-    let wb;
-    let hb;
-    let height;
-    let width;
-    $: h = ha + hb;
-    $: w = wa + wb;
+    let wa;  /* width of pane A */ /* difference with original */
+    let ha;  /* height of pane A */ /* difference with original */
+    let wb;  /* width of pane B */ /* difference with original */
+    let hb;  /* height of pane B */ /* difference with original */
+    $: h = ha + hb; /* difference with original */
+    $: w = wa + wb; /* difference with original */
     $: size = type === 'vertical' ? h : w;
     $: min = 100 * (buffer / size);
     $: max = 100 - min;
     $: pos = clamp(pos, min, max);
     const refs = {};
     let dragging = false;
-
-    onMount(() => {
-        height = window.innerHeight - 88; // margins plus top-app-bar
-        width = window.innerWidth;
-    })
 
     /* difference with original */
     /**
@@ -106,7 +99,7 @@
     }
     $: side = type === 'horizontal' ? 'left' : 'top';
     $: dimension = type === 'horizontal' ? 'width' : 'height';
-    $: topB = type === 'horizontal' ? wa : ha;
+    $: topB = type === 'horizontal' ? wa : ha; /* difference with original */
 </script>
 
 <style>
@@ -134,7 +127,7 @@
     }
     .divider {
         position: absolute;
-        z-index: 6;  /* z-index of dialog is 7, this one must be lower*/
+        z-index: 3;  /* z-index of dialog is 7, and of menu it is 8, this one must be lower. Only the value '3' seems to work. */
         display: none;
     }
     .divider::after {

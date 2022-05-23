@@ -18,7 +18,7 @@
                 "sortAscendingAriaLabel" and
                 "sortDescendingAriaLabel" props on the DataTable.
             -->
-            <Cell checkbox>
+            <Cell checkbox sortable={false}>
                 <Label>Show in Editor</Label>
             </Cell>
             <Cell columnId="message" style="width: 100%;">
