@@ -1,7 +1,6 @@
 ## Issues that remain to be done in this webapp
 
 1. Names of the concepts that can be searched for should be entered in some config by the lang engineer.
-2. The error list and search results should not have a number, or perhaps they should have some ID.
 3. Search for structure should be augmented with a view to enter the structure.
 5. Styling should be improved.
 8. Progress indicator for importing unit. => should be tested
@@ -17,6 +16,7 @@
 21. Message on server: "DeprecationWarning: In future versions of Node.js, fs.rmdir(path, { recursive: true }) will be removed. Use fs.rm(path, { recursive: true }) instead"
 
 DONE:
+2. The error list and search results should not have a number, or perhaps they should have some ID.
 4. Delete model functionality should be added.
 6. When an item is selected in the info panel (error or search result), the cursor should jump to the corresponding
    element.
