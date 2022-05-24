@@ -8,7 +8,7 @@
     <Content id="event-content">
         <div>
             <br> <!-- br is here to make the lable visible when it is moved to the top of the textfield -->
-            <Textfield variant="outlined" bind:invalid={nameInvalid} bind:value={newName} label="name of new model">
+            <Textfield variant="outlined" bind:invalid={nameInvalid} bind:value={newName} label="name of model">
                 <HelperText slot="helper">{helperText}</HelperText>
             </Textfield>
 
@@ -69,7 +69,7 @@
                     comm.openModel(internalSelected);
                     // console.log("OPENING EXISTING MODEL: " + newName);
                     $initializing = false;
-                } else if (!newNameInvalid()) {
+                } else if (!newNameInvalid() && newName.length > 0) {
                     comm.newModel(newName);
                     // console.log("CREATING NEW MODEL: " + newName);
                     $initializing = false;

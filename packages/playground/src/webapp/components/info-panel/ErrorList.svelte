@@ -81,6 +81,11 @@
 	let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
 
 	function handleSort() {
+		// first remember the currectly selected item
+		let item;
+		if (!!$modelErrors && $modelErrors.length > 0) {
+			item = $modelErrors[selected];
+		}
 		$modelErrors.sort((a, b) => {
 			const [aVal, bVal] = [a[sort], b[sort]][
 				sortDirection === 'ascending' ? 'slice' : 'reverse'
@@ -90,7 +95,10 @@
 			}
 			return Number(aVal) - Number(bVal);
 		});
-		$modelErrors = $modelErrors;
+		$modelErrors = $modelErrors; // we need an assignment to trigger svelte's reactiveness
+		// find the new index for the selected item and make sure this is marked
+		selected = $modelErrors.indexOf(item);
+		handleClick(selected);
 	}
 
 	// selection of row does not function, therefore we use the checkbox option from the SMUI docs

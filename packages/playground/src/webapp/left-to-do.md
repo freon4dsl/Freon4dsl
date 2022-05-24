@@ -1,8 +1,5 @@
 ## Issues that remain to be done in this webapp
 
-12. Find out how to set the address of the server.
-13. Change generation of language/gen/index to use 'import type'.
-
 LATER:
 1. Names of the concepts that can be searched for should be entered in some config by the lang engineer.
 3. Search for structure should be augmented with a view to enter the structure.
@@ -22,6 +19,8 @@ DONE:
 7. Code to import a unit should be moved to other place.
 9. Add comments on changes in SplitPane.
 10. Split EditorCommunication in better to handle units, and address all todos.
+12. Find out how to set the address of the server.
+13. Change generation of language/gen/index to use 'import type'. => not needed, because webapp is part of playground.
 15. Adjust the z-indez of the mouse-catcher of SplitPane such that it stays behind the dialogs.
 19. Remove all unneeded console.logs.
 20. Make sure Travis is ok: travis.yml uses node 14.15.4, where svelte-kit expects >= 16. Maybe update yarn as well?

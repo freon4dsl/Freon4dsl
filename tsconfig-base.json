@@ -16,9 +16,6 @@
       ],
       "@projectit/server/*": [
         "packages/server/src/*"
-      ],
-      "@projectit/webapp-kit/*": [
-        "packages/webapp-kit/src/*"
       ]
     }
   }

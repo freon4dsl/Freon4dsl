@@ -95,12 +95,16 @@
     // new unit menuitem
     const newUnit = () => {
 		// console.log("FileMenu.newUnit");
-        // get list of units from server, because new unit may not have the same name as an existing one
-        serverCommunication.loadUnitList($currentModelName, (names: string[]) => {
-            // list may be empty => this is the first unit to be stored
-            $unitNames = names;
-            $newUnitDialogVisible = true;
-        });
+		if (!!$currentModelName && $currentModelName.length > 0) {
+			// get list of units from server, because new unit may not have the same name as an existing one
+			serverCommunication.loadUnitList($currentModelName, (names: string[]) => {
+				// list may be empty => this is the first unit to be stored
+				$unitNames = names;
+				$newUnitDialogVisible = true;
+			});
+		} else {
+			setUserMessage("Please, select or create a model first.");
+		}
     }
 
     // save unit menuitem

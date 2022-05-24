@@ -27,11 +27,11 @@ export class PiEditParseUtil {
             const firstItem = line.items[0];
             if (firstItem instanceof PiEditParsedProjectionIndent) {
                 if(projection.classifier.name === "Entity") {
-                    console.log("ignoredIndent = " + ignoredIndent, "firstItem = " + firstItem.amount);
+                    // console.log("ignoredIndent = " + ignoredIndent, "firstItem = " + firstItem.amount);
                 }
                 ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
                 if(projection.classifier.name === "Entity") {
-                    console.log("ignoredIndent calculted as = " + ignoredIndent);
+                    // console.log("ignoredIndent calculated as = " + ignoredIndent);
                 }
             }
             // line.items.forEach(item => {

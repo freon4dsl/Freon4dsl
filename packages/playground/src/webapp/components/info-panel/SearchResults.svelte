@@ -70,6 +70,11 @@
     let sortDirection: Lowercase<keyof typeof SortValue> = "ascending";
 
     function handleSort() {
+        // first remember the currectly selected item
+        let item;
+        if (!!$searchResults && $searchResults.length > 0) {
+            item = $searchResults[selected];
+        }
         $searchResults.sort((a, b) => {
             const [aVal, bVal] = [a[sort], b[sort]][
                 sortDirection === "ascending" ? "slice" : "reverse"
@@ -79,7 +84,10 @@
             }
             return Number(aVal) - Number(bVal);
         });
-        $searchResults = $searchResults;
+        $searchResults = $searchResults; // we need an assignment to trigger svelte's reactiveness
+        // find the new index for the selected item and make sure this is marked
+        selected = $searchResults.indexOf(item);
+        handleClick(selected);
     }
 
     // selection of row does not function, therefore we use the checkbox option from the SMUI docs
