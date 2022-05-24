@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".", // This must be specified if "paths" is.
     "paths": {
       "@projectit/core/*": [
         "packages/core/src/*"
@@ -16,8 +17,8 @@
       "@projectit/server/*": [
         "packages/server/src/*"
       ],
-      "@projectit/webapp/*": [
-        "packages/webapp/src/*"
+      "@projectit/webapp-kit/*": [
+        "packages/webapp-kit/src/*"
       ]
     }
   }

@@ -72,6 +72,6 @@
     "packages/playground",
     "packages/test",
     "packages/server",
-    "packages/webapp"
+    "packages/webapp-kit"
   ]
 }

@@ -1,7 +1,7 @@
 
 // TODO rethink these interfaces
-import { PiElement, PiNamedElement } from "@projectit/core";
-import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
+import type { PiElement } from "@projectit/core";
+// import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
 // export interface IModelUnitData {
 //     // id: number;
@@ -18,14 +18,16 @@ export interface IServerCommunication {
 
     /**
      * Takes 'piUnit' and stores it according to the data in 'modelInfo'
-     * @param modelInfo
+     * @param modelName
+     * @param unitName
      * @param piUnit
      */
     putModelUnit(modelName: string, unitName: string, piUnit: PiElement);
 
     /**
      * Deletes the unit according to the data in 'modelInfo' from the server
-     * @param modelInfo
+     * @param modelName
+     * @param unitName
      */
     deleteModelUnit(modelName: string, unitName: string);
 
@@ -51,7 +53,8 @@ export interface IServerCommunication {
     /**
      * Reads the model unit according to the data in 'modelInfo' from the server and
      * calls 'loadCallBack', which takes the model unit as parameter.
-     * @param modelInfo
+     * @param modelName
+     * @param unitName
      * @param loadCallback
      */
     loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
@@ -59,7 +62,8 @@ export interface IServerCommunication {
     /**
      * Reads the public interface of the model unit according to the data in 'modelInfo' from the server and
      * calls 'loadCallBack', which takes the model unit as parameter.
-     * @param modelInfo
+     * @param modelName
+     * @param unitName
      * @param loadCallback
      */
     loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
