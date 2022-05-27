@@ -19,7 +19,7 @@
 </script>
 
 <span class="status-bar">
-	<div class='mdc-typography--body2'>
+	<div class='mdc-typography--caption'>
 	<IconButton style="margin-right: -24px; margin-left: -12px;">
 		{#if $modelErrors.length > 0}
 			<Icon component={Svg} viewBox='0 0 24 24'>
@@ -31,39 +31,39 @@
 			</Icon>
 		{/if}
 	</IconButton>
-	<em >{$currentModelName}</em>
+	{$currentModelName}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon component={Svg} viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-	<em>{$currentUnitName}</em>
+	{$currentUnitName}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon component={Svg} viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		box: <i>{currentBox?.role} {currentBox?.$id}</i>
+		box: {currentBox?.role} {currentBox?.$id}
 			<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon component={Svg} viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		kind: <i>{currentBox?.kind} </i>
+		kind: {currentBox?.kind} 
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon component={Svg} viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		elem: <i>{currentBox?.element?.piId()} - {currentBox?.element?.piLanguageConcept()} </i>
+		elem: {currentBox?.element?.piId()} - {currentBox?.element?.piLanguageConcept()} 
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon component={Svg} viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		(x, y): <i>{(!!currentBox ? Math.round(currentBox.actualX + editorEnvironment.editor.scrollX)
+		(x, y): {(!!currentBox ? Math.round(currentBox.actualX + editorEnvironment.editor.scrollX)
     + ", " + Math.round(currentBox?.actualY + editorEnvironment.editor.scrollY) : "NAN")}
-    "{(isTextBox(currentBox) ? currentBox.getText() : "NotTextBox")}"</i>
+    "{(isTextBox(currentBox) ? currentBox.getText() : "NotTextBox")}"
 		</div>
 </span>
 
@@ -72,15 +72,12 @@
     position: relative;
     height: 36px;
     width: 100%;
-    /*height: var(--pi-statusbar-height);*/
-    /*color: var(--theme-colors-color);*/
-    /*background: var(--theme-colors-inverse_color);*/
-    /*font-size: var(--pi-button-font-size);*/
-    /*border-bottom: var(--theme-colors-list_divider) solid 1px;*/
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    background: #80CBC4; // teal-200
-	// todo use color variable
+    background: var(--freon-colors-bg-status);
+	color: var(--freon-colors-text-status);
+	font-style: var(--freon-text-style-status);
+	white-space: nowrap;
   }
 </style>

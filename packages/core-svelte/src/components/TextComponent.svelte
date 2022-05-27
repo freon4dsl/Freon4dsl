@@ -364,7 +364,7 @@
         // const boxStyle = (textBox.parent instanceof AliasBox ? textBox.parent.style : (textBox.parent instanceof SelectBox ? textBox.parent.style : textBox.style));
         textStyle = styleToCSS(conceptStyle(editor.style, editor.theme, textBox.element.piLanguageConcept(), boxType, textBox.style));
         // if (textBox.getText() === "appel") {
-        //     textStyle += "--theme-colors-bg_text_box: lightgrey;"
+        //     textStyle += "--freon-colors-bg_text_box: lightgrey;"
         // }
 
         textBox.setFocus = setFocus;
@@ -411,9 +411,9 @@
     }
 
     .text {
-        /*background-color: var(--theme-colors-bg_text_box);*/
+        /*background-color: var(--freon-colors-bg_text_box);*/
         content: attr(data-placeholdertext);
-        color: var(--theme-colors-color_text_box);
+        color: var(--freon-colors-color_text_box);
         padding: 3px;
         white-space: normal;
         display: inline-block;

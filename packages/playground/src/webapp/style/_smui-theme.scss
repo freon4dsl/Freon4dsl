@@ -1,20 +1,32 @@
+// NOTE: This file needs to have the name 'smui-theme' in order for the 'prepare' command to function.
+// The entries in this file handle everything that has to do with colors in the 'light' theme mode.
+
 @use 'sass:color';
 
 @use '@material/theme/color-palette';
-@use 'freon';
 
+// Freon Colors!!
 @use '@material/theme/index' as theme with (
-  $primary: freon.$freon-primary,
-  $secondary: freon.$freon-secondary,
-  $surface: color.adjust(color-palette.$grey-50, $blue: +4),
+  $primary: #80cbc4,
+  $secondary: #ce93d8,
+  $surface: #eeeeee,
   $background: #fff,
-  $error: color-palette.$red-900,
-  $on-error: green,
-  $on-primary: purple,
-  $on-secondary: red,
-  $on-surface: black
+  $error: #d32f2f,
+  $on-primary: purple,     // a slighter darker version of 'secondary'
+  $on-secondary: #00695c,   // a slighter darker version of 'primary'
+  //$on-surface: black,
+  //$on-error: black,
+  //accessible-ink-color,
+  //contrast,
+  //contrast-tone,
+  //luminance,
+  //text-emphasis,
+  //tone
 );
-@use "./site.scss";
+
+// Include all the global styles that do not involve dark/light modes.
+@use './app';
+
 @use '@material/linear-progress/index' as linear-progress;
 
 // my-colored-bar is used for the progress indicator in the EditorPart component
@@ -23,15 +35,45 @@
   @include linear-progress.buffer-color(theme.$red-100);
 }
 
+/* CSS variables that are used in the editor part of Freon, i.e. in the package 'core-svelte'. */
+/* Change the values as you like. */
+/* Note that we need to use a different syntax to be able to use SCSS variables as value
+for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/css-vars */
+.status-bar {
+  --freon-colors-bg-status: #00796b;
+  --freon-colors-text-status: white;
+  --freon-text-style-status: italic;
+}
+
+.editor-part {
+  /* Normal text colors */
+  --freon-colors-text_editor: #{--mdc-theme-primary};       /* The color of the text, unless set otherwise by the projection */
+  --freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
+  --freon-colors-bg_editor: #{theme.$surface};              /* The background color of the editor */
+
+  /* Dropdown colors */
+  --freon-colors-color_dropdownitem_component: #{theme.$blue-900};
+  --freon-colors-bg_dropdown_component: #{theme.$surface};
+  --freon-colors-border_dropdown_component: #{theme.$blue-900};
+  --freon-colors-border_dropdownitem_component: #{theme.$blue-900};
+
+  /* Selectable */
+  --freon-colors-bg_selected: rgba(211, 227, 253, 255);
+  --freon-colors-border_selected: #{theme.$blue-900};
+  --freon-colors-color_text_box: #{theme.$blue-900};
+
+  /* Fonts */
+  --freon-fonts-family_editor: "Arial";     /* The font family of the text, unless set otherwise by the projection */
+  --freon-fonts-size_editor: 14px;          /* The font size of the text, unless set otherwise by the projection */
+  --freon-fonts-style_editor: normal;       /* The font style of the text, unless set otherwise by the projection */
+  --freon-fonts-weight_editor: normal;      /* The font weight of the text, unless set otherwise by the projection */
+
+  /* Popup */
+  --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
+}
+
 html,
 body {
   background-color: theme.$surface;
   color: theme.$on-surface;
-}
-
-a {
-  color: #40b3ff;
-}
-a:visited {
-  color: color.scale(#40b3ff, $lightness: -35%);
 }

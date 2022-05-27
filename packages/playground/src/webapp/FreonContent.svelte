@@ -9,6 +9,7 @@
     import SplitPane from "./components/SplitPane.svelte";
     import EditorPart from "./components/editor-panel/EditorPart.svelte";
     import InfoPanel from "./components/info-panel/InfoPanel.svelte";
+    import StatusBar from "./components/editor-panel/StatusBar.svelte";
     // todo restrict height to 100vh, and show footer
 </script>
 

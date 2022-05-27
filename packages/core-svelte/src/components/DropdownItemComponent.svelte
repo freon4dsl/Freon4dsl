@@ -27,19 +27,19 @@
 
 <style>
     .dropdownitem {
-        color: var(--theme-colors-color_dropdownitem_component);
+        color: var(--freon-colors-color_dropdownitem_component, darkblue);
         display: block;
         white-space: nowrap;
         border:none;
     }
     .isSelected {
         border: none;
-        background-color: lightblue;
+        background-color: lightblue;  /* todo? use variable for color */
     }
     .dropdownitem:hover {
         display: block;
         white-space: nowrap;
-         color: blue;
+        color: blue;
     }
 
 

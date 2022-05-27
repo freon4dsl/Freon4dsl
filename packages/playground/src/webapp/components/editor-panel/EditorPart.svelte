@@ -1,6 +1,5 @@
 <div class='editor-part'>
-    <StatusBar/>
-    <LinearProgress indeterminate closed="{!$editorProgressShown}" class="my-colored-bar"/>
+
 
     {#if ($noUnitAvailable)}
         <div class="message">
