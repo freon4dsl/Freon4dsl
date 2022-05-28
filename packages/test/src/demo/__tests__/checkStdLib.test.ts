@@ -15,6 +15,10 @@ import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 
 describe("Checking stdlib for Demo", () => {
     let stdlib: DemoStdlib = DemoEnvironment.getInstance().stdlib as DemoStdlib;
+    beforeEach(done => {
+        DemoEnvironment.getInstance();
+        done();
+    });
 
     test("all predefined instances of limited concepts should be found", () => {
         expect(stdlib.find("String")).toBe(DemoAttributeType.String);

@@ -1,3 +1,4 @@
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoEntity, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
@@ -8,6 +9,7 @@ describe("testing Scoper", () => {
     let scoper = new DemoScoper();
 
     beforeEach(done => {
+        DemoEnvironment.getInstance();
         done();
     });
 

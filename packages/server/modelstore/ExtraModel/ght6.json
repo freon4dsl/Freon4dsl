@@ -10,7 +10,7 @@
             {
                "$typename": "Attribute",
                "name": "qwe",
-               "declaredType": "String"
+               "declaredType": "Integer"
             },
             {
                "$typename": "Attribute",
@@ -89,10 +89,7 @@
             }
          ],
          "methods": [],
-         "listOfReferences": [
-            "",
-            ""
-         ],
+         "listOfReferences": [],
          "baseEntity": null
       }
    ],

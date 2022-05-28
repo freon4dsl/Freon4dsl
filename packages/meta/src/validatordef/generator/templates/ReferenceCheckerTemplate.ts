@@ -12,7 +12,6 @@ export class ReferenceCheckerTemplate {
         const checkerClassName: string = Names.referenceChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const writerInterfaceName: string = Names.PiWriter;
-        const environmentName: string = Names.environment(language);
         const overallTypeName: string = Names.allConcepts(language);
 
         // because 'createChecksOnNonOptionalParts' determines which concepts to import
@@ -27,9 +26,8 @@ export class ReferenceCheckerTemplate {
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.PiNamedElement}, LanguageEnvironment } from "${PROJECTITCORE}";
         import { ${overallTypeName}, ${Names.PiElementReference}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${environmentName} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${environmentName}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
 
@@ -42,14 +40,14 @@ export class ReferenceCheckerTemplate {
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
-            myWriter: ${writerInterfaceName} = (${environmentName}.getInstance() as ${environmentName}).writer;
+            myWriter: ${writerInterfaceName} = LanguageEnvironment.getInstance().writer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
             ${allMethods}           
             
             private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.PiElementReference}<${Names.PiNamedElement}>, propertyName: string, locationDescription: string) {
-                const scoper = ${environmentName}.getInstance().scoper;
+                const scoper = LanguageEnvironment.getInstance().scoper;
                 const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
