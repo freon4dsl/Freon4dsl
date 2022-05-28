@@ -1,4 +1,5 @@
 import type { PiEnvironment } from "@projectit/core";
+import { LanguageInitializer } from "../language/LanguageInitializer";
 import type { IServerCommunication } from "../server/IServerCommunication";
 import { ServerCommunication } from "../server/ServerCommunication";
 
@@ -7,6 +8,8 @@ import { ServerCommunication } from "../server/ServerCommunication";
  */
 import { ExampleEnvironment } from "@projectit/playground/src/example/config/gen/ExampleEnvironment";
 export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+LanguageInitializer.initialize();
+
 
 /**
  * The one and only reference to the server on which the models are stored
