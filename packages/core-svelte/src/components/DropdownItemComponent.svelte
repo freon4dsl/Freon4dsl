@@ -34,10 +34,11 @@
     }
     .isSelected {
         border: none;
-        background-color: lightblue;
+        background-color: white;
     }
     .dropdownitem:hover {
         display: block;
+        background-color: white;
         white-space: nowrap;
          color: blue;
     }
