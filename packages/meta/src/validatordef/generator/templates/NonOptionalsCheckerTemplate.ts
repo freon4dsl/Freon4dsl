@@ -29,9 +29,8 @@ export class NonOptionalsCheckerTemplate {
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, LanguageEnvironment } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
 
@@ -44,7 +43,7 @@ export class NonOptionalsCheckerTemplate {
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
-            myWriter: ${writerInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).writer;
+            myWriter: ${writerInterfaceName} = LanguageEnvironment.getInstance().writer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 

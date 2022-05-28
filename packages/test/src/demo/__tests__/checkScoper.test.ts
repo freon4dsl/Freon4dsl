@@ -1,3 +1,4 @@
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoModel, DemoFunction, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
@@ -8,9 +9,10 @@ describe("testing Scoper", () => {
         let model: Demo = new DemoModelCreator().createIncorrectModel();
         let scoper = new DemoScoper();
 
-        // beforeEach(done => {
-        //     done();
-        // });
+        beforeEach(done => {
+            DemoEnvironment.getInstance();
+            done();
+        });
 
         test("visible elements in model and unit", () => {
             let vi = scoper.getVisibleNames(model);

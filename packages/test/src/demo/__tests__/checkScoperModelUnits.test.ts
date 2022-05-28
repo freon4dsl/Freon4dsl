@@ -8,10 +8,16 @@ import { initializeLanguage } from "../language/gen/DemoLanguage";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 
 describe("testing Scoper on model units", () => {
+
     describe("Scoper.getVisibleElements from DemoModel with Units", () => {
         let model: Demo = new DemoModelCreator().createModelWithMultipleUnits();
         let scoper = DemoEnvironment.getInstance().scoper;
         let stdlib = DemoStdlib.getInstance();
+
+        beforeEach(done => {
+            DemoEnvironment.getInstance();
+            done();
+        });
 
         test("visible elements in model", () => {
             let vi = scoper.getVisibleNames(model);

@@ -1,3 +1,4 @@
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { AppliedFeature, DemoAttributeRef, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
@@ -12,6 +13,7 @@ describe("testing Alternative Scopes", () => {
         let scoper = new DemoScoper();
 
         beforeEach(done => {
+            DemoEnvironment.getInstance();
             done();
         });
 
