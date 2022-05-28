@@ -45,10 +45,15 @@
 
 	import { serverCommunication } from "./config/WebappConfiguration";
 	import { LanguageInitializer } from "./language/LanguageInitializer";
+	import LinearProgress from '@smui/linear-progress';
+
+	import StatusBar from "./components/editor-panel/StatusBar.svelte";
+	import { editorProgressShown } from "./components/stores/ModelStore";
 
 	// import this file to set which loggers will be active
 	import { muteLogs } from "./logging/LoggerSettings";
 	import FreonContent from "./FreonContent.svelte";
+	import StatusBar from "./components/editor-panel/StatusBar.svelte";
 
 	muteLogs();
 
@@ -140,7 +145,8 @@
 </TopAppBar>
 
 <AutoAdjust {topAppBar} >
-
+	<StatusBar />
+	<LinearProgress indeterminate closed="{!$editorProgressShown}" class="my-colored-bar"/>
 	<div class='main-frame'>
 		<Drawer variant='dismissible' bind:open={$drawerOpen}>
 			<Header>
@@ -166,9 +172,9 @@
 <FindTextDialog />
 
 <style>
-	.main-frame {
-		margin: 10px;
-	}
+	/*.main-frame {*/
+	/*	margin: 10px;*/
+	/*}*/
 	.space-right {
 		margin-right: 6px;
 	}

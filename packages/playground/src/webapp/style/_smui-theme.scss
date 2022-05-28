@@ -1,37 +1,6 @@
-@use 'sass:color';
+// NOTE: This file needs to have the name 'smui-theme' in order for the 'prepare' command to function.
+// Unfortunately, the preporcessor expects this file name.
 
-@use '@material/theme/color-palette';
-@use 'freon';
+// The entries in this file handle everything that has to do with colors in the 'light' theme mode.
 
-@use '@material/theme/index' as theme with (
-  $primary: freon.$freon-primary,
-  $secondary: freon.$freon-secondary,
-  $surface: color.adjust(color-palette.$grey-50, $blue: +4),
-  $background: #fff,
-  $error: color-palette.$red-900,
-  $on-error: green,
-  $on-primary: purple,
-  $on-secondary: red,
-  $on-surface: black
-);
-@use "./site.scss";
-@use '@material/linear-progress/index' as linear-progress;
-
-// my-colored-bar is used for the progress indicator in the EditorPart component
-.my-colored-bar {
-  @include linear-progress.bar-color(theme.$red-500);
-  @include linear-progress.buffer-color(theme.$red-100);
-}
-
-html,
-body {
-  background-color: theme.$surface;
-  color: theme.$on-surface;
-}
-
-a {
-  color: #40b3ff;
-}
-a:visited {
-  color: color.scale(#40b3ff, $lightness: -35%);
-}
+@use 'freon_theme-light';

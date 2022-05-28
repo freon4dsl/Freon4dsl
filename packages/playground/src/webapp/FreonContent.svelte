@@ -36,11 +36,15 @@
     </Banner>
     <SplitPane type='vertical' pos={80}>
         <section class='splitpane-section' slot='a'>
+            <div style="margin-left: 10px; height:100vh;">
             <EditorPart/>
+            </div>
         </section>
 
         <section class='splitpane-section' slot='b'>
+            <div style="margin-left: 10px">
             <InfoPanel/>
+            </div>
         </section>
     </SplitPane>
 </div>
