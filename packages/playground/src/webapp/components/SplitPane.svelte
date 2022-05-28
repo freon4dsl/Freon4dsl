@@ -106,7 +106,7 @@
     .container {
         position: relative;
         width: calc(100vw);
-        height: calc(100vh - 104px); /* minus 104px, bcause this is the height of the top-app-bar plus the status-bar plus padding round main frame (48 + 36 + 2 * 10) */
+        height: calc(100vh - 86px); /* minus 96px, bcause this is the height of the top-app-bar plus the status-bar plus padding round main frame (48 + 24 + 1 * 10) */
         min-height: 400px;
     }
     .pane {
