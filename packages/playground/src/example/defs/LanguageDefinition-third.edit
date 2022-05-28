@@ -1,10 +1,10 @@
 editor Third
-//
-//Method {
-//    [
-//        method CALL signature: ${name} ( ${parameters horizontal separator[,]} ): ${declaredType}
-//    ]
-//}
-//Attribute {
-//    [ ALLEEN ATTRIBUUT NAAM: ${name} ]
-//}
+
+Method {
+    [
+        method CALL signature: ${name} ( ${parameters horizontal separator[,]} ): ${declaredType}
+    ]
+}
+Attribute {
+    [ ALLEEN ATTRIBUUT NAAM: ${name} ]
+}

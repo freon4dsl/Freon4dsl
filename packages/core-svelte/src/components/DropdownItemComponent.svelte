@@ -34,10 +34,11 @@
     }
     .isSelected {
         border: none;
-        background-color: lightblue;  /* todo? use variable for color */
+        background-color: lightblue; /* TODO: Use variable for color */
     }
     .dropdownitem:hover {
         display: block;
+        background-color: white; /* TODO See previous */
         white-space: nowrap;
         color: blue;
     }

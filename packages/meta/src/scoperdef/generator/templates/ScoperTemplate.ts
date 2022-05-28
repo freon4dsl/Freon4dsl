@@ -114,7 +114,7 @@ export class ScoperTemplate {
              * See ${scoperInterfaceName}.
              */
             public getVisibleElements(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): PiNamedElement[] {
-                ${generateAlternativeScopes ? `this.myTyper = ${Names.environment(language)}.getInstance().typer as ${typerClassName};` : ``}
+                ${generateAlternativeScopes ? `this.myTyper = LanguageEnvironment.getInstance().typer as ${typerClassName};` : ``}
                 const visitedNamespaces: FreonNamespace[] = [];
                 const result: ${Names.PiNamedElement}[] = [].concat(this.getElementsFromStdlib(metatype));
                 this.getVisibleElementsIntern(modelelement, result, visitedNamespaces, metatype, excludeSurrounding);
@@ -227,10 +227,10 @@ export class ScoperTemplate {
              */           
             private getElementsFromStdlib(metatype?: string): ${Names.PiNamedElement}[] {
                 if (!!metatype) {
-                    return ${Names.environment(language)}.getInstance().stdlib.elements.filter((elem) => elem.piLanguageConcept() === metatype ||
+                    return LanguageEnvironment.getInstance().stdlib.elements.filter((elem) => elem.piLanguageConcept() === metatype ||
                             Language.getInstance().subConcepts(metatype).includes(elem.piLanguageConcept()));
                 } else {
-                    return ${Names.environment(language)}.getInstance().stdlib.elements;
+                    return LanguageEnvironment.getInstance().stdlib.elements;
                 }
             }
             
@@ -248,9 +248,8 @@ export class ScoperTemplate {
 
         // now we have enough information to create the correct imports
         const templateImports: string = `
-        import { ${scoperInterfaceName}, ${Names.PiNamedElement}, PiLogger, Language, PiElement, PiModelUnit, FreonNamespace, modelUnit } from "${PROJECTITCORE}"
+        import { ${scoperInterfaceName}, ${Names.PiNamedElement}, LanguageEnvironment, PiLogger, Language, PiElement, PiModelUnit, FreonNamespace, modelUnit } from "${PROJECTITCORE}"
         import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }  `;
 
         return templateImports + templateBody;

@@ -1,19 +1,19 @@
 editor shortTables precedence 3
-//
-//Parameter {
-//    table [
-//        Name
-//        ${name}
-//    ]
-//}
-//Attribute {
-//    table [
-//        ${name}
-//    ]
-//}
-//Method {
-//    table [
-//        Name    |  type
-//        ${name} | ${declaredType}
-//    ]
-//}
+
+Parameter {
+    table [
+        Name
+        ${name}
+    ]
+}
+Attribute {
+    table [
+        ${name}
+    ]
+}
+Method {
+    table [
+        Name    |  type
+        ${name} | ${declaredType}
+    ]
+}

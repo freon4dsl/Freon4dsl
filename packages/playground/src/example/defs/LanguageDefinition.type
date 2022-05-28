@@ -3,7 +3,7 @@ typer
 // for now: first is considered to be the root of the type hierarchy
 istype {  BaseType }
 
-hastype { ExExpression, Parameter, Attribute, Method, AttributeRef }
+hastype { ExExpression, Parameter, Attribute, Method, AttributeRef, ParameterRef }
 
 anytype {
     conformsto AttributeType:ANY;

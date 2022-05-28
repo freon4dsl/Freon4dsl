@@ -1,4 +1,5 @@
 import { PiError } from "@projectit/core";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import {
     DemoModel,
     DemoAttributeType,
@@ -21,6 +22,7 @@ describe("Testing Validator", () => {
     const validator = new DemoValidator();
 
     beforeEach(done => {
+        DemoEnvironment.getInstance();
         done();
     });
 

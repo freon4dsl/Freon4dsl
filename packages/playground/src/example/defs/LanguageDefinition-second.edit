@@ -1,12 +1,12 @@
 editor OndersteBoven precedence 5
-//
-//ExampleUnit {
-//        [
-//        ONDERSTE BOVEN unit ${name} {
-//        1. unit level methods:
-//            ${methods:Third}
-//        2. entities
-//            ${entities vertical }
-//        }
-//        ]
-//}
+
+ExampleUnit {
+        [
+        ONDERSTE BOVEN unit ${name} {
+        1. unit level methods:
+            ${methods:Third}
+        2. entities
+            ${entities vertical }
+        }
+        ]
+}

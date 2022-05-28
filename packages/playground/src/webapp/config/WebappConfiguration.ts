@@ -1,3 +1,4 @@
+import { LanguageEnvironment } from "@projectit/core";
 import type { PiEnvironment } from "@projectit/core";
 import { LanguageInitializer } from "../language/LanguageInitializer";
 import type { IServerCommunication } from "../server/IServerCommunication";

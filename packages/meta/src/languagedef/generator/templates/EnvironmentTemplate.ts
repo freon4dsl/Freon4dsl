@@ -14,7 +14,7 @@ export class EnvironmentTemplate {
         return `
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
                     ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}
+                    ${Names.PiWriter}, LanguageEnvironment
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
@@ -44,6 +44,7 @@ export class EnvironmentTemplate {
             public static getInstance(): ${Names.PiEnvironment}  {
                 if (this.environment === undefined || this.environment === null) {
                     this.environment = new ${Names.environment(language)}();
+                    LanguageEnvironment.setInstance(this.environment);
                 }
                 return this.environment;
             }

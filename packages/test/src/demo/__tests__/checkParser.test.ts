@@ -4,6 +4,12 @@ import { Demo, DemoModel } from "../language/gen";
 import { FileHandler } from "../../utils/FileHandler";
 
 describe("Testing Parser", () => {
+
+    beforeEach(done => {
+        DemoEnvironment.getInstance();
+        done();
+    });
+
     test("complete example model unparsed and parsed again", () => {
         const originalModel = new DemoModelCreator().createCorrectModel();
         const unparser = DemoEnvironment.getInstance().writer;
