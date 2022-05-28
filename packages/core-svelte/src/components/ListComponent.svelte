@@ -116,21 +116,20 @@
     .list-component {
         --pi-list-grid-template-columns: "";
         --pi-list-grid-template-rows: "";
-        --pi-list-background-color: var(--inverse-color);
     }
     .horizontalList {
         /*grid-template-rows: var(--pi-list-grid-template-rows);*/
         /*grid-template-columns: var(--pi-list-grid-template-columns);*/
         white-space: nowrap;
         display: inline-block;
-        background-color: var(--pi-list-background-color);
+        background-color: var(--freon-colors-bg_editor, white);
     }
 
     .verticalList {
         /*grid-template-rows: var(--pi-list-grid-template-rows);*/
         /*grid-template-columns: var(--pi-list-grid-template-columns);*/
         /*display: grid;*/
-        background-color: var(--pi-list-background-color);
+        background-color: var(--freon-colors-bg_editor, white);
         /*margin-top: 10px;*/
     }
 </style>

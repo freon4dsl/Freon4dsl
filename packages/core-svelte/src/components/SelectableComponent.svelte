@@ -86,8 +86,8 @@
     }
 
     .selectedComponent {
-        background-color: var(--theme-colors-bg_selected);
-        outline: 1px solid var(--theme-colors-border_selected);
+        background-color: var(--freon-colors-bg_selected, rgba(211, 227, 253, 255));
+        outline: 1px solid var(--freon-colors-border_selected, darkblue);
         box-sizing: border-box;
         display: inline-block;
         vertical-align: middle;

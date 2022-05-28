@@ -105,8 +105,8 @@
 <style>
     .container {
         position: relative;
-        width: calc(100vw - 20px);
-        height: calc(100vh - 78px);
+        width: calc(100vw);
+        height: calc(100vh - 86px); /* minus 96px, bcause this is the height of the top-app-bar plus the status-bar plus padding round main frame (48 + 24 + 1 * 10) */
         min-height: 400px;
     }
     .pane {
@@ -115,7 +115,6 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        /*background-color: var(--theme-colors-inverse_color);        !* difference with original *!*/
     }
     .mousecatcher {
         position: absolute;
@@ -133,8 +132,7 @@
     .divider::after {
         content: '';
         position: absolute;
-        background-color: teal;
-        /*background-color: var(--theme-colors-slider);         !* difference with original *!*/
+        background-color: var(--freon-colors-slider, black);         /* difference with original */
     }
     .horizontal {
         padding: 0 8px;

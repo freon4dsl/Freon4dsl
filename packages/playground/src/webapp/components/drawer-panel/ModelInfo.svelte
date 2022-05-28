@@ -7,12 +7,20 @@
                 {#if !!myUnits}
                     {#each myUnits as unit, index}
                         {#if unit.piLanguageConcept() === name}
-                            <div>
+                            <div
+                                    class={Object.keys(anchorClasses).join(index + ' ')}
+                                    use:Anchor={{addClass: addClass, removeClass: removeClass}}
+                                    bind:this={anchor[index]}
+                            >
                                 <Item activated={(unit.name === $currentUnitName)}
                                       on:SMUI:action={() => menus[index].setOpen(true)}>
                                     <Text>{unit.name}</Text>
                                 </Item>
-                                <Menu bind:this={menus[index]}>
+                                <Menu bind:this={menus[index]}
+                                      anchor={false}
+                                      bind:anchorElement={anchor[index]}
+                                      anchorCorner="BOTTOM_LEFT"
+                                >
                                     <List>
                                         <Item on:SMUI:action={() => (openUnit(index))}>
                                             <Text>Open</Text>
@@ -56,8 +64,25 @@
     import { EditorState } from "../../language/EditorState";
     import { setUserMessage } from "../stores/UserMessageStore";
     import { ImportExportHandler } from "../../language/ImportExportHandler";
+    import { Anchor } from '@smui/menu-surface';
 
     let menus: MenuComponentDev[] = [];
+    // following is used to position the menu
+    let anchor: HTMLDivElement[] = [];
+    let anchorClasses: { [k: string]: boolean } = {};
+
+    const addClass = (className: string) => {
+        if (!anchorClasses[className]) {
+            anchorClasses[className] = true;
+        }
+    }
+    const removeClass = (className: string) => {
+        if (anchorClasses[className]) {
+            delete anchorClasses[className];
+            anchorClasses = anchorClasses;
+        }
+    }
+    // end positioning
 
     let myUnits = [];
     $: myUnits = !!$units && $units.length > 0

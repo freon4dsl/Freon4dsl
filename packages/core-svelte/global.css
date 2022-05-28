@@ -1,12 +1,22 @@
 :root {
-	--pi-selected-background-color: rgba(211, 227, 253, 255);
-	--pi-popup-border: #d7d7d7;
-	--pi-popup-background: #fff;
-	--pi-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-	--pi-editor-background: white;
-	--pi-list-background-color: white;
-	--theme-colors-bg_editor: white;			/* The background color of the editor */
-	--theme-colors-text_editor: darkblue;			/* The color of the text, unless set otherwise by the projection */
+	/* Projectional Editor "globals" */
+	--freon-colors-bg_dropdown_component: lightblue;
+	--freon-colors-border_dropdown_component: darkblue;
+	--freon-colors-color_dropdownitem_component: darkblue;
+	--freon-colors-border_dropdownitem_component: darkblue;
+	--freon-colors-inverse_color: #d3e3fd;  /* Text color on non_normal background */
+	--freon-colors-bg_editor: white;		/* The background color of the editor */
+	--freon-colors-text_editor: darkblue;	/* The color of the text, unless set otherwise by the projection */
+	--freon-fonts-size_editor: 14px;		/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-style_editor: italic;		/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-weight_editor: normal;	/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-family_editor: "Arial";	/* The font size of the text, unless set otherwise by the projection */
+	/* Selectable */
+	--freon-colors-bg_selected: rgba(211, 227, 253, 255);
+	--freon-colors-border_selected: darkblue;
+	--freon-colors-color_text_box: darkblue;
+	/* Others */
+	--freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 }
 
 html, body {
