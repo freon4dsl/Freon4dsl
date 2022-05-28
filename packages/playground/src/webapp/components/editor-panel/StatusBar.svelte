@@ -70,7 +70,7 @@
 <style lang="scss">
   .status-bar {
     position: relative;
-    height: 36px;
+    height: 24px;
     width: 100%;
     box-sizing: border-box;
     display: flex;

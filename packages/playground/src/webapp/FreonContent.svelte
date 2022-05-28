@@ -9,7 +9,6 @@
     import SplitPane from "./components/SplitPane.svelte";
     import EditorPart from "./components/editor-panel/EditorPart.svelte";
     import InfoPanel from "./components/info-panel/InfoPanel.svelte";
-    import StatusBar from "./components/editor-panel/StatusBar.svelte";
     // todo restrict height to 100vh, and show footer
 </script>
 
@@ -37,11 +36,15 @@
     </Banner>
     <SplitPane type='vertical' pos={80}>
         <section class='splitpane-section' slot='a'>
+            <div style="margin-left: 10px; height:100vh;">
             <EditorPart/>
+            </div>
         </section>
 
         <section class='splitpane-section' slot='b'>
+            <div style="margin-left: 10px">
             <InfoPanel/>
+            </div>
         </section>
     </SplitPane>
 </div>

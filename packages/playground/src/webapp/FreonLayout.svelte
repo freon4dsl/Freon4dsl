@@ -172,9 +172,9 @@
 <FindTextDialog />
 
 <style>
-	.main-frame {
-		margin: 10px;
-	}
+	/*.main-frame {*/
+	/*	margin: 10px;*/
+	/*}*/
 	.space-right {
 		margin-right: 6px;
 	}
