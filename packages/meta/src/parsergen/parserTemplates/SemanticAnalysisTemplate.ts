@@ -79,7 +79,7 @@ export class SemanticAnalysisTemplate {
         return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
                 import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
                 import { ${refWalkerName} } from "./${refWalkerName}";
-                import { Concept, Language, PiElement } from "@projectit/core";
+                import { Concept, Language, PiElement, PiElementReference } from "@projectit/core";
 
                 export class ${className} {
 
@@ -135,10 +135,10 @@ export class SemanticAnalysisTemplate {
 
         return `
             import {
-              ${Names.allConcepts(language)}, PiElementReference, ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
+              ${Names.allConcepts(language)}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
             } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
             import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
-            import { PiNamedElement, Language, LanguageEnvironment } from "@projectit/core";
+            import { PiNamedElement, Language, LanguageEnvironment, PiElementReference } from "@projectit/core";
             
             export class ${className} extends ${Names.defaultWorker(language)} implements ${Names.workerInterface(language)} {
                 changesToBeMade: Map<${everyConceptName}, ${everyConceptName}> = null;

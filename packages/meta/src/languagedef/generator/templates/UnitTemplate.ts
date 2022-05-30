@@ -14,8 +14,9 @@ export class UnitTemplate {
         const myName = Names.classifier(unitDescription);
         const needsObservable = unitDescription.primProperties.length > 0;
         const extendsClass = "MobxModelElementImpl";
+        const hasReferences = unitDescription.references().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
-        const coreImports = this.findMobxImports(unitDescription).concat(["PiModelUnit", "PiUtils", "matchElementList"]);
+        const coreImports = this.findMobxImports(unitDescription).concat(["PiModelUnit", "PiUtils", "matchElementList"]).concat(hasReferences ? (Names.PiElementReference) : null);
         const metaType = Names.metaType(language);
 
         // Template starts here
@@ -45,13 +46,11 @@ export class UnitTemplate {
     }
 
     private findModelImports(unitDescription: PiUnitDescription, myName: string): string[] {
-        const hasReferences = unitDescription.references().length > 0;
         return Array.from(
             new Set(
                 unitDescription.parts().map(part => Names.classifier(part.type))
                     .concat(unitDescription.references().map(part => Names.classifier(part.type)))
                     .concat(Names.metaType(unitDescription.language))
-                    .concat(hasReferences ? (Names.PiElementReference) : null)
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )

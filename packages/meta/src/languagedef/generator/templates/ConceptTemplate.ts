@@ -38,7 +38,7 @@ export class ConceptTemplate {
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const implementsPi = (isExpression ? "PiExpression" : (hasName ? "PiNamedElement" : "PiElement"));
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = ConceptUtils.findMobxImports(hasSuper, concept).concat(implementsPi).concat(["PiUtils", "matchElementList", "matchPrimitiveList"]);
+        const coreImports = ConceptUtils.findMobxImports(hasSuper, concept).concat(implementsPi).concat(["PiUtils", "matchElementList", "matchPrimitiveList"]).concat(hasReferences ? (Names.PiElementReference) : "");
         const metaType = Names.metaType(language);
         const modelImports = this.findModelImports(concept, myName, hasReferences);
         const intfaces = Array.from(
@@ -46,6 +46,8 @@ export class ConceptTemplate {
                 concept.interfaces.map(i => Names.interface(i.referred))
             )
         );
+
+
 
         // Template starts here
         return `
@@ -220,7 +222,6 @@ export class ConceptTemplate {
                     .concat(concept.implementedParts().map(part => Names.classifier(part.type)))
                     .concat(concept.implementedReferences().map(part => Names.classifier(part.type)))
                     .concat(Names.metaType(concept.language))
-                    .concat(hasReferences ? (Names.PiElementReference) : null)
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )

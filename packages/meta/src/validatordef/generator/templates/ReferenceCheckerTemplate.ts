@@ -26,8 +26,8 @@ export class ReferenceCheckerTemplate {
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.PiNamedElement}, LanguageEnvironment } from "${PROJECTITCORE}";
-        import { ${overallTypeName}, ${Names.PiElementReference}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.PiElementReference}, ${Names.PiNamedElement}, LanguageEnvironment } from "${PROJECTITCORE}";
+        import { ${overallTypeName}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
 

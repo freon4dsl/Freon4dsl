@@ -1,5 +1,5 @@
-import { AstWorker, PiElement } from "@projectit/core";
-import { DSprivate, DSpublic, DSref, DSunit, PiElementReference } from "../language/gen/index";
+import { AstWorker, PiElement, PiElementReference } from "@projectit/core";
+import { DSprivate, DSpublic, DSref, DSunit } from "../language/gen/index";
 
 export class RefCreatorWorker implements AstWorker {
 

@@ -1,4 +1,4 @@
-import { PiError } from "@projectit/core";
+import { PiElementReference, PiError } from "@projectit/core";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import {
     DemoModel,
@@ -10,7 +10,6 @@ import {
     DemoAttribute,
     DemoFunction,
     DemoVariable,
-    PiElementReference,
     Demo
 } from "../language/gen";
 import { DemoValidator } from "../validator/gen/DemoValidator";

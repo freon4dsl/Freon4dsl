@@ -1,4 +1,5 @@
-import { DSmodel, DSref, PiElementReference } from "../language/gen";
+import { PiElementReference } from "@projectit/core";
+import { DSmodel, DSref } from "../language/gen";
 import { initializeScoperDef } from "../scoper/gen/index";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";

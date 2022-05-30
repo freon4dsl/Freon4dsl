@@ -1,11 +1,11 @@
-import { PiElement, Searcher } from "@projectit/core";
+import { PiElement, Searcher, PiElementReference } from "@projectit/core";
 import { FileHandler } from "../../utils/FileHandler";
 import {
     AssociationClass,
     AssociationEnd, Attribute, IClassifier,
     MultiplicityKind,
     OctopusModel,
-    OctopusModelUnitType, PiElementReference, UmlClass,
+    OctopusModelUnitType, UmlClass,
     UmlPart
 } from "../language/gen";
 import { OctopusEnvironment } from "../config/gen/OctopusEnvironment";

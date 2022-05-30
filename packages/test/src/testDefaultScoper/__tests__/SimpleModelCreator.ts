@@ -1,5 +1,5 @@
-import { DSmodel, DSpublic, DSprivate, DSref, DSunit, PiElementReference } from "../language/gen";
-import { GenericModelSerializer, AstWalker, PiElement } from "@projectit/core";
+import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen";
+import { GenericModelSerializer, AstWalker, PiElement, PiElementReference } from "@projectit/core";
 import { RefCreatorWorker } from "./RefCreatorWorker";
 
 export class SimpleModelCreator {

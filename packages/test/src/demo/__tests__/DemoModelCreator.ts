@@ -1,5 +1,5 @@
+import { PiElementReference } from "@projectit/core";
 import {
-    PiElementReference,
     DemoEntity,
     DemoAttribute,
     DemoFunction,

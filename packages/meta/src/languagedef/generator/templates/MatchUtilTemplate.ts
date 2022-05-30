@@ -9,8 +9,7 @@ export class MatchUtilTemplate {
         // TODO JOS: do we need the <T extends PiNamedElement> here?
         // Template starts here
         return `
-        import { PiNamedElement } from "@projectit/core";
-        import { PiElementReference } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
+        import { PiNamedElement, PiElementReference } from "@projectit/core";
 
         /**
          * Class MatchUtil implements the match functionality on a list of PiElementReferences.
