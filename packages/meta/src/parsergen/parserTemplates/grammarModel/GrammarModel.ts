@@ -86,10 +86,9 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
         import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
         import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
-        import { ${Names.PiNamedElement}, PiParseLocation } from "@projectit/core";
+        import { ${Names.PiNamedElement}, PiParseLocation, PiElementReference } from "@projectit/core";
         import { ${this.parts.map(part => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from ".";
-        import { PiElementReference } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        
+         
         /**
         *   Class ${className} is the main syntax analyser.
         *   The actual work is being done by its parts, one for each model unit,

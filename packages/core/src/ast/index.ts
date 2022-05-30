@@ -7,3 +7,4 @@ export * from "./PiExpression";
 export * from "./PiModel";
 export * from "./PiModelUnit";
 export * from "./decorators";
+export * from "./PiElementReference";

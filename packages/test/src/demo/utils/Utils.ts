@@ -1,5 +1,4 @@
-import { PiElement } from "@projectit/core";
-import { PiElementReference } from "../language/gen/index";
+import { PiElement, PiElementReference } from "@projectit/core";
 
 export function printModel1(element: PiElement): string {
     return JSON.stringify(element, skipReferences, "  " )

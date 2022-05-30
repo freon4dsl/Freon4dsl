@@ -250,8 +250,7 @@ export class FreonTyperPartTemplate {
 
         });
 
-        ListUtil.addIfNotPresent(this.imports, "PiElementReference");
-        const imports = `import { ${typerInterfaceName}, PiType, AstType, PiElement, Language, CommonSuperTypeUtil } from "${PROJECTITCORE}";
+        const imports = `import { ${typerInterfaceName}, PiType, AstType, PiElement, Language, PiElementReference, CommonSuperTypeUtil } from "${PROJECTITCORE}";
         import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}
         import { ${Names.typer(language)} } from "./${Names.typer(language)}";`;

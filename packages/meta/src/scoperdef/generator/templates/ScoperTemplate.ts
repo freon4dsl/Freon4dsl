@@ -16,7 +16,7 @@ import {
 import { PiScopeDef, ScopeConceptDef } from "../../metalanguage";
 
 export class ScoperTemplate {
-    languageImports: string[] = ["PiElementReference"]; // holds the names of all classifiers that need to be imported from the generated language structure
+    languageImports: string[] = []; // holds the names of all classifiers that need to be imported from the generated language structure
     hasAlternativeScopeText: string = "";
     getAlternativeScopeText: string = "";
     getAdditionalNamespacetext = "";
@@ -248,7 +248,7 @@ export class ScoperTemplate {
 
         // now we have enough information to create the correct imports
         const templateImports: string = `
-        import { ${scoperInterfaceName}, ${Names.PiNamedElement}, LanguageEnvironment, PiLogger, Language, PiElement, PiModelUnit, FreonNamespace, modelUnit } from "${PROJECTITCORE}"
+        import { ${scoperInterfaceName}, ${Names.PiNamedElement}, LanguageEnvironment, PiLogger, Language, PiElement, PiElementReference, PiModelUnit, FreonNamespace, modelUnit } from "${PROJECTITCORE}"
         import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }  `;
 

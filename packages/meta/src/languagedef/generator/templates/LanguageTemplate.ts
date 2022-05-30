@@ -4,11 +4,11 @@ import { Names, PROJECTITCORE, LangUtil, GenerationUtil } from "../../../utils";
 export class LanguageTemplate {
 
     generateLanguage(language: PiLanguage): string {
-        return `import { Language, Model, ModelUnit, Property, Concept, Interface } from "${PROJECTITCORE}";
+        return `import { Language, Model, ModelUnit, Property, Concept, Interface, ${Names.PiElementReference} } from "${PROJECTITCORE}";
         
             import { ${Names.classifier(language.modelConcept)}, ${language.units.map(unit =>
             `${Names.classifier(unit)}`).join(", ") }, ${language.concepts.map(concept =>
-                `${Names.concept(concept)}`).join(", ") }, ${Names.PiElementReference} } from "./internal";
+                `${Names.concept(concept)}`).join(", ")} } from "./internal";
     
             /**
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.

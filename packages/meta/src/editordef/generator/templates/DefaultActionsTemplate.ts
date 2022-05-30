@@ -36,11 +36,12 @@ export class DefaultActionsTemplate {
                 PiUtils,
                 AliasBox,
                 OptionalBox,
+                PiElementReference,
                 LEFT_MOST,
                 RIGHT_MOST
             } from "${PROJECTITCORE}";
             
-            import { PiElementReference, ${modelImports.join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${modelImports.join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
              /**
              * This module implements the actions available to the user in the editor.

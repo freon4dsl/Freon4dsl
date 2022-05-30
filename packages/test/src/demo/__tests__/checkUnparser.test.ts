@@ -1,3 +1,4 @@
+import { PiElementReference } from "@projectit/core";
 import {
     DemoModel,
     DemoMultiplyExpression,
@@ -8,7 +9,7 @@ import {
     DemoAttribute,
     DemoFunction,
     DemoVariable,
-    PiElementReference, DemoAttributeType
+    DemoAttributeType
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";

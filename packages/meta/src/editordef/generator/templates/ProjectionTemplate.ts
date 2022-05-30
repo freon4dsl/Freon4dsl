@@ -57,10 +57,10 @@ export class ProjectionTemplate {
         // the neccessary imports are gathered while making the methods in the template
         // they are added to the generated 'coreText' string afterwards
         this.modelImports = [];
-        this.coreImports = [Names.PiProjection, Names.PiCompositeProjection, Names.PiElement, "LanguageEnvironment", "PiTableDefinition", "Box"]; // these are always used
+        this.coreImports = [Names.PiProjection, Names.PiElementReference, Names.PiCompositeProjection, Names.PiElement, "LanguageEnvironment", "PiTableDefinition", "Box"]; // these are always used
         if (!!binaryConcepts && binaryConcepts.length > 0 && projectionGroup.name === Names.defaultProjectionName) {
             // these are always used in the default projection group
-            this.modelImports.push(Names.allConcepts(language), Names.PiElementReference);
+            this.modelImports.push(Names.allConcepts(language));
             this.coreImports.push("isPiBinaryExpression", "PiBinaryExpression", "createDefaultBinaryBox", "BoxFactory", "BoxUtils");
         }
         binaryConcepts.forEach(c =>
@@ -422,7 +422,7 @@ export class ProjectionTemplate {
     private generateReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
         const featureType = Names.classifier(appliedFeature.type);
         this.addToIfNotPresent(this.modelImports, featureType);
-        this.addToIfNotPresent(this.modelImports, Names.PiElementReference);
+        this.addToIfNotPresent(this.coreImports, Names.PiElementReference);
         this.addToIfNotPresent(this.coreImports, "BoxUtils");
         return `BoxUtils.referenceBox(
                                 ${element},

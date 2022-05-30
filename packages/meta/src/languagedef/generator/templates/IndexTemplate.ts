@@ -20,7 +20,6 @@ export class IndexTemplate {
         tmp.push("ModelUnitMetaType");
         tmp.push(Names.allConcepts(language));
         tmp.push(Names.metaType(language));
-        tmp.push(Names.PiElementReference);
         tmp.push(Names.initializeLanguage);
 
         // the template starts here
@@ -42,7 +41,6 @@ export class IndexTemplate {
 
 
         const tmp: string[] = [];
-        tmp.push(Names.PiElementReference);
         tmp.push(Names.classifier(language.modelConcept));
         language.units.map(c =>
             tmp.push(Names.classifier(c))

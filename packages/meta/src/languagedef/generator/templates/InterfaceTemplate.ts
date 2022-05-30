@@ -29,8 +29,7 @@ export class InterfaceTemplate {
 
         // Template starts here
         return `
-            ${hasReferences ? `import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";` : ``}
-            import { ${Names.PiElement} } from "${PROJECTITCORE}";
+            import { ${Names.PiElement} ${hasReferences ? `, ${Names.PiElementReference}` : ""} } from "${PROJECTITCORE}";
             import { ${imports.join(", ")} } from "./internal";
 
             /**

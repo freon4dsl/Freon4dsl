@@ -96,8 +96,8 @@ export class WriterTemplate {
 
         // Template starts here
         return `
-        import { ${Names.PiNamedElement}, ${writerInterfaceName} } from "${PROJECTITCORE}";
-        import { ${allLangConceptsName}, ${Names.PiElementReference}, 
+        import { ${Names.PiNamedElement}, ${Names.PiElementReference}, ${writerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${allLangConceptsName}, 
             ${language.interfaces.length > 0
             ? language.interfaces.map(concept => `
                 ${Names.classifier(concept)}, `).join("")

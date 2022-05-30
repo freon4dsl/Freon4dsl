@@ -1,5 +1,5 @@
-import { DSmodel, DSpublic, DSprivate, DSref, DSunit, PiElementReference } from "../language/gen";
-import { GenericModelSerializer } from "@projectit/core";
+import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen";
+import { GenericModelSerializer, PiElementReference } from "@projectit/core";
 
 // This class creates a model like SimpleModelCreator,
 // but adds more extensive references
