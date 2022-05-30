@@ -1,0 +1,14 @@
+Base Product base1 for Home, Health
+	 premium calculation: EUR 20,30 + EUR 45,63
+     InsurancePart base23 for Home on house23
+         risk: 20%
+         premium calculation: EUR 10,20
+         is approved: YES
+	 InsurancePart hospital for Health on person123
+     	 risk: 70%
+     	 premium calculation: EUR 100,80
+     	 is approved: YES
+     InsurancePart fire for Home on house23
+     	 risk: 10%
+     	 premium calculation: EUR 4,20
+     	 is approved: NO

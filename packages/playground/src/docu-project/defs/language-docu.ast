@@ -1,0 +1,153 @@
+language DocuProject
+
+model InsuranceModel {
+    parts: Part[];
+    products: Product[];
+}
+
+modelunit Part {
+    part: InsurancePart;
+    file-extension = "part";
+}
+
+modelunit Product {
+    product: InsuranceProduct;
+    file-extension = "prod";
+}
+
+interface InsuranceProduct {
+    name: identifier;                       // internal name
+}
+
+concept BaseProduct implements InsuranceProduct {
+    themes: InsuranceTheme[];               // the 'kind' of insurance
+    parts: InsurancePart[];                 // all parts of this product
+    internalPremium: EuroExpression;        // premium on an annual basis
+}
+
+concept FinalProduct implements InsuranceProduct {
+    productName: string;                    // name by which this product is known to the public
+    reference basedOn: InsuranceProduct;    // a final product is either based on a BaseProduct or it extends another final product
+    reference additionalParts: InsurancePart[]; // optionally, known parts can be included by reference
+    riskAdjustment?: RiskPercentage;        // an adjustment to the risk of the separate parts, e.g. caused by the combination of the parts
+    advertisedPremium: EuroExpression;      // the premium as known to the public
+    nrPremiumDays: PremiumDays;             // the number of days for which the advertised premium is calculated
+}
+
+concept InsurancePart {
+    name: identifier;
+    theme: InsuranceTheme;
+    reference toBeInsured: InsuranceItem;
+    averageRisk: RiskPercentage;
+    minimalPremium: EuroExpression;
+    isApproved: boolean = false;
+}
+
+limited InsuranceTheme {
+    Home; Health; Liability; Travel; Car; LegalAssistance; MotorCycle; LifeAndFuneral; Financial;
+}
+
+limited PremiumDays {
+    // if the 'name' property was not provided, it would have been generated
+    name: identifier;
+    nrOfDays: number;
+    // notations 'name:' and '"name":' are both correct
+    Week = { name: "Week", nrOfDays: 7 }
+    Month = { "name": "Month", nrOfDays: 30 }
+    // the following instance gets the name "Quarter"
+    Quarter = { nrOfDays: 91 }
+    Semester = { nrOfDays: 182 }
+    Year = { nrOfDays: 365 }
+}
+
+interface InsuranceItem {
+    name: identifier;
+    description: string;    // description of what is to be insured
+}
+
+concept House implements InsuranceItem {
+    address: string; // TODO add more content
+}
+
+concept Person implements InsuranceItem {
+    familyName: string;
+    dateOfBirth: Date;
+}
+
+concept Date {
+    dd: number;
+    mm: number;
+    yy: number;
+}
+
+concept MotorVehicle {
+    licensePlate: string;
+}
+
+concept RiskPercentage {
+    perc: number;
+}
+
+////////////////////////////////////////////////////////////////
+//       Expressions to be able to calculate with Euros       //
+////////////////////////////////////////////////////////////////
+abstract expression EuroExpression {
+//    applied?: AppliedEuroExpression;
+}
+
+//abstract concept AppliedEuroExpression {
+//    applied?: AppliedEuroExpression;
+//}
+
+expression EuroLiteral base EuroExpression {
+    euros: number;
+    cents: number;
+}
+
+//expression EuroSum base EuroExpression { TODO add sum expression
+//    variable: LoopVariable;
+//    from: EuroExpression;
+//    to  : EuroExpression;
+//    body: EuroExpression;
+//}
+
+abstract binary expression BinaryEuroExpression base EuroExpression {
+    left: EuroExpression;
+    right: EuroExpression;
+}
+
+binary expression PlusExpression base BinaryEuroExpression {
+    priority = 4;
+}
+
+binary expression MinusExpression base BinaryEuroExpression {
+    priority = 4;
+}
+
+//abstract binary expression BinaryMathExpression base EuroExpression {
+//    left: EuroExpression;
+//    right: NumberLiteral;
+//}
+//
+//binary expression MultiplyExpression base BinaryMathExpression {
+//    priority = 8;
+//}
+//
+//binary expression DivideExpression base BinaryMathExpression {
+//    priority = 8;
+//}
+//
+//expression NumberLiteral {
+//    value: number;
+//}
+
+
+// the following concepts are only present to explain indentation
+concept Text {
+}
+concept Text2 {
+}
+concept Text3 {
+}
+concept Text4 {
+}

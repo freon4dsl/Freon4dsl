@@ -1,0 +1,18 @@
+editor publicOnly precedence 10
+
+FinalProduct {
+// shows only those elements that will be exposed to the public
+[
+    InsuranceProduct ${productName}
+        Premium: ${advertisedPremium} per ${nrPremiumDays}
+        [? Additional parts: ${additionalParts vertical initiator[including]} ]
+]
+}
+
+InsurancePart {
+[
+    ${name} \[ approved: ${self.isApproved [ok | NEEDS-APPROVAL]} \]
+        Theme: ${theme}
+        Item: ${toBeInsured}
+]
+}

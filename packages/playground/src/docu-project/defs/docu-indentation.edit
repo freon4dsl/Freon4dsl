@@ -1,0 +1,42 @@
+editor default
+
+Text {
+[
+This is
+        literal text
+      that is projected in the
+                editor
+  for every concept of type Text.
+]
+}
+
+Text2 {
+            [
+            This is
+                    literal text
+                  that is projected in the
+
+                            editor
+              for every concept of type Text.
+            ]
+}
+
+Text3 {
+    [
+                 This is
+               literal text
+          that is projected in the
+                  editor
+       for every concept of type Text.
+            ]
+}
+
+Text4 {
+    [
+                 This is
+               literal text
+          that is projected in the
+                  editor
+       for every concept of type Text.
+    ]
+}

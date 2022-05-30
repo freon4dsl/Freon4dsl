@@ -1,0 +1,57 @@
+editor default
+
+boolean [YES | NO] // are the strings used to display a boolean value
+
+referenceSeparator [:] // is the string that separates the names in a path name, e.g. pack1:cls3:part
+
+Part {[ ${self.part} ]}
+Product {[ ${self.product} ]}
+
+InsurancePart{
+[
+    InsurancePart ${self.name} for ${self.theme} on ${self.toBeInsured}
+        risk: ${self.averageRisk}
+        premium calculation: ${self.minimalPremium}
+        is approved: ${self.isApproved}
+]
+table [
+    Name    | theme    | item           | risk           | calculation       | is approved
+    ${name} | ${theme} | ${toBeInsured} | ${averageRisk} | ${minimalPremium} | ${isApproved}
+]
+}
+
+BaseProduct {[
+    Base Product ${name} for ${themes horizontal separator[,]}
+        premium calculation: ${internalPremium}
+        ${parts table rows}
+]}
+
+FinalProduct {[
+    InsuranceProduct ${name} ( public name: ${productName} ) based on ${basedOn}
+        Premium: ${advertisedPremium} per ${nrPremiumDays}
+        [? Risk adjusted by: ${riskAdjustment} ]
+        [? Additional parts: ${additionalParts} ]
+]}
+
+RiskPercentage {[ ${self.perc}% ]}
+
+EuroLiteral {
+    [EUR ${euros},${cents}] // TODO make third level projection where EUR is the euro symbol
+}
+
+MinusExpression  {
+    symbol = "-"
+}
+PlusExpression {
+    symbol = "+"
+}
+//MultiplyExpression {
+//    symbol = "*"
+//}
+//DivideExpression {
+//    symbol = "/"
+//}
+
+//NumberLiteral {
+//    [${self.value}]
+//}
