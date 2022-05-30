@@ -86,6 +86,7 @@ export class FreonNamespace {
             const sameModelUnit = (modelUnit(elem) === origin);
             const visit = !Language.getInstance().classifier(elem.piLanguageConcept()).isNamespace &&
                 (sameModelUnit || (!!elem.piOwner() && Language.getInstance().classifierProperty(elem.piOwner().piLanguageConcept(), elem.piOwnerDescriptor().propertyName).isPublic));
+            LOGGER.log("Namespace::Visit " + elem.piLanguageConcept() + "(" + elem["name"] + ")" + " ==> " + visit + "   same modelunit? " + sameModelUnit + "  _elem " + this._myElem.piLanguageConcept());
             return visit;
         });
         return result;
