@@ -83,4 +83,5 @@ html,
 body {
   background-color: theme.$surface;
   color: theme.$on-surface;
+  --mdc-theme-primary: #{theme.$primary};
 }
