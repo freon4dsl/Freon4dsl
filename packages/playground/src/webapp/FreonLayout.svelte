@@ -78,9 +78,6 @@
 	}
 
 	onMount(async () => {
-		// initialize language settings
-		// LanguageInitializer.initialize();
-
 		// get list of models from server
 		await serverCommunication.loadModelList((names: string[]) => {
 			if (names.length > 0) {

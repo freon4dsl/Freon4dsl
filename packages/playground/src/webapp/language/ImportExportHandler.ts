@@ -23,7 +23,7 @@ export class ImportExportHandler {
                     const text = reader.result;
                     if (typeof text == "string") {
                         try {
-                            EditorState.getInstance().unitFromFile(reader.result as string, metaType);
+                            EditorState.getInstance().unitFromFile(file.name.split(".").shift(), reader.result as string, metaType);
                         } catch (e) {
                             setUserMessage(`${e.message}`);
                         }

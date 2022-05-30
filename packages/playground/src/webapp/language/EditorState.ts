@@ -53,6 +53,7 @@ export class EditorState {
         // create a new model
         this.currentModel = editorEnvironment.newModel(modelName);
         currentModelName.set(this.currentModel.name);
+        editorProgressShown.set(false);
     }
 
     /**
@@ -280,16 +281,20 @@ export class EditorState {
      * @param content
      * @param metaType
      */
-    unitFromFile(content: string, metaType: string) {
+    unitFromFile(fileName: string, content: string, metaType: string) {
         // save the old current unit, if there is one
         this.saveCurrentUnit();
-        let elem: PiModelUnit = null;
+        let unit: PiModelUnit = null;
         try {
             // the following also adds the new unit to the model
-            elem = editorEnvironment.reader.readFromString(content, metaType, this.currentModel) as PiModelUnit;
-            if (!!elem) {
+            unit = editorEnvironment.reader.readFromString(content, metaType, this.currentModel) as PiModelUnit;
+            if (!!unit) {
+                // if the element does not yet have a name use the file name
+                if (!unit.name || unit.name.length === 0) {
+                    unit.name = fileName;
+                }
                 // set elem in editor
-                this.showUnitAndErrors(elem);
+                this.showUnitAndErrors(unit);
             }
         } catch (e) {
             setUserMessage(e.message, SeverityType.error);

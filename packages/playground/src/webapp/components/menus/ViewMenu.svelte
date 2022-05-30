@@ -36,9 +36,7 @@
             {/each}
             <Separator />
             <Item on:SMUI:action={apply}>
-                <Button>
-                    <Label>Apply</Label>
-                </Button>
+                <Text style="color:var(--mdc-theme-primary)">Apply changes</Text>
             </Item>
         </List>
     </Menu>

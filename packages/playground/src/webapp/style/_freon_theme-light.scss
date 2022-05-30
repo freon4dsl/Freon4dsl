@@ -11,8 +11,7 @@
   $surface: #eeeeee,
   $background: #fff,
   $error: #B00020,
-  //$on-primary: #ffffb0,
-  //$on-primary: purple,     // a slighter darker version of 'secondary'
+  //$on-primary: color-palette.$orange-50,
   $on-secondary: #00695c,   // a slighter darker version of 'primary'
   //$on-surface: black,
   //$on-error: black,
@@ -85,4 +84,5 @@ html,
 body {
   background-color: theme.$surface;
   color: theme.$on-surface;
+  --mdc-theme-primary: #{theme.$primary};
 }
