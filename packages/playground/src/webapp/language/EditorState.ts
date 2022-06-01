@@ -73,7 +73,6 @@ export class EditorState {
         currentModelName.set(modelName);
         // fill the new model with the units loaded from the server
         serverCommunication.loadUnitList(modelName, (localUnitNames: string[]) => {
-            // console.log(`callback unitNames: ${unitNames}`);
             unitNames.set(localUnitNames);
             if (localUnitNames && localUnitNames.length > 0) {
                 // load the first unit completely and show it
@@ -95,8 +94,11 @@ export class EditorState {
                         });
                     }
                 }
+            } else {
+                editorProgressShown.set(false);
             }
         });
+
     }
 
     /**
@@ -281,7 +283,7 @@ export class EditorState {
      * @param content
      * @param metaType
      */
-    unitFromFile(fileName: string, content: string, metaType: string) {
+    unitFromFile(fileName: string, content: string, metaType: string, showIt: boolean) {
         // save the old current unit, if there is one
         this.saveCurrentUnit();
         let unit: PiModelUnit = null;
@@ -289,22 +291,20 @@ export class EditorState {
             // the following also adds the new unit to the model
             unit = editorEnvironment.reader.readFromString(content, metaType, this.currentModel) as PiModelUnit;
             if (!!unit) {
-                // if the element does not yet have a name use the file name
+                // if the element does not yet have a name, try to use the file name
                 if (!unit.name || unit.name.length === 0) {
-                    unit.name = fileName;
+                    unit.name = this.makeUnitName(fileName);
                 }
-                // set elem in editor
-                this.showUnitAndErrors(unit);
+                if (showIt) {
+                    // set elem in editor
+                    this.showUnitAndErrors(unit);
+                }
+                serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit);
             }
         } catch (e) {
             setUserMessage(e.message, SeverityType.error);
         }
         // if (elem) {
-        //     if (this.currentModel.getUnits().filter(unit => unit.name === elem.name).length > 0) {
-        //         setUserMessage(`Unit named '${elem.name}' already exists.`, severityType.error);
-        //         return;
-        //     }
-
             // TODO find way to get interface without use of the server, because of concurrency error
             // swap old unit with its interface in the in-memory model
             // serverCommunication.loadModelUnitInterface(
@@ -319,9 +319,33 @@ export class EditorState {
 
             // add the new unit to the current model
             // this.currentModel.addUnit(elem);
-
         // }
+    }
 
+    private makeUnitName(fileName: string): string {
+        const nameExist: boolean = !!this.currentModel.getUnits().find(existing => existing.name === fileName);
+        if (nameExist) {
+            setUserMessage(`Unit named '${fileName}' already exists, adding number.`, SeverityType.error);
+            // find the existing names that start with the file name
+            const unitsWithSimiliarName = this.currentModel.getUnits().filter(existing => existing.name.startsWith(fileName));
+            if (unitsWithSimiliarName.length > 1) { // there are already numbered units
+                // find the biggest number that is in use after the filename, e.g. Home12, Home3 => 12
+                let biggestNr: number = 1;
+                // find the characters in each of the existing names that come after the file name
+                const trailingParts: string[] = unitsWithSimiliarName.map(existing => existing.name.slice(fileName.length));
+                trailingParts.forEach(trailing => {
+                    const nextNumber: number = Number.parseInt(trailing);
+                    if (!isNaN(nextNumber) && nextNumber >= biggestNr) {
+                        biggestNr = nextNumber + 1;
+                    }
+                });
+                return fileName + biggestNr;
+            } else {
+                return fileName + "1";
+            }
+        } else {
+            return fileName;
+        }
     }
 
     /**
