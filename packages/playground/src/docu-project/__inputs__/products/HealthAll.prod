@@ -1,0 +1,22 @@
+InsuranceProduct HealthAll ( public name: "Healthy Life" )
+    Themes: Health
+    Premium: EUR 1000,00 per Month
+    Insured risks:
+        hospitalization;
+        medicines;
+        dentist;
+        eyecare;
+        generalPractitioner;
+
+    Calculation
+        Risk adjusted by = 2%
+        calculated premium: adjust(hospitalization, riskAdjustment)
+            + adjust(medicines, riskAdjustment + 1%)
+            + adjust(dentist, riskAdjustment - 2%)
+            + adjust(eyecare, riskAdjustment * 4)
+            + adjust(generalPractitioner, riskAdjustment / 2)
+
+    Helper functions:
+        adjust(part: InsurancePart, adjustment: Percentage): EUR {
+            part.statisticalRisk * part.maximumPayOut * adjustment
+        }

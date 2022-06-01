@@ -1,3 +1,6 @@
+/* This file contains some extra examples for the documentation site.
+These definitions are not taken into account in the actual language. */
+
 editor default
 
 Text {

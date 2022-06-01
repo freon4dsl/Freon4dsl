@@ -1,0 +1,10 @@
+InsuranceProduct HomeExtra ( public name: "Sound as a Rock" )
+    Themes: Home, Legal
+    Premium: EUR 400,00 per Month
+    Insured risks:
+        fire;
+        breakingAndEntering;
+        flooding;
+        stormAndLightning;
+        damageToOtherPersonsProperty;
+        damageToOtherPersonsHealth;
