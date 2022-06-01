@@ -207,6 +207,7 @@ export class ConceptMaker {
                 result = new RHSRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
             } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
                 const sub1 = new RHSRefEntry(prop);
+                // TODO create a RHSRefListWithInitiator class
                 result = new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
             } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                 const sub1 = new RHSRefEntry(prop);
