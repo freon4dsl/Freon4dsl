@@ -8,7 +8,7 @@ InsuranceProduct HomeCheap ( public name: "Save and Sound" )
     Calculation
         calculated premium: partPremium(fire) + partPremium(breakingAndEntering)
 
-    Helper functions
+    Helper functions:
         partPremium(part: InsurancePart): EUR {
             part.statisticalRisk * part.maximumPayOut
         }

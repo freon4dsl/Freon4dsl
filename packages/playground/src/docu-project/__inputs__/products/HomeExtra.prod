@@ -8,3 +8,6 @@ InsuranceProduct HomeExtra ( public name: "Sound as a Rock" )
         stormAndLightning;
         damageToOtherPersonsProperty;
         damageToOtherPersonsHealth;
+
+    Calculation
+        calculated premium: 100 + 25

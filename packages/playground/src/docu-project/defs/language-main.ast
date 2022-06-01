@@ -65,24 +65,27 @@ concept Parameter  {
     reference declaredType: DocuType;
 }
 
+// Sorry, its not good style to use an interface and a set of separate limited concepts.
+// At least, it is an example of using an interface, and of the fact that limited
+// concepts can implement interfaces.
 interface DocuType {
     name: identifier;
 }
 
-concept InsurancePartType implements DocuType {
-    name: identifier = "InsurancePart";
+limited InsurancePartType implements DocuType {
+    InsurancePart;
 }
 
-concept PercentageType implements DocuType {
-    name: identifier = "Percentage";
+limited PercentageType implements DocuType {
+    Percentage;
 }
 
-concept NumberType implements DocuType {
-    name: identifier = "Number";
+limited NumberType implements DocuType {
+    Number;
 }
 
-concept EuroType implements DocuType {
-    name: identifier = "EUR";
+limited EuroType implements DocuType {
+    EUR;
 }
 
 limited InsuranceTheme {

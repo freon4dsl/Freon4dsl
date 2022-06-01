@@ -8,7 +8,7 @@ InsuranceProduct LegalAll ( public name: "Careless" )
     Calculation
         calculated premium: calc(damageToOtherPersonsProperty) + calc(damageToOtherPersonsHealth)
 
-    Helper functions
+    Helper functions:
         calc(part: InsurancePart): EUR {
             part.maximumPayOut * 10%
         }

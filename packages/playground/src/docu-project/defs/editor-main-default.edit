@@ -33,8 +33,8 @@ InsuranceProduct {[
         Calculation
             [? Risk adjusted by = ${riskAdjustment} ]
             calculated premium: ${calculation}
-        Helper functions:
-            ${helpers vertical}
+        [?Helper functions:
+            ${helpers vertical}]
 ]}
 
 CalcFunction {

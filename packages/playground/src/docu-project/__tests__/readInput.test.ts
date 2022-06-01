@@ -5,6 +5,7 @@ import { InsuranceModel, Part, Product } from "../language/gen";
 
 const writer = DocuProjectEnvironment.getInstance().writer;
 const reader = DocuProjectEnvironment.getInstance().reader;
+const scoper = DocuProjectEnvironment.getInstance().scoper;
 const validator = DocuProjectEnvironment.getInstance().validator;
 const handler = new FileHandler();
 
@@ -26,7 +27,7 @@ function addProductToModel(model: InsuranceModel, filepath: string) {
         unit1.name = filepath.split("/").pop().split(".").shift();
     } catch (e) {
         console.log(e.message + e.stack);
-        // expect(e).toBeNull();
+        expect(e).toBeNull();
     }
 }
 
@@ -46,11 +47,37 @@ describe("Testing DocuProject", () => {
         addPartToModel(model, "src/docu-project/__inputs__/base/Legal.base");
     });
 
-    test("add product", () => {
+    test("add HealthAll product", () => {
         addProductToModel(model, "src/docu-project/__inputs__/products/HealthAll.prod");
-        console.log(model.getUnits().map(u => u instanceof Part ? u.part.name : u instanceof Product ? u.product.name : "no unit").join("\n\n"));
-        const errors = validator.validate(model);
-        console.log(errors.map(e => e.message + ' in [' + e.locationdescription + ']').join("\n"));
+    });
+
+    test("add HomeAll product", () => {
+        addProductToModel(model, "src/docu-project/__inputs__/products/HomeAll.prod");
+    });
+
+    test("add HomeAndHealth product", () => {
+        addProductToModel(model, "src/docu-project/__inputs__/products/HomeAndHealth.prod");
+    });
+
+    test("add HomeCheap product", () => {
+        addProductToModel(model, "src/docu-project/__inputs__/products/HomeCheap.prod");
+
+    });
+
+    test("add HomeExtra product", () => {
+        addProductToModel(model, "src/docu-project/__inputs__/products/HomeExtra.prod");
+    });
+
+    test("add LegalAll product", () => {
+        addProductToModel(model, "src/docu-project/__inputs__/products/LegalAll.prod");
+        // console.log(model.getUnits().map(u => u instanceof Part ? u.part.name : u instanceof Product ? u.product.name : "no unit").join(", "));
+        model.getUnits().forEach(u => {
+            const names: string[] = scoper.getVisibleNames(u);
+            console.log("Visible names in unit: " + u.name + "\n" + names.map(n => n).join(", "));
+        });
+
+        // const errors = validator.validate(model);
+        // console.log("Errors found (" + errors.length + ")\n" + errors.map(e => e.message + ' in [' + e.locationdescription + ']').join("\n"));
     });
 
 });

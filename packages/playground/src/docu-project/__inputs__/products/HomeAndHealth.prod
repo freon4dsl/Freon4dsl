@@ -10,3 +10,10 @@ InsuranceProduct HomeAndHealth ( public name: "Healthy at Home" )
         dentist;
         eyecare;
         generalPractitioner;
+
+    Calculation
+        calculated premium: adjust(hospitalization, riskAdjustment)
+            + adjust(medicines, riskAdjustment + 1%)
+            + adjust(dentist, riskAdjustment - 2%)
+            + adjust(eyecare, riskAdjustment * 4)
+            + adjust(generalPractitioner, riskAdjustment / 2)
