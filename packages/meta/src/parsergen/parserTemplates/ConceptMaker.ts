@@ -45,6 +45,7 @@ import {
 } from "./grammarModel";
 import { LOG2USER } from "../../utils/UserLogger";
 import { ListUtil } from "../../utils";
+import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator";
 
 
 export class ConceptMaker {
@@ -209,7 +210,7 @@ export class ConceptMaker {
                 result = new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
             } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                 const sub1 = new RHSRefEntry(prop);
-                result = new RHSPartListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName "joinText")*`
+                result = new RHSRefListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName "joinText")*`
             }
         }
         return result;

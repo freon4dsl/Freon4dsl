@@ -98,4 +98,5 @@ export const internalTransformList = "transformSharedPackedParseTreeList";
 export const internalTransformRefList = "transformSharedPackedParseTreeRefList";
 export const internalTransformLeaf = "transformSharedPackedParseTreeLeaf";
 export const internalTransformBranch = "transformSharedPackedParseTreeBranch";
+export const internalTransformPiElementRef = "piElemRef";
 
