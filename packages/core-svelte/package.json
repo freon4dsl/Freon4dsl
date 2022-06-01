@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@projectit/core": "0.3.0",
-    "@testing-library/svelte": "^3.0.3",
+    "@testing-library/svelte": "3.1.0",
     "@testing-library/user-event": "^13.5.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@types/jest": "^27.4.0",
