@@ -14,7 +14,7 @@ model all {
 
 // contains only parts
 modelunit unitA {
-    public name: identifier;
+    name: identifier;
     Apart1: conceptWithBasePrim;
     Apart2: conceptWithBaseNonPrim;
     Apart3: conceptWithInheritanceTree1;
@@ -33,7 +33,7 @@ modelunit unitA {
 
 // contains only references
 modelunit unitB {
-    public name: identifier;
+    name: identifier;
     reference Bpart1: conceptWithBasePrim;
     reference Bpart2: conceptWithBaseNonPrim;
     reference Bpart3: conceptWithInheritanceTree1;
@@ -52,7 +52,7 @@ modelunit unitB {
 
 // contains only lists
 modelunit unitC {
-    public name: identifier;
+    name: identifier;
     Cpart1: conceptWithBasePrim;
     Cpart2: conceptWithBaseNonPrim;
     Cpart3: conceptWithInheritanceTree1;
@@ -71,7 +71,7 @@ modelunit unitC {
 
 // contains only reference lists
 modelunit unitD {
-    public name: identifier;
+    name: identifier;
     reference Cref1: conceptWithBasePrim;
     reference Cref2: conceptWithBaseNonPrim;
     reference Cref3: conceptWithInheritanceTree1;

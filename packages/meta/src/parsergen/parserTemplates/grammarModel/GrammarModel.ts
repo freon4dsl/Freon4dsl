@@ -199,9 +199,9 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
               
             public transform__pi_reference(branch: SPPTBranch){
-                if (branch.name.includes("multi") || branch.name.includes("List")) {
+                if (branch.name.includes("multi") || branch.name.includes("List")) { // its a path name
                     return this.${internalTransformList}<string>(branch, "${this.refSeparator}");
-                } else {
+                } else { // its a single name
                     return this.${internalTransformLeaf}(branch);
                 }
             }

@@ -33,7 +33,7 @@ describe("Testing Default Scoper", () => {
         const model: DSmodel = creator.createModel(1, 2 );
         // run the scoper to test all names in the model
         const visibleNames = scoper.getVisibleNames( model.units[0] );
-        printDifference(creator, visibleNames);
+        // printDifference(creator, visibleNames);
         // print("names in model of depth 2: ", visibleNames);
         for (const x of creator.allNames) {
             if (!visibleNames.includes(x)) {
@@ -121,7 +121,7 @@ describe("Testing Default Scoper", () => {
         errors.forEach(mess => {
             errorMessages.push(mess.message + " in " + mess.locationdescription);
         });
-        print("!!! found errors", errorMessages);
+        // print("!!! found errors", errorMessages);
         expect(errors.length).toBe(8);
         expect(errorMessages.includes("Cannot find reference 'private30_OF_private28_OF_private24_OF_unit16_OF_model' in dsRefs of unit1_OF_model")).toBeTruthy();
         expect(errorMessages.includes("Cannot find reference 'private27_OF_public25_OF_private24_OF_unit16_OF_model' in dsRefs of unit1_OF_model")).toBeTruthy();

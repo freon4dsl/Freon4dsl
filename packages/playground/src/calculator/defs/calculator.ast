@@ -6,7 +6,7 @@ model CalculatorModel {
 }
 
 modelunit Calculator {
-    public name: identifier;
+    name: identifier;
 	inputFields: InputField[];
 	outputFields: OutputField[];
 }

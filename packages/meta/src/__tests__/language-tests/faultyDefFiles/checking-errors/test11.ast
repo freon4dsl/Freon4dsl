@@ -1,12 +1,12 @@
 language test11
 
 model test {
-    public name: identifier;
+    name: identifier;
     unit: testUnit;
 }
 
 modelunit testUnit {
-    public name: identifier;
+    name: identifier;
 }
 
 concept YY  {

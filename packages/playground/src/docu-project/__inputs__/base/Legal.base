@@ -1,0 +1,9 @@
+Base Products legal1 for Legal
+	 InsurancePart damageToOtherPersonsProperty
+     	 risk assessment: 70%
+     	 maximum payout: EUR 250000,00
+     	 is approved: YES
+	 InsurancePart damageToOtherPersonsHealth
+     	 risk assessment: 70%
+     	 maximum payout: EUR 1000000,00
+     	 is approved: YES

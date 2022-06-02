@@ -13,7 +13,7 @@ model TestParserModel {
 }
 
 modelunit PrimitivesTest {
-    public name: identifier;
+    name: identifier;
     prim: Prim;
     primExtra: PrimsWithExtraText;
     separator: PrimsWithSeparator;
@@ -66,7 +66,7 @@ concept PrimsWithInitiator {
 }
 
 modelunit PrimsWithKeywordTest {
-    public name: identifier;
+    name: identifier;
     primWith: PrimKeyword[];
     file-extension = "wit";
 }
@@ -77,7 +77,7 @@ concept PrimKeyword {
 
 // TEST PROPERTIES WITH TYPES THAT ARE LIMITED CONCEPTS
 modelunit LimitedTest {
-    public name: identifier;
+    name: identifier;
     limitedNonOpt: LimitedNonOptional;
     limitedOpt: LimitedOptional;
     limitedOpt2: LimitedOptional;
@@ -112,7 +112,7 @@ limited OtherLimited {
 
 // TEST PROPERTIES THAT ARE PARTS WHICH HAVE CONCEPT TYPES
 modelunit PartsTest {
-    public name: identifier;
+    name: identifier;
     directParts: WithDirectParts;
     partsOfParts?: WithSubSubParts;
     file-extension = "par";
@@ -147,7 +147,7 @@ concept SubConcept {
 
 // TEST PROPERTIES THAT ARE REFERENCES TO CONCEPT TYPES
 modelunit RefsTest {
-    public name: identifier;
+    name: identifier;
     directRefs: WithDirectRefs;
     indirectRefs?: WithSubSubRefs;
     withSeparator?: RefsWithSeparator;

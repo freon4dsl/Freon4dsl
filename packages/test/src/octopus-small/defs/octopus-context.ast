@@ -2,7 +2,7 @@
 language octopus
 
 modelunit OclPart {
-    public name: identifier;
+    name: identifier;
     constraints: OclContext[];
 }
 /**

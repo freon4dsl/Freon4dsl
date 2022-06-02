@@ -1,0 +1,37 @@
+editor default
+
+////////////////////////////////////////////////////////////////
+//       Expressions to be able to calculate with Euros       //
+////////////////////////////////////////////////////////////////
+EuroLiteral {
+    [EUR ${euros},${cents}] // TODO make third level projection where EUR is the euro symbol
+}
+NumberLiteral {
+    [${self.value}]
+}
+PercentageLiteral {
+    [${self.value}%]
+}
+MinusExpression  {
+    symbol = "-"
+}
+PlusExpression {
+    symbol = "+"
+}
+MultiplyExpression {
+    symbol = "*"
+}
+DivideExpression {
+    symbol = "/"
+}
+FunctionCallExpression {
+    [${funcDefinition} ( ${args horizontal separator[,] } )]
+    referenceShortcut = ${funcDefinition}
+    trigger = "calc"
+}
+ParameterRef {
+    [${self.parameter}[?.${self.attribute}]]
+}
+AttributeRef {
+    [${name}]
+}

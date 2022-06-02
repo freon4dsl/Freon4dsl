@@ -1,0 +1,19 @@
+InsuranceProduct HomeAndHealth ( public name: "Healthy at Home" ) USES health1, home1
+    Themes: Home, Health
+    Premium: EUR 800,00 per Month
+    Insured risks:
+        fire;
+        breakingAndEntering;
+        stormAndLightning;
+        hospitalization;
+        medicines;
+        dentist;
+        eyecare;
+        generalPractitioner;
+
+    Calculation
+        calculated premium: adjust(hospitalization, riskAdjustment)
+            + adjust(medicines, riskAdjustment + 1%)
+            + adjust(dentist, riskAdjustment - 2%)
+            + adjust(eyecare, riskAdjustment * 4)
+            + adjust(generalPractitioner, riskAdjustment / 2)

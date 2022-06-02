@@ -1,0 +1,17 @@
+InsuranceProduct HomeAll ( public name: "Super Save" ) USES home1
+    Themes: Home
+    Premium: EUR 200,00 per Month
+    Insured risks:
+        fire;
+        breakingAndEntering;
+        flooding;
+        stormAndLightning;
+
+    Calculation
+        Risk adjusted by = 5%
+        calculated premium: adjust(fire, riskAdjustment) + adjust(breakingAndEntering, riskAdjustment + 1%)
+
+    Helper functions:
+        adjust(part: InsurancePart, adjustment: Percentage): EUR {
+            part.statisticalRisk * part.maximumPayOut * adjustment
+        }

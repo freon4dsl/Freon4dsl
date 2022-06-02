@@ -1,0 +1,60 @@
+language DocuProject
+
+////////////////////////////////////////////////////////////////
+//       Expressions to be able to calculate with Euros       //
+////////////////////////////////////////////////////////////////
+abstract expression DocuExpression {
+}
+
+// Literal Expressions
+abstract expression Literal base DocuExpression {
+}
+expression EuroLiteral base Literal {
+    euros: number;
+    cents: number;
+}
+expression NumberLiteral base Literal {
+    value: number;
+}
+expression PercentageLiteral base Literal {
+    value: number;
+}
+
+// Basic binary expressions: plus, minus, multiply, divide
+abstract binary expression BinaryExpression base DocuExpression {
+    left: DocuExpression;
+    right: DocuExpression;
+}
+
+binary expression PlusExpression base BinaryExpression {
+    priority = 4;
+}
+
+binary expression MinusExpression base BinaryExpression {
+    priority = 4;
+}
+
+binary expression MultiplyExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression DivideExpression base BinaryExpression {
+    priority = 8;
+}
+
+// Expression to call a function and use its parameters
+expression FunctionCallExpression base DocuExpression {
+    reference funcDefinition: CalcFunction;     // a reference to the function to be used
+    args: DocuExpression[];                     // arguments to the function
+}
+
+// Expression that can be used within the body of a function to refer to a parameter
+expression ParameterRef base DocuExpression {
+    reference parameter: Parameter;
+    attribute?: AttributeRef;       // used for a chain of expressions link by a dot, e.g. xx.yy
+}
+
+// Refers to a property of a parameter or of an InsuranceProduct
+expression AttributeRef base DocuExpression {
+    name: identifier;               // the name of the property of the parameter
+}

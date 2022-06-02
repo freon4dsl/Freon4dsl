@@ -8,12 +8,12 @@ language vehicles
 // test for reference separator
 
 model VehicleModel {
-    public name: identifier;
+    name: identifier;
     unit: VehicleUnit;
 }
 
 modelunit VehicleUnit {
-    public name: identifier;
+    name: identifier;
     first: boolean;
     second: boolean;
     vehicles: Vehicle[];

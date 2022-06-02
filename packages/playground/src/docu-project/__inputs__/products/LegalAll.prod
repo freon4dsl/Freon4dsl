@@ -1,0 +1,14 @@
+InsuranceProduct LegalAll ( public name: "Careless" ) USES legal1
+    Themes: Legal
+    Premium: EUR 2000,00 per Month
+    Insured risks:
+        damageToOtherPersonsProperty;
+        damageToOtherPersonsHealth;
+
+    Calculation
+        calculated premium: calc(damageToOtherPersonsProperty) + calc(damageToOtherPersonsHealth)
+
+    Helper functions:
+        calc(part: InsurancePart): EUR {
+            part.maximumPayOut * 10%
+        }

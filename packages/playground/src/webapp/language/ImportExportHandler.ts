@@ -4,40 +4,45 @@ import { editorEnvironment, serverCommunication } from "../config/WebappConfigur
 import type { PiModelUnit } from "@projectit/core";
 import { editorProgressShown } from "../components/stores/ModelStore";
 
+// TODO rethink this class using Workers, see https://developer.mozilla.org/en-US/docs/Web/API/Worker
+
 export class ImportExportHandler {
 
     importUnits(fileList: FileList){
         editorProgressShown.set(true);
-        const reader = new FileReader();
-        // todo check whether the name of the unit already exists in the model
+        let showIt: boolean = true; // only show the first of the imported units
         for (let file of fileList) {
-            // todo async: wait for file to be uploaded before starting next
-            // todo do something with progress indicator
-            // to check whether the file is recognisable as a model unit, we examine the file extension
-            const extension: string = file.name.split(".").pop();
-            let metaType: string = this.metaTypeForExtension(extension);
-            // if the right extension has been found, continue
-            if (metaType.length > 0) {
-                reader.readAsText(file);
-                reader.onload = function() {
-                    const text = reader.result;
-                    if (typeof text == "string") {
-                        try {
-                            EditorState.getInstance().unitFromFile(reader.result as string, metaType);
-                        } catch (e) {
-                            setUserMessage(`${e.message}`);
-                        }
-                    }
-                };
-                reader.onerror = function() {
-                    setUserMessage(reader.error.message);
-                };
-            } else {
-                setUserMessage(`File ${file.name} does not have the right (extension) type.
-                 Found: ${extension}, expected one of: ${this.allExtensionsToString()}.`);
-            }
+            this.readSingleFile(file, showIt);
+            showIt = false;
         }
         editorProgressShown.set(false);
+    }
+
+    private async readSingleFile(file: File, showIt: boolean) {
+        const reader = new FileReader();
+        // to check whether the file is recognisable as a model unit, we examine the file extension
+        const extension: string = file.name.split(".").pop();
+        let metaType: string = this.metaTypeForExtension(extension);
+        // if the right extension has been found, continue
+        if (metaType.length > 0) {
+            await reader.readAsText(file);
+            reader.onload = function() {
+                const text = reader.result;
+                if (typeof text == "string") {
+                    try {
+                        EditorState.getInstance().unitFromFile(file.name.split(".").shift(), reader.result as string, metaType, showIt);
+                    } catch (e) {
+                        setUserMessage(`${e.message}`);
+                    }
+                }
+            };
+            reader.onerror = function() {
+                setUserMessage(reader.error.message);
+            };
+        } else {
+            setUserMessage(`File ${file.name} does not have the right (extension) type.
+                 Found: ${extension}, expected one of: ${this.allExtensionsToString()}.`);
+        }
     }
 
     async exportUnit(unit: PiModelUnit) {

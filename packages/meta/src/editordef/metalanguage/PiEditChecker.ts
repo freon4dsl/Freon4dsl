@@ -449,27 +449,29 @@ export class PiEditChecker extends Checker<PiEditUnit> {
 
     private checkExtras(classifierInfo: ExtraClassifierInfo) {
         LOGGER.log("checking extra info on classifier " + classifierInfo.classifier?.name);
-        // check the reference shortcut and change the expression into a reference to a property
-        if (!!classifierInfo.referenceShortcutExp) {
-            this.myExpressionChecker.checkLangExp(classifierInfo.referenceShortcutExp, classifierInfo.classifier.referred);
-            const xx: PiProperty = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
-            // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat
-            if (!!xx) {
-                classifierInfo.referenceShortCut = PiElementReference.create<PiProperty>(xx as PiProperty, "PiProperty");
-                classifierInfo.referenceShortCut.owner = this.language;
+        if (!!classifierInfo.classifier.referred) { // error message done elsewhere
+            // check the reference shortcut and change the expression into a reference to a property
+            if (!!classifierInfo.referenceShortcutExp) {
+                this.myExpressionChecker.checkLangExp(classifierInfo.referenceShortcutExp, classifierInfo.classifier.referred);
+                const xx: PiProperty = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
+                // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat
+                if (!!xx) {
+                    classifierInfo.referenceShortCut = PiElementReference.create<PiProperty>(xx as PiProperty, "PiProperty");
+                    classifierInfo.referenceShortCut.owner = this.language;
+                }
             }
         }
         if (!!classifierInfo.trigger) {
             if (classifierInfo.trigger === "ERROR") {
                 this.runner.simpleCheck(false,
-                    `A trigger may not be an empty string ${ParseLocationUtil.location(classifierInfo)}`);
+                    `A trigger may not be an empty string ${ParseLocationUtil.location(classifierInfo)}.`);
                 classifierInfo.trigger = null;
             }
         }
         if (!!classifierInfo.symbol) {
             if (classifierInfo.symbol === "ERROR") {
                 this.runner.simpleCheck(false,
-                    `A symbol may not be an empty string ${ParseLocationUtil.location(classifierInfo)}`);
+                    `A symbol may not be an empty string ${ParseLocationUtil.location(classifierInfo)}.`);
                 classifierInfo.symbol = null;
             }
         }

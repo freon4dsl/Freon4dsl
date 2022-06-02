@@ -1,32 +1,32 @@
 language ScoperTest
 
 model DSmodel {
-    name: identifier;
-    public units: DSunit[];
+    private name: identifier;
+    units: DSunit[];
 }
 
 modelunit DSunit {
-    public reference imports: DSunit[];
-    public name: identifier;
-    public dsPublics: DSpublic[];
-    public reference dsRefs: DSref[];
-    dsPrivates: DSprivate[];
+    reference imports: DSunit[];
+    name: identifier;
+    dsPublics: DSpublic[];
+    reference dsRefs: DSref[];
+    private dsPrivates: DSprivate[];
 }
 
 interface DSref {
-    public name: identifier;
+    name: identifier;
 }
 
 concept DSpublic implements DSref {
-    public conceptParts: DSpublic[];
-    public reference conceptRefs: DSref[];
-    conceptPrivates: DSprivate[];
+    conceptParts: DSpublic[];
+    reference conceptRefs: DSref[];
+    private conceptPrivates: DSprivate[];
 }
 
 concept DSprivate implements DSref {
-    public conceptParts: DSpublic[];
-    conceptPrivates: DSprivate[];
-    reference conceptRefs: DSref[];
+    conceptParts: DSpublic[];
+    private conceptPrivates: DSprivate[];
+    private reference conceptRefs: DSref[];
 }
 
 concept Dummy {

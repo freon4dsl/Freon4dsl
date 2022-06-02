@@ -122,7 +122,7 @@ export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
             nameProperty.isPart = true;
             nameProperty.isList = false;
             nameProperty.isOptional = false;
-            nameProperty.isPublic = false;
+            nameProperty.isPublic = true;
             nameProperty.isStatic = false;
             nameProperty.owningClassifier = piLimitedConcept;
             piLimitedConcept.primProperties.push(nameProperty);

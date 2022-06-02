@@ -7,13 +7,13 @@ model RevenueService {
 }
 
 modelunit TaxRuleSet {
-    public name: identifier;
+    name: identifier;
     year: string; //number
     taxrules: TaxRule[];
 }
 
 modelunit TaxPayer {
-    public name: identifier;
+    name: identifier;
     address: string;
     payerType: TaxPayerType;
     taxId: TaxID;

@@ -45,7 +45,7 @@ concept AA  {
 }
 
 modelunit BB {
-    public name: identifier;
+    name: identifier;
     supers: AA[];
 }
 

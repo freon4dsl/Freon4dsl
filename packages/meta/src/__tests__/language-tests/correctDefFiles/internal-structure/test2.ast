@@ -6,7 +6,7 @@ model ROOT {
 }
 
 modelunit AA  {
-    public name: identifier;
+    name: identifier;
     // the possibilities for primitive properties
     // TODO add identifier
     AAprop1: string;

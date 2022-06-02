@@ -1,12 +1,12 @@
 language graphviz_dot
 
 model xx {
-    public name: identifier;
+    name: identifier;
     units: unitA[];
 }
 modelunit unitA {
-    public name: identifier;
-    public graph: AbstractGraph;
+    name: identifier;
+    graph: AbstractGraph;
 }
 abstract concept AbstractGraph {
     name: identifier;
