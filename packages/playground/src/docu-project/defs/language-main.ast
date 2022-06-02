@@ -95,7 +95,7 @@ limited EuroType implements DocuType {
 }
 
 limited InsuranceTheme {
-    Home; Health; Legal;
+    HomeTheme; HealthTheme; LegalTheme;
 }
 
 limited PremiumDays {

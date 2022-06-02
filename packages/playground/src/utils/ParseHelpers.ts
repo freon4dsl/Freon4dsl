@@ -6,19 +6,21 @@ import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
 export class ParseHelpers {
     static printTree(node: SPPTNode, indent?: number): string {
         let result: string = '';
-        if (indent === null || indent === undefined) {
-            indent = 0;
-        }
-        if (node.isLeaf) {
-            result += ParseHelpers.printLeaf(node as SPPTLeaf, indent);
-        } else if (node.isBranch) {
-            result += ParseHelpers.printBranch(node as SPPTBranch, indent);
-        } else if (Array.isArray(node)) {
-            node.forEach(n => {
-                result += ParseHelpers.printTree(n, indent) + "\n";
-            })
-        } else {
-            result += 'UNKNOWN node TYPE: ' + node.constructor.name + ' (' + node.matchedText?.trimEnd() + ')';
+        if (node !== null && node !== undefined) {
+            if (indent === null || indent === undefined) {
+                indent = 0;
+            }
+            if (node.isLeaf) {
+                result += ParseHelpers.printLeaf(node as SPPTLeaf, indent);
+            } else if (node.isBranch) {
+                result += ParseHelpers.printBranch(node as SPPTBranch, indent);
+            } else if (Array.isArray(node)) {
+                node.forEach(n => {
+                    result += ParseHelpers.printTree(n, indent) + "\n";
+                })
+            } else {
+                result += 'UNKNOWN node TYPE: ' + node.constructor.name + ' (' + node.matchedText?.trimEnd() + ')';
+            }
         }
         return result;
     }

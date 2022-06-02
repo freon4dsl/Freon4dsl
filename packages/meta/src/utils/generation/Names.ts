@@ -76,6 +76,7 @@ export class Names {
     // because the below names are used to generate TypeScript classes
     // they all have to start with an uppercase character
     static matchUtil: string = "MatchUtil";
+    static referenceSeparator: string = "/"; // TODO use value from editDef
     public static configuration() {
         return "ProjectitConfiguration";
     }

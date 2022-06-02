@@ -1,6 +1,7 @@
 import { FileHandler } from "../../utils/FileHandler";
 import { DocuProjectEnvironment } from "../config/gen/DocuProjectEnvironment";
-import { InsuranceModel, Part, Product } from "../language/gen";
+import { BaseProduct, InsuranceModel, InsurancePart, Part, Product } from "../language/gen";
+import { Language, PiElementReference } from "@projectit/core";
 
 const writer = DocuProjectEnvironment.getInstance().writer;
 const reader = DocuProjectEnvironment.getInstance().reader;
@@ -28,7 +29,7 @@ function addProductToModel(model: InsuranceModel, filepath: string) {
         unit1.name = filepath.split("/").pop().split(".").shift();
     } catch (e) {
         console.log(e.message + e.stack);
-        expect(e).toBeNull();
+        // expect(e).toBeNull();
     }
 }
 
@@ -71,11 +72,35 @@ describe("Testing DocuProject", () => {
 
     test("add LegalAll product", () => {
         addProductToModel(model, "src/docu-project/__inputs__/products/LegalAll.prod");
+
+    });
+
+    test("check resulting model", () => {
+        // console.log(model.getUnits().map(u => u.name).join(", "));
         // console.log(model.getUnits().map(u => u instanceof Part ? u.part.name : u instanceof Product ? u.product.name : "no unit").join(", "));
         // model.getUnits().forEach(u => {
         //     const names: string[] = scoper.getVisibleNames(u);
         //     console.log("Visible names in unit: " + u.name + "\n" + names.map(n => n).join(", "));
         // });
+
+        //
+        const hUnit: Part = model.getUnits().find(u => u.name === 'Health') as Part;
+        const hBase: BaseProduct = hUnit.part;
+        expect (hBase.name).toBe('health1');
+        const hospitalPart = hBase.parts.find(p => p.name === 'hospitalization');
+        expect (hospitalPart).not.toBeNull();
+        expect (hospitalPart).not.toBeUndefined();
+        //
+        const usingRef: Product = model.getUnits().find(u => u.name === 'HealthAll') as Product;
+        expect(usingRef).not.toBeNull();
+        // expect(usingRef).not.toBeUndefined();
+        const parts: PiElementReference<InsurancePart>[] = usingRef?.product.parts;
+        // console.log( parts.map(ref => ref.pathnameToString('&&')).join('\n'))
+        // const names: string[] = scoper.getVisibleNames(usingRef?.product);
+        // expect (names).toContain('Health');
+        // expect (names).toContain('health1');
+        // expect (names).not.toContain('hospitalization');
+        //
 
         const errors = validator.validate(model);
         console.log("Errors found (" + errors.length + ")\n" + errors.map(e => e.message + ' in [' + e.locationdescription + ']').join("\n"));

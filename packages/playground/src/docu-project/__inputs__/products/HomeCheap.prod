@@ -1,5 +1,5 @@
 InsuranceProduct HomeCheap ( public name: "Save and Sound" ) USES home1
-    Themes: Home
+    Themes: HomeTheme
     Premium: EUR 100,00 per Month
     Insured risks:
         fire;
