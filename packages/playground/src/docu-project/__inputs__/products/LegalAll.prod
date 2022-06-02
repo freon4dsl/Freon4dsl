@@ -1,4 +1,4 @@
-InsuranceProduct LegalAll ( public name: "Careless" )
+InsuranceProduct LegalAll ( public name: "Careless" ) USES legal1
     Themes: Legal
     Premium: EUR 2000,00 per Month
     Insured risks:

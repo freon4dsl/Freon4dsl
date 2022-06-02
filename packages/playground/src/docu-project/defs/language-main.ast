@@ -46,6 +46,7 @@ concept InsuranceProduct {
     advertisedPremium: EuroLiteral;         // the premium as known to the public
     nrPremiumDays: PremiumDays;             // the number of days for which the advertised premium is calculated
     reference parts: InsurancePart[];       // optionally, known parts can be included by reference
+    reference basedOn: BaseProduct[];       // the BaseProducts from which the parts are taken
 
     riskAdjustment?: PercentageLiteral;     // an adjustment to the risk of the separate parts, e.g. caused by the combination of the parts
     calculation: DocuExpression;            // the premium as calculated based on the parts

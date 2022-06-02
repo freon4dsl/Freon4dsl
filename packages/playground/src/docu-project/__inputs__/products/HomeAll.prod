@@ -1,4 +1,4 @@
-InsuranceProduct HomeAll ( public name: "Super Save" )
+InsuranceProduct HomeAll ( public name: "Super Save" ) USES home1
     Themes: Home
     Premium: EUR 200,00 per Month
     Insured risks:

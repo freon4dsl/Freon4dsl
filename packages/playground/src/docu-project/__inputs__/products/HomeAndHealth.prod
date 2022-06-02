@@ -1,4 +1,4 @@
-InsuranceProduct HomeAndHealth ( public name: "Healthy at Home" )
+InsuranceProduct HomeAndHealth ( public name: "Healthy at Home" ) USES health1, home1
     Themes: Home, Health
     Premium: EUR 800,00 per Month
     Insured risks:

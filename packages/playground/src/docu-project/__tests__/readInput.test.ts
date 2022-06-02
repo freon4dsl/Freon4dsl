@@ -1,4 +1,3 @@
-import { GenericModelSerializer, PiModelUnit } from "@projectit/core";
 import { FileHandler } from "../../utils/FileHandler";
 import { DocuProjectEnvironment } from "../config/gen/DocuProjectEnvironment";
 import { InsuranceModel, Part, Product } from "../language/gen";
@@ -13,6 +12,7 @@ function addPartToModel(model: InsuranceModel, filepath: string) {
     try {
         const langSpec: string = handler.stringFromFile(filepath);
         const unit1 = reader.readFromString(langSpec, "Part", model) as Part;
+        // use last name of filepath as name of the unit
         unit1.name = filepath.split("/").pop().split(".").shift();
     } catch (e) {
         console.log(e.message + e.stack);
@@ -23,7 +23,8 @@ function addPartToModel(model: InsuranceModel, filepath: string) {
 function addProductToModel(model: InsuranceModel, filepath: string) {
     try {
         const langSpec: string = handler.stringFromFile(filepath);
-        const unit1 = reader.readFromString(langSpec, "Product", model) as PiModelUnit;
+        const unit1 = reader.readFromString(langSpec, "Product", model) as Product;
+        // use last name of filepath as name of the unit
         unit1.name = filepath.split("/").pop().split(".").shift();
     } catch (e) {
         console.log(e.message + e.stack);
@@ -71,13 +72,13 @@ describe("Testing DocuProject", () => {
     test("add LegalAll product", () => {
         addProductToModel(model, "src/docu-project/__inputs__/products/LegalAll.prod");
         // console.log(model.getUnits().map(u => u instanceof Part ? u.part.name : u instanceof Product ? u.product.name : "no unit").join(", "));
-        model.getUnits().forEach(u => {
-            const names: string[] = scoper.getVisibleNames(u);
-            console.log("Visible names in unit: " + u.name + "\n" + names.map(n => n).join(", "));
-        });
+        // model.getUnits().forEach(u => {
+        //     const names: string[] = scoper.getVisibleNames(u);
+        //     console.log("Visible names in unit: " + u.name + "\n" + names.map(n => n).join(", "));
+        // });
 
-        // const errors = validator.validate(model);
-        // console.log("Errors found (" + errors.length + ")\n" + errors.map(e => e.message + ' in [' + e.locationdescription + ']').join("\n"));
+        const errors = validator.validate(model);
+        console.log("Errors found (" + errors.length + ")\n" + errors.map(e => e.message + ' in [' + e.locationdescription + ']').join("\n"));
     });
 
 });

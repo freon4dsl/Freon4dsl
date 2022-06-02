@@ -1,4 +1,4 @@
-InsuranceProduct HomeExtra ( public name: "Sound as a Rock" )
+InsuranceProduct HomeExtra ( public name: "Sound as a Rock" ) USES home1, legal1
     Themes: Home, Legal
     Premium: EUR 400,00 per Month
     Insured risks:

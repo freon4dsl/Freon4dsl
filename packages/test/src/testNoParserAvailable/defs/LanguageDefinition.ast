@@ -6,12 +6,12 @@ model Demo {
 }
 
 modelunit ExModel {
-    public name: identifier;
-    public entities: Entity[];
-    public methods: Method[];
+    name: identifier;
+    entities: Entity[];
+    methods: Method[];
 }
 interface BaseType {
-    public name: identifier;
+    name: identifier;
 }
 interface Type base BaseType {
 }
@@ -23,7 +23,7 @@ concept Entity implements Type {
 }
 
 concept Method {
-    public name: identifier;
+    name: identifier;
     reference declaredType : Type;
     body: ExExpression;
     parameters: Parameter[];
