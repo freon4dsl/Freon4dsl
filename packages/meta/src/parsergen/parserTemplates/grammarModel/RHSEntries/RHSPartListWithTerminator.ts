@@ -28,7 +28,7 @@ export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
         if (this.isSingleEntry) {
             myListStatement = `const _myList = ${nodeName};`;
         }
-        return `// RHSListGroup  
+        return `// RHSPartListWithTerminator  
             ${ParserGenUtil.internalName(this.property.name)} = [];
             ${myListStatement}
             _myList.forEach(subNode => {  

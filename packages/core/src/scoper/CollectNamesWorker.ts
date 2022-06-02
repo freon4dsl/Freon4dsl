@@ -13,7 +13,7 @@ export class CollectNamesWorker implements AstWorker {
     namesList: PiNamedElement[] = [];
     // 'metatype' may or may not be set; if set any named element is included only if it conforms to this type
     metatype: string;
-    // The modelunit where the names search started, needed to decide what is public/private.
+    // The modelunit where the names search started, TODO check this: needed to decide what is public/private.
     origin: PiModelUnit;
 
     constructor(origin: PiModelUnit) {

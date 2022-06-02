@@ -7,7 +7,7 @@ model ROOT {
 }
 
 modelunit AA  {
-    public name: identifier;
+    name: identifier;
 
     AAprop9: CC;
     AAprop10: CC[];

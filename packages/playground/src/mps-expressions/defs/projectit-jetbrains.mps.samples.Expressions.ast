@@ -6,7 +6,7 @@ model MpsExpressionModel {
 }
 
 modelunit MpsExpression {
-    public name: identifier;
+    name: identifier;
     expression: SimpleMathExpression;
 }
 

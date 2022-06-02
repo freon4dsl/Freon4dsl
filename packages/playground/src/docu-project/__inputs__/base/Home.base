@@ -1,0 +1,17 @@
+Base Products home1 for Home
+     InsurancePart breakingAndEntering
+         risk assessment: 20%
+         maximum payout: EUR 250000,00
+         is approved: YES
+     InsurancePart fire
+     	 risk assessment: 10%
+     	 maximum payout: EUR 250000,00
+     	 is approved: NO
+     InsurancePart flooding
+         risk assessment: 20%
+     	 maximum payout: EUR 250000,00
+         is approved: YES     	 
+     InsurancePart stormAndLightning
+         risk assessment: 20%
+     	 maximum payout: EUR 250000,00
+         is approved: YES

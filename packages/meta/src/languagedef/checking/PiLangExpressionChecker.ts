@@ -64,6 +64,10 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
 
     // exp
     public checkLangExp(langExp: PiLangExp, enclosingConcept: PiClassifier) {
+        if (!enclosingConcept) {
+            LOGGER.error("enclosingConcept is null in 'checkLangExp'.")
+            return;
+        }
         langExp.language = this.language;
         LOGGER.log("checkLangExp " + langExp.toPiString() );
         if (langExp instanceof PiInstanceExp) {
@@ -215,7 +219,10 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     // .XXX
     private checkAppliedFeatureExp(feat: PiLangAppliedFeatureExp, enclosingConcept: PiClassifier) {
         LOGGER.log("checkAppliedFeatureExp " + feat?.toPiString());
-
+        if (!enclosingConcept) {
+            LOGGER.error("enclosingConcept is null in 'checkAppliedFeatureExp'.")
+            return;
+        }
         for (const e of enclosingConcept.allProperties()) {
             if (e.name === feat.sourceName) {
                 feat.referredElement = e;

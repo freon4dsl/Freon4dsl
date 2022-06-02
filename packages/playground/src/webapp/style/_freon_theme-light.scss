@@ -11,8 +11,7 @@
   $surface: #eeeeee,
   $background: #fff,
   $error: #B00020,
-  //$on-primary: #ffffb0,
-  //$on-primary: purple,     // a slighter darker version of 'secondary'
+  //$on-primary: color-palette.$orange-50,
   $on-secondary: #00695c,   // a slighter darker version of 'primary'
   //$on-surface: black,
   //$on-error: black,
@@ -49,9 +48,9 @@
   --freon-colors-slider: #{theme.$on-secondary};    /* The color of the slider between the error/search pane and the editor */
 }
 
-/* The follwoing are CSS variables that are used in the editor part of Freon, i.e. in the package 'core-svelte'. */
+/* The following are CSS variables that are used in the editor part of Freon, i.e. in the package 'core-svelte'. */
 /* Change the values as you like. */
-/* Note that we need to use a different syntax to be able to use SCSS variables as value
+/* Note that you need to use a different syntax to be able to use SCSS variables as value
 for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/css-vars */
 .editor-part {
   /* Normal text colors */
@@ -70,9 +69,8 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-colors-border_selected: #{theme.$blue-900};
   --freon-colors-color_text_box: #{theme.$blue-900};
 
-
   /* Fonts */
-  --freon-fonts-family_editor: "Arial";     /* The font family of the text, unless set otherwise by the projection */
+  --freon-fonts-family_editor: "Roboto";    /* The font family of the text, unless set otherwise by the projection */
   --freon-fonts-size_editor: 14px;          /* The font size of the text, unless set otherwise by the projection */
   --freon-fonts-style_editor: normal;       /* The font style of the text, unless set otherwise by the projection */
   --freon-fonts-weight_editor: normal;      /* The font weight of the text, unless set otherwise by the projection */
@@ -85,4 +83,5 @@ html,
 body {
   background-color: theme.$surface;
   color: theme.$on-surface;
+  --mdc-theme-primary: #{theme.$primary};
 }

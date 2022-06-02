@@ -1,0 +1,107 @@
+language DocuProject
+
+////////////////////////////////////////////////////////////////
+//       Main concepts in the Documentation Project           //
+////////////////////////////////////////////////////////////////
+
+model InsuranceModel {
+    parts: Part[];
+    products: Product[];
+}
+
+modelunit Part {
+    part: BaseProduct;
+    file-extension = "base";
+}
+
+modelunit Product {
+    product: InsuranceProduct;
+    file-extension = "prod";
+}
+
+// A BaseProduct defines all the different elements ('parts') that can be
+// used to create a marketable InsuranceProduct.
+concept BaseProduct {
+    name: identifier;                       // internal name
+    theme: InsuranceTheme;                  // the 'kind' of insurance
+    parts: InsurancePart[];                 // all parts of this product
+}
+
+// An InsurancePart defines a single aspect of an InsuranceProduct together
+// with the statistical risk of the event happening, and the maximum payout
+// in case the insured event happens.
+concept InsurancePart {
+    name: identifier;
+    isApproved: boolean = false;
+    statisticalRisk: PercentageLiteral;
+    maximumPayOut: EuroLiteral;
+}
+
+// An InsuranceProduct is a combination of insured events, defined in InsuranceParts,
+// that can be marketed and sold to the public.
+concept InsuranceProduct {
+    name: identifier;
+    productName: string;                    // name by which this product is known to the public
+    themes: InsuranceTheme[];               // the 'kind' of insurance
+    advertisedPremium: EuroLiteral;         // the premium as known to the public
+    nrPremiumDays: PremiumDays;             // the number of days for which the advertised premium is calculated
+    reference parts: InsurancePart[];       // optionally, known parts can be included by reference
+    reference basedOn: BaseProduct[];       // the BaseProducts from which the parts are taken
+
+    riskAdjustment?: PercentageLiteral;     // an adjustment to the risk of the separate parts, e.g. caused by the combination of the parts
+    calculation: DocuExpression;            // the premium as calculated based on the parts
+    helpers: CalcFunction[];                // helper functions used to calculate the premium
+}
+
+// A function used to make a calculation of the premium of an InsuranceProduct
+concept CalcFunction {
+    name: identifier;
+    reference declaredType : DocuType;
+    body: DocuExpression;
+    parameters: Parameter[];
+}
+
+concept Parameter  {
+    name: identifier;
+    reference declaredType: DocuType;
+}
+
+// Sorry, its not good style to use an interface and a set of separate limited concepts.
+// At least, it is an example of using an interface, and of the fact that limited
+// concepts can implement interfaces.
+interface DocuType {
+    name: identifier;
+}
+
+limited InsurancePartType implements DocuType {
+    InsurancePart;
+}
+
+limited PercentageType implements DocuType {
+    Percentage;
+}
+
+limited NumberType implements DocuType {
+    Number;
+}
+
+limited EuroType implements DocuType {
+    EUR;
+}
+
+limited InsuranceTheme {
+    Home; Health; Legal;
+}
+
+limited PremiumDays {
+    // if the 'name' property was not provided, it would have been generated
+    name: identifier;
+    nrOfDays: number;
+    // notations 'name:' and '"name":' are both correct
+    Week = { name: "Week", nrOfDays: 7 }
+    Month = { "name": "Month", nrOfDays: 30 }
+    // the following instance gets the name "Quarter"
+    Quarter = { nrOfDays: 91 }
+    Semester = { nrOfDays: 182 }
+    Year = { nrOfDays: 365 }
+}

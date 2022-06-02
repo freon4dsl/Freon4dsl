@@ -1,16 +1,16 @@
 language RulesLanguage
 
 model RulesModel {
-    public name: identifier;
-    public entity: Data[];
-    public rules: Rules[];
+    name: identifier;
+    entity: Data[];
+    rules: Rules[];
 }
 
 modelunit Rules {
-    public name: identifier;
+    name: identifier;
     reference imports: Data;
     reference forEntity: Entity;
-    public Rules: Rule[];
+    Rules: Rule[];
 }
 
 abstract concept Rule {

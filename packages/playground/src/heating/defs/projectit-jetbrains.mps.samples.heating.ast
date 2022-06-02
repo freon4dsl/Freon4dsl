@@ -6,7 +6,7 @@ model Heating {
 }
 
 modelunit HeatingPlan {
-    public name: identifier;
+    name: identifier;
 	dailyPlans: DailyPlan[];
 }
 

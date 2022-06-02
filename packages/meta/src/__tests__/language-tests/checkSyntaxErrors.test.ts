@@ -46,7 +46,7 @@ describe("Checking language parser on syntax errors", () => {
         try {
             parser.parse(parseFile);
         } catch (e) {
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected "public", "reference", "}", or variable but "=" found.`
+            expect(e.message).toBe(`syntax error: SyntaxError: Expected "private", "reference", "}", or variable but "=" found.`
                 + " \n                "
                 +`[file: test5.ast, line: 12, column: 5]`);
         }

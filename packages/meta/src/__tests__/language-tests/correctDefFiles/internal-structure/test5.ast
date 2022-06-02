@@ -6,7 +6,7 @@ model ROOT {
 }
 
 modelunit AA  {
-    public name: identifier;
+    name: identifier;
     // properties with concept as type
     AAprop7: BB;
     file-extension = "aap";

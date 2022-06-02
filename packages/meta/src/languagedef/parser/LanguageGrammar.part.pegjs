@@ -15,7 +15,7 @@ Language_Definition
 abstractKey     = "abstract" rws { return true; }
 modelKey        = "model" rws { return true; }
 unitKey         = "modelunit" rws { return true; }
-publicKey       = "public" rws { return true; }
+privateKey      = "private" rws { return true; }
 limitedKey      = "limited" rws {return true; }
 interfaceKey    = "interface" rws
 binaryKey       = "binary" rws { return true; }
@@ -115,10 +115,10 @@ expression = abs:abstractKey? binary:binaryKey? expressionKey ws name:var rws ba
 property = part:partProperty      { return part; }
          / ref:referenceProperty  { return ref; }
 
-partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? colon_separator ws type:classifierReference isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
+partProperty = isPrivate:privateKey? name:var ws isOptional:optionalKey? colon_separator ws type:classifierReference isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
     {
         return create.createPartOrPrimProperty({
-            "isPublic": (!!isPublic),
+            "isPublic": (isPrivate?false:true),
             "name": name,
             "isOptional": (isOptional?true:false),
             "isList": (isList?true:false),
@@ -128,9 +128,9 @@ partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? colon_sep
         });
     }
 
-referenceProperty = isPublic:publicKey? referenceKey ws name:var ws isOptional:optionalKey? colon_separator ws type:classifierReference isList:"[]"? semicolon_separator
+referenceProperty = isPrivate:privateKey? referenceKey ws name:var ws isOptional:optionalKey? colon_separator ws type:classifierReference isList:"[]"? semicolon_separator
     { return create.createReferenceProperty({
-        "isPublic": (!!isPublic),
+        "isPublic": (isPrivate?false:true),
         "name": name,
         "typeReference": type,
         "isOptional": (isOptional?true:false),

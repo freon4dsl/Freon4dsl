@@ -15,6 +15,7 @@
     "styles-light": "smui-theme compile public/site.css -i src/webapp/style",
     "styles-dark": "smui-theme compile public/site-dark.css -i src/webapp/style/dark",
     "graphviz":	    "bash ../../scripts/projectit-dev.sh -v all -d src/graphviz/defs -o src/graphviz",
+    "docu-project":	"bash ../../scripts/projectit-dev.sh -v all -d src/docu-project/defs -o src/docu-project",
     "example": 	    "bash ../../scripts/projectit-dev.sh -v all -d src/example/defs -o src/example",
     "references":   "bash ../../scripts/projectit-dev.sh -v all -d src/complex-reference-generated/defs -o src/complex-reference-generated",
     "rules":        "bash ../../scripts/projectit-dev.sh -v all -d src/rules-language/defs -o src/rules-language",

@@ -1,12 +1,12 @@
 language PiLanguage
 
 model PiLanguage {
-    public name: identifier;
-    public structure: PiStructureDef;
-    public editor: PiEditorDef;
-    public scoper: PiScoperDef;
-    public typer: PiTyperDef;
-    public validator: PiValidatorDef;
+    name: identifier;
+    structure: PiStructureDef;
+    editor: PiEditorDef;
+    scoper: PiScoperDef;
+    typer: PiTyperDef;
+    validator: PiValidatorDef;
 }
 
 // TODO validation rule

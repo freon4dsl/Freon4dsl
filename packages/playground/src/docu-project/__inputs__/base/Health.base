@@ -1,0 +1,21 @@
+Base Products health1 for Health
+	 InsurancePart hospitalization
+     	 risk assessment: 70%
+     	 maximum payout: EUR 1500000,00
+     	 is approved: YES
+	 InsurancePart medicines
+     	 risk assessment: 70%
+     	 maximum payout: EUR 250000,00
+     	 is approved: YES
+	 InsurancePart dentist
+     	 risk assessment: 70%
+     	 maximum payout: EUR 350000,00
+     	 is approved: YES
+	 InsurancePart eyecare
+     	 risk assessment: 70%
+     	 maximum payout: EUR 150000,00
+     	 is approved: YES
+	 InsurancePart generalPractitioner
+     	 risk assessment: 70%
+     	 maximum payout: EUR 200000,00
+     	 is approved: YES

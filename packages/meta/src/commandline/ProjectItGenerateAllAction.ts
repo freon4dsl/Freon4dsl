@@ -4,24 +4,20 @@ import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { FileWatcher } from "../utils/generation/FileWatcher";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
-import { ScoperParser } from "../scoperdef/parser/ScoperParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
-import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
-import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
+import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
+import { ScoperParser } from "../scoperdef/parser/ScoperParser";
+import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { PiScopeDef } from "../scoperdef/metalanguage";
+import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { PiValidatorDef } from "../validatordef/metalanguage";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
-import { LOG2USER } from "../utils/UserLogger";
-import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
-
-// import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
-// import { PiTypeDefinition } from "../typerdef/metalanguage";
-// import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
 import { PiTyperDef } from "../typerdef/metalanguage";
 import { PiTyperMerger } from "../typerdef/parser";
+import { LOG2USER } from "../utils/UserLogger";
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
@@ -31,7 +27,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
     protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
-    // protected typerGenerator: PiTyperGenerator = new PiTyperGenerator();
     protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
     protected language: PiLanguage;
 
@@ -94,7 +89,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     }
 
     private generateTyper = () => {
-        console.info("Generating typer");
+        LOG2USER.info("Generating typer");
         let typer: PiTyperDef;
         try {
             if (this.typerFiles.length > 0) {
@@ -107,18 +102,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
             // LOG2USER.error("Stopping typer generation because of errors: " + e.message);
         }
-        // let typer: PiTypeDefinition;
-        // try {
-        //     if (this.typerFiles.length > 0) {
-        //         typer = new PiTyperParser(this.language).parseMulti(this.typerFiles);
-        //     }
-        //     this.typerGenerator.language = this.language;
-        //     this.typerGenerator.outputfolder = this.outputFolder;
-        //     this.typerGenerator.generate(typer);
-        // } catch (e) {
-        //     LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
-        //     // LOG2USER.error("Stopping typer generation because of errors: " + e.message);
-        // }
     };
 
     private generateScoper = () => {

@@ -2,8 +2,8 @@ language TyTest
 
 // MODEL
 model TyTest {
-    public unitA: unitA[];
-    public unitB: unitB;
+    unitA: unitA[];
+    unitB: unitB;
 }
 // type definitions
 modelunit unitB {
@@ -17,7 +17,7 @@ modelunit unitA {
 }
 // ALL INTERFACES
 interface Type { // base BaseType {
-    public name: identifier;
+    name: identifier;
 }
 //
 //interface BaseType {

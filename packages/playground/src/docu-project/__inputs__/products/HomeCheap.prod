@@ -1,0 +1,14 @@
+InsuranceProduct HomeCheap ( public name: "Save and Sound" ) USES home1
+    Themes: Home
+    Premium: EUR 100,00 per Month
+    Insured risks:
+        fire;
+        breakingAndEntering;
+
+    Calculation
+        calculated premium: partPremium(fire) + partPremium(breakingAndEntering)
+
+    Helper functions:
+        partPremium(part: InsurancePart): EUR {
+            part.statisticalRisk * part.maximumPayOut
+        }

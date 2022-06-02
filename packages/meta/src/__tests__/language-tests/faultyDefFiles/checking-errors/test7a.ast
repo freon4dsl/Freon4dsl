@@ -1,12 +1,12 @@
 language test7a
 
 model test {
-    public name: identifier;
+    name: identifier;
     unit: testUnit;
 }
 
 modelunit testUnit {
-    public name: identifier;
+    name: identifier;
 }
 limited KK base LL {
     mmInstance1;

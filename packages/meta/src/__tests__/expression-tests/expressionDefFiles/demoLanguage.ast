@@ -7,7 +7,7 @@ model ROOT {
 
 modelunit DemoModel {
     functions: DemoFunction[];
-    public name: identifier;
+    name: identifier;
     entities: DemoEntity[];
 }
 

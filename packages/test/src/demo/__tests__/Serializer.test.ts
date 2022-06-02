@@ -6,7 +6,6 @@ import { JsonModelCreator } from "./JsonModelCreator";
 describe("Checking Serializer on Demo", () => {
     DemoEnvironment.getInstance();
     let initialModel: DemoModel = new JsonModelCreator().model;
-    // let initialModel: DemoModel = new DemoModelCreator().model;
 
     beforeEach(done => {
         done();

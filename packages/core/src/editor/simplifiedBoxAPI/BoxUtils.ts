@@ -223,9 +223,9 @@ export class BoxUtils {
                     }));
             },
             () => {
-                // console.log("==> get selected option for property " + propertyName + " of " + element["name"] + " is " + property.name + " or " + element[propertyName].name)
-                if (!!element[propertyName]) {
-                    return { id: element[propertyName].name, label: element[propertyName].name };
+                // console.log("==> get selected option for property " + propertyName + " of " + element["name"] + " is " + property.name )
+                if (!!property) {
+                    return { id: property.name, label: property.name };
                 } else {
                     return null;
                 }
@@ -341,12 +341,13 @@ export class BoxUtils {
     }
 
     static horizontalReferenceListBox(element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListInfo): Box {
+        // TODO this one is not yet functioning correctly
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a reference list
         if (property !== undefined && propertyName !== null && isList && isPart === "reference") {
             // find the children to show in this listBox
-            let children = this.makeRefItems(property, element, propertyName, scoper, listJoin);
+            let children: Box[] = this.makeRefItems(property, element, propertyName, scoper, listJoin);
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
             // return the box
@@ -439,9 +440,10 @@ export class BoxUtils {
         });
     }
 
-    private static makeRefItems(property: PiNamedElement[], element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListInfo) {
-        const numberOfItems = property.length;
-        return property.map((listElem, index) => {
+    private static makeRefItems(properties: PiNamedElement[], element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListInfo): Box[] {
+        const result: Box[] = [];
+        const numberOfItems = properties.length;
+        properties.forEach((listElem, index) => {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
             const setFunc = (selected: string) => {
                 listElem.name = selected;
@@ -450,30 +452,30 @@ export class BoxUtils {
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
-                        return BoxFactory.horizontalList(element, roleName, [
+                        result.push( BoxFactory.horizontalList(element, roleName, [
                             BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
-                        ]);
+                        ]));
                     } else {
-                        return BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index);
+                        result.push( BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index) );
                     }
                 } else if (listJoin.type === this.terminatorName) {
-                    return BoxFactory.horizontalList(element, roleName, [
+                    result.push(BoxFactory.horizontalList(element, roleName, [
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
-                    ]);
+                    ]) );
                 } else if (listJoin.type === this.initiatorName) {
                     // TODO test this code
-                    return BoxFactory.horizontalList(element, roleName, [
+                    result.push(BoxFactory.horizontalList(element, roleName, [
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index)
-                    ]);
+                    ]) );
                 }
             } else {
-                return BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index);
+                result.push( BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index) );
             }
-            return null;
         });
+        return result;
     }
 
     private static getPropertyInfo(element: PiElement, propertyName: string) {

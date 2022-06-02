@@ -2,7 +2,7 @@ language PiLanguage
 
 // begin scoper definition
 modelunit PiScoperDef {
-    public name: identifier;
+    name: identifier;
     languageName: string;
     reference namespaces: PiClassifier[];
     scopeConceptDefs: ScopeConceptDef[];
