@@ -2,10 +2,10 @@ language PiLanguage  // from: projectit/meta/.../editordef
 
 // begin editor definition
 modelunit PiEditorDef {
-    public name: identifier;
+    name: identifier;
 //        language: PiLanguage;
     languageName: string;
-    public conceptEditors: PiEditConcept[];
+    conceptEditors: PiEditConcept[];
     file-extension = "edit";
 }
 

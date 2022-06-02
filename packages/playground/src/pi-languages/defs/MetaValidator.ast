@@ -2,7 +2,7 @@ language PiLanguage
 
 // begin validator definition
 modelunit PiValidatorDef {
-    public name: identifier;
+    name: identifier;
 //}
 //concept PiValidatorDef {
 //    location: ParseLocation;

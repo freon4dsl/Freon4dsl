@@ -6,7 +6,7 @@ model Json {
 }
 
 modelunit JsonFile {
-    public name: identifier;
+    name: identifier;
 	contents: IJsonValue;
 }
 

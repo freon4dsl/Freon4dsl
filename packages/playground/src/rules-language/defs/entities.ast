@@ -1,13 +1,13 @@
 language RulesLanguage
 
 modelunit Data {
-    public name: identifier;
-    public entities: Entity[];
+    name: identifier;
+    entities: Entity[];
 }
 
 concept Entity {
-    public name: identifier;
-    public attributes: Attribute[];
+    name: identifier;
+    attributes: Attribute[];
 }
 
 interface Type {
@@ -15,7 +15,7 @@ interface Type {
 }
 
 concept Attribute {
-    public name: identifier;
+    name: identifier;
     reference declaredType: Type;
 }
 

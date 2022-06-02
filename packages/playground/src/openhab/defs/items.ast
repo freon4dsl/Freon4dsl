@@ -8,15 +8,15 @@ model OpenHabModel {
 }
 
 modelunit ItemModel {
-    public name: identifier;
-	public items: ModelItem[];
+    name: identifier;
+	items: ModelItem[];
 }
 
 abstract concept ModelItem {
-    public name: identifier;
-    public type: BaseModelItemType;
-    public reference groups: ModelGroup[];
-    public label: string;
+    name: identifier;
+    type: BaseModelItemType;
+    reference groups: ModelGroup[];
+    label: string;
 //    state?: StateType;
 }
 
