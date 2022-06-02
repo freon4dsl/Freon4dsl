@@ -341,6 +341,7 @@ export class BoxUtils {
     }
 
     static horizontalReferenceListBox(element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListInfo): Box {
+        // TODO this one is not yet functioning correctly
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a reference list

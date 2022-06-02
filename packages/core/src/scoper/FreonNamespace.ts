@@ -67,7 +67,7 @@ export class FreonNamespace {
      */
     private getInternalVisibleElements(origin: PiModelUnit, metatype?: string): PiNamedElement[] {
         const result: PiNamedElement[] = [];
-        // for now we push all parts, later public/private annotations can be taken into account
+        // TODO check this: for now we push all parts, later public/private annotations can be taken into account
         // set up the 'worker' of the visitor pattern
         // const myNamesCollector = new ExampleNamesCollector();
         const myNamesCollector = new CollectNamesWorker(origin);
