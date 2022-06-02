@@ -6,7 +6,7 @@ model ROOT {
 }
 
 modelunit AA {
-    public name: identifier;
+    name: identifier;
     prop1: BB;
     file-extension = "aas";
 }

@@ -10,7 +10,7 @@ model Y {
 }
 
 modelunit Yunit {
-    public name: identifier;
+    name: identifier;
     part2: Wrong;
 }
 

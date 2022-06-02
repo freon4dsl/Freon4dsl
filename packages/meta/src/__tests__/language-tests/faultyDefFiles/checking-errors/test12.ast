@@ -1,13 +1,13 @@
 language test12
 
 model test {
-    public name: identifier;
+    name: identifier;
     unit: testUnit;
     unit4: testUnit;
 }
 
 modelunit testUnit {
-    public name: identifier;
+    name: identifier;
 }
 concept testExpressionBase base expressionXX {
 }
