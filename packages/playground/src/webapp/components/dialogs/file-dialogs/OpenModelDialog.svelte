@@ -3,6 +3,7 @@
         aria-labelledby="event-title"
         aria-describedby="event-content"
         on:SMUIDialog:closed={closeHandler}
+        on:keydown={handleKeydown}
 >
     <Title id="event-title">Open Model</Title>
     <Content id="event-content">
@@ -49,6 +50,7 @@
     import { initializing, openModelDialogVisible } from "../../stores/DialogStore";
     import { setUserMessage } from "../../stores/UserMessageStore";
     import { EditorState } from "../../../language/EditorState";
+    import * as Keys from "@projectit/core"
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -60,22 +62,26 @@
     $: nameInvalid = newName.length > 0 ? newNameInvalid() : false;
     let helperText: string = initialHelperText;
 
+    function doSubmit() {
+        let comm = EditorState.getInstance();
+        if (internalSelected?.length > 0) { // should be checked first, because newName depends on it
+            comm.openModel(internalSelected);
+            // console.log("OPENING EXISTING MODEL: " + newName);
+            $initializing = false;
+        } else if (!newNameInvalid() && newName.length > 0) {
+            comm.newModel(newName);
+            // console.log("CREATING NEW MODEL: " + newName);
+            $initializing = false;
+        } else {
+            setUserMessage(`Cannot create model ${newName}, because its name is invalid.`);
+        }
+    }
+
     function closeHandler(e: CustomEvent<{ action: string }>) {
         // console.log("initalizing: " + $initializing);
         switch (e.detail.action) {
             case submitStr:
-                let comm = EditorState.getInstance();
-                if (internalSelected?.length > 0) { // should be checked first, because newName depends on it
-                    comm.openModel(internalSelected);
-                    // console.log("OPENING EXISTING MODEL: " + newName);
-                    $initializing = false;
-                } else if (!newNameInvalid() && newName.length > 0) {
-                    comm.newModel(newName);
-                    // console.log("CREATING NEW MODEL: " + newName);
-                    $initializing = false;
-                } else {
-                    setUserMessage(`Cannot create model ${newName}, because its name is invalid.`);
-                }
+                doSubmit();
                 break;
             case cancelStr:
                 if ($initializing) {
@@ -90,6 +96,20 @@
                 break;
         }
         resetVariables();
+    }
+
+    const handleKeydown = (event) => {
+        switch (event.keyCode) {
+            case Keys.ENTER: { // on Enter key try to submit
+                event.stopPropagation();
+                event.preventDefault();
+                if (!newNameInvalid()) {
+                    doSubmit();
+                    resetVariables();
+                }
+                break;
+            }
+        }
     }
 
     function newNameInvalid(): boolean {
