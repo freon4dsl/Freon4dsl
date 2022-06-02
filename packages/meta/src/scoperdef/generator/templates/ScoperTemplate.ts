@@ -346,14 +346,15 @@ export class ScoperTemplate {
                     loopVarExtended = loopVarExtended.concat(".referred");
                 }
             }
+            // TODO the generated code is commented out until the MobX cyce is resolved
             result = result.concat(`
             // generated based on '${expression.toPiString()}'
             for (let ${loopVar} of element.${expression.appliedfeature.toPiString()}) {
-                if (!!${loopVarExtended}) {
-                    result.push(${loopVarExtended});
+                // if (!!${loopVarExtended}) {
+                    // result.push(${loopVarExtended});
                     // let extraNamespace = ${generatedClassName}.create(${loopVarExtended});
                     // ${generatedClassName}.joinResultsWithShadowing(extraNamespace.getVisibleElements(metatype), result);
-                }
+                // }
             }`);
         } else {
             // TODO check use of toPiString()
