@@ -1,12 +1,14 @@
-InsuranceProduct HealthAll ( public name: "Healthy Life" ) USES health1
-    Themes: Health
+InsuranceProduct HealthAll1 ( public name: "Healthy Life" ) USES health1
+    Themes: HealthTheme
     Premium: EUR 1000,00 per Month
     Insured risks:
+        health1:hospitalization;
+        /*
         hospitalization;
         medicines;
         dentist;
         eyecare;
-        generalPractitioner;
+        generalPractitioner; */
 
     Calculation
         Risk adjusted by = 2%

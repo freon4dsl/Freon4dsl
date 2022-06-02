@@ -22,7 +22,6 @@ export class ReferenceCheckerTemplate {
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
         const allMethods: string = `${allClassifiers.map(concept => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}`;
-        // TODO adjust 'makeErrorMessage' to pathnames in PiElementReference
 
         // the template starts here
         return `
@@ -43,6 +42,7 @@ export class ReferenceCheckerTemplate {
             myWriter: ${writerInterfaceName} = LanguageEnvironment.getInstance().writer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
+            private refSeparator: string = '${Names.referenceSeparator}';
 
             ${allMethods}           
             
@@ -52,7 +52,7 @@ export class ReferenceCheckerTemplate {
                 if (possibles.length > 0) {
                     this.errorList.push(
                         new PiError(                                       
-                            \`Reference '\${referredElem.pathnameToString("/")}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.piLanguageConcept()}\`).join(", ")}]\`,
+                            \`Reference '\${referredElem.pathnameToString(this.refSeparator)}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.piLanguageConcept()}\`).join(", ")}]\`,
                                 modelelement,
                                 \`\${propertyName} of \${locationDescription}\`,
                             PiErrorSeverity.Error
@@ -60,7 +60,7 @@ export class ReferenceCheckerTemplate {
                     );
                 } else {
                     this.errorList.push(
-                        new PiError(\`Cannot find reference '\${referredElem.pathnameToString("/")}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, PiErrorSeverity.Error)
+                        new PiError(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, PiErrorSeverity.Error)
                     );
                 }
             }
