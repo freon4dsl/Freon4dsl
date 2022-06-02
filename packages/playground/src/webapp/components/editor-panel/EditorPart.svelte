@@ -20,6 +20,7 @@
 <style>
     .editor-part {
         height: 100%;
+        margin-top: 10px;
     }
     .message {
         margin: 30px;
