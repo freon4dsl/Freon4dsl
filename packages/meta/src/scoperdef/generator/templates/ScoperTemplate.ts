@@ -61,8 +61,10 @@ export class ScoperTemplate {
             ${generateAlternativeScopes ? `myTyper: ${typerClassName};` : ``}
             // Added to avoid loop when searching for additional namespaces
             additionalNamespacesVisited: PiElementReference<PiNamedElement>[] = [];
+            private     currentRoleNames: string[] = [];
     
             public resolvePathName(basePosition: PiElement, doNotSearch: string, pathname: string[], metatype?: ${langConceptType}): ${Names.PiNamedElement} {
+                this.currentRoleNames.push(doNotSearch);
                 // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
                 let elementsFromBasePosition: ${Names.PiNamedElement}[] = this.getVisibleElements(basePosition);
                 // start the loop over the set of names in the pathname
@@ -76,15 +78,18 @@ export class ScoperTemplate {
                         // but do not use the metatype information, because only the element with the last of the pathname will have the correct type
                         found = this.getFromVisibleElements(previousFound, pathname[index]);
                         if (found === null || found === undefined || !Language.getInstance().classifier(found.piLanguageConcept()).isNamespace) {
+                            this.currentRoleNames.splice(this.currentRoleNames.indexOf(doNotSearch),1);
                             return null;
                         }
                         previousFound = found;
                     }
                     // check if 'found' is public or 'found' is in the namespace of the basePosition
                     if (!this.isPublic(found) && !elementsFromBasePosition.includes(found)) {
+                        this.currentRoleNames.splice(this.currentRoleNames.indexOf(doNotSearch),1);
                         return null;
                     }
                 }
+                this.currentRoleNames.splice(this.currentRoleNames.indexOf(doNotSearch),1);
                 return found;
             }
  
@@ -340,21 +345,24 @@ export class ScoperTemplate {
         const loopVar: string = "loopVariable";
         let loopVarExtended = loopVar;
         if (myRef.isList) {
-            // TODO additionalNamespacesVisitied should also be done for listy references
+            // TODO additionalNamespacesVisited should also be done for listy references
             if (myRef instanceof PiConceptProperty) {
                 if (!myRef.isPart) {
                     loopVarExtended = loopVarExtended.concat(".referred");
                 }
             }
-            // TODO the generated code is commented out until the MobX cyce is resolved
             result = result.concat(`
             // generated based on '${expression.toPiString()}'
             for (let ${loopVar} of element.${expression.appliedfeature.toPiString()}) {
-                // if (!!${loopVarExtended}) {
-                    // result.push(${loopVarExtended});
-                    // let extraNamespace = ${generatedClassName}.create(${loopVarExtended});
-                    // ${generatedClassName}.joinResultsWithShadowing(extraNamespace.getVisibleElements(metatype), result);
-                // }
+                if (loopVariable instanceof PiElementReference) {
+                    if (!this.currentRoleNames.includes('${expression.appliedfeature.toPiString()}')) {
+                        if (!!loopVariable.referred) {
+                            result.push(loopVariable.referred);
+                        }
+                    }
+                } else {
+                    result.push(loopVariable);
+                }
             }`);
         } else {
             // TODO check use of toPiString()
