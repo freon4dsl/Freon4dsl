@@ -66,6 +66,7 @@
     import { ImportExportHandler } from "../../language/ImportExportHandler";
     import { Anchor } from '@smui/menu-surface';
 
+    // TODO add rename option to context menu
     let menus: MenuComponentDev[] = [];
     // following is used to position the menu
     let anchor: HTMLDivElement[] = [];

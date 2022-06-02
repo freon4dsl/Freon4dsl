@@ -3,6 +3,7 @@
         aria-labelledby="event-title"
         aria-describedby="event-content"
         on:SMUIDialog:closed={closeHandler}
+        on:keydown={handleKeydown}
 >
     <Title id="event-title">Create new unit</Title>
     <Content id="event-content">
@@ -45,6 +46,7 @@
     import Radio from "@smui/radio";
     import FormField from "@smui/form-field";
     import { EditorState } from "../../../language/EditorState";
+    import * as Keys from "@projectit/core";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -56,12 +58,16 @@
     $: nameInvalid = newName.length > 0 ? !!typeSelected ? newNameInvalid() : newNameInvalid() : false;
     let helperText: string = initialHelperText;
 
+    function doSubmit() {
+        if (!newNameInvalid()) {
+            EditorState.getInstance().newUnit(newName, typeSelected);
+        }
+    }
+
     function closeHandler(e: CustomEvent<{ action: string }>) {
         switch (e.detail.action) {
             case submitStr:
-                if (!newNameInvalid()) {
-                    EditorState.getInstance().newUnit(newName, typeSelected);
-                }
+                doSubmit();
                 break;
             case cancelStr:
                 break;
@@ -95,6 +101,21 @@
     function resetVariables() {
         newName = "";
         helperText = initialHelperText;
+        $newUnitDialogVisible = false;
+    }
+
+    const handleKeydown = (event) => {
+        switch (event.keyCode) {
+            case Keys.ENTER: { // on Enter key try to submit
+                event.stopPropagation();
+                event.preventDefault();
+                if (!newNameInvalid()) {
+                    doSubmit();
+                    resetVariables();
+                }
+                break;
+            }
+        }
     }
 
 </script>

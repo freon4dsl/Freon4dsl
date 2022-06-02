@@ -56,9 +56,14 @@ concept InsuranceProduct {
 // A function used to make a calculation of the premium of an InsuranceProduct
 concept CalcFunction {
     name: identifier;
+    description?: Description;
     reference declaredType : DocuType;
     body: DocuExpression;
     parameters: Parameter[];
+}
+
+concept Description {
+    content: string;
 }
 
 concept Parameter  {
