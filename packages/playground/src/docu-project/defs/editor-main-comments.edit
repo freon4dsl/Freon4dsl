@@ -1,0 +1,67 @@
+/* This file holds the same projections as the default projection set,
+but every proejction is augmented with comments on what the elements of
+the language mean. */
+
+editor comments
+
+// both modelunits show a single concept
+Part {[
+/* This is a model unit that contains a part of an insurance product */
+${self.part}
+]}
+Product {[
+/* This is a model unit that contains an insurance product */
+${self.product}
+]}
+
+BaseProduct {[
+    Base Products ${name} for ${theme}
+        ${parts}
+]}
+
+InsurancePart{
+[
+    Insurance Part ${self.name}
+            /* An insurance part holds details about a to be insured event. */
+        risk assessment: ${self.statisticalRisk}
+            /* The risk assessment is the statistical risk that the event will happen. */
+        maximum payout: ${self.maximumPayOut}
+            /* The maximum payout is the maximum amount to be paid in case the insured event happens. */
+        is approved: ${self.isApproved}
+            /* 'is approved' indicates whether this insurance part is in development, or in use. */
+]
+}
+
+InsuranceProduct {[
+    Insurance Product ${name} ( public name: ${productName} ) USES ${basedOn horizontal separator[, ]}
+            /* An insurance product defines a combination of to be insured events that are packaged as a sellable product. */
+        Themes: ${themes horizontal separator[, ]}
+            /* Themes gives a list of types of insurance parts that are packaged in this product. */
+        Premium: ${advertisedPremium} per ${nrPremiumDays}
+            /* Premium is the income by selling this product per part of the year. */
+        Insured risks: /* The packaged insured events. */
+            ${parts vertical terminator [;]}
+        Calculation
+            [? Risk adjusted by = ${riskAdjustment}
+                /* Risk adjustment is used to change the calculation, because the
+                   packaging changes the individual risks of the insurance parts. */ ]
+            calculated premium: ${calculation}
+                /* Calculation is an estimate of the cost of this product per year. */
+        [?Helper functions: /* Functions that can be used within the premium calculation. */
+            ${helpers vertical}]
+]}
+
+CalcFunction {
+    [
+        ${name} ( ${parameters horizontal separator[,]} ): ${declaredType} {
+            /* ${description} */
+            ${body}
+        }
+    ]
+}
+Parameter {
+     [${name} : ${declaredType}]
+}
+
+// No need for projection for DocuType and its implementors, they
+// are only used as references, so their names suffice.

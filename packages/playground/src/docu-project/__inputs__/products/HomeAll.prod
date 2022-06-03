@@ -1,5 +1,5 @@
 InsuranceProduct HomeAll ( public name: "Super Save" ) USES home1
-    Themes: Home
+    Themes: HomeTheme
     Premium: EUR 200,00 per Month
     Insured risks:
         fire;

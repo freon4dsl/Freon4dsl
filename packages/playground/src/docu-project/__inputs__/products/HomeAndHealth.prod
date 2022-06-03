@@ -1,5 +1,5 @@
 InsuranceProduct HomeAndHealth ( public name: "Healthy at Home" ) USES health1, home1
-    Themes: Home, Health
+    Themes: HomeTheme, HealthTheme
     Premium: EUR 800,00 per Month
     Insured risks:
         fire;
@@ -17,3 +17,7 @@ InsuranceProduct HomeAndHealth ( public name: "Healthy at Home" ) USES health1, 
             + adjust(dentist, riskAdjustment - 2%)
             + adjust(eyecare, riskAdjustment * 4)
             + adjust(generalPractitioner, riskAdjustment / 2)
+    Helper functions:
+        adjust(part: InsurancePart, adjustment: Percentage): EUR {
+            part.statisticalRisk * part.maximumPayOut * adjustment
+        }

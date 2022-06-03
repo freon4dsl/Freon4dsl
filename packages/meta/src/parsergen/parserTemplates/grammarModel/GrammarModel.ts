@@ -212,10 +212,16 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
              */
             public piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
                 let referred: string | string[] | T = this.${internalTransformNode}(branch);
+                if (this.getChildren(branch)?.length > 1) {
+                    // its a path name
+                    referred = this.transformSharedPackedParseTreeList<string>(branch, '${this.refSeparator}');
+                }
                 if (referred == null || referred == undefined ) {
-                    throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
+                    // throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
+                    return null;
                 } else if (typeof referred === "string" && (referred as string).length == 0) {
-                    throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
+                    // throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
+                    return null;
                 } else {
                     return PiElementReference.create<T>(referred, typeName);
                 }
