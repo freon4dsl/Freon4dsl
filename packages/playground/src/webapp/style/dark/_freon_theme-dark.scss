@@ -77,6 +77,10 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
+  --freon-padding-text-component: 0px;
+  --freon-padding-label-component: 0px;
+  --freon-padding-horizontallist-component: 0px;
+  --freon-padding-verticallist-component: 0px;
 }
 
 html,

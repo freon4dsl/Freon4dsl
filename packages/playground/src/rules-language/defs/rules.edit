@@ -3,7 +3,8 @@ editor default
 Rules {
     [
     Rules ${self.name} using data from ${self.imports}
-        entity: ${self.forEntity}
+
+        using entity: ${self.forEntity}
         ${self.Rules vertical }
     ]
 }
@@ -12,6 +13,7 @@ CheckingRule {
     [
 
         Validation ${self.name}: ${self.check}
+
             description: ${self.description}
 
     ]

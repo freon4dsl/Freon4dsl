@@ -128,5 +128,8 @@
         font-family: var(--freon-fonts-family_editor, "Arial");
         color: var(--freon-colors-text_editor, darkblue);
         background-color: var(--freon-colors-bg_editor, white);
+        margin: var(--freon-margin-projectit-component, 1px);
+        padding: var(--freon-padding-projectit-component, 1px);
+
     }
 </style>
