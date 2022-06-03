@@ -207,14 +207,19 @@ export class RulesCheckerTemplate {
     }
 
     private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, message?: string) {
+        const leftElement: string = GenerationUtil.langExpToTypeScript(r.type1);
+        const rightElement: string = GenerationUtil.langExpToTypeScript(r.type2);
         if (message.length === 0) {
-            message = `"Type of ["+ this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1)}) 
-                        + "] should equal " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2)})`;
+            message = `"Type of '"+ this.myWriter.writeNameOnly(${leftElement}) 
+                        + "' (" + leftType.toPiString(this.myWriter) + ") should equal the type of '" + this.myWriter.writeNameOnly(${rightElement})
+                        + "' (" + rightType.toPiString(this.myWriter) + ")"`;
         }
-        return `if (!this.typer.equalsType(${GenerationUtil.langExpToTypeScript(r.type1)}, ${GenerationUtil.langExpToTypeScript(r.type2)})) {
-                    this.errorList.push(new PiError(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
-                    ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
-                }`;
+        return `const leftType = this.typer.inferType(${leftElement});
+            const rightType = this.typer.inferType(${rightElement});
+            if (!this.typer.equals(leftType, rightType)) {
+                this.errorList.push(new PiError(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
+                ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
+            }`;
     }
 
     private makeIsuniqueRule(rule: IsuniqueRule, locationdescription: string, severity: string, message: string): string {
@@ -224,6 +229,15 @@ export class RulesCheckerTemplate {
         const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
         const listpropertyTypeName = GenerationUtil.getBaseTypeAsString(referredListproperty);
         const listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature);
+        //
+        let refAddition: string = '';
+        if (!rule.list.findRefOfLastAppliedFeature().isPart) { // the elements in the list are all PiElementReferences
+            refAddition += ".referred";
+            console.log("added .referred: " + locationdescription);
+        } else {
+            console.log(rule.list.appliedfeature.__referredElement.name + " is not a reference.")
+        }
+        //
         if (message.length === 0) {
             message = `"The value of property '${listpropertyName}' is not unique in list '${listName}'"`;
         }
@@ -231,7 +245,7 @@ export class RulesCheckerTemplate {
         ${GenerationUtil.langExpToTypeScript(rule.list)}.forEach((elem, index) => {
             if ((elem === undefined) || (elem === null)) {
                 this.errorList.push(new PiError(\`Element[\$\{index\}] of property '${listName}' has no value\`,
-                 ${GenerationUtil.langExpToTypeScript(rule.list)}[index],
+                 ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
                  ${locationdescription},
                  ${severity}));
                     ${rule.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
@@ -240,7 +254,7 @@ export class RulesCheckerTemplate {
                     ${uniquelistName}.push(elem.${listpropertyTypescript});
                 } else {
                     this.errorList.push(new PiError(${message},
-                     ${GenerationUtil.langExpToTypeScript(rule.list)}[index],
+                     ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
                      ${locationdescription},
                      ${severity}));                }
                     ${rule.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
