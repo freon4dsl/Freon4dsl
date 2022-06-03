@@ -19,5 +19,6 @@ InsuranceProduct HealthAll1 ( public name: "Healthy Life" ) USES health1
 
     Helper functions:
         adjust(part: InsurancePart, adjustment: Percentage): EUR {
-            part.statisticalRisk * part.maximumPayOut * adjustment
+            part.maximumPayOut
+            // part.statisticalRisk * part.maximumPayOut * adjustment
         }

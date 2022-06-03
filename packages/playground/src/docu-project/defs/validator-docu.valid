@@ -1,0 +1,31 @@
+validator DocuValidator for language DocuProject
+
+InsuranceProduct {
+    notEmpty self.parts;
+    isunique name in self.parts;
+    isunique name in self.helpers
+        {
+            message: "All helper functions need to have a unique name.",
+            severity: error
+        }
+    ;
+}
+
+MinusExpression  {
+    typecheck equalsType( self.left, self.right );
+}
+PlusExpression {
+    typecheck equalsType( self.left, self.right );
+}
+MultiplyExpression {
+    typecheck equalsType( self.left, self.right );
+}
+DivideExpression {
+    typecheck equalsType( self.left, self.right );
+}
+
+CalcFunction {
+    typecheck conformsTo (self.body, self.declaredType);
+    isunique name in self.parameters;
+    validIdentifier ;
+}

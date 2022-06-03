@@ -1,7 +1,7 @@
 import { FileHandler } from "../../utils/FileHandler";
 import { DocuProjectEnvironment } from "../config/gen/DocuProjectEnvironment";
 import { BaseProduct, InsuranceModel, InsurancePart, Part, Product } from "../language/gen";
-import { Language, PiElementReference } from "@projectit/core";
+import { Language, PiElement, PiElementReference } from "@projectit/core";
 
 const writer = DocuProjectEnvironment.getInstance().writer;
 const reader = DocuProjectEnvironment.getInstance().reader;
@@ -29,7 +29,7 @@ function addProductToModel(model: InsuranceModel, filepath: string) {
         unit1.name = filepath.split("/").pop().split(".").shift();
     } catch (e) {
         console.log(e.message + e.stack);
-        // expect(e).toBeNull();
+        expect(e).toBeNull();
     }
 }
 
@@ -53,27 +53,26 @@ describe("Testing DocuProject", () => {
         addProductToModel(model, "src/docu-project/__inputs__/products/HealthAll.prod");
     });
 
-    test("add HomeAll product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/HomeAll.prod");
-    });
-
-    test("add HomeAndHealth product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/HomeAndHealth.prod");
-    });
-
-    test("add HomeCheap product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/HomeCheap.prod");
-
-    });
-
-    test("add HomeExtra product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/HomeExtra.prod");
-    });
-
-    test("add LegalAll product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/LegalAll.prod");
-
-    });
+    // test("add HomeAll product", () => {
+    //     addProductToModel(model, "src/docu-project/__inputs__/products/HomeAll.prod");
+    // });
+    //
+    // test("add HomeAndHealth product", () => {
+    //     addProductToModel(model, "src/docu-project/__inputs__/products/HomeAndHealth.prod");
+    // });
+    //
+    // test("add HomeCheap product", () => {
+    //     addProductToModel(model, "src/docu-project/__inputs__/products/HomeCheap.prod");
+    //
+    // });
+    //
+    // test("add HomeExtra product", () => {
+    //     addProductToModel(model, "src/docu-project/__inputs__/products/HomeExtra.prod");
+    // });
+    //
+    // test("add LegalAll product", () => {
+    //     addProductToModel(model, "src/docu-project/__inputs__/products/LegalAll.prod");
+    // });
 
     test("check resulting model", () => {
         // console.log(model.getUnits().map(u => u.name).join(", "));
@@ -103,7 +102,9 @@ describe("Testing DocuProject", () => {
         //
 
         const errors = validator.validate(model);
-        console.log("Errors found (" + errors.length + ")\n" + errors.map(e => e.message + ' in [' + e.locationdescription + ']').join("\n"));
+        console.log("Errors found (" + errors.length + ")\n" + errors.map(e => e.message + ' in ['
+            + e.locationdescription + ']').join("\n"));
+            // + writer.writeToString((e.reportedOn as PiElement).piOwner()) + ']').join("\n"));
     });
 
 });
