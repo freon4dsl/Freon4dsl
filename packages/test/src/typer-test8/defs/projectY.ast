@@ -15,7 +15,7 @@ concept ExpWithType {
 }
 
 // definitions of types
-abstract concept TypeUsage { // where a type can be used either a referred type of or declared type is correct
+abstract concept TypeUsage { // where a type can be used, either a referred type of or declared type is correct
 }
 
 concept TypeRef base TypeUsage  {

@@ -32,7 +32,7 @@ export class FreonTypeEqualsMaker {
             const foundRule: PitEqualsRule = equalsRules.find(conRule => conRule.owner.myClassifier === type);
             if (!!foundRule) {
                 const myType: string = Names.classifier(type);
-                astSubRules.push(`if (this.metaTypeOk((${leftVarName} as AstType).astElement, "${myType}")) {
+                astSubRules.push(`if (this.mainTyper.metaTypeOk((${leftVarName} as AstType).astElement, "${myType}")) {
                     const elem1: ${myType} = (${leftVarName} as AstType).astElement as ${myType};
                     const elem2: ${myType} = (${rightVarName} as AstType).astElement as ${myType};
                     if (!!elem1 && !!elem2) {

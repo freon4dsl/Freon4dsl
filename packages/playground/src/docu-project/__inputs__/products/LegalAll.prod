@@ -4,6 +4,7 @@ InsuranceProduct LegalAll ( public name: "Careless" ) USES legal1
     Insured risks:
         damageToOtherPersonsProperty;
         damageToOtherPersonsHealth;
+        health1:hospitalization;
 
     Calculation
         calculated premium: calc(damageToOtherPersonsProperty) + calc(damageToOtherPersonsHealth)

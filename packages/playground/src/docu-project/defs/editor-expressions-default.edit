@@ -29,9 +29,33 @@ FunctionCallExpression {
     referenceShortcut = ${funcDefinition}
     trigger = "calc"
 }
+InsurancePartRef {
+    [${self.part}]
+    referenceShortcut = ${self.part}
+}
+RiskAdjustmentRef {
+    [riskAdjustment]
+}
 ParameterRef {
     [${self.parameter}[?.${self.attribute}]]
+    referenceShortcut = ${self.parameter}
 }
-AttributeRef {
-    [${name}]
+RiskRef {
+    [statisticalRisk]
+}
+PayoutRef {
+    [maximumPayOut]
+}
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    [${kind}{ ${content horizontal separator[,]} }]
+    referenceShortcut = ${self.kind}
+}
+TypeRef {
+    [${self.type}]
+    referenceShortcut = ${self.type}
+}
+GenericTypeDecl {
+    [${kind}< ${baseType} >]
+    referenceShortcut = ${self.kind}
 }
