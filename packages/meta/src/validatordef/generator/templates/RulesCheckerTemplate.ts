@@ -108,7 +108,7 @@ export class RulesCheckerTemplate {
         // find the property that indicates the location in human terms
         const locationdescription = ValidationUtils.findLocationDescription(ruleSet.conceptRef.referred);
 
-        ruleSet.rules.forEach(r => {
+        ruleSet.rules.forEach((r, index) => {
             // find the severity for the rule
             const severity: string = this.makeSeverity(r);
 
@@ -120,7 +120,7 @@ export class RulesCheckerTemplate {
 
             // create the text for the rule
             if (r instanceof CheckEqualsTypeRule) {
-                result += this.makeEqualsTypeRule(r, locationdescription, severity, message);
+                result += this.makeEqualsTypeRule(r, locationdescription, severity, index, message);
             } else if (r instanceof CheckConformsRule) {
                 result += this.makeConformsRule(r, locationdescription, severity, message);
             } else if (r instanceof NotEmptyRule) {
@@ -206,18 +206,21 @@ export class RulesCheckerTemplate {
                  }`;
     }
 
-    private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, message?: string) {
+    private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, index: number, message?: string) {
+        // TODO change other methods similar to this one, i.e. first determine the types then call typer on types
+        // TODO make sure alle errors message use the same format
         const leftElement: string = GenerationUtil.langExpToTypeScript(r.type1);
         const rightElement: string = GenerationUtil.langExpToTypeScript(r.type2);
         if (message.length === 0) {
             message = `"Type of '"+ this.myWriter.writeNameOnly(${leftElement}) 
-                        + "' (" + leftType.toPiString(this.myWriter) + ") should equal the type of '" + this.myWriter.writeNameOnly(${rightElement})
-                        + "' (" + rightType.toPiString(this.myWriter) + ")"`;
+                        + "' (" + leftType${index}.toPiString(this.myWriter) + ") should equal the type of '" 
+                        + this.myWriter.writeNameOnly(${rightElement})
+                        + "' (" + rightType${index}.toPiString(this.myWriter) + ")"`;
         }
-        return `const leftType = this.typer.inferType(${leftElement});
-            const rightType = this.typer.inferType(${rightElement});
-            if (!this.typer.equals(leftType, rightType)) {
-                this.errorList.push(new PiError(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
+        return `const leftType${index} = this.typer.inferType(${leftElement});
+            const rightType${index} = this.typer.inferType(${rightElement});
+            if (!this.typer.equals(leftType${index}, rightType${index})) {
+                this.errorList.push(new PiError(${message}, ${leftElement}, ${locationdescription}, ${severity}));
                 ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
             }`;
     }
@@ -233,9 +236,6 @@ export class RulesCheckerTemplate {
         let refAddition: string = '';
         if (!rule.list.findRefOfLastAppliedFeature().isPart) { // the elements in the list are all PiElementReferences
             refAddition += ".referred";
-            console.log("added .referred: " + locationdescription);
-        } else {
-            console.log(rule.list.appliedfeature.__referredElement.name + " is not a reference.")
         }
         //
         if (message.length === 0) {
