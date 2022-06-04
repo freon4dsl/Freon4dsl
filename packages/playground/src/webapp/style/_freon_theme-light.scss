@@ -114,6 +114,9 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-colors-backgroundcolor_text_box: lightgreen;
 }
 
+.\/\* {
+  --freon-font-weight-label-component: bold;
+}
 .\{ {
   --freon-font-weight-label-component: bold;
 }
