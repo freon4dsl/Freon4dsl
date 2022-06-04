@@ -28,7 +28,7 @@ export class FreonTypeInferMaker {
             // find the equalsRule, if present
             const foundRule: PitEqualsRule = inferRules.find(conRule => conRule.owner.myClassifier === type);
             if (!!foundRule) {
-                result.push(`if (this.metaTypeOk(${varName}, "${Names.classifier(foundRule.owner.myClassifier)}")) {
+                result.push(`if (this.mainTyper.metaTypeOk(${varName}, "${Names.classifier(foundRule.owner.myClassifier)}")) {
                 result = ${FreonTyperGenUtils.makeExpAsType(foundRule.exp, varName, false, imports)};
              }`)
             }
@@ -37,7 +37,7 @@ export class FreonTypeInferMaker {
         // add an entry for all limited concepts
         const allLimited = typerDef.language.concepts.filter(con => con instanceof PiLimitedConcept) as PiLimitedConcept[];
         allLimited.map(lim =>
-            result.push(`if (this.metaTypeOk(${varName}, "${Names.classifier(lim)}")) {
+            result.push(`if (this.mainTyper.metaTypeOk(${varName}, "${Names.classifier(lim)}")) {
                 result = AstType.create({ astElement: modelelement });
              }`)
         );

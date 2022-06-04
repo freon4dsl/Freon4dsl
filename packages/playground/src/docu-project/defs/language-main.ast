@@ -57,7 +57,7 @@ concept InsuranceProduct {
 concept CalcFunction {
     name: identifier;
     description?: Description;
-    reference declaredType : DocuType;
+    declaredType : DocuType;
     body: DocuExpression;
     parameters: Parameter[];
 }
@@ -68,30 +68,47 @@ concept Description {
 
 concept Parameter  {
     name: identifier;
-    reference declaredType: DocuType;
+    declaredType: DocuType;
+}
+
+// AST concepts used for typing the language
+
+/* This concept is used wherever an explicit type can be used,
+ * be it either a referred type (i.e. the name of a type that is known),
+ * or declared type (i.e. a type delcaration that is made on-the-spot).
+ */
+abstract concept DocuType {
 }
 
 // Sorry, its not good style to use an interface and a set of separate limited concepts.
 // At least, it is an example of using an interface, and of the fact that limited
 // concepts can implement interfaces.
-interface DocuType {
+interface NamedType {
     name: identifier;
 }
 
-limited InsurancePartType implements DocuType {
+limited InsurancePartType implements NamedType {
     InsurancePart;
 }
 
-limited PercentageType implements DocuType {
+limited PercentageType implements NamedType {
     Percentage;
 }
 
-limited NumberType implements DocuType {
+limited NumberType implements NamedType {
     Number;
 }
 
-limited EuroType implements DocuType {
+limited EuroType implements NamedType {
     EUR;
+}
+
+/* The concept TypeRef represents a reference to a known type.
+ * In the 'language-extras.ast'file there is an example of a
+ * concept representing a type declaration.
+ */
+concept TypeRef base DocuType  {
+    reference type: NamedType;
 }
 
 limited InsuranceTheme {

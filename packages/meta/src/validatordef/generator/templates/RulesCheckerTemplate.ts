@@ -108,7 +108,7 @@ export class RulesCheckerTemplate {
         // find the property that indicates the location in human terms
         const locationdescription = ValidationUtils.findLocationDescription(ruleSet.conceptRef.referred);
 
-        ruleSet.rules.forEach(r => {
+        ruleSet.rules.forEach((r, index) => {
             // find the severity for the rule
             const severity: string = this.makeSeverity(r);
 
@@ -120,7 +120,7 @@ export class RulesCheckerTemplate {
 
             // create the text for the rule
             if (r instanceof CheckEqualsTypeRule) {
-                result += this.makeEqualsTypeRule(r, locationdescription, severity, message);
+                result += this.makeEqualsTypeRule(r, locationdescription, severity, index, message);
             } else if (r instanceof CheckConformsRule) {
                 result += this.makeConformsRule(r, locationdescription, severity, message);
             } else if (r instanceof NotEmptyRule) {
@@ -206,15 +206,23 @@ export class RulesCheckerTemplate {
                  }`;
     }
 
-    private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, message?: string) {
+    private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, index: number, message?: string) {
+        // TODO change other methods similar to this one, i.e. first determine the types then call typer on types
+        // TODO make sure alle errors message use the same format
+        const leftElement: string = GenerationUtil.langExpToTypeScript(r.type1);
+        const rightElement: string = GenerationUtil.langExpToTypeScript(r.type2);
         if (message.length === 0) {
-            message = `"Type of ["+ this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1)}) 
-                        + "] should equal " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2)})`;
+            message = `"Type of '"+ this.myWriter.writeNameOnly(${leftElement}) 
+                        + "' (" + leftType${index}?.toPiString(this.myWriter) + ") should equal the type of '" 
+                        + this.myWriter.writeNameOnly(${rightElement})
+                        + "' (" + rightType${index}?.toPiString(this.myWriter) + ")"`;
         }
-        return `if (!this.typer.equalsType(${GenerationUtil.langExpToTypeScript(r.type1)}, ${GenerationUtil.langExpToTypeScript(r.type2)})) {
-                    this.errorList.push(new PiError(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
-                    ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
-                }`;
+        return `const leftType${index} = this.typer.inferType(${leftElement});
+            const rightType${index} = this.typer.inferType(${rightElement});
+            if (!this.typer.equals(leftType${index}, rightType${index})) {
+                this.errorList.push(new PiError(${message}, ${leftElement}, ${locationdescription}, ${severity}));
+                ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
+            }`;
     }
 
     private makeIsuniqueRule(rule: IsuniqueRule, locationdescription: string, severity: string, message: string): string {
@@ -224,14 +232,20 @@ export class RulesCheckerTemplate {
         const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
         const listpropertyTypeName = GenerationUtil.getBaseTypeAsString(referredListproperty);
         const listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature);
+        //
+        let refAddition: string = '';
+        if (!rule.list.findRefOfLastAppliedFeature().isPart) { // the elements in the list are all PiElementReferences
+            refAddition += ".referred";
+        }
+        //
         if (message.length === 0) {
-            message = `"The value of property '${listpropertyName}' is not unique in list '${listName}'"`;
+            message = `\`The value of property '${listpropertyName}' (\"\${elem.name}\") is not unique in list '${listName}'\``;
         }
         return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
         ${GenerationUtil.langExpToTypeScript(rule.list)}.forEach((elem, index) => {
             if ((elem === undefined) || (elem === null)) {
                 this.errorList.push(new PiError(\`Element[\$\{index\}] of property '${listName}' has no value\`,
-                 ${GenerationUtil.langExpToTypeScript(rule.list)}[index],
+                 ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
                  ${locationdescription},
                  ${severity}));
                     ${rule.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
@@ -240,7 +254,7 @@ export class RulesCheckerTemplate {
                     ${uniquelistName}.push(elem.${listpropertyTypescript});
                 } else {
                     this.errorList.push(new PiError(${message},
-                     ${GenerationUtil.langExpToTypeScript(rule.list)}[index],
+                     ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
                      ${locationdescription},
                      ${severity}));                }
                     ${rule.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      

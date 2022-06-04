@@ -79,9 +79,9 @@ export class AstType implements PiType {
     toPiString(writer: PiWriter): string {
         if (!!this.astElement ) {
             if (this.astElement === AstType.ANY) {
-                return "AstType[ ANY ]";
+                return "ANY";
             } else {
-                return "AstType[ " + writer.writeToString(this.astElement) + " ]";
+                return writer.writeToString(this.astElement);
             }
         }
         return "AstType[ unknown ]";
