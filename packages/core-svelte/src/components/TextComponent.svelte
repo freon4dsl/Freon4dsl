@@ -379,7 +379,7 @@
 
 </script>
 
-<span class={"text"}
+<span class="text {textBox.role}"
       style="{textStyle}"
       tabindex="0"
       data-placeholdertext={placeholder}

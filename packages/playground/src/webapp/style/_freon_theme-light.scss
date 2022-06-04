@@ -107,14 +107,22 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 
 }
 
-.using.entity\: {
-  color: red;
-  --freon-font-weight-label-component: normal;
+.Rules-name-textbox, .CheckingRule-name-textbox {
+  --freon-colors-backgroundcolor_text_box: lightgreen;
+}
+.Entity-name-textbox {
+  --freon-colors-backgroundcolor_text_box: lightgreen;
 }
 
-.Validation {
-   color: orange;
-   --freon-font-weight-label-component: bold;
+.\{ {
+  --freon-font-weight-label-component: bold;
+}
+.using.entity\: , .Validation {
+  --freon-font-weight-label-component: bold;
+  --freon-color-label-component: red;
+}
+.alias-SetValue-attribute-referencebox-textbox {
+  --freon-colors-backgroundcolor_text_box: orange;
 }
 
 html,
