@@ -208,15 +208,7 @@ export class FreonTyperPartTemplate {
             }
                         
             ${inferMaker.extraMethods.map(meth => meth).join("\n\n")}
-            
-            private metaTypeOk(element: PiElement, requestedType: string): boolean {
-                const metatype = element.piLanguageConcept();
-                if (metatype === requestedType || Language.getInstance().subConcepts(requestedType).includes(metatype)) {
-                    return true;
-                }
-                return false;
-            }
-            
+                      
             private typeOf(myArg: PiElement | PiElement[]): PiType {
                 let result: PiType;
                 if (Array.isArray(myArg)) {

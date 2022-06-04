@@ -53,26 +53,26 @@ describe("Testing DocuProject", () => {
         addProductToModel(model, "src/docu-project/__inputs__/products/HealthAll.prod");
     });
 
-    // test("add HomeAll product", () => {
-    //     addProductToModel(model, "src/docu-project/__inputs__/products/HomeAll.prod");
-    // });
-    //
-    // test("add HomeAndHealth product", () => {
-    //     addProductToModel(model, "src/docu-project/__inputs__/products/HomeAndHealth.prod");
-    // });
-    //
-    // test("add HomeCheap product", () => {
-    //     addProductToModel(model, "src/docu-project/__inputs__/products/HomeCheap.prod");
-    //
-    // });
-    //
-    // test("add HomeExtra product", () => {
-    //     addProductToModel(model, "src/docu-project/__inputs__/products/HomeExtra.prod");
-    // });
-    //
-    // test("add LegalAll product", () => {
-    //     addProductToModel(model, "src/docu-project/__inputs__/products/LegalAll.prod");
-    // });
+    test("add HomeAll product", () => {
+        addProductToModel(model, "src/docu-project/__inputs__/products/HomeAll.prod");
+    });
+
+    test("add HomeAndHealth product", () => {
+        addProductToModel(model, "src/docu-project/__inputs__/products/HomeAndHealth.prod");
+    });
+
+    test("add HomeCheap product", () => {
+        addProductToModel(model, "src/docu-project/__inputs__/products/HomeCheap.prod");
+
+    });
+
+    test("add HomeExtra product", () => {
+        addProductToModel(model, "src/docu-project/__inputs__/products/HomeExtra.prod");
+    });
+
+    test("add LegalAll product", () => {
+        addProductToModel(model, "src/docu-project/__inputs__/products/LegalAll.prod");
+    });
 
     test("check resulting model", () => {
         // console.log(model.getUnits().map(u => u.name).join(", "));

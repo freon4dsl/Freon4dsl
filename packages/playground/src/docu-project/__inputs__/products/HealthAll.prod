@@ -15,10 +15,9 @@ InsuranceProduct HealthAll1 ( public name: "Healthy Life" ) USES health1
             + adjust(medicines, riskAdjustment + 1%)
             + adjust(dentist, riskAdjustment - 2%)
             + adjust(eyecare, riskAdjustment * 4)
-            + adjust(generalPractitioner, riskAdjustment / 2)
+            + adjust(generalPractitioner, riskAdjustment)
 
     Helper functions:
         adjust(part: InsurancePart, adjustment: Percentage): EUR {
-            part.maximumPayOut
-            // part.statisticalRisk * part.maximumPayOut * adjustment
+            part.statisticalRisk * part.maximumPayOut * adjustment
         }

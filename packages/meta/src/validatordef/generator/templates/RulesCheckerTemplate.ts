@@ -213,9 +213,9 @@ export class RulesCheckerTemplate {
         const rightElement: string = GenerationUtil.langExpToTypeScript(r.type2);
         if (message.length === 0) {
             message = `"Type of '"+ this.myWriter.writeNameOnly(${leftElement}) 
-                        + "' (" + leftType${index}.toPiString(this.myWriter) + ") should equal the type of '" 
+                        + "' (" + leftType${index}?.toPiString(this.myWriter) + ") should equal the type of '" 
                         + this.myWriter.writeNameOnly(${rightElement})
-                        + "' (" + rightType${index}.toPiString(this.myWriter) + ")"`;
+                        + "' (" + rightType${index}?.toPiString(this.myWriter) + ")"`;
         }
         return `const leftType${index} = this.typer.inferType(${leftElement});
             const rightType${index} = this.typer.inferType(${rightElement});

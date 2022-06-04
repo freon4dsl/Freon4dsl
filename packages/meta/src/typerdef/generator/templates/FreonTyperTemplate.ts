@@ -22,7 +22,7 @@ export class FreonTyperTemplate {
 
         // Template starts here
         return `
-        import { PiElement, PiType, ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { PiElement, PiType, Language, ${typerInterfaceName} } from "${PROJECTITCORE}";
 
         ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
@@ -220,6 +220,14 @@ export class FreonTyperTemplate {
                 return this.generatedTyper.getSuperTypes(type);
             }
 
+            public metaTypeOk(element: PiElement, requestedType: string): boolean {
+                const metatype = element.piLanguageConcept();
+                if (metatype === requestedType || Language.getInstance().subConcepts(requestedType).includes(metatype)) {
+                    return true;
+                }
+                return false;
+            }
+    
             /**
              * Returns a list of types: one for each element of 'inlist',
              * if this type is not yet present in the result.

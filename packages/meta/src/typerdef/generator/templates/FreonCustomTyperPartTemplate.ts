@@ -20,7 +20,7 @@ export class FreonCustomTyperPartTemplate {
         export class ${generatedClassName} implements ${typerInterfaceName} {
             mainTyper: ${Names.typer(language)};
         
-            isType(elem: PiElement): boolean | null {
+            isType(modelelement: PiElement): boolean | null {
                 return null;
             }
         
