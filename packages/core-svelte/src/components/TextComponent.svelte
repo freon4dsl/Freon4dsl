@@ -379,7 +379,7 @@
 
 </script>
 
-<span class={"text"}
+<span class="text {textBox.role}"
       style="{textStyle}"
       tabindex="0"
       data-placeholdertext={placeholder}
@@ -397,13 +397,13 @@
 <style>
     .text:empty:before {
         content: attr(data-placeholdertext);
-        color: inherit;
-        background-color: inherit;
-        font-family: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        padding: 0px;
-        margin: inherit;
+        color: var(--freon-colors-color_text_box, blue);
+        background-color: var(--freon-colors-backgroundcolor_text_box, inherit);
+        font-family: var(--freon-fonts-family_text_component, "Arial");
+        font-size: var(--freon-fonts-size_text_component, 14pt);
+        font-weight: var(--freon-font-weight-text-component, inherit);
+        padding: var(--freon-padding-text-component, 1px);
+        margin: var(--freon-margin-text-component, 1px);
         display: inherit;
         white-space: inherit;
         border: inherit;
@@ -411,10 +411,14 @@
     }
 
     .text {
-        /*background-color: var(--freon-colors-bg_text_box);*/
         content: attr(data-placeholdertext);
-        color: var(--freon-colors-color_text_box);
-        padding: 3px;
+        color: var(--freon-colors-color_text_box, blue);
+        background-color: var(--freon-colors-backgroundcolor_text_box, inherit);
+        font-family: var(--freon-fonts-family_text_component, "Arial");
+        font-size: var(--freon-fonts-size_text_component, 14pt);
+        font-weight: var(--freon-font-weight-text-component, inherit);
+        padding: var(--freon-padding-text-component, 1px);
+        margin: var(--freon-margin-text-component, 1px);
         white-space: normal;
         display: inline-block;
     }

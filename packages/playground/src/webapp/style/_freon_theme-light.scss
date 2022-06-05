@@ -69,14 +69,63 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-colors-border_selected: #{theme.$blue-900};
   --freon-colors-color_text_box: #{theme.$blue-900};
 
+  --freon-colors-backgroundcolor_text_box: yellow;
+  --freon-colors-backgroundcolor_label_box: inherit;
+
   /* Fonts */
   --freon-fonts-family_editor: "Roboto";    /* The font family of the text, unless set otherwise by the projection */
   --freon-fonts-size_editor: 14px;          /* The font size of the text, unless set otherwise by the projection */
   --freon-fonts-style_editor: normal;       /* The font style of the text, unless set otherwise by the projection */
   --freon-fonts-weight_editor: normal;      /* The font weight of the text, unless set otherwise by the projection */
+  --freon-font-weight-label-component: normal;
+  --freon-font-weight-text-component: normal;
 
+  --freon-fonts-size_text_component: 14px;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-fonts-style_text_component: normal;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-fonts-weight_text_component: normal;	/* The font size of the text, unless set otherwise by the projection */
+  --freon-fonts-family_text_component: "Arial";	/* The font size of the text, unless set otherwise by the projection */
+  --freon-fonts-size_label_component: 14px;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-fonts-style_label_component: normal;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-fonts-weight_label_component: normal;	/* The font size of the text, unless set otherwise by the projection */
+  --freon-fonts-family_label_component: "Arial";	/* The font size of the text, unless set otherwise by the projection */
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
+
+  --freon-padding-text-component: 0px 1px 0px 1px;
+  --freon-padding-label-component: 0px 1px 0px 1px;
+  --freon-padding-horizontallist-component: 0px;
+  --freon-padding-verticallist-component: 0px;
+  --freon-padding-projectit-component: 1px;
+
+  --freon-margin-text-component: 1px;
+  --freon-margin-label-component: 1px;
+  --freon-margin-horizontallist-component: 1px;
+  --freon-margin-verticallist-component: 1px;
+  --freon-margin-projectit-component: 1px;
+
+  --freon-color-label-component: black;
+
+}
+
+.Rules-name-textbox, .CheckingRule-name-textbox {
+  --freon-colors-backgroundcolor_text_box: lightgreen;
+}
+.Entity-name-textbox {
+  --freon-colors-backgroundcolor_text_box: lightgreen;
+}
+
+.\/\* {
+  --freon-font-weight-label-component: bold;
+}
+.\{ {
+  --freon-font-weight-label-component: bold;
+}
+.using.entity\: , .Validation {
+  --freon-font-weight-label-component: bold;
+  --freon-color-label-component: red;
+}
+.alias-SetValue-attribute-referencebox-textbox {
+  --freon-colors-backgroundcolor_text_box: orange;
 }
 
 html,

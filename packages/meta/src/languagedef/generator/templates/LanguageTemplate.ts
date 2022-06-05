@@ -115,7 +115,7 @@ export class LanguageTemplate {
                         typeName: "${Names.concept(concept)}",
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
-                        isNamedElement: ${concept.implementedPrimProperties().some(p => p.name === "name")},
+                        isNamedElement: ${concept.allPrimProperties().some(p => p.name === "name")},
                         trigger: "${Names.concept(concept)}",
                         constructor: () => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}()`}; },
                         properties: new Map< string, Property>(),

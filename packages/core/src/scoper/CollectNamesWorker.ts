@@ -1,6 +1,7 @@
 /**
  * This worker class collects all visible names in the model.
  */
+import { element } from "svelte/internal";
 import { PiElement, PiModelUnit, PiNamedElement } from "../ast";
 import { AstWorker, modelUnit } from "../ast-utils";
 import { Language, Property } from "../language";
@@ -36,14 +37,19 @@ export class CollectNamesWorker implements AstWorker {
         const partProperties: Property[] = Language.getInstance().getPropertiesOfKind(modelelement.piLanguageConcept(), "part");
         // walk children
         for(const prop of partProperties){
-            LOGGER.log(modelelement.piLanguageConcept() + ":  part " + prop.name + " isNamed " + Language.getInstance().classifier(prop.type).isNamedElement +
-            "  visible " + this.isVisible(modelelement, prop) + "hasType " + this.hasLookedForType(prop));
-            if( Language.getInstance().classifier(prop.type).isNamedElement && this.hasLookedForType(prop) && this.isVisible(modelelement, prop)) {
-                LOGGER.log(" push " + (Language.getInstance().getPropertyValue(modelelement, prop) as PiNamedElement[]).map(e => e.name));
-                this.namesList.push(...(Language.getInstance().getPropertyValue(modelelement, prop) as PiNamedElement[]));
+            if (this.isVisible(modelelement, prop)) {
+                this.addIfOk(Language.getInstance().getPropertyValue(modelelement, prop));
             }
         }
         return false;
+    }
+
+    private addIfOk(elements: PiElement[]): void {
+        for(const elem of elements) {
+            if(Language.getInstance().classifier(elem.piLanguageConcept()).isNamedElement && this.hasLookedForType(elem)) {
+                this.namesList.push(elem as PiNamedElement);
+            }
+        }
     }
 
     execAfter(modelelement: PiElement): boolean {
@@ -56,9 +62,9 @@ export class CollectNamesWorker implements AstWorker {
      * @param namedElement
      */
 
-    private hasLookedForType(property: Property) {
+    private hasLookedForType(element: PiElement) {
         if (!!this.metatype) {
-            const concept = property.type;
+            const concept = element.piLanguageConcept();
             return (concept === this.metatype || Language.getInstance().subConcepts(this.metatype).includes(concept));
         } else {
             return true;

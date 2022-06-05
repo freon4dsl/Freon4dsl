@@ -33,10 +33,19 @@
                {
                   "$typename": "SetValue",
                   "value": {
-                     "$typename": "HasNoValue",
-                     "attribute": "Height"
+                     "$typename": "IsEqualTo",
+                     "left": null,
+                     "right": {
+                        "$typename": "HasNoValue",
+                        "attribute": "Height"
+                     }
                   },
                   "attribute": "Name"
+               },
+               {
+                  "$typename": "SetValue",
+                  "value": null,
+                  "attribute": null
                }
             ],
             "ElseStatements": [
