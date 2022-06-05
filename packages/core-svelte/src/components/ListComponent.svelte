@@ -122,18 +122,18 @@
         /*grid-template-columns: var(--pi-list-grid-template-columns);*/
         white-space: nowrap;
         display: inline-block;
-        padding: var(--freon-padding-horizontallist-component, 1px);
-        background-color: var(--freon-colors-bg_editor, white);
-        margin: var(--freon-margin-horizontallist-component, 1px);
+        padding: var(--freon-horizontallist-component-padding, 1px);
+        background-color: var(--freon-editor-component-background-color, white);
+        margin: var(--freon-horizontallist-component-margin, 1px);
     }
 
     .verticalList {
         /*grid-template-rows: var(--pi-list-grid-template-rows);*/
         /*grid-template-columns: var(--pi-list-grid-template-columns);*/
         /*display: grid;*/
-        background-color: var(--freon-colors-bg_editor, white);
-        padding: var(--freon-padding-verticallist-component, 1px);
-        margin: var(--freon-margin-verticallist-component, 1px);
+        background-color: var(--freon-editor-component-background-color, white);
+        padding: var(--freon-verticallist-component-padding, 1px);
+        margin: var(--freon-verticallist-component-margin, 1px);
         /*margin-top: 10px;*/
     }
 </style>

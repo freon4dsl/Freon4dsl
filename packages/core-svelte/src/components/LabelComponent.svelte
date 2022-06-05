@@ -58,17 +58,19 @@
 <style>
     .label:empty:before {
         content: attr(data-placeholdertext);
-        margin: var(--freon-margin-label-component, 1px);
-        padding: var(--freon-padding-label-component, 1px);
-        background-color: var(--freon-colors-backgroundcolor_label_box, inherit);
+        margin: var(--freon-label-component-margin, 1px);
+        padding: var(--freon-label-component-padding, 1px);
+        background-color: var(--freon-label-component-background-color, inherit);
     }
 
     .label {
-        color: var(--freon-color-label-component);
-        background-color: var(--freon-colors-backgroundcolor_label_box, inherit);
-        font-weight: var(--freon-font-weight-label-component, normal);
-        padding: var(--freon-padding-label-component, 1px);
-        margin: var(--freon-margin-label-component, 1px);
+        color: var(--freon-label-component-color);
+        background-color: var(--freon-label-component-background-color, inherit);
+        font-style: var(--freon-label-component-font-style, inherit);
+        font-weight: var(--freon-label-component-font-weight, normal);
+        font-size: var(--freon-label-component-font-size, inherit);
+        padding: var(--freon-label-component-padding, 1px);
+        margin: var(--freon-label-component-margin, 1px);
         white-space: normal;
         display: inline-block;
     }
