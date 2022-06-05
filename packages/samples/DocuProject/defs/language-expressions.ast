@@ -65,16 +65,16 @@ expression ParameterRef base DocuExpression {
 }
 
 // Refers to a property of a parameter or of an InsuranceProduct
-abstract expression AttributeRef base DocuExpression {
+abstract concept AttributeRef { // base DocuExpression {
     name: identifier;               // the name of the property of the parameter
 }
 
-expression RiskRef base AttributeRef  {
+concept RiskRef base AttributeRef  {
     name: identifier = "statisticalRisk";      // the name of the property of the parameter
 //    type?: PercentageType;
 }
 
-expression PayoutRef base AttributeRef {
+concept PayoutRef base AttributeRef {
     name: identifier = "maximumPayOut";       // the name of the property of the parameter
 //    type?: EuroType;
 }

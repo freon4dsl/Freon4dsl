@@ -53,34 +53,34 @@
 for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/css-vars */
 .editor-part {
   /* Normal text colors */
-  --freon-colors-text_editor: #{--mdc-theme-text-primary-on-dark};       /* The color of the text, unless set otherwise by the projection */
+  --freon-editor-component-color: #{--mdc-theme-text-primary-on-dark};       /* The color of the text, unless set otherwise by the projection */
   --freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
-  --freon-colors-bg_editor: #{theme.$surface};              /* The background color of the editor */
+  --freon-editor-component-background-color: #{theme.$surface};              /* The background color of the editor */
 
   /* Dropdown colors */
-  --freon-colors-color_dropdownitem_component: #{theme.$blue-900};
-  --freon-colors-bg_dropdown_component: #{theme.$surface};
-  --freon-colors-border_dropdown_component: #{theme.$blue-900};
-  --freon-colors-border_dropdownitem_component: #{theme.$blue-900};
+  --freon-dropdownitem-component-color: #{theme.$blue-900};
+  --freon-dropdown-component-background-color: #{theme.$surface};
+  --freon-dropdown-component-border-color: #{theme.$blue-900};
+  --freon-dropdownitem-component-border-color: #{theme.$blue-900};
 
   /* Selectable */
   --freon-colors-bg_selected: rgba(211, 227, 253, 255);
   --freon-colors-border_selected: #{theme.$blue-900};
-  --freon-colors-color_text_box: #{theme.$blue-900};
+  --freon-text-component-color: #{theme.$blue-900};
 
 
   /* Fonts */
-  --freon-fonts-family_editor: "Arial";     /* The font family of the text, unless set otherwise by the projection */
-  --freon-fonts-size_editor: 14px;          /* The font size of the text, unless set otherwise by the projection */
-  --freon-fonts-style_editor: normal;       /* The font style of the text, unless set otherwise by the projection */
-  --freon-fonts-weight_editor: normal;      /* The font weight of the text, unless set otherwise by the projection */
+  --freon-editor-component-font-family: "Arial";     /* The font family of the text, unless set otherwise by the projection */
+  --freon-editor-component-font-size: 14px;          /* The font size of the text, unless set otherwise by the projection */
+  --freon-editor-component-font-style: normal;       /* The font style of the text, unless set otherwise by the projection */
+  --freon-editor-component-font-weight: normal;      /* The font weight of the text, unless set otherwise by the projection */
 
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-  --freon-padding-text-component: 0px;
-  --freon-padding-label-component: 0px;
-  --freon-padding-horizontallist-component: 0px;
-  --freon-padding-verticallist-component: 0px;
+  --freon-text-component-padding: 0px;
+  --freon-label-component-padding: 0px;
+  --freon-horizontallist-component-padding: 0px;
+  --freon-verticallist-component-padding: 0px;
 }
 
 html,
