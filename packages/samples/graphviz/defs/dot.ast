@@ -1,4 +1,4 @@
-language graphviz_dot
+language graphviz
 
 model xx {
     name: identifier;

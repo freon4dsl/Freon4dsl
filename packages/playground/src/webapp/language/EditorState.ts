@@ -24,7 +24,7 @@ import {
     modelErrors,
 } from "../components/stores/InfoPanelStore";
 
-const LOGGER = new PiLogger("EditorCommunication"); // .mute();
+const LOGGER = new PiLogger("EditorState"); // .mute();
 
 export class EditorState {
     private static instance: EditorState = null;
@@ -62,7 +62,7 @@ export class EditorState {
      * @param modelName
      */
     async openModel(modelName: string) {
-        LOGGER.log("EditorCommunication.openmodel(" + modelName + ")");
+        LOGGER.log("EditorState.openmodel(" + modelName + ")");
         editorProgressShown.set(true);
         this.resetGlobalVariables();
 
@@ -168,7 +168,7 @@ export class EditorState {
      * Pushes the current unit to the server
      */
     async saveCurrentUnit() {
-        LOGGER.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
+        LOGGER.log("EditorState.saveCurrentUnit: " + get(currentUnitName));
         const unit: PiNamedElement = editorEnvironment.editor.rootElement as PiNamedElement;
         if (!!unit) {
             if (!!this.currentModel?.name && this.currentModel?.name.length) {
@@ -308,12 +308,12 @@ export class EditorState {
             // TODO find way to get interface without use of the server, because of concurrency error
             // swap old unit with its interface in the in-memory model
             // serverCommunication.loadModelUnitInterface(
-            //     EditorCommunication.getInstance().currentModel.name,
-            //     EditorCommunication.getInstance().currentUnit.name,
+            //     EditorState.getInstance().currentModel.name,
+            //     EditorState.getInstance().currentUnit.name,
             //     (oldUnitInterface: PiNamedElement) => {
             //         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
             //             // swap old unit with its interface in the in-memory model
-            //             EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+            //             EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
             //         }
             //     });
 
@@ -388,7 +388,7 @@ export class EditorState {
      * Runs the validator for the current unit
      */
     getErrors() {
-        LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
+        LOGGER.log("EditorState.getErrors() for " + this.currentUnit.name);
         if (!!this.currentUnit) {
             try {
                 const list = editorEnvironment.validator.validate(this.currentUnit);

@@ -122,7 +122,9 @@
         /*grid-template-columns: var(--pi-list-grid-template-columns);*/
         white-space: nowrap;
         display: inline-block;
+        padding: var(--freon-padding-horizontallist-component, 1px);
         background-color: var(--freon-colors-bg_editor, white);
+        margin: var(--freon-margin-horizontallist-component, 1px);
     }
 
     .verticalList {
@@ -130,6 +132,8 @@
         /*grid-template-columns: var(--pi-list-grid-template-columns);*/
         /*display: grid;*/
         background-color: var(--freon-colors-bg_editor, white);
+        padding: var(--freon-padding-verticallist-component, 1px);
+        margin: var(--freon-margin-verticallist-component, 1px);
         /*margin-top: 10px;*/
     }
 </style>

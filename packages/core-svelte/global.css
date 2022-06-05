@@ -8,15 +8,43 @@
 	--freon-colors-bg_editor: white;		/* The background color of the editor */
 	--freon-colors-text_editor: darkblue;	/* The color of the text, unless set otherwise by the projection */
 	--freon-fonts-size_editor: 14px;		/* The font size of the text, unless set otherwise by the projection */
-	--freon-fonts-style_editor: italic;		/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-style_editor: normal;		/* The font size of the text, unless set otherwise by the projection */
 	--freon-fonts-weight_editor: normal;	/* The font size of the text, unless set otherwise by the projection */
 	--freon-fonts-family_editor: "Arial";	/* The font size of the text, unless set otherwise by the projection */
+
+	--freon-fonts-size_text_component: 14px;		/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-style_text_component: normal;		/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-weight_text_component: normal;	/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-family_text_component: "Arial";	/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-size_label_component: 14px;		/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-style_label_component: normal;		/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-weight_label_component: normal;	/* The font size of the text, unless set otherwise by the projection */
+	--freon-fonts-family_label_component: "Arial";	/* The font size of the text, unless set otherwise by the projection */
 	/* Selectable */
 	--freon-colors-bg_selected: rgba(211, 227, 253, 255);
 	--freon-colors-border_selected: darkblue;
 	--freon-colors-color_text_box: darkblue;
+
+	--freon-colors-backgroundcolor_text_box: white;
+	--freon-colors-backgroundcolor_label_box: inherit;
 	/* Others */
 	--freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
+
+	--freon-padding-text-component: 0px;
+	--freon-padding-label-component: 0px;
+	--freon-padding-horizontallist-component: 0px;
+	--freon-padding-verticallist-component: 0px;
+	--freon-padding-projectit-component: 0px;
+	--freon-font-weight-label-component: normal;
+	--freon-font-weight-text-component: normal;
+
+	--freon-margin-text-component: 0px;
+	--freon-margin-label-component: 0px;
+	--freon-margin-horizontallist-component: 0px;
+	--freon-margin-verticallist-component: 0px;
+	--freon-margin-projectit-component: 0px;
+
+	--freon-color-label-component: black;
 }
 
 html, body {

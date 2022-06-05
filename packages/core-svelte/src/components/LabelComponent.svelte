@@ -40,12 +40,12 @@
 
     autorun( () => {
         text = label.getLabel();
-        AUTO_LOGGER.log("LabelComponent ["+ text + "]")
+        console.log("LabelComponent ["+ text + "]");
         $: style = styleToCSS(conceptStyle(editor.style, editor.theme, label.element.piLanguageConcept(), "label", label.style));
     });
 </script>
 
-<div class="label"
+<div class="label {text}"
      style="{style}"
      tabIndex={0}
      on:focus={onFocusHandler}
@@ -58,11 +58,17 @@
 <style>
     .label:empty:before {
         content: attr(data-placeholdertext);
+        margin: var(--freon-margin-label-component, 1px);
+        padding: var(--freon-padding-label-component, 1px);
+        background-color: var(--freon-colors-backgroundcolor_label_box, inherit);
     }
 
     .label {
-        font-weight: bold;
-        padding: 3px;
+        color: var(--freon-color-label-component);
+        background-color: var(--freon-colors-backgroundcolor_label_box, inherit);
+        font-weight: var(--freon-font-weight-label-component, normal);
+        padding: var(--freon-padding-label-component, 1px);
+        margin: var(--freon-margin-label-component, 1px);
         white-space: normal;
         display: inline-block;
     }

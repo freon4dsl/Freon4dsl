@@ -35,7 +35,7 @@
             "name": "",
             "Condition": {
                "$typename": "CheckingRuleCall",
-               "rule": null
+               "rule": "sqs"
             },
             "ThenStatements": [],
             "ElseStatements": []
@@ -43,5 +43,5 @@
       }
    ],
    "imports": "Entities",
-   "forEntity": null
+   "forEntity": "Patient"
 }
