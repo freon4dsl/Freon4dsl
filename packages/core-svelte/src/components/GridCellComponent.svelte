@@ -86,9 +86,11 @@
 
 <style>
     .gridcellcomponent {
-        box-sizing: content-box;
+        box-sizing: border-box;
         align-self: stretch;
         display: flex;
-        color: magenta
+        color: magenta;
+         padding: var(--freon-gridcell-component-padding, 1px);
+         padding: var(--freon-gridcell-component-margin, 1px);
     }
 </style>

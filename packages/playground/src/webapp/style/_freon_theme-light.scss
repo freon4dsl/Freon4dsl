@@ -53,6 +53,7 @@
 /* Note that you need to use a different syntax to be able to use SCSS variables as value
 for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/css-vars */
 .editor-part {
+  box-sizing: border-box;
   /* Selectable */
   --freon-colors-bg_selected: rgba(211, 227, 253, 255);
   --freon-colors-border_selected: #{theme.$blue-900};
@@ -97,7 +98,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-horizontallist-component-margin: 0px;
 
   --freon-verticallist-component-padding: 0px;
-  --freon-verticallist-component-margin: 1px;
+  --freon-verticallist-component-margin: 0px;
 
 
 }
@@ -109,7 +110,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-colors-backgroundcolor_text_box: lightgreen;
 }
 
-.\/\* {
+.\/\*, .\*\/ {
   //--freon-label-component-font-weight: lighter;
   --freon-label-component-font-style: italic;
   --freon-label-component-color: #{theme.$grey-500};
@@ -126,16 +127,16 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 }
 
 .\,, .\%, .\. {
-  --freon-label-component-margin: 0px;
+  --freon-label-component-margin: 0px 0px 0px 0px;
   --freon-label-component-padding: 0px 0px 0px 0px;
 }
-.EuroLiteral-cents-numberbox {
-  --freon-label-component-margin: 0px;
-  --freon-label-component-padding: 0px 0px 0px 0px;
-}
+//.EuroLiteral-cents-numberbox {
+//  --freon-label-component-margin: 0px;
+//  --freon-label-component-padding: 0px 1px 0px 1px;
+//}
 .alias-binary-pre-textbox, .alias-binary-post-textbox, .alias-exp-left-textbox, .alias-exp-right-textbox {
   --freon-text-component-margin: 0px;
-  --freon-text-component-padding: 0px 0px 0px 0px;
+  --freon-text-component-padding: -1px 1px 0px 1px;
 }
 html,
 body {

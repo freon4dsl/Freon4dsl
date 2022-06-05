@@ -41,6 +41,9 @@
 	--freon-label-component-font-style: normal;
 	--freon-label-component-font-size: inherit;
 
+	--freon-gridcell-component-padding:inherit;
+	--freon-gridcell-component-margin: inherit;
+
 	--freon-text-component-margin: 0px;
 	--freon-label-component-margin: 0px;
 	--freon-horizontallist-component-margin: 0px;

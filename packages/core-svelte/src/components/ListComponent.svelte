@@ -125,6 +125,7 @@
         padding: var(--freon-horizontallist-component-padding, 1px);
         background-color: var(--freon-editor-component-background-color, white);
         margin: var(--freon-horizontallist-component-margin, 1px);
+        box-sizing: border-box;
     }
 
     .verticalList {
@@ -135,6 +136,7 @@
         padding: var(--freon-verticallist-component-padding, 1px);
         margin: var(--freon-verticallist-component-margin, 1px);
         /*margin-top: 10px;*/
+        box-sizing: border-box;
     }
 </style>
 
