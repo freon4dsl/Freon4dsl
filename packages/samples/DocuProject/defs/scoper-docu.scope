@@ -6,6 +6,6 @@ InsuranceProduct {
     namespace_addition = self.basedOn;
 }
 
-//AttributeRef {
-//	scope = typeof( container );
-//}
+AttributeRef {
+	scope = typeof( container );
+}

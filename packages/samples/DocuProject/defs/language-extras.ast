@@ -34,4 +34,9 @@ expression GenericLiteral base DocuExpression {
 concept Entity {
     isCompany: boolean;
     name: identifier;
+    baseEntity?: Entity;
+}
+
+concept EntityAttribute {
+    numVal: number;
 }
