@@ -2,7 +2,7 @@
 but every proejction is augmented with comments on what the elements of
 the language mean. */
 
-editor comments
+editor comments precedence 10
 
 // both modelunits show a single concept
 Part {[
