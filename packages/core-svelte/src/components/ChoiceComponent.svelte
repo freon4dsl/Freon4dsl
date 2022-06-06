@@ -381,12 +381,12 @@
         opacity: 1.0;
 
         z-index: 99;
-        background: var(--freon-colors-bg_dropdown_component, lightblue);
+        background-color: var(--freon-dropdown-component-background-color, lightblue);
     }
 
     .popupWrapper {
         position: absolute;
-        border: 1px solid var(--freon-colors-border_dropdown_component, darkblue);
+        border: 1px solid var(--freon-dropdown-component-border-color, darkblue);
         box-shadow: var(--freon-popup-box-shadow, 0 0 6px 0 rgba(0, 0, 0, 0.5));
         border-radius: 2px;
         top: 10px;
@@ -395,7 +395,7 @@
         z-index: 95;
     }
     .dropdownitem {
-        color: var(--freon-colors-color_dropdownitem_component, darkblue);
+        color: var(--freon-dropdownitem-component-color, darkblue);
         display: block;
         white-space: nowrap;
         border:none;

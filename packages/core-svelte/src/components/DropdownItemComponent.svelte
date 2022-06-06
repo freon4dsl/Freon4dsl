@@ -27,7 +27,7 @@
 
 <style>
     .dropdownitem {
-        color: var(--freon-colors-color_dropdownitem_component, darkblue);
+        color: var(--freon-dropdownitem-component-color, darkblue);
         display: block;
         white-space: nowrap;
         border:none;

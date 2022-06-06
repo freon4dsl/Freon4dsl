@@ -397,13 +397,14 @@
 <style>
     .text:empty:before {
         content: attr(data-placeholdertext);
-        color: var(--freon-colors-color_text_box, blue);
+        color: var(--freon-text-component-color, blue);
         background-color: var(--freon-colors-backgroundcolor_text_box, inherit);
-        font-family: var(--freon-fonts-family_text_component, "Arial");
-        font-size: var(--freon-fonts-size_text_component, 14pt);
-        font-weight: var(--freon-font-weight-text-component, inherit);
-        padding: var(--freon-padding-text-component, 1px);
-        margin: var(--freon-margin-text-component, 1px);
+        font-family: var(--freon-text-component-font-family, "Arial");
+        font-size: var(--freon-text-component-font-size, 14pt);
+        font-weight: var(--freon-text-component-font-weight, inherit);
+        font-style: var(--freon-text-component-font-style, inherit);
+        padding: var(--freon-text-component-padding, 1px);
+        margin: var(--freon-text-component-margin, 1px);
         display: inherit;
         white-space: inherit;
         border: inherit;
@@ -412,13 +413,14 @@
 
     .text {
         content: attr(data-placeholdertext);
-        color: var(--freon-colors-color_text_box, blue);
+        color: var(--freon-text-component-color, blue);
         background-color: var(--freon-colors-backgroundcolor_text_box, inherit);
-        font-family: var(--freon-fonts-family_text_component, "Arial");
-        font-size: var(--freon-fonts-size_text_component, 14pt);
-        font-weight: var(--freon-font-weight-text-component, inherit);
-        padding: var(--freon-padding-text-component, 1px);
-        margin: var(--freon-margin-text-component, 1px);
+        font-family: var(--freon-text-component-font-family, "Arial");
+        font-size: var(--freon-text-component-font-size, 14pt);
+        font-weight: var(--freon-text-component-font-weight, inherit);
+        font-style: var(--freon-text-component-font-style, inherit);
+        padding: var(--freon-text-component-padding, 1px);
+        margin: var(--freon-text-component-margin, 1px);
         white-space: normal;
         display: inline-block;
     }

@@ -122,14 +122,14 @@
         height: 100%;
         width: 100%;
         overflow-x: auto;
-        font-size: var(--freon-fonts-size_editor, 14px);
-        font-style: var(--freon-fonts-style_editor, italic);
-        font-weight: var(--freon-fonts-weight_editor, normal);
-        font-family: var(--freon-fonts-family_editor, "Arial");
-        color: var(--freon-colors-text_editor, darkblue);
-        background-color: var(--freon-colors-bg_editor, white);
-        margin: var(--freon-margin-projectit-component, 1px);
-        padding: var(--freon-padding-projectit-component, 1px);
+        font-size: var(--freon-editor-component-font-size, 14px);
+        font-style: var(--freon-editor-component-font-style, italic);
+        font-weight: var(--freon-editor-component-font-weight, normal);
+        font-family: var(--freon-editor-component-font-family, "Arial");
+        color: var(--freon-editor-component-color, darkblue);
+        background-color: var(--freon-editor-component-background-color, white);
+        margin: var(--freon-editor-component-margin, 1px);
+        padding: var(--freon-editor-component-padding, 1px);
 
     }
 </style>
