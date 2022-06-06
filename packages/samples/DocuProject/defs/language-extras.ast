@@ -30,3 +30,8 @@ expression GenericLiteral base DocuExpression {
     content: DocuExpression[];
     kind: GenericKind;
 }
+
+concept Entity {
+    isCompany: boolean;
+    name: identifier;
+}

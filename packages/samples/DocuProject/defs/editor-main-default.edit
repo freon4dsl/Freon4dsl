@@ -53,3 +53,7 @@ Parameter {
 
 // No need for projection for DocuType and its implementors, they
 // are only used as references, so their names suffice.
+
+Entity {[
+    ${self.isCompany [COMPANY]} ${self.name}
+]}

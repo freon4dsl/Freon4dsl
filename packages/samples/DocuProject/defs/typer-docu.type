@@ -9,7 +9,7 @@ type TT_GenericType {
 }
 
 // Which concepts have a type?
-hastype { DocuExpression, DocuType, RiskRef, PayoutRef }
+hastype { DocuExpression, DocuType }
 
 // Which type does an expression have?
 TypeRef {
