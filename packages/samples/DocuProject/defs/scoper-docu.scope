@@ -1,6 +1,6 @@
 scoper DocuScoper for language DocuProject
 
-isnamespace { InsuranceProduct, BaseProduct, CalcFunction }
+isnamespace { InsuranceProduct, BaseProduct, CalcFunction, Entity }
 
 InsuranceProduct {
     namespace_addition = self.basedOn;
@@ -8,4 +8,8 @@ InsuranceProduct {
 
 AttributeRef {
 	scope = typeof( container );
+}
+
+Entity {
+    namespace_addition = self.baseEntity;
 }

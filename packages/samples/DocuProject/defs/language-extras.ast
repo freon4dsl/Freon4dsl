@@ -34,7 +34,7 @@ expression GenericLiteral base DocuExpression {
 concept Entity {
     isCompany: boolean;
     name: identifier;
-    baseEntity?: Entity;
+    reference baseEntity?: Entity;
 }
 
 concept EntityAttribute {

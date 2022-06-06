@@ -1,9 +1,8 @@
 editor specials
 
 BaseProduct {[
-    /* In this projection 'self.parts' is always shown according to the projection
-     * defined for concept InsurancePart in the editor 'comments'.
-     */
+    /* In this projection 'self.parts' is always shown according to the projection */
+    /* defined for concept InsurancePart in the editor 'comments'.                 */
     Base Products ${self.name} for ${self.theme}
         ${self.parts:comments}
 ]}

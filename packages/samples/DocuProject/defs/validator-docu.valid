@@ -30,6 +30,7 @@ CalcFunction {
     isunique name in self.parameters;
     validIdentifier
     {
-        message: "El nombre '${self.name}' no es un identificador correcto."
-    }
+        message: "El nombre '${self.name}' no es un identificador correcto.",
+        severity: error
+    };
 }

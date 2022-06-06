@@ -9,7 +9,7 @@ type GenericType {
 }
 
 // Which concepts have a type?
-hastype { DocuExpression, DocuType }
+hastype { DocuExpression, DocuType, CalcFunction, Parameter }
 
 // Which type does an expression have?
 TypeRef {
