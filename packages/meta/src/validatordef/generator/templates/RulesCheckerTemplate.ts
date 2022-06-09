@@ -239,7 +239,7 @@ export class RulesCheckerTemplate {
         }
         //
         if (message.length === 0) {
-            message = `\`The value of property '${listpropertyName}' (\"\${elem.name}\") is not unique in list '${listName}'\``;
+            message = `\`The value of property '${listpropertyName}' (\"\${this.myWriter.writeNameOnly(elem.${listpropertyTypescript})}\") is not unique in list '${listName}'\``;
         }
         return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
         ${GenerationUtil.langExpToTypeScript(rule.list)}.forEach((elem, index) => {
