@@ -10,6 +10,7 @@ export class ReaderTemplate {
      */
     public generateReader(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
         const semanticAnalyser: string = Names.semanticAnalyser(language);
+        const syntaxAnalyser: string = Names.syntaxAnalyser(language);
 
         // Template starts here
         return `
@@ -28,16 +29,20 @@ export class ReaderTemplate {
         *   modelunits. 
         */
         export class ${Names.reader(language)} implements ${Names.PiReader} {
-            parser: LanguageProcessor = Agl.processorFromString(${Names.grammarStr(language)}, new ${Names.syntaxAnalyser(language)}(), null, null);
+            analyser: ${syntaxAnalyser} = new ${syntaxAnalyser}();
+            parser: LanguageProcessor = Agl.processorFromString(${Names.grammarStr(language)}, this.analyser, null, null);
 
             /**
              * Parses and performs a syntax analysis on 'sentence', using the parser and analyser
              * for 'metatype', if available. If 'sentence' is correct, a model unit will be created, 
              * otherwise an error wil be thrown containing the parse or analysis error.
-             * @param sentence
-             * @param metatype
+             * @param sentence      the input string which will be parsed
+             * @param metatype      the type of the unit to be created
+             * @param model         the model to which the unit will be added
+             * @param sourceName    the (optional) name of the source that contains 'sentence'
              */
-            readFromString(sentence: string, metatype: ModelUnitMetaType, model: ${Names.classifier(language.modelConcept)}): ${Names.modelunit(language)} {
+            readFromString(sentence: string, metatype: ModelUnitMetaType, model: ${Names.classifier(language.modelConcept)}, sourceName?: string): ${Names.modelunit(language)} {
+                this.analyser.sourceName = sourceName;
                 let startRule: string = "";
                 // choose the correct parser                
                 ${language.units.map(unit =>
@@ -58,7 +63,7 @@ export class ReaderTemplate {
                         unit = asm as ${Names.modelunit(language)};
                     } catch (e) {
                         // strip the error message, otherwise it's too long for the webapp
-                        let mess = e.message.replace("Could not match goal,", "Parse error");
+                        let mess = e.message.replace("Could not match goal,", "Parse error in " + sourceName + ":");
                         if (!!mess && mess.length > 0) {
                             console.log(mess);
                             throw new Error(mess);

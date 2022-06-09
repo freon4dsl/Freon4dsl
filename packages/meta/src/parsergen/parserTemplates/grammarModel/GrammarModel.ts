@@ -96,7 +96,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         *   
         */
         export class ${className} implements SyntaxAnalyser {
-            filename: string = "";
+            sourceName: string = "";
             locationMap: any;
             ${this.parts.map(part => `private ${this.getPartAnalyserName(part)}: ${Names.unitAnalyser(this.language, part.unit)} = new ${Names.unitAnalyser(this.language, part.unit)}(this)`).join(";\n")}
         
@@ -125,7 +125,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                             throw e;
                         } else {
                             // add more info to the error message 
-                            throw new Error(\`Syntax error in "\${node?.matchedText.trimEnd()}": \${e.message}\`);
+                            throw new Error(\`Syntax error in "\${this.sourceName} (line: \${node.location.line}, column: \${node.location.column})": \${e.message}\`);
                         }
                         // console.log(e.message + e.stack);
                     }
@@ -275,7 +275,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             
             public location(branch: SPPTBranch): PiParseLocation {
                 const location = PiParseLocation.create({
-                    filename: this.filename,
+                    filename: this.sourceName,
                     line: branch.location.line,
                     column: branch.location.column
                 });

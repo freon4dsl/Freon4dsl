@@ -289,7 +289,7 @@ export class EditorState {
         let unit: PiModelUnit = null;
         try {
             // the following also adds the new unit to the model
-            unit = editorEnvironment.reader.readFromString(content, metaType, this.currentModel) as PiModelUnit;
+            unit = editorEnvironment.reader.readFromString(content, metaType, this.currentModel, fileName) as PiModelUnit;
             if (!!unit) {
                 // if the element does not yet have a name, try to use the file name
                 if (!unit.name || unit.name.length === 0) {

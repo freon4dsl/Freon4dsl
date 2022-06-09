@@ -1,4 +1,5 @@
 import { PiOwnerDescriptor } from "./PiOwnerDescriptor";
+import { PiParseLocation } from "../reader";
 
 /**
  * You can either directly implement these interfaces, or use `Module Augmentation`,
@@ -22,4 +23,6 @@ export interface PiElement {
     piIsBinaryExpression(): boolean;
 
     match(toBeMatched: Partial<PiElement>): boolean;
+
+    parse_location: PiParseLocation;    // if relevant, the location of this element within the source from which it is parsed`;
 }

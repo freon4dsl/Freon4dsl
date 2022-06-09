@@ -1,6 +1,7 @@
 import { MobxModelElementImpl } from "../../ast/decorators/DecoratedModelElement";
 import { PiElement } from "../../ast";
 import { Box } from "./Box";
+import { PiParseLocation } from "../../reader";
 
 export class DummyBox extends Box {
     kind = "DummyBox";
@@ -38,5 +39,7 @@ export class DummyElement extends MobxModelElementImpl implements PiElement {
     match(toBeMatched: Partial<PiElement>): boolean {
         return false;
     }
+
+    parse_location: PiParseLocation;
 
 }

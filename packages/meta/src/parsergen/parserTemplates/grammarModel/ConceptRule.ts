@@ -50,7 +50,10 @@ export class ConceptRule extends GrammarRule {
                     ${myProperties.map(prop => `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)}`).join(";\n")}
                     const children = this.${mainAnalyserName}.getChildren(branch);` +  // to avoid an extra newline in the result
             `${this.ruleParts.map((part, index) => `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}      
-                    return ${Names.classifier(this.concept)}.create({${myProperties.map(prop => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}});
+                    return ${Names.classifier(this.concept)}.create({
+                        ${myProperties.map(prop => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}
+                        ${myProperties.length > 0 ? ',' : ''} parse_location: this.${mainAnalyserName}.location(branch)
+                    });
                 }`;
     }
 
