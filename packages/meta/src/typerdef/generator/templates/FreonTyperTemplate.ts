@@ -219,14 +219,6 @@ export class FreonTyperTemplate {
                 // no result from custom typers => use the generated typer
                 return this.generatedTyper.getSuperTypes(type);
             }
-
-            public metaTypeOk(element: PiElement, requestedType: string): boolean {
-                const metatype = element.piLanguageConcept();
-                if (metatype === requestedType || Language.getInstance().subConcepts(requestedType).includes(metatype)) {
-                    return true;
-                }
-                return false;
-            }
     
             /**
              * Returns a list of types: one for each element of 'inlist',

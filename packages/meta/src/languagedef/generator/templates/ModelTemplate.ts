@@ -49,8 +49,7 @@ export class ModelTemplate {
             }`
         ).join("\n")}
                     if (!!result && !!metatype) {
-                        const myMetatype = result.piLanguageConcept();
-                        if (myMetatype === metatype || Language.getInstance().subConcepts(metatype).includes(myMetatype)) {
+                        if (Language.getInstance().metaConformsToType(result, metatype)) {
                             return result;
                         }
                     } else {
