@@ -10,7 +10,7 @@
           PiUtils,
           styleToCSS,
           toPiKey,
-          GridCellBox, Box, PiCommand, PI_NULL_COMMAND, PiPostAction
+          GridCellBox, Box, PiCommand, PI_NULL_COMMAND, PiPostAction, GridOrientation, BoxTypeName
      } from "@projectit/core";
      import { autorun, runInAction } from "mobx";
     import { afterUpdate } from "svelte";
@@ -61,23 +61,26 @@
 
     let row: string;
     let column: string;
-    let boxStyle: string = "";
     let int: number = 0;
+    let orientation: BoxTypeName = "gridcellNeutral";
+    let isHeader = "noheader"
     autorun(() => {
         $boxStore = cellBox.box;
         LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);
         row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
         column = cellBox.column + (cellBox.columnSpan ? " / span " + cellBox.columnSpan : "");
-        const gridStyle = `grid-row: ${row}; grid-column: ${column};`;
-        const orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ?"gridcellOdd" : "gridcellEven" )));
-        boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, cellBox.box.element.piLanguageConcept(), orientation, cellBox.style)) + gridStyle;
+        orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ?"gridcellOdd" : "gridcellEven" )));
+        if(cellBox.isHeader) {
+             isHeader = "gridcell-header";
+        }
     });
 
 </script>
 
 <div
-        class="gridcellcomponent"
-        style={boxStyle}
+        class="gridcellcomponent {orientation} {isHeader}"
+        style:grid-row="{row}"
+        style:grid-column="{column}"
         onClick={onCellClick}
         on:keydown={onKeydown}
 >
@@ -92,5 +95,7 @@
         color: magenta;
          padding: var(--freon-gridcell-component-padding, 1px);
          padding: var(--freon-gridcell-component-margin, 1px);
+         background-color: var(--freon-gridcell-component-background-color, white);
+         color: var(--freon-gridcell-component-color, inherit);
     }
 </style>

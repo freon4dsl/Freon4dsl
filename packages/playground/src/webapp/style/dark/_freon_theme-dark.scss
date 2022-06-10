@@ -60,12 +60,13 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   /* Dropdown colors */
   --freon-dropdownitem-component-color: #{theme.$blue-900};
   --freon-dropdown-component-background-color: #{theme.$surface};
+  --freon-dropdown-component-color: inherit;
   --freon-dropdown-component-border-color: #{theme.$blue-900};
   --freon-dropdownitem-component-border-color: #{theme.$blue-900};
 
   /* Selectable */
-  --freon-colors-bg_selected: rgba(211, 227, 253, 255);
-  --freon-colors-border_selected: #{theme.$blue-900};
+  --freon-selected-background-color: rgba(211, 227, 253, 255);
+  --freon-selected-outline-color: #{theme.$blue-900};
   --freon-text-component-color: #{theme.$blue-900};
 
 

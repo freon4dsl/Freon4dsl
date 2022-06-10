@@ -348,7 +348,7 @@
     };
 
 
-    let textStyle: string = "";
+    let boxType: string = "";
 
     autorun(() => {
         AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "] isEditing [" + isEditing + "]");
@@ -360,13 +360,11 @@
         // }
         // textStyle = ":before {" +  styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style)) + "}";
         // TODO check these style calcs for each situation
-        const boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
+        boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
         // const boxStyle = (textBox.parent instanceof AliasBox ? textBox.parent.style : (textBox.parent instanceof SelectBox ? textBox.parent.style : textBox.style));
-        textStyle = styleToCSS(conceptStyle(editor.style, editor.theme, textBox.element.piLanguageConcept(), boxType, textBox.style));
         // if (textBox.getText() === "appel") {
         //     textStyle += "--freon-colors-bg_text_box: lightgrey;"
         // }
-
         textBox.setFocus = setFocus;
     });
 
@@ -379,8 +377,7 @@
 
 </script>
 
-<span class="text {textBox.role}"
-      style="{textStyle}"
+<span class="{textBox.role} text-box-{boxType} text"
       tabindex="0"
       data-placeholdertext={placeholder}
       on:keypress={onKeyPress}
@@ -398,7 +395,7 @@
     .text:empty:before {
         content: attr(data-placeholdertext);
         color: var(--freon-text-component-color, blue);
-        background-color: var(--freon-colors-backgroundcolor_text_box, inherit);
+        background-color: var(--freon-text-component-background-color, inherit);
         font-family: var(--freon-text-component-font-family, "Arial");
         font-size: var(--freon-text-component-font-size, 14pt);
         font-weight: var(--freon-text-component-font-weight, inherit);
@@ -414,7 +411,7 @@
     .text {
         content: attr(data-placeholdertext);
         color: var(--freon-text-component-color, blue);
-        background-color: var(--freon-colors-backgroundcolor_text_box, inherit);
+        background-color: var(--freon-text-component-background-color, inherit);
         font-family: var(--freon-text-component-font-family, "Arial");
         font-size: var(--freon-text-component-font-size, 14pt);
         font-weight: var(--freon-text-component-font-weight, inherit);

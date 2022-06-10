@@ -65,7 +65,7 @@ expression ParameterRef base DocuExpression {
 }
 
 // Refers to a property of a parameter or of an InsuranceProduct
-abstract concept AttributeRef { // base DocuExpression {
+abstract concept AttributeRef {
     name: identifier;               // the name of the property of the parameter
 }
 

@@ -40,32 +40,12 @@
         // NOTE: Triggers autorun whenever an element is added or delete from the list
         svNotifier.notifyChange();
     });
-    // Local Variables
-    let gridStyle;
-    let cssGrgVars: string;
     autorun(() => {
         LOGGER.log("AUtorun list")
         svNotifier.dummy
         svList = list;
         children = [...list.children];
         list.setFocus = setFocus;
-
-        const nrOfBoxes = svList.children.length;
-        gridStyle =
-            isHorizontalBox(svList)
-                ? {
-                    gridTemplateColumns: "repeat(" + nrOfBoxes + ", auto)",
-                }
-                : {
-                    gridTemplateRows: "repeat(" + nrOfBoxes + ", auto)",
-                    gridTemplateColumns: "repeat(1, auto)",
-                    backgroundColor: "green"
-                };
-        cssGrgVars = `--pi-list-grid-template-rows:   ${gridStyle.gridTemplateRows};
-                      --pi-list-grid-template-columns:${gridStyle.gridTemplateColumns};
-                     `
-        // useless, list has no contents!
-        + styleToCSS(conceptStyle(editor.style, editor.theme, list.element.piLanguageConcept(), "list", list.style));
     });
 
     // TODO Empty vertical list gives empty line, try to add entities in the example.
@@ -87,7 +67,6 @@
 </script>
 
 <span class="list-component"
-      style="{cssGrgVars}"
       on:click
       on:focus={onFocusHandler}
       on:blur={onBlurHandler}

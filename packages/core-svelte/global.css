@@ -1,56 +1,65 @@
 :root {
 	/* Projectional Editor "globals" */
-	--freon-dropdown-component-background-color: lightblue;
-	--freon-dropdown-component-border-color: darkblue;
-	--freon-dropdownitem-component-color: darkblue;
-	--freon-dropdownitem-component-border-color: darkblue;
 	--freon-colors-inverse_color: #d3e3fd;  /* Text color on non_normal background */
+
 	--freon-editor-component-background-color: white;		/* The background color of the editor */
 	--freon-editor-component-color: darkblue;	/* The color of the text, unless set otherwise by the projection */
 	--freon-editor-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
 	--freon-editor-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
 	--freon-editor-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
 	--freon-editor-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
+	--freon-editor-component-padding: 0px;
+	--freon-editor-component-margin: 0px;
+
+	--freon-dropdown-component-background-color: lightblue;
+	--freon-dropdown-component-color: blue;
+	--freon-dropdownitem-component-background-color: inherit;
+	--freon-dropdownitem-component-selected-color: inherit;
+	--freon-dropdownitem-component-selected-background-color: inherit;
+	--freon-dropdownitem-component-hover-color: inherit;
+	--freon-dropdownitem-component-hover-background-color: inherit;
+	--freon-dropdown-component-border-color: darkblue;
+	--freon-dropdownitem-component-color: darkblue;
+	--freon-dropdownitem-component-border-color: darkblue;
+
+	/* Selectable */
+	--freon-selected-background-color: rgba(211, 227, 253, 255);
+	--freon-selected-outline-color: darkblue;
+
+	/* Others */
+	--freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 
 	--freon-text-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
 	--freon-text-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
 	--freon-text-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
 	--freon-text-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
-	--freon-fonts-size_label_component: 14px;		/* The font size of the text, unless set otherwise by the projection */
+	--freon-text-component-padding: 0px;
+	--freon-text-component-margin: 0px;
+	--freon-text-component-color: darkblue;
+	--freon-text-component-background-color: white;
+
 	--freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
 	--freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
 	--freon-label-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
-	/* Selectable */
-	--freon-colors-bg_selected: rgba(211, 227, 253, 255);
-	--freon-colors-border_selected: darkblue;
-	--freon-text-component-color: darkblue;
-
-	--freon-colors-backgroundcolor_text_box: white;
-	--freon-label-component-background-color: inherit;
-	/* Others */
-	--freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-
-	--freon-text-component-padding: 0px;
-	--freon-label-component-padding: 0px;
-	--freon-horizontallist-component-padding: 0px;
-	--freon-verticallist-component-padding: 0px;
-	--freon-editor-component-padding: 0px;
-	--freon-label-component-font-weight: normal;
-	--freon-text-component-font-weight: normal;
-	--freon-text-component-font-style: normal;
-	--freon-label-component-font-style: normal;
 	--freon-label-component-font-size: inherit;
+	--freon-label-component-margin: 0px;
+	--freon-label-component-padding: 0px;
+	--freon-label-component-color: black;
+	--freon-label-component-background-color: inherit;
+
+
 
 	--freon-gridcell-component-padding:inherit;
 	--freon-gridcell-component-margin: inherit;
+	--freon-gridcell-component-background-color: inherit;
+	--freon-gridcell-component-color: inherit;
 
-	--freon-text-component-margin: 0px;
-	--freon-label-component-margin: 0px;
 	--freon-horizontallist-component-margin: 0px;
-	--freon-verticallist-component-margin: 0px;
-	--freon-editor-component-margin: 0px;
+	--freon-horizontallist-component-padding: 0px;
 
-	--freon-label-component-color: black;
+	--freon-verticallist-component-padding: 0px;
+	--freon-verticallist-component-margin: 0px;
+
 }
 
 html, body {

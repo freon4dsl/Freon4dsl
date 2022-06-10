@@ -47,6 +47,15 @@
   /* SplitPane divider */
   --freon-colors-slider: #{theme.$on-secondary};    /* The color of the slider between the error/search pane and the editor */
 }
+.text-box-alias {
+  --freon-text-component-color: red;
+}
+.text-box-select {
+  --freon-text-component-color: green;
+}
+.text-box-text {
+  --freon-text-component-color: blue;
+}
 
 /* The following are CSS variables that are used in the editor part of Freon, i.e. in the package 'core-svelte'. */
 /* Change the values as you like. */
@@ -55,8 +64,8 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 .editor-part {
   box-sizing: border-box;
   /* Selectable */
-  --freon-colors-bg_selected: rgba(211, 227, 253, 255);
-  --freon-colors-border_selected: #{theme.$blue-900};
+  --freon-selected-background-color: rgba(211, 227, 253, 255);
+  --freon-selected-outline-color: #{theme.$blue-900};
   /* Normal text colors */
   //--freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
   --freon-editor-component-background-color: #{theme.$surface};              /* The background color of the editor */
@@ -66,13 +75,20 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   /* Fonts */
   --freon-editor-component-font-family: "Roboto";    /* The font family of the text, unless set otherwise by the projection */
   --freon-editor-component-font-size: 14px;          /* The font size of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-style: normal;       /* The font style of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-weight: normal;      /* The font weight of the text, unless set otherwise by the projection */
+  --freon-editor-component-font-style: bold;       /* The font style of the text, unless set otherwise by the projection */
+  --freon-editor-component-font-weight: bold;      /* The font weight of the text, unless set otherwise by the projection */
   /* Dropdown colors */
   --freon-dropdown-component-border-color: #{theme.$blue-900};
   --freon-dropdown-component-background-color: #{theme.$surface};
+  --freon-dropdown-component-color: inherit;
+
   --freon-dropdownitem-component-color: #{theme.$blue-900};
+  --freon-dropdownitem-component-background-color: inherit;
   --freon-dropdownitem-component-border-color: #{theme.$blue-900};
+  --freon-dropdownitem-component-selected-color: inherit;
+  --freon-dropdownitem-component-selected-background-color: inherit;
+  --freon-dropdownitem-component-hover-color: inherit;
+  --freon-dropdownitem-component-hover-background-color: inherit;
 
   --freon-text-component-color: #{theme.$blue-900};
   --freon-text-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
@@ -85,8 +101,8 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-label-component-color: black;
   --freon-label-component-background-color: inherit;
   --freon-label-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-font-style: bold;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-font-weight: bold;	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-padding: 0px 1px 0px 1px;
   --freon-label-component-margin: 1px;
@@ -103,11 +119,23 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 
 }
 
+.gridcellOdd {
+  --freon-gridcell-component-background-color: #{theme.$grey-300};
+}
+.gridcellEven {
+  --freon-gridcell-component-background-color: transparent;
+}
+.gridcell-header {
+  --freon-gridcell-component-background-color: #{theme.$grey-500};
+}
 .Rules-name-textbox, .CheckingRule-name-textbox {
-  --freon-colors-backgroundcolor_text_box: lightgreen;
+  --freon-text-component-background-color: lightgreen;
 }
 .Entity-name-textbox {
-  --freon-colors-backgroundcolor_text_box: lightgreen;
+  --freon-text-component-background-color: lightgreen;
+}
+.StringLiteralExpression-value-textbox {
+  --freon-text-component-color: green;
 }
 
 .\/\*, .\*\/ {
@@ -123,7 +151,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-label-component-color: red;
 }
 .alias-SetValue-attribute-referencebox-textbox {
-  --freon-colors-backgroundcolor_text_box: orange;
+  --freon-text-component-background-color: orange;
 }
 
 .\,, .\%, .\. {

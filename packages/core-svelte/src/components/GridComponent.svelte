@@ -29,7 +29,7 @@
     let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(gridBox.cells);
     let templateColumns: string;
     let templateRows: string;
-    let boxStyle = ""
+
     const onKeydown = (event: KeyboardEvent) => {
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === KEY_ENTER) {
@@ -58,16 +58,13 @@
 
         templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
         templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
-        boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, gridBox.element.piLanguageConcept(), "grid", gridBox.style));
 
     });
 </script>
 
 <div
-        style=" grid-template-columns: {templateColumns};
-                grid-template-rows: {templateRows};
-                {boxStyle}
-              "
+        style:grid-template-columns="{templateColumns}"
+        style:grid-template-rows="{templateRows}"
         class="maingridcomponent"
         on:keydown={onKeydown}
 >
