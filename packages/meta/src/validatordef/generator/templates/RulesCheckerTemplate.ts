@@ -234,12 +234,14 @@ export class RulesCheckerTemplate {
         const listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature);
         //
         let refAddition: string = '';
+        let howToWriteName: string = 'this.myWriter.writeNameOnly(elem)';
         if (!rule.list.findRefOfLastAppliedFeature().isPart) { // the elements in the list are all PiElementReferences
             refAddition += ".referred";
+            howToWriteName = 'elem.name'; // if the list element is a reference there is no need to call the writer
         }
         //
         if (message.length === 0) {
-            message = `\`The value of property '${listpropertyName}' (\"\${this.myWriter.writeNameOnly(elem)}\") is not unique in list '${listName}'\``;
+            message = `\`The value of property '${listpropertyName}' (\"\${${howToWriteName}}\") is not unique in list '${listName}'\``;
         }
         return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
         ${GenerationUtil.langExpToTypeScript(rule.list)}.forEach((elem, index) => {
