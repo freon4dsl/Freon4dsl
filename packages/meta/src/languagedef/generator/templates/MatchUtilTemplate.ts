@@ -1,9 +1,9 @@
 import { PiLanguage } from "../../metalanguage";
-import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names } from "../../../utils";
 
 export class MatchUtilTemplate {
 
-    generateMatchUtil(language: PiLanguage, relativePath: string): string {
+    generateMatchUtil(): string {
         const generatedClassName: String = Names.matchUtil;
 
         // TODO JOS: do we need the <T extends PiNamedElement> here?
