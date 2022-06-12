@@ -54,6 +54,8 @@
 	import { muteLogs } from "./logging/LoggerSettings";
 	import FreonContent from "./FreonContent.svelte";
 	import StatusBar from "./components/editor-panel/StatusBar.svelte";
+	import { editorEnvironment } from "./config/WebappConfiguration";
+
 
 	muteLogs();
 
@@ -75,6 +77,7 @@
 		document.head
 				.querySelector<HTMLLinkElement>("link[href$=\"/site-dark.css\"]")
 				?.insertAdjacentElement("afterend", themeLink);
+		editorEnvironment.editor.theme = lightTheme ? "light" : "dark";
 	}
 
 	onMount(async () => {

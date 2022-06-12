@@ -47,7 +47,9 @@
 	--freon-label-component-color: black;
 	--freon-label-component-background-color: inherit;
 
-
+	--freon-grid-component-border-color: inherit;
+	--freon-grid-component-border-width: inherit;
+	--freon-grid-component-border-style: inherit;
 
 	--freon-gridcell-component-padding:inherit;
 	--freon-gridcell-component-margin: inherit;

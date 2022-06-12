@@ -63,7 +63,10 @@
     let column: string;
     let int: number = 0;
     let orientation: BoxTypeName = "gridcellNeutral";
-    let isHeader = "noheader"
+    let isHeader = "noheader";
+     let cssStyle : string = "";
+     let cssClass : string = "";
+
     autorun(() => {
         $boxStore = cellBox.box;
         LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);
@@ -73,14 +76,17 @@
         if(cellBox.isHeader) {
              isHeader = "gridcell-header";
         }
+        cssStyle = $boxStore.cssStyle;
+        cssClass = cellBox.cssClass;
     });
 
 </script>
 
 <div
-        class="gridcellcomponent {orientation} {isHeader}"
+        class="gridcellcomponent {orientation} {isHeader} {cssClass}"
         style:grid-row="{row}"
         style:grid-column="{column}"
+        style="{cssStyle}"
         onClick={onCellClick}
         on:keydown={onKeydown}
 >
@@ -92,10 +98,9 @@
         box-sizing: border-box;
         align-self: stretch;
         display: flex;
-        color: magenta;
-         padding: var(--freon-gridcell-component-padding, 1px);
-         padding: var(--freon-gridcell-component-margin, 1px);
-         background-color: var(--freon-gridcell-component-background-color, white);
-         color: var(--freon-gridcell-component-color, inherit);
+        padding: var(--freon-gridcell-component-padding, 1px);
+        padding: var(--freon-gridcell-component-margin, 1px);
+        background-color: var(--freon-gridcell-component-background-color, white);
+        color: var(--freon-gridcell-component-color, inherit);
     }
 </style>

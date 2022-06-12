@@ -8,8 +8,7 @@ import {
     GridBox,
     GridOrientation,
     isAliasBox, PiCustomAction,
-    PiEditor,
-    PiStyle
+    PiEditor
 } from "../index";
 import { PiElement } from "../../ast";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'

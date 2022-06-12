@@ -52,20 +52,21 @@
         }
 
     };
+    let cssClass: string = "";
     autorun(() => {
         $cells = [...gridBox.cells];
         length = $cells.length;
 
         templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
         templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
-
+        cssClass = gridBox.cssClass;
     });
 </script>
 
 <div
         style:grid-template-columns="{templateColumns}"
         style:grid-template-rows="{templateRows}"
-        class="maingridcomponent"
+        class="maingridcomponent {cssClass}"
         on:keydown={onKeydown}
 >
     {#each $cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid" + "-" + notifier.dummy)}
@@ -80,8 +81,8 @@
         align-items: center;
         align-content: center;
         justify-items: stretch;
-        border: darkgreen;
-        border-width: 1pt;
-        border-style: solid;
+        border-color: var(--freon-grid-component-border-color, darkgreen);
+        border-width: var(--freon-grid-component-border-width, 1pt);
+        border-style: var(--freon-grid-component-border-style, solid);
     }
 </style>

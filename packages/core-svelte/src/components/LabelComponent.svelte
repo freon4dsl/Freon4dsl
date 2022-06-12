@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
-    import { conceptStyle, LabelBox, PiLogger, styleToCSS, type PiEditor } from "@projectit/core";
+    import { LabelBox, PiLogger, styleToCSS, type PiEditor } from "@projectit/core";
     import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
 
     export let label;// = new LabelBox(null, "boxRole", "This is a box");
@@ -37,14 +37,16 @@
         FOCUS_LOGGER.log("onBlur for box " + label.role);
     }
     let style: string;
+    let cssClass: string;
 
     autorun( () => {
         text = label.getLabel();
-        $: style = styleToCSS(conceptStyle(editor.style, editor.theme, label.element.piLanguageConcept(), "label", label.style));
+        style = label.cssStyle;
+        cssClass = label.cssClass
     });
 </script>
 
-<div class="label {text}"
+<div class="label {text} {cssClass}"
      style="{style}"
      tabIndex={0}
      on:focus={onFocusHandler}

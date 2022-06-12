@@ -1,12 +1,11 @@
 import {
-    AliasBox,
     Box,
     HorizontalListBox,
     isHorizontalBox,
     SelectBox,
     SelectOption,
     PiEditor,
-    triggerToString, PiStyle, BoxFactory
+    triggerToString, BoxFactory
 } from "../editor";
 import { PiBinaryExpression, PiExpression } from "../ast";
 import { Language } from "../language";
@@ -93,9 +92,9 @@ export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, 
  * @param editor
  * @param exp
  * @param symbol
- * @param style
+ * @param cssStyle
  */
-export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, symbol: string, style?: PiStyle): Box {
+export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, symbol: string, cssStyle?: string): Box {
     const operatorBox = new SelectBox(
         exp,
         EXPRESSION_SYMBOL,
@@ -134,7 +133,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
             return BehaviorExecutionResult.NO_MATCH;
         },
         {
-            style: style
+            cssStyle: cssStyle
         }
     );
 

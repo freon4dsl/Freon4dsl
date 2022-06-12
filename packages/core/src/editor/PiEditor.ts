@@ -11,7 +11,7 @@ import {
     isSelectBox,
     isTextBox,
     Box,
-    PiActions, PiEditorStyle
+    PiActions
 } from "./internal";
 
 const LOGGER = new PiLogger("PiEditor");
@@ -21,7 +21,6 @@ export class PiEditor {
     readonly actions?: PiActions;
     readonly projection: PiProjection;
     new_pi_actions: PiAction[]= [];
-    style: PiEditorStyle = { global: { dark: {}, light: {}}};
     theme: string = "light";
 
     private $rootBox: Box | null = null;
