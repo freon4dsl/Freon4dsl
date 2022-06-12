@@ -32,7 +32,7 @@ grammar ${Names.grammar(this.language)} {
                 
 ${this.grammarContent()}   
 
-__pi_reference = [ identifier / '${this.refSeparator}' ]+ ;
+${refRuleName} = [ identifier / '${this.refSeparator}' ]+ ;
         
 // white space and comments
 skip WHITE_SPACE = "\\\\s+" ;
@@ -198,7 +198,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 return group;
             }
               
-            public transform__pi_reference(branch: SPPTBranch){
+            public transform${refRuleName}(branch: SPPTBranch){
                 if (branch.name.includes("multi") || branch.name.includes("List")) { // its a path name
                     return this.${internalTransformList}<string>(branch, "${this.refSeparator}");
                 } else { // its a single name
