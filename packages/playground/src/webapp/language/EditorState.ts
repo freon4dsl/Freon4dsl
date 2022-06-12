@@ -23,6 +23,7 @@ import { editorEnvironment, serverCommunication } from "../config/WebappConfigur
 import {
     modelErrors,
 } from "../components/stores/InfoPanelStore";
+import { ServerCommunication } from "../server/ServerCommunication";
 
 const LOGGER = new PiLogger("EditorState"); // .mute();
 
@@ -188,6 +189,18 @@ export class EditorState {
         }
     }
 
+    async renameModelUnit(unit: PiModelUnit, newName: string) {
+        console.log("Units before: " + this.currentModel.getUnits().map(u => u.name));
+        const oldName: string = unit.name;
+        // if (unit === this.currentUnit) {
+        //     await this.saveCurrentUnit();
+        // }
+        unit.name = newName;
+        ServerCommunication.getInstance().renameModelUnit(this.currentModel.name, oldName, newName, unit);
+        this.setUnitLists();
+        console.log("Units after: " + this.currentModel.getUnits().map(u => u.name));
+    }
+
     /**
      * Deletes the unit 'unit', from the server and from the current in-memory model
      * @param unit
@@ -218,7 +231,9 @@ export class EditorState {
      */
     private setUnitLists() {
         LOGGER.log("setUnitLists");
-        units.set(this.currentModel.getUnits());
+        const unitsInModel = this.currentModel.getUnits();
+        unitNames.set(unitsInModel.map(u => u.name));
+        units.set(unitsInModel);
     }
 
     /**
