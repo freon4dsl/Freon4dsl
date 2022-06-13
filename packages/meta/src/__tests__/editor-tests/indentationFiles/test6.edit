@@ -1,0 +1,16 @@
+editor default
+// the same input as test1, but now with optional sub projections
+
+CC {
+[
+                text1
+        [?
+        ${CCprop8}
+        ]
+       text2
+   [?
+       innertext
+ ${CCprop10}
+more text
+   ]
+]}
