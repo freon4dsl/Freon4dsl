@@ -222,7 +222,7 @@ export class FreonTyperPartTemplate {
             private getElemFromAstType(type: PiType, metatype: string): PiElement {
                 if (type.$typename === "AstType") {
                     const astElement: PiElement = (type as AstType).astElement;
-                    if (astElement.piLanguageConcept() === metatype || Language.getInstance().subConcepts(metatype).includes(astElement.piLanguageConcept())) {
+                    if (Language.getInstance().metaConformsToType(astElement, metatype)) {
                         return astElement;
                     }
                 }

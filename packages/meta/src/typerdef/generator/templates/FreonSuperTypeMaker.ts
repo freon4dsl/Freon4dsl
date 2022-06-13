@@ -41,7 +41,7 @@ export class FreonSuperTypeMaker {
             const foundRule: PitEqualsRule = conformanceRules.find(conRule => conRule.owner.myClassifier === type);
             if (!!foundRule) {
                 if (!FreonTyperGenUtils.isType(foundRule.owner.myClassifier)) {
-                    astSubRules.push(`if (this.mainTyper.metaTypeOk(elem, "${myType}")) {
+                    astSubRules.push(`if (Language.getInstance().metaConformsToType(elem, "${myType}")) {
 
                     }`);
                 }
@@ -50,7 +50,7 @@ export class FreonSuperTypeMaker {
                 if (!!foundLimitedSpec) {
                     // make sub-entry for limited spec
                     const conformsExps: PitBinaryExp[] = foundLimitedSpec.rules.filter(r => r.exp instanceof PitConformsExp).map(r => r.exp as PitConformsExp);
-                    astSubRules.push(`if (this.mainTyper.metaTypeOk(elem, "${myType}")) {
+                    astSubRules.push(`if (Language.getInstance().metaConformsToType(elem, "${myType}")) {
                             ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
                         }`);
                     limitedSpecs.splice(limitedSpecs.indexOf(foundLimitedSpec), 1);
@@ -61,7 +61,7 @@ export class FreonSuperTypeMaker {
         limitedSpecs.map(spec => {
             const myType: string = Names.classifier(spec.myClassifier);
             const conformsExps: PitBinaryExp[] = spec.rules.filter(r => r.exp instanceof PitConformsExp).map(r => r.exp as PitConformsExp);
-            astSubRules.push(`if (this.mainTyper.metaTypeOk(elem, "${myType}")) {
+            astSubRules.push(`if (Language.getInstance().metaConformsToType(elem, "${myType}")) {
                 ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
             }`);
         });

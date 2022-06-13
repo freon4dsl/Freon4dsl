@@ -38,7 +38,8 @@ export class ConceptUtils {
 
     public static makeBasicProperties(metaType: string, conceptName: string, hasSuper: boolean): string {
         return `readonly $typename: ${metaType} = "${conceptName}";    // holds the metatype in the form of a string
-                ${!hasSuper ? "$id: string;     // a unique identifier" : ""}    `;
+                ${!hasSuper ? "$id: string;     // a unique identifier" : ""}    
+                parse_location: PiParseLocation;    // if relevant, the location of this element within the source from which it is parsed`;
     }
 
     public static makePrimitiveProperty(property: PiPrimitiveProperty): string {
@@ -231,17 +232,20 @@ export class ConceptUtils {
                 static create(data: Partial<${myName}>): ${myName} {
                     const result = new ${myName}();
                     ${concept.allProperties().map(property =>
-            `${(property.isList && !(property instanceof PiPrimitiveProperty)) ?
-                `if (!!data.${property.name}) {
-                                data.${property.name}.forEach(x =>
-                                    result.${property.name}.push(x)
-                                );
-                            }`
-                : `if (!!data.${property.name}) { 
-                                result.${property.name} = data.${property.name};
-                            }`
-            }`).join("\n")
-        }
+                        `${(property.isList && !(property instanceof PiPrimitiveProperty)) ?
+                            `if (!!data.${property.name}) {
+                                            data.${property.name}.forEach(x =>
+                                                result.${property.name}.push(x)
+                                            );
+                                        }`
+                            : `if (!!data.${property.name}) { 
+                                            result.${property.name} = data.${property.name};
+                                        }`
+                        }`).join("\n")
+                    }
+                    if (!!data.parse_location) {
+                        result.parse_location = data.parse_location;
+                    }
                     return result;
                 }`;
     }

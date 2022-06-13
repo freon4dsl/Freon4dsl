@@ -280,4 +280,18 @@ export class Language {
     addReferenceCreator(creator: (name: string, type: string) => any) {
         this.referenceCreator = creator;
     }
+
+    /**
+     * Returns true if the piLanguageConcept of 'element', i.e. its metatype,
+     * is the same as 'requestedType' or is a subtype of 'requestedType'.
+     * @param element
+     * @param requestedType
+     */
+    public metaConformsToType(element: PiElement, requestedType: string): boolean {
+        const metatype = element.piLanguageConcept();
+        if (metatype === requestedType || Language.getInstance().subConcepts(requestedType).includes(metatype)) {
+            return true;
+        }
+        return false;
+    }
 }

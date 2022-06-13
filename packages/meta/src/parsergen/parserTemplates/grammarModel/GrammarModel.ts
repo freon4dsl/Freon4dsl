@@ -32,7 +32,7 @@ grammar ${Names.grammar(this.language)} {
                 
 ${this.grammarContent()}   
 
-__pi_reference = [ identifier / '${this.refSeparator}' ]+ ;
+${refRuleName} = [ identifier / '${this.refSeparator}' ]+ ;
         
 // white space and comments
 skip WHITE_SPACE = "\\\\s+" ;
@@ -96,7 +96,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         *   
         */
         export class ${className} implements SyntaxAnalyser {
-            filename: string = "";
+            sourceName: string = "";
             locationMap: any;
             ${this.parts.map(part => `private ${this.getPartAnalyserName(part)}: ${Names.unitAnalyser(this.language, part.unit)} = new ${Names.unitAnalyser(this.language, part.unit)}(this)`).join(";\n")}
         
@@ -125,7 +125,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                             throw e;
                         } else {
                             // add more info to the error message 
-                            throw new Error(\`Syntax error in "\${node?.matchedText.trimEnd()}": \${e.message}\`);
+                            throw new Error(\`Syntax error in "\${this.sourceName} (line: \${node.location.line}, column: \${node.location.column})": \${e.message}\`);
                         }
                         // console.log(e.message + e.stack);
                     }
@@ -198,7 +198,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 return group;
             }
               
-            public transform__pi_reference(branch: SPPTBranch){
+            public transform${refRuleName}(branch: SPPTBranch){
                 if (branch.name.includes("multi") || branch.name.includes("List")) { // its a path name
                     return this.${internalTransformList}<string>(branch, "${this.refSeparator}");
                 } else { // its a single name
@@ -275,7 +275,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             
             public location(branch: SPPTBranch): PiParseLocation {
                 const location = PiParseLocation.create({
-                    filename: this.filename,
+                    filename: this.sourceName,
                     line: branch.location.line,
                     column: branch.location.column
                 });

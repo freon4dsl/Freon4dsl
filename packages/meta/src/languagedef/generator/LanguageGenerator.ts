@@ -32,6 +32,7 @@ import { ConfigurationTemplate } from "./templates/ConfigurationTemplate";
 import { ModelTemplate } from "./templates/ModelTemplate";
 import { UnitTemplate } from "./templates/UnitTemplate";
 import { MatchUtilTemplate } from "./templates/MatchUtilTemplate";
+import { ListUtilTemplate } from "./templates/ListUtilTemplate";
 
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
@@ -65,6 +66,7 @@ export class LanguageGenerator {
         const workerTemplate = new WorkerInterfaceTemplate();
         const defaultWorkerTemplate = new DefaultWorkerTemplate();
         const matchTemplate = new MatchUtilTemplate();
+        const listTemplate = new ListUtilTemplate();
         const configurationTemplate = new ConfigurationTemplate();
 
         // Prepare folders
@@ -160,8 +162,12 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.utilsGenFolder}/${Names.defaultWorker(language)}.ts`, defaultWorkerFile);
 
         LOGGER.log(`Generating match util: ${this.utilsGenFolder}/${Names.matchUtil}.ts`);
-        const matchFile = FileUtil.pretty(matchTemplate.generateMatchUtil(language, relativePath), "Match Util Class", generationStatus);
+        const matchFile = FileUtil.pretty(matchTemplate.generateMatchUtil(), "Match Util Class", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/${Names.matchUtil}.ts`, matchFile);
+
+        LOGGER.log(`Generating list util: ${this.utilsGenFolder}/${Names.listUtil}.ts`);
+        const listFile = FileUtil.pretty(listTemplate.generateListUtil(), "List Util Class", generationStatus);
+        fs.writeFileSync(`${this.utilsGenFolder}/${Names.listUtil}.ts`, listFile);
 
         LOGGER.log(`Generating utils index: ${this.utilsGenFolder}/index.ts`);
         const utilIndexFile = FileUtil.pretty(languageIndexTemplate.generateUtilsIndex(language), "Utils Index", generationStatus);

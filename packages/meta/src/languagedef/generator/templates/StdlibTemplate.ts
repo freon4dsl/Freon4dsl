@@ -1,5 +1,12 @@
 import { PiLanguage, PiLimitedConcept } from "../../metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, CONFIGURATION_FOLDER } from "../../../utils";
+import {
+    LANGUAGE_GEN_FOLDER,
+    Names,
+    PROJECTITCORE,
+    CONFIGURATION_FOLDER,
+    LANGUAGE_UTILS_FOLDER,
+    LANGUAGE_UTILS_GEN_FOLDER
+} from "../../../utils";
 
 export class StdlibTemplate {
     limitedConceptNames: string[] = [];
@@ -14,6 +21,7 @@ export class StdlibTemplate {
                     ${this.limitedConceptNames.map(name => `${name}`).join(", ") } 
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
+        import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.
@@ -43,7 +51,7 @@ export class StdlibTemplate {
             private constructor() {
                 ${this.constructorText}
                 for (const lib of projectitConfiguration.customStdLibs) {
-                    this.elements.push(...lib.elements);
+                    ListUtil.addAllIfNotPresent<PiNamedElement>(this.elements, lib.elements);
                 }
             }  
             
@@ -61,8 +69,7 @@ export class StdlibTemplate {
                     if (possibles.length !== 0) {
                         if (metatype) {
                             for (const elem of possibles) {
-                                const concept = elem.piLanguageConcept();
-                                if (concept === metatype || Language.getInstance().subConcepts(concept).includes(metatype)) {
+                                if (Language.getInstance().metaConformsToType(elem, metatype)) {
                                     return elem;
                                 }
                             }

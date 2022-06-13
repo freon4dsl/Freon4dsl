@@ -1,6 +1,7 @@
 
 // TODO rethink these interfaces
 import type { PiElement } from "@projectit/core";
+import { PiNamedElement } from "@projectit/core";
 // import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
 // export interface IModelUnitData {
@@ -30,6 +31,15 @@ export interface IServerCommunication {
      * @param unitName
      */
     deleteModelUnit(modelName: string, unitName: string);
+
+    /**
+     * Renames 'piUnit' in model with name 'modelName' to 'newName'.
+     * @param modelName
+     * @param oldName
+     * @param newName
+     * @param piUnit
+     */
+    renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: PiNamedElement) ;
 
     /**
      * Deletes the complete model with name 'modelName', including all its modelunits

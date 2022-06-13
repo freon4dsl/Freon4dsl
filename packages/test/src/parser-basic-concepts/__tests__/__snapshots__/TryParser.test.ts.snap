@@ -28,6 +28,10 @@ ExpressionTest {
         "$$propertyName": "left",
         "$id": "ID-2",
         "$typename": "StringLiteralEx",
+        "parse_location": PiParseLocation {
+          "column": 2,
+          "line": 4,
+        },
         "value": "literal1",
       },
       "_PI_right": StringLiteralEx {
@@ -36,7 +40,15 @@ ExpressionTest {
         "$$propertyName": "right",
         "$id": "ID-3",
         "$typename": "StringLiteralEx",
+        "parse_location": PiParseLocation {
+          "column": 39,
+          "line": 4,
+        },
         "value": "literal2",
+      },
+      "parse_location": PiParseLocation {
+        "column": 2,
+        "line": 4,
       },
     },
     MultiplyEx {
@@ -57,6 +69,10 @@ ExpressionTest {
           "$$propertyName": "left",
           "$id": "ID-5",
           "$typename": "NumberLiteralEx",
+          "parse_location": PiParseLocation {
+            "column": 2,
+            "line": 5,
+          },
           "value": 109,
         },
         "_PI_right": StringLiteralEx {
@@ -65,7 +81,15 @@ ExpressionTest {
           "$$propertyName": "right",
           "$id": "ID-6",
           "$typename": "StringLiteralEx",
+          "parse_location": PiParseLocation {
+            "column": 32,
+            "line": 5,
+          },
           "value": "literal3",
+        },
+        "parse_location": PiParseLocation {
+          "column": 2,
+          "line": 5,
         },
       },
       "_PI_right": BooleanLiteralEx {
@@ -74,11 +98,23 @@ ExpressionTest {
         "$$propertyName": "right",
         "$id": "ID-8",
         "$typename": "BooleanLiteralEx",
+        "parse_location": PiParseLocation {
+          "column": 69,
+          "line": 5,
+        },
         "value": true,
+      },
+      "parse_location": PiParseLocation {
+        "column": 2,
+        "line": 5,
       },
     },
   ],
   "_PI_normalEx": Array [],
   "name": "simpleExpressions",
+  "parse_location": PiParseLocation {
+    "column": 1,
+    "line": 1,
+  },
 }
 `;
