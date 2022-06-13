@@ -2,8 +2,6 @@ language PiLanguage
 
 // begin scoper definition
 modelunit PiScoperDef {
-    name: identifier;
-    languageName: string;
     reference namespaces: PiClassifier[];
     scopeConceptDefs: ScopeConceptDef[];
     file-extension = "scope";
@@ -16,11 +14,11 @@ concept ScopeConceptDef {
 }
 
 concept PiNamespaceAddition {
-    expressions: PiLangExp[];
+    expressions: PitExp[];
 }
 
 concept PiAlternativeScope {
-    expression: PiLangExp;
+    expression: PitExp;
 }
 
 // end scoper definition

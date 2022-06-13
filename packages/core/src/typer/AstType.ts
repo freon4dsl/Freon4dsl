@@ -1,6 +1,7 @@
 import { PiOwnerDescriptor, PiElement, PiNamedElement } from "../ast";
 import { PiWriter } from "../writer";
 import { PiType } from "./PiType";
+import { PiParseLocation } from "../reader";
 
 
 class NamedElement implements PiNamedElement {
@@ -58,6 +59,8 @@ class NamedElement implements PiNamedElement {
     match(toBeMatched: Partial<NamedElement>): boolean {
         return toBeMatched.name === this.name;
     }
+
+    parse_location: PiParseLocation;
 }
 
 export class AstType implements PiType {

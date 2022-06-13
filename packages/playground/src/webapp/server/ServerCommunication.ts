@@ -207,4 +207,13 @@ export class ServerCommunication implements IServerCommunication {
         LOGGER.error(this, errorMess);
         setUserMessage(errorMess);
     }
+
+    async renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: PiNamedElement) {
+        LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
+        // put the unit and its interface under the new name
+        this.putModelUnit(modelName, newName, piUnit);
+        // remove the old unit and interface
+        this.deleteModelUnit(modelName, oldName);
+    }
+
 }

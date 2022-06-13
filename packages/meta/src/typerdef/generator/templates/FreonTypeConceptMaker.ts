@@ -10,7 +10,7 @@ export class FreonTypeConceptMaker {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? `extends ${Names.classifier(concept.base.referred)}` : `implements ${this.piTypeName}`;
-        const coreImports: string[] = ["PiUtils", "PiWriter" ];
+        const coreImports: string[] = ["PiUtils", "PiWriter", "PiParseLocation" ];
         if (!hasSuper) {
             coreImports.push(this.piTypeName);
             coreImports.push("PiElement");

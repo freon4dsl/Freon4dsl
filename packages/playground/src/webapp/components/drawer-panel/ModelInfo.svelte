@@ -28,6 +28,9 @@
                                         <Item on:SMUI:action={() => (saveUnit(index))}>
                                             <Text>Save</Text>
                                         </Item>
+                                        <Item on:SMUI:action={() => (renameUnit(index))}>
+                                            <Text>Rename</Text>
+                                        </Item>
                                         <Item on:SMUI:action={() => (deleteUnit(index))}>
                                             <Text>Delete</Text>
                                         </Item>
@@ -56,11 +59,11 @@
 <script lang="ts">
     import List, { Group, Item, Text, Separator } from "@smui/list";
     import { unitTypes } from "../stores/LanguageStore";
-    import { currentUnitName, toBeDeleted, units } from "../stores/ModelStore";
+    import { currentUnitName, toBeDeleted, toBeRenamed, units } from "../stores/ModelStore";
     import type { MenuComponentDev } from "@smui/menu";
     import { Subtitle } from "@smui/drawer";
     import Menu from "@smui/menu";
-    import { deleteUnitDialogVisible } from "../stores/DialogStore";
+    import { deleteUnitDialogVisible, renameUnitDialogVisible } from "../stores/DialogStore";
     import { EditorState } from "../../language/EditorState";
     import { setUserMessage } from "../stores/UserMessageStore";
     import { ImportExportHandler } from "../../language/ImportExportHandler";
@@ -116,6 +119,12 @@
         } else {
             setUserMessage(`Unit '${$units[index].name}' has no changes.`, 0);
         }
+    };
+
+    const renameUnit = (index: number) => {
+        // console.log("ModelInfo.renameUnit: " + $units[index].name);
+        $toBeRenamed = $units[index];
+        $renameUnitDialogVisible = true;
     };
 
     const exportUnit = (index: number) => {

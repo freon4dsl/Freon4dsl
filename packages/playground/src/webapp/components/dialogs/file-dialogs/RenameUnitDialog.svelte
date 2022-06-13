@@ -1,27 +1,17 @@
 <Dialog
-        bind:open={$newUnitDialogVisible}
+        bind:open={$renameUnitDialogVisible}
         aria-labelledby="event-title"
         aria-describedby="event-content"
         on:SMUIDialog:closed={closeHandler}
         on:keydown={handleKeydown}
 >
-    <Title id="event-title">Create new unit</Title>
+    <Title id="event-title">Rename unit</Title>
     <Content id="event-content">
         <div>
             <br> <!-- br is here to make the label visible when it is moved to the top of the textfield -->
-            <Textfield variant="outlined" bind:invalid={nameInvalid} bind:value={newName} label="name of new unit">
+            <Textfield variant="outlined" bind:invalid={nameInvalid} bind:value={newName} label="new name of the unit">
                 <HelperText slot="helper">{helperText}</HelperText>
             </Textfield>
-            {#each $unitTypes as name}
-                <FormField >
-                    <Radio
-                            bind:group={typeSelected}
-                            value={name}
-                    />
-                    <span slot="label">{name}</span>
-                </FormField>
-            {/each}
-
         </div>
     </Content>
     <Actions>
@@ -29,7 +19,7 @@
             <Label>Cancel</Label>
         </Button>
         <Button variant="raised" action={submitStr} default>
-            <Label>Open</Label>
+            <Label>Rename</Label>
         </Button>
     </Actions>
 </Dialog>
@@ -39,12 +29,8 @@
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Textfield from "@smui/textfield";
     import HelperText from "@smui/textfield/helper-text";
-    import { unitNames } from "../../stores/ModelStore";
-    import { newUnitDialogVisible } from "../../stores/DialogStore";
-
-    import { unitTypes } from "../../stores/LanguageStore";
-    import Radio from "@smui/radio";
-    import FormField from "@smui/form-field";
+    import { toBeRenamed, unitNames } from "../../stores/ModelStore";
+    import { renameUnitDialogVisible } from "../../stores/DialogStore";
     import { EditorState } from "../../../language/EditorState";
     import * as Keys from "@projectit/core";
 
@@ -52,15 +38,14 @@
     const submitStr: string = "submit";
     const initialHelperText: string = "Enter a new name.";
 
-    let typeSelected: string = $unitTypes[0]; // initialize to the first type found
     let newName: string = "";
     let nameInvalid: boolean;
-    $: nameInvalid = newName.length > 0 ? !!typeSelected ? newNameInvalid() : newNameInvalid() : false;
+    $: nameInvalid = newName.length > 0 ? newNameInvalid() : false;
     let helperText: string = initialHelperText;
 
     function doSubmit() {
         if (!newNameInvalid()) {
-            EditorState.getInstance().newUnit(newName, typeSelected);
+            EditorState.getInstance().renameModelUnit($toBeRenamed, newName);
         }
     }
 
@@ -73,7 +58,6 @@
                 break;
             default:
                 // This means the user clicked the scrim or pressed Esc to close the dialog.
-                // The actions will be "close".
                 break;
         }
         resetVariables();
@@ -89,9 +73,6 @@
         } else if (!newName.match(/^[a-z,A-Z][a-z,A-Z0-9_]*$/)) {
             helperText = "Name may contain only characters and numbers, and must start with a character.";
             return true;
-        } else if (!(!!typeSelected && typeSelected.length > 0)) {
-            helperText = "Please, select the type of the unit below.";
-            return true;
         } else {
             helperText = initialHelperText;
             return false;
@@ -101,7 +82,7 @@
     function resetVariables() {
         newName = "";
         helperText = initialHelperText;
-        $newUnitDialogVisible = false;
+        $renameUnitDialogVisible = false;
     }
 
     const handleKeydown = (event) => {

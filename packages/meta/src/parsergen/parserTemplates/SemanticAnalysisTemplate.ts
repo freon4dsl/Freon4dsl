@@ -182,7 +182,7 @@ export class SemanticAnalysisTemplate {
                     let metatype: string = Names.classifier(type);
                     this.addToImports(type);
                     let propName: string = ref.name;
-                    result += `if (metatype === "${metatype}" || Language.getInstance().subConcepts("${metatype}").includes(metatype)) {
+                    result += `if (Language.getInstance().metaConformsToType(elem, "${metatype}")) {
                         replacement = ${toBeCreated}.create({ ${propName}: PiElementReference.create<${metatype}>(referredElem.name, metatype) });
                     } else `;
                 }

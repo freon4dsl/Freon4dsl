@@ -77,6 +77,7 @@ export class Names {
     // they all have to start with an uppercase character
     static matchUtil: string = "MatchUtil";
     static referenceSeparator: string = "/"; // TODO use value from editDef
+    static listUtil: string = "ListUtil";
     public static configuration() {
         return "ProjectitConfiguration";
     }

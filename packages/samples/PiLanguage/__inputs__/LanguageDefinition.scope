@@ -1,4 +1,4 @@
-scoper ExampleScoper for language "Example"
+scoper
 
 // isnamespace { Entity,Model }
 
@@ -9,11 +9,11 @@ scoper ExampleScoper for language "Example"
 isnamespace { Method, Entity, ExampleUnit, SumExpression }
 
 Entity {
-    namespace_addition = ${self.baseEntity};
+    namespace_addition = self.baseEntity;
 }
 
 AppliedFeature {
-	scope = typeof( container );
+	scope = typeof( container ).xxx;
 }
 
 

@@ -54,8 +54,7 @@
 	import { muteLogs } from "./logging/LoggerSettings";
 	import FreonContent from "./FreonContent.svelte";
 	import StatusBar from "./components/editor-panel/StatusBar.svelte";
-	// import { editorEnvironment } from "./config/WebappConfiguration";
-
+	import RenameUnitDialog from "./components/dialogs/file-dialogs/RenameUnitDialog.svelte";
 
 	muteLogs();
 
@@ -166,6 +165,7 @@
 <DeleteModelDialog/>
 <NewUnitDialog/>
 <DeleteUnitDialog/>
+<RenameUnitDialog/>
 
 <FindNamedElementDialog />
 <FindStructureDialog />

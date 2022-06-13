@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_FOLDER } from "../../../utils";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
 import { PiLanguage } from "../../../languagedef/metalanguage";
 import { PiTyperDef } from "../../metalanguage";
 
@@ -27,6 +27,7 @@ export class FreonTyperTemplate {
         ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
         import { ${defaultTyperName} } from "./${defaultTyperName}";
+        import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";
                 
         /**
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
@@ -219,14 +220,6 @@ export class FreonTyperTemplate {
                 // no result from custom typers => use the generated typer
                 return this.generatedTyper.getSuperTypes(type);
             }
-
-            public metaTypeOk(element: PiElement, requestedType: string): boolean {
-                const metatype = element.piLanguageConcept();
-                if (metatype === requestedType || Language.getInstance().subConcepts(requestedType).includes(metatype)) {
-                    return true;
-                }
-                return false;
-            }
     
             /**
              * Returns a list of types: one for each element of 'inlist',
@@ -237,15 +230,9 @@ export class FreonTyperTemplate {
             private elementListToTypeList(inlist: PiElement[]): PiType[] {
                 const typelist: PiType[] = [];
                 for (const elem of inlist) {
-                    this.addIfNotPresent(typelist, this.inferType(elem));
+                    ListUtil.addIfNotPresent<PiType>(typelist, this.inferType(elem));
                 }
                 return typelist;
-            }
-            
-            private addIfNotPresent<T>(list: T[], addition: T) {
-                if (!!addition && !list.includes(addition)) {
-                    list.push(addition);
-                }
             }
             
         }`;

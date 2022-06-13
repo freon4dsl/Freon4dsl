@@ -1,13 +1,14 @@
 import { PiElement, PiModel } from "../ast";
 
-// tag::reader-interface[]
 export interface PiReader {
     /**
-     * Parses the 'input' into a model unit of type 'metatype'.
-     * May throw an Error if a syntax error occurs.
-     * @param input
-     * @param metatype
+     * Parses and performs a syntax analysis on 'sentence', using the parser and analyser
+     * for 'metatype', if available. If 'sentence' is correct, a model unit will be created,
+     * otherwise an error wil be thrown containing the parse or analysis error.
+     * @param sentence      the input string which will be parsed
+     * @param metatype      the type of the unit to be created
+     * @param model         the model to which the unit will be added
+     * @param sourceName    the (optional) name of the source that contains 'sentence'
      */
-    readFromString(input: string, metatype: string, model: PiModel): PiElement;
+    readFromString(input: string, metatype: string, model: PiModel, sourceName?: string): PiElement;
 }
-// end::reader-interface[]

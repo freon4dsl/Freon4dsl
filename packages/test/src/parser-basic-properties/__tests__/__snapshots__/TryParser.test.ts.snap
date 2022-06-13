@@ -269,6 +269,10 @@ LimitedTest {
       },
       "typeName": "VisibilityKind",
     },
+    "parse_location": PiParseLocation {
+      "column": 19,
+      "line": 2,
+    },
   },
   "_PI_limitedOpt": LimitedOptional {
     "$$owner": [Circular],
@@ -375,6 +379,10 @@ LimitedTest {
       },
       "typeName": "VisibilityKind",
     },
+    "parse_location": PiParseLocation {
+      "column": 16,
+      "line": 12,
+    },
   },
   "_PI_limitedOpt2": LimitedOptional {
     "$$owner": [Circular],
@@ -382,8 +390,16 @@ LimitedTest {
     "$$propertyName": "limitedOpt2",
     "$id": "ID-4",
     "$typename": "LimitedOptional",
+    "parse_location": PiParseLocation {
+      "column": 17,
+      "line": 18,
+    },
   },
   "name": "anyNameWillDo",
+  "parse_location": PiParseLocation {
+    "column": 1,
+    "line": 1,
+  },
 }
 `;
 
@@ -439,6 +455,10 @@ PartsTest {
       },
       "content": "stringLiteral",
       "optContent": 10,
+      "parse_location": PiParseLocation {
+        "column": 25,
+        "line": 3,
+      },
     },
     "_PI_partList": Array [
       PartConcept {
@@ -466,6 +486,10 @@ PartsTest {
         },
         "content": "otherString",
         "optContent": 0,
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 9,
+        },
       },
       PartConcept {
         "$$owner": [Circular],
@@ -492,6 +516,10 @@ PartsTest {
         },
         "content": "stringLiteralXXX",
         "optContent": 123,
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 13,
+        },
       },
       PartConcept {
         "$$owner": [Circular],
@@ -518,11 +546,23 @@ PartsTest {
         },
         "content": "stringLiteralYYY",
         "optContent": 0,
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 17,
+        },
       },
     ],
+    "parse_location": PiParseLocation {
+      "column": 14,
+      "line": 2,
+    },
   },
   "_PI_partsOfParts": null,
   "name": "myName",
+  "parse_location": PiParseLocation {
+    "column": 1,
+    "line": 1,
+  },
 }
 `;
 
@@ -578,6 +618,10 @@ PartsTest {
       },
       "content": "stringLiteral",
       "optContent": 10,
+      "parse_location": PiParseLocation {
+        "column": 25,
+        "line": 3,
+      },
     },
     "_PI_partList": Array [
       PartConcept {
@@ -605,6 +649,10 @@ PartsTest {
         },
         "content": "otherString",
         "optContent": 0,
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 9,
+        },
       },
       PartConcept {
         "$$owner": [Circular],
@@ -631,6 +679,10 @@ PartsTest {
         },
         "content": "stringLiteralXXX",
         "optContent": 123,
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 13,
+        },
       },
       PartConcept {
         "$$owner": [Circular],
@@ -657,8 +709,16 @@ PartsTest {
         },
         "content": "stringLiteralYYY",
         "optContent": 0,
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 17,
+        },
       },
     ],
+    "parse_location": PiParseLocation {
+      "column": 14,
+      "line": 2,
+    },
   },
   "_PI_partsOfParts": WithSubSubParts {
     "$$owner": [Circular],
@@ -708,6 +768,10 @@ PartsTest {
             },
             "content": "stringLiteralFGT",
             "optContent": 10,
+            "parse_location": PiParseLocation {
+              "column": 38,
+              "line": 36,
+            },
           },
           "_PI_partList": Array [
             PartConcept {
@@ -735,8 +799,16 @@ PartsTest {
               },
               "content": "otherStringZZZ",
               "optContent": 0,
+              "parse_location": PiParseLocation {
+                "column": 37,
+                "line": 42,
+              },
             },
           ],
+          "parse_location": PiParseLocation {
+            "column": 29,
+            "line": 35,
+          },
         },
         WithDirectParts {
           "$$owner": [Circular],
@@ -771,6 +843,10 @@ PartsTest {
             },
             "content": "stringLiteralZZZ",
             "optContent": 1045,
+            "parse_location": PiParseLocation {
+              "column": 38,
+              "line": 48,
+            },
           },
           "_PI_partList": Array [
             PartConcept {
@@ -798,8 +874,16 @@ PartsTest {
               },
               "content": "otherString",
               "optContent": 0,
+              "parse_location": PiParseLocation {
+                "column": 37,
+                "line": 54,
+              },
             },
           ],
+          "parse_location": PiParseLocation {
+            "column": 29,
+            "line": 47,
+          },
         },
       ],
       "_PI_normalSub": WithDirectParts {
@@ -835,11 +919,23 @@ PartsTest {
           },
           "content": "stringLiteral",
           "optContent": 10,
+          "parse_location": PiParseLocation {
+            "column": 46,
+            "line": 26,
+          },
         },
         "_PI_partList": Array [],
+        "parse_location": PiParseLocation {
+          "column": 32,
+          "line": 25,
+        },
       },
       "_PI_optListSub": Array [],
       "_PI_optionalSub": null,
+      "parse_location": PiParseLocation {
+        "column": 15,
+        "line": 24,
+      },
     },
     "_PI_partList": Array [
       SubConcept {
@@ -882,8 +978,16 @@ PartsTest {
               },
               "content": "stringLiteral",
               "optContent": 10,
+              "parse_location": PiParseLocation {
+                "column": 30,
+                "line": 113,
+              },
             },
             "_PI_partList": Array [],
+            "parse_location": PiParseLocation {
+              "column": 21,
+              "line": 112,
+            },
           },
         ],
         "_PI_normalSub": WithDirectParts {
@@ -919,6 +1023,10 @@ PartsTest {
             },
             "content": "stringLiteral",
             "optContent": 10,
+            "parse_location": PiParseLocation {
+              "column": 42,
+              "line": 66,
+            },
           },
           "_PI_partList": Array [
             PartConcept {
@@ -946,6 +1054,10 @@ PartsTest {
               },
               "content": "otherString",
               "optContent": 0,
+              "parse_location": PiParseLocation {
+                "column": 41,
+                "line": 72,
+              },
             },
             PartConcept {
               "$$owner": [Circular],
@@ -972,6 +1084,10 @@ PartsTest {
               },
               "content": "stringLiteralXXX",
               "optContent": 123,
+              "parse_location": PiParseLocation {
+                "column": 41,
+                "line": 77,
+              },
             },
             PartConcept {
               "$$owner": [Circular],
@@ -998,8 +1114,16 @@ PartsTest {
               },
               "content": "stringLiteralYYY",
               "optContent": 0,
+              "parse_location": PiParseLocation {
+                "column": 41,
+                "line": 82,
+              },
             },
           ],
+          "parse_location": PiParseLocation {
+            "column": 31,
+            "line": 65,
+          },
         },
         "_PI_optListSub": Array [],
         "_PI_optionalSub": WithDirectParts {
@@ -1035,6 +1159,10 @@ PartsTest {
             },
             "content": "stringLiteral",
             "optContent": 10,
+            "parse_location": PiParseLocation {
+              "column": 42,
+              "line": 89,
+            },
           },
           "_PI_partList": Array [
             PartConcept {
@@ -1062,6 +1190,10 @@ PartsTest {
               },
               "content": "otherString",
               "optContent": 0,
+              "parse_location": PiParseLocation {
+                "column": 41,
+                "line": 95,
+              },
             },
             PartConcept {
               "$$owner": [Circular],
@@ -1088,6 +1220,10 @@ PartsTest {
               },
               "content": "stringLiteralXXX",
               "optContent": 123,
+              "parse_location": PiParseLocation {
+                "column": 41,
+                "line": 100,
+              },
             },
             PartConcept {
               "$$owner": [Circular],
@@ -1114,8 +1250,20 @@ PartsTest {
               },
               "content": "stringLiteralYYY",
               "optContent": 0,
+              "parse_location": PiParseLocation {
+                "column": 41,
+                "line": 105,
+              },
             },
           ],
+          "parse_location": PiParseLocation {
+            "column": 33,
+            "line": 88,
+          },
+        },
+        "parse_location": PiParseLocation {
+          "column": 17,
+          "line": 64,
         },
       },
       SubConcept {
@@ -1158,8 +1306,16 @@ PartsTest {
               },
               "content": "stringLiteral",
               "optContent": 10,
+              "parse_location": PiParseLocation {
+                "column": 34,
+                "line": 141,
+              },
             },
             "_PI_partList": Array [],
+            "parse_location": PiParseLocation {
+              "column": 25,
+              "line": 140,
+            },
           },
         ],
         "_PI_normalSub": WithDirectParts {
@@ -1195,8 +1351,16 @@ PartsTest {
             },
             "content": "stringLiteral",
             "optContent": 10,
+            "parse_location": PiParseLocation {
+              "column": 30,
+              "line": 124,
+            },
           },
           "_PI_partList": Array [],
+          "parse_location": PiParseLocation {
+            "column": 31,
+            "line": 123,
+          },
         },
         "_PI_optListSub": Array [
           WithDirectParts {
@@ -1232,8 +1396,16 @@ PartsTest {
               },
               "content": "stringLit",
               "optContent": 1440,
+              "parse_location": PiParseLocation {
+                "column": 34,
+                "line": 150,
+              },
             },
             "_PI_partList": Array [],
+            "parse_location": PiParseLocation {
+              "column": 25,
+              "line": 149,
+            },
           },
         ],
         "_PI_optionalSub": WithDirectParts {
@@ -1269,13 +1441,33 @@ PartsTest {
             },
             "content": "stringLiteral",
             "optContent": 10,
+            "parse_location": PiParseLocation {
+              "column": 30,
+              "line": 132,
+            },
           },
           "_PI_partList": Array [],
+          "parse_location": PiParseLocation {
+            "column": 33,
+            "line": 131,
+          },
+        },
+        "parse_location": PiParseLocation {
+          "column": 17,
+          "line": 122,
         },
       },
     ],
+    "parse_location": PiParseLocation {
+      "column": 9,
+      "line": 23,
+    },
   },
   "name": "myName",
+  "parse_location": PiParseLocation {
+    "column": 1,
+    "line": 1,
+  },
 }
 `;
 
@@ -1330,6 +1522,10 @@ PartsTest {
         },
         "content": "stringLiteral",
         "optContent": 10,
+        "parse_location": PiParseLocation {
+          "column": 24,
+          "line": 28,
+        },
       },
       PartConcept {
         "$$owner": [Circular],
@@ -1356,6 +1552,10 @@ PartsTest {
         },
         "content": "stringLiteralYYY",
         "optContent": 0,
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 32,
+        },
       },
     ],
     "_PI_optPart": PartConcept {
@@ -1383,6 +1583,10 @@ PartsTest {
       },
       "content": "stringLiteral",
       "optContent": 10,
+      "parse_location": PiParseLocation {
+        "column": 24,
+        "line": 9,
+      },
     },
     "_PI_part": PartConcept {
       "$$owner": [Circular],
@@ -1409,6 +1613,10 @@ PartsTest {
       },
       "content": "stringLiteral",
       "optContent": 10,
+      "parse_location": PiParseLocation {
+        "column": 25,
+        "line": 3,
+      },
     },
     "_PI_partList": Array [
       PartConcept {
@@ -1436,6 +1644,10 @@ PartsTest {
         },
         "content": "otherString",
         "optContent": 0,
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 15,
+        },
       },
       PartConcept {
         "$$owner": [Circular],
@@ -1462,6 +1674,10 @@ PartsTest {
         },
         "content": "stringLiteralXXX",
         "optContent": 123,
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 19,
+        },
       },
       PartConcept {
         "$$owner": [Circular],
@@ -1488,11 +1704,23 @@ PartsTest {
         },
         "content": "stringLiteralYYY",
         "optContent": 0,
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 23,
+        },
       },
     ],
+    "parse_location": PiParseLocation {
+      "column": 14,
+      "line": 2,
+    },
   },
   "_PI_partsOfParts": null,
   "name": "myName",
+  "parse_location": PiParseLocation {
+    "column": 1,
+    "line": 1,
+  },
 }
 `;
 
@@ -1521,6 +1749,10 @@ PrimitivesTest {
     "$$propertyName": "prim",
     "$id": "ID-2",
     "$typename": "Prim",
+    "parse_location": PiParseLocation {
+      "column": 5,
+      "line": 3,
+    },
     "primBoolean": true,
     "primIdentifier": "EenNaam",
     "primListBoolean": Array [
@@ -1551,6 +1783,10 @@ PrimitivesTest {
     "$$propertyName": "primExtra",
     "$id": "ID-3",
     "$typename": "PrimsWithExtraText",
+    "parse_location": PiParseLocation {
+      "column": 5,
+      "line": 14,
+    },
     "primBooleanWithExtra": false,
     "primIdentifierWithExtra": "EenNaam",
     "primListBooleanWithExtra": Array [
@@ -1580,6 +1816,10 @@ PrimitivesTest {
     "$$propertyName": "separator",
     "$id": "ID-4",
     "$typename": "PrimsWithSeparator",
+    "parse_location": PiParseLocation {
+      "column": 11,
+      "line": 22,
+    },
     "primListBooleanSeparator": Array [
       true,
       false,
@@ -1605,6 +1845,10 @@ PrimitivesTest {
     "$$propertyName": "separatorOpt",
     "$id": "ID-6",
     "$typename": "PrimsWithSeparator",
+    "parse_location": PiParseLocation {
+      "column": 14,
+      "line": 32,
+    },
     "primListBooleanSeparator": Array [
       true,
       false,
@@ -1623,6 +1867,10 @@ PrimitivesTest {
     "$$propertyName": "terminator",
     "$id": "ID-5",
     "$typename": "PrimsWithTerminator",
+    "parse_location": PiParseLocation {
+      "column": 12,
+      "line": 27,
+    },
     "primListBooleanTerminator": Array [
       true,
     ],
@@ -1642,6 +1890,10 @@ PrimitivesTest {
     "$$propertyName": "terminatorOpt",
     "$id": "ID-7",
     "$typename": "PrimsWithTerminator",
+    "parse_location": PiParseLocation {
+      "column": 15,
+      "line": 37,
+    },
     "primListBooleanTerminator": Array [],
     "primListIdentifierTerminator": Array [
       "EenNaam",
@@ -1652,6 +1904,10 @@ PrimitivesTest {
     ],
   },
   "name": "someName",
+  "parse_location": PiParseLocation {
+    "column": 1,
+    "line": 1,
+  },
 }
 `;
 
@@ -1681,6 +1937,10 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-2",
       "$typename": "PrimKeyword",
+      "parse_location": PiParseLocation {
+        "column": 6,
+        "line": 3,
+      },
       "primBoolean": true,
     },
     PrimKeyword {
@@ -1689,6 +1949,10 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-3",
       "$typename": "PrimKeyword",
+      "parse_location": PiParseLocation {
+        "column": 9,
+        "line": 4,
+      },
       "primBoolean": false,
     },
     PrimKeyword {
@@ -1697,6 +1961,10 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-4",
       "$typename": "PrimKeyword",
+      "parse_location": PiParseLocation {
+        "column": 6,
+        "line": 5,
+      },
       "primBoolean": true,
     },
     PrimKeyword {
@@ -1705,6 +1973,10 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-5",
       "$typename": "PrimKeyword",
+      "parse_location": PiParseLocation {
+        "column": 9,
+        "line": 6,
+      },
       "primBoolean": false,
     },
     PrimKeyword {
@@ -1713,6 +1985,10 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-6",
       "$typename": "PrimKeyword",
+      "parse_location": PiParseLocation {
+        "column": 6,
+        "line": 7,
+      },
       "primBoolean": true,
     },
     PrimKeyword {
@@ -1721,6 +1997,10 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-7",
       "$typename": "PrimKeyword",
+      "parse_location": PiParseLocation {
+        "column": 9,
+        "line": 8,
+      },
       "primBoolean": false,
     },
     PrimKeyword {
@@ -1729,6 +2009,10 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-8",
       "$typename": "PrimKeyword",
+      "parse_location": PiParseLocation {
+        "column": 6,
+        "line": 9,
+      },
       "primBoolean": false,
     },
     PrimKeyword {
@@ -1737,10 +2021,18 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-9",
       "$typename": "PrimKeyword",
+      "parse_location": PiParseLocation {
+        "column": 9,
+        "line": 10,
+      },
       "primBoolean": true,
     },
   ],
   "name": "myName",
+  "parse_location": PiParseLocation {
+    "column": 1,
+    "line": 1,
+  },
 }
 `;
 
@@ -1824,6 +2116,10 @@ RefsTest {
         "typeName": "RefConcept",
       },
     ],
+    "parse_location": PiParseLocation {
+      "column": 13,
+      "line": 2,
+    },
   },
   "_PI_indirectRefs": null,
   "_PI_withSeparator": RefsWithSeparator {
@@ -1874,6 +2170,10 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
+        "parse_location": PiParseLocation {
+          "column": 21,
+          "line": 31,
+        },
       },
       WithDirectRefs {
         "$$owner": [Circular],
@@ -1916,6 +2216,10 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
+        "parse_location": PiParseLocation {
+          "column": 21,
+          "line": 39,
+        },
       },
       WithDirectRefs {
         "$$owner": [Circular],
@@ -1958,6 +2262,10 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
+        "parse_location": PiParseLocation {
+          "column": 21,
+          "line": 47,
+        },
       },
     ],
     "_PI_partList": Array [
@@ -2022,6 +2330,10 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
+        "parse_location": PiParseLocation {
+          "column": 19,
+          "line": 13,
+        },
       },
       WithDirectRefs {
         "$$owner": [Circular],
@@ -2064,10 +2376,22 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
+        "parse_location": PiParseLocation {
+          "column": 21,
+          "line": 23,
+        },
       },
     ],
+    "parse_location": PiParseLocation {
+      "column": 19,
+      "line": 13,
+    },
   },
   "name": "myName",
+  "parse_location": PiParseLocation {
+    "column": 1,
+    "line": 1,
+  },
 }
 `;
 
@@ -2191,6 +2515,10 @@ RefsTest {
         "typeName": "RefConcept",
       },
     ],
+    "parse_location": PiParseLocation {
+      "column": 13,
+      "line": 2,
+    },
   },
   "_PI_indirectRefs": WithSubSubRefs {
     "$$owner": [Circular],
@@ -2299,6 +2627,10 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 66,
+        },
       },
     ],
     "_PI_optPart": WithDirectRefs {
@@ -2401,6 +2733,10 @@ RefsTest {
           "typeName": "RefConcept",
         },
       ],
+      "parse_location": PiParseLocation {
+        "column": 27,
+        "line": 28,
+      },
     },
     "_PI_part": WithDirectRefs {
       "$$owner": [Circular],
@@ -2502,6 +2838,10 @@ RefsTest {
           "typeName": "RefConcept",
         },
       ],
+      "parse_location": PiParseLocation {
+        "column": 24,
+        "line": 15,
+      },
     },
     "_PI_partList": Array [
       WithDirectRefs {
@@ -2604,6 +2944,10 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 41,
+        },
       },
       WithDirectRefs {
         "$$owner": [Circular],
@@ -2705,8 +3049,16 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 53,
+        },
       },
     ],
+    "parse_location": PiParseLocation {
+      "column": 18,
+      "line": 14,
+    },
   },
   "_PI_withSeparator": RefsWithSeparator {
     "$$owner": [Circular],
@@ -2815,6 +3167,10 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 80,
+        },
       },
       WithDirectRefs {
         "$$owner": [Circular],
@@ -2916,10 +3272,22 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
+        "parse_location": PiParseLocation {
+          "column": 25,
+          "line": 92,
+        },
       },
     ],
     "_PI_partList": Array [],
+    "parse_location": PiParseLocation {
+      "column": 25,
+      "line": 80,
+    },
   },
   "name": "myName",
+  "parse_location": PiParseLocation {
+    "column": 1,
+    "line": 1,
+  },
 }
 `;

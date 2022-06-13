@@ -232,8 +232,7 @@ export class ScoperTemplate {
              */           
             private getElementsFromStdlib(metatype?: string): ${Names.PiNamedElement}[] {
                 if (!!metatype) {
-                    return LanguageEnvironment.getInstance().stdlib.elements.filter((elem) => elem.piLanguageConcept() === metatype ||
-                            Language.getInstance().subConcepts(metatype).includes(elem.piLanguageConcept()));
+                    return LanguageEnvironment.getInstance().stdlib.elements.filter(elem => Language.getInstance().metaConformsToType(elem, metatype));
                 } else {
                     return LanguageEnvironment.getInstance().stdlib.elements;
                 }

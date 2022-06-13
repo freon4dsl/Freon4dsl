@@ -1,7 +1,7 @@
-import { PiLanguageEnvironment } from "../environment/gen/PiLanguageEnvironment";
 import { FileHandler } from "./FileHandler";
 import { PiStructureDef, PiValidatorDef, PiScoperDef, PiTyperDef, PiLanguage } from "../language/gen";
 import { PiError } from "@projectit/core";
+import { PiLanguageEnvironment } from "../config/gen/PiLanguageEnvironment";
 
 describe("Pi Language Parser", () => {
     const reader = PiLanguageEnvironment.getInstance().reader;
@@ -13,7 +13,7 @@ describe("Pi Language Parser", () => {
     test.skip( " on .ast file", () => {
         try {
             const completeModel: PiLanguage = new PiLanguage();
-            const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.ast");
+            const input = fileHandler.stringFromFile("src/PiLanguage/__inputs__/LanguageDefinition.ast");
             const unit1: PiStructureDef = reader.readFromString(input, "PiStructureDef", completeModel) as PiStructureDef;
             console.log(writer.writeToString(unit1, 0, false));
             // expect(unit1).toMatchSnapshot();
@@ -23,10 +23,10 @@ describe("Pi Language Parser", () => {
         }
     });
 
-    test.skip( " on .scope file", () => {
+    test( " on .scope file", () => {
         try {
             const completeModel: PiLanguage = new PiLanguage();
-            const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.scope");
+            const input = fileHandler.stringFromFile("src/PiLanguage/__inputs__/LanguageDefinition.scope");
             const unit1: PiScoperDef = reader.readFromString(input, "PiScoperDef", completeModel) as PiScoperDef;
             console.log(writer.writeToString(unit1, 0, false));
             // expect(unit1).toMatchSnapshot();
@@ -39,7 +39,7 @@ describe("Pi Language Parser", () => {
     test.skip( " on .valid file", () => {
         try {
             const completeModel: PiLanguage = new PiLanguage();
-            const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/LanguageDefinition.valid");
+            const input = fileHandler.stringFromFile("src/PiLanguage/__inputs__/LanguageDefinition.valid");
             const unit1: PiValidatorDef = reader.readFromString(input, "PiValidatorDef", completeModel) as PiValidatorDef;
             console.log(writer.writeToString(unit1, 0, false));
             // expect(unit1).toMatchSnapshot();
@@ -52,10 +52,10 @@ describe("Pi Language Parser", () => {
     test( " on .type file", () => {
         try {
             const completeModel: PiLanguage = new PiLanguage();
-            const languageStr = fileHandler.stringFromFile("src/pi-languages/__inputs__/typer-test/types.ast");
+            const languageStr = fileHandler.stringFromFile("src/PiLanguage/__inputs__/typer-test/types.ast");
             const langUnit: PiStructureDef = reader.readFromString(languageStr, "PiStructureDef", completeModel) as PiStructureDef;
 
-            const input = fileHandler.stringFromFile("src/pi-languages/__inputs__/typer-test/type-rules.type");
+            const input = fileHandler.stringFromFile("src/PiLanguage/__inputs__/typer-test/type-rules.type");
             const typeUnit: PiTyperDef = reader.readFromString(input, "PiTyperDef", completeModel) as PiTyperDef;
 
             const conc = langUnit.concepts.find(x => x.name ==="SimpleExp1");
