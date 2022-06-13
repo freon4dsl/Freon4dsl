@@ -70,7 +70,7 @@
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
         runInAction( () => {
-            choiceBox.textBox.style = choiceBox.style;
+            choiceBox.textBox.cssStyle = choiceBox.cssStyle;
             if (!!selected) {
                 choiceBox.textBox.setText(selected.label);
             }
@@ -295,10 +295,9 @@
         if (!!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
-        let style = conceptStyle(editor.style, editor.theme, choiceBox.element.piLanguageConcept(), "alias", choiceBox.style);
-        aliasStyle = styleToCSS(style);
+        aliasStyle = choiceBox.cssStyle;
         runInAction( () => {
-            choiceBox.textBox.style = style;
+            choiceBox.textBox.cssStyle = aliasStyle;
         });
 
     });

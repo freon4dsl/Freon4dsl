@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
-    import { conceptStyle, LabelBox, PiLogger, styleToCSS, type PiEditor } from "@projectit/core";
+    import { LabelBox, PiLogger, styleToCSS, type PiEditor } from "@projectit/core";
     import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
 
     export let label;// = new LabelBox(null, "boxRole", "This is a box");
@@ -37,15 +37,16 @@
         FOCUS_LOGGER.log("onBlur for box " + label.role);
     }
     let style: string;
+    let cssClass: string;
 
     autorun( () => {
         text = label.getLabel();
-        console.log("LabelComponent ["+ text + "]");
-        $: style = styleToCSS(conceptStyle(editor.style, editor.theme, label.element.piLanguageConcept(), "label", label.style));
+        style = label.cssStyle;
+        cssClass = label.cssClass
     });
 </script>
 
-<div class="label {text}"
+<div class="label {text} {cssClass}"
      style="{style}"
      tabIndex={0}
      on:focus={onFocusHandler}
@@ -64,11 +65,12 @@
     }
 
     .label {
-        color: var(--freon-label-component-color);
+        color: var(--freon-label-component-color, inherit);
         background-color: var(--freon-label-component-background-color, inherit);
         font-style: var(--freon-label-component-font-style, inherit);
         font-weight: var(--freon-label-component-font-weight, normal);
         font-size: var(--freon-label-component-font-size, inherit);
+        font-family: var(--freon-label-component-font-family, "inherit");
         padding: var(--freon-label-component-padding, 1px);
         margin: var(--freon-label-component-margin, 1px);
         white-space: normal;

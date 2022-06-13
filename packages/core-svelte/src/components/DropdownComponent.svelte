@@ -118,6 +118,7 @@
         opacity: 1;
         z-index: 99;
         background-color: var(--freon-dropdown-component-background-color, lightblue);
+        color: var(--freon-dropdown-component-color, blue);
     }
 
     .popupWrapper {

@@ -8,8 +8,7 @@ import {
     GridBox,
     GridOrientation,
     isAliasBox, PiCustomAction,
-    PiEditor,
-    PiStyle
+    PiEditor
 } from "../index";
 import { PiElement } from "../../ast";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
@@ -18,21 +17,6 @@ import { MetaKey, PiKey } from "../../util/Keys";
 import { NBSP, PiLogger, PiUtils } from "../../util";
 import { Language } from "../../language";
 import { RoleProvider } from "./RoleProvider";
-
-// headerStyle and rowStyle are the default styles for a table
-export const headerStyle: PiStyle = {
-    padding: "0px",
-    // color: "darkred",
-    "font-weight": "bold",
-    "align-items": "left",
-    border: "lightgrey",
-    // "border-style": "solid",
-    // "border-width": "1px",
-    "background-color": "lightgrey"
-};
-
-export const cellStyle: PiStyle = {
-};
 
 type Location = { row: number, column: number};
 const LOGGER = new PiLogger("TableUtil");
@@ -95,7 +79,7 @@ export class TableUtil {
                 LOGGER.log("TableUtil header " + location.row + " - " + location.column + " with headers " + hasHeaders );
                 cells.push( BoxFactory.gridcell(element, "cell-" + location.row + "-" + location.column, location.row, location.column,
                     BoxUtils.labelBox(element, item, "" + index),
-                    { style : headerStyle })
+                    { isHeader: true })
                 );
             });
             // add the cells for each element of the list
@@ -106,22 +90,21 @@ export class TableUtil {
                     const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
                     LOGGER.log("TableUtil add " + cellRoleName + " with headers " + hasHeaders );
                     cells.push(BoxFactory.gridcell(item, cellRoleName, location.row, location.column,
-                            projector(item),
-                        { style: cellStyle }
+                            projector(item)
+
                     ));
                 });
             });
             // add an extra row where a new element to the list can be added
             const location = this.calcLocation({row: property.length +1, column:1}, orientation, hasHeaders);
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
-            LOGGER.log("TableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders );
+            console.log("TableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders + " span[" + (orientation === "row" ? cellGetters.length : 1) + "/" + (orientation === "row" ? 1 : cellGetters.length) + "]");
             cells.push( BoxFactory.gridcell(element, cellRoleName,  location.row, location.column,
                 BoxFactory.alias(element, "alias-add-row-or-column", `<add new ${orientation}>`,
                 { propertyName: propertyName, conceptName: propInfo.type }),
                 {
                     columnSpan: (orientation === "row" ? cellGetters.length : 1),
-                    rowSpan: (orientation === "row" ? 1 : cellGetters.length),
-                    style: cellStyle
+                    rowSpan: (orientation === "row" ? 1 : cellGetters.length)
             }));
             // Add keyboard actions to grid such that new rows can be added by Return Key
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");

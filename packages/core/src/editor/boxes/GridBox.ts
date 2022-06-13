@@ -1,5 +1,4 @@
 import { observable, makeObservable } from "mobx";
-import { PiStyle } from "../PiStyle";
 import { GridCellBox } from "./GridCellBox";
 
 import { Box } from "./internal";

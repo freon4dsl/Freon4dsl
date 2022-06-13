@@ -26,8 +26,6 @@ export class EnvironmentTemplate {
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
         import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
-        import { editorStyle } from "${relativePath}${STYLES_FOLDER}/CustomStyles";
-
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.
          * It holds the currently used editor, scoper, typer, etc, thus providing an entry point for
@@ -57,7 +55,6 @@ export class EnvironmentTemplate {
                 const rootProjection = new ${Names.CompositeProjection}("root");
                 initializeProjections(rootProjection);
                 this.editor = new PiEditor(rootProjection, actions);
-                this.editor.style = editorStyle;
                 this.editor.rootElement = null;
                 this.editor.environment = this;
                 initializeLanguage();

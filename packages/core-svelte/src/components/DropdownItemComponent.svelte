@@ -28,17 +28,20 @@
 <style>
     .dropdownitem {
         color: var(--freon-dropdownitem-component-color, darkblue);
+        background-color: var(--freon-dropdownitem-component-background-color, inherit);
         display: block;
         white-space: nowrap;
         border:none;
     }
     .isSelected {
         border: none;
-        background-color: lightblue; /* TODO: Use variable for color */
+        color: var(--freon-dropdownitem-component-selected-color, darkblue);
+        background-color: var(--freon-dropdownitem-component-selected-background-color, lightblue);
     }
     .dropdownitem:hover {
         display: block;
-        background-color: white; /* TODO See previous */
+        background-color: var(--freon-dropdownitem-component-hover-color, darkblue);
+        background-color: var(--freon-dropdownitem-component-hover-background-color, white);
         white-space: nowrap;
         color: blue;
     }

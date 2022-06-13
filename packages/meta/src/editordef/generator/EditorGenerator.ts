@@ -46,7 +46,7 @@ export class EditorGenerator {
         projection.setStandardBooleanKeywords(editDef); // initiate the template with the standard boolean keywords
         const customProjectiontemplate = new CustomProjectionTemplate();
         const editorIndexTemplate = new EditorIndexTemplate();
-        const stylesTemplate = new StylesTemplate();
+        // const stylesTemplate = new StylesTemplate();
         const editorDefTemplate = new EditorDefTemplate();
 
         // Prepare folders
@@ -88,9 +88,9 @@ export class EditorGenerator {
         const customProjectionFile = FileUtil.pretty(customProjectiontemplate.generate(this.language), "Custom Projection", generationStatus);
         FileUtil.generateManualFile(`${this.editorFolder}/${Names.customProjection(this.language)}.ts`, customProjectionFile, "Custom Projection");
 
-        LOGGER.log(`Generating editor styles: ${this.stylesFolder}/CustomStyles.ts`);
-        const editorStylesConst = FileUtil.pretty(stylesTemplate.generateConst(), "Editor Styles constant", generationStatus);
-        FileUtil.generateManualFile(`${this.stylesFolder}/CustomStyles.ts`, editorStylesConst, "Editor Styles Constant");
+        // LOGGER.log(`Generating editor styles: ${this.stylesFolder}/CustomStyles.ts`);
+        // const editorStylesConst = FileUtil.pretty(stylesTemplate.generateConst(), "Editor Styles constant", generationStatus);
+        // FileUtil.generateManualFile(`${this.stylesFolder}/CustomStyles.ts`, editorStylesConst, "Editor Styles Constant");
 
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
         const editorIndexGenFile = FileUtil.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef), "Editor Gen Index", generationStatus);

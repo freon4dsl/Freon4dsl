@@ -76,6 +76,7 @@
 		document.head
 				.querySelector<HTMLLinkElement>("link[href$=\"/site-dark.css\"]")
 				?.insertAdjacentElement("afterend", themeLink);
+		// editorEnvironment.editor.theme = lightTheme ? "light" : "dark";
 	}
 
 	onMount(async () => {
