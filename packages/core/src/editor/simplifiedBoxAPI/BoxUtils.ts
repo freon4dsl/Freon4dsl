@@ -1,13 +1,13 @@
-import { action, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../ast";
 import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes";
-import { BehaviorExecutionResult, createKeyboardShortcutForList2, PiUtils } from "../../util";
+import { BehaviorExecutionResult, PiUtils } from "../../util";
 import { Language, PropertyKind } from "../../language";
 import { PiEditor } from "../PiEditor";
-import { PiProjection } from "../PiProjection";
 import { PiScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
 import { PiCompositeProjection } from "../PiCompositeProjection";
+import { EmptyLineBox } from "../boxes/EmptyLineBox";
 
 export class PiListInfo {
     text: string;
@@ -18,6 +18,10 @@ export class BoxUtils {
     static separatorName: string = "Separator";
     static terminatorName: string = "Terminator";
     static initiatorName: string = "Initiator";
+
+    static emptyLineBox(element: PiElement, role: string): EmptyLineBox {
+        return new EmptyLineBox(element, role);
+    }
 
     /**
      * Returns a textBox for property named 'propertyName' within 'element'.
@@ -252,6 +256,7 @@ export class BoxUtils {
      * Returns a labelBox for 'content' within 'element'.
      * @param element
      * @param content
+     * @param uid
      * @param selectable when true this box can be selected, default is 'false'
      */
     static labelBox(element: PiElement, content: string, uid: string, selectable?: boolean): Box {
@@ -367,10 +372,9 @@ export class BoxUtils {
         const property = element[propertyName];
         const roleName = RoleProvider.property(element.piLanguageConcept(), propertyName);
         const byName: boolean = !!projectionName && projectionName.length > 0;
-        const result = !!property
+        return !!property
             ? (byName ? rootProjection.getNamedBox(property, projectionName) : rootProjection.getBox(property))
             : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
-        return result;
     }
 
     /**

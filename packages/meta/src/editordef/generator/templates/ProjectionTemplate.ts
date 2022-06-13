@@ -258,8 +258,10 @@ export class ProjectionTemplate {
 
     private generateLine(line: PiEditProjectionLine, elementVarName: string, index: number, boxLabel: string, language: PiLanguage, topIndex: number): string {
         let result: string = "";
-        // TODO empty lines are discarded in the editor now
-        if (!line.isEmpty()) {
+        if (line.isEmpty()) {
+            this.addToIfNotPresent(this.coreImports, "BoxUtils");
+            result = `BoxUtils.emptyLineBox(${elementVarName}, "${boxLabel}-empty-line-${index}")`;
+        } else {
             // do all projection items in the line, separate them with a comma
             line.items.forEach((item, itemIndex) => {
                 result += this.generateItem(item, elementVarName, index, itemIndex, boxLabel, language, topIndex);
