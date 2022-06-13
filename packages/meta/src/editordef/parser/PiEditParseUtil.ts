@@ -17,33 +17,36 @@ export class PiEditParseUtil {
      */
     public static normalize(projection: PiEditProjection): void {
         // everything is parsed as one line, now break this line on ParsedNewLines and remove empty lines
-        // projection.lines = PiEditParseUtil.normalizeLine(projection.lines[0]);
 
         // find the indentation of the complete projection, which should be ignored
-        let ignoredIndent = 0;
+        let ignoredIndent = 100; // begin with an arbitrary large amount
 
         // find the line with the least indentation
-        projection.lines.forEach(line => {
+        projection.lines.forEach((line, index) => {
             const firstItem = line.items[0];
             if (firstItem instanceof PiEditParsedProjectionIndent) {
-                if(projection.classifier.name === "Entity") {
-                    // console.log("ignoredIndent = " + ignoredIndent, "firstItem = " + firstItem.amount);
-                }
-                ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
-                if(projection.classifier.name === "Entity") {
-                    // console.log("ignoredIndent calculated as = " + ignoredIndent);
-                }
+                ignoredIndent = Math.min(ignoredIndent, firstItem.amount);
+            } else if (!(firstItem instanceof PiOptionalPropertyProjection && firstItem.lines.length > 1)) { // multi-line optionals are handled below
+                ignoredIndent = 0;
             }
-            // line.items.forEach(item => {
-            //     if (item instanceof PiOptionalPropertyProjection) {
-            //         item.lines.forEach(subLine => {
-            //             const firstItem = subLine.items[0];
-            //             if (firstItem instanceof PiEditParsedProjectionIndent) {
-            //                 ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
-            //             }
-            //         });
-            //     }
-            // });
+            // console.log("calculated ignored indent on line " + index + " to be " + ignoredIndent + ", in \n\t" + line.toString())
+            line.items.forEach(item => {
+                if (item instanceof PiOptionalPropertyProjection) {
+                    if (item.lines.length > 1) { // its a multi-line optional, so regard its lines as well, but skip the first which holds '[?'
+                        item.lines.forEach((subLine, subIndex) => {
+                            if (subIndex !== 0) {
+                                const firstItem = subLine.items[0];
+                                if (firstItem instanceof PiEditParsedProjectionIndent) {
+                                    ignoredIndent = Math.min(ignoredIndent, firstItem.amount);
+                                } else { // no parsed indent found, thus first item is in column 0
+                                    ignoredIndent = 0;
+                                }
+                            }
+                            // console.log("OPTIONAL: calculated ignored indent on line " + index + " to be " + ignoredIndent + ", subIndex: " + subIndex + ", " + subLine.toString());
+                        });
+                    }
+                }
+            });
         });
 
         // determine the indent of each line, while ignoring the 'ignoredIndent'
@@ -103,7 +106,10 @@ export class PiEditParseUtil {
                 result.push(currentLine);
                 currentLine = new PiEditProjectionLine();
             } else if (item instanceof PiOptionalPropertyProjection) {
-                item.lines = PiEditParseUtil.normalizeLine(item.lines[0]);
+                if (item.lines[0].items[0] instanceof PiEditParsedNewline) {
+                    // in this case the optional projection starts on a new line
+                    item.lines = PiEditParseUtil.normalizeLine(item.lines[0]);
+                }
                 currentLine.items.push(item);
             } else {
                 currentLine.items.push(item);

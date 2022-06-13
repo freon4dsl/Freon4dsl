@@ -150,9 +150,9 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
         ${this.standardBooleanProjection ? `boolean ${this.standardBooleanProjection}` : ``}
         ${this.standardReferenceSeparator ? `referenceSeparator [ ${this.standardReferenceSeparator} ]` : ``}
         
-        ${this.projections.map(gr => gr.toString()).join("\n")}
+        ${this.projections?.map(gr => gr.toString()).join("\n")}
 
-        ${this.extras.map(gr => gr.toString()).join("\n")}`;
+        ${this.extras?.map(gr => gr.toString()).join("\n")}`;
     }
 }
 
@@ -292,9 +292,7 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
         if (!!this.boolInfo) {
             extraText = `\n/* boolean */ ${this.boolInfo}`;
         }
-        return `\${ ${this.expression? this.expression.toPiString() : ``} /* ${this.property?.referred ?
-            `found ${this.property?.referred?.name}` :
-            `not found ${this.property?.name}`} */ }${extraText}`;
+        return `\${ ${this.expression? this.expression.toPiString() : ``} }${extraText}`;
     }
 }
 
@@ -330,9 +328,7 @@ export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
     }
 
     toString(): string {
-        return `[? /*  ${this.property?.referred ? 
-            `found ${this.property?.referred?.name}` : 
-            `not found ${this.property?.name}`} */ 
+        return `[?  
         // #lines ${this.lines.length}
             ${this.lines.map(line => line.toString()).join("\n")}\`;
         ]`;
@@ -400,7 +396,10 @@ export class PiEditParsedProjectionIndent extends PiDefinitionElement {
     amount: number = 0;
 
     toString(): string {
-        return this.indent.replace(/ /g, "_" + this.amount);
+        if (this.amount === 0) {
+            return "_0";
+        }
+        return this.indent.replace(/ /g, "_") + this.amount;
     }
 }
 
