@@ -18,6 +18,7 @@ import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
 import { PiTyperDef } from "../typerdef/metalanguage";
 import { PiTyperMerger } from "../typerdef/parser";
 import { LOG2USER } from "../utils/UserLogger";
+import { DiagramGenerator } from "../diagramgen/DiagramGenerator";
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
@@ -29,6 +30,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
     protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
     protected language: PiLanguage;
+    private diagramGenerator: DiagramGenerator = new DiagramGenerator();
 
     public constructor() {
         super({
@@ -56,6 +58,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
                 this.generateValidator();
                 this.generateScoper();
                 this.generateTyper();
+                this.generateDiagrams();
             } catch (e) {
                 LOG2USER.error("Stopping generation because of errors in the language definition: " + e.message + "\n");
             }
@@ -168,6 +171,14 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.language = new LanguageParser().parseMulti(this.languageFiles);
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(this.language);
+    };
+
+    private generateDiagrams = () => {
+        // generate the language
+        LOG2USER.info("Generating language diagrams");
+        this.diagramGenerator.outputfolder = this.outputFolder;
+        this.diagramGenerator.language = this.language;
+        this.diagramGenerator.generate();
     };
 
 }
