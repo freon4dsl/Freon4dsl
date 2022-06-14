@@ -5,6 +5,7 @@ import { Names } from "./Names";
 export const LANGUAGE_FOLDER = "language";
 export const LANGUAGE_GEN_FOLDER = "language/gen";
 export const DIAGRAM_FOLDER = "diagrams";
+export const DIAGRAM_GEN_FOLDER = "diagrams/gen";
 export const LANGUAGE_UTILS_FOLDER = "utils";
 export const LANGUAGE_UTILS_GEN_FOLDER = "utils/gen";
 export const EDITOR_FOLDER = "editor";

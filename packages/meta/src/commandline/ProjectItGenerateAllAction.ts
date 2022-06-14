@@ -35,7 +35,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public constructor() {
         super({
             actionName: "all",
-            summary: "Generates the TypeScript code for all parts of the work environment for your language",
+            summary: "Generates the TypeScript code for all parts of the work environment for your language, plus some diagrams that show the AST",
             documentation:
                 "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, the reader, the writer, and the " +
                 "validator for language as defined in files in DEFINITIONS_DIR."
@@ -178,6 +178,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         LOG2USER.info("Generating language diagrams");
         this.diagramGenerator.outputfolder = this.outputFolder;
         this.diagramGenerator.language = this.language;
+        this.diagramGenerator.fileNames = this.languageFiles;
         this.diagramGenerator.generate();
     };
 
