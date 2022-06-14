@@ -1,4 +1,4 @@
-import { PiConcept, PiInterface, PiLanguage, PiProperty } from "../../languagedef/metalanguage";
+import { PiConcept, PiInterface, PiLanguage, PiLimitedConcept, PiProperty } from "../../languagedef/metalanguage";
 import { ListUtil } from "../../utils";
 
 export class DiagramTemplate {
@@ -65,11 +65,18 @@ ${this.makeUmlClasses(conceptsToInclude)}
     }
 
     private conceptToUml(concept: PiConcept): string {
-        // only prim properties are shown as UML attributes
-        return `    class ${concept.name}${concept.isAbstract && this.withHtml ? ":::abstract" : ""} {
+        if (concept instanceof PiLimitedConcept) {
+            return `    class ${concept.name}${this.withHtml ? ":::enumeration" : ""} {
+        ${!this.withHtml ? "<<enumeration>>" : ""}
+        ${concept.allInstances().map(p => p.name).join("\n\t\t")}
+    }`;
+        } else {
+            // only prim properties are shown as UML attributes
+            return `    class ${concept.name}${concept.isAbstract && this.withHtml ? ":::abstract" : ""} {
         ${concept.isAbstract && !this.withHtml ? "<<abstract>>" : ""}
         ${concept.primProperties.map(p => this.primPropToUml(p)).join("\n\t\t")}
     }`;
+        }
     }
 
     private primPropToUml(prop: PiProperty): string {

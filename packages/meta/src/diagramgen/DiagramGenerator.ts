@@ -68,7 +68,7 @@ export class DiagramGenerator {
         generatedContent  = mdTemplate.generate(title, content);
         this.makeFile(`inheritance diagram in md`, generatedFilePath, generatedContent, generationStatus);
 
-        // Generats diagrams for all .ast files
+        // Generate diagrams for all .ast files
         for(const name of this.fileNames) {
             const fName: string = name.split(FileUtil.separator()).pop().split(".").shift();
             title = `Class diagram for file ${fName}`;
@@ -105,6 +105,10 @@ export class DiagramGenerator {
 
     clean(force: boolean) {
         this.getFolderNames();
+        FileUtil.deleteDirAndContent(this.diagramAstFolder);
+        FileUtil.deleteDirIfEmpty(this.diagramAstFolder);
+        FileUtil.deleteDirAndContent(this.diagramGenFolder);
+        FileUtil.deleteDirIfEmpty(this.diagramGenFolder);
         FileUtil.deleteDirAndContent(this.diagramFolder);
         FileUtil.deleteDirIfEmpty(this.diagramFolder);
     }
