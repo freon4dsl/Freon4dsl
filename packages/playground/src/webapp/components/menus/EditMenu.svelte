@@ -14,7 +14,7 @@
 	>
 		<List>
 			{#each menuItems as item (item.id)}
-				<Item on:SMUI:action={() => (handleClick(item.id))}>
+				<Item on:SMUI:action={() => (handleClick(item.id))} disabled={isDisabled(item.id)}>
 					<Text>{item.title}</Text>
 				</Item>
 				{#if item.id === 2 || item.id === 5 || item.id === 6 }
@@ -94,4 +94,11 @@
 		{ title: 'Find Structure Element', action: findStructureElement, id: 8 },
 		{ title: 'Find Text', action: findText, id: 9 },
 	];
+
+	function isDisabled(id): boolean {
+		if (id === 1 || id === 2) {
+			return true;
+		}
+		return false;
+	}
 </script>

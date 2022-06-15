@@ -96,4 +96,12 @@ export class AstType implements PiType {
     toAstElement(): PiElement {
         return this.astElement;
     }
+
+    copy(): AstType {
+        const result: AstType = new AstType;
+        if (this.astElement) {
+            result.astElement = this.astElement;
+        }
+        return result;
+    }
 }

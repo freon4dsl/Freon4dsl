@@ -1,5 +1,5 @@
 import { editorEnvironment } from "../config/WebappConfiguration";
-import { PiCompositeProjection, PiError, PiLogger, Searcher } from "@projectit/core";
+import { Box, isAliasBox, isAliasTextBox, isTextBox, PiCompositeProjection, PiError, PiLogger, Searcher } from "@projectit/core";
 import type { PiElement } from "@projectit/core";
 import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore";
 import { EditorState } from "./EditorState";
@@ -11,6 +11,7 @@ const LOGGER = new PiLogger("EditorRequestsHandler"); // .mute();
 
 export class EditorRequestsHandler {
     private static instance: EditorRequestsHandler = null;
+
     static getInstance(): EditorRequestsHandler {
         if (EditorRequestsHandler.instance === null) {
             EditorRequestsHandler.instance = new EditorRequestsHandler();
@@ -55,26 +56,54 @@ export class EditorRequestsHandler {
     }
 
     cut() {
-        // TODO implement cut()
         LOGGER.log("cut called");
-        return undefined;
+        const tobecut: PiElement = editorEnvironment.editor.selectedItem;
+        if (!!tobecut) {
+            EditorState.getInstance().deleteElement(tobecut);
+            copiedElement.set(tobecut);
+            // console.log("saved: " + editorEnvironment.writer.writeToString(get(copiedElement)));
+        } else {
+            setUserMessage("Nothing selected", SeverityType.warning);
+        }
     }
 
     copy() {
         LOGGER.log("copy called");
-        const tobecopied: PiElement = EditorState.getInstance().getSelectedElement();
+        const tobecopied: PiElement = editorEnvironment.editor.selectedItem;
         if (!!tobecopied) {
             copiedElement.set(tobecopied.copy());
-            console.log("saved: " + editorEnvironment.writer.writeToString(get(copiedElement)));
+            // console.log("saved: " + editorEnvironment.writer.writeToString(get(copiedElement)));
         } else {
-            setUserMessage("nothing selected", SeverityType.warning);
+            setUserMessage("Nothing selected", SeverityType.warning);
         }
     }
 
     paste() {
-        // TODO implement paste()
         LOGGER.log("paste called");
-        return undefined;
+        const tobepasted = get(copiedElement);
+        if (!!tobepasted) {
+            const currentSelection: Box = editorEnvironment.editor.selectedBox;
+            const element: PiElement = currentSelection.element;
+            if (!!currentSelection) {
+                if (isAliasTextBox(currentSelection)) {
+                    if (isAliasBox(currentSelection.parent)) {
+                        if (currentSelection.parent.conceptName === tobepasted.piLanguageConcept()) {
+                            // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
+                            EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName )
+                        } else {
+                            setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
+                        }
+                    }
+                } else {
+                    // console.log(currentSelection.role);
+                }
+            } else {
+                setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
+            }
+        } else {
+            setUserMessage("Nothing to be pasted", SeverityType.warning);
+            return;
+        }
     }
 
     validate() {
@@ -104,7 +133,7 @@ export class EditorRequestsHandler {
         this.showSearchResults(results, "elemToMatch");
     }
 
-    findNamedElement(nameToFind: string, metatypeSelected: string){
+    findNamedElement(nameToFind: string, metatypeSelected: string) {
         LOGGER.log("findNamedElement called");
         searchResultLoaded.set(false);
         activeTab.set(searchTab);
