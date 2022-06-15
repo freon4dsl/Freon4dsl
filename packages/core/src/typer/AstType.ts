@@ -56,6 +56,9 @@ class NamedElement implements PiNamedElement {
         return "NamedElement";
     }
 
+    copy(): NamedElement {
+        return this;
+    }
     match(toBeMatched: Partial<NamedElement>): boolean {
         return toBeMatched.name === this.name;
     }

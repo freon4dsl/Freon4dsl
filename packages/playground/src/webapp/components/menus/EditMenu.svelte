@@ -17,7 +17,7 @@
 				<Item on:SMUI:action={() => (handleClick(item.id))}>
 					<Text>{item.title}</Text>
 				</Item>
-				{#if item.id === 2 || item.id === 3}
+				{#if item.id === 2 || item.id === 5 || item.id === 6 }
 					<Separator />
 				{/if}
 			{/each}
@@ -86,10 +86,12 @@
 	let menuItems : MenuItem[] = [
 		{ title: 'Undo', action: EditorRequestsHandler.getInstance().undo, id: 1 },
 		{ title: 'Redo', action: EditorRequestsHandler.getInstance().redo, id: 2 },
-		{ title: 'Validate', action: EditorRequestsHandler.getInstance().validate, id: 3 },
-		{ title: 'Find Named Element', action: findNamedElement, id: 4 },
-		{ title: 'Find Structure Element', action: findStructureElement, id: 5 },
-		{ title: 'Find Text', action: findText, id: 6 },
-		{ title: 'Replace', action: EditorRequestsHandler.getInstance().replace, id: 7 },
+		{ title: 'Cut', action: EditorRequestsHandler.getInstance().cut, id: 3 },
+		{ title: 'Copy', action: EditorRequestsHandler.getInstance().copy, id: 4 },
+		{ title: 'Paste', action: EditorRequestsHandler.getInstance().paste, id: 5 },
+		{ title: 'Validate', action: EditorRequestsHandler.getInstance().validate, id: 6 },
+		{ title: 'Find Named Element', action: findNamedElement, id: 7 },
+		{ title: 'Find Structure Element', action: findStructureElement, id: 8 },
+		{ title: 'Find Text', action: findText, id: 9 },
 	];
 </script>

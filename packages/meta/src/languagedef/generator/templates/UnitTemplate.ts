@@ -40,6 +40,7 @@ export class UnitTemplate {
             
                 ${ConceptUtils.makeConstructor(false, unitDescription.allProperties())}
                 ${ConceptUtils.makeBasicMethods(false, metaType,false, true,false, false)} 
+                ${ConceptUtils.makeCopyMethod(unitDescription, myName, false)}
                 ${ConceptUtils.makeMatchMethod(false, unitDescription, myName)}               
             }
             `;

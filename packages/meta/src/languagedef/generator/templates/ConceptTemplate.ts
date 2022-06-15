@@ -70,6 +70,7 @@ export class ConceptTemplate {
                               
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties())}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)} 
+                ${ConceptUtils.makeCopyMethod(concept, myName, concept.isAbstract)}
                 ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName)}    
                 ${ConceptUtils.makeConvenienceMethods(concept.references())}                               
             }
@@ -119,7 +120,8 @@ export class ConceptTemplate {
                 ${concept.implementedReferences().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}     
                               
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties())}
-                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false,true, true)}                    
+                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false,true, true)}   
+                ${ConceptUtils.makeCopyMethod(concept, myName, concept.isAbstract)}                
                 
                 /**
                  * Returns the priority of this expression instance.
@@ -202,7 +204,8 @@ export class ConceptTemplate {
                 ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
 
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties())}
-                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false,false, false)}    
+                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false,false, false)}   
+                ${ConceptUtils.makeCopyMethod(concept, myName, concept.isAbstract)}
                 ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName)}             
             }
                        

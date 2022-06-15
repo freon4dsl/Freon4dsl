@@ -163,6 +163,10 @@ export class PiEditor {
         return this.$selectedBox;
     }
 
+    get selectedItem(): PiElement {
+        return this.selectedElement;
+    }
+
     set selectedBox(box: Box) {
         LOGGER.log("selecteedBox:  set selected box to: " + (!!box ? box.role : "null") + "  NOSELECT [" + this.NOSELECT + "]");
         if( this.NOSELECT) { return; }

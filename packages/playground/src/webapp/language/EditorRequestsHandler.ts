@@ -3,6 +3,9 @@ import { PiCompositeProjection, PiError, PiLogger, Searcher } from "@projectit/c
 import type { PiElement } from "@projectit/core";
 import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore";
 import { EditorState } from "./EditorState";
+import { copiedElement } from "../components/stores/ModelStore";
+import { get } from "svelte/store";
+import { setUserMessage, SeverityType, userMessage } from "../components/stores/UserMessageStore";
 
 const LOGGER = new PiLogger("EditorRequestsHandler"); // .mute();
 
@@ -51,18 +54,35 @@ export class EditorRequestsHandler {
         return undefined;
     }
 
+    cut() {
+        // TODO implement cut()
+        LOGGER.log("cut called");
+        return undefined;
+    }
+
+    copy() {
+        LOGGER.log("copy called");
+        const tobecopied: PiElement = EditorState.getInstance().getSelectedElement();
+        if (!!tobecopied) {
+            copiedElement.set(tobecopied.copy());
+            console.log("saved: " + editorEnvironment.writer.writeToString(get(copiedElement)));
+        } else {
+            setUserMessage("nothing selected", SeverityType.warning);
+        }
+    }
+
+    paste() {
+        // TODO implement paste()
+        LOGGER.log("paste called");
+        return undefined;
+    }
+
     validate() {
         LOGGER.log("validate called");
         errorsLoaded.set(false);
         activeTab.set(errorTab);
         EditorState.getInstance().getErrors();
         errorsLoaded.set(true);
-    }
-
-    replace() {
-        // TODO implement replace()
-        LOGGER.log("replace called");
-        return undefined;
     }
 
     findText(stringToFind: string) {

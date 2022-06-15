@@ -250,6 +250,16 @@ export class ConceptUtils {
                 }`;
     }
 
+    public static makeCopyMethod(concept: PiClassifier, myName: string, isAbstract: boolean): string {
+
+        return `/**
+                 * A convenience method that copies this instance into a new object.
+                 */
+                copy(): ${myName} {
+                    ${isAbstract ? `console.log("${myName}: copy method should be implemented by concrete subclass"); \nreturn null;` : `return ${myName}.create(this);`}    
+                }`;
+    }
+
     public static makeMatchMethod(hasSuper: boolean, concept: PiClassifier, myName: string): string {
         let propsToDo: PiProperty[] = [];
         if (hasSuper && concept instanceof PiConcept) {

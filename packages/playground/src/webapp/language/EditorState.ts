@@ -414,4 +414,8 @@ export class EditorState {
             }
         }
     }
+
+    getSelectedElement() {
+        return editorEnvironment.editor.selectedItem;
+    }
 }
