@@ -344,19 +344,26 @@ export class ScoperTemplate {
         const loopVar: string = "loopVariable";
         let loopVarExtended = loopVar;
         if (myRef.isList) {
-            // TODO additionalNamespacesVisited should also be done for listy references
             if (myRef instanceof PiConceptProperty) {
                 if (!myRef.isPart) {
                     loopVarExtended = loopVarExtended.concat(".referred");
                 }
             }
+            const namespaceExpression = `element.${expression.appliedfeature.toPiString()}`;
             result = result.concat(`
             // generated based on '${expression.toPiString()}'
             for (let ${loopVar} of element.${expression.appliedfeature.toPiString()}) {
                 if (loopVariable instanceof PiElementReference) {
                     if (!this.currentRoleNames.includes('${expression.appliedfeature.toPiString()}')) {
                         if (!!loopVariable.referred) {
-                            result.push(loopVariable.referred);
+                            if (!this.additionalNamespacesVisited.includes(loopVariable.referred)){
+                                this.additionalNamespacesVisited.push(loopVariable.referred);
+                                const referred = loopVariable.referred;
+                                if(!!referred) { 
+                                    result.push(loopVariable.referred);
+                                }
+                                this.additionalNamespacesVisited.pop();
+                            }
                         }
                     }
                 } else {
@@ -368,15 +375,17 @@ export class ScoperTemplate {
             const namespaceExpression = `element.${expression.appliedfeature.toPiString()}`;
             result = result.concat(`
                // generated based on '${expression.toPiString()}' 
-               if (!!${namespaceExpression}) {
-                  if (!this.additionalNamespacesVisited.includes(${namespaceExpression})){
-                     this.additionalNamespacesVisited.push(${namespaceExpression});
-                     const referred = ${namespaceExpression}.referred;
-                     if(!!referred) { 
-                        result.push(${namespaceExpression}.referred);
-                     }
-                     this.additionalNamespacesVisited.pop();
-                  }
+               if (!this.currentRoleNames.includes('${expression.appliedfeature.toPiString()}')) {
+                   if (!!${namespaceExpression}) {
+                      if (!this.additionalNamespacesVisited.includes(${namespaceExpression})){
+                         this.additionalNamespacesVisited.push(${namespaceExpression});
+                         const referred = ${namespaceExpression}.referred;
+                         if(!!referred) { 
+                            result.push(${namespaceExpression}.referred);
+                         }
+                         this.additionalNamespacesVisited.pop();
+                      }
+                   }
                }`);
         }
         return result;
