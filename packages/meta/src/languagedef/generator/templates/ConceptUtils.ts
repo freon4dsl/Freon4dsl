@@ -9,6 +9,7 @@ import {
     PiInterface
 } from "../../metalanguage";
 import * as console from "console";
+import { property } from "lodash";
 
 export class ConceptUtils {
 
@@ -251,13 +252,51 @@ export class ConceptUtils {
     }
 
     public static makeCopyMethod(concept: PiClassifier, myName: string, isAbstract: boolean): string {
-
-        return `/**
+        const comment = `/**
+                 * A convenience method that copies this instance into a new object.
+                 */`;
+        if (isAbstract) {
+            return `${comment}
+                copy(): ${myName} {
+                    console.log("${myName}: copy method should be implemented by concrete subclass"); 
+                    return null;  
+                }`;
+        } else {
+            return `/**
                  * A convenience method that copies this instance into a new object.
                  */
                 copy(): ${myName} {
-                    ${isAbstract ? `console.log("${myName}: copy method should be implemented by concrete subclass"); \nreturn null;` : `return ${myName}.create(this);`}    
+                    const result = new ${myName}();
+                    ${concept.allProperties().map(property =>
+                        `if (!!this.${property.name}) {
+                            ${this.makeCopyProperty(property)}
+                        }`).join("\n")
+                    }
+                    return result;  
                 }`;
+        }
+    }
+
+    private static makeCopyProperty(property): string {
+        let result: string = "";
+        if (property.isList) {
+            if (property.isPrimitive) {
+                result = `this.${property.name}.forEach(x =>
+                        result.${property.name}.push(x)
+                    );`;
+            } else {
+                result = `this.${property.name}.forEach(x =>
+                        result.${property.name}.push(x.copy())
+                    );`;
+            }
+        } else {
+            if (property.isPrimitive) {
+                result = `result.${property.name} = this.${property.name};`;
+            } else {
+                result = `result.${property.name} = this.${property.name}.copy();`;
+            }
+        }
+        return result;
     }
 
     public static makeMatchMethod(hasSuper: boolean, concept: PiClassifier, myName: string): string {

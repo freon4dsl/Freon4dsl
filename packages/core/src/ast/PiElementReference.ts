@@ -29,6 +29,10 @@ export class PiElementReference<T extends PiNamedElement> extends MobxModelEleme
         return result;
     }
 
+    public copy<T extends PiNamedElement>(): PiElementReference<T> {
+        return PiElementReference.create<T>(this._PI_pathname, this.typeName);
+    }
+
     private _PI_pathname: string[] = [];
     private _PI_referred: T = null;
 
