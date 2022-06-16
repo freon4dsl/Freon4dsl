@@ -17,3 +17,5 @@ export let findTextDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let findStructureDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let findNamedDialogVisible: Writable<boolean> = writable<boolean>(false);
 
+// variables for the HelpButton
+export let helpDialogVisible: Writable<boolean> = writable<boolean>(false);

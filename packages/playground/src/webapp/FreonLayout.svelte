@@ -35,6 +35,7 @@
 	import FindNamedElementDialog from "./components/dialogs/edit-dialogs/FindNamedElementDialog.svelte";
 	import FindStructureDialog from "./components/dialogs/edit-dialogs/FindStructureDialog.svelte";
 	import FindTextDialog from "./components/dialogs/edit-dialogs/FindTextDialog.svelte";
+	import HelpDialog from "./components/dialogs/HelpDialog.svelte";
 
 	import { modelNames } from "./components/stores/ServerStore";
 	import { drawerOpen } from "./components/stores/DrawerStore";
@@ -42,9 +43,9 @@
 	import { userMessageOpen } from "./components/stores/UserMessageStore";
 	import { languageName } from "./components/stores/LanguageStore";
 	import { currentModelName } from "./components/stores/ModelStore";
+	import { helpDialogVisible } from "./components/stores/DialogStore";
 
 	import { serverCommunication } from "./config/WebappConfiguration";
-	import { LanguageInitializer } from "./language/LanguageInitializer";
 	import LinearProgress from '@smui/linear-progress';
 
 	import StatusBar from "./components/editor-panel/StatusBar.svelte";
@@ -55,6 +56,7 @@
 	import FreonContent from "./FreonContent.svelte";
 	import StatusBar from "./components/editor-panel/StatusBar.svelte";
 	import RenameUnitDialog from "./components/dialogs/file-dialogs/RenameUnitDialog.svelte";
+	import HelpDialog from "./components/dialogs/HelpDialog.svelte";
 
 	muteLogs();
 
@@ -129,7 +131,7 @@
 					<path fill="currentColor" d={mdiWeb} />
 				</Icon>
 			</IconButton>
-			<IconButton aria-label="Help Page" target="_blank" href="https://www.projectit.org/">
+			<IconButton aria-label="Help Page" on:click={() => {$helpDialogVisible = true; console.log($helpDialogVisible)}}>
 				<Icon component={Svg} viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiHelp} />
 				</Icon>
@@ -170,6 +172,8 @@
 <FindNamedElementDialog />
 <FindStructureDialog />
 <FindTextDialog />
+
+<HelpDialog />
 
 <style>
 	/*.main-frame {*/

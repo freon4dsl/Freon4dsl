@@ -1,6 +1,9 @@
 import {writable} from 'svelte/store';
 import type { Writable } from 'svelte/store';
 
+// info about ProjectIt
+export const versionNumber = "0.4.0";
+
 // severity can range from 0 to 4
 // 0 means information
 // 1 means hint
