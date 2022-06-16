@@ -14,10 +14,10 @@
 	>
 		<List>
 			{#each menuItems as item (item.id)}
-				<Item on:SMUI:action={() => (handleClick(item.id))}>
+				<Item on:SMUI:action={() => (handleClick(item.id))} disabled={isDisabled(item.id)}>
 					<Text>{item.title}</Text>
 				</Item>
-				{#if item.id === 2 || item.id === 3}
+				{#if item.id === 2 || item.id === 5 || item.id === 6 }
 					<Separator />
 				{/if}
 			{/each}
@@ -42,6 +42,7 @@
 		findTextDialogVisible
 	} from "../stores/DialogStore";
 	import { EditorRequestsHandler } from "../../language/EditorRequestsHandler";
+	import { setUserMessage } from "../stores/UserMessageStore";
 
 	let menu: MenuComponentDev;
 
@@ -82,14 +83,27 @@
 		menuItem.action(id);
 	};
 
+	const notImplemented = () => {
+		setUserMessage("Sorry, this action is not yet implemented.");
+	}
+
 	// all menu items
 	let menuItems : MenuItem[] = [
 		{ title: 'Undo', action: EditorRequestsHandler.getInstance().undo, id: 1 },
 		{ title: 'Redo', action: EditorRequestsHandler.getInstance().redo, id: 2 },
-		{ title: 'Validate', action: EditorRequestsHandler.getInstance().validate, id: 3 },
-		{ title: 'Find Named Element', action: findNamedElement, id: 4 },
-		{ title: 'Find Structure Element', action: findStructureElement, id: 5 },
-		{ title: 'Find Text', action: findText, id: 6 },
-		{ title: 'Replace', action: EditorRequestsHandler.getInstance().replace, id: 7 },
+		{ title: 'Cut', action: notImplemented, id: 3 },
+		{ title: 'Copy', action: notImplemented, id: 4 },
+		{ title: 'Paste', action: notImplemented, id: 5 },
+		{ title: 'Validate', action: EditorRequestsHandler.getInstance().validate, id: 6 },
+		{ title: 'Find Named Element', action: findNamedElement, id: 7 },
+		{ title: 'Find Structure Element', action: findStructureElement, id: 8 },
+		{ title: 'Find Text', action: findText, id: 9 },
 	];
+
+	function isDisabled(id): boolean {
+		if (id >= 1 && id <= 5 || id === 8) {
+			return true;
+		}
+		return false;
+	}
 </script>
