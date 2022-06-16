@@ -50,4 +50,3 @@ export interface PiModel extends PiNamedElement {
      */
     getUnitsForType(type: string): PiModelUnit[];
 }
-// end::model-interface[]
