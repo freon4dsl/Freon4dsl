@@ -6,26 +6,14 @@ import {
     PiPrimitiveProperty,
     PiProperty,
     PiPrimitiveType,
-    PiInterface
+    PiInterface, PiUnitDescription
 } from "../../metalanguage";
 import * as console from "console";
 import { property } from "lodash";
 
 export class ConceptUtils {
 
-    public static findMobxImports(hasSuper: boolean, concept: PiConcept): string[] {
-        const mobxImports: string[] = [];
-        if (!hasSuper) {
-            mobxImports.push("MobxModelElementImpl");
-        }
-        if (concept.implementedProperties().some(part => part.isList && !part.isPrimitive)) {
-            mobxImports.push("observablelistpart");
-        }
-        if (concept.implementedProperties().some(part => !part.isList && !part.isPrimitive)) {
-            mobxImports.push("observablepart");
-        }
-        return mobxImports;
-    }
+
 
     public static makeImportStatements(needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
         // TODO remove or change the import for MatchUtil
@@ -155,7 +143,7 @@ export class ConceptUtils {
             `${allPrimitiveProps.map(p =>
                 (p.isList ?
                         `makeObservable(this, {"${p.name}": observable})` :
-                        `makeObservable(this, {"${Names.primitivePropertyField(p)}": observable})`
+                        `observablePrim(this, "${p.name}")`
                 )
             ).join("\n")}
                         `

@@ -1,0 +1,9 @@
+language UndoTester
+
+model UndoModel {
+    unit: UndoUnit;
+}
+
+modelunit UndoUnit {
+    prim: string;
+}

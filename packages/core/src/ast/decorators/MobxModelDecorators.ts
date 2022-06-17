@@ -2,6 +2,8 @@ import { IObservableValue, IArrayWillChange, IArrayWillSplice, observable, inter
 import "reflect-metadata";
 
 import { DecoratedModelElement } from "./DecoratedModelElement";
+import { PiChangeManager } from "../../change-manager/PiChangeManager";
+import { PiElement } from "../PiElement";
 
 export const MODEL_PREFIX = "_PI_";
 export const MODEL_PREFIX_LENGTH = MODEL_PREFIX.length;
@@ -10,12 +12,12 @@ export const MODEL_NAME = MODEL_PREFIX + "Name";
 
 /**
  * This property decorator can be used to decorate properties of type ModelElement.
- * The objects in such properties will automatically keep a owner reference.
+ * The objects in such properties will automatically keep an owner reference.
  *
  * @param {Object} target is the prototype
- * @param {string | symbol} propertyKey
+ * @param {string } propertyKey
  */
-export function observablereference(target: DecoratedModelElement, propertyKey: string | symbol) {
+export function observablereference(target: DecoratedModelElement, propertyKey: string ) {
     // const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
     //
     // const getter = function(this: any) {
@@ -73,12 +75,47 @@ export function observablereference(target: DecoratedModelElement, propertyKey: 
 
 /**
  * This property decorator can be used to decorate properties of type ModelElement.
- * The objects in such properties will automatically keep a owner reference.
+ * The objects in such properties will automatically keep an owner reference.
  *
  * @param {Object} target is the prototype
- * @param {string | symbol} propertyKey
+ * @param {string } propertyKey
  */
-export function observablelistreference(target: DecoratedModelElement, propertyKey: string | symbol) {
+export function observablelistreference(target: DecoratedModelElement, propertyKey: string ) {
+}
+
+export function observablePrim(target: DecoratedModelElement, propertyKey: string ) {
+    const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
+    const getter = function(this: any) {
+        const storedObserver = this[privatePropertyKey] as IObservableValue<string | number | boolean>;
+        if (!!storedObserver) {
+            return storedObserver.get();
+        } else {
+            this[privatePropertyKey] = observable.box(null);
+            return this[privatePropertyKey].get();
+        }
+    };
+
+    const setter = function(this: any, newValue: string | number | boolean) {
+        PiChangeManager.getInstance().setPrimitive(this, propertyKey, newValue);
+
+        let storedObserver = this[privatePropertyKey] as IObservableValue<string | number | boolean>;
+
+        if (!!storedObserver) {
+            runInAction( () => {
+                storedObserver.set(newValue);
+            });
+        } else {
+            storedObserver = observable.box(newValue);
+            this[privatePropertyKey] = storedObserver;
+        }
+    }
+    // tslint:disable no-unused-expression
+    Reflect.deleteProperty(target, propertyKey);
+    Reflect.defineProperty(target, propertyKey, {
+        get: getter,
+        set: setter,
+        configurable: true
+    });
 }
 
 export function model1() {
@@ -90,12 +127,12 @@ export function model1() {
 /**
  *
  * This property decorator can be used to decorate properties of type ModelElement.
- * The objects in such properties will automatically keep a owner reference.
+ * The objects in such properties will automatically keep an owner reference.
  *
  * @param {Object} target
- * @param {string | symbol} propertyKey
+ * @param {string } propertyKey
  */
-export function observablepart(target: DecoratedModelElement, propertyKey: string | symbol) {
+export function observablepart(target: DecoratedModelElement, propertyKey: string) {
     const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
 
     const getter = function(this: any) {
@@ -108,8 +145,9 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
         }
     };
 
-    const setter = function(this: any, val: DecoratedModelElement) {
-         let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
+    const setter = function(this: any, newValue: DecoratedModelElement) {
+        PiChangeManager.getInstance().setPart(this, propertyKey, newValue);
+        let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         const storedValue = !!storedObserver ? storedObserver.get() : null;
         // Clean owner of current part
         if (!!storedValue) {
@@ -119,26 +157,26 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
         }
         if (!!storedObserver) {
             runInAction( () => {
-                storedObserver.set(val);
+                storedObserver.set(newValue);
             });
         } else {
-            this[privatePropertyKey] = observable.box(val);
+            this[privatePropertyKey] = observable.box(newValue);
             storedObserver = this[privatePropertyKey];
         }
-        if (val !== null && val !== undefined) {
-            if (val.$$owner !== undefined && val.$$owner !== null) {
-                if (val.$$propertyIndex !== undefined) {
+        if (newValue !== null && newValue !== undefined) {
+            if (newValue.$$owner !== undefined && newValue.$$owner !== null) {
+                if (newValue.$$propertyIndex !== undefined) {
                     // Clean new value from its containing list
-                    (val.$$owner as any)[val.$$propertyName].splice(val.$$propertyIndex, 1);
+                    (newValue.$$owner as any)[newValue.$$propertyName].splice(newValue.$$propertyIndex, 1);
                 } else {
                     // Clean new value from its owner
-                    (val.$$owner as any)[MODEL_PREFIX + val.$$propertyName] = null;
+                    (newValue.$$owner as any)[MODEL_PREFIX + newValue.$$propertyName] = null;
                 }
             }
             // Set owner
-            val.$$owner = this;
-            val.$$propertyName = propertyKey.toString();
-            val.$$propertyIndex = undefined;
+            newValue.$$owner = this;
+            newValue.$$propertyName = propertyKey.toString();
+            newValue.$$propertyIndex = undefined;
         }
     };
 
@@ -151,7 +189,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
     });
 }
 
-export function observablelistpart(target: Object, propertyKey: string | symbol) {
+export function observablelistpart(target: Object, propertyKey: string ) {
     const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
 
     const getter = function(this: any) {
@@ -192,6 +230,7 @@ function willChange(
         case "update":
             const newValue = change.newValue;
             const oldValue = change.object[change.index];
+            PiChangeManager.getInstance().updateListElement(newValue, oldValue, change.index);
             if (newValue !== oldValue) {
                 if (!!newValue) {
                     if (!!newValue.$$owner) {
@@ -217,6 +256,9 @@ function willChange(
             let index: number = change.index;
             const removedCount: number = change.removedCount;
             const added: DecoratedModelElement[] = change.added;
+            const listOwner: PiElement = (change.object as any)[MODEL_CONTAINER];
+            const propertyName: string = (change.object as any)[MODEL_NAME];
+            PiChangeManager.getInstance().updateList(listOwner, propertyName, index, removedCount, added);
             const addedCount = added.length;
             for (const i in added) {
                 // cleanup old owner reference of new value
@@ -230,8 +272,8 @@ function willChange(
                         }
                     }
                     // set the owner properties for inserted elements
-                    element.$$owner = (change.object as any)[MODEL_CONTAINER];
-                    element.$$propertyName = (change.object as any)[MODEL_NAME];
+                    element.$$owner = listOwner;
+                    element.$$propertyName = propertyName;
                     element.$$propertyIndex = index + Number(i);
                 }
             }
