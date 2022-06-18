@@ -24,6 +24,10 @@ export class MobxTestElement extends PiElementBaseImpl {
     text(): string {
         return this.name;
     }
+
+    piLanguageConcept(): string {
+        return "MobxTestElement";
+    }
 }
 
 export class ModelContext {

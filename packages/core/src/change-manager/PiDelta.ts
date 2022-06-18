@@ -71,7 +71,7 @@ export class PiRefDelta extends PiDelta {
 
 export class PiListDelta extends PiDelta {
     removedCount: number;
-    added: PiElement[];
+    added: PiElement[] = [];
 
     constructor(owner: PiElement, propertyName: string, index: number, removedCount: number, added: DecoratedModelElement[]) {
         super(owner, propertyName, index);
