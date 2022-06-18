@@ -1,8 +1,9 @@
 import { action, makeObservable } from "mobx";
-import { PiLogger, PiUtils } from "./internal";
+import { PiUtils } from ".";
 import { Box, PiEditor } from "../editor";
 import { PiBinaryExpression, PiElement, PiExpression } from "../ast";
 import { isPiBinaryExpression, isPiExpression } from "../ast-utils";
+import { PiLogger } from "../logging";
 
 // reserved role names for expressions, use with care.
 export const PI_BINARY_EXPRESSION_LEFT = "PiBinaryExpression-left";

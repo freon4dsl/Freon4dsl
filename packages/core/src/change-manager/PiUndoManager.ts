@@ -1,9 +1,9 @@
-import { PiChangeManager } from "../change-manager/PiChangeManager";
+import { PiChangeManager } from "./PiChangeManager";
 import { PiModelUnit } from "../ast";
 import { PiDelta, TransactionDelta } from "./PiDelta";
-import { PiLogger } from "../util";
-
-const LOGGER: PiLogger = new PiLogger("PiUndoManager");
+// import { PiLogger } from "../logging";
+//
+// const LOGGER: PiLogger = new PiLogger("PiUndoManager");
 /**
  * Class PiUndoManager holds two sets of stacks of change information on the model.
  * The information is stored per model unit; one stack for undo info, one for redo info.
@@ -12,6 +12,7 @@ export class PiUndoManager {
     private static theInstance; // the only instance of this class
     private inTransaction: boolean = false;
     private currentTransaction: TransactionDelta;
+    private inUndo: boolean = false;
 
     /**
      * This method implements the singleton pattern
@@ -66,6 +67,13 @@ export class PiUndoManager {
     }
 
     private addDelta(delta: PiDelta) {
+        // if (this.inUndo) {
+        //     this.addRedo(delta);
+        // }
+        this.addUndo(delta);
+    }
+
+    private addUndo(delta: PiDelta) {
         let myStack = this.undoStackPerUnit.get("UndoUnit");
         if (myStack === null || myStack === undefined) {
             this.undoStackPerUnit.set("UndoUnit", []);
@@ -78,16 +86,18 @@ export class PiUndoManager {
                 myStack.push(this.currentTransaction);
             }
             this.currentTransaction.internalDeltas.push(delta);
-            LOGGER.log("PiUndoManager: IN TRANSACTION added undo for " + delta.owner.piLanguageConcept() + "[" + delta.propertyName + "]");
+            console.log("PiUndoManager: IN TRANSACTION added undo for " + delta.owner.piLanguageConcept() + "[" + delta.propertyName + "]");
         } else {
             myStack.push(delta);
-            LOGGER.log("PiUndoManager: added undo for " + delta.owner.piLanguageConcept() + "[" + delta.propertyName + "]");
+            console.log("PiUndoManager: added undo for " + delta.owner.piLanguageConcept() + "[" + delta.propertyName + "]");
         }
     }
 
     executeUndo(unit: PiModelUnit) {
+        this.inUndo = true; // make sure incoming changes are stored on redo stack
         const delta = this.undoStackPerUnit.get(unit.name).pop();
         this.executeDelta(delta);
+        this.inUndo = false;
     }
 
     executeRedo(unit: PiModelUnit) {
@@ -96,6 +106,6 @@ export class PiUndoManager {
     }
 
     private executeDelta(delta: PiDelta) {
-        // TODO make sure incoming change is stored on redo stack
+
     }
 }

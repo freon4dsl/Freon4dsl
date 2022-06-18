@@ -3,7 +3,7 @@ import { makeObservable, observable, computed, action, trace, runInAction } from
 import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiOwnerDescriptor, PiElement } from "../ast";
-import { PiCaret, wait, PiLogger } from "../util";
+import { PiCaret, wait } from "../util";
 import { PiAction } from "./actions/index";
 import {
     PiProjection,
@@ -13,6 +13,7 @@ import {
     Box,
     PiActions
 } from "./internal";
+import { PiLogger } from "../logging";
 
 const LOGGER = new PiLogger("PiEditor");
 

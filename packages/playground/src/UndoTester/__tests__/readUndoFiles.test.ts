@@ -42,8 +42,32 @@ describe("Testing Undo Manager", () => {
         const myStack: PiDelta[] = manager.undoStackPerUnit.get("UndoUnit");
         expect (myStack).not.toBeNull();
         expect (myStack).not.toBeUndefined();
-        // expect (myStack.length).toBe(1);
+        expect (myStack.length).toBe(1);
         console.log("length of undo stack: " + myStack.length + " => [[" + myStack.map(d => d.toString()).join(", ") + "]]");
+    });
+
+    test("read First WITH transaction plus simple change", () => {
+        const manager = PiUndoManager.getInstance();
+        manager.cleanStacks();
+        manager.startTransaction();
+        const filePath = "src/UndoTester/__inputs__/First.und";
+        const model: UndoModel = new UndoModel();
+        const langSpec: string = handler.stringFromFile(filePath);
+        const unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
+        manager.endTransaction();
+        expect(unit1).not.toBeNull();
+        // console.log(writer.writeToString(unit1));
+        expect (manager.undoStackPerUnit).not.toBeNull();
+        expect (manager.undoStackPerUnit).not.toBeUndefined();
+        const myStack: PiDelta[] = manager.undoStackPerUnit.get("UndoUnit");
+        expect (myStack).not.toBeNull();
+        expect (myStack).not.toBeUndefined();
+        expect (myStack.length).toBe(1);
+        // console.log("length of undo stack: " + myStack.length + " => [[" + myStack.map(d => d.toString()).join(", ") + "]]");
+
+        // now change the value of 'prim'
+        unit1.prim = "nieuwe_waarde";
+        expect (myStack.length).toBe(2);
     });
 
 });

@@ -1,10 +1,10 @@
-import { PiElement, DecoratedModelElement } from "../ast";
+import { DecoratedModelElement, PiElement, PiElementBaseImpl, PiElementReference } from "../ast";
 import { PiDelta, PiListDelta, PiPartDelta, PiPrimDelta, PiRefDelta } from "./PiDelta";
-import { PiLogger } from "../util";
+// import { PiLogger } from "../logging";
 
 export type callback = (delta: PiDelta) => void;
 
-const LOGGER: PiLogger = new PiLogger("PiChangeManager").mute();
+// const LOGGER: PiLogger = new PiLogger("PiChangeManager").mute(); // for now removed, because it causes an error in MobxTest
 
 export class PiChangeManager {
     private static theInstance; // the only instance of this class
@@ -39,9 +39,9 @@ export class PiChangeManager {
      * @param value
      */
     public setRef(elemToChange: PiElement, propertyName: string, value: DecoratedModelElement): void {
-        LOGGER.log("ChangeManager: set REF value for " + elemToChange.piLanguageConcept() + "[" + propertyName + "] := " + value);
+        // LOGGER.log("ChangeManager: set REF value for " + elemToChange.piLanguageConcept() + "[" + propertyName + "] := " + value);
         if(!!this.changeRefCallbacks) {
-            const delta: PiRefDelta = new PiRefDelta(elemToChange, propertyName, elemToChange[propertyName], value as any);
+            const delta: PiRefDelta = new PiRefDelta(elemToChange, propertyName, elemToChange[propertyName], value);
             for(const cb of this.changeRefCallbacks) {
                 cb(delta);
             }
@@ -55,9 +55,9 @@ export class PiChangeManager {
      * @param value
      */
     public setPart(elemToChange: PiElement, propertyName: string, value: DecoratedModelElement): void {
-        LOGGER.log("ChangeManager: set PART value for " + elemToChange.piLanguageConcept() + "[" + propertyName + "] := " + value);
+        console.log("ChangeManager: set PART value for " + elemToChange.piLanguageConcept() + "[" + propertyName + "] := " + value);
         if(!!this.changePartCallbacks) {
-            const delta: PiPartDelta = new PiPartDelta(elemToChange, propertyName, elemToChange[propertyName], value as any);
+            const delta: PiPartDelta = new PiPartDelta(elemToChange, propertyName, elemToChange[propertyName], value);
             for(const cb of this.changePartCallbacks) {
                 cb(delta);
             }
@@ -71,7 +71,7 @@ export class PiChangeManager {
      * @param value
      */
     public setPrimitive(elemToChange: PiElement, propertyName: string, value: string | boolean | number): void {
-        LOGGER.log("ChangeManager: set PRIMITIVE value for " + elemToChange.piLanguageConcept() + "[" + propertyName + "] := " + value);
+        // LOGGER.log("ChangeManager: set PRIMITIVE value for " + elemToChange.piLanguageConcept() + "[" + propertyName + "] := " + value);
         if(!!this.changePrimCallbacks) {
              const delta: PiPrimDelta = new PiPrimDelta(elemToChange, propertyName, elemToChange[propertyName], value);
              for(const cb of this.changePrimCallbacks) {
@@ -89,10 +89,10 @@ export class PiChangeManager {
     public updateListElement(newValue: DecoratedModelElement, oldValue: DecoratedModelElement, index: number) {
         const owner = oldValue.$$owner;
         const propertyName: string = oldValue.$$propertyName;
-        LOGGER.log("ChangeManager: UPDATE LIST ELEMENT for " + owner.piLanguageConcept() + "[" + propertyName + "] := " + newValue);
+        // LOGGER.log("ChangeManager: UPDATE LIST ELEMENT for " + owner.piLanguageConcept() + "[" + propertyName + "] := " + newValue);
         if(!!this.changeListElemCallbacks) {
             // TODO this does not work for lists of refs or prims!!
-            const delta: PiPartDelta = new PiPartDelta(owner, propertyName, oldValue as any, newValue as any, index);
+            const delta: PiPartDelta = new PiPartDelta(owner, propertyName, oldValue, newValue, index);
             for(const cb of this.changeListElemCallbacks) {
                 cb(delta);
             }
@@ -108,9 +108,9 @@ export class PiChangeManager {
      * @param added         the elements to be added
      */
     public updateList(listOwner: PiElement, propertyName: string, index: number, removedCount: number, added: DecoratedModelElement[]) {
-        LOGGER.log("ChangeManager: UPDATE LIST for " + listOwner.piLanguageConcept() + "[" + propertyName + "]");
+        // LOGGER.log("ChangeManager: UPDATE LIST for " + listOwner.piLanguageConcept() + "[" + propertyName + "]");
         if(!!this.changeListCallbacks) {
-            const delta: PiListDelta = new PiListDelta(listOwner, propertyName, index, removedCount, added as any);
+            const delta: PiListDelta = new PiListDelta(listOwner, propertyName, index, removedCount, added);
             for(const cb of this.changeListCallbacks) {
                 cb(delta);
             }

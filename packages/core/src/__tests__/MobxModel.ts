@@ -1,10 +1,12 @@
 import "reflect-metadata";
-import { PiElementReferenceM } from "./PiElementReferenceM";
-import { observablelistpart, observablelistreference, observablepart, observablereference } from "../MobxModelDecorators";
-import { MobxModelElementImpl } from "../DecoratedModelElement";
+import { PiElementReference, PiElementBaseImpl, observablelistpart, observablepart } from "../ast";
 import { makeObservable, observable } from "mobx";
+import { PiElementReferenceTestScoper } from "./PiElementReferenceTestScoper";
 
-export class MobxTestElement extends MobxModelElementImpl {
+/**
+ * These classes are used only to test the mobx decorators. They extend PiElementBase directly.
+ */
+export class MobxTestElement extends PiElementBaseImpl {
     public name: string;
 
     constructor(name: string) {
@@ -52,13 +54,16 @@ export class MobxTestParts extends MobxTestElement {
     @observablelistpart manyPart: MobxTestElement[];
     @observablepart singlePart: MobxTestElement;
 
-    @observablelistreference manyReference: MobxTestElement[];
-    @observablepart singleReference: PiElementReferenceM<MobxTestElement>;
+    @observablelistpart manyReference: MobxTestElement[];
+    @observablepart singleReference: PiElementReferenceTestScoper<MobxTestElement>;
 
     constructor(name: string) {
         super(name);
     }
 
+    piLanguageConcept(): string {
+        return "MobxTestParts";
+    }
     toString(): string {
         return "FunctionCallExpression";
     }
@@ -71,8 +76,8 @@ export class MobxTestRoot extends MobxTestElement {
 export class MobxTestReferences extends MobxTestElement {
     name: string;
 
-    @observablelistreference manyReference: MobxTestElement[];
-    @observablereference singleReference: MobxTestElement[];
+    @observablelistpart manyReference: MobxTestElement[];
+    @observablepart singleReference: MobxTestElement[];
 
     constructor(name: string) {
         super(name);

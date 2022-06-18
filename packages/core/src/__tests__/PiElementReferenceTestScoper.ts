@@ -1,15 +1,15 @@
-import { PiNamedElement } from ".";
+import { PiNamedElement } from "../ast";
 import { computed, observable, makeObservable } from "mobx";
-import { LanguageEnvironment } from "../environment/LanguageEnvironment";
 import { PiLogger } from "../logging";
-import { MobxModelElementImpl } from "./decorators";
+import { MobxModelElementImpl, PiElementReference } from "../ast";
+import { TestScoper } from "./TestScoper";
 
 const LOGGER = new PiLogger("PiElementReference").mute();
 /**
  * Class PiElementReference provides the implementation for a (named) reference in ProjectIt.
  * References can be set with either a referred object, or with a name.
  */
-export class PiElementReference<T extends PiNamedElement> extends MobxModelElementImpl {
+export class PiElementReferenceTestScoper<T extends PiNamedElement> extends MobxModelElementImpl {
     /**
      * Returns a new instance which refers to an element named 'name' of type T, or
      * to the element 'name' itself.
@@ -17,8 +17,8 @@ export class PiElementReference<T extends PiNamedElement> extends MobxModelEleme
      * @param name
      * @param typeName
      */
-    public static create<T extends PiNamedElement>(name: string | string[] | T, typeName: string): PiElementReference<T> {
-        const result = new PiElementReference(null, typeName);
+    public static create<T extends PiNamedElement>(name: string | string[] | T, typeName: string): PiElementReferenceTestScoper<T> {
+        const result = new PiElementReferenceTestScoper(null, typeName);
         if (Array.isArray(name)) {
             result.pathname = name;
         } else if (typeof name === "string") {
@@ -28,10 +28,6 @@ export class PiElementReference<T extends PiNamedElement> extends MobxModelEleme
         }
         result.typeName = typeName;
         return result;
-    }
-
-    public copy<T extends PiNamedElement>(): PiElementReference<T> {
-        return PiElementReference.create<T>(this._PI_pathname, this.typeName);
     }
 
     private _PI_pathname: string[] = [];
@@ -50,7 +46,7 @@ export class PiElementReference<T extends PiNamedElement> extends MobxModelEleme
         super();
         this.referred = referredElement;
         this.typeName = typeName;
-        makeObservable<PiElementReference<T>, "_PI_pathname" | "_PI_referred">(this, {
+        makeObservable<PiElementReferenceTestScoper<T>, "_PI_pathname" | "_PI_referred">(this, {
             _PI_referred: observable,
             _PI_pathname: observable,
             referred: computed,
@@ -100,14 +96,10 @@ export class PiElementReference<T extends PiNamedElement> extends MobxModelEleme
     get referred(): T {
         LOGGER.log("PiElementReference " + this._PI_pathname + " property " + this.piOwnerDescriptor().propertyName + " owner " + this.piOwnerDescriptor().owner.piLanguageConcept());
         if (!!this._PI_referred) {
-           return this._PI_referred;
-       } else {
-            return LanguageEnvironment.getInstance().scoper.resolvePathName(
-                this.piOwnerDescriptor().owner,
-                this.piOwnerDescriptor().propertyName,
-                this._PI_pathname,
-                this.typeName
-            ) as T;
+            return this._PI_referred;
+        } else {
+            // this line is different form the 'true' PiElementReference
+            return TestScoper.getInstance().getFromVisibleElements(this._PI_pathname.shift()) as T;
         }
     }
 

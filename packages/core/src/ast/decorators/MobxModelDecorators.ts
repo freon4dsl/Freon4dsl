@@ -2,86 +2,12 @@ import { IObservableValue, IArrayWillChange, IArrayWillSplice, observable, inter
 import "reflect-metadata";
 
 import { DecoratedModelElement } from "./DecoratedModelElement";
-import { PiChangeManager } from "../../change-manager/PiChangeManager";
-import { PiElement } from "../PiElement";
+import { PiChangeManager } from "../../change-manager";
 
 export const MODEL_PREFIX = "_PI_";
 export const MODEL_PREFIX_LENGTH = MODEL_PREFIX.length;
 export const MODEL_CONTAINER = MODEL_PREFIX + "Container";
 export const MODEL_NAME = MODEL_PREFIX + "Name";
-
-/**
- * This property decorator can be used to decorate properties of type ModelElement.
- * The objects in such properties will automatically keep an owner reference.
- *
- * @param {Object} target is the prototype
- * @param {string } propertyKey
- */
-export function observablereference(target: DecoratedModelElement, propertyKey: string ) {
-    // const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
-    //
-    // const getter = function(this: any) {
-    //     // console.log("GET observablereference observablereference observablereference observablereference");
-    //     const storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
-    //     let result: any = storedObserver ? storedObserver.get() : undefined;
-    //     if (result === undefined) {
-    //         result = null;
-    //         this[privatePropertyKey] = observable.box(result);
-    //     }
-    //     return result;
-    // };
-    //
-    // const setter = function(this: any, val: DecoratedModelElement) {
-    //     console.log("SET observablereference observablereference observablereference observablereference");
-    //     let storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
-    //     const storedValue = storedObserver ? storedObserver.get() : null;
-    //     // Clean owner of current part
-    //     if (storedValue) {
-    //         storedValue.owner = null;
-    //         storedValue.propertyName = "";
-    //         storedValue.propertyIndex = undefined;
-    //     }
-    //     if (storedObserver) {
-    //         storedObserver.set(val);
-    //     } else {
-    //         this[privatePropertyKey] = observable.box(val);
-    //         storedObserver = this[privatePropertyKey];
-    //     }
-    //     if (val !== null && val !== undefined) {
-    //         if (val.owner !== undefined && val.owner !== null) {
-    //             if (val.propertyIndex !== undefined) {
-    //                 // Clean new value from its containing list
-    //                 (val.owner as any)[val.propertyName].splice(val.propertyIndex, 1);
-    //             } else {
-    //                 // Clean new value from its owner
-    //                 (val.owner as any)[MODEL_PREFIX + val.propertyName] = null;
-    //             }
-    //         }
-    //         // Set owner
-    //         val.owner = this;
-    //         val.propertyName = propertyKey.toString();
-    //         val.propertyIndex = undefined;
-    //     }
-    // };
-    //
-    // // tslint:disable no-unused-expression
-    // Reflect.deleteProperty(target, propertyKey);
-    // Reflect.defineProperty(target, propertyKey, {
-    //     get: getter,
-    //     set: setter,
-    //     configurable: true
-    // });
-}
-
-/**
- * This property decorator can be used to decorate properties of type ModelElement.
- * The objects in such properties will automatically keep an owner reference.
- *
- * @param {Object} target is the prototype
- * @param {string } propertyKey
- */
-export function observablelistreference(target: DecoratedModelElement, propertyKey: string ) {
-}
 
 export function observablePrim(target: DecoratedModelElement, propertyKey: string ) {
     const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
@@ -116,12 +42,6 @@ export function observablePrim(target: DecoratedModelElement, propertyKey: strin
         set: setter,
         configurable: true
     });
-}
-
-export function model1() {
-    return (constructor: new (...args: any[]) => any) => {
-        return constructor;
-    };
 }
 
 /**
@@ -256,7 +176,7 @@ function willChange(
             let index: number = change.index;
             const removedCount: number = change.removedCount;
             const added: DecoratedModelElement[] = change.added;
-            const listOwner: PiElement = (change.object as any)[MODEL_CONTAINER];
+            const listOwner = (change.object as any)[MODEL_CONTAINER];
             const propertyName: string = (change.object as any)[MODEL_NAME];
             PiChangeManager.getInstance().updateList(listOwner, propertyName, index, removedCount, added);
             const addedCount = added.length;
@@ -305,3 +225,84 @@ function willChange(
     }
     return change;
 }
+
+// TODO everything below is currently unused -- should be removed after check whether it is truely unneeded
+/**
+ * This property decorator can be used to decorate properties of type ModelElement.
+ * The objects in such properties will automatically keep an owner reference.
+ *
+ * @param {Object} target is the prototype
+ * @param {string } propertyKey
+ */
+// export function observablereference(target: DecoratedModelElement, propertyKey: string ) {
+//     // const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
+//     //
+//     // const getter = function(this: any) {
+//     //     // console.log("GET observablereference observablereference observablereference observablereference");
+//     //     const storedObserver = this[privatePropertyKey] as ObservableValue<MobxModelElementImpl>;
+//     //     let result: any = storedObserver ? storedObserver.get() : undefined;
+//     //     if (result === undefined) {
+//     //         result = null;
+//     //         this[privatePropertyKey] = observable.box(result);
+//     //     }
+//     //     return result;
+//     // };
+//     //
+//     // const setter = function(this: any, val: MobxModelElementImpl) {
+//     //     console.log("SET observablereference observablereference observablereference observablereference");
+//     //     let storedObserver = this[privatePropertyKey] as ObservableValue<MobxModelElementImpl>;
+//     //     const storedValue = storedObserver ? storedObserver.get() : null;
+//     //     // Clean owner of current part
+//     //     if (storedValue) {
+//     //         storedValue.owner = null;
+//     //         storedValue.propertyName = "";
+//     //         storedValue.propertyIndex = undefined;
+//     //     }
+//     //     if (storedObserver) {
+//     //         storedObserver.set(val);
+//     //     } else {
+//     //         this[privatePropertyKey] = observable.box(val);
+//     //         storedObserver = this[privatePropertyKey];
+//     //     }
+//     //     if (val !== null && val !== undefined) {
+//     //         if (val.owner !== undefined && val.owner !== null) {
+//     //             if (val.propertyIndex !== undefined) {
+//     //                 // Clean new value from its containing list
+//     //                 (val.owner as any)[val.propertyName].splice(val.propertyIndex, 1);
+//     //             } else {
+//     //                 // Clean new value from its owner
+//     //                 (val.owner as any)[MODEL_PREFIX + val.propertyName] = null;
+//     //             }
+//     //         }
+//     //         // Set owner
+//     //         val.owner = this;
+//     //         val.propertyName = propertyKey.toString();
+//     //         val.propertyIndex = undefined;
+//     //     }
+//     // };
+//     //
+//     // // tslint:disable no-unused-expression
+//     // Reflect.deleteProperty(target, propertyKey);
+//     // Reflect.defineProperty(target, propertyKey, {
+//     //     get: getter,
+//     //     set: setter,
+//     //     configurable: true
+//     // });
+// }
+
+/**
+ * This property decorator can be used to decorate properties of type ModelElement.
+ * The objects in such properties will automatically keep an owner reference.
+ *
+ * @param {Object} target is the prototype
+ * @param {string } propertyKey
+ */
+// export function observablelistreference(target: DecoratedModelElement, propertyKey: string ) {
+// }
+
+
+// export function model1() {
+//     return (constructor: new (...args: any[]) => any) => {
+//         return constructor;
+//     };
+// }
