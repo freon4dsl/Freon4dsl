@@ -1,8 +1,8 @@
 import { PiNamedElement } from "../ast";
 import { computed, observable, makeObservable } from "mobx";
-import { PiLogger } from "../logging";
-import { MobxModelElementImpl, PiElementReference } from "../ast";
 import { TestScoper } from "./TestScoper";
+import { PiLogger } from "../logging";
+import { MobxModelElementImpl } from "../ast";
 
 const LOGGER = new PiLogger("PiElementReference").mute();
 /**
@@ -28,6 +28,10 @@ export class PiElementReferenceTestScoper<T extends PiNamedElement> extends Mobx
         }
         result.typeName = typeName;
         return result;
+    }
+
+    public copy<T extends PiNamedElement>(): PiElementReferenceTestScoper<T> {
+        return PiElementReferenceTestScoper.create<T>(this._PI_pathname, this.typeName);
     }
 
     private _PI_pathname: string[] = [];
@@ -56,7 +60,7 @@ export class PiElementReferenceTestScoper<T extends PiNamedElement> extends Mobx
     }
 
     set name(value: string) {
-        this._PI_pathname.push(value);
+        this._PI_pathname = [value];
         this._PI_referred = null;
     }
 
@@ -66,9 +70,6 @@ export class PiElementReferenceTestScoper<T extends PiNamedElement> extends Mobx
     }
 
     get name(): string {
-        if (!!this._PI_referred) {
-            return this.referred.name;
-        }
         return this._PI_pathname[this._PI_pathname.length - 1];
     }
 
@@ -98,8 +99,8 @@ export class PiElementReferenceTestScoper<T extends PiNamedElement> extends Mobx
         if (!!this._PI_referred) {
             return this._PI_referred;
         } else {
-            // this line is different form the 'true' PiElementReference
-            return TestScoper.getInstance().getFromVisibleElements(this._PI_pathname.shift()) as T;
+            // this line is different from the 'true' PiElementReference
+            return TestScoper.getInstance().getFromVisibleElements(this.name) as T;
         }
     }
 
@@ -114,7 +115,7 @@ export class PiElementReferenceTestScoper<T extends PiNamedElement> extends Mobx
      * Returns true if this reference has the same name as 'toBeMatched'.
      * @param toBeMatched
      */
-    match(toBeMatched: Partial<PiElementReference<T>>): boolean {
+    match(toBeMatched: Partial<PiElementReferenceTestScoper<T>>): boolean {
         return toBeMatched.name === this.name;
     }
 }

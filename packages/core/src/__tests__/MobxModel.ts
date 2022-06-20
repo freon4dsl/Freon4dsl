@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { PiElementReference, PiElementBaseImpl, observablelistpart, observablepart } from "../ast";
+import { PiElementBaseImpl, observablelistpart, observablepart } from "../ast";
 import { makeObservable, observable } from "mobx";
 import { PiElementReferenceTestScoper } from "./PiElementReferenceTestScoper";
 
@@ -42,11 +42,13 @@ export class ModelContext {
 }
 
 export class MobxTestTreeNode extends MobxTestElement {
-    @observablepart left: MobxTestElement | null;
-    @observablepart right: MobxTestElement | null;
+    left: MobxTestElement | null;
+    right: MobxTestElement | null;
 
     constructor(name: string) {
         super(name);
+        observablepart(this, "left");
+        observablepart(this, "right")
     }
 
     toString(): string {
@@ -55,14 +57,18 @@ export class MobxTestTreeNode extends MobxTestElement {
 }
 
 export class MobxTestParts extends MobxTestElement {
-    @observablelistpart manyPart: MobxTestElement[];
-    @observablepart singlePart: MobxTestElement;
+    manyPart: MobxTestElement[];
+    singlePart: MobxTestElement;
 
-    @observablelistpart manyReference: MobxTestElement[];
-    @observablepart singleReference: PiElementReferenceTestScoper<MobxTestElement>;
+    manyReference: MobxTestElement[];
+    singleReference: PiElementReferenceTestScoper<MobxTestElement>;
 
     constructor(name: string) {
         super(name);
+        observablepart(this, "singleReference");
+        observablepart(this, "singlePart");
+        observablelistpart(this, "manyReference");
+        observablelistpart(this, "manyPart");
     }
 
     piLanguageConcept(): string {
@@ -74,19 +80,24 @@ export class MobxTestParts extends MobxTestElement {
 }
 
 export class MobxTestRoot extends MobxTestElement {
-    @observablepart element: MobxTestParts;
+    element: MobxTestParts;
+
+    constructor(name: string) {
+        super(name);
+        observablepart(this, "element");
+    }
 }
 
 export class MobxTestReferences extends MobxTestElement {
     name: string;
 
-    @observablelistpart manyReference: MobxTestElement[];
-    @observablepart singleReference: MobxTestElement[];
+    manyReference: MobxTestElement[];
+    singleReference: MobxTestElement[];
 
     constructor(name: string) {
         super(name);
-        makeObservable(this, {
-            name: observable
-        })
+        makeObservable(this, { name: observable });
+        observablepart(this, "singleReference");
+        observablelistpart(this, "manyReference");
     }
 }

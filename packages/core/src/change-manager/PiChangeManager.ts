@@ -55,7 +55,7 @@ export class PiChangeManager {
      * @param value
      */
     public setPart(elemToChange: PiElement, propertyName: string, value: DecoratedModelElement): void {
-        console.log("ChangeManager: set PART value for " + elemToChange.piLanguageConcept() + "[" + propertyName + "] := " + value);
+        // console.log("ChangeManager: set PART value for " + elemToChange.piLanguageConcept() + "[" + propertyName + "] := " + value);
         if(!!this.changePartCallbacks) {
             const delta: PiPartDelta = new PiPartDelta(elemToChange, propertyName, elemToChange[propertyName], value);
             for(const cb of this.changePartCallbacks) {
