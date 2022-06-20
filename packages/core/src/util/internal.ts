@@ -11,7 +11,6 @@
 // // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 // export { MetaKey, PiKey } from "./Keys";
 // export * as Keys from "./Keys";
-export * from "./PiLogging";
 
 // dependent only upon editor
 export * from "./MatchUtil";

@@ -5,7 +5,7 @@
 import { PiElement, PiModelUnit, PiNamedElement } from "../ast";
 import { AstWalker, modelUnit } from "../ast-utils";
 import { Language } from "../language";
-import { PiLogger } from "../util/index";
+import { PiLogger } from "../logging";
 import { CollectNamesWorker } from "./CollectNamesWorker";
 
 const LOGGER = new PiLogger("FreonNamespace").mute();

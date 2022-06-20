@@ -1,7 +1,8 @@
 import { observable, makeObservable } from "mobx";
 
 import { PiElement } from "../../ast";
-import { PiLogger, PiUtils } from "../../util";
+import { PiUtils } from "../../util";
+import { PiLogger } from "../../logging";
 
 const LOGGER = new PiLogger("Box");
 
