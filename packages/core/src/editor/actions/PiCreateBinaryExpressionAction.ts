@@ -1,5 +1,6 @@
 import { PiBinaryExpression } from "../../ast";
-import { PiLogger, PiUtils } from "../../util";
+import { PiUtils } from "../../util";
+import { PiLogger} from "../../logging";
 import { Box } from "../boxes/index";
 import { PiEditor } from "../PiEditor";
 import { PiAction } from "./PiAction";

@@ -1,5 +1,6 @@
 import { action, makeObservable } from "mobx";
-import { PiLogger, PiUtils } from "./internal";
+import { PiUtils } from "./internal";
+import { PiLogger } from "../logging";
 import { Box, PiEditor } from "../editor";
 import { PiBinaryExpression, PiElement, PiExpression } from "../ast";
 import { isPiBinaryExpression, isPiExpression } from "../ast-utils";

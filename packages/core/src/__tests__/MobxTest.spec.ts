@@ -1,4 +1,4 @@
-import { PiElementReferenceM } from "./PiElementReferenceM";
+import { PiElementReferenceTestScoper } from "./PiElementReferenceTestScoper";
 import { TestScoper } from "./TestScoper";
 import { MobxTestElement, ModelContext, MobxTestRoot, MobxTestParts } from "./MobxModel";
 import { observe, reaction } from "mobx";
@@ -27,7 +27,7 @@ describe("Mobx Model", () => {
             element.singlePart = part3;
 
             // const observableRoot = observable(root);
-            element.singleReference = PiElementReferenceM.create(part2, "tt");
+            element.singleReference = PiElementReferenceTestScoper.create(part2, "tt");
 
             ctx.root = root;
 
@@ -56,9 +56,8 @@ describe("Mobx Model", () => {
             element.singleReference.name = "part1";
 
             // name and reference should be changed
-            expect(element.manyPart.length).toBe(2);
-            expect(element.singleReference.referred).toBe(part1);
             expect(element.singleReference.name).toBe("part1");
+            expect(element.singleReference.referred).toBe(part1);
             checkUnchanged();
 
             element.singleReference.name = "part44";
@@ -73,9 +72,9 @@ describe("Mobx Model", () => {
             checkUnchanged();
 
             part1.name = "part1-newname";
-            // referred part changes name, thus reference follows this change
-            expect(element.singleReference.name).toBe("part1-newname");
-            expect(element.singleReference.referred).toBe(part1);
+            // referred part changes name, but reference does not follow this change
+            expect(element.singleReference.name).toBe("part1");
+            expect(element.singleReference.referred).toBeNull;
             checkUnchanged();
 
             element.singleReference.name = "part1";
@@ -97,7 +96,7 @@ describe("Mobx Model", () => {
             checkUnchanged();
 
             const singleRef = element.singleReference;
-            element.singleReference = PiElementReferenceM.create(part1, "tt");
+            element.singleReference = PiElementReferenceTestScoper.create(part1, "tt");
             expect(element.singleReference.name).toBe("part1");
             expect(element.singleReference.referred).toBe(part1);
             expect(singleRef.piOwnerDescriptor() === null);

@@ -5,7 +5,7 @@ import { element } from "svelte/internal";
 import { PiElement, PiModelUnit, PiNamedElement } from "../ast";
 import { AstWorker, modelUnit } from "../ast-utils";
 import { Language, Property } from "../language";
-import { PiLogger } from "../util/index";
+import { PiLogger } from "../logging";
 
 const LOGGER = new PiLogger("CollectNamesWorker").mute();
 

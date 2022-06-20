@@ -1,5 +1,5 @@
 import { Language, Property } from "../language";
-import { PiLogger } from "../util";
+import { PiLogger } from "../logging";
 import { AstWorker } from "./AstWorker";
 import { PiElement } from "../ast";
 
