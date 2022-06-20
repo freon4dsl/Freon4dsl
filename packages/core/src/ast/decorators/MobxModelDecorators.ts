@@ -66,9 +66,9 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
     };
 
     const setter = function(this: any, newValue: DecoratedModelElement) {
-        PiChangeManager.getInstance().setPart(this, propertyKey, newValue);
         let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         const storedValue = !!storedObserver ? storedObserver.get() : null;
+        PiChangeManager.getInstance().setPart(this, propertyKey, newValue, storedValue);
         // Clean owner of current part
         if (!!storedValue) {
             storedValue.$$owner = null;
@@ -136,6 +136,25 @@ export function observablelistpart(target: Object, propertyKey: string ) {
 }
 
 /**
+ * The type of the index in a list might be an array instead of a single number.
+ * In that case, we take the first element of the array as index.
+ * @param index
+ */
+function checkIndexType(index: number) {
+    if (!(typeof index === "number")) {
+        console.trace("=====================================");
+        console.log("MOBX ARRAY change Index type " + typeof index);
+        // TODO (index as any) because of TS2407:  The right-hand side of a 'for...in' statement must be
+        //       of type 'any', an object type or a type parameter, but here has type 'never'.
+        for (const pp in index as any) {
+            console.log("        key " + pp + " type " + typeof index[pp]);
+        }
+        index = index[0];
+    }
+    return index;
+}
+
+/**
  * Function called when an array element is changed, will ensure
  * that the old element is removed and its owner reference is cleared.
  * The new element will have its owner reference set correctly.
@@ -173,16 +192,24 @@ function willChange(
             }
             break;
         case "splice":
-            let index: number = change.index;
+            let index: number = checkIndexType(change.index);
             const removedCount: number = change.removedCount;
+            // find all elements that need to be removed
+            const removed = [];
+            for (let num = 0; num < removedCount; num++) {
+                removed.push(change.object[index + num]);
+            }
+            // find all elements that need to be added
             const added: DecoratedModelElement[] = change.added;
+            const addedCount = added.length;
+            // find the list owner and the name of the property that holds the list
             const listOwner = (change.object as any)[MODEL_CONTAINER];
             const propertyName: string = (change.object as any)[MODEL_NAME];
-            PiChangeManager.getInstance().updateList(listOwner, propertyName, index, removedCount, added);
-            const addedCount = added.length;
-            for (const i in added) {
+            // make sure the change is propagated to listeners
+            PiChangeManager.getInstance().updateList(listOwner, propertyName, index, removed, added);
+            // change the owner info in the elements to be added, if any
+            added.forEach((element, i) => {
                 // cleanup old owner reference of new value
-                const element = added[i];
                 if (!!element) {
                     if (!!element.$$owner) {
                         if (element.$$propertyIndex !== undefined) {
@@ -196,25 +223,14 @@ function willChange(
                     element.$$propertyName = propertyName;
                     element.$$propertyIndex = index + Number(i);
                 }
+            });
+            // change the owner info in the elements to be removed, if any
+            for (const rem of removed) {
+                rem.$$owner = null;
+                rem.$$propertyName = "";
+                rem.$$propertyIndex = undefined;
             }
-            for (let num = 0; num < removedCount; num++) {
-                let rr = index + num;
-                if (!(typeof index === "number")) {
-                    console.trace("=====================================");
-                    console.log("MOBX ARRAY change Index type " + typeof index);
-                    // TODO (index as any) because of TS2407:  The right-hand side of a 'for...in' statement must be
-                    //       of type 'any', an object type or a type parameter, but here has type 'never'.
-                    for (const pp in index as any) {
-                        console.log("        key " + pp + " type " + typeof index[pp]);
-                    }
-                    index = index[0];
-                }
-                rr = num + index;
-                change.object[rr].$$owner = null;
-                change.object[rr].$$propertyName = "";
-                change.object[rr].$$propertyIndex = undefined;
-            }
-            // Update all other indices
+            // update all other indices
             for (let above = index; above < change.object.length; above++) {
                 const aboveElement = change.object[above];
                 if (aboveElement.$$propertyIndex !== undefined) {

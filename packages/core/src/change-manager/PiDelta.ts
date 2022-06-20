@@ -1,4 +1,4 @@
-import { DecoratedModelElement, PiElement, PiElementBaseImpl, PiElementReference, PiNamedElement } from "../ast";
+import { DecoratedModelElement, MobxModelElementImpl, PiElement, PiElementBaseImpl, PiElementReference, PiNamedElement } from "../ast";
 
 export abstract class PiDelta {
     owner: PiElement;
@@ -39,11 +39,13 @@ export class PiPartDelta extends PiDelta {
 
     constructor(owner: PiElement, propertyName: string, oldValue: DecoratedModelElement, newValue: DecoratedModelElement, index?: number) {
         super(owner, propertyName, index);
-        if (oldValue instanceof PiElementBaseImpl) {
-            this.oldValue = oldValue;
+        if (oldValue instanceof MobxModelElementImpl) { // TODO adjust this test when PiElementBaseImpl is used in generation
+            this.oldValue = oldValue as PiElementBaseImpl;
+            // console.log("oldValue of part: " + typeof oldValue + ", " + this.oldValue.piId())
         }
-        if (newValue instanceof PiElementBaseImpl) {
-            this.newValue = newValue;
+        if (newValue instanceof MobxModelElementImpl) {
+            this.newValue = newValue as PiElementBaseImpl;
+            // console.log("newValue of part: " + typeof newValue + ", " + this.newValue.piId())
         }
     }
 
@@ -52,30 +54,16 @@ export class PiPartDelta extends PiDelta {
     }
 }
 
-export class PiRefDelta extends PiDelta {
-    oldValue: PiElementReference<PiNamedElement>;
-    newValue: PiElementReference<PiNamedElement>;
-
-    constructor(owner: PiElement, propertyName: string, oldValue: PiElementReference<PiNamedElement>, newValue: DecoratedModelElement, index?: number) {
-        super(owner, propertyName, index);
-        this.oldValue = oldValue;
-        if (newValue instanceof PiElementReference) {
-            this.newValue = newValue;
-        }
-    }
-
-    toString(): string {
-        return "PiRefDelta<" + this.owner?.piLanguageConcept() + "[" + this.propertyName + "]>";
-    }
-}
-
 export class PiListDelta extends PiDelta {
-    removedCount: number;
+    removed: PiElement[] = [];
     added: PiElement[] = [];
 
-    constructor(owner: PiElement, propertyName: string, index: number, removedCount: number, added: DecoratedModelElement[]) {
+    constructor(owner: PiElement, propertyName: string, index: number, removed: DecoratedModelElement[], added: DecoratedModelElement[]) {
         super(owner, propertyName, index);
-        this.removedCount = removedCount;
+        for(const r of removed) {
+            if (r instanceof PiElementBaseImpl)
+                this.removed.push(r);
+        }
         for(const a of added) {
             if (a instanceof PiElementBaseImpl)
                 this.added.push(a);
@@ -87,7 +75,7 @@ export class PiListDelta extends PiDelta {
     }
 }
 
-export class TransactionDelta extends  PiDelta {
+export class PiTransactionDelta extends  PiDelta {
     internalDeltas: PiDelta[] = [];
 
     toString(): string {

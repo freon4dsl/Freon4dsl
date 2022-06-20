@@ -24,7 +24,6 @@ export class ClassifierUtil {
         }
         if (props.some(prop => !prop.isList && !prop.isPrimitive)) {
             // for non-list non-primitive properties include "observablepart"
-            console.log("PART");
             mobxImports.push("observablepart");
         }
         if (props.some(prop => prop.isList && !prop.isPrimitive)) {
