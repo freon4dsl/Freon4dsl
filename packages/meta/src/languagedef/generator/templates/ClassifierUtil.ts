@@ -19,16 +19,16 @@ export class ClassifierUtil {
 
     private static getObserveFunctions(props: PiProperty[], mobxImports: string[]) {
         if (props.some(prop => !prop.isList && prop.isPrimitive)) {
-            // for non-list primitive properties include "observablePrim"
-            mobxImports.push("observablePrim");
+            // for non-list primitive properties include "observableprim"
+            mobxImports.push("observableprim");
         }
         if (props.some(prop => !prop.isList && !prop.isPrimitive)) {
             // for non-list non-primitive properties include "observablepart"
             mobxImports.push("observablepart");
         }
         if (props.some(prop => prop.isList && !prop.isPrimitive)) {
-            // for list properties include "observablelistpart"
-            mobxImports.push("observablelistpart");
+            // for list properties include "observablepartlist"
+            mobxImports.push("observablepartlist");
         }
     }
 }

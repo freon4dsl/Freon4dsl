@@ -8,6 +8,8 @@ const LOGGER = new PiLogger("PiElementReference").mute();
 /**
  * Class PiElementReference provides the implementation for a (named) reference in ProjectIt.
  * References can be set with either a referred object, or with a name.
+ * This class is a copy of PiElementReference - because it needs to use a different scoper.
+ * The only difference with the original is (should be) the call to the scoper in 'get referred()'.
  */
 export class PiElementReferenceTestScoper<T extends PiNamedElement> extends MobxModelElementImpl {
     /**

@@ -1,6 +1,7 @@
 import { DecoratedModelElement, PiElement } from "../ast";
 import { PiDelta, PiListDelta, PiPartDelta, PiPrimDelta } from "./PiDelta";
 import { PiLogger } from "../logging";
+import { Language, PrimType } from "../language";
 
 export type callback = (delta: PiDelta) => void;
 
@@ -69,15 +70,23 @@ export class PiChangeManager {
      * @param oldValue
      * @param index
      */
-    public updateListElement(newValue: DecoratedModelElement, oldValue: DecoratedModelElement, index: number) {
+    public updatePartListElement(newValue: DecoratedModelElement, oldValue: DecoratedModelElement, index: number) {
         const owner: PiElement = oldValue.$$owner;
         const propertyName: string = oldValue.$$propertyName;
         LOGGER.log("ChangeManager: UPDATE LIST ELEMENT for " + owner.piLanguageConcept() + "[" + propertyName + "][ " + index + "] := " + newValue);
         if(!!this.changeListElemCallbacks) {
-            // TODO this does not work for lists of refs or prims!!
-            const delta: PiPartDelta = new PiPartDelta(owner, propertyName, oldValue, newValue, index);
-            for(const cb of this.changeListElemCallbacks) {
-                cb(delta);
+            let delta: PiDelta = null;
+            // find the kind of the property that is changed: "part"/"reference" or "prim"
+            const kind = Language.getInstance().classifierProperty(owner.piLanguageConcept(), propertyName)?.propertyKind;
+            if ( kind === "part" || kind === "reference" ) {
+                delta = new PiPartDelta(owner, propertyName, oldValue, newValue, index);
+            } else if ( kind === "primitive" ) {
+                // delta = new PiPrimDelta(owner, propertyName, oldValue, newValue, index);
+            }
+            if (delta !== null && delta !== undefined) {
+                for (const cb of this.changeListElemCallbacks) {
+                    cb(delta);
+                }
             }
         }
     }
@@ -90,7 +99,7 @@ export class PiChangeManager {
      * @param removedCount  number of elements that are removed
      * @param added         the elements to be added
      */
-    public updateList(listOwner: PiElement, propertyName: string, index: number, removed: DecoratedModelElement[], added: DecoratedModelElement[]) {
+    public updatePartList(listOwner: PiElement, propertyName: string, index: number, removed: DecoratedModelElement[], added: DecoratedModelElement[]) {
         LOGGER.log("ChangeManager: UPDATE LIST for " + listOwner.piLanguageConcept() + "[" + propertyName + "]");
         if(!!this.changeListCallbacks) {
             const delta: PiListDelta = new PiListDelta(listOwner, propertyName, index, removed, added);
@@ -98,5 +107,13 @@ export class PiChangeManager {
                 cb(delta);
             }
         }
+    }
+
+    public updatePrimList(listOwner: any, propertyName: string, index: number, removed: PrimType[], added: PrimType[]) {
+
+    }
+
+    public updatePrimListElement(newValue: string | number | boolean, oldValue: string | number | boolean, index: number) {
+
     }
 }

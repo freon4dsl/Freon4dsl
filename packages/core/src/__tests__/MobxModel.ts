@@ -1,11 +1,23 @@
 import "reflect-metadata";
-import { PiElementBaseImpl, observablelistpart, observablepart } from "../ast";
+import { PiElementBaseImpl, observablepartlist, observablepart, observableprimlist, observableprim } from "../ast";
 import { makeObservable, observable } from "mobx";
 import { PiElementReferenceTestScoper } from "./PiElementReferenceTestScoper";
 
 /**
- * These classes are used only to test the mobx decorators. They extend PiElementBase directly.
+ * These classes are used only to test the mobx decorators. They extend PiElementBaseImpl directly.
  */
+
+export class ModelContext {
+    root: MobxTestElement;
+
+    constructor() {
+        this.root = null;
+        makeObservable(this, {
+            root: observable
+        })
+    }
+}
+
 export class MobxTestElement extends PiElementBaseImpl {
     public name: string;
 
@@ -30,14 +42,55 @@ export class MobxTestElement extends PiElementBaseImpl {
     }
 }
 
-export class ModelContext {
-    root: MobxTestElement;
+export class MobxTestRoot extends MobxTestElement {
+    element: MobxTestParts;
 
-    constructor() {
-        this.root = null;
-        makeObservable(this, {
-            root: observable
-        })
+    constructor(name: string) {
+        super(name);
+        observablepart(this, "element");
+    }
+}
+
+export class MobxTestParts extends MobxTestElement {
+    manyPrim: number[];
+    singlePrim: number;
+
+    manyPart: MobxTestElement[];
+    singlePart: MobxTestElement;
+
+    manyReference: PiElementReferenceTestScoper<MobxTestElement>[];
+    singleReference: PiElementReferenceTestScoper<MobxTestElement>;
+
+    constructor(name: string) {
+        super(name);
+        observableprim(this, "singlePrim");
+        observableprimlist(this, "manyPrim");
+        observablepart(this, "singlePart");
+        observablepartlist(this, "manyReference");
+        observablepart(this, "singleReference");
+        observablepartlist(this, "manyPart");
+    }
+
+    piLanguageConcept(): string {
+        return "MobxTestParts";
+    }
+    toString(): string {
+        return "FunctionCallExpression";
+    }
+}
+
+
+export class MobxTestReferences extends MobxTestElement {
+    name: string;
+
+    manyReference: MobxTestElement[];
+    singleReference: MobxTestElement[];
+
+    constructor(name: string) {
+        super(name);
+        makeObservable(this, { name: observable });
+        observablepart(this, "singleReference");
+        observablepartlist(this, "manyReference");
     }
 }
 
@@ -53,51 +106,5 @@ export class MobxTestTreeNode extends MobxTestElement {
 
     toString(): string {
         return "TreeNode";
-    }
-}
-
-export class MobxTestParts extends MobxTestElement {
-    manyPart: MobxTestElement[];
-    singlePart: MobxTestElement;
-
-    manyReference: MobxTestElement[];
-    singleReference: PiElementReferenceTestScoper<MobxTestElement>;
-
-    constructor(name: string) {
-        super(name);
-        observablepart(this, "singleReference");
-        observablepart(this, "singlePart");
-        observablelistpart(this, "manyReference");
-        observablelistpart(this, "manyPart");
-    }
-
-    piLanguageConcept(): string {
-        return "MobxTestParts";
-    }
-    toString(): string {
-        return "FunctionCallExpression";
-    }
-}
-
-export class MobxTestRoot extends MobxTestElement {
-    element: MobxTestParts;
-
-    constructor(name: string) {
-        super(name);
-        observablepart(this, "element");
-    }
-}
-
-export class MobxTestReferences extends MobxTestElement {
-    name: string;
-
-    manyReference: MobxTestElement[];
-    singleReference: MobxTestElement[];
-
-    constructor(name: string) {
-        super(name);
-        makeObservable(this, { name: observable });
-        observablepart(this, "singleReference");
-        observablelistpart(this, "manyReference");
     }
 }

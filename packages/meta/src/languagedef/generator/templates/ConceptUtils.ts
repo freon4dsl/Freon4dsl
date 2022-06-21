@@ -141,19 +141,19 @@ export class ConceptUtils {
             `${allPrimitiveProps.map(p =>
                 (p.isList ?
                         `makeObservable(this, {"${p.name}": observable})` :
-                        `observablePrim(this, "${p.name}")`
+                        `observableprim(this, "${p.name}")`
                 )
             ).join("\n")}
                         `
             : ``
         }
                     ${allButPrimitiveProps.length !== 0 ?
-            `// both 'observablepart' and 'observablelistpart' change the get and set of an attribute 
+            `// both 'observablepart' and 'observablepartlist' change the get and set of an attribute 
                         // such that the parent-part relationship is consistently maintained, 
                         // and make sure the part is observable
                         ${allButPrimitiveProps.map(p =>
                 (p.isList ?
-                        `observablelistpart(this, "${p.name}");`
+                        `observablepartlist(this, "${p.name}");`
                         :
                         `observablepart(this, "${p.name}");`
                 )

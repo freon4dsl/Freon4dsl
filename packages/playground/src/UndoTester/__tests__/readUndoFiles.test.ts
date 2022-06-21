@@ -7,6 +7,16 @@ const handler = new FileHandler();
 const reader = UndoTesterEnvironment.getInstance().reader;
 const writer = UndoTesterEnvironment.getInstance().writer;
 
+function readUnitInTransaction(manager: PiUndoManager, filePath: string) {
+    manager.cleanStacks();
+    manager.startTransaction();
+    const model: UndoModel = new UndoModel();
+    const langSpec: string = handler.stringFromFile(filePath);
+    const unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
+    manager.endTransaction();
+    return unit1;
+}
+
 describe("Testing Undo Manager", () => {
 
     it("read First WITHOUT transaction", () => {
@@ -28,13 +38,8 @@ describe("Testing Undo Manager", () => {
 
     it("read First WITH transaction", () => {
         const manager = PiUndoManager.getInstance();
-        manager.cleanStacks();
-        manager.startTransaction();
         const filePath = "src/UndoTester/__inputs__/First.und";
-        const model: UndoModel = new UndoModel();
-        const langSpec: string = handler.stringFromFile(filePath);
-        const unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
-        manager.endTransaction();
+        const unit1 = readUnitInTransaction(manager, filePath);
         expect(unit1).not.toBeNull();
         // console.log(writer.writeToString(unit1));
         expect (manager.undoStackPerUnit).not.toBeNull();
@@ -47,19 +52,14 @@ describe("Testing Undo Manager", () => {
         expect (delta instanceof PiTransactionDelta).toBe(true);
         if (delta instanceof PiTransactionDelta) {
             expect (delta.internalDeltas.length).toBe(3);
-            // console.log("length of undo stack: " + delta.internalDeltas.length + " => [[" + delta.internalDeltas.map(d => d.toString()).join(", ") + "]]");
+            // console.log("length of internal stack: " + delta.internalDeltas.length + " => [[" + delta.internalDeltas.map(d => d.toString()).join(", ") + "]]");
         }
     });
 
     it("change, undo, redo, undo on prim", () => {
         const manager = PiUndoManager.getInstance();
-        manager.cleanStacks();
-        manager.startTransaction();
         const filePath = "src/UndoTester/__inputs__/first.und";
-        const model: UndoModel = new UndoModel();
-        const langSpec: string = handler.stringFromFile(filePath);
-        const unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
-        manager.endTransaction();
+        const unit1 = readUnitInTransaction(manager, filePath);
         expect(unit1).not.toBeNull();
         // console.log(writer.writeToString(unit1));
         expect (manager.undoStackPerUnit).not.toBeNull();
@@ -82,7 +82,7 @@ describe("Testing Undo Manager", () => {
         expect (redoStack).not.toBeUndefined();
         expect (redoStack.length).toBe(1);
         expect (unit1.prim).toBe("myText");
-        console.log("length of redo stack: " + redoStack.length + " => [[" + redoStack.map(d => d.toString()).join(", ") + "]]");
+        // console.log("length of redo stack: " + redoStack.length + " => [[" + redoStack.map(d => d.toString()).join(", ") + "]]");
 
         // redo the change
         manager.executeRedo(unit1);
@@ -91,13 +91,8 @@ describe("Testing Undo Manager", () => {
 
     it("change, undo, redo, undo on part", () => {
         const manager = PiUndoManager.getInstance();
-        manager.cleanStacks();
-        manager.startTransaction();
         const filePath = "src/UndoTester/__inputs__/second.und";
-        const model: UndoModel = new UndoModel();
-        const langSpec: string = handler.stringFromFile(filePath);
-        const unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
-        manager.endTransaction();
+        const unit1 = readUnitInTransaction(manager, filePath);
         expect(unit1).not.toBeNull();
         // console.log(writer.writeToString(unit1));
         expect (manager.undoStackPerUnit).not.toBeNull();
@@ -128,6 +123,34 @@ describe("Testing Undo Manager", () => {
         // redo the change
         manager.executeRedo(unit1);
         expect (unit1.part).toBe(otherPart);
+    });
+
+    it("change, undo, redo, undo on list of primitives", () => {
+        const manager = PiUndoManager.getInstance();
+        const filePath = "src/UndoTester/__inputs__/first.und";
+        const unit1 = readUnitInTransaction(manager, filePath);
+        expect(unit1).not.toBeNull();
+        expect(unit1.numlist.length).toBeGreaterThan(0);
+        const undoStack: PiDelta[] = manager.undoStackPerUnit.get("myName");
+        expect (undoStack.length).toBe(1);
+
+        // change the value of 'numlist'
+        unit1.numlist[0] = 24;
+        // expect (undoStack.length).toBe(2);
+        expect (unit1.numlist[0]).toBe(24);
+
+        // // undo the change
+        // manager.executeUndo(unit1);
+        // expect (undoStack.length).toBe(2);
+        // const redoStack: PiDelta[] = manager.redoStackPerUnit.get(unit1.name);
+        // expect (redoStack).not.toBeNull();
+        // expect (redoStack).not.toBeUndefined();
+        // expect (redoStack.length).toBe(1);
+        // expect (unit1.part.piId()).toBe(oldPartId);
+        //
+        // // redo the change
+        // manager.executeRedo(unit1);
+        // expect (unit1.part).toBe(otherPart);
     });
 
 });
