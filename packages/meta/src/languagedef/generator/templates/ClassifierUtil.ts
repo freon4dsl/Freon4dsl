@@ -22,6 +22,10 @@ export class ClassifierUtil {
             // for non-list primitive properties include "observableprim"
             mobxImports.push("observableprim");
         }
+        if (props.some(prop => prop.isList && prop.isPrimitive)) {
+            // for list primitive properties include "observableprimlist"
+            mobxImports.push("observableprimlist");
+        }
         if (props.some(prop => !prop.isList && !prop.isPrimitive)) {
             // for non-list non-primitive properties include "observablepart"
             mobxImports.push("observablepart");
