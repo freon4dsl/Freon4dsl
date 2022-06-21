@@ -6,4 +6,11 @@ model UndoModel {
 
 modelunit UndoUnit {
     prim: string;
+    numlist: number[];
+    part?: UndoPart;
+    file-extension = "und";
+}
+
+concept UndoPart {
+    name: identifier;
 }

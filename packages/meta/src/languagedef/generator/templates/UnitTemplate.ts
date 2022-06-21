@@ -18,7 +18,7 @@ export class UnitTemplate {
         const hasReferences = unitDescription.references().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
         const coreImports = ClassifierUtil.findMobxImports(unitDescription)
-            .concat(["PiModelUnit", "PiUtils", "PiParseLocation", "matchElementList"])
+            .concat(["PiModelUnit", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"])
             .concat(hasReferences ? (Names.PiElementReference) : null);
         const metaType = Names.metaType(language);
 

@@ -13,9 +13,8 @@ import {
 import { ConceptUtils } from "./ConceptUtils";
 import { ClassifierUtil } from "./ClassifierUtil";
 
-
 export class ConceptTemplate {
-
+    // TODO clean up imports in every generate method
     generateConcept(concept: PiConcept): string {
         if (concept instanceof PiLimitedConcept) {
             return this.generateLimited(concept);
@@ -27,7 +26,6 @@ export class ConceptTemplate {
     }
 
     private generateConceptPrivate(concept: PiConcept): string {
-        // TODO clean up imports
         const language = concept.language;
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;

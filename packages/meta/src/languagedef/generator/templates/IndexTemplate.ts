@@ -78,8 +78,7 @@ export class IndexTemplate {
     generateUtilsIndex(language: PiLanguage): string {
         return `export * from "./${Names.workerInterface(language)}";
                 export * from "./${Names.walker(language)}";
-                export * from "./${Names.defaultWorker(language)}";
-                export * from "./${Names.matchUtil}";`;
+                export * from "./${Names.defaultWorker(language)}";`;
 
     }
 }

@@ -4,6 +4,7 @@ import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiOwnerDescriptor, PiElement } from "../ast";
 import { PiCaret, wait } from "../util";
+import { PiLogger } from "../logging";
 import { PiAction } from "./actions/index";
 import {
     PiProjection,
@@ -13,7 +14,6 @@ import {
     Box,
     PiActions
 } from "./internal";
-import { PiLogger } from "../logging";
 
 const LOGGER = new PiLogger("PiEditor");
 
