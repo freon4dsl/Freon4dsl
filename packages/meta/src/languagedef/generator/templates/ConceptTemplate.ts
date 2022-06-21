@@ -13,7 +13,7 @@ import {
 import { ConceptUtils } from "./ConceptUtils";
 
 export class ConceptTemplate {
-    // TODO clean up imports in every generate method
+    // TODO clean up imports in every generate method to avoid unused imports
     generateConcept(concept: PiConcept): string {
         if (concept instanceof PiLimitedConcept) {
             return this.generateLimited(concept);
