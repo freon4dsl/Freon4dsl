@@ -27,12 +27,10 @@ export class ConceptUtils {
     }
 
     public static makeImportStatements(needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
-        // TODO remove or change the import for MatchUtil
         return `
             ${needsObservable ? `import { observable, makeObservable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
             import { ${modelImports.join(", ")} } from "./internal";
-            import { MatchUtil } from "../../utils/gen";
             `;
     }
 
@@ -299,13 +297,13 @@ export class ConceptUtils {
                               result = result && matchElementList(this.${property.name}, toBeMatched.${property.name});
                           }`
             } else {
-                // TODO here we known that MatchUtil.matchReferenceList needs to be imported => add to imports
+                // TODO here we known that matchReferenceList needs to be imported => add to imports
                 // TODO here we known that Names.classifier(property.type) needs to be imported => add to imports
                 // result = `if (!!toBeMatched.${property.name}) {
-                //               MatchUtil.matchReferenceList<${Names.classifier(property.type)}>(this.${property.name}, toBeMatched.${property.name});
+                //               matchReferenceList<${Names.classifier(property.type)}>(this.${property.name}, toBeMatched.${property.name});
                 //           }`
                 result = `if (result && !!toBeMatched.${property.name}) {
-                              result = result && MatchUtil.matchReferenceList(this.${property.name}, toBeMatched.${property.name});
+                              result = result && matchReferenceList(this.${property.name}, toBeMatched.${property.name});
                           }`
             }
         } else {

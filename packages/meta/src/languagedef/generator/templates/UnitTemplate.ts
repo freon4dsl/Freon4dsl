@@ -16,7 +16,9 @@ export class UnitTemplate {
         const extendsClass = "MobxModelElementImpl";
         const hasReferences = unitDescription.references().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
-        const coreImports = this.findMobxImports(unitDescription).concat(["PiModelUnit", "PiUtils", "PiParseLocation", "matchElementList"]).concat(hasReferences ? (Names.PiElementReference) : null);
+        const coreImports = this.findMobxImports(unitDescription)
+            .concat(["PiModelUnit", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"])
+            .concat(hasReferences ? (Names.PiElementReference) : null);
         const metaType = Names.metaType(language);
 
         // Template starts here
