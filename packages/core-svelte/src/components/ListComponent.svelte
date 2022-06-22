@@ -64,6 +64,13 @@
         LOGGER.log("render box " + box.role);
         return box;
     }
+
+    function setPrevious(b: Box): string {
+        previousBox = b;
+        return "";
+    }
+
+    let previousBox = null;
 </script>
 
 <span class="list-component"
@@ -82,10 +89,13 @@
     {:else}
         <div class="verticalList"  on:click>
             {#each children as box, i (box.id)}
-                {#if i > 0 && i < children.length}
-                    <br/>
+                {#if i > 0 && i < children.length
+                     && !(i === 1 && isEmptyLineBox(previousBox))
+                }
+                    <br class="LISTNEWLINE"/>
                 {/if}
                 <RenderComponent box={box} editor={editor}/>
+                { setPrevious(box) }
             {/each}
         </div>
     {/if}
