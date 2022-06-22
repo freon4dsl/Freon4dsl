@@ -6,7 +6,22 @@ import { PiChangeManager } from "../../change-manager";
 import { PrimType } from "../../language";
 import { PiLogger } from "../../logging";
 
-const LOGGER = new PiLogger("MobxDecorators");
+const LOGGER: PiLogger = new PiLogger("MobxDecorators").mute();
+
+/**
+ * The set of functions in this file all add extra functionality to the mobx observers.
+ * They make sure that:
+ *  1. all PiElements have information on the object that 'owns' them: the PiOwnerDescriptor information is set,
+ *  2. all PiElements have just 1 owner: when an element is assigned to another property, its previous owner is
+ *  set to null, or in case the previous property is a list, it is removed from this list,
+ *  2. all observable lists do not contain null or undefined values,
+ *  4. all changes in the model are reported to the PiChangeManager, which distributes this information to
+ *  any object that is subscribed to it.
+ *
+ *  Note that a difference is made only between properties with primitive value (i.e. string | number | boolean) and
+ *  properties with an object value. There is no difference between 'part' and 'reference' properties. Both are handled
+ *  as properties with object values.
+ */
 
 export const MODEL_PREFIX = "_PI_";
 export const MODEL_PREFIX_LENGTH = MODEL_PREFIX.length;
@@ -149,7 +164,7 @@ export function observableprimlist(target: Object, propertyKey: string) {
  * @param isPrimitive
  */
 function observablelist(target: Object, propertyKey: string, isPrimitive: boolean ) {
-    const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
+    const privatePropertyKey = MODEL_PREFIX + propertyKey;
 
     const getter = function(this: any) {
         return this[privatePropertyKey];
@@ -162,35 +177,15 @@ function observablelist(target: Object, propertyKey: string, isPrimitive: boolea
     (array as any)[MODEL_CONTAINER] = target;
     (array as any)[MODEL_NAME] = propertyKey.toString();
     if (!isPrimitive) {
-        intercept(array, change => objectWillChange(change)); // Since mobx6
+        intercept(array, change => objectWillChange(change, propertyKey)); // Since mobx6
     } else {
-        intercept(array, change => primWillChange(change));
+        intercept(array, change => primWillChange(change, propertyKey));
     }
 
     Reflect.deleteProperty(target, propertyKey);
     Reflect.defineProperty(target, propertyKey, {
         get: getter
     });
-}
-
-/**
- * The type of the index in a list might be an array instead of a single number.
- * In that case, we take the first element of the array as index.
- * @param index
- */
-function checkIndexType(index: number) {
-    // TODO improve: check whether index is an Array
-    if (!(typeof index === "number")) {
-        // console.trace("=====================================");
-        // console.log("MOBX ARRAY change Index type " + typeof index);
-        // // (index as any) because of TS2407:  The right-hand side of a 'for...in' statement must be
-        // //       of type 'any', an object type or a type parameter, but here has type 'never'.
-        // for (const pp in index as any) {
-        //     console.log("        key " + pp + " type " + typeof index[pp]);
-        // }
-        index = index[0];
-    }
-    return index;
 }
 
 /**
@@ -203,8 +198,9 @@ function checkIndexType(index: number) {
 function resetOwner(element: DecoratedModelElement, listOwner, propertyName: string, index: number) {
     if (!!element) {
         if (!!element.$$owner) {
+            // remove the element from its previous owner
             if (element.$$propertyIndex !== undefined) {
-                (element.$$owner as any)[element.$$propertyName][element.$$propertyIndex] = null;
+                (element.$$owner as any)[element.$$propertyName].splice(element.$$propertyIndex, 1);
             } else {
                 (element.$$owner as any)[element.$$propertyName] = null;
             }
@@ -231,20 +227,21 @@ function cleanOwner(oldValue: DecoratedModelElement) {
  * that the old element is removed and its owner reference is cleared.
  * The new element will have its owner reference set correctly.
  * Also ensures that no null or undefined values are in the list.
- * Note: for lists of type PiElement[].
- * @param change
+ * Note: the function is used for lists of type PiElement[], for
+ * lists of primitives values 'primWillChange' is used.
+ *
+ * @param change        the change on the array
+ * @param propertyKey   name of the property that is about to change, only used for error message
  */
 function objectWillChange(
     change: IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement>
-): IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement> | null {
+    , propertyKey: string): IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement> | null {
 
     switch (change.type) {
         case "update":
             const newValue = change.newValue;
-            const oldValue = change.object[change.index];
-
-            console.log("replacing " + oldValue?.toString() + " with " + newValue?.toString());
             if (newValue !== null && newValue !== undefined) {
+                const oldValue = change.object[change.index];
                 PiChangeManager.getInstance().updatePartListElement(newValue, oldValue, change.index);
                 if (newValue !== oldValue) {
                     // cleanup old owner reference of new value
@@ -253,15 +250,15 @@ function objectWillChange(
                     cleanOwner(oldValue);
                 }
             } else {
-                // delete old value from list and do not return this change - it should not be executed
-                change.object.splice(oldValue.$$propertyIndex, 1);
-                // TODO 'this' should be removed for something useful
-                LOGGER.error("Attempt to assign null to element of observable list: element is removed.");
+                // instead of assigning, remove this element --- do not add to change manager, this will be done by the splice command
+                change.object.splice(change.index, 1);
+                LOGGER.error(`Attempt to assign null to element of observable list '${propertyKey}': element is removed.`);
+                // do not return this change - it should not be executed
                 return null;
             }
             break;
         case "splice":
-            let index: number = checkIndexType(change.index);
+            let index: number = change.index;
             const removedCount: number = change.removedCount;
             // find all elements that need to be removed
             const removed: any[] = [];
@@ -285,7 +282,7 @@ function objectWillChange(
                     // remove any null values: we do not want any null values added to the list
                     change.added.splice(i, 1);  // do not increase i !!!
                     addedCount--;
-                    LOGGER.error("Ignored attempt to add null or undefined to observable list of objects.")
+                    LOGGER.error(`Ignored attempt to add null or undefined to observable list '${propertyKey}'.`);
                 }
             });
             // change the owner info in the elements to be removed, if any
@@ -309,13 +306,13 @@ function objectWillChange(
 /**
  * Function called when an array element is changed, will ensure
  * that no null or undefined values are in the list.
- * Note: for lists of type string[] | boolean[] | number[].
+ * Note: only used for lists of type string[] | boolean[] | number[].
  * @param change
  */
 function primWillChange(
     change: IArrayWillChange<PrimType> | IArrayWillSplice<PrimType>
-): IArrayWillChange<PrimType> | IArrayWillSplice<PrimType> | null {
-    // console.log("primWillChange [" + change.type + "]");
+    , propertyKey: string): IArrayWillChange<PrimType> | IArrayWillSplice<PrimType> | null {
+    // LOGGER.log("primWillChange [" + change.type + "]");
     switch (change.type) {
         case "update":
             const newValue: PrimType = change.newValue;
@@ -323,15 +320,15 @@ function primWillChange(
             if (newValue !== null && newValue !== undefined) {
                 PiChangeManager.getInstance().updatePrimListElement(newValue, oldValue, change.index);
             } else {
-                // delete old value from list and do not return this change - it should not be executed
+                // instead of assigning, remove this element --- do not add to change manager, this will be done by the splice command
                 change.object.splice(change.index, 1);
-                // TODO 'this' should be removed for something useful
-                LOGGER.error("Ignored attempt to add null or undefined to observable list of primitives.");
+                LOGGER.error(`Attempt to assign null to element of observable list '${propertyKey}': element is removed.`);
+                // do not return this change - it should not be executed
                 return null;
             }
             break;
         case "splice":
-            let index: number = checkIndexType(change.index);
+            let index: number = change.index;
             const removedCount: number = change.removedCount;
             // find all elements that need to be removed
             const removed: PrimType[] = [];
@@ -347,7 +344,7 @@ function primWillChange(
                 if (element === null || element === undefined) {
                     // remove any null values: we do not want any null values added to the list
                     change.added.splice(i, 1);
-                    LOGGER.error("Ignored attempt to add null or undefined to observable list of objects.")
+                    LOGGER.error(`Ignored attempt to add null or undefined to observable list '${propertyKey}'.`);
                 }
             });
             // make sure the change is propagated to listeners
@@ -358,84 +355,3 @@ function primWillChange(
     return change;
 }
 
-
-// TODO everything below is currently unused -- should be removed after check whether it is truely unneeded
-/**
- * This property decorator can be used to decorate properties of type ModelElement.
- * The objects in such properties will automatically keep an owner reference.
- *
- * @param {Object} target is the prototype
- * @param {string } propertyKey
- */
-// export function observablereference(target: DecoratedModelElement, propertyKey: string ) {
-//     // const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
-//     //
-//     // const getter = function(this: any) {
-//     //     // console.log("GET observablereference observablereference observablereference observablereference");
-//     //     const storedObserver = this[privatePropertyKey] as ObservableValue<MobxModelElementImpl>;
-//     //     let result: any = storedObserver ? storedObserver.get() : undefined;
-//     //     if (result === undefined) {
-//     //         result = null;
-//     //         this[privatePropertyKey] = observable.box(result);
-//     //     }
-//     //     return result;
-//     // };
-//     //
-//     // const setter = function(this: any, val: MobxModelElementImpl) {
-//     //     console.log("SET observablereference observablereference observablereference observablereference");
-//     //     let storedObserver = this[privatePropertyKey] as ObservableValue<MobxModelElementImpl>;
-//     //     const storedValue = storedObserver ? storedObserver.get() : null;
-//     //     // Clean owner of current part
-//     //     if (storedValue) {
-//     //         storedValue.owner = null;
-//     //         storedValue.propertyName = "";
-//     //         storedValue.propertyIndex = undefined;
-//     //     }
-//     //     if (storedObserver) {
-//     //         storedObserver.set(val);
-//     //     } else {
-//     //         this[privatePropertyKey] = observable.box(val);
-//     //         storedObserver = this[privatePropertyKey];
-//     //     }
-//     //     if (val !== null && val !== undefined) {
-//     //         if (val.owner !== undefined && val.owner !== null) {
-//     //             if (val.propertyIndex !== undefined) {
-//     //                 // Clean new value from its containing list
-//     //                 (val.owner as any)[val.propertyName].splice(val.propertyIndex, 1);
-//     //             } else {
-//     //                 // Clean new value from its owner
-//     //                 (val.owner as any)[MODEL_PREFIX + val.propertyName] = null;
-//     //             }
-//     //         }
-//     //         // Set owner
-//     //         val.owner = this;
-//     //         val.propertyName = propertyKey.toString();
-//     //         val.propertyIndex = undefined;
-//     //     }
-//     // };
-//     //
-//     // // tslint:disable no-unused-expression
-//     // Reflect.deleteProperty(target, propertyKey);
-//     // Reflect.defineProperty(target, propertyKey, {
-//     //     get: getter,
-//     //     set: setter,
-//     //     configurable: true
-//     // });
-// }
-
-/**
- * This property decorator can be used to decorate properties of type ModelElement.
- * The objects in such properties will automatically keep an owner reference.
- *
- * @param {Object} target is the prototype
- * @param {string } propertyKey
- */
-// export function observablelistreference(target: DecoratedModelElement, propertyKey: string ) {
-// }
-
-
-// export function model1() {
-//     return (constructor: new (...args: any[]) => any) => {
-//         return constructor;
-//     };
-// }

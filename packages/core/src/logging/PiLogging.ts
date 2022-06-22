@@ -25,8 +25,6 @@ export class PiLogger {
         }
     }
 
-
-
     static muteAllLogs() {
         PiLogger.muteAll = true;
     }
