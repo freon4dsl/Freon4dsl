@@ -256,7 +256,7 @@ function objectWillChange(
                 // delete old value from list and do not return this change - it should not be executed
                 change.object.splice(oldValue.$$propertyIndex, 1);
                 // TODO 'this' should be removed for something useful
-                LOGGER.error(this, "Attempt to assign null to element of observable list: element is removed.");
+                LOGGER.error("Attempt to assign null to element of observable list: element is removed.");
                 return null;
             }
             break;
@@ -285,7 +285,7 @@ function objectWillChange(
                     // remove any null values: we do not want any null values added to the list
                     change.added.splice(i, 1);  // do not increase i !!!
                     addedCount--;
-                    LOGGER.error(this, "Ignored attempt to add null or undefined to observable list of objects.")
+                    LOGGER.error("Ignored attempt to add null or undefined to observable list of objects.")
                 }
             });
             // change the owner info in the elements to be removed, if any
@@ -326,7 +326,7 @@ function primWillChange(
                 // delete old value from list and do not return this change - it should not be executed
                 change.object.splice(change.index, 1);
                 // TODO 'this' should be removed for something useful
-                LOGGER.error(this, "Ignored attempt to add null or undefined to observable list of primitives.");
+                LOGGER.error("Ignored attempt to add null or undefined to observable list of primitives.");
                 return null;
             }
             break;
@@ -347,7 +347,7 @@ function primWillChange(
                 if (element === null || element === undefined) {
                     // remove any null values: we do not want any null values added to the list
                     change.added.splice(i, 1);
-                    LOGGER.error(this, "Ignored attempt to add null or undefined to observable list of objects.")
+                    LOGGER.error("Ignored attempt to add null or undefined to observable list of objects.")
                 }
             });
             // make sure the change is propagated to listeners
