@@ -5,7 +5,7 @@ import { Language, PrimType } from "../language";
 
 export type callback = (delta: PiDelta) => void;
 
-const LOGGER: PiLogger = new PiLogger("PiChangeManager"); //.mute(); // for now removed, because it causes an error in MobxTest
+const LOGGER: PiLogger = new PiLogger("PiChangeManager").mute();
 
 export class PiChangeManager {
     private static theInstance; // the only instance of this class
