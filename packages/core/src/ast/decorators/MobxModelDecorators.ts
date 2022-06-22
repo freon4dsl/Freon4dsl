@@ -179,7 +179,7 @@ function observablelist(target: Object, propertyKey: string, isPrimitive: boolea
     if (!isPrimitive) {
         intercept(array, change => objectWillChange(change, propertyKey)); // Since mobx6
     } else {
-        intercept(array, change => primWillChange(change, propertyKey));
+        intercept(array, change => primWillChange(change, target, propertyKey));
     }
 
     Reflect.deleteProperty(target, propertyKey);
@@ -252,7 +252,7 @@ function objectWillChange(
             } else {
                 // instead of assigning, remove this element --- do not add to change manager, this will be done by the splice command
                 change.object.splice(change.index, 1);
-                LOGGER.error(`Attempt to assign null to element of observable list '${propertyKey}': element is removed.`);
+                LOGGER.info(`Attempt to assign null to element of observable list '${propertyKey}': element is removed.`);
                 // do not return this change - it should not be executed
                 return null;
             }
@@ -282,7 +282,7 @@ function objectWillChange(
                     // remove any null values: we do not want any null values added to the list
                     change.added.splice(i, 1);  // do not increase i !!!
                     addedCount--;
-                    LOGGER.error(`Ignored attempt to add null or undefined to observable list '${propertyKey}'.`);
+                    LOGGER.info(`Ignored attempt to add null or undefined to observable list '${propertyKey}'.`);
                 }
             });
             // change the owner info in the elements to be removed, if any
@@ -310,19 +310,22 @@ function objectWillChange(
  * @param change
  */
 function primWillChange(
-    change: IArrayWillChange<PrimType> | IArrayWillSplice<PrimType>
-    , propertyKey: string): IArrayWillChange<PrimType> | IArrayWillSplice<PrimType> | null {
+    change: IArrayWillChange<PrimType> | IArrayWillSplice<PrimType>,
+    target: any,
+    propertyKey: string
+): IArrayWillChange<PrimType> | IArrayWillSplice<PrimType> | null {
     // LOGGER.log("primWillChange [" + change.type + "]");
     switch (change.type) {
         case "update":
             const newValue: PrimType = change.newValue;
             const oldValue: PrimType = change.object[change.index];
             if (newValue !== null && newValue !== undefined) {
-                PiChangeManager.getInstance().updatePrimListElement(newValue, oldValue, change.index);
+                // console.log("change.object: " + target["name"] + ", propertyName: " + propertyKey);
+                PiChangeManager.getInstance().updatePrimListElement(target, propertyKey, newValue, oldValue, change.index);
             } else {
                 // instead of assigning, remove this element --- do not add to change manager, this will be done by the splice command
                 change.object.splice(change.index, 1);
-                LOGGER.error(`Attempt to assign null to element of observable list '${propertyKey}': element is removed.`);
+                LOGGER.info(`Attempt to assign null to element of observable list '${propertyKey}': element is removed.`);
                 // do not return this change - it should not be executed
                 return null;
             }
@@ -344,7 +347,7 @@ function primWillChange(
                 if (element === null || element === undefined) {
                     // remove any null values: we do not want any null values added to the list
                     change.added.splice(i, 1);
-                    LOGGER.error(`Ignored attempt to add null or undefined to observable list '${propertyKey}'.`);
+                    LOGGER.info(`Ignored attempt to add null or undefined to observable list '${propertyKey}'.`);
                 }
             });
             // make sure the change is propagated to listeners

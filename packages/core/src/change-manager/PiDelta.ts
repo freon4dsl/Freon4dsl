@@ -1,4 +1,5 @@
 import { DecoratedModelElement, MobxModelElementImpl, PiElement, PiElementBaseImpl, PiElementReference, PiNamedElement } from "../ast";
+import { PrimType } from "../language";
 
 export abstract class PiDelta {
     owner: PiElement;
@@ -54,19 +55,21 @@ export class PiPartDelta extends PiDelta {
     }
 }
 
-export class PiListDelta extends PiDelta {
+export class PiPartListDelta extends PiDelta {
     removed: PiElement[] = [];
     added: PiElement[] = [];
 
     constructor(owner: PiElement, propertyName: string, index: number, removed: DecoratedModelElement[], added: DecoratedModelElement[]) {
         super(owner, propertyName, index);
-        for(const r of removed) {
-            if (r instanceof PiElementBaseImpl)
+        for (const r of removed) {
+            if (r instanceof PiElementBaseImpl) {
                 this.removed.push(r);
+            }
         }
-        for(const a of added) {
-            if (a instanceof PiElementBaseImpl)
+        for (const a of added) {
+            if (a instanceof PiElementBaseImpl) {
                 this.added.push(a);
+            }
         }
     }
 
@@ -75,7 +78,22 @@ export class PiListDelta extends PiDelta {
     }
 }
 
-export class PiTransactionDelta extends  PiDelta {
+export class PiPrimListDelta extends PiDelta {
+    removed: PrimType[] = [];
+    added: PrimType[] = [];
+
+    constructor(owner: PiElement, propertyName: string, index: number, removed: PrimType[], added: PrimType[]) {
+        super(owner, propertyName, index);
+        this.removed = removed;
+        this.added = added;
+    }
+
+    toString(): string {
+        return "PiPrimListDelta<" + this.owner?.piLanguageConcept() + "[" + this.propertyName + "]>";
+    }
+}
+
+export class PiTransactionDelta extends PiDelta {
     internalDeltas: PiDelta[] = [];
 
     toString(): string {

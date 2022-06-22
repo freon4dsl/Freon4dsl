@@ -1,6 +1,6 @@
 import { PiChangeManager } from "./PiChangeManager";
 import { PiModelUnit } from "../ast";
-import { PiDelta, PiListDelta, PiPartDelta, PiPrimDelta, PiTransactionDelta } from "./PiDelta";
+import { PiDelta, PiPartListDelta, PiPartDelta, PiPrimDelta, PiTransactionDelta } from "./PiDelta";
 import { PiLogger } from "../logging";
 
 const LOGGER: PiLogger = new PiLogger("PiUndoManager");
@@ -131,7 +131,7 @@ export class PiUndoManager {
         } else if (delta instanceof PiPartDelta) {
             console.log("reverseDelta: " + delta.toString() + ", old value: " + delta.oldValue?.piId());
             delta.owner[delta.propertyName] = delta.oldValue;
-        } else if (delta instanceof PiListDelta) {
+        } else if (delta instanceof PiPartListDelta) {
             if (delta.removed.length > 0) {
                 console.log("reverseDelta: elements that were removed: " + delta.removed )
             }
