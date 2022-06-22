@@ -30,7 +30,11 @@ export class PiPrimDelta extends PiDelta {
     }
 
     toString(): string {
-        return "PiPrimDelta<" + this.owner?.piLanguageConcept() + "[" + this.propertyName + "]>";
+        let indexStr: string = '';
+        if (this.index > 0) {
+            indexStr = "[" + this.index + "]";
+        }
+        return "set " + DeltaUtil.getElemName(this.owner) + "." + this.propertyName + indexStr + " to " + this.newValue;
     }
 }
 
@@ -51,7 +55,7 @@ export class PiPartDelta extends PiDelta {
     }
 
     toString(): string {
-        return "PiPartDelta<" + this.owner?.piLanguageConcept() + "[" + this.propertyName + "]>";
+        return "set " + DeltaUtil.getElemName(this.owner) + "." + this.propertyName + " to " + DeltaUtil.getElemName(this.newValue);
     }
 }
 
@@ -74,7 +78,13 @@ export class PiPartListDelta extends PiDelta {
     }
 
     toString(): string {
-        return "PiListDelta<" + this.owner?.piLanguageConcept() + "[" + this.propertyName + "]>";
+        let ownerName = DeltaUtil.getElemName(this.owner);
+        if (this.removed.length > 0) {
+            return `removed [${this.removed.map(r => DeltaUtil.getElemName(r))}] from ${ownerName}.${this.propertyName}`;
+        } else if (this.added.length > 0) {
+            return `added [${this.added.map(r => DeltaUtil.getElemName(r))}] to ${ownerName}.${this.propertyName}`;
+        }
+        return "PiListDelta<" + ownerName + "[" + this.propertyName + "]>";
     }
 }
 
@@ -84,12 +94,22 @@ export class PiPrimListDelta extends PiDelta {
 
     constructor(owner: PiElement, propertyName: string, index: number, removed: PrimType[], added: PrimType[]) {
         super(owner, propertyName, index);
-        this.removed = removed;
-        this.added = added;
+        if (!!removed) {
+            this.removed = removed;
+        }
+        if (!!added) {
+            this.added = added;
+        }
     }
 
     toString(): string {
-        return "PiPrimListDelta<" + this.owner?.piLanguageConcept() + "[" + this.propertyName + "]>";
+        let ownerName = DeltaUtil.getElemName(this.owner);
+        if (this.removed.length > 0) {
+            return `removed [${this.removed}] from ${ownerName}.${this.propertyName} from index ${this.index}`;
+        } else if (this.added.length > 0) {
+            return `added [${this.added}] to ${ownerName}.${this.propertyName}`;
+        }
+        return "PiPrimListDelta<" + ownerName + "[" + this.propertyName + "]>";
     }
 }
 
@@ -97,6 +117,17 @@ export class PiTransactionDelta extends PiDelta {
     internalDeltas: PiDelta[] = [];
 
     toString(): string {
-        return "TransactionDelta<" + this.owner?.piLanguageConcept() + "[" + this.propertyName + "]>";
+        // TODO add name and return this
+        return "PiTransactionDelta<" + this.internalDeltas.map(d => d.toString()).join("\n") + ">";
+    }
+}
+
+export class DeltaUtil {
+    static getElemName(element: PiElement): string {
+        let ownerName: string = element["name"];
+        if (!ownerName) {
+            ownerName = element?.piLanguageConcept();
+        }
+        return ownerName;
     }
 }

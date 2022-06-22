@@ -1,6 +1,6 @@
 import { PiChangeManager } from "./PiChangeManager";
 import { PiModelUnit } from "../ast";
-import { PiDelta, PiPartListDelta, PiPartDelta, PiPrimDelta, PiTransactionDelta } from "./PiDelta";
+import { PiDelta, PiPartListDelta, PiPartDelta, PiPrimDelta, PiTransactionDelta, PiPrimListDelta } from "./PiDelta";
 import { PiLogger } from "../logging";
 
 const LOGGER: PiLogger = new PiLogger("PiUndoManager");
@@ -10,6 +10,7 @@ const LOGGER: PiLogger = new PiLogger("PiUndoManager");
  */
 export class PiUndoManager {
     private static theInstance; // the only instance of this class
+    private inIgnoreState: boolean = false;
     private inTransaction: boolean = false;
     private currentTransaction: PiTransactionDelta;
     private inUndo: boolean = false;
@@ -31,6 +32,14 @@ export class PiUndoManager {
     public endTransaction() {
         this.inTransaction = false;
         this.currentTransaction = null;
+    }
+
+    public startIgnore() {
+        this.inIgnoreState = true;
+    }
+
+    public endIgnore() {
+        this.inIgnoreState = false;
     }
 
     undoStackPerUnit: Map<string, PiDelta[]> = new Map<string, PiDelta[]>();
@@ -64,10 +73,14 @@ export class PiUndoManager {
     }
 
     private addDelta(delta: PiDelta) {
-        if (this.inUndo) {
-            this.addRedo(delta);
-        } else {
-            this.addUndo(delta);
+        // console.log("in transaction: " + this.inTransaction);
+
+        if (!this.inIgnoreState) {
+            if (this.inUndo) {
+                this.addRedo(delta);
+            } else {
+                this.addUndo(delta);
+            }
         }
     }
 
@@ -114,7 +127,7 @@ export class PiUndoManager {
 
     executeUndo(unit: PiModelUnit) {
         this.inUndo = true; // make sure incoming changes are stored on redo stack
-        console.log("executing undo for unit: "+ unit.name)
+        // console.log("executing undo for unit: "+ unit.name)
         const delta = this.undoStackPerUnit.get(unit.name).pop();
         this.reverseDelta(delta, unit);
         this.inUndo = false;
@@ -126,20 +139,34 @@ export class PiUndoManager {
     }
 
     private reverseDelta(delta: PiDelta, unit: PiModelUnit) {
-        if (delta instanceof PiPrimDelta) {
-            delta.owner[delta.propertyName] = delta.oldValue;
-        } else if (delta instanceof PiPartDelta) {
-            console.log("reverseDelta: " + delta.toString() + ", old value: " + delta.oldValue?.piId());
-            delta.owner[delta.propertyName] = delta.oldValue;
-        } else if (delta instanceof PiPartListDelta) {
+        console.log(`reverseDelta<${delta.constructor.name}>:  ${delta.toString()} `);
+        if (delta instanceof PiPartDelta || delta instanceof PiPrimDelta) {
+            if (this.hasIndex(delta)) {
+                if (this.checkIndex(delta)) {
+                    delta.owner[delta.propertyName][delta.index] = delta.oldValue;
+                } else {
+                    LOGGER.error(`cannot reverse ${delta.toString()} because the index is incorrect`);
+                }
+            } else {
+                delta.owner[delta.propertyName] = delta.oldValue;
+            }
+        } else if (delta instanceof PiPartListDelta || delta instanceof PiPrimListDelta) {
             if (delta.removed.length > 0) {
-                console.log("reverseDelta: elements that were removed: " + delta.removed )
+                delta.owner[delta.propertyName].splice(delta.index, 0, ...delta.removed );
             }
             if (delta.added.length > 0) {
-                console.log("reverseDelta: elements that were added: " + delta.added)
+                delta.owner[delta.propertyName].splice(delta.index, delta.added.length );
             }
         } else if (delta instanceof PiTransactionDelta) {
-            console.log("to be done: reverse of transaction");
+            // TODO
         }
+    }
+
+    private hasIndex(delta: PiDelta): boolean {
+        return delta.index !== null && delta.index !== undefined;
+    }
+
+    private checkIndex(delta: PiDelta): boolean {
+        return delta.index >= 0 && delta.index < delta.owner[delta.propertyName].length;
     }
 }

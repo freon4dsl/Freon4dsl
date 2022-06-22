@@ -1,6 +1,6 @@
 UndoUnit myName {
 	 prim "myText"
-	 numlist 1 2 3
+	 numlist 100 200 300
 	 part UndoPart part1 {
           	 }
 }
