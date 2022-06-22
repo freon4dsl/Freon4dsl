@@ -3,7 +3,8 @@ import { makeObservable, observable, computed, action, trace, runInAction } from
 import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiOwnerDescriptor, PiElement } from "../ast";
-import { PiCaret, wait, PiLogger } from "../util";
+import { PiCaret, wait } from "../util";
+import { PiLogger } from "../logging";
 import { PiAction } from "./actions/index";
 import {
     PiProjection,
@@ -137,7 +138,7 @@ export class PiEditor {
         }
         LOGGER.log("selectBox: " + (!!box ? box.role : box) + " caret " + caretPosition?.position);
         if (box === this.selectedBox) {
-            LOGGER.info(this, "box already selected");
+            LOGGER.info( "box already selected");
             return;
         }
         if (isAliasBox(box)) {
@@ -280,7 +281,7 @@ export class PiEditor {
         const first = this.selectedBox.firstEditableChild;
         LOGGER.log("selectFirstEditableChildBox: " + first.kind + " elem: " + first.element + "  role " + first.role);
         if (first) {
-            LOGGER.info(this, "selectFirstEditableChildBox: first found with role " + first.role);
+            LOGGER.info( "selectFirstEditableChildBox: first found with role " + first.role);
             this.selectBoxNew(first);
         }
     }

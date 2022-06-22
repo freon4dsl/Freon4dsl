@@ -1,6 +1,7 @@
 import { Names, PROJECTITCORE } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
 import { PiModelDescription } from "../../metalanguage/PiLanguage";
+import { ClassifierUtil } from "./ClassifierUtil";
 
 export class ModelTemplate {
     // Note: a model may not have other properties than units
@@ -8,7 +9,8 @@ export class ModelTemplate {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
-        const coreImports = this.findMobxImports(modelDescription).concat(["PiModel", "Language", "PiUtils", "PiParseLocation", "matchElementList"]);
+        const coreImports = ClassifierUtil.findMobxImports(modelDescription)
+            .concat(["PiModel", "Language", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"]);
         const modelImports = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType(language);
 
@@ -208,15 +210,4 @@ export class ModelTemplate {
         );
     }
 
-    private findMobxImports(concept: PiModelDescription): string[] {
-        const mobxImports: string[] = [];
-        mobxImports.push("MobxModelElementImpl");
-        if (concept.properties.some(part => part.isList && !part.isPrimitive)) {
-            mobxImports.push("observablelistpart");
-        }
-        if (concept.properties.some(part => !part.isList && !part.isPrimitive)) {
-            mobxImports.push("observablepart");
-        }
-        return mobxImports;
-    }
 }

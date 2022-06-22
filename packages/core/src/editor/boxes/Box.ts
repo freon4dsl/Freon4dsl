@@ -1,7 +1,8 @@
 import { observable, makeObservable } from "mobx";
 
 import { PiElement } from "../../ast";
-import { PiLogger, PiUtils } from "../../util";
+import { PiUtils } from "../../util";
+import { PiLogger } from "../../logging";
 
 const LOGGER = new PiLogger("Box");
 
@@ -214,14 +215,14 @@ export abstract class Box {
     }
 
     private getEditableChildrenRecursive(result: Box[]) {
-        LOGGER.info(this, "getEditableChildrenRecursive for " + this.kind);
+        LOGGER.info( "getEditableChildrenRecursive for " + this.kind);
         if (this.isEditable()) {
-            LOGGER.info(this, "Found editable: " + this.role);
+            LOGGER.info( "Found editable: " + this.role);
             result.push(this);
             return;
         }
         this.children.forEach(c => {
-            LOGGER.info(this, "child: " + c.kind);
+            LOGGER.info( "child: " + c.kind);
             c.getEditableChildrenRecursive(result);
         });
         // return this.children.filter(c => (isTextBox(c) || isAliasBox(c) || isSelectBox(c)) || c.children.length);

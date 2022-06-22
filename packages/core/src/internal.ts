@@ -7,7 +7,8 @@
  * concepts that are using them.
  */
 
-// ast depends on nothing
+// ast and logging depends on nothing
+export * from "./logging";
 export * from "./ast";
 // language holds dependencies on ast, editor, and util
 export * from "./language";
@@ -31,5 +32,8 @@ export * from "./writer";
 
 // environment depends on most of the other parts
 export * from "./environment";
+
+// change manager
+export * from "./change-manager";
 
 

@@ -1,9 +1,12 @@
 import { ReferenceShortcut } from "../editor";
 import { PiElement, PiModel, PiModelUnit } from "../ast";
-import { isNullOrUndefined, PiLogger } from "../util";
+import { isNullOrUndefined } from "../util";
+import { PiLogger } from "../logging";
 const LOGGER = new PiLogger("Language");
 
 export type PropertyKind = "primitive" | "part" | "reference";
+
+export type PrimType = string | boolean | number;
 
 export type Property = {
     name: string;

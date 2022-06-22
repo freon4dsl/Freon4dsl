@@ -1,7 +1,8 @@
-import { MobxModelElementImpl, PiNamedElement } from ".";
-import { computed, observable, makeObservable, trace } from "mobx";
+import { PiNamedElement } from ".";
+import { computed, observable, makeObservable } from "mobx";
 import { LanguageEnvironment } from "../environment/LanguageEnvironment";
-import { PiLogger } from "../util/index";
+import { PiLogger } from "../logging";
+import { MobxModelElementImpl } from "./decorators";
 
 const LOGGER = new PiLogger("PiElementReference").mute();
 /**
@@ -59,7 +60,7 @@ export class PiElementReference<T extends PiNamedElement> extends MobxModelEleme
     }
 
     set name(value: string) {
-        this._PI_pathname.push(value);
+        this._PI_pathname = [value];
         this._PI_referred = null;
     }
 
@@ -69,9 +70,6 @@ export class PiElementReference<T extends PiNamedElement> extends MobxModelEleme
     }
 
     get name(): string {
-        if (!!this._PI_referred) {
-            return this.referred.name;
-        }
         return this._PI_pathname[this._PI_pathname.length - 1];
     }
 

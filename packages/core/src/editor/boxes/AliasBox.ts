@@ -1,10 +1,11 @@
 import { Concept, Language } from "../../language";
-import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior, PiLogger } from "../../util";
+import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../../util";
 import { PiCreatePartAction } from "../actions/PiCreatePartAction";
 import { triggerToString, PiEditor, TextBox, isProKey } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
 import { PiElement } from "../../ast";
 import { runInAction } from "mobx";
+import { PiLogger } from "../../logging";
 
 const LOGGER = new PiLogger("AliasBox");
 

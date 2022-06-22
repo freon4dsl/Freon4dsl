@@ -11,10 +11,10 @@ import {
     PiPrimitiveType
 } from "../../metalanguage";
 import { ConceptUtils } from "./ConceptUtils";
-
+import { ClassifierUtil } from "./ClassifierUtil";
 
 export class ConceptTemplate {
-
+    // TODO clean up imports in every generate method
     generateConcept(concept: PiConcept): string {
         if (concept instanceof PiLimitedConcept) {
             return this.generateLimited(concept);
@@ -26,7 +26,6 @@ export class ConceptTemplate {
     }
 
     private generateConceptPrivate(concept: PiConcept): string {
-        // TODO clean up imports
         const language = concept.language;
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
@@ -38,7 +37,8 @@ export class ConceptTemplate {
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const implementsPi = (isExpression ? "PiExpression" : (hasName ? "PiNamedElement" : "PiElement"));
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = ConceptUtils.findMobxImports(hasSuper, concept).concat(implementsPi).concat(["PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList"]).concat(hasReferences ? (Names.PiElementReference) : "");
+        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
+            .concat(implementsPi).concat(["PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList", "matchReferenceList"]).concat(hasReferences ? (Names.PiElementReference) : "");
         const metaType = Names.metaType(language);
         const modelImports = this.findModelImports(concept, myName, hasReferences);
         const intfaces = Array.from(
@@ -89,7 +89,7 @@ export class ConceptTemplate {
         const baseExpressionName = Names.concept(GenerationUtil.findExpressionBase(concept));
         const abstract = concept.isAbstract ? "abstract" : "";
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = ConceptUtils.findMobxImports(hasSuper, concept).concat(["PiBinaryExpression", "PiParseLocation", "PiUtils"]);
+        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat(["PiBinaryExpression", "PiParseLocation", "PiUtils"]);
         const metaType = Names.metaType(language);
         let modelImports = this.findModelImports(concept, myName, hasReferences);
         if (!modelImports.includes(baseExpressionName)) {
@@ -173,7 +173,7 @@ export class ConceptTemplate {
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const abstract = (concept.isAbstract ? "abstract" : "");
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = ConceptUtils.findMobxImports(hasSuper, concept).concat(["PiNamedElement", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList"]);
+        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat(["PiNamedElement", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList"]);
         const metaType = Names.metaType(language);
         const imports = this.findModelImports(concept, myName, false);
         const intfaces = Array.from(

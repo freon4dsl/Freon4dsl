@@ -25,8 +25,6 @@ export class PiLogger {
         }
     }
 
-
-
     static muteAllLogs() {
         PiLogger.muteAll = true;
     }
@@ -58,10 +56,9 @@ export class PiLogger {
         this.category = cat;
     }
 
-    info(o: any, msg: LogMessage) {
+    info(msg: LogMessage) {
         if ((!PiLogger.muteAll) && this.active) {
-            const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
-            this.logToConsole(PiLogger.FG_BLUE, type + ": " + this.message(msg));
+            this.logToConsole(PiLogger.FG_BLUE, this.category + ": " + this.message(msg));
         }
     }
 
@@ -71,9 +68,8 @@ export class PiLogger {
         }
     }
 
-    error(o: any, msg: LogMessage) {
-        const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
-        console.log(PiLogger.FG_RED, "ERROR: " + type + ": " + this.message(msg));
+    error(msg: LogMessage) {
+        console.log(PiLogger.FG_RED, "ERROR: " + this.category + ": " + this.message(msg));
     }
 
     mute(): PiLogger {

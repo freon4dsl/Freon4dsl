@@ -1,7 +1,6 @@
 import { PiNamedElement } from "./PiNamedElement";
 import { PiModelUnit } from "./PiModelUnit";
 
-// TODO rethink inheritance from PiNamedElement: no match method needed here
 export interface PiModel extends PiNamedElement {
     /**
      * Finds a unit of this model based on its name and 'metatype'.

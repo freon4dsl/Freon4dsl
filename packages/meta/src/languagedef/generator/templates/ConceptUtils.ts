@@ -6,34 +6,18 @@ import {
     PiPrimitiveProperty,
     PiProperty,
     PiPrimitiveType,
-    PiInterface
+    PiInterface, PiUnitDescription
 } from "../../metalanguage";
 import * as console from "console";
 import { property } from "lodash";
 
 export class ConceptUtils {
 
-    public static findMobxImports(hasSuper: boolean, concept: PiConcept): string[] {
-        const mobxImports: string[] = [];
-        if (!hasSuper) {
-            mobxImports.push("MobxModelElementImpl");
-        }
-        if (concept.implementedProperties().some(part => part.isList && !part.isPrimitive)) {
-            mobxImports.push("observablelistpart");
-        }
-        if (concept.implementedProperties().some(part => !part.isList && !part.isPrimitive)) {
-            mobxImports.push("observablepart");
-        }
-        return mobxImports;
-    }
-
     public static makeImportStatements(needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
-        // TODO remove or change the import for MatchUtil
         return `
-            ${needsObservable ? `import { observable, makeObservable } from "mobx";` : ""}            
+            ${needsObservable ? `import { observable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
             import { ${modelImports.join(", ")} } from "./internal";
-            import { MatchUtil } from "../../utils/gen";
             `;
     }
 
@@ -46,39 +30,41 @@ export class ConceptUtils {
     public static makePrimitiveProperty(property: PiPrimitiveProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
+        return `${property.name} : ${GenerationUtil.getBaseTypeAsString(property)}${arrayType}; \t${comment}`;
+    }
+
+    private static initializer(property: PiPrimitiveProperty): string {
         let initializer = "";
         const myType: PiClassifier = property.type;
         if (!property.isList) {
             switch (myType) {
                 case PiPrimitiveType.identifier: {
-                    initializer = `= \"${property.initialValue ? property.initialValue : ``}\"`;
+                    initializer = `this.${property.name} = \"${property.initialValue ? property.initialValue : ``}\"`;
                     break;
                 }
                 case PiPrimitiveType.string: {
-                    initializer = `= \"${property.initialValue ? property.initialValue : ``}\"`;
+                    initializer = `this.${property.name} = \"${property.initialValue ? property.initialValue : ``}\"`;
                     break;
                 }
                 case PiPrimitiveType.number: {
-                    initializer = `= ${property.initialValue ? property.initialValue : `0`}`;
+                    initializer = `this.${property.name} = ${property.initialValue ? property.initialValue : `0`}`;
                     break;
                 }
                 case PiPrimitiveType.boolean: {
-                    initializer = `= ${property.initialValue ? property.initialValue : `false`}`;
+                    initializer = `this.${property.name} = ${property.initialValue ? property.initialValue : `false`}`;
                     break;
                 }
             }
         } else {
             if (!!property.initialValueList) {
                 if (myType === PiPrimitiveType.string || myType === PiPrimitiveType.identifier) {
-                    initializer = `= [${property.initialValueList.map(elem => `\"${elem}\"`).join(", ")}]`;
+                    initializer = `${property.initialValueList.map(elem => `this.${property.name}.push(\"${elem}\")`).join("\n ")}`;
                 } else {
-                    initializer = `= [${property.initialValueList}]`;
+                    initializer = `${property.initialValueList.map(elem => `this.${property.name}.push(${elem})`).join("\n ")}`;
                 }
-            } else {
-                initializer = "= []";
             }
         }
-        return `${property.name} : ${GenerationUtil.getBaseTypeAsString(property)}${arrayType} ${initializer}; \t${comment}`;
+        return initializer;
     }
 
     public static makePartProperty(property: PiConceptProperty): string {
@@ -141,8 +127,9 @@ export class ConceptUtils {
         // console.log("found NON overriding props: " + allProps.filter(p => !p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
         const allButPrimitiveProps: PiConceptProperty[] = allProps.filter(p => !p.isPrimitive && !p.implementedInBase) as PiConceptProperty[];
         const allPrimitiveProps: PiPrimitiveProperty[] = allProps.filter(p => p.isPrimitive && !p.implementedInBase) as PiPrimitiveProperty[];
+
         return `constructor(id?: string) {
-                    ${!hasSuper ? `
+        ${!hasSuper ? `
                         super();
                         if (!!id) { 
                             this.$id = id;
@@ -151,23 +138,27 @@ export class ConceptUtils {
                         }`
             : "super(id);"
         }
-                    ${allPrimitiveProps.length !== 0 ?
-            `${allPrimitiveProps.map(p =>
+        ${allPrimitiveProps.length !== 0 ?
+            `// Both 'observableprim' and 'observableprimlist' change the get and set of the attribute 
+             // such that the part is observable. In lists no 'null' or 'undefined' values are allowed.
+            ${allPrimitiveProps.map(p =>
                 (p.isList ?
-                        `makeObservable(this, {"${p.name}": observable})` :
-                        `makeObservable(this, {"${Names.primitivePropertyField(p)}": observable})`
-                )
+                    `observableprimlist(this, "${p.name}");
+                     ${this.initializer(p)};`
+                    : `observableprim(this, "${p.name}");
+                       ${this.initializer(p)};`
+                )                
             ).join("\n")}
                         `
             : ``
         }
-                    ${allButPrimitiveProps.length !== 0 ?
-            `// both 'observablepart' and 'observablelistpart' change the get and set of an attribute 
-                        // such that the parent-part relationship is consistently maintained, 
-                        // and make sure the part is observable
+        ${allButPrimitiveProps.length !== 0 ?
+            `// Both 'observablepart' and 'observablepartlist' change the get and set of the attribute 
+             // such that the parent-part relationship is consistently maintained, 
+             // and make sure the part is observable. In lists no 'null' or 'undefined' values are allowed.
                         ${allButPrimitiveProps.map(p =>
                 (p.isList ?
-                        `observablelistpart(this, "${p.name}");`
+                        `observablepartlist(this, "${p.name}");`
                         :
                         `observablepart(this, "${p.name}");`
                 )
@@ -233,7 +224,7 @@ export class ConceptUtils {
                 static create(data: Partial<${myName}>): ${myName} {
                     const result = new ${myName}();
                     ${concept.allProperties().map(property =>
-                        `${(property.isList && !(property instanceof PiPrimitiveProperty)) ?
+                        `${(property.isList) ?
                             `if (!!data.${property.name}) {
                                             data.${property.name}.forEach(x =>
                                                 result.${property.name}.push(x)
@@ -348,13 +339,13 @@ export class ConceptUtils {
                               result = result && matchElementList(this.${property.name}, toBeMatched.${property.name});
                           }`
             } else {
-                // TODO here we known that MatchUtil.matchReferenceList needs to be imported => add to imports
+                // TODO here we known that matchReferenceList needs to be imported => add to imports
                 // TODO here we known that Names.classifier(property.type) needs to be imported => add to imports
                 // result = `if (!!toBeMatched.${property.name}) {
-                //               MatchUtil.matchReferenceList<${Names.classifier(property.type)}>(this.${property.name}, toBeMatched.${property.name});
+                //               matchReferenceList<${Names.classifier(property.type)}>(this.${property.name}, toBeMatched.${property.name});
                 //           }`
                 result = `if (result && !!toBeMatched.${property.name}) {
-                              result = result && MatchUtil.matchReferenceList(this.${property.name}, toBeMatched.${property.name});
+                              result = result && matchReferenceList(this.${property.name}, toBeMatched.${property.name});
                           }`
             }
         } else {
