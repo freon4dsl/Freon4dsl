@@ -48,7 +48,7 @@ export class PiElementReference<T extends PiNamedElement> extends MobxModelEleme
         makeObservable<PiElementReference<T>, "_PI_pathname" | "_PI_referred">(this, {
             _PI_referred: observable,
             _PI_pathname: observable,
-            referred: computed,
+            // referred: computed,
             // name: computed,
             // pathname: computed
         });
