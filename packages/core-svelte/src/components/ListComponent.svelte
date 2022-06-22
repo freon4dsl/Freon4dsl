@@ -3,8 +3,15 @@
     import { afterUpdate, onDestroy, onMount } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
-    import { Box, conceptStyle, HorizontalListBox, ListBox, PiEditor, PiLogger, styleToCSS } from "@projectit/core";
-    import { isHorizontalBox } from "@projectit/core";
+    import {
+        Box,
+        HorizontalListBox,
+        isEmptyLineBox,
+        ListBox,
+        PiEditor,
+        PiLogger,
+        isHorizontalBox
+    } from "@projectit/core";
 
     // Parameters
     export let list: ListBox ; //= new HorizontalListBox(null, "l1");
