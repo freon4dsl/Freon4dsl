@@ -32,8 +32,8 @@ describe("Testing Undo Manager", () => {
         const myStack = manager.undoStackPerUnit.get("myName");
         expect (myStack).not.toBeNull();
         expect (myStack).not.toBeUndefined();
-        expect (myStack.length).toBe(6);
         // console.log("length of undo stack: " + myStack.length + " => [[\n\t" + myStack.map(d => d.toString() + "\n\t").join("") + "]]");
+        expect (myStack.length).toBe(1);
     });
 
     it("read First WITH transaction", () => {
@@ -51,8 +51,9 @@ describe("Testing Undo Manager", () => {
         const delta = myStack[0];
         expect (delta instanceof PiTransactionDelta).toBe(true);
         if (delta instanceof PiTransactionDelta) {
-            expect (delta.internalDeltas.length).toBe(6);
-            // console.log("length of internal stack: " + delta.internalDeltas.length + " => [[" + delta.internalDeltas.map(d => d.toString() + "\n\t").join("") + "]]");
+            console.log("length of internal stack: " + delta.internalDeltas.length + " => [[" + delta.internalDeltas.map(d => d.toString() + "\n\t").join("") + "]]");
+            expect (delta.internalDeltas.length).toBe(1
+            );
         }
     });
 
@@ -108,12 +109,12 @@ describe("Testing Undo Manager", () => {
         const otherPartId = otherPart.piId();
         unit1.part = otherPart;
         // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString()).join(", ") + "]]");
-        expect (undoStack.length).toBe(4); // read file (1), create prop of otherPart (2), set name in otherPart (3), set unit1.part (4)
+        expect (undoStack.length).toBe(2); // read file (1), set unit1.part (2)
         expect (unit1.part).toBe(otherPart);
 
         // undo the change
         manager.executeUndo(unit1);
-        expect (undoStack.length).toBe(3);
+        expect (undoStack.length).toBe(1);
         const redoStack: PiDelta[] = manager.redoStackPerUnit.get(unit1.name);
         expect (redoStack).not.toBeNull();
         expect (redoStack).not.toBeUndefined();
@@ -203,12 +204,12 @@ describe("Testing Undo Manager", () => {
         const oldValue = unit1.partlist[2];
         const newValue = new UndoPart("part90");
         unit1.partlist[2] = newValue;
-        expect (undoStack.length).toBe(3); // creating newValue also results in delta, therefore '3' instead of '2'
+        expect (undoStack.length).toBe(2);
         expect (unit1.partlist[2]).toBe(newValue);
 
         // undo the change
         manager.executeUndo(unit1);
-        expect (undoStack.length).toBe(2);
+        expect (undoStack.length).toBe(1);
         const redoStack: PiDelta[] = manager.redoStackPerUnit.get(unit1.name);
         expect (redoStack).not.toBeNull();
         expect (redoStack).not.toBeUndefined();
@@ -220,7 +221,7 @@ describe("Testing Undo Manager", () => {
         expect (unit1.partlist[2]).toBe(newValue);
     });
 
-    it.skip("change, undo, redo, undo on multiple elements in a list of parts", () => {
+    it("change, undo, redo, undo on multiple elements in a list of parts", () => {
         const manager = PiUndoManager.getInstance();
         const filePath = "src/UndoTester/__inputs__/third.und";
         const unit1 = readUnitInTransaction(manager, filePath);
@@ -230,22 +231,26 @@ describe("Testing Undo Manager", () => {
         expect (undoStack.length).toBe(1);
 
         // change the value of 'partlist'
-        expect (unit1.partlist.length).toBe(3);
+        // console.log(unit1.partlist.map(p => p.name));
+        expect (unit1.partlist.length).toBe(5);
+        expect (unit1.piOwner()).not.toBeNull();
+        expect (unit1.piOwner()).not.toBeUndefined();
         const oldValue1 = unit1.partlist[0];
         const oldValue2 = unit1.partlist[1];
         const oldValue3 = unit1.partlist[2];
         unit1.partlist.splice(1, 2);
         expect (undoStack.length).toBe(2);
-        expect (unit1.partlist.length).toBe(1);
+        expect (unit1.partlist.length).toBe(3);
 
         // undo the change
+        // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString()).join(", ") + "]]");
         manager.executeUndo(unit1);
         expect (undoStack.length).toBe(1);
-        const redoStack: PiDelta[] = manager.redoStackPerUnit.get(unit1.name);
+        const redoStack: PiDelta[] = manager.redoStackPerUnit.get("myName");
         expect (redoStack).not.toBeNull();
         expect (redoStack).not.toBeUndefined();
         expect (redoStack.length).toBe(1);
-        expect (unit1.partlist.length).toBe(3);
+        expect (unit1.partlist.length).toBe(5);
         expect (unit1.partlist[0]).toBe(oldValue1);
         expect (unit1.partlist[1]).toBe(oldValue2);
         expect (unit1.partlist[2]).toBe(oldValue3);
@@ -253,6 +258,6 @@ describe("Testing Undo Manager", () => {
         // redo the change
         manager.executeRedo(unit1);
         expect (undoStack.length).toBe(2);
-        expect (unit1.partlist.length).toBe(1);
+        expect (unit1.partlist.length).toBe(3);
     });
 });

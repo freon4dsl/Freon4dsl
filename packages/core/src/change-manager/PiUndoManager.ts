@@ -2,6 +2,7 @@ import { PiChangeManager } from "./PiChangeManager";
 import { PiModelUnit } from "../ast";
 import { PiDelta, PiPartListDelta, PiPartDelta, PiPrimDelta, PiTransactionDelta, PiPrimListDelta } from "./PiDelta";
 import { PiLogger } from "../logging";
+import { modelUnit } from "../ast-utils";
 
 const LOGGER: PiLogger = new PiLogger("PiUndoManager");
 /**
@@ -93,7 +94,7 @@ export class PiUndoManager {
         }
         if (this.inTransaction) {
             if (this.currentTransaction === null || this.currentTransaction === undefined) {
-                this.currentTransaction = new PiTransactionDelta(delta.owner, delta.propertyName, delta.index);
+                this.currentTransaction = new PiTransactionDelta(modelUnit(delta.owner), delta.owner, delta.propertyName, delta.index);
                 myStack.push(this.currentTransaction);
             }
             this.currentTransaction.internalDeltas.push(delta);
@@ -114,7 +115,7 @@ export class PiUndoManager {
         }
         if (this.inTransaction) {
             if (this.currentTransaction === null || this.currentTransaction === undefined) {
-                this.currentTransaction = new PiTransactionDelta(delta.owner, delta.propertyName, delta.index);
+                this.currentTransaction = new PiTransactionDelta(modelUnit(delta.owner), delta.owner, delta.propertyName, delta.index);
                 myStack.push(this.currentTransaction);
             }
             this.currentTransaction.internalDeltas.push(delta);
@@ -128,6 +129,7 @@ export class PiUndoManager {
     executeUndo(unit: PiModelUnit) {
         this.inUndo = true; // make sure incoming changes are stored on redo stack
         // console.log("executing undo for unit: "+ unit.name)
+        // TODO make safe
         const delta = this.undoStackPerUnit.get(unit.name).pop();
         this.reverseDelta(delta, unit);
         this.inUndo = false;
@@ -139,7 +141,7 @@ export class PiUndoManager {
     }
 
     private reverseDelta(delta: PiDelta, unit: PiModelUnit) {
-        console.log(`reverseDelta<${delta.constructor.name}>:  ${delta.toString()} `);
+        // console.log(`reverseDelta<${delta.constructor.name}>:  ${delta.toString()} `);
         if (delta instanceof PiPartDelta || delta instanceof PiPrimDelta) {
             if (this.hasIndex(delta)) {
                 if (this.checkIndex(delta)) {
@@ -159,6 +161,7 @@ export class PiUndoManager {
             }
         } else if (delta instanceof PiTransactionDelta) {
             // TODO
+            console.log("reverse of transaction delta to be done");
         }
     }
 

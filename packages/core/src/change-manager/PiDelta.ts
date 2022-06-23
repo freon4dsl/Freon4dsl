@@ -1,17 +1,25 @@
-import { DecoratedModelElement, MobxModelElementImpl, PiElement, PiElementBaseImpl, PiElementReference, PiNamedElement } from "../ast";
+import {
+    DecoratedModelElement,
+    MobxModelElementImpl,
+    PiElement,
+    PiElementBaseImpl,
+    PiModelUnit,
+} from "../ast";
 import { PrimType } from "../language";
 
 export abstract class PiDelta {
+    unit: PiModelUnit;
     owner: PiElement;
     propertyName: string;
     index: number; // only used in case the changed element is (part of) a list
 
-    constructor(owner: PiElement, propertyName: string, index?: number) {
+    constructor(unit: PiModelUnit, owner: PiElement, propertyName: string, index?: number) {
         this.owner = owner;
         this.propertyName = propertyName;
         if (index !== null && index !== undefined) {
             this.index = index;
         }
+        this.unit = unit;
     }
 
     toString(): string {
@@ -23,8 +31,8 @@ export class PiPrimDelta extends PiDelta {
     oldValue: string | boolean | number;
     newValue: string | boolean | number;
 
-    constructor(owner: PiElement, propertyName: string, oldValue: string | boolean | number, newValue: string | boolean | number, index?: number) {
-        super(owner, propertyName, index);
+    constructor(unit: PiModelUnit, owner: PiElement, propertyName: string, oldValue: string | boolean | number, newValue: string | boolean | number, index?: number) {
+        super(unit, owner, propertyName, index);
         this.oldValue = oldValue;
         this.newValue = newValue;
     }
@@ -42,8 +50,8 @@ export class PiPartDelta extends PiDelta {
     oldValue: PiElement;
     newValue: PiElement;
 
-    constructor(owner: PiElement, propertyName: string, oldValue: DecoratedModelElement, newValue: DecoratedModelElement, index?: number) {
-        super(owner, propertyName, index);
+    constructor(unit: PiModelUnit, owner: PiElement, propertyName: string, oldValue: DecoratedModelElement, newValue: DecoratedModelElement, index?: number) {
+        super(unit, owner, propertyName, index);
         if (oldValue instanceof MobxModelElementImpl) { // TODO adjust this test when PiElementBaseImpl is used in generation
             this.oldValue = oldValue as PiElementBaseImpl;
             // console.log("oldValue of part: " + typeof oldValue + ", " + this.oldValue.piId())
@@ -63,16 +71,16 @@ export class PiPartListDelta extends PiDelta {
     removed: PiElement[] = [];
     added: PiElement[] = [];
 
-    constructor(owner: PiElement, propertyName: string, index: number, removed: DecoratedModelElement[], added: DecoratedModelElement[]) {
-        super(owner, propertyName, index);
+    constructor(unit: PiModelUnit, owner: PiElement, propertyName: string, index: number, removed: DecoratedModelElement[], added: DecoratedModelElement[]) {
+        super(unit, owner, propertyName, index);
         for (const r of removed) {
-            if (r instanceof PiElementBaseImpl) {
-                this.removed.push(r);
+            if (r instanceof MobxModelElementImpl) { // TODO adjust this test when PiElementBaseImpl is used in generation
+                this.removed.push(r as PiElementBaseImpl);
             }
         }
         for (const a of added) {
-            if (a instanceof PiElementBaseImpl) {
-                this.added.push(a);
+            if (a instanceof MobxModelElementImpl) {
+                this.added.push(a as PiElementBaseImpl);
             }
         }
     }
@@ -84,7 +92,7 @@ export class PiPartListDelta extends PiDelta {
         } else if (this.added.length > 0) {
             return `added [${this.added.map(r => DeltaUtil.getElemName(r))}] to ${ownerName}.${this.propertyName}`;
         }
-        return "PiListDelta<" + ownerName + "[" + this.propertyName + "]>";
+        return `changed list ${ownerName}.${this.propertyName} from index ${this.index}: removed [${this.removed.map(r => DeltaUtil.getElemName(r))}], added [${this.added.map(r => DeltaUtil.getElemName(r))}]`;
     }
 }
 
@@ -92,8 +100,8 @@ export class PiPrimListDelta extends PiDelta {
     removed: PrimType[] = [];
     added: PrimType[] = [];
 
-    constructor(owner: PiElement, propertyName: string, index: number, removed: PrimType[], added: PrimType[]) {
-        super(owner, propertyName, index);
+    constructor(unit: PiModelUnit, owner: PiElement, propertyName: string, index: number, removed: PrimType[], added: PrimType[]) {
+        super(unit, owner, propertyName, index);
         if (!!removed) {
             this.removed = removed;
         }
