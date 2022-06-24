@@ -2,6 +2,7 @@ import { PiDelta, PiPartDelta, PiPartListDelta, PiPrimDelta, PiPrimListDelta, Pi
 import { PiModelUnit } from "../ast";
 import { modelUnit } from "../ast-utils";
 import { PiLogger } from "../logging";
+import { PiUndoManager } from "./PiUndoManager";
 
 const LOGGER: PiLogger = new PiLogger("PiUndoStackManager");
 
@@ -127,11 +128,11 @@ export class PiUndoStackManager {
             }
         } else if (delta instanceof PiTransactionDelta) {
             // TODO when multiple sources of change are present, then a check is needed whether the state of the unit is such that this delta can be reversed
-            this.inTransaction = true;
+            PiUndoManager.getInstance().startTransaction(this.changeSource);
             for (const sub of delta.internalDeltas) {
                 this.reverseDelta(sub);
             }
-            this.inTransaction = false;
+            PiUndoManager.getInstance().endTransaction(this.changeSource);
         }
     }
 
