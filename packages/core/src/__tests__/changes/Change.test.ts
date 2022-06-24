@@ -213,7 +213,7 @@ describe("Change and Undo Manager", () => {
         expect (unit.partlist.length).toBe(3);
     });
 
-    it("WITH transaction: change, undo, redo, undo on multiple elements in a list of parts", () => {
+    it("transaction: change, undo, redo, undo on multiple elements in a list of parts", () => {
         // make this a transaction
         manager.startTransaction(unit);
 
@@ -244,26 +244,25 @@ describe("Change and Undo Manager", () => {
         const delta = undoStack[0];
         expect (delta instanceof PiTransactionDelta).toBe(true);
         if (delta instanceof PiTransactionDelta) {
-            console.log("length of internal stack: " + delta.internalDeltas.length + " => [[" + delta.internalDeltas.map(d => d.toString() + "\n\t").join("") + "]]");
+            // console.log("length of internal stack: " + delta.internalDeltas.length + " => [[" + delta.internalDeltas.map(d => d.toString() + "\n\t").join("") + "]]");
             expect (delta.internalDeltas.length).toBe(3);
         }
 
-        // TODO test undo/redo when these are implemented for transactions
-        // // undo the change
-        // // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString()).join(", ") + "]]");
-        // manager.executeUndo(unit);
-        // // expect (undoStack.length).toBe(0);
-        // // const redoStack: PiDelta[] = getRedoStackPerUnit(manager, unit);
-        // // expect (redoStack.length).toBe(1);
-        // expect (unit.partlist.length).toBe(5);
-        // expect (unit.partlist[0]).toBe(oldValue1);
-        // expect (unit.partlist[1]).toBe(oldValue2);
-        // expect (unit.partlist[2]).toBe(oldValue3);
-        //
-        // // redo the change
-        // manager.executeRedo(unit);
-        // expect (undoStack.length).toBe(1);
-        // expect (unit.partlist.length).toBe(3);
+        // undo the change
+        // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString()).join(", ") + "]]");
+        manager.executeUndo(unit);
+        expect (undoStack.length).toBe(0);
+        const redoStack: PiDelta[] = getRedoStackPerUnit(manager, unit);
+        expect (redoStack.length).toBe(1);
+        expect (unit.partlist.length).toBe(5);
+        expect (unit.partlist[0]).toBe(oldValue1);
+        expect (unit.partlist[1]).toBe(oldValue2);
+        expect (unit.partlist[2]).toBe(oldValue3);
+
+        // redo the change
+        manager.executeRedo(unit);
+        expect (undoStack.length).toBe(1);
+        expect (unit.partlist.length).toBe(3);
 
     });
 });

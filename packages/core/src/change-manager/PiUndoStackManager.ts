@@ -53,7 +53,7 @@ export class PiUndoStackManager {
         const delta = this.undoStack.pop();
         // console.log("executing undo for unit: "+ this.changeSource.name + ", " + delta.toString())
         if (!!delta) {
-            PiUndoStackManager.reverseDelta(delta);
+            this.reverseDelta(delta);
         }
         this.inUndo = false;
     }
@@ -61,7 +61,7 @@ export class PiUndoStackManager {
     public executeRedo() {
         const delta = this.redoStack.pop();
         if (!!delta) {
-            PiUndoStackManager.reverseDelta(delta);
+            this.reverseDelta(delta);
         }
     }
 
@@ -106,7 +106,7 @@ export class PiUndoStackManager {
         }
     }
 
-    private static reverseDelta(delta: PiDelta) {
+    private reverseDelta(delta: PiDelta) {
         // console.log(`reverseDelta<${delta.constructor.name}>:  ${delta.toString()} `);
         if (delta instanceof PiPartDelta || delta instanceof PiPrimDelta) {
             if (PiUndoStackManager.hasIndex(delta)) {
@@ -126,8 +126,12 @@ export class PiUndoStackManager {
                 delta.owner[delta.propertyName].splice(delta.index, delta.added.length );
             }
         } else if (delta instanceof PiTransactionDelta) {
-            // TODO
-            console.log("reverse of transaction delta to be done");
+            // TODO when multiple sources of change are present, then a check is needed whether the state of the unit is such that this delta can be reversed
+            this.inTransaction = true;
+            for (const sub of delta.internalDeltas) {
+                this.reverseDelta(sub);
+            }
+            this.inTransaction = false;
         }
     }
 
