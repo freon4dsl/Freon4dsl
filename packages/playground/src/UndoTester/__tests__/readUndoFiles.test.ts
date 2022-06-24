@@ -5,15 +5,15 @@ import { PiDelta, PiTransactionDelta, PiUndoManager } from "@projectit/core";
 
 const handler = new FileHandler();
 const reader = UndoTesterEnvironment.getInstance().reader;
-const writer = UndoTesterEnvironment.getInstance().writer;
+// const writer = UndoTesterEnvironment.getInstance().writer;
 
 function readUnitInTransaction(manager: PiUndoManager, filePath: string) {
-    manager.cleanStacks();
-    manager.startTransaction();
+    manager.cleanStacks(null);
+    manager.startTransaction(null);
     const model: UndoModel = new UndoModel();
     const langSpec: string = handler.stringFromFile(filePath);
     const unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
-    manager.endTransaction();
+    manager.endTransaction(null);
     return unit1;
 }
 
@@ -27,9 +27,7 @@ describe("Testing Undo Manager", () => {
         const unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
         expect(unit1).not.toBeNull();
         // console.log(writer.writeToString(unit1));
-        expect (manager.undoStackPerUnit).not.toBeNull();
-        expect (manager.undoStackPerUnit).not.toBeUndefined();
-        const myStack = manager.undoStackPerUnit.get("myName");
+        const myStack: PiDelta[] = manager.getUndoStackPerUnit(null);
         expect (myStack).not.toBeNull();
         expect (myStack).not.toBeUndefined();
         // console.log("length of undo stack: " + myStack.length + " => [[\n\t" + myStack.map(d => d.toString() + "\n\t").join("") + "]]");
@@ -42,9 +40,7 @@ describe("Testing Undo Manager", () => {
         const unit1 = readUnitInTransaction(manager, filePath);
         expect(unit1).not.toBeNull();
         // console.log(writer.writeToString(unit1));
-        expect (manager.undoStackPerUnit).not.toBeNull();
-        expect (manager.undoStackPerUnit).not.toBeUndefined();
-        const myStack: PiDelta[] = manager.undoStackPerUnit.get("myName");
+        const myStack: PiDelta[] = manager.getUndoStackPerUnit(null);
         expect (myStack).not.toBeNull();
         expect (myStack).not.toBeUndefined();
         expect (myStack.length).toBe(1);
@@ -52,8 +48,7 @@ describe("Testing Undo Manager", () => {
         expect (delta instanceof PiTransactionDelta).toBe(true);
         if (delta instanceof PiTransactionDelta) {
             console.log("length of internal stack: " + delta.internalDeltas.length + " => [[" + delta.internalDeltas.map(d => d.toString() + "\n\t").join("") + "]]");
-            expect (delta.internalDeltas.length).toBe(1
-            );
+            expect (delta.internalDeltas.length).toBe(1);
         }
     });
 
@@ -63,25 +58,23 @@ describe("Testing Undo Manager", () => {
         const unit1 = readUnitInTransaction(manager, filePath);
         expect(unit1).not.toBeNull();
         // console.log(writer.writeToString(unit1));
-        expect (manager.undoStackPerUnit).not.toBeNull();
-        expect (manager.undoStackPerUnit).not.toBeUndefined();
-        const undoStack: PiDelta[] = manager.undoStackPerUnit.get("myName");
+        const undoStack: PiDelta[] = manager.getUndoStackPerUnit(unit1);
         expect (undoStack).not.toBeNull();
         expect (undoStack).not.toBeUndefined();
-        expect (undoStack.length).toBe(1);
-        // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString() + "\n\t").join("") + "]]");
 
         // change the value of 'prim'
         unit1.prim = "nieuwe_waarde";
-        expect (undoStack.length).toBe(2);
+        expect (undoStack.length).toBe(1);
         expect (unit1.prim).toBe("nieuwe_waarde");
+        // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString() + "\n\t").join("") + "]]");
 
         // undo the change
         manager.executeUndo(unit1);
-        const redoStack: PiDelta[] = manager.redoStackPerUnit.get(unit1.name);
+        const redoStack: PiDelta[] = manager.getRedoStackPerUnit(unit1);
         expect (redoStack).not.toBeNull();
         expect (redoStack).not.toBeUndefined();
         expect (redoStack.length).toBe(1);
+        expect (undoStack.length).toBe(0);
         expect (unit1.prim).toBe("myText");
         // console.log("length of redo stack: " + redoStack.length + " => [[" + redoStack.map(d => d.toString()).join(", ") + "]]");
 
@@ -96,12 +89,9 @@ describe("Testing Undo Manager", () => {
         const unit1 = readUnitInTransaction(manager, filePath);
         expect(unit1).not.toBeNull();
         // console.log(writer.writeToString(unit1));
-        expect (manager.undoStackPerUnit).not.toBeNull();
-        expect (manager.undoStackPerUnit).not.toBeUndefined();
-        const undoStack: PiDelta[] = manager.undoStackPerUnit.get("myName");
+        const undoStack: PiDelta[] = manager.getUndoStackPerUnit(unit1);
         expect (undoStack).not.toBeNull();
         expect (undoStack).not.toBeUndefined();
-        expect (undoStack.length).toBe(1);
 
         // change the value of 'part'
         const oldPartId = unit1.part.piId(); // remember the id of the old value
@@ -109,13 +99,13 @@ describe("Testing Undo Manager", () => {
         const otherPartId = otherPart.piId();
         unit1.part = otherPart;
         // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString()).join(", ") + "]]");
-        expect (undoStack.length).toBe(2); // read file (1), set unit1.part (2)
+        expect (undoStack.length).toBe(1);
         expect (unit1.part).toBe(otherPart);
 
         // undo the change
         manager.executeUndo(unit1);
-        expect (undoStack.length).toBe(1);
-        const redoStack: PiDelta[] = manager.redoStackPerUnit.get(unit1.name);
+        expect (undoStack.length).toBe(0);
+        const redoStack: PiDelta[] = manager.getRedoStackPerUnit(unit1);
         expect (redoStack).not.toBeNull();
         expect (redoStack).not.toBeUndefined();
         expect (redoStack.length).toBe(1);
@@ -132,19 +122,19 @@ describe("Testing Undo Manager", () => {
         const unit1 = readUnitInTransaction(manager, filePath);
         expect(unit1).not.toBeNull();
         expect(unit1.numlist.length).toBeGreaterThan(0);
-        const undoStack: PiDelta[] = manager.undoStackPerUnit.get("myName");
-        expect (undoStack.length).toBe(1);
+        const undoStack: PiDelta[] = manager.getUndoStackPerUnit(unit1);
+        expect (undoStack.length).toBe(0);
 
         // change the value of 'numlist'
         const oldValue = unit1.numlist[0];
         unit1.numlist[0] = 24;
-        expect (undoStack.length).toBe(2);
+        expect (undoStack.length).toBe(1);
         expect (unit1.numlist[0]).toBe(24);
 
         // undo the change
         manager.executeUndo(unit1);
-        expect (undoStack.length).toBe(1);
-        const redoStack: PiDelta[] = manager.redoStackPerUnit.get(unit1.name);
+        expect (undoStack.length).toBe(0);
+        const redoStack: PiDelta[] = manager.getUndoStackPerUnit(unit1);
         expect (redoStack).not.toBeNull();
         expect (redoStack).not.toBeUndefined();
         expect (redoStack.length).toBe(1);
@@ -161,8 +151,8 @@ describe("Testing Undo Manager", () => {
         const unit1 = readUnitInTransaction(manager, filePath);
         expect(unit1).not.toBeNull();
         expect(unit1.numlist.length).toBeGreaterThan(0);
-        const undoStack: PiDelta[] = manager.undoStackPerUnit.get("myName");
-        expect (undoStack.length).toBe(1);
+        const undoStack: PiDelta[] = manager.getUndoStackPerUnit(unit1);
+        expect (undoStack.length).toBe(0);
 
         // change the value of 'numlist'
         expect (unit1.numlist.length).toBe(3);
@@ -170,13 +160,13 @@ describe("Testing Undo Manager", () => {
         const oldValue2 = unit1.numlist[1];
         const oldValue3 = unit1.numlist[2];
         unit1.numlist.splice(1, 2);
-        expect (undoStack.length).toBe(2);
+        expect (undoStack.length).toBe(1);
         expect (unit1.numlist.length).toBe(1);
 
         // undo the change
         manager.executeUndo(unit1);
-        expect (undoStack.length).toBe(1);
-        const redoStack: PiDelta[] = manager.redoStackPerUnit.get(unit1.name);
+        expect (undoStack.length).toBe(0);
+        const redoStack: PiDelta[] = manager.getRedoStackPerUnit(unit1);
         expect (redoStack).not.toBeNull();
         expect (redoStack).not.toBeUndefined();
         expect (redoStack.length).toBe(1);
@@ -187,7 +177,7 @@ describe("Testing Undo Manager", () => {
 
         // redo the change
         manager.executeRedo(unit1);
-        expect (undoStack.length).toBe(2);
+        expect (undoStack.length).toBe(1);
         expect (unit1.numlist.length).toBe(1);
     });
 
@@ -197,7 +187,7 @@ describe("Testing Undo Manager", () => {
         const unit1 = readUnitInTransaction(manager, filePath);
         expect(unit1).not.toBeNull();
         expect(unit1.partlist.length).toBe(5);
-        const undoStack: PiDelta[] = manager.undoStackPerUnit.get("myName");
+        const undoStack: PiDelta[] = manager.getUndoStackPerUnit(unit1);
         expect (undoStack.length).toBe(1);
 
         // change the value of 'partlist'
@@ -210,7 +200,7 @@ describe("Testing Undo Manager", () => {
         // undo the change
         manager.executeUndo(unit1);
         expect (undoStack.length).toBe(1);
-        const redoStack: PiDelta[] = manager.redoStackPerUnit.get(unit1.name);
+        const redoStack: PiDelta[] = manager.getRedoStackPerUnit(unit1);
         expect (redoStack).not.toBeNull();
         expect (redoStack).not.toBeUndefined();
         expect (redoStack.length).toBe(1);
@@ -227,7 +217,7 @@ describe("Testing Undo Manager", () => {
         const unit1 = readUnitInTransaction(manager, filePath);
         expect(unit1).not.toBeNull();
         expect(unit1.partlist.length).toBeGreaterThan(0);
-        const undoStack: PiDelta[] = manager.undoStackPerUnit.get("myName");
+        const undoStack: PiDelta[] = manager.getUndoStackPerUnit(unit1);
         expect (undoStack.length).toBe(1);
 
         // change the value of 'partlist'
@@ -246,7 +236,8 @@ describe("Testing Undo Manager", () => {
         // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString()).join(", ") + "]]");
         manager.executeUndo(unit1);
         expect (undoStack.length).toBe(1);
-        const redoStack: PiDelta[] = manager.redoStackPerUnit.get("myName");
+        const redoStack: PiDelta[] = manager.getRedoStackPerUnit(unit1);
+
         expect (redoStack).not.toBeNull();
         expect (redoStack).not.toBeUndefined();
         expect (redoStack.length).toBe(1);
