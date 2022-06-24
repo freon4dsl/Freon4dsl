@@ -22,9 +22,9 @@ export interface PiEnvironment {
     writer: PiWriter;
     reader: PiReader;
 
-    // projectionalEditorComponent: ProjectionalEditor;
     languageName: string;
     unitNames: string[];
+    namedConcepts: string[];    // the type names of all concepts/interfaces that have a name property
     fileExtensions: Map<string, string>;
 }
 
