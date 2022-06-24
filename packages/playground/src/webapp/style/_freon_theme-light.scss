@@ -256,5 +256,7 @@ html,
 body {
   background-color: theme.$surface;
   color: theme.$on-surface;
+  margin: 0;
+  box-sizing: border-box;
   --mdc-theme-primary: #{theme.$primary};
 }
