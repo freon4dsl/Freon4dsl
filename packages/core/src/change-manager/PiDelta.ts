@@ -88,11 +88,11 @@ export class PiPartListDelta extends PiDelta {
     toString(): string {
         let ownerName = DeltaUtil.getElemName(this.owner);
         if (this.removed.length > 0) {
-            return `removed [${this.removed.map(r => DeltaUtil.getElemName(r))}] from ${ownerName}.${this.propertyName}`;
+            return `remove [${this.removed.map(r => DeltaUtil.getElemName(r))}] from ${ownerName}.${this.propertyName}`;
         } else if (this.added.length > 0) {
-            return `added [${this.added.map(r => DeltaUtil.getElemName(r))}] to ${ownerName}.${this.propertyName}`;
+            return `add [${this.added.map(r => DeltaUtil.getElemName(r))}] to ${ownerName}.${this.propertyName}`;
         }
-        return `changed list ${ownerName}.${this.propertyName} from index ${this.index}: removed [${this.removed.map(r => DeltaUtil.getElemName(r))}], added [${this.added.map(r => DeltaUtil.getElemName(r))}]`;
+        return `change list ${ownerName}.${this.propertyName} from index ${this.index}: removed [${this.removed.map(r => DeltaUtil.getElemName(r))}], added [${this.added.map(r => DeltaUtil.getElemName(r))}]`;
     }
 }
 

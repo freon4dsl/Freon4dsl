@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { PiElementBaseImpl, observablepartlist, observablepart, observableprimlist, observableprim } from "../ast";
+import { PiElementBaseImpl, observablepartlist, observablepart, observableprimlist, observableprim } from "../../ast";
 import { makeObservable, observable } from "mobx";
 import { PiElementReferenceTestScoper } from "./PiElementReferenceTestScoper";
 
@@ -49,6 +49,14 @@ export class MobxTestRoot extends MobxTestElement {
         super(name);
         observablepart(this, "element");
     }
+
+    piIsUnit(): boolean {
+        return true;
+    }
+
+    piIsModel(): boolean {
+        return true;
+    }
 }
 
 export class MobxTestParts extends MobxTestElement {
@@ -76,6 +84,14 @@ export class MobxTestParts extends MobxTestElement {
     }
     toString(): string {
         return "FunctionCallExpression";
+    }
+
+    piIsUnit(): boolean {
+        return false;
+    }
+
+    piIsModel(): boolean {
+        return false;
     }
 }
 

@@ -4,8 +4,9 @@ import { PiDelta } from "./PiDelta";
 import { PiUndoStackManager } from "./PiUndoStackManager";
 
 /**
- * Class PiUndoManager holds two sets of stacks of change information on the model.
+ * Class PiUndoManager holds the change information on the model.
  * The information is stored per model unit; one stack for undo info, one for redo info.
+ * Any changes that cannot be attributed to a single unit are stored separately.
  */
 export class PiUndoManager {
     private static theInstance; // the only instance of this class
@@ -23,29 +24,11 @@ export class PiUndoManager {
     // Note: the implementation depends on the piId() of the units, which is different each time a unit is read from storage
     // We assume the Map is only used during a single run of the tool.
     private undoManagerPerUnit: Map<string, PiUndoStackManager> = new Map<string, PiUndoStackManager>();
-    public modelUndoManager: PiUndoStackManager = new PiUndoStackManager(null);
+    private modelUndoManager: PiUndoStackManager = new PiUndoStackManager(null);
     private inTransaction: boolean = false;
     private unitForTransaction: PiModelUnit = null;
 
-    //// for testing purposes only
-    getUndoStackPerUnit(unit: PiModelUnit): PiDelta[] {
-        if (!!unit) {
-            return this.getUndoStackManager(unit).undoStack;
-        } else {
-            return this.modelUndoManager.undoStack;
-        }
-    }
-
-    getRedoStackPerUnit(unit: PiModelUnit): PiDelta[] {
-        if (!!unit) {
-            return this.getUndoStackManager(unit).redoStack;
-        } else {
-            return this.modelUndoManager.redoStack;
-        }
-    }
-    ///// end for testing purposes only
-
-    public startTransaction(unit: PiModelUnit) {
+    public startTransaction(unit?: PiModelUnit) {
         if (!!unit) {
             this.getUndoStackManager(unit).startTransaction();
             this.unitForTransaction = unit;
@@ -55,8 +38,7 @@ export class PiUndoManager {
         this.inTransaction = true;
     }
 
-
-    public endTransaction(unit: PiModelUnit) {
+    public endTransaction(unit?: PiModelUnit) {
         if (!!unit) {
             this.getUndoStackManager(unit).endTransaction();
             this.unitForTransaction = null;
@@ -66,7 +48,7 @@ export class PiUndoManager {
         this.inTransaction = false;
     }
 
-    public startIgnore(unit: PiModelUnit) {
+    public startIgnore(unit?: PiModelUnit) {
         if (!!unit) {
             this.getUndoStackManager(unit).startIgnore();
         } else {
@@ -74,7 +56,7 @@ export class PiUndoManager {
         }
     }
 
-    public endIgnore(unit: PiModelUnit) {
+    public endIgnore(unit?: PiModelUnit) {
         if (!!unit) {
             this.getUndoStackManager(unit).endIgnore();
         } else {
@@ -82,10 +64,7 @@ export class PiUndoManager {
         }
     }
 
-    /**
-     * A temporary method, because during testing we use the same manager
-     */
-    public cleanStacks(unit: PiModelUnit) {
+    public cleanStacks(unit?: PiModelUnit) {
         if (!!unit) {
             this.getUndoStackManager(unit).cleanStacks();
         } else {
@@ -93,15 +72,24 @@ export class PiUndoManager {
         }
     }
 
-    public executeUndo(unit: PiModelUnit) {
+    public cleanAllStacks() {
+        this.undoManagerPerUnit.forEach(val =>
+            val.cleanStacks()
+        );
+        this.modelUndoManager.cleanStacks();
+    }
+
+    public executeUndo(unit?: PiModelUnit) {
         if (!!unit) {
+            // console.log("execute undo for unit" )
             this.getUndoStackManager(unit).executeUndo();
         } else {
+            // console.log("execute undo for model" )
             this.modelUndoManager.executeUndo();
         }
     }
 
-    public executeRedo(unit: PiModelUnit) {
+    public executeRedo(unit?: PiModelUnit) {
         if (!!unit) {
             this.getUndoStackManager(unit).executeRedo();
         } else {
@@ -132,23 +120,27 @@ export class PiUndoManager {
         if (this.inTransaction) {
             // we are in a transaction => store all changes in the unit that originated the transaction
             if (!!this.unitForTransaction) {
+                // console.log("adding transaction to " + this.unitForTransaction.name)
                 this.getUndoStackManager(this.unitForTransaction).addDelta(delta);
             } else {
                 // the model has changed => store in model manager
+                // console.log("adding transaction to model")
                 this.modelUndoManager.addDelta(delta);
             }
         } else {
             // not in a transaction => store the changes in the unit that is changed.
             if (!!delta.unit) {
+                // console.log("adding delta to " + delta.unit.name)
                 this.getUndoStackManager(delta.unit).addDelta(delta);
             } else {
                 // the model has changed => store in model manager
+                // console.log("adding delta to model")
                 this.modelUndoManager.addDelta(delta);
             }
         }
     }
 
-    private getUndoStackManager(unit: PiModelUnit): PiUndoStackManager {
+    private getUndoStackManager(unit?: PiModelUnit): PiUndoStackManager {
         if (!!unit) {
             let unitManager = this.undoManagerPerUnit.get(unit.name);
             if (!unitManager) {

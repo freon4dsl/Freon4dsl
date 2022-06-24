@@ -4,11 +4,16 @@ import { modelUnit } from "../ast-utils";
 import { PiLogger } from "../logging";
 
 const LOGGER: PiLogger = new PiLogger("PiUndoStackManager");
+
+/**
+ * Class PiUndoStackManager holds two sets of stacks of change information on a model unit.
+ * The information is stored per model unit; one stack for undo info, one for redo info.
+ */
 export class PiUndoStackManager {
     changeSource: PiModelUnit;
 
-    public undoStack: PiDelta[] = [];
-    public redoStack: PiDelta[] = [];
+    private undoStack: PiDelta[] = [];
+    private redoStack: PiDelta[] = [];
     private inIgnoreState: boolean = false;
     private inTransaction: boolean = false;
     private currentTransaction: PiTransactionDelta;
@@ -45,8 +50,8 @@ export class PiUndoStackManager {
 
     public executeUndo() {
         this.inUndo = true; // make sure incoming changes are stored on redo stack
-        // console.log("executing undo for unit: "+ unit.name)
         const delta = this.undoStack.pop();
+        // console.log("executing undo for unit: "+ this.changeSource.name + ", " + delta.toString())
         if (!!delta) {
             PiUndoStackManager.reverseDelta(delta);
         }
@@ -64,8 +69,10 @@ export class PiUndoStackManager {
         // console.log("in transaction: " + this.inTransaction);
         if (!this.inIgnoreState) {
             if (this.inUndo) {
+                // console.log('adding redo to ' + this.changeSource?.name)
                 this.addRedo(delta);
             } else {
+                // console.log('adding undo to ' + this.changeSource?.name)
                 this.addUndo(delta);
             }
         }
