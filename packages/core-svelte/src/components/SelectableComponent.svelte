@@ -88,8 +88,8 @@
     .selectedComponent {
         background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
         outline-color: var(--freon-selected-outline-color, darkblue);
-        outline-style: var(--freon-selected-outline-color, solid);
-        outline-width: var(--freon-selected-outline-color, 1px);
+        outline-style: var(--freon-selected-outline-style, solid);
+        outline-width: var(--freon-selected-outline-width, 1px);
         box-sizing: border-box;
         display: inline-block;
         vertical-align: middle;
