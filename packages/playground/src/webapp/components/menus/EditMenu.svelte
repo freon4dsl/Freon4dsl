@@ -101,7 +101,7 @@
 	];
 
 	function isDisabled(id): boolean {
-		if (id === 1 || id === 2 || id === 8 ) { // undo, redo, and find structure element
+		if ( id === 8 ) { // find structure element
 			return true;
 		}
 		return false;

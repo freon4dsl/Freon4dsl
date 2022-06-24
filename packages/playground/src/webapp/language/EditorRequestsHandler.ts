@@ -1,5 +1,15 @@
 import { editorEnvironment } from "../config/WebappConfiguration";
-import { Box, isAliasBox, isAliasTextBox, isTextBox, PiCompositeProjection, PiError, PiLogger, Searcher } from "@projectit/core";
+import {
+    Box,
+    isAliasBox,
+    isAliasTextBox,
+    isTextBox,
+    PiCompositeProjection,
+    PiError,
+    PiLogger,
+    PiUndoManager,
+    Searcher
+} from "@projectit/core";
 import type { PiElement } from "@projectit/core";
 import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore";
 import { EditorState } from "./EditorState";
@@ -44,15 +54,19 @@ export class EditorRequestsHandler {
     }
 
     redo() {
-        // TODO implement redo()
-        LOGGER.log("redo called");
-        return undefined;
+        const unitInEditor = EditorState.getInstance().currentUnit;
+        console.log("redo called: " + PiUndoManager.getInstance().nextRedoAsText(unitInEditor));
+        if (!!unitInEditor) {
+            PiUndoManager.getInstance().executeRedo(unitInEditor);
+        }
     }
 
     undo() {
-        // TODO implement undo()
-        LOGGER.log("undo called");
-        return undefined;
+        const unitInEditor = EditorState.getInstance().currentUnit;
+        LOGGER.log("undo called: " + PiUndoManager.getInstance().nextUndoAsText(unitInEditor));
+        if (!!unitInEditor) {
+            PiUndoManager.getInstance().executeUndo(unitInEditor);
+        }
     }
 
     cut() {

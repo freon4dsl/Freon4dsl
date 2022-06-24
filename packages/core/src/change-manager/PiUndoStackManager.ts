@@ -144,4 +144,19 @@ export class PiUndoStackManager {
         return delta.index >= 0 && delta.index < delta.owner[delta.propertyName].length;
     }
 
+    nextUndoAsText(): string {
+        if (this.undoStack.length > 0) {
+            return this.undoStack[this.undoStack.length - 1].toString();
+        } else {
+            return 'nothing left to undo'
+        }
+    }
+
+    nextRedoAsText(): string {
+        if (this.redoStack.length > 0) {
+            return this.redoStack[this.redoStack.length - 1].toString();
+        } else {
+            return 'nothing left to redo'
+        }
+    }
 }

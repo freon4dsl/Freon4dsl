@@ -79,6 +79,26 @@ export class PiUndoManager {
         this.modelUndoManager.cleanStacks();
     }
 
+    public nextUndoAsText(unit?: PiModelUnit): string {
+        if (!!unit) {
+            // console.log("execute undo for unit" )
+            return this.getUndoStackManager(unit).nextUndoAsText();
+        } else {
+            // console.log("execute undo for model" )
+            return this.modelUndoManager.nextUndoAsText();
+        }
+    }
+
+    public nextRedoAsText(unit?: PiModelUnit): string {
+        if (!!unit) {
+            // console.log("execute undo for unit" )
+            return this.getUndoStackManager(unit).nextRedoAsText();
+        } else {
+            // console.log("execute undo for model" )
+            return this.modelUndoManager.nextRedoAsText();
+        }
+    }
+
     public executeUndo(unit?: PiModelUnit) {
         if (!!unit) {
             // console.log("execute undo for unit" )
