@@ -37,8 +37,7 @@ export class LanguageInitializer {
         projectionsShown.set(nameList); // initialy, all projections are shown
 
         // the concept names for which a search is possible
-        conceptNames.set(["Attr", "Mthod"]);
-        // TODO conceptNames.set(editorEnvironment.conceptNames);
+        conceptNames.set(editorEnvironment.namedConcepts);
 
         // start the undo manager
         PiUndoManager.getInstance();
