@@ -1,7 +1,10 @@
 {
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "name": "@projectit/meta",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -42,10 +45,5 @@
     "net.akehurst.language-agl-processor": "4.0.0-rc.5",
     "kotlin": "^1.5.21",
     "tslib": "^2.3.0"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
   }
-
 }
