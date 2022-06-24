@@ -40,9 +40,7 @@ export class InterfaceTemplate {
             {               
                 ${intf.primProperties.map(p => this.generatePrimitiveProperty(p)).join("\n")}
                 ${intf.parts().map(p => this.generatePartProperty(p)).join("\n")}
-                ${intf.references().map(p => this.generateReferenceProperty(p)).join("\n")}         
-                
-                copy(): ${myName};                
+                ${intf.references().map(p => this.generateReferenceProperty(p)).join("\n")}                         
             }`;
     }
 

@@ -6,7 +6,7 @@ export class PiReferenceTemplate {
     generatePiReference(language: PiLanguage, relativePath: string): string {
         return `
         import { MobxModelElementImpl } from "${PROJECTITCORE}";
-        import { computed, observable } from "mobx";
+        import { computed, observable, makeObservable } from "mobx";
         import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         

@@ -153,7 +153,7 @@ export class ScoperTemplate {
                         nearestNamespace = doSurrouding ? this.findNearestNamespace(modelelement) : null;
                     }
                 } else {
-                    LOGGER.error( "getVisibleElements: modelelement is null");
+                    LOGGER.error(this, "getVisibleElements: modelelement is null");
                 }
             }
         

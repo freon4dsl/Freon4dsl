@@ -50,7 +50,7 @@ export class ServerCommunication implements IServerCommunication {
                 `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`
             );
         } else {
-            LOGGER.error( "Name of Unit '" + unitName + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
+            LOGGER.error(this, "Name of Unit '" + unitName + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
         }
     }
 
@@ -125,7 +125,7 @@ export class ServerCommunication implements IServerCommunication {
                     const unit = ServerCommunication.serial.toTypeScriptInstance(res);
                     loadCallback(unit);
                 } catch (e) {
-                    LOGGER.error( "loadModelUnit, " + e.message);
+                    LOGGER.error(this, "loadModelUnit, " + e.message);
                     setUserMessage(e.message);
                     console.log(e.stack);
                 }
@@ -149,7 +149,7 @@ export class ServerCommunication implements IServerCommunication {
                     const model = ServerCommunication.serial.toTypeScriptInstance(res);
                     loadCallback(model);
                 } catch (e) {
-                    LOGGER.error( "loadModelUnitInterface, " + e.message);
+                    LOGGER.error(this, "loadModelUnitInterface, " + e.message);
                     setUserMessage(e.message);
                 }
             }
@@ -204,7 +204,7 @@ export class ServerCommunication implements IServerCommunication {
         if (e.message.includes("aborted")) {
             errorMess = `Time out: no response from ${SERVER_URL}.`;
         }
-        LOGGER.error( errorMess);
+        LOGGER.error(this, errorMess);
         setUserMessage(errorMess);
     }
 

@@ -16,7 +16,7 @@ export interface DecoratedModelElement {
  * the above interface and be able to use the decorators.
  */
 // @model
-export class MobxModelElementImpl implements DecoratedModelElement {
+export class    MobxModelElementImpl implements DecoratedModelElement {
     $$owner: PiElement | null = null;
     $$propertyName: string = "";
     $$propertyIndex: number | undefined = undefined;

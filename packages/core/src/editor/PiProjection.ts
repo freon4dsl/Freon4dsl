@@ -5,6 +5,7 @@ import { PiTableDefinition } from "./PiTables";
 /**
  * Interface for the projection.
  */
+// tag::PiProjection[]
 export interface PiProjection {
     /**
      * Returns the box for `element`. If 'nameOfSuper' is present, it returns the box for the
@@ -24,3 +25,4 @@ export interface PiProjection {
     name: string;
     isEnabled: boolean;
 }
+// end::PiProjection[]

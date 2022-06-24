@@ -18,7 +18,6 @@ import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
 import { PiTyperDef } from "../typerdef/metalanguage";
 import { PiTyperMerger } from "../typerdef/parser";
 import { LOG2USER } from "../utils/UserLogger";
-import { DiagramGenerator } from "../diagramgen/DiagramGenerator";
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
@@ -30,12 +29,11 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
     protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
     protected language: PiLanguage;
-    private diagramGenerator: DiagramGenerator = new DiagramGenerator();
 
     public constructor() {
         super({
             actionName: "all",
-            summary: "Generates the TypeScript code for all parts of the work environment for your language, plus some diagrams that show the AST",
+            summary: "Generates the TypeScript code for all parts of the work environment for your language",
             documentation:
                 "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, the reader, the writer, and the " +
                 "validator for language as defined in files in DEFINITIONS_DIR."
@@ -58,7 +56,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
                 this.generateValidator();
                 this.generateScoper();
                 this.generateTyper();
-                this.generateDiagrams();
             } catch (e) {
                 LOG2USER.error("Stopping generation because of errors in the language definition: " + e.message + "\n");
             }
@@ -171,15 +168,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.language = new LanguageParser().parseMulti(this.languageFiles);
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(this.language);
-    };
-
-    private generateDiagrams = () => {
-        // generate the language
-        LOG2USER.info("Generating language diagrams");
-        this.diagramGenerator.outputfolder = this.outputFolder;
-        this.diagramGenerator.language = this.language;
-        this.diagramGenerator.fileNames = this.languageFiles;
-        this.diagramGenerator.generate();
     };
 
 }

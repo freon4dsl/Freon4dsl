@@ -52,7 +52,7 @@ export class AstWalker {
                 }
             }
         } else {
-            LOGGER.error("No worker found.");
+            LOGGER.error(this, "No worker found.");
         }
     }
 }

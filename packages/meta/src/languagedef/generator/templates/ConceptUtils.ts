@@ -6,16 +6,29 @@ import {
     PiPrimitiveProperty,
     PiProperty,
     PiPrimitiveType,
-    PiInterface, PiUnitDescription
+    PiInterface
 } from "../../metalanguage";
 import * as console from "console";
-import { property } from "lodash";
 
 export class ConceptUtils {
 
+    public static findMobxImports(hasSuper: boolean, concept: PiConcept): string[] {
+        const mobxImports: string[] = [];
+        if (!hasSuper) {
+            mobxImports.push("MobxModelElementImpl");
+        }
+        if (concept.implementedProperties().some(part => part.isList && !part.isPrimitive)) {
+            mobxImports.push("observablelistpart");
+        }
+        if (concept.implementedProperties().some(part => !part.isList && !part.isPrimitive)) {
+            mobxImports.push("observablepart");
+        }
+        return mobxImports;
+    }
+
     public static makeImportStatements(needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
         return `
-            ${needsObservable ? `import { observable } from "mobx";` : ""}            
+            ${needsObservable ? `import { observable, makeObservable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
             import { ${modelImports.join(", ")} } from "./internal";
             `;
@@ -30,41 +43,39 @@ export class ConceptUtils {
     public static makePrimitiveProperty(property: PiPrimitiveProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : ${GenerationUtil.getBaseTypeAsString(property)}${arrayType}; \t${comment}`;
-    }
-
-    private static initializer(property: PiPrimitiveProperty): string {
         let initializer = "";
         const myType: PiClassifier = property.type;
         if (!property.isList) {
             switch (myType) {
                 case PiPrimitiveType.identifier: {
-                    initializer = `this.${property.name} = \"${property.initialValue ? property.initialValue : ``}\"`;
+                    initializer = `= \"${property.initialValue ? property.initialValue : ``}\"`;
                     break;
                 }
                 case PiPrimitiveType.string: {
-                    initializer = `this.${property.name} = \"${property.initialValue ? property.initialValue : ``}\"`;
+                    initializer = `= \"${property.initialValue ? property.initialValue : ``}\"`;
                     break;
                 }
                 case PiPrimitiveType.number: {
-                    initializer = `this.${property.name} = ${property.initialValue ? property.initialValue : `0`}`;
+                    initializer = `= ${property.initialValue ? property.initialValue : `0`}`;
                     break;
                 }
                 case PiPrimitiveType.boolean: {
-                    initializer = `this.${property.name} = ${property.initialValue ? property.initialValue : `false`}`;
+                    initializer = `= ${property.initialValue ? property.initialValue : `false`}`;
                     break;
                 }
             }
         } else {
             if (!!property.initialValueList) {
                 if (myType === PiPrimitiveType.string || myType === PiPrimitiveType.identifier) {
-                    initializer = `${property.initialValueList.map(elem => `this.${property.name}.push(\"${elem}\")`).join("\n ")}`;
+                    initializer = `= [${property.initialValueList.map(elem => `\"${elem}\"`).join(", ")}]`;
                 } else {
-                    initializer = `${property.initialValueList.map(elem => `this.${property.name}.push(${elem})`).join("\n ")}`;
+                    initializer = `= [${property.initialValueList}]`;
                 }
+            } else {
+                initializer = "= []";
             }
         }
-        return initializer;
+        return `${property.name} : ${GenerationUtil.getBaseTypeAsString(property)}${arrayType} ${initializer}; \t${comment}`;
     }
 
     public static makePartProperty(property: PiConceptProperty): string {
@@ -127,9 +138,8 @@ export class ConceptUtils {
         // console.log("found NON overriding props: " + allProps.filter(p => !p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
         const allButPrimitiveProps: PiConceptProperty[] = allProps.filter(p => !p.isPrimitive && !p.implementedInBase) as PiConceptProperty[];
         const allPrimitiveProps: PiPrimitiveProperty[] = allProps.filter(p => p.isPrimitive && !p.implementedInBase) as PiPrimitiveProperty[];
-
         return `constructor(id?: string) {
-        ${!hasSuper ? `
+                    ${!hasSuper ? `
                         super();
                         if (!!id) { 
                             this.$id = id;
@@ -138,27 +148,23 @@ export class ConceptUtils {
                         }`
             : "super(id);"
         }
-        ${allPrimitiveProps.length !== 0 ?
-            `// Both 'observableprim' and 'observableprimlist' change the get and set of the attribute 
-             // such that the part is observable. In lists no 'null' or 'undefined' values are allowed.
-            ${allPrimitiveProps.map(p =>
+                    ${allPrimitiveProps.length !== 0 ?
+            `${allPrimitiveProps.map(p =>
                 (p.isList ?
-                    `observableprimlist(this, "${p.name}");
-                     ${this.initializer(p)};`
-                    : `observableprim(this, "${p.name}");
-                       ${this.initializer(p)};`
-                )                
+                        `makeObservable(this, {"${p.name}": observable})` :
+                        `makeObservable(this, {"${Names.primitivePropertyField(p)}": observable})`
+                )
             ).join("\n")}
                         `
             : ``
         }
-        ${allButPrimitiveProps.length !== 0 ?
-            `// Both 'observablepart' and 'observablepartlist' change the get and set of the attribute 
-             // such that the parent-part relationship is consistently maintained, 
-             // and make sure the part is observable. In lists no 'null' or 'undefined' values are allowed.
+                    ${allButPrimitiveProps.length !== 0 ?
+            `// both 'observablepart' and 'observablelistpart' change the get and set of an attribute 
+                        // such that the parent-part relationship is consistently maintained, 
+                        // and make sure the part is observable
                         ${allButPrimitiveProps.map(p =>
                 (p.isList ?
-                        `observablepartlist(this, "${p.name}");`
+                        `observablelistpart(this, "${p.name}");`
                         :
                         `observablepart(this, "${p.name}");`
                 )
@@ -224,7 +230,7 @@ export class ConceptUtils {
                 static create(data: Partial<${myName}>): ${myName} {
                     const result = new ${myName}();
                     ${concept.allProperties().map(property =>
-                        `${(property.isList) ?
+                        `${(property.isList && !(property instanceof PiPrimitiveProperty)) ?
                             `if (!!data.${property.name}) {
                                             data.${property.name}.forEach(x =>
                                                 result.${property.name}.push(x)
@@ -240,54 +246,6 @@ export class ConceptUtils {
                     }
                     return result;
                 }`;
-    }
-
-    public static makeCopyMethod(concept: PiClassifier, myName: string, isAbstract: boolean): string {
-        const comment = `/**
-                 * A convenience method that copies this instance into a new object.
-                 */`;
-        if (isAbstract) {
-            return `${comment}
-                copy(): ${myName} {
-                    console.log("${myName}: copy method should be implemented by concrete subclass"); 
-                    return null;  
-                }`;
-        } else {
-            return `/**
-                 * A convenience method that copies this instance into a new object.
-                 */
-                copy(): ${myName} {
-                    const result = new ${myName}();
-                    ${concept.allProperties().map(property =>
-                        `if (!!this.${property.name}) {
-                            ${this.makeCopyProperty(property)}
-                        }`).join("\n")
-                    }
-                    return result;  
-                }`;
-        }
-    }
-
-    private static makeCopyProperty(property): string {
-        let result: string = "";
-        if (property.isList) {
-            if (property.isPrimitive) {
-                result = `this.${property.name}.forEach(x =>
-                        result.${property.name}.push(x)
-                    );`;
-            } else {
-                result = `this.${property.name}.forEach(x =>
-                        result.${property.name}.push(x.copy())
-                    );`;
-            }
-        } else {
-            if (property.isPrimitive) {
-                result = `result.${property.name} = this.${property.name};`;
-            } else {
-                result = `result.${property.name} = this.${property.name}.copy();`;
-            }
-        }
-        return result;
     }
 
     public static makeMatchMethod(hasSuper: boolean, concept: PiClassifier, myName: string): string {
