@@ -1,18 +1,15 @@
 import { PiChangeManager } from "./PiChangeManager";
 import { PiModelUnit } from "../ast";
-import { PiDelta, PiListDelta, PiPartDelta, PiPrimDelta, PiTransactionDelta } from "./PiDelta";
-import { PiLogger } from "../logging";
+import { PiDelta } from "./PiDelta";
+import { PiUndoStackManager } from "./PiUndoStackManager";
 
-const LOGGER: PiLogger = new PiLogger("PiUndoManager");
 /**
- * Class PiUndoManager holds two sets of stacks of change information on the model.
+ * Class PiUndoManager holds the change information on the model.
  * The information is stored per model unit; one stack for undo info, one for redo info.
+ * Any changes that cannot be attributed to a single unit are stored separately.
  */
 export class PiUndoManager {
     private static theInstance; // the only instance of this class
-    private inTransaction: boolean = false;
-    private currentTransaction: PiTransactionDelta;
-    private inUndo: boolean = false;
 
     /**
      * This method implements the singleton pattern
@@ -24,24 +21,100 @@ export class PiUndoManager {
         return this.theInstance;
     }
 
-    public startTransaction() {
+    // Note: the implementation depends on the piId() of the units, which is different each time a unit is read from storage
+    // We assume the Map is only used during a single run of the tool.
+    private undoManagerPerUnit: Map<string, PiUndoStackManager> = new Map<string, PiUndoStackManager>();
+    private modelUndoManager: PiUndoStackManager = new PiUndoStackManager(null);
+    private inTransaction: boolean = false;
+    private unitForTransaction: PiModelUnit = null;
+
+    public startTransaction(unit?: PiModelUnit) {
+        if (!!unit) {
+            this.getUndoStackManager(unit).startTransaction();
+            this.unitForTransaction = unit;
+        } else {
+            this.modelUndoManager.startTransaction();
+        }
         this.inTransaction = true;
     }
 
-    public endTransaction() {
+    public endTransaction(unit?: PiModelUnit) {
+        if (!!unit) {
+            this.getUndoStackManager(unit).endTransaction();
+            this.unitForTransaction = null;
+        } else {
+            this.modelUndoManager.endTransaction();
+        }
         this.inTransaction = false;
-        this.currentTransaction = null;
     }
 
-    undoStackPerUnit: Map<string, PiDelta[]> = new Map<string, PiDelta[]>();
-    redoStackPerUnit: Map<string, PiDelta[]> = new Map<string, PiDelta[]>();
+    public startIgnore(unit?: PiModelUnit) {
+        if (!!unit) {
+            this.getUndoStackManager(unit).startIgnore();
+        } else {
+            this.modelUndoManager.startIgnore();
+        }
+    }
 
-    /**
-     * A temporary method, because during testing we use the same manager
-     */
-    public cleanStacks() {
-        this.undoStackPerUnit.clear();
-        this.redoStackPerUnit.clear();
+    public endIgnore(unit?: PiModelUnit) {
+        if (!!unit) {
+            this.getUndoStackManager(unit).endIgnore();
+        } else {
+            this.modelUndoManager.endIgnore();
+        }
+    }
+
+    public cleanStacks(unit?: PiModelUnit) {
+        if (!!unit) {
+            this.getUndoStackManager(unit).cleanStacks();
+        } else {
+            this.modelUndoManager.cleanStacks();
+        }
+    }
+
+    public cleanAllStacks() {
+        this.undoManagerPerUnit.forEach(val =>
+            val.cleanStacks()
+        );
+        this.modelUndoManager.cleanStacks();
+    }
+
+    public nextUndoAsText(unit?: PiModelUnit): string {
+        if (!!unit) {
+            // console.log("execute undo for unit" )
+            return this.getUndoStackManager(unit).nextUndoAsText();
+        } else {
+            // console.log("execute undo for model" )
+            return this.modelUndoManager.nextUndoAsText();
+        }
+    }
+
+    public nextRedoAsText(unit?: PiModelUnit): string {
+        if (!!unit) {
+            // console.log("execute undo for unit" )
+            return this.getUndoStackManager(unit).nextRedoAsText();
+        } else {
+            // console.log("execute undo for model" )
+            return this.modelUndoManager.nextRedoAsText();
+        }
+    }
+
+    public executeUndo(unit?: PiModelUnit) {
+        if (!!unit) {
+            // console.log("execute undo for unit" )
+            this.getUndoStackManager(unit).executeUndo();
+        } else {
+            // console.log("execute undo for model" )
+            this.modelUndoManager.executeUndo();
+        }
+    }
+
+    public executeRedo(unit?: PiModelUnit) {
+        if (!!unit) {
+            this.getUndoStackManager(unit).executeRedo();
+        } else {
+            this.modelUndoManager.executeRedo();
+        }
     }
 
     /**
@@ -64,82 +137,39 @@ export class PiUndoManager {
     }
 
     private addDelta(delta: PiDelta) {
-        if (this.inUndo) {
-            this.addRedo(delta);
-        } else {
-            this.addUndo(delta);
-        }
-    }
-
-    private addUndo(delta: PiDelta) {
-        let myStack = this.undoStackPerUnit.get("myName");
-        if (myStack === null || myStack === undefined) {
-            this.undoStackPerUnit.set("myName", []);
-            myStack = this.undoStackPerUnit.get("myName");
-            // LOGGER.log("added stack for unit UndoUnit")
-        }
         if (this.inTransaction) {
-            if (this.currentTransaction === null || this.currentTransaction === undefined) {
-                this.currentTransaction = new PiTransactionDelta(delta.owner, delta.propertyName, delta.index);
-                myStack.push(this.currentTransaction);
+            // we are in a transaction => store all changes in the unit that originated the transaction
+            if (!!this.unitForTransaction) {
+                // console.log("adding transaction to " + this.unitForTransaction.name)
+                this.getUndoStackManager(this.unitForTransaction).addDelta(delta);
+            } else {
+                // the model has changed => store in model manager
+                // console.log("adding transaction to model")
+                this.modelUndoManager.addDelta(delta);
             }
-            this.currentTransaction.internalDeltas.push(delta);
-            // console.log("PiUndoManager: IN TRANSACTION added undo for " + delta.owner.piLanguageConcept() + "[" + delta.propertyName + "]");
         } else {
-            myStack.push(delta);
-            // console.log("PiUndoManager: added undo for " + delta.owner.piLanguageConcept() + "[" + delta.propertyName + "]");
+            // not in a transaction => store the changes in the unit that is changed.
+            if (!!delta.unit) {
+                // console.log("adding delta to " + delta.unit.name)
+                this.getUndoStackManager(delta.unit).addDelta(delta);
+            } else {
+                // the model has changed => store in model manager
+                // console.log("adding delta to model")
+                this.modelUndoManager.addDelta(delta);
+            }
         }
     }
 
-    private addRedo(delta: PiDelta) {
-        // console.log("adding redo: " +delta.toString())
-        let myStack = this.redoStackPerUnit.get("myName");
-        if (myStack === null || myStack === undefined) {
-            this.redoStackPerUnit.set("myName", []);
-            myStack = this.redoStackPerUnit.get("myName");
-            // LOGGER.log("added stack for unit UndoUnit")
-        }
-        if (this.inTransaction) {
-            if (this.currentTransaction === null || this.currentTransaction === undefined) {
-                this.currentTransaction = new PiTransactionDelta(delta.owner, delta.propertyName, delta.index);
-                myStack.push(this.currentTransaction);
+    private getUndoStackManager(unit?: PiModelUnit): PiUndoStackManager {
+        if (!!unit) {
+            let unitManager = this.undoManagerPerUnit.get(unit.name);
+            if (!unitManager) {
+                unitManager = new PiUndoStackManager(unit);
+                this.undoManagerPerUnit.set(unit.name, unitManager);
             }
-            this.currentTransaction.internalDeltas.push(delta);
-            // console.log("PiUndoManager: IN TRANSACTION added redo for " + delta.owner.piLanguageConcept() + "[" + delta.propertyName + "]");
+            return unitManager;
         } else {
-            myStack.push(delta);
-            // console.log("PiUndoManager: added redo for " + delta.owner.piLanguageConcept() + "[" + delta.propertyName + "]");
-        }
-    }
-
-    executeUndo(unit: PiModelUnit) {
-        this.inUndo = true; // make sure incoming changes are stored on redo stack
-        console.log("executing undo for unit: "+ unit.name)
-        const delta = this.undoStackPerUnit.get(unit.name).pop();
-        this.reverseDelta(delta, unit);
-        this.inUndo = false;
-    }
-
-    executeRedo(unit: PiModelUnit) {
-        const delta = this.redoStackPerUnit.get(unit.name).pop();
-        this.reverseDelta(delta, unit);
-    }
-
-    private reverseDelta(delta: PiDelta, unit: PiModelUnit) {
-        if (delta instanceof PiPrimDelta) {
-            delta.owner[delta.propertyName] = delta.oldValue;
-        } else if (delta instanceof PiPartDelta) {
-            console.log("reverseDelta: " + delta.toString() + ", old value: " + delta.oldValue?.piId());
-            delta.owner[delta.propertyName] = delta.oldValue;
-        } else if (delta instanceof PiListDelta) {
-            if (delta.removed.length > 0) {
-                console.log("reverseDelta: elements that were removed: " + delta.removed )
-            }
-            if (delta.added.length > 0) {
-                console.log("reverseDelta: elements that were added: " + delta.added)
-            }
-        } else if (delta instanceof PiTransactionDelta) {
-            console.log("to be done: reverse of transaction");
+            return this.modelUndoManager;
         }
     }
 }

@@ -1,11 +1,18 @@
 import { DecoratedModelElement, PiElement } from "../ast";
-import { PiDelta, PiListDelta, PiPartDelta, PiPrimDelta } from "./PiDelta";
+import { PiDelta, PiPartListDelta, PiPartDelta, PiPrimDelta, PiPrimListDelta } from "./PiDelta";
 import { PiLogger } from "../logging";
-import { Language, PrimType } from "../language";
+import { PrimType } from "../language";
+import { modelUnit } from "../ast-utils";
 
 export type callback = (delta: PiDelta) => void;
 
 const LOGGER: PiLogger = new PiLogger("PiChangeManager").mute();
+
+/**
+ * This class dispatches all changes in a model to all its subscribers.
+ * Note that changes in standalone PiElements, i.e. those that are not part of a model,
+ * are not distributed.
+ */
 
 export class PiChangeManager {
     private static theInstance; // the only instance of this class
@@ -41,9 +48,12 @@ export class PiChangeManager {
     public setPart(elemToChange: PiElement, propertyName: string, newValue: DecoratedModelElement, oldValue: DecoratedModelElement): void {
         LOGGER.log("ChangeManager: set PART value for " + elemToChange.piLanguageConcept() + "[" + propertyName + "] := " + newValue);
         if(!!this.changePartCallbacks) {
-            const delta: PiPartDelta = new PiPartDelta(elemToChange, propertyName, oldValue, newValue);
-            for(const cb of this.changePartCallbacks) {
-                cb(delta);
+            const unit = modelUnit(elemToChange);
+            if (!!unit?.piOwner() || elemToChange.piIsModel()) {
+                const delta: PiPartDelta = new PiPartDelta(unit, elemToChange, propertyName, oldValue, newValue);
+                for (const cb of this.changePartCallbacks) {
+                    cb(delta);
+                }
             }
         }
     }
@@ -57,10 +67,13 @@ export class PiChangeManager {
     public setPrimitive(elemToChange: PiElement, propertyName: string, value: string | boolean | number): void {
         LOGGER.log("ChangeManager: set PRIMITIVE value for " + elemToChange.piLanguageConcept() + "[" + propertyName + "] := " + value);
         if(!!this.changePrimCallbacks) {
-             const delta: PiPrimDelta = new PiPrimDelta(elemToChange, propertyName, elemToChange[propertyName], value);
-             for(const cb of this.changePrimCallbacks) {
-                 cb(delta);
-             }
+            const unit = modelUnit(elemToChange);
+            if (!!unit?.piOwner() || elemToChange.piIsModel()) {
+                const delta: PiPrimDelta = new PiPrimDelta(unit, elemToChange, propertyName, elemToChange[propertyName], value);
+                for (const cb of this.changePrimCallbacks) {
+                    cb(delta);
+                }
+            }
          }
     }
 
@@ -75,17 +88,13 @@ export class PiChangeManager {
         const propertyName: string = oldValue.$$propertyName;
         LOGGER.log("ChangeManager: UPDATE LIST ELEMENT for " + owner.piLanguageConcept() + "[" + propertyName + "][ " + index + "] := " + newValue);
         if(!!this.changeListElemCallbacks) {
-            let delta: PiDelta = null;
-            // find the kind of the property that is changed: "part"/"reference" or "prim"
-            const kind = Language.getInstance().classifierProperty(owner.piLanguageConcept(), propertyName)?.propertyKind;
-            if ( kind === "part" || kind === "reference" ) {
-                delta = new PiPartDelta(owner, propertyName, oldValue, newValue, index);
-            } else if ( kind === "primitive" ) {
-                // delta = new PiPrimDelta(owner, propertyName, oldValue, newValue, index);
-            }
-            if (delta !== null && delta !== undefined) {
-                for (const cb of this.changeListElemCallbacks) {
-                    cb(delta);
+            const unit = modelUnit(owner);
+            if (!!unit?.piOwner() || owner.piIsModel()) {
+                let delta: PiDelta = new PiPartDelta(unit, owner, propertyName, oldValue, newValue, index);
+                if (delta !== null && delta !== undefined) {
+                    for (const cb of this.changeListElemCallbacks) {
+                        cb(delta);
+                    }
                 }
             }
         }
@@ -100,20 +109,43 @@ export class PiChangeManager {
      * @param added         the elements to be added
      */
     public updatePartList(listOwner: PiElement, propertyName: string, index: number, removed: DecoratedModelElement[], added: DecoratedModelElement[]) {
-        LOGGER.log("ChangeManager: UPDATE LIST for " + listOwner.piLanguageConcept() + "[" + propertyName + "]");
+        LOGGER.log("ChangeManager: UPDATE PART LIST for " + listOwner.piLanguageConcept() + "[" + propertyName + "]");
         if(!!this.changeListCallbacks) {
-            const delta: PiListDelta = new PiListDelta(listOwner, propertyName, index, removed, added);
-            for(const cb of this.changeListCallbacks) {
-                cb(delta);
+            const unit = modelUnit(listOwner);
+            if (!!unit?.piOwner() || listOwner.piIsModel()) {
+                const delta: PiPartListDelta = new PiPartListDelta(unit, listOwner, propertyName, index, removed, added);
+                for (const cb of this.changeListCallbacks) {
+                    cb(delta);
+                }
             }
         }
     }
 
     public updatePrimList(listOwner: any, propertyName: string, index: number, removed: PrimType[], added: PrimType[]) {
-
+        LOGGER.log("ChangeManager: UPDATE PRIMITIVE LIST for " + listOwner.piLanguageConcept() + "[" + propertyName + "]");
+        if(!!this.changeListCallbacks) {
+            const unit = modelUnit(listOwner);
+            if (!!unit?.piOwner() || listOwner.piIsModel()) {
+                const delta: PiPrimListDelta = new PiPrimListDelta(unit, listOwner, propertyName, index, removed, added);
+                for (const cb of this.changeListCallbacks) {
+                    cb(delta);
+                }
+            }
+        }
     }
 
-    public updatePrimListElement(newValue: string | number | boolean, oldValue: string | number | boolean, index: number) {
-
+    public updatePrimListElement(listOwner: PiElement, propertyName: string, newValue: string | number | boolean, oldValue: string | number | boolean, index: number) {
+        LOGGER.log("ChangeManager: UPDATE LIST ELEMENT for " + listOwner.piLanguageConcept() + "[" + propertyName + "][" + index + "] := " + newValue);
+        if(!!this.changeListElemCallbacks) {
+            const unit = modelUnit(listOwner);
+            if (!!unit?.piOwner() || listOwner.piIsModel()) {
+                let delta: PiDelta = new PiPrimDelta(unit, listOwner, propertyName, oldValue, newValue, index);
+                if (delta !== null && delta !== undefined) {
+                    for (const cb of this.changeListElemCallbacks) {
+                        cb(delta);
+                    }
+                }
+            }
+        }
     }
 }

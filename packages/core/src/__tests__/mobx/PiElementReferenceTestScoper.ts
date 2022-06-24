@@ -1,8 +1,8 @@
-import { PiNamedElement } from "../ast";
+import { PiNamedElement } from "../../ast";
 import { computed, observable, makeObservable } from "mobx";
 import { TestScoper } from "./TestScoper";
-import { PiLogger } from "../logging";
-import { MobxModelElementImpl } from "../ast";
+import { PiLogger } from "../../logging";
+import { MobxModelElementImpl } from "../../ast";
 
 const LOGGER = new PiLogger("PiElementReference").mute();
 /**

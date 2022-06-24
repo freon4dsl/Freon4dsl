@@ -1,6 +1,0 @@
-UndoUnit myName {
-	 prim "myText"
-	 numlist 1 2 3
-	 part UndoPart part1 {
-          	 }
-}
