@@ -6,8 +6,6 @@ const LOGGER = new PiLogger("Language");
 
 export type PropertyKind = "primitive" | "part" | "reference";
 
-export type PrimType = string | boolean | number;
-
 export type Property = {
     name: string;
     type: string;

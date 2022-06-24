@@ -1,5 +1,5 @@
 import { MobxTestElement, MobxTestRoot } from "./MobxModel";
-import { PiNamedElement } from "../../ast";
+import { PiNamedElement } from "../ast";
 
 export class TestScoper {
     root: MobxTestRoot;

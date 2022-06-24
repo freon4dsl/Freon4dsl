@@ -3,6 +3,7 @@ import { PiType } from "./PiType";
 
 // Part of the ProjectIt Framework.
 
+// tag::typer-interface[]
 export interface PiTyper {
 
     /**
@@ -80,3 +81,4 @@ export interface PiTyper {
      */
     getSuperTypes(type: PiType): PiType[];
 }
+// end::typer-interface[]

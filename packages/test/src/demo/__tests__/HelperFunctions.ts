@@ -57,13 +57,13 @@ export function MakeMultiplyExp(left: any, right: any): DemoMultiplyExpression {
 }
 
 export function MakePlusExp(left: any, right: any): DemoPlusExpression {
-    const plusExpression: DemoPlusExpression = new DemoPlusExpression(); // ("+");
+    const plusExpression: DemoBinaryExpression = new DemoPlusExpression(); // ("+");
     addToBinaryExpression(left, plusExpression, right);
     return plusExpression;
 }
 
 export function MakeDivideExp(left: any, right: any): DemoDivideExpression {
-    const divideExpression: DemoDivideExpression = new DemoDivideExpression(); // ("/");
+    const divideExpression: DemoBinaryExpression = new DemoDivideExpression(); // ("/");
     addToBinaryExpression(left, divideExpression, right);
     return divideExpression;
 }

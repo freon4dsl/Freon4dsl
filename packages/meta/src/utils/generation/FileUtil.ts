@@ -15,11 +15,6 @@ export function isNullOrUndefined(obj: Object | null | undefined): obj is null |
 }
 
 export class FileUtil {
-
-    public static separator() : string {
-        return path.sep;
-    }
-
     public static generateManualFile(pathName: string, contents: string, message: string) {
         if (!fs.existsSync(pathName)) {
             fs.writeFileSync(pathName, contents);
@@ -79,16 +74,13 @@ export class FileUtil {
         const folder = "./" + dir;
         if (fs.existsSync(folder)) {
             fs.readdirSync(folder).forEach(file => {
-                const completePath = path.join(folder, file)
-                if (!fs.lstatSync(completePath).isDirectory()) {
-                    fs.unlink(completePath, err => {
-                        LOGGER.log("deleting file: [" + completePath + "]");
-                        if (err) {
-                            LOGGER.error(err.message + " " + err.path);
-                            status.numberOfErrors += 1;
-                        }
-                    });
-                }
+                fs.unlink(path.join(folder, file), err => {
+                    LOGGER.log("deleting file: [" + path.join(folder, file) + "]");
+                    if (err) {
+                        LOGGER.error(err.message + " " + err.path);
+                        status.numberOfErrors += 1;
+                    }
+                });
             });
         } else {
             LOGGER.error("Could not find folder: [" + folder + "]");

@@ -2,7 +2,7 @@
 import {
     PiError,
     PiErrorSeverity,
-    PiLogger, PiOwnerDescriptor, Property
+    PiLogger
 } from "@projectit/core";
 import type {
     PiElement,
@@ -16,21 +16,19 @@ import {
     currentUnitName,
     noUnitAvailable,
     units,
-    editorProgressShown, unitNames, copiedElement
+    editorProgressShown, unitNames
 } from "../components/stores/ModelStore";
 import { setUserMessage, SeverityType } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
 import {
-    modelErrors
+    modelErrors,
 } from "../components/stores/InfoPanelStore";
 import { ServerCommunication } from "../server/ServerCommunication";
-import { runInAction } from "mobx";
 
 const LOGGER = new PiLogger("EditorState"); // .mute();
 
 export class EditorState {
     private static instance: EditorState = null;
-
     static getInstance(): EditorState {
         if (EditorState.instance === null) {
             EditorState.instance = new EditorState();
@@ -83,7 +81,7 @@ export class EditorState {
                 let first: boolean = true;
                 for (const unitName of localUnitNames) {
                     if (first) {
-                        serverCommunication.loadModelUnit(modelName, unitName, (unit: PiModelUnit) => {
+                        serverCommunication.loadModelUnit( modelName, unitName, (unit: PiModelUnit) => {
                             this.currentModel.addUnit(unit);
                             this.currentUnit = unit;
                             currentUnitName.set(this.currentUnit.name);
@@ -155,7 +153,7 @@ export class EditorState {
      * @private
      */
     private createNewUnit(newName: string, unitType: string) {
-        LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: " + newName);
+        LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: "+ newName);
         // create a new unit and add it to the current model
         const newUnit = EditorState.getInstance().currentModel.newUnit(unitType);
         if (!!newUnit) {
@@ -221,7 +219,7 @@ export class EditorState {
             modelErrors.set([]);
         }
         // get rid of the name in the navigator
-        currentUnitName.set("");
+        currentUnitName.set('');
         this.setUnitLists();
     }
 
@@ -245,7 +243,7 @@ export class EditorState {
     async openModelUnit(newUnit: PiModelUnit) {
         LOGGER.log("openModelUnit called, unitName: " + newUnit.name);
         // TODO currentUnitName is not updated properly
-        if (!!this.currentUnit && newUnit.name === this.currentUnit.name) {
+        if (!!this.currentUnit && newUnit.name === this.currentUnit.name ) {
             // the unit to open is the same as the unit in the editor, so we are doing nothing
             LOGGER.log("openModelUnit doing NOTHING");
             return;
@@ -322,20 +320,20 @@ export class EditorState {
             setUserMessage(e.message, SeverityType.error);
         }
         // if (elem) {
-        // TODO find way to get interface without use of the server, because of concurrency error
-        // swap old unit with its interface in the in-memory model
-        // serverCommunication.loadModelUnitInterface(
-        //     EditorState.getInstance().currentModel.name,
-        //     EditorState.getInstance().currentUnit.name,
-        //     (oldUnitInterface: PiNamedElement) => {
-        //         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
-        //             // swap old unit with its interface in the in-memory model
-        //             EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
-        //         }
-        //     });
+            // TODO find way to get interface without use of the server, because of concurrency error
+            // swap old unit with its interface in the in-memory model
+            // serverCommunication.loadModelUnitInterface(
+            //     EditorState.getInstance().currentModel.name,
+            //     EditorState.getInstance().currentUnit.name,
+            //     (oldUnitInterface: PiNamedElement) => {
+            //         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
+            //             // swap old unit with its interface in the in-memory model
+            //             EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
+            //         }
+            //     });
 
-        // add the new unit to the current model
-        // this.currentModel.addUnit(elem);
+            // add the new unit to the current model
+            // this.currentModel.addUnit(elem);
         // }
     }
 
@@ -414,40 +412,6 @@ export class EditorState {
                 LOGGER.log(e.message);
                 modelErrors.set([new PiError("Problem reading model unit: '" + e.message + "'", this.currentUnit, this.currentUnit.name, PiErrorSeverity.Error)]);
             }
-        }
-    }
-
-    deleteElement(tobeDeleted: PiElement) {
-        if (!!tobeDeleted) {
-            // find the owner of the element to be deleted and remove the element there
-            const owner: PiElement = tobeDeleted.piOwner();
-            const desc: PiOwnerDescriptor = tobeDeleted.piOwnerDescriptor();
-            // console.log("deleting " + desc.propertyName + "[" + desc.propertyIndex + "]");
-            if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
-                const propList = owner[desc.propertyName];
-                if (Array.isArray(propList) && propList.length > desc.propertyIndex) {
-                    runInAction(() =>
-                        propList.splice(desc.propertyIndex, 1)
-                    );
-                }
-            } else {
-                runInAction(() =>
-                    owner[desc.propertyName] = null
-                );
-            }
-        }
-    }
-
-    pasteInElement(element: PiElement, propertyName: string, index?: number) {
-        const property = element[propertyName];
-        if (Array.isArray(property)) {
-            runInAction(() =>
-                property.push(get(copiedElement))
-            );
-        } else {
-            runInAction(() =>
-                element[propertyName] = get(copiedElement)
-            );
         }
     }
 }

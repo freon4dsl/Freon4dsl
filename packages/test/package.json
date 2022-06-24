@@ -32,7 +32,7 @@
     "typer-test8":  "bash ../../scripts/projectit-dev.sh all -d src/typer-test8/defs -o src/typer-test8",
     "vehicles":     "bash ../../scripts/projectit-dev.sh all -d src/vehicles/defs -o src/vehicles",
     "build":        "yarn demo && yarn octopus && yarn parser-conc && yarn basic-props && yarn parsergen && yarn imports && yarn defaultscoper && yarn definedscoper && yarn langconstr && yarn noparser && yarn prim-gen && yarn testproject && yarn typer-test8 && yarn vehicles && tsc",
-    "clean-config": "rm */*/config/ProjectItConfiguration.ts",
+    "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-parser": "rm -r */*/*parse*",
     "clean":        "yarn clean-config && yarn clean-custom",
