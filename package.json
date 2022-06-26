@@ -2,6 +2,7 @@
   "name": "projectIt",
   "private": true,
   "scripts": {
+    "alive": "echo I am alive",
     "bootstrap": "lerna bootstrap",
     "cleanup": "rm -rf ./node_modules",
     "start": "lerna run start --stream --parallel",

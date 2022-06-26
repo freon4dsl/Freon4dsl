@@ -1,8 +1,8 @@
-import { PiLanguage, PiLanguageChecker } from "../metalanguage/";
-import { PiParser } from "../../utils/PiParser";
+import { PiLanguage } from "../metalanguage/";
+import { PiParser, MetaLogger } from "../../utils";
 import * as pegjsParser from "./LanguageGrammar";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName } from "./LanguageCreators";
-import { MetaLogger } from "../../utils/MetaLogger";
+import { PiLangChecker } from "../checking/PiLangChecker";
 
 const LOGGER = new MetaLogger("LanguageParser").mute();
 
@@ -10,7 +10,7 @@ export class LanguageParser extends PiParser<PiLanguage> {
     constructor() {
         super();
         this.parser = pegjsParser;
-        this.checker = new PiLanguageChecker(null);
+        this.checker = new PiLangChecker(null);
     }
 
     protected merge(submodels: PiLanguage[]): PiLanguage {

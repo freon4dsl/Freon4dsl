@@ -8,9 +8,9 @@ import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
-import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
+import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
 import { MetaLogger } from "../utils/MetaLogger";
-import { GenerationStatus, Helpers } from "../utils";
+import { GenerationStatus, FileUtil } from "../utils";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { PiLanguage } from "../languagedef/metalanguage";
 
@@ -30,7 +30,7 @@ export class ProjectItCleanAction extends CommandLineAction {
     protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
     protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
-    protected typerGenerator: PiTyperGenerator = new PiTyperGenerator();
+    protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
     private language: PiLanguage;
 
     public constructor() {
@@ -163,7 +163,7 @@ export class ProjectItCleanAction extends CommandLineAction {
         }
         const generationStatus = new GenerationStatus();
         let languageFiles: string[] = [];
-        const myFileSet: string[] = Helpers.findFiles(this.defFolder, generationStatus);
+        const myFileSet: string[] = FileUtil.findFiles(this.defFolder, generationStatus);
         if (myFileSet.length > 0) {
             for (const filename of myFileSet) {
                 if (/\.ast$/.test(filename)) {

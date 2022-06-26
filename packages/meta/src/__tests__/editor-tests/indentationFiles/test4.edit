@@ -1,0 +1,10 @@
+editor default
+// the same input as test1, but now with optional sub projections
+
+CC {
+[
+                text
+        [? ${CCprop8} ]
+       text
+            [? ${CCprop10} ]
+]}

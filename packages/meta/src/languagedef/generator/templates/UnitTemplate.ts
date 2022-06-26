@@ -1,13 +1,6 @@
 import { Names } from "../../../utils";
-import {
-    makeBasicMethods,
-    makeBasicProperties, makeConstructor,
-    makeImportStatements,
-    makePartProperty,
-    makePrimitiveProperty,
-    makeReferenceProperty, makeStaticCreateMethod
-} from "./ConceptUtils";
-import { PiModelDescription, PiUnitDescription } from "../../metalanguage/PiLanguage";
+import { ConceptUtils } from "./ConceptUtils";
+import { PiUnitDescription } from "../../metalanguage/PiLanguage";
 
 export class UnitTemplate {
     // the following template is based on assumptions about a 'unit'
@@ -21,45 +14,45 @@ export class UnitTemplate {
         const myName = Names.classifier(unitDescription);
         const needsObservable = unitDescription.primProperties.length > 0;
         const extendsClass = "MobxModelElementImpl";
+        const hasReferences = unitDescription.references().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
-        const coreImports = this.findMobxImports(unitDescription).concat(["PiModelUnit", "PiUtils"]);
+        const coreImports = this.findMobxImports(unitDescription)
+            .concat(["PiModelUnit", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"])
+            .concat(hasReferences ? (Names.PiElementReference) : null);
         const metaType = Names.metaType(language);
 
-        // TODO remove unused imports from template
         // Template starts here
         return `
-            ${makeImportStatements(needsObservable, coreImports, modelImports)}
+            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
             
             /**
              * Class ${myName} is the implementation of the model unit with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            @model
             export class ${myName} extends ${extendsClass} implements PiModelUnit {
             
-                ${makeStaticCreateMethod(unitDescription, myName)}
+                ${ConceptUtils.makeStaticCreateMethod(unitDescription, myName)}
                 
                 fileExtension: string;                        
-                ${makeBasicProperties(metaType, myName, false)}
-                ${unitDescription.primProperties.map(p => makePrimitiveProperty(p)).join("\n")}
-                ${unitDescription.parts().map(p => makePartProperty(p)).join("\n")}
-                ${unitDescription.references().map(p => makeReferenceProperty(p)).join("\n")}     
+                ${ConceptUtils.makeBasicProperties(metaType, myName, false)}
+                ${unitDescription.primProperties.map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
+                ${unitDescription.parts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
+                ${unitDescription.references().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}     
             
-                ${makeConstructor(false, unitDescription.properties)}
-                ${makeBasicMethods(false, metaType,false, true,false, false)}                
+                ${ConceptUtils.makeConstructor(false, unitDescription.allProperties())}
+                ${ConceptUtils.makeBasicMethods(false, metaType,false, true,false, false)} 
+                ${ConceptUtils.makeMatchMethod(false, unitDescription, myName)}               
             }
             `;
     }
 
     private findModelImports(unitDescription: PiUnitDescription, myName: string): string[] {
-        const hasReferences = unitDescription.references().length > 0;
         return Array.from(
             new Set(
-                unitDescription.parts().map(part => Names.classifier(part.type.referred))
-                    .concat(unitDescription.references().map(part => Names.classifier(part.type.referred)))
+                unitDescription.parts().map(part => Names.classifier(part.type))
+                    .concat(unitDescription.references().map(part => Names.classifier(part.type)))
                     .concat(Names.metaType(unitDescription.language))
-                    .concat(hasReferences ? (Names.PiElementReference) : null)
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )
@@ -67,7 +60,7 @@ export class UnitTemplate {
     }
 
     private findMobxImports(unitDescription: PiUnitDescription): string[] {
-        const mobxImports: string[] = ["model"];
+        const mobxImports: string[] = [];
         mobxImports.push("MobxModelElementImpl");
         if (unitDescription.properties.some(part => part.isList && !part.isPrimitive)) {
             mobxImports.push("observablelistpart");

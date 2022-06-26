@@ -5,6 +5,7 @@
       {
          "$typename": "Entity",
          "name": "ent1",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
@@ -152,11 +153,13 @@
                "declaredType": "Integer"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": "ent4"
       },
       {
          "$typename": "Entity",
          "name": "ent2",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
@@ -195,6 +198,7 @@
                "declaredType": "Boolean"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": null
       }
    ],

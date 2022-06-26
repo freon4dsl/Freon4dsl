@@ -1,0 +1,20 @@
+editor default
+
+TEST_CHOICES {[
+    ${a}
+    ${b}
+    ${c}
+    ${d}
+    ${e}
+    ${f}
+]}
+aa {[ AA ]}
+bb {[ BB ]}
+cc {[ CC ]}
+dd {[ DD ]}
+ee {[ EE ]}
+ff {[ FF ]}
+
+yy {[ YY ]}
+xx {[ XX ]}
+zz {[ ZZ ]}

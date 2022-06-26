@@ -1,0 +1,62 @@
+editor default
+
+referenceSeparator [::]
+
+XXunit {
+    [
+    UnitA ${name}
+    ${lines terminator[;]}
+    ]
+}
+
+ExpWithType {
+    [${expr} : ${type}]
+}
+
+// EXPRESSIONS
+NumberLiteral {
+    [${xx}]
+}
+
+StringLiteral {
+    [${xx}]
+}
+
+BooleanLiteral {
+    [${xx}]
+}
+
+NamedExp {
+    [(${inner} as ${myType})]
+}
+
+PlusExp {
+    [${left} + ${right}]
+}
+
+UnitLiteral {
+    // 62 kilogram, or 112 miles
+    [${inner} ${unit}]
+}
+
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    [${kind}{ ${content horizontal separator[,]} }]
+}
+
+// TYPES
+TypeRef {
+    [${self.type}]
+}
+
+NamedType {
+    [${name}]
+}
+
+GenericType {
+    [${kind}< ${baseType} >]
+}
+
+UnitOfMeasurement {
+    [${unit}< ${baseType} >]
+}

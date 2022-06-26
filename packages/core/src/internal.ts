@@ -7,17 +7,23 @@
  * concepts that are using them.
  */
 
-// language holds no dependencies upon other parts
+// ast and logging depends on nothing
+export * from "./logging";
+export * from "./ast";
+// language holds dependencies on ast, editor, and util
 export * from "./language";
+// ast-utils depends on language, ast, util
+export * from "./ast-utils";
 
 // editor and util depend upon each other, and upon language
 export * from "./util";
 export * from "./editor";
 
-// the following parts depend upon language
+// the following parts depend upon language and ast
 export * from "./environment";
 export * from "./reader";
 export * from "./scoper";
+export * from "./searchers";
 export * from "./storage";
 export * from "./stdlib";
 export * from "./typer";

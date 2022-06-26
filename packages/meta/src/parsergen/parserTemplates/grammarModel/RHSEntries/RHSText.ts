@@ -40,9 +40,7 @@ export class RHSText extends RightHandSideEntry {
     }
 
     toGrammar(): string {
-        // TODO apparently the .edit parser does not remove the space char after the end quote (')
-        // therefore we do it here
-        return this.text.trimEnd() + this.doNewline();
+        return this.text + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

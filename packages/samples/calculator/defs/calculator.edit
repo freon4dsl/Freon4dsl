@@ -1,0 +1,43 @@
+editor default
+
+Calculator {
+    [
+    Calculator ${self.name}
+    ${self.inputFields vertical }
+
+    ${self.outputFields vertical }
+    ]
+}
+
+InputField {
+    [input ${self.name}]
+}
+
+OutputField {
+    [output ${self.expression}]
+}
+
+InputFieldReference {
+    [${self.field}]
+}
+
+NumberLiteralExpression {
+        [${self.value}]
+}
+
+PlusExpression {
+    symbol = "+"
+}
+
+MinusExpression {
+    symbol = "-"
+}
+
+MultiplyExpression {
+    symbol = "*"
+}
+
+DivideExpression {
+    symbol = "/"
+}
+

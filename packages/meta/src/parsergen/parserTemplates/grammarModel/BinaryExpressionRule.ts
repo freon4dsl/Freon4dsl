@@ -20,12 +20,12 @@ export class BinaryExpressionRule extends GrammarRule {
     }
 
     toMethod(mainAnalyserName: string): string {
-        // TODO get the right type for 'BinaryExpression' in stead of ${Names.concept(expressionBase)}
         let cases: string[] = [];
         for (const [key, value] of this.symbolToConcept) {
+            // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
             cases.push(`
                 case '${value}': {
-                    combined = ${Names.classifier(key)}.create({left: first, right: second});
+                    combined = ${Names.classifier(key)}.create({left: first, right: second, parse_location: this.${mainAnalyserName}.location(branch)});
                     break;
                 }`);
         }

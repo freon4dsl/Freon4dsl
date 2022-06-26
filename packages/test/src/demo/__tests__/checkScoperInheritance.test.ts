@@ -1,5 +1,6 @@
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoScoper } from "../scoper/gen/DemoScoper";
-import { DemoModel, DemoFunction, DemoEntity, Demo } from "../language/gen";
+import { DemoEntity, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("testing Scoper", () => {
@@ -8,6 +9,7 @@ describe("testing Scoper", () => {
     let scoper = new DemoScoper();
 
     beforeEach(done => {
+        DemoEnvironment.getInstance();
         done();
     });
 
@@ -54,8 +56,13 @@ describe("testing Scoper", () => {
             ent.attributes.forEach(attr => {
                 expect(vis).toContain(attr.name);
             });
+            if (!!ent.baseEntity) {
+                ent.baseEntity.referred.attributes.forEach(attr => {
+                    expect(vis).toContain(attr.name);
+                });
+            }
             let done: DemoEntity[] = [];
-            done.push(ent);
+            // done.push(ent);
             testInheritedPropsrecursive(ent, vis, done);
             // console.log("visible elements for " + ent.unitName + ":");
             // vis.forEach(n => {console.log(n);});

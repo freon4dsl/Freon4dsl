@@ -1,7 +1,7 @@
+import { PiLogger } from "@projectit/core";
 import { DSmodel } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
-import { ScoperTestEnvironment } from "../environment/gen/ScoperTestEnvironment";
-import * as fs from "fs";
+import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";
@@ -33,7 +33,7 @@ describe("Testing Default Scoper", () => {
         const model: DSmodel = creator.createModel(1, 2 );
         // run the scoper to test all names in the model
         const visibleNames = scoper.getVisibleNames( model.units[0] );
-        printDifference(creator, visibleNames);
+        // printDifference(creator, visibleNames);
         // print("names in model of depth 2: ", visibleNames);
         for (const x of creator.allNames) {
             if (!visibleNames.includes(x)) {
@@ -41,29 +41,12 @@ describe("Testing Default Scoper", () => {
             }
             expect(visibleNames).toContain(x);
         }
-        // // run unparser to inspect model
-        // const unparsed: string = unparser.writeToString(model, 0, false);
-        // const path: string = "./unparsedGeneratedModel.txt";
-        // if (!fs.existsSync(path)) {
-        //     fs.writeFileSync(path, unparsed);
-        // } else {
-        //     console.log(this, "test-unparser: user file " + path + " already exists, skipping it.");
-        // }
-        // // run the validator to see if the references are ok
-        // const validator = environment.validator;
-        // const errors = validator.validate(model);
-        // const errorMessages: string[] = [];
-        // errors.forEach(mess => {
-        //     errorMessages.push(mess.message + " in " + mess.locationdescription);
-        // });
-        // // print("found errors", errorMessages);
-        // expect (errors.length).toBe(0);
     });
 
     test("names in model with 3 units of depth 2, without unit interfaces", () => {
         const model: DSmodel = creator.createModel(3, 2);
-        let visibleNames = scoper.getVisibleNames(model.units[0]);
-        // the only names that may be visible are the names of all model units, plus all names within the own unit
+        const visibleNames = scoper.getVisibleNames(model.units[0]);
+         // the only names that may be visible are the names of all model units, plus all names within the own unit
         // the latter all contain the name of unit
         let namesToTest = creator.allNames.filter(name => name.includes(model.units[0].name) || name === model.units[1].name || name === model.units[2].name);
         for (const x of namesToTest) {
@@ -72,23 +55,25 @@ describe("Testing Default Scoper", () => {
         for (const x of visibleNames) {
             expect(namesToTest).toContain(x);
         }
-        visibleNames = scoper.getVisibleNames(model.units[1]);
+
+        const visibleNames2 = scoper.getVisibleNames(model.units[1]);
         // the only names that may be visible are the names of all model units, plus all names within the own unit
         // the latter all contain the name of unit
         namesToTest = creator.allNames.filter(name => name.includes(model.units[1].name) || name === model.units[0].name || name === model.units[2].name);
         for (const x of namesToTest) {
-            expect(visibleNames).toContain(x);
+            expect(visibleNames2).toContain(x);
         }
-        for (const x of visibleNames) {
+        for (const x of visibleNames2) {
             expect(namesToTest).toContain(x);
-        }        visibleNames = scoper.getVisibleNames(model.units[2]);
+        }
+        const visibleNames3 = scoper.getVisibleNames(model.units[2]);
         // the only names that may be visible are the names of all model units, plus all names within the own unit
         // the latter all contain the name of unit
         namesToTest = creator.allNames.filter(name => name.includes(model.units[2].name) || name === model.units[0].name || name === model.units[1].name);
         for (const x of namesToTest) {
-            expect(visibleNames).toContain(x);
+            expect(visibleNames3).toContain(x);
         }
-        for (const x of visibleNames) {
+        for (const x of visibleNames3) {
             expect(namesToTest).toContain(x);
         }
     });
@@ -136,7 +121,7 @@ describe("Testing Default Scoper", () => {
         errors.forEach(mess => {
             errorMessages.push(mess.message + " in " + mess.locationdescription);
         });
-        print("found errors", errorMessages);
+        // print("!!! found errors", errorMessages);
         expect(errors.length).toBe(8);
         expect(errorMessages.includes("Cannot find reference 'private30_OF_private28_OF_private24_OF_unit16_OF_model' in dsRefs of unit1_OF_model")).toBeTruthy();
         expect(errorMessages.includes("Cannot find reference 'private27_OF_public25_OF_private24_OF_unit16_OF_model' in dsRefs of unit1_OF_model")).toBeTruthy();

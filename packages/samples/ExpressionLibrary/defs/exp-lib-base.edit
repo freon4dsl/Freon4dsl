@@ -1,0 +1,6 @@
+editor default
+
+GroupedExpression {
+    [( ${self.inner} )]
+    symbol = "()"
+}

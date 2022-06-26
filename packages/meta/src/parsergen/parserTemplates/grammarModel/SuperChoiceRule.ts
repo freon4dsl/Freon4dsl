@@ -18,6 +18,7 @@ export class SuperChoiceRule extends GrammarRule {
     }
 
     toGrammar(): string {
+        // TODO this code is the same as in ChoiceRule.ts => see whether these can be merged
         let rule: string = "";
         if (this.implementors.length > 0) {
             // test to see if there is a binary expression concept here
@@ -26,8 +27,15 @@ export class SuperChoiceRule extends GrammarRule {
                 // exclude binary expression concepts
                 rule = `${(this.ruleName)} = ${implementorsNoBinaries.map(implementor =>
                     `${this.getTypeCallExcludeSelf(implementor)} `).join("\n    | ")}`;
-                // add the special binary concept rule as choice
-                rule += `\n    | ${BinaryExpMaker.specialBinaryRuleName} ;`;
+                // add the special binary concept rule(s) as choice
+                const expBases = ParserGenUtil.findAllExpressionBases(this.implementors.filter(sub => sub instanceof PiBinaryExpressionConcept) as PiBinaryExpressionConcept[]);
+                if (implementorsNoBinaries.length > 0) { // there are already choices present in the rule, so add a '|' as separator
+                    rule += '\n    | ';
+                }
+                expBases.forEach(base => {
+                    rule += `${BinaryExpMaker.getBinaryRuleName(base)} ;`;
+                });
+
             } else {
                 // normal choice rule
                 rule = `${(this.ruleName)} = ${this.implementors.map(implementor =>

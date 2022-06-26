@@ -1,0 +1,10 @@
+editor group1
+
+BB  {
+[
+    ${BBprop7: group1}
+    ${BBprop8: group2}
+    ${BBprop11: group45}
+    ${BBprop12: default}
+   ]
+}

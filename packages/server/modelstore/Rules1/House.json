@@ -12,6 +12,17 @@
                "declaredType": "Integer"
             }
          ]
+      },
+      {
+         "$typename": "Entity",
+         "name": "Office",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "city",
+               "declaredType": "String"
+            }
+         ]
       }
    ]
 }

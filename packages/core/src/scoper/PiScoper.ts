@@ -1,4 +1,4 @@
-import { PiElement, PiNamedElement } from "../language";
+import { PiElement, PiNamedElement } from "../ast";
 
 // Part of the ProjectIt Framework
 
@@ -78,5 +78,11 @@ export interface PiScoper {
      * @param excludeSurrounding
      */
     getVisibleNames(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): string[];
+
+    /**
+     * Returns all PiElements that are defined as additional namespaces for `element'.
+     * @param element
+     */
+    additionalNamespaces(element: PiElement): PiElement[];
 }
 // end::scoper-interface[]

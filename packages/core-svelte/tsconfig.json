@@ -3,7 +3,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["node"],
+    "types": ["node", "jest"],
 
     "declaration": true,                            /* Generates corresponding '.d.ts' file. */
     "declarationMap": true,                         /* Generates a sourcemap for each corresponding '.d.ts' file. */

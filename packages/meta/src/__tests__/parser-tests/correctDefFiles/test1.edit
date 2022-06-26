@@ -1,0 +1,28 @@
+editor default
+
+TEST_PRIMS {[
+    ${a}
+    ${b}
+    ${c}
+    ${d}
+    ${e}
+    ${f}
+    ${g}
+    ${h}
+    ${j}
+]}
+// primitives properties
+// with single keyword
+aa {[${self.singleBool [single]}]}
+// with double keyword
+bb {[${self.doubleBool [double1 | double2]}]}
+// mandatory, not in optional group
+cc {[${self.mandatoryPrim }]}
+// optional, or in optional group
+dd {[${self.optionalPrim }]}
+ee {[[? ${self.primInOptionalGroup}]]}
+// list, no join type
+ff {[${self.primList}]}
+gg {[${self.primList separator[=]}]}
+hh {[${self.primList terminator[=]}]}
+jj {[${self.primList initiator[=]}]}

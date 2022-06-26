@@ -1,6 +1,7 @@
-import { MobxModelElementImpl } from "../../language/decorators/DecoratedModelElement";
-import { PiElement } from "../../language/PiElement";
+import { MobxModelElementImpl } from "../../ast/decorators/DecoratedModelElement";
+import { PiElement } from "../../ast";
 import { Box } from "./Box";
+import { PiParseLocation } from "../../reader";
 
 export class DummyBox extends Box {
     kind = "DummyBox";
@@ -34,5 +35,11 @@ export class DummyElement extends MobxModelElementImpl implements PiElement {
     piLanguageConcept(): string {
         return "DummyElement";
     }
+
+    match(toBeMatched: Partial<PiElement>): boolean {
+        return false;
+    }
+
+    parse_location: PiParseLocation;
 
 }

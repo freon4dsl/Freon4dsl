@@ -38,20 +38,10 @@ export class PiLanguage extends PiLangElement {
         if (result === undefined) {
             result = this.findUnitDescription(name);
         }
-        // if (result === undefined) {
-        //     result = this.findBasicType(name);
-        // }
+        if (result === undefined) {
+            result = this.findBasicType(name);
+        }
         return result;
-    }
-
-    findExpressionBase(): PiExpressionConcept {
-        // TODO why the return inside the find???
-        // TODO rethink the inheritance structure of expressions: should binaries always inherit from expression, and more questions!
-        // TODO the following depends on the order of concepts in the .ast file
-        const result = this.concepts.find(c => {
-            return c instanceof PiExpressionConcept && (!!c.base ? !(c.base.referred instanceof PiExpressionConcept) : true);
-        });
-        return result as PiExpressionConcept;
     }
 
     findBasicType(name:string): PiClassifier {
@@ -64,10 +54,26 @@ export class PiLanguage extends PiLangElement {
 }
 
 export abstract class PiClassifier extends PiLangElement {
+    private static __ANY: PiClassifier = null;
+
+    static get ANY(): PiClassifier {
+        if (PiClassifier.__ANY === null || PiClassifier.__ANY === undefined) {
+            PiClassifier.__ANY = new PiConcept();
+            PiClassifier.__ANY.name = "ANY";
+        }
+        return this.__ANY;
+    }
+
     language: PiLanguage;
     isPublic: boolean;
     properties: PiProperty[] = [];
+    // TODO remove this attribute and make it a function on 'properties'
     primProperties: PiPrimitiveProperty[] = [];
+    // get primProperties(): PiPrimitiveProperty[] {
+    //     return this.properties.filter(prop => prop instanceof PiPrimitiveProperty) as PiPrimitiveProperty[];
+    //     // of
+    //     return this.properties.filter(prop => prop.type instanceof PiPrimitiveType) as PiPrimitiveProperty[];
+    // }
 
     parts(): PiConceptProperty[] {
         return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart) as PiConceptProperty[];
@@ -78,7 +84,9 @@ export abstract class PiClassifier extends PiLangElement {
     }
 
     allPrimProperties(): PiPrimitiveProperty[] {
-        return this.primProperties;
+        let result: PiPrimitiveProperty[] = [];
+        result.push(...this.primProperties);
+        return result;
     }
 
     allParts(): PiConceptProperty[] {
@@ -91,25 +99,25 @@ export abstract class PiClassifier extends PiLangElement {
 
     allProperties(): PiProperty[] {
         let result: PiProperty[] = [];
-        result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
+        result.push(...this.allPrimProperties());
+        result.push(...this.allParts());
+        result.push(...this.allReferences());
         return result;
     }
 
     nameProperty(): PiPrimitiveProperty {
-        return this.allPrimProperties().find(p => p.name === "name");
-    }
-
-    identifierNameProperty(): PiPrimitiveProperty {
-        return this.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
+        return this.allPrimProperties().find(p => p.name === "name" && p.type === PiPrimitiveType.identifier);
     }
 }
 
 export class PiModelDescription extends PiClassifier {
+    isPublic: boolean = true;
+
     unitTypes(): PiUnitDescription[] {
         let result: PiUnitDescription[] = [];
         // all parts of a model are units
         for (const intf of this.parts()) {
-            result = result.concat(intf.type.referred as PiUnitDescription);
+            result = result.concat(intf.type as PiUnitDescription);
         }
         return result;
     }
@@ -124,7 +132,8 @@ export class PiInterface extends PiClassifier {
     base: PiElementReference<PiInterface>[] = [];
 
     allPrimProperties(): PiPrimitiveProperty[] {
-        let result: PiPrimitiveProperty[] = this.primProperties;
+        let result: PiPrimitiveProperty[] = []; // return a new array
+        result.push(...this.primProperties);
         for (const intf of this.base) {
             result = result.concat(intf.referred.allPrimProperties());
         }
@@ -181,6 +190,7 @@ export class PiInterface extends PiClassifier {
         tmp.forEach(concept => result = result.concat(concept.allSubInterfacesRecursive()));
         return result;
     }
+
 }
 
 export class PiConcept extends PiClassifier {
@@ -191,7 +201,12 @@ export class PiConcept extends PiClassifier {
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.implementedPrimProperties();
         if (!!this.base && !!this.base.referred) {
-            result = result.concat(this.base.referred.allPrimProperties());
+            this.base.referred.allPrimProperties().forEach(p => {
+                // hide overwritten property
+                if (!result.some(previous => previous.name === p.name && previous.implementedInBase)) {
+                    result.push(p);
+                }
+            });
         }
         return result;
     }
@@ -199,7 +214,12 @@ export class PiConcept extends PiClassifier {
     allParts(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.implementedParts();
         if (!!this.base && !!this.base.referred) {
-            result = result.concat(this.base.referred.allParts());
+            this.base.referred.allParts().forEach(p => {
+                // hide overwritten property
+                if (!result.some(previous => previous.name === p.name && previous.implementedInBase)) {
+                    result.push(p);
+                }
+            });
         }
         return result;
     }
@@ -207,7 +227,12 @@ export class PiConcept extends PiClassifier {
     allReferences(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.implementedReferences();
         if (!!this.base && !!this.base.referred) {
-            result = result.concat(this.base.referred.allReferences());
+            this.base.referred.allReferences().forEach(p => {
+                // hide overwritten property
+                if (!result.some(previous => previous.name === p.name && previous.implementedInBase)) {
+                    result.push(p);
+                }
+            });
         }
         return result;
     }
@@ -218,8 +243,14 @@ export class PiConcept extends PiClassifier {
         return result;
     }
 
+    /**
+     * Returns a list of properties that are either (1) defined in this concept or (2) in one of the interfaces
+     * that is implemented by this concept. Excluded are properties that are defined in an interface but are already
+     * included in one of the base concepts.
+     */
     implementedPrimProperties(): PiPrimitiveProperty[] {
-        let result: PiPrimitiveProperty[] = this.primProperties;
+        let result: PiPrimitiveProperty[] = []; // return a new array!
+        result.push(...this.primProperties);
         for (const intf of this.interfaces) {
             for (const intfProp of intf.referred.allPrimProperties()) {
                 let allreadyIncluded = false;
@@ -321,6 +352,7 @@ export class PiConcept extends PiClassifier {
         tmp.forEach(concept => result = result.concat(concept.allSubConceptsRecursive()));
         return result;
     }
+
 }
 
 export class PiExpressionConcept extends PiConcept {
@@ -330,14 +362,7 @@ export class PiExpressionConcept extends PiConcept {
 export class PiBinaryExpressionConcept extends PiExpressionConcept {
     // left: PiExpressionConcept;
     // right: PiExpressionConcept;
-    // TODO move to editor
-    symbol: string;
     priority: number;
-
-    getSymbol(): string {
-        const p = this.symbol;
-        return (!!p ? p : "undefined");
-    }
 
     getPriority(): number {
         const p = this.priority;
@@ -351,6 +376,15 @@ export class PiLimitedConcept extends PiConcept {
     findInstance(name: string): PiInstance {
         return this.instances.find(inst => inst.name === name);
     }
+
+    allInstances(): PiInstance[] {
+        const result: PiInstance[] = [];
+        result.push(...this.instances);
+        if (!!this.base && this.base.referred instanceof PiLimitedConcept) {
+            result.push(...this.base.referred.allInstances());
+        }
+        return result;
+    }
 }
 
 export class PiProperty extends PiLangElement {
@@ -358,12 +392,33 @@ export class PiProperty extends PiLangElement {
     isOptional: boolean;
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
-    type: PiElementReference<PiClassifier>;
-    owningConcept: PiClassifier;
+    implementedInBase: boolean = false;
+    private __type: PiElementReference<PiClassifier>;
+    owningClassifier: PiClassifier;
 
     get isPrimitive(): boolean {
+        if (this.type instanceof PiPrimitiveType) {
+            return true;
+        }
         return false;
     };
+    get type(): PiClassifier {
+        return this.__type?.referred;
+    }
+    set type(t: PiClassifier) {
+        this.__type = PiElementReference.create<PiClassifier>(t, "PiClassifier");
+        this.__type.owner = this;
+    }
+    get typeReference(): PiElementReference<PiClassifier> { // only used by PiLanguageChecker and PiTyperChecker
+        return this.__type;
+    }
+    set typeReference(t : PiElementReference<PiClassifier>) { // only used by PiLanguageChecker and PiTyperChecker
+        this.__type = t;
+        this.__type.owner = this;
+    }
+    toPiString(): string {
+        return this.name + ": " + this.__type.name;
+    }
 }
 
 export class PiConceptProperty extends PiProperty {
@@ -372,26 +427,43 @@ export class PiConceptProperty extends PiProperty {
 
 export class PiPrimitiveProperty extends PiProperty {
     isStatic: boolean;
-    // only one of 'initialValue' and 'initialValueList' may have a value
-    // TODO see if we can improve this
-    initialValue: PiPrimitiveValue;
-    initialValueList: PiPrimitiveValue[];
+    initialValueList: PiPrimitiveValue[] = [];
 
     get isPrimitive(): boolean {
         return true;
     };
+
+    get initialValue(): PiPrimitiveValue {
+        return this.initialValueList[0];
+    }
+
+    set initialValue(value: PiPrimitiveValue) {
+        this.initialValueList[0] = value;
+    }
 }
 
 export class PiInstance extends PiLangElement {
     concept: PiElementReference<PiConcept>; // should be a limited concept
-    props: PiPropertyInstance[] = [];
+    // Note that these properties may be undefined, when there is no definition in the .ast file
+    props: PiInstanceProperty[] = [];
+
+    nameProperty(): PiInstanceProperty {
+        return this.props.find(p => p.name === "name");
+    }
 }
 
-export class PiPropertyInstance extends PiLangElement {
+export class PiInstanceProperty extends PiLangElement {
     owningInstance: PiElementReference<PiInstance>;
     property: PiElementReference<PiProperty>;
-    value: PiPrimitiveValue;
-    valueList: PiPrimitiveValue[];
+    valueList: PiPrimitiveValue[] = [];
+
+    get value(): PiPrimitiveValue {
+        return this.valueList[0];
+    }
+
+    set value(newV) {
+        this.valueList[0] = newV;
+    }
 }
 
 // the following two classes are only used in the typer and validator definitions
@@ -435,8 +507,14 @@ export class PiPrimitiveType extends PiConcept {
             case "identifier" : return this.identifier;
             case "number" : return this.number;
         }
-        // TODO see whether we need to return null?
         return this.$piANY;
+    }
+
+    allSubConceptsRecursive(): PiConcept[] {
+        return [];
+    }
+    allSubConceptsDirect(): PiConcept[] {
+        return [];
     }
 }
 

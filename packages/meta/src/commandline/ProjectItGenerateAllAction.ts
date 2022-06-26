@@ -1,21 +1,22 @@
 import { PiLanguage } from "../languagedef/metalanguage";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
-import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
-import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
-import { FileWatcher } from "../utils/FileWatcher";
+import { FileWatcher } from "../utils/generation/FileWatcher";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
-import { ScoperParser } from "../scoperdef/parser/ScoperParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
-import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
-import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
+import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { PiTypeDefinition } from "../typerdef/metalanguage";
+import { ScoperParser } from "../scoperdef/parser/ScoperParser";
+import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { PiScopeDef } from "../scoperdef/metalanguage";
+import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { PiValidatorDef } from "../validatordef/metalanguage";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
+import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
+import { PiTyperDef } from "../typerdef/metalanguage";
+import { PiTyperMerger } from "../typerdef/parser";
 import { LOG2USER } from "../utils/UserLogger";
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
@@ -26,7 +27,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
     protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
-    protected typerGenerator: PiTyperGenerator = new PiTyperGenerator();
+    protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
     protected language: PiLanguage;
 
     public constructor() {
@@ -89,17 +90,17 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     private generateTyper = () => {
         LOG2USER.info("Generating typer");
-        let typer: PiTypeDefinition;
+        let typer: PiTyperDef;
         try {
             if (this.typerFiles.length > 0) {
-                typer = new PiTyperParser(this.language).parseMulti(this.typerFiles);
+                typer = new PiTyperMerger(this.language).parseMulti(this.typerFiles);
             }
             this.typerGenerator.language = this.language;
             this.typerGenerator.outputfolder = this.outputFolder;
             this.typerGenerator.generate(typer);
         } catch (e) {
-            // LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
-            LOG2USER.error("Stopping typer generation because of errors: " + e.message);
+            LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
+            // LOG2USER.error("Stopping typer generation because of errors: " + e.message);
         }
     };
 
@@ -130,8 +131,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.validatorGenerator.outputfolder = this.outputFolder;
             this.validatorGenerator.generate(validator);
         } catch (e) {
-            // LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
-            LOG2USER.error("Stopping validator generation because of errors: " + e.message);
+            LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
+            // LOG2USER.error("Stopping validator generation because of errors: " + e.message);
         }
     };
 
@@ -147,8 +148,10 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             if (this.editFiles.length > 0) {
                 editor = new PiEditParser(this.language).parseMulti(this.editFiles);
             } else {
-                editor = this.editorGenerator.createDefaultEditorDefinition();
+                editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
             }
+            // add default values for everything that is not present in the default projection group
+            DefaultEditorGenerator.addDefaults(editor);
 
             this.editorGenerator.generate(editor);
             this.parserGenerator.generate(editor);

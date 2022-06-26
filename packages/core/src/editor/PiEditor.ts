@@ -1,9 +1,10 @@
 import { isEqual } from "lodash";
-import { makeObservable, observable, computed, action, trace } from "mobx";
+import { makeObservable, observable, computed, action, trace, runInAction } from "mobx";
 import { PiEnvironment } from "../environment/PiEnvironment";
 
-import { PiContainerDescriptor, PiElement } from "../language";
-import { PiCaret, wait, PiLogger } from "../util";
+import { PiOwnerDescriptor, PiElement } from "../ast";
+import { PiCaret, wait } from "../util";
+import { PiLogger } from "../logging";
 import { PiAction } from "./actions/index";
 import {
     PiProjection,
@@ -11,7 +12,7 @@ import {
     isSelectBox,
     isTextBox,
     Box,
-    PiActions, PiEditorStyle
+    PiActions
 } from "./internal";
 
 const LOGGER = new PiLogger("PiEditor");
@@ -21,7 +22,6 @@ export class PiEditor {
     readonly actions?: PiActions;
     readonly projection: PiProjection;
     new_pi_actions: PiAction[]= [];
-    style: PiEditorStyle = { global: { dark: {}, light: {}}};
     theme: string = "light";
 
     private $rootBox: Box | null = null;
@@ -241,33 +241,33 @@ export class PiEditor {
     deleteBox(box: Box) {
         LOGGER.log("deleteBox");
         const exp: PiElement = box.element;
-        const container: PiContainerDescriptor = exp.piContainer();
+        const ownerDescriptor: PiOwnerDescriptor = exp.piOwnerDescriptor();
         // if (isPiExpression(exp)) {
         //     const newExp = this.getPlaceHolderExpression();
         //     PiUtils.replaceExpression(exp, newExp, this);
         //     await this.selectElement(newExp);
         // } else {
-        if (container !== null) {
-            LOGGER.log("remove from parent splice " + [container.propertyIndex] + ", 1");
-            const propertyIndex = container.propertyIndex;
-            const parentElement = container.container;
+        if (ownerDescriptor !== null) {
+            LOGGER.log("remove from parent splice " + [ownerDescriptor.propertyIndex] + ", 1");
+            const propertyIndex = ownerDescriptor.propertyIndex;
+            const parentElement = ownerDescriptor.owner;
             if (propertyIndex !== undefined) {
-                let arrayProperty = (container.container as any)[container.propertyName] as any;
+                let arrayProperty = (ownerDescriptor.owner as any)[ownerDescriptor.propertyName] as any;
                 arrayProperty.splice(propertyIndex, 1);
                 let length = arrayProperty.length;
                 if (length === 0) {
                     // TODO Maybe we should select the element (or leaf) just before the list.
-                    this.selectElement(parentElement, `${container.container.piLanguageConcept()}-${container.propertyName}`);
+                    this.selectElement(parentElement, `${ownerDescriptor.owner.piLanguageConcept()}-${ownerDescriptor.propertyName}`);
                 } else if (length <= propertyIndex) {
                     this.selectElement(arrayProperty[propertyIndex - 1]);
                 } else {
                     this.selectElement(arrayProperty[propertyIndex]);
                 }
             } else {
-                container.container[container.propertyName] = null;
+                ownerDescriptor.owner[ownerDescriptor.propertyName] = null;
                 // TODO The rolename is identical to the one generated in Roles.ts,  should not be copied here
-                this.selectElement(container.container,
-                    (container.container.piIsBinaryExpression() ? `PiBinaryExpression-${container.propertyName}` : `${container.container.piLanguageConcept()}-${container.propertyName}`));
+                this.selectElement(ownerDescriptor.owner,
+                    (ownerDescriptor.owner.piIsBinaryExpression() ? `PiBinaryExpression-${ownerDescriptor.propertyName}` : `${ownerDescriptor.owner.piLanguageConcept()}-${ownerDescriptor.propertyName}`));
             }
         }
         // }
@@ -348,16 +348,19 @@ export class PiEditor {
         return this.isOnPreviousLine(other, ref);
     }
 
-
     set rootElement(exp: PiElement) {
-        this._rootElement = exp;
-        this.$rootBox = this.projection.getBox(this._rootElement);
+        runInAction( () => {
+            this._rootElement = exp;
+            // this._rootElement = exp;
+            this.$rootBox = this.projection.getBox(this._rootElement);
+        }
+    );
         // if (exp instanceof MobxModelElementImpl) {
-        //     exp.container = this;
+        //     exp.owner = this;
         //     exp.propertyIndex = undefined;
         //     exp.propertyName = "rootElement";
         //     // not a PiElement , therefore no root.
-        //     // exp.container = null;
+        //     // exp.owner = null;
         // }
     }
 

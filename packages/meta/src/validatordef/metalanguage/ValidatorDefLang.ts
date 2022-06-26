@@ -1,7 +1,7 @@
 // Note that the following import cannot be from "@projectit/core", because
 // this leads to a load error
 // import { PiErrorSeverity } from "@projectit/core";
-import { PiErrorSeverity } from "../../utils/PiErrorSeverity";
+import { PiErrorSeverity } from "../../utils/generation/PiErrorSeverity";
 import { PiDefinitionElement } from "../../utils";
 import { PiLangExp, PiConcept } from "../../languagedef/metalanguage";
 // The next import should be separate and the last of the imports.
@@ -30,16 +30,25 @@ export class ValidationSeverity extends PiDefinitionElement {
 
 export class ValidationMessage extends PiDefinitionElement {
     content: ValidationMessagePart[] = [];
+    toPiString(): string {
+        return this.content.map(p => p.toPiString()).join(" ");
+    }
 }
 
 export type ValidationMessagePart = ValidationMessageText | ValidationMessageReference;
 
 export class ValidationMessageText extends PiDefinitionElement {
     value: string;
+    toPiString(): string {
+        return this.value;
+    }
 }
 
 export class ValidationMessageReference extends PiDefinitionElement {
     expression: PiLangExp;
+    toPiString(): string {
+        return this.expression.toPiString();
+    }
 }
 
 export abstract class ValidationRule extends PiDefinitionElement {

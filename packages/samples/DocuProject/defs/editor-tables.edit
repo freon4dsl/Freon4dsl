@@ -1,0 +1,16 @@
+/* This file contains the table definition in a separate editor / projection group.
+This enables the user to switch tables on and off. */
+
+editor tables precedence 4
+
+InsurancePart{
+table [
+    Name    | risk               | pay out          | is approved
+    ${name} | ${statisticalRisk} | ${maximumPayOut} | ${isApproved}
+]
+}
+
+BaseProduct {[
+    Base Products ${name} for ${theme}
+        ${parts table rows}
+]}

@@ -10,7 +10,7 @@ export class FileHandler {
     public stringFromFile(filepath: string): string {
         // read language file
         if (!fs.existsSync(filepath)) {
-            console.error(this, "File '" + filepath + "' does not exist, exiting.");
+            // console.error(this, "File '" + filepath + "' does not exist, exiting.");
             throw new Error(`File '${filepath}' not found.`);
         }
         return fs.readFileSync(filepath, { encoding: "utf8" });

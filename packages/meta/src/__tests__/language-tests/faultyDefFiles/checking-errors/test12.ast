@@ -1,0 +1,21 @@
+language test12
+
+model test {
+    name: identifier;
+    unit: testUnit;
+    unit4: testUnit;
+}
+
+modelunit testUnit {
+    name: identifier;
+}
+concept testExpressionBase base expressionXX {
+}
+expression expressionXX {
+}
+
+expression expYY base expressionXX {
+}
+
+expression expZZ base testExpressionBase {
+}

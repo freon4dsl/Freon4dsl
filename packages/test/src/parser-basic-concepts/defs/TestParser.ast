@@ -9,7 +9,7 @@ model TestConceptsModel {
 }
 
 modelunit ExpressionTest {
-    public name: identifier;
+    name: identifier;
     normalEx: ExBase[];
     binEx: ExBase[];
 }

@@ -1,0 +1,15 @@
+typer
+
+istype { ROOT_TYPE, BASIC_TYPE }
+
+hastype { ExpressionBase }
+
+ComparisonExpression {
+    infertype BASIC_TYPE:Boolean;
+}
+GroupedExpression {
+    infertype self.inner;
+}
+BinaryExpressionBase {
+    infertype self.left;
+}

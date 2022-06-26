@@ -1,0 +1,51 @@
+editor someGroup
+
+AAAAAA  {[
+    ${AAprop1}
+    ${AAprop2}
+    ${AAprop3}
+    ${AAprop4}
+    ${AAprop5}
+    ${AAprop6}
+   ]
+   symbol = "aa"
+}
+
+BB  {
+[
+    ${BBprop3}
+    ${BBprop4}
+    ${BBprop5}
+    ${BBprop6}
+   ]
+   symbol = "aa"
+}
+
+CC {
+[
+ some text
+]
+    trigger = "::"
+}
+
+DD {
+[
+ some text
+]
+    symbol = "::"
+}
+
+EE {
+[
+ some text
+]
+    symbol = "::"
+    trigger = "ee"
+}
+
+FF {
+[
+ some text
+]
+    trigger = "ee"
+}

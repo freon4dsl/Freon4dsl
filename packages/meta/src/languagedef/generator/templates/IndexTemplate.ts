@@ -1,5 +1,5 @@
 import { PiLanguage } from "../../metalanguage";
-import { Names, sortConcepts } from "../../../utils";
+import { Names, GenerationUtil } from "../../../utils";
 
 export class IndexTemplate {
 
@@ -20,7 +20,6 @@ export class IndexTemplate {
         tmp.push("ModelUnitMetaType");
         tmp.push(Names.allConcepts(language));
         tmp.push(Names.metaType(language));
-        tmp.push(Names.PiElementReference);
         tmp.push(Names.initializeLanguage);
 
         // the template starts here
@@ -42,20 +41,16 @@ export class IndexTemplate {
 
 
         const tmp: string[] = [];
-        tmp.push(Names.PiElementReference);
         tmp.push(Names.classifier(language.modelConcept));
         language.units.map(c =>
             tmp.push(Names.classifier(c))
         );
-        // TODO should be sorting interfaces as well, I think
-        language.interfaces.map(c =>
-            tmp.push(Names.interface(c))
+        // The exports need to be sorted such that base concepts/interfaces are exported before the
+        // concepts/interfaces that are extending them.
+        GenerationUtil.sortClassifiers(language.interfaces).reverse().map(c =>
+            tmp.push(Names.classifier(c))
         );
-
-        // The exports need to be sorted such that base concepts are exported before the
-        // concepts that are extending them.
-        // Function 'sortConcepts' provides a sorting mechanism, but its result needs to be reversed.
-        sortConcepts(language.concepts).reverse().map(c =>
+        GenerationUtil.sortConceptsOrRefs(language.concepts).reverse().map(c =>
             tmp.push(Names.concept(c))
         );
 
@@ -84,5 +79,6 @@ export class IndexTemplate {
         return `export * from "./${Names.workerInterface(language)}";
                 export * from "./${Names.walker(language)}";
                 export * from "./${Names.defaultWorker(language)}";`;
+
     }
 }

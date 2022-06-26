@@ -2,15 +2,14 @@
 // this leads to a load error
 // import { PiErrorSeverity } from "@projectit/core";
 import {
-    ENVIRONMENT_GEN_FOLDER,
-    langExpToTypeScript,
+    CONFIGURATION_GEN_FOLDER, GenerationUtil,
     LANGUAGE_GEN_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     PiErrorSeverity,
-    PROJECTITCORE, getBaseTypeAsString
+    PROJECTITCORE
 } from "../../../utils";
-import { PiConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -28,7 +27,6 @@ import {
 import { ValidationUtils } from "../ValidationUtils";
 
 export class RulesCheckerTemplate {
-    done: PiConcept[] = [];
 
     generateRulesChecker(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
@@ -44,9 +42,8 @@ export class RulesCheckerTemplate {
                                 */`;
         // the template starts here
         return `
-        import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.PiNamedElement}, LanguageEnvironment } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
         import { reservedWordsInTypescript } from "./ReservedWords";         
@@ -59,9 +56,9 @@ export class RulesCheckerTemplate {
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
-            myWriter: ${writerInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).writer;
+            myWriter: ${writerInterfaceName} = LanguageEnvironment.getInstance().writer;
             // 'typer' is used to implement the 'typecheck' rules in the validator definition 
-            typer: ${typerInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).typer;
+            typer: ${typerInterfaceName} = LanguageEnvironment.getInstance().typer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
@@ -94,21 +91,16 @@ export class RulesCheckerTemplate {
             }
         }    
         `;
-
-        this.done = [];
-
     }
 
     private createImports(language: PiLanguage): string {
-        let result: string =
-            `${language.concepts?.map(concept => `
+        return `${language.concepts?.map(concept => `
                 ${Names.concept(concept)}`).concat(
                     language.interfaces?.map(intf => `
                 ${Names.interface(intf)}`).concat(
                         language.units?.map(intf => `
                 ${Names.classifier(intf)}`).join(", ")))
             }`;
-        return result;
     }
 
     private createRules(ruleSet: ConceptRuleSet): string {
@@ -116,7 +108,7 @@ export class RulesCheckerTemplate {
         // find the property that indicates the location in human terms
         const locationdescription = ValidationUtils.findLocationDescription(ruleSet.conceptRef.referred);
 
-        ruleSet.rules.forEach(r => {
+        ruleSet.rules.forEach((r, index) => {
             // find the severity for the rule
             const severity: string = this.makeSeverity(r);
 
@@ -128,7 +120,7 @@ export class RulesCheckerTemplate {
 
             // create the text for the rule
             if (r instanceof CheckEqualsTypeRule) {
-                result += this.makeEqualsTypeRule(r, locationdescription, severity, message);
+                result += this.makeEqualsTypeRule(r, locationdescription, severity, index, message);
             } else if (r instanceof CheckConformsRule) {
                 result += this.makeConformsRule(r, locationdescription, severity, message);
             } else if (r instanceof NotEmptyRule) {
@@ -177,7 +169,7 @@ export class RulesCheckerTemplate {
         if (message.length === 0) {
             message = `"'${r.toPiString()}' is false"`;
         }
-        return `if (!(${langExpToTypeScript(r.exp1)} ${r.comparator} ${langExpToTypeScript(r.exp2)})) {
+        return `if (!(${GenerationUtil.langExpToTypeScript(r.exp1)} ${r.comparator} ${GenerationUtil.langExpToTypeScript(r.exp2)})) {
                     this.errorList.push( new PiError( ${message}, modelelement, ${locationdescription}, ${severity} ));   
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
@@ -185,9 +177,9 @@ export class RulesCheckerTemplate {
 
     private makeValidNameRule(r: ValidNameRule, locationdescription: string, severity: string, message: string) {
         if (message.length === 0) {
-            message = `"'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier"`;
+            message = `"'" + ${GenerationUtil.langExpToTypeScript(r.property)} + "' is not a valid identifier"`;
         }
-        return `if (!this.isValidName(${langExpToTypeScript(r.property)})) {
+        return `if (!this.isValidName(${GenerationUtil.langExpToTypeScript(r.property)})) {
                     this.errorList.push( new PiError( ${message}, modelelement, ${locationdescription}, ${severity} ));                         
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
@@ -197,7 +189,7 @@ export class RulesCheckerTemplate {
         if (message.length === 0) {
             message = `"List '${r.property.toPiString()}' may not be empty"`;
         }
-        return `if (${langExpToTypeScript(r.property)}.length == 0) {
+        return `if (${GenerationUtil.langExpToTypeScript(r.property)}.length == 0) {
                     this.errorList.push(new PiError(${message}, modelelement, ${locationdescription}, ${severity}));
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
@@ -205,24 +197,32 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type " + this.myWriter.writeNameOnly(this.typer.inferType(${langExpToTypeScript(r.type1)})) + " of [" + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) + 
-                         "] does not conform to " + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type2)})`;
+            message = `"Type " + this.typer.inferType(${GenerationUtil.langExpToTypeScript(r.type1)})?.toPiString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1)}) + 
+                         "] does not conform to " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2)})`;
         }
-        return `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
-                    this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
+        return `if (!this.typer.conformsType(${GenerationUtil.langExpToTypeScript(r.type1)}, ${GenerationUtil.langExpToTypeScript(r.type2)})) {
+                    this.errorList.push(new PiError(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                  }`;
     }
 
-    private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, message?: string) {
+    private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, index: number, message?: string) {
+        // TODO change other methods similar to this one, i.e. first determine the types then call typer on types
+        // TODO make sure alle errors message use the same format
+        const leftElement: string = GenerationUtil.langExpToTypeScript(r.type1);
+        const rightElement: string = GenerationUtil.langExpToTypeScript(r.type2);
         if (message.length === 0) {
-            message = `"Type of ["+ this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) 
-                        + "] should equal " + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type2)})`;
+            message = `"Type of '"+ this.myWriter.writeNameOnly(${leftElement}) 
+                        + "' (" + leftType${index}?.toPiString(this.myWriter) + ") should equal the type of '" 
+                        + this.myWriter.writeNameOnly(${rightElement})
+                        + "' (" + rightType${index}?.toPiString(this.myWriter) + ")"`;
         }
-        return `if (!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
-                    this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
-                    ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
-                }`;
+        return `const leftType${index} = this.typer.inferType(${leftElement});
+            const rightType${index} = this.typer.inferType(${rightElement});
+            if (!this.typer.equals(leftType${index}, rightType${index})) {
+                this.errorList.push(new PiError(${message}, ${leftElement}, ${locationdescription}, ${severity}));
+                ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
+            }`;
     }
 
     private makeIsuniqueRule(rule: IsuniqueRule, locationdescription: string, severity: string, message: string): string {
@@ -230,16 +230,24 @@ export class RulesCheckerTemplate {
         const listName = rule.list.appliedfeature.toPiString();
         const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
         const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
-        const listpropertyTypeName = getBaseTypeAsString(referredListproperty);
-        const listpropertyTypescript = langExpToTypeScript(rule.listproperty.appliedfeature);
+        const listpropertyTypeName = GenerationUtil.getBaseTypeAsString(referredListproperty);
+        const listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature);
+        //
+        let refAddition: string = '';
+        let howToWriteName: string = 'this.myWriter.writeNameOnly(elem)';
+        if (!rule.list.findRefOfLastAppliedFeature().isPart) { // the elements in the list are all PiElementReferences
+            refAddition += ".referred";
+            howToWriteName = 'elem.name'; // if the list element is a reference there is no need to call the writer
+        }
+        //
         if (message.length === 0) {
-            message = `"The value of property '${listpropertyName}' is not unique in list '${listName}'"`;
+            message = `\`The value of property '${listpropertyName}' (\"\${${howToWriteName}}\") is not unique in list '${listName}'\``;
         }
         return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
-        ${langExpToTypeScript(rule.list)}.forEach((elem, index) => {
+        ${GenerationUtil.langExpToTypeScript(rule.list)}.forEach((elem, index) => {
             if ((elem === undefined) || (elem === null)) {
                 this.errorList.push(new PiError(\`Element[\$\{index\}] of property '${listName}' has no value\`,
-                 ${langExpToTypeScript(rule.list)}[index],
+                 ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
                  ${locationdescription},
                  ${severity}));
                     ${rule.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
@@ -248,7 +256,7 @@ export class RulesCheckerTemplate {
                     ${uniquelistName}.push(elem.${listpropertyTypescript});
                 } else {
                     this.errorList.push(new PiError(${message},
-                     ${langExpToTypeScript(rule.list)}[index],
+                     ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
                      ${locationdescription},
                      ${severity}));                }
                     ${rule.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
@@ -264,9 +272,13 @@ export class RulesCheckerTemplate {
                 if (cont instanceof ValidationMessageText) {
                     // console.log("FOUND message text: '" + cont.value + "'");
                     result += `${cont.value}`;
-                } else if (cont instanceof  ValidationMessageReference) {
-                    // console.log("FOUND message expression: '" + cont.expression.toPiString() + "'");
-                    result += `\${${langExpToTypeScript(cont.expression)}}`;
+                } else if (cont instanceof ValidationMessageReference) {
+                    if (cont.expression.findRefOfLastAppliedFeature() instanceof PiPrimitiveProperty) {
+                        result += `\${${GenerationUtil.langExpToTypeScript(cont.expression)}}`;
+                    } else {
+                        // console.log("FOUND message expression: '" + cont.expression.toPiString() + "'");
+                        result += `\${this.myWriter.writeToString(${GenerationUtil.langExpToTypeScript(cont.expression)})}`;
+                    }
                 }
                 if (index < numberOfparts - 1) {
                     result += " ";

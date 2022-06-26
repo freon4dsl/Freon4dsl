@@ -1,7 +1,7 @@
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import { MetaKey } from "./Keys";
 import * as Keys from "./Keys";
-import { PiLogger } from "./internal";
+import { PiLogger } from "../logging";
 import { PiCreatePartAction } from "../editor";
 
 const LOGGER = new PiLogger("ListBoxUtil");

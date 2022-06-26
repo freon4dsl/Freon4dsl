@@ -1,0 +1,44 @@
+typer
+
+istype { PiClassifier }
+
+hastype { PitExp }
+
+PitPropertyCallExp {
+    infertype self.property.type; // TODO error message when this expression does not result in one of the types mentioned in istype{}
+}
+PitSelfExp {
+    // TODO this rule should be
+    // infertype ownerOfType(PitClassifierRule).myClassifier;
+    infertype PiPrimitiveType:boolean;
+}
+
+PitVarCallExp {
+    infertype self.variable.type;
+}
+
+PitCreateExp {
+    infertype self.type;
+}
+PitFunctionCallExp {
+    infertype self.returnType;
+}
+
+PitWhereExp {
+    infertype self.variable.type;
+}
+
+PitAnytypeExp {
+    // TODO this rule should be different
+    infertype PiPrimitiveType:boolean;
+}
+PitLimitedInstanceExp {
+    // TODO this rule should be different
+    infertype PiPrimitiveType:boolean;
+}
+PitEquals {
+    infertype PiPrimitiveType:boolean;
+}
+PitConforms {
+    infertype PiPrimitiveType:boolean;
+}

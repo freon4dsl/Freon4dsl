@@ -27,8 +27,9 @@ export class GrammarPart {
 
         return `import {net} from "net.akehurst.language-agl-processor";
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
-        import { PiElementReference, ${this.imports.map(imp => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${this.imports.map(imp => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
+        import { PiElementReference } from "@projectit/core";
         
         export class ${className} {
             mainAnalyser: ${Names.syntaxAnalyser(language)};

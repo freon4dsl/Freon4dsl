@@ -1,35 +1,34 @@
-editor XXX for language ParserOnConcepts
+editor default
 
 //NumberLiteralEx {
-//    @projection normal
 //        [${self.value}]
 //}
 //
 //StringLiteralEx {
-//    @projection StringLiteralEx
 //        [
 //        '${self.value}'
 //        ]
-//    @trigger "'"
+//    trigger = "'"
 //}
 //
 //BooleanLiteralEx {
-//    @projection [ ${self.value} ]
-//    @trigger "boolean"
+//    [ ${self.value} ]
+//    trigger = "boolean"
 //}
 
 PlusEx {
-    @symbol "+"
+    symbol = "+"
 }
 
 MultiplyEx {
-    @symbol "*"
+    symbol = "*"
+}
+
+
+AndEx {
+    symbol = "and"
 }
 
 DivideEx {
-    @symbol "/"
-}
-
-AndEx {
-    @symbol "and"
+    symbol = "/"
 }

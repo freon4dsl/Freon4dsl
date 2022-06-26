@@ -11,22 +11,33 @@ import { PiElementReference } from ".";
  *  1. Simple expression: a simple value, currently only numbers
  *  2. Instance expression: an expression that refers to a predefined instance of a limited concept, e.g. DemoAttributeType:Integer
  *  3. Functions expression: an expression that refers to one of the functions that may be used in the typer and/or validator, like 'conformsto'
- *  4. Concept expression: an expression that refers to a keyword, currently only 'container'
+ *  4. Concept expression: an expression that refers to a keyword, currently only 'owner'
  *  5. Self expression: an expression that refers to a property of a classifier, like 'self.age'
  */
 
 export abstract class PiLangExp extends PiLangElement {
     sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
-    // TODO appliedfeature could be moved to SelfExp, is not used elsewhere
     appliedfeature: PiLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
-    referredElement: PiElementReference<PiLangElement>;  // refers to the element called 'sourceName'
-    location: ParseLocation;                            // holds start and end in the parsed file
+    __referredElement: PiElementReference<PiLangElement>;  // refers to the element called 'sourceName'
     language: PiLanguage;                           // the language for which this expression is defined
 
-    // returns the element to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
+    // returns the property to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
     findRefOfLastAppliedFeature(): PiProperty {
-        // TODO should this method return something else then null, when there is no applied feature???
-        return this.appliedfeature?.findRefOfLastAppliedFeature();
+        if (!!this.language) {
+            if (this.appliedfeature !== undefined) {
+                // console.log(" last of: " + this.appliedfeature.sourceName);
+                return this.appliedfeature.findRefOfLastAppliedFeature();
+            } else {
+                const found: PiLangElement = this.__referredElement?.referred;
+                // console.log("found reference: " + found?.name + " of type " + typeof found);
+                if (found instanceof PiProperty) {
+                    return found;
+                }
+            }
+        } else {
+            throw Error("Applied feature cannot be found because language is not set.")
+        }
+        return null;
     }
 
     toPiString(): string {
@@ -50,13 +61,13 @@ export class PiLangSelfExp extends PiLangExp {
 
     static create(referred: PiClassifier): PiLangSelfExp {
         const result = new PiLangSelfExp();
-        result.referredElement = PiElementReference.create<PiClassifier>(referred, "PiClassifier");
-        result.referredElement.owner = result;
+        result.__referredElement = PiElementReference.create<PiClassifier>(referred, "PiClassifier");
+        result.__referredElement.owner = result;
         result.sourceName = Names.nameForSelf;
         return result;
     }
 
-    referredElement: PiElementReference<PiClassifier>; // is not needed, can be determined based on its parent
+    __referredElement: PiElementReference<PiClassifier>; // is not needed, can be determined based on its parent
 
     toPiString(): string {
         if (!!this.sourceName) {
@@ -70,7 +81,7 @@ export class PiLangSelfExp extends PiLangExp {
 export class PiInstanceExp extends PiLangExp {
     // sourceName should be name of a limited concept
     instanceName: string;   // should be name of one of the predefined instances of 'sourceName'
-    referredElement: PiElementReference<PiInstance>;
+    __referredElement: PiElementReference<PiInstance>;
 
     toPiString(): string {
         return this.sourceName + ":" + this.instanceName;
@@ -78,7 +89,7 @@ export class PiInstanceExp extends PiLangExp {
 }
 
 export class PiLangConceptExp extends PiLangExp {
-    referredElement: PiElementReference<PiClassifier>;
+    __referredElement: PiElementReference<PiClassifier>;
 
     toPiString(): string {
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
@@ -89,23 +100,34 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
 
     static create(owner: PiLangExp, name: string, referred: PiProperty): PiLangAppliedFeatureExp {
         const result = new PiLangAppliedFeatureExp();
-        result.referredElement = PiElementReference.create<PiProperty>(referred, "PiProperty");
-        result.referredElement.owner = result;
+        result.referredElement = referred;
         result.sourceName = name;
         result.sourceExp = owner;
         return result;
     }
 
     sourceExp: PiLangExp;
-    referredElement: PiElementReference<PiProperty>;
+    __referredElement: PiElementReference<PiProperty>;
+
+    get referredElement(): PiProperty {
+        return this.__referredElement?.referred;
+    }
+
+    set referredElement(p: PiProperty) {
+        this.__referredElement = PiElementReference.create<PiProperty>(p, "PiProperty");
+        this.__referredElement.owner = this;
+    }
+
+    get reference(): PiElementReference<PiProperty> {
+        return this.__referredElement;
+    }
+
+    set reference(p: PiElementReference<PiProperty>) {
+        this.__referredElement = p;
+        this.__referredElement.owner = this;
+    }
 
     toPiString(): string {
-        let isRef: boolean = false;
-        if (!!this.referredElement) {
-            const ref = this.referredElement.referred;
-            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
-        }
-        // return this.sourceName + (isRef ? ".referred" : "") + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
     }
 
@@ -115,7 +137,7 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
             return this.appliedfeature.findRefOfLastAppliedFeature();
         } else {
             // console.log("found reference: " + this.referredElement?.referred?.name);
-            return this.referredElement?.referred;
+            return this.__referredElement?.referred;
         }
     }
 }
@@ -124,7 +146,7 @@ export class PiLangFunctionCallExp extends PiLangExp {
     // sourceName: string; 			// only used in validator for 'conformsTo' and 'equalsType'
     actualparams: PiLangExp[] = [];
     returnValue: boolean;
-    referredElement: PiElementReference<PiFunction>;
+    __referredElement: PiElementReference<PiFunction>;
 
     toPiString(): string {
         let actualPars: string = "( ";

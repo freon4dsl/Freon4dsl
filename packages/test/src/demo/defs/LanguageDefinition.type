@@ -1,8 +1,10 @@
-typer Demo for language Demo
+typer
 
 // for now: first is considered to be the root of the type hierarchy
 istype { BaseType }
 // TODO: remove errors when this statement is used: istype { DemoEntity, DemoAttributeType, Type }
+
+hastype { DemoExpression, DemoAttribute, DemoFunction, DemoVariable, DemoAttributeRef }
 
 anytype {
     // conformsto self.base
@@ -21,9 +23,6 @@ DemoAttribute {
 
 DemoFunction {
     infertype self.declaredType;
-}
-DemoExpression {
-    abstract infertype ;
 }
 DemoStringLiteralExpression {
     infertype DemoAttributeType:String;
@@ -63,5 +62,11 @@ DemoVariableRef   {
 }
 DemoAttributeRef   {
     infertype self.attribute.declaredType;
+}
+DemoAndExpression {
+    infertype DemoAttributeType:Boolean;
+}
+DemoOrExpression {
+    infertype DemoAttributeType:Boolean;
 }
 

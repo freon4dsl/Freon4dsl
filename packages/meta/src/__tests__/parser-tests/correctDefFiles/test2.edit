@@ -1,0 +1,27 @@
+editor default
+
+TEST_SINGLES {[
+    ${a}
+    ${b1}
+    ${b2}
+    ${c}
+    ${d}
+    ${e1}
+    ${e2}
+    ${f}
+]}
+// single part properties
+// optional, or in optional projection
+aa {[${optionalPart}]}
+bb1 {[[?${optionalPart}]]}
+bb2 {[ xxx [?${optionalPart}] ]}
+// mandatory
+cc {[${mandatoryPart}]}
+
+// single reference properties
+dd {[${optionalRef}]}
+ee1 {[[?${optionalRef}]]}
+ee2 {[ xxx [?${optionalRef}]]}
+ff {[${mandatoryRef}]}
+
+someConcept {[${name} : ${prop}]}

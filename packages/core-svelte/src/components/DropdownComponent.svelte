@@ -117,13 +117,14 @@
 
         opacity: 1;
         z-index: 99;
-        background: var(--theme-colors-bg_dropdown_component);
+        background-color: var(--freon-dropdown-component-background-color, lightblue);
+        color: var(--freon-dropdown-component-color, blue);
     }
 
     .popupWrapper {
         position: absolute;
-        border: 1px solid var(--theme-colors-border_dropdown_component);
-        box-shadow: var(--pi-popup-box-shadow);
+        border: 1px solid var(--freon-dropdown-component-border-color, darkblue);
+        box-shadow: var(--freon-popup-box-shadow, 0 0 6px 0 rgba(0, 0, 0, 0.5));
         border-radius: 2px;
         top: 10px;
         left: -1px;

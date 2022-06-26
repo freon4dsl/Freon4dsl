@@ -1,13 +1,12 @@
 import { PiLogger } from "@projectit/core";
-import { PiNamedElement } from "@projectit/core";
+import type { PiNamedElement } from "@projectit/core";
 import { GenericModelSerializer } from "@projectit/core";
-import { IServerCommunication } from "./IServerCommunication";
-import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
+import type { IServerCommunication } from "./IServerCommunication";
+import { setUserMessage } from "../components/stores/UserMessageStore";
 
 const LOGGER = new PiLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
 
-// the address of our server
 const node_port = process.env.NODE_PORT || 3001;
 const SERVER_URL = `http://127.0.0.1:${node_port}/`;
 console.log("NODE_PORT:" + node_port+ "  env " + JSON.stringify(process.env));
@@ -24,7 +23,7 @@ export class ServerCommunication implements IServerCommunication {
         return ServerCommunication.instance;
     }
 
-    private static findParams(params: string) {
+    private static findParams(params?: string) {
         if (!!params && params.length > 0) {
             return "?" + params;
         } else {
@@ -128,6 +127,7 @@ export class ServerCommunication implements IServerCommunication {
                 } catch (e) {
                     LOGGER.error(this, "loadModelUnit, " + e.message);
                     setUserMessage(e.message);
+                    console.log(e.stack);
                 }
             }
         }
@@ -199,7 +199,7 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
-    private handleError(e) {
+    private handleError(e: Error) {
         let errorMess: string = e.message;
         if (e.message.includes("aborted")) {
             errorMess = `Time out: no response from ${SERVER_URL}.`;
@@ -207,4 +207,13 @@ export class ServerCommunication implements IServerCommunication {
         LOGGER.error(this, errorMess);
         setUserMessage(errorMess);
     }
+
+    async renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: PiNamedElement) {
+        LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
+        // put the unit and its interface under the new name
+        this.putModelUnit(modelName, newName, piUnit);
+        // remove the old unit and interface
+        this.deleteModelUnit(modelName, oldName);
+    }
+
 }

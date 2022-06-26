@@ -1,0 +1,19 @@
+language test11
+
+model test {
+    name: identifier;
+    unit: testUnit;
+}
+
+modelunit testUnit {
+    name: identifier;
+}
+
+concept YY  {
+    // ERROR: no initial value allowed in concept properties
+    prop1: ZZ = 10;
+}
+
+concept ZZ {
+    name: identifier;
+}

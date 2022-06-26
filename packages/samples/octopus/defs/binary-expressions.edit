@@ -1,0 +1,29 @@
+editor default
+
+PlusExpression {
+    symbol = "+"
+}
+MinusExpression {
+    symbol = "-"
+}
+MultiplyExpression {
+    symbol = "*"
+}
+DivideExpression {
+    symbol = "/"
+}
+LessThenExpression {
+    symbol = "<"
+}
+OrExpression {
+    symbol = "or"
+}
+AndExpression {
+    symbol = "and"
+}
+GreaterThenExpression {
+    symbol = ">"
+}
+EqualsExpression {
+    symbol = "=="
+}

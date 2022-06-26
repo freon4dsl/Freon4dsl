@@ -1,0 +1,11 @@
+UnitA expressionsWithTypes
+
+12 : NUMBER;
+456 : STRING;
+456 : BOOLEAN;
+"string" : STRING;
+"string" : NUMBER;
+"string" : BOOLEAN;
+true : BOOLEAN;
+true : STRING;
+true : NUMBER;

@@ -1,10 +1,12 @@
 import { PiClassifier, PiConcept, PiLanguage, PiPrimitiveProperty } from "../../languagedef/metalanguage";
-import { ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../utils";
+import { CONFIGURATION_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../utils";
 import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 import { UnitAnalyser } from "./UnitAnalyser";
 
 // first call 'analyse' then the other methods as they depend on the global variables to be set
 
+// TODO rethink semantic analysis => should be done on whole model
+// why is common unit not included???
 export class SemanticAnalysisTemplate {
     imports: PiClassifier[] = [];
     possibleProblems: PiConcept[] = [];
@@ -12,26 +14,40 @@ export class SemanticAnalysisTemplate {
     private exprWithBooleanProp: Map<PiClassifier, PiPrimitiveProperty> = new Map<PiClassifier, PiPrimitiveProperty>();
 
     analyse(analyser: UnitAnalyser) {
-        this.reset();
+        // this.reset();
         // find which classifiers have possible problems
-        // TODO use subs instead of LangUtil.subConcepts(classifier)
         for (const [classifier, subs] of analyser.interfacesAndAbstractsUsed) {
             if (!((classifier as PiConcept).base)) {
                 let hasProblems: boolean = false;
+                let subsWithSingleReference: PiConcept[] = [];
                 for (const sub of subs) {
                     if (sub instanceof PiConcept) {
                         for (const ref of sub.allReferences()) {
-                            if (analyser.classifiersUsed.includes(ref.type.referred)){
+                            if (analyser.classifiersUsed.includes(ref.type)){
                                 this.addProblem(sub);
                                 hasProblems = true;
                             }
                         }
+                        // find all concepts that have a single non-optional reference, and possibly other optional props
+                        // the parsing will render a rule thatmatches when only one reference is present
+                        // these references need to be checked against their expected (meta)types.
+                        const nonOptionals = sub.allProperties().filter(prop => !prop.isOptional);
+                        if (nonOptionals.length === 1 && !nonOptionals[0].isPart) {
+                            subsWithSingleReference.push(sub);
+                        }
                     }
                     for (const prim of sub.allPrimProperties()) {
-                        if (prim.type.referred == PiPrimitiveType.boolean) {
+                        if (prim.type == PiPrimitiveType.boolean) {
                             this.exprWithBooleanProp.set(sub, prim);
                         }
                     }
+                }
+                if (subsWithSingleReference.length > 1) { // a single one will not result in problems
+                    subsWithSingleReference.forEach(sub => {
+                        // console.log("adding problem for " + sub.name);
+                        this.addProblem(sub);
+                    });
+                    hasProblems = true;
                 }
                 if (hasProblems) {
                     this.addSuper(classifier);
@@ -57,12 +73,13 @@ export class SemanticAnalysisTemplate {
         const everyConceptName: string = Names.allConcepts(language);
         const className: string = Names.semanticAnalyser(language);
         const refWalkerName: string = Names.semanticWalker(language);
+        // TODO rethink the replacement of all properties of an object and test it
 
         // start Template
         return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
                 import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
                 import { ${refWalkerName} } from "./${refWalkerName}";
-                import { Concept, Language, PiElement } from "@projectit/core";
+                import { Concept, Language, PiElement, PiElementReference } from "@projectit/core";
 
                 export class ${className} {
 
@@ -84,16 +101,15 @@ export class SemanticAnalysisTemplate {
 
                         // now change all ref errors
                         for (const [toBeReplaced, newObject] of changesToBeMade) {
-                            // TODO test the replacement of all properties
                             const myType: Concept = Language.getInstance().concept(toBeReplaced.piLanguageConcept());
                             myType.properties.forEach(prop => {
                                 if (prop.type !== "boolean" && !!toBeReplaced[prop.name]) {
                                     newObject[prop.name] = toBeReplaced[prop.name];
                                 }
                             });
-                            let parent: PiElement = toBeReplaced.piContainer().container;
-                            const propName: string = toBeReplaced.piContainer().propertyName;
-                            const propIndex: number = toBeReplaced.piContainer().propertyIndex;
+                            let parent: PiElement = toBeReplaced.piOwnerDescriptor().owner;
+                            const propName: string = toBeReplaced.piOwnerDescriptor().propertyName;
+                            const propIndex: number = toBeReplaced.piOwnerDescriptor().propertyIndex;
                             if (propIndex !== undefined) {
                                 parent[propName].splice(propIndex, 1, newObject);
                             } else {
@@ -119,11 +135,10 @@ export class SemanticAnalysisTemplate {
 
         return `
             import {
-              ${Names.allConcepts(language)}, PiElementReference, ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
+              ${Names.allConcepts(language)}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
             } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
             import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
-            import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
-            import { PiNamedElement } from "@projectit/core";
+            import { PiNamedElement, Language, LanguageEnvironment, PiElementReference } from "@projectit/core";
             
             export class ${className} extends ${Names.defaultWorker(language)} implements ${Names.workerInterface(language)} {
                 changesToBeMade: Map<${everyConceptName}, ${everyConceptName}> = null;
@@ -136,7 +151,7 @@ export class SemanticAnalysisTemplate {
                 ${this.possibleProblems.map(poss => `${this.makeVistorMethod(poss)}`).join("\n")}
                 
                 private findReplacement(modelelement: ${Names.allConcepts(language)}, referredElem: PiElementReference<PiNamedElement>) {
-                    const scoper = ${Names.environment(language)}.getInstance().scoper;
+                    const scoper = LanguageEnvironment.getInstance().scoper;
                     const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                     if (possibles.length > 0) {
                         // element probably refers to something with another type
@@ -155,6 +170,7 @@ export class SemanticAnalysisTemplate {
             `;
     }
 
+    // TODO if there are possibles, but still the metatype is not correct, do not make a replacement
     private makeReplacementIfStat(): string {
         // TODO add replacement of properties that are lists
         let result: string = '';
@@ -162,18 +178,18 @@ export class SemanticAnalysisTemplate {
             if (!poss.isAbstract) {
                 let toBeCreated: string = Names.classifier(poss);
                 for (const ref of poss.allReferences().filter(prop => !prop.isList)) {
-                    let type: PiClassifier = ref.type.referred;
+                    let type: PiClassifier = ref.type;
                     let metatype: string = Names.classifier(type);
                     this.addToImports(type);
                     let propName: string = ref.name;
-                    result += `if (metatype === "${metatype}") {
+                    result += `if (Language.getInstance().metaConformsToType(elem, "${metatype}")) {
                         replacement = ${toBeCreated}.create({ ${propName}: PiElementReference.create<${metatype}>(referredElem.name, metatype) });
                     } else `;
                 }
             }
         }
         if (result.length > 0) {
-            result += `{ throw new Error("Semantic analysis error: cannot replace reference.") }`
+            result += `{ throw new Error("Semantic analysis error: cannot replace reference: " + referredElem.name + " of type " + metatype + "." ) }`
         }
         return result;
     }

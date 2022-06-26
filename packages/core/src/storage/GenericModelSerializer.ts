@@ -1,5 +1,5 @@
-import { PiElement } from "../language";
-import { Language, Property } from "./Language";
+import { PiElement } from "../ast";
+import { Language, Property } from "../language";
 import { isNullOrUndefined } from "../util";
 
 /**
@@ -55,8 +55,8 @@ export class GenericModelSerializer {
     }
 
     private convertProperties(result: PiElement, property: Property, value: any) {
-        // console.log(">> creating property "+ property.name + "  of type " + property.propertyType + " isList " + property.isList);
-        switch (property.propertyType) {
+        // console.log(">> creating property "+ property.name + "  of type " + property.propertyKind + " isList " + property.isList);
+        switch (property.propertyKind) {
             case "primitive":
                 if (property.isList) {
                     result[property.name] = [];
@@ -64,7 +64,6 @@ export class GenericModelSerializer {
                         result[property.name].push(value[item]);
                     }
                 } else {
-                    // TODO Add other primitive property types
                     if (property.type === "string" || property.type === "identifier") {
                         this.checkValueToType(value, "string", property);
                     } else if (property.type === "number") {
@@ -137,7 +136,7 @@ export class GenericModelSerializer {
         const result: Object = { $typename: typename };
         // console.log("typename: " + typename);
         for (const p of this.language.allConceptProperties(typename)) {
-            // console.log(">>>> start converting property " + p.name + " of type " + p.propertyType);
+            // console.log(">>>> start converting property " + p.name + " of type " + p.propertyKind);
             if (publicOnly) {
                 if (p.isPublic) {
                     this.convertPropertyToJSON(p, tsObject, publicOnly, result);
@@ -151,7 +150,7 @@ export class GenericModelSerializer {
     }
 
     private convertPropertyToJSON(p: Property, tsObject: PiElement, publicOnly: boolean, result: Object) {
-        switch (p.propertyType) {
+        switch (p.propertyKind) {
             case "part":
                 const value = tsObject[p.name];
                 if (p.isList) {

@@ -1,0 +1,36 @@
+validator DocuValidator for language DocuProject
+
+InsuranceProduct {
+    notEmpty self.parts;
+    isunique name in self.parts;
+    isunique name in self.helpers;
+}
+
+// the following typechecks are not yet functioning, implemented in custom validator and custom typer instead
+MinusExpression  {
+    typecheck equalsType( self.left, self.right );
+}
+PlusExpression {
+//    typecheck equalsType( self.left, self.right );
+}
+MultiplyExpression {
+//    typecheck equalsType( self.left, self.right );
+}
+DivideExpression {
+//    typecheck equalsType( self.left, self.right );
+}
+BaseProduct {
+    validIdentifier self.name;
+}
+InsurancePart {
+    validIdentifier ; // default is 'name: identifier'
+}
+CalcFunction {
+    // typecheck conformsTo (self.body, self.declaredType);
+    isunique name in self.parameters;
+    validIdentifier
+    {
+        message: "El nombre '${self.name}' no es un identificador correcto.",
+        severity: error
+    };
+}

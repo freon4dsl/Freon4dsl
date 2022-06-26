@@ -5,10 +5,12 @@
       {
          "$typename": "Entity",
          "name": "entity1",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
-               "name": "attr1"
+               "name": "attr1",
+               "declaredType": null
             },
             {
                "$typename": "Attribute",
@@ -32,7 +34,8 @@
             },
             {
                "$typename": "Attribute",
-               "name": "zZ"
+               "name": "zZ",
+               "declaredType": null
             }
          ],
          "methods": [
@@ -63,11 +66,13 @@
                "declaredType": "Integer"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": null
       },
       {
          "$typename": "Entity",
          "name": "entityNoAttrs",
+         "construc": null,
          "attributes": [],
          "methods": [
             {
@@ -102,11 +107,13 @@
                "declaredType": "Boolean"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": null
       },
       {
          "$typename": "Entity",
          "name": "entityNoMeths",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
@@ -120,6 +127,7 @@
             }
          ],
          "methods": [],
+         "listOfReferences": [],
          "baseEntity": null
       }
    ],

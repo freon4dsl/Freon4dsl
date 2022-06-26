@@ -1,4 +1,4 @@
-WithKeywordProj myName
+PrimsWithKeywordTest myName {
 	primWith
 	    PrimWithKeywordProj <BOOL>
         PrimWithKeywordProj
@@ -8,3 +8,4 @@ WithKeywordProj myName
         PrimWithKeywordProj
 	    PrimWithKeywordProj
         PrimWithKeywordProj <BOOL>
+}

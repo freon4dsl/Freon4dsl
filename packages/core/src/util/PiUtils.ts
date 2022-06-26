@@ -1,9 +1,10 @@
-import { action, runInAction } from "mobx";
-import { PiLogger } from "./internal";
+import { runInAction } from "mobx";
+import { PiLogger } from "../logging";
 // the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
-import { PiKey } from "./Keys";
+// import { PiKey } from "./Keys";
 import { Box, isProKey, PI_NULL_COMMAND, PiActionTrigger, PiCommand, PiEditor } from "../editor";
-import { PiContainerDescriptor, PiElement, PiExpression, isPiExpression } from "../language";
+import { PiOwnerDescriptor, PiElement, PiExpression } from "../ast";
+import { isPiExpression } from "../ast-utils";
 
 export type BooleanCallback = () => boolean;
 export type DynamicBoolean = BooleanCallback | boolean;
@@ -16,6 +17,14 @@ let LATEST_ID = 0;
 const LOGGER = new PiLogger("PiUtils");
 
 export class PiUtils {
+
+    /**
+     * Resets the ID, so the same ID can now appear twice.
+     * Use only in tests to ensure the ID's there always start at 0
+     */
+    static resetId(): void {
+        LATEST_ID = 0;
+    }
     /**
      *
      */
@@ -42,13 +51,13 @@ export class PiUtils {
         }
     }
 
-    static setContainer(exp: PiElement, piContainer: PiContainerDescriptor | null, editor: PiEditor): void {
+    static setContainer(exp: PiElement, piOwnerDescriptor: PiOwnerDescriptor | null, editor: PiEditor): void {
         runInAction(() => {
-            if (!!piContainer) {
-                if (piContainer.propertyIndex === undefined) {
-                    piContainer.container[piContainer.propertyName] = exp;
+            if (!!piOwnerDescriptor) {
+                if (piOwnerDescriptor.propertyIndex === undefined) {
+                    piOwnerDescriptor.owner[piOwnerDescriptor.propertyName] = exp;
                 } else {
-                    piContainer.container[piContainer.propertyName][piContainer.propertyIndex] = exp;
+                    piOwnerDescriptor.owner[piOwnerDescriptor.propertyName][piOwnerDescriptor.propertyIndex] = exp;
                 }
             } else {
                 editor.rootElement = exp;
@@ -60,7 +69,7 @@ export class PiUtils {
         PiUtils.CHECK(isPiExpression(oldExpression), "replaceExpression: old element should be a PiExpression, but it isn't");
         PiUtils.CHECK(isPiExpression(newExpression), "replaceExpression: new element should be a PiExpression, but it isn't");
         runInAction(() => {
-            PiUtils.setContainer(newExpression, oldExpression.piContainer(), editor);
+            PiUtils.setContainer(newExpression, oldExpression.piOwnerDescriptor(), editor);
         });
     }
 

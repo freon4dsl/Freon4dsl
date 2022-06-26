@@ -3,8 +3,15 @@
     import { afterUpdate, onDestroy, onMount } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
-    import { Box, conceptStyle, HorizontalListBox, ListBox, PiEditor, PiLogger, styleToCSS } from "@projectit/core";
-    import { isHorizontalBox } from "@projectit/core";
+    import {
+        Box,
+        HorizontalListBox,
+        isEmptyLineBox,
+        ListBox,
+        PiEditor,
+        PiLogger,
+        isHorizontalBox
+    } from "@projectit/core";
 
     // Parameters
     export let list: ListBox ; //= new HorizontalListBox(null, "l1");
@@ -40,32 +47,12 @@
         // NOTE: Triggers autorun whenever an element is added or delete from the list
         svNotifier.notifyChange();
     });
-    // Local Variables
-    let gridStyle;
-    let cssGrgVars: string;
     autorun(() => {
         LOGGER.log("AUtorun list")
         svNotifier.dummy
         svList = list;
         children = [...list.children];
         list.setFocus = setFocus;
-
-        const nrOfBoxes = svList.children.length;
-        gridStyle =
-            isHorizontalBox(svList)
-                ? {
-                    gridTemplateColumns: "repeat(" + nrOfBoxes + ", auto)",
-                }
-                : {
-                    gridTemplateRows: "repeat(" + nrOfBoxes + ", auto)",
-                    gridTemplateColumns: "repeat(1, auto)",
-                    backgroundColor: "green"
-                };
-        cssGrgVars = `--pi-list-grid-template-rows:   ${gridStyle.gridTemplateRows};
-                      --pi-list-grid-template-columns:${gridStyle.gridTemplateColumns};
-                     `
-        // useless, list has no contents!
-        + styleToCSS(conceptStyle(editor.style, editor.theme, list.element.piLanguageConcept(), "list", list.style));
     });
 
     // TODO Empty vertical list gives empty line, try to add entities in the example.
@@ -84,10 +71,16 @@
         LOGGER.log("render box " + box.role);
         return box;
     }
+
+    function setPrevious(b: Box): string {
+        previousBox = b;
+        return "";
+    }
+
+    let previousBox = null;
 </script>
 
 <span class="list-component"
-      style="{cssGrgVars}"
       on:click
       on:focus={onFocusHandler}
       on:blur={onBlurHandler}
@@ -102,8 +95,14 @@
         </div>
     {:else}
         <div class="verticalList"  on:click>
-            {#each children as box (box.id)}
+            {#each children as box, i (box.id)}
+                {#if i > 0 && i < children.length
+                     && !(i === 1 && isEmptyLineBox(previousBox))
+                }
+                    <br class="LISTNEWLINE"/>
+                {/if}
                 <RenderComponent box={box} editor={editor}/>
+                { setPrevious(box) }
             {/each}
         </div>
     {/if}
@@ -113,22 +112,27 @@
     .list-component {
         --pi-list-grid-template-columns: "";
         --pi-list-grid-template-rows: "";
-        --pi-list-background-color: var(--inverse-color);
     }
     .horizontalList {
-        grid-template-rows: var(--pi-list-grid-template-rows);
-        grid-template-columns: var(--pi-list-grid-template-columns);
+        /*grid-template-rows: var(--pi-list-grid-template-rows);*/
+        /*grid-template-columns: var(--pi-list-grid-template-columns);*/
         white-space: nowrap;
         display: inline-block;
-        background-color: var(--pi-list-background-color);
+        padding: var(--freon-horizontallist-component-padding, 1px);
+        background-color: var(--freon-editor-component-background-color, white);
+        margin: var(--freon-horizontallist-component-margin, 1px);
+        box-sizing: border-box;
     }
 
     .verticalList {
-        grid-template-rows: var(--pi-list-grid-template-rows);
-        grid-template-columns: var(--pi-list-grid-template-columns);
-        display: grid;
-        background-color: var(--pi-list-background-color);
+        /*grid-template-rows: var(--pi-list-grid-template-rows);*/
+        /*grid-template-columns: var(--pi-list-grid-template-columns);*/
+        /*display: grid;*/
+        background-color: var(--freon-editor-component-background-color, white);
+        padding: var(--freon-verticallist-component-padding, 1px);
+        margin: var(--freon-verticallist-component-margin, 1px);
         /*margin-top: 10px;*/
+        box-sizing: border-box;
     }
 </style>
 

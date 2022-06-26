@@ -1,4 +1,4 @@
-import { Names } from "../../../utils";
+import { GenerationUtil, Names } from "../../../utils";
 import {
     PiPrimitiveProperty,
     PiBinaryExpressionConcept,
@@ -6,22 +6,14 @@ import {
     PiConcept,
     PiLimitedConcept,
     PiProperty,
-    PiPropertyInstance, PiClassifier
+    PiInstanceProperty,
+    PiClassifier,
+    PiPrimitiveType
 } from "../../metalanguage";
-import {
-    findMobxImports,
-    makeBasicMethods,
-    makeBasicProperties,
-    makeConstructor,
-    makeImportStatements,
-    makePartProperty,
-    makePrimitiveProperty,
-    makeReferenceProperty, makeStaticCreateMethod
-} from "./ConceptUtils";
-import { PiPrimitiveType } from "../../metalanguage/PiLanguage";
+import { ConceptUtils } from "./ConceptUtils";
 
 export class ConceptTemplate {
-
+    // TODO clean up imports in every generate method to avoid unused imports
     generateConcept(concept: PiConcept): string {
         if (concept instanceof PiLimitedConcept) {
             return this.generateLimited(concept);
@@ -44,7 +36,8 @@ export class ConceptTemplate {
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const implementsPi = (isExpression ? "PiExpression" : (hasName ? "PiNamedElement" : "PiElement"));
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = findMobxImports(hasSuper, concept).concat(implementsPi).concat("PiUtils");
+        const coreImports = ConceptUtils.findMobxImports(hasSuper, concept).concat(implementsPi)
+            .concat(["PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"]).concat(hasReferences ? (Names.PiElementReference) : "");
         const metaType = Names.metaType(language);
         const modelImports = this.findModelImports(concept, myName, hasReferences);
         const intfaces = Array.from(
@@ -53,28 +46,31 @@ export class ConceptTemplate {
             )
         );
 
+
+
         // Template starts here
         return `
-            ${makeImportStatements(needsObservable, coreImports, modelImports)}
+            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
 
             /**
              * Class ${myName} is the implementation of the concept with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
-             */            
-            @model
+             */
             export ${abstract} class ${myName} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
             {
-                ${(!isAbstract) ? `${makeStaticCreateMethod(concept, myName)}`
+                ${(!isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
                 : ""}
                             
-                ${makeBasicProperties(metaType, myName, hasSuper)}
-                ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
-                ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
-                ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
+                ${ConceptUtils.makeBasicProperties(metaType, myName, hasSuper)}
+                ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
+                ${concept.implementedParts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
+                ${concept.implementedReferences().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}     
                               
-                ${makeConstructor(hasSuper, concept.implementedProperties())}
-                ${makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)}                                   
+                ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties())}
+                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)} 
+                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName)}    
+                ${ConceptUtils.makeConvenienceMethods(concept.references())}                               
             }
         `;
     }
@@ -88,10 +84,10 @@ export class ConceptTemplate {
         const hasReferences = concept.implementedReferences().length > 0;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const isAbstract = concept.isAbstract;
-        const baseExpressionName = Names.concept(concept.language.findExpressionBase());
+        const baseExpressionName = Names.concept(GenerationUtil.findExpressionBase(concept));
         const abstract = concept.isAbstract ? "abstract" : "";
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = findMobxImports(hasSuper, concept).concat(["PiBinaryExpression", "PiUtils"]);
+        const coreImports = ConceptUtils.findMobxImports(hasSuper, concept).concat(["PiBinaryExpression", "PiParseLocation", "PiUtils"]);
         const metaType = Names.metaType(language);
         let modelImports = this.findModelImports(concept, myName, hasReferences);
         if (!modelImports.includes(baseExpressionName)) {
@@ -105,25 +101,24 @@ export class ConceptTemplate {
 
         // Template starts here
         return `
-            ${makeImportStatements(needsObservable, coreImports, modelImports)}
+            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
 
             /**
              * Class ${myName} is the implementation of the binary expression concept with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            @model
             export ${abstract} class ${myName} extends ${extendsClass} implements PiBinaryExpression${intfaces.map(imp => `, ${imp}`).join("")} {            
-                ${(!isAbstract) ? `${makeStaticCreateMethod(concept, myName)}`
+                ${(!isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
                 : ""}
                             
-                ${makeBasicProperties(metaType, myName, hasSuper)}
-                ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
-                ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
-                ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
+                ${ConceptUtils.makeBasicProperties(metaType, myName, hasSuper)}
+                ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
+                ${concept.implementedParts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
+                ${concept.implementedReferences().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}     
                               
-                ${makeConstructor(hasSuper, concept.implementedProperties())}
-                ${makeBasicMethods(hasSuper, metaType,false, false,true, true)}                    
+                ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties())}
+                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false,true, true)}                    
                 
                 /**
                  * Returns the priority of this expression instance.
@@ -166,11 +161,8 @@ export class ConceptTemplate {
 
 
 // the folowing template is based on assumptions about a limited concept.
-    // a limited has a name property
-    // a limited is not an expression ???
     // a limited does not have any non-prim properties
     // a limited does not have any references
-    // the base of a limited is also a limited
     private generateLimited(concept: PiLimitedConcept): string {
         const language = concept.language;
         const myName = Names.concept(concept);
@@ -178,7 +170,8 @@ export class ConceptTemplate {
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const abstract = (concept.isAbstract ? "abstract" : "");
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = findMobxImports(hasSuper, concept).concat(["PiNamedElement", "PiUtils"]);
+        const coreImports = ConceptUtils.findMobxImports(hasSuper, concept)
+            .concat(["PiNamedElement", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"]);
         const metaType = Names.metaType(language);
         const imports = this.findModelImports(concept, myName, false);
         const intfaces = Array.from(
@@ -189,28 +182,28 @@ export class ConceptTemplate {
 
         // Template starts here
         return `
-            ${makeImportStatements(needsObservable, coreImports, imports)}
+            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, imports)}
 
             /**
              * Class ${myName} is the implementation of the limited concept with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            @model
             export ${abstract} class ${myName} extends ${extendsClass} implements PiNamedElement${intfaces.map(imp => `, ${imp}`).join("")}
             {           
-                ${(!concept.isAbstract) ? `${makeStaticCreateMethod(concept, myName)}`
+                ${(!concept.isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
                 : ""}
              
                 ${concept.instances.map(predef =>
                     `static ${predef.name}: ${myName};  // implementation of instance ${predef.name}`).join("\n")}
                      static $piANY : ${myName};         // default predefined instance
                             
-                ${makeBasicProperties(metaType, myName, hasSuper)}
-                ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
+                ${ConceptUtils.makeBasicProperties(metaType, myName, hasSuper)}
+                ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
 
-                ${makeConstructor(hasSuper, concept.implementedProperties())}
-                ${makeBasicMethods(hasSuper, metaType,false, false,false, false)}                
+                ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties())}
+                ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false,false, false)}    
+                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName)}             
             }
                        
             // Because of mobx we need to generate the initialisations outside of the class,
@@ -226,21 +219,19 @@ export class ConceptTemplate {
             new Set(
                 concept.interfaces.map(i => Names.interface(i.referred))
                     .concat((concept.base ? Names.concept(concept.base.referred) : null))
-                    .concat(concept.implementedParts().map(part => Names.classifier(part.type.referred)))
-                    .concat(concept.implementedReferences().map(part => Names.classifier(part.type.referred)))
+                    .concat(concept.implementedParts().map(part => Names.classifier(part.type)))
+                    .concat(concept.implementedReferences().map(part => Names.classifier(part.type)))
                     .concat(Names.metaType(concept.language))
-                    .concat(hasReferences ? (Names.PiElementReference) : null)
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )
         );
     }
 
-    // TODO weave the next method into the template for limited concepts
-    private createInstancePropValue(property: PiPropertyInstance): string {
+    private createInstancePropValue(property: PiInstanceProperty): string {
         const refProperty: PiProperty = property.property?.referred;
         if (!!refProperty && refProperty instanceof PiPrimitiveProperty) { // should always be the case
-            const type: PiClassifier = refProperty.type.referred;
+            const type: PiClassifier = refProperty.type;
             if (refProperty.isList) {
                 return `[ ${property.valueList.map(value =>
                     `${(type === PiPrimitiveType.string || type === PiPrimitiveType.identifier) ? `"${value}"` : `${value}` }`

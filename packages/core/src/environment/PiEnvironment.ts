@@ -5,7 +5,7 @@ import { PiTyper } from "../typer";
 import { PiStdlib } from "../stdlib";
 import { PiWriter } from "../writer";
 import { PiReader } from "../reader";
-import { PiModel } from "../language";
+import { PiModel } from "../ast";
 
 // tag::environment-interface[]
 export interface PiEnvironment {

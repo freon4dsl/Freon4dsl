@@ -1,0 +1,28 @@
+editor default
+
+PiScoperDef {
+[
+scoper
+
+    [?isnamespace { ${self.namespaces horizontal separator[, ]} }]
+
+    ${self.scopeConceptDefs vertical}
+]
+}
+
+ScopeConceptDef {
+[
+${self.conceptRef} {
+    [?${self.namespaceAdditions}]
+    [?${self.alternativeScope}]
+}
+]
+}
+
+PiNamespaceAddition {
+[namespace_addition = ${self.expressions horizontal separator[ + ]};]
+}
+
+PiAlternativeScope {
+[scope = ${self.expression};]
+}

@@ -11,6 +11,16 @@
                "name": "Height"
             }
          ]
+      },
+      {
+         "$typename": "Entity",
+         "name": "Office",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "city"
+            }
+         ]
       }
    ]
 }

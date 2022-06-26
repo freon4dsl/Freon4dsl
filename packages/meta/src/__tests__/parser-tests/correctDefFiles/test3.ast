@@ -1,0 +1,27 @@
+language test2
+model TEST {
+    unit: TEST_LISTS;
+}
+modelunit TEST_LISTS {
+    a: aa;
+    b: bb;
+    c: cc;
+    d: dd;
+    e: ee;
+    f: ff;
+    g: gg;
+    h: hh;
+}
+concept aa {partList: someConcept[];}
+concept bb {partList: someConcept[];}
+concept cc {partList: someConcept[];}
+concept dd {partList: someConcept[];}
+concept ee {reference refList: someConcept[];}
+concept ff {reference refList: someConcept[];}
+concept gg {reference refList: someConcept[];}
+concept hh {reference refList: someConcept[];}
+
+concept someConcept {
+    name: identifier;
+    prop: number;
+}

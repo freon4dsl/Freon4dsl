@@ -1,7 +1,9 @@
 import { action, makeObservable } from "mobx";
-import { PiLogger, PiUtils } from "./internal";
+import { PiUtils } from "./internal";
+import { PiLogger } from "../logging";
 import { Box, PiEditor } from "../editor";
-import { isPiBinaryExpression, PiBinaryExpression, PiElement, PiExpression, isPiExpression } from "../language";
+import { PiBinaryExpression, PiElement, PiExpression } from "../ast";
+import { isPiBinaryExpression, isPiExpression } from "../ast-utils";
 
 // reserved role names for expressions, use with care.
 export const PI_BINARY_EXPRESSION_LEFT = "PiBinaryExpression-left";
@@ -44,11 +46,11 @@ class BTree {
     isRightMostChild(exp: PiExpression): boolean {
         PiUtils.CHECK(!exp.piIsBinaryExpression(), "isRightMostChild expects a non-binary expression");
         let currentExp = exp;
-        let expContainer = currentExp.piContainer();
-        while (expContainer && isPiBinaryExpression(expContainer.container)) {
-            if (expContainer.container.piRight() === currentExp) {
-                currentExp = expContainer.container;
-                expContainer = expContainer.container.piContainer();
+        let ownerDescriptor = currentExp.piOwnerDescriptor();
+        while (ownerDescriptor && isPiBinaryExpression(ownerDescriptor.owner)) {
+            if (ownerDescriptor.owner.piRight() === currentExp) {
+                currentExp = ownerDescriptor.owner;
+                ownerDescriptor = ownerDescriptor.owner.piOwnerDescriptor();
             } else {
                 return false;
             }
@@ -63,11 +65,11 @@ class BTree {
     isLeftMostChild(exp: PiExpression): boolean {
         PiUtils.CHECK(!exp.piIsBinaryExpression(), "isLeftMostChild expects a non-binary expression");
         let currentExp = exp;
-        let expContainer = currentExp.piContainer();
-        while (expContainer && isPiBinaryExpression(expContainer.container)) {
-            if (expContainer.container.piLeft() === currentExp) {
-                currentExp = expContainer.container;
-                expContainer = expContainer.container.piContainer();
+        let ownerDescriptor = currentExp.piOwnerDescriptor();
+        while (ownerDescriptor && isPiBinaryExpression(ownerDescriptor.owner)) {
+            if (ownerDescriptor.owner.piLeft() === currentExp) {
+                currentExp = ownerDescriptor.owner;
+                ownerDescriptor = ownerDescriptor.owner.piOwnerDescriptor();
             } else {
                 return false;
             }
@@ -150,7 +152,7 @@ class BTree {
      * Works when `exp` has just been added to the tree.
      */
     balanceTree(binaryExp: PiBinaryExpression, editor: PiEditor) {
-        const expContainer = binaryExp.piContainer();
+        const ownerDescriptor = binaryExp.piOwnerDescriptor();
         const left = binaryExp.piLeft();
         if (isPiBinaryExpression(left)) {
             LOGGER.log("Rule 1: prio parent <= prio left");
@@ -158,7 +160,7 @@ class BTree {
                 const leftRight = left.piRight();
                 left.piSetRight(binaryExp);
                 binaryExp.piSetLeft(leftRight);
-                PiUtils.setContainer(left, expContainer, editor);
+                PiUtils.setContainer(left, ownerDescriptor, editor);
                 this.balanceTree(binaryExp, editor);
                 return;
             }
@@ -170,17 +172,17 @@ class BTree {
                 const rightLeft = right.piLeft();
                 right.piSetLeft(binaryExp);
                 binaryExp.piSetRight(rightLeft);
-                PiUtils.setContainer(right, expContainer, editor);
+                PiUtils.setContainer(right, ownerDescriptor, editor);
                 this.balanceTree(binaryExp, editor);
                 return;
             }
         }
-        if (expContainer && isPiBinaryExpression(expContainer.container)) {
-            const parent = expContainer.container;
+        if (ownerDescriptor && isPiBinaryExpression(ownerDescriptor.owner)) {
+            const parent = ownerDescriptor.owner;
             if (parent.piLeft() === binaryExp) {
                 LOGGER.log("Rule 3: exp is a left child");
                 if (binaryExp.piPriority() < parent.piPriority()) {
-                    const parentProContainer = parent.piContainer();
+                    const parentProContainer = parent.piOwnerDescriptor();
                     const expRight = binaryExp.piRight();
                     binaryExp.piSetRight(parent);
                     parent.piSetLeft(expRight);
@@ -192,7 +194,7 @@ class BTree {
                 PiUtils.CHECK(parent.piRight() === binaryExp, "should be the right child");
                 LOGGER.log("Rule 4: exp is a right child, parent is " + parent);
                 if (binaryExp.piPriority() <= parent.piPriority()) {
-                    const parentProContainer = parent.piContainer();
+                    const parentProContainer = parent.piOwnerDescriptor();
                     const expLeft = binaryExp.piLeft();
                     binaryExp.piSetLeft(parent);
                     parent.piSetRight(expLeft);

@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
-import { PiElement } from "../../language/PiElement";
+import { PiElement } from "../../ast";
 import { BehaviorExecutionResult } from "../../util/BehaviorUtils";
-import { PiLogger } from "../../util/PiLogging";
+import { PiLogger } from "../../logging";
 import { PiUtils } from "../../util/PiUtils";
 import { PiEditor } from "../PiEditor";
 import {
@@ -141,6 +141,7 @@ export class BoxFactory {
 
         runInAction( () => {
             // 2. Apply the other arguments in case they have changed
+            result.setLabel(getLabel);
             PiUtils.initializeObject(result, initializer);
         });
 

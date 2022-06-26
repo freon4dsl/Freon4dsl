@@ -1,19 +1,20 @@
 import { PiLanguage } from "../../metalanguage";
-import { Names, PROJECTITCORE, LangUtil, getBaseTypeAsString } from "../../../utils";
+import { Names, PROJECTITCORE, LangUtil, GenerationUtil } from "../../../utils";
 
 export class LanguageTemplate {
 
     generateLanguage(language: PiLanguage): string {
-        return `import { Language, Model, ModelUnit, Property, Concept, Interface } from "${PROJECTITCORE}";
+        return `import { Language, Model, ModelUnit, Property, Concept, Interface, ${Names.PiElementReference} } from "${PROJECTITCORE}";
         
             import { ${Names.classifier(language.modelConcept)}, ${language.units.map(unit =>
             `${Names.classifier(unit)}`).join(", ") }, ${language.concepts.map(concept =>
-                `${Names.concept(concept)}`).join(", ") }, ${Names.PiElementReference} } from "./internal";
+                `${Names.concept(concept)}`).join(", ")} } from "./internal";
     
             /**
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.
              */
              export function initializeLanguage() {
+                Language.getInstance().name = "${language.name}";
                 Language.getInstance().addModel(describe${Names.classifier(language.modelConcept)}());
                 ${language.units.map(concept =>
                     `Language.getInstance().addUnit(describe${Names.classifier(concept)}());`
@@ -32,34 +33,35 @@ export class LanguageTemplate {
             function describe${Names.classifier(language.modelConcept)}(): Model {
                     const model =             {
                         typeName: "${Names.classifier(language.modelConcept)}",
+                        isNamespace: true,
                         constructor: () => { return new ${Names.classifier(language.modelConcept)}(); },
                         properties: new Map< string, Property>(),
                     }
                     ${language.modelConcept.allPrimProperties().map(prop =>
                         `model.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${getBaseTypeAsString(prop)}",
+                                        type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "primitive"
+                                        propertyKind: "primitive"
                                     });`
                     ).join("\n")}
                     ${language.modelConcept.allParts().map(prop =>
                         `model.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${Names.classifier(prop.type.referred)}",
+                                        type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "part"
+                                        propertyKind: "part"
                                     });`
                     ).join("\n")}
                     ${language.modelConcept.allReferences().map(prop =>
                         `model.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${Names.classifier(prop.type.referred)}",
+                                        type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "reference"
+                                        propertyKind: "reference"
                                     });`
                        ).join("\n")}
                         return model;
@@ -70,6 +72,7 @@ export class LanguageTemplate {
                 function describe${Names.classifier(modelunit)}(): ModelUnit {
                     const modelunit =             {
                         typeName: "${Names.classifier(modelunit)}",
+                        isNamedElement: true,
                         fileExtension: "${modelunit.fileExtension}",
                         constructor: () => { return new ${Names.classifier(modelunit)}(); },
                         properties: new Map< string, Property>(),
@@ -77,28 +80,28 @@ export class LanguageTemplate {
                     ${modelunit.allPrimProperties().map(prop =>
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${getBaseTypeAsString(prop)}",
+                                        type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "primitive"
+                                        propertyKind: "primitive"
                                     });`
                     ).join("\n")}
                             ${modelunit.allParts().map(prop =>
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${Names.classifier(prop.type.referred)}",
+                                        type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "part"
+                                        propertyKind: "part"
                                     });`
                     ).join("\n")}
                             ${modelunit.allReferences().map(prop =>
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
-                                        type: "${Names.classifier(prop.type.referred)}",
+                                        type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
-                                        propertyType: "reference"
+                                        propertyKind: "reference"
                                     });`
                     ).join("\n")}
                         return modelunit;
@@ -112,6 +115,7 @@ export class LanguageTemplate {
                         typeName: "${Names.concept(concept)}",
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
+                        isNamedElement: ${concept.allPrimProperties().some(p => p.name === "name")},
                         trigger: "${Names.concept(concept)}",
                         constructor: () => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}()`}; },
                         properties: new Map< string, Property>(),
@@ -121,28 +125,28 @@ export class LanguageTemplate {
                     ${concept.allPrimProperties().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${getBaseTypeAsString(prop)}",
+                                type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "primitive"
+                                propertyKind: "primitive"
                             });`
                     ).join("\n")}
                     ${concept.allParts().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${Names.classifier(prop.type.referred)}",
+                                type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "part"
+                                propertyKind: "part"
                             });`
                     ).join("\n")}
                     ${concept.allReferences().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${Names.classifier(prop.type.referred)}",
+                                type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "reference"
+                                propertyKind: "reference"
                             });`
                     ).join("\n")}
                 return concept;
@@ -154,34 +158,35 @@ export class LanguageTemplate {
                     const intface =             {
                         typeName: "${Names.interface(intface)}",
                         isPublic: ${intface.isPublic},
+                        isNamedElement: ${intface.allPrimProperties().some(p => p.name === "name")},
                         properties: new Map< string, Property>(),
                         subConceptNames: [${LangUtil.subConcepts(intface).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
                     }
                 ${intface.allPrimProperties().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${getBaseTypeAsString(prop)}",
+                                type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "primitive"
+                                propertyKind: "primitive"
                             });`
                 ).join("\n")}
                 ${intface.allParts().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${Names.classifier(prop.type.referred)}",
+                                type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "part"
+                                propertyKind: "part"
                             });`
                 ).join("\n")}
                 ${intface.allReferences().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${Names.classifier(prop.type.referred)}",
+                                type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
-                                propertyType: "reference"
+                                propertyKind: "reference"
                             });`
                 ).join("\n")}
                 return intface;

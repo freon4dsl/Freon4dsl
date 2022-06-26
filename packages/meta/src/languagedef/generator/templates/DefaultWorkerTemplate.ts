@@ -1,4 +1,4 @@
-import { Names, LANGUAGE_GEN_FOLDER, createImports } from "../../../utils";
+import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils";
 import { PiLanguage } from "../../metalanguage";
 
 export class DefaultWorkerTemplate {
@@ -17,7 +17,7 @@ export class DefaultWorkerTemplate {
 
         // the template starts here
         return `
-        import { ${createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}"; 
+        import { ${GenerationUtil.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}"; 
         import { ${workerInterfaceName} } from "./${Names.workerInterface(language)}";     
 
         /**

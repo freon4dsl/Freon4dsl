@@ -1,4 +1,4 @@
-import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoEntity, DemoFunction, DemoModel } from "../language/gen";
 import { GenericModelSerializer } from "@projectit/core";
 import { JsonModelCreator } from "./JsonModelCreator";
@@ -6,7 +6,6 @@ import { JsonModelCreator } from "./JsonModelCreator";
 describe("Checking Serializer on Demo", () => {
     DemoEnvironment.getInstance();
     let initialModel: DemoModel = new JsonModelCreator().model;
-    // let initialModel: DemoModel = new DemoModelCreator().model;
 
     beforeEach(done => {
         done();
@@ -29,7 +28,7 @@ describe("Checking Serializer on Demo", () => {
 
         expect(inModel.entities.length).toBe(2);
         const e1: DemoEntity = inModel.entities[0];
-        // expect(e1.container).toBe(inModel);
+        // expect(e1.owner).toBe(inModel);
         expect(e1.name).not.toBeNull();
         expect(e1.name).toBe("Person");
         expect(e1.functions.length).toBe(0);
@@ -55,7 +54,7 @@ describe("Checking Serializer on Demo", () => {
 
             expect(inModel.entities.length).toBe(0);
             // const e1: DemoEntity = inModel.entities[0];
-            // // expect(e1.container).toBe(inModel);
+            // // expect(e1.owner).toBe(inModel);
             // expect(e1.name).not.toBeNull();
             // expect(e1.name).toBe("Person");
             // // expect(e1.functions.length).toBe(1);

@@ -1,0 +1,18 @@
+editor First
+
+PiEditorDef {
+    [
+    editor ${name} for language ${languageName}
+    ${conceptEditors vertical}
+    ]
+}
+
+PiEditConcept {
+    [
+    ${concept} {
+    ${projection}
+    [?trigger ${trigger}]
+    [?symbol ${operator}]
+    ]
+}
+

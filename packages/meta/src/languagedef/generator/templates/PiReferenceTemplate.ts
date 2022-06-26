@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
+import { Names, PROJECTITCORE, CONFIGURATION_GEN_FOLDER } from "../../../utils";
 import { PiLanguage } from "../../metalanguage";
 
 export class PiReferenceTemplate {
@@ -8,7 +8,7 @@ export class PiReferenceTemplate {
         import { MobxModelElementImpl } from "${PROJECTITCORE}";
         import { computed, observable, makeObservable } from "mobx";
         import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
-        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
+        import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         
         /**
          * Class ${Names.PiElementReference} provides the implementation for a (named) reference in ProjectIt.
@@ -104,8 +104,8 @@ export class PiReferenceTemplate {
                     return this._PI_referred;
                 } else {
                     return ${Names.environment(language)}.getInstance().scoper.resolvePathName(
-                        this.piContainer().container, 
-                        this.piContainer().propertyName, 
+                        this.piOwnerDescriptor().owner, 
+                        this.piOwnerDescriptor().propertyName, 
                         this._PI_pathname, 
                         this.typeName
                     ) as T;
@@ -117,6 +117,14 @@ export class PiReferenceTemplate {
                     this._PI_pathname.push(referredElement.name);
                 }
                 this._PI_referred = referredElement;
+            }
+            
+            /**
+             * Returns true if this reference has the same name as 'toBeMatched'.
+             * @param toBeMatched
+             */
+            match(toBeMatched: Partial<PiElementReference<T>>): boolean {
+                return toBeMatched.name === this.name;
             }
         }`;
     }

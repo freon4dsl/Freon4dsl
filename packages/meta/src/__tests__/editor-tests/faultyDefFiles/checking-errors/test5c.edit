@@ -1,0 +1,10 @@
+editor group2
+
+CC {[
+    ${CCprop7: group1}
+    ${CCprop8: group2}
+    ${CCprop11: group67}
+    ${CCprop12: default}
+    ]}
+
+BB {[ something]}

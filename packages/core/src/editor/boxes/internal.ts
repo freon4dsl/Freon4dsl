@@ -8,6 +8,7 @@
  */
 
 export * from "./Box";
+export * from "./EmptyLineBox";
 
 // the following classes directly inherit from Box
 export * from "./AbstractChoiceBox";

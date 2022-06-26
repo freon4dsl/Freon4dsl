@@ -1,0 +1,31 @@
+editor default
+
+AAAAAA {[
+    // properties with concept as type
+    ${AAprop7 table }
+${AAprop8 table }
+  ${AAprop9 table }
+    ${AAprop10 table }
+    // properties with interface as type
+    ${AAprop11 table }
+    ${AAprop12 table }
+    ${AAprop13 table }
+    ${AAprop14 table }
+] }
+//    // the possibilities for primitive properties
+//    AAprop1: string;
+//    AAprop2: string[];
+//    AAprop3: number;
+//    AAprop4: number[];
+//    AAprop5: boolean;
+//    AAprop6: boolean[];
+//    // properties with concept as type
+//    AAprop7: BB;
+//    AAprop8: BB[];
+//    reference AAprop9: CC;
+//    reference AAprop10: CC[];
+//    // properties with interface as type
+//    AAprop11: DD;
+//    AAprop12: DD[];
+//    reference AAprop13: FF;
+//    reference AAprop14: FF[];

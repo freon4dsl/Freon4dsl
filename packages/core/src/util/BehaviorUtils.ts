@@ -1,8 +1,6 @@
 import { runInAction } from "mobx";
 import { isRegExp, isString, Box, PiEditor, PiPostAction, PiAction } from "../editor";
-import { PiElement } from "../language/index";
-import { Language } from "../storage/Language";
-import { LEFT_MOST, PiLogger } from "./internal";
+import { PiLogger } from "../logging";
 
 const LOGGER = new PiLogger("BehaviorUtils");
 
@@ -74,10 +72,8 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                     LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + action.referenceShortcut + "]");
                     let postAction: PiPostAction;
                     runInAction( () => {
-                        console.log("============== START")
                         const command = action.command(box);
                         postAction = command.execute(box, label, editor);
-                        console.log("============== END")
                     });
                     postAction();
                     return BehaviorExecutionResult.EXECUTED;

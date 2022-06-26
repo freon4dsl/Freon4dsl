@@ -1,4 +1,5 @@
-import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, PiElementReference, DemoFunction } from "../language/gen";
+import { PiElementReference } from "@projectit/core";
+import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, DemoFunction } from "../language/gen";
 
 export class JsonModelCreator {
     model: DemoModel;

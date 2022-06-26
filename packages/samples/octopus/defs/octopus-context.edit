@@ -1,0 +1,23 @@
+editor default
+
+referenceSeparator [::]
+
+OclPart {
+        [
+        package ${self.name}
+            ${self.constraints vertical }
+        endpackage
+        ]
+}
+
+OclContext {
+    [
+    context ${self.owningModelelement}
+    ${self.usageType}: [? ${self.definedOperation} =][? ${self.definedAttribute} =]${self.expression}
+    ]
+
+}
+
+ModelElementReference {
+    [ ${surroundingClassifier}[?::${feature}]]
+}

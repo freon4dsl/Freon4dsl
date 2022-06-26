@@ -1,0 +1,14 @@
+editor default
+
+BooleanLiteral {
+    [${self.value}]
+}
+
+NumberLiteral {
+    [${self.value}]
+}
+
+StringLiteral {
+    [${self.value}]
+}
+

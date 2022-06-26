@@ -5,6 +5,13 @@
       {
          "$typename": "Entity",
          "name": "belastingplichtige",
+         "construc": {
+            "$typename": "Method",
+            "name": "CONSTRUCT",
+            "body": null,
+            "parameters": [],
+            "declaredType": null
+         },
          "attributes": [
             {
                "$typename": "Attribute",
@@ -24,7 +31,7 @@
             {
                "$typename": "Attribute",
                "name": "attr4",
-               "declaredType": "entity1"
+               "declaredType": "entityNoAttrs"
             },
             {
                "$typename": "Attribute",
@@ -64,11 +71,13 @@
                "declaredType": "Integer"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": null
       },
       {
          "$typename": "Entity",
          "name": "entityNoAttrs",
+         "construc": null,
          "attributes": [],
          "methods": [
             {
@@ -107,11 +116,13 @@
                "declaredType": "Boolean"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": null
       },
       {
          "$typename": "Entity",
          "name": "entityNoMeths",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
@@ -130,6 +141,7 @@
             }
          ],
          "methods": [],
+         "listOfReferences": [],
          "baseEntity": null
       }
    ],

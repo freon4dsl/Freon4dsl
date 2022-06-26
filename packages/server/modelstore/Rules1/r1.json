@@ -4,7 +4,7 @@
    "Rules": [
       {
          "$typename": "CheckingRule",
-         "name": "r1",
+         "name": "r21",
          "description": "a rule",
          "check": {
             "$typename": "HasNoValue",
@@ -13,10 +13,11 @@
       },
       {
          "$typename": "IfThenElseRule",
-         "name": "fefewf",
-         "description": "fewfwe",
+         "name": "checkSomeStuff",
+         "description": "A rule",
          "IfStatement": {
             "$typename": "IfStatement",
+            "name": "",
             "Condition": {
                "$typename": "And",
                "left": {
@@ -25,17 +26,26 @@
                },
                "right": {
                   "$typename": "CheckingRuleCall",
-                  "rule": "r1"
+                  "rule": "r21"
                }
             },
             "ThenStatements": [
                {
                   "$typename": "SetValue",
                   "value": {
-                     "$typename": "HasNoValue",
-                     "attribute": "Height"
+                     "$typename": "IsEqualTo",
+                     "left": null,
+                     "right": {
+                        "$typename": "HasNoValue",
+                        "attribute": "Height"
+                     }
                   },
                   "attribute": "Name"
+               },
+               {
+                  "$typename": "SetValue",
+                  "value": null,
+                  "attribute": null
                }
             ],
             "ElseStatements": [
@@ -59,10 +69,6 @@
          }
       }
    ],
-   "imports": [
-      "House",
-      "Entities",
-      "AAA"
-   ],
+   "imports": "House",
    "forEntity": "Building"
 }

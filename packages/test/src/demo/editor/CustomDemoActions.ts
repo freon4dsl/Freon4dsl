@@ -10,7 +10,6 @@ import { PiCreateBinaryExpressionAction, PiCustomAction, PiActions } from "@proj
  * (2) if a creator/behavior based on the editor definition is present, this is used,
  * (3) if neither (1) nor (2) yields a result, the default is used.
  */
-
 export class CustomDemoActions implements PiActions {
     binaryExpressionActions: PiCreateBinaryExpressionAction[] = MANUAL_BINARY_EXPRESSION_ACTIONS;
     customActions: PiCustomAction[] = MANUAL_CUSTOM_ACTIONS;

@@ -13,7 +13,7 @@ import {
     PiLimitedConcept,
     PiPrimitiveProperty,
     PiProperty,
-    PiPropertyInstance,
+    PiInstanceProperty,
     PiClassifier,
     PiLangElement
 } from "./internal";
@@ -33,6 +33,6 @@ export type PiLangEveryConcept =
     | PiConceptProperty
     | PiPrimitiveProperty
     | PiInstance
-    | PiPropertyInstance
+    | PiInstanceProperty
     | PiFunction
     | PiParameter;

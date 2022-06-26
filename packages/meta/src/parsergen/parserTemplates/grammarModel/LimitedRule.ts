@@ -52,14 +52,14 @@ export class LimitedRule extends GrammarRule {
             return `
                 ${ParserGenUtil.makeComment(this.toGrammar())}
                 public transform${this.ruleName}(branch: SPPTBranch): ${Names.classifier(this.concept)} {
-                    let choice = (branch.matchedText).trim();
+                    let choice = branch.nonSkipMatchedText;
                     ${ifStat}
                 }`;
         } else { // make a 'normal' reference method
             return `
                     ${ParserGenUtil.makeComment(this.toGrammar())}
                     public transform${this.ruleName}(branch: SPPTBranch): string {
-                        return branch.matchedText;
+                        return branch.nonSkipMatchedText;
                     }`;
         }
     }

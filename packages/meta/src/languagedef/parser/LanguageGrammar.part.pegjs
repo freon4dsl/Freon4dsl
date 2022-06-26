@@ -15,7 +15,7 @@ Language_Definition
 abstractKey     = "abstract" rws { return true; }
 modelKey        = "model" rws { return true; }
 unitKey         = "modelunit" rws { return true; }
-publicKey       = "public" rws { return true; }
+privateKey      = "private" rws { return true; }
 limitedKey      = "limited" rws {return true; }
 interfaceKey    = "interface" rws
 binaryKey       = "binary" rws { return true; }
@@ -49,10 +49,9 @@ unit = isUnit:unitKey name:var
         });
     }
 
-concept = isPublic:publicKey? abs:abstractKey? conceptKey name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
+concept = abs:abstractKey? conceptKey name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
     {
         return create.createConcept({
-            "isPublic": (!!isPublic),
             "isAbstract": (!!abs),
             "name": name,
             "base": base,
@@ -62,10 +61,10 @@ concept = isPublic:publicKey? abs:abstractKey? conceptKey name:var rws base:conc
         });
     }
 
-limited = isPublic:publicKey? limitedKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* instances:instance* curly_end
+limited = abs:abstractKey? limitedKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* instances:instance* curly_end
     {
         return create.createLimitedConcept({
-            "isPublic": (!!isPublic),
+            "isAbstract": (!!abs),
             "name": name,
             "base": base,
             "interfaces": implementedInterfaces,
@@ -75,10 +74,9 @@ limited = isPublic:publicKey? limitedKey ws name:var rws base:conceptbase? ws im
         });
     }
 
-interface = isPublic:publicKey? interfaceKey ws name:var rws base:interfacebase? curly_begin props:property* curly_end
+interface = interfaceKey ws name:var rws base:interfacebase? curly_begin props:property* curly_end
     {
         return create.createInterface({
-            "isPublic": (!!isPublic),
             "name": name,
             "base": base,
             "properties": props,
@@ -86,7 +84,7 @@ interface = isPublic:publicKey? interfaceKey ws name:var rws base:interfacebase?
         });
     }
 
-expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
+expression = abs:abstractKey? binary:binaryKey? expressionKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
                 curly_begin
                     props:property*
                     priority:priority?
@@ -94,7 +92,6 @@ expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKe
     {
         if (!!binary) {
             return create.createBinaryExpressionConcept({
-                "isPublic": (!!isPublic),
                 "isAbstract": (!!abs),
                 "name": name,
                 "base": base,
@@ -105,7 +102,6 @@ expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKe
             });
         } else {
             return create.createExpressionConcept({
-                "isPublic": (!!isPublic),
                 "isAbstract": (!!abs),
                 "name": name,
                 "base": base,
@@ -119,25 +115,24 @@ expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKe
 property = part:partProperty      { return part; }
          / ref:referenceProperty  { return ref; }
 
-partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? colon_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
+partProperty = isPrivate:privateKey? name:var ws isOptional:optionalKey? colon_separator ws type:classifierReference isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
     {
-        let ref =  create.createClassifierReference({"name": type, "location": location()});
         return create.createPartOrPrimProperty({
-            "isPublic": (!!isPublic),
+            "isPublic": (isPrivate?false:true),
             "name": name,
             "isOptional": (isOptional?true:false),
             "isList": (isList?true:false),
             "initialValue": initialvalue,
-            "type": ref,
+            "typeReference": type,
             "location": location()
         });
     }
 
-referenceProperty = isPublic:publicKey? referenceKey ws name:var ws isOptional:optionalKey? colon_separator ws type:classifierReference isList:"[]"? semicolon_separator
+referenceProperty = isPrivate:privateKey? referenceKey ws name:var ws isOptional:optionalKey? colon_separator ws type:classifierReference isList:"[]"? semicolon_separator
     { return create.createReferenceProperty({
-        "isPublic": (!!isPublic),
+        "isPublic": (isPrivate?false:true),
         "name": name,
-        "type": type,
+        "typeReference": type,
         "isOptional": (isOptional?true:false),
         "isList": (isList?true:false),
         "location": location()

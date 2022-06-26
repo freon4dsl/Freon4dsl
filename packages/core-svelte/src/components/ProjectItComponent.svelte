@@ -122,11 +122,14 @@
         height: 100%;
         width: 100%;
         overflow-x: auto;
-        font-size: var(--theme-fonts-size_editor);
-        font-style: var(--theme-fonts-style_editor);
-        font-weight: var(--theme-fonts-weight_editor);
-        font-family: var(--theme-fonts-family_editor);
-        color: var(--theme-colors-text_editor);
-        background-color: var(--theme-colors-bg_editor);
+        font-size: var(--freon-editor-component-font-size, 14px);
+        font-style: var(--freon-editor-component-font-style, italic);
+        font-weight: var(--freon-editor-component-font-weight, normal);
+        font-family: var(--freon-editor-component-font-family, "Arial");
+        color: var(--freon-editor-component-color, darkblue);
+        background-color: var(--freon-editor-component-background-color, white);
+        margin: var(--freon-editor-component-margin, 1px);
+        padding: var(--freon-editor-component-padding, 1px);
+
     }
 </style>

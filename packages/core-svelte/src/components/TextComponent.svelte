@@ -26,13 +26,10 @@
         isPrintable,
         AliasBox,
         KEY_ESCAPE,
-        styleToCSS,
-        conceptStyle,
         SelectBox,
         PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { choiceBox } from "./AliasComponent.svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
     const LOGGER = new PiLogger("TextComponent");
@@ -349,7 +346,7 @@
     };
 
 
-    let textStyle: string = "";
+    let boxType: string = "";
 
     autorun(() => {
         AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "] isEditing [" + isEditing + "]");
@@ -361,13 +358,11 @@
         // }
         // textStyle = ":before {" +  styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style)) + "}";
         // TODO check these style calcs for each situation
-        const boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
+        boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
         // const boxStyle = (textBox.parent instanceof AliasBox ? textBox.parent.style : (textBox.parent instanceof SelectBox ? textBox.parent.style : textBox.style));
-        textStyle = styleToCSS(conceptStyle(editor.style, editor.theme, textBox.element.piLanguageConcept(), boxType, textBox.style));
         // if (textBox.getText() === "appel") {
-        //     textStyle += "--theme-colors-bg_text_box: lightgrey;"
+        //     textStyle += "--freon-colors-bg_text_box: lightgrey;"
         // }
-
         textBox.setFocus = setFocus;
     });
 
@@ -380,8 +375,7 @@
 
 </script>
 
-<span class={"text"}
-      style="{textStyle}"
+<span class="{textBox.role} text-box-{boxType} text"
       tabindex="0"
       data-placeholdertext={placeholder}
       on:keypress={onKeyPress}
@@ -398,13 +392,14 @@
 <style>
     .text:empty:before {
         content: attr(data-placeholdertext);
-        color: inherit;
-        background-color: inherit;
-        font-family: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        padding: inherit;
-        margin: inherit;
+        color: var(--freon-text-component-color, blue);
+        background-color: var(--freon-text-component-background-color, inherit);
+        font-family: var(--freon-text-component-font-family, "Arial");
+        font-size: var(--freon-text-component-font-size, 14pt);
+        font-weight: var(--freon-text-component-font-weight, inherit);
+        font-style: var(--freon-text-component-font-style, inherit);
+        padding: var(--freon-text-component-padding, 1px);
+        margin: var(--freon-text-component-margin, 1px);
         display: inherit;
         white-space: inherit;
         border: inherit;
@@ -412,10 +407,15 @@
     }
 
     .text {
-        /*background-color: var(--theme-colors-bg_text_box);*/
         content: attr(data-placeholdertext);
-        color: var(--theme-colors-color_text_box);
-        padding: 3px;
+        color: var(--freon-text-component-color, blue);
+        background-color: var(--freon-text-component-background-color, inherit);
+        font-family: var(--freon-text-component-font-family, "Arial");
+        font-size: var(--freon-text-component-font-size, 14pt);
+        font-weight: var(--freon-text-component-font-weight, inherit);
+        font-style: var(--freon-text-component-font-style, inherit);
+        padding: var(--freon-text-component-padding, 1px);
+        margin: var(--freon-text-component-margin, 1px);
         white-space: normal;
         display: inline-block;
     }

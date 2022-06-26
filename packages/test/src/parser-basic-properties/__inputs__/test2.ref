@@ -1,28 +1,31 @@
-RefsTest myName
-	directRefs WithDirectRefs
-                  	ref someName::x34565
+RefsTest myName {
+	directRefs WithDirectRefs {
+                  	ref someName.x34565
                   	optRef nameA
                   	refList
-                        name1::d45fgh
+                        name1.d45fgh
                         name2
                         name3
                         name4
                     optRefList nameZ
-                    nameY::sdfsgargh::HERA
+                    nameY.sdfsgargh.HERA
                     nameX
-    indirectRefs WithSubSubRefs 
-                 	part WithDirectRefs
+    }
+    indirectRefs WithSubSubRefs {
+                 	part WithDirectRefs {
                                            	ref someName
                                            	optRef nameA
                                            	refList
-                                                 name1::WREQWR::gag
+                                                 name1.WREQWR.gag
                                                  name2
-                                                 name3::fghy
+                                                 name3.fghy
                                                  name4
-                                             optRefList nameZ
-                                             nameY::h56
-                                             nameX
-                 	optPart WithDirectRefs
+                                             optRefList
+                                                 nameZ
+                                                 nameY.h56
+                                                 nameX
+                 	    }
+                 	optPart WithDirectRefs {
                                               	ref someName
                                               	optRef nameA
                                               	refList
@@ -33,19 +36,9 @@ RefsTest myName
                                                 optRefList nameZ
                                                 nameY
                                                 nameX
-                            WithDirectRefs
-                                              	ref someName
-                                              	optRef nameA
-                                              	refList
-                                                    name1
-                                                    name2
-                                                    name3
-                                                    name4
-                                                optRefList nameZ
-                                                nameY
-                                                nameX
-                 	partList 
-                        WithDirectRefs
+                            }
+                 	partList
+                        WithDirectRefs {
                                             ref someName
                                             optRef nameA
                                             refList
@@ -56,7 +49,8 @@ RefsTest myName
                                             optRefList nameZ
                                             nameY
                                             nameX
-                        WithDirectRefs
+                        }
+                        WithDirectRefs {
                                             ref someName
                                             optRef nameA
                                             refList
@@ -67,8 +61,9 @@ RefsTest myName
                                             optRefList nameZ
                                             nameY
                                             nameX
-                 	optList 
-                        WithDirectRefs
+                 	    }
+                 	optList
+                        WithDirectRefs {
                                             ref someName
                                             optRef nameA
                                             refList
@@ -79,8 +74,10 @@ RefsTest myName
                                             optRefList nameZ
                                             nameY
                                             nameX
+                        }
+    }
 withSeparator
-                        WithDirectRefs
+                        WithDirectRefs {
                                             ref someName
                                             optRef nameA
                                             refList
@@ -91,8 +88,8 @@ withSeparator
                                             optRefList nameZ
                                             nameY
                                             nameX
-                                            !!
-                        WithDirectRefs
+                        } !!
+                        WithDirectRefs {
                                             ref someName
                                             optRef nameA
                                             refList
@@ -103,3 +100,5 @@ withSeparator
                                             optRefList nameZ
                                             nameY
                                             nameX
+                        }
+}

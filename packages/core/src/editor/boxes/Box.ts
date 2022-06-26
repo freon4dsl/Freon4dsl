@@ -1,8 +1,8 @@
 import { observable, makeObservable } from "mobx";
 
-import { PiElement } from "../../language";
-import { PiLogger, PiUtils } from "../../util";
-import { PiStyle } from "../PiStyle";
+import { PiElement } from "../../ast";
+import { PiUtils } from "../../util";
+import { PiLogger } from "../../logging";
 
 const LOGGER = new PiLogger("Box");
 
@@ -12,7 +12,8 @@ export abstract class Box {
     role: string = "";
     roleNumber: number = undefined;
     element: PiElement = null;
-    style: PiStyle = null;
+    cssClass: string = "";
+    cssStyle: string = "";
     selectable: boolean = true;
     parent: Box = null;
 
@@ -32,7 +33,8 @@ export abstract class Box {
             role: observable,
             roleNumber: observable,
             element: observable,
-            style: observable
+            cssStyle: observable,
+            cssClass: observable
             // actualHeight: observable,
             // actualWidth: observable,
             // actualX: observable,

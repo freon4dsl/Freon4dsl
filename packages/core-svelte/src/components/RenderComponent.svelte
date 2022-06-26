@@ -1,5 +1,4 @@
 <script lang="ts">
-    import ChoiceComponent from "./ChoiceComponent.svelte";
     import AliasComponent from "./AliasComponent.svelte";
     import { AUTO_LOGGER } from "./ChangeNotifier";
     import GridComponent from "./GridComponent.svelte";
@@ -11,6 +10,7 @@
     import LabelComponent from "./LabelComponent.svelte";
     import ListComponent from "./ListComponent.svelte";
     import OptionalComponent from "./OptionalComponent.svelte";
+    import EmptyLineComponent from "./EmptyLineComponent.svelte";
     import { afterUpdate, beforeUpdate, onDestroy } from "svelte";
 
     import type { Box } from "@projectit/core";
@@ -25,6 +25,7 @@
         isVerticalBox,
         isHorizontalBox,
         isSvgBox,
+        isEmptyLineBox,
         LabelBox, PiEditor, PiLogger
     } from "@projectit/core";
 
@@ -94,6 +95,8 @@
         <SelectableComponent box={showBox} editor={editor}>
             <OptionalComponent optionalBox={showBox} editor={editor}/>
         </SelectableComponent>
+    {:else if isEmptyLineBox(showBox) }
+        <EmptyLineComponent box={showBox} editor={editor}/>
     {:else}
         <SelectableComponent box={UNKNOWN} editor={editor}>
             <LabelComponent label={UNKNOWN} editor={editor}/>

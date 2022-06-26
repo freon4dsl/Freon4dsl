@@ -1,6 +1,5 @@
-
-import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, READER_GEN_FOLDER } from "../../../utils";
+import { PiLanguage } from "../../../languagedef/metalanguage";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 import {
     internalTransformBranch,
     internalTransformLeaf,
@@ -8,15 +7,16 @@ import {
     internalTransformNode,
     internalTransformRefList
 } from "../ParserGenUtil";
-import { GrammarRule } from "./GrammarRule";
-import { refRuleName, refSeparator } from "./GrammarUtils";
-import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
+import { refRuleName } from "./GrammarUtils";
 import { GrammarPart } from "./GrammarPart";
 
 export class GrammarModel {
-    language: PiLanguage = null;
-    parts: GrammarPart[] = [];
-    // private allRuleNames: string[] = [];
+    // these four properties are set by the GrammarGenerator
+    public language: PiLanguage = null;
+    public parts: GrammarPart[] = [];
+    public trueValue: string = 'true';
+    public falseValue: string = 'false';
+    public refSeparator: string = "."; // default reference separator
 
     toGrammar() : string {
         // there is no prettier for the grammar string, therefore we take indentation and
@@ -32,7 +32,7 @@ grammar ${Names.grammar(this.language)} {
                 
 ${this.grammarContent()}   
 
-__pi_reference = [ identifier / '${refSeparator}' ]+ ;
+${refRuleName} = [ identifier / '${this.refSeparator}' ]+ ;
         
 // white space and comments
 skip WHITE_SPACE = "\\\\s+" ;
@@ -44,7 +44,7 @@ leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf stringLiteral       = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
 leaf numberLiteral       = "[0-9]+";
-leaf booleanLiteral      = 'false' | 'true';
+leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             
 }\`; // end of grammar`;
     }
@@ -86,10 +86,9 @@ leaf booleanLiteral      = 'false' | 'true';
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
         import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
         import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
-        import { ${Names.PiNamedElement} } from "@projectit/core";
+        import { ${Names.PiNamedElement}, PiParseLocation, PiElementReference } from "@projectit/core";
         import { ${this.parts.map(part => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from ".";
-        import { PiElementReference } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        
+         
         /**
         *   Class ${className} is the main syntax analyser.
         *   The actual work is being done by its parts, one for each model unit,
@@ -97,6 +96,7 @@ leaf booleanLiteral      = 'false' | 'true';
         *   
         */
         export class ${className} implements SyntaxAnalyser {
+            sourceName: string = "";
             locationMap: any;
             ${this.parts.map(part => `private ${this.getPartAnalyserName(part)}: ${Names.unitAnalyser(this.language, part.unit)} = new ${Names.unitAnalyser(this.language, part.unit)}(this)`).join(";\n")}
         
@@ -113,31 +113,36 @@ leaf booleanLiteral      = 'false' | 'true';
             }
         
             public ${internalTransformNode}(node: SPPTNode): any {
-                try {
-                    if (node.isLeaf) {
-                        return this.${internalTransformLeaf}(node);
-                    } else if (node.isBranch) {
-                        return this.${internalTransformBranch}(node as SPPTBranch);
+                if (!!node) {
+                    try {
+                        if (node.isLeaf) {
+                            return this.${internalTransformLeaf}(node);
+                        } else if (node.isBranch) {
+                            return this.${internalTransformBranch}(node as SPPTBranch);
+                        }
+                    } catch (e) {
+                        if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${className}")) {
+                            throw e;
+                        } else {
+                            // add more info to the error message 
+                            throw new Error(\`Syntax error in "\${this.sourceName} (line: \${node.location.line}, column: \${node.location.column})": \${e.message}\`);
+                        }
+                        // console.log(e.message + e.stack);
                     }
-                } catch (e) {
-                    if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${className}")) {
-                        throw e;
-                    } else {
-                        // add more info to the error message 
-                        throw new Error(\`Syntax error in "\${node?.matchedText}": \${e.message}\`);
-                    }
+                } else {
+                    return null;
                 }
             }
             
             private ${internalTransformLeaf}(node: SPPTNode): any {
-                let tmp = ((node as SPPTLeaf)?.matchedText).trim();
+                let tmp = ((node as SPPTLeaf)?.nonSkipMatchedText).trim();
                 if (tmp.length > 0) {
                     if (tmp.startsWith('"')) { // stringLiteral, strip the surrounding quotes
                         tmp = tmp.slice(1, tmp.length - 1);
                         return tmp;
-                    } else if (tmp == "false") { // booleanLiteral
+                    } else if (tmp == "${this.falseValue}") { // booleanLiteral
                         return false;
-                    } else if (tmp == "true") { // booleanLiteral
+                    } else if (tmp == "${this.trueValue}") { // booleanLiteral
                         return true;
                     } else if (Number.isInteger(parseInt(tmp))) { // numberLiteral
                         return parseInt(tmp);
@@ -160,13 +165,14 @@ leaf booleanLiteral      = 'false' | 'true';
              * Generic method to get the children of a branch. Throws an error if no children can be found.
              */
             public getChildren(branch: SPPTBranch): any {
-                let children: any = null;
-                try {
-                    return branch.nonSkipChildren.toArray();
-                } catch (e) {
-                    throw new Error(\`Cannot follow branch: \${e.message} (\${branch.matchedText})\`);
+                if (!!branch && !!branch.nonSkipChildren) {
+                    try {
+                        return branch.nonSkipChildren.toArray();
+                    } catch (e) {
+                        throw new Error(\`Cannot follow branch: \${e.message} (\${branch.matchedText.trimEnd()})\`);
+                    }
                 }
-                return children;
+                return null;
             }
 
             /**
@@ -179,11 +185,11 @@ leaf booleanLiteral      = 'false' | 'true';
                 while (!stop) {
                     let nextOne: any = null;
                     try {
-                        nextOne = group.nonSkipChildren.toArray()[0]; 
+                        nextOne = group.nonSkipChildren?.toArray()[0]; 
                     } catch (e) {
                         throw new Error(\`Cannot follow group: \${e.message} (\${group.matchedText})\`);
                     }
-                    if (!nextOne.name.includes("multi") && !nextOne.name.includes("group")) {
+                    if (!nextOne || (!nextOne.name.includes("multi") && !nextOne.name.includes("group"))) {
                         stop = true; // found a branch with actual content, return its parent!
                     } else {
                         group = nextOne;
@@ -192,10 +198,10 @@ leaf booleanLiteral      = 'false' | 'true';
                 return group;
             }
               
-            public transform__pi_reference(branch: SPPTBranch){
-                if (branch.name.includes("multi") || branch.name.includes("List")) {
-                    return this.${internalTransformList}<string>(branch, "${refSeparator}");
-                } else {
+            public transform${refRuleName}(branch: SPPTBranch){
+                if (branch.name.includes("multi") || branch.name.includes("List")) { // its a path name
+                    return this.${internalTransformList}<string>(branch, "${this.refSeparator}");
+                } else { // its a single name
                     return this.${internalTransformLeaf}(branch);
                 }
             }
@@ -206,10 +212,16 @@ leaf booleanLiteral      = 'false' | 'true';
              */
             public piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
                 let referred: string | string[] | T = this.${internalTransformNode}(branch);
+                if (this.getChildren(branch)?.length > 1) {
+                    // its a path name
+                    referred = this.transformSharedPackedParseTreeList<string>(branch, '${this.refSeparator}');
+                }
                 if (referred == null || referred == undefined ) {
-                    throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
+                    // throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
+                    return null;
                 } else if (typeof referred === "string" && (referred as string).length == 0) {
-                    throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
+                    // throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
+                    return null;
                 } else {
                     return PiElementReference.create<T>(referred, typeName);
                 }
@@ -247,7 +259,7 @@ leaf booleanLiteral      = 'false' | 'true';
                 if (!!children) {
                     for (const child of children) {
                         let refName: any = this.${internalTransformNode}(child);
-                        if (refName !== null && refName !== undefined && refName.length > 0) {
+                        if (refName !== null && refName !== undefined) {
                             if (separator === null || separator === undefined) {
                                 result.push(PiElementReference.create<T>(refName, typeName));
                             } else {
@@ -259,6 +271,15 @@ leaf booleanLiteral      = 'false' | 'true';
                     }
                 }
                 return result;
+            }
+            
+            public location(branch: SPPTBranch): PiParseLocation {
+                const location = PiParseLocation.create({
+                    filename: this.sourceName,
+                    line: branch.location.line,
+                    column: branch.location.column
+                });
+                return location;
             }
         }`;
         // end Template

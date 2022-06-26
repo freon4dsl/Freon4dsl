@@ -5,11 +5,12 @@
       {
          "$typename": "Entity",
          "name": "Aasss-p",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
                "name": "qwe",
-               "declaredType": "String"
+               "declaredType": "Integer"
             },
             {
                "$typename": "Attribute",
@@ -18,8 +19,8 @@
             },
             {
                "$typename": "Attribute",
-               "name": "",
-               "declaredType": null
+               "name": "rr12",
+               "declaredType": "Boolean"
             }
          ],
          "methods": [
@@ -63,29 +64,32 @@
                      "$typename": "Parameter",
                      "name": "aaaaaa",
                      "declaredType": null
-                  },
-                  {
-                     "$typename": "Parameter",
-                     "name": "",
-                     "declaredType": null
                   }
                ],
                "declaredType": "Boolean"
             }
          ],
+         "listOfReferences": [],
          "baseEntity": "Mies"
       },
       {
          "$typename": "Entity",
          "name": "Mies",
+         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
-               "name": "",
-               "declaredType": null
+               "name": "eeeee",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "ddd",
+               "declaredType": "Boolean"
             }
          ],
          "methods": [],
+         "listOfReferences": [],
          "baseEntity": null
       }
    ],
@@ -103,14 +107,46 @@
             {
                "$typename": "Parameter",
                "name": "",
-               "declaredType": null
+               "declaredType": "Integer"
             },
             {
                "$typename": "Parameter",
                "name": "",
-               "declaredType": null
+               "declaredType": "Mies"
             }
          ],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "sswqdd",
+         "body": null,
+         "parameters": [
+            {
+               "$typename": "Parameter",
+               "name": "",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Parameter",
+               "name": "",
+               "declaredType": "Integer"
+            }
+         ],
+         "declaredType": "String"
+      },
+      {
+         "$typename": "Method",
+         "name": "dqwdwqddwq",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "wdqwdwq eee212e ee21e e12 12 12ee",
+         "body": null,
+         "parameters": [],
          "declaredType": null
       }
    ]

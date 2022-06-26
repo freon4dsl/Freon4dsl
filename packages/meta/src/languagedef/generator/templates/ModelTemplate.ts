@@ -1,28 +1,15 @@
 import { Names, PROJECTITCORE } from "../../../utils";
-import {
-    findMobxImports,
-    makeBasicMethods,
-    makeBasicProperties, makeConstructor,
-    makePartProperty,
-    makePrimitiveProperty,
-    makeStaticCreateMethod
-} from "./ConceptUtils";
-import { PiConcept, PiModelDescription } from "../../metalanguage/PiLanguage";
+import { ConceptUtils } from "./ConceptUtils";
+import { PiModelDescription } from "../../metalanguage/PiLanguage";
 
 export class ModelTemplate {
-    // the following template is based on assumptions about a 'model'
-    // a model is not abstract
-    // a model is not an expression
-    // a model is not a modelunit
-    // a model may not have a superclass
-    // a model may not implement any interfaces
-    // a model only has parts ??
-    // TODO may a model have other properties than units???
+    // Note: a model may not have other properties than units
     public generateModel(modelDescription: PiModelDescription): string {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
-        const coreImports = this.findMobxImports(modelDescription).concat(["PiModel", "Language", "PiUtils"]);
+        const coreImports = this.findMobxImports(modelDescription)
+            .concat(["PiModel", "Language", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"]);
         const modelImports = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType(language);
 
@@ -36,17 +23,17 @@ export class ModelTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            @model
             export class ${myName} extends ${extendsClass} implements PiModel {     
             
-                ${makeStaticCreateMethod(modelDescription, myName)}
+                ${ConceptUtils.makeStaticCreateMethod(modelDescription, myName)}
                                       
-                ${makeBasicProperties(metaType, myName, false)}
-                ${modelDescription.primProperties.map(p => makePrimitiveProperty(p)).join("\n")}
-                ${modelDescription.parts().map(p => makePartProperty(p)).join("\n")}
+                ${ConceptUtils.makeBasicProperties(metaType, myName, false)}
+                ${modelDescription.primProperties.map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
+                ${modelDescription.parts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
 
-                ${makeConstructor(false, modelDescription.properties)}            
-                ${makeBasicMethods(false, metaType,true, false,false, false)}
+                ${ConceptUtils.makeConstructor(false, modelDescription.properties)}            
+                ${ConceptUtils.makeBasicMethods(false, metaType,true, false,false, false)}
+                ${ConceptUtils.makeMatchMethod(false, modelDescription, myName)}
                 
                 /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.
@@ -63,8 +50,7 @@ export class ModelTemplate {
             }`
         ).join("\n")}
                     if (!!result && !!metatype) {
-                        const myMetatype = result.piLanguageConcept();
-                        if (myMetatype === metatype || Language.getInstance().subConcepts(metatype).includes(myMetatype)) {
+                        if (Language.getInstance().metaConformsToType(result, metatype)) {
                             return result;
                         }
                     } else {
@@ -83,17 +69,17 @@ export class ModelTemplate {
                     if ( oldUnit.piLanguageConcept() !== newUnit.piLanguageConcept()) {
                         return false;
                     }
-                    if ( oldUnit.piContainer().container !== this) {
+                    if ( oldUnit.piOwnerDescriptor().owner !== this) {
                         return false;
                     }
                     // we must store the interface in the same place as the old unit, which info is held in PiContainer()
                     ${modelDescription.parts().map(part =>
-            `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
+            `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.piOwnerDescriptor().propertyName === "${part.name}" ) {
                                 ${part.isList ?
-                `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)});
-                                this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type.referred)});`
+                `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)});
+                                this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type)});`
                 :
-                `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)};`}
+                `this.${part.name} = newUnit as ${Names.classifier(part.type)};`}
                             } else`
         ).join(" ")}                    
                     {
@@ -110,14 +96,13 @@ export class ModelTemplate {
                     addUnit(newUnit: ${Names.modelunit(language)}): boolean {
                         if (!!newUnit) {
                             const myMetatype = newUnit.piLanguageConcept();
-                            // TODO this depends on the fact the only one part of the model concept has the same type, should we allow differently???
                             switch (myMetatype) {
                             ${language.modelConcept.allParts().map(part =>
-            `case "${Names.classifier(part.type.referred)}": {
+            `case "${Names.classifier(part.type)}": {
                                     ${part.isList ?
-                `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});`
+                `this.${part.name}.push(newUnit as ${Names.classifier(part.type)});`
                 :
-                `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`
+                `this.${part.name} = newUnit as ${Names.classifier(part.type)}`
             }
                                     return true;
                                 }`).join("\n")}
@@ -136,9 +121,9 @@ export class ModelTemplate {
                             const myMetatype = oldUnit.piLanguageConcept();
                             switch (myMetatype) {
                             ${language.modelConcept.allParts().map(part =>
-            `case "${Names.classifier(part.type.referred)}": {
+            `case "${Names.classifier(part.type)}": {
                                     ${part.isList ?
-                `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)}), 1);`
+                `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)}), 1);`
                 :
                 `this.${part.name} = null;`
             }
@@ -158,12 +143,12 @@ export class ModelTemplate {
                 newUnit(typename: ${Names.metaType(language)}) : ${Names.modelunit(language)}  {
                     switch (typename) {
                         ${language.modelConcept.allParts().map(part =>
-            `case "${Names.classifier(part.type.referred)}": {
-                                const unit: ${Names.classifier(part.type.referred)} = new ${Names.classifier(part.type.referred)}();
+            `case "${Names.classifier(part.type)}": {
+                                const unit: ${Names.classifier(part.type)} = new ${Names.classifier(part.type)}();
                                     ${part.isList ?
-                `this.${part.name}.push(unit as ${Names.classifier(part.type.referred)});`
+                `this.${part.name}.push(unit as ${Names.classifier(part.type)});`
                 :
-                `this.${part.name} = unit as ${Names.classifier(part.type.referred)}`
+                `this.${part.name} = unit as ${Names.classifier(part.type)}`
             }
                                     return unit;
                                 }`
@@ -182,7 +167,9 @@ export class ModelTemplate {
             `${part.isList ?
                 `result = result.concat(this.${part.name});`
                 :
-                `result.push(this.${part.name});`
+                `if (!!this.${part.name}) {
+                    result.push(this.${part.name});
+                 }`
             }`).join("\n")}
                         return result;
                     }
@@ -194,11 +181,11 @@ export class ModelTemplate {
                         switch (type) {
                         ${language.modelConcept.allParts().map(part =>
             `${part.isList ?
-                `case "${Names.classifier(part.type.referred)}": {
+                `case "${Names.classifier(part.type)}": {
                                     return this.${part.name};
                                 }`
                 :
-                `case "${Names.classifier(part.type.referred)}": {
+                `case "${Names.classifier(part.type)}": {
                                     let result : ${Names.modelunit(language)}[] = [];
                                     result.push(this.${part.name});
                                     return result;
@@ -213,7 +200,7 @@ export class ModelTemplate {
     private findModelImports(modelDescription: PiModelDescription, myName: string): string[] {
         return Array.from(
             new Set(
-                modelDescription.parts().map(part => Names.classifier(part.type.referred))
+                modelDescription.parts().map(part => Names.classifier(part.type))
                     .concat(Names.metaType(modelDescription.language))
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
@@ -222,7 +209,7 @@ export class ModelTemplate {
     }
 
     private findMobxImports(concept: PiModelDescription): string[] {
-        const mobxImports: string[] = ["model"];
+        const mobxImports: string[] = [];
         mobxImports.push("MobxModelElementImpl");
         if (concept.properties.some(part => part.isList && !part.isPrimitive)) {
             mobxImports.push("observablelistpart");

@@ -1,5 +1,5 @@
 import { makeObservable, observable } from "mobx";
-import { PiElement } from "../../language/index";
+import { PiElement } from "../../ast";
 import { PiUtils } from "../../util/index";
 import { Box } from "./Box";
 
@@ -7,6 +7,7 @@ export class GridCellBox extends Box  {
     row: number = 1;
     column: number = 1;
     private $box: Box = null;
+    isHeader: boolean = false;
     rowSpan?: number;
     columnSpan?: number;
     kind: string = "GridCellBox";
@@ -23,7 +24,8 @@ export class GridCellBox extends Box  {
         makeObservable<GridCellBox, "$box">(this, {
             $box: observable,
             row: observable,
-            column: observable
+            column: observable,
+            isHeader: observable
         });
         this.selectable = false;
     }

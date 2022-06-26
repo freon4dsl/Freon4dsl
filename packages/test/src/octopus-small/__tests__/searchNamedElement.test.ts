@@ -1,0 +1,78 @@
+import { PiElement, Searcher } from "@projectit/core";
+import { FileHandler } from "../../utils/FileHandler";
+import {
+    AssociationEnd,
+    OctopusModel,
+    OctopusModelUnitType,
+    UmlPart
+} from "../language/gen";
+import { OctopusEnvironment } from "../config/gen/OctopusEnvironment";
+
+const writer = OctopusEnvironment.getInstance().writer;
+const reader = OctopusEnvironment.getInstance().reader;
+const handler = new FileHandler();
+const searcher = new Searcher();
+
+function readFile(filepath: string): OctopusModelUnitType {
+    try {
+        const model: OctopusModel = new OctopusModel();
+        const langSpec: string = handler.stringFromFile(filepath);
+        return reader.readFromString(langSpec, "UmlPart", model) as OctopusModelUnitType;
+    } catch (e) {
+        console.log(e.message + e.stack);
+    }
+    return null;
+}
+
+describe("Testing Search NamedElement", () => {
+
+    test("search elements named 'customer' or 'Customer' in orders", () => {
+        const myUnit = readFile("src/octopus-small/__inputs__/orders.uml2");
+        if (!!myUnit) {
+            const found: PiElement[] = searcher.findNamedElementNotCaseSensitive("customer", myUnit);
+            expect (found.length).toBe(3);
+            // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
+        } else {
+            console.log("No unit to search");
+        }
+    });
+
+    test("search elements named 'customer' in orders", () => {
+        const myUnit = readFile("src/octopus-small/__inputs__/orders.uml2");
+        if (!!myUnit) {
+            const found: PiElement[] = searcher.findNamedElement("customer", myUnit);
+            expect (found.length).toBe(2);
+            // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
+        } else {
+            console.log("No unit to search");
+        }
+    });
+
+    test("search elements named 'kind' in Book", () => {
+        const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
+        if (!!myUnit) {
+            const found: PiElement[] = searcher.findNamedElement("kind", myUnit);
+            expect (found.length).toBe(2);
+            // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
+        } else {
+            console.log("No unit to search");
+        }
+    });
+
+    test("search 'twoColumn' in Book, with and without metatype", () => {
+        const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
+        if (!!myUnit) {
+            let found: PiElement[] = searcher.findNamedElement("twoColumn", myUnit, "AssociationEnd");
+            expect(found.length).toBe(0);
+            // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
+            found = searcher.findNamedElement("twoColumn", myUnit);
+            expect(found.length).toBe(1);
+            // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
+            found = searcher.findNamedElement("twoColumn", myUnit, "Attribute");
+            expect(found.length).toBe(1);
+            // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
+        } else {
+            console.log("No unit to search");
+        }
+    });
+});

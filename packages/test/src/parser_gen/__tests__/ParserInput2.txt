@@ -3,15 +3,17 @@ unit andereNaam {
 main:
 
 entity56 base anotherEntity, andAnother, andYetAnother start
-    attr78: type1 = "myString",
-    attr9: type2 = "TEKST"
+    attr78: Boolean = "myString",
+    attr9: String = "TEKST"
 end
 
 unit wide functions:
-DemoFunction functionYYY
+DemoFunction functionYYY {
 	expression CALL funct555 (  )
 	parameters
-	DemoVariable variableZZZ
+	DemoVariable variableZZZ {
     	declaredType entity56
-	declaredType STRING
+    	}
+	declaredType Integer
+	}
 }

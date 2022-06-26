@@ -1,11 +1,11 @@
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
-import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
-import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
+import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
+import { PiTyperMerger } from "../typerdef/parser/PiTyperMerger";
 
 const LOGGER = new MetaLogger("ProjectItGenerateTyper"); // .mute();
 export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
-    protected typerGenerator: PiTyperGenerator;
+    protected typerGenerator: FreonTyperGenerator;
 
     public constructor() {
         super({
@@ -19,11 +19,11 @@ export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
         LOGGER.log("Starting ProjectIt typer generation ...");
 
         super.generate();
-        this.typerGenerator = new PiTyperGenerator();
+        this.typerGenerator = new FreonTyperGenerator();
         this.typerGenerator.language = this.language;
         this.typerGenerator.outputfolder = this.outputFolder;
 
-        const typer = new PiTyperParser(this.language).parseMulti(this.typerFiles);
+        const typer = new PiTyperMerger(this.language).parseMulti(this.typerFiles);
         if (typer === null) {
             throw new Error("Typer definition could not be parsed, exiting.");
         }

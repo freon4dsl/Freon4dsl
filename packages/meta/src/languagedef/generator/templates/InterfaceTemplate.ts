@@ -3,7 +3,7 @@ import {
     PiPrimitiveProperty,
     PiInterface
 } from "../../metalanguage";
-import { Names, PROJECTITCORE, getBaseTypeAsString } from "../../../utils";
+import { Names, PROJECTITCORE, GenerationUtil } from "../../../utils";
 
 export class InterfaceTemplate {
 
@@ -20,7 +20,7 @@ export class InterfaceTemplate {
 
         const imports = Array.from(
             new Set(
-                intf.properties.map(p => Names.classifier(p.type.referred))
+                intf.properties.map(p => Names.classifier(p.type))
                     .concat(intf.base.map ( elem => Names.interface(elem.referred) ))
                     .filter(name => !(name === myName))
                     .filter(r => r !== null && (r.length > 0))
@@ -29,8 +29,7 @@ export class InterfaceTemplate {
 
         // Template starts here
         return `
-            ${hasReferences ? `import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";` : ``}
-            import { ${Names.PiElement} } from "${PROJECTITCORE}";
+            import { ${Names.PiElement} ${hasReferences ? `, ${Names.PiElementReference}` : ""} } from "${PROJECTITCORE}";
             import { ${imports.join(", ")} } from "./internal";
 
             /**
@@ -47,18 +46,18 @@ export class InterfaceTemplate {
 
     generatePrimitiveProperty(property: PiPrimitiveProperty): string {
         const comment = "// implementation of " + property.name ;
-        return `${property.name}: ${getBaseTypeAsString(property)} ${property.isList ? "[]" : ""}; ${comment}`;
+        return `${property.name}: ${GenerationUtil.getBaseTypeAsString(property)} ${property.isList ? "[]" : ""}; ${comment}`;
     }
 
     generatePartProperty(property: PiConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : ${Names.classifier(property.type.referred)}${arrayType}; ${comment}`;
+        return `${property.name} : ${Names.classifier(property.type)}${arrayType}; ${comment}`;
     }
 
     generateReferenceProperty(property: PiConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
+        return `${property.name} : PiElementReference<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
     }
 }

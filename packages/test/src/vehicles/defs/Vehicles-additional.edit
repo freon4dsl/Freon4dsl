@@ -1,0 +1,40 @@
+editor additional
+
+Vehicle {
+[
+    with ${nrOfWheels} wheels
+    ADDITIONAL PROJECTION
+    Maker: ${manufacturer }
+]}
+
+Manufacturer {
+[
+${name} based in ${country}
+CEO: ${CEO_name}
+]}
+
+IsElectrical {
+[
+    [=> IsMotorised]
+    ${chargeCapacity} kWh
+]}
+
+IsMotorised {
+[
+    TypeOfEngine: ${typeOfEngine}
+    ${maxSpeed} km/hour
+]}
+
+Bike {
+[
+    ${typeName} [=> Vehicle]
+    ${tyreSize} inch
+]}
+
+Steamboat  {
+[
+    ${typeName} is a heritage ship: ${isHeritage}
+    [=> IsMotorised:default]
+    ${nrOfPassengers} passengers
+    works on ${preferedWaterWay}
+]}

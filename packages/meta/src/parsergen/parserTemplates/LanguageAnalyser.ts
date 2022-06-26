@@ -24,25 +24,16 @@ export interface PiAnalyser {
     conceptsWithSub: Map<PiConcept, PiClassifier[]>;
 }
 
-export class LanguageAnalyser implements PiAnalyser {
-    // TODO remove 'implements PiAnalyser', make extra UnitAnalyser for common parts
+export class LanguageAnalyser {
     unitAnalysers: UnitAnalyser[] = [];
     private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
-    // name of the unit
-    unit: PiUnitDescription = null;
-    // all concepts used in multiple units
-    classifiersUsed: PiClassifier[] = [];
-    // all binary concepts used in multiple units
-    binaryConceptsUsed: PiBinaryExpressionConcept[] = [];
-    // all interfaces and abstract concepts that are mentioned in multiple units
-    interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]> = new Map<PiClassifier, PiClassifier[]>();
-    // all limited concepts that are referred to (as type of properties), from multiple units
-    limitedsReferred: PiLimitedConcept[] = [];
-    // all concepts that are not abstract, but do have sub concepts, from multiple units
-    conceptsWithSub: Map<PiConcept, PiClassifier[]> = new Map<PiConcept, PiClassifier[]>();
-
+    // commonAnalyser holds the information on parts that are used in multple units
+    // it is not used to analyse anything!!
+    commonAnalyser: UnitAnalyser = new UnitAnalyser();
 
     analyseModel(language: PiLanguage) {
+        this.commonAnalyser.reset();
+        
         language.units.forEach(unit => {
             const unitAnalyser = new UnitAnalyser();
             this.unitAnalysers.push(unitAnalyser);
@@ -68,28 +59,28 @@ export class LanguageAnalyser implements PiAnalyser {
 
     private removeCommonsFromUnitAnalysers() {
         this.unitAnalysers.forEach(analyser => {
-            this.classifiersUsed.forEach(classifier => {
+            this.commonAnalyser.classifiersUsed.forEach(classifier => {
                 const index = analyser.classifiersUsed.indexOf(classifier);
                 if (index !== -1) {
                     analyser.classifiersUsed.splice(index, 1);
                 }
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             });
-            this.binaryConceptsUsed.forEach(classifier => {
+            this.commonAnalyser.binaryConceptsUsed.forEach(classifier => {
                 const index = analyser.binaryConceptsUsed.indexOf(classifier);
                 analyser.binaryConceptsUsed.splice(index, 1);
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             });
-            this.limitedsReferred.forEach(classifier => {
+            this.commonAnalyser.limitedsReferred.forEach(classifier => {
                 const index = analyser.limitedsReferred.indexOf(classifier);
                 analyser.limitedsReferred.splice(index, 1);
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             });
-            for (const [classifier, used] of this.interfacesAndAbstractsUsed) {
+            for (const [classifier, used] of this.commonAnalyser.interfacesAndAbstractsUsed) {
                 analyser.interfacesAndAbstractsUsed.delete(classifier);
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             }
-            for (const [classifier, used] of this.conceptsWithSub) {
+            for (const [classifier, used] of this.commonAnalyser.conceptsWithSub) {
                 analyser.conceptsWithSub.delete(classifier);
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             }
@@ -144,16 +135,16 @@ export class LanguageAnalyser implements PiAnalyser {
     }
 
     private LOG() {
-        console.log(`Found common classifiers: ${this.classifiersUsed.map(cl => cl.name).join(", ")}`);
-        console.log(`Found common binary expressions: ${this.binaryConceptsUsed.map(cl => cl.name).join(", ")}`);
-        console.log(`Found common limited concepts: ${this.limitedsReferred.map(cl => cl.name).join(", ")}`);
+        console.log(`Found common classifiers: ${this.commonAnalyser.classifiersUsed.map(cl => cl.name).join(", ")}`);
+        console.log(`Found common binary expressions: ${this.commonAnalyser.binaryConceptsUsed.map(cl => cl.name).join(", ")}`);
+        console.log(`Found common limited concepts: ${this.commonAnalyser.limitedsReferred.map(cl => cl.name).join(", ")}`);
         let names: string = "";
-        for (const [classifier, used] of this.interfacesAndAbstractsUsed) {
+        for (const [classifier, used] of this.commonAnalyser.interfacesAndAbstractsUsed) {
             names += classifier.name + ", ";
         }
         console.log(`Found common interfaces and abstracts: ${names}`);
         names = "";
-        for (const [classifier, used] of this.conceptsWithSub) {
+        for (const [classifier, used] of this.commonAnalyser.conceptsWithSub) {
             names += classifier.name + ", ";
         }
         console.log(`Found common concepts with subs: ${names}`);
@@ -186,32 +177,32 @@ export class LanguageAnalyser implements PiAnalyser {
     }
 
     private addClassifierUsed(classifier: PiClassifier) {
-        if (!this.classifiersUsed.includes(classifier)) {
-            this.classifiersUsed.push(classifier);
+        if (!this.commonAnalyser.classifiersUsed.includes(classifier)) {
+            this.commonAnalyser.classifiersUsed.push(classifier);
         }
     }
 
     private addBinaryConceptsUsed(classifier: PiBinaryExpressionConcept) {
-        if (!this.binaryConceptsUsed.includes(classifier)) {
-            this.binaryConceptsUsed.push(classifier);
+        if (!this.commonAnalyser.binaryConceptsUsed.includes(classifier)) {
+            this.commonAnalyser.binaryConceptsUsed.push(classifier);
         }
     }
 
     private addLimitedsReferred(classifier: PiLimitedConcept) {
-        if (!this.limitedsReferred.includes(classifier)) {
-            this.limitedsReferred.push(classifier);
+        if (!this.commonAnalyser.limitedsReferred.includes(classifier)) {
+            this.commonAnalyser.limitedsReferred.push(classifier);
         }
     }
 
     private addInterfacesAndAbstractsUsed(classifier: PiClassifier, used: PiClassifier[]) {
-        if (!this.interfacesAndAbstractsUsed.has(classifier)) {
-            this.interfacesAndAbstractsUsed.set(classifier, used);
+        if (!this.commonAnalyser.interfacesAndAbstractsUsed.has(classifier)) {
+            this.commonAnalyser.interfacesAndAbstractsUsed.set(classifier, used);
         }
     }
 
     private addConceptsWithSubs(classifier: PiConcept, used: PiClassifier[]) {
-        if (!this.conceptsWithSub.has(classifier)) {
-            this.conceptsWithSub.set(classifier, used);
+        if (!this.commonAnalyser.conceptsWithSub.has(classifier)) {
+            this.commonAnalyser.conceptsWithSub.set(classifier, used);
         }
     }
 }

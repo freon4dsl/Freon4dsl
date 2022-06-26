@@ -1,0 +1,73 @@
+typer
+
+// Which concepts have a type?
+hastype { Exp, TypeUsage }
+
+// What are the top and bottom types?
+anytype {
+    conformsto PredefinedType:ANY; // PredefinedType:ANY is the least specific type
+}
+
+PredefinedType {
+    PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
+}
+
+// Which type does an expression have?
+TypeRef {
+    infertype self.type;
+}
+
+GenericType {
+//    infertype x:TT_GenericType where {
+//        x.base equalsto typeof(self.baseType);
+//        x.kind equalsto self.kind;
+//    }
+    infertype TT_GenericType {
+        base: typeof(self.baseType),
+// of:  base: self.baseType,
+        kind: self.kind
+    };
+}
+
+UnitOfMeasurement {
+    infertype TT_MeasurementType {
+        base: typeof(self.baseType),
+        unit: self.unit
+    };
+}
+
+NumberLiteral {
+    infertype PredefinedType:NUMBER;
+}
+
+StringLiteral {
+    infertype PredefinedType:STRING;
+}
+
+BooleanLiteral {
+    infertype PredefinedType:BOOLEAN;
+}
+
+NamedExp {
+    infertype self.myType;
+}
+
+PlusExp {
+    infertype commonSuperType(self.left, self.right);
+}
+
+UnitLiteral {
+    // 62 kilogram, or 112 miles
+    infertype TT_MeasurementType {
+                  base: typeof(self.inner),
+                  unit: self.unit
+              };
+}
+
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    infertype TT_GenericType {
+        base: typeof(self.content),
+        kind: GenericKind:Collection
+    };
+}

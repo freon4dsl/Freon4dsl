@@ -1,15 +1,14 @@
 import {
-    AliasBox,
     Box,
     HorizontalListBox,
     isHorizontalBox,
     SelectBox,
     SelectOption,
     PiEditor,
-    PiProjection, triggerToString, PiStyle, BoxFactory
+    triggerToString, BoxFactory
 } from "../editor";
-import { PiBinaryExpression, PiExpression } from "../language";
-import { Language } from "../storage";
+import { PiBinaryExpression, PiExpression } from "../ast";
+import { Language } from "../language";
 import {
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
@@ -74,8 +73,8 @@ export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, 
 
     const rightConceptName = Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("right")?.type;
     const leftConceptName = Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("left")?.type;
-    console.log("RIGHT CONCEPT for "+ exp.piLanguageConcept()  + " is " + Language.getInstance().classifier(exp.piLanguageConcept()) );
-    console.log("            ===> " + Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("right") + " is " + rightConceptName);
+    // console.log("RIGHT CONCEPT for "+ exp.piLanguageConcept()  + " is " + Language.getInstance().classifier(exp.piLanguageConcept()) );
+    // console.log("            ===> " + Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("right") + " is " + rightConceptName);
     result.addChildren([
         (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : BoxFactory.alias(exp, PI_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left", conceptName: leftConceptName  })),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
@@ -93,9 +92,9 @@ export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, 
  * @param editor
  * @param exp
  * @param symbol
- * @param style
+ * @param cssStyle
  */
-export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, symbol: string, style?: PiStyle): Box {
+export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, symbol: string, cssStyle?: string): Box {
     const operatorBox = new SelectBox(
         exp,
         EXPRESSION_SYMBOL,
@@ -134,7 +133,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
             return BehaviorExecutionResult.NO_MATCH;
         },
         {
-            style: style
+            cssStyle: cssStyle
         }
     );
 

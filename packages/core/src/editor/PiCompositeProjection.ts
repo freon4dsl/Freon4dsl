@@ -1,16 +1,20 @@
 import { observable, makeObservable, action } from "mobx";
-import { PiElement } from "../language";
-import { Box, BoxFactory, LabelBox, OrderedList, PiProjection } from "./internal";
+import { PiElement } from "../ast";
+import { Box, BoxFactory, LabelBox, PiProjection } from "./internal";
 import { PiTableDefinition } from "./PiTables";
+import { Language } from "../language";
 
 export class PiCompositeProjection implements PiProjection {
-    private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
+    private projections: Map<string, PiProjection> = new Map<string, PiProjection>();
     private _rootProjection: PiProjection | null = null;
     name: string = "";
+    isEnabled: boolean = true;
 
     set rootProjection(p: PiCompositeProjection) {
         this._rootProjection = p;
-        this.projections.toArray().forEach(child => (child.element.rootProjection = p));
+        for(let child of this.projections.values()) {
+            child.rootProjection = p;
+        }
     }
 
     constructor(name?: string) {
@@ -19,31 +23,47 @@ export class PiCompositeProjection implements PiProjection {
         }
         makeObservable<PiCompositeProjection, "projections">(this, {
             projections: observable,
-            projectionToBack: action,
-            projectiontoFront: action,
+            disableProjection: action,
+            enableProjection: action,
             addProjection: action
         });
     }
 
     getBox(element: PiElement): Box {
-        for (let p of this.projections.toArray()) {
-            const result: Box = p.element.getBox(element);
-            if (result !== null) {
-                return result;
+        for (let p of this.projections.values()) {
+            if (p.isEnabled) {
+                const result: Box = p.getBox(element);
+                if (result !== null) {
+                    return result;
+                }
             }
         }
         // return a default box if nothing has been  found.
         return new LabelBox(element, "unknown-projection", () => "unknown box for " + element);
     }
 
-    getTableDefinition(conceptName: string): PiTableDefinition {
-        for (let p of this.projections.toArray()) {
-            const result = p.element.getTableDefinition(conceptName);
+    getNamedBox(element: PiElement, projectionName: string): Box {
+        const proj = this.projections.get(projectionName);
+        if (!!proj) {
+            const result: Box = proj.getBox(element);
             if (result !== null) {
                 return result;
             }
         }
-        // return a default box if nothing has been  found.
+        // return the default box if nothing has been found.
+        return this.getBox(element);
+    }
+
+    getTableDefinition(conceptName: string): PiTableDefinition {
+        for (let p of this.projections.values()) {
+            if (p.isEnabled) {
+                const result = p.getTableDefinition(conceptName);
+                if (result !== null) {
+                    return result;
+                }
+            }
+        }
+        // return a default box if nothing has been found.
         return {
             headers: [conceptName],
             cells: [(element: PiElement) => {
@@ -53,21 +73,48 @@ export class PiCompositeProjection implements PiProjection {
     }
 
     addProjection(p: PiProjection) {
-        this.projections.add(p.name, p);
+        this.projections.set(p.name, p);
         p.rootProjection = this; //(!!this.rootProjection ? this : this.rootProjection);
     }
 
-    projectiontoFront(name: string) {
+    enableProjection(name: string) {
         BoxFactory.clearCaches();
-        this.projections.toFront(name);
+        console.log("Composite: enabling Projection " + name);
+        this.projections.get(name).isEnabled = true;
     }
 
-    projectionToBack(name: string) {
+    disableProjection(name: string) {
         BoxFactory.clearCaches();
-        this.projections.toBack(name);
+        console.log("Composite: disabling Projection " + name);
+        this.projections.get(name).isEnabled = false;
     }
 
     projectionNames(): string[] {
-        return this.projections.toArray().map(p => p.name);
+        return Array.from(this.projections.keys());
+    }
+
+    checkSuper(nameOfSuper: string, elementName: string ): boolean {
+        // find the names of the subclasses of 'nameOfSuper'
+        const myConcept = Language.getInstance().concept(nameOfSuper);
+        let names: string[] = [];
+        if (!!myConcept) {
+            names = myConcept.subConceptNames;
+        } else {
+            names = Language.getInstance().interface(nameOfSuper)?.subConceptNames;
+        }
+        // now search the names for 'elementName'
+        let result: boolean = false;
+        if (!!names && names.length > 0) {
+            result = names.includes(elementName);
+            // NB Below not needed, as subconcepts includes _all_ subconcepts already.
+            // if (!result) { // do recursive
+            //     myConcept.subConceptNames.forEach(n => {
+            //         if (this.checkSuper(n, elementName)) { // to avoid overwriting 'result' with next element
+            //             result = true;
+            //         }
+            //     });
+            // }
+        }
+        return result;
     }
 }

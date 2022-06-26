@@ -1,0 +1,13 @@
+editor default
+
+ZZ {[
+    [? ${ZZprop8}  ]
+    [?
+        ${ZZprop11}
+
+    ]
+]}
+
+AAAAAA {[
+    [? ${AAprop5 [<keywordProjection>]}]
+]}

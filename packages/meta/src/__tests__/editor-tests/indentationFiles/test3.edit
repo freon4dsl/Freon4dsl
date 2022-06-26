@@ -1,0 +1,20 @@
+editor default
+
+AAAAAA {
+    [
+${AAprop5 [xxxx]}
+    ]}
+
+BB { // base CC
+      [
+        ${BBprop5 [aap | noot]}
+      text
+      ]}
+
+CC {
+       [
+                text
+        ${CCprop8}
+       text
+            ${CCprop10}
+       ]}

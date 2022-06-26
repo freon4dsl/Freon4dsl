@@ -1,17 +1,17 @@
 language Demo
 
 model Demo {
-    public name: identifier;
-    public models: DemoUnit[];
+    name: identifier;
+    models: DemoUnit[];
 }
 
 modelunit DemoUnit {
-    public name: identifier;
-    public main: DemoEntity;
-    public functions: DemoFunction[];
+    name: identifier;
+    main: DemoEntity;
+    functions: DemoFunction[];
 }
 
-public concept DemoEntity  {
+concept DemoEntity  {
     name: identifier;
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
@@ -38,8 +38,8 @@ expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
 }
 
-public concept DemoFunction {
-    public name: identifier;
+concept DemoFunction {
+    name: identifier;
     reference declaredType : DemoAttributeType;
     expression: DemoExpression;
     parameters: DemoVariable[];

@@ -1,5 +1,5 @@
 import { PiLanguage } from "../../metalanguage";
-import { Names, LANGUAGE_GEN_FOLDER, createImports } from "../../../utils";
+import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils";
 
 export class WorkerInterfaceTemplate {
 
@@ -7,7 +7,7 @@ export class WorkerInterfaceTemplate {
 
         // the template starts here
         return `
-        import { ${createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
+        import { ${GenerationUtil.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
 
         /**
          * Interface ${Names.workerInterface(language)} implements the extended visitor pattern of instances of language ${language.name}.

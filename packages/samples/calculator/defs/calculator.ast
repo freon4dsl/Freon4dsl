@@ -1,0 +1,58 @@
+language calculator // jetbrains.mps.calculator
+
+model CalculatorModel {
+    name: identifier;
+    calc: Calculator;
+}
+
+modelunit Calculator {
+    name: identifier;
+	inputFields: InputField[];
+	outputFields: OutputField[];
+}
+
+concept InputField  implements INamedConcept {
+}
+
+concept OutputField  {
+	expression: CalcExpression;
+}
+
+expression InputFieldReference base CalcExpression {
+	reference field: InputField;
+}
+
+interface INamedConcept {
+	name: identifier;
+}
+
+// add Simple Numeric Expression from library
+abstract expression CalcExpression {}
+
+abstract expression LiteralExpression base CalcExpression {}
+
+expression NumberLiteralExpression base LiteralExpression {
+    value: string;
+}
+
+abstract binary expression BinaryExpression base CalcExpression {
+    left: CalcExpression;
+    right: CalcExpression;
+}
+
+binary expression MultiplyExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression PlusExpression base BinaryExpression {
+     priority = 4;
+}
+
+binary expression MinusExpression base BinaryExpression {
+    priority = 4;
+}
+
+binary expression DivideExpression base BinaryExpression {
+    priority = 8;
+}
+
