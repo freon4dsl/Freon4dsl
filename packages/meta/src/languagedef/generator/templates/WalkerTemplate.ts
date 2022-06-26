@@ -50,7 +50,7 @@ export class WalkerTemplate {
                         return this.walk${Names.classifier(concept)}(modelelement, includeChildren );
                     }`).join("")}
                 } else {
-                    LOGGER.error( "No worker found.");
+                    LOGGER.error(this, "No worker found.");
                 }
             }
 

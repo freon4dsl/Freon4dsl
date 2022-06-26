@@ -35,6 +35,9 @@
   @include linear-progress.buffer-color(theme.$red-100);
 }
 
+:focus {
+  outline: none;
+}
 // status-bar style is used for the StatusBar component above the editor
 .status-bar {
   //--freon-colors-bg-status: #4f9a94;
@@ -143,6 +146,8 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   /* Selectable */
   --freon-selected-background-color: rgba(211, 227, 253, 255);
   --freon-selected-outline-color: #{theme.$blue-900};
+  --freon-selected-outline-width: 1px;
+  --freon-selected-outline-style: solid;
   /* Normal text colors */
   //--freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
   --freon-editor-component-background-color: #{theme.$surface};              /* The background color of the editor */
@@ -251,5 +256,7 @@ html,
 body {
   background-color: theme.$surface;
   color: theme.$on-surface;
+  margin: 0;
+  box-sizing: border-box;
   --mdc-theme-primary: #{theme.$primary};
 }

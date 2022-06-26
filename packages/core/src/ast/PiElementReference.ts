@@ -1,8 +1,7 @@
-import { PiNamedElement } from ".";
-import { computed, observable, makeObservable } from "mobx";
+import { MobxModelElementImpl, PiNamedElement } from ".";
+import { computed, observable, makeObservable, trace } from "mobx";
 import { LanguageEnvironment } from "../environment/LanguageEnvironment";
 import { PiLogger } from "../logging";
-import { MobxModelElementImpl } from "./decorators";
 
 const LOGGER = new PiLogger("PiElementReference").mute();
 /**
@@ -30,10 +29,6 @@ export class PiElementReference<T extends PiNamedElement> extends MobxModelEleme
         return result;
     }
 
-    public copy<T extends PiNamedElement>(): PiElementReference<T> {
-        return PiElementReference.create<T>(this._PI_pathname, this.typeName);
-    }
-
     private _PI_pathname: string[] = [];
     private _PI_referred: T = null;
 
@@ -53,7 +48,7 @@ export class PiElementReference<T extends PiNamedElement> extends MobxModelEleme
         makeObservable<PiElementReference<T>, "_PI_pathname" | "_PI_referred">(this, {
             _PI_referred: observable,
             _PI_pathname: observable,
-            referred: computed,
+            // referred: computed,
             // name: computed,
             // pathname: computed
         });

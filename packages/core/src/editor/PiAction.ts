@@ -13,12 +13,13 @@ export function triggerToString(t: PiTriggerType): string {
     }
 }
 
-
+// tag::action-interface[]
 export interface PiActions {
     binaryExpressionActions: PiCreateBinaryExpressionAction[];
 
     customActions: PiCustomAction[];
 }
+// end::action-interface[]
 
 export function isRegExp(a: PiTriggerType): a is RegExp {
     return (a as any).exec !== undefined;

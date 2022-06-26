@@ -215,14 +215,14 @@ export abstract class Box {
     }
 
     private getEditableChildrenRecursive(result: Box[]) {
-        LOGGER.info( "getEditableChildrenRecursive for " + this.kind);
+        LOGGER.info(this, "getEditableChildrenRecursive for " + this.kind);
         if (this.isEditable()) {
-            LOGGER.info( "Found editable: " + this.role);
+            LOGGER.info(this, "Found editable: " + this.role);
             result.push(this);
             return;
         }
         this.children.forEach(c => {
-            LOGGER.info( "child: " + c.kind);
+            LOGGER.info(this, "child: " + c.kind);
             c.getEditableChildrenRecursive(result);
         });
         // return this.children.filter(c => (isTextBox(c) || isAliasBox(c) || isSelectBox(c)) || c.children.length);

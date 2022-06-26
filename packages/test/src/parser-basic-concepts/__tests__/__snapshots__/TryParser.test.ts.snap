@@ -9,6 +9,7 @@ ExpressionTest {
     "$id": "ID-1",
     "$typename": "TestConceptsModel",
     "_PI_expr": [Circular],
+    "name": "",
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "expr",
@@ -27,11 +28,11 @@ ExpressionTest {
         "$$propertyName": "left",
         "$id": "ID-2",
         "$typename": "StringLiteralEx",
-        "_PI_value": "literal1",
         "parse_location": PiParseLocation {
           "column": 2,
           "line": 4,
         },
+        "value": "literal1",
       },
       "_PI_right": StringLiteralEx {
         "$$owner": [Circular],
@@ -39,11 +40,11 @@ ExpressionTest {
         "$$propertyName": "right",
         "$id": "ID-3",
         "$typename": "StringLiteralEx",
-        "_PI_value": "literal2",
         "parse_location": PiParseLocation {
           "column": 39,
           "line": 4,
         },
+        "value": "literal2",
       },
       "parse_location": PiParseLocation {
         "column": 2,
@@ -68,11 +69,11 @@ ExpressionTest {
           "$$propertyName": "left",
           "$id": "ID-5",
           "$typename": "NumberLiteralEx",
-          "_PI_value": 109,
           "parse_location": PiParseLocation {
             "column": 2,
             "line": 5,
           },
+          "value": 109,
         },
         "_PI_right": StringLiteralEx {
           "$$owner": [Circular],
@@ -80,11 +81,11 @@ ExpressionTest {
           "$$propertyName": "right",
           "$id": "ID-6",
           "$typename": "StringLiteralEx",
-          "_PI_value": "literal3",
           "parse_location": PiParseLocation {
             "column": 32,
             "line": 5,
           },
+          "value": "literal3",
         },
         "parse_location": PiParseLocation {
           "column": 2,
@@ -97,11 +98,11 @@ ExpressionTest {
         "$$propertyName": "right",
         "$id": "ID-8",
         "$typename": "BooleanLiteralEx",
-        "_PI_value": true,
         "parse_location": PiParseLocation {
           "column": 69,
           "line": 5,
         },
+        "value": true,
       },
       "parse_location": PiParseLocation {
         "column": 2,
@@ -109,8 +110,8 @@ ExpressionTest {
       },
     },
   ],
-  "_PI_name": "simpleExpressions",
   "_PI_normalEx": Array [],
+  "name": "simpleExpressions",
   "parse_location": PiParseLocation {
     "column": 1,
     "line": 1,
