@@ -1,7 +1,5 @@
 import { runInAction } from "mobx";
 import { PiLogger } from "../logging";
-// the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
-// import { PiKey } from "./Keys";
 import { Box, isProKey, PI_NULL_COMMAND, PiActionTrigger, PiCommand, PiEditor } from "../editor";
 import { PiOwnerDescriptor, PiElement, PiExpression } from "../ast";
 import { isPiExpression } from "../ast-utils";

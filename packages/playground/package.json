@@ -1,6 +1,6 @@
 {
   "name": "@projectit/playground",
-  "version": "0.4.0",
+  "version": "0.3.0",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -108,10 +108,11 @@
     "typescript": "4.5.5"
   },
   "dependencies": {
-    "@projectit/core": "0.4.0",
-    "@projectit/core-svelte": "0.4.0",
-    "@projectit/server": "0.4.0",
+    "@projectit/core": "0.3.0",
+    "@projectit/core-svelte": "0.3.0",
+    "@projectit/server": "0.3.0",
     "@types/node": "^14.14.31",
+    "csstype": "^3.0.10",
     "mobx": "6.3.3",
     "mobx-utils": "6.0.4",
     "click-outside": "1.0.4",

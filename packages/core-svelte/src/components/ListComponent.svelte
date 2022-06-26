@@ -3,15 +3,8 @@
     import { afterUpdate, onDestroy, onMount } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
-    import {
-        Box,
-        HorizontalListBox,
-        isEmptyLineBox,
-        ListBox,
-        PiEditor,
-        PiLogger,
-        isHorizontalBox
-    } from "@projectit/core";
+    import { Box, conceptStyle, HorizontalListBox, ListBox, PiEditor, PiLogger, styleToCSS } from "@projectit/core";
+    import { isHorizontalBox } from "@projectit/core";
 
     // Parameters
     export let list: ListBox ; //= new HorizontalListBox(null, "l1");
@@ -71,13 +64,6 @@
         LOGGER.log("render box " + box.role);
         return box;
     }
-
-    function setPrevious(b: Box): string {
-        previousBox = b;
-        return "";
-    }
-
-    let previousBox = null;
 </script>
 
 <span class="list-component"
@@ -96,13 +82,10 @@
     {:else}
         <div class="verticalList"  on:click>
             {#each children as box, i (box.id)}
-                {#if i > 0 && i < children.length
-                     && !(i === 1 && isEmptyLineBox(previousBox))
-                }
-                    <br class="LISTNEWLINE"/>
+                {#if i > 0 && i < children.length}
+                    <br/>
                 {/if}
                 <RenderComponent box={box} editor={editor}/>
-                { setPrevious(box) }
             {/each}
         </div>
     {/if}

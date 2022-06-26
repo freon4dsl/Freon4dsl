@@ -1,7 +1,7 @@
 import { observable, makeObservable, action } from "mobx";
 
 import { PiUtils } from "../../util";
-import { Box} from "../internal";
+import { Box} from "./Box";
 import { PiElement } from "../../ast";
 
 export enum ListDirection {

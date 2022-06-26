@@ -2,7 +2,6 @@ import { PiElement, PiNamedElement } from "../ast";
 
 // Part of the ProjectIt Framework
 
-// tag::scoper-interface[]
 export interface PiScoper {
 
     /**
@@ -85,4 +84,3 @@ export interface PiScoper {
      */
     additionalNamespaces(element: PiElement): PiElement[];
 }
-// end::scoper-interface[]

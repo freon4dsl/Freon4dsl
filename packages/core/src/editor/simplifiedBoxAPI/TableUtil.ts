@@ -14,10 +14,10 @@ import { PiElement } from "../../ast";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import * as Keys from "../../util/Keys";
 import { MetaKey, PiKey } from "../../util/Keys";
-import { NBSP, PiUtils } from "../../util";
-import { PiLogger } from "../../logging";
+import { PiUtils } from "../../util";
 import { Language } from "../../language";
 import { RoleProvider } from "./RoleProvider";
+import { PiLogger } from "../../logging";
 
 type Location = { row: number, column: number};
 const LOGGER = new PiLogger("TableUtil");
