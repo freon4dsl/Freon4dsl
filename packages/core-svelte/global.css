@@ -24,9 +24,7 @@
 
 	/* Selectable */
 	--freon-selected-background-color: rgba(211, 227, 253, 255);
-	--freon-selected-outline-color: inherit;
-	--freon-selected-outline-style: inherit;
-	--freon-selected-outline-width: inherit;
+	--freon-selected-outline-color: darkblue;
 
 	/* Others */
 	--freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);

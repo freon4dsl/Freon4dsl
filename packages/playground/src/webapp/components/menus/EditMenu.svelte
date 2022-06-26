@@ -91,9 +91,9 @@
 	let menuItems : MenuItem[] = [
 		{ title: 'Undo', action: EditorRequestsHandler.getInstance().undo, id: 1 },
 		{ title: 'Redo', action: EditorRequestsHandler.getInstance().redo, id: 2 },
-		{ title: 'Cut', action: notImplemented, id: 3 },
-		{ title: 'Copy', action: notImplemented, id: 4 },
-		{ title: 'Paste', action: notImplemented, id: 5 },
+		{ title: 'Cut', action: EditorRequestsHandler.getInstance().cut, id: 3 },
+		{ title: 'Copy', action: EditorRequestsHandler.getInstance().copy, id: 4 },
+		{ title: 'Paste', action: EditorRequestsHandler.getInstance().paste, id: 5 },
 		{ title: 'Validate', action: EditorRequestsHandler.getInstance().validate, id: 6 },
 		{ title: 'Find Named Element', action: findNamedElement, id: 7 },
 		{ title: 'Find Structure Element', action: findStructureElement, id: 8 },
@@ -101,7 +101,7 @@
 	];
 
 	function isDisabled(id): boolean {
-		if (id >= 1 && id <= 5 || id === 8) {
+		if ( id === 8 ) { // find structure element
 			return true;
 		}
 		return false;

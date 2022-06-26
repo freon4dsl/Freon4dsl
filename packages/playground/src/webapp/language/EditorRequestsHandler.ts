@@ -1,13 +1,27 @@
 import { editorEnvironment } from "../config/WebappConfiguration";
-import { PiCompositeProjection, PiError, PiLogger, Searcher } from "@projectit/core";
+import {
+    Box,
+    isAliasBox,
+    isAliasTextBox,
+    isTextBox,
+    PiCompositeProjection,
+    PiError,
+    PiLogger,
+    PiUndoManager,
+    Searcher
+} from "@projectit/core";
 import type { PiElement } from "@projectit/core";
 import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore";
 import { EditorState } from "./EditorState";
+import { copiedElement } from "../components/stores/ModelStore";
+import { get } from "svelte/store";
+import { setUserMessage, SeverityType, userMessage } from "../components/stores/UserMessageStore";
 
 const LOGGER = new PiLogger("EditorRequestsHandler"); // .mute();
 
 export class EditorRequestsHandler {
     private static instance: EditorRequestsHandler = null;
+
     static getInstance(): EditorRequestsHandler {
         if (EditorRequestsHandler.instance === null) {
             EditorRequestsHandler.instance = new EditorRequestsHandler();
@@ -40,15 +54,70 @@ export class EditorRequestsHandler {
     }
 
     redo() {
-        // TODO implement redo()
-        LOGGER.log("redo called");
-        return undefined;
+        const unitInEditor = EditorState.getInstance().currentUnit;
+        console.log("redo called: " + PiUndoManager.getInstance().nextRedoAsText(unitInEditor));
+        if (!!unitInEditor) {
+            PiUndoManager.getInstance().executeRedo(unitInEditor);
+        }
     }
 
     undo() {
-        // TODO implement undo()
-        LOGGER.log("undo called");
-        return undefined;
+        const unitInEditor = EditorState.getInstance().currentUnit;
+        LOGGER.log("undo called: " + PiUndoManager.getInstance().nextUndoAsText(unitInEditor));
+        if (!!unitInEditor) {
+            PiUndoManager.getInstance().executeUndo(unitInEditor);
+        }
+    }
+
+    cut() {
+        LOGGER.log("cut called");
+        const tobecut: PiElement = editorEnvironment.editor.selectedItem;
+        if (!!tobecut) {
+            EditorState.getInstance().deleteElement(tobecut);
+            copiedElement.set(tobecut);
+            // console.log("saved: " + editorEnvironment.writer.writeToString(get(copiedElement)));
+        } else {
+            setUserMessage("Nothing selected", SeverityType.warning);
+        }
+    }
+
+    copy() {
+        LOGGER.log("copy called");
+        const tobecopied: PiElement = editorEnvironment.editor.selectedItem;
+        if (!!tobecopied) {
+            copiedElement.set(tobecopied.copy());
+            // console.log("saved: " + editorEnvironment.writer.writeToString(get(copiedElement)));
+        } else {
+            setUserMessage("Nothing selected", SeverityType.warning);
+        }
+    }
+
+    paste() {
+        LOGGER.log("paste called");
+        const tobepasted = get(copiedElement);
+        if (!!tobepasted) {
+            const currentSelection: Box = editorEnvironment.editor.selectedBox;
+            const element: PiElement = currentSelection.element;
+            if (!!currentSelection) {
+                if (isAliasTextBox(currentSelection)) {
+                    if (isAliasBox(currentSelection.parent)) {
+                        if (currentSelection.parent.conceptName === tobepasted.piLanguageConcept()) {
+                            // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
+                            EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName )
+                        } else {
+                            setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
+                        }
+                    }
+                } else {
+                    // console.log(currentSelection.role);
+                }
+            } else {
+                setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
+            }
+        } else {
+            setUserMessage("Nothing to be pasted", SeverityType.warning);
+            return;
+        }
     }
 
     validate() {
@@ -57,12 +126,6 @@ export class EditorRequestsHandler {
         activeTab.set(errorTab);
         EditorState.getInstance().getErrors();
         errorsLoaded.set(true);
-    }
-
-    replace() {
-        // TODO implement replace()
-        LOGGER.log("replace called");
-        return undefined;
     }
 
     findText(stringToFind: string) {
@@ -84,7 +147,7 @@ export class EditorRequestsHandler {
         this.showSearchResults(results, "elemToMatch");
     }
 
-    findNamedElement(nameToFind: string, metatypeSelected: string){
+    findNamedElement(nameToFind: string, metatypeSelected: string) {
         LOGGER.log("findNamedElement called");
         searchResultLoaded.set(false);
         activeTab.set(searchTab);

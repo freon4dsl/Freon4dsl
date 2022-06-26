@@ -12,6 +12,7 @@
 // export { MetaKey, PiKey } from "./Keys";
 // export * as Keys from "./Keys";
 
+
 // dependent only upon editor
 export * from "./MatchUtil";
 export * from "./BehaviorUtils";
@@ -22,7 +23,6 @@ export * from "./PiUtils";
 
 // the others
 export * from "./BalanceTreeUtils";
-export * from "../editor/simplifiedBoxAPI/TableUtil";
 export * from "./ListBoxUtil";
 
 // the following depends on BalanceTreeUtils and BehaviorUtils

@@ -12,7 +12,7 @@ export function createKeyboardShortcutForList2 (
     conceptName: string,
     roleToSelect: string
 ): PiCreatePartAction {
-    console.log("LIST role [" + role + "]")
+    LOGGER.log("LIST role [" + role + "]")
     const listKeyboardShortcut: PiCreatePartAction = new PiCreatePartAction({
         trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
         activeInBoxRoles: [role, "alias-" + role + "-textbox"],

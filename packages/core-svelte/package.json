@@ -1,15 +1,7 @@
 {
-  "private": false,
-  "publishConfig": {
-    "access": "public"
-  },
   "name": "@projectit/core-svelte",
-  "version": "0.4.0",
+  "version": "0.3.0",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/joswarmer/ProjectIt.git"
-  },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -26,19 +18,21 @@
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "test": "jest"
   },
-  "devDependencies": {
+  "dependencies": {
+    "@projectit/core": "0.3.0",
     "@testing-library/svelte": "3.1.0",
     "@testing-library/user-event": "^13.5.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@types/jest": "^27.4.0",
     "svelte-jester": "^2.3.1",
     "ts-jest": "^27.1.3",
-    "jest-transform-stub": "^2.0.0"
-  },
-  "dependencies": {
-    "@projectit/core": "0.4.0",
+    "jest-transform-stub": "^2.0.0",
     "click-outside": "1.0.4",
     "mobx": "6.3.3",
     "tslib": "^2.3.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   }
 }
