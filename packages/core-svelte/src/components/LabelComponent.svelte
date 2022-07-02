@@ -7,12 +7,12 @@
     export let label: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
 
-    // console.log("LABEL COMPONENT - " + label?.role)
-    const LOGGER = new PiLogger("LabelComponent");
+    const LOGGER = new PiLogger("LabelComponent").mute();
+    FOCUS_LOGGER.mute();
     let id: string = `${label.element.piId()}-${label.role}`;
 
     onDestroy(() => {
-        LOGGER.log("DESTROY LABEL  COMPONENT ["+ text + "]")
+        LOGGER.log("LabelComponent.onDestroy ["+ text + "]")
     });
 
     let element: HTMLDivElement = null;
