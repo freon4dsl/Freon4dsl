@@ -1,4 +1,10 @@
 <script lang="ts">
+// Since Svelte does not support inheritance, but in stead only uses composition,
+// any component that can be selected is surrounded by this component.
+// This component takes care of handling mouse clicks and adjusts the styling
+// when its slot component is (un)selected. Also, the dimensions of the slot
+// component are calculated after each update.
+
     import {
         Box,
         LabelBox,
@@ -6,15 +12,16 @@
         PiLogger
     } from "@projectit/core";
     import { autorun } from "mobx";
-    import { afterUpdate, tick } from "svelte";
+    import { afterUpdate } from "svelte";
     import { AUTO_LOGGER } from "./ChangeNotifier";
 
     // Parameters
     export let box: Box = new LabelBox(null, "DUMMY", "LABEL");
     export let editor: PiEditor;
 
-    let LOGGER = new PiLogger("SelectableComponent");
-    let XLOGGER = new PiLogger("X");
+    let LOGGER = new PiLogger("SelectableComponent").mute();
+    AUTO_LOGGER.mute();
+    // let XLOGGER = new PiLogger("X");
     let isSelected: boolean = false;
     let className: string;
     let element: HTMLDivElement = null;
@@ -36,7 +43,7 @@
         if (element === null) {
             return;
         }
-        const rect: ClientRect = element.getBoundingClientRect();
+        const rect: DOMRect = element.getBoundingClientRect();
         if (box !== null && box !== undefined) {
             box.actualX = rect.left;
             box.actualY = rect.top;

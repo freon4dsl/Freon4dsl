@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/svelte';
-import { TextComponent } from "../components";
+import { TextComponent } from "../../components";
 import { PiEditor, TextBox } from "@projectit/core";
 
 // see https://testing-library.com/docs/ for testing options
