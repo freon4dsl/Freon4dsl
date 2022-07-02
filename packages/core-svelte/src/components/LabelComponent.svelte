@@ -1,17 +1,17 @@
 <script lang="ts">
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
-    import { LabelBox, PiLogger, styleToCSS, type PiEditor } from "@projectit/core";
-    import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
+    import { PiLogger, type PiEditor } from "@projectit/core";
+    import { FOCUS_LOGGER } from "./ChangeNotifier";
 
     export let label;// = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
 
-    // console.log("LABEL COMPONENT - " + label?.role)
-    const LOGGER = new PiLogger("LabelComponent");
+    const LOGGER = new PiLogger("LabelComponent").mute();
+    FOCUS_LOGGER.mute();
 
     onDestroy(() => {
-        LOGGER.log("DESTROY LABEL  COMPONENT ["+ text + "]")
+        LOGGER.log("LabelComponent.onDestroy ["+ text + "]")
     });
 
     let element: HTMLDivElement =null;
@@ -31,10 +31,10 @@
 
     let text: string;
     const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("onFocus for box " + label.role);
+        FOCUS_LOGGER.log("LabelComponent.onFocus for box " + label.role);
     }
     const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("onBlur for box " + label.role);
+        FOCUS_LOGGER.log("LabelComponent.onBlur for box " + label.role);
     }
     let style: string;
     let cssClass: string;

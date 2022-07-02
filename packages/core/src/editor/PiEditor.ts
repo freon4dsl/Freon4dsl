@@ -15,7 +15,7 @@ import {
     PiActions
 } from "./internal";
 
-const LOGGER = new PiLogger("PiEditor");
+const LOGGER = new PiLogger("PiEditor").mute();
 
 export class PiEditor {
     private _rootElement: PiElement = null;
@@ -169,7 +169,7 @@ export class PiEditor {
     }
 
     set selectedBox(box: Box) {
-        LOGGER.log("selecteedBox:  set selected box to: " + (!!box ? box.role : "null") + "  NOSELECT [" + this.NOSELECT + "]");
+        LOGGER.log("selectedBox:  set selected box to: " + (!!box ? box.role : "null") + "  NOSELECT [" + this.NOSELECT + "]");
         if( this.NOSELECT) { return; }
 
         if (isAliasBox(box)) {
