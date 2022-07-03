@@ -1,24 +1,31 @@
 {
   "private": false,
   "name": "@projectit/server",
-  "version": "0.3.0",
+  "version": "0.4.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joswarmer/ProjectIt.git"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
     "model-server": "./dist/bin/start-server.js"
   },
   "scripts": {
-    "cleanup":          "bash ../../scripts/cleanup.sh",
-    "start":            "cross-env NODE_ENV=development NODE_PORT=3002 nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server-starter.ts",
-    "build":            "tsc --build",
-    "build-verbose":    "tsc --build --verbose --listFiles --listEmittedFiles",
-    "build-release":    "yarn build",
-    "lint":             "tslint -c ./tslint.json './src/**/*.ts*'",
-    "release":          "npm publish",
-    "publish-local":    "npm publish --registry http://localhost:4873",
-    "unpublish-local":  "npm unpublish --force --registry http://localhost:4873",
-    "test":             "jest"
+    "cleanup": "bash ../../scripts/cleanup.sh",
+    "start": "cross-env NODE_ENV=development NODE_PORT=3002 nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server-starter.ts",
+    "build": "tsc --build",
+    "build-verbose": "tsc --build --verbose --listFiles --listEmittedFiles",
+    "build-release": "yarn build",
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
+    "release": "npm publish",
+    "publish-local": "npm publish --registry http://localhost:4873",
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "test": "jest"
   },
   "dependencies": {
     "@types/koa": "^2.13.4",
@@ -27,11 +34,6 @@
     "koa-router": "10.0.0",
     "koa2-cors": "2.0.6",
     "supertest": "^6.1.6",
-    "tslib": "2.3.0"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
+    "tslib": "2.4.0"
   }
-
 }

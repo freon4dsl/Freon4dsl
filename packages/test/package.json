@@ -54,14 +54,14 @@
     "test":         "jest"
   },
   "dependencies": {
-    "@projectit/core": "0.3.0",
-    "@projectit/meta": "0.3.1",
+    "@projectit/core": "0.4.0",
+    "@projectit/meta": "0.4.0",
     "@types/history": "^4.7.5",
     "net.akehurst.language-agl-processor": "4.0.0-rc.5",
     "kotlin": "^1.5.21",
     "global": "^4.4.0",
     "mobx": "6.3.3",
-    "tslib": "^2.3.0"
+    "tslib": "^2.4.0"
   },
   "publishConfig": {
     "access": "private"
