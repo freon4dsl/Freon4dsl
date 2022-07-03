@@ -166,18 +166,25 @@
             // To Be Sure save the current text
             let value = currentText();
             const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
-            if( cmd !== PI_NULL_COMMAND) {
+            if (cmd !== PI_NULL_COMMAND) {
                 let postAction: PiPostAction;
-                runInAction( () => {
-                     textBox.setText(value);
+                runInAction(() => {
+                    if (value !== originalText) {
+                        textBox.setText(value);
+                    }
                     postAction = cmd.execute(textBox, toPiKey(event), editor);
                 });
-                if(!!postAction) { postAction(); }
+                if (!!postAction) {
+                    postAction();
+                }
             } else {
                 LOGGER.log("Key not handled for element " + textBox.element);
                 if (event.key === KEY_ENTER) {
                     LOGGER.log("   ENTER, so propagate");
-                    event["action"] = () => textBox.setText(value);
+                    // Propagate, this action will only be executed withina gridCellComponent.
+                    if (value !== originalText) {
+                        event["action"] = () => textBox.setText(value);
+                    }
                 }
             }
         }
@@ -316,11 +323,12 @@
     const onBlur = (e: FocusEvent) => {
         isEditing = false;
         let value = currentText();
-        LOGGER.log("onBlur current [" + value + "] box text [" + textBox.getText() + "]");
+        LOGGER.log("onBlur current [" + value + "] box text [" + textBox.getText() + "] original [" + originalText + "]");
         if (!isAliasTextBox(textBox)) {
             textBox.caretPosition = getCaretPosition();
-            textBox.setText(value);
-            editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
+            if (value !== originalText) {
+                textBox.setText(value);
+            }            editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         }
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
