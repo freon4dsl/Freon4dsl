@@ -26,8 +26,6 @@
         isPrintable,
         AliasBox,
         KEY_ESCAPE,
-        styleToCSS,
-        conceptStyle,
         SelectBox,
         PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
