@@ -18,7 +18,7 @@
     "build-release": "yarn run build",
     "dev": "rollup -c -w",
     "validate": "svelte-check",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
     "install-local": "yarn install --registry http://localhost:4873",
     "republish-local": "yarn unpublish-local && yarn publish-local",
     "release": "npm publish",

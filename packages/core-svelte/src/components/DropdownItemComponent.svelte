@@ -9,6 +9,8 @@
     export let option: SelectOption;
 
     let label: string = option.label;
+    // TODO add id
+    // let id: string = `${box.element.piId()}-${box.role}`;
 
     const onClick = (e: MouseEvent): void => {
         LOGGER.log("CLICKED, option " + option.id);

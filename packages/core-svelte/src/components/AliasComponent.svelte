@@ -19,15 +19,15 @@
         KEY_TAB,
         KEY_ARROW_DOWN,
         KEY_ARROW_UP,
-        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT, styleToCSS, conceptStyle,
+        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT,
         type SelectOption, PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
-    import { action, autorun, runInAction } from "mobx";
+    import { autorun, runInAction } from "mobx";
     import { clickOutside } from "./clickOutside";
     import { afterUpdate, onMount } from "svelte";
     import { type Writable, writable } from "svelte/store";
     import { SelectOptionList } from "./SelectableOptionList";
-    import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import SelectableComponent from "./SelectableComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
@@ -44,6 +44,8 @@
     let selectedOption: SelectOption;
     let selectableOptionList = new SelectOptionList(editor);
     let isEditing: boolean = false;
+    // id is put in a variable to be able to access it from the component, not only from the HTML element
+    let id: string = `${choiceBox.element.piId()}-${choiceBox.role}`;
 
     function setOpen(msg: string, value: boolean) {
         // LOGGER.log("SET OPEN " + choiceBox?.role + " from " + $openStore + " to " + value + " in " + msg );
@@ -95,7 +97,7 @@
      * @returns {Promise<void>}
      */
     const triggerKeyPressEvent = (key: string) => {
-        LOGGER.info(this, "triggerKeyPressEvent " + key);
+        LOGGER.info("triggerKeyPressEvent " + key);
         isEditing = true;
         if (!!textComponent) {
             // textComponent.textOnScreen = key;
@@ -106,7 +108,7 @@
     };
 
     const handleStringInput = (s: string, aliasResult: BehaviorExecutionResult): BehaviorExecutionResult => {
-        LOGGER.info(this, "handleStringInput for box " + choiceBox.role);
+        LOGGER.info("handleStringInput for box " + choiceBox.role);
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
                 // if (!!textComponent) {
@@ -121,12 +123,12 @@
                 }
                 break;
             case BehaviorExecutionResult.PARTIAL_MATCH:
-                LOGGER.info(this, "PARTIAL_MATCH");
+                LOGGER.info("PARTIAL_MATCH");
                 selectableOptionList.text = s;
                 setOpen("handleStringInput", true);
                 break;
             case BehaviorExecutionResult.NO_MATCH:
-                LOGGER.info(this, "NO MATCH");
+                LOGGER.info("NO MATCH");
                 selectableOptionList.text = s;
                 break;
         }
@@ -327,6 +329,7 @@
      on:click={onClick}
      style="{aliasStyle}"
      use:clickOutside on:click_outside={handleClickOutside}
+     id="{id}"
 >
     <SelectableComponent box={choiceBox.textBox} editor={editor}>
         <TextComponent

@@ -18,6 +18,7 @@
     let isSelected: boolean = false;
     let className: string;
     let element: HTMLDivElement = null;
+    let id: string = `${box.element.piId()}-${box.role}`;
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log("SelectableComponent.onClick: " + event + " for box " + box.role);
@@ -69,7 +70,9 @@
      tabIndex={0}
      on:click={onClick}
      bind:clientHeight={box.actualHeight}
-     bind:this={element}>
+     bind:this={element}
+     id="{id}"
+>
     <slot class="slot" editor={editor} />
 </div>
 
