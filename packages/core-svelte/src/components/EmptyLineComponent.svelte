@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { EmptyLineBox, type PiEditor } from "@projectit/core";
+    import type { EmptyLineBox, PiEditor } from "@projectit/core";
 
     export let box: EmptyLineBox;
     export let editor: PiEditor;

@@ -315,7 +315,7 @@
     };
 
     let text: string = textBox.getText();
-    let element: HTMLDivElement;
+    let element: HTMLSpanElement;
     let placeholder: string;
 
     /**
@@ -361,7 +361,6 @@
     autorun(() => {
         AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "] isEditing [" + isEditing + "]");
         placeholder = textBox.placeHolder;
-        const tmp = textBox.getText();
         // If being edited, do not set the value, let the user type whatever (s)he wants
         // if (!isEditing) {
             text = textBox.getText();

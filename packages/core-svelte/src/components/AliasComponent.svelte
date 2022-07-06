@@ -143,9 +143,9 @@
         }
     };
 
-    const onInput = (e: InputEvent) => {
+    const onInput = (event: Event) => {
         isEditing = true;
-        const value = (e.target as HTMLElement).innerText;
+        const value = (event.target as HTMLElement).innerText;
         LOGGER.log("onInput: [" + value + "] for role " + choiceBox.role + " with text [" + textComponent.getText() + "]");
         let aliasResult = undefined;
         if (isAliasBox(choiceBox)) {
@@ -304,7 +304,7 @@
 
     });
 
-    const handleClickOutside = (event): void => {
+    const handleClickOutside = (event: Event): void => {
         setOpen("clickOutside", false);
         isEditing = false;
     };
