@@ -1,5 +1,5 @@
 import { matchElementList, observablepart, observablepartlist, PiElementBaseImpl, PiNamedElement, PiUtils } from "@projectit/core";
-import { SimpleElement } from "../one-element/SimpleElement";
+import { SimpleElement } from "./SimpleElement";
 import { makeObservable, observable } from "mobx";
 
 export class ElementWithList extends PiElementBaseImpl implements PiNamedElement  {
@@ -19,7 +19,7 @@ export class ElementWithList extends PiElementBaseImpl implements PiNamedElement
         return result;
     }
 
-    readonly $typename: string = "WithList"; // holds the metatype in the form of a string
+    readonly $typename: string = "ElementWithList"; // holds the metatype in the form of a string
     $id: string; // a unique identifier
     // parse_location: PiParseLocation; // if relevant, the location of this element within the source from which it is parsed
     name: string = ""; // implementation of name

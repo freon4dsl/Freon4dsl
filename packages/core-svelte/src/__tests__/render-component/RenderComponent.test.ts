@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen } from "@testing-library/svelte";
 import { IndentBox, LabelBox, PiEditor, PiElement } from "@projectit/core";
-import { SimpleElement } from "../models/one-element/SimpleElement";
+import { SimpleElement } from "../models/SimpleElement";
 import RenderComponent from "../../components/RenderComponent.svelte";
 
 describe("Render component", () => {

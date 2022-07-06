@@ -10,7 +10,7 @@ export type GridOrientation = "neutral" | "row" | "column";
 export class GridBox extends Box {
     readonly kind = "GridBox";
     cells: GridCellBox[] = [];
-    private $children: Box[] = [];
+    private $children: Box[] = []; // TODO find out why this prop is needed
     orientation: GridOrientation = "neutral";
 
     constructor(exp: PiElement, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {

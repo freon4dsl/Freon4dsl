@@ -1,49 +1,50 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
-import { HorizontalListBox, LabelBox, PiEditor } from "@projectit/core";
+import { LabelBox, OptionalBox, PiEditor } from "@projectit/core";
 import { ModelMaker } from "../models/ModelMaker";
-import ListComponent from "../../components/ListComponent.svelte"; // Note that this form of import is neccessary for jest to function!
+import OptionalComponent from "../../components/OptionalComponent.svelte"; // Note that this form of import is neccessary for jest to function!
+import { configure } from '@testing-library/dom'
+configure({ testIdAttribute: 'id' })
 
-describe("List component", () => {
-    let horizontalBox: HorizontalListBox;
+describe("Optional component", () => {
+    let optionalBox: OptionalBox;
     const myEditor = new PiEditor(null, null);
+    let showIt: boolean = true;
 
     beforeEach(() => {
         // create a model and the boxes for the model
-        const model = ModelMaker.makeList();
-        const boxes: LabelBox[] = [];
-        model.myList.forEach((xx, index) => {
-            boxes[index] = new LabelBox(xx, "list-element" + index, () => "Label" + index);
-        });
-        horizontalBox = new HorizontalListBox(model, "", boxes);
+        const model = ModelMaker.makeOptional();
+        const box: LabelBox = new LabelBox(model.myOptional, "optional-element", () => "OptionalLabel");
+        optionalBox = new OptionalBox(model, "opt-role", () => {return showIt;}, box, false, "someAliasText" );
     });
 
-    it("all elements are visible", () => {
-        const result = render(ListComponent, { list: horizontalBox, editor: myEditor });
-        horizontalBox.children.forEach((box , index)=> {
-            const myLabel = screen.getByText('Label' + index);
-            expect(myLabel).toBeVisible();
-        });
+    it.skip("all elements are visible", () => {
+        const result = render(OptionalComponent, { optionalBox: optionalBox, editor: myEditor });
+        expect(result.container).toBeNull();
+        // horizontalBox.children.forEach((box , index)=> {
+        //     const myLabel = screen.getByText('Label' + index);
+        //     expect(myLabel).toBeVisible();
+        // });
     });
 
-    it("when clicked, a single element gets focus", () => {
-        const result = render(ListComponent, { list: horizontalBox, editor: myEditor });
+    it.skip("when clicked, a single element gets focus", () => {
+        const result = render(OptionalComponent, { list: optionalBox, editor: myEditor });
         // nothing has focus before the click
-        horizontalBox.children.forEach((box , index)=> {
+        optionalBox.children.forEach((box , index)=> {
             const myLabel = screen.getByText('Label' + index);
             expect(myLabel).not.toHaveFocus();
         });
         // click the list
         fireEvent.click(result.container);
         // nothing has focus
-        horizontalBox.children.forEach((box , index)=> {
+        optionalBox.children.forEach((box , index)=> {
             const myLabel = screen.getByText('Label' + index);
             expect(myLabel).not.toHaveFocus();
         });
         // click the second element
         fireEvent.click(screen.getByText('Label1'));
         // the second element has focus
-        horizontalBox.children.forEach((box , index)=> {
+        optionalBox.children.forEach((box , index)=> {
             const myLabel = screen.getByText('Label' + index);
             if (index !== 1) {
                 expect(myLabel).not.toHaveFocus();
@@ -53,12 +54,12 @@ describe("List component", () => {
         });
     });
 
-    it("using arrow keys, another element gets focus", () => {
-        const result = render(ListComponent, { list: horizontalBox, editor: myEditor });
+    it.skip("using arrow keys, another element gets focus", () => {
+        const result = render(OptionalComponent, { list: optionalBox, editor: myEditor });
         // click the second element
         fireEvent.click(screen.getByText('Label1'));
         // the second element has focus
-        horizontalBox.children.forEach((box , index)=> {
+        optionalBox.children.forEach((box , index)=> {
             const myLabel = screen.getByText('Label' + index);
             if (index !== 1) {
                 expect(myLabel).not.toHaveFocus();
@@ -67,9 +68,9 @@ describe("List component", () => {
             }
         });
         // set the focus programmatically on the first element
-        horizontalBox.children[0].setFocus();
+        optionalBox.children[0].setFocus();
         // the first element has focus
-        horizontalBox.children.forEach((box , index)=> {
+        optionalBox.children.forEach((box , index)=> {
             const myLabel = screen.getByText('Label' + index);
             if (index !== 0) {
                 expect(myLabel).not.toHaveFocus();

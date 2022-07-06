@@ -1,5 +1,6 @@
 import { ElementWithList } from "./ElementWithList";
-import { SimpleElement } from "../one-element/SimpleElement";
+import { SimpleElement } from "./SimpleElement";
+import { ElementWithOptional } from "./ElementWithOptional";
 
 export class ModelMaker {
     static makeList(): ElementWithList {
@@ -12,6 +13,13 @@ export class ModelMaker {
         owner.myList.push(element2);
         owner.myList.push(element3);
         owner.myList.push(element4);
+        return owner;
+    }
+
+    static makeOptional(): ElementWithOptional {
+        const owner: ElementWithOptional = new ElementWithOptional("OPTIONAL-OWNER");
+        const optional: SimpleElement = new SimpleElement("OPTIONAL_ELEMENT");
+        owner.myOptional = optional;
         return owner;
     }
 }

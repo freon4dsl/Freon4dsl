@@ -48,21 +48,16 @@
     afterUpdate(() => {
         // LOGGER.log("<< RenderComponent.afterUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
         showBox = box;
-    })
+    });
     beforeUpdate(() => {
         // LOGGER
         // .log(">> RenderComponent.beforeUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
         showBox = box;
-    })
-
+    });
 
     autorun(() => {
         AUTO_LOGGER.log("RenderComponent: " + box.kind + " for element " + box.element.piLanguageConcept());
         showBox = box;
-        if (isVerticalBox(showBox) || isHorizontalBox(showBox)) {
-            // LOGGER.log("    children " + showBox.children.length);
-            // showBox.children.forEach(box => box.name);
-        }
     });
 </script>
 

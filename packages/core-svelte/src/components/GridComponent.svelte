@@ -31,6 +31,7 @@
     let templateRows: string;
 
     const onKeydown = (event: KeyboardEvent) => {
+        // TODO check whether this is needed, the gridcellcomponent handles this
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === KEY_ENTER) {
             const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), gridBox, editor);
@@ -40,7 +41,7 @@
                     postAction = cmd.execute(gridBox, toPiKey(event), editor);
                 });
                 if(!!postAction) { postAction(); }
-            }
+            } // TODO see if the following else can be removed
             else {
                 // if (!isKeyboardShortcutForThis) {
                     if (event.key === KEY_ENTER) {
@@ -53,6 +54,7 @@
 
     };
     let cssClass: string = "";
+    // TODO either use svelte store for cells or mobx observable???
     autorun(() => {
         $cells = [...gridBox.cells];
         length = $cells.length;
