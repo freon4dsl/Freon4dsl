@@ -7,7 +7,7 @@
     export let indentBox: IndentBox;
     export let editor: PiEditor;
 
-    let style=`${indentBox.indent * 8}px;`;
+    export const style=`${indentBox.indent * 8}px;`; // only exported for testing purposes
     let id: string = `${indentBox.element.piId()}-${indentBox.role}`;
 
     autorun( () => {
