@@ -304,7 +304,7 @@
 
     });
 
-    const handleClickOutside = (event: Event): void => {
+    const handleClickOutside = (): void => {
         setOpen("clickOutside", false);
         isEditing = false;
     };
