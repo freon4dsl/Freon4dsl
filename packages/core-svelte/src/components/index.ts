@@ -8,7 +8,6 @@ import IndentComponent from './IndentComponent.svelte';
 import LabelComponent from './LabelComponent.svelte';
 import ListComponent from './ListComponent.svelte';
 import OptionalComponent from './OptionalComponent.svelte';
-import ProjectionalEditorComponent from './ProjectionalEditorComponent.svelte';
 import ProjectItComponent from './ProjectItComponent.svelte';
 import RenderComponent from './RenderComponent.svelte';
 import SelectableComponent from './SelectableComponent.svelte';
@@ -26,7 +25,6 @@ export {
     LabelComponent,
     ListComponent,
     OptionalComponent,
-    ProjectionalEditorComponent,
     ProjectItComponent,
     RenderComponent,
     SelectableComponent,
