@@ -3,8 +3,9 @@
 
     export let box: EmptyLineBox;
     export let editor: PiEditor;
+    let id: string = `${box.element.piId()}-${box.role}`;
 </script>
 
-<span>
+<span id="{id}">
     <br>
 </span>

@@ -38,6 +38,8 @@
     export let textBox: TextBox ; // new TextBox(null, "role:", () => "Editable textbox", (v: string) => { });
     export let editor: PiEditor;
 
+    let id: string = `${textBox.element.piId()}-${textBox.role}`;
+
     export let getText = (): string => {
         // TODO loopt eentje achter tijdens onKeyDown, want we kunnen de key nog negeren.
         return currentText();
@@ -331,7 +333,7 @@
             }            editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         }
         if (textBox.deleteWhenEmpty && value.length === 0) {
-            EVENT_LOG.info(this, "delete empty text");
+            EVENT_LOG.info("delete empty text");
             editor.deleteBox(textBox);
         }
         LOGGER.log("END onBlur text [" + currentText() + "]");
@@ -395,6 +397,7 @@
       contenteditable="true"
       bind:innerHTML={text}
       bind:this={element}
+      id="{id}"
 ></span>
 
 <style>

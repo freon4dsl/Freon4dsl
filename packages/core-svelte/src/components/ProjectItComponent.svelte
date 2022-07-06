@@ -17,6 +17,8 @@
 
     let LOGGER = new PiLogger("ProjectItComponent");
     export let editor: PiEditor;
+    // TODO add id
+    // let id: string = `${box.element.piId()}-${box.role}`;
 
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();

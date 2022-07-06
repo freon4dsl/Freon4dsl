@@ -36,7 +36,7 @@
     import { writable } from 'svelte/store';
     import type  { Writable } from 'svelte/store';
     import { SelectOptionList } from "./SelectableOptionList";
-    import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import SelectableComponent from "./SelectableComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
 
@@ -48,6 +48,7 @@
     let textComponent: TextComponent;
     let selectedOption: SelectOption;
     let selectableOptionList = new SelectOptionList(editor);
+    let id: string = `${choiceBox.element.piId()}-${choiceBox.role}`;
 
     function setOpen(msg: string, value: boolean) {
         // LOGGER.log("SET OPEN " + choiceBox?.role + " from " + $openStore + " to " + value + " in " + msg );
@@ -74,7 +75,7 @@
      * @returns {Promise<void>}
      */
     const triggerKeyPressEvent = async (key: string) => {
-        LOGGER.info(this, "triggerKeyPressEvent " + key);
+        LOGGER.info("triggerKeyPressEvent " + key);
         const aliasResult = await handleStringInput(key);
         if (aliasResult !== BehaviorExecutionResult.EXECUTED) {
             if (!!textComponent && !!textComponent.element) {
@@ -84,7 +85,7 @@
     };
 
     const handleStringInput = async (value: string) => {
-        LOGGER.info(this, "handleStringInput for box " + choiceBox.role);
+        LOGGER.info("handleStringInput for box " + choiceBox.role);
         const aliasResult = executeBehavior(choiceBox, value, value, editor);
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
@@ -339,6 +340,7 @@
      on:focusout={onBlurHandler2}
      on:click={onClick}
      use:clickOutside on:click_outside={handleClickOutside}
+     id="{id}"
 >
     <SelectableComponent box={choiceBox.textBox} editor={editor}>
         <TextComponent

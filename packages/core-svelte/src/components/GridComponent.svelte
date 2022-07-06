@@ -1,11 +1,10 @@
 <script lang="ts">
     import {
-        conceptStyle, GridCellBox, isMetaKey, KEY_ENTER, PiUtils, styleToCSS, toPiKey,
+        GridCellBox, isMetaKey, KEY_ENTER, PiUtils, toPiKey,
         type GridBox, type PiEditor, PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { choiceBox } from "./AliasComponent.svelte";
-    import { AUTO_LOGGER, ChangeNotifier, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { ChangeNotifier, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import GridCellComponent from "./GridCellComponent.svelte";
     import { autorun, runInAction } from "mobx";
     import { writable, type Writable } from "svelte/store";
@@ -14,6 +13,7 @@
     export let editor: PiEditor;
 
     let notifier = new ChangeNotifier();
+    let id: string = `${gridBox.element.piId()}-${gridBox.role}`;
 
     onMount( () => {
         MOUNT_LOGGER.log("GridComponent onmount")
@@ -68,6 +68,7 @@
         style:grid-template-rows="{templateRows}"
         class="maingridcomponent {cssClass}"
         on:keydown={onKeydown}
+        id="{id}"
 >
     {#each $cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid" + "-" + notifier.dummy)}
         <GridCellComponent grid={gridBox} cellBox={cell} editor={editor}/>

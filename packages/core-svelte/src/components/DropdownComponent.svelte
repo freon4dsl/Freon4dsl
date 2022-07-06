@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
     import { autorun } from "mobx";
     import { createEventDispatcher } from "svelte";
     import {
-        findOption, PiLogger,
+        PiLogger,
         type SelectOption,
         KEY_ESCAPE, KEY_ARROW_DOWN, KEY_ARROW_UP, KEY_DELETE, KEY_ENTER
     } from "@projectit/core";
@@ -16,6 +16,8 @@
 
     const LOGGER = new PiLogger("DropdownComponent");
     const dispatcher = createEventDispatcher();
+    // TODO add id
+    // let id: string = `${box.element.piId()}-${box.role}`;
 
     const getOptionsLogged = (): SelectOption[] => {
         const options = getOptions();

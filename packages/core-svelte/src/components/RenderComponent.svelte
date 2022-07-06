@@ -38,6 +38,9 @@
     export let box: Box;
     export let editor: PiEditor;
 
+    let showBox: Box;
+    let id: string = `${box.element.piId()}-${box.role}`;
+
     const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)), {
         selectable: false,
     });
@@ -52,7 +55,7 @@
         showBox = box;
     })
 
-    let showBox;
+
     autorun(() => {
         AUTO_LOGGER.log("RenderComponent: " + box.kind + " for element " + box.element.piLanguageConcept());
         showBox = box;
@@ -63,7 +66,7 @@
     });
 </script>
 
-<span>
+<span id="{id}">
 <!--    <svelte:component this={boxComponent(box)}/> -->
     {#if isLabelBox(showBox)}
         <SelectableComponent box={showBox} editor={editor}>

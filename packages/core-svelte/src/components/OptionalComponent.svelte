@@ -3,12 +3,13 @@
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
     import { getRoot, OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
-    import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
+    import { FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
 
     export let optionalBox: OptionalBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("OptionalComponent");
+    let id: string = `${optionalBox.element.piId()}-${optionalBox.role}`;
 
     onDestroy(() => {
         LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ optionalBox.id + "]")
@@ -62,6 +63,7 @@
 <div class="optional"
      tabIndex={0}
      bind:this={element}
+     id="{id}"
 >
     {#if mustShow || showByCondition}
         <RenderComponent box={optionalBox.box} editor={editor} />

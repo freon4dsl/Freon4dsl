@@ -1,20 +1,21 @@
 <script lang="ts">
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
-    import { LabelBox, PiLogger, styleToCSS, type PiEditor } from "@projectit/core";
-    import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
+    import { PiLogger, type PiEditor, LabelBox } from "@projectit/core";
+    import { FOCUS_LOGGER } from "./ChangeNotifier";
 
-    export let label;// = new LabelBox(null, "boxRole", "This is a box");
+    export let label: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
 
     // console.log("LABEL COMPONENT - " + label?.role)
     const LOGGER = new PiLogger("LabelComponent");
+    let id: string = `${label.element.piId()}-${label.role}`;
 
     onDestroy(() => {
         LOGGER.log("DESTROY LABEL  COMPONENT ["+ text + "]")
     });
 
-    let element: HTMLDivElement =null;
+    let element: HTMLDivElement = null;
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("LabelComponent.setFocus for box " + label?.role);
         if (!!element) {
@@ -31,11 +32,12 @@
 
     let text: string;
     const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("onFocus for box " + label.role);
+        FOCUS_LOGGER.log("LabelComponent.onFocus for box " + label.role);
     }
     const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("onBlur for box " + label.role);
+        FOCUS_LOGGER.log("LabelComponent.onBlur for box " + label.role);
     }
+    // TODO question: do you need both style and cssClass?
     let style: string;
     let cssClass: string;
 
@@ -52,6 +54,7 @@
      on:focus={onFocusHandler}
      on:blur={onBlurHandler}
      bind:this={element}
+     id="{id}"
 >
     {text}
 </div>

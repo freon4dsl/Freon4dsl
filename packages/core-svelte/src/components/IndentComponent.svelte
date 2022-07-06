@@ -8,6 +8,7 @@
     export let editor: PiEditor;
 
     let style=`${indentBox.indent * 8}px;`;
+    let id: string = `${indentBox.element.piId()}-${indentBox.role}`;
 
     autorun( () => {
        indentBox.indent;
@@ -28,6 +29,7 @@
     style:margin-left="{style}"
     on:focus={onFocus}
     on:blur={onBlur}
+    id="{id}"
 >
     <RenderComponent box={indentBox.child} editor={editor}/>
 </span>

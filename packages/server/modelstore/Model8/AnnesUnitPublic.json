@@ -4,7 +4,26 @@
    "entities": [
       {
          "$typename": "Entity",
-         "name": "Robert"
+         "name": "Robert",
+         "construc": null,
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "leeftijd",
+               "declaredType": "Integer"
+            }
+         ],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "",
+               "body": null,
+               "parameters": [],
+               "declaredType": null
+            }
+         ],
+         "listOfReferences": [],
+         "baseEntity": null
       }
    ],
    "methods": []

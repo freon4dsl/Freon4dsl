@@ -1,7 +1,7 @@
 <script lang="ts">
     import { autorun } from "mobx";
     import { afterUpdate, onDestroy, onMount } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import {
         Box,
@@ -20,9 +20,9 @@
     // console.log("LIST COMPONET READ " + list?.role)
     // Local state variables
     let LOGGER: PiLogger = new PiLogger("ListComponent");
-    let svList: HorizontalListBox = list;
+    let svList: ListBox = list; // TODO question: why a new variable, cannot use 'list'?
     let svNotifier = new ChangeNotifier();
-    let element: HTMLDivElement;
+    let element: HTMLSpanElement;
     let children: Box[];
     $: children = [...list.children];
 
