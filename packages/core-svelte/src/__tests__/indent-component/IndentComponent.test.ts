@@ -3,6 +3,9 @@ import { fireEvent, render, screen } from "@testing-library/svelte";
 import { IndentBox, LabelBox, PiEditor, PiElement } from "@projectit/core";
 import { SimpleElement } from "../models/one-element/SimpleElement";
 import IndentComponent from "../../components/IndentComponent.svelte";
+import { configure } from '@testing-library/dom'
+configure({ testIdAttribute: 'id' })
+
 
 describe("Indent component", () => {
     // an indent box coupled to element2, that takes as slot:
