@@ -365,13 +365,7 @@
         // if (!isEditing) {
             text = textBox.getText();
         // }
-        // textStyle = ":before {" +  styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style)) + "}";
-        // TODO check these style calcs for each situation
         boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
-        // const boxStyle = (textBox.parent instanceof AliasBox ? textBox.parent.style : (textBox.parent instanceof SelectBox ? textBox.parent.style : textBox.style));
-        // if (textBox.getText() === "appel") {
-        //     textStyle += "--freon-colors-bg_text_box: lightgrey;"
-        // }
         textBox.setFocus = setFocus;
     });
 

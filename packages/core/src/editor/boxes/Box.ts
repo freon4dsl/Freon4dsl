@@ -12,8 +12,11 @@ export abstract class Box {
     role: string = "";
     roleNumber: number = undefined;
     element: PiElement = null;
+    // Custom CSS class that will be added to the conponent rendering this box
     cssClass: string = "";
+    // Custom CSS Style class that will be added as inline style to the conponent rendering this box
     cssStyle: string = "";
+    // Can this box be selected in the editor?
     selectable: boolean = true;
     parent: Box = null;
 
