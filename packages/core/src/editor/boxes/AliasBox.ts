@@ -149,7 +149,7 @@ export function isAliasBox(b: Box): b is AliasBox {
     return b.kind === "AliasBox"; //  b instanceof AliasBox;
 }
 
-export function isAliasTextBox(b: Box): b is TextBox {
+export function isAliasTextBox(b: Box): boolean {
     return b.kind === "TextBox" && isAliasBox(b.parent);
 }
 

@@ -37,7 +37,6 @@
     const onBlurHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("LabelComponent.onBlur for box " + label.role);
     }
-    // TODO question: do you need both style and cssClass?
     let style: string;
     let cssClass: string;
 
