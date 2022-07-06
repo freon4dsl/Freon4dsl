@@ -20,7 +20,7 @@
     // console.log("LIST COMPONET READ " + list?.role)
     // Local state variables
     let LOGGER: PiLogger = new PiLogger("ListComponent");
-    let svList: HorizontalListBox = list;
+    let svList: ListBox = list; // TODO question: why a new variable, cannot use 'list'?
     let svNotifier = new ChangeNotifier();
     let element: HTMLDivElement;
     let children: Box[];
