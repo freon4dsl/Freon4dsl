@@ -31,6 +31,7 @@
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { componentId } from "./util";
 
     const LOGGER = new PiLogger("TextComponent");
     // Is this component currently being edited by the user?
@@ -38,7 +39,7 @@
     export let textBox: TextBox ; // new TextBox(null, "role:", () => "Editable textbox", (v: string) => { });
     export let editor: PiEditor;
 
-    let id: string = `${textBox.element.piId()}-${textBox.role}`;
+    let id: string = componentId(textBox);
 
     export let getText = (): string => {
         // TODO loopt eentje achter tijdens onKeyDown, want we kunnen de key nog negeren.

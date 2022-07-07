@@ -3,13 +3,14 @@
     import { autorun } from "mobx";
     import { PiLogger, type PiEditor, LabelBox } from "@projectit/core";
     import { FOCUS_LOGGER } from "./ChangeNotifier";
+    import { componentId } from "./util";
 
     export let label: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("LabelComponent").mute();
-    FOCUS_LOGGER.mute();
-    let id: string = `${label.element.piId()}-${label.role}`;
+
+    let id: string = componentId(label);
 
     onDestroy(() => {
         LOGGER.log("LabelComponent.onDestroy ["+ text + "]")

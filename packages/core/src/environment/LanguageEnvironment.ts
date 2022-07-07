@@ -31,7 +31,6 @@ export class LanguageEnvironment implements PiEnvironment {
     public reader: PiReader;
     public stdlib: PiStdlib;
     public unitNames: string[];
-    public namedConcepts: string[];
     public validator: PiValidator;
     public writer: PiWriter;
 

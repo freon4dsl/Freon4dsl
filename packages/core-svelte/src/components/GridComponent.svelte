@@ -1,19 +1,17 @@
 <script lang="ts">
-    import {
-        GridCellBox, isMetaKey, KEY_ENTER, PiUtils, toPiKey,
-        type GridBox, type PiEditor, PiCommand, PI_NULL_COMMAND, PiPostAction
-    } from "@projectit/core";
+    import { GridCellBox, type GridBox, type PiEditor } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import { ChangeNotifier, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import GridCellComponent from "./GridCellComponent.svelte";
-    import { autorun, runInAction } from "mobx";
+    import { autorun } from "mobx";
     import { writable, type Writable } from "svelte/store";
+    import { componentId } from "./util";
 
     export let gridBox: GridBox;
     export let editor: PiEditor;
 
     let notifier = new ChangeNotifier();
-    let id: string = `${gridBox.element.piId()}-${gridBox.role}`;
+    let id = componentId(gridBox);
 
     onMount( () => {
         MOUNT_LOGGER.log("GridComponent onmount")
@@ -30,29 +28,6 @@
     let templateColumns: string;
     let templateRows: string;
 
-    const onKeydown = (event: KeyboardEvent) => {
-        // TODO check whether this is needed, the gridcellcomponent handles this
-        const piKey = toPiKey(event);
-        if (isMetaKey(event) || event.key === KEY_ENTER) {
-            const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), gridBox, editor);
-            if( cmd !== PI_NULL_COMMAND) {
-                let postAction: PiPostAction;
-                runInAction( () => {
-                    postAction = cmd.execute(gridBox, toPiKey(event), editor);
-                });
-                if(!!postAction) { postAction(); }
-            } // TODO see if the following else can be removed
-            else {
-                // if (!isKeyboardShortcutForThis) {
-                    if (event.key === KEY_ENTER) {
-                        return;
-                    }
-
-                // }
-            }
-        }
-
-    };
     let cssClass: string = "";
     // TODO either use svelte store for cells or mobx observable???
     autorun(() => {
@@ -69,7 +44,6 @@
         style:grid-template-columns="{templateColumns}"
         style:grid-template-rows="{templateRows}"
         class="maingridcomponent {cssClass}"
-        on:keydown={onKeydown}
         id="{id}"
 >
     {#each $cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid" + "-" + notifier.dummy)}
@@ -81,9 +55,10 @@
     .maingridcomponent {
         display: inline-grid;
         /*grid-gap: 2px;*/
+
         align-items: center;
         align-content: center;
-        justify-items: stretch;
+        justify-items: center;
         border-color: var(--freon-grid-component-border-color, darkgreen);
         border-width: var(--freon-grid-component-border-width, 1pt);
         border-style: var(--freon-grid-component-border-style, solid);

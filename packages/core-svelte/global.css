@@ -57,6 +57,7 @@
 	--freon-gridcell-component-margin: inherit;
 	--freon-gridcell-component-background-color: inherit;
 	--freon-gridcell-component-color: inherit;
+	--freon-gridcell-component-justify-left: stretch;
 
 	--freon-horizontallist-component-margin: 0px;
 	--freon-horizontallist-component-padding: 0px;

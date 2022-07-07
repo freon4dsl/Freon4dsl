@@ -202,6 +202,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 }
 
 .gridcellOdd {
+  //--freon-gridcell-component-justify-left: right;
   --freon-gridcell-component-background-color: #{theme.$grey-300};
 }
 .gridcellEven {

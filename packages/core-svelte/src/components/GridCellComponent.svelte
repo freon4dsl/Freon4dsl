@@ -14,7 +14,7 @@
     import { writable, type Writable } from "svelte/store";
     import { UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
-    import { isOdd } from "./util";
+    import { componentId, isOdd } from "./util";
 
     // properties
     export let grid: GridBox;
@@ -27,7 +27,7 @@
     const LOGGER = new PiLogger("GridCellComponent");
     let boxStore: Writable<Box> = writable<Box>(cellBox.box);
     let cssVariables: string;
-    let id: string = `${cellBox.element.piId()}-${cellBox.role}`;
+    let id: string = componentId(cellBox);
 
     afterUpdate(() => {
         UPDATE_LOGGER.log("GridCellComponent.afterUpdate");
@@ -102,6 +102,7 @@
     .gridcellcomponent {
         box-sizing: border-box;
         align-self: stretch;
+        justify-self: var(--freon-gridcell-component-justify-left, stretch);
         display: flex;
         padding: var(--freon-gridcell-component-padding, 1px);
         padding: var(--freon-gridcell-component-margin, 1px);
