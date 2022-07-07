@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
 import { LabelBox, PiEditor, PiElement } from "@projectit/core";
-import { SimpleElement } from "../models/one-element/SimpleElement";
+import { SimpleElement } from "../models/SimpleElement";
 import LabelComponent from "../../components/LabelComponent.svelte";
 import TestLabelSelectable from "./TestLabelSelectable.svelte";
 

@@ -10,15 +10,15 @@
 
     const LOGGER = new PiLogger("OptionalComponent");
     let id: string = `${optionalBox.element.piId()}-${optionalBox.role}`;
+    let childBox ;
+    let mustShow = false;
+    let showByCondition = false;
+    let element: HTMLDivElement = null;
 
     onDestroy(() => {
         LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ optionalBox.id + "]")
     });
 
-    let mustShow = false;
-    let showByCondition = false;
-
-    let element: HTMLDivElement =null;
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
         if (mustShow || showByCondition) {
@@ -32,6 +32,7 @@
         MOUNT_LOGGER.log("OptionalComponent onMount --------------------------------")
         optionalBox.setFocus = setFocus;
     });
+
     afterUpdate( () => {
         LOGGER.log("AfterUpdate " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
         LOGGER.log("   root " + getRoot(optionalBox).$id);
@@ -40,11 +41,8 @@
                 LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
             })
         }
-
         optionalBox.setFocus = setFocus;
     });
-
-    let childBox ;
 
     autorun( () => {
         LOGGER.log("AUTO " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);

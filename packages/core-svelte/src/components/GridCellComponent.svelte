@@ -21,7 +21,7 @@
     export let cellBox: GridCellBox;
     export let editor: PiEditor;
 
-     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
+    type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
     //local variable
     const LOGGER = new PiLogger("GridCellComponent");
