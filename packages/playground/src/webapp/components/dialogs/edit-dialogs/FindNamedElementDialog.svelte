@@ -12,7 +12,7 @@
             </Textfield>
         </div>
         <div>
-            {#each $conceptNames as name}
+            {#each Language.getInstance().getNamedElements() as name}
                 <FormField>
                     <Radio
                             bind:group={typeSelected}
@@ -35,6 +35,7 @@
 </Dialog>
 
 <script lang="ts">
+    import { Language } from "@projectit/core";
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Textfield from "@smui/textfield";
     import HelperText from "@smui/textfield/helper-text";
@@ -42,7 +43,6 @@
     import Radio from "@smui/radio";
     import FormField from "@smui/form-field";
     import { findNamedDialogVisible } from "../../stores/DialogStore";
-    import { conceptNames } from "../../stores/LanguageStore";
     import { EditorRequestsHandler } from "../../../language/EditorRequestsHandler";
 
     const cancelStr: string = "cancel";

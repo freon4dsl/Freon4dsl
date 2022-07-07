@@ -1,5 +1,5 @@
 import { ReferenceShortcut } from "../editor";
-import { PiElement, PiModel, PiModelUnit } from "../ast";
+import { PiElement, PiModel, PiModelUnit, PiNamedElement } from "../ast";
 import { isNullOrUndefined } from "../util";
 import { PiLogger } from "../logging";
 const LOGGER = new PiLogger("Language");
@@ -209,6 +209,30 @@ export class Language {
             }
         }
     }
+
+    /**
+     * Return all named concept in the language.
+     */
+    public getNamedConcepts(): string[] {
+        return Array.from(this.concepts.values()).filter( concept => concept.isNamedElement).map(concept => concept.typeName);
+    }
+
+    /**
+     * Return all named interfaces in the language.
+     */
+    public getNamedInterfaces(): string[] {
+        return Array.from(this.interfaces.values()).filter( intfc => intfc.isNamedElement).map(intfc => intfc.typeName);
+    }
+
+    /**
+     * Return all named concepts and interfaces in the language.
+     */
+    public getNamedElements(): string[] {
+        return this.getNamedConcepts().concat(this.getNamedInterfaces());
+    }
+
+    intfc
+
     createModel(): PiModel {
         return this.pmodel?.constructor();
     }

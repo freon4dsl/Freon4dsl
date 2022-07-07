@@ -1,5 +1,4 @@
 import {
-    conceptNames,
     fileExtensions,
     languageName,
     projectionNames,
@@ -35,9 +34,6 @@ export class LanguageInitializer {
         let nameList: string[] = proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name];
         projectionNames.set(nameList);
         projectionsShown.set(nameList); // initialy, all projections are shown
-
-        // the concept names for which a search is possible
-        conceptNames.set(editorEnvironment.namedConcepts);
 
         // start the undo manager
         PiUndoManager.getInstance();

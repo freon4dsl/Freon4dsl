@@ -11,7 +11,6 @@ import { PiClassifier, PiLanguage } from "../../metalanguage";
 export class EnvironmentTemplate {
 
     generateEnvironment(language: PiLanguage, relativePath: string): string {
-        const namedConcepts: PiClassifier[] = language.conceptsAndInterfaces().filter(c => GenerationUtil.hasNameProperty(c));
         return `
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
                     ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
@@ -86,8 +85,6 @@ export class EnvironmentTemplate {
             languageName: string = "${language.name}";
             // the type names of all units
             unitNames: string[] = [${language.modelConcept.unitTypes().map(unit => `"${Names.classifier(unit)}"`)}];  
-            // the type names of all concepts/interfaces that have a name property
-            namedConcepts: string[] = [${namedConcepts.map(unit => `"${Names.classifier(unit)}"`)}];    
             fileExtensions: Map<string, string> = new Map([
                 ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
             ]);
