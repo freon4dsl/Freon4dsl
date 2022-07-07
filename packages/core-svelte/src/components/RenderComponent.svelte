@@ -29,7 +29,7 @@
         LabelBox, PiEditor, PiLogger
     } from "@projectit/core";
 
-    const LOGGER = new PiLogger("RenderComponent");
+    const LOGGER = new PiLogger("RenderComponent").mute();
 
     onDestroy(() => {
         LOGGER.log("DESTROY for box: " + box.role);
@@ -39,7 +39,7 @@
     export let editor: PiEditor;
 
     let showBox: Box;
-    let id: string = `${box.element.piId()}-${box.role}`;
+    let id: string = `render-${box.element.piId()}-${box.role}`;
 
     const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)), {
         selectable: false,
