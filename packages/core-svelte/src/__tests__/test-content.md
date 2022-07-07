@@ -1,3 +1,8 @@
+# OptionalComponent
+
+1. als conditie waar oplevert dan wordt component getoond, anders niet, behalve als mustShow true is
+2. niet getoond, dan wordt aliasbox getoond.
+
 # Alle componenten
 Alle keyboard events moeten worden doorgegeven naar de parent component, behalve in sommige gevallen.
 Deze worden altijd in de bovenste component afgehandeld:
@@ -19,10 +24,7 @@ Deze worden altijd in de bovenste component afgehandeld:
 5. de events in 2.2 tot 2.7 moeten worden doorgegeven aan de parent van de text box.
 6. de caret position on click is correct gezet in bijbehorende text box
 
-# OptionalComponent
 
-1. als conditie waar oplevert dan wordt component getoond, anders niet, behalve als mustShow true is
-2. niet getoond, dan wordt aliasbox getoond.
 
 # DropDownItemComponent
 

@@ -25,7 +25,7 @@
     let isSelected: boolean = false;
     let className: string;
     let element: HTMLDivElement = null;
-    let id: string = `${box.element.piId()}-${box.role}`;
+    let id: string = `selectable-${box.element.piId()}-${box.role}`;
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log("SelectableComponent.onClick: " + event + " for box " + box.role);

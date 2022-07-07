@@ -23,7 +23,7 @@ type BoxCache<T extends Box> = {
     [id: string]: RoleCache<T>;
 }
 
-const LOGGER: PiLogger = new PiLogger("BoxFactory");
+const LOGGER: PiLogger = new PiLogger("BoxFactory").mute();
 
 // The box caches
 let aliasCache: BoxCache<AliasBox> = {};

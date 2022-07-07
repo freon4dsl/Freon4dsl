@@ -8,7 +8,7 @@
     export let optionalBox: OptionalBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
     export let editor: PiEditor;
 
-    const LOGGER = new PiLogger("OptionalComponent");
+    const LOGGER = new PiLogger("OptionalComponent").mute();
     let id: string = `${optionalBox.element.piId()}-${optionalBox.role}`;
     let childBox ;
     let mustShow = false;

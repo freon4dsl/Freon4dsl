@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
 import { LabelBox, PiEditor, PiElement } from "@projectit/core";
-import { SimpleElement } from "../models/SimpleElement";
-import LabelComponent from "../../components/LabelComponent.svelte";
-import TestLabelSelectable from "./TestLabelSelectable.svelte";
+import { SimpleElement } from "./models/SimpleElement";
+import LabelComponent from "../components/LabelComponent.svelte";
+import MockLabelSelectable from "./mock-components/MockLabelSelectable.svelte";
 
 describe("Label component", () => {
     const element: PiElement = new SimpleElement("WHATSINANAME");
@@ -31,7 +31,7 @@ describe("Label component", () => {
     it("gets focus when clicked", () => {
         // the SelectableComponent listens to mouse clicks,
         // therefore we test this using a wrapper 'TestLabelSelectable'
-        render(TestLabelSelectable, {box1: myLabelBox, box2: secondLabelBox, editor: myEditor})
+        render(MockLabelSelectable, {box1: myLabelBox, box2: secondLabelBox, editor: myEditor})
         const myContainer1 = screen.getByTestId('test-label1');
         expect(myContainer1).toBeVisible();
         const myLabel = screen.getByText('LabelText');
@@ -46,8 +46,8 @@ describe("Label component", () => {
 
     it("loses focus when another label is clicked", () => {
         // the SelectableComponent listens to mouse clicks,
-        // therefore we test this using a wrapper 'TestLabelSelectable'
-        render(TestLabelSelectable, {box1: myLabelBox, box2: secondLabelBox, editor: myEditor})
+        // therefore we test this using a wrapper 'MockLabelSelectable'
+        render(MockLabelSelectable, {box1: myLabelBox, box2: secondLabelBox, editor: myEditor})
         const myContainer1 = screen.getByTestId('test-label1');
         expect(myContainer1).toBeVisible();
         const myLabel = screen.getByText('LabelText');

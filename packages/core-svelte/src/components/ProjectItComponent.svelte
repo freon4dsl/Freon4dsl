@@ -23,7 +23,6 @@
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
-
     }
 
     const onKeyDown = (event: KeyboardEvent) => {

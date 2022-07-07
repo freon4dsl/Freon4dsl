@@ -12,7 +12,7 @@ export class OptionalBox extends Box {
     readonly kind = "OptionalBox";
 
     box: Box = null;
-    whenNoShowingAlias: AliasBox = null;
+    whenNoShowingAlias: AliasBox = null; // TODO question: should name be whenShowingAlias or alternativeBox?
     mustShow: boolean = false;
     condition: () => boolean;
 
