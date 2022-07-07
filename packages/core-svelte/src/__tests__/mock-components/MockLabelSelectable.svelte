@@ -1,10 +1,10 @@
 <script lang="ts">
     import LabelComponent from "../../components/LabelComponent.svelte";
     import SelectableComponent from "../../components/SelectableComponent.svelte";
-    import { Box, PiEditor } from "@projectit/core";
+    import { LabelBox, PiEditor } from "@projectit/core";
     // Parameters
-    export let box1: Box;
-    export let box2: Box;
+    export let box1: LabelBox;
+    export let box2: LabelBox;
     export let editor: PiEditor;
 
 </script>
