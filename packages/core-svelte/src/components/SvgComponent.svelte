@@ -1,9 +1,11 @@
 <script lang="ts">
     import type { PiEditor, SvgBox } from "@projectit/core";
+    import { componentId } from "./util";
 
     export let svgBox: SvgBox;
     export let editor: PiEditor;
-    let id: string = `${svgBox.element.piId()}-${svgBox.role}`;
+
+    let id: string = componentId(svgBox);
 </script>
 
 <!--TODO 500, 500 in viewbox is dependent on the SVG image !!-->

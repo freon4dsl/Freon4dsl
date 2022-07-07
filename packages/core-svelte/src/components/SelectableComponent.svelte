@@ -20,8 +20,7 @@
     export let editor: PiEditor;
 
     let LOGGER = new PiLogger("SelectableComponent").mute();
-    AUTO_LOGGER.mute();
-    // let XLOGGER = new PiLogger("X");
+
     let isSelected: boolean = false;
     let className: string;
     let element: HTMLDivElement = null;

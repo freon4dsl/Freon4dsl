@@ -3,12 +3,14 @@
     import { FOCUS_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import type {IndentBox, PiEditor} from "@projectit/core";
+    import { componentId } from "./util";
 
     export let indentBox: IndentBox;
     export let editor: PiEditor;
 
-    export const style=`${indentBox.indent * 8}px;`; // only exported for testing purposes
-    let id: string = `${indentBox.element.piId()}-${indentBox.role}`;
+    // only exported for testing purposes
+    export const style=`${indentBox.indent * 8}px;`;
+    let id: string = componentId(indentBox);
 
     autorun( () => {
        indentBox.indent;

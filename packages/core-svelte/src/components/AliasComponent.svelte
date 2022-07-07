@@ -31,6 +31,7 @@
     import SelectableComponent from "./SelectableComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
+    import { componentId } from "./util";
 
     // Svelte Parameters
     export let choiceBox: AbstractChoiceBox;
@@ -38,14 +39,14 @@
 
     // Local Variables
     let openStore: Writable<boolean> = writable<boolean>(false);
-    let LOGGER = new PiLogger("AliasComponent").mute();
+    let LOGGER = new PiLogger("AliasComponent");
     let dropdownComponent: DropdownComponent;
     let textComponent: TextComponent;
     let selectedOption: SelectOption;
     let selectableOptionList = new SelectOptionList(editor);
     let isEditing: boolean = false;
     // id is put in a variable to be able to access it from the component, not only from the HTML element
-    let id: string = `alias-${choiceBox.element.piId()}-${choiceBox.role}`;
+    let id: string = "alias-" + componentId(choiceBox);
 
     function setOpen(msg: string, value: boolean) {
         // LOGGER.log("SET OPEN " + choiceBox?.role + " from " + $openStore + " to " + value + " in " + msg );
