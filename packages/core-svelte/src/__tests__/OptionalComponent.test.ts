@@ -90,9 +90,8 @@ describe("Optional component", () => {
         result.component.$on("keypress", handleKeyStroke) // Bind mock function to keypress event using Svelte component API
         // press arrow up
         await fireEvent.keyPress(myOptional, {key: 'ArrowUp', code: 'ArrowUp',charCode: 38});
-        expect(MockVariables.nrKeyPress).toBe(1);
-        expect(MockVariables.nrKeyDown).toBe(0);
+        expect(MockVariables.nrKeypress).toBe(1);
+        expect(MockVariables.nrKeydown).toBe(0);
         // expect(handleKeyStroke).toHaveBeenCalledTimes(1);
     });
-
 });

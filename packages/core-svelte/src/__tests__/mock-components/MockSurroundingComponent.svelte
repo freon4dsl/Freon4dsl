@@ -8,11 +8,11 @@
     });
 
     const onKeyDown = (event: KeyboardEvent) => {
-        MockVariables.nrKeyDown++;
+        MockVariables.keydown(event);
     }
 
     const onKeyPress = (event: KeyboardEvent) => {
-        MockVariables.nrKeyPress++;
+        MockVariables.keypress(event);
     }
 
 </script>
