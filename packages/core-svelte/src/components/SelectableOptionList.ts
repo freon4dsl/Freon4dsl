@@ -1,7 +1,7 @@
 import { action, observable, makeObservable, computed } from "mobx";
 import { SelectOption, PiEditor, MatchUtil, PiLogger } from "@projectit/core";
 
-const LOGGER = new PiLogger("SelectOptionList");
+const LOGGER = new PiLogger("SelectOptionList").mute();
 
 export class SelectOptionList {
     editor: PiEditor = null;
