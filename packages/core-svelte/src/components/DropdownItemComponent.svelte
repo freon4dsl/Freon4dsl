@@ -2,7 +2,7 @@
     import { PiLogger, type SelectOption } from "@projectit/core";
     import { createEventDispatcher } from "svelte";
 
-    const LOGGER: PiLogger = new PiLogger("DropdownItemComponent").mute();
+    const LOGGER: PiLogger = new PiLogger("DropdownItemComponent");
     const dispatcher = createEventDispatcher();
 
     export let isSelected: boolean = false;
@@ -35,16 +35,14 @@
         border:none;
     }
     .isSelected {
-        border: none;
         color: var(--freon-dropdownitem-component-selected-color, darkblue);
         background-color: var(--freon-dropdownitem-component-selected-background-color, lightblue);
+        border: none;
     }
     .dropdownitem:hover {
-        display: block;
-        background-color: var(--freon-dropdownitem-component-hover-color, darkblue);
+        color: var(--freon-dropdownitem-component-hover-color, darkblue);
         background-color: var(--freon-dropdownitem-component-hover-background-color, white);
-        white-space: nowrap;
-        color: blue;
+    /*  TODO question: are changes correct? */
     }
 
 

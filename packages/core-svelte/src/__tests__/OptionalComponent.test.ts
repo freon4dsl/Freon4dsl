@@ -1,13 +1,12 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
 import { LabelBox, OptionalBox, PiCompositeProjection, PiEditor } from "@projectit/core";
-import MockSurroundingComponent from "./mock-components/MockSurroundingComponent.svelte";
 import { MockVariables } from "./mock-components/MockVariables";
 import { ModelMaker } from "./models/ModelMaker";
 import OptionalComponent from "../components/OptionalComponent.svelte"; // Note that this form of import is neccessary for jest to function!
 import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../components/ChangeNotifier";
 import { ElementWithOptional } from "./models/ElementWithOptional";
-import TestOptional from "./mock-components/TestOptional.svelte";
+import Mock4Optional from "./mock-components/Mock4Optional.svelte";
 import { configure } from '@testing-library/dom'
 configure({ testIdAttribute: 'id' })
 
@@ -75,23 +74,19 @@ describe("Optional component", () => {
 
     it("all keyboard events are propagated when optional is visible", async () => {
         ownerBox = new OptionalBox(model, "opt-role", () => {return true;}, childBox, true, "someAliasText" );
-        const result = render(TestOptional, { box: ownerBox, editor: myEditor });
+        const result = render(Mock4Optional, { box: ownerBox, editor: myEditor });
         const myOwner = screen.getByTestId("OPTIONAL-OWNER-opt-role");
         expect(myOwner).toBeVisible();
         const myOptional = screen.getByTestId("OPTIONAL_ELEMENT-optional-element");
         expect(myOptional).toBeVisible();
         const myEnv = screen.getByTestId("mock-environment");
         expect(myEnv).toBeVisible();
-        // expect(() => getByLabelText('another button')).not.toThrow();
-        // set up mock function
-        const handleKeyStroke = jest.fn();
 
-        // result.component.$on("keydown", handleKeyStroke) // Bind mock function to keydown event using Svelte component API
-        result.component.$on("keypress", handleKeyStroke) // Bind mock function to keypress event using Svelte component API
         // press arrow up
         await fireEvent.keyPress(myOptional, {key: 'ArrowUp', code: 'ArrowUp',charCode: 38});
         expect(MockVariables.nrKeypress).toBe(1);
         expect(MockVariables.nrKeydown).toBe(0);
-        // expect(handleKeyStroke).toHaveBeenCalledTimes(1);
+
+        // await userEvent.keyboard("{ArrowUp}"); // TODO this does not seem to work, why?
     });
 });

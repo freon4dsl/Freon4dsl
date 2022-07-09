@@ -193,6 +193,7 @@
         if (isPrintable(e) && !e.ctrlKey) {
             LOGGER.log("Down: is printable, text is now [" + textComponent.getText() + "]");
             setOpen("onKeyDown", true);
+            // TODO question: why this code here and also on line 223?
             if (dropdownComponent !== null && dropdownComponent !== undefined) {
                 dropdownComponent.handleKeyDown(e);
             }
@@ -207,13 +208,13 @@
             return;
         }
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_ARROW_RIGHT) {
-            setOpen("arraow at the edges", false);
+            setOpen("arrow at the edges", false);
         }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
         }
         if ((e.key === KEY_SPACEBAR && e.ctrlKey) || (e.key === KEY_ESCAPE)) {
-            setOpen("cltr-space or esacape", !$openStore);
+            setOpen("cltr-space or escape", !$openStore);
             return;
         }
         if ($openStore) {
@@ -350,3 +351,5 @@
     {/if}
 
 </div>
+
+<!-- TODO question: why is selectedOptionId set to a constant value? -->

@@ -1,4 +1,4 @@
-import { PiKey, toPiKey } from "@projectit/core";
+import { PiKey, SelectOption, toPiKey } from "@projectit/core";
 
 /**
  * Class to keep track of keystrokes for MockSurroundingComponent
@@ -10,6 +10,8 @@ export class MockVariables {
     static keypressValues: PiKey[];
     static keydownValues: PiKey[];
     static keyupValues: PiKey[];
+    static nrPi_itemSelected: number = 0;
+    static pi_itemSelectedValues: string[];
 
     static reset(): void {
         MockVariables.nrKeydown = 0;
@@ -32,6 +34,11 @@ export class MockVariables {
     static keydown(k: KeyboardEvent): void {
         MockVariables.nrKeydown++;
         MockVariables.keydownValues.push(toPiKey(k));
+    }
+
+    static pi_itemSelected(event: CustomEvent<SelectOption>): void {
+        MockVariables.nrPi_itemSelected++;
+        MockVariables.pi_itemSelectedValues.push(event.detail.id);
     }
 }
 

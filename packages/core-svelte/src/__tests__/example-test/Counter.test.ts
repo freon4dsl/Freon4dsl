@@ -17,6 +17,8 @@ describe('example tests', () => {
         // screen.getByText((content, element) => {
         //     return element.tagName.toLowerCase() === 'span' && content.startsWith('Visible')
         // })
+
+        // expect(() => getByLabelText('another button')).not.toThrow();
     })
 
     it('it works', async () => {

@@ -16,8 +16,7 @@
 
     const LOGGER = new PiLogger("DropdownComponent").mute();
     const dispatcher = createEventDispatcher();
-    // TODO add id
-    // let id: string = `${box.element.piId()}-${box.role}`;
+    let id: string = `dropdown-${getOptions().map(opt => opt.id).join("-")}`;
 
     const getOptionsLogged = (): SelectOption[] => {
         const options = getOptions();
@@ -104,6 +103,9 @@
         {/each}
     </div>
 </div>
+
+<!-- TODO question: why the 'on:pi-ItemSelected' in DropdownItemComponent? -->
+
 
 <style>
     .dropdown {
