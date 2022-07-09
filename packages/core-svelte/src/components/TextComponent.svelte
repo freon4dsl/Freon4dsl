@@ -33,7 +33,7 @@
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import { componentId } from "./util";
 
-    const LOGGER = new PiLogger("TextComponent");
+    const LOGGER = new PiLogger("TextComponent").mute();
     // Is this component currently being edited by the user?
     export let isEditing: boolean = false;
     export let textBox: TextBox ; // new TextBox(null, "role:", () => "Editable textbox", (v: string) => { });

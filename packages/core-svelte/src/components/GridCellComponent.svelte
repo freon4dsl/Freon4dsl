@@ -24,7 +24,7 @@
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
     //local variable
-    const LOGGER = new PiLogger("GridCellComponent");
+    const LOGGER = new PiLogger("GridCellComponent").mute();
     let boxStore: Writable<Box> = writable<Box>(cellBox.box);
     let cssVariables: string;
     let id: string = componentId(cellBox);

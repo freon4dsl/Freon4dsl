@@ -14,7 +14,7 @@
     // Needed to know when the dropdownlist has changed
     // export let notifier: ChangeNotifier;
 
-    const LOGGER = new PiLogger("DropdownComponent");
+    const LOGGER = new PiLogger("DropdownComponent").mute();
     const dispatcher = createEventDispatcher();
     // TODO add id
     // let id: string = `${box.element.piId()}-${box.role}`;

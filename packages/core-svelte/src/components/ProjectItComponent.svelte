@@ -15,7 +15,7 @@
     import { AUTO_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
 
-    let LOGGER = new PiLogger("ProjectItComponent");
+    let LOGGER = new PiLogger("ProjectItComponent").mute();
     export let editor: PiEditor;
     // TODO add id
     // let id: string = `${box.element.piId()}-${box.role}`;

@@ -2,7 +2,7 @@
     import { PiLogger, type SelectOption } from "@projectit/core";
     import { createEventDispatcher } from "svelte";
 
-    const LOGGER: PiLogger = new PiLogger("DropdownItemComponent");
+    const LOGGER: PiLogger = new PiLogger("DropdownItemComponent").mute();
     const dispatcher = createEventDispatcher();
 
     export let isSelected: boolean = false;
