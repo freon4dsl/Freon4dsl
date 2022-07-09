@@ -8,14 +8,12 @@
     export let isSelected: boolean = false;
     export let option: SelectOption;
 
-    let label: string = option.label;
-    // TODO add id
-    // let id: string = `${box.element.piId()}-${box.role}`;
+    let id: string = `dropdown-item-${option.label}-${option.id}`;
 
     const onClick = (e: MouseEvent): void => {
         LOGGER.log("CLICKED, option " + option.id);
         e.stopPropagation();
-        dispatcher("pi-ItemSelected",option );
+        dispatcher("pi-ItemSelected", option);
     };
 </script>
 
@@ -23,8 +21,9 @@
      class:isSelected
      on:click={onClick}
      tabIndex={0}
+     id="{id}"
 >
-    {label}
+    {option.label}
 </div>
 
 <style>

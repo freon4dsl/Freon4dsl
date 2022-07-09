@@ -24,8 +24,6 @@ Deze worden altijd in de bovenste component afgehandeld:
 5. de events in 2.2 tot 2.7 moeten worden doorgegeven aan de parent van de text box.
 6. de caret position on click is correct gezet in bijbehorende text box
 
-
-
 # DropDownItemComponent
 
 1. on click geeft melding naar boven: een pi-ItemSelected event
