@@ -36,4 +36,6 @@ export * from "./environment";
 // change manager
 export * from "./change-manager";
 
+export * from "./interpreter";
+
 
