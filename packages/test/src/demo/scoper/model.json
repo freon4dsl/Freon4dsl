@@ -1,0 +1,334 @@
+{
+  "propertyName": "",
+  "$typename": "Demo",
+  "name": "ModelWithInheritance",
+  "$id": "ID-5",
+  "_PI_models": [
+    {
+      "propertyName": "models",
+      "$typename": "DemoModel",
+      "$id": "ID-6",
+      "name": "DemoModel_with_inheritance",
+      "_PI_entities": [
+        {
+          "propertyName": "entities",
+          "$typename": "DemoEntity",
+          "$id": "ID-7",
+          "x": "xxx",
+          "name": "Vehicle",
+          "baseInterface_attr": 0,
+          "simpleprop": "simple",
+          "_PI_attributes": [
+            {
+              "propertyName": "attributes",
+              "$typename": "DemoAttribute",
+              "$id": "ID-8",
+              "name": "brand",
+              "_PI_declaredType": "REF => String"
+            },
+            {
+              "propertyName": "attributes",
+              "$typename": "DemoAttribute",
+              "$id": "ID-9",
+              "name": "type",
+              "_PI_declaredType": "REF => String"
+            }
+          ],
+          "_PI_functions": [
+            {
+              "propertyName": "functions",
+              "$typename": "DemoFunction",
+              "$id": "ID-29",
+              "name": "SOMETHING",
+              "_PI_declaredType": "REF => Integer",
+              "_PI_expression": {
+                "propertyName": "expression",
+                "$typename": "DemoIfExpression",
+                "$id": "ID-30",
+                "_PI_condition": {
+                  "propertyName": "condition",
+                  "$typename": "DemoLessThenExpression",
+                  "$id": "ID-31",
+                  "_PI_left": {
+                    "propertyName": "left",
+                    "$typename": "DemoNumberLiteralExpression",
+                    "$id": "ID-32",
+                    "value": 4
+                  },
+                  "_PI_right": {
+                    "propertyName": "right",
+                    "$typename": "DemoNumberLiteralExpression",
+                    "$id": "ID-33",
+                    "value": 80
+                  }
+                },
+                "_PI_whenTrue": {
+                  "propertyName": "whenTrue",
+                  "$typename": "DemoNumberLiteralExpression",
+                  "$id": "ID-34",
+                  "value": 87
+                },
+                "_PI_whenFalse": {
+                  "propertyName": "whenFalse",
+                  "$typename": "DemoNumberLiteralExpression",
+                  "$id": "ID-35",
+                  "value": 1345
+                }
+              }
+            }
+          ]
+        },
+        {
+          "propertyName": "entities",
+          "$typename": "DemoEntity",
+          "$id": "ID-10",
+          "x": "xxx",
+          "name": "Car",
+          "baseInterface_attr": 0,
+          "simpleprop": "simple",
+          "_PI_baseEntity": "REF => Vehicle",
+          "_PI_attributes": [
+            {
+              "propertyName": "attributes",
+              "$typename": "DemoAttribute",
+              "$id": "ID-11",
+              "name": "numberplate",
+              "_PI_declaredType": "REF => Integer"
+            },
+            {
+              "propertyName": "attributes",
+              "$typename": "DemoAttribute",
+              "$id": "ID-12",
+              "name": "make",
+              "_PI_declaredType": "REF => String"
+            }
+          ],
+          "_PI_functions": [
+            {
+              "propertyName": "functions",
+              "$typename": "DemoFunction",
+              "$id": "ID-39",
+              "name": "SOMETHING",
+              "_PI_declaredType": "REF => Integer",
+              "_PI_expression": {
+                "propertyName": "expression",
+                "$typename": "DemoIfExpression",
+                "$id": "ID-40",
+                "_PI_condition": {
+                  "propertyName": "condition",
+                  "$typename": "DemoLessThenExpression",
+                  "$id": "ID-41",
+                  "_PI_left": {
+                    "propertyName": "left",
+                    "$typename": "DemoNumberLiteralExpression",
+                    "$id": "ID-42",
+                    "value": 4
+                  },
+                  "_PI_right": {
+                    "propertyName": "right",
+                    "$typename": "DemoNumberLiteralExpression",
+                    "$id": "ID-43",
+                    "value": 80
+                  }
+                },
+                "_PI_whenTrue": {
+                  "propertyName": "whenTrue",
+                  "$typename": "DemoNumberLiteralExpression",
+                  "$id": "ID-44",
+                  "value": 87
+                },
+                "_PI_whenFalse": {
+                  "propertyName": "whenFalse",
+                  "$typename": "DemoNumberLiteralExpression",
+                  "$id": "ID-45",
+                  "value": 1345
+                }
+              }
+            }
+          ]
+        },
+        {
+          "propertyName": "entities",
+          "$typename": "DemoEntity",
+          "$id": "ID-13",
+          "x": "xxx",
+          "name": "Bike",
+          "baseInterface_attr": 0,
+          "simpleprop": "simple",
+          "_PI_baseEntity": "REF => Vehicle",
+          "_PI_attributes": [
+            {
+              "propertyName": "attributes",
+              "$typename": "DemoAttribute",
+              "$id": "ID-14",
+              "name": "backseat",
+              "_PI_declaredType": "REF => Boolean"
+            },
+            {
+              "propertyName": "attributes",
+              "$typename": "DemoAttribute",
+              "$id": "ID-15",
+              "name": "gears",
+              "_PI_declaredType": "REF => Integer"
+            }
+          ],
+          "_PI_functions": [
+            {
+              "propertyName": "functions",
+              "$typename": "DemoFunction",
+              "$id": "ID-49",
+              "name": "SOMETHING",
+              "_PI_declaredType": "REF => Integer",
+              "_PI_expression": {
+                "propertyName": "expression",
+                "$typename": "DemoIfExpression",
+                "$id": "ID-50",
+                "_PI_condition": {
+                  "propertyName": "condition",
+                  "$typename": "DemoLessThenExpression",
+                  "$id": "ID-51",
+                  "_PI_left": {
+                    "propertyName": "left",
+                    "$typename": "DemoNumberLiteralExpression",
+                    "$id": "ID-52",
+                    "value": 4
+                  },
+                  "_PI_right": {
+                    "propertyName": "right",
+                    "$typename": "DemoNumberLiteralExpression",
+                    "$id": "ID-53",
+                    "value": 80
+                  }
+                },
+                "_PI_whenTrue": {
+                  "propertyName": "whenTrue",
+                  "$typename": "DemoNumberLiteralExpression",
+                  "$id": "ID-54",
+                  "value": 87
+                },
+                "_PI_whenFalse": {
+                  "propertyName": "whenFalse",
+                  "$typename": "DemoNumberLiteralExpression",
+                  "$id": "ID-55",
+                  "value": 1345
+                }
+              }
+            }
+          ]
+        },
+        {
+          "propertyName": "entities",
+          "$typename": "DemoEntity",
+          "$id": "ID-16",
+          "x": "xxx",
+          "name": "RaceBike",
+          "baseInterface_attr": 0,
+          "simpleprop": "simple",
+          "_PI_baseEntity": "REF => Bike",
+          "_PI_attributes": [
+            {
+              "propertyName": "attributes",
+              "$typename": "DemoAttribute",
+              "$id": "ID-17",
+              "name": "color",
+              "_PI_declaredType": "REF => String"
+            },
+            {
+              "propertyName": "attributes",
+              "$typename": "DemoAttribute",
+              "$id": "ID-18",
+              "name": "wheelsize",
+              "_PI_declaredType": "REF => Integer"
+            }
+          ],
+          "_PI_functions": [
+            {
+              "propertyName": "functions",
+              "$typename": "DemoFunction",
+              "$id": "ID-59",
+              "name": "SOMETHING",
+              "_PI_declaredType": "REF => Integer",
+              "_PI_expression": {
+                "propertyName": "expression",
+                "$typename": "DemoIfExpression",
+                "$id": "ID-60",
+                "_PI_condition": {
+                  "propertyName": "condition",
+                  "$typename": "DemoLessThenExpression",
+                  "$id": "ID-61",
+                  "_PI_left": {
+                    "propertyName": "left",
+                    "$typename": "DemoNumberLiteralExpression",
+                    "$id": "ID-62",
+                    "value": 4
+                  },
+                  "_PI_right": {
+                    "propertyName": "right",
+                    "$typename": "DemoNumberLiteralExpression",
+                    "$id": "ID-63",
+                    "value": 80
+                  }
+                },
+                "_PI_whenTrue": {
+                  "propertyName": "whenTrue",
+                  "$typename": "DemoNumberLiteralExpression",
+                  "$id": "ID-64",
+                  "value": 87
+                },
+                "_PI_whenFalse": {
+                  "propertyName": "whenFalse",
+                  "$typename": "DemoNumberLiteralExpression",
+                  "$id": "ID-65",
+                  "value": 1345
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "_PI_functions": [
+        {
+          "propertyName": "functions",
+          "$typename": "DemoFunction",
+          "$id": "ID-19",
+          "name": "SOMETHING",
+          "_PI_declaredType": "REF => Integer",
+          "_PI_expression": {
+            "propertyName": "expression",
+            "$typename": "DemoIfExpression",
+            "$id": "ID-20",
+            "_PI_condition": {
+              "propertyName": "condition",
+              "$typename": "DemoLessThenExpression",
+              "$id": "ID-21",
+              "_PI_left": {
+                "propertyName": "left",
+                "$typename": "DemoNumberLiteralExpression",
+                "$id": "ID-22",
+                "value": 4
+              },
+              "_PI_right": {
+                "propertyName": "right",
+                "$typename": "DemoNumberLiteralExpression",
+                "$id": "ID-23",
+                "value": 80
+              }
+            },
+            "_PI_whenTrue": {
+              "propertyName": "whenTrue",
+              "$typename": "DemoNumberLiteralExpression",
+              "$id": "ID-24",
+              "value": 87
+            },
+            "_PI_whenFalse": {
+              "propertyName": "whenFalse",
+              "$typename": "DemoNumberLiteralExpression",
+              "$id": "ID-25",
+              "value": 1345
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

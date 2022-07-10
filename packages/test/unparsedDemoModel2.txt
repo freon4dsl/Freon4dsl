@@ -1,0 +1,68 @@
+model CorrectUnit { 
+main: types: 
+    
+entities: 
+    DemoEntity School 
+        simpleprop "simple" 
+        baseInterface_attr 0 
+        x "xxx" 
+        attributes 
+            foundedIn : Integer
+            name : String
+        entAttributes 
+            
+        functions 
+            DemoFunction requestClean 
+                expression 5 + 24 
+                parameters 
+                    DemoVariable cleaningCompany 
+                        declaredType Company
+                declaredType Integer
+        int_attrs 
+            
+        int_functions 
+            
+        baseEntity 
+        baseInterface
+
+
+    DemoEntity Company 
+        simpleprop "simple" 
+        baseInterface_attr 0 
+        x "xxx" 
+        attributes 
+            name : String
+            VAT_Number : Integer
+        entAttributes 
+            
+        functions 
+            DemoFunction doClean 
+                expression 5 + 24 
+                parameters 
+                    DemoVariable at 
+                        declaredType Company
+                declaredType Integer
+        int_attrs 
+            
+        int_functions 
+            
+        baseEntity 
+        baseInterface
+
+
+model wide functions: 
+    DemoFunction compare 
+        expression if ( 2 < 5 ) then 
+                             1 
+                   else 
+                      5 
+                   endif 
+        parameters 
+            
+        declaredType Integer
+DemoFunction helloString 
+                                 expression ' "Hello Demo" ' 
+                                 parameters 
+                                     
+                                 declaredType String 
+}

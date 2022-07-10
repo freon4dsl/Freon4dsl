@@ -1,0 +1,75 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "vwefw",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "dveww",
+         "construc": {
+            "$typename": "Method",
+            "name": "ffwefwe",
+            "body": null,
+            "parameters": [],
+            "declaredType": null
+         },
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "ffef",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "fewfwe",
+               "declaredType": "Integer"
+            }
+         ],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "fewfwef",
+               "body": {
+                  "$typename": "PlusExpression",
+                  "left": {
+                     "$typename": "NumberLiteralExpression",
+                     "value": 1,
+                     "appliedfeature": null
+                  },
+                  "right": {
+                     "$typename": "NumberLiteralExpression",
+                     "value": 2,
+                     "appliedfeature": null
+                  },
+                  "appliedfeature": null
+               },
+               "parameters": [
+                  {
+                     "$typename": "Parameter",
+                     "name": "fefew",
+                     "declaredType": "String"
+                  }
+               ],
+               "declaredType": "dveww"
+            }
+         ],
+         "listOfReferences": [],
+         "baseEntity": null
+      },
+      {
+         "$typename": "Entity",
+         "name": "r32r32r",
+         "construc": {
+            "$typename": "Method",
+            "name": "a",
+            "body": null,
+            "parameters": [],
+            "declaredType": "dveww"
+         },
+         "attributes": [],
+         "methods": [],
+         "listOfReferences": [],
+         "baseEntity": null
+      }
+   ],
+   "methods": []
+}

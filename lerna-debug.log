@@ -1,0 +1,30 @@
+0 silly argv {
+0 silly argv   _: [ 'run' ],
+0 silly argv   stream: true,
+0 silly argv   lernaVersion: '3.20.2',
+0 silly argv   '$0': '/Users/jos/projects/projectit/ProjectIt/node_modules/.bin/lerna',
+0 silly argv   script: 'test'
+0 silly argv }
+1 notice cli v3.20.2
+2 verbose rootPath /Users/jos/projects/projectit/ProjectIt
+3 info Executing command in 5 packages: "yarn run test"
+4 silly npmRunScript.stream [ 'test', [], '@projectit/core' ]
+5 silly getExecOpts /Users/jos/projects/projectit/ProjectIt/packages/core undefined
+6 silly npmRunScript.stream [ 'test', [], '@projectit/meta' ]
+7 silly getExecOpts /Users/jos/projects/projectit/ProjectIt/packages/meta undefined
+8 silly npmRunScript.stream [ 'test', [], '@projectit/server' ]
+9 silly getExecOpts /Users/jos/projects/projectit/ProjectIt/packages/server undefined
+10 silly npmRunScript.stream [ 'test', [], '@projectit/core-svelte' ]
+11 silly getExecOpts /Users/jos/projects/projectit/ProjectIt/packages/core-svelte undefined
+12 silly npmRunScript.stream [ 'test', [], '@projectit/test' ]
+13 silly getExecOpts /Users/jos/projects/projectit/ProjectIt/packages/test undefined
+14 error MaxBufferError: stderr maxBuffer exceeded
+14 error     at PassThrough.<anonymous> (/Users/jos/projects/projectit/ProjectIt/node_modules/get-stream/index.js:41:19)
+14 error     at PassThrough.emit (node:events:402:35)
+14 error     at addChunk (node:internal/streams/readable:315:12)
+14 error     at readableAddChunk (node:internal/streams/readable:285:11)
+14 error     at PassThrough.Readable.push (node:internal/streams/readable:228:10)
+14 error     at node:internal/streams/transform:192:12
+14 error     at PassThrough._transform (node:internal/streams/passthrough:46:3)
+14 error     at PassThrough.Transform._write (node:internal/streams/transform:184:23)
+14 error     at writeOrBuffer (node:internal/streams/writable:389:12)

@@ -1,0 +1,19 @@
+editor myTables
+
+Parameter {
+    table [
+        Type            | Name
+        ${declaredType} | ${name}
+    ]
+}
+Attribute {
+    table [
+        ${name} | ${declaredType}
+    ]
+}
+Method {
+    table [
+        Name    | parameters            | type            | body
+        ${name} | ${parameters:CALLOUT} | ${declaredType} | ${body}
+    ]
+}
