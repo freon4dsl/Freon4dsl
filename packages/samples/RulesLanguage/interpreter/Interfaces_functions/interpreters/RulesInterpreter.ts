@@ -1,8 +1,3 @@
-
-
-// const getPropertyFunction: OwningPropertyFunction = (node: Object) => {
-//     return (node === undefined ? "<property>" : node["$property"]);
-// }
 import {
     ConceptFunction,
     IMainInterpreter,
