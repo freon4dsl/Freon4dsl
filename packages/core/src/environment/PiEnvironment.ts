@@ -23,7 +23,6 @@ export interface PiEnvironment {
     reader: PiReader;
 
     languageName: string;
-    unitNames: string[];
     fileExtensions: Map<string, string>;
 }
 

@@ -6,7 +6,7 @@ import {
     unitTypes
 } from "../components/stores/LanguageStore";
 import { editorEnvironment } from "../config/WebappConfiguration";
-import { PiCompositeProjection, PiUndoManager } from "@projectit/core";
+import { Language, PiCompositeProjection, PiUndoManager } from "@projectit/core";
 
 export class LanguageInitializer {
 
@@ -18,7 +18,7 @@ export class LanguageInitializer {
         languageName.set(editorEnvironment.languageName);
 
         // the names of the unit types
-        unitTypes.set(editorEnvironment.unitNames);
+        unitTypes.set(Language.getInstance().getUnitNames());
 
         // the file extensions for all unit types
         // because 'editorEnvironment.fileExtensions.values()' is not an Array but an IterableIterator,
