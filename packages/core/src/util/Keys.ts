@@ -13,12 +13,14 @@ export enum MetaKey {
 export type PiKey = {
     meta: MetaKey;
     keyCode: number;
+    code: string;
 };
 
 export function toPiKey(e: KeyboardEvent): PiKey {
     return {
         meta: meta(e),
-        keyCode: e.keyCode
+        keyCode: e.keyCode, // TODO remove depricated keyCode
+        code: e.code
     };
 }
 

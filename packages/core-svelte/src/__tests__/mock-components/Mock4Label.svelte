@@ -1,16 +1,16 @@
 <script lang="ts">
+    import { LabelBox, PiEditor } from "@projectit/core";
     import MockSurroundingComponent from "./MockSurroundingComponent.svelte";
-    import OptionalComponent from "../../components/OptionalComponent.svelte";
-    import { OptionalBox, PiEditor } from "@projectit/core";
+    import LabelComponent from "../../components/LabelComponent.svelte";
 
     // Parameters
-    export let box: OptionalBox;
+    export let box: LabelBox;
     export let editor: PiEditor;
     export let id = "mock-environment";
 </script>
 
 <div id="mock-environment">
     <MockSurroundingComponent>
-        <OptionalComponent optionalBox={box} editor={editor}/>
+        <LabelComponent label={box} editor={editor}/>
     </MockSurroundingComponent>
 </div>

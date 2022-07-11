@@ -1,22 +1,16 @@
 <script lang="ts">
-    import { SelectOption } from "@projectit/core";
     import DropdownItemComponent from "../../components/DropdownItemComponent.svelte";
-    import { MockVariables } from "./MockVariables";
+    import { SelectOption } from "@projectit/core";
+    import { MockVariables } from "../mock-components/MockVariables";
 
-    // Parameters
-    export let isSelected: boolean;
     export let option: SelectOption = { id: "select-text", label: "select-text" };
-    export let id = "test-dropdownItem";
 
     const onSelectOption = (event: CustomEvent<SelectOption>): void => {
-        console.log("YESSSSSSSSSSSS");
+        // console.log("Mock4DropdownItemComponent received, option " + JSON.stringify(event.detail));
         MockVariables.pi_itemSelected(event);
     };
-
 </script>
 
-<div on:pi-ItemSelected={onSelectOption}
-     id="{id}"
->
-    <DropdownItemComponent option={option} isSelected={isSelected}/>
+<div id="parent">
+    <DropdownItemComponent on:pi-ItemSelected={onSelectOption} option={option} isSelected={true} />
 </div>

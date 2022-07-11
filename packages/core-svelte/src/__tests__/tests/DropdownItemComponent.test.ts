@@ -5,10 +5,10 @@ import { configure } from '@testing-library/dom'
 configure({ testIdAttribute: 'id' });
 
 import { SelectOption } from "@projectit/core";
-import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../components/ChangeNotifier";
-import DropdownItemComponent from "../components/DropdownItemComponent.svelte";
-import Mock4DropdownItem from "./mock-components/Mock4DropdownItem.svelte";
-import { tick } from "svelte";
+import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../../components/ChangeNotifier";
+import DropdownItemComponent from "../../components/DropdownItemComponent.svelte";
+import Mock4DropdownItem from "../mock-components/Mock4DropdownItem.svelte";
+import { MockVariables } from "../mock-components/MockVariables";
 
 describe("DropDownItemComponent component", () => {
     MOUNT_LOGGER.mute();
@@ -43,13 +43,12 @@ describe("DropDownItemComponent component", () => {
     });
 
     it("on click causes event 'pi-ItemSelected'", async () => {
-        const user = userEvent.setup(); // do not use in before hook, see https://kentcdodds.com/blog/avoid-nesting-when-youre-testing
-        const result = render(Mock4DropdownItem, { isSelected: true, option: option });
-        const myElement = screen.getByTestId(`dropdown-item-${option.label}-${option.id}`);
-        expect(myElement).toBeVisible();
-        await fireEvent.click(myElement);
-        await tick();
-        // TODO finish this test
-        // expect(MockVariables.nrPi_itemSelected).toBe(1);
+        let option: SelectOption = { id: "select-text", label: "select-text" };
+        const result = render(Mock4DropdownItem, {});
+        const item = screen.getByTestId(`dropdown-item-${option.label}-${option.id}`);
+        expect(item).toBeVisible();
+        await fireEvent.click(item);
+        expect(MockVariables.nrPi_itemSelected).toBe(1);
+        expect(MockVariables.pi_itemSelectedValues[MockVariables.pi_itemSelectedValues.length-1]).toStrictEqual(option);
     });
 });

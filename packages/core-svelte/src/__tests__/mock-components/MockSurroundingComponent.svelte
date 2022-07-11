@@ -15,11 +15,16 @@
         MockVariables.keypress(event);
     }
 
+    const onKeyUp = (event: KeyboardEvent) => {
+        MockVariables.keyup(event);
+    }
+
 </script>
 
 <div id="mockComponent"
      on:keypress={onKeyPress}
      on:keydown={onKeyDown}
+     on:keyup={onKeyUp}
 >
     <slot  />
 </div>

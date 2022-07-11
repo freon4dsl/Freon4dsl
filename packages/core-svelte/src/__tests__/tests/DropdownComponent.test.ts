@@ -4,9 +4,9 @@ import userEvent from "@testing-library/user-event";
 import { configure } from '@testing-library/dom'
 configure({ testIdAttribute: 'id' });
 
-import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../components/ChangeNotifier";
-import { MockVariables } from "./mock-components/MockVariables";
-import Mock4Dropdown from "./mock-components/Mock4Dropdown.svelte";
+import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../../components/ChangeNotifier";
+import { MockVariables } from "../mock-components/MockVariables";
+import Mock4Dropdown from "../mock-components/Mock4Dropdown.svelte";
 
 describe("DropDownComponent", () => {
     MOUNT_LOGGER.mute();
@@ -27,11 +27,14 @@ describe("DropDownComponent", () => {
     });
 
     it("arrow down changes current selection", () => {
+        // TODO
     });
 
     it("enter causes a pi-ItemSelected event", () => {
+        // TODO
     });
 
     it("escape or delete closes drop down, without pi-ItemSelected event", () => {
+    //  TODO
     });
 });

@@ -86,6 +86,9 @@
     const onBlur = (e: FocusEvent) => {
         FOCUS_LOGGER.log("DropdownComponent.onBlur")
     }
+    const onSelectOption = (event: CustomEvent<SelectOption>) => {
+        console.log("DropdownComponent.onSelectOption");
+    }
 </script>
 
 <div class="dropdown"
@@ -97,7 +100,7 @@
         {#each getOptionsForHtml as option (option.id + option.label)}
             <div class="popup">
                 <div>
-                    <DropdownItemComponent on:pi-ItemSelected option={option} isSelected={option.id === selectedOptionId} />
+                    <DropdownItemComponent on:pi-ItemSelected={onSelectOption} option={option} isSelected={option.id === selectedOptionId} />
                 </div>
             </div>
         {/each}

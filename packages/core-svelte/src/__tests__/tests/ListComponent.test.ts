@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
 import { HorizontalListBox, LabelBox, PiEditor } from "@projectit/core";
-import { ModelMaker } from "./models/ModelMaker";
-import ListComponent from "../components/ListComponent.svelte"; // Note that this form of import is neccessary for jest to function!
+import { ModelMaker } from "../models/ModelMaker";
+import ListComponent from "../../components/ListComponent.svelte"; // Note that this form of import is neccessary for jest to function!
 
 describe("List component", () => {
     let horizontalBox: HorizontalListBox;

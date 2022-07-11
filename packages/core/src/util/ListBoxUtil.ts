@@ -1,5 +1,5 @@
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
-import { MetaKey } from "./Keys";
+import { KEY_ENTER, MetaKey } from "./Keys";
 import * as Keys from "./Keys";
 import { PiLogger } from "../logging";
 import { PiCreatePartAction } from "../editor";
@@ -14,7 +14,7 @@ export function createKeyboardShortcutForList2 (
 ): PiCreatePartAction {
     LOGGER.log("LIST role [" + role + "]")
     const listKeyboardShortcut: PiCreatePartAction = new PiCreatePartAction({
-        trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
+        trigger: { meta: MetaKey.None, keyCode: Keys.ENTER, code: KEY_ENTER },
         activeInBoxRoles: [role, "alias-" + role + "-textbox"],
         conceptName: conceptName,
         propertyName: propertyName,
