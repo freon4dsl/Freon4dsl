@@ -1,0 +1,9 @@
+editor default
+
+RFunction { [
+        function ${self.name} ( ${self.parameters} ) {
+            ${self.body}
+        }
+    ]
+    trigger = "function"
+}

@@ -3,6 +3,7 @@ language RulesLanguage
 modelunit Data {
     name: identifier;
     entities: Entity[];
+    functions: RFunction[];
 }
 
 concept Entity {
@@ -36,6 +37,17 @@ limited Gender {
     Male = { name: "Male", code: 0}
     Female = { name: "Female", code: 1}
     Unknown = { name: "Unknown", code: 2}
+}
+
+concept RFunction {
+    name: identifier;
+    parameters: Parameter[];
+    body: RuleExpression;
+}
+
+concept Parameter {
+    name: identifier;
+    type: Type;
 }
 
 
