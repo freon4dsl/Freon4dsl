@@ -40,11 +40,11 @@ export class InterpreterContext {
         this.values.forEach( (value: Object, node: Object) => {
             result += node["name"] + " == " + value +", ";
         });
-        return result + "}";
-        // return "{ " +
-        // Array.from(this.values.entries()).map(
-        //     (value: Object, node: Object) => {return node["name"] + " == " + value; }
-        // ).join(", "); +
-        //     " }"
+        // return result + "}";
+        return "{ " +
+        Array.from(this.values.entries()).map(
+            ([node, value]) => {return node["name"] + " == " + value; }
+        ).join(", ") +
+            " }"
     }
 }
