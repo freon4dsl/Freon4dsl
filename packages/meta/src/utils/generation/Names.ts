@@ -300,4 +300,20 @@ export class Names {
     public static refName(property: PiProperty): string {
         return  "$" + property.name;
     }
+
+    public static interpreterClassname(language : PiLanguage): string {
+        return Names.startWithUpperCase(language.name)+ "Interpreter";
+    }
+
+    public static interpreterBaseClassname(language: PiLanguage): string {
+        return Names.interpreterClassname(language) + "Base";
+    }
+
+    public static interpreterInterfacename(language: PiLanguage): string {
+        return "I" + Names.interpreterClassname(language);
+    }
+
+    public static interpreterInitname(language: PiLanguage): string {
+        return Names.interpreterClassname(language) + "Init";
+    }
 }

@@ -35,7 +35,7 @@ class TraceNode {
             // The root, no output string here
             result = "";
         } else {
-            result = indent + this.tracer.property(this.node) + ": " + this.tracer.concept(this.node) + " = " + this.value + (this.idValid(this.ctx)? " CONTEXT: " + this.ctx.toString() : "")  + "\n";
+            result = indent + this.tracer.property(this.node) + ": " + this.tracer.concept(this.node) + " = " + this.value + (this.idValid(this.ctx)? " Ctx " + this.ctx.toString() : "")  + "\n";
         }
         this.children.forEach((child: TraceNode, index: number) => {
             let baseIndent = "    ";

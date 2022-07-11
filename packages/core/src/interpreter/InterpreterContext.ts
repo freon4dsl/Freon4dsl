@@ -36,10 +36,15 @@ export class InterpreterContext {
     }
 
     toString(): string {
-        let result = "";
+        let result = "{ ";
         this.values.forEach( (value: Object, node: Object) => {
             result += node["name"] + " == " + value +", ";
         });
-        return result;
+        return result + "}";
+        // return "{ " +
+        // Array.from(this.values.entries()).map(
+        //     (value: Object, node: Object) => {return node["name"] + " == " + value; }
+        // ).join(", "); +
+        //     " }"
     }
 }

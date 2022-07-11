@@ -1,3 +1,5 @@
+import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator";
+import { PiInterpreterDef } from "../interpretergen/metalanguage/PiInterpreterDef";
 import { PiLanguage } from "../languagedef/metalanguage";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
@@ -29,6 +31,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
     protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
+    protected interpreterGenerator: InterpreterGenerator = new InterpreterGenerator();
     protected language: PiLanguage;
     private diagramGenerator: DiagramGenerator = new DiagramGenerator();
 
@@ -58,6 +61,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
                 this.generateValidator();
                 this.generateScoper();
                 this.generateTyper();
+                this.generateInterpreter();
                 this.generateDiagrams();
             } catch (e) {
                 LOG2USER.error("Stopping generation because of errors in the language definition: " + e.message + "\n");
@@ -103,6 +107,22 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.typerGenerator.generate(typer);
         } catch (e) {
             LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
+            // LOG2USER.error("Stopping typer generation because of errors: " + e.message);
+        }
+    };
+
+    private generateInterpreter = () => {
+        LOG2USER.info("Generating interpreter");
+        let interpreterDef: PiInterpreterDef = new PiInterpreterDef();
+        for (const concept of this.language.concepts) {
+            interpreterDef.conceptsToEvaluate.push(concept);
+        }
+        try {
+            this.interpreterGenerator.language = this.language;
+            this.interpreterGenerator.outputfolder = this.outputFolder;
+            this.interpreterGenerator.generate(interpreterDef);
+        } catch (e) {
+            LOG2USER.error("Stopping interpreter generation because of errors: " + e.message + "\n" + e.stack);
             // LOG2USER.error("Stopping typer generation because of errors: " + e.message);
         }
     };
