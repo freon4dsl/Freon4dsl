@@ -50,9 +50,9 @@ export class InterpreterBaseTemplate {
             const interpreter = new ${interpreter}(main);
             
             ${interpreterDef.conceptsToEvaluate.map(c => {
-                `main.registerFunction("${Names.concept(c)}", interpreter.eval${Names.concept(c)});` 
-            }).join("\n")}
-        
+                return `main.registerFunction("${Names.concept(c)}", interpreter.eval${Names.concept(c)});` 
+            }).join("\n")} // DONE
+
         }`
     }
 
