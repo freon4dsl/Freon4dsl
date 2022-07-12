@@ -8,7 +8,7 @@
         KEY_ESCAPE, KEY_ARROW_DOWN, KEY_ARROW_UP, KEY_DELETE, KEY_ENTER
     } from "@projectit/core";
     import DropdownItemComponent from "./DropdownItemComponent.svelte";
-    import { selectedOptionId } from "./DropdownStore";
+    import { dropdownOpen, selectedOptionId } from "./DropdownStore";
 
     export let getOptions: () => SelectOption[];
 
@@ -16,7 +16,7 @@
 
     const LOGGER = new PiLogger("DropdownComponent").mute();
     const dispatcher = createEventDispatcher();
-    const id: string = `dropdown-${getOptions().map(opt => opt.id).join("-")}`;
+    const id: string = `dropdown-${getOptions().map(opt => opt.label).join("-")}`;
 
     const getOptionsLogged = (): SelectOption[] => {
         // TODO explain why this extra filter is needed
@@ -40,7 +40,7 @@
      */
     export const handleKeyDown = (e: KeyboardEvent): boolean => {
         const options = getOptions();
-        const index = options.findIndex(o => o.id == $selectedOptionId); // Note, we must use '==', not '==='. The strict equal fails.
+        const index = options.findIndex(o => o.id == $selectedOptionId); // Note, we must use '==', not '==='. The strict equal fails on a store prop.
         LOGGER.log("handleKeyDown " + e.key + " index = " + index + ", $selectedOptionId: '" + $selectedOptionId + "'");
         switch (e.key) {
             case KEY_ARROW_DOWN:
@@ -62,8 +62,10 @@
                     return false;
                 }
             case KEY_DELETE:
+                $dropdownOpen = false;
                 return true;
             case KEY_ESCAPE:
+                $dropdownOpen = false;
                 return true;
         }
         return false;

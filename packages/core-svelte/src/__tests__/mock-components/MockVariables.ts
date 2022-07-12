@@ -45,3 +45,9 @@ export class MockVariables {
     }
 }
 
+// console.log(`AFTER MockVariables
+//     keyPress: ${MockVariables.nrKeypress},
+//     keyDown: ${MockVariables.nrKeydown},
+//     keyUp: ${MockVariables.nrKeyup}
+//     piItemSelected: ${MockVariables.nrPiItemSelected}`)
+

@@ -29,20 +29,20 @@
     import { autorun, runInAction } from "mobx";
     import { clickOutside } from "./clickOutside";
     import { afterUpdate, onMount } from "svelte";
-    import { type Writable, writable } from "svelte/store";
     import { SelectOptionList } from "./SelectableOptionList";
     import { FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import SelectableComponent from "./SelectableComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
     import { componentId } from "./util";
+    import { dropdownOpen } from "./DropdownStore";
 
     // Svelte Parameters
     export let choiceBox: AbstractChoiceBox;
     export let editor: PiEditor;
 
     // Local Variables
-    let openStore: Writable<boolean> = writable<boolean>(false);
+
     let LOGGER = new PiLogger("AliasComponent");
     let dropdownComponent: DropdownComponent;
     let textComponent: TextComponent;
@@ -54,7 +54,7 @@
 
     function setOpen(msg: string, value: boolean) {
         // LOGGER.log("SET OPEN " + choiceBox?.role + " from " + $openStore + " to " + value + " in " + msg );
-        $openStore = value;
+        $dropdownOpen = value;
         // isEditing = true;
     }
 
@@ -218,17 +218,17 @@
             e.stopPropagation();
         }
         if ((e.key === KEY_SPACEBAR && e.ctrlKey) || (e.key === KEY_ESCAPE)) {
-            setOpen("cltr-space or escape", !$openStore);
+            setOpen("cltr-space or escape", !$dropdownOpen);
             return;
         }
-        if ($openStore) {
+        if ($dropdownOpen) {
             // Propagate key event to dropdown component
             LOGGER.log("Forwarding event to dropdown component");
             if (dropdownComponent !== null && dropdownComponent !== undefined) {
                 const x = dropdownComponent.handleKeyDown(e);
                 LOGGER.log("      handled result: " + x);
             } else {
-                console.error("AliasComponent.onKeyDown: DROPDOWN UNDEFINED ope " + $openStore);
+                console.error("AliasComponent.onKeyDown: DROPDOWN UNDEFINED ope " + $dropdownOpen);
             }
 
             e.preventDefault();
@@ -286,16 +286,16 @@
     };
 
     const onClick = (e: MouseEvent) => {
-        LOGGER.log("onClick before open is " + $openStore);
-        setOpen("onClick", !$openStore);
-        LOGGER.log("onClick after, open is " + $openStore);
+        LOGGER.log("onClick before open is " + $dropdownOpen);
+        setOpen("onClick", !$dropdownOpen);
+        LOGGER.log("onClick after, open is " + $dropdownOpen);
     };
 
     let listForDropdown: SelectOption[];
     let aliasStyle: string = "";
 
     autorun(() => {
-        if ($openStore) {
+        if ($dropdownOpen) {
             listForDropdown = selectableOptionList.getFilteredOptions();
         }
         selectedOption = choiceBox.getSelectedOption();
@@ -345,7 +345,7 @@
             bind:this={textComponent}
         />
     </SelectableComponent>
-    {#if $openStore}
+    {#if $dropdownOpen}
         <DropdownComponent
             bind:this="{dropdownComponent}"
             on:piItemSelected={onSelectOption}
