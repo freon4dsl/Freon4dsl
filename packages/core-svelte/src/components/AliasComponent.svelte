@@ -1,6 +1,10 @@
 <!-- This component does all the screen handling for both an Alias and a Select Component.
 -->
 <script lang="ts">
+    // TODO when user enters text that does not correspond to one of the options, this should be indicated
+    // Currently, nothing is shown
+    // TODO when the user enters text that corresponds with a single option, this option should be choosen immediately or
+    // at least the option should be slected in the dropdown box, so 'Enter' would select it
     import {
         BehaviorExecutionResult,
         AbstractChoiceBox,
@@ -344,12 +348,8 @@
     {#if $openStore}
         <DropdownComponent
             bind:this="{dropdownComponent}"
-            on:pi-ItemSelected={onSelectOption}
+            on:piItemSelected={onSelectOption}
             getOptions={getAliasOptions}
-            selectedOptionId="2"
         />
     {/if}
-
 </div>
-
-<!-- TODO question: why is selectedOptionId set to a constant value? -->

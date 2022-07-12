@@ -42,7 +42,6 @@
 		findTextDialogVisible
 	} from "../stores/DialogStore";
 	import { EditorRequestsHandler } from "../../language/EditorRequestsHandler";
-	import { setUserMessage } from "../stores/UserMessageStore";
 
 	let menu: MenuComponentDev;
 
@@ -82,10 +81,6 @@
 		// perform the action associated with the menu item
 		menuItem.action(id);
 	};
-
-	const notImplemented = () => {
-		setUserMessage("Sorry, this action is not yet implemented.");
-	}
 
 	// all menu items
 	let menuItems : MenuItem[] = [

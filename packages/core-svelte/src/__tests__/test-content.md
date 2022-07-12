@@ -26,14 +26,14 @@ Deze worden altijd in de bovenste component afgehandeld:
 
 # DropDownItemComponent
 
-1. on click geeft melding naar boven: een pi-ItemSelected event
+1. on click geeft melding naar boven: een piItemSelected event
 2. indien geselecteerd dan wijzigt de style
 
 # DropDownComponent
 
 1. pijl omhoog omlaag worden niet gepropageerd
 2. pijl omhoog omlaag veranderen huidige selectie
-3. enter geeft melding naar boven: een pi-ItemSelected event
+3. enter geeft melding naar boven: een piItemSelected event
 4. escape, delete sluit drop down ??? => zou moeten ???
 
 # AliasComponent

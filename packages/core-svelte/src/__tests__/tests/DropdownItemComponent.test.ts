@@ -9,6 +9,7 @@ import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../../co
 import DropdownItemComponent from "../../components/DropdownItemComponent.svelte";
 import Mock4DropdownItem from "../mock-components/Mock4DropdownItem.svelte";
 import { MockVariables } from "../mock-components/MockVariables";
+import { selectedOptionId } from "../../components/DropdownStore";
 
 describe("DropDownItemComponent component", () => {
     MOUNT_LOGGER.mute();
@@ -16,17 +17,20 @@ describe("DropDownItemComponent component", () => {
     UPDATE_LOGGER.mute();
     FOCUS_LOGGER.mute();
 
-    let option: SelectOption = { id: "select-text", label: "select-text" };
+    let option: SelectOption = { id: "1", label: "select-text" };
 
-    it("when selected has class 'isSelected'", () => {
-        const result = render(DropdownItemComponent, { isSelected: true, option: option });
+    it("when selected has class 'isSelected'", async () => {
+        // currentSelectedOptionId.set(option.id); // when set after rendering, 'await' is needed
+        const result = render(DropdownItemComponent, { option: option });
         const myElement = screen.getByTestId(`dropdown-item-${option.label}-${option.id}`);
         expect(myElement).toBeVisible();
+        await selectedOptionId.set(option.id); // when set after rendering, 'await' is needed
         expect(myElement).toHaveClass("isSelected");
     });
 
-    it("when not selected does not have class 'isSelected'", () => {
-        const result = render(DropdownItemComponent, { isSelected: false, option: option });
+    it("when not selected does not have class 'isSelected'", async () => {
+        selectedOptionId.set("23");
+        const result = render(DropdownItemComponent, { option: option });
         const myElement = screen.getByTestId(`dropdown-item-${option.label}-${option.id}`);
         expect(myElement).toBeVisible();
         expect(myElement).not.toHaveClass("isSelected");
@@ -34,7 +38,7 @@ describe("DropDownItemComponent component", () => {
 
     it("when hovered over the style changes", async () => {
         const user = userEvent.setup(); // do not use in before hook, see https://kentcdodds.com/blog/avoid-nesting-when-youre-testing
-        const result = render(DropdownItemComponent, { isSelected: true, option: option });
+        const result = render(DropdownItemComponent, { option: option });
         const myElement = screen.getByTestId(`dropdown-item-${option.label}-${option.id}`);
         expect(myElement).toBeVisible();
         expect(myElement).toHaveStyle("color: var(--freon-dropdownitem-component-color, darkblue)");
@@ -42,13 +46,14 @@ describe("DropDownItemComponent component", () => {
         expect(myElement).toHaveStyle("color: var(--freon-dropdownitem-component-hover-color, darkblue)");
     });
 
-    it("on click causes event 'pi-ItemSelected'", async () => {
-        let option: SelectOption = { id: "select-text", label: "select-text" };
-        const result = render(Mock4DropdownItem, {});
+    it("on click causes event 'piItemSelected' and changes style", async () => {
+        const result = render(Mock4DropdownItem);
         const item = screen.getByTestId(`dropdown-item-${option.label}-${option.id}`);
         expect(item).toBeVisible();
+        expect(item).not.toHaveClass("isSelected");
         await fireEvent.click(item);
-        expect(MockVariables.nrPi_itemSelected).toBe(1);
-        expect(MockVariables.pi_itemSelectedValues[MockVariables.pi_itemSelectedValues.length-1]).toStrictEqual(option);
+        expect(MockVariables.nrPiItemSelected).toBe(1);
+        expect(MockVariables.piItemSelectedValues[MockVariables.piItemSelectedValues.length-1]).toStrictEqual(option);
+        expect(item).toHaveClass("isSelected");
     });
 });

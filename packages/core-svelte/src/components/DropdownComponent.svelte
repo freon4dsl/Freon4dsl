@@ -8,17 +8,18 @@
         KEY_ESCAPE, KEY_ARROW_DOWN, KEY_ARROW_UP, KEY_DELETE, KEY_ENTER
     } from "@projectit/core";
     import DropdownItemComponent from "./DropdownItemComponent.svelte";
+    import { selectedOptionId } from "./DropdownStore";
 
     export let getOptions: () => SelectOption[];
-    export let selectedOptionId: string = "1";
-    // Needed to know when the dropdownlist has changed
-    // export let notifier: ChangeNotifier;
+
+    // export let notifier: ChangeNotifier; // Needed to know when the dropdownlist has changed
 
     const LOGGER = new PiLogger("DropdownComponent").mute();
     const dispatcher = createEventDispatcher();
-    let id: string = `dropdown-${getOptions().map(opt => opt.id).join("-")}`;
+    const id: string = `dropdown-${getOptions().map(opt => opt.id).join("-")}`;
 
     const getOptionsLogged = (): SelectOption[] => {
+        // TODO explain why this extra filter is needed
         const options = getOptions();
         // check for duplicate keys and give a usefull error
         const alreadySeen: string[] = [];
@@ -39,8 +40,8 @@
      */
     export const handleKeyDown = (e: KeyboardEvent): boolean => {
         const options = getOptions();
-        const index = options.findIndex(o => o.id === selectedOptionId);
-        LOGGER.log("handleKeyDown " + e.key + " index="+ index);
+        const index = options.findIndex(o => o.id == $selectedOptionId); // Note, we must use '==', not '==='. The strict equal fails.
+        LOGGER.log("handleKeyDown " + e.key + " index = " + index + ", $selectedOptionId: '" + $selectedOptionId + "'");
         switch (e.key) {
             case KEY_ARROW_DOWN:
                 if (index + 1 < options.length) {
@@ -55,7 +56,7 @@
             case KEY_ENTER:
                 if (index >= 0 && index < options.length) {
                     e.stopPropagation();
-                    dispatcher("pi-ItemSelected", options[index]);
+                    dispatcher("piItemSelected", options[index]);
                     return true;
                 } else {
                     return false;
@@ -70,7 +71,7 @@
 
     const setSelectedOption = (index: string): void => {
         LOGGER.log("set selected option to "+ index);
-        selectedOptionId = index;
+        $selectedOptionId = index;
     }
 
     let getOptionsForHtml : SelectOption[];
@@ -86,29 +87,30 @@
     const onBlur = (e: FocusEvent) => {
         FOCUS_LOGGER.log("DropdownComponent.onBlur")
     }
-    const onSelectOption = (event: CustomEvent<SelectOption>) => {
-        console.log("DropdownComponent.onSelectOption");
-    }
 </script>
+
+<!-- Because custom events do not 'bubble', we have to propagate piItemSelected explictly, by
+ setting on:piItemSelected on all DropdownItemComponents -->
 
 <div class="dropdown"
         on:focus={onFocus}
         on:blur={onBlur}
+        on:keypress={handleKeyDown}
+     id="{id}"
 >
     <div tabIndex={0}  />
     <div class="popupWrapper">
         {#each getOptionsForHtml as option (option.id + option.label)}
             <div class="popup">
                 <div>
-                    <DropdownItemComponent on:pi-ItemSelected={onSelectOption} option={option} isSelected={option.id === selectedOptionId} />
+                    <DropdownItemComponent on:piItemSelected option={option} />
                 </div>
             </div>
         {/each}
     </div>
 </div>
 
-<!-- TODO question: why the 'on:pi-ItemSelected' in DropdownItemComponent? -->
-
+<!-- TODO question: why the tabIndex on each component? -->
 
 <style>
     .dropdown {

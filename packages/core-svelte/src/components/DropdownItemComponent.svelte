@@ -1,24 +1,27 @@
 <script lang="ts">
     import { PiLogger, type SelectOption } from "@projectit/core";
     import { createEventDispatcher } from "svelte";
+    import { selectedOptionId } from "./DropdownStore";
 
     const LOGGER: PiLogger = new PiLogger("DropdownItemComponent").mute();
     const dispatcher = createEventDispatcher();
 
-    export let isSelected: boolean = false;
     export let option: SelectOption;
+
+    let isSelected: boolean = option.id === $selectedOptionId;
 
     let id: string = `dropdown-item-${option.label}-${option.id}`;
 
     const onClick = (e: MouseEvent): void => {
-        LOGGER.log("CLICKED, option " + option.id);
+        $selectedOptionId = option.id;
+        LOGGER.log("CLICKED, option " + option.id + ", currentSelection: " + $selectedOptionId);
         e.stopPropagation();
-        dispatcher("pi-ItemSelected", option);
+        dispatcher("piItemSelected", option);
     };
 </script>
 
 <div class={"dropdownitem"}
-     class:isSelected
+     class:isSelected={$selectedOptionId === option.id}
      on:click={onClick}
      tabIndex={0}
      id="{id}"
