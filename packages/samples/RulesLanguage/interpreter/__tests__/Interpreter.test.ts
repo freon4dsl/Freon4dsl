@@ -81,15 +81,15 @@ describe("Demo Model", () => {
             done();
         });
 
-        test("NEW 3 Check 10 * func(5, 7) + 30 * 3 === 210", () => {
-            expect(model.name).not.toBeNull();
-            const rexp: RuleExpression = (model.rules[0].Rules[0] as CheckingRule).check;
-            const intp: RulesInterpreter = new RulesInterpreter();
-            intp.setTracing(true);
-            const result = intp.evaluate(rexp);
-            console.log(intp.getTrace().root.toStringRecursive());
-            expect(result.valueOf()).toBe(210);
-        });
+        // test("NEW 3 Check 10 * func(5, 7) + 30 * 3 === 210", () => {
+        //     expect(model.name).not.toBeNull();
+        //     const rexp: RuleExpression = (model.rules[0].Rules[0] as CheckingRule).check;
+        //     const intp: RulesInterpreter = new RulesInterpreter();
+        //     intp.setTracing(true);
+        //     const result = intp.evaluate(rexp);
+        //     console.log(intp.getTrace().root.toStringRecursive());
+        //     expect(result.valueOf()).toBe(210);
+        // });
         test("Generated interpreter Check 10 * func(5, 7) + 30 * 3 === 210", () => {
             expect(model.name).not.toBeNull();
             const rexp: RuleExpression = (model.rules[0].Rules[0] as CheckingRule).check;

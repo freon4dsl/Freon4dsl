@@ -8,7 +8,8 @@ import {
 import {  RulesLanguageInterpreterInit } from "./gen/RulesLanguageInterpreterInit";
 
 const getPropertyFunction: OwningPropertyFunction = (node: Object) => {
-    return (node as PiElement).piOwnerDescriptor().propertyName;
+    const index = (node as PiElement).piOwnerDescriptor().propertyIndex;
+    return (node as PiElement).piOwnerDescriptor().propertyName + (index !== undefined ? "[" + index + "]" : "");
 };
 
 /**
