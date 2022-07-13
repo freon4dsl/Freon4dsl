@@ -20,6 +20,8 @@ export interface PiElement {
 
     piIsExpression(): boolean;
 
+    piIsUnaryExpression(): boolean;
+
     piIsBinaryExpression(): boolean;
 
     copy(): PiElement;

@@ -1,4 +1,5 @@
 import { PiBinaryExpression, PiElement } from "../../ast";
+import { PiUnaryExpression } from "../../ast/PiUnaryExpression";
 import { Language } from "../../language";
 import { BTREE, PiCaret, PiCaretPosition } from "../../util";
 import { Box } from "../boxes";
@@ -153,7 +154,30 @@ export class PiCreateSiblingCommand extends PiCommand {
     undo(box: Box, editor: PiEditor) {}
 }
 
+export type PiUnaryExpressionBuilder = (box: Box, text: string, editor: PiEditor) => PiUnaryExpression;
 export type PiBinaryExpressionBuilder = (box: Box, text: string, editor: PiEditor) => PiBinaryExpression;
+
+export class PiCreateUnaryExpressionCommand extends PiCommand {
+    expressionBuilder: PiUnaryExpressionBuilder;
+    boxRoleToSelect: string;
+    caretPosition: PiCaret;
+
+    constructor(expressionBuilder: PiUnaryExpressionBuilder) {
+        super();
+        this.expressionBuilder = expressionBuilder;
+    }
+
+    execute(box: Box, trigger: PiActionTrigger, editor: PiEditor): PiPostAction {
+        console.log("PiCreateUnaryExpressionCommand: trigger [" + triggerToString2(trigger) + "] part: ");
+        const selected = BTREE.insertUnaryExpression(this.expressionBuilder(box, triggerToString2(trigger), editor), box, editor);
+        const self = this;
+        return function () {
+            editor.selectElement(selected.element, selected.boxRoleToSelect)
+        };
+    }
+
+    undo() {}
+}
 
 export class PiCreateBinaryExpressionCommand extends PiCommand {
     expressionBuilder: PiBinaryExpressionBuilder;

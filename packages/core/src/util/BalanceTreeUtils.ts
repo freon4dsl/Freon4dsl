@@ -1,4 +1,5 @@
 import { action, makeObservable } from "mobx";
+import { PiUnaryExpression } from "../ast/PiUnaryExpression";
 import { PiUtils } from "./internal";
 import { Box, PiEditor } from "../editor";
 import { PiBinaryExpression, PiElement, PiExpression } from "../ast";
@@ -147,7 +148,11 @@ class BTree {
         return selectedElement;
     }
 
-    /**
+    insertUnaryExpression(newBinExp: PiUnaryExpression, box: Box, editor: PiEditor): Selected | null {
+        // TODO Implement
+        return null;
+    }
+        /**
      * Balances the tree according to operator precedence.
      * Works when `exp` has just been added to the tree.
      */

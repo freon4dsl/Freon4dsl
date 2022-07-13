@@ -20,6 +20,10 @@ export abstract class PiElementBaseImpl extends MobxModelElementImpl implements 
         throw new Error("Method should be implemented by subclasses of PiElementBaseImpl.");
     }
 
+    piIsUnaryExpression(): boolean {
+        throw new Error("Method should be implemented by subclasses of PiElementBaseImpl.");
+    }
+
     piIsBinaryExpression(): boolean {
         throw new Error("Method should be implemented by subclasses of PiElementBaseImpl.");
     }

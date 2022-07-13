@@ -11,5 +11,6 @@ export * from "./PiCommand";
 export * from "./PiAction";
 export * from "./PiCustomAction";
 export * from "./PiCreateBinaryExpressionAction";
+export * from "./PiCreateUnaryExpressionAction";
 export * from "./PiCreatePartAction";
 export * from "./PiCreateSiblingAction";

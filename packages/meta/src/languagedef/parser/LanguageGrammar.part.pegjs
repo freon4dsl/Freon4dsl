@@ -19,6 +19,7 @@ privateKey      = "private" rws { return true; }
 limitedKey      = "limited" rws {return true; }
 interfaceKey    = "interface" rws
 binaryKey       = "binary" rws { return true; }
+unaryKey        = "unary" rws { return true; }
 expressionKey   = "expression" rws { return true; }
 conceptKey      = "concept" rws
 baseKey         = "base" rws { return true; }
@@ -84,7 +85,7 @@ interface = interfaceKey ws name:var rws base:interfacebase? curly_begin props:p
         });
     }
 
-expression = abs:abstractKey? binary:binaryKey? expressionKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
+expression = abs:abstractKey? unary:unaryKey? binary:binaryKey? expressionKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
                 curly_begin
                     props:property*
                     priority:priority?
@@ -92,6 +93,16 @@ expression = abs:abstractKey? binary:binaryKey? expressionKey ws name:var rws ba
     {
         if (!!binary) {
             return create.createBinaryExpressionConcept({
+                "isAbstract": (!!abs),
+                "name": name,
+                "base": base,
+                "interfaces": implementedInterfaces,
+                "properties": props,
+                "priority": (!!priority ? priority : 0),
+                "location": location()
+            });
+        } else if(!!unary){
+            return create.createUnaryExpressionConcept({
                 "isAbstract": (!!abs),
                 "name": name,
                 "base": base,

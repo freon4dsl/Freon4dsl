@@ -7,7 +7,15 @@ import {
     PiInstance,
     PiExpressionConcept,
     PiBinaryExpressionConcept,
-    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveType, PiModelDescription, PiUnitDescription, PiElementReference
+    PiLimitedConcept,
+    PiConcept,
+    PiProperty,
+    PiClassifier,
+    PiPrimitiveType,
+    PiModelDescription,
+    PiUnitDescription,
+    PiElementReference,
+    PiUnaryExpressionConcept
 } from "../metalanguage";
 import { ParseLocationUtil } from "../../utils";
 
@@ -192,6 +200,17 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+}
+
+export function createUnaryExpressionConcept(data: Partial<PiUnaryExpressionConcept>): PiUnaryExpressionConcept {
+    // console.log("createUnaryExpressionConcept " + data.name);
+    const result = new PiUnaryExpressionConcept();
+    result.isAbstract = !!data.isAbstract;
+    if ( !!data.priority ) {
+        result.priority = data.priority;
+    }
+    createCommonConceptProps(data, result);
+    return result;
 }
 
 export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionConcept>): PiBinaryExpressionConcept {

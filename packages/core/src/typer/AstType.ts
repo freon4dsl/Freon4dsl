@@ -36,6 +36,10 @@ class NamedElement implements PiNamedElement {
         return "";
     }
 
+    piIsUnaryExpression(): boolean {
+        return false;
+    }
+
     piIsBinaryExpression(): boolean {
         return false;
     }

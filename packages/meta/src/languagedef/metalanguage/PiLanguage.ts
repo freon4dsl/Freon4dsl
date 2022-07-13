@@ -370,6 +370,15 @@ export class PiBinaryExpressionConcept extends PiExpressionConcept {
     }
 }
 
+export class PiUnaryExpressionConcept extends PiExpressionConcept {
+    priority: number;
+
+    getPriority(): number {
+        const p = this.priority;
+        return (!!p ? p : -1);
+    }
+}
+
 export class PiLimitedConcept extends PiConcept {
     instances: PiInstance[] = [];
 

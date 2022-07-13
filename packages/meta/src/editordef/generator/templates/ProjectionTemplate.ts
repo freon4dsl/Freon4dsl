@@ -79,13 +79,11 @@ export class ProjectionTemplate {
              */
             export class ${Names.projection(projectionGroup)} implements ${Names.PiProjection} {
                 rootProjection: ${Names.PiCompositeProjection};
-                showBrackets: boolean = false;
                 name: string = "${projectionGroup.name}";
                 isEnabled: boolean = true;
 
                 constructor() {
                     makeObservable(this, {
-                        showBrackets: observable,
                         isEnabled: observable,
                     });
                 }
@@ -155,8 +153,9 @@ export class ProjectionTemplate {
                      */
                     private createBinaryBox(exp: PiBinaryExpression, symbol: string): Box {
                         const binBox = createDefaultBinaryBox(exp, symbol, LanguageEnvironment.getInstance().editor);
+                        const showBrackets = LanguageEnvironment.getInstance().editor.showBrackets;
                         if (
-                            this.showBrackets &&
+                            showBrackets &&
                             !!exp.piOwnerDescriptor().owner &&
                             isPiBinaryExpression(exp.piOwnerDescriptor().owner)
                         ) {

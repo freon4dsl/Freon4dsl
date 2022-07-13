@@ -42,7 +42,7 @@ export class UnitTemplate {
                 ${unitDescription.references().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}     
             
                 ${ConceptUtils.makeConstructor(false, unitDescription.allProperties())}
-                ${ConceptUtils.makeBasicMethods(false, metaType,false, true,false, false)} 
+                ${ConceptUtils.makeBasicMethods(false, metaType,false, true,false, false,false )} 
                 ${ConceptUtils.makeCopyMethod(unitDescription, myName, false)}
                 ${ConceptUtils.makeMatchMethod(false, unitDescription, myName)}               
             }

@@ -33,7 +33,7 @@ export class ModelTemplate {
                 ${modelDescription.parts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
 
                 ${ConceptUtils.makeConstructor(false, modelDescription.properties)}            
-                ${ConceptUtils.makeBasicMethods(false, metaType,true, false,false, false)}
+                ${ConceptUtils.makeBasicMethods(false, metaType,true, false,false, false,false)}
                 ${ConceptUtils.makeCopyMethod(modelDescription, myName, false)}
                 ${ConceptUtils.makeMatchMethod(false, modelDescription, myName)}
                 

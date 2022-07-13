@@ -168,7 +168,7 @@ export class ConceptUtils {
             }`;
     }
 
-    public static makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression): string {
+    public static makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isUnaryExpression: boolean, isBinaryExpression: boolean): string {
         return `                                
                 /**
                  * Returns the metatype of this instance in the form of a string.
@@ -205,6 +205,13 @@ export class ConceptUtils {
                  */                 
                 piIsExpression(): boolean {
                     return ${isExpression};
+                }
+
+                /**
+                 * Returns true if this instance is a unary expression concept.
+                 */                 
+                piIsUnaryExpression(): boolean {
+                    return ${isUnaryExpression};
                 }
 
                 /**

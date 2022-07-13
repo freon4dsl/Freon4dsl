@@ -23,6 +23,7 @@ export class PiEditor {
     readonly projection: PiProjection;
     new_pi_actions: PiAction[]= [];
     theme: string = "light";
+    showBrackets: boolean = false;
 
     private $rootBox: Box | null = null;
     private $selectedBox: Box | null = null;
@@ -56,6 +57,7 @@ export class PiEditor {
         makeObservable<PiEditor, "$rootBox" | "selectedRole" | "$selectedBox" | "selectedElement" | "_rootElement">(this, {
             $rootBox: observable,
             _rootElement: observable,
+            showBrackets: observable,
             $selectedBox: observable,
             selectedElement: observable,
             selectedRole: observable,
