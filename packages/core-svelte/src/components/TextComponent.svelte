@@ -1,4 +1,5 @@
-<svelte:options accessors={true} />
+<svelte:options accessors={true}/> <!-- adds getters and setters for the component's props -->
+<!-- TODO question: cannot this compiler option be (re)moved to tsconfig? -->
 
 <script lang="ts">
     import { autorun, runInAction } from "mobx";
@@ -34,21 +35,25 @@
     import { componentId } from "./util";
 
     const LOGGER = new PiLogger("TextComponent").mute();
-    // Is this component currently being edited by the user?
-    export let isEditing: boolean = false;
-    export let textBox: TextBox ; // new TextBox(null, "role:", () => "Editable textbox", (v: string) => { });
+    type BoxType = "alias" | "select" | "text"; // TODO question: is 'select' still an option?
+
+    // Parameters
+    export let isEditing: boolean = false; // Is this component currently being edited by the user?
+    export let textBox: TextBox;
     export let editor: PiEditor;
 
+    // Local variables
     let id: string = componentId(textBox);
+    let text: string = textBox.getText();   // the text to be displayed
+    let element: HTMLSpanElement;           // the element on the screen
+    let placeholder: string;                // the placeholder when value of text component is not present
+    let originalText: string;               // variable to remember the text that was in the box previously
+    let boxType: BoxType = "text";          // indication how is this text component used
 
-    export let getText = (): string => {
-        // TODO loopt eentje achter tijdens onKeyDown, want we kunnen de key nog negeren.
-        return currentText();
-    };
-
+    // Exported functions
     export const setFocus = () => {
-        LOGGER.log("setFocus in SetFocus" + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
-        if (hasFocus()) {
+        FOCUS_LOGGER.log("setFocus " + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
+        if (document.activeElement === element) {
             FOCUS_LOGGER.log("    has focus already");
             return;
         }
@@ -56,74 +61,172 @@
         setCaretPosition(textBox.caretPosition);
     };
 
-    function hasFocus(): boolean {
-        return document.activeElement === element;
-    }
-
-    /**
-     * Decides whether the default behavior of the event should be ignored
-     * @param e
-     */
-    const shouldIgnore = (e: KeyboardEvent): boolean => {
-        if (e.altKey) {
-            return true;
-        }
-        return e.key === KEY_ENTER || e.key === KEY_TAB;
-    };
-
-    /**
-     * Decides whether the  event should be propagated to the parent component
-     * @param e
-     */
-    const shouldPropagate = (e: KeyboardEvent): boolean => {
-        if (isPrintable(e)) {
-            return true;
-        }
-        if (isMetaKey(e)) {
-            if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN || e.key === KEY_TAB || e.key === KEY_SPACEBAR) {
-                return true;
-            }
-        }
-        if (e.key === KEY_ENTER || e.key === KEY_DELETE || e.key === KEY_TAB) {
-            return true;
-        }
-        if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN || e.key === KEY_ESCAPE) {
-            return true;
-        }
-        const caretPosition = getCaretPosition();
-        if (e.key === KEY_ARROW_LEFT || e.key === KEY_BACKSPACE) {
-            return caretPosition <= 0;
-        } else if (e.key === KEY_ARROW_RIGHT || e.key === KEY_DELETE) {
-            return caretPosition >= currentLength();
-        } else {
-            return false;
-        }
-    };
-
-    function currentLength(): number {
-        if (!!element && !!element.innerText) {
-            return element.innerText.length;
-        } else {
-            return 0;
-        }
-    }
-
-    function currentText(): string {
-        if (!!element && !!element.innerText) {
-            return element.innerText;
-        } else {
-            return "";
-        }
-    }
-
-    let originalText: string;
-
+    // Local behaviour
     onMount(() => {
         MOUNT_LOGGER.log("TextComponent.onMount for role [" + textBox.role + "]");
         textBox.setFocus = setFocus;
         textBox.setCaret = setCaret;
         originalText = textBox.getText();
+        addRange(0);
     });
+
+    // Helpers functions
+
+    // Note that innerText returns the HTML element (entire code) as a string and displays HTML element on the screen (as HTML code),
+    // while innerHTML returns only text content of the HTML element.
+    let currentLength: number = 0;
+    $: currentLength = element?.innerHTML?.length;
+
+    function currentText(): string {
+        if (!!element && !!element.innerHTML) {
+            return element.innerHTML;
+        } else {
+            return "";
+        }
+    }
+
+    function logBox(message: string) {
+        // console.log(message + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
+    }
+
+    // Caret position functions
+
+    const setCaret = (caret: PiCaret) => {
+        switch (caret.position) {
+            case PiCaretPosition.RIGHT_MOST:
+                LOGGER.log("setCaretPosition RIGHT");
+                setCaretToMostRight();
+                textBox.caretPosition = textBox.getText().length;
+                break;
+            case PiCaretPosition.LEFT_MOST:
+                LOGGER.log("setCaretPosition LEFT");
+                setCaretToMostLeft();
+                textBox.caretPosition = 0;
+                break;
+            case PiCaretPosition.INDEX:
+                LOGGER.log("setCaretPosition INDEX");
+                setCaretPosition(caret.index);
+                textBox.caretPosition = caret.index;
+                break;
+            case PiCaretPosition.UNSPECIFIED:
+                LOGGER.log("setCaretPosition UNSPECIFIED");
+                break;
+            default:
+                LOGGER.log("setCaretPosition ERROR");
+                break;
+        }
+        logBox("setFocus in setCaret");
+        // element.focus();
+    };
+
+    const setCaretToMostLeft = () => {
+        setCaretPosition(0);
+    };
+
+    const setCaretToMostRight = () => {
+        LOGGER.log("setCaretPosition RIGHT: " + textBox.getText().length);
+        setCaretPosition(textBox.getText().length);
+    };
+
+    function addRange(position: number) {
+        window.getSelection().removeAllRanges();
+        const range = document.createRange();
+        if (element!.childNodes[0]) { // Assert that element is non-null and access childNodes[0]
+            range.setStart(element!.childNodes[0], position);
+        } else {
+            range.setStart(element!, position);
+        }
+        range.collapse(true);
+        window.getSelection().addRange(range);
+    }
+
+    const setCaretPosition = (position: number) => {
+        logBox("setCaretPosition: " + position);
+        if (position === -1) {
+            return;
+        }
+        try {
+            if (position > currentLength) {
+                // position already has the new length, while currentLength still has the old length
+                // because window.getSelection() is still returning the previous element
+                // TODO Fix the error below
+                console.error("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR \n" +
+                    "TextComponent.setCaretPosition position: " + position + " length: " + currentLength);
+                position = currentLength;
+            }
+            addRange(position);
+            LOGGER.log("New position is: " + position);
+            textBox.caretPosition = position;
+        } catch (e) {
+            console.error("TextComponent.setCaretPosition ERROR: " + e.toString());
+        }
+    };
+
+    const getCaretPosition = (): number => {
+        // TODO This causes an extra afterUpdate in Svelte, don't know why ! What is 'This'?
+        // return window.getSelection().focusOffset;
+        let result: number = 0;
+        let selObj: Selection = window.getSelection();
+        if (selObj.anchorNode.parentNode === element) { // selObj is not always equal to 'element'!!!
+            if (selObj.rangeCount > 0) {
+                result = selObj.getRangeAt(0).startOffset;
+            }
+        } else {
+            console.log("getting wrong caret position for " + id + ", selObj: '" + selObj.anchorNode.nodeValue + "'");
+        }
+        return result;
+    };
+
+    // Event handlers
+
+    const onClick = (event: MouseEvent) => {
+        logBox("onClick before");
+        // addRange(0); // TODO get argument right
+        textBox.caretPosition = getCaretPosition();
+        logBox("onClick after");
+    };
+
+    /**
+     * Decides whether the default behavior of the event should be ignored
+     * @param event
+     */
+    const shouldIgnore = (event: KeyboardEvent): boolean => {
+        // TODO question: is this function actually useful?
+        // shouldPropagate already filters ENTER and TAB and is called before shouldIgnore
+        if (event.altKey) {
+            return true;
+        }
+        return event.key === KEY_ENTER || event.key === KEY_TAB;
+    };
+
+    /**
+     * Decides whether the event should be propagated to the parent component
+     * @param event
+     */
+    const shouldPropagate = (event: KeyboardEvent): boolean => {
+        if (isPrintable(event)) {
+            return true;
+        }
+        if (isMetaKey(event)) {
+            if (event.key === KEY_ARROW_UP || event.key === KEY_ARROW_DOWN || event.key === KEY_TAB || event.key === KEY_SPACEBAR) {
+                return true;
+            }
+        }
+        if (event.key === KEY_ENTER || event.key === KEY_DELETE || event.key === KEY_TAB) {
+            return true;
+        }
+        if (event.key === KEY_ARROW_UP || event.key === KEY_ARROW_DOWN || event.key === KEY_ESCAPE) {
+            return true;
+        }
+        const caretPosition = getCaretPosition();
+        if (event.key === KEY_ARROW_LEFT || event.key === KEY_BACKSPACE) {
+            return caretPosition <= 0;
+        } else if (event.key === KEY_ARROW_RIGHT || event.key === KEY_DELETE) {
+            return caretPosition >= currentLength;
+        } else {
+            return false;
+        }
+    };
 
     /**
      * Used to handle non-printing characters
@@ -193,85 +296,6 @@
         }
     };
 
-    const setCaret = (caret: PiCaret) => {
-        switch (caret.position) {
-            case PiCaretPosition.RIGHT_MOST:
-                LOGGER.log("setCaretPosition RIGHT");
-                setCaretToMostRight();
-                textBox.caretPosition = textBox.getText().length;
-                break;
-            case PiCaretPosition.LEFT_MOST:
-                LOGGER.log("setCaretPosition LEFT");
-                setCaretToMostLeft();
-                textBox.caretPosition = 0;
-                break;
-            case PiCaretPosition.INDEX:
-                LOGGER.log("setCaretPosition INDEX");
-                setCaretPosition(caret.index);
-                textBox.caretPosition = caret.index;
-                break;
-            case PiCaretPosition.UNSPECIFIED:
-                LOGGER.log("setCaretPosition UNSPECIFIED");
-                break;
-            default:
-                LOGGER.log("setCaretPosition ERROR");
-                break;
-        }
-        logBox("setFocus in setCaret");
-        // element.focus();
-    };
-
-    const setCaretToMostLeft = () => {
-        setCaretPosition(0);
-    };
-
-    const setCaretToMostRight = () => {
-        LOGGER.log("setCaretPosition RIGHT: " + textBox.getText().length);
-        setCaretPosition(textBox.getText().length);
-    };
-
-    const setCaretPosition = (position: number) => {
-        logBox("setCaretPosition: " + position);
-        if (position === -1) {
-            return;
-        }
-        try {
-            if (position > currentLength()) {
-                // TODO Fix the error below
-                console.error("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR; ");
-                console.error("TextComponent.setCaretPosition position: " + position + " length: " + currentLength());
-                position = currentLength();
-            }
-            clearSelection();
-            const range = document.createRange();
-            if (element!.childNodes[0]) {
-                range.setStart(element!.childNodes[0], position);
-            } else {
-                range.setStart(element!, position);
-            }
-            range.collapse(true);
-            window.getSelection().addRange(range);
-            LOGGER.log("New position is: " + position);
-            textBox.caretPosition = position;
-        } catch (e) {
-            console.error("TextComponent.setCaretPosition ERROR: " + e.toString());
-        }
-    };
-
-    const clearSelection = () => {
-        window.getSelection().removeAllRanges();
-    };
-
-    const onClick = (event: MouseEvent) => {
-        logBox("onClick before");
-        textBox.caretPosition = getCaretPosition();
-        logBox("onClick after");
-    };
-
-    function logBox(message: string) {
-        LOGGER.log(message + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
-    }
-
     /**
      * IS triggered for printable keys only,
      * @param event
@@ -315,15 +339,11 @@
         }
     };
 
-    let text: string = textBox.getText();
-    let element: HTMLSpanElement;
-    let placeholder: string;
-
     /**
      * Would like to use onChange event, but that is only defined for <inout>, not for contenteditable.
-     * @param e
+     * @param event
      */
-    const onBlur = (e: FocusEvent) => {
+    const onBlur = (event: FocusEvent) => {
         isEditing = false;
         let value = currentText();
         LOGGER.log("onBlur current [" + value + "] box text [" + textBox.getText() + "] original [" + originalText + "]");
@@ -331,7 +351,8 @@
             textBox.caretPosition = getCaretPosition();
             if (value !== originalText) {
                 textBox.setText(value);
-            }            editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
+            }
+            editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         }
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info("delete empty text");
@@ -350,32 +371,16 @@
         }
     });
 
-    export const getCaretPosition = (): number => {
-        // TODO This causes an extra afterUpdate in Svelte, don't know why !
-        // return window.getSelection().focusOffset;
-        return window.getSelection().getRangeAt(0).startOffset;
-    };
-
-
-    let boxType: string = "";
-
     autorun(() => {
         AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "] isEditing [" + isEditing + "]");
         placeholder = textBox.placeHolder;
         // If being edited, do not set the value, let the user type whatever (s)he wants
         // if (!isEditing) {
-            text = textBox.getText();
+        text = textBox.getText();
         // }
         boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
         textBox.setFocus = setFocus;
     });
-
-    // const onFocus = async (e: FocusEvent) => {
-    //     FOCUS_LOGGER.log("TextComponent.onFocus for box " + textBox.role);
-    // };
-    // const onBlurHandler = async (e: FocusEvent) => {
-    //     FOCUS_LOGGER.log("TextComponent.onBlur for box " + textBox.role);
-    // };
 
 </script>
 
@@ -385,14 +390,15 @@
       on:keypress={onKeyPress}
       on:keydown={onKeyDown}
       on:click={onClick}
-
-
       on:blur={onBlur}
       contenteditable="true"
-      bind:innerHTML={text}
+
       bind:this={element}
       id="{id}"
-></span>
+>{text}</span>
+
+<!-- TODO question: why is contenteditable always true? -->
+<!-- TODO question: is using an <input> with on:input an option here? -->
 
 <style>
     .text:empty:before {

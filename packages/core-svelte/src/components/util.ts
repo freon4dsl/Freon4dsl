@@ -7,6 +7,7 @@ export function isEven(n: number): boolean {
     return (n & 1) === 0;
 }
 export function componentId(box: Box): string {
+    // TODO use this function for each component
     return `${box?.element.piId()}-${box?.role}`;
 
 }

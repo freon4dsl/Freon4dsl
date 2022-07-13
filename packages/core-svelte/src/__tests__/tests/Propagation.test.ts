@@ -55,6 +55,10 @@ describe("Keyboard events are propagated", () => {
         await pressKeys(myOptional);
     });
 
+    it("by text component", async () => {
+        // TODO
+    });
+
     async function pressKeys(htmlElement: HTMLElement) {
         // reset MockVariables
         MockVariables.reset();

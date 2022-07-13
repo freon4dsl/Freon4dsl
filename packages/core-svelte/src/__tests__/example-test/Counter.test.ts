@@ -19,6 +19,12 @@ describe('example tests', () => {
         // })
 
         // expect(() => getByLabelText('another button')).not.toThrow();
+
+        // from https://kentcdodds.com/blog/common-mistakes-with-react-testing-library
+        // ❌
+        // fireEvent.change(input, {target: {value: 'hello world'}})
+        // ✅
+        // userEvent.type(input, 'hello world')
     })
 
     it('it works', async () => {
