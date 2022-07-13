@@ -6,7 +6,7 @@
     import { componentId } from "./util";
 
     export let label: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
-    export let editor: PiEditor;
+    // export let editor: PiEditor;
 
     const LOGGER = new PiLogger("LabelComponent").mute();
 

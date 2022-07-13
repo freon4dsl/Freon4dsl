@@ -3,7 +3,7 @@
     import { componentId } from "./util";
 
     export let box: EmptyLineBox;
-    export let editor: PiEditor;
+    // export let editor: PiEditor;
     let id: string = componentId(box);
 </script>
 

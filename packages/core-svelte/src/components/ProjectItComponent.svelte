@@ -19,6 +19,11 @@
     export let editor: PiEditor;
     // TODO add id
     // let id: string = `${box.element.piId()}-${box.role}`;
+    /**
+     * The current main element is this component.
+     */
+    let element: HTMLDivElement;
+    let rootBox: Box;
 
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();
@@ -86,23 +91,17 @@
         event.stopPropagation();
     };
 
-    let rootBox: Box;
     autorun(() => {
         AUTO_LOGGER.log("==================> ProjectItComponent")
         rootBox = editor.rootBox;
     });
 
     /**
-     * The current main element os this component.
-     */
-    let element: HTMLDivElement;
-
-    /**
      * Keep track of the scrolling position in the editor, so we know exactly where bozes are
      * in relationship with each other.
      */
     function onScroll() {
-                    editor.scrollX = element.scrollLeft;
+        editor.scrollX = element.scrollLeft;
         editor.scrollY = element.scrollTop;
     }
 </script>
@@ -131,6 +130,5 @@
         background-color: var(--freon-editor-component-background-color, white);
         margin: var(--freon-editor-component-margin, 1px);
         padding: var(--freon-editor-component-padding, 1px);
-
     }
 </style>
