@@ -5,6 +5,11 @@ import { configure } from '@testing-library/dom'
 configure({ testIdAttribute: 'id' });
 
 import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../../components/ChangeNotifier";
+import { ElementWithOptional } from "../models/ElementWithOptional";
+import { AliasBox, LabelBox, OptionalBox, PiCompositeProjection, PiEditor } from "@projectit/core";
+import { ModelMaker } from "../models/ModelMaker";
+import OptionalComponent from "../../components/OptionalComponent.svelte";
+import { AliasComponent } from "../../components";
 
 describe("AliasComponent", () => {
     MOUNT_LOGGER.mute();
@@ -12,7 +17,27 @@ describe("AliasComponent", () => {
     UPDATE_LOGGER.mute();
     FOCUS_LOGGER.mute();
 
+    let model: ElementWithOptional;
+    let aliasBox: AliasBox;
+    let optionalBox: OptionalBox;
+    let childBox: LabelBox;
+    const myEditor = new PiEditor(new PiCompositeProjection(), null);
+
+    beforeEach(() => {
+        // create a model and the boxes for the model
+        model = ModelMaker.makeOptional();
+        childBox = new LabelBox(model.myOptional, "optional-element", () => "OptionalLabel");
+        optionalBox = new OptionalBox(model, "opt-role", () => {return true;}, childBox, false, "someAliasText" );
+        aliasBox = optionalBox.whenNoShowingAlias;
+    });
+
     it("on click: dropdown is visible", async () => {
+        const result = render(AliasComponent, { choiceBox: aliasBox, editor: myEditor });
+        const myOwner = screen.getByTestId("alias-OPTIONAL-OWNER-opt-role");
+        expect(myOwner).toBeVisible();
+
+        fireEvent.click(myOwner);
+        expect(myOwner).toBeNull();
     // TODO
     });
 
