@@ -70,20 +70,14 @@
         addRange(0);
     });
 
-    // Helpers functions
+    // Helper functions
 
     // Note that innerText returns the HTML element (entire code) as a string and displays HTML element on the screen (as HTML code),
     // while innerHTML returns only text content of the HTML element.
     let currentLength: number = 0;
     $: currentLength = element?.innerHTML?.length;
-
-    function currentText(): string {
-        if (!!element && !!element.innerHTML) {
-            return element.innerHTML;
-        } else {
-            return "";
-        }
-    }
+    let currentText: string;
+    $: currentText = element?.innerHTML;
 
     function logBox(message: string) {
         // console.log(message + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
@@ -94,13 +88,13 @@
     const setCaret = (caret: PiCaret) => {
         switch (caret.position) {
             case PiCaretPosition.RIGHT_MOST:
-                LOGGER.log("setCaretPosition RIGHT");
-                setCaretToMostRight();
+                LOGGER.log("setCaretPosition RIGHT: " + textBox.getText().length);
+                setCaretPosition(textBox.getText().length);
                 textBox.caretPosition = textBox.getText().length;
                 break;
             case PiCaretPosition.LEFT_MOST:
                 LOGGER.log("setCaretPosition LEFT");
-                setCaretToMostLeft();
+                setCaretPosition(0);
                 textBox.caretPosition = 0;
                 break;
             case PiCaretPosition.INDEX:
@@ -115,30 +109,7 @@
                 LOGGER.log("setCaretPosition ERROR");
                 break;
         }
-        logBox("setFocus in setCaret");
-        // element.focus();
     };
-
-    const setCaretToMostLeft = () => {
-        setCaretPosition(0);
-    };
-
-    const setCaretToMostRight = () => {
-        LOGGER.log("setCaretPosition RIGHT: " + textBox.getText().length);
-        setCaretPosition(textBox.getText().length);
-    };
-
-    function addRange(position: number) {
-        window.getSelection().removeAllRanges();
-        const range = document.createRange();
-        if (element!.childNodes[0]) { // Assert that element is non-null and access childNodes[0]
-            range.setStart(element!.childNodes[0], position);
-        } else {
-            range.setStart(element!, position);
-        }
-        range.collapse(true);
-        window.getSelection().addRange(range);
-    }
 
     const setCaretPosition = (position: number) => {
         logBox("setCaretPosition: " + position);
@@ -172,19 +143,44 @@
                 result = selObj.getRangeAt(0).startOffset;
             }
         } else {
-            console.log("getting wrong caret position for " + id + ", selObj: '" + selObj.anchorNode.nodeValue + "'");
+            let range = selObj.getRangeAt(selObj.rangeCount -1);
+
+            console.log("getting wrong caret position for " + id + ", selObj: '" + selObj.anchorNode.nodeValue + "', range: " + range.startContainer.nodeValue);
         }
         return result;
     };
 
+    function addRange(position: number) {
+        window.getSelection().removeAllRanges();
+        const range = document.createRange();
+        if (element!.childNodes[0]) { // Assert that element is non-null and access childNodes[0]
+            range.setStart(element!.childNodes[0], position);
+        } else {
+            range.setStart(element!, position);
+        }
+        range.collapse(true);
+        window.getSelection().addRange(range);
+    }
+
     // Event handlers
 
-    const onClick = (event: MouseEvent) => {
+    const onClick = () => {
         logBox("onClick before");
-        // addRange(0); // TODO get argument right
+
+        let range = window.getSelection().getRangeAt(window.getSelection().rangeCount -1);
+        console.log("on click: range.startOffset: " + range.startOffset + ", range.endOffset: " + range.endOffset)
         textBox.caretPosition = getCaretPosition();
         logBox("onClick after");
     };
+
+    // EXAMPLE
+    // document.onselectionchange = function() {
+    //     let {
+    //         anchorNode, anchorOffset, focusNode, focusOffset
+    //     } = document.getSelection();
+    //     from.value = `${anchorNode && anchorNode.data}:${anchorOffset}`;
+    //     to.value = `${focusNode && focusNode.data}:${focusOffset}`;
+    // };
 
     /**
      * Decides whether the default behavior of the event should be ignored
@@ -240,7 +236,7 @@
         //     return;
         // }
         if (event.key === KEY_DELETE) {
-            if (currentText() === "") {
+            if (currentText === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
                     editor.deleteBox(editor.selectedBox);
                     event.stopPropagation();
@@ -251,7 +247,7 @@
             return;
         }
         if (event.key === KEY_BACKSPACE) {
-            if (currentText() === "") {
+            if (currentText === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
                     editor.deleteBox(editor.selectedBox);
                     event.stopPropagation();
@@ -267,10 +263,10 @@
             LOGGER.log("preventDefault");
             event.preventDefault();
         }
-        const piKey = toPiKey(event);
+        // const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === KEY_ENTER) {
             // To Be Sure save the current text
-            let value = currentText();
+            let value = currentText;
             const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
             if (cmd !== PI_NULL_COMMAND) {
                 let postAction: PiPostAction;
@@ -304,7 +300,7 @@
         LOGGER.log("onKeyPress: " + event.key);
         isEditing = true;
         const insertionIndex = getCaretPosition();
-        switch (textBox.keyPressAction(currentText(), event.key, insertionIndex)) {
+        switch (textBox.keyPressAction(currentText, event.key, insertionIndex)) {
             case KeyPressAction.OK:
                 logBox("KeyPressAction.OK");
                 break;
@@ -345,7 +341,7 @@
      */
     const onBlur = (event: FocusEvent) => {
         isEditing = false;
-        let value = currentText();
+        let value = currentText;
         LOGGER.log("onBlur current [" + value + "] box text [" + textBox.getText() + "] original [" + originalText + "]");
         if (!isAliasTextBox(textBox)) {
             textBox.caretPosition = getCaretPosition();
@@ -358,11 +354,11 @@
             EVENT_LOG.info("delete empty text");
             editor.deleteBox(textBox);
         }
-        LOGGER.log("END onBlur text [" + currentText() + "]");
+        LOGGER.log("END onBlur text [" + currentText + "]");
     };
 
     afterUpdate(() => {
-        UPDATE_LOGGER.log("TextComponent update [" + isEditing + "] [" + currentText() + "] getText [" + textBox.getText() + "] text [" + text + "] box [" + textBox.role + "] caret [" + textBox.caretPosition + "]");
+        UPDATE_LOGGER.log("TextComponent update [" + isEditing + "] [" + currentText + "] getText [" + textBox.getText() + "] text [" + text + "] box [" + textBox.role + "] caret [" + textBox.caretPosition + "]");
         textBox.setFocus = setFocus;
         textBox.setCaret = setCaret;
         // If being edited, do not set the value, let the user type whatever (s)he wants
@@ -372,7 +368,7 @@
     });
 
     autorun(() => {
-        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "] isEditing [" + isEditing + "]");
+        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "] isEditing [" + isEditing + "]");
         placeholder = textBox.placeHolder;
         // If being edited, do not set the value, let the user type whatever (s)he wants
         // if (!isEditing) {
@@ -392,13 +388,12 @@
       on:click={onClick}
       on:blur={onBlur}
       contenteditable="true"
-
+      bind:innerHTML={text}
       bind:this={element}
       id="{id}"
->{text}</span>
-
-<!-- TODO question: why is contenteditable always true? -->
-<!-- TODO question: is using an <input> with on:input an option here? -->
+></span>
+<!--  The reason for the use of contenteditable is because we need the box to be content aware AND
+adapt its size dynamically (both width and height). Using <input> does not support the latter. -->
 
 <style>
     .text:empty:before {

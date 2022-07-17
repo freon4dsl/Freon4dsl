@@ -81,7 +81,7 @@ describe("TextComponent", () => {
         expect(text1).not.toHaveFocus();
 
         // set the caret position from the textBox
-        textBox1.setCaret(PiCaret.RIGHT_MOST);
+        textBox1.setCaret(PiCaret.LEFT_MOST);
 
         // The following does not work because jsdom does not support 'getBoundingClientRect'.
         // Therefore, we cannot test a mouse click on a specific position within the text.
@@ -98,7 +98,7 @@ describe("TextComponent", () => {
 
         fireEvent.click(text1);
         expect(text1).toHaveFocus();
-        // expect(textBox.caretPosition).toBe(0);
+        expect(textBox1.caretPosition).toBe(0);
 
         // click on other element
         const text2 = screen.getByTestId(componentId(textBox2));
@@ -139,26 +139,20 @@ describe("TextComponent", () => {
         // TODO
     });
 
-    it("keyPressAction as stated in textbox should be executed", () => {
+    it("keyPressAction as stated in textbox should be executed", async () => {
+        render(Mock4TextDouble, { box1: textBox1, box2: textBox2, editor: myEditor });
+        const owner1 = screen.getByTestId("mock-text1");
+        expect(owner1).toBeVisible();
+        const text1 = screen.getByTestId(componentId(textBox1));
+        expect(text1).toBeVisible();
+
+        await fireEvent.keyPress(text1, { key: "Enter", code: "Enter", charCode: 13 });
         //  TODO
     });
 
     it("on click: the caret position is set correctly in the textbox", async () => {
         // TODO
     });
-
-    function getComputedElHeight(el) {
-        return Number(window.getComputedStyle(el).height.split('px')[0]);
-    }
-
-    function xx(el) {
-        return {
-            width: parseFloat(el.style.width) || 0,
-            height: parseFloat(el.style.height) || 0,
-            top: parseFloat(el.style.marginTop) || 0,
-            left: parseFloat(el.style.marginLeft) || 0
-        }
-    }
 
     // maybe this is a way to mock the bounding rectangle
     const p = document.createElement('p')
