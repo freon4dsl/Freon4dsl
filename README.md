@@ -41,6 +41,7 @@ Choose one of the projects in playground. Note that not all of them will work co
 Generate the code for that project (we have choosen the 'example' project):
 ```bash
   cd packages/playground
+  yarn install-example
   yarn example
 ```
 
