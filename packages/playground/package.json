@@ -48,6 +48,7 @@
     "install-example": "ts-node ../tools/src/InstallLanguage.ts install -d ../samples/Example -t ./src",
     "install-docu-project": "ts-node ../tools/src/InstallLanguage.ts install -d ../samples/DocuProject -t ./src",
     "install-rules":      "ts-node ../tools/src/InstallLanguage.ts install -d ../samples/RulesLanguage -t ./src",
+    "save-rules":      "ts-node ../tools/src/InstallLanguage.ts save",
     "install-calculator": "ts-node ../tools/src/InstallLanguage.ts install -d ../samples/calculator -t ./src",
     "install-json": "ts-node ../tools/src/InstallLanguage.ts install -d ../samples/Json -t ./src",
     "install-expression-library": "ts-node ../tools/src/InstallLanguage.ts install -d ../samples/ExpressionLibrary -t ./src",
