@@ -1,7 +1,5 @@
-import { matchElementList, observablepart, observablepartlist, PiElementBaseImpl, PiNamedElement, PiUtils } from "@projectit/core";
-import { SimpleElement } from "./SimpleElement";
+import { matchElementList, observablepartlist, PiElementBaseImpl, PiNamedElement, PiUtils } from "@projectit/core";
 import { makeObservable, observable } from "mobx";
-import { ElementWithOptional } from "./ElementWithOptional";
 import { ElementWithManyAttrs } from "./ElementWithManyAttrs";
 
 export class ElementForGrid extends PiElementBaseImpl implements PiNamedElement  {

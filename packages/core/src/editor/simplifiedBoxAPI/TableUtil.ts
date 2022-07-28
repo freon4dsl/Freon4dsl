@@ -62,7 +62,7 @@ export class TableUtil {
 
     private static tableBox(orientation: GridOrientation, element: PiElement, propertyName: string, columnHeaders: string[],
                                       cellGetters: ((e: PiElement) => Box)[],
-                                      editor: PiEditor): Box {
+                                      editor: PiEditor): GridBox {
         // find the information on the property to be shown
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         const property = element[propertyName];

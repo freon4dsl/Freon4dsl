@@ -12,7 +12,7 @@ export const NBSP: string = "".concat("\u00A0");
 
 let LATEST_ID = 0;
 
-const LOGGER = new PiLogger("PiUtils");
+const LOGGER = new PiLogger("PiUtils").mute();
 
 export class PiUtils {
 
