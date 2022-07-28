@@ -1,0 +1,15 @@
+language TextTest
+
+model xx {
+    first: SingleUnit;
+    second: DoubleUnit;
+    }
+
+modelunit SingleUnit {
+    text1: string;
+}
+
+modelunit DoubleUnit {
+    text1: string;
+    text2: string;
+}

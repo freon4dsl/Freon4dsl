@@ -1,0 +1,9 @@
+editor default
+
+SingleUnit {[
+    labelBefore ${text1} labelAfter
+]}
+
+DoubleUnit {[
+    labelBefore ${text1} ${text2} labelAfter
+]}

@@ -11,6 +11,6 @@
 
 <div id="mock-environment">
     <MockSurroundingComponent>
-        <LabelComponent label={box} editor={editor}/>
+        <LabelComponent label={box}/>
     </MockSurroundingComponent>
 </div>
