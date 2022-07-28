@@ -12,6 +12,11 @@
 
     let notifier = new ChangeNotifier();
     let id = componentId(gridBox);
+    let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(gridBox.cells);
+    // TODO either use svelte store for cells or mobx observable???
+    let templateColumns: string;
+    let templateRows: string;
+    let cssClass: string = "";
 
     onMount( () => {
         MOUNT_LOGGER.log("GridComponent onmount")
@@ -24,12 +29,7 @@
         // Triggers autorun
         notifier.notifyChange();
     });
-    let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(gridBox.cells);
-    let templateColumns: string;
-    let templateRows: string;
 
-    let cssClass: string = "";
-    // TODO either use svelte store for cells or mobx observable???
     autorun(() => {
         $cells = [...gridBox.cells];
         length = $cells.length;

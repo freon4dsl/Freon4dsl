@@ -21,13 +21,21 @@
     export let cellBox: GridCellBox;
     export let editor: PiEditor;
 
+    // a convenience type
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
-    //local variable
+    //local variables
     const LOGGER = new PiLogger("GridCellComponent").mute();
     let boxStore: Writable<Box> = writable<Box>(cellBox.box);
     let cssVariables: string;
     let id: string = componentId(cellBox);
+    let row: string;
+    let column: string;
+    let int: number = 0;
+    let orientation: BoxTypeName = "gridcellNeutral";
+    let isHeader = "noheader";
+    let cssStyle: string = "";
+    let cssClass: string = "";
 
     afterUpdate(() => {
         UPDATE_LOGGER.log("GridCellComponent.afterUpdate");
@@ -62,14 +70,6 @@
     const onCellClick = (() => {
         LOGGER.log("GridCellComponent.onCellClick " + cellBox.row + ", " + cellBox.column);
     });
-
-    let row: string;
-    let column: string;
-    let int: number = 0;
-    let orientation: BoxTypeName = "gridcellNeutral";
-    let isHeader = "noheader";
-    let cssStyle: string = "";
-    let cssClass: string = "";
 
     autorun(() => {
         $boxStore = cellBox.box;

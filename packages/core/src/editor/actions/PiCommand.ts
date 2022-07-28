@@ -18,7 +18,7 @@ export abstract class PiCommand {
     /**
      * Executes the action, should contain all model changes for this action.
      * Returns a function that should be executed after the projection has been calculated as a result
-     * of the changes by `execute`.  Otherwise boxes and/or element that need to selected will not be available.
+     * of the changes by `execute`. Otherwise, boxes and/or element that need to selected will not be available.
      * @param action The action that invokes this command.
      * @param box    The box that is selected when imvoking this command.
      * @param text   The text or keyboard shortcut or menu that invoked this command.
@@ -28,7 +28,7 @@ export abstract class PiCommand {
 
     /**
      * Undo this command.
-     * The assumption is that tis will be done on the model in the state directly after executing this command.
+     * The assumption is that this will be done on the model in the state directly after executing this command.
      * If this is not the case, the undo might give unexpected results.
      * By keeping all executed commands on a stack, undo can be realized for multiple commands.
      *

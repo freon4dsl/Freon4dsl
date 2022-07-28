@@ -21,7 +21,7 @@ describe("Indent component", () => {
         const myLabel = screen.getByText('LabelText');
         expect(myLabel).toBeVisible();
         const indentComp = screen.getByTestId(`${myIndentBox.element.piId()}-${myIndentBox.role}`);
-        // Cannot test the dynamic value of margin-left TODO find out how to
+        // Cannot test the dynamic value of margin-left, because testing-library does not have a layout engine
         // For now, we test the static value of margin-left
         expect(indentComp).toHaveStyle('margin-left: 50px');
         // and ... the dynamic value of 'style' in the Svelte component
