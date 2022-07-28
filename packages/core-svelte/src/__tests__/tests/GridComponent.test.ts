@@ -1,18 +1,15 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/svelte";
-import userEvent from "@testing-library/user-event";
 import { configure } from "@testing-library/dom";
-
 configure({ testIdAttribute: "id" });
 
+import { GridBox, GridCellBox, LabelBox, PiCompositeProjection, PiEditor } from "@projectit/core";
 import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../../components/ChangeNotifier";
 import { ModelMaker } from "../models/ModelMaker";
 import { ElementForGrid } from "../models/ElementForGrid";
-import { GridComponent } from "../../components";
-import { BoxFactory, BoxUtils, GridBox, GridCellBox, LabelBox, PiCompositeProjection, PiEditor } from "@projectit/core";
 import { ElementWithManyAttrs } from "../models/ElementWithManyAttrs";
 import Mock4Grid from "../mock-components/Mock4Grid.svelte";
-import { componentId } from "../../components/util";
+import { pressKeys } from "./pressKeys";
 
 describe("GridComponent", () => {
     MOUNT_LOGGER.mute();
@@ -44,17 +41,40 @@ describe("GridComponent", () => {
     });
 
     it("header is shown according to orientation", async () => {
-        gridBox.orientation = "row";
+        // gridBox.orientation = "row";
         render(Mock4Grid, { grid: gridBox, editor: myEditor });
         // take any element in the header row
         const cellElement = screen.getByTestId('LIST-OWNER-test-header2');
-        expect(cellElement).not.toBeVisible();
+        expect(cellElement).toBeVisible();
         expect(cellElement).toHaveClass('gridcell-header');
         // TODO finish this
+        const gridElement = screen.getByTestId('LIST-OWNER-test-grid-box');
+        expect(gridElement).toBeVisible();
     });
 
     it("enter key causes execution of keyboard shortcut command", () => {
         // TODO
     });
 
+    // Cannot get this test working in Propagation.test.ts,
+    // but it is working here, so let's keep it in this file... :-(
+    it("keyboard events are propagated", async () => {
+        // render it
+        render(Mock4Grid, { grid: gridBox, editor: myEditor });
+        const gridElement = screen.getByTestId('LIST-OWNER-test-grid-box');
+        expect(gridElement).toBeVisible();
+
+        // test the keys on the grid
+        await pressKeys(gridElement);
+
+        // test the keys on a grid cell
+        let cellElement = screen.getByText('first-attr2');
+        expect(cellElement).toBeVisible();
+        await pressKeys(cellElement);
+
+        // test the keys on another grid cell
+        cellElement = screen.getByText('third-attr1');
+        expect(cellElement).toBeVisible();
+        await pressKeys(cellElement);
+    });
 });

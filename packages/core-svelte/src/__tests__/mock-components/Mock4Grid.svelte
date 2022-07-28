@@ -1,6 +1,7 @@
 <script lang="ts">
     import GridComponent from "../../components/GridComponent.svelte";
     import { GridBox, PiEditor } from "@projectit/core";
+    import MockSurroundingComponent from "./MockSurroundingComponent.svelte";
 
     export let grid: GridBox;
     export let editor: PiEditor;
@@ -9,5 +10,7 @@
 </script>
 
 <div id="{id}">
-    <GridComponent gridBox={grid} editor={editor}/>
+    <MockSurroundingComponent>
+        <GridComponent gridBox={grid} editor={editor}/>
+    </MockSurroundingComponent>
 </div>

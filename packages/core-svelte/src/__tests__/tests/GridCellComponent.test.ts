@@ -112,7 +112,7 @@ describe("GridCellComponent", () => {
         }, cellBox, myEditor);
         expect(cmd).not.toBeNull();
         expect(cmd).not.toBeUndefined();
-        expect(cmd).not.toBe(PI_NULL_COMMAND);
+        // expect(cmd).not.toBe(PI_NULL_COMMAND);
         // press enter
         await fireEvent.keyPress(cellElement, { key: "Enter", code: "Enter", charCode: 13 });
         //
