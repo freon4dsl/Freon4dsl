@@ -161,7 +161,7 @@
 			}
 			case KEY_ARROW_LEFT: {
 				getCaretPosition(event);
-				LOGGER.log("Caret at: ", from);
+				LOGGER.log("Caret at: " + from);
 				if (from !== 0) { // when the arrow key can stay within the text, do not let the parent handle it
 					event.stopPropagation();
 				} else { // the key will cause this element to lose focus, its content should be saved
@@ -171,7 +171,7 @@
 			}
 			case KEY_ARROW_RIGHT: {
 				getCaretPosition(event);
-				LOGGER.log("Caret at: ", from);
+				LOGGER.log("Caret at: " + from);
 				if (from !== text.length) { // when the arrow key can stay within the text, do not let the parent handle it
 					event.stopPropagation();
 				} else { // the key will cause this element to lose focus, its content should be saved
@@ -190,7 +190,7 @@
 					// TODO REDO
 				} else {
 					getCaretPosition(event);
-					LOGGER.log("Caret at: ", from);
+					LOGGER.log("Caret at: " + from);
 					if (from !== 0) { // when there are still chars remaining to the left, do not let the parent handle it
 						// without propagation, the browser handles which char(s) to be deleted
 						// with event.ctrlKey: delete text from caret to end => handled by browser
@@ -373,8 +373,9 @@
         background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
         cursor: ew-resize;
     }
+	/* TODO question: is this style still in use? */
 	.text:empty:before {
-		content: attr(data-placeholdertext);
+		/*content: attr(data-placeholdertext);*/
 		color: var(--freon-text-component-color, blue);
 		background-color: var(--freon-text-component-background-color, inherit);
 		font-family: var(--freon-text-component-font-family, "Arial");
@@ -390,7 +391,7 @@
 	}
 
 	.text {
-		content: attr(data-placeholdertext);
+		/*content: attr(data-placeholdertext);*/
 		color: var(--freon-text-component-color, blue);
 		background-color: var(--freon-text-component-background-color, inherit);
 		font-family: var(--freon-text-component-font-family, "Arial");
