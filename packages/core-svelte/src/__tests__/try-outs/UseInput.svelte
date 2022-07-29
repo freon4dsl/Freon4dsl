@@ -1,6 +1,6 @@
 <script lang="ts">
     import { PiEditor, TextBox } from "@projectit/core";
-    import SmuiInputUndressed from "./SmuiInputUndressed.svelte"
+    import TextBasedOnInput from "./TextBasedOnInput.svelte";
 
     export let box1: TextBox;
     export let box2: TextBox;
@@ -11,8 +11,8 @@
 
 
 <div id="{id1}">
-    <SmuiInputUndressed textBox={box1} editor={editor} value={box1.getText()}/>
+    <TextBasedOnInput textBox={box1} editor={editor} value={box1.getText()}/>
 </div>
 <div id="{id2}">
-    <SmuiInputUndressed textBox={box2} editor={editor}/>
+    <TextBasedOnInput textBox={box2} editor={editor}/>
 </div>

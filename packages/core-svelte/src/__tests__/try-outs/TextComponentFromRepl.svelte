@@ -1,35 +1,104 @@
 <script>
-	let text = 'smallWORLDand';
+	import { afterUpdate } from "svelte";
+
+	let text = '';
+	let placeholder = "<...>";
 
 	let isEditing = false;
+	let editStart = false;
 	let size = 10;
+	let from = -1;
+	let to = -1;
+	let input;
 
-	function toggle() {
-		isEditing = !isEditing;
-		size = text.length;
+	function startEditing() {
+		isEditing = true;
+		editStart = true;
+		size = text.length == 0 ? 10 : text.length;
+		let {
+			anchorNode, anchorOffset, focusNode, focusOffset
+		} = document.getSelection();
+		from = anchorOffset;
+		to = focusOffset;
 	}
 
+	function endEditing() {
+		isEditing = false;
+		from = -1;
+		to = -1;
+	}
+
+	function getCaretPosition(event) {
+		from = event.target.selectionStart;
+		to = event.target.selectionEnd;
+	}
+
+	afterUpdate(() => {
+		console.log("AFTERRRRRRR");
+		if (editStart) {
+			input.selectionStart = from;
+			input.selectionEnd = to;
+			input.focus();
+			editStart = false;
+		}
+	});
+
 	const onKeypress = (event) => {
+
 		switch (event.key) {
 			case "Enter": {
 				console.log("Enter pressed")
-				toggle();
+				endEditing();
 				event.preventDefault();
 				event.stopPropagation();
+				break;
+			}
+			case 'ArrowLeft': {
+				getCaretPosition(event);
+				console.log('Caret at: ', from)
+				if (from !== 0) { // when the arrow key can stay within the text, do not let the parent handle it
+					event.stopPropagation();
+				} else { // the key will cause this element to lose focus, its content should be saved
+					endEditing();
+				}
+				break;
+			}
+			case 'ArrowRight': {
+				getCaretPosition(event);
+				console.log('Caret at: ', from)
+				if (from !== text.length) { // when the arrow key can stay within the text, do not let the parent handle it
+					event.stopPropagation();
+				} else { // the key will cause this element to lose focus, its content should be saved
+					endEditing();
+				}
+				break;
+			}
+			case 'ArrowDown': {
+				endEditing();
 				break;
 			}
 		}
 	}
 </script>
 
+<h1>
+	A Text component
+</h1>
 <span>some text before the text component</span>
 <span>
 	{#if isEditing}
-		<span class="resizable-input" on:blur={toggle} >
-			<input class='resizable-input' bind:value={text} on:keydown={onKeypress} size={size}/>
+		<span className="resizable-input">
+			<input id='inputId' className='resizable-input' bind:this={input} bind:value={text} on:blur={endEditing}
+				   on:keydown={onKeypress} size={size} placeholder="{placeholder}"/>
 		</span>
 	{:else}
-		<span on:click={toggle}>{text}</span>
+		<span on:click={startEditing}>
+			{#if text.length > 0}
+			{text}
+			{:else}
+			{placeholder}
+	{/if}
+	</span>
 	{/if}
 </span>
 <span>some text after the text component</span>

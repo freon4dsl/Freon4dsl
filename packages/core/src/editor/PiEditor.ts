@@ -88,6 +88,7 @@ export class PiEditor {
      */
     NOSELECT: Boolean = false;
 
+    // TODO caretPosition seems not to be used anywhere - remove it?
     selectElement(element: PiElement, role?: string, caretPosition?: PiCaret) {
         LOGGER.log("selectElement " + element?.piLanguageConcept());
         if( this.NOSELECT) { return; }

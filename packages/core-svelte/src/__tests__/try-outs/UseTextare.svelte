@@ -1,6 +1,6 @@
 <script lang="ts">
     import { PiEditor, TextBox } from "@projectit/core";
-    import SimpleTextComponent from "./SimpleTextComponent.svelte";
+    import TextBasedOnTextarea from "./TextBasedOnTextarea.svelte";
 
     export let box1: TextBox;
     export let box2: TextBox;
@@ -11,8 +11,8 @@
 
 
 <div id="{id1}">
-        <SimpleTextComponent textBox={box1} editor={editor}/>
+        <TextBasedOnTextarea textBox={box1} editor={editor}/>
 </div>
 <div id="{id2}">
-        <SimpleTextComponent textBox={box2} editor={editor}/>
+        <TextBasedOnTextarea textBox={box2} editor={editor}/>
 </div>

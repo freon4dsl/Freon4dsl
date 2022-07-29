@@ -19,7 +19,7 @@ export type PiKey = {
 export function toPiKey(e: KeyboardEvent): PiKey {
     return {
         meta: meta(e),
-        keyCode: e.keyCode, // TODO remove depricated keyCode
+        keyCode: e.keyCode, // TODO remove deprecated keyCode
         code: e.code
     };
 }

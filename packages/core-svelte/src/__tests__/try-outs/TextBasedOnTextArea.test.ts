@@ -12,7 +12,7 @@ import { componentId } from "../../components/util";
 import UseSimpleText from "./UseSimpleText.svelte";
 
 
-describe("SimpleTextComponent", () => {
+describe("TextBasedOnTextarea", () => {
     MOUNT_LOGGER.mute();
     AUTO_LOGGER.mute();
     UPDATE_LOGGER.mute();

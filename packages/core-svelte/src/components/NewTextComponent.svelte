@@ -151,6 +151,7 @@
 
     const onClick = (event: MouseEvent) => {
         console.log("onClick, caret: " + getCaretPosition());
+        isEditing = true;
     };
 
     // EXAMPLE
@@ -316,17 +317,31 @@
 
 <!--  The reason for the use of a contenteditable span is that we need the box to be content aware AND
 adapt its size dynamically (both width and height). Using <input> does not support the latter. -->
-<span class="{textBox.role} text-box-{boxType} text"
-      tabindex="0"
-      data-placeholdertext={placeholder}
-      on:keydown={onKeyDown}
-      on:click={onClick}
-      on:blur={onBlur}
-      contenteditable="true"
-      bind:innerHTML={text}
-      bind:this={element}
-      id="{id}"
-></span>
+<div>
+    {#if isEditing}
+        <input type="text"
+               id="{id}-input"
+               placeholder="{placeholder}"
+
+
+               on:click={onClick}
+               on:blur={onBlur}
+               bind:value={text}
+        >
+    {:else}
+        <span class="{textBox.role} text-box-{boxType} text"
+              tabindex="0"
+              data-placeholdertext={placeholder}
+              on:keydown={onKeyDown}
+              on:click={onClick}
+              on:blur={onBlur}
+              contenteditable="true"
+              bind:innerHTML={text}
+              bind:this={element}
+              id="{id}"
+        ></span>
+    {/if}
+</div>
 <comment></comment>
 <!-- comment is an unvisible placeholder for the caret position PiCaretPosition.RIGHT_MOST -->
 
