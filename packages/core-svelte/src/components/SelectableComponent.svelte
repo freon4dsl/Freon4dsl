@@ -27,7 +27,7 @@
     let id: string = `selectable-${box.element.piId()}-${box.role}`;
 
     const onClick = (event: MouseEvent) => {
-        LOGGER.log("SelectableComponent.onClick: " + event + " for box " + box.role);
+        console.log("SelectableComponent.onClick: " + event + " for box " + box.role);
         isSelected = !isSelected;
 
         if (box.selectable) {
