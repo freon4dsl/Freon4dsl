@@ -1,13 +1,13 @@
 import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../ast";
-import { Box, BoxFactory, CharAllowed, SelectOption, TextBox } from "../boxes";
-import { BehaviorExecutionResult, PiUtils } from "../../util";
+import { Box, BoxFactory, CharAllowed, SelectOption, TextBox, EmptyLineBox } from "../boxes";
+import { BehaviorExecutionResult } from "../utils";
 import { Language, PropertyKind } from "../../language";
 import { PiEditor } from "../PiEditor";
 import { PiScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
 import { PiCompositeProjection } from "../PiCompositeProjection";
-import { EmptyLineBox } from "../boxes/EmptyLineBox";
+import { PiUtils } from "../../util";
 
 export class PiListInfo {
     text: string;

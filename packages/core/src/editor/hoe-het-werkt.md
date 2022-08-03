@@ -35,3 +35,10 @@ De enige componenten die naar een commando zoeken zijn: TextComponent, AliasComp
 
 A trigger can be a string of chars, but 'findKeyboardShortcutCommand' in all cases gets as input
 'toPiKey(event)', where event is a KeyboardEvent. This means that only one char is checked. How can this be right?
+
+# PiUtils
+
+Should separate the ID() and stuff that is for the editor only.
+
+# Triggers
+In Custom actions definitions wordt TriggerUse gebruikt en niet TriggerType. Hoe zit dat?

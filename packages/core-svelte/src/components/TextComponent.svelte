@@ -13,8 +13,8 @@
 		KEY_SHIFT, KEY_SPACEBAR, KEY_TAB, PI_NULL_COMMAND,
 		PiCaret,
 		PiCaretPosition, PiCommand,
-		PiEditor,
-		PiLogger, PiPostAction, PiUtils, SelectBox,
+		PiEditor, PiEditorUtil,
+		PiLogger, PiPostAction, SelectBox,
 		TextBox, toPiKey
 	} from "@projectit/core";
     import { componentId } from "./util";
@@ -183,7 +183,7 @@
 		console.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
 
 		// first check if this event has a command defined for it
-		const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
+		const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
 		if (cmd !== PI_NULL_COMMAND) {
 			let postAction: PiPostAction;
 			runInAction(() => {
@@ -205,8 +205,12 @@
 				break;
 			}
 			case KEY_ARROW_DOWN:
-			case KEY_ARROW_UP: {
-				endEditing(); // the parent 'ProjectItcomponent' handles selecting another box
+			case KEY_ARROW_UP:
+			case KEY_ENTER:
+			case KEY_ESCAPE:
+			case KEY_TAB: {
+				LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
+				endEditing(); // the parent 'ProjectItcomponent' handles selecting another box - TODO why does it not function?
 				break;
 			}
 			case KEY_ARROW_LEFT: {
@@ -282,16 +286,7 @@
 					break;
 				}
 			}
-			case KEY_ENTER:
-			case KEY_ESCAPE:
-			case KEY_TAB: {
-				LOGGER.log("Enter, escape, or tab pressed");
-				endEditing();
-				editor.selectNextLeaf();
-				event.preventDefault();
-				event.stopPropagation();
-				break;
-			}
+
 			default: { // the event.key is probably a printable chararcter, still there are these keystrokes to be handled
 				if (event.ctrlKey && !event.altKey && event.key === 'z') { // ctrl-z
 					// UNDO handled by browser

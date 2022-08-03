@@ -6,9 +6,9 @@ import {
     SelectOption,
     PiEditor,
     triggerTypeToString, BoxFactory
-} from "../editor";
-import { PiBinaryExpression, PiExpression } from "../ast";
-import { Language } from "../language";
+} from "../index";
+import { PiBinaryExpression, PiExpression } from "../../ast";
+import { Language } from "../../language";
 import {
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
@@ -20,11 +20,12 @@ import {
     EXPRESSION_SYMBOL,
     LEFT_MOST,
     RIGHT_MOST,
+} from "../../util";
+import {
     BehaviorExecutionResult,
     NBSP,
-    PiUtils
+    PiEditorUtil
 } from "./internal";
-// TODO move this file to src/editor
 
 // const LOGGER = new PiLogger("PiExpressionHelpers");
 
@@ -122,7 +123,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
                     const newExp = alias.expressionBuilder(operatorBox, triggerTypeToString(alias.trigger), editor);
                     newExp.piSetLeft(exp.piLeft());
                     newExp.piSetRight(exp.piRight());
-                    PiUtils.replaceExpression(exp, newExp, editor);
+                    PiEditorUtil.replaceExpression(exp, newExp, editor);
                     BTREE.balanceTree(newExp, editor);
                     exp = newExp;
                     editor.selectElement(newExp, AFTER_BINARY_OPERATOR);

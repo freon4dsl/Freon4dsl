@@ -3,7 +3,7 @@ import { Box } from "../boxes";
 import { PiEditor } from "../PiEditor";
 import { PiCommand } from "./PiCommand";
 import { PiTriggerUse, PiTriggerType } from "./PiTriggers";
-import { PiCaret } from "../PiCaret";
+import { PiCaret } from "../utils/PiCaret";
 
 export type CustomAction = (box: Box,
                             trigger: PiTriggerUse,

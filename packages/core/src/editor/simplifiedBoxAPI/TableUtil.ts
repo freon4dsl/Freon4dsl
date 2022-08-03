@@ -12,12 +12,12 @@ import {
 } from "../index";
 import { PiElement } from "../../ast";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
-import * as Keys from "../../util/Keys";
-import { KEY_ENTER, MetaKey, PiKey } from "../../util/Keys";
-import { PiUtils } from "../../util";
+import * as Keys from "../utils/Keys";
+import { KEY_ENTER, MetaKey, PiKey } from "../utils/Keys";
 import { Language } from "../../language";
 import { RoleProvider } from "./RoleProvider";
 import { PiLogger } from "../../logging";
+import { PiUtils } from "../../util";
 
 type Location = { row: number, column: number};
 const LOGGER = new PiLogger("TableUtil");

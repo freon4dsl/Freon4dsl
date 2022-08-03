@@ -3,7 +3,6 @@ import { makeObservable, observable, computed, action, runInAction } from "mobx"
 import { PiEnvironment } from "../environment";
 
 import { PiOwnerDescriptor, PiElement } from "../ast";
-import { wait } from "../util";
 import { PiLogger } from "../logging";
 import { PiAction } from "./actions";
 import {
@@ -14,7 +13,8 @@ import {
     Box,
     PiCompositeActions
 } from "./internal";
-import { PiCaret } from "./PiCaret";
+import { PiCaret } from "./utils/PiCaret";
+import { wait } from "./utils";
 
 const LOGGER = new PiLogger("PiEditor").mute();
 
@@ -224,7 +224,7 @@ export class PiEditor {
         const ownerDescriptor: PiOwnerDescriptor = exp.piOwnerDescriptor();
         // if (isPiExpression(exp)) {
         //     const newExp = this.getPlaceHolderExpression();
-        //     PiUtils.replaceExpression(exp, newExp, this);
+        //     PiEditorUtils.replaceExpression(exp, newExp, this);
         //     await this.selectElement(newExp);
         // } else {
         if (ownerDescriptor !== null) {

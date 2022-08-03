@@ -1,9 +1,9 @@
 import { action, makeObservable } from "mobx";
-import { PiUtils } from "./internal";
-import { Box, PiEditor } from "../editor";
+import { Box, PiEditor, PiEditorUtil } from "../editor";
 import { PiBinaryExpression, PiElement, PiExpression } from "../ast";
 import { isPiBinaryExpression, isPiExpression } from "../ast-utils";
 import { PiLogger } from "../logging";
+import { PiUtils } from "./PiUtils";
 
 // reserved role names for expressions, use with care.
 export const PI_BINARY_EXPRESSION_LEFT = "PiBinaryExpression-left";
@@ -113,13 +113,13 @@ class BTree {
         switch (box.role) {
             case LEFT_MOST:
                 selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
-                PiUtils.replaceExpression(exp, newBinExp, editor);
+                PiEditorUtil.replaceExpression(exp, newBinExp, editor);
                 newBinExp.piSetRight(exp);
                 this.balanceTree(newBinExp, editor);
                 break;
             case RIGHT_MOST:
                 selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_RIGHT };
-                PiUtils.replaceExpression(exp, newBinExp, editor);
+                PiEditorUtil.replaceExpression(exp, newBinExp, editor);
                 newBinExp.piSetLeft(exp);
                 this.balanceTree(newBinExp, editor);
                 break;
@@ -160,7 +160,7 @@ class BTree {
                 const leftRight = left.piRight();
                 left.piSetRight(binaryExp);
                 binaryExp.piSetLeft(leftRight);
-                PiUtils.setContainer(left, ownerDescriptor, editor);
+                PiEditorUtil.setContainer(left, ownerDescriptor, editor);
                 this.balanceTree(binaryExp, editor);
                 return;
             }
@@ -172,7 +172,7 @@ class BTree {
                 const rightLeft = right.piLeft();
                 right.piSetLeft(binaryExp);
                 binaryExp.piSetRight(rightLeft);
-                PiUtils.setContainer(right, ownerDescriptor, editor);
+                PiEditorUtil.setContainer(right, ownerDescriptor, editor);
                 this.balanceTree(binaryExp, editor);
                 return;
             }
@@ -186,7 +186,7 @@ class BTree {
                     const expRight = binaryExp.piRight();
                     binaryExp.piSetRight(parent);
                     parent.piSetLeft(expRight);
-                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
+                    PiEditorUtil.setContainer(binaryExp, parentProContainer, editor);
                     this.balanceTree(binaryExp, editor);
                     return;
                 }
@@ -198,7 +198,7 @@ class BTree {
                     const expLeft = binaryExp.piLeft();
                     binaryExp.piSetLeft(parent);
                     parent.piSetRight(expLeft);
-                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
+                    PiEditorUtil.setContainer(binaryExp, parentProContainer, editor);
                     this.balanceTree(binaryExp, editor);
                     return;
                 }

@@ -1,8 +1,10 @@
 import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../ast";
-import { BehaviorExecutionResult, PiKey, PiUtils } from "../../util";
-import { BoxFactory, PiCaret, PiEditor } from "../internal";
+import { BehaviorExecutionResult, BoxFactory, PiEditor } from "../internal";
 import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
+import { PiCaret } from "../utils/PiCaret";
+import { PiKey } from "../utils/Keys";
+import { PiUtils } from "../../util";
 
 export abstract class AbstractChoiceBox extends Box {
     kind = "AbstractChoiceBox";

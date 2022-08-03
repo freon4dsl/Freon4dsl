@@ -1,5 +1,5 @@
-import { BehaviorExecutionResult } from "../../util";
-import { PiEditor } from "../internal";
+
+import { BehaviorExecutionResult, PiEditor } from "../internal";
 import { AbstractChoiceBox, SelectOption, Box } from "./internal";
 import { PiElement } from "../../ast";
 

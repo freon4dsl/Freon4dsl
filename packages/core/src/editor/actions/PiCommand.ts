@@ -5,7 +5,7 @@ import { Box } from "../boxes";
 import { PiEditor } from "../PiEditor";
 import { CustomAction, EMPTY_POST_ACTION, PiPostAction, ReferenceShortcut } from "./PiAction";
 import { isString, PiTriggerUse, triggerTypeToString } from "./PiTriggers";
-import { PiCaret } from "../PiCaret";
+import { PiCaret } from "../utils/PiCaret";
 
 /**
  * Abstract supercass for all commands in ProjectIt.

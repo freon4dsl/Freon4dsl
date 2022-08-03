@@ -4,7 +4,7 @@
     // TODO when user enters text that does not correspond to one of the options, this should be indicated
     // Currently, nothing is shown
     // TODO when the user enters text that corresponds with a single option, this option should be choosen immediately or
-    // at least the option should be slected in the dropdown box, so 'Enter' would select it
+    // at least the option should be selected in the dropdown box, so 'Enter' would select it
     import {
         BehaviorExecutionResult,
         AbstractChoiceBox,
@@ -15,7 +15,6 @@
         isPrintable,
         PiEditor,
         PiLogger,
-        PiUtils,
         toPiKey,
         isSelectBox,
         findOption,
@@ -24,7 +23,7 @@
         KEY_ARROW_DOWN,
         KEY_ARROW_UP,
         KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT,
-        type SelectOption, PiCommand, PI_NULL_COMMAND, PiPostAction
+        type SelectOption, PiCommand, PI_NULL_COMMAND, PiPostAction, PiEditorUtil
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
     import { clickOutside } from "./clickOutside";
@@ -239,7 +238,7 @@
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
                         console.log("Keyboard shortcut in AliasComponentg ===============")
-                        const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(e), choiceBox, editor);
+                        const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(e), choiceBox, editor);
                         if( cmd !== PI_NULL_COMMAND) {
                             let postAction: PiPostAction;
                             runInAction( () => {

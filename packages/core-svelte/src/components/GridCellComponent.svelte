@@ -5,7 +5,7 @@
         KEY_ENTER,
         type PiEditor,
         PiLogger,
-        PiUtils,
+        PiEditorUtil,
         toPiKey,
         GridCellBox, Box, PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
@@ -48,7 +48,7 @@
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === KEY_ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
-            const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), cellBox, editor);
+            const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), cellBox, editor);
             if (cmd !== PI_NULL_COMMAND) {
                 let postAction: PiPostAction;
                 runInAction(() => {

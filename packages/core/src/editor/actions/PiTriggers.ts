@@ -1,4 +1,4 @@
-import { PiKey } from "../../util";
+import { PiKey } from "../utils/Keys";
 
 export type PiTriggerType = string | RegExp | PiKey; // the definition, like parameter
 export type PiTriggerUse = string | PiKey; // the use, like argument

@@ -23,7 +23,7 @@ export class DefaultActionsTemplate {
                 BEFORE_BINARY_OPERATOR,
                 Box,
                 MetaKey,
-                PiActions,
+                ${Names.PiActions},
                 PiCreateBinaryExpressionAction,
                 PiCaret,
                 PiCustomAction,

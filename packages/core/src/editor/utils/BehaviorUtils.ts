@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
-import { isRegExp, isString, Box, PiEditor, PiPostAction, PiAction } from "../editor";
-import { PiLogger } from "../logging";
+import { isRegExp, isString, Box, PiEditor, PiPostAction, PiAction } from "../index";
+import { PiLogger } from "../../logging";
 
 const LOGGER = new PiLogger("BehaviorUtils");
 
