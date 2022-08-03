@@ -64,7 +64,13 @@
 <span id="{id}">
 <!--    <svelte:component this={boxComponent(box)}/> -->
     {#if isLabelBox(showBox)}
-        <LabelComponent label={showBox} editor={editor}/>
+        <SelectableComponent box={showBox} editor={editor}>
+            <LabelComponent label={showBox} editor={editor}/>
+        </SelectableComponent>
+    {:else if isTextBox(showBox) }
+       	<TextComponent textBox={showBox} editor={editor}/>
+    {:else if isIndentBox(showBox) }
+        <IndentComponent indentBox={showBox} editor={editor}/>
     {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
         	<ListComponent list={showBox} editor={editor}/>
@@ -77,10 +83,6 @@
         <SelectableComponent box={showBox} editor={editor}>
         	<AliasComponent choiceBox={showBox} editor={editor}/>
         </SelectableComponent>
-    {:else if isTextBox(showBox) }
-       	<TextComponent textBox={showBox} editor={editor}/>
-    {:else if isIndentBox(showBox) }
-        <IndentComponent indentBox={showBox} editor={editor}/>
     {:else if isGridBox(showBox) }
         <GridComponent gridBox={showBox} editor={editor}/>
     {:else if isSvgBox(showBox) }

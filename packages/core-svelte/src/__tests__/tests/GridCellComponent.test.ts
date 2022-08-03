@@ -107,8 +107,8 @@ describe("GridCellComponent", () => {
         // find the command that should be executed
         const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand({
             meta: MetaKey.None,
-            keyCode: 13,
-            code: "Enter"
+            key:  'Enter',
+            code: 'Enter'
         }, cellBox, myEditor);
         expect(cmd).not.toBeNull();
         expect(cmd).not.toBeUndefined();

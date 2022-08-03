@@ -7,15 +7,15 @@
 <script lang="ts">
 	import { afterUpdate, onMount } from "svelte";
 	import {
-		AliasBox,
+		AliasBox, CharAllowed, isAliasTextBox,
 		KEY_ALT, KEY_ARROW_DOWN, KEY_ARROW_LEFT, KEY_ARROW_RIGHT, KEY_ARROW_UP, KEY_BACKSPACE,
 		KEY_CONTROL, KEY_DELETE, KEY_ENTER, KEY_ESCAPE,
-		KEY_SHIFT, KEY_SPACEBAR, KEY_TAB,
+		KEY_SHIFT, KEY_SPACEBAR, KEY_TAB, PI_NULL_COMMAND,
 		PiCaret,
-		PiCaretPosition,
+		PiCaretPosition, PiCommand,
 		PiEditor,
-		PiLogger, SelectBox,
-		TextBox
+		PiLogger, PiPostAction, PiUtils, SelectBox,
+		TextBox, toPiKey
 	} from "@projectit/core";
     import { componentId } from "./util";
 	import { autorun, runInAction } from "mobx";
@@ -44,10 +44,13 @@
 	let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
 											// Note that 'from <= to' always holds.
 
-	// Exported functions
-	export const setFocus = () => {
+	/**
+	 * This function sets the focus on this element programmatically.
+	 * It is called from the editor.
+	 */
+	const setFocus = () => {
 		// TODO should we check here whether the box is selectable? If so, where else is this check needed?
-		LOGGER.log("setFocus " + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
+		LOGGER.log("setFocus " + ": box[" + textBox.role + "]");
 		// FOCUS_LOGGER.log("setFocus " + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
 		if (document.activeElement === inputHTMLelement || isEditing ) {
 			FOCUS_LOGGER.log("    has focus already");
@@ -60,6 +63,35 @@
 		originalText = text;
 		size = text.length == 0 ? 10 : text.length;
 		// inputHTMLelement.focus(); is done by afterUpdate()
+	};
+
+	/**
+	 * This function sets the caret position of the <input> element programmatically.
+	 * It is called from the editor.
+	 * @param piCaret
+	 */
+	const setCaret = (piCaret: PiCaret) => {
+		LOGGER.log("setCaretPosition");
+		switch (piCaret.position) {
+			case PiCaretPosition.RIGHT_MOST:
+				from = to = text.length;
+				break;
+			case PiCaretPosition.LEFT_MOST:
+			case PiCaretPosition.UNSPECIFIED:
+				from = to = 0;
+				break;
+			case PiCaretPosition.INDEX:
+				from = piCaret.from;
+				to = piCaret.to;
+				break;
+			default:
+				break;
+		}
+		if (isEditing) {
+			inputHTMLelement.selectionStart = from >= 0 ? from : 0;
+			inputHTMLelement.selectionEnd = to >= 0 ? to : 0;
+			inputHTMLelement.focus();
+		}
 	};
 
 	/**
@@ -99,6 +131,7 @@
 			event.stopPropagation();
 		}
 	}
+
 	/**
 	 * When the <input> element loses focus the fucntion is called. It switches the display back to
 	 * the <span> element, and stores the current text in the textbox.
@@ -115,6 +148,7 @@
 			} else if (text !== originalText) {
 				textBox.setText(text);
 			}
+			// TODO set the cursor through the editor
 		});
     }
 
@@ -138,53 +172,41 @@
     }
 
 	/**
-	 * This function sets the caret position of the <input> element programmatically.
-	 * @param piCaret
-	 */
-	const setCaret = (piCaret: PiCaret) => {
-		LOGGER.log("setCaretPosition");
-		switch (piCaret.position) {
-			case PiCaretPosition.RIGHT_MOST:
-				from = to = text.length;
-				break;
-			case PiCaretPosition.LEFT_MOST:
-				from = to = 0;
-				break;
-			case PiCaretPosition.INDEX:
-				from = to = piCaret.index;
-				break;
-			case PiCaretPosition.UNSPECIFIED:
-				break;
-			default:
-				break;
-		}
-		if (isEditing) {
-			inputHTMLelement.selectionStart = from >= 0 ? from : 0;
-			inputHTMLelement.selectionEnd = to >= 0 ? to : 0;
-			inputHTMLelement.focus();
-		}
-	};
-
-	/**
-	 * This function handles any keyboard event that occurs within the <input> element.
+	 * This function handles any non-printable keyboard event that occurs within the <input> element.
+	 * Note, we use onKeyDown, because onKeyPress is deprecated.
 	 * @param event
 	 */
-    const onKeypress = (event: KeyboardEvent) => {
+	const onKeyDown = (event: KeyboardEvent) => {
 		// see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
 		// stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
 		// preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
+		console.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
+
+		// first check if this event has a command defined for it
+		const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
+		if (cmd !== PI_NULL_COMMAND) {
+			let postAction: PiPostAction;
+			runInAction(() => {
+				if (text !== originalText) {
+					textBox.setText(text);
+				}
+				postAction = cmd.execute(textBox, toPiKey(event), editor);
+			});
+			if (!!postAction) {
+				postAction();
+			}
+			return;
+		}
+		// no command, then check what type of event it is and whether we can handle it here
 		switch (event.key) {
-			case KEY_ALT: { // not relevant if entered separately
-				break;
-			}
-			case KEY_CONTROL: { // not relevant if entered separately
-				break;
-			}
+			case KEY_ALT:
+			case KEY_CONTROL:
 			case KEY_SHIFT: { // not relevant if entered separately
 				break;
 			}
-			case KEY_ARROW_DOWN: {
-				endEditing();
+			case KEY_ARROW_DOWN:
+			case KEY_ARROW_UP: {
+				endEditing(); // the parent 'ProjectItcomponent' handles selecting another box
 				break;
 			}
 			case KEY_ARROW_LEFT: {
@@ -194,6 +216,7 @@
 					event.stopPropagation();
 				} else { // the key will cause this element to lose focus, its content should be saved
 					endEditing();
+					editor.selectPreviousLeaf();
 				}
 				break;
 			}
@@ -204,11 +227,8 @@
 					event.stopPropagation();
 				} else { // the key will cause this element to lose focus, its content should be saved
 					endEditing();
+					editor.selectNextLeaf();
 				}
-				break;
-			}
-			case KEY_ARROW_UP: {
-				endEditing();
 				break;
 			}
 			case KEY_BACKSPACE: {
@@ -216,22 +236,24 @@
 					// TODO UNDO
 				} else if (!event.ctrlKey && event.altKey && event.shiftKey) { // alt-shift-backspace
 					// TODO REDO
-				} else {
+				} else { // backspace
 					getCaretPosition(event);
 					LOGGER.log("Caret at: " + from);
 					if (from !== 0) { // when there are still chars remaining to the left, do not let the parent handle it
 						// without propagation, the browser handles which char(s) to be deleted
 						// with event.ctrlKey: delete text from caret to end => handled by browser
 						event.stopPropagation();
-					} else if (text === "" || !!text) {
+					} else if (text === "" || !!text) { // nothing left in this component to delete
 						if (textBox.deleteWhenEmptyAndErase) {
 							editor.deleteBox(editor.selectedBox);
 							event.stopPropagation();
 							return;
 						}
-					} else { // TODO nothing left in this component to delete, what should happen?
+						editor.selectPreviousLeaf();
+					} else {
 						// the key will cause this element to lose focus, its content should be saved
 						endEditing();
+						editor.selectPreviousLeaf();
 					}
 				}
 				break;
@@ -239,60 +261,49 @@
 			case KEY_DELETE: {
 				if (!event.ctrlKey && !event.altKey && event.shiftKey) { // shift-delete
 					// CUT
-				} else {
+				} else { // delete
 					getCaretPosition(event);
 					if (to !== text.length) { // when there are still chars remaining to the right, do not let the parent handle it
 						// without propagation, the browser handles which char(s) to be deleted
 						// with event.ctrlKey: delete text from caret to 0 => handled by browser
 						event.stopPropagation();
-					} else if (text === "" || !!text) {
+					} else if (text === "" || !!text) { //  nothing left in this component to delete
 						if (textBox.deleteWhenEmptyAndErase) {
 							editor.deleteBox(editor.selectedBox);
 							event.stopPropagation();
 							return;
 						}
-					} else { // TODO nothing left in this component to delete, what should happen?
+						editor.selectNextLeaf();
+					} else {
 						// the key will cause this element to lose focus, its content should be saved
 						endEditing();
+						editor.selectNextLeaf();
 					}
 					break;
 				}
 			}
-			case KEY_SPACEBAR: { // ignore any spaces in the text
-				event.stopPropagation();
-				event.preventDefault();
-				break;
-			}
-			case KEY_ENTER: {
-				LOGGER.log("Enter pressed");
-				endEditing();
-				event.preventDefault();
-				event.stopPropagation();
-				break;
-			}
-				// TODO: should the following keys do something?
-			case KEY_ESCAPE: {
-				break;
-			}
+			case KEY_ENTER:
+			case KEY_ESCAPE:
 			case KEY_TAB: {
+				LOGGER.log("Enter, escape, or tab pressed");
+				endEditing();
+				editor.selectNextLeaf();
+				event.preventDefault();
+				event.stopPropagation();
 				break;
 			}
-			default: {
-				if (event.ctrlKey && !event.altKey && event.key === 'z') {
+			default: { // the event.key is probably a printable chararcter, still there are these keystrokes to be handled
+				if (event.ctrlKey && !event.altKey && event.key === 'z') { // ctrl-z
 					// UNDO handled by browser
-				}
-				if (event.ctrlKey && event.altKey && event.key === 'z' || !event.ctrlKey && event.altKey && event.key === KEY_BACKSPACE) {
+				} else if (event.ctrlKey && event.altKey && event.key === 'z' || !event.ctrlKey && event.altKey && event.key === KEY_BACKSPACE) { // ctrl-alt-z or alt-backspace
 					// REDO handled by browser
-				}
-				if (event.ctrlKey && !event.altKey && event.key === 'h') {
+				} else if (event.ctrlKey && !event.altKey && event.key === 'h') { // ctrl-h
 					// SEARCH
 					event.stopPropagation();
-				}
-				if (event.ctrlKey && !event.altKey && event.key === 'x') {
+				} else if (event.ctrlKey && !event.altKey && event.key === 'x') { // ctrl-x
 					// CUT
 					event.stopPropagation();
-				}
-				if (event.ctrlKey && !event.altKey && event.key === 'c') {
+				} else if (event.ctrlKey && !event.altKey && event.key === 'c') { // ctrl-c
 					// COPY
 					event.stopPropagation();
 					navigator.clipboard.writeText(text) // TODO get only the selected text from document.getSelection
@@ -302,8 +313,7 @@
 							.catch(err => {
 								alert('Error in copying text: ' + err.message);
 							});
-				}
-				if (event.ctrlKey && !event.altKey && event.key === 'v') {
+				} else if (event.ctrlKey && !event.altKey && event.key === 'v') { // ctrl-v
 					// PASTE
 					event.stopPropagation();
 					event.preventDefault(); // the default event causes extra <span> elements to be added
@@ -314,8 +324,36 @@
 					navigator.clipboard.readText().then(
 							clipText => LOGGER.log('adding ' + clipText + ' after ' + text[to -1]));
 					// TODO add the clipText to 'text'
+				} else {
+					switch (textBox.isCharAllowed(event.key)) {
+						case CharAllowed.OK: // add to text, handled by browser
+							break;
+						case CharAllowed.NOT_OK: // ignore
+							// ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
+							LOGGER.log("KeyPressAction.NOT_OK");
+							event.preventDefault();
+							event.stopPropagation();
+							break;
+						case CharAllowed.GOTO_NEXT: // try in previous or next box
+							LOGGER.log("KeyPressAction.GOTO_NEXT");
+							getCaretPosition(event);
+							if (from === 0) {
+								editor.selectNextLeaf();
+							} else if (to === text.length) {
+								editor.selectPreviousLeaf();
+							}
+							LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
+							if (isAliasTextBox(editor.selectedBox)) {
+								LOGGER.log("     is an alias box");
+								(editor.selectedBox.parent as AliasBox).triggerKeyPressEvent(event.key);
+							} else {
+								LOGGER.log("     is NOT an alias box");
+							}
+							event.preventDefault();
+							event.stopPropagation();
+							break;
+					}
 				}
-				// all other keys are added to the text
 			}
 		}
     };
@@ -334,6 +372,7 @@
 			editStart = false;
 		}
 		if (!isEditing && !!spanElement) {
+			// TODO test this
 			setBoxSizes(textBox, spanElement.getBoundingClientRect());
 		}
 	});
@@ -367,7 +406,7 @@
 				   bind:this={inputHTMLelement}
 				   bind:value={text}
                    on:blur={endEditing}
-                   on:keydown={onKeypress}
+				   on:keydown={onKeyDown}
 				   size={size}
 				   placeholder="{placeholder}"/>
 		</span>

@@ -5,5 +5,7 @@ SingleUnit {[
 ]}
 
 DoubleUnit {[
-    labelBefore ${text1} ${text2} labelAfter
+    labelBefore ${text1}
+        ${text2}
+    labelAfter
 ]}

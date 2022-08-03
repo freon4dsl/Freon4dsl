@@ -4,38 +4,13 @@ import { PiLogger } from "../logging";
 
 const LOGGER = new PiLogger("BehaviorUtils");
 
-export enum PiCaretPosition {
-    UNSPECIFIED,
-    LEFT_MOST,
-    RIGHT_MOST,
-    INDEX
-}
-
-export class PiCaret {
-    static RIGHT_MOST = new PiCaret(PiCaretPosition.RIGHT_MOST, 0);
-    static LEFT_MOST = new PiCaret(PiCaretPosition.LEFT_MOST, 0);
-    static UNSPECIFIED = new PiCaret(PiCaretPosition.UNSPECIFIED, 0);
-
-    static IndexPosition(i: number): PiCaret {
-        return new PiCaret(PiCaretPosition.INDEX, i);
-    }
-
-    position: PiCaretPosition;
-    index: number;
-
-    constructor(p: PiCaretPosition, i: number) {
-        this.position = p;
-        this.index = i;
-    }
-}
-
 export enum BehaviorExecutionResult {
     NULL,
     EXECUTED,
     PARTIAL_MATCH,
     NO_MATCH
 }
-
+// TODO question: how does this relate to the PiCommand structure?
 /**
  * Try to execute the alias `text`, and return true if this succeeds
  * Matching on full text only.

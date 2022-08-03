@@ -300,7 +300,7 @@
         LOGGER.log("onKeyPress: " + event.key);
         isEditing = true;
         const insertionIndex = getCaretPosition();
-        switch (textBox.keyPressAction(currentText, event.key, insertionIndex)) {
+        switch (textBox.isCharAllowed(currentText, event.key, insertionIndex)) {
             case KeyPressAction.OK:
                 logBox("KeyPressAction.OK");
                 break;

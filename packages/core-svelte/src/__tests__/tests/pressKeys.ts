@@ -10,7 +10,7 @@ export async function pressKeys(htmlElement: HTMLElement) {
     expect(MockVariables.nrKeypress).toBe(1);
     expect(MockVariables.keypressValues[MockVariables.keypressValues.length - 1]).toStrictEqual({
         code: "ArrowUp",
-        keyCode: 0,
+        key: "ArrowUp",
         meta: 0
     });
 
@@ -19,7 +19,7 @@ export async function pressKeys(htmlElement: HTMLElement) {
     expect(MockVariables.nrKeypress).toBe(2);
     expect(MockVariables.keypressValues[MockVariables.keypressValues.length - 1]).toStrictEqual({
         code: "ArrowDown",
-        keyCode: 0,
+        key: "ArrowDown",
         meta: 0
     });
 
@@ -28,7 +28,7 @@ export async function pressKeys(htmlElement: HTMLElement) {
     expect(MockVariables.nrKeypress).toBe(3);
     expect(MockVariables.keypressValues[MockVariables.keypressValues.length - 1]).toStrictEqual({
         code: "ArrowLeft",
-        keyCode: 0,
+        key: "ArrowLeft",
         meta: 0
     });
 
@@ -37,7 +37,7 @@ export async function pressKeys(htmlElement: HTMLElement) {
     expect(MockVariables.nrKeypress).toBe(4);
     expect(MockVariables.keypressValues[MockVariables.keypressValues.length - 1]).toStrictEqual({
         code: "ArrowRight",
-        keyCode: 0,
+        key: "ArrowRight",
         meta: 0
     });
 
@@ -46,7 +46,7 @@ export async function pressKeys(htmlElement: HTMLElement) {
     expect(MockVariables.nrKeypress).toBe(5);
     expect(MockVariables.keypressValues[MockVariables.keypressValues.length - 1]).toStrictEqual({
         code: "Tab",
-        keyCode: 0,
+        key: "Tab",
         meta: 0
     });
 
@@ -56,7 +56,7 @@ export async function pressKeys(htmlElement: HTMLElement) {
     expect(MockVariables.nrKeypress).toBe(6);
     expect(MockVariables.keypressValues[MockVariables.keypressValues.length - 1]).toStrictEqual({
         code: "Tab",
-        keyCode: 0,
+        key: "Tab",
         meta: 3
     });
 }

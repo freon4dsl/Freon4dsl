@@ -1,7 +1,7 @@
 import { PiBinaryExpression } from "../../ast";
 import { PiUtils } from "../../util";
 import { PiLogger } from "../../logging";
-import { Box } from "../boxes/index";
+import { Box } from "../boxes";
 import { PiEditor } from "../PiEditor";
 import { PiAction } from "./PiAction";
 import { PiCommand, PiCreateBinaryExpressionCommand } from "./PiCommand";

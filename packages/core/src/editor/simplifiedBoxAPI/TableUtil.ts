@@ -177,7 +177,7 @@ export class TableUtil {
         }
         // LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
         const result = new PiCreateSiblingAction({
-            trigger: { meta: MetaKey.None, keyCode: Keys.ENTER, code: Keys.KEY_ENTER },
+            trigger: { meta: MetaKey.None, key: Keys.KEY_ENTER, code: Keys.KEY_ENTER },
             activeInBoxRoles: rolenames,
             conceptName: conceptName,
 
@@ -192,7 +192,7 @@ export class TableUtil {
      */
     private static createKeyboardShortcutForEmptyCollectionGrid(): PiCustomAction {
         return PiCustomAction.create({
-            trigger: { meta: MetaKey.None, keyCode: Keys.ENTER, code: KEY_ENTER },
+            trigger: { meta: MetaKey.None, key: Keys.KEY_ENTER, code: KEY_ENTER },
             activeInBoxRoles: ["alias-add-row-or-column", "alias-alias-add-row-or-column-textbox"],
             action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
                 const element = box.element;

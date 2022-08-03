@@ -12,14 +12,16 @@ export enum MetaKey {
 
 export type PiKey = {
     meta: MetaKey;
-    keyCode: number;
+    // keyCode: number;
+    key: string;
     code: string;
 };
 
 export function toPiKey(e: KeyboardEvent): PiKey {
     return {
         meta: meta(e),
-        keyCode: e.keyCode, // TODO remove deprecated keyCode
+        key: e.key,
+        // keyCode: e.keyCode, // TODO remove deprecated keyCode
         code: e.code
     };
 }
@@ -98,6 +100,7 @@ export function isNumeric(event: KeyboardEvent): boolean {
 export function isPrintable(event: KeyboardEvent): boolean {
     // TODO Check new way of accessing key codes using event.key (keycode is deprecated), see https://github.com/ndrsn/is-printable-key-event
     const keyCode = event.keyCode;
+    event.key > 'a'
     return (
         (!event.altKey &&
             !event.ctrlKey &&

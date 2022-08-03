@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../ast";
-import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes";
+import { Box, BoxFactory, CharAllowed, SelectOption, TextBox } from "../boxes";
 import { BehaviorExecutionResult, PiUtils } from "../../util";
 import { Language, PropertyKind } from "../../language";
 import { PiEditor } from "../PiEditor";
@@ -80,8 +80,8 @@ export class BoxUtils {
                     (v: string) => runInAction( () => {(element[propertyName][index] = Number.parseInt(v))}),
                     {
                         placeHolder: `<${propertyName}>`,
-                        keyPressAction: (currentText: string, key: string, index: number) => {
-                            return isNumber(currentText, key, index);
+                        isCharAllowed: (char: string) => {
+                            return isNumber(char);
                         }
                     });
             } else {
@@ -92,8 +92,8 @@ export class BoxUtils {
                     (v: string) => runInAction( () => {(element[propertyName] = Number.parseInt(v))}),
                     {
                         placeHolder: `<${propertyName}>`,
-                        keyPressAction: (currentText: string, key: string, index: number) => {
-                            return isNumber(currentText, key, index);
+                        isCharAllowed: (char: string) => {
+                            return isNumber(char);
                         }
                     });
             }
@@ -491,17 +491,11 @@ export class BoxUtils {
     }
 }
 
-function isNumber(currentText: string, key: string, index: number): KeyPressAction {
+function isNumber(char: string): CharAllowed {
     // console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof ["+ typeof currentText + "] key [" + key + "] index [" + index + "]");
-    if (isNaN(Number(key))) {
-        if (index === currentText.length) {
-            return KeyPressAction.GOTO_NEXT;
-        } else if (index === 0) {
-            return KeyPressAction.GOTO_PREVIOUS;
-        } else {
-            return KeyPressAction.NOT_OK;
-        }
+    if (isNaN(Number(char))) {
+        return CharAllowed.GOTO_NEXT;
     } else {
-        return KeyPressAction.OK;
+        return CharAllowed.OK;
     }
 }
