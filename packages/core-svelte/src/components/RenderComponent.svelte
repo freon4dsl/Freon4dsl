@@ -67,6 +67,10 @@
         <SelectableComponent box={showBox} editor={editor}>
             <LabelComponent label={showBox} editor={editor}/>
         </SelectableComponent>
+    {:else if isTextBox(showBox) }
+       	<TextComponent textBox={showBox} editor={editor}/>
+    {:else if isIndentBox(showBox) }
+        <IndentComponent indentBox={showBox} editor={editor}/>
     {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
         	<ListComponent list={showBox} editor={editor}/>
@@ -79,12 +83,6 @@
         <SelectableComponent box={showBox} editor={editor}>
         	<AliasComponent choiceBox={showBox} editor={editor}/>
         </SelectableComponent>
-    {:else if isTextBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-        	<TextComponent textBox={showBox} editor={editor}/>
-        </SelectableComponent>
-    {:else if isIndentBox(showBox) }
-        <IndentComponent indentBox={showBox} editor={editor}/>
     {:else if isGridBox(showBox) }
         <GridComponent gridBox={showBox} editor={editor}/>
     {:else if isSvgBox(showBox) }
@@ -96,9 +94,7 @@
     {:else if isEmptyLineBox(showBox) }
         <EmptyLineComponent box={showBox} editor={editor}/>
     {:else}
-        <SelectableComponent box={UNKNOWN} editor={editor}>
-            <LabelComponent label={UNKNOWN} editor={editor}/>
-        </SelectableComponent>
+        <LabelComponent label={UNKNOWN} editor={editor}/>
     {/if}
 </span>
 

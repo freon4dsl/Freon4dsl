@@ -5,10 +5,10 @@ import {
     SelectBox,
     SelectOption,
     PiEditor,
-    triggerToString, BoxFactory
-} from "../editor";
-import { PiBinaryExpression, PiExpression } from "../ast";
-import { Language } from "../language";
+    triggerTypeToString, BoxFactory
+} from "../index";
+import { PiBinaryExpression, PiExpression } from "../../ast";
+import { Language } from "../../language";
 import {
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
@@ -20,10 +20,11 @@ import {
     EXPRESSION_SYMBOL,
     LEFT_MOST,
     RIGHT_MOST,
+} from "../../util";
+import {
     BehaviorExecutionResult,
-    PiCaret,
     NBSP,
-    PiUtils
+    PiEditorUtil
 } from "./internal";
 
 // const LOGGER = new PiLogger("PiExpressionHelpers");
@@ -119,10 +120,10 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
             if (editor.actions && editor.actions.binaryExpressionActions) {
                 const alias = editor.actions.binaryExpressionActions.filter(e => (e.trigger as string) === option.id)[0];
                 if (!!alias) {
-                    const newExp = alias.expressionBuilder(operatorBox, triggerToString(alias.trigger), editor);
+                    const newExp = alias.expressionBuilder(operatorBox, triggerTypeToString(alias.trigger), editor);
                     newExp.piSetLeft(exp.piLeft());
                     newExp.piSetRight(exp.piRight());
-                    PiUtils.replaceExpression(exp, newExp, editor);
+                    PiEditorUtil.replaceExpression(exp, newExp, editor);
                     BTREE.balanceTree(newExp, editor);
                     exp = newExp;
                     editor.selectElement(newExp, AFTER_BINARY_OPERATOR);

@@ -110,7 +110,8 @@ describe("TextComponent", () => {
         const user = userEvent.setup();
         // user.type normally clicks before typing, but we need to check the caret position as well, so we skip the click
         await user.type(input1, ': hello world', { skipClick: true }); // TODO does not react to special chars
-        expect(input1).toHaveValue('initialText1:helloworld'); // spaces are ignored!!
+        expect(input1).toHaveValue('initialText1: hello world');
+        // TODO add a test where spaces are ignored
         expect(text2.innerHTML).toBe('initialText2');
 
         // set the focus to element 2
@@ -119,7 +120,7 @@ describe("TextComponent", () => {
         expect(input2).toHaveFocus();
 
         // check the text in the box
-        expect(textBox1.getText()).toBe('initialText1:helloworld');
+        expect(textBox1.getText()).toBe('initialText1: hello world');
     });
 
     it("keyPressAction as stated in textbox should be executed", async () => {

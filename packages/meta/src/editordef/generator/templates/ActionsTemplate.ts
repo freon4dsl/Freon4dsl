@@ -6,7 +6,7 @@ export class ActionsTemplate {
     generate(language: PiLanguage): string {
         return `
             import {
-                PiActions,
+                ${Names.PiActions},
                 PiActionsUtil,
                 PiCreateBinaryExpressionAction,
                 PiCustomAction
@@ -23,7 +23,7 @@ export class ActionsTemplate {
              * (2) if a creator/behavior based on the editor definition is present, this is used,
              * (3) if neither (1) nor (2) yields a result, the default is used.  
              */  
-            export class ${Names.actions(language)} implements ${Names.PiActions} {
+            export class ${Names.actions(language)} implements ${Names.PiActions} { 
                 // Combine generated and manually written actions, where manual actions may override the generated ones
                 binaryExpressionActions: PiCreateBinaryExpressionAction[] = PiActionsUtil.join(BINARY_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_ACTIONS) as PiCreateBinaryExpressionAction[];
                 customActions: PiCustomAction[] = PiActionsUtil.join(CUSTOM_ACTIONS, MANUAL_CUSTOM_ACTIONS) as PiCustomAction[];

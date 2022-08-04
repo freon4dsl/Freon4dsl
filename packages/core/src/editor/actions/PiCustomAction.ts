@@ -1,8 +1,8 @@
-import { PiUtils } from "../../util";
 import { PiLogger } from "../../logging";
 import { Box } from "../boxes/index";
 import { PiAction, CustomAction } from "./internal";
 import { PiCommand, PiCustomCommand } from "./PiCommand";
+import { PiUtils } from "../../util";
 
 const LOGGER = new PiLogger("PiCustomAction");
 

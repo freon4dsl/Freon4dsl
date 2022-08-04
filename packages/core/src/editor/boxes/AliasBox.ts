@@ -1,7 +1,14 @@
 import { Concept, Language } from "../../language";
-import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../../util";
 import { PiCreatePartAction } from "../actions/PiCreatePartAction";
-import { triggerToString, PiEditor, TextBox, isProKey } from "../internal";
+import {
+    triggerTypeToString,
+    PiEditor,
+    TextBox,
+    isProKey,
+    BehaviorExecutionResult,
+    executeSingleBehavior,
+    executeBehavior
+} from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
 import { PiElement } from "../../ast";
 import { runInAction } from "mobx";
@@ -80,10 +87,10 @@ export class AliasBox extends AbstractChoiceBox {
             .forEach(action => {
                 const options: SelectOption[] = [];
                 options.push({
-                    id: triggerToString(action.trigger) ,//+ "_action",
-                    label: triggerToString(action.trigger),// + "_action",
+                    id: triggerTypeToString(action.trigger) ,//+ "_action",
+                    label: triggerTypeToString(action.trigger),// + "_action",
                     action: action,
-                    description: "alias " + triggerToString(action.trigger)
+                    description: "alias " + triggerTypeToString(action.trigger)
                 });
                 // }
                 result.push(...options);
@@ -140,7 +147,7 @@ export class AliasBox extends AbstractChoiceBox {
         });
     }
 
-    triggerKeyPressEvent = (key: string) => {
+    triggerKeyPressEvent = (key: string) => { // TODO rename this one, e.g. to triggerKeyEvent
         console.error("AliasBox " + this.role + " has empty triggerKeyPressEvent");
     };
 }

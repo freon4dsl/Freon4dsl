@@ -12,14 +12,14 @@ export enum MetaKey {
 
 export type PiKey = {
     meta: MetaKey;
-    keyCode: number;
+    key: string;
     code: string;
 };
 
 export function toPiKey(e: KeyboardEvent): PiKey {
     return {
         meta: meta(e),
-        keyCode: e.keyCode, // TODO remove deprecated keyCode
+        key: e.key,
         code: e.code
     };
 }
@@ -56,25 +56,21 @@ export function meta(e: KeyboardEvent): MetaKey {
  *  This file contains the constants for all key codes.
  *  Use these constants instead of the numeric values in the code to make it more readable.
  */
-export const BACKSPACE = 8;
-export const TAB = 9;
-export const ENTER = 13;
-export const CHARACTER_A = 65;
-export const SHIFT = 16;
-export const CONTROL = 17;
-export const ALT = 18;
-export const ESCAPE = 27;
+// export const BACKSPACE = 8;
+// export const TAB = 9;
+// export const ENTER = 13;
+// export const CHARACTER_A = 65;
+// export const SHIFT = 16;
+// export const CONTROL = 17;
+// export const ALT = 18;
+// export const ESCAPE = 27;
 export const SPACEBAR = 32;
-export const ARROW_LEFT = 37;
-export const ARROW_UP = 38;
-export const ARROW_RIGHT = 39;
-export const ARROW_DOWN = 40;
-export const DELETE = 46;
+// export const ARROW_LEFT = 37;
+// export const ARROW_UP = 38;
+// export const ARROW_RIGHT = 39;
+// export const ARROW_DOWN = 40;
+// export const DELETE = 46;
 
-/**
- *  keyCode is deprecated, should use the key values below.
- *  TODO Replace the keyCode with key everywhere
- */
 export const KEY_BACKSPACE = "Backspace";
 export const KEY_TAB = "Tab";
 export const KEY_ENTER = "Enter";
@@ -95,9 +91,11 @@ export function isNumeric(event: KeyboardEvent): boolean {
     return !event.altKey && !event.shiftKey && !event.ctrlKey && ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105));
 }
 
+// TODO rewrite this function
 export function isPrintable(event: KeyboardEvent): boolean {
     // TODO Check new way of accessing key codes using event.key (keycode is deprecated), see https://github.com/ndrsn/is-printable-key-event
     const keyCode = event.keyCode;
+    event.key > 'a'
     return (
         (!event.altKey &&
             !event.ctrlKey &&

@@ -7,18 +7,20 @@
 <script lang="ts">
 	import { afterUpdate, onMount } from "svelte";
 	import {
+		AliasBox, CharAllowed, isAliasTextBox,
 		KEY_ALT, KEY_ARROW_DOWN, KEY_ARROW_LEFT, KEY_ARROW_RIGHT, KEY_ARROW_UP, KEY_BACKSPACE,
 		KEY_CONTROL, KEY_DELETE, KEY_ENTER, KEY_ESCAPE,
-		KEY_SHIFT, KEY_SPACEBAR, KEY_TAB,
+		KEY_SHIFT, KEY_SPACEBAR, KEY_TAB, PI_NULL_COMMAND,
 		PiCaret,
-		PiCaretPosition,
-		PiEditor,
-		PiLogger,
-		TextBox
+		PiCaretPosition, PiCommand,
+		PiEditor, PiEditorUtil,
+		PiLogger, PiPostAction, SelectBox,
+		TextBox, toPiKey
 	} from "@projectit/core";
     import { componentId } from "./util";
 	import { autorun, runInAction } from "mobx";
 	import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
+	import { setBoxSizes } from "./setBoxSizes";
 
     const LOGGER = new PiLogger("TextComponent").mute();
     type BoxType = "alias" | "select" | "text"; // TODO question: is 'select' still an option?
@@ -42,9 +44,13 @@
 	let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
 											// Note that 'from <= to' always holds.
 
-	// Exported functions
-	export const setFocus = () => {
-		LOGGER.log("setFocus " + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
+	/**
+	 * This function sets the focus on this element programmatically.
+	 * It is called from the editor.
+	 */
+	const setFocus = () => {
+		// TODO should we check here whether the box is selectable? If so, where else is this check needed?
+		LOGGER.log("setFocus " + ": box[" + textBox.role + "]");
 		// FOCUS_LOGGER.log("setFocus " + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
 		if (document.activeElement === inputHTMLelement || isEditing ) {
 			FOCUS_LOGGER.log("    has focus already");
@@ -54,24 +60,77 @@
 		// we assume they are set programmatically before or after the call to this function
 		isEditing = true;
 		editStart = true;
+		originalText = text;
 		size = text.length == 0 ? 10 : text.length;
 		// inputHTMLelement.focus(); is done by afterUpdate()
 	};
 
 	/**
-	 * When the switch is made from <span> to <input> this function is called.
-	 * It stores the caret position(s) to be used to set the selection of the <input>.
+	 * This function sets the caret position of the <input> element programmatically.
+	 * It is called from the editor.
+	 * @param piCaret
 	 */
-    function onClick() {
-        isEditing = true;
-        editStart = true;
-        size = text.length == 0 ? 10 : text.length;
-        let {
-            anchorNode, anchorOffset, focusNode, focusOffset
-        } = document.getSelection();
-        from = anchorOffset;
-        to = focusOffset;
-    }
+	const setCaret = (piCaret: PiCaret) => {
+		LOGGER.log("setCaretPosition");
+		switch (piCaret.position) {
+			case PiCaretPosition.RIGHT_MOST:
+				from = to = text.length;
+				break;
+			case PiCaretPosition.LEFT_MOST:
+			case PiCaretPosition.UNSPECIFIED:
+				from = to = 0;
+				break;
+			case PiCaretPosition.INDEX:
+				from = piCaret.from;
+				to = piCaret.to;
+				break;
+			default:
+				break;
+		}
+		if (isEditing) {
+			inputHTMLelement.selectionStart = from >= 0 ? from : 0;
+			inputHTMLelement.selectionEnd = to >= 0 ? to : 0;
+			inputHTMLelement.focus();
+		}
+	};
+
+	/**
+	 * When the switch is made from <span> to <input> this function is called.
+	 * It stores the caret position(s) to be used to set the selection of the <input>,
+	 * and sets the selectedBox of the editor.
+	 */
+    function startEditing(event: MouseEvent) {
+		LOGGER.log('startEditing');
+		if (textBox.selectable) {
+			isEditing = true;
+			editStart = true;
+			originalText = text;
+			size = text.length == 0 ? 10 : text.length + 5;
+			let {
+				anchorNode, anchorOffset, focusNode, focusOffset
+			} = document.getSelection();
+			from = anchorOffset;
+			to = focusOffset;
+
+			LOGGER.log("       ===> selected box " + textBox.role);
+			editor.selectedBox = textBox;
+			event.preventDefault();
+			event.stopPropagation();
+		}
+	}
+
+	/**
+	 * When the <input> element is shown, the clicks should not be propagated.
+	 * (Clicks either resize the element or set the caret position.)
+	 * @param event
+	 */
+	function onClick(event: MouseEvent) {
+		LOGGER.log('onClick while Editing');
+		if (isEditing) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+	}
 
 	/**
 	 * When the <input> element loses focus the fucntion is called. It switches the display back to
@@ -82,19 +141,22 @@
         isEditing = false;
         from = -1;
         to = -1;
-		// store the current value in the textbox
+		// store the current value in the textbox, or delete the box, if appropriate
 		runInAction(() => {
-			if (text !== originalText) {
+			if (textBox.deleteWhenEmpty && text.length === 0) {
+				editor.deleteBox(textBox);
+			} else if (text !== originalText) {
 				textBox.setText(text);
 			}
-			isEditing = false;
+			// TODO set the cursor through the editor
 		});
     }
 
 	/**
 	 * When a keyboard event is triggered, this function stores the caret position(s).
 	 * Note, this function is to be used from the <input> element only. It depends on the
-	 * fact that the event target has a 'selectionStart' and a 'selectionEnd'.
+	 * fact that the event target has a 'selectionStart' and a 'selectionEnd', which is the case
+	 * only for <textarea> or <input> elements.
 	 * @param event
 	 */
     function getCaretPosition(event: KeyboardEvent) {
@@ -110,53 +172,45 @@
     }
 
 	/**
-	 * This function sets the caret position of the <input> element programmatically.
-	 * @param piCaret
-	 */
-	const setCaret = (piCaret: PiCaret) => {
-		LOGGER.log("setCaretPosition");
-		switch (piCaret.position) {
-			case PiCaretPosition.RIGHT_MOST:
-				from = to = text.length;
-				break;
-			case PiCaretPosition.LEFT_MOST:
-				from = to = 0;
-				break;
-			case PiCaretPosition.INDEX:
-				from = to = piCaret.index;
-				break;
-			case PiCaretPosition.UNSPECIFIED:
-				break;
-			default:
-				break;
-		}
-		if (isEditing) {
-			inputHTMLelement.selectionStart = from >= 0 ? from : 0;
-			inputHTMLelement.selectionEnd = to >= 0 ? to : 0;
-			inputHTMLelement.focus();
-		}
-	};
-
-	/**
-	 * This function handles any keyboard event that occurs within the <input> element.
+	 * This function handles any non-printable keyboard event that occurs within the <input> element.
+	 * Note, we use onKeyDown, because onKeyPress is deprecated.
 	 * @param event
 	 */
-    const onKeypress = (event: KeyboardEvent) => {
+	const onKeyDown = (event: KeyboardEvent) => {
 		// see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
 		// stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
 		// preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
+		console.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
+
+		// first check if this event has a command defined for it
+		const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
+		if (cmd !== PI_NULL_COMMAND) {
+			let postAction: PiPostAction;
+			runInAction(() => {
+				if (text !== originalText) {
+					textBox.setText(text);
+				}
+				postAction = cmd.execute(textBox, toPiKey(event), editor);
+			});
+			if (!!postAction) {
+				postAction();
+			}
+			return;
+		}
+		// no command, then check what type of event it is and whether we can handle it here
 		switch (event.key) {
-			case KEY_ALT: { // not relevant if entered separately
-				break;
-			}
-			case KEY_CONTROL: { // not relevant if entered separately
-				break;
-			}
+			case KEY_ALT:
+			case KEY_CONTROL:
 			case KEY_SHIFT: { // not relevant if entered separately
 				break;
 			}
-			case KEY_ARROW_DOWN: {
-				endEditing();
+			case KEY_ARROW_DOWN:
+			case KEY_ARROW_UP:
+			case KEY_ENTER:
+			case KEY_ESCAPE:
+			case KEY_TAB: {
+				LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
+				endEditing(); // the parent 'ProjectItcomponent' handles selecting another box - TODO why does it not function?
 				break;
 			}
 			case KEY_ARROW_LEFT: {
@@ -166,6 +220,7 @@
 					event.stopPropagation();
 				} else { // the key will cause this element to lose focus, its content should be saved
 					endEditing();
+					editor.selectPreviousLeaf();
 				}
 				break;
 			}
@@ -176,11 +231,8 @@
 					event.stopPropagation();
 				} else { // the key will cause this element to lose focus, its content should be saved
 					endEditing();
+					editor.selectNextLeaf();
 				}
-				break;
-			}
-			case KEY_ARROW_UP: {
-				endEditing();
 				break;
 			}
 			case KEY_BACKSPACE: {
@@ -188,15 +240,24 @@
 					// TODO UNDO
 				} else if (!event.ctrlKey && event.altKey && event.shiftKey) { // alt-shift-backspace
 					// TODO REDO
-				} else {
+				} else { // backspace
 					getCaretPosition(event);
 					LOGGER.log("Caret at: " + from);
 					if (from !== 0) { // when there are still chars remaining to the left, do not let the parent handle it
 						// without propagation, the browser handles which char(s) to be deleted
 						// with event.ctrlKey: delete text from caret to end => handled by browser
 						event.stopPropagation();
-					} else { // the key will cause this element to lose focus, its content should be saved
+					} else if (text === "" || !!text) { // nothing left in this component to delete
+						if (textBox.deleteWhenEmptyAndErase) {
+							editor.deleteBox(editor.selectedBox);
+							event.stopPropagation();
+							return;
+						}
+						editor.selectPreviousLeaf();
+					} else {
+						// the key will cause this element to lose focus, its content should be saved
 						endEditing();
+						editor.selectPreviousLeaf();
 					}
 				}
 				break;
@@ -204,53 +265,40 @@
 			case KEY_DELETE: {
 				if (!event.ctrlKey && !event.altKey && event.shiftKey) { // shift-delete
 					// CUT
-				} else {
+				} else { // delete
 					getCaretPosition(event);
 					if (to !== text.length) { // when there are still chars remaining to the right, do not let the parent handle it
 						// without propagation, the browser handles which char(s) to be deleted
 						// with event.ctrlKey: delete text from caret to 0 => handled by browser
 						event.stopPropagation();
-					} else { // the key will cause this element to lose focus, its content should be saved
+					} else if (text === "" || !!text) { //  nothing left in this component to delete
+						if (textBox.deleteWhenEmptyAndErase) {
+							editor.deleteBox(editor.selectedBox);
+							event.stopPropagation();
+							return;
+						}
+						editor.selectNextLeaf();
+					} else {
+						// the key will cause this element to lose focus, its content should be saved
 						endEditing();
+						editor.selectNextLeaf();
 					}
+					break;
 				}
-				break;
 			}
-			case KEY_SPACEBAR: { // ignore any spaces in the text
-				event.stopPropagation();
-				event.preventDefault();
-				break;
-			}
-			case KEY_ENTER: {
-				LOGGER.log("Enter pressed");
-				endEditing();
-				event.preventDefault();
-				event.stopPropagation();
-				break;
-			}
-				// TODO: should the following keys do something?
-			case KEY_ESCAPE: {
-				break;
-			}
-			case KEY_TAB: {
-				break;
-			}
-			default: {
-				if (event.ctrlKey && !event.altKey && event.key === 'z') {
+
+			default: { // the event.key is probably a printable chararcter, still there are these keystrokes to be handled
+				if (event.ctrlKey && !event.altKey && event.key === 'z') { // ctrl-z
 					// UNDO handled by browser
-				}
-				if (event.ctrlKey && event.altKey && event.key === 'z' || !event.ctrlKey && event.altKey && event.key === KEY_BACKSPACE) {
+				} else if (event.ctrlKey && event.altKey && event.key === 'z' || !event.ctrlKey && event.altKey && event.key === KEY_BACKSPACE) { // ctrl-alt-z or alt-backspace
 					// REDO handled by browser
-				}
-				if (event.ctrlKey && !event.altKey && event.key === 'h') {
+				} else if (event.ctrlKey && !event.altKey && event.key === 'h') { // ctrl-h
 					// SEARCH
 					event.stopPropagation();
-				}
-				if (event.ctrlKey && !event.altKey && event.key === 'x') {
+				} else if (event.ctrlKey && !event.altKey && event.key === 'x') { // ctrl-x
 					// CUT
 					event.stopPropagation();
-				}
-				if (event.ctrlKey && !event.altKey && event.key === 'c') {
+				} else if (event.ctrlKey && !event.altKey && event.key === 'c') { // ctrl-c
 					// COPY
 					event.stopPropagation();
 					navigator.clipboard.writeText(text) // TODO get only the selected text from document.getSelection
@@ -260,8 +308,7 @@
 							.catch(err => {
 								alert('Error in copying text: ' + err.message);
 							});
-				}
-				if (event.ctrlKey && !event.altKey && event.key === 'v') {
+				} else if (event.ctrlKey && !event.altKey && event.key === 'v') { // ctrl-v
 					// PASTE
 					event.stopPropagation();
 					event.preventDefault(); // the default event causes extra <span> elements to be added
@@ -272,8 +319,36 @@
 					navigator.clipboard.readText().then(
 							clipText => LOGGER.log('adding ' + clipText + ' after ' + text[to -1]));
 					// TODO add the clipText to 'text'
+				} else {
+					switch (textBox.isCharAllowed(event.key)) {
+						case CharAllowed.OK: // add to text, handled by browser
+							break;
+						case CharAllowed.NOT_OK: // ignore
+							// ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
+							LOGGER.log("KeyPressAction.NOT_OK");
+							event.preventDefault();
+							event.stopPropagation();
+							break;
+						case CharAllowed.GOTO_NEXT: // try in previous or next box
+							LOGGER.log("KeyPressAction.GOTO_NEXT");
+							getCaretPosition(event);
+							if (from === 0) {
+								editor.selectNextLeaf();
+							} else if (to === text.length) {
+								editor.selectPreviousLeaf();
+							}
+							LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
+							if (isAliasTextBox(editor.selectedBox)) {
+								LOGGER.log("     is an alias box");
+								(editor.selectedBox.parent as AliasBox).triggerKeyPressEvent(event.key);
+							} else {
+								LOGGER.log("     is NOT an alias box");
+							}
+							event.preventDefault();
+							event.stopPropagation();
+							break;
+					}
 				}
-				// all other keys are added to the text
 			}
 		}
     };
@@ -291,6 +366,10 @@
 			inputHTMLelement.focus();
 			editStart = false;
 		}
+		if (!isEditing && !!spanElement) {
+			// TODO test this
+			setBoxSizes(textBox, spanElement.getBoundingClientRect());
+		}
 	});
 
 	onMount(() => {
@@ -304,30 +383,33 @@
 	autorun(() => {
 		LOGGER.log("autorun");
 		AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] textBox [" + textBox.getText() + "] innertText [" + spanElement?.innerText + "] isEditing [" + isEditing + "]");
-		placeholder = textBox.placeHolder; // TODO can this be moved to onMount()?
+		// TODO can the following five statements be moved to onMount()?
+		placeholder = textBox.placeHolder;
+		text = textBox.getText();
+		boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
+		textBox.setFocus = setFocus;
+		textBox.setCaret = setCaret;
 	});
 
 </script>
 
-<span on:blur={endEditing}>
+<span on:blur={endEditing} on:click={onClick}>
 	{#if isEditing}
-		<span className="resizable-input">
+		<span class="resizable-input">
 			<input type="text"
 				   id="{id}-input"
-				   className='resizable-input'
 				   bind:this={inputHTMLelement}
 				   bind:value={text}
                    on:blur={endEditing}
-                   on:keydown={onKeypress}
+				   on:keydown={onKeyDown}
 				   size={size}
 				   placeholder="{placeholder}"/>
 		</span>
 	{:else}
-		<span
-				class="{textBox.role} text-box-{boxType} text"
-				on:click={onClick}
-				bind:this={spanElement}
-				id="{id}">
+		<span class="{textBox.role} text-box-{boxType} text"
+			  on:click={startEditing}
+			  bind:this={spanElement}
+			  id="{id}">
 			{#if !!text && text.length > 0}
 				{text}
 			{:else}
@@ -346,23 +428,28 @@
 
         /* no extra spaces */
         padding: 0;
-        margin-bottom: 0px;
+        margin-bottom: -5px;
         white-space: nowrap;
 
         /* default widths */
         min-width: 2em;
         max-width: 30em;
     }
-
     /* let <input> assume the size of the wrapper */
     .resizable-input > input {
         width: 100%;
         box-sizing: border-box;
         margin: 0;
         border: none;
-        background: lightgrey;
+		background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
+		outline-color: var(--freon-selected-outline-color, darkblue);
+		outline-style: var(--freon-selected-outline-style, solid);
+		outline-width: var(--freon-selected-outline-width, 1px);
+		font-family: var(--freon-text-component-font-family, "Arial");
+		font-size: var(--freon-text-component-font-size, 14pt);
+		font-weight: var(--freon-text-component-font-weight, inherit);
+		font-style: var(--freon-text-component-font-style, inherit);
     }
-
     /* add a visible handle */
     .resizable-input::after {
         display: inline-block;
@@ -373,23 +460,6 @@
         background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
         cursor: ew-resize;
     }
-	/* TODO question: is this style still in use? */
-	.text:empty:before {
-		/*content: attr(data-placeholdertext);*/
-		color: var(--freon-text-component-color, blue);
-		background-color: var(--freon-text-component-background-color, inherit);
-		font-family: var(--freon-text-component-font-family, "Arial");
-		font-size: var(--freon-text-component-font-size, 14pt);
-		font-weight: var(--freon-text-component-font-weight, inherit);
-		font-style: var(--freon-text-component-font-style, inherit);
-		padding: var(--freon-text-component-padding, 1px);
-		margin: var(--freon-text-component-margin, 1px);
-		display: inherit;
-		white-space: inherit;
-		border: inherit;
-		opacity: 50%;
-	}
-
 	.text {
 		/*content: attr(data-placeholdertext);*/
 		color: var(--freon-text-component-color, blue);

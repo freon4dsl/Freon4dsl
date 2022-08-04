@@ -1,8 +1,8 @@
 
 import { observablepart, PiElementBaseImpl, PiModel } from "../../../ast";
-import { PiUtils } from "../../../util";
 import { Language } from "../../../language";
 import { UndoUnit } from "./UndoUnit";
+import { PiUtils } from "../../../util";
 
 /**
  * Class UndoModel is the implementation of the model with the same name in the language definition file.

@@ -8,11 +8,12 @@ import {
     GridBox,
     GridCellBox,
     LabelBox,
-    MetaKey, PI_NULL_COMMAND,
+    MetaKey,
+    PI_NULL_COMMAND,
     PiCommand,
     PiCompositeProjection,
     PiEditor,
-    PiUtils
+    PiEditorUtil
 } from "@projectit/core";
 import { ModelMaker } from "../models/ModelMaker";
 import { ElementForGrid } from "../models/ElementForGrid";
@@ -105,10 +106,10 @@ describe("GridCellComponent", () => {
         let cellElement = screen.getByTestId(componentId(cellBox));
         expect(cellElement).toBeVisible();
         // find the command that should be executed
-        const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand({
+        const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand({
             meta: MetaKey.None,
-            keyCode: 13,
-            code: "Enter"
+            key:  'Enter',
+            code: 'Enter'
         }, cellBox, myEditor);
         expect(cmd).not.toBeNull();
         expect(cmd).not.toBeUndefined();

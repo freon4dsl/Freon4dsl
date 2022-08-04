@@ -1,4 +1,4 @@
-import { PiAction, PiTriggerType } from "../editor";
+import { PiAction, PiTriggerType } from "../index";
 // the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
 import { PiKey } from "./Keys";
 import { remove, union } from "lodash";
@@ -38,7 +38,7 @@ export class PiActionsUtil {
                     if (type1 === "PiKey") {
                         const key1 = trigger1 as PiKey;
                         const key2 = trigger2 as PiKey;
-                        return key1.meta === key2.meta && key1.keyCode === key2.keyCode;
+                        return key1.meta === key2.meta && key1.key === key2.key;
                     } else {
                         const regexp1 = trigger1 as RegExp;
                         const regexp2 = trigger2 as RegExp;

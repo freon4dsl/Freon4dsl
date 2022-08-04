@@ -1,7 +1,7 @@
 import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../ast";
-import { PiUtils } from "../../util/index";
 import { Box } from "./Box";
+import { PiUtils } from "../../util";
 
 // TODO state in every box which element we assume to be getting as param, e.g. is the element in a GridCellBox the same as in the corresponding GridBox?
 export class GridCellBox extends Box  {
