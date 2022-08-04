@@ -99,8 +99,8 @@
     }
 
     const handleKeydown = (event) => {
-        switch (event.keyCode) {
-            case Keys.ENTER: { // on Enter key try to submit
+        switch (event.key) {
+            case Keys.KEY_ENTER: { // on Enter key try to submit
                 event.stopPropagation();
                 event.preventDefault();
                 if (!newNameInvalid()) {
