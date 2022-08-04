@@ -67,7 +67,8 @@ export class ModelRequests {
     public static async deleteModel(foldername: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            console.log("Unlink: " + path.join(`${storeFolder}`, foldername))
+            console.log("Unlink: " + path.join(`${storeFolder}`, foldername));
+            // TODO DeprecationWarning: In future versions of Node.js, fs.rmdir(path, { recursive: true }) will be removed. Use fs.rm(path, { recursive: true }) instead
             fs.rmdirSync(path.join(`${storeFolder}`, foldername), { recursive: true });
         } catch (e) {
             console.log(e.message);
