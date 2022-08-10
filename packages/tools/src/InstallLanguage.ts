@@ -1,12 +1,10 @@
-import { ProjectItGenerateAllAction } from "@projectit/meta/dist/commandline/ProjectItGenerateAllAction";
-import { ProjectItGenerateLanguage } from "@projectit/meta/dist/commandline/ProjectItGenerateLanguage";
-
-
 import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
 import { CopyLanguage } from "./CopyLanguage";
+import { SaveLanguage } from "./SaveLanguage";
 
 export class InstallLanguage extends CommandLineParser {
     private languageAction: CopyLanguage;
+    private saveAction: SaveLanguage;
 
     private verboseArg: CommandLineFlagParameter;
 
@@ -16,8 +14,9 @@ export class InstallLanguage extends CommandLineParser {
             toolDescription: "ProjectIt toolset for installing languages in playground."
         });
         this.languageAction = new CopyLanguage();
+        this.saveAction = new SaveLanguage();
         this.addAction(this.languageAction);
-
+        this.addAction(this.saveAction);
     }
 
     protected onDefineParameters(): void {
