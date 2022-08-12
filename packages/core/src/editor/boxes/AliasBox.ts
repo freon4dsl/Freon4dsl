@@ -99,7 +99,7 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     private getCreateElementOption(propertyName: string, conceptName: string, concept: Concept): SelectOption {
-        LOGGER.log("AliasBox.createElementAction proeprty: " + propertyName + " concept " + conceptName);
+        LOGGER.log("AliasBox.createElementAction property: " + propertyName + " concept " + conceptName);
         return {
             id: conceptName,
             label: concept.trigger,

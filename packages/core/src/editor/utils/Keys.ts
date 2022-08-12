@@ -64,7 +64,7 @@ export function meta(e: KeyboardEvent): MetaKey {
 // export const CONTROL = 17;
 // export const ALT = 18;
 // export const ESCAPE = 27;
-export const SPACEBAR = 32;
+export const SPACEBAR = 32; // TODO remove this one as well
 // export const ARROW_LEFT = 37;
 // export const ARROW_UP = 38;
 // export const ARROW_RIGHT = 39;

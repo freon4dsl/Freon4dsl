@@ -9,11 +9,16 @@ import { PiUtils } from "../../util";
 export abstract class AbstractChoiceBox extends Box {
     kind = "AbstractChoiceBox";
     placeholder: string;
-    // caretPosition: number = -1;
     textBox: TextBox;
     textHelper: ChoiceTextHelper;
-    getSelectedOption(): SelectOption | null { return null; };
-    getOptions(editor: PiEditor): SelectOption[] { return [] };
+
+    getSelectedOption(): SelectOption | null {
+        return null;
+    };
+
+    getOptions(editor: PiEditor): SelectOption[] {
+        return [];
+    };
 
     constructor(exp: PiElement, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
         super(exp, role);
@@ -45,12 +50,12 @@ export abstract class AbstractChoiceBox extends Box {
     }
 
     selectOption(editor: PiEditor, option: SelectOption): BehaviorExecutionResult {
-        console.error("AbstractChoiceBox.selectOption")
+        console.error("AbstractChoiceBox.selectOption");
         return BehaviorExecutionResult.NULL;
     };
 
     setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
-        if( !!this.textBox) {
+        if (!!this.textBox) {
             this.textBox.setCaret(caret);
         }
     };

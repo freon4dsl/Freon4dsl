@@ -31,8 +31,9 @@ export class PiEditor {
     private $selectedBox: Box | null = null;    // The currently selected box.
     // private $selectedRole: string = null;       // the currenly selected role.
 
-    constructor(projection: PiProjection, actions?: PiCompositeActions) {
+    constructor(projection: PiProjection, environment: PiEnvironment, actions?: PiCompositeActions) {
         this.projection = projection;
+        this.environment = environment;
         this.actions = actions;
         if (!!actions) {
             actions.customActions.forEach(ca => this.new_pi_actions.push(ca));
@@ -77,11 +78,19 @@ export class PiEditor {
     }
 
     get rootElement(): PiElement {
-        return this.$rootBox.element;
+        if (!!this.$rootBox) {
+            return this.$rootBox.element;
+        } else {
+            return null;
+        }
     }
 
     get selectedElement(): PiElement {
-        return this.$selectedBox.element;
+        if (!!this.$selectedBox) {
+            return this.$selectedBox.element;
+        } else {
+            return null;
+        }
     }
 
     get rootBox(): Box { // used from ProjectItComponent only
@@ -123,7 +132,7 @@ export class PiEditor {
         }
     }
 
-    // A series of Setters for $SelectedBox
+    // A series of Setters for $selectedBox
 
     /**
      * Selects the parent of the currently selected box.

@@ -74,7 +74,7 @@
                     const down = editor.boxBelow(editor.selectedBox);
                     LOGGER.log("!!!!!!! Select down box " + down?.role);
                     if (down !== null && down !== undefined) {
-                        editor.selectBoxNew(down);
+                        editor.selectBoxNew(down); // TODO use other function from editor
                     }
                     stopEvent(event);
                     break;
@@ -97,7 +97,7 @@
     });
 
     /**
-     * Keep track of the scrolling position in the editor, so we know exactly where bozes are
+     * Keep track of the scrolling position in the editor, so we know exactly where boxes are
      * in relationship with each other.
      */
     function onScroll() {
@@ -116,6 +116,7 @@
                      box={rootBox}
     />
 </div>
+<!-- 	tabIndex="0" is needed for the keydown event to function!!!	 -->
 
 <style>
     .projectit {

@@ -3,6 +3,7 @@ language TextTest
 model xx {
     first: SingleUnit;
     second: DoubleUnit;
+    third: ListUnit;
     }
 
 modelunit SingleUnit {
@@ -12,4 +13,8 @@ modelunit SingleUnit {
 modelunit DoubleUnit {
     text1: string;
     text2: string;
+}
+
+modelunit ListUnit {
+    listOfText: string[];
 }

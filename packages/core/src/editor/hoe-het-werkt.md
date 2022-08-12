@@ -11,8 +11,8 @@ de constructor.
 De PiEditor constructor wordt aangeroepen in de gegenereerde Environment. Hier wordt gezet:
 1. projection, 
 2. actions, 
-3. rootElement, // op null, is niet nodig, want bij init al op null!! => TODO meta aanpassen!!!
-4. environment // zou ook in constructor moeten worden toegevoegd => TODO meta aanpassen!!!
+3. rootElement, // op null, is niet nodig, want bij init al op null!! => meta aangepast!!!
+4. environment // zou ook in constructor moeten worden toegevoegd => meta aangepast!!!
 
 De PiEditor krijgt altijd een PiElement. Hij zoekt er zelf een box bij!!!
 
@@ -38,7 +38,11 @@ A trigger can be a string of chars, but 'findKeyboardShortcutCommand' in all cas
 
 # PiUtils
 
-Should separate the ID() and stuff that is for the editor only.
+Separated the ID() and stuff that is for the editor only.
 
 # Triggers
 In Custom actions definitions wordt TriggerUse gebruikt en niet TriggerType. Hoe zit dat?
+
+# AliasBox and AliasComponent
+
+See AliasBox line 84. What is the difference between New Actions and Keyboard Shortcuts?

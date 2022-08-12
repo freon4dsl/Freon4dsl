@@ -9,3 +9,7 @@ DoubleUnit {[
         ${text2}
     labelAfter
 ]}
+
+ListUnit {[
+    labelBefore ${self.listOfText} labelAfter
+]}
