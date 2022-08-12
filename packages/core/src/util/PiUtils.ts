@@ -49,6 +49,10 @@ export class PiUtils {
         }
     }
 
+    static ERROR(msg: string): void {
+        throw new Error("ERROR: " + msg);
+    }
+
     static setContainer(exp: PiElement, piOwnerDescriptor: PiOwnerDescriptor | null, editor: PiEditor): void {
         runInAction(() => {
             if (!!piOwnerDescriptor) {
@@ -63,6 +67,12 @@ export class PiUtils {
         });
     }
 
+    /**
+     * Replaces an expression with another expression
+     * @param oldExpression The expression to be replaced
+     * @param newExpression The expression that replaces the old one.
+     * @param editor        The editor that is open
+     */
     static replaceExpression(oldExpression: PiExpression, newExpression: PiExpression, editor: PiEditor) {
         PiUtils.CHECK(isPiExpression(oldExpression), "replaceExpression: old element should be a PiExpression, but it isn't");
         PiUtils.CHECK(isPiExpression(newExpression), "replaceExpression: new element should be a PiExpression, but it isn't");
