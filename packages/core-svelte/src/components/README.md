@@ -15,7 +15,8 @@ A component loses focus by:
    9. ctrl right (focus goes to next sibling component, if present, else warning,
    note that this might be a non-editable structure)
 
-Right-click on any component shows a context menu with the actions that are possible for that component. 
+Right-click on any (selectable) component shows a context menu with the actions that are possible 
+for that component. 
 Some actions might also be associated with a single key-event or with a string trigger.
 
 ## RenderComponent
@@ -60,29 +61,39 @@ on the screen where the user may enter some text (used for e.g. expressions).
 5. Every time the text goes from editable to un-editable, the text is stored in the corresponding box.
 
 ## TextDropdownComponent
-Combines a textComponent with a dropdown menu. Does the same as a TextComponent, except that ...
+Combines a textComponent with a dropdown menu. The dropdown opens as soon as the component gets focus. It 
+does the same as a TextComponent, except that ...
 1. The arrow up and down keys select another option in the dropdown. The Enter key then selects the option.
 2. When the component is selected by click, the dropdown is shown, but when the component is 
 selected by keyboard, the dropdown is not shown, until the user enters a character. (TODO test this when the boxes are used.)
 3. The component never allows entering text that is not in the dropdown options list. This text is ignored.
+The dropdown shows an error.
 4. When the chosen option equals a string trigger for a registered keyPressAction, this action is executed.
 
 ## ListComponent
-Shows a 'true' list, that is a list from the model. It has the following behaviour.
-1. There is a placeholder item at the end of the list where the user can add a new element. This placeholder
-becomes a Dropdown component when the type of the elements in the list has subclasses. Then any of the 
-concrete subclasses can be chosen.
-2. The user can move an element up or down in the list either using drag and drop.
-3. The user can add a new element anywhere in the list using the context menu.
+Shows a 'true' list, that is a list from the model, either horizontally or vertically. It has the 
+following behaviour.
+1. The user can move an element up or down in the list either using drag and drop.
+2. The user can add a new element anywhere in the list using the context menu.
 Note that the whole list can also be selectable, e.g. when the user wants to delete it completely.
 
+Context menu in list has the following options:
+* add element before => followed by second menu for subclasses, if any
+* add element after => followed by second menu for subclasses, if any
+* delete element
+* cut
+* copy
+* paste before
+* paste after
+* move up
+* move down
+
 ## GridComponent
-Shows a 'true' list, that is a list from the model, in a table format. It has the following behaviour.
-1. There is a placeholder item at the end of the table where the user can add a new element by selecting 
-it and using the Enter key.
-2. The user can select a complete line/column (e.g. by using ctrl-up) and move it up or down in the 
-list either using shift-left or shift-down, or a context menu.
-3. The user can select a complete line/column and add a new element anywhere in the table using
+Shows a 'true' list, that is a list from the model, in a table format. It has the same behaviour as 
+a list, but only when a complete line/column (e.g. by using ctrl-up) is selected.
+1. The user can select a complete line/column (e.g. by using ctrl-up) and move it up or down in the 
+list either using drag and drop.
+2. The user can select a complete line/column and add a new element anywhere in the table using
    the context menu.
 Note that the whole table can also be selectable, e.g. when the user wants to delete it completely.
 
