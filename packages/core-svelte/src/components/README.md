@@ -106,7 +106,7 @@ It may be selectable through ctrl-up or down, etc.
 Shows an optional model element.
 1. When the element is not present, it depends on the box-condition whether the placeholder is a 
 'non-visible' or a visible TextDropdown component.
-2. The placeholder is always a TextDropdown component, where all options are couple to actiosn that 
+2. The placeholder is always a TextDropdown component, where all options are coupled to actions that 
 create a certain element. No non-option entry is allowed.
 
 Is this really a separate component???? Why??? It could be a TextDropdown.

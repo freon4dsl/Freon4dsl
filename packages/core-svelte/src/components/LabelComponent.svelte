@@ -4,6 +4,7 @@
     import { PiLogger, type PiEditor, LabelBox } from "@projectit/core";
     import { FOCUS_LOGGER } from "./ChangeNotifier";
     import { componentId } from "./util";
+    import { setBoxSizes } from "./setBoxSizes";
 
     export let label: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
@@ -29,6 +30,7 @@
     });
     afterUpdate( () => {
         label.setFocus = setFocus;
+        setBoxSizes(label, element.getBoundingClientRect());
     });
 
     let text: string;

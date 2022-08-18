@@ -1,4 +1,8 @@
 <script lang="ts">
+    /**
+     * This component is the main component in the complete editor.
+     * It renders the rootbox of the PiEditor.
+     */
     import {
         PiEditor,
         PiLogger,
@@ -15,21 +19,25 @@
     import { AUTO_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
 
-    let LOGGER = new PiLogger("ProjectItComponent").mute();
     export let editor: PiEditor;
-    // TODO add id
-    // let id: string = `${box.element.piId()}-${box.role}`;
-    /**
-     * The current main element is this component.
-     */
+    let LOGGER = new PiLogger("ProjectItComponent").mute();
     let element: HTMLDivElement;
     let rootBox: Box;
+    // let id: string = `${box.element.piId()}-${box.role}`; // TODO add id
 
+    /**
+     * Helper function: stop the event from propagating and executing its default action
+     * @param event
+     */
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
     }
 
+    /**
+     * Handles key storkes that are avialable everywhere in the editor.
+     * @param event
+     */
     const onKeyDown = (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey);
         // event.persist();
@@ -71,19 +79,11 @@
                     stopEvent(event);
                     break;
                 case KEY_ARROW_DOWN:
-                    const down = editor.boxBelow(editor.selectedBox);
-                    LOGGER.log("!!!!!!! Select down box " + down?.role);
-                    if (down !== null && down !== undefined) {
-                        editor.selectBoxNew(down); // TODO use other function from editor
-                    }
+                    editor.selectBoxUnder();
                     stopEvent(event);
                     break;
                 case KEY_ARROW_UP:
-                    LOGGER.log("Up: " + editor.selectedBox.role);
-                    const up = editor.boxAbove(editor.selectedBox);
-                    if (up !== null) {
-                        editor.selectBoxNew(up);
-                    }
+                    editor.selectBoxAbove();
                     stopEvent(event);
                     break;
             }

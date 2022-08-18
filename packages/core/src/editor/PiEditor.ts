@@ -188,6 +188,21 @@ export class PiEditor {
         }
     }
 
+    selectBoxAbove() {
+        LOGGER.log("selectBoxAbove: " + this.selectedBox.role);
+        const up = this.boxAbove(this.selectedBox);
+        if (up !== null) {
+            this.selectBoxNew(up);
+        }
+    }
+
+    selectBoxUnder() {
+        LOGGER.log("selectBoxUnder: " + this.selectedBox.role);
+        const down = this.boxBelow(this.selectedBox);
+        if (down !== null && down !== undefined) {
+            this.selectBoxNew(down);
+        }
+    }
     /**
      * Selects ... todo
      * @param box

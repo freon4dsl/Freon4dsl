@@ -8,7 +8,7 @@
     import TextComponent from "./TextComponent.svelte";
     import SelectableComponent from "./SelectableComponent.svelte";
     import LabelComponent from "./LabelComponent.svelte";
-    import ListComponent from "./ListComponent.svelte";
+    import LayoutComponent from "./LayoutComponent.svelte";
     import OptionalComponent from "./OptionalComponent.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
     import { afterUpdate, beforeUpdate, onDestroy } from "svelte";
@@ -64,16 +64,14 @@
 <span id="{id}">
 <!--    <svelte:component this={boxComponent(box)}/> -->
     {#if isLabelBox(showBox)}
-        <SelectableComponent box={showBox} editor={editor}>
-            <LabelComponent label={showBox} editor={editor}/>
-        </SelectableComponent>
+        <LabelComponent label={showBox} editor={editor}/>
     {:else if isTextBox(showBox) }
        	<TextComponent textBox={showBox} editor={editor}/>
     {:else if isIndentBox(showBox) }
         <IndentComponent indentBox={showBox} editor={editor}/>
     {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
-        	<ListComponent list={showBox} editor={editor}/>
+        	<LayoutComponent list={showBox} editor={editor}/>
         </SelectableComponent>
     {:else if isAliasBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>

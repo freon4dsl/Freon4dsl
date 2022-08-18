@@ -5,7 +5,7 @@
 <!-- its own <span> that gets a handle to actually resize it. -->
 
 <script lang="ts">
-	import { afterUpdate, onMount } from "svelte";
+	import { afterUpdate, onMount, createEventDispatcher } from "svelte";
 	import {
 		AliasBox, CharAllowed, isAliasTextBox,
 		KEY_ALT, KEY_ARROW_DOWN, KEY_ARROW_LEFT, KEY_ARROW_RIGHT, KEY_ARROW_UP, KEY_BACKSPACE,
@@ -23,12 +23,14 @@
 	import { setBoxSizes } from "./setBoxSizes";
 
     const LOGGER = new PiLogger("TextComponent").mute();
+	const dispatcher = createEventDispatcher();
     type BoxType = "alias" | "select" | "text";
 
     // Parameters
     export let isEditing: boolean = false; 	// indication whether this component is currently being edited by the user
     export let textBox: TextBox;			// the accompanying textbox
     export let editor: PiEditor;			// the editor
+	export let partOfAlias;					// indication whether this textcomponent is part of a TextDropdownComponent
 
     // Local variables
     let id: string = componentId(textBox);	// an id for the html element
@@ -53,7 +55,7 @@
 		LOGGER.log("setFocus " + ": box[" + textBox.role + "]");
 		// FOCUS_LOGGER.log("setFocus " + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
 		if (document.activeElement === inputHTMLelement || isEditing ) {
-			FOCUS_LOGGER.log("    has focus already");
+			FOCUS_LOGGER.log("TextComponent has focus already");
 			return;
 		}
 		// set the local variables, but do not set 'from' and 'to'
@@ -96,8 +98,8 @@
 
 	/**
 	 * When the switch is made from <span> to <input> this function is called.
-	 * It stores the caret position(s) from the <span>, which can then be used
-	 * to set the selection of the <input>. It also sets the selectedBox of the editor.
+	 * It stores the caret position(s) to be used to set the selection of the <input>,
+	 * and sets the selectedBox of the editor.
 	 */
     function startEditing(event: MouseEvent) {
 		LOGGER.log('startEditing');
@@ -120,14 +122,13 @@
 	}
 
 	/**
-	 * This function handles click only when the <input> element is shown.
-	 * These clicks either resize the element or set the caret position,
-	 * and should not be propagated.
+	 * When the <input> element is shown, the clicks should not be propagated.
+	 * (Clicks either resize the element or set the caret position.)
 	 * @param event
 	 */
 	function onClick(event: MouseEvent) {
 		LOGGER.log('onClick while Editing');
-		if (isEditing) {
+		if (!partOfAlias) {
 			event.preventDefault();
 			event.stopPropagation();
 		}
@@ -138,6 +139,7 @@
 	 * the <span> element, and stores the current text in the textbox.
 	 */
     function endEditing() {
+		LOGGER.log('TextComponent endEditing');
 		// reset the local variables
         isEditing = false;
         from = -1;
@@ -181,7 +183,7 @@
 		// see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
 		// stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
 		// preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
-		console.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
+		console.log("TextComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
 
 		// first check if this event has a command defined for it
 		const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
@@ -206,19 +208,27 @@
 				break;
 			}
 			case KEY_ARROW_DOWN:
-			case KEY_ARROW_UP:
+			case KEY_ARROW_UP: {
+				if (!partOfAlias) {
+					endEditing();
+				} // else, let alias box handle this
+				break;
+			}
 			case KEY_ENTER:
 			case KEY_ESCAPE:
 			case KEY_TAB: {
-				LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
-				endEditing(); // the parent 'ProjectItcomponent' handles selecting another box - TODO why does it not function?
+				console.log("TextComponent Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
+				if (!partOfAlias) {
+					endEditing();
+				} // else, let alias box handle this
 				break;
 			}
 			case KEY_ARROW_LEFT: {
 				getCaretPosition(event);
-				LOGGER.log("Caret at: " + from);
+				console.log("TextComponent Caret at: " + from);
 				if (from !== 0) { // when the arrow key can stay within the text, do not let the parent handle it
 					event.stopPropagation();
+					dispatcher('textUpdate', {content: text, caret: from + 1});
 				} else { // the key will cause this element to lose focus, its content should be saved
 					endEditing();
 					editor.selectPreviousLeaf();
@@ -230,6 +240,7 @@
 				LOGGER.log("Caret at: " + from);
 				if (from !== text.length) { // when the arrow key can stay within the text, do not let the parent handle it
 					event.stopPropagation();
+					dispatcher('textUpdate', {content: text, caret: from + 1});
 				} else { // the key will cause this element to lose focus, its content should be saved
 					endEditing();
 					editor.selectNextLeaf();
@@ -352,7 +363,14 @@
 				}
 			}
 		}
-    };
+	};
+
+	const onBlur = () => {
+		console.log("TextComponent onBlur")
+		if (!partOfAlias) {
+			endEditing();
+		}
+	}
 
 	/**
 	 * When the HTML is updated, and the switch is made from <span> to <input>,
@@ -372,6 +390,11 @@
 		if (!isEditing && !!spanElement) {
 			// TODO test this
 			setBoxSizes(textBox, spanElement.getBoundingClientRect());
+		}
+		if (isEditing && partOfAlias) {
+			// send event to parent
+			console.log('TextComponent dispatching event with text ' + text);
+			dispatcher('textUpdate', {content: text, caret: from + 1});
 		}
 	});
 
@@ -411,16 +434,17 @@
 				   id="{id}-input"
 				   bind:this={inputHTMLelement}
 				   bind:value={text}
-                   on:blur={endEditing}
+				   on:blur={onBlur}
 				   on:keydown={onKeyDown}
 				   size={size}
 				   placeholder="{placeholder}"/>
 		</span>
 	{:else}
 		<span class="{textBox.role} text-box-{boxType} text"
+			  tabIndex={0}
 			  on:click={startEditing}
 			  bind:this={spanElement}
-			  id="{id}">
+			  id="{id}-span">
 			{#if !!text && text.length > 0}
 				{text}
 			{:else}

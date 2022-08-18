@@ -5,7 +5,6 @@
     import RenderComponent from "./RenderComponent.svelte";
     import {
         Box,
-        HorizontalListBox,
         isEmptyLineBox,
         ListBox,
         PiEditor,
@@ -19,7 +18,7 @@
 
     // console.log("LIST COMPONET READ " + list?.role)
     // Local state variables
-    let LOGGER: PiLogger = new PiLogger("ListComponent").mute();
+    let LOGGER: PiLogger = new PiLogger("LayoutComponent").mute();
     let svList: ListBox = list; // TODO question: why a new variable, cannot use 'list'?
     let svNotifier = new ChangeNotifier();
     let element: HTMLSpanElement;
@@ -31,18 +30,18 @@
     });
 
     async function setFocus(): Promise<void> {
-        FOCUS_LOGGER.log("ListComponent.setFocus for box " + list.role);
+        FOCUS_LOGGER.log("LayoutComponent.setFocus for box " + list.role);
         if (!!element) {
             element.focus();
         }
     }
     onMount( () => {
-        MOUNT_LOGGER.log("ListComponent onMount --------------------------------")
+        MOUNT_LOGGER.log("LayoutComponent onMount --------------------------------")
         list.setFocus = setFocus;
     });
 
     afterUpdate(() => {
-        UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
+        UPDATE_LOGGER.log("LayoutComponent.afterUpdate for " + list.role);
         list.setFocus = setFocus;
         // NOTE: Triggers autorun whenever an element is added or delete from the list
         svNotifier.notifyChange();
@@ -57,20 +56,20 @@
 
     // TODO Empty vertical list gives empty line, try to add entities in the example.
     const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("ListComponent.onFocus for box " + list.role);
+        FOCUS_LOGGER.log("LayoutComponent.onFocus for box " + list.role);
         // e.preventDefault();
         // e.stopPropagation();
     }
     const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("ListComponent.onBlur for box " + list.role);
+        FOCUS_LOGGER.log("LayoutComponent.onBlur for box " + list.role);
         // e.preventDefault();
         // e.stopPropagation();
     }
 
-    function box(box: Box): Box {
-        LOGGER.log("render box " + box.role);
-        return box;
-    }
+    // function box(box: Box): Box {
+    //     LOGGER.log("render box " + box.role);
+    //     return box;
+    // }
 
     function setPrevious(b: Box): string {
         previousBox = b;
@@ -80,7 +79,7 @@
     let previousBox = null;
 </script>
 
-<span class="list-component"
+<span class="layout-component"
       on:focus={onFocusHandler}
       on:blur={onBlurHandler}
       tabIndex={0}
@@ -108,7 +107,7 @@
 </span>
 
 <style>
-    .list-component {
+    .layout-component {
         --pi-list-grid-template-columns: "";
         --pi-list-grid-template-rows: "";
     }
