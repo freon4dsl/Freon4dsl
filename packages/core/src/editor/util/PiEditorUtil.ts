@@ -53,7 +53,7 @@ export class PiEditorUtil {
     // which tests whether its input is a PiKey. Why???
     static findKeyboardShortcutCommand(piKey: PiTriggerUse, box: Box, editor: PiEditor): PiCommand {
         LOGGER.log("findKeyboardShortcutCommand for box " + box.role + " kind " + box.kind + " for key " + JSON.stringify(piKey));
-        for (const act of editor.new_pi_actions) {
+        for (const act of editor.newPiActions) {
             if (isProKey(act.trigger) && isProKey(piKey)) {
                 LOGGER.log("findKeyboardShortcutCommand for box " + box.role + " kind " + box.kind + " with activeroles: " + act.activeInBoxRoles);
                 if (act.trigger.meta === piKey.meta && act.trigger.key === piKey.key) {

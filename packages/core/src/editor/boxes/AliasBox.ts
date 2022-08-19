@@ -75,7 +75,7 @@ export class AliasBox extends AbstractChoiceBox {
         }
         // Using the new actions:
         // Now look in all actions defined in the editor whether they fit this alias, except for the keyboard shortcuts
-        editor.new_pi_actions
+        editor.newPiActions
             .filter(action => !isProKey(action.trigger) && action.activeInBoxRoles.includes(this.role))
             .forEach(action => {
                 const options: SelectOption[] = [];

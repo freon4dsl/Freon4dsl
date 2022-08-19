@@ -23,7 +23,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
     LOGGER.log("Enter executeBehavior text [" + text + "] label [" + label + "] box role [" + box.role + "]");
     let partialMatch: boolean = false;
 
-    for (const action of editor.new_pi_actions) {
+    for (const action of editor.newPiActions) {
         const trigger = action.trigger;
         LOGGER.log("  executeBehavior trigger " + trigger + "  roles " + action.activeInBoxRoles);
         if (action.activeInBoxRoles.includes(box.role)) {
