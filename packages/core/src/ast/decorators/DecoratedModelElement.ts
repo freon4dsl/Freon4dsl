@@ -44,3 +44,14 @@ export class MobxModelElementImpl implements DecoratedModelElement {
             : null;
     }
 }
+
+export function allOwners(dec: PiElement): PiElement[] {
+    const result = [];
+    let owner = dec?.piOwner();
+
+    while( !!owner) {
+        result.push(owner);
+        owner = owner.piOwner();
+    }
+    return result;
+}

@@ -158,9 +158,9 @@ class BTree {
             LOGGER.log("Rule 1: prio parent <= prio left");
             if (binaryExp.piPriority() > left.piPriority()) {
                 const leftRight = left.piRight();
+                PiUtils.setContainer(left, ownerDescriptor, editor);
                 left.piSetRight(binaryExp);
                 binaryExp.piSetLeft(leftRight);
-                PiUtils.setContainer(left, ownerDescriptor, editor);
                 this.balanceTree(binaryExp, editor);
                 return;
             }
@@ -170,9 +170,9 @@ class BTree {
             LOGGER.log("Rule 2: prio parent < prio right");
             if (binaryExp.piPriority() >= right.piPriority()) {
                 const rightLeft = right.piLeft();
+                PiUtils.setContainer(right, ownerDescriptor, editor);
                 right.piSetLeft(binaryExp);
                 binaryExp.piSetRight(rightLeft);
-                PiUtils.setContainer(right, ownerDescriptor, editor);
                 this.balanceTree(binaryExp, editor);
                 return;
             }
@@ -184,9 +184,9 @@ class BTree {
                 if (binaryExp.piPriority() < parent.piPriority()) {
                     const parentProContainer = parent.piOwnerDescriptor();
                     const expRight = binaryExp.piRight();
+                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
                     binaryExp.piSetRight(parent);
                     parent.piSetLeft(expRight);
-                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
                     this.balanceTree(binaryExp, editor);
                     return;
                 }
@@ -196,9 +196,9 @@ class BTree {
                 if (binaryExp.piPriority() <= parent.piPriority()) {
                     const parentProContainer = parent.piOwnerDescriptor();
                     const expLeft = binaryExp.piLeft();
+                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
                     binaryExp.piSetLeft(parent);
                     parent.piSetRight(expLeft);
-                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
                     this.balanceTree(binaryExp, editor);
                     return;
                 }

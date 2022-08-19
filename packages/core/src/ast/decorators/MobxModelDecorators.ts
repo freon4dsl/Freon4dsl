@@ -1,7 +1,8 @@
 import { IObservableValue, IArrayWillChange, IArrayWillSplice, observable, intercept, runInAction } from "mobx";
 import "reflect-metadata";
+import { PiElement } from "../PiElement";
 
-import { DecoratedModelElement } from "./DecoratedModelElement";
+import { allOwners, DecoratedModelElement } from "./DecoratedModelElement";
 import { PiChangeManager } from "../../change-manager";
 import { PrimType } from "../../language";
 import { PiLogger } from "../../logging";
@@ -52,6 +53,14 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
     const setter = function(this: any, newValue: DecoratedModelElement) {
         let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         const storedValue = !!storedObserver ? storedObserver.get() : null;
+        console.log("newValue is " + newValue );
+        console.log("newValue is " + JSON.stringify(newValue, ["$typename", "$id"]) + " owners: " + JSON.stringify(allOwners(this as any as PiElement), ["$typename", "$id"]) );
+        if (allOwners(this as any as PiElement).includes(newValue as any as PiElement)) {
+            throw Error("CYCLE IN AST");
+            // } else {
+            //     console.log("No cycle in Ast, owners: " + allOwners(newValue as any as PiElement).length);
+        }
+
         PiChangeManager.getInstance().setPart(this, propertyKey, newValue, storedValue);
         // Clean owner of current part
         if (!!storedValue) {
