@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../ast";
-import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes";
+import { Box, BoxFactory, CharAllowed, SelectOption, TextBox } from "../boxes";
 import { PiUtils } from "../../util";
 import { BehaviorExecutionResult } from "../util";
 import { Language, PropertyKind } from "../../language";
@@ -8,7 +8,7 @@ import { PiEditor } from "../PiEditor";
 import { PiScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
 import { PiCompositeProjection } from "../PiCompositeProjection";
-import { EmptyLineBox } from "../boxes/EmptyLineBox";
+import { EmptyLineBox } from "../boxes";
 
 export class PiListInfo {
     text: string;
@@ -78,10 +78,12 @@ export class BoxUtils {
                     element,
                     roleName,
                     () => element[propertyName][index].toString(),
-                    (v: string) => runInAction( () => {(element[propertyName][index] = Number.parseInt(v))}),
+                    (v: string) => runInAction(() => {
+                        (element[propertyName][index] = Number.parseInt(v, 10));
+                    }),
                     {
                         placeHolder: `<${propertyName}>`,
-                        keyPressAction: (currentText: string, key: string, index: number) => {
+                        isCharAllowed: (currentText: string, key: string, index: number) => {
                             return isNumber(currentText, key, index);
                         }
                     });
@@ -90,10 +92,12 @@ export class BoxUtils {
                     element,
                     roleName,
                     () => element[propertyName].toString(),
-                    (v: string) => runInAction( () => {(element[propertyName] = Number.parseInt(v))}),
+                    (v: string) => runInAction(() => {
+                        (element[propertyName] = Number.parseInt(v, 10));
+                    }),
                     {
                         placeHolder: `<${propertyName}>`,
-                        keyPressAction: (currentText: string, key: string, index: number) => {
+                        isCharAllowed: (currentText: string, key: string, index: number) => {
                             return isNumber(currentText, key, index);
                         }
                     });
@@ -113,10 +117,13 @@ export class BoxUtils {
      * @param labels the different texts to be shown when the property is false or true
      * @param index the index of the item in the list, if the property is a list
      */
-    static booleanBox(element: PiElement, propertyName: string, labels: { yes: string; no: string } = {
-        yes: "yes",
-        no: "no"
-    }, index?: number): Box {
+    static booleanBox(element: PiElement,
+                      propertyName: string,
+                      labels: { yes: string; no: string } = {
+                          yes: "yes",
+                          no: "no"
+                      },
+                      index?: number): Box {
         // find the information on the property to be shown
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
@@ -146,7 +153,7 @@ export class BoxUtils {
                     }
                 },
                 (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
-                    runInAction( () => {
+                    runInAction(() => {
                         if (option.id === labels.yes) {
                             element[propertyName][index] = true;
                         } else if (option.id === labels.no) {
@@ -170,7 +177,7 @@ export class BoxUtils {
                     }
                 },
                 (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
-                    runInAction( () => {
+                    runInAction(() => {
                         if (option.id === labels.yes) {
                             element[propertyName] = true;
                         } else if (option.id === labels.no) {
@@ -235,15 +242,15 @@ export class BoxUtils {
                     return null;
                 }
             },
-             (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
+            (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
                 // L.log("==> SET selected option for property " + propertyName + " of " + element["name"] + " to " + option?.label);
                 if (!!option) {
                     // console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
-                    runInAction( () => {
+                    runInAction(() => {
                         setFunc(option.label);
                     });
                 } else {
-                    runInAction( () => {
+                    runInAction(() => {
                         element[propertyName] = null;
                     });
                 }
@@ -282,7 +289,7 @@ export class BoxUtils {
 
     static verticalPartListBox(element: PiElement, propertyName: string, rootProjection: PiCompositeProjection, listJoin: PiListInfo, projName?: string): Box {
         // find the information on the property to be shown
-        let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
+        const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a part list
         if (property !== undefined && propertyName !== null && isList && isPart === "part") {
             // find the children to show in this listBox
@@ -292,7 +299,10 @@ export class BoxUtils {
             // TODO: Add keboard action for Enter:
             // TODO for role:RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item")
             // CANNO DO< no EDIGOR AVAILABLE:
-            // editorr.addOrReplaceAction(createKeyboardShortcutForList2(RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item"), propertyName, element.piLanguageConcept(), "dummy"));
+            // editor.addOrReplaceAction(createKeyboardShortcutForList2(RoleProvider.property(element.piLanguageConcept(),
+            // propertyName, "
+            // new-list-item"),
+            // propertyName, element.piLanguageConcept(), "dummy"));
             // return the box
             return BoxFactory.verticalList(
                 element,
@@ -307,7 +317,7 @@ export class BoxUtils {
 
     static verticalReferenceListBox(element: PiElement, propertyName: string, scoper: PiScoper, listInfo?: PiListInfo): Box {
         // find the information on the property to be shown
-        let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
+        const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a reference list
         if (property !== undefined && propertyName !== null && isList && isPart === "reference") {
             // find the children to show in this listBox
@@ -325,9 +335,13 @@ export class BoxUtils {
         }
     }
 
-    static horizontalPartListBox(element: PiElement, propertyName: string, rootProjection: PiCompositeProjection, listJoin: PiListInfo, projName?: string): Box {
+    static horizontalPartListBox(element: PiElement,
+                                 propertyName: string,
+                                 rootProjection: PiCompositeProjection,
+                                 listJoin: PiListInfo,
+                                 projName?: string): Box {
         // find the information on the property to be shown
-        let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
+        const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a part list
         if (property !== undefined && property !== null && isList && isPart !== "reference") {
             // find the children to show in this listBox, depending on whether it is a list of parts or of references
@@ -349,7 +363,7 @@ export class BoxUtils {
     static horizontalReferenceListBox(element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListInfo): Box {
         // TODO this one is not yet functioning correctly
         // find the information on the property to be shown
-        let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
+        const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a reference list
         if (property !== undefined && propertyName !== null && isList && isPart === "reference") {
             // find the children to show in this listBox
@@ -411,7 +425,12 @@ export class BoxUtils {
         );
     }
 
-    private static findPartItems(property: PiElement[], element: PiElement, propertyName: string, rootProjection: PiCompositeProjection, listJoin: PiListInfo, projectionName?: string) {
+    private static findPartItems(property: PiElement[],
+                                 element: PiElement,
+                                 propertyName: string,
+                                 rootProjection: PiCompositeProjection,
+                                 listJoin: PiListInfo,
+                                 projectionName?: string) {
         const numberOfItems = property.length;
         return property.map((listElem, index) => {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
@@ -457,34 +476,34 @@ export class BoxUtils {
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
-                        result.push( BoxFactory.horizontalList(element, roleName, [
+                        result.push(BoxFactory.horizontalList(element, roleName, [
                             BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]));
                     } else {
-                        result.push( BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index) );
+                        result.push(BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index));
                     }
                 } else if (listJoin.type === this.terminatorName) {
                     result.push(BoxFactory.horizontalList(element, roleName, [
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
-                    ]) );
+                    ]));
                 } else if (listJoin.type === this.initiatorName) {
                     // TODO test this code
                     result.push(BoxFactory.horizontalList(element, roleName, [
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index)
-                    ]) );
+                    ]));
                 }
             } else {
-                result.push( BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index) );
+                result.push(BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index));
             }
         });
         return result;
     }
 
     private static getPropertyInfo(element: PiElement, propertyName: string) {
-        let property = element[propertyName];
+        const property = element[propertyName];
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
         const isPart: PropertyKind = propInfo.propertyKind;
@@ -492,17 +511,17 @@ export class BoxUtils {
     }
 }
 
-function isNumber(currentText: string, key: string, index: number): KeyPressAction {
+function isNumber(currentText: string, key: string, index: number): CharAllowed {
     // console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof ["+ typeof currentText + "] key [" + key + "] index [" + index + "]");
     if (isNaN(Number(key))) {
         if (index === currentText.length) {
-            return KeyPressAction.GOTO_NEXT;
+            return CharAllowed.GOTO_NEXT;
         } else if (index === 0) {
-            return KeyPressAction.GOTO_PREVIOUS;
+            return CharAllowed.GOTO_PREVIOUS;
         } else {
-            return KeyPressAction.NOT_OK;
+            return CharAllowed.NOT_OK;
         }
     } else {
-        return KeyPressAction.OK;
+        return CharAllowed.OK;
     }
 }

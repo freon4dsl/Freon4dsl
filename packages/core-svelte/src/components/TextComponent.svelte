@@ -14,7 +14,6 @@
         TAB,
         EVENT_LOG,
         isMetaKey,
-        KeyPressAction,
         PiUtils,
         TextBox,
         PiEditor,
@@ -27,7 +26,7 @@
         AliasBox,
         ESCAPE,
         SelectBox,
-        PiCommand, PI_NULL_COMMAND, PiPostAction
+        PiCommand, PI_NULL_COMMAND, PiPostAction, PiEditorUtil, CharAllowed
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
@@ -168,7 +167,7 @@
         if (isMetaKey(event) || event.key === ENTER) {
             // To Be Sure save the current text
             let value = currentText();
-            const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
+            const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
             if (cmd !== PI_NULL_COMMAND) {
                 let postAction: PiPostAction;
                 runInAction(() => {
@@ -207,8 +206,8 @@
                 break;
             case PiCaretPosition.INDEX:
                 LOGGER.log("setCaretPosition INDEX");
-                setCaretPosition(caret.index);
-                textBox.caretPosition = caret.index;
+                setCaretPosition(caret.from);
+                textBox.caretPosition = caret.from;
                 break;
             case PiCaretPosition.UNSPECIFIED:
                 LOGGER.log("setCaretPosition UNSPECIFIED");
@@ -280,17 +279,17 @@
         LOGGER.log("onKeyPress: " + event.key);
         isEditing = true;
         const insertionIndex = getCaretPosition();
-        switch (textBox.keyPressAction(currentText(), event.key, insertionIndex)) {
-            case KeyPressAction.OK:
-                logBox("KeyPressAction.OK");
+        switch (textBox.isCharAllowed(currentText(), event.key, insertionIndex)) {
+            case CharAllowed.OK:
+                logBox("CharAllowed.OK");
                 break;
-            case KeyPressAction.NOT_OK:
-                LOGGER.log("KeyPressAction.NOT_OK");
+            case CharAllowed.NOT_OK:
+                LOGGER.log("CharAllowed.NOT_OK");
                 event.preventDefault();
                 event.stopPropagation();
                 break;
-            case KeyPressAction.GOTO_NEXT:
-                LOGGER.log("KeyPressAction.GOTO_NEXT");
+            case CharAllowed.GOTO_NEXT:
+                LOGGER.log("CharAllowed.GOTO_NEXT");
                 editor.selectNextLeaf();
                 LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
                 if (isAliasTextBox(editor.selectedBox)) {
@@ -302,8 +301,8 @@
                 event.preventDefault();
                 event.stopPropagation();
                 break;
-            case KeyPressAction.GOTO_PREVIOUS:
-                LOGGER.log("KeyPressAction.GOTO_PREVIOUS");
+            case CharAllowed.GOTO_PREVIOUS:
+                LOGGER.log("CharAllowed.GOTO_PREVIOUS");
                 editor.selectPreviousLeaf();
                 LOGGER.log("PREVIOUS LEAF IS " + editor.selectedBox.role);
                 if (isAliasTextBox(editor.selectedBox)) {

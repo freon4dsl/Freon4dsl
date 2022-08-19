@@ -7,7 +7,7 @@ import { PiLogger } from "../../logging";
 
 const LOGGER = new PiLogger("TextBox");
 
-export enum KeyPressAction {
+export enum CharAllowed {
     OK,
     GOTO_NEXT,
     GOTO_PREVIOUS,
@@ -41,8 +41,8 @@ export class TextBox extends Box {
         this.$setText(newValue);
     }
 
-    keyPressAction: (currentText: string, key: string, index: number) => KeyPressAction = () => {
-        return KeyPressAction.OK;
+    isCharAllowed: (currentText: string, key: string, index: number) => CharAllowed = () => {
+        return CharAllowed.OK;
     };
 
     constructor(exp: PiElement, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>) {
