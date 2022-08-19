@@ -34,9 +34,9 @@ export class SelectBox extends AbstractChoiceBox {
         this.selectOption = selectOption;
     }
 
-    getOptions(editor: PiEditor):  SelectOption[]  {
+    getOptions(editor: PiEditor): SelectOption[] {
         const matchingOptions: SelectOption[] = this.getAllOptions(editor);
-        // matchung text does noet work correct as you nmeed to know the cursor position.
+        // matching text does not work correct as you need to know the cursor position.
         // TODO filter in the component where the cursor position is known.
             // .filter(option => MatchUtil.partialMatch(this.textBox.getText(), option.label));
         return matchingOptions

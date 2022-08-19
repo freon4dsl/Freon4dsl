@@ -38,7 +38,7 @@ export class AliasBox extends AbstractChoiceBox {
             return executeSingleBehavior(option.action, this, option.id, option.label, editor);
         } else {
             // Try all statically defined actions
-            let result = executeBehavior(this, option.id, option.label, editor);
+            const result = executeBehavior(this, option.id, option.label, editor);
             if (result === BehaviorExecutionResult.EXECUTED) {
                 return result;
             }
@@ -61,7 +61,7 @@ export class AliasBox extends AbstractChoiceBox {
             // If the alias box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
             const clsOtIntf = Language.getInstance().concept(this.conceptName) ?? Language.getInstance().interface(this.conceptName);
-             clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (creatableConceptname: string) => {
+            clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (creatableConceptname: string) => {
                 const creatableConcept = Language.getInstance().concept(creatableConceptname);
                 if (!!creatableConcept && !creatableConcept.isAbstract) {
                     if (!!(creatableConcept.referenceShortcut)) {
@@ -92,7 +92,7 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     private getCreateElementOption(propertyName: string, conceptName: string, concept: Concept): SelectOption {
-        LOGGER.log("AliasBox.createElementAction proeprty: " + propertyName + " concept " + conceptName);
+        LOGGER.log("AliasBox.createElementAction property: " + propertyName + " concept " + conceptName);
         return {
             id: conceptName,
             label: concept.trigger,
@@ -140,7 +140,7 @@ export class AliasBox extends AbstractChoiceBox {
         });
     }
 
-    triggerKeyPressEvent = (key: string) => {
+    triggerKeyPressEvent = (key: string) => { // TODO rename this one, e.g. to triggerKeyEvent
         console.error("AliasBox " + this.role + " has empty triggerKeyPressEvent");
     };
 }

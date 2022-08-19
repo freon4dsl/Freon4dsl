@@ -26,7 +26,7 @@ export class OptionalBox extends Box {
         });
         this.box = box;
         box.parent = this;
-        this.whenNoShowingAlias = BoxFactory.alias(element, role, aliasText);
+        this.whenNoShowingAlias = BoxFactory.alias(element, role, aliasText); // TODO question: should not the role be diff from role of this box? Where is the "alias" prefix added?
         this.whenNoShowingAlias.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;

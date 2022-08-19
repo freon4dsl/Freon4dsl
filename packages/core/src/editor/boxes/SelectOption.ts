@@ -13,9 +13,9 @@ export interface SelectOption {
      */
     label: string;
 
-    action?: PiAction,
+    action?: PiAction;
     /**
-     * A more vervose description, keep this to a single short line.
+     * A more verbose description, keep this to a single short line.
      */
     description?: string;
 }
@@ -33,9 +33,9 @@ export interface SelectedOption {
      */
     option: SelectOption;
     /**
-     * An optional parameter to the seleected option.
+     * An optional parameter to the selected option.
      */
-    parameter?: string;
+    parameter?: string; // TODO seems never to be used, remove?
 
 }
 
