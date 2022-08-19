@@ -2,9 +2,9 @@ import { PiBinaryExpression, PiElement } from "../../ast";
 import { Language } from "../../language";
 import { BTREE, PiCaret, PiCaretPosition } from "../../util";
 import { Box } from "../boxes";
-import { isString } from "../PiCombinedActions";
 import { PiEditor } from "../PiEditor";
-import { CustomAction, EMPTY_POST_ACTION, PiActionTrigger, PiPostAction, ReferenceShortcut, triggerToString2 } from "./PiAction";
+import { CustomAction, EMPTY_POST_ACTION, PiPostAction, ReferenceShortcut } from "./PiAction";
+import { isString, PiTriggerUse, triggerTypeToString } from "./PiTriggers";
 
 /**
  * Abstract supercass for all commands in ProjectIt.
@@ -23,7 +23,7 @@ export abstract class PiCommand {
      * @param text   The text or keyboard shortcut or menu that invoked this command.
      * @param editor The editor instance in which this command is invoked.
      */
-    abstract execute(box: Box, text: PiActionTrigger, editor: PiEditor): PiPostAction;
+    abstract execute(box: Box, text: PiTriggerUse, editor: PiEditor): PiPostAction;
 
     /**
      * Undo this command.
@@ -38,7 +38,7 @@ export abstract class PiCommand {
 }
 
 class PiNullCommand extends PiCommand {
-    execute(box: Box, text: PiActionTrigger, editor: PiEditor): PiPostAction {
+    execute(box: Box, text: PiTriggerUse, editor: PiEditor): PiPostAction {
         return EMPTY_POST_ACTION;
     }
 
@@ -72,10 +72,10 @@ export class PiCreatePartCommand extends PiCommand {
         console.log("+++++++++++++++ Create part command " + propertyName + ", " + conceptName);
     }
 
-    execute(box: Box, trigger: PiActionTrigger, editor: PiEditor): PiPostAction {
+    execute(box: Box, trigger: PiTriggerUse, editor: PiEditor): PiPostAction {
         console.log(
             "CreatePartCommand: trigger [" +
-                triggerToString2(trigger) +
+                triggerTypeToString(trigger) +
                 "] part: " +
                 this.conceptName +
                 " in " +
@@ -119,8 +119,8 @@ export class PiCreateSiblingCommand extends PiCommand {
         this.boxRoleToSelect = boxRoleToSelect;
     }
 
-    execute(box: Box, trigger: PiActionTrigger, editor: PiEditor): PiPostAction {
-        console.log("CreateSiblingCommand: trigger [" + triggerToString2(trigger) + "] part: " + this.conceptName + " refshort " + this.referenceShortcut);
+    execute(box: Box, trigger: PiTriggerUse, editor: PiEditor): PiPostAction {
+        console.log("CreateSiblingCommand: trigger [" + triggerTypeToString(trigger) + "] part: " + this.conceptName + " refshort " + this.referenceShortcut);
         const newElement: PiElement = Language.getInstance().concept(this.conceptName)?.constructor();
         if (newElement === undefined || newElement === null) {
             // TODO Find out why this happens sometimes
@@ -164,10 +164,9 @@ export class PiCreateBinaryExpressionCommand extends PiCommand {
         this.expressionBuilder = expressionBuilder;
     }
 
-    execute(box: Box, trigger: PiActionTrigger, editor: PiEditor): PiPostAction {
-        console.log("PiCreateBinaryExpressionCommand: trigger [" + triggerToString2(trigger) + "] part: ");
-        const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, triggerToString2(trigger), editor), box, editor);
-        const self = this;
+    execute(box: Box, trigger: PiTriggerUse, editor: PiEditor): PiPostAction {
+        console.log("PiCreateBinaryExpressionCommand: trigger [" + triggerTypeToString(trigger) + "] part: ");
+        const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, triggerTypeToString(trigger), editor), box, editor);
         return function () {
             editor.selectElement(selected.element, selected.boxRoleToSelect)
         };
@@ -187,11 +186,11 @@ export class PiCustomCommand extends PiCommand {
         this.boxRoleToSelect = boxRoleToSelect;
     }
 
-    execute(box: Box, trigger: PiActionTrigger, editor: PiEditor): PiPostAction {
+    execute(box: Box, trigger: PiTriggerUse, editor: PiEditor): PiPostAction {
         // LOGGER.log("execute custom action, text is [" + text + "] refShort [" + this.referenceShortcut + "]" );
-        console.log("PiCustomCommand: trigger [" + triggerToString2(trigger) + "]");
+        console.log("PiCustomCommand: trigger [" + triggerTypeToString(trigger) + "]");
         const self = this;
-        const selected = self.action(box, triggerToString2(trigger), editor);
+        const selected = self.action(box, triggerTypeToString(trigger), editor);
 
         if (!!selected) {
             if (!!self.boxRoleToSelect) {

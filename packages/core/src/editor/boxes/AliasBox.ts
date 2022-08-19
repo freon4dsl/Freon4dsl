@@ -1,7 +1,7 @@
 import { Concept, Language } from "../../language";
 import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../../util";
-import { PiCreatePartAction } from "../actions/PiCreatePartAction";
-import { triggerToString, PiEditor, TextBox, isProKey } from "../internal";
+import { PiCreatePartAction } from "../actions";
+import { triggerTypeToString, PiEditor, TextBox, isProKey } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
 import { PiElement } from "../../ast";
 import { runInAction } from "mobx";
@@ -80,10 +80,10 @@ export class AliasBox extends AbstractChoiceBox {
             .forEach(action => {
                 const options: SelectOption[] = [];
                 options.push({
-                    id: triggerToString(action.trigger) ,//+ "_action",
-                    label: triggerToString(action.trigger),// + "_action",
+                    id: triggerTypeToString(action.trigger) ,//+ "_action",
+                    label: triggerTypeToString(action.trigger),// + "_action",
                     action: action,
-                    description: "alias " + triggerToString(action.trigger)
+                    description: "alias " + triggerTypeToString(action.trigger)
                 });
                 // }
                 result.push(...options);

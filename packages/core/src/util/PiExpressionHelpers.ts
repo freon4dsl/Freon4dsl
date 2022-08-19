@@ -5,7 +5,7 @@ import {
     SelectBox,
     SelectOption,
     PiEditor,
-    triggerToString, BoxFactory
+    triggerTypeToString, BoxFactory
 } from "../editor";
 import { PiBinaryExpression, PiExpression } from "../ast";
 import { Language } from "../language";
@@ -21,7 +21,6 @@ import {
     LEFT_MOST,
     RIGHT_MOST,
     BehaviorExecutionResult,
-    PiCaret,
     NBSP,
     PiUtils
 } from "./internal";
@@ -119,7 +118,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
             if (editor.actions && editor.actions.binaryExpressionActions) {
                 const alias = editor.actions.binaryExpressionActions.filter(e => (e.trigger as string) === option.id)[0];
                 if (!!alias) {
-                    const newExp = alias.expressionBuilder(operatorBox, triggerToString(alias.trigger), editor);
+                    const newExp = alias.expressionBuilder(operatorBox, triggerTypeToString(alias.trigger), editor);
                     newExp.piSetLeft(exp.piLeft());
                     newExp.piSetRight(exp.piRight());
                     PiUtils.replaceExpression(exp, newExp, editor);

@@ -4,4 +4,5 @@ Week 19-08-22:
 1. Created README in /editor
 2. Name of PiActions changed into PiCombinedActions, to distinguish this interface from 
 /editor/actions/PiAction. Caused changes in meta, and changes in CustomActions in samples and test.
-
+3. Everything todo with triggers moved from PiActions/PiCombinedActions and PiAction to new file 
+/editor/actions/PiTrigger.

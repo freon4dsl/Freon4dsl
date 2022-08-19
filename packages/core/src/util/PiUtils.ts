@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import { PiLogger } from "../logging";
-import { Box, isProKey, PI_NULL_COMMAND, PiActionTrigger, PiCommand, PiEditor } from "../editor";
+import { Box, isProKey, PI_NULL_COMMAND, PiTriggerUse, PiCommand, PiEditor } from "../editor";
 import { PiOwnerDescriptor, PiElement, PiExpression } from "../ast";
 import { isPiExpression } from "../ast-utils";
 
@@ -80,7 +80,7 @@ export class PiUtils {
      * @param box
      * @param editor
      */
-    static findKeyboardShortcutCommand(piKey: PiActionTrigger, box: Box, editor: PiEditor): PiCommand {
+    static findKeyboardShortcutCommand(piKey: PiTriggerUse, box: Box, editor: PiEditor): PiCommand {
         LOGGER.log("Enyter findKeyboardShortcutCommand for box " + box.role + " kind " + box.kind + " for key " + JSON.stringify(piKey));
         for (const act of editor.new_pi_actions) {
             if (isProKey(act.trigger) && isProKey(piKey)) {
