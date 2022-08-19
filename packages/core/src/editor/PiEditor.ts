@@ -12,14 +12,14 @@ import {
     isSelectBox,
     isTextBox,
     Box,
-    PiActions
+    PiCombinedActions
 } from "./internal";
 
 const LOGGER = new PiLogger("PiEditor").mute();
 
 export class PiEditor {
     private _rootElement: PiElement = null;
-    readonly actions?: PiActions;
+    readonly actions?: PiCombinedActions;
     readonly projection: PiProjection;
     new_pi_actions: PiAction[]= [];
     theme: string = "light";
@@ -48,9 +48,10 @@ export class PiEditor {
      */
     scrollY: number = 0;
 
-    constructor(projection: PiProjection, actions?: PiActions) {
+    constructor(projection: PiProjection, environment: PiEnvironment, actions?: PiCombinedActions) {
         this.actions = actions;
         this.projection = projection;
+        this.environment = environment;
         this.initializeAliases(actions);
 
         makeObservable<PiEditor, "$rootBox" | "selectedRole" | "$selectedBox" | "selectedElement" | "_rootElement">(this, {
@@ -67,7 +68,7 @@ export class PiEditor {
         });
     }
 
-    initializeAliases(actions?: PiActions) {
+    initializeAliases(actions?: PiCombinedActions) {
         if (!actions) {
             return;
         }

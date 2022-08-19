@@ -1,7 +1,7 @@
 import { PiElement } from "../../ast";
 import { PiCaret, PiKey } from "../../util/index";
 import { Box } from "../boxes/index";
-import { isProKey, isRegExp, isString } from "../PiAction";
+import { isProKey, isRegExp, isString } from "../PiCombinedActions";
 import { PiEditor } from "../PiEditor";
 import { PiCommand } from "./PiCommand";
 

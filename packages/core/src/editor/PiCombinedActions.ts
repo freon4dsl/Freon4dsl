@@ -14,7 +14,7 @@ export function triggerToString(t: PiTriggerType): string {
 }
 
 
-export interface PiActions {
+export interface PiCombinedActions {
     binaryExpressionActions: PiCreateBinaryExpressionAction[];
 
     customActions: PiCustomAction[];

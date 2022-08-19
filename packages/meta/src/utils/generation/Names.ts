@@ -37,7 +37,7 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static PiErrorSeverity:string = "PiErrorSeverity";
     // tslint:disable-next-line:variable-name
-    public static PiActions:string = "PiActions";
+    public static PiActions:string = "PiCombinedActions";
     // tslint:disable-next-line:variable-name
     public static PiEditor:string = "PiEditor";
     // tslint:disable-next-line:variable-name
