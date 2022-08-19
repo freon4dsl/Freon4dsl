@@ -19,3 +19,4 @@ export * from "./PiStyle";
 export * from "./PiEditor";
 
 export * from "./actions";
+export * from "./util";

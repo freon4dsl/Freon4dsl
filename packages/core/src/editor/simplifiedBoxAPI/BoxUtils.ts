@@ -1,7 +1,8 @@
 import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../ast";
 import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes";
-import { BehaviorExecutionResult, PiUtils } from "../../util";
+import { PiUtils } from "../../util";
+import { BehaviorExecutionResult } from "../util";
 import { Language, PropertyKind } from "../../language";
 import { PiEditor } from "../PiEditor";
 import { PiScoper } from "../../scoper";

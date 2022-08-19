@@ -6,9 +6,9 @@ import {
     SelectOption,
     PiEditor,
     triggerTypeToString, BoxFactory
-} from "../editor";
-import { PiBinaryExpression, PiExpression } from "../ast";
-import { Language } from "../language";
+} from "../index";
+import { PiBinaryExpression, PiExpression } from "../../ast";
+import { Language } from "../../language";
 import {
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
@@ -20,10 +20,10 @@ import {
     EXPRESSION_SYMBOL,
     LEFT_MOST,
     RIGHT_MOST,
-    BehaviorExecutionResult,
-    NBSP,
     PiUtils
-} from "./internal";
+} from "../../util";
+import { NBSP } from "../index";
+import { BehaviorExecutionResult } from "./BehaviorUtils";
 
 // const LOGGER = new PiLogger("PiExpressionHelpers");
 

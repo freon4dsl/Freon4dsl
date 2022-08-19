@@ -1,5 +1,6 @@
 import { observable, action, makeObservable } from "mobx";
-import { PiCaretPosition, PiCaret, PiUtils } from "../../util";
+import { PiUtils } from "../../util";
+import { PiCaret } from "../util";
 import { PiElement } from "../../ast";
 import { Box } from "./internal";
 import { PiLogger } from "../../logging";
@@ -66,21 +67,6 @@ export class TextBox extends Box {
     setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
         LOGGER.log("setCaret: " + caret.position);
         /* To be overwritten by `TextComponent` */
-        switch (caret.position) {
-            case PiCaretPosition.RIGHT_MOST:
-                this.caretPosition = this.getText().length;
-                break;
-            case PiCaretPosition.LEFT_MOST:
-                this.caretPosition = 0;
-                break;
-            case PiCaretPosition.INDEX:
-                this.caretPosition = caret.index;
-                break;
-            case PiCaretPosition.UNSPECIFIED:
-                break;
-            default:
-                break;
-        }
     };
 
     /** @internal

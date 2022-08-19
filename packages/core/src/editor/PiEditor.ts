@@ -3,7 +3,8 @@ import { makeObservable, observable, computed, action, trace, runInAction } from
 import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiOwnerDescriptor, PiElement } from "../ast";
-import { PiCaret, wait } from "../util";
+import { wait } from "./util";
+import { PiCaret } from "./util";
 import { PiLogger } from "../logging";
 import { PiAction } from "./actions/index";
 import {

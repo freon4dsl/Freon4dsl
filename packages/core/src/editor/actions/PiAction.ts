@@ -1,6 +1,6 @@
 import { PiElement } from "../../ast";
-import { PiCaret, PiKey } from "../../util/index";
-import { Box } from "../boxes/index";
+import { PiCaret } from "../util/";
+import { Box } from "../boxes/";
 import { PiEditor } from "../PiEditor";
 import { PiCommand } from "./PiCommand";
 import { PiTriggerUse, PiTriggerType } from "./PiTriggers";

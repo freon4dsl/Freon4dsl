@@ -1,6 +1,7 @@
 import { PiBinaryExpression, PiElement } from "../../ast";
 import { Language } from "../../language";
-import { BTREE, PiCaret, PiCaretPosition } from "../../util";
+import { BTREE } from "../../util";
+import { PiCaret, PiCaretPosition } from "../util";
 import { Box } from "../boxes";
 import { PiEditor } from "../PiEditor";
 import { CustomAction, EMPTY_POST_ACTION, PiPostAction, ReferenceShortcut } from "./PiAction";

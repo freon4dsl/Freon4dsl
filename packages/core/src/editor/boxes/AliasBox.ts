@@ -1,5 +1,5 @@
 import { Concept, Language } from "../../language";
-import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../../util";
+import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../util";
 import { PiCreatePartAction } from "../actions";
 import { triggerTypeToString, PiEditor, TextBox, isProKey } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";

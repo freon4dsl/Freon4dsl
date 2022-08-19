@@ -12,8 +12,8 @@ import {
 } from "../index";
 import { PiElement } from "../../ast";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
-import * as Keys from "../../util/Keys";
-import { MetaKey, PiKey } from "../../util/Keys";
+import * as Keys from "../util/Keys";
+import { MetaKey, PiKey } from "../util/Keys";
 import { PiUtils } from "../../util";
 import { Language } from "../../language";
 import { RoleProvider } from "./RoleProvider";

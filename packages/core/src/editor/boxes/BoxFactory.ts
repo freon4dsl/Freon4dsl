@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import { PiElement } from "../../ast";
-import { BehaviorExecutionResult } from "../../util/BehaviorUtils";
+import { BehaviorExecutionResult } from "../util/BehaviorUtils";
 import { PiLogger } from "../../logging";
 import { PiUtils } from "../../util/PiUtils";
 import { PiEditor } from "../PiEditor";

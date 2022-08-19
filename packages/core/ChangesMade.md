@@ -6,3 +6,5 @@ Week 19-08-22:
 /editor/actions/PiAction. Caused changes in meta, and changes in CustomActions in samples and test.
 3. Everything todo with triggers moved from PiActions/PiCombinedActions and PiAction to new file 
 /editor/actions/PiTrigger.
+4. Moved utils that are specific for the editor from /util to /editor/util, and extracted PiCaret class
+from BehaviorUtils.ts. Removed implementation of setCaret in TextBox, because this is always overwritten.
