@@ -8,3 +8,4 @@ Week 19-08-22:
 /editor/actions/PiTrigger.
 4. Moved utils that are specific for the editor from /util to /editor/util, and extracted PiCaret class
 from BehaviorUtils.ts. Removed implementation of setCaret in TextBox, because this is always overwritten.
+5. Replaced use of 'keyCode' by 'key', only the test whether a character is printable remains to be done.

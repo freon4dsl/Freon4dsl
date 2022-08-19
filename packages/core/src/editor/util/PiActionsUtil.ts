@@ -38,7 +38,7 @@ export class PiActionsUtil {
                     if (type1 === "PiKey") {
                         const key1 = trigger1 as PiKey;
                         const key2 = trigger2 as PiKey;
-                        return key1.meta === key2.meta && key1.keyCode === key2.keyCode;
+                        return key1.meta === key2.meta && key1.key === key2.key;
                     } else {
                         const regexp1 = trigger1 as RegExp;
                         const regexp2 = trigger2 as RegExp;

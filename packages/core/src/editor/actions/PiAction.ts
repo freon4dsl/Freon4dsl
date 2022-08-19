@@ -5,7 +5,9 @@ import { PiEditor } from "../PiEditor";
 import { PiCommand } from "./PiCommand";
 import { PiTriggerUse, PiTriggerType } from "./PiTriggers";
 
-export type CustomAction = (box: Box, trigger: PiTriggerUse, editor: PiEditor) => PiElement | null;
+export type CustomAction = (box: Box,
+                            trigger: PiTriggerUse,
+                            editor: PiEditor) => PiElement | null;
 export type PiPostAction = () => void;
 
 export const EMPTY_POST_ACTION = function() {};

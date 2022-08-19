@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
-import { PiCreateSiblingAction } from "../actions/PiCreateSiblingAction";
-import { GridCellBox } from "../boxes/GridCellBox";
+import { PiCreateSiblingAction } from "../actions";
+import { GridCellBox } from "../boxes";
 import {
     AliasBox,
     Box, BoxFactory,
@@ -13,7 +13,7 @@ import {
 import { PiElement } from "../../ast";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import * as Keys from "../util/Keys";
-import { MetaKey, PiKey } from "../util/Keys";
+import { MetaKey, PiKey } from "../util";
 import { PiUtils } from "../../util";
 import { Language } from "../../language";
 import { RoleProvider } from "./RoleProvider";
@@ -145,9 +145,10 @@ export class TableUtil {
      *
      * @param element
      * @param propertyName
+     * @param nrOfRows
+     * @param nrOfColumns
      * @param editor
-     * @param elementBuilder
-     * @param cells
+     * @param conceptName
      * @private
      */
     private static addKeyBoardShortCuts(element: PiElement,propertyName: string, nrOfRows: number, nrOfColumns: number, editor: PiEditor, conceptName: string) {
@@ -164,7 +165,13 @@ export class TableUtil {
 
     /**
      * Create a keyboard shortcut for use in an element table
-     * @param roleToSelect
+     *
+     * @param element
+     * @param propertyName
+     * @param nrOfRows
+     * @param nrOfColumns
+     * @param conceptName
+     * @private
      */
     private static createKeyboardShortcutForCollectionGrid(element: PiElement, propertyName: string, nrOfRows: number, nrOfColumns: number, conceptName: string): PiCreateSiblingAction {
         const rolenames: string[] = [];
@@ -177,7 +184,7 @@ export class TableUtil {
         }
         // LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
         const result = new PiCreateSiblingAction({
-            trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
+            trigger: { meta: MetaKey.None, key: Keys.ENTER, code: Keys.ENTER },
             activeInBoxRoles: rolenames,
             conceptName: conceptName,
 
@@ -187,12 +194,11 @@ export class TableUtil {
 
     /**
      * Create a keyboard shortcut for use in an empty table
-     * @param roleToSelect
      * @private
      */
     private static createKeyboardShortcutForEmptyCollectionGrid(): PiCustomAction {
         return PiCustomAction.create({
-            trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
+            trigger: { meta: MetaKey.None, key: Keys.ENTER, code: Keys.ENTER },
             activeInBoxRoles: ["alias-add-row-or-column", "alias-alias-add-row-or-column-textbox"],
             action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
                 const element = box.element;

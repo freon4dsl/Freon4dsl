@@ -15,11 +15,11 @@
         toPiKey,
         isSelectBox,
         findOption,
-        KEY_ENTER,
-        KEY_TAB,
-        KEY_ARROW_DOWN,
-        KEY_ARROW_UP,
-        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT,
+        ENTER,
+        TAB,
+        ARROW_DOWN,
+        ARROW_UP,
+        SPACEBAR, ESCAPE, DELETE, ARROW_LEFT, BACKSPACE, ARROW_RIGHT,
         type SelectOption, PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
@@ -199,20 +199,20 @@
             e.stopPropagation();
             return;
         }
-        if (e.key === KEY_DELETE) {
+        if (e.key === DELETE) {
             e.stopPropagation();
         }
-        if (e.key === KEY_TAB) {
+        if (e.key === TAB) {
             setOpen("TAB", false);
             return;
         }
-        if (e.key === KEY_ARROW_LEFT || e.key === KEY_ARROW_RIGHT) {
+        if (e.key === ARROW_LEFT || e.key === ARROW_RIGHT) {
             setOpen("arraow at the edges", false);
         }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
         }
-        if ((e.key === KEY_SPACEBAR && e.ctrlKey) || (e.key === KEY_ESCAPE)) {
+        if ((e.key === SPACEBAR && e.ctrlKey) || (e.key === ESCAPE)) {
             setOpen("cltr-space or esacape", !$openStore);
             return;
         }
@@ -230,7 +230,7 @@
             e.stopPropagation();
         } else {
             switch (e.key) {
-                case KEY_ENTER:
+                case ENTER:
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
                         console.log("Keyboard shortcut in AliasComponentg ===============")
@@ -251,13 +251,13 @@
 
     const shouldPropagate = (e: KeyboardEvent): boolean => {
         if (isMetaKey(e)) {
-            if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN || e.key === KEY_TAB) {
+            if (e.key === ARROW_UP || e.key === ARROW_DOWN || e.key === TAB) {
                 return true;
             }
         }
-        if (e.key === KEY_ENTER || e.key === KEY_TAB || e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN ||
-            e.key === KEY_ARROW_LEFT || e.key === KEY_BACKSPACE || e.key === KEY_ARROW_RIGHT ||
-            e.key === KEY_DELETE) {
+        if (e.key === ENTER || e.key === TAB || e.key === ARROW_UP || e.key === ARROW_DOWN ||
+            e.key === ARROW_LEFT || e.key === BACKSPACE || e.key === ARROW_RIGHT ||
+            e.key === DELETE) {
             return true;
         } else {
             return false;

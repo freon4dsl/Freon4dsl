@@ -99,7 +99,7 @@
     }
 
     const handleKeydown = (event) => {
-        switch (event.keyCode) {
+        switch (event.key) {
             case Keys.ENTER: { // on Enter key try to submit
                 event.stopPropagation();
                 event.preventDefault();

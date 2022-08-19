@@ -56,7 +56,7 @@ export class PiEditorUtil {
         for (const act of editor.new_pi_actions) {
             if (isProKey(act.trigger) && isProKey(piKey)) {
                 LOGGER.log("findKeyboardShortcutCommand for box " + box.role + " kind " + box.kind + " with activeroles: " + act.activeInBoxRoles);
-                if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
+                if (act.trigger.meta === piKey.meta && act.trigger.key === piKey.key) {
                     if (act.activeInBoxRoles.includes(box.role)) {
                         LOGGER.log("findKeyboardShortcutCommand: executing keyboard action");
                         return act.command(box);

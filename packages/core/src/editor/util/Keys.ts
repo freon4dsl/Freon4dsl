@@ -12,13 +12,15 @@ export enum MetaKey {
 
 export type PiKey = {
     meta: MetaKey;
-    keyCode: number;
+    key: string;
+    code: string;
 };
 
 export function toPiKey(e: KeyboardEvent): PiKey {
     return {
         meta: meta(e),
-        keyCode: e.keyCode
+        key: e.key,
+        code: e.code
     };
 }
 
@@ -50,46 +52,43 @@ export function meta(e: KeyboardEvent): MetaKey {
     return MetaKey.None;
 }
 
-/**
- *  This file contains the constants for all key codes.
- *  Use these constants instead of the numeric values in the code to make it more readable.
- */
-export const BACKSPACE = 8;
-export const TAB = 9;
-export const ENTER = 13;
-export const CHARACTER_A = 65;
-export const SHIFT = 16;
-export const CONTROL = 17;
-export const ALT = 18;
-export const ESCAPE = 27;
-export const SPACEBAR = 32;
-export const ARROW_LEFT = 37;
-export const ARROW_UP = 38;
-export const ARROW_RIGHT = 39;
-export const ARROW_DOWN = 40;
-export const DELETE = 46;
-
-/**
- *  keyCode is deprecated, should use the key values below.
- *  TODO Replace the keyCode with key everywhere
- */
-export const KEY_BACKSPACE = "Backspace";
-export const KEY_TAB = "Tab";
-export const KEY_ENTER = "Enter";
-export const KEY_SHIFT = "Shift";
-export const KEY_CONTROL = "Control";
-export const KEY_ALT = "Alt";
-export const KEY_ESCAPE = "Escape";
-export const KEY_SPACEBAR = " ";
-export const KEY_ARROW_LEFT = "ArrowLeft";
-export const KEY_ARROW_UP = "ArrowUp";
-export const KEY_ARROW_RIGHT = "ArrowRight";
-export const KEY_ARROW_DOWN = "ArrowDown";
-export const KEY_DELETE = "Delete";
+export const BACKSPACE = "Backspace";
+export const TAB = "Tab";
+export const ENTER = "Enter";
+export const SHIFT = "Shift";
+export const CONTROL = "Control";
+export const ALT = "Alt";
+export const ESCAPE = "Escape";
+export const SPACEBAR = " ";
+export const ARROW_LEFT = "ArrowLeft";
+export const ARROW_UP = "ArrowUp";
+export const ARROW_RIGHT = "ArrowRight";
+export const ARROW_DOWN = "ArrowDown";
+export const DELETE = "Delete";
 
 export function isNumeric(event: KeyboardEvent): boolean {
-    const keyCode = event.keyCode;
-    return !event.altKey && !event.shiftKey && !event.ctrlKey && ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105));
+    const key = event.key;
+    if (!event.altKey && !event.shiftKey && !event.ctrlKey) { // no meta keys
+        switch (key) {
+            case "0":
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+            case "7":
+            case "8":
+            case "9": {
+                return true;
+                break;
+            }
+            default: {
+                return false;
+            }
+        }
+    }
+    return false;
 }
 
 export function isPrintable(event: KeyboardEvent): boolean {
@@ -98,11 +97,10 @@ export function isPrintable(event: KeyboardEvent): boolean {
     return (
         (!event.altKey &&
             !event.ctrlKey &&
-            ((keyCode >= 48 && keyCode <= 90) ||
-                (keyCode >= 96 && keyCode <= 105) ||
-                (keyCode >= 106 && keyCode <= 111) ||
-                (keyCode >= 186 && keyCode <= 222))) ||
-        keyCode === SPACEBAR
+            ((keyCode >= 48 && keyCode <= 90) ||        // 0-9 plus a-Z
+                (keyCode >= 96 && keyCode <= 111) ||    // the numpad keys
+                (keyCode >= 186 && keyCode <= 222))) || // quotes and brackets
+                    keyCode === 32                      // spacebar
     );
 }
 

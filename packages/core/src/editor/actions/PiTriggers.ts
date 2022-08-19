@@ -23,7 +23,7 @@ export function triggerTypeToString(trigger: PiTriggerType): string {
     if (isString(trigger)){
         return trigger;
     } else if (isProKey(trigger)) {
-        return "'" + trigger.meta.toString() + "-" + trigger.keyCode + "'";
+        return "'" + trigger.meta.toString() + "-" + trigger.key + "'";
     } else if (isRegExp(trigger)) {
         return "/" + trigger.source + "/";
     } else {
