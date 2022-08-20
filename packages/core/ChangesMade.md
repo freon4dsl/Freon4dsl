@@ -12,3 +12,4 @@ from BehaviorUtils.ts. Removed implementation of setCaret in TextBox, because th
 6. General cleanup of code.
 7. Changed 'keyPressAction' to 'isCharAllowed' in TextBox.
 8. Cleanup of PiEditor.
+9. Merged in the temp changes in tree balancing. 

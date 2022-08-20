@@ -14,7 +14,6 @@
         TAB,
         EVENT_LOG,
         isMetaKey,
-        PiUtils,
         TextBox,
         PiEditor,
         toPiKey,
@@ -163,7 +162,7 @@
             LOGGER.log("preventDefault");
             event.preventDefault();
         }
-        const piKey = toPiKey(event);
+        // const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             // To Be Sure save the current text
             let value = currentText();
