@@ -1,7 +1,3 @@
-import { ProjectItGenerateAllAction } from "@projectit/meta/dist/commandline/ProjectItGenerateAllAction";
-import { ProjectItGenerateLanguage } from "@projectit/meta/dist/commandline/ProjectItGenerateLanguage";
-
-
 import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
 import { CopyLanguage } from "./CopyLanguage";
 import { SaveLanguage } from "./SaveLanguage";
