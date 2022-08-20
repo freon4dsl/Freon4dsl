@@ -33,9 +33,7 @@ export class LanguageInitializer {
         const proj = editorEnvironment.editor.projection;
         let nameList: string[] = proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name];
         projectionNames.set(nameList);
-        // projectionsShown.set(nameList); // initialy, all projections are shown
-        // TODO remove this temp statement
-        projectionsShown.set([]);
+        projectionsShown.set(nameList); // initialy, all projections are shown
 
         // start the undo manager
         PiUndoManager.getInstance();
