@@ -2,7 +2,7 @@ import { runInAction } from "mobx";
 import { PiElement } from "../../ast";
 import { BehaviorExecutionResult } from "../util/BehaviorUtils";
 import { PiLogger } from "../../logging";
-import { PiUtils } from "../../util/PiUtils";
+import { isNullOrUndefined, PiUtils } from "../../util/PiUtils";
 import { PiEditor } from "../PiEditor";
 import {
     Box,
@@ -276,11 +276,11 @@ export class BoxFactory {
 
 }
 
-const equals = (a, b) => { // TODO use isNullOrUndefined here
-    if (a === undefined && b !== undefined || a !== undefined && b === undefined) {
+const equals = (a, b) => {
+    if (isNullOrUndefined(a)  && !isNullOrUndefined(b) || !isNullOrUndefined(a) && isNullOrUndefined(b)) {
         return false;
     }
-    if (a === undefined && b === undefined) {
+    if (isNullOrUndefined(a) && isNullOrUndefined(b)) {
         return true;
     }
     return a.length === b.length && a.every((v, i) => v === b[i]);
