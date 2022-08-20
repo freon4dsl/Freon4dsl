@@ -32,11 +32,6 @@ export interface SelectedOption {
      * The option that the user has selected.
      */
     option: SelectOption;
-    /**
-     * An optional parameter to the selected option.
-     */
-    parameter?: string; // TODO seems never to be used, remove?
-
 }
 
 export function findOption(options: SelectOption[], id: string): SelectOption | null {
