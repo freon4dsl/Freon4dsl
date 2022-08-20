@@ -1,6 +1,7 @@
 import { ElementWithList } from "./ElementWithList";
 import { SimpleElement } from "./SimpleElement";
 import { ElementWithOptional } from "./ElementWithOptional";
+import { ElementWithText } from "./ElementWithText";
 
 export class ModelMaker {
     static makeList(): ElementWithList {
@@ -20,6 +21,13 @@ export class ModelMaker {
         const owner: ElementWithOptional = new ElementWithOptional("OPTIONAL-OWNER");
         const optional: SimpleElement = new SimpleElement("OPTIONAL_ELEMENT");
         owner.myOptional = optional;
+        return owner;
+    }
+
+    static makeText(): ElementWithText {
+        const owner: ElementWithText = new ElementWithText("TEXT-OWNER");
+        owner.myText1 = "initialText1";
+        owner.myText2 = "initialText2";
         return owner;
     }
 }

@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
 import { LabelBox, OptionalBox, PiCompositeProjection, PiEditor } from "@projectit/core";
-import MockSurroundingComponent from "./mock-components/MockSurroundingComponent.svelte";
-import { MockVariables } from "./mock-components/MockVariables";
-import { ModelMaker } from "./models/ModelMaker";
-import OptionalComponent from "../components/OptionalComponent.svelte"; // Note that this form of import is neccessary for jest to function!
-import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../components/ChangeNotifier";
-import { ElementWithOptional } from "./models/ElementWithOptional";
-import TestOptional from "./mock-components/TestOptional.svelte";
+import MockSurroundingComponent from "../mock-components/MockSurroundingComponent.svelte";
+import { MockVariables } from "../mock-components/MockVariables";
+import { ModelMaker } from "../models/ModelMaker";
+import OptionalComponent from "../../components/OptionalComponent.svelte"; // Note that this form of import is neccessary for jest to function!
+import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../../components/ChangeNotifier";
+import { ElementWithOptional } from "../models/ElementWithOptional";
+import TestOptional from "../mock-components/TestOptional.svelte";
 import { configure } from '@testing-library/dom'
 configure({ testIdAttribute: 'id' })
 

@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import { render, screen } from "@testing-library/svelte";
 import { IndentBox, LabelBox, PiEditor, PiElement } from "@projectit/core";
-import { SimpleElement } from "./models/SimpleElement";
-import IndentComponent from "../components/IndentComponent.svelte";
+import { SimpleElement } from "../models/SimpleElement";
+import IndentComponent from "../../components/IndentComponent.svelte";
 import { configure } from '@testing-library/dom'
 configure({ testIdAttribute: 'id' })
 

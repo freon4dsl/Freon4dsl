@@ -338,6 +338,7 @@
             isEditing={isEditing}
             textBox={choiceBox.textBox}
             bind:this={textComponent}
+            partOfAlias={true}
         />
     </SelectableComponent>
     {#if $openStore}

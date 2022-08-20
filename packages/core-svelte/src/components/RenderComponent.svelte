@@ -80,9 +80,7 @@
         	<AliasComponent choiceBox={showBox} editor={editor}/>
         </SelectableComponent>
     {:else if isTextBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-        	<TextComponent textBox={showBox} editor={editor}/>
-        </SelectableComponent>
+       	<TextComponent textBox={showBox} editor={editor} partOfAlias={false}/>
     {:else if isIndentBox(showBox) }
         <IndentComponent indentBox={showBox} editor={editor}/>
     {:else if isGridBox(showBox) }
