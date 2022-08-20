@@ -29,7 +29,6 @@ export class PiEditor {
     private _selectedElement: PiElement = null; // The model element that is currently selected in the editor.
     private _selectedBox: Box | null = null;    // The box defined for _selectedElement. Note that it is a 'slave' to _selectedElement.
     private _selectedPosition: PiCaret = PiCaret.UNSPECIFIED;   // The caret position within the _selectedBox.
-    private _selectedRole: string = null;       // TODO not really used, remove?
     // TODO question: NOSELECT is not used, remove?
     private NOSELECT: Boolean = false;          // Do not accept "select" actions, used e.g. when an undo is going to come.
 
@@ -45,12 +44,11 @@ export class PiEditor {
         this.environment = environment;
         this.initializeAliases(actions);
         // TODO rethink whether selectedBox should be observable
-        makeObservable<PiEditor, "_rootElement" | "_selectedElement" | "_selectedBox" | "_selectedRole">(this, {
+        makeObservable<PiEditor, "_rootElement" | "_selectedElement" | "_selectedBox">(this, {
             theme: observable,
             _rootElement: observable,
             _selectedElement: observable,
             _selectedBox: observable,
-            _selectedRole: observable,
             selectedBox: computed,
             deleteBox: action
         });
@@ -120,7 +118,6 @@ export class PiEditor {
         }
         if (!!this._selectedBox) {
             this._selectedElement = this._selectedBox.element;
-            this._selectedRole = this._selectedBox.role;
         }
     }
 
@@ -148,7 +145,6 @@ export class PiEditor {
             return;
         }
         this._selectedElement = element;
-        this._selectedRole = role;
         this._selectedPosition = caretPosition;
         const box = this._rootBox.findBox(element.piId(), role);
         // LOGGER.log("selectElement: selectElement found box " + box?.kind);
