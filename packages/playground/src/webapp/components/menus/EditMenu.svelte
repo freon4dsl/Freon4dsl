@@ -26,6 +26,7 @@
 </div>
 
 <script lang="ts">
+	import { PiElement } from "@projectit/core";
 	import type { MenuComponentDev } from '@smui/menu';
 	import Menu from '@smui/menu';
 	import { Anchor } from '@smui/menu-surface';
@@ -35,6 +36,8 @@
 		Text
 	} from '@smui/list';
 	import Button, { Label } from '@smui/button';
+	import { editorEnvironment } from "../../config/WebappConfiguration";
+	import { activeTab, interpreterTab, interpreterTrace } from "../stores/InfoPanelStore";
 	import { MenuItem } from "../ts-utils/MenuItem";
 	import {
 		findNamedDialogVisible,
@@ -65,6 +68,18 @@
 	// implementation of all actions
 	const findText = () => {
 		$findTextDialogVisible = true;
+	}
+
+	const runInterpreter = () => {
+		const intp = editorEnvironment.interpreter;
+		intp.setTracing(true);
+		const node: PiElement = editorEnvironment.editor.selectedItem;
+
+		intp.evaluate(node);
+		const trace = intp.getTrace().root.toStringRecursive();
+		console.log(trace);
+		interpreterTrace.set(trace);
+		activeTab.set(interpreterTab);
 	}
 
 	const findStructureElement = () => {
@@ -98,6 +113,7 @@
 		{ title: 'Find Named Element', action: findNamedElement, id: 7 },
 		{ title: 'Find Structure Element', action: findStructureElement, id: 8 },
 		{ title: 'Find Text', action: findText, id: 9 },
+		{ title: 'Run Interpreter', action: runInterpreter, id: 10 },
 	];
 
 	function isDisabled(id): boolean {
