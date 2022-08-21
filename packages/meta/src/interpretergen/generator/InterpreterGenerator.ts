@@ -8,6 +8,7 @@ import {
 } from "../../utils";
 import { PiInterpreterDef } from "../metalanguage/PiInterpreterDef";
 import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate";
+import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate";
 
 const LOGGER = new MetaLogger("InterpreterGenerator").mute();
 
@@ -30,6 +31,7 @@ export class InterpreterGenerator {
         LOGGER.log("Generating interpreter in folder " + this.interpreterFolder + " for language " + this.language?.name);
 
         const template = new InterpreterBaseTemplate();
+        const mainTemplate = new InterpreterMainTemplate();
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.interpreterGenFolder);
@@ -48,6 +50,10 @@ export class InterpreterGenerator {
         generatedContent  = template.interpreterInit(this.language, interpreterDef);
         this.makeFile("interpreter init", generatedFilePath, generatedContent, generationStatus);
         // FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter init")
+
+        generatedFilePath = `${this.interpreterFolder}/${Names.interpreterName(this.language)}.ts`;
+        generatedContent  = mainTemplate.interpreterMain(this.language, interpreterDef);
+        this.makeFile("interpreter main", generatedFilePath, generatedContent, generationStatus);
     }
 
     private makeFile(generationMessage: string, generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {

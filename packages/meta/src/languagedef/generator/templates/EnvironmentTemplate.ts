@@ -4,7 +4,14 @@ import {
     TYPER_GEN_FOLDER,
     SCOPER_GEN_FOLDER,
     VALIDATOR_GEN_FOLDER,
-    EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER, WRITER_GEN_FOLDER, READER_GEN_FOLDER, STYLES_FOLDER, GenerationUtil
+    EDITOR_GEN_FOLDER,
+    LANGUAGE_GEN_FOLDER,
+    STDLIB_GEN_FOLDER,
+    WRITER_GEN_FOLDER,
+    READER_GEN_FOLDER,
+    STYLES_FOLDER,
+    GenerationUtil,
+    INTERPRETER_FOLDER
 } from "../../../utils/";
 import { PiClassifier, PiLanguage } from "../../metalanguage";
 
@@ -14,7 +21,7 @@ export class EnvironmentTemplate {
         return `
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
                     ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, LanguageEnvironment
+                    ${Names.PiWriter}, ${Names.FreonInterpreter}, LanguageEnvironment
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
@@ -24,6 +31,7 @@ export class EnvironmentTemplate {
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
+        import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}";
         import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
         /**
@@ -82,6 +90,7 @@ export class EnvironmentTemplate {
             validator: ${Names.PiValidator} = new ${Names.validator(language)}();
             writer: ${Names.PiWriter} = new ${Names.writer(language)}();
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
+            interpreter: ${Names.FreonInterpreter} = new ${Names.interpreterName(language)};
             languageName: string = "${language.name}";
             // the type names of all units
             unitNames: string[] = [${language.modelConcept.unitTypes().map(unit => `"${Names.classifier(unit)}"`)}];  

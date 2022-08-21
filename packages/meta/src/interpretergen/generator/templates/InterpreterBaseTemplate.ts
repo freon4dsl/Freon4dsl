@@ -7,16 +7,26 @@ export class InterpreterBaseTemplate {
     constructor() {
     }
 
+    /**
+     * The base class containing all interpreter functions that should be defined.
+     * @param language
+     * @param interpreterDef
+     */
     public interpreterBase(language: PiLanguage, interpreterDef: PiInterpreterDef): string {
-        return `import { InterpreterContext } from "@projectit/core";
+        return `// Generated my Freon, will be overwritten with every generation.
+        import { InterpreterContext, RtObject } from "@projectit/core";
         import { ${interpreterDef.conceptsToEvaluate.map(c => Names.concept(c)).join(",")} } from "../../language/gen";
         
+        /**
+         * The base class containing all interpreter functions that should be defined. 
+         * All functions throw an error when called.
+         */
         export class ${Names.interpreterBaseClassname(language)} {
         
             constructor() {}
             
             ${interpreterDef.conceptsToEvaluate.map(c =>
-                `eval${Names.concept(c)} (node: ${Names.concept(c)} , ctx: InterpreterContext): Object {
+                `eval${Names.concept(c)} (node: ${Names.concept(c)} , ctx: InterpreterContext): RtObject {
                     throw Error("eval${Names.concept(c)} is not defined");
                 }`
             ).join("\n\n")}
@@ -26,11 +36,16 @@ export class InterpreterBaseTemplate {
 
     public interpreterClass(language: PiLanguage, interpreterDef: PiInterpreterDef): string {
         const baseName = Names.interpreterBaseClassname(language);
-        return `import { InterpreterContext, IMainInterpreter } from "@projectit/core";
+        return `// Generated my Freon once, will NEVER be overwritten.
+        import { InterpreterContext, IMainInterpreter, RtObject } from "@projectit/core";
         import { ${baseName} } from "./gen/${baseName}";
         
         let main: IMainInterpreter;
         
+        /**
+         * The class containing all interpreter functions twritten by thge language engineer. 
+         * This class is initially empty,  and will not be overwritten if it already exists..
+         */
         export class ${Names.interpreterClassname(language)} extends ${baseName} {
         
             constructor(m: IMainInterpreter) {
@@ -46,6 +61,9 @@ export class InterpreterBaseTemplate {
         return `import { IMainInterpreter } from "@projectit/core";
         import { ${interpreter} } from "../${interpreter}";
         
+        /**
+         * The class that registers all interpreter function with the main interpreter. 
+         */
         export function ${Names.interpreterInitname(language)}(main: IMainInterpreter) {
             const interpreter = new ${interpreter}(main);
             
