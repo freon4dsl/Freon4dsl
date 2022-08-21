@@ -1,18 +1,22 @@
 import { RtObject } from "./RtObject";
 
 export class RtString extends RtObject {
-    value: string;
+    _value: string;
 
     constructor(value: string) {
         super();
-        this.value = value;
+        this._value = value;
+    }
+
+    get value(): string {
+        return this._value;
     }
 
     plus(other: Object): RtString {
         if (isRtString(other)) {
-            return new RtString(this.value + other.value);
+            return new RtString(this._value + other.value);
         } else {
-            return new RtString(this.value + other.toString());
+            return new RtString(this._value + other.toString());
         }
     }
 
