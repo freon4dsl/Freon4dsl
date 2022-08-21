@@ -1,6 +1,4 @@
-import AliasComponent from './AliasComponent.svelte';
 import DropdownComponent from './DropdownComponent.svelte';
-import DropdownItemComponent from './DropdownItemComponent.svelte';
 import EmptyLineComponent from './EmptyLineComponent.svelte';
 import GridCellComponent from './GridCellComponent.svelte';
 import GridComponent from './GridComponent.svelte';
@@ -13,11 +11,10 @@ import RenderComponent from './RenderComponent.svelte';
 import SelectableComponent from './SelectableComponent.svelte';
 import SvgComponent from './SvgComponent.svelte';
 import TextComponent from './TextComponent.svelte';
+import TextDropdownComponent from './TextDropdownComponent.svelte';
 
 export {
-    AliasComponent,
     DropdownComponent,
-    DropdownItemComponent,
     EmptyLineComponent,
     GridCellComponent,
     GridComponent,
@@ -29,5 +26,6 @@ export {
     RenderComponent,
     SelectableComponent,
     SvgComponent,
-    TextComponent
+    TextComponent,
+    TextDropdownComponent
 }

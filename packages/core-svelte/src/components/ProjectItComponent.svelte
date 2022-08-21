@@ -15,7 +15,7 @@
     import { AUTO_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
 
-    let LOGGER = new PiLogger("ProjectItComponent").mute();
+    let LOGGER = new PiLogger("ProjectItComponent"); //.mute();
     export let editor: PiEditor;
     // TODO add id
     // let id: string = `${box.element.piId()}-${box.role}`;
@@ -26,7 +26,7 @@
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log("onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey);
+        console.log("onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey);
         // event.persist();
         if (event.ctrlKey || event.altKey) {
             switch (event.key) {
@@ -57,6 +57,7 @@
                     stopEvent(event)
                     break;
                 case DELETE:
+                    console.log('ProjectItComponent DELETE')
                     editor.deleteBox(editor.selectedBox);
                     stopEvent(event);
                     break;

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import AliasComponent from "./AliasComponent.svelte";
     import { AUTO_LOGGER } from "./ChangeNotifier";
     import GridComponent from "./GridComponent.svelte";
     import SvgComponent from "./SvgComponent.svelte";
@@ -28,6 +27,7 @@
         isEmptyLineBox,
         LabelBox, PiEditor, PiLogger
     } from "@projectit/core";
+    import TextDropdownComponent from "./TextDropdownComponent.svelte";
 
     const LOGGER = new PiLogger("RenderComponent").mute();
 
@@ -64,21 +64,13 @@
 <span id="{id}">
 <!--    <svelte:component this={boxComponent(box)}/> -->
     {#if isLabelBox(showBox)}
-        <SelectableComponent box={showBox} editor={editor}>
-            <LabelComponent label={showBox} editor={editor}/>
-        </SelectableComponent>
+        <LabelComponent label={showBox} editor={editor}/>
     {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-        	<ListComponent list={showBox} editor={editor}/>
-        </SelectableComponent>
+       	<ListComponent list={showBox} editor={editor}/>
     {:else if isAliasBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-        	<AliasComponent choiceBox={showBox} editor={editor}/>
-        </SelectableComponent>
+        <TextDropdownComponent aliasBox={showBox} editor={editor}/>
     {:else if isSelectBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-        	<AliasComponent choiceBox={showBox} editor={editor}/>
-        </SelectableComponent>
+        <TextDropdownComponent aliasBox={showBox} editor={editor}/>
     {:else if isTextBox(showBox) }
        	<TextComponent textBox={showBox} editor={editor} partOfAlias={false}/>
     {:else if isIndentBox(showBox) }
@@ -88,15 +80,11 @@
     {:else if isSvgBox(showBox) }
         <SvgComponent svgBox={showBox} editor={editor}/>
     {:else if isOptionalBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-            <OptionalComponent optionalBox={showBox} editor={editor}/>
-        </SelectableComponent>
+        <OptionalComponent optionalBox={showBox} editor={editor}/>
     {:else if isEmptyLineBox(showBox) }
         <EmptyLineComponent box={showBox} editor={editor}/>
     {:else}
-        <SelectableComponent box={UNKNOWN} editor={editor}>
-            <LabelComponent label={UNKNOWN} editor={editor}/>
-        </SelectableComponent>
+        <LabelComponent label={UNKNOWN} editor={editor}/>
     {/if}
 </span>
 

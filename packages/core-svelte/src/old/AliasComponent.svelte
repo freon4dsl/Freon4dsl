@@ -23,15 +23,15 @@
         type SelectOption, PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
-    import { clickOutside } from "./clickOutside";
+    import { clickOutside } from "../components/clickOutside";
     import { afterUpdate, onMount } from "svelte";
     import { type Writable, writable } from "svelte/store";
-    import { SelectOptionList } from "./SelectableOptionList";
-    import { FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
-    import SelectableComponent from "./SelectableComponent.svelte";
-    import TextComponent from "./TextComponent.svelte";
-    import DropdownComponent from "./DropdownComponent.svelte";
-    import { componentId } from "./util";
+    import { SelectOptionList } from "../components/SelectableOptionList";
+    import { FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../components/ChangeNotifier";
+    import SelectableComponent from "../components/SelectableComponent.svelte";
+    import TextComponent from "../components/TextComponent.svelte";
+    import DropdownComponent from "../components/DropdownComponent.svelte";
+    import { componentId } from "../components/util";
 
     // Svelte Parameters
     export let choiceBox: AbstractChoiceBox;

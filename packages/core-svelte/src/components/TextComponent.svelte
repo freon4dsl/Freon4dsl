@@ -20,7 +20,7 @@
     import { componentId } from "./util";
     import { autorun, runInAction } from "mobx";
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
-    import { setBoxSizes } from "./setBoxSizes";
+    import { setBoxSizes, storeText } from "./CommonFunctions";
 
     const LOGGER = new PiLogger("TextComponent").mute();
     const dispatcher = createEventDispatcher();
@@ -30,8 +30,8 @@
     export let isEditing: boolean = false; 	// indication whether this component is currently being edited by the user
     export let textBox: TextBox;			// the accompanying textbox
     export let editor: PiEditor;			// the editor
-    export let partOfAlias;					// indication whether this textcomponent is part of a TextDropdownComponent
-    export let text: string = textBox.getText();   // the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
+    export let partOfAlias: boolean;		// indication whether this textcomponent is part of a TextDropdownComponent
+    export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
     // Local variables
     let id: string = componentId(textBox);	// an id for the html element
@@ -103,7 +103,7 @@
      */
     function startEditing(event: MouseEvent) {
         LOGGER.log('startEditing');
-        if (textBox.selectable) {
+        if (textBox.selectable || partOfAlias) {
             isEditing = true;
             editStart = true;
             originalText = text;
@@ -113,25 +113,26 @@
             } = document.getSelection();
             from = anchorOffset;
             to = focusOffset;
-
-            LOGGER.log("       ===> selected box " + textBox.role);
             editor.selectedBox = textBox;
             event.preventDefault();
             event.stopPropagation();
+			dispatcher('startEditing'); // tell the TextDropdown that the edit has started
         }
     }
 
     /**
      * When the <input> element is shown, the clicks should not be propagated.
      * (Clicks either resize the element or set the caret position.)
+	 * Except ... when this component is part of a TextDropdown Component.
      * @param event
      */
     function onClick(event: MouseEvent) {
-        LOGGER.log('onClick while Editing');
-        if (!partOfAlias) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
+        LOGGER.log('TextComponent onClick');
+        if (partOfAlias) {  // let TextDropdownComponent know, dropdown menu will also be shown
+			dispatcher('startEditing');
+		}
+		event.preventDefault();
+		event.stopPropagation();
     }
 
     /**
@@ -144,15 +145,13 @@
         isEditing = false;
         from = -1;
         to = -1;
-        // store the current value in the textbox, or delete the box, if appropriate
-        runInAction(() => {
-            if (textBox.deleteWhenEmpty && text.length === 0) {
-                editor.deleteBox(textBox);
-            } else if (text !== originalText) {
-                textBox.setText(text);
-            }
-            // TODO set the cursor through the editor
-        });
+
+		if (!partOfAlias) {
+			// store the current value in the textbox, or delete the box, if appropriate
+			storeText(editor, text, textBox);
+		} else {
+			dispatcher('endEditing');
+		}
     }
 
     /**
@@ -183,7 +182,7 @@
         // see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
         // stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
         // preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
-        // console.log("TextComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
+        console.log("TextComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
 
         // first check if this event has a command defined for it
         const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
@@ -283,21 +282,22 @@
                         // without propagation, the browser handles which char(s) to be deleted
                         // with event.ctrlKey: delete text from caret to 0 => handled by browser
                         event.stopPropagation();
-                    } else if (text === "" || !!text) { //  nothing left in this component to delete
+                    } else if (text === "" || !text) { //  nothing left in this component to delete
                         if (textBox.deleteWhenEmptyAndErase) {
                             editor.deleteBox(editor.selectedBox);
                             event.stopPropagation();
                             return;
                         }
+						event.stopPropagation();
                         editor.selectNextLeaf();
-                    } else {
+                    } else { // TODO is this correct?
                         // the key will cause this element to lose focus, its content should be saved
                         endEditing();
                         editor.selectNextLeaf();
                     }
-                    break;
                 }
-            }
+				break;
+			}
 
             default: { // the event.key is probably a printable chararcter, still there are these keystrokes to be handled
                 if (event.ctrlKey && !event.altKey && event.key === 'z') { // ctrl-z
@@ -368,9 +368,7 @@
 
     const onBlur = () => {
         LOGGER.log("TextComponent onBlur")
-        if (!partOfAlias) {
-            endEditing();
-        }
+        endEditing();
     }
 
     /**
@@ -417,13 +415,17 @@
      */
     autorun(() => {
         LOGGER.log("autorun");
-        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] textBox [" + textBox.getText() + "] innertText [" + spanElement?.innerText + "] isEditing [" + isEditing + "]");
-        // TODO can the following five statements be moved to onMount() or should they be copied to onMount()?
-		textBox.setFocus = setFocus;
-		textBox.setCaret = setCaret;
-		originalText = text = textBox.getText();
-		placeholder = textBox.placeHolder;
-		boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
+		if (textBox instanceof TextBox) {
+			AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] textBox [" + textBox.getText() + "] innertText [" + spanElement?.innerText + "] isEditing [" + isEditing + "]");
+			// TODO can the following five statements be moved to onMount() or should they be copied to onMount()?
+			textBox.setFocus = setFocus;
+			textBox.setCaret = setCaret;
+			originalText = text = textBox.getText();
+			placeholder = textBox.placeHolder;
+			boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
+		} else {
+			LOGGER.log('Error: textBox of type: ' + textBox.constructor.name);
+		}
     });
 
 </script>
