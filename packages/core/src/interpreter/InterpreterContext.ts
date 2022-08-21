@@ -2,12 +2,14 @@
  * Class representing the comntext (or environment) in which an expreession is evaaluated.
  * The context contains values for objects and is hierarchical.
  */
+import { RtObject } from "./runtime/RtObject";
+
 export class InterpreterContext {
     // Dummy context, caan be used as the start context
     public static EMPTY_CONTEXT = new InterpreterContext(null);
 
     // Map containing values for objects in this context
-    private values: Map<Object, Object> = new Map<Object, Object>();
+    private values: Map<Object, RtObject> = new Map<Object, RtObject>();
 
     // Parent context, used to find objects in case they are not in the current context
     private parentContext: InterpreterContext;
@@ -19,7 +21,7 @@ export class InterpreterContext {
     /**
      * Find the value of `node` in this context, assuming its type is T.
      */
-    find<T>(node: Object): T {
+    find<T extends RtObject>(node: Object): T {
         const result = this.values.get(node);
         if(!!result) {
             return result as T;
@@ -31,7 +33,7 @@ export class InterpreterContext {
     /**
      * Set the vaalue of `node` to `value`.
      */
-    set(node: Object, value: Object): void {
+    set(node: Object, value: RtObject): void {
         this.values.set(node, value);
     }
 

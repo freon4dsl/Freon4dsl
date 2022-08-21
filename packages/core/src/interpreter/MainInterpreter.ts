@@ -7,6 +7,8 @@ import {
     InitFunction,
     OwningPropertyFunction
 } from "./IMainInterpreter";
+import { RtObject } from "./runtime/index";
+import { RtArray } from "./runtime/RtArray";
 
 /**
  * The main interpreter class, usually hidden by a facade specific for a project.
@@ -72,16 +74,16 @@ export class MainInterpreter implements IMainInterpreter {
      * @see IMainInterpreter.evaluate
      * Evaluate `node` with context `ctx` aand return the value
      */
-    public evaluate(node: Object, ctx: InterpreterContext): Object {
+    public evaluate(node: Object, ctx: InterpreterContext): RtObject {
         if( node === undefined || node === null){
             console.error("Cannot interpret null/undefined element " + node);
             return undefined;
         }
         if(Array.isArray(node) ) {
-            const resultArray: Object[] = [];
+            const resultArray: RtArray<RtObject> = new RtArray<RtObject>();
             for (const element of node) {
-                const result = this.evaluate(element,ctx);
-                resultArray.push(result);
+                const result: RtObject = this.evaluate(element,ctx);
+                resultArray.array.push(result);
             }
             return resultArray;
         } else {
@@ -93,7 +95,7 @@ export class MainInterpreter implements IMainInterpreter {
             if (this.tracing) {
                 this.tracer.start(node, ctx);
             }
-            const value = interpreterFunction(node, ctx);
+            const value: RtObject = interpreterFunction(node, ctx);
             if( value === undefined){
                 console.log("Concept " + this.getConcept(node) + " evaluates to undefined");
             }

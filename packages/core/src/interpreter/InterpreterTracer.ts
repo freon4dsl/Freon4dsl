@@ -1,5 +1,6 @@
 import { ConceptFunction, OwningPropertyFunction } from "./IMainInterpreter";
 import { InterpreterContext } from "./InterpreterContext";
+import { RtObject } from "./runtime/RtObject";
 
 const INDENT = "    ";
 const INDENT_DIRECT = "|-- ";
@@ -9,7 +10,7 @@ const INDENT_INDIRECT = "|   ";
  */
 class TraceNode {
     tracer: InterpreterTracer;
-    value: Object;
+    value: RtObject;
     node: Object;
     parent: TraceNode;
     children: TraceNode[] = [];
@@ -84,7 +85,7 @@ export class InterpreterTracer {
         this.current = newTrace;
     }
 
-    push(node: Object, value, ctx?: InterpreterContext) {
+    push(node: Object, value: RtObject, ctx?: InterpreterContext) {
         if(this.current.node !== node) {
             console.error("INCORRECT ELEMENT IN TRACE");
             throw new Error("INCORRECT ELEMENT IN TRACE")

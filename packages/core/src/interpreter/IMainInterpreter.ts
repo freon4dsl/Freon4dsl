@@ -1,9 +1,10 @@
 import { InterpreterContext } from "./InterpreterContext";
 import { InterpreterTracer } from "./InterpreterTracer";
+import { RtObject } from "./runtime/RtObject";
 
 export type ConceptFunction = (node: Object) => string;
 export type OwningPropertyFunction = (node: Object) => string;
-export type EvaluateFunction = (node: Object, ctx: InterpreterContext) => Object;
+export type EvaluateFunction = (node: Object, ctx: InterpreterContext) => RtObject;
 export type InitFunction = (i: IMainInterpreter) => void;
 
 export interface IMainInterpreter {
@@ -15,7 +16,7 @@ export interface IMainInterpreter {
     /**
      * Evaluate `node` with context `ctx` and return the  value.
      */
-    evaluate(node: Object, ctx: InterpreterContext): Object;
+    evaluate(node: Object, ctx: InterpreterContext): RtObject;
 
     /**
      * Get the tracer instance that is filled by `evaluate`.
