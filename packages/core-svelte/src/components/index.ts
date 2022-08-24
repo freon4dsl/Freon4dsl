@@ -8,7 +8,6 @@ import ListComponent from './ListComponent.svelte';
 import OptionalComponent from './OptionalComponent.svelte';
 import ProjectItComponent from './ProjectItComponent.svelte';
 import RenderComponent from './RenderComponent.svelte';
-import SelectableComponent from './SelectableComponent.svelte';
 import SvgComponent from './SvgComponent.svelte';
 import TextComponent from './TextComponent.svelte';
 import TextDropdownComponent from './TextDropdownComponent.svelte';
@@ -24,7 +23,6 @@ export {
     OptionalComponent,
     ProjectItComponent,
     RenderComponent,
-    SelectableComponent,
     SvgComponent,
     TextComponent,
     TextDropdownComponent

@@ -4,19 +4,20 @@
 
     export let selectedId: string = '';
     export let options: SelectOption[] = [];
-    let id = 'dropdown-test';
+    let id: string = 'dropdown-test'; // TODO better id
     const dispatcher = createEventDispatcher();
 
-    $: isSelected = (option) => { // determines the style of the selected option
+    $: isSelected = (option: SelectOption) => { // determines the style of the selected option
         if (options.length === 1) return true;
         return option.id === selectedId;
     }
 
-    const handleClick = (option) => {
+    const handleClick = (option: SelectOption) => {
         selectedId = option.id;
         // console.log("Dropdown CLICKED, option " + option.id);
         dispatcher("piItemSelected", option);
     };
+    // TODO remove div with class 'popupWrapper'
 </script>
 
 <div class="dropdown"
@@ -27,14 +28,14 @@
             {#each options as option (option.id + option.label)}
                 <div class="dropdownitem"
                      class:isSelected={isSelected(option)}
-                     on:click={() => (handleClick(option))}
+                     on:click={(event) => {event.preventDefault(); event.stopPropagation(); handleClick(option); }}
                 >
                     {option.label}
                 </div>
             {/each}
         {:else}
             <div class="dropdownerror">
-                invalid input!
+                Invalid input!
             </div>
         {/if}
     </div>

@@ -5,7 +5,6 @@
     import IndentComponent from "./IndentComponent.svelte";
     import { autorun } from "mobx";
     import TextComponent from "./TextComponent.svelte";
-    import SelectableComponent from "./SelectableComponent.svelte";
     import LabelComponent from "./LabelComponent.svelte";
     import ListComponent from "./ListComponent.svelte";
     import OptionalComponent from "./OptionalComponent.svelte";
@@ -59,6 +58,7 @@
         AUTO_LOGGER.log("RenderComponent: " + box.kind + " for element " + box.element.piLanguageConcept());
         showBox = box;
     });
+    // TODO add styling for selected box as in SelectableComponent
 </script>
 
 <span id="{id}">
@@ -68,11 +68,11 @@
     {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
        	<ListComponent list={showBox} editor={editor}/>
     {:else if isAliasBox(showBox) }
-        <TextDropdownComponent aliasBox={showBox} editor={editor}/>
+        <TextDropdownComponent choiceBox={showBox} editor={editor}/>
     {:else if isSelectBox(showBox) }
-        <TextDropdownComponent aliasBox={showBox} editor={editor}/>
+        <TextDropdownComponent choiceBox={showBox} editor={editor}/>
     {:else if isTextBox(showBox) }
-       	<TextComponent textBox={showBox} editor={editor} partOfAlias={false}/>
+       	<TextComponent textBox={showBox} editor={editor} partOfAlias={false} isEditing={false} text=""/>
     {:else if isIndentBox(showBox) }
         <IndentComponent indentBox={showBox} editor={editor}/>
     {:else if isGridBox(showBox) }

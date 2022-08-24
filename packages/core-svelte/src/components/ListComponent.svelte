@@ -81,20 +81,19 @@
 </script>
 
 <span class="list-component"
-      on:click
       on:focus={onFocusHandler}
       on:blur={onBlurHandler}
       tabIndex={0}
       bind:this={element}
 >
     {#if isHorizontalBox(svList) }
-        <div class="horizontalList"  on:click>
+        <div class="horizontalList" >
             {#each children as box (box.id)}
                 <RenderComponent box={box} editor={editor}/>
             {/each}
         </div>
     {:else}
-        <div class="verticalList"  on:click>
+        <div class="verticalList" >
             {#each children as box, i (box.id)}
                 {#if i > 0 && i < children.length
                      && !(i === 1 && isEmptyLineBox(previousBox))

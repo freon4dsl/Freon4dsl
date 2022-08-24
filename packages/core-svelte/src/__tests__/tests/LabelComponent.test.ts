@@ -5,7 +5,7 @@ import { SimpleElement } from "../models/SimpleElement";
 import LabelComponent from "../../components/LabelComponent.svelte";
 import MockLabelSelectable from "../mock-components/MockLabelSelectable.svelte";
 
-describe("Label component", () => {
+describe.skip("Label component", () => {
     const element: PiElement = new SimpleElement("WHATSINANAME");
     const myLabelBox = new LabelBox(element, "role", () => "LabelText");
     const element2: PiElement = new SimpleElement("ANOTHERNAME");

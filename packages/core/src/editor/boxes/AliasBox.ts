@@ -55,6 +55,10 @@ export class AliasBox extends AbstractChoiceBox {
         }
     }
 
+    /**
+     * Returns the options (for a dropdown component) that fit this AliasBox.
+     * @param editor
+     */
     getOptions(editor: PiEditor): SelectOption[] {
         const result: SelectOption[] = [];
         if( !!this.propertyName && !!this.conceptName) {

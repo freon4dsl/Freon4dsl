@@ -1,5 +1,4 @@
 <script lang="ts">
-    import SelectableComponent from "../../components/SelectableComponent.svelte";
     import TextComponent from "../../components/TextComponent.svelte";
     import { PiEditor, TextBox } from "@projectit/core";
 
@@ -12,12 +11,8 @@
 
 
 <div id="{id1}">
-    <SelectableComponent box={box1} editor={editor}>
-        <TextComponent textBox={box1} editor={editor} partOfAlias={false}/>
-    </SelectableComponent>
+        <TextComponent textBox={box1} editor={editor} partOfAlias={false} isEditing={false} text=""/>
 </div>
 <div id="{id2}">
-    <SelectableComponent box={box2} editor={editor}>
-        <TextComponent textBox={box2} editor={editor} partOfAlias={false}/>
-    </SelectableComponent>
+        <TextComponent textBox={box2} editor={editor} partOfAlias={false} isEditing={false} text=""/>
 </div>

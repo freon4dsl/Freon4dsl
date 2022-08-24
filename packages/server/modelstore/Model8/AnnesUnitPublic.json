@@ -4,7 +4,7 @@
    "entities": [
       {
          "$typename": "Entity",
-         "name": "Robert",
+         "name": "Bool",
          "construc": null,
          "attributes": [
             {
@@ -16,10 +16,10 @@
          "methods": [
             {
                "$typename": "Method",
-               "name": "",
+               "name": "x a",
                "body": null,
                "parameters": [],
-               "declaredType": null
+               "declaredType": "String"
             }
          ],
          "listOfReferences": [],

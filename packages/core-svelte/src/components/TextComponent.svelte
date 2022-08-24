@@ -20,31 +20,35 @@
     import { componentId } from "./util";
     import { autorun, runInAction } from "mobx";
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
-    import { setBoxSizes, storeText } from "./CommonFunctions";
+    import { setBoxSizes } from "./CommonFunctions";
 
     const LOGGER = new PiLogger("TextComponent").mute();
     const dispatcher = createEventDispatcher();
     type BoxType = "alias" | "select" | "text";
 
     // Parameters
-    export let isEditing: boolean = false; 	// indication whether this component is currently being edited by the user
     export let textBox: TextBox;			// the accompanying textbox
-    export let editor: PiEditor;			// the editor
-    export let partOfAlias: boolean;		// indication whether this textcomponent is part of a TextDropdownComponent
-    export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
+	export let editor: PiEditor;			// the editor
+	export let partOfAlias: boolean;		// indication whether this textcomponent is part of a TextDropdownComponent
+	// TODO rethink the exporting of the next two parameters
+	export let isEditing: boolean = false; 	// indication whether this component is currently being edited by the user, needs to be exported for binding in TextDropdownComponent
+	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
     // Local variables
-    let id: string = componentId(textBox);	// an id for the html element
+	let id: string;                         // an id for the html element
+	id = !!textBox ? componentId(textBox) : 'text-with-unknown-box';
     let spanElement: HTMLSpanElement;       // the <span> element on the screen
     let inputHTMLelement: HTMLInputElement; // the <input> element on the screen
     let placeholder: string;                // the placeholder when value of text component is not present
     let originalText: string;               // variable to remember the text that was in the box previously
-    let boxType: BoxType = "text";          // indication how is this text component used
     let editStart = false;					// indicates whether we are just starting to edit, so we need to set the cursor in the <input>
     let size = 10;							// the size of the <input>
     let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
     let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
-    // Note that 'from <= to' always holds.
+    										// Note that 'from <= to' always holds.
+
+	let boxType: BoxType = "text";          // indication how is this text component used, determines styling
+	$: boxType = (textBox?.parent instanceof AliasBox ? "alias" : (textBox?.parent instanceof SelectBox ? "select" : "text"));
 
     /**
      * This function sets the focus on this element programmatically.
@@ -53,7 +57,6 @@
     const setFocus = () => {
         // TODO should we check here whether the box is selectable? If so, where else is this check needed?
         LOGGER.log("setFocus " + ": box[" + textBox.role + "]");
-        // FOCUS_LOGGER.log("setFocus " + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
         if (document.activeElement === inputHTMLelement || isEditing ) {
             FOCUS_LOGGER.log("TextComponent has focus already");
             return;
@@ -67,7 +70,23 @@
         // inputHTMLelement.focus(); is done by afterUpdate()
     };
 
-    /**
+	/**
+	 * This function ensures that 'from <= to' always holds.
+	 * Should be called whenever these variables are set.
+	 * @param inFrom
+	 * @param inTo
+	 */
+	function setFromAndTo(inFrom: number, inTo: number) {
+		if (inFrom < inTo) {
+			from = inFrom;
+			to = inTo;
+		} else {
+			from = inTo;
+			to = inFrom;
+		}
+	}
+
+	/**
      * This function sets the caret position of the <input> element programmatically.
      * It is called from the editor.
      * @param piCaret
@@ -83,9 +102,8 @@
                 from = to = 0;
                 break;
             case PiCaretPosition.INDEX:
-                from = piCaret.from;
-                to = piCaret.to;
-                break;
+				setFromAndTo(piCaret.from, piCaret.to);
+				break;
             default:
                 break;
         }
@@ -103,40 +121,43 @@
      */
     function startEditing(event: MouseEvent) {
         LOGGER.log('startEditing');
-        if (textBox.selectable || partOfAlias) {
+        if (textBox.selectable || partOfAlias) { // TODO is textBox.selectable still needed
             isEditing = true;
             editStart = true;
             originalText = text;
             size = text.length == 0 ? 10 : text.length + 5;
             let {
-                anchorNode, anchorOffset, focusNode, focusOffset
+                anchorOffset, focusOffset
             } = document.getSelection();
-            from = anchorOffset;
-            to = focusOffset;
+            setFromAndTo(anchorOffset, focusOffset);
             editor.selectedBox = textBox;
             event.preventDefault();
             event.stopPropagation();
 			dispatcher('startEditing'); // tell the TextDropdown that the edit has started
-        }
+        } else {
+			LOGGER.log('NOT textBox.selectable')
+		}
     }
 
     /**
      * When the <input> element is shown, the clicks should not be propagated.
      * (Clicks either resize the element or set the caret position.)
-	 * Except ... when this component is part of a TextDropdown Component.
+	 * When this component is part of a TextDropdown Component, the dropdown options should also be altered.
      * @param event
      */
     function onClick(event: MouseEvent) {
         LOGGER.log('TextComponent onClick');
-        if (partOfAlias) {  // let TextDropdownComponent know, dropdown menu will also be shown
-			dispatcher('startEditing');
+        if (partOfAlias) {  // let TextDropdownComponent know, dropdown menu needs to be altered
+			setFromAndTo(inputHTMLelement.selectionStart, inputHTMLelement.selectionEnd);
+			LOGGER.log('dispatching from on click')
+			dispatcher('textUpdate', {content: text, caret: from});
 		}
-		event.preventDefault();
-		event.stopPropagation();
+		// event.preventDefault();
+		// event.stopPropagation();
     }
 
     /**
-     * When the <input> element loses focus the fucntion is called. It switches the display back to
+     * When the <input> element loses focus the function is called. It switches the display back to
      * the <span> element, and stores the current text in the textbox.
      */
     function endEditing() {
@@ -148,7 +169,13 @@
 
 		if (!partOfAlias) {
 			// store the current value in the textbox, or delete the box, if appropriate
-			storeText(editor, text, textBox);
+			runInAction(() => {
+				if (textBox.deleteWhenEmpty && text.length === 0) {
+					editor.deleteBox(textBox);
+				} else if (text !== textBox.getText()) {
+					textBox.setText(text);
+				}
+			});
 		} else {
 			dispatcher('endEditing');
 		}
@@ -182,8 +209,9 @@
         // see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
         // stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
         // preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
-        console.log("TextComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
+        LOGGER.log("TextComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
 
+		// TODO use toPiKey to shorten tests on meta keys
         // first check if this event has a command defined for it
         const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
         if (cmd !== PI_NULL_COMMAND) {
@@ -201,18 +229,14 @@
         }
         // no command, then check what type of event it is and whether we can handle it here
         switch (event.key) {
+			// TODO reorganise switch to be sure that meta keys are handled correctly
             case ALT:
             case CONTROL:
             case SHIFT: { // not relevant if entered separately
                 break;
             }
             case ARROW_DOWN:
-            case ARROW_UP: {
-                if (!partOfAlias) {
-                    endEditing();
-                } // else, let alias box handle this
-                break;
-            }
+            case ARROW_UP:
             case ENTER:
             case ESCAPE:
             case TAB: {
@@ -224,10 +248,12 @@
             }
             case ARROW_LEFT: {
                 getCaretPosition(event);
-                LOGGER.log("Caret at: " + from);
+                LOGGER.log("Arrow-left: Caret at: " + from);
                 if (from !== 0) { // when the arrow key can stay within the text, do not let the parent handle it
                     event.stopPropagation();
-                    dispatcher('textUpdate', {content: text, caret: from + 1});
+					// note: caret is set to one less because getCaretPosition is calculated before the event is executed
+					LOGGER.log('dispatching from arrow-left')
+					dispatcher('textUpdate', {content: text, caret: from - 1});
                 } else { // the key will cause this element to lose focus, its content should be saved
                     endEditing();
                     editor.selectPreviousLeaf();
@@ -236,9 +262,11 @@
             }
             case ARROW_RIGHT: {
                 getCaretPosition(event);
-                LOGGER.log("Caret at: " + from);
+                LOGGER.log("Arrow-right: Caret at: " + from);
                 if (from !== text.length) { // when the arrow key can stay within the text, do not let the parent handle it
                     event.stopPropagation();
+					// note: caret is set to one more because getCaretPosition is calculated before the event is executed
+					LOGGER.log('dispatching from arrow-right')
                     dispatcher('textUpdate', {content: text, caret: from + 1});
                 } else { // the key will cause this element to lose focus, its content should be saved
                     endEditing();
@@ -277,6 +305,7 @@
                 if (!event.ctrlKey && !event.altKey && event.shiftKey) { // shift-delete
                     // CUT
                 } else { // delete
+					event.stopPropagation();
                     getCaretPosition(event);
                     if (to !== text.length) { // when there are still chars remaining to the right, do not let the parent handle it
                         // without propagation, the browser handles which char(s) to be deleted
@@ -285,15 +314,12 @@
                     } else if (text === "" || !text) { //  nothing left in this component to delete
                         if (textBox.deleteWhenEmptyAndErase) {
                             editor.deleteBox(editor.selectedBox);
-                            event.stopPropagation();
                             return;
-                        }
-						event.stopPropagation();
-                        editor.selectNextLeaf();
-                    } else { // TODO is this correct?
-                        // the key will cause this element to lose focus, its content should be saved
-                        endEditing();
-                        editor.selectNextLeaf();
+						} else { // TODO is this correct?
+							// the key will cause this element to lose focus, its content should be saved
+							endEditing();
+							editor.selectNextLeaf();
+						}
                     }
                 }
 				break;
@@ -334,7 +360,8 @@
                 } else {
 					getCaretPosition(event);
                     switch (textBox.isCharAllowed(text, event.key, from)) {
-                        case CharAllowed.OK: // add to text, handled by browser
+						case CharAllowed.OK: // add to text, handled by browser
+							// afterupdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
                             break;
                         case CharAllowed.NOT_OK: // ignore
                             // ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
@@ -366,9 +393,14 @@
         }
     };
 
-    const onBlur = () => {
-        LOGGER.log("TextComponent onBlur")
-        endEditing();
+	/**
+	 * When this component loses focus, do everything that is needed to end the editing state.
+	 */
+    const onFocusOut = () => {
+        LOGGER.log("TextComponent onFocusOut")
+		if (!partOfAlias) {
+			endEditing();
+		} // else let TextDropdownComponent handle it
     }
 
     /**
@@ -392,8 +424,8 @@
         }
         if (isEditing && partOfAlias) {
             // send event to parent
-            LOGGER.log('TextComponent dispatching event with text ' + text);
-            dispatcher('textUpdate', {content: text, caret: from + 1});
+            LOGGER.log('TextComponent dispatching event with text ' + text + ' from afterUpdate');
+            dispatcher('textUpdate', {content: text, caret: from});
         }
     });
 
@@ -423,8 +455,6 @@
 			originalText = text = textBox.getText();
 			placeholder = textBox.placeHolder;
 			boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
-		} else {
-			LOGGER.log('Error: textBox of type: ' + textBox.constructor.name);
 		}
     });
 
@@ -437,7 +467,7 @@
                    id="{id}-input"
                    bind:this={inputHTMLelement}
                    bind:value={text}
-                   on:blur={onBlur}
+                   on:focusout={onFocusOut}
                    on:keydown={onKeyDown}
                    size={size}
                    placeholder="{placeholder}"/>

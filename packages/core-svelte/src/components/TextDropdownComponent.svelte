@@ -6,37 +6,42 @@
     // within the text.
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
+    import { clickOutside } from "./clickOutside";
     import {
         AbstractChoiceBox,
         ARROW_DOWN,
         ARROW_UP,
         ENTER,
-        PiEditor,
+        isSelectBox,
+        PiEditor, PiLogger,
         SelectOption,
         TextBox
     } from "@projectit/core";
     import { componentId } from "./util";
-    import { clickOutside } from "./clickOutside";
-    import { runInAction } from "mobx";
-    import { storeText } from "./CommonFunctions";
+    import { autorun, runInAction } from "mobx";
 
-    export let aliasBox: AbstractChoiceBox;	// the accompanying AliasBox or SelectBox
-    export let editor: PiEditor;			// the editor
+    const LOGGER = new PiLogger("TextDropdownComponent").mute();
 
-    let textBox: TextBox;
-    $: textBox = aliasBox?.textBox;
+    export let choiceBox: AbstractChoiceBox;	// the accompanying AliasBox or SelectBox
+    export let editor: PiEditor;			    // the editor
+    let textBox: TextBox;                       // the textbox that is to be coupled to the TextComponent part
+    $: textBox = choiceBox?.textBox;            // keeps the textBox variable in state with the choiceBox!
 
-    let textComponent: TextComponent;
-    let dropdownComponent: DropdownComponent;
-    let id: string = componentId(aliasBox); // an id for the html element
-    let isEditing: boolean = false;         // becomes true when the text field gets focus
-    let text: string = '';		            // the text in the text field
-    let selectedId: string;		            // the id of the selected option in the dropdown
-    let options: SelectOption[];            // the list of filtered options that are shown in the dropdown
-    let all_options: SelectOption[];        // all options as calculated by the editor
+    let id: string;                             // an id for the html element
+    id = !!choiceBox ? componentId(choiceBox) : 'textdropdown-with-unknown-box';
+    let isEditing: boolean = false;             // becomes true when the text field gets focus
+    let text: string = "";		                // the text in the text field
+    let selectedId: string;		                // the id of the selected option in the dropdown
+    let filteredOptions: SelectOption[];        // the list of filtered options that are shown in the dropdown
+    let allOptions: SelectOption[];             // all options as calculated by the editor
 
-    let getOptions = (): SelectOption[] => { // the function used to calculate all_options, called by onClick and setFocus
-        return aliasBox?.getOptions(editor);
+    const noOptionsId = 'noOptions';            // constant for when the editor has no options
+    let getOptions = (): SelectOption[] => {    // the function used to calculate all_options, called by onClick and setFocus
+        let result = choiceBox?.getOptions(editor);
+        if (result === null || result === undefined) {
+            result = [{id: noOptionsId, label: '<no known options>'}];
+        }
+        return result;
     };
 
     /**
@@ -44,10 +49,12 @@
      * It is called from the editor.
      */
     const setFocus = () => {
+        // TODO to be tested
         // console.log('TextDropdownComponent setFocus');
         isEditing = true;
-        all_options = options = getOptions();
-    }
+        editor.selectedBox = choiceBox;
+        allOptions = filteredOptions = getOptions();
+    };
 
     /**
      * This custom event is triggered when the text in the textComponent is altered or when the
@@ -56,10 +63,14 @@
      * in the dropdownComponent is changed.
      * @param event
      */
-    const textUpdate = (event) => {
+    const textUpdate = (event: CustomEvent) => {
+        // console.log('textUpdate: ' + JSON.stringify(event.detail));
         text = event.detail.content;
-        options = all_options.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
-    }
+        if (!allOptions) {
+            allOptions = getOptions();
+        }
+        filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+    };
 
     /**
      * These events are either not handled by the textComponent, or not handled by the dropdownComponent.
@@ -68,18 +79,18 @@
      * textComponent, and the editing state is ended.
      * @param event
      */
-    const onKeyDown = (event) => {
-        console.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ', selectedId: ' + selectedId);
-        switch(event.key) {
+    const onKeyDown = (event: KeyboardEvent) => {
+        LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
+        switch (event.key) {
             case ARROW_DOWN: {
                 if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
-                    selectedId = options[0].id;
+                    selectedId = filteredOptions[0].id;
                 } else {
-                    const index = options.findIndex(o => o.id === selectedId);
-                    if (index + 1 < options.length) { // the 'normal' case: go one down
-                        selectedId = options[index + 1].id;
-                    } else if (index + 1 === options.length) { // the end of the options reached: go to the first
-                        selectedId = options[0].id;
+                    const index = filteredOptions.findIndex(o => o.id === selectedId);
+                    if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
+                        selectedId = filteredOptions[index + 1].id;
+                    } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
+                        selectedId = filteredOptions[0].id;
                     }
                 }
                 event.preventDefault();
@@ -88,89 +99,135 @@
             }
             case ARROW_UP: {
                 if (!selectedId || selectedId.length == 0) { // there is no current selection, start at the last option
-                    selectedId = options[options.length - 1].id;
+                    selectedId = filteredOptions[filteredOptions.length - 1].id;
                 } else {
-                    const index = options.findIndex(o => o.id === selectedId);
+                    const index = filteredOptions.findIndex(o => o.id === selectedId);
                     if (index > 0) { // the 'normal' case: go one up
-                        selectedId = options[index - 1].id;
+                        selectedId = filteredOptions[index - 1].id;
                     } else if (index === 0) { // the beginning of the options reached: go to the last
-                        selectedId = options[options.length - 1].id;
+                        selectedId = filteredOptions[filteredOptions.length - 1].id;
                     }
                 }
                 event.preventDefault();
                 event.stopPropagation();
                 break;
             }
-            case ENTER: {
-                if (options.length === 1) { // if there is just one option left, choose that one
-                    text = options[0].label;
-                    storeText(editor, text, textBox);
+            case ENTER: { // user wants current selection
+                // find the chosen option
+                let chosenOption: SelectOption = null;
+                if (filteredOptions.length === 1) { // if there is just one option left, choose that one
+                    chosenOption = filteredOptions[0];
                 } else { // find the selected option and choose that one
-                    const index = options.findIndex(o => o.id === selectedId);
-                    if (index >= 0 && index < options.length) {
-                        text = options[index].label;
-                        storeText(editor, text, textBox);
+                    const index = filteredOptions.findIndex(o => o.id === selectedId);
+                    if (index >= 0 && index < filteredOptions.length) {
+                        chosenOption = filteredOptions[index];
                     }
                 }
+                // store or execute the option
+                if (!!chosenOption) {
+                    storeAndExecute(chosenOption);
+                } else { //  no valid option, restore the original text
+                    text = textBox.getText();
+                }
+                // stop editing
                 isEditing = false;
                 event.preventDefault();
                 event.stopPropagation();
                 break;
             }
         }
-    }
+    };
 
     /**
      * This custom event is triggered by a click in the dropdown. The option that is clicked
      * is set as text in the textComponent and the editing state is ended.
      */
     const itemSelected = () => {
-        // console.log('Textdropdown itemSelected')
-        const index = options.findIndex(o => o.id === selectedId);
-        if (index >= 0 && index < options.length) {
-            text = options[index].label;
-            // store the current value in the textbox, or delete the box, if appropriate
-            storeText(editor, text, textBox);
+        LOGGER.log('Textdropdown itemSelected')
+        const index = filteredOptions.findIndex(o => o.id === selectedId);
+        if (index >= 0 && index < filteredOptions.length) {
+            storeAndExecute(filteredOptions[index]);
         }
         isEditing = false;
-    }
+    };
 
+    /**
+     * This custom event is triggered when the TextComponent gets focus, either by click or tabbing.
+     * The editor is notified of the newly selected box and the options list is filled.
+     */
     const startEditing = () => {
-        // console.log('TextDropdownComponent: startEditing');
+        // LOGGER.log('TextDropdownComponent: startEditing');
         isEditing = true;
-        all_options = options = getOptions();
+        editor.selectedBox = choiceBox;
+        if (!allOptions) {
+            allOptions = getOptions();
+        }
+        allOptions = filteredOptions = getOptions();
+    };
+
+    /**
+     * When the user has selected an option, in whatever manner, this function is called.
+     * The action that is associated with the option is executed. This changes the model,
+     * thus it triggers the creation of a new box model. The 'autorun' function is triggered
+     * by these changes.
+     * @param selected
+     */
+    function storeAndExecute(selected: SelectOption) {
+        LOGGER.log('executing option ' + selected.label);
+        runInAction(() => {
+            // TODO set the new cursor through the editor
+            choiceBox.selectOption(editor, selected); // TODO the result of the execution is ignored
+            // TODO the execution of the option should set the text in the selectBox, for now this is handled here
+            if (isSelectBox(choiceBox)) {
+                choiceBox.textHelper.setText(selected.label);
+            }
+        });
     }
 
-    function checkCurrentText() {
+    /**
+     * This function is called whenever the user ends editing the TextComponent,
+     * in whatever manner. It checks whether the current selected option/text is
+     * a valid option. If so, this option is executed, else the text is set to the
+     * original value.
+     */
+    const endEditing = () => {
+        LOGGER.log('TextDropdownComponent: endEditing');
         isEditing = false;
         // check whether the current text is a valid option
-        let validOption = all_options.find(o => o.label === text);
-        if (!!validOption) {
-            // store the current value in the textbox, or delete the box, if appropriate
-            storeText(editor, text, textBox);
-        } else {
+        if (!allOptions) {
+            allOptions = getOptions();
+        }
+        let validOption = allOptions.find(o => o.label === text);
+        if (!!validOption && validOption.id !== noOptionsId) {
+            storeAndExecute(validOption);
+        } else { // no valide option, restore the previous value
             text = textBox.getText();
         }
-    }
+    };
 
-    const endEditing = () => {
-        // console.log('TextDropdownComponent: endEditing');
-        checkCurrentText();
-    }
+    /**
+     * This function is executed whenever there is a change in the box model.
+     * It sets the text in the choiceBox, if this is a SelectBox.
+     */
+    autorun(() => {
+        if (isSelectBox(choiceBox)) {
+            // TODO see todo in 'storeOrExecute'
+            let selectedOption = choiceBox.getSelectedOption();
+            if (!!selectedOption) {
+                choiceBox.textHelper.setText(selectedOption.label);
+            }
+        }
+    });
 
-    const hide = () => {
-        console.log("TextDropdownComponent onBlur")
-        checkCurrentText();
-    }
 </script>
 
 <span id="{id}"
       on:keydown={onKeyDown}
-      use:clickOutside on:clickOutside={hide}
+      use:clickOutside
+      on:click_outside={endEditing}
 >
     <TextComponent
             bind:isEditing={isEditing}
-            bind:this={textComponent}
             bind:text={text}
             textBox={textBox}
             editor={editor}
@@ -181,9 +238,8 @@
     />
     {#if isEditing}
         <DropdownComponent
-                bind:this={dropdownComponent}
                 bind:selectedId={selectedId}
-                bind:options={options}
+                bind:options={filteredOptions}
                 on:piItemSelected={itemSelected}/>
     {/if}
 </span>

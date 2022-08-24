@@ -4,7 +4,7 @@ import { HorizontalListBox, LabelBox, PiEditor } from "@projectit/core";
 import { ModelMaker } from "../models/ModelMaker";
 import ListComponent from "../../components/ListComponent.svelte"; // Note that this form of import is neccessary for jest to function!
 
-describe("List component", () => {
+describe.skip("List component", () => {
     let horizontalBox: HorizontalListBox;
     const myEditor = new PiEditor(null, null);
 

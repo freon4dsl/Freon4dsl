@@ -13,7 +13,7 @@
     } from "@projectit/core";
     import { autorun } from "mobx";
     import { afterUpdate } from "svelte";
-    import { AUTO_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER } from "../components/ChangeNotifier";
 
     // Parameters
     export let box: Box = new LabelBox(null, "DUMMY", "LABEL");

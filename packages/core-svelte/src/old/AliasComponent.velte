@@ -28,7 +28,7 @@
     import { type Writable, writable } from "svelte/store";
     import { SelectOptionList } from "../components/SelectableOptionList";
     import { FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../components/ChangeNotifier";
-    import SelectableComponent from "../components/SelectableComponent.svelte";
+    import SelectableComponent from "./SelectableComponent.svelte";
     import TextComponent from "../components/TextComponent.svelte";
     import DropdownComponent from "../components/DropdownComponent.svelte";
     import { componentId } from "../components/util";

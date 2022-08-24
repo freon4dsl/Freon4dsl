@@ -11,7 +11,7 @@ import TestOptional from "../mock-components/TestOptional.svelte";
 import { configure } from '@testing-library/dom'
 configure({ testIdAttribute: 'id' })
 
-describe("Optional component", () => {
+describe.skip("Optional component", () => {
     MOUNT_LOGGER.mute();
     AUTO_LOGGER.mute();
     UPDATE_LOGGER.mute();
