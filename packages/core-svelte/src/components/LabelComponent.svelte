@@ -4,19 +4,19 @@
     import { PiLogger, type PiEditor, LabelBox } from "@projectit/core";
     import { FOCUS_LOGGER } from "./ChangeNotifier";
     import { componentId } from "./util";
+    import { setBoxSizes } from "./CommonFunctions";
 
-    export let label: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
+    export let label: LabelBox;
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("LabelComponent").mute();
 
     let id: string = componentId(label);
-
-    onDestroy(() => {
-        LOGGER.log("LabelComponent.onDestroy ["+ text + "]")
-    });
-
     let element: HTMLDivElement = null;
+    let text: string;
+    let style: string;
+    let cssClass: string;
+
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("LabelComponent.setFocus for box " + label?.role);
         if (!!element) {
@@ -27,24 +27,27 @@
     onMount( () => {
        label.setFocus = setFocus;
     });
+
     afterUpdate( () => {
         label.setFocus = setFocus;
+        setBoxSizes(label, element.getBoundingClientRect());
     });
 
-    let text: string;
+    // TODO remove the following three functions, or use them to attach a context menu
     const onFocusHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("LabelComponent.onFocus for box " + label.role);
     }
     const onBlurHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("LabelComponent.onBlur for box " + label.role);
     }
-    let style: string;
-    let cssClass: string;
+    onDestroy(() => {
+        LOGGER.log("LabelComponent.onDestroy ["+ text + "]")
+    });
 
     autorun( () => {
         text = label.getLabel();
         style = label.cssStyle;
-        cssClass = label.cssClass
+        cssClass = label.cssClass;
     });
 </script>
 

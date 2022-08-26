@@ -45,6 +45,8 @@
         return result;
     };
 
+    // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next alias!!!
+
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the editor.
