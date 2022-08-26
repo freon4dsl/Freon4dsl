@@ -117,10 +117,10 @@ export function isHorizontalList(b: Box): b is HorizontalListBox {
 }
 
 export function isVerticalBox(b: Box): b is VerticalListBox {
-    return b.kind === "VerticalListBox" && !(b as HorizontalListBox).trueList; // b instanceof VerticalListBox;
+    return b.kind === "VerticalListBox" && !(b as VerticalListBox).trueList; // b instanceof VerticalListBox;
 }
 
 export function isVerticalList(b: Box): b is VerticalListBox {
     // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
-    return b.kind === "VerticalListBox" && !(b as HorizontalListBox).trueList; // b instanceof VerticalListBox;
+    return b.kind === "VerticalListBox" && (b as VerticalListBox).trueList; // b instanceof VerticalListBox;
 }

@@ -27,9 +27,10 @@
         isHorizontalBox,
         isSvgBox,
         isEmptyLineBox,
-        LabelBox, PiEditor, PiLogger
+        LabelBox, PiEditor, PiLogger, isVerticalList, isHorizontalList
     } from "@projectit/core";
     import TextDropdownComponent from "./TextDropdownComponent.svelte";
+    import LayoutComponent from "./LayoutComponent.svelte";
 
     const LOGGER = new PiLogger("RenderComponent").mute();
 
@@ -41,9 +42,9 @@
     let isSelected: boolean = false;
     let className: string = '';
 
-    const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)), {
-        selectable: false,
-    });
+    // const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)), {
+    //     selectable: false,
+    // });
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log("RenderComponent.onClick: " + event + " for box " + box.role);
@@ -80,10 +81,11 @@
 </script>
 
 <span id="{id}" class={className} on:click={onClick}>
-<!--    <svelte:component this={boxComponent(box)}/> -->
     {#if isLabelBox(showBox)}
         <LabelComponent label={showBox} editor={editor}/>
     {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
+       	<LayoutComponent list={showBox} editor={editor}/>
+    {:else if isHorizontalList(showBox) || isVerticalList(showBox) }
        	<ListComponent list={showBox} editor={editor}/>
     {:else if isAliasBox(showBox) }
         <TextDropdownComponent choiceBox={showBox} editor={editor}/>
@@ -94,15 +96,15 @@
     {:else if isIndentBox(showBox) }
         <IndentComponent indentBox={showBox} editor={editor}/>
     {:else if isGridBox(showBox) }
-        <GridComponent gridBox={showBox} editor={editor} tabIndex={0}/>
+        <GridComponent gridBox={showBox} editor={editor}/>
     {:else if isSvgBox(showBox) }
         <SvgComponent svgBox={showBox} editor={editor}/>
     {:else if isOptionalBox(showBox) }
-        <OptionalComponent optionalBox={showBox} editor={editor} tabIndex={0}/>
+        <OptionalComponent optionalBox={showBox} editor={editor}/>
     {:else if isEmptyLineBox(showBox) }
         <EmptyLineComponent box={showBox} editor={editor}/>
     {:else}
-        <LabelComponent label={UNKNOWN} editor={editor}/>
+        <p>UNKNOWN BOX TYPE: {showBox?.kind}</p>
     {/if}
 </span>
 

@@ -11,7 +11,7 @@
 
     const LOGGER = new PiLogger("LabelComponent").mute();
 
-    let id: string = componentId(label);
+    let id: string = !!label ? componentId(label) : "unknown-label-id";
     let element: HTMLDivElement = null;
     let text: string;
     let style: string;
