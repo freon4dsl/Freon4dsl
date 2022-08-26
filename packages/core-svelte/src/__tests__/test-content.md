@@ -40,18 +40,18 @@ Deze worden altijd in de bovenste component afgehandeld:
 
 # AliasComponent
 
-1. als click dan verschijnt drop down
-2. als keyboard entry dan geen dropdown
-3. ctr-space : toggle drop down
+1. place holder moet getoond worden als de alias component leeg is
+2. als click dan verschijnt drop down
+3. als keyboard entry dan geen dropdown, maar wel zodra een char ingetikt wordt
+   1. als char een spatie is dan wordt dropdown met alle opties getoond
 4. als tekst in text box dan options in drop down filteren
-5. als tekst volkomen gelijk aan optie, dan wordt deze geselecteerd en bijbehorende
+5. als tekst volkomen gelijk aan optie, dan wordt deze met ENTER geselecteerd en bijbehorende
    alias actie uitgevoerd
-6. place holder moet getoond worden als de alias component leeg is
-7. als niets geselecteerd uit drop down opties en component verliest focus dan
+6. als niets geselecteerd uit drop down opties en component verliest focus dan
    1. dropdown closed
-   2. text component moet leeg worden, place holder getoond
-8. als drop down geopend is dan moeten de pijl keys omhoog, omlaag bij de drop down terecht komen
-9. escape sluit drop down
+   2. text component toont vorige waarde
+7. als drop down geopend is dan moeten de pijl keys omhoog, omlaag bij de drop down terecht komen
+8. escape sluit drop down
 
 # GridCellComponent
 

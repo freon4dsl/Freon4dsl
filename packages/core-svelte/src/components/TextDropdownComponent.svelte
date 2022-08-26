@@ -11,7 +11,7 @@
         AbstractChoiceBox,
         ARROW_DOWN,
         ARROW_UP,
-        ENTER,
+        ENTER, ESCAPE,
         isSelectBox,
         PiEditor, PiLogger,
         SelectOption,
@@ -30,6 +30,7 @@
     let id: string;                             // an id for the html element
     id = !!choiceBox ? componentId(choiceBox) : 'textdropdown-with-unknown-box';
     let isEditing: boolean = false;             // becomes true when the text field gets focus
+    let dropdownShown: boolean = false;         // when true the dropdwon element is shown
     let text: string = "";		                // the text in the text field
     let selectedId: string;		                // the id of the selected option in the dropdown
     let filteredOptions: SelectOption[];        // the list of filtered options that are shown in the dropdown
@@ -52,6 +53,7 @@
         // TODO to be tested
         // console.log('TextDropdownComponent setFocus');
         isEditing = true;
+        dropdownShown = false;
         editor.selectedBox = choiceBox;
         allOptions = filteredOptions = getOptions();
     };
@@ -65,6 +67,7 @@
      */
     const textUpdate = (event: CustomEvent) => {
         // console.log('textUpdate: ' + JSON.stringify(event.detail));
+        dropdownShown = true;
         text = event.detail.content;
         if (!allOptions) {
             allOptions = getOptions();
@@ -77,11 +80,18 @@
      * In case of an arrow down or up event in the textComponent, the currently selected option in the dropdown is changed.
      * In case of an Enter event in the dropdown, the currently selected option in the dropdown is set as text in the
      * textComponent, and the editing state is ended.
+     * In case of an ESCAPE in the textCompnent, the dropdown is closed, while the editing state remains.
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
         LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
         switch (event.key) {
+            case ESCAPE: {
+                dropdownShown = false;
+                event.preventDefault();
+                event.stopPropagation();
+                break;
+            }
             case ARROW_DOWN: {
                 if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
                     selectedId = filteredOptions[0].id;
@@ -131,6 +141,7 @@
                 }
                 // stop editing
                 isEditing = false;
+                dropdownShown = false;
                 event.preventDefault();
                 event.stopPropagation();
                 break;
@@ -149,6 +160,7 @@
             storeAndExecute(filteredOptions[index]);
         }
         isEditing = false;
+        dropdownShown = false;
     };
 
     /**
@@ -158,6 +170,7 @@
     const startEditing = () => {
         // LOGGER.log('TextDropdownComponent: startEditing');
         isEditing = true;
+        dropdownShown = true;
         editor.selectedBox = choiceBox;
         if (!allOptions) {
             allOptions = getOptions();
@@ -193,6 +206,7 @@
     const endEditing = () => {
         LOGGER.log('TextDropdownComponent: endEditing');
         isEditing = false;
+        dropdownShown = false;
         // check whether the current text is a valid option
         if (!allOptions) {
             allOptions = getOptions();
@@ -217,6 +231,7 @@
                 choiceBox.textHelper.setText(selectedOption.label);
             }
         }
+        // choiceBox.setFocus = setFocus;
     });
 
 </script>
@@ -236,7 +251,7 @@
             on:startEditing={startEditing}
             on:endEditing={endEditing}
     />
-    {#if isEditing}
+    {#if dropdownShown}
         <DropdownComponent
                 bind:selectedId={selectedId}
                 bind:options={filteredOptions}

@@ -26,7 +26,7 @@
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
-        console.log("onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey);
+        console.log("ProjectItComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey);
         // event.persist();
         if (event.ctrlKey || event.altKey) {
             switch (event.key) {
