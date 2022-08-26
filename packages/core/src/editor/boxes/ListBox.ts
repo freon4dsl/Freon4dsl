@@ -12,6 +12,7 @@ export enum ListDirection {
 export abstract class ListBox extends Box {
     protected direction: ListDirection = ListDirection.HORIZONTAL;
     protected _children: Box[] = [];
+    trueList: boolean; // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
 
     protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role);
@@ -107,9 +108,19 @@ export class VerticalListBox extends ListBox {
 
 
 export function isHorizontalBox(b: Box): b is HorizontalListBox {
-    return b.kind === "HorizontalListBox"; // b instanceof HorizontalListBox;
+    return b.kind === "HorizontalListBox" && !(b as HorizontalListBox).trueList; // b instanceof HorizontalListBox;
+}
+
+export function isHorizontalList(b: Box): b is HorizontalListBox {
+    // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
+    return b.kind === "HorizontalListBox" && (b as HorizontalListBox).trueList; // b instanceof HorizontalListBox;
 }
 
 export function isVerticalBox(b: Box): b is VerticalListBox {
-    return b.kind === "VerticalListBox";//b instanceof VerticalListBox || b instanceof VerticalPiElementListBox;
+    return b.kind === "VerticalListBox" && !(b as HorizontalListBox).trueList; // b instanceof VerticalListBox;
+}
+
+export function isVerticalList(b: Box): b is VerticalListBox {
+    // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
+    return b.kind === "VerticalListBox" && !(b as HorizontalListBox).trueList; // b instanceof VerticalListBox;
 }

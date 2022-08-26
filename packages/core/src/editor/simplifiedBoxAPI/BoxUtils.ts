@@ -296,7 +296,7 @@ export class BoxUtils {
             let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin, projName);
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
-            // TODO: Add keboard action for Enter:
+            // TODO: Add keyboard action for Enter:
             // TODO for role:RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item")
             // CANNO DO< no EDIGOR AVAILABLE:
             // editor.addOrReplaceAction(createKeyboardShortcutForList2(RoleProvider.property(element.piLanguageConcept(),
@@ -307,6 +307,7 @@ export class BoxUtils {
             return BoxFactory.verticalList(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist"),
+                true,
                 children
             );
         } else {
@@ -327,6 +328,7 @@ export class BoxUtils {
             return BoxFactory.verticalList(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "vreflist"),
+                true,
                 children
             );
         } else {
@@ -352,6 +354,7 @@ export class BoxUtils {
             return BoxFactory.horizontalList(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "hpartlist"),
+                true,
                 children
             );
         } else {
@@ -374,6 +377,7 @@ export class BoxUtils {
             return BoxFactory.horizontalList(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "hlist"),
+                true,
                 children
             );
         } else {
@@ -438,7 +442,7 @@ export class BoxUtils {
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
-                        return BoxFactory.horizontalList(element, roleName, [
+                        return BoxFactory.horizontalList(element, roleName, true,[
                             (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]);
@@ -446,13 +450,13 @@ export class BoxUtils {
                         return (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem));
                     }
                 } else if (listJoin.type === this.terminatorName) {
-                    return BoxFactory.horizontalList(element, roleName, [
+                    return BoxFactory.horizontalList(element, roleName, true, [
                         (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]);
                 } else if (listJoin.type === this.initiatorName) {
                     // TODO test "Initiator"
-                    return BoxFactory.horizontalList(element, roleName, [
+                    return BoxFactory.horizontalList(element, roleName, true,[
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                         (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem))
                     ]);
@@ -476,7 +480,7 @@ export class BoxUtils {
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
-                        result.push(BoxFactory.horizontalList(element, roleName, [
+                        result.push(BoxFactory.horizontalList(element, roleName, true, [
                             BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]));
@@ -484,13 +488,13 @@ export class BoxUtils {
                         result.push(BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index));
                     }
                 } else if (listJoin.type === this.terminatorName) {
-                    result.push(BoxFactory.horizontalList(element, roleName, [
+                    result.push(BoxFactory.horizontalList(element, roleName, true, [
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]));
                 } else if (listJoin.type === this.initiatorName) {
                     // TODO test this code
-                    result.push(BoxFactory.horizontalList(element, roleName, [
+                    result.push(BoxFactory.horizontalList(element, roleName, true, [
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index)
                     ]));
