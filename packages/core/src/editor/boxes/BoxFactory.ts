@@ -181,16 +181,18 @@ export class BoxFactory {
         // return result;
     }
 
-    static horizontalList(element: PiElement, role: string, trueList: boolean, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
+    static horizontalList(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
         // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
         if (cacheHorizontalOff) {
             const result = new HorizontalListBox(element, role, children, initializer);
             result.trueList = trueList;
+            result.propertyName = propertyName;
             return result;
         }
         const creator = () => new HorizontalListBox(element, role, children, initializer);
         const result: HorizontalListBox = this.find<HorizontalListBox>(element, role, creator, horizontalListCache);
         result.trueList = trueList;
+        result.propertyName = propertyName;
         runInAction( () => {
             // 2. Apply the other arguments in case they have changed
             if( !equals(result.children, children)) {
@@ -203,16 +205,18 @@ export class BoxFactory {
         return result;
     }
 
-    static verticalList(element: PiElement, role: string, trueList: boolean, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
+    static verticalList(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
         // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
         if (cacheVerticalOff) {
             const result = new VerticalListBox(element, role, children, initializer);
             result.trueList = trueList;
+            result.propertyName = propertyName;
             return result;
         }
         const creator = () => new VerticalListBox(element, role, children, initializer);
         const result: VerticalListBox = this.find<VerticalListBox>(element, role, creator, verticalListCache);
         result.trueList = trueList;
+        result.propertyName = propertyName;
         runInAction(() => {
             // 2. Apply the other arguments in case they have changed
             if (!equals(result.children, children)) {

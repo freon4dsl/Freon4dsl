@@ -308,6 +308,7 @@ export class BoxUtils {
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist"),
                 true,
+                propertyName,
                 children
             );
         } else {
@@ -329,6 +330,7 @@ export class BoxUtils {
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "vreflist"),
                 true,
+                propertyName,
                 children
             );
         } else {
@@ -355,6 +357,7 @@ export class BoxUtils {
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "hpartlist"),
                 true,
+                propertyName,
                 children
             );
         } else {
@@ -378,6 +381,7 @@ export class BoxUtils {
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "hlist"),
                 true,
+                propertyName,
                 children
             );
         } else {
@@ -442,7 +446,8 @@ export class BoxUtils {
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
-                        return BoxFactory.horizontalList(element, roleName, true,[
+                        return BoxFactory.horizontalList(element, roleName, true, propertyName,
+                            [
                             (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]);
@@ -450,13 +455,15 @@ export class BoxUtils {
                         return (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem));
                     }
                 } else if (listJoin.type === this.terminatorName) {
-                    return BoxFactory.horizontalList(element, roleName, true, [
+                    return BoxFactory.horizontalList(element, roleName, true, propertyName,
+                        [
                         (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]);
                 } else if (listJoin.type === this.initiatorName) {
                     // TODO test "Initiator"
-                    return BoxFactory.horizontalList(element, roleName, true,[
+                    return BoxFactory.horizontalList(element, roleName, true,propertyName,
+                        [
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                         (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem))
                     ]);
@@ -480,7 +487,8 @@ export class BoxUtils {
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
-                        result.push(BoxFactory.horizontalList(element, roleName, true, [
+                        result.push(BoxFactory.horizontalList(element, roleName, true, propertyName,
+                            [
                             BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]));
@@ -488,13 +496,15 @@ export class BoxUtils {
                         result.push(BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index));
                     }
                 } else if (listJoin.type === this.terminatorName) {
-                    result.push(BoxFactory.horizontalList(element, roleName, true, [
+                    result.push(BoxFactory.horizontalList(element, roleName, true, propertyName,
+                        [
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]));
                 } else if (listJoin.type === this.initiatorName) {
                     // TODO test this code
-                    result.push(BoxFactory.horizontalList(element, roleName, true, [
+                    result.push(BoxFactory.horizontalList(element, roleName, true, propertyName,
+                        [
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index)
                     ]));
