@@ -7,7 +7,7 @@
     import { setBoxSizes } from "./CommonFunctions";
 
     export let label: LabelBox;
-    export let editor: PiEditor;
+    // export let editor: PiEditor;
 
     const LOGGER = new PiLogger("LabelComponent").mute();
 

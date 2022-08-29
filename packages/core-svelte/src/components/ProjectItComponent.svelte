@@ -94,16 +94,16 @@
     });
 
     /**
-     * The current main element os this component.
+     * The current main element of this component.
      */
     let element: HTMLDivElement;
 
     /**
-     * Keep track of the scrolling position in the editor, so we know exactly where bozes are
+     * Keep track of the scrolling position in the editor, so we know exactly where boxes are
      * in relationship with each other.
      */
     function onScroll() {
-                    editor.scrollX = element.scrollLeft;
+        editor.scrollX = element.scrollLeft;
         editor.scrollY = element.scrollTop;
     }
 </script>

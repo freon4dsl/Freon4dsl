@@ -1,6 +1,6 @@
 <script lang="ts">
     // This component renders any box from the box model.
-    // Depending on its type the right component is used.
+    // Depending on the box type the right component is used.
     // It also makes the rendered element selectable, including changing the style.
     import { AUTO_LOGGER } from "./ChangeNotifier";
     import GridComponent from "./GridComponent.svelte";
@@ -82,11 +82,11 @@
 
 <span id="{id}" class={className} on:click={onClick}>
     {#if isLabelBox(showBox)}
-        <LabelComponent label={showBox} editor={editor}/>
+        <LabelComponent label={showBox}/>
     {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
        	<LayoutComponent list={showBox} editor={editor}/>
     {:else if isHorizontalList(showBox) || isVerticalList(showBox) }
-       	<ListComponent list={showBox} editor={editor}/>
+       	<ListComponent box={showBox} editor={editor}/>
     {:else if isAliasBox(showBox) }
         <TextDropdownComponent choiceBox={showBox} editor={editor}/>
     {:else if isSelectBox(showBox) }
@@ -98,11 +98,11 @@
     {:else if isGridBox(showBox) }
         <GridComponent gridBox={showBox} editor={editor}/>
     {:else if isSvgBox(showBox) }
-        <SvgComponent svgBox={showBox} editor={editor}/>
+        <SvgComponent svgBox={showBox}/>
     {:else if isOptionalBox(showBox) }
         <OptionalComponent optionalBox={showBox} editor={editor}/>
     {:else if isEmptyLineBox(showBox) }
-        <EmptyLineComponent box={showBox} editor={editor}/>
+        <EmptyLineComponent box={showBox}/>
     {:else}
         <p>UNKNOWN BOX TYPE: {showBox?.kind}</p>
     {/if}

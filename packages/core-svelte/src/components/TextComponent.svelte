@@ -362,6 +362,8 @@
                     switch (textBox.isCharAllowed(text, event.key, from)) {
 						case CharAllowed.OK: // add to text, handled by browser
 							// afterupdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
+							event.preventDefault();
+							event.stopPropagation();
                             break;
                         case CharAllowed.NOT_OK: // ignore
                             // ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
@@ -460,7 +462,7 @@
 
 </script>
 
-<span on:click={onClick} id="{id}">
+<span on:click={onClick} id="{id}"on:contextmenu|preventDefault={(event) => console.log(event.pageX, event.pageY, event.clientY, event.clientY)}>
 	{#if isEditing}
 		<span class="resizable-input">
 			<input type="text"
@@ -505,6 +507,9 @@
     }
     /* let <input> assume the size of the wrapper */
     .resizable-input > input {
+		/* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
+		padding: 1px 1px;
+		line-height: 6px;
         width: 100%;
         box-sizing: border-box;
         margin: 0;

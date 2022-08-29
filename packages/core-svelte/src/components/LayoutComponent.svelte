@@ -67,10 +67,10 @@
         // e.stopPropagation();
     }
 
-    function box(box: Box): Box {
-        LOGGER.log("render box " + box.role);
-        return box;
-    }
+    // function box(box: Box): Box {
+    //     LOGGER.log("render box " + box.role);
+    //     return box;
+    // }
 
     function setPrevious(b: Box): string {
         previousBox = b;

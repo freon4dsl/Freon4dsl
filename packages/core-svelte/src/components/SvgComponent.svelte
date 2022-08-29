@@ -3,7 +3,7 @@
     import { componentId } from "./util";
 
     export let svgBox: SvgBox;
-    export let editor: PiEditor;
+    // export let editor: PiEditor;
 
     let id: string = componentId(svgBox);
 </script>

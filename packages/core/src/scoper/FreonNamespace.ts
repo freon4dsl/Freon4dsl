@@ -69,7 +69,6 @@ export class FreonNamespace {
         const result: PiNamedElement[] = [];
         // TODO check this: for now we push all parts, later public/private annotations can be taken into account
         // set up the 'worker' of the visitor pattern
-        // const myNamesCollector = new ExampleNamesCollector();
         const myNamesCollector = new CollectNamesWorker(origin);
         myNamesCollector.namesList = result;
         if (!!metatype) {
@@ -77,7 +76,6 @@ export class FreonNamespace {
         }
 
         // set up the 'walker of the visitor pattern
-        // const myWalker = new ExampleWalker();
         const myWalker = new AstWalker();
         myWalker.myWorkers.push(myNamesCollector);
 

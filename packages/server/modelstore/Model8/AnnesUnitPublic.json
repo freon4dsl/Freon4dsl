@@ -4,13 +4,18 @@
    "entities": [
       {
          "$typename": "Entity",
-         "name": "Bool",
+         "name": "Robert",
          "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
                "name": "leeftijd",
                "declaredType": "Integer"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "",
+               "declaredType": null
             }
          ],
          "methods": [
@@ -22,6 +27,15 @@
                "declaredType": "String"
             }
          ],
+         "listOfReferences": [],
+         "baseEntity": null
+      },
+      {
+         "$typename": "Entity",
+         "name": "Mojojojo",
+         "construc": null,
+         "attributes": [],
+         "methods": [],
          "listOfReferences": [],
          "baseEntity": null
       }
