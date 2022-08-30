@@ -106,7 +106,7 @@
     .container {
         position: relative;
         width: calc(100vw);
-        height: calc(100vh - 86px); /* minus 96px, bcause this is the height of the top-app-bar plus the status-bar plus padding round main frame (48 + 24 + 1 * 10) */
+        height: calc(100vh - 96px); /* minus 96px, bcause this is the height of the top-app-bar plus the status-bar plus padding round main frame (48 + 24 + 1 * 10) TODO change this comment */
         min-height: 400px;
     }
     .pane {
@@ -167,12 +167,13 @@
     }
 </style>
 
+<!-- we use offsetWidth and offsetHeight instead of clientWidth and clientHeight, because these include any scrollbars -->
 <div class="container" bind:this={refs.container} >
-    <div class="pane" style="{dimension}: {pos}%; top: 0px;" bind:clientWidth={wa} bind:clientHeight={ha}>
+    <div class="pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
         <slot name="a"></slot>
     </div>
 
-    <div class="pane" style="{dimension}: {100 - (pos)}%; top:{ topB}px;" bind:clientWidth={wb} bind:clientHeight={hb}>
+    <div class="pane" style="{dimension}: {100 - (pos)}%; top:{ topB}px;" bind:offsetWidth={wb} bind:offsetHeight={hb}>
         <slot name="b"></slot>
     </div>
 
