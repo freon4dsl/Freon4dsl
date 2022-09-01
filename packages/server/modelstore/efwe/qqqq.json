@@ -1,0 +1,126 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "qqqq",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "fdew",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "appel",
+               "declaredType": "Integer"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "noot",
+               "declaredType": "Boolean"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "broodzaak",
+               "declaredType": "String"
+            }
+         ],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "methodName",
+               "body": {
+                  "$typename": "AndExpression",
+                  "left": {
+                     "$typename": "PlusExpression",
+                     "left": {
+                        "$typename": "NumberLiteralExpression",
+                        "value": 12,
+                        "appliedfeature": null
+                     },
+                     "right": {
+                        "$typename": "StringLiteralExpression",
+                        "value": "aap",
+                        "appliedfeature": null
+                     },
+                     "appliedfeature": null
+                  },
+                  "right": {
+                     "$typename": "PlusExpression",
+                     "left": {
+                        "$typename": "NumberLiteralExpression",
+                        "value": 44,
+                        "appliedfeature": null
+                     },
+                     "right": {
+                        "$typename": "SumExpression",
+                        "variable": {
+                           "$typename": "LoopVariable",
+                           "name": "index"
+                        },
+                        "from": {
+                           "$typename": "NumberLiteralExpression",
+                           "value": 1,
+                           "appliedfeature": null
+                        },
+                        "to": null,
+                        "body": null,
+                        "appliedfeature": null
+                     },
+                     "appliedfeature": null
+                  },
+                  "appliedfeature": null
+               },
+               "parameters": [
+                  {
+                     "$typename": "Parameter",
+                     "name": "wdda",
+                     "declaredType": "Integer"
+                  }
+               ],
+               "declaredType": "Integer"
+            },
+            {
+               "$typename": "Method",
+               "name": "wdwqd",
+               "body": {
+                  "$typename": "PlusExpression",
+                  "left": {
+                     "$typename": "ParameterRef",
+                     "appliedfeature": {
+                        "$typename": "AttributeRef",
+                        "appliedfeature": null,
+                        "attribute": "noot"
+                     },
+                     "parameter": "aaa"
+                  },
+                  "right": {
+                     "$typename": "ParameterRef",
+                     "appliedfeature": {
+                        "$typename": "AttributeRef",
+                        "appliedfeature": null,
+                        "attribute": "broodzaak"
+                     },
+                     "parameter": "aaa"
+                  },
+                  "appliedfeature": null
+               },
+               "parameters": [
+                  {
+                     "$typename": "Parameter",
+                     "name": "aaa",
+                     "declaredType": "fdew"
+                  }
+               ],
+               "declaredType": null
+            },
+            {
+               "$typename": "Method",
+               "name": "",
+               "body": null,
+               "parameters": [],
+               "declaredType": null
+            }
+         ],
+         "baseEntity": "fdew"
+      }
+   ],
+   "methods": []
+}

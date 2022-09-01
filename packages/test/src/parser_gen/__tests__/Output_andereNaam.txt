@@ -1,0 +1,18 @@
+unit andereNaam {
+main: entity56 base anotherEntity,
+                    andAnother,
+                    andYetAnother
+          start
+              attr78 : Boolean = "myString",
+              attr9 : String = "TEKST"
+          end
+unit wide functions:
+    DemoFunction functionYYY {
+        expression CALL funct555 (  )
+        parameters
+            DemoVariable variableZZZ {
+                declaredType entity56
+            }
+        declaredType Integer
+    }
+}

@@ -1,0 +1,11 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "qqqq",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "fdew"
+      }
+   ],
+   "methods": []
+}

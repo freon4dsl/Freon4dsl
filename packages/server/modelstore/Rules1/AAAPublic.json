@@ -1,3 +1,18 @@
 {
-   "$typename": "Data"
+   "$typename": "Data",
+   "name": "AAA",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "aaa",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "aaa-attr",
+               "declaredType": "String"
+            }
+         ]
+      }
+   ],
+   "functions": []
 }

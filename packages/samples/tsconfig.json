@@ -1,0 +1,6 @@
+{
+  "exclude": [
+    "calculator",
+    "RulesLanguage"
+  ]
+}
