@@ -1,29 +1,32 @@
 import { RtObject } from "./RtObject";
 
 export class RtString extends RtObject {
-    _value: string;
+    readonly _type = "RtString";
+
+    _stringValue: string;
 
     constructor(value: string) {
         super();
-        this._value = value;
+        this._stringValue = value;
     }
 
     get value(): string {
-        return this._value;
+        return this._stringValue;
     }
 
-    plus(other: Object): RtString {
+    plus(other: RtObject): RtString {
         if (isRtString(other)) {
-            return new RtString(this._value + other.value);
+            return new RtString(this._stringValue + other.value);
         } else {
-            return new RtString(this._value + other.toString());
+            return new RtString(this._stringValue + other.toString());
         }
     }
 
     toString(): string {
         return this.value
-    }}
+    }
+}
 
-export function isRtString(obj: any): obj is RtString {
-    return obj instanceof RtString;
+export function isRtString(obj: Object): obj is RtString {
+    return Object.getPrototypeOf(obj)?.constructor?.name === "RtString";
 }

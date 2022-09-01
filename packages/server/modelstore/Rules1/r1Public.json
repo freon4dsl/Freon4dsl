@@ -2,7 +2,89 @@
    "$typename": "Rules",
    "name": "r1",
    "Rules": [
-      null,
-      null
-   ]
+      {
+         "$typename": "CheckingRule",
+         "name": "r21",
+         "description": "a rule",
+         "check": {
+            "$typename": "HasNoValue",
+            "attribute": null
+         }
+      },
+      {
+         "$typename": "IfThenElseRule",
+         "name": "checkSomeStuff",
+         "description": "A rule",
+         "IfStatement": {
+            "$typename": "IfStatement",
+            "name": "",
+            "Condition": {
+               "$typename": "And",
+               "left": {
+                  "$typename": "HasAnyValue",
+                  "attribute": "Height"
+               },
+               "right": {
+                  "$typename": "CheckingRuleCall",
+                  "rule": "r21"
+               }
+            },
+            "ThenStatements": [
+               {
+                  "$typename": "SetValue",
+                  "value": {
+                     "$typename": "IsEqualTo",
+                     "left": null,
+                     "right": {
+                        "$typename": "HasNoValue",
+                        "attribute": "Height"
+                     }
+                  },
+                  "attribute": "Name"
+               },
+               {
+                  "$typename": "SetValue",
+                  "value": {
+                     "$typename": "Plus",
+                     "left": {
+                        "$typename": "NumberLiteral",
+                        "value": "12"
+                     },
+                     "right": {
+                        "$typename": "NumberLiteral",
+                        "value": "23"
+                     }
+                  },
+                  "attribute": null
+               }
+            ],
+            "ElseStatements": [
+               {
+                  "$typename": "SetValue",
+                  "value": {
+                     "$typename": "HasAnyValue",
+                     "attribute": "Age"
+                  },
+                  "attribute": "Name"
+               },
+               {
+                  "$typename": "SetValue",
+                  "value": {
+                     "$typename": "HasNoValue",
+                     "attribute": "Height"
+                  },
+                  "attribute": null
+               }
+            ]
+         }
+      },
+      {
+         "$typename": "CheckingRule",
+         "name": "",
+         "description": "",
+         "check": null
+      }
+   ],
+   "imports": "House",
+   "forEntity": "Building"
 }

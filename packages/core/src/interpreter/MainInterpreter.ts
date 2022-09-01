@@ -7,7 +7,7 @@ import {
     InitFunction,
     OwningPropertyFunction
 } from "./IMainInterpreter";
-import { RtObject } from "./runtime/index";
+import { isRtError, RtObject } from "./runtime/index";
 import { RtArray } from "./runtime/RtArray";
 
 /**
@@ -102,6 +102,10 @@ export class MainInterpreter implements IMainInterpreter {
             if (this.tracing) {
                 this.tracer.push(node, value);
                 this.tracer.end(node);
+            }
+            if( isRtError(value)) {
+                console.error(value.toString())
+                throw value;
             }
             return value;
         }

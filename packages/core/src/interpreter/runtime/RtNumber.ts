@@ -1,7 +1,10 @@
+import { isRtError, RtError } from "./RtError";
 import { RtObject } from "./RtObject";
 import { isRtString } from "./RtString";
+import { isRtEmpty, RtEmpty } from "./RtEmpty";
 
 export class RtNumber extends RtObject { //} implements RtHasPlus  {
+    readonly _type = "RtNumber";
     private _value: number;
 
     constructor(value: number) {
@@ -13,44 +16,62 @@ export class RtNumber extends RtObject { //} implements RtHasPlus  {
         return this._value;
     }
 
-    plus(other: Object): RtObject {
+    plus(other: RtObject): RtObject {
         if (isRtNumber(other)) {
             return new RtNumber(this._value + other.value);
         }
         if( isRtString(other)) {
             return new RtNumber(this._value + Number.parseFloat(other.value));
+        } else if (isRtEmpty(other)) {
+            return this;
+        } else if (isRtError(other)) {
+            return other;
         }
-        throw new Error("No plus found")
+        // @ts-ignore TS assumes other is of type 'never', but that is incorrect.
+        return new RtError("RtNumber.divide: no divide found for " + other.rtType);
     }
 
-    multiply(other: Object): RtObject {
+    multiply(other: RtObject): RtObject {
         if (isRtNumber(other)) {
             return new RtNumber(this._value * other.value);
-        }
-        if( isRtString(other)) {
+        } else if( isRtString(other)) {
             return new RtNumber(this._value * Number.parseFloat(other.value));
+        } else if (isRtEmpty(other)) {
+            return this;
+        } else if (isRtError(other)) {
+            return other;
         }
-        throw new Error("No multiply found")
+        // @ts-ignore TS assumes other is of type 'never', but that is incorrect.
+        return new RtError("RtNumber.divide: no divide found for " + this + " * " + other.rtType);
     }
 
-    minus(other: Object): RtObject {
+    minus(other: RtObject): RtObject {
         if (isRtNumber(other)) {
             return new RtNumber(this._value - other.value);
         }
         if( isRtString(other)) {
             return new RtNumber(this._value - Number.parseFloat(other.value));
+        } else if (isRtEmpty(other)) {
+            return other;
+        } else if (isRtError(other)) {
+            return other;
         }
-        throw new Error("No minus found")
+        // @ts-ignore TS assumes other is of type 'never', but that is incorrect.
+        return new RtError("No minus found for " + other.rtType);
     }
 
-    divide(other: Object): RtObject {
+    divide(other: RtObject): RtObject {
         if (isRtNumber(other)) {
             return new RtNumber(this._value / other.value);
-        }
-        if( isRtString(other)) {
+        } else if( isRtString(other)) {
             return new RtNumber(this._value / Number.parseFloat(other.value));
+        } else if (isRtEmpty(other)) {
+            return other;
+        } else if (isRtError(other)) {
+            return other;
         }
-        throw new Error("No divide found")
+        // @ts-ignore TS assumes other is of type 'never', but that is incorrect.
+        return new RtError("RtNumber.divide: no divide found for " + other.rtType);
     }
 
     toString(): string {

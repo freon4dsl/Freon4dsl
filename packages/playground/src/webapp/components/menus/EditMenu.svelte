@@ -26,7 +26,7 @@
 </div>
 
 <script lang="ts">
-	import { PiElement } from "@projectit/core";
+	import { isRtError, PiElement } from "@projectit/core";
 	import type { MenuComponentDev } from '@smui/menu';
 	import Menu from '@smui/menu';
 	import { Anchor } from '@smui/menu-surface';
@@ -75,10 +75,14 @@
 		intp.setTracing(true);
 		const node: PiElement = editorEnvironment.editor.selectedItem;
 
-		intp.evaluate(node);
-		const trace = intp.getTrace().root.toStringRecursive();
-		console.log(trace);
-		interpreterTrace.set(trace);
+		const value = intp.evaluate(node);
+		if(isRtError(value)){
+			interpreterTrace.set(value.toString());
+		} else {
+			const trace = intp.getTrace().root.toStringRecursive();
+			console.log(trace);
+			interpreterTrace.set(trace);
+		}
 		activeTab.set(interpreterTab);
 	}
 

@@ -14,7 +14,7 @@ export class InterpreterBaseTemplate {
      */
     public interpreterBase(language: PiLanguage, interpreterDef: PiInterpreterDef): string {
         return `// Generated my Freon, will be overwritten with every generation.
-        import { InterpreterContext, RtObject } from "@projectit/core";
+        import { InterpreterContext, RtObject, RtError } from "@projectit/core";
         import { ${interpreterDef.conceptsToEvaluate.map(c => Names.concept(c)).join(",")} } from "../../language/gen";
         
         /**
@@ -27,7 +27,7 @@ export class InterpreterBaseTemplate {
             
             ${interpreterDef.conceptsToEvaluate.map(c =>
                 `eval${Names.concept(c)} (node: ${Names.concept(c)} , ctx: InterpreterContext): RtObject {
-                    throw Error("eval${Names.concept(c)} is not defined");
+                    throw new RtError("eval${Names.concept(c)} is not defined");
                 }`
             ).join("\n\n")}
         }

@@ -1,9 +1,10 @@
-export class RtObject extends Object {
+export class RtObject {
+    _type: string;
+
     constructor() {
-        super();
     }
 
     get rtType(): string {
-        return Object.getPrototypeOf(this).constructor.name;
+        return this._type;
     }
 }
