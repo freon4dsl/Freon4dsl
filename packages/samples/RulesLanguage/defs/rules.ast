@@ -69,7 +69,7 @@ expression ParameterRef base RuleExpression {
 }
 
 //////////////////// Literal expressions ////////////////////////
-expression NumberLiteral {
+expression NumberLiteral base RuleExpression {
     value: string;
 }
 
