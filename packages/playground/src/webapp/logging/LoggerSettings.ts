@@ -28,13 +28,15 @@ export function muteLogs() {
     // PiLogger.mute("TextBox");
     // PiLogger.mute("SelectBox");
     // PiLogger.mute("HorizontalListBox");
-    // PiLogger.mute("ActionBox");
+    PiLogger.mute("ActionBox");
 
     // from ~/webapp:
-    // PiLogger.mute("EditorCommunication");
+    PiLogger.mute("EditorCommunication");
+    PiLogger.mute("ServerCommunication");
+    PiLogger.mute("EditorState");
 
     // from current project:
-    // PiLogger.mute("ExampleScoper");
+    PiLogger.mute("ExampleScoper");
 
     // PiLogger.muteAllLogs();
 }
