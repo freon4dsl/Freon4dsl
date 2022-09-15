@@ -33,13 +33,11 @@
     import { afterUpdate } from "svelte";
     import {selectedBoxes} from "./svelte-utils/DropAndSelectStore";
 
-
     const LOGGER = new PiLogger("RenderComponent"); //.mute();
 
     export let box: Box;
     export let editor: PiEditor;
 
-    let id: string = `render-${box.id}`;
     let className: string = '';
 
     const onClick = (event: MouseEvent) => {
@@ -67,12 +65,14 @@
 
 </script>
 
-<span id="{id}"
+<span id="render-${box?.id}"
       class="render-component {className}"
       on:click={onClick}
       tabIndex={0}
 >
-    {#if isActionBox(box) || isSelectBox(box)}
+    {#if box === null || box === undefined }
+        <p class="error">[BOX IS NULL OR UNDEFINED]</p>
+    {:else if isActionBox(box) || isSelectBox(box)}
         <TextDropdownComponent box={box} editor={editor}/>
     {:else if isEmptyLineBox(box) }
         <EmptyLineComponent box={box}/>
@@ -93,7 +93,7 @@
     {:else if isTextBox(box) }
        	<TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
     {:else}
-        <p>UNKNOWN BOX TYPE: {box?.kind}</p>
+        <p class="error">UNKNOWN BOX TYPE: {box.kind}</p>
     {/if}
 </span>
 
@@ -101,6 +101,9 @@
     .render-component {
         box-sizing: border-box;
         display: flex;
+    }
+    .error {
+        color: red;
     }
     .unSelected {
         background: transparent;
