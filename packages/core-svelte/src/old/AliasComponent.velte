@@ -27,7 +27,6 @@
     import { afterUpdate, onMount } from "svelte";
     import { type Writable, writable } from "svelte/store";
     import { SelectOptionList } from "../components/SelectableOptionList";
-    import { FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "../components/ChangeNotifier";
     import SelectableComponent from "./SelectableComponent.svelte";
     import TextComponent from "../components/TextComponent.svelte";
     import DropdownComponent from "../components/DropdownComponent.svelte";
@@ -68,7 +67,7 @@
     };
 
     onMount(() => {
-        MOUNT_LOGGER.log("AliasComponent.onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
+        LOGGER.log("AliasComponent.onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
@@ -179,7 +178,7 @@
                 choiceBox.textHelper.setText("");
             }
         } else {
-            console.error("AliasComponent.onInput: should be an AliasBox or SelectBox");
+            console.error("AliasComponent.onInput: should be an ActionBox or SelectBox");
             return;
         }
         LOGGER.log("onInput aliasResult: [" + aliasResult + "]");

@@ -6,7 +6,7 @@ import { PiLogger } from "../logging";
 import { PiAction } from "./actions/index";
 import {
     PiProjection,
-    isAliasBox,
+    isActionBox,
     isSelectBox,
     isTextBox,
     Box,
@@ -28,6 +28,7 @@ export class PiEditor {
     private _rootBox: Box | null = null;        // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
     private _selectedElement: PiElement = null; // The model element that is currently selected in the editor.
     private _selectedBox: Box | null = null;    // The box defined for _selectedElement. Note that it is a 'slave' to _selectedElement.
+    selectedBoxes: Box[]; // todo adjust this
     private _selectedPosition: PiCaret = PiCaret.UNSPECIFIED;   // The caret position within the _selectedBox.
     private _selectedRole: string = null;       // TODO not really used, remove?
     // TODO question: NOSELECT is not used, remove?
@@ -107,13 +108,13 @@ export class PiEditor {
      * Sets the selected box programmatically, and adjusts the selected element as well.
      * @param box
      */
-    set selectedBox(box: Box) { // TODO question how does this method relate to the other setters for _selectedBox? The check on AliasBox is also there.
+    set selectedBox(box: Box) { // TODO question how does this method relate to the other setters for _selectedBox? The check on ActionBox is also there.
         LOGGER.log("selectedBox:  set selected box to: " + (!!box ? box.role : "null") + "  NOSELECT [" + this.NOSELECT + "]");
         if (this.NOSELECT) {
             return;
         }
 
-        if (!!box && isAliasBox(box)) {
+        if (!!box && isActionBox(box)) {
             this._selectedBox = box.textBox;
         } else {
             this._selectedBox = box;
@@ -174,7 +175,7 @@ export class PiEditor {
     selectParentBox() {
         LOGGER.log("==> SelectParent of " + this.selectedBox?.role + this.selectedBox?.parent.kind);
         let parent = this.selectedBox?.parent;
-        if (!!parent && (isAliasBox(parent) || isSelectBox(parent))) {
+        if (!!parent && (isActionBox(parent) || isSelectBox(parent))) {
             // Coming from (hidden) textbox in Select/Alias box
             parent = parent.parent;
         }
@@ -393,13 +394,13 @@ export class PiEditor {
             LOGGER.info("box already selected");
             return;
         }
-        if (isAliasBox(box)) {
+        if (isActionBox(box)) {
             this.selectedBox = box.textBox;
         } else {
             this.selectedBox = box;
         }
         LOGGER.log("selectBox: select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
-        if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
+        if (isTextBox(box) || isActionBox(box) || isSelectBox(box)) {
             if (!!caretPosition) {
                 LOGGER.log("caret position is " + caretPosition.position);
                 box.setCaret(caretPosition);

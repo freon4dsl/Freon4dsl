@@ -1,16 +1,15 @@
 <script lang="ts">
-    import type { PiEditor, SvgBox } from "@projectit/core";
-    import { componentId } from "./util";
+    import type { SvgBox } from "@projectit/core";
+    import { componentId } from "./svelte-utils";
 
-    export let svgBox: SvgBox;
-    // export let editor: PiEditor;
+    export let box: SvgBox;
 
-    let id: string = componentId(svgBox);
+    let id: string = componentId(box);
 </script>
 
 <!--TODO 500, 500 in viewbox is dependent on the SVG image !!-->
-<svg width={svgBox.width} height={svgBox.height} viewBox={"0 0 500 500"} id="{id}">
-        <path d={svgBox.svgPath}/>
+<svg width={box.width} height={box.height} viewBox={"0 0 500 500"} id="{id}">
+        <path d={box.svgPath}/>
 </svg>
 
 <style>

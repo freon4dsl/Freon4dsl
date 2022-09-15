@@ -1,66 +1,54 @@
 <script lang="ts">
-    import { GridCellBox, type GridBox, type PiEditor } from "@projectit/core";
+    import { GridCellBox, type GridBox, type PiEditor, PiLogger } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { ChangeNotifier, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
-    import GridCellComponent from "./GridCellComponent.svelte";
     import { autorun } from "mobx";
-    import { writable, type Writable } from "svelte/store";
-    import { componentId } from "./util";
+    import GridCellComponent from "./GridCellComponent.svelte";
+    import { componentId } from "./svelte-utils";
 
-    export let gridBox: GridBox;
+    const LOGGER = new PiLogger("GridComponent").mute();
+
+    export let box: GridBox;
     export let editor: PiEditor;
 
-    let notifier = new ChangeNotifier();
-    let id = componentId(gridBox);
+    let id = componentId(box);
+    let cells: GridCellBox[];
+    $: cells = box.cells;
+    let templateColumns: string = `repeat(${box.numberOfColumns() - 1}, auto)`;
+    let templateRows: string = `repeat(${box.numberOfRows() - 1}, auto)`;
+    let cssClass: string = box.cssClass;
 
-    onMount( () => {
-        MOUNT_LOGGER.log("GridComponent onmount")
-        $cells = gridBox.cells;
-    })
-
-    afterUpdate(() => {
-        UPDATE_LOGGER.log("GridComponent afterUpdate for girdBox " + gridBox.element.piLanguageConcept())
-        $cells = gridBox.cells;
-        // Triggers autorun
-        notifier.notifyChange();
-    });
-    let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(gridBox.cells);
-    let templateColumns: string;
-    let templateRows: string;
-
-    let cssClass: string = "";
-    // TODO either use svelte store for cells or mobx observable???
-    autorun(() => {
-        $cells = [...gridBox.cells];
-        length = $cells.length;
-
-        templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
-        templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
-        cssClass = gridBox.cssClass;
-    });
+    // autorun(() => {
+    //     $cells = [...box.cells];
+    //     length = $cells.length;
+    //
+    //     templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
+    //     templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
+    //     cssClass = box.cssClass;
+    // });
 </script>
 
-<div
+<span
         style:grid-template-columns="{templateColumns}"
         style:grid-template-rows="{templateRows}"
         class="maingridcomponent {cssClass}"
         id="{id}"
 >
-    {#each $cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid" + "-" + notifier.dummy)}
-        <GridCellComponent grid={gridBox} cellBox={cell} editor={editor}/>
+    {#each cells as cell (cell.content.element.piId() + '-' + cell.row + '-' + cell.column)}
+        <GridCellComponent box={cell} editor={editor} parentId="{id}"/>
     {/each}
-</div>
+</span>
+
 
 <style>
     .maingridcomponent {
         display: inline-grid;
-        /*grid-gap: 2px;*/
-
-        align-items: center;
-        align-content: center;
+        grid-gap: 2px;
+        align-items: center; /* place-items is an abbreviation for align-items and justify-items */
         justify-items: center;
+        align-content: center;
         border-color: var(--freon-grid-component-border-color, darkgreen);
         border-width: var(--freon-grid-component-border-width, 1pt);
         border-style: var(--freon-grid-component-border-style, solid);
+        border-radius: 4px;
     }
 </style>

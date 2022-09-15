@@ -2,128 +2,114 @@
     // This component renders any box from the box model.
     // Depending on the box type the right component is used.
     // It also makes the rendered element selectable, including changing the style.
-    import { AUTO_LOGGER } from "./ChangeNotifier";
-    import GridComponent from "./GridComponent.svelte";
-    import SvgComponent from "./SvgComponent.svelte";
-    import IndentComponent from "./IndentComponent.svelte";
-    import { autorun } from "mobx";
-    import TextComponent from "./TextComponent.svelte";
-    import LabelComponent from "./LabelComponent.svelte";
-    import ListComponent from "./ListComponent.svelte";
-    import OptionalComponent from "./OptionalComponent.svelte";
-    import EmptyLineComponent from "./EmptyLineComponent.svelte";
-    import { afterUpdate, beforeUpdate, onDestroy } from "svelte";
-
-    import type { Box } from "@projectit/core";
+    // Note also that all boxes are rendered as flex-items within a RenderComponent,
+    // which is the flex-container.
     import {
-        isAliasBox,
+        isActionBox,
+        isEmptyLineBox,
         isGridBox,
         isIndentBox,
         isLabelBox,
-        isSelectBox,
+        isLayoutBox,
+        isListBox,
         isOptionalBox,
+        isSelectBox,
         isTextBox,
-        isVerticalBox,
-        isHorizontalBox,
         isSvgBox,
-        isEmptyLineBox,
-        LabelBox, PiEditor, PiLogger, isVerticalList, isHorizontalList
+        PiEditor,
+        PiLogger,
+        Box
     } from "@projectit/core";
-    import TextDropdownComponent from "./TextDropdownComponent.svelte";
+    import EmptyLineComponent from "./EmptyLineComponent.svelte";
+    import GridComponent from "./GridComponent.svelte";
+    import IndentComponent from "./IndentComponent.svelte";
+    import LabelComponent from "./LabelComponent.svelte";
     import LayoutComponent from "./LayoutComponent.svelte";
+    import ListComponent from "./ListComponent.svelte";
+    import OptionalComponent from "./OptionalComponent.svelte";
+    import TextComponent from "./TextComponent.svelte";
+    import TextDropdownComponent from "./TextDropdownComponent.svelte";
+    import SvgComponent from "./SvgComponent.svelte";
+    import { afterUpdate } from "svelte";
+    import {selectedBoxes} from "./svelte-utils/DropAndSelectStore";
+    import { componentId } from "./svelte-utils";
 
-    const LOGGER = new PiLogger("RenderComponent").mute();
+    const LOGGER = new PiLogger("RenderComponent"); //.mute();
 
     export let box: Box;
     export let editor: PiEditor;
 
-    let showBox: Box;
-    let id: string = `render-${box.element.piId()}-${box.role}`;
-    let isSelected: boolean = false;
+    let id: string = `render-${componentId(box)}`;
     let className: string = '';
 
-    // const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)), {
-    //     selectable: false,
-    // });
-
     const onClick = (event: MouseEvent) => {
-        LOGGER.log("RenderComponent.onClick: " + event + " for box " + box.role);
+        LOGGER.log("RenderComponent.onClick for box " + box.role + ", selectable:" + box.selectable);
+        // Note that click events on some components, like TextComponent, are already caught.
+        // These components need to take care of setting the currently selected element themselves.
         if (box.selectable) {
-            // isSelected = !isSelected;
-            console.log("RenderComponent selected box: " + box.role);
-            editor.selectedBox = box;
+            editor.selectedBoxes = [box];
+            $selectedBoxes = [box];
             event.preventDefault();
             event.stopPropagation();
         } // else: let the parent element take care of selection
     };
 
-    // TODO find out when and why the following three functions are used
+    // TODO remove this function in favor of autorun()
     afterUpdate(() => {
-        // LOGGER.log("<< RenderComponent.afterUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
-        showBox = box;
-    });
-    beforeUpdate(() => {
-        // LOGGER
-        // .log(">> RenderComponent.beforeUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
-        showBox = box;
-    });
-    onDestroy(() => {
-        LOGGER.log("DESTROY for box: " + box.role);
+        // LOGGER.log("RenderComponent.afterUpdate for box " + box.role + ", isSelected:" + (editor?.selectedBoxes === box));
+        let isSelected: boolean = $selectedBoxes.includes(box);
+        className = (isSelected ? "selected" : "unSelected");
     });
 
-    autorun(() => {
-        AUTO_LOGGER.log("RenderComponent: " + box.kind + " for element " + box.element.piLanguageConcept());
-        showBox = box;
-        isSelected = editor?.selectedBox === box;
-        className = (isSelected ? "selectedComponent" : "unSelectedComponent");
-    });
+    // autorun(() => {
+    //     className = (editor?.selectedBoxes === box ? "selected" : "unSelected");
+    // });
 
 </script>
 
-<span id="{id}" class={className} on:click={onClick}>
-    {#if isLabelBox(showBox)}
-        <LabelComponent label={showBox}/>
-    {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
-       	<LayoutComponent list={showBox} editor={editor}/>
-    {:else if isHorizontalList(showBox) || isVerticalList(showBox) }
-       	<ListComponent box={showBox} editor={editor}/>
-    {:else if isAliasBox(showBox) }
-        <TextDropdownComponent choiceBox={showBox} editor={editor}/>
-    {:else if isSelectBox(showBox) }
-        <TextDropdownComponent choiceBox={showBox} editor={editor}/>
-    {:else if isTextBox(showBox) }
-       	<TextComponent textBox={showBox} editor={editor} partOfAlias={false} isEditing={false} text=""/>
-    {:else if isIndentBox(showBox) }
-        <IndentComponent indentBox={showBox} editor={editor}/>
-    {:else if isGridBox(showBox) }
-        <GridComponent gridBox={showBox} editor={editor}/>
-    {:else if isSvgBox(showBox) }
-        <SvgComponent svgBox={showBox}/>
-    {:else if isOptionalBox(showBox) }
-        <OptionalComponent optionalBox={showBox} editor={editor}/>
-    {:else if isEmptyLineBox(showBox) }
-        <EmptyLineComponent box={showBox}/>
+<span id="{id}"
+      class="render-component {className}"
+      on:click={onClick}
+      tabIndex={0}
+>
+    {#if isActionBox(box) || isSelectBox(box)}
+        <TextDropdownComponent box={box} editor={editor}/>
+    {:else if isEmptyLineBox(box) }
+        <EmptyLineComponent box={box}/>
+    {:else if isGridBox(box) }
+        <GridComponent box={box} editor={editor} />
+    {:else if isIndentBox(box) }
+        <IndentComponent box={box} editor={editor}/>
+    {:else if isLabelBox(box)}
+        <LabelComponent box={box}/>
+    {:else if isLayoutBox(box) }
+       	<LayoutComponent box={box} editor={editor}/>
+    {:else if isListBox(box) }
+       	<ListComponent box={box} editor={editor}/>
+    {:else if isOptionalBox(box) }
+        <OptionalComponent box={box} editor={editor}/>
+    {:else if isSvgBox(box) }
+        <SvgComponent box={box}/>
+    {:else if isTextBox(box) }
+       	<TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
     {:else}
-        <p>UNKNOWN BOX TYPE: {showBox?.kind}</p>
+        <p>UNKNOWN BOX TYPE: {box?.kind}</p>
     {/if}
 </span>
 
 <style>
-    .unSelectedComponent {
+    .render-component {
+        box-sizing: border-box;
+        display: flex;
+    }
+    .unSelected {
         background: transparent;
         border: none;
-        display: inline-block;
-        vertical-align: middle;
     }
-
-    .selectedComponent {
+    .selected {
         background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
         outline-color: var(--freon-selected-outline-color, darkblue);
         outline-style: var(--freon-selected-outline-style, solid);
         outline-width: var(--freon-selected-outline-width, 1px);
-        box-sizing: border-box;
-        display: inline-block;
-        vertical-align: middle;
-        /*border-radius: 3px;*/
     }
 </style>

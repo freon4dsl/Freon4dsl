@@ -2,12 +2,12 @@ import { runInAction } from "mobx";
 import { PiCreateSiblingAction } from "../actions";
 import { GridCellBox } from "../boxes";
 import {
-    AliasBox,
+    ActionBox,
     Box, BoxFactory,
     BoxUtils,
     GridBox,
     GridOrientation,
-    isAliasBox, PiCustomAction,
+    isActionBox, PiCustomAction,
     PiEditor
 } from "../index";
 import { PiElement } from "../../ast";
@@ -101,7 +101,7 @@ export class TableUtil {
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
             console.log("TableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders + " span[" + (orientation === "row" ? cellGetters.length : 1) + "/" + (orientation === "row" ? 1 : cellGetters.length) + "]");
             cells.push( BoxFactory.gridcell(element, cellRoleName,  location.row, location.column,
-                BoxFactory.alias(element, "alias-add-row-or-column", `<add new ${orientation}>`,
+                BoxFactory.action(element, "alias-add-row-or-column", `<add new ${orientation}>`,
                 { propertyName: propertyName, conceptName: propInfo.type }),
                 {
                     columnSpan: (orientation === "row" ? cellGetters.length : 1),
@@ -202,16 +202,16 @@ export class TableUtil {
             activeInBoxRoles: ["alias-add-row-or-column", "alias-alias-add-row-or-column-textbox"],
             action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
                 const element = box.element;
-                const aliasBox = (isAliasBox(box) ? box : box.parent as AliasBox);
-                LOGGER.log("2 New table row/column for " + aliasBox.propertyName + " concept " + aliasBox.conceptName);
-                const newElement: PiElement = Language.getInstance().concept(aliasBox?.conceptName)?.constructor();
+                const actionBox = (isActionBox(box) ? box : box.parent as ActionBox);
+                LOGGER.log("2 New table row/column for " + actionBox.propertyName + " concept " + actionBox.conceptName);
+                const newElement: PiElement = Language.getInstance().concept(actionBox?.conceptName)?.constructor();
                 if( newElement === undefined) {
                     // TODO Find out why this happenss sometimes
                     LOGGER.log("EMPTY grid: Unexpected new element undefined");
                     return null;
                 }
                 runInAction( () => {
-                    element[aliasBox.propertyName].push(newElement);
+                    element[actionBox.propertyName].push(newElement);
                 });
                 LOGGER.log("runInaction finished.")
                 return newElement;

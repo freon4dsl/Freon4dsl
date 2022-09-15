@@ -15,7 +15,7 @@
     </Tab>
 </TabBar>
 
-<div class='mdc-typography--body1'>
+<div class='mdc-typography--body1 infopanel'>
     {#if $activeTab === errorTab}
         <Card>
             <ErrorList />
@@ -26,3 +26,11 @@
         </Card>
     {/if}
 </div>
+
+<style>
+    .infopanel {
+        overflow: auto;
+        box-sizing: border-box;
+        padding: 4px;
+    }
+</style>

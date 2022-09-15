@@ -3,72 +3,67 @@
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
     import { getRoot, OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
-    import { FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
+    import {componentId} from "./svelte-utils";
 
-    export let optionalBox: OptionalBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
+    export let box: OptionalBox;
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("OptionalComponent").mute();
-    let id: string = `${optionalBox.element.piId()}-${optionalBox.role}`;
-    let childBox ;
+    let id: string;                             // an id for the html element showing the optional
+    id = !!box ? componentId(box) : 'optional-with-unknown-box';
     let mustShow = false;
     let showByCondition = false;
-    let element: HTMLDivElement = null;
-
-    onDestroy(() => {
-        LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ optionalBox.id + "]")
-    });
 
     const setFocus = async (): Promise<void> => {
-        FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
-        if (mustShow || showByCondition) {
-            optionalBox.box.firstEditableChild.setFocus();
-        } else {
-            optionalBox.whenNoShowingAlias.setFocus();
-        }
+        LOGGER.log("OptionalComponent.setFocus on box " + box.role);
+        // if (mustShow || showByCondition) {
+        //     box.firstEditableChild.setFocus();
+        // } else {
+        //     box.whenNoShowingAlias.setFocus();
+        // }
     };
 
     onMount( () => {
-        MOUNT_LOGGER.log("OptionalComponent onMount --------------------------------")
-        optionalBox.setFocus = setFocus;
+        // MOUNT_LOGGER.log("OptionalComponent onMount --------------------------------")
+        box.setFocus = setFocus;
+        mustShow = box.mustShow;
+        showByCondition = box.showByCondition;
     });
 
-    afterUpdate( () => {
-        LOGGER.log("AfterUpdate " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
-        LOGGER.log("   root " + getRoot(optionalBox).$id);
-        if(optionalBox.box.kind === "HorizontalListBox") {
-            optionalBox.box.children.forEach( child => {
-                LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
-            })
-        }
-        optionalBox.setFocus = setFocus;
-    });
+    // afterUpdate( () => {
+    //     LOGGER.log("AfterUpdate " + box.$id + " :" + box.role + " mustshow: " + box.mustShow + " condition " + box.showByCondition + "  child " + box.box.element.piLanguageConcept() + ":" + box.box.kind + " : " + box.box.$id);
+    //     LOGGER.log("   root " + getRoot(box).$id);
+    //     if(box.box.kind === "HorizontalListBox") {
+    //         box.box.children.forEach(child => {
+    //             LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
+    //         })
+    //     }
+    //     box.setFocus = setFocus;
+    // });
 
-    autorun( () => {
-        LOGGER.log("AUTO " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
-        LOGGER.log("   root " + getRoot(optionalBox).$id);
-        if(optionalBox.box.kind === "HorizontalListBox") {
-            optionalBox.box.children.forEach( child => {
-                LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
-            })
-        }
-        mustShow = optionalBox.mustShow;
-        childBox = optionalBox.box;
-        showByCondition = optionalBox.showByCondition;
-    });
+    // autorun( () => {
+    //     LOGGER.log("AUTO " + box.$id + " :" + box.role + " mustshow: " + box.mustShow + " condition " + box.showByCondition + "  child " + box.box.element.piLanguageConcept() + ":" + box.box.kind + " : " + box.box.$id);
+    //     LOGGER.log("   root " + getRoot(box).$id);
+    //     if(box.box.kind === "HorizontalListBox") {
+    //         box.box.children.forEach(child => {
+    //             LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
+    //         })
+    //     }
+    //     mustShow = box.mustShow;
+    //     childBox = box.box;
+    //     showByCondition = box.showByCondition;
+    // });
 </script>
 
-<div class="optional"
-     tabIndex={0}
-     bind:this={element}
+<span class="optional"
      id="{id}"
 >
     {#if mustShow || showByCondition}
-        <RenderComponent box={optionalBox.box} editor={editor} />
+        <RenderComponent box={box.content} editor={editor} />
     {:else}
-        <RenderComponent box={optionalBox.whenNoShowingAlias} editor={editor} />
+        <RenderComponent box={box.placeholder} editor={editor} />
     {/if}
-</div>
+</span>
 
 <style>
     .optional:empty:before {

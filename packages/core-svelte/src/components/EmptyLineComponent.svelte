@@ -1,12 +1,12 @@
 <script lang="ts">
-    import type { EmptyLineBox, PiEditor } from "@projectit/core";
-    import { componentId } from "./util";
+    import type { EmptyLineBox } from "@projectit/core";
+    import { componentId } from "./svelte-utils";
 
     export let box: EmptyLineBox;
-    // export let editor: PiEditor;
     let id: string = componentId(box);
 </script>
 
-<span id="{id}">
+<span id="{id}" >
     <br>
 </span>
+

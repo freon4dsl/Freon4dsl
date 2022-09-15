@@ -1,96 +1,110 @@
 <script lang="ts">
-    import { flip } from 'svelte/animate'; // TODO adjust rollup.config for svelte.animate
-    import ContextMenu from './ContextMenu.svelte';
-    import { Box, Language, ListBox, PiEditor } from "@projectit/core";
-    import { componentId } from "./util";
+    import {flip} from 'svelte/animate'; // TODO adjust rollup.config for svelte.animate
+    import {Box, ListBox, ListDirection, PiEditor, PiLogger} from "@projectit/core";
+    import {componentId} from "./svelte-utils";
     import RenderComponent from "./RenderComponent.svelte";
     import { runInAction } from "mobx";
-    import { checkAndDrop, moveListElement } from "./dropHelpers";
-    import { active, activeInList, dragged, draggedFromList } from "./DropStore";
+    import { checkAndDrop, moveListElement } from "./svelte-utils/dropHelpers";
+    import {
+        draggedElem,
+        draggedFrom,
+        activeElem,
+        activeIn,
+        ElementInfo,
+        selectedBoxes
+    } from "./svelte-utils/DropAndSelectStore";
+    import {contextMenu, contextMenuVisible, items} from "./svelte-utils/ContextMenuStore";
 
     export let box: ListBox;	                // the accompanying ListBox
     export let editor: PiEditor;			    // the editor
 
+    const LOGGER = new PiLogger("ListComponent"); //.mute();
     let id: string;                             // an id for the html element showing the list
     id = !!box ? componentId(box) : 'list-with-unknown-box';
-    let isHorizontal = false;                   // indicates whether the list should be shown horizontally or vertically
+    let isHorizontal: boolean;                  // indicates whether the list should be shown horizontally or vertically
+    $: isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
     let hovering = -1;                          // determines the style of a list element, when nothing is being dragged
-    let shownElements: Box[];
+    let shownElements: Box[];                   // the parts of the list that are being shown
     $: shownElements = [...box.children];
 
     // determine the type of the elements in the list
-    // this speeds up the check wether the element may be dropped in a certain drop-zone
-    const propInfo = Language.getInstance().classifierProperty(box.element.piLanguageConcept(), box.propertyName);
-    let elementType: string = propInfo.type;
+    // this speeds up the check whether the element may be dropped in a certain drop-zone
+    let elementType: string = box.element.piLanguageConcept();
 
     const drop = (event: DragEvent, targetIndex) => {
-        const json = event.dataTransfer.getData("text/plain");
-        const data = JSON.parse(json);
+        const data: ElementInfo = $draggedElem;
 
-        // console.log('DROPPING list-item [' + data.dropInfo.index + '] from list [' + data.listId + '] in list [' + id + ']');
-        if (data.listId === id) { // dropping in the same list
-            runInAction(() => {
-                moveListElement(box.element, box.propertyName, data.dropInfo.index, targetIndex);
-            });
+        console.log('DROPPING item [' + data.element.piId() + '] from [' + data.ownerId + '] in list [' + id + '] on position [' + targetIndex + ']');
+        if (data.ownerId === id) { // dropping in the same list
+            console.log('moving item within list');
+            // runInAction(() => {
+            //     moveListElement(box.element, box.propertyName, data.dropInfo.index, targetIndex);
+            // });
         } else { // dropping in another list
-            runInAction(() => {
-                // check if item may be dropped here
-                if (!checkAndDrop(editor.rootElement, box.element, box.propertyName, data.dropInfo, targetIndex)) {
-                    // TODO other way for error message
-                    alert("drop is not allowed here, types do not match");
-                }
-                // TODO second drop gives mobx error
-            });
+            console.log('moving item to another list');
+            // runInAction(() => {
+            //     // check if item may be dropped here
+            //     if (!checkAndDrop(editor.rootElement, box.element, box.propertyName, data.dropInfo, targetIndex)) {
+            //         // TODO other way for error message
+            //         alert("drop is not allowed here, types do not match");
+            //     }
+            //     // TODO second drop gives mobx error
+            // });
         }
         // everything is done, so reset the variables
-        $dragged = -1;
-        $draggedFromList = '';
-        $active = -1;
-        $activeInList = '';
+        $draggedElem = null;
+        $draggedFrom = '';
+        $activeElem = {row: - 1, column: -1 };
+        $activeIn = '';
         hovering = -1;
     }
 
     const dragstart = (event: DragEvent, listId: string, listIndex) => {
+        // close any context menu
+        $contextMenuVisible = false;
+
         // give the drag an effect
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.dropEffect = 'move';
 
-        // create the data to be transfered
-        const data = {listId: listId, dropInfo: { parentElementId: box.element.piId(), propertyName: box.propertyName, propertyType: elementType, index: listIndex }};
-        event.dataTransfer.setData('text/plain', JSON.stringify(data));
-
-        // notify the store that something is being dragged
-        $dragged = listIndex;
-        $draggedFromList = listId;
+        // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
+        // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
+        // create the data to be transferred and notify the store that something is being dragged
+        $draggedElem = new ElementInfo(id, elementType, listId, box.propertyName, listIndex);
+        $draggedFrom = listId;
     }
     const dragenter= (event: DragEvent, index): boolean => {
-        const json = event.dataTransfer.getData("text/plain");
-        const data = JSON.parse(json);
-        // only show this list item as active when the type of the element to be dropped is the right one
+        const data: ElementInfo = $draggedElem;
+        // only show this item as active when the type of the element to be dropped is the right one
         // TODO allow subtypes
-        if (elementType === data.dropInfo.propertyType) {
-            $active = index;
-            $activeInList = id;
+        if (elementType === data.elementType) {
+            $activeElem = {row: index, column: -1};
+            $activeIn = id;
             return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
         }
+        return false;
     }
     const mouseover=(index): boolean => {
+        LOGGER.log('mouseover');
         hovering = index;
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     }
     const mouseout=(): boolean => {
         hovering = -1;
-        $active = -1;
-        $activeInList = '';
+        $activeElem = {row: -1, column: -1};
+        $activeIn = '';
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     }
 
-    let contextMenu;
-    let itemWithMenu;
-    function openMenu(a, b, c) {
-        console.log('openMenu: ' + a + ", " + b + ", " + c + ', editor pos: ' + editor.scrollX + editor.scrollY);
-        itemWithMenu = c;
-        contextMenu.show(a, b);
+    function showContextMenu(event, index: number) {
+        if (index >= 0 && index <= shownElements.length) {
+            const elemBox: Box = shownElements[index];
+            editor.selectedBoxes = [elemBox];
+            $selectedBoxes = [elemBox];
+            // todo determine the contents of the menu based on elemBox
+            $contextMenu.items = items;
+            $contextMenu.show(event); // this function sets $contextMenuVisible to true
+        }
     }
 
     // The mouseover fires when the mouse cursor is outside the element and then move to inside the boundaries of the element.
@@ -102,16 +116,21 @@
 
 <!-- on:focus is here to avoid a known bug in svelte 3.4*: "A11y: on:mouseover must be accompanied by on:focus with Svelte v3.40 #285" -->
 <!-- Likewise on:blur is needed for on:mouseout -->
-<div class="list" class:horizontalList="{isHorizontal}" class:verticalList="{!isHorizontal}" tabindex=0 id="{id}">
-    {#each shownElements as box, index  (box.id)}
+<span class="list" id="{id}"
+      style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
+      style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}"
+>
+    {#each shownElements as box, index  (componentId(box))}
         <span
                 class="list-item"
-                class:hovering={hovering === index && !($active === index && $activeInList === id)}
-                class:is-active={$active === index && $activeInList === id}
-                class:dragged={$dragged === index && $draggedFromList === id}
+                class:hovering={hovering === index && !($activeElem?.row === index && $activeIn === id)}
+                class:is-active={$activeElem?.row === index && $activeIn === id}
+                class:dragged={$draggedElem?.row === index && $draggedFrom === id}
+                style:grid-column="{!isHorizontal ? 1 : index+1}"
+                style:grid-row="{isHorizontal ? 1 : index+1}"
                 animate:flip
                 draggable=true
-                on:dragstart|stopPropagation={event => {dragstart(event, id, index);}}
+                on:dragstart|stopPropagation={event => dragstart(event, id, index)}
                 on:drop|stopPropagation={event => drop(event, index)}
                 ondragover="return false"
                 on:dragenter|stopPropagation={(event) => dragenter(event, index)}
@@ -119,35 +138,39 @@
                 on:mouseout|stopPropagation={mouseout}
                 on:focus={() => {}}
                 on:blur={() => {}}
-                on:contextmenu|preventDefault={(event) => openMenu(event.pageX, event.pageY, index)}
+                on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event, index)}
         >
             <RenderComponent box={box} editor={editor}/>
-            {#if !isHorizontal && (index < shownElements.length - 1)} <br> {/if}
 		</span>
     {/each}
-</div>
-<ContextMenu bind:this={contextMenu}/>
+</span>
 
 <style>
     .list {
+        display: inline-grid;
+        grid-gap: 2px;
+        align-items: center; /* place-items is an abbreviation for align-items and justify-items */
+        justify-items: center;
+        align-content: center;
+        border-color: var(--freon-grid-component-border-color, darkgreen);
+        border-width: var(--freon-grid-component-border-width, 1pt);
+        border-style: var(--freon-grid-component-border-style, solid);
         border-radius: 4px;
-        box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-        padding: var(--freon-horizontallist-component-padding, 1px);
-        background-color: var(--freon-editor-component-background-color, white);
-        margin: var(--freon-horizontallist-component-margin, 1px);
+        /*box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);*/
+        background: transparent;
         box-sizing: border-box;
+        width: 100%;
     }
     .list-item {
         display: block;
-        margin-left:5px;
-        /* to prevent movement of elements when changing style there is an 'invisible' border that can change color */
-        border: solid 2px transparent;
+        padding: 1px;
+        box-sizing: border-box;
+        align-self: center;
+        justify-self: var(--freon-gridcell-component-justify-left, stretch);
     }
     .list-item.is-active {
-        border: solid 2px red;
-        background-color: red; /* TODO adjust the colors to freon colors */
-        color: #fff;
-        border-top: solid 10px transparent; /* move the element a little down to show where the drop can take place */
+        outline: solid 1px red; /* TODO adjust the colors to freon colors */
+        /*border-top: solid 10px transparent; !* move the element a little down to show where the drop can take place *!*/
     }
     .list-item.hovering {
         cursor: grab;
@@ -155,11 +178,5 @@
     .list-item.dragged {
         opacity:0.5;
         cursor: grabbing;
-    }
-    .horizontalList {
-        white-space: nowrap;
-        display: inline-block;
-    }
-    .verticalList {
     }
 </style>

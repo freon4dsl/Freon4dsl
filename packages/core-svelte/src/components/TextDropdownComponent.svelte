@@ -6,7 +6,7 @@
     // within the text.
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
-    import { clickOutside } from "./clickOutside";
+    import { clickOutside } from "./svelte-utils";
     import {
         AbstractChoiceBox,
         ARROW_DOWN,
@@ -17,18 +17,18 @@
         SelectOption,
         TextBox
     } from "@projectit/core";
-    import { componentId } from "./util";
+    import { componentId } from "./svelte-utils";
     import { autorun, runInAction } from "mobx";
 
     const LOGGER = new PiLogger("TextDropdownComponent").mute();
 
-    export let choiceBox: AbstractChoiceBox;	// the accompanying AliasBox or SelectBox
+    export let box: AbstractChoiceBox;	// the accompanying AliasBox or SelectBox
     export let editor: PiEditor;			    // the editor
     let textBox: TextBox;                       // the textbox that is to be coupled to the TextComponent part
-    $: textBox = choiceBox?.textBox;            // keeps the textBox variable in state with the choiceBox!
+    $: textBox = box?.textBox;            // keeps the textBox variable in state with the box!
 
     let id: string;                             // an id for the html element
-    id = !!choiceBox ? componentId(choiceBox) : 'textdropdown-with-unknown-box';
+    id = !!box ? componentId(box) : 'textdropdown-with-unknown-box';
     let isEditing: boolean = false;             // becomes true when the text field gets focus
     let dropdownShown: boolean = false;         // when true the dropdwon element is shown
     let text: string = "";		                // the text in the text field
@@ -38,7 +38,7 @@
 
     const noOptionsId = 'noOptions';            // constant for when the editor has no options
     let getOptions = (): SelectOption[] => {    // the function used to calculate all_options, called by onClick and setFocus
-        let result = choiceBox?.getOptions(editor);
+        let result = box?.getOptions(editor);
         if (result === null || result === undefined) {
             result = [{id: noOptionsId, label: '<no known options>'}];
         }
@@ -56,7 +56,7 @@
         // console.log('TextDropdownComponent setFocus');
         isEditing = true;
         dropdownShown = false;
-        editor.selectedBox = choiceBox;
+        editor.selectedBoxes = [box];
         allOptions = filteredOptions = getOptions();
     };
 
@@ -82,7 +82,7 @@
      * In case of an arrow down or up event in the textComponent, the currently selected option in the dropdown is changed.
      * In case of an Enter event in the dropdown, the currently selected option in the dropdown is set as text in the
      * textComponent, and the editing state is ended.
-     * In case of an ESCAPE in the textCompnent, the dropdown is closed, while the editing state remains.
+     * In case of an ESCAPE in the textComponent, the dropdown is closed, while the editing state remains.
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
@@ -173,11 +173,11 @@
         // LOGGER.log('TextDropdownComponent: startEditing');
         isEditing = true;
         dropdownShown = true;
-        editor.selectedBox = choiceBox;
+        editor.selectedBoxes = [box];
         if (!allOptions) {
             allOptions = getOptions();
         }
-        allOptions = filteredOptions = getOptions();
+        filteredOptions = getOptions();
     };
 
     /**
@@ -189,14 +189,16 @@
      */
     function storeAndExecute(selected: SelectOption) {
         LOGGER.log('executing option ' + selected.label);
-        runInAction(() => {
-            // TODO set the new cursor through the editor
-            choiceBox.selectOption(editor, selected); // TODO the result of the execution is ignored
-            // TODO the execution of the option should set the text in the selectBox, for now this is handled here
-            if (isSelectBox(choiceBox)) {
-                choiceBox.textHelper.setText(selected.label);
-            }
-        });
+        // runInAction(() => {
+        //     // TODO set the new cursor through the editor
+        //     box.selectOption(editor, selected); // TODO the result of the execution is ignored
+        //     // TODO the execution of the option should set the text in the selectBox, for now this is handled here
+        //     if (isSelectBox(box)) {
+        //         box.textHelper.setText(selected.label);
+        //     }
+        // });
+        // within svelte testbed only:
+        text = selected.label;
     }
 
     /**
@@ -223,32 +225,42 @@
 
     /**
      * This function is executed whenever there is a change in the box model.
-     * It sets the text in the choiceBox, if this is a SelectBox.
+     * It sets the text in the box, if this is a SelectBox.
      */
-    autorun(() => {
-        if (isSelectBox(choiceBox)) {
-            // TODO see todo in 'storeOrExecute'
-            let selectedOption = choiceBox.getSelectedOption();
-            if (!!selectedOption) {
-                choiceBox.textHelper.setText(selectedOption.label);
+    // autorun(() => {
+    //     if (isSelectBox(box)) {
+    //         // TODO see todo in 'storeOrExecute'
+    //         let selectedOption = box.getSelectedOption();
+    //         if (!!selectedOption) {
+    //             box.textHelper.setText(selectedOption.label);
+    //         }
+    //     }
+    //     // box.setFocus = setFocus;
+    // });
+
+    const onFocusOut = () => {
+            // Text component has lost focus, check where focus has moved to
+            if (!document.hasFocus()) { // Focus has moved outside the document tab/window
+                console.log("TextDropdownComponent onFocusOut OUTSIDE");
+                endEditing();
+            // } else // Focus has moved to dropdown element
             }
         }
-        // choiceBox.setFocus = setFocus;
-    });
-
 </script>
 
 <span id="{id}"
       on:keydown={onKeyDown}
       use:clickOutside
       on:click_outside={endEditing}
+      on:focusout={onFocusOut}
+
 >
     <TextComponent
             bind:isEditing={isEditing}
             bind:text={text}
-            textBox={textBox}
+            partOfActionBox={true}
+            box={textBox}
             editor={editor}
-            partOfAlias={true}
             on:textUpdate={textUpdate}
             on:startEditing={startEditing}
             on:endEditing={endEditing}

@@ -397,7 +397,7 @@ export class BoxUtils {
         const byName: boolean = !!projectionName && projectionName.length > 0;
         return !!property
             ? (byName ? rootProjection.getNamedBox(property, projectionName) : rootProjection.getBox(property))
-            : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
+            : BoxFactory.action(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
     }
 
     /**
@@ -422,7 +422,7 @@ export class BoxUtils {
 
     private static addPlaceholder(children: Box[], element: PiElement, propertyName: string) {
         return children.concat(
-            BoxFactory.alias(
+            BoxFactory.action(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item"),
                 `<+ ${propertyName}>`,

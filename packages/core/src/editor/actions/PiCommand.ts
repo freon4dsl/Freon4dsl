@@ -87,7 +87,7 @@ export class PiCreatePartCommand extends PiCommand {
         const newElement: PiElement = Language.getInstance().concept(this.conceptName)?.constructor();
         if (newElement === undefined || newElement === null) {
             // TODO Find out why this happens sometimes
-            console.error("AliasBox action: Unexpected new element undefined");
+            console.error("ActionBox action: Unexpected new element undefined");
             return EMPTY_POST_ACTION;
         }
         if (Language.getInstance().classifierProperty(box.element.piLanguageConcept(), this.propertyName).isList) {

@@ -17,3 +17,5 @@ export let copiedElement: Writable<PiElement> = writable<PiElement>(null);
 
 export let editorProgressShown: Writable<boolean> = writable<boolean>(false);
 
+export let unsavedChanges: Writable<boolean> = writable<boolean>(false); // TODO set this value somewhere
+

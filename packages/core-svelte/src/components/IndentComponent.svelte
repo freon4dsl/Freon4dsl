@@ -1,44 +1,26 @@
 <script lang="ts">
     import { autorun } from "mobx";
-    import { FOCUS_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import type {IndentBox, PiEditor} from "@projectit/core";
-    import { componentId } from "./util";
+    import { componentId } from "./svelte-utils";
 
-    export let indentBox: IndentBox;
+    export let box: IndentBox;
     export let editor: PiEditor;
 
-    // only exported for testing purposes
-    export const style=`${indentBox.indent * 8}px;`;
-    let id: string = componentId(indentBox);
+    const style=`margin-left: ${box.indent * 8}px;`;
+    let id: string = componentId(box);
 
-    autorun( () => {
-       indentBox.indent;
-    });
-
-    const onFocus = (e: FocusEvent) =>  {
-        FOCUS_LOGGER.log("IndentComponent.onFocus")
-    };
-    const onBlur = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("IndentComponent.onBlur")
-    }
+    // autorun( () => {
+    //   box.indent;
+    // });
 
 </script>
 
 <span
-    class="indentStyle"
-    tabIndex={0}
-    style:margin-left="{style}"
-    on:focus={onFocus}
-    on:blur={onBlur}
+    style="{style}"
     id="{id}"
 >
-    <RenderComponent box={indentBox.child} editor={editor}/>
+    <RenderComponent box={box.child} editor={editor}/>
 </span>
 
-<style>
-    .indentStyle {
-        margin-left: 50px;
-    }
-</style>
 

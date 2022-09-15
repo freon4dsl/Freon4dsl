@@ -6,7 +6,7 @@ import { PiUtils } from "../../util/PiUtils";
 import { PiEditor } from "../PiEditor";
 import {
     Box,
-    AliasBox,
+    ActionBox,
     LabelBox,
     TextBox,
     SelectOption,
@@ -26,7 +26,7 @@ type BoxCache<T extends Box> = {
 const LOGGER: PiLogger = new PiLogger("BoxFactory").mute();
 
 // The box caches
-let aliasCache: BoxCache<AliasBox> = {};
+let aliasCache: BoxCache<ActionBox> = {};
 let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
@@ -94,7 +94,7 @@ export class BoxFactory {
      * @param cache   The cache to use
      */
     private static find<T extends Box>(element: PiElement, role: string, creator: () => T, cache: BoxCache<T>): T {
-        // 1. Create the alias box, or find the one that already exists for this element and role
+        // 1. Create the action box, or find the one that already exists for this element and role
         const elementId = element.piId();
         if (!!cache[elementId]) {
             const box = cache[elementId][role];
@@ -116,13 +116,13 @@ export class BoxFactory {
         }
     }
 
-    static alias(element: PiElement, role: string, placeHolder: string, initializer?: Partial<AliasBox>): AliasBox {
+    static action(element: PiElement, role: string, placeHolder: string, initializer?: Partial<ActionBox>): ActionBox {
         if (cacheAliasOff) {
-            return new AliasBox(element, role, placeHolder, initializer);
+            return new ActionBox(element, role, placeHolder, initializer);
         }
-        // 1. Create the alias box, or find the one that already exists for this element and role
-        const creator = () => new AliasBox(element, role, placeHolder, initializer);
-        const result: AliasBox = this.find<AliasBox>(element, role, creator, aliasCache);
+        // 1. Create the action box, or find the one that already exists for this element and role
+        const creator = () => new ActionBox(element, role, placeHolder, initializer);
+        const result: ActionBox = this.find<ActionBox>(element, role, creator, aliasCache);
 
         runInAction(() => {
             // 2. Apply the other arguments in case they have changed
@@ -137,7 +137,7 @@ export class BoxFactory {
         if (cacheLabelOff) {
             return new LabelBox(element, role, getLabel, initializer);
         }
-        // 1. Create the alias box, or find the one that already exists for this element and role
+        // 1. Create the label box, or find the one that already exists for this element and role
         const creator = () => new LabelBox(element, role, getLabel, initializer);
         const result: LabelBox = this.find<LabelBox>(element, role, creator, labelCache);
 
@@ -154,7 +154,7 @@ export class BoxFactory {
         if (cacheTextOff) {
             return new TextBox(element, role, getText, setText, initializer);
         }
-        // 1. Create the  box, or find the one that already exists for this element and role
+        // 1. Create the text box, or find the one that already exists for this element and role
         const creator = () => new TextBox(element, role, getText, setText, initializer);
         const result: TextBox = this.find<TextBox>(element, role, creator, textCache);
 
@@ -239,7 +239,7 @@ export class BoxFactory {
         if (cacheSelectOff) {
             return new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
         }
-        // 1. Create the  box, or find the one that already exists for this element and role
+        // 1. Create the select box, or find the one that already exists for this element and role
         const creator = () => new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
         const result: SelectBox = this.find<SelectBox>(element, role, creator, selectCache);
 
@@ -259,7 +259,7 @@ export class BoxFactory {
         if (cacheOptionalOff) {
             return new OptionalBox(element, role, condition, box, mustShow, aliasText);
         }
-        // 1. Create the alias box, or find the one that already exists for this element and role
+        // 1. Create the optional box, or find the one that already exists for this element and role
         const creator = () => new OptionalBox(element, role, condition, box, mustShow, aliasText);
         const result: OptionalBox = this.find<OptionalBox>(element, role, creator, optionalCache);
 
@@ -274,7 +274,7 @@ export class BoxFactory {
         if (cacheGridcellOff) {
             return new GridCellBox(element, role, row, column, box, initializer);
         }
-        // 1. Create the alias box, or find the one that already exists for this element and role
+        // 1. Create the grid cell box, or find the one that already exists for this element and role
         const creator = () => new GridCellBox(element, role, row, column, box, initializer);
         const result: GridCellBox = this.find<GridCellBox>(element, role, creator, gridcellCache);
 

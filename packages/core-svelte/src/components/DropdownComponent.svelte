@@ -17,53 +17,60 @@
         // console.log("Dropdown CLICKED, option " + option.id);
         dispatcher("piItemSelected", option);
     };
-    // TODO remove div with class 'popupWrapper'
 </script>
 
-<div class="dropdown"
+<nav class="dropdown"
      id="{id}"
 >
-    <div class="popupWrapper">
-        {#if options.length > 0 }
-            {#each options as option (option.id + option.label)}
-                <div class="dropdownitem"
-                     class:isSelected={isSelected(option)}
-                     on:click={(event) => {event.preventDefault(); event.stopPropagation(); handleClick(option); }}
-                >
-                    {option.label}
-                </div>
-            {/each}
-        {:else}
-            <div class="dropdownerror">
-                Invalid input!
+    {#if options.length > 0 }
+        {#each options as option (option.id + option.label)}
+            <div class="dropdownitem"
+                 class:isSelected={isSelected(option)}
+                 on:click={(event) => {event.preventDefault(); event.stopPropagation(); handleClick(option); }}
+            >
+                {option.label}
             </div>
-        {/if}
-    </div>
-</div>
+        {/each}
+    {:else}
+        <div class="dropdownerror">
+            Invalid input!
+        </div>
+    {/if}
+</nav>
 
 
 <style>
     .dropdown {
-        position: relative;
-    }
-
-    .popupWrapper {
-        position: absolute;
         border: 1px solid var(--freon-dropdown-component-border-color, darkblue);
         box-shadow: var(--freon-popup-box-shadow, 0 0 6px 0 rgba(0, 0, 0, 0.5));
         border-radius: 2px;
-        top: 10px;
-        left: -1px;
         opacity: 1;
         z-index: 95;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        background: #e5e5e5;
+        min-width: 120px;
+        width: fit-content;
+        margin-top: 3px;
+        position: absolute;
     }
 
     .dropdownitem {
         color: var(--freon-dropdownitem-component-color, darkblue);
         background-color: var(--freon-dropdownitem-component-background-color, inherit);
-        display: block;
         white-space: nowrap;
         border: none;
+        background: none;
+        border-radius: 2px;
+        padding: 4px;
+        margin: 3px;
+        cursor: pointer;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        gap: 2px;
+        place-items: center;
     }
 
     .dropdownerror {
@@ -76,7 +83,7 @@
 
     .dropdownitem:hover {
         color: var(--freon-dropdownitem-component-hover-color, darkblue);
-        background-color: var(--freon-dropdownitem-component-hover-background-color, yellow);
+        background-color: var(--freon-dropdownitem-component-hover-background-color, #f4f4f4);
     }
 
     .isSelected {

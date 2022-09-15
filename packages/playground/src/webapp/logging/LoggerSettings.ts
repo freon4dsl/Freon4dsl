@@ -2,36 +2,39 @@ import { PiLogger } from "@projectit/core";
 
 // Mute or unmute logs here (in addition to elsewhere).
 export function muteLogs() {
-    PiLogger.mute("PiEditor");
-    PiLogger.mute("PiUtils");
-    PiLogger.mute("TextComponent");
-    PiLogger.mute("AliasComponent");
-    PiLogger.mute("AUTORUN");
-    PiLogger.mute("FOCUS")
-    PiLogger.mute("AFTER_UPDATE");
-    PiLogger.mute("MOUNT");
-    PiLogger.mute("SelectOptionList");
-    PiLogger.mute("OptionalComponent");
-    PiLogger.mute("RenderComponent");
-    PiLogger.mute("SelectableComponent");
+    // from ~/core-svelte:
+    PiLogger.mute("ContextMenu");            // currently, there is no LOGGER for ContextMenu
+    PiLogger.mute("DropdownComponent");      // currently, there is no LOGGER for DropdownComponent
+    PiLogger.mute("EmptyLineComponent");     // currently, there is no LOGGER for EmptyLineComponent
+    // PiLogger.mute("GridCellComponent");
+    // PiLogger.mute("GridComponent");
+    PiLogger.mute("IndentComponent");        // currently, there is no LOGGER for IndentComponent
     PiLogger.mute("LabelComponent");
-    PiLogger.mute("ListComponent");
-    PiLogger.mute("DropdownComponent");
-    PiLogger.mute("DropdownItemComponent");
-    PiLogger.mute("X");
-    PiLogger.mute("BoxFactory");
-    PiLogger.mute("Language");
-    PiLogger.mute("TableUtil");
-    PiLogger.mute("GridCellComponent");
-    PiLogger.mute("ProjectItComponent");
-    PiLogger.mute("TextBox");
-    PiLogger.mute("SelectBox");
-    PiLogger.mute("HorizontalListBox");
-    PiLogger.mute("AliasBox");
+    PiLogger.mute("LayoutComponent");
+    // PiLogger.mute("ListComponent");
+    PiLogger.mute("OptionalComponent");
+    // PiLogger.mute("ProjectItComponent");
+    // PiLogger.mute("RenderComponent");
+    PiLogger.mute("TextComponent");
+    PiLogger.mute("TextDropdownComponent");
 
-// PiLogger.mute("EditorCommunication");
+    // from ~/core:
+    // PiLogger.mute("PiEditor");
+    // PiLogger.mute("PiUtils");
+    // PiLogger.mute("SelectOptionList");
+    // PiLogger.mute("BoxFactory");
+    // PiLogger.mute("Language");
+    // PiLogger.mute("TableUtil");
+    // PiLogger.mute("TextBox");
+    // PiLogger.mute("SelectBox");
+    // PiLogger.mute("HorizontalListBox");
+    // PiLogger.mute("ActionBox");
 
-    PiLogger.mute("ExampleScoper");
+    // from ~/webapp:
+    // PiLogger.mute("EditorCommunication");
+
+    // from current project:
+    // PiLogger.mute("ExampleScoper");
 
     // PiLogger.muteAllLogs();
 }

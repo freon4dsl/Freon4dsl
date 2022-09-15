@@ -13,7 +13,6 @@
     } from "@projectit/core";
     import { autorun } from "mobx";
     import { afterUpdate } from "svelte";
-    import { AUTO_LOGGER } from "../components/ChangeNotifier";
 
     // Parameters
     export let box: Box = new LabelBox(null, "DUMMY", "LABEL");
@@ -59,7 +58,7 @@
     });
 
     autorun(() => {
-        AUTO_LOGGER.log("SelectableComponent for box: " + box.role);
+        LOGGER.log("SelectableComponent for box: " + box.role);
         isSelected = editor?.selectedBox === box;
         className = (isSelected ? "selectedComponent" : "unSelectedComponent");
         if (isSelected) {

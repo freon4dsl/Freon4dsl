@@ -6,40 +6,39 @@
 
 <script lang="ts">
     import { afterUpdate, onMount, createEventDispatcher } from "svelte";
-    import {
-        AliasBox, CharAllowed, isAliasTextBox,
-        ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE,
-        CONTROL, DELETE, ENTER, ESCAPE,
-        SHIFT, TAB, PI_NULL_COMMAND,
-        PiCaret,
-        PiCaretPosition, PiCommand,
-        PiEditor, PiEditorUtil,
-        PiLogger, PiPostAction, SelectBox,
-        TextBox, toPiKey
-    } from "@projectit/core";
-    import { componentId } from "./util";
+	import { componentId, setBoxSizes } from "./svelte-utils";
+	import {
+		ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE,
+		CONTROL, DELETE, ENTER, ESCAPE,
+		SHIFT, TAB,
+		isActionBox,
+		isSelectBox,
+		PiEditor,
+		PiLogger,
+		TextBox,
+		CharAllowed, PiCaret, PiCaretPosition
+	} from "@projectit/core";
+    import { componentId } from "./svelte-utils";
     import { autorun, runInAction } from "mobx";
-    import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
-    import { setBoxSizes } from "./CommonFunctions";
+	import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
 
-    const LOGGER = new PiLogger("TextComponent").mute();
+    const LOGGER = new PiLogger("TextComponent"); // .mute();
     const dispatcher = createEventDispatcher();
     type BoxType = "alias" | "select" | "text";
 
     // Parameters
-    export let textBox: TextBox;			// the accompanying textbox
-	export let editor: PiEditor;			// the editor
-	export let partOfAlias: boolean;		// indication whether this textcomponent is part of a TextDropdownComponent
-	// TODO rethink the exporting of the next two parameters
+    export let box: TextBox;				// the accompanying textbox
+    export let editor: PiEditor;			// the editor
 	export let isEditing: boolean = false; 	// indication whether this component is currently being edited by the user, needs to be exported for binding in TextDropdownComponent
+	export let partOfActionBox: boolean = false; // indication whether this text component is part of an TextDropdownComponent
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
     // Local variables
-	let id: string;                         // an id for the html element
-	id = !!textBox ? componentId(textBox) : 'text-with-unknown-box';
+    let id: string;                         // an id for the html element
+    id = !!box ? componentId(box) : 'text-with-unknown-box';
     let spanElement: HTMLSpanElement;       // the <span> element on the screen
-    let inputHTMLelement: HTMLInputElement; // the <input> element on the screen
-    let placeholder: string;                // the placeholder when value of text component is not present
+    let inputElement: HTMLInputElement; 	// the <input> element on the screen
+    let placeholder: string = '<..>';       // the placeholder when value of text component is not present
     let originalText: string;               // variable to remember the text that was in the box previously
     let editStart = false;					// indicates whether we are just starting to edit, so we need to set the cursor in the <input>
     let size = 10;							// the size of the <input>
@@ -47,8 +46,8 @@
     let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
     										// Note that 'from <= to' always holds.
 
-	let boxType: BoxType = "text";          // indication how is this text component used, determines styling
-	$: boxType = (textBox?.parent instanceof AliasBox ? "alias" : (textBox?.parent instanceof SelectBox ? "select" : "text"));
+    let boxType: BoxType = "text";          // indication how is this text component used, determines styling
+    $: boxType = !!box.parent ? (isActionBox(box?.parent) ? "alias" : isSelectBox(box?.parent) ? "select" : "text") : "text";
 
     /**
      * This function sets the focus on this element programmatically.
@@ -56,9 +55,8 @@
      */
     const setFocus = () => {
         // TODO should we check here whether the box is selectable? If so, where else is this check needed?
-        LOGGER.log("setFocus " + ": box[" + textBox.role + "]");
-        if (document.activeElement === inputHTMLelement || isEditing ) {
-            FOCUS_LOGGER.log("TextComponent has focus already");
+        LOGGER.log("setFocus " + ": box[" + box.role + "]");
+        if (document.activeElement === inputElement || isEditing) {
             return;
         }
         // set the local variables, but do not set 'from' and 'to'
@@ -66,27 +64,27 @@
         isEditing = true;
         editStart = true;
         originalText = text;
-        size = text.length == 0 ? 10 : text.length;
-        // inputHTMLelement.focus(); is done by afterUpdate()
+        size = text.length === 0 ? 10 : text.length;
+        // inputElement.focus(); is done by afterUpdate()
     };
 
-	/**
-	 * This function ensures that 'from <= to' always holds.
-	 * Should be called whenever these variables are set.
-	 * @param inFrom
-	 * @param inTo
-	 */
-	function setFromAndTo(inFrom: number, inTo: number) {
-		if (inFrom < inTo) {
-			from = inFrom;
-			to = inTo;
-		} else {
-			from = inTo;
-			to = inFrom;
-		}
-	}
+    /**
+     * This function ensures that 'from <= to' always holds.
+     * Should be called whenever these variables are set.
+     * @param inFrom
+     * @param inTo
+     */
+    function setFromAndTo(inFrom: number, inTo: number) {
+        if (inFrom < inTo) {
+            from = inFrom;
+            to = inTo;
+        } else {
+            from = inTo;
+            to = inFrom;
+        }
+    }
 
-	/**
+    /**
      * This function sets the caret position of the <input> element programmatically.
      * It is called from the editor.
      * @param piCaret
@@ -108,52 +106,49 @@
                 break;
         }
         if (isEditing) {
-            inputHTMLelement.selectionStart = from >= 0 ? from : 0;
-            inputHTMLelement.selectionEnd = to >= 0 ? to : 0;
-            inputHTMLelement.focus();
+            inputElement.selectionStart = from >= 0 ? from : 0;
+            inputElement.selectionEnd = to >= 0 ? to : 0;
+            inputElement.focus();
         }
     };
 
     /**
      * When the switch is made from <span> to <input> this function is called.
      * It stores the caret position(s) to be used to set the selection of the <input>,
-     * and sets the selectedBox of the editor.
+     * and sets the selectedBoxes of the editor.
      */
     function startEditing(event: MouseEvent) {
         LOGGER.log('startEditing');
-        if (textBox.selectable || partOfAlias) { // TODO is textBox.selectable still needed
-            isEditing = true;
-            editStart = true;
-            originalText = text;
-            size = text.length == 0 ? 10 : text.length + 5;
-            let {
-                anchorOffset, focusOffset
-            } = document.getSelection();
-            setFromAndTo(anchorOffset, focusOffset);
-            editor.selectedBox = textBox;
-            event.preventDefault();
-            event.stopPropagation();
-			dispatcher('startEditing'); // tell the TextDropdown that the edit has started
-        } else {
-			LOGGER.log('NOT textBox.selectable')
-		}
+        // set the global selection
+        editor.selectedBoxes = [box];
+        $selectedBoxes = [box];
+        // set the local variables
+        isEditing = true;
+        editStart = true;
+        originalText = text;
+        size = text.length === 0 ? 10 : text.length;
+        let {anchorOffset, focusOffset} = document.getSelection();
+        setFromAndTo(anchorOffset, focusOffset);
+        event.preventDefault();
+        event.stopPropagation();
+        dispatcher('startEditing'); // tell the TextDropdown that the edit has started
     }
 
     /**
-     * When the <input> element is shown, the clicks should not be propagated.
+     * This function is only called when the <input> element is shown. Then clicks should not be propagated.
      * (Clicks either resize the element or set the caret position.)
-	 * When this component is part of a TextDropdown Component, the dropdown options should also be altered.
+     * When this component is part of a TextDropdown Component, the dropdown options should also be altered.
      * @param event
      */
     function onClick(event: MouseEvent) {
         LOGGER.log('TextComponent onClick');
-        if (partOfAlias) {  // let TextDropdownComponent know, dropdown menu needs to be altered
-			setFromAndTo(inputHTMLelement.selectionStart, inputHTMLelement.selectionEnd);
-			LOGGER.log('dispatching from on click')
-			dispatcher('textUpdate', {content: text, caret: from});
-		}
-		// event.preventDefault();
-		// event.stopPropagation();
+        if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
+            setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+            LOGGER.log('dispatching from on click')
+            dispatcher('textUpdate', {content: text, caret: from});
+        }
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     /**
@@ -167,18 +162,21 @@
         from = -1;
         to = -1;
 
-		if (!partOfAlias) {
-			// store the current value in the textbox, or delete the box, if appropriate
-			runInAction(() => {
-				if (textBox.deleteWhenEmpty && text.length === 0) {
-					editor.deleteBox(textBox);
-				} else if (text !== textBox.getText()) {
-					textBox.setText(text);
-				}
-			});
-		} else {
-			dispatcher('endEditing');
-		}
+        if (!partOfActionBox) {
+            // store the current value in the textbox, or delete the box, if appropriate
+            // runInAction(() => {
+            // 	if (box.deleteWhenEmpty && text.length === 0) {
+            // 		editor.deleteBox(box);
+            // 	} else if (text !== box.getText()) {
+            // 		box.setText(text);
+            // 	}
+            // });
+            if (text !== box.getText()) {
+                box.setText(text);
+            }
+        } else {
+            dispatcher('endEditing');
+        }
     }
 
     /**
@@ -191,13 +189,7 @@
     function getCaretPosition(event: KeyboardEvent) {
         // the following type cast satisfies the type checking, as the event can only be generated from the <input> element
         const target = event.target as HTMLInputElement;
-        if (target.selectionEnd < target.selectionStart) {
-            from = target.selectionEnd;
-            to = target.selectionStart;
-        } else {
-            from = target.selectionStart;
-            to = target.selectionEnd;
-        }
+        setFromAndTo(target.selectionStart, target.selectionEnd);
     }
 
     /**
@@ -211,25 +203,25 @@
         // preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
         LOGGER.log("TextComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
 
-		// TODO use toPiKey to shorten tests on meta keys
+        // TODO use toPiKey to shorten tests on meta keys
         // first check if this event has a command defined for it
-        const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), textBox, editor);
-        if (cmd !== PI_NULL_COMMAND) {
-            let postAction: PiPostAction;
-            runInAction(() => {
-                if (text !== originalText) {
-                    textBox.setText(text);
-                }
-                postAction = cmd.execute(textBox, toPiKey(event), editor);
-            });
-            if (!!postAction) {
-                postAction();
-            }
-            return;
-        }
+        // const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), box, editor);
+        // if (cmd !== PI_NULL_COMMAND) {
+        //     let postAction: PiPostAction;
+        //     runInAction(() => {
+        //         if (text !== originalText) {
+        //             box.setText(text);
+        //         }
+        //         postAction = cmd.execute(box, toPiKey(event), editor);
+        //     });
+        //     if (!!postAction) {
+        //         postAction();
+        //     }
+        //     return;
+        // }
         // no command, then check what type of event it is and whether we can handle it here
         switch (event.key) {
-			// TODO reorganise switch to be sure that meta keys are handled correctly
+            // TODO reorganise switch to be sure that meta keys are handled correctly
             case ALT:
             case CONTROL:
             case SHIFT: { // not relevant if entered separately
@@ -241,9 +233,9 @@
             case ESCAPE:
             case TAB: {
                 LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
-                if (!partOfAlias) {
+                if (!partOfActionBox) {
                     endEditing();
-				} // else, let alias box handle this
+                } // else, let alias box handle this
                 break;
             }
             case ARROW_LEFT: {
@@ -251,9 +243,9 @@
                 LOGGER.log("Arrow-left: Caret at: " + from);
                 if (from !== 0) { // when the arrow key can stay within the text, do not let the parent handle it
                     event.stopPropagation();
-					// note: caret is set to one less because getCaretPosition is calculated before the event is executed
-					LOGGER.log('dispatching from arrow-left')
-					dispatcher('textUpdate', {content: text, caret: from - 1});
+                    // note: caret is set to one less because getCaretPosition is calculated before the event is executed
+                    LOGGER.log('dispatching from arrow-left')
+                    dispatcher('textUpdate', {content: text, caret: from - 1});
                 } else { // the key will cause this element to lose focus, its content should be saved
                     endEditing();
                     editor.selectPreviousLeaf();
@@ -265,8 +257,8 @@
                 LOGGER.log("Arrow-right: Caret at: " + from);
                 if (from !== text.length) { // when the arrow key can stay within the text, do not let the parent handle it
                     event.stopPropagation();
-					// note: caret is set to one more because getCaretPosition is calculated before the event is executed
-					LOGGER.log('dispatching from arrow-right')
+                    // note: caret is set to one more because getCaretPosition is calculated before the event is executed
+                    LOGGER.log('dispatching from arrow-right')
                     dispatcher('textUpdate', {content: text, caret: from + 1});
                 } else { // the key will cause this element to lose focus, its content should be saved
                     endEditing();
@@ -287,8 +279,8 @@
                         // with event.ctrlKey: delete text from caret to end => handled by browser
                         event.stopPropagation();
                     } else if (text === "" || !!text) { // nothing left in this component to delete
-                        if (textBox.deleteWhenEmptyAndErase) {
-                            editor.deleteBox(editor.selectedBox);
+                        if (box.deleteWhenEmptyAndErase) {
+                            editor.deleteBox(box);
                             event.stopPropagation();
                             return;
                         }
@@ -305,25 +297,25 @@
                 if (!event.ctrlKey && !event.altKey && event.shiftKey) { // shift-delete
                     // CUT
                 } else { // delete
-					event.stopPropagation();
+                    event.stopPropagation();
                     getCaretPosition(event);
                     if (to !== text.length) { // when there are still chars remaining to the right, do not let the parent handle it
                         // without propagation, the browser handles which char(s) to be deleted
                         // with event.ctrlKey: delete text from caret to 0 => handled by browser
                         event.stopPropagation();
                     } else if (text === "" || !text) { //  nothing left in this component to delete
-                        if (textBox.deleteWhenEmptyAndErase) {
-                            editor.deleteBox(editor.selectedBox);
+                        if (box.deleteWhenEmptyAndErase) {
+                            editor.deleteBox(box);
                             return;
-						} else { // TODO is this correct?
-							// the key will cause this element to lose focus, its content should be saved
-							endEditing();
-							editor.selectNextLeaf();
-						}
+                        } else { // TODO is this correct?
+                            // the key will cause this element to lose focus, its content should be saved
+                            endEditing();
+                            editor.selectNextLeaf();
+                        }
                     }
                 }
-				break;
-			}
+                break;
+            }
 
             default: { // the event.key is probably a printable chararcter, still there are these keystrokes to be handled
                 if (event.ctrlKey && !event.altKey && event.key === 'z') { // ctrl-z
@@ -355,15 +347,14 @@
                     // Firefox only supports reading the clipboard in browser extensions, using the "clipboardRead" extension permission.
                     // TODO add a check on the browser used
                     navigator.clipboard.readText().then(
-                        clipText => LOGGER.log('adding ' + clipText + ' after ' + text[to -1]));
+                        clipText => LOGGER.log('adding ' + clipText + ' after ' + text[to - 1]));
                     // TODO add the clipText to 'text'
                 } else {
-					getCaretPosition(event);
-                    switch (textBox.isCharAllowed(text, event.key, from)) {
-						case CharAllowed.OK: // add to text, handled by browser
-							// afterupdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
-							event.preventDefault();
-							event.stopPropagation();
+                    getCaretPosition(event);
+                    switch (box.isCharAllowed(text, event.key, from)) {
+                        case CharAllowed.OK: // add to text, handled by browser
+                            LOGGER.log('CharAllowed');
+                            // afterupdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
                             break;
                         case CharAllowed.NOT_OK: // ignore
                             // ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
@@ -373,19 +364,19 @@
                             break;
                         case CharAllowed.GOTO_NEXT: // try in previous or next box
                             LOGGER.log("KeyPressAction.GOTO_NEXT");
-                            getCaretPosition(event);
                             if (from === 0) {
                                 editor.selectNextLeaf();
                             } else if (to === text.length) {
                                 editor.selectPreviousLeaf();
                             }
-                            LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
-                            if (isAliasTextBox(editor.selectedBox)) {
-                                LOGGER.log("     is an alias box");
-                                (editor.selectedBox.parent as AliasBox).triggerKeyPressEvent(event.key);
-                            } else {
-                                LOGGER.log("     is NOT an alias box");
-                            }
+                            // todo adjust for multiple selection
+                            LOGGER.log("    NEXT LEAF IS " + editor.selectedBoxes[0].role);
+                            // if (isAliasTextBox(editor.selectedBoxes)) {
+                            //     LOGGER.log("     is an alias box");
+                            //     (editor.selectedBoxes.parent as AliasBox).triggerKeyPressEvent(event.key);
+                            // } else {
+                            //     LOGGER.log("     is NOT an alias box");
+                            // }
                             event.preventDefault();
                             event.stopPropagation();
                             break;
@@ -395,14 +386,14 @@
         }
     };
 
-	/**
-	 * When this component loses focus, do everything that is needed to end the editing state.
-	 */
-    const onFocusOut = () => {
+    /**
+     * When this component loses focus, do everything that is needed to end the editing state.
+     */
+    const onFocusOut = (e) => {
         LOGGER.log("TextComponent onFocusOut")
-		if (!partOfAlias) {
-			endEditing();
-		} // else let TextDropdownComponent handle it
+        if (!partOfActionBox) {
+            endEditing();
+        } // else let TextDropdownComponent handle it
     }
 
     /**
@@ -413,21 +404,21 @@
      * box sizes in the textbox.
      */
     afterUpdate(() => {
-        LOGGER.log("afterUpdate " + editStart);
+        LOGGER.log("afterUpdate");
         if (editStart) {
-            inputHTMLelement.selectionStart = from >= 0 ? from : 0;
-            inputHTMLelement.selectionEnd = to >= 0 ? to : 0;
-            inputHTMLelement.focus();
+            inputElement.selectionStart = from >= 0 ? from : 0;
+            inputElement.selectionEnd = to >= 0 ? to : 0;
+            inputElement.focus();
             editStart = false;
         }
         if (!isEditing && !!spanElement) {
             // TODO test this
-            setBoxSizes(textBox, spanElement.getBoundingClientRect());
+            setBoxSizes(box, spanElement.getBoundingClientRect());
         }
-        if (isEditing && partOfAlias) {
+        if (isEditing && partOfActionBox) {
             // send event to parent
             LOGGER.log('TextComponent dispatching event with text ' + text + ' from afterUpdate');
-            dispatcher('textUpdate', {content: text, caret: from});
+            dispatcher('textUpdate', {content: text, caret: from + 1});
         }
     });
 
@@ -438,36 +429,36 @@
      */
     onMount(() => {
         LOGGER.log('onMount');
-        MOUNT_LOGGER.log("TextComponent.onMount for role [" + textBox.role + "]");
-        textBox.setFocus = setFocus;
-        textBox.setCaret = setCaret;
-        originalText = text = textBox.getText();
+        box.setFocus = setFocus;
+        // box.setCaret = setCaret;
+        originalText = text = box.getText();
+        placeholder = box.placeHolder;
     });
 
-    /**
-     * TODO when is this function called?
-     */
-    autorun(() => {
-        LOGGER.log("autorun");
-		if (textBox instanceof TextBox) {
-			AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] textBox [" + textBox.getText() + "] innertText [" + spanElement?.innerText + "] isEditing [" + isEditing + "]");
-			// TODO can the following five statements be moved to onMount() or should they be copied to onMount()?
-			textBox.setFocus = setFocus;
-			textBox.setCaret = setCaret;
-			originalText = text = textBox.getText();
-			placeholder = textBox.placeHolder;
-			boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
-		}
-    });
-
+    // /**
+    //  * This function is called when something in the underlying model changes
+    //  */
+    // autorun(() => {
+    //     LOGGER.log("autorun");
+    // 	if (box instanceof TextBox) {
+    // 		AUTO_LOGGER.log("TextComponent role " + box.role + " text [" + text + "] box [" + box.getText() + "] innertText [" + spanElement?.innerText + "] isEditing [" + isEditing + "]");
+    // 		// TODO can the following five statements be moved to onMount() or should they be copied to onMount()?
+    // 		box.setFocus = setFocus;
+    // 		box.setCaret = setCaret;
+    // 		originalText = text = box.getText();
+    // 		placeholder = box.placeHolder;
+    // 		boxType = (box.parent instanceof AliasBox ? "alias" : (box.parent instanceof SelectBox ? "select" : "text"));
+    // 	}
+    // });
 </script>
 
-<span on:click={onClick} id="{id}"on:contextmenu|preventDefault={(event) => console.log(event.pageX, event.pageY, event.clientY, event.clientY)}>
+
+<span on:click={onClick} id="{id}">
 	{#if isEditing}
 		<span class="resizable-input">
 			<input type="text"
                    id="{id}-input"
-                   bind:this={inputHTMLelement}
+                   bind:this={inputElement}
                    bind:value={text}
                    on:focusout={onFocusOut}
                    on:keydown={onKeyDown}
@@ -475,8 +466,7 @@
                    placeholder="{placeholder}"/>
 		</span>
 	{:else}
-		<span class="{textBox.role} text-box-{boxType} text"
-              tabIndex={0}
+		<span class="{box.role} text-box-{boxType} text"
               on:click={startEditing}
               bind:this={spanElement}
               id="{id}-span">
@@ -505,11 +495,12 @@
         min-width: 2em;
         max-width: 30em;
     }
+
     /* let <input> assume the size of the wrapper */
     .resizable-input > input {
-		/* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
-		padding: 1px 1px;
-		line-height: 6px;
+        /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
+        padding: 1px 1px;
+        line-height: 6px;
         width: 100%;
         box-sizing: border-box;
         margin: 0;
@@ -523,6 +514,7 @@
         font-weight: var(--freon-text-component-font-weight, inherit);
         font-style: var(--freon-text-component-font-style, inherit);
     }
+
     /* add a visible handle */
     .resizable-input::after {
         display: inline-block;
@@ -533,6 +525,7 @@
         background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
         cursor: ew-resize;
     }
+
     .text {
         /*content: attr(data-placeholdertext);*/
         color: var(--freon-text-component-color, blue);

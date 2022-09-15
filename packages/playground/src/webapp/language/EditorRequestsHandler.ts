@@ -1,7 +1,7 @@
 import { editorEnvironment } from "../config/WebappConfiguration";
 import {
     Box,
-    isAliasBox,
+    isActionBox,
     isAliasTextBox,
     isTextBox,
     PiCompositeProjection,
@@ -100,7 +100,7 @@ export class EditorRequestsHandler {
             const element: PiElement = currentSelection.element;
             if (!!currentSelection) {
                 if (isAliasTextBox(currentSelection)) {
-                    if (isAliasBox(currentSelection.parent)) {
+                    if (isActionBox(currentSelection.parent)) {
                         if (currentSelection.parent.conceptName === tobepasted.piLanguageConcept()) {
                             // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
                             EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName )

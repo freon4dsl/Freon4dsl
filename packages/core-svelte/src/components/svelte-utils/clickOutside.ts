@@ -3,7 +3,6 @@
 export function clickOutside(node) {
 
     const handleClick = event => {
-        // console.log('clickOutside: ' + JSON.stringify(event.target) + " " + event.defaultPrevented);
         if (node && !node.contains(event.target) && !event.defaultPrevented) {
             node.dispatchEvent(
                 new CustomEvent('click_outside', node)

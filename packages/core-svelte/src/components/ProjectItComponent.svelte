@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import {
         PiEditor,
         PiLogger,
@@ -12,13 +13,17 @@
         ARROW_RIGHT
     } from "@projectit/core";
     import { autorun } from "mobx";
-    import { AUTO_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
+    import ContextMenu from "./ContextMenu.svelte";
+    import { contextMenuVisible, contextMenu } from "./svelte-utils/ContextMenuStore.js";
+    import {viewport} from "./svelte-utils/EditorViewportStore";
 
     let LOGGER = new PiLogger("ProjectItComponent"); //.mute();
     export let editor: PiEditor;
     // TODO add id
     // let id: string = `${box.element.piId()}-${box.role}`;
+    let element: HTMLDivElement; // The current main element of this component.
+    let rootBox: Box;
 
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();
@@ -50,6 +55,7 @@
             // All alt keys here
         } else {
             // No meta key pressed
+            // todo adjust to multiple selections
             switch (event.key) {
                 case BACKSPACE:
                 case ARROW_LEFT:
@@ -58,7 +64,7 @@
                     break;
                 case DELETE:
                     console.log('ProjectItComponent DELETE')
-                    editor.deleteBox(editor.selectedBox);
+                    editor.deleteBox(editor.selectedBoxes[0]);
                     stopEvent(event);
                     break;
                 case TAB:
@@ -67,7 +73,7 @@
                     stopEvent(event);
                     break;
                 case ARROW_DOWN:
-                    const down = editor.boxBelow(editor.selectedBox);
+                    const down = editor.boxBelow(editor.selectedBoxes[0]);
                     LOGGER.log("!!!!!!! Select down box " + down?.role);
                     if (down !== null && down !== undefined) {
                         editor.selectBoxNew(down);
@@ -75,8 +81,8 @@
                     stopEvent(event);
                     break;
                 case ARROW_UP:
-                    LOGGER.log("Up: " + editor.selectedBox.role);
-                    const up = editor.boxAbove(editor.selectedBox);
+                    LOGGER.log("Up: " + editor.selectedBoxes[0].role);
+                    const up = editor.boxAbove(editor.selectedBoxes[0]);
                     if (up !== null) {
                         editor.selectBoxNew(up);
                     }
@@ -87,29 +93,52 @@
         event.stopPropagation();
     };
 
-    let rootBox: Box;
     autorun(() => {
-        AUTO_LOGGER.log("==================> ProjectItComponent")
         rootBox = editor.rootBox;
     });
-
-    /**
-     * The current main element of this component.
-     */
-    let element: HTMLDivElement;
 
     /**
      * Keep track of the scrolling position in the editor, so we know exactly where boxes are
      * in relationship with each other.
      */
     function onScroll() {
+        // Hide any contextmenu upon scrolling, because its position will not be correct.
+        $contextMenuVisible = false;
+        // todo should we use a timeOut here?
         editor.scrollX = element.scrollLeft;
         editor.scrollY = element.scrollTop;
     }
+
+    onMount(() => {
+        // We keep track of the size of the editor component, to be able to position any context menu correctly.
+        // For this we use a ResizeObserver.
+
+        // Define the observer and its callback.
+        const resizeObserver = new ResizeObserver(entries => {
+            // Hide any contextmenu upon resize, because its position will not be correct.
+            $contextMenuVisible = false;
+            // Use a timeOut to improve performance, otherwise every slight change will activate this function.
+            setTimeout(() => {
+                // We're only watching one element, this is the first of the entries.
+                const entry = entries.at(0);
+                // Get the element's size.
+                // Note that entry.contentRect gives slightly different results to entry.target.getBoundingClientRect().
+                // But I have no idea why.
+                let rect = entry.target.getBoundingClientRect();
+                $viewport.setSizes(rect.height, rect.width, rect.top, rect.left);
+            }, 400); // Might use another value for the delay, but this seems ok.
+        });
+
+        // Observe the ProjectItComponent element.
+        resizeObserver.observe(element);
+
+        // This callback cleans up the observer.
+        return () => resizeObserver.unobserve(element);
+    });
 </script>
 
+
 <div class={"projectit"}
-     tabIndex={0}
      on:keydown={onKeyDown}
      on:scroll={onScroll}
      bind:this={element}
@@ -118,12 +147,15 @@
                      box={rootBox}
     />
 </div>
+<!-- Here the only instance of ContextMenu is defined -->
+<!-- TODO make some default items for the context menu -->
+<ContextMenu bind:this={$contextMenu} items={[]}/>
+
 
 <style>
     .projectit {
         height: 100%;
         width: 100%;
-        overflow-x: auto;
         font-size: var(--freon-editor-component-font-size, 14px);
         font-style: var(--freon-editor-component-font-style, italic);
         font-weight: var(--freon-editor-component-font-weight, normal);
@@ -132,6 +164,12 @@
         background-color: var(--freon-editor-component-background-color, white);
         margin: var(--freon-editor-component-margin, 1px);
         padding: var(--freon-editor-component-padding, 1px);
-
+        box-sizing: border-box;
+        position: relative;
+        overflow: auto;
+        /* show a box shadow similar to the one for the info panel */
+        box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),0 1px 1px 0 rgba(0, 0, 0, 0.14),0 1px 3px 0 rgba(0,0,0,.12);
+        border-radius: 4px;
+        /* end box shadow */
     }
 </style>

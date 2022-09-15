@@ -39,13 +39,13 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
         }
         if (isLeftMost) {
             // TODO Change into Svelte Style
-            // result.insertChild(new AliasBox(exp, LEFT_MOST, NBSP, { style: STYLES.aliasExpression }));
-            result.insertChild(BoxFactory.alias(exp, LEFT_MOST, NBSP));
+            // result.insertChild(new ActionBox(exp, LEFT_MOST, NBSP, { style: STYLES.aliasExpression }));
+            result.insertChild(BoxFactory.action(exp, LEFT_MOST, NBSP));
         }
         if (isRightMost) {
             // TODO Change into Svelte Style
-            // result.addChild(new AliasBox(exp, RIGHT_MOST, NBSP, { style: STYLES.aliasExpression }));
-            result.addChild(BoxFactory.alias(exp, RIGHT_MOST, NBSP));
+            // result.addChild(new ActionBox(exp, RIGHT_MOST, NBSP, { style: STYLES.aliasExpression }));
+            result.addChild(BoxFactory.action(exp, RIGHT_MOST, NBSP));
         }
         return result;
     } else {
@@ -75,13 +75,13 @@ export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, 
     // console.log("RIGHT CONCEPT for "+ exp.piLanguageConcept()  + " is " + Language.getInstance().classifier(exp.piLanguageConcept()) );
     // console.log("            ===> " + Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("right") + " is " + rightConceptName);
     result.addChildren([
-        (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : BoxFactory.alias(exp, PI_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left", conceptName: leftConceptName  })),
+        (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : BoxFactory.action(exp, PI_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left", conceptName: leftConceptName  })),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
-        BoxFactory.alias(exp, BEFORE_BINARY_OPERATOR, NBSP),
+        BoxFactory.action(exp, BEFORE_BINARY_OPERATOR, NBSP),
         createOperatorBox(editor, exp, symbol),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
-        BoxFactory.alias(exp, AFTER_BINARY_OPERATOR, NBSP),
-        (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : BoxFactory.alias(exp, PI_BINARY_EXPRESSION_RIGHT, "[add-right]", { propertyName: "right", conceptName: rightConceptName }))
+        BoxFactory.action(exp, AFTER_BINARY_OPERATOR, NBSP),
+        (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : BoxFactory.action(exp, PI_BINARY_EXPRESSION_RIGHT, "[add-right]", { propertyName: "right", conceptName: rightConceptName }))
     ]);
     return result;
 }

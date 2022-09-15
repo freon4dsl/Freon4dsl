@@ -1,138 +1,74 @@
 <script lang="ts">
     import { autorun } from "mobx";
     import { afterUpdate, onDestroy, onMount } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import {
         Box,
-        HorizontalListBox,
         isEmptyLineBox,
         ListBox,
         PiEditor,
         PiLogger,
-        isHorizontalBox
+        ListDirection
     } from "@projectit/core";
+    import { componentId } from "./svelte-utils";
 
     // Parameters
-    export let list: ListBox ; //= new HorizontalListBox(null, "l1");
+    export let box: ListBox; // todo change to LayoutBox
     export let editor: PiEditor;
 
-    // console.log("LIST COMPONET READ " + list?.role)
-    // Local state variables
-    let LOGGER: PiLogger = new PiLogger("ListComponent").mute();
-    let svList: ListBox = list; // TODO question: why a new variable, cannot use 'list'?
-    let svNotifier = new ChangeNotifier();
+    let LOGGER: PiLogger = new PiLogger("LayoutComponent").mute();
+    let id: string = !!box ? componentId(box) : "unknown-label-id";
     let element: HTMLSpanElement;
     let children: Box[];
-    $: children = [...list.children];
-
-    onDestroy(() => {
-        LOGGER.log("DESTROY LIST  COMPONENT")
-    });
+    $: children = [...box.children];
+    let isHorizontal: boolean;
+    $: isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
 
     async function setFocus(): Promise<void> {
-        FOCUS_LOGGER.log("ListComponent.setFocus for box " + list.role);
         if (!!element) {
             element.focus();
         }
     }
-    onMount( () => {
-        MOUNT_LOGGER.log("ListComponent onMount --------------------------------")
-        list.setFocus = setFocus;
+
+    onMount(() => {
+        box.setFocus = setFocus;
     });
 
-    afterUpdate(() => {
-        UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
-        list.setFocus = setFocus;
-        // NOTE: Triggers autorun whenever an element is added or delete from the list
-        svNotifier.notifyChange();
-    });
-    autorun(() => {
-        AUTO_LOGGER.log("AUtorun list")
-        svNotifier.dummy
-        svList = list;
-        children = [...list.children];
-        list.setFocus = setFocus;
-    });
-
-    // TODO Empty vertical list gives empty line, try to add entities in the example.
-    const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("ListComponent.onFocus for box " + list.role);
-        // e.preventDefault();
-        // e.stopPropagation();
-    }
-    const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("ListComponent.onBlur for box " + list.role);
-        // e.preventDefault();
-        // e.stopPropagation();
-    }
-
-    // function box(box: Box): Box {
-    //     LOGGER.log("render box " + box.role);
-    //     return box;
-    // }
-
-    function setPrevious(b: Box): string {
-        previousBox = b;
-        return "";
-    }
-
-    let previousBox = null;
 </script>
 
-<span class="list-component"
-      on:focus={onFocusHandler}
-      on:blur={onBlurHandler}
-      tabIndex={0}
+<span class="layout-component" class:horizontal="{isHorizontal}" class:vertical="{!isHorizontal}"
       bind:this={element}
 >
-    {#if isHorizontalBox(svList) }
-        <div class="horizontalList" >
-            {#each children as box (box.id)}
-                <RenderComponent box={box} editor={editor}/>
-            {/each}
-        </div>
+    {#if isHorizontal }
+        {#each children as child (componentId(child))}
+            <RenderComponent box={child} editor={editor}/>
+        {/each}
     {:else}
-        <div class="verticalList" >
-            {#each children as box, i (box.id)}
-                {#if i > 0 && i < children.length
-                     && !(i === 1 && isEmptyLineBox(previousBox))
-                }
-                    <br/>
-                {/if}
-                <RenderComponent box={box} editor={editor}/>
-                { setPrevious(box) }
-            {/each}
-        </div>
+        {#each children as child, i (componentId(child))}
+            {#if i > 0 && i < children.length && !(isEmptyLineBox(children[i - 1]))}
+                <br/>
+            {/if}
+            <RenderComponent box={child} editor={editor}/>
+        {/each}
     {/if}
 </span>
 
 <style>
-    .list-component {
-        --pi-list-grid-template-columns: "";
-        --pi-list-grid-template-rows: "";
-    }
-    .horizontalList {
-        /*grid-template-rows: var(--pi-list-grid-template-rows);*/
-        /*grid-template-columns: var(--pi-list-grid-template-columns);*/
-        white-space: nowrap;
-        display: inline-block;
+    .layout-component {
+        background: transparent;
         padding: var(--freon-horizontallist-component-padding, 1px);
-        background-color: var(--freon-editor-component-background-color, white);
         margin: var(--freon-horizontallist-component-margin, 1px);
         box-sizing: border-box;
     }
 
-    .verticalList {
-        /*grid-template-rows: var(--pi-list-grid-template-rows);*/
-        /*grid-template-columns: var(--pi-list-grid-template-columns);*/
-        /*display: grid;*/
-        background-color: var(--freon-editor-component-background-color, white);
-        padding: var(--freon-verticallist-component-padding, 1px);
-        margin: var(--freon-verticallist-component-margin, 1px);
-        /*margin-top: 10px;*/
-        box-sizing: border-box;
+    .horizontal {
+        white-space: nowrap;
+        /*display: inline-block; !* maybe use display: flex; ?? *!*/
+        display: flex;
+        align-items: baseline;
+    }
+
+    .vertical {
+        /*width: 100%;*/
     }
 </style>
-
-

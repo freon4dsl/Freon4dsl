@@ -34,7 +34,7 @@ export class DefaultActionsTemplate {
                 PiLogger,
                 PiTriggerType,
                 PiUtils,
-                AliasBox,
+                ActionBox,
                 OptionalBox,
                 PiElementReference,
                 LEFT_MOST,
@@ -64,7 +64,7 @@ export class DefaultActionsTemplate {
                     expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
                         const parent = box.element;
                         const newExpression = new ${Names.concept(c)}();
-                        parent[(box as AliasBox).propertyName] = newExpression;
+                        parent[(box as ActionBox).propertyName] = newExpression;
                         return newExpression;
                     }
             })`

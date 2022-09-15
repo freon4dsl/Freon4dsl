@@ -2,65 +2,49 @@
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
     import { PiLogger, type PiEditor, LabelBox } from "@projectit/core";
-    import { FOCUS_LOGGER } from "./ChangeNotifier";
-    import { componentId } from "./util";
-    import { setBoxSizes } from "./CommonFunctions";
+    import { componentId, setBoxSizes } from "./svelte-utils";
 
-    export let label: LabelBox;
-    // export let editor: PiEditor;
+    export let box: LabelBox;
 
     const LOGGER = new PiLogger("LabelComponent").mute();
 
-    let id: string = !!label ? componentId(label) : "unknown-label-id";
+    let id: string = !!box ? componentId(box) : "unknown-label-id";
     let element: HTMLDivElement = null;
-    let text: string;
     let style: string;
     let cssClass: string;
+    let text: string;
+    $: text = box.getLabel();
 
     const setFocus = async (): Promise<void> => {
-        FOCUS_LOGGER.log("LabelComponent.setFocus for box " + label?.role);
+        LOGGER.log("LabelComponent.setFocus for box " + box?.role);
         if (!!element) {
             element.focus();
         }
     };
 
     onMount( () => {
-       label.setFocus = setFocus;
+       box.setFocus = setFocus;
     });
 
     afterUpdate( () => {
-        label.setFocus = setFocus;
-        setBoxSizes(label, element.getBoundingClientRect());
+        box.setFocus = setFocus;
+        setBoxSizes(box, element.getBoundingClientRect());
     });
 
-    // TODO remove the following three functions, or use them to attach a context menu
-    const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("LabelComponent.onFocus for box " + label.role);
-    }
-    const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("LabelComponent.onBlur for box " + label.role);
-    }
-    onDestroy(() => {
-        LOGGER.log("LabelComponent.onDestroy ["+ text + "]")
-    });
-
-    autorun( () => {
-        text = label.getLabel();
-        style = label.cssStyle;
-        cssClass = label.cssClass;
-    });
+    // autorun( () => {
+    //     text = box.getLabel();
+    //     style = box.cssStyle;
+    //     cssClass = box.cssClass;
+    // });
 </script>
 
-<div class="label {text} {cssClass}"
+<span class="label {text} {cssClass}"
      style="{style}"
-     tabIndex={0}
-     on:focus={onFocusHandler}
-     on:blur={onBlurHandler}
      bind:this={element}
      id="{id}"
 >
     {text}
-</div>
+</span>
 
 <style>
     .label:empty:before {

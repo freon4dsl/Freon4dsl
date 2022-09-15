@@ -7,13 +7,13 @@ import { PiElement } from "../../ast";
 import { runInAction } from "mobx";
 import { PiLogger } from "../../logging";
 
-const LOGGER = new PiLogger("AliasBox");
+const LOGGER = new PiLogger("ActionBox");
 
-export class AliasBox extends AbstractChoiceBox {
-    readonly kind = "AliasBox";
+export class ActionBox extends AbstractChoiceBox {
+    readonly kind = "ActionBox";
     placeholder: string;
     /**
-     * Filled with the name of the property, in case the AliasBox is used to create new elements
+     * Filled with the name of the property, in case the ActionBox is used to create new elements
      */
     propertyName?: string;
     /**
@@ -28,12 +28,12 @@ export class AliasBox extends AbstractChoiceBox {
      * @param placeHolder
      * @param initializer
      */
-    constructor(element: PiElement, role: string, placeHolder: string, initializer?: Partial<AliasBox>) {
+    constructor(element: PiElement, role: string, placeHolder: string, initializer?: Partial<ActionBox>) {
         super(element, role, placeHolder, initializer);
     }
 
     selectOption(editor: PiEditor, option: SelectOption): BehaviorExecutionResult {
-        LOGGER.log("AliasBox selectOption " + JSON.stringify(option));
+        LOGGER.log("ActionBox selectOption " + JSON.stringify(option));
         if (!!option.action) {
             return executeSingleBehavior(option.action, this, option.id, option.label, editor);
         } else {
@@ -46,17 +46,17 @@ export class AliasBox extends AbstractChoiceBox {
             const allOptions = this.getOptions(editor);
             const selectedOptions = allOptions.filter(o => option.label === o.label);
             if (selectedOptions.length === 1) {
-                LOGGER.log("AliasBox.selectOption dynamic " + JSON.stringify(selectedOptions));
+                LOGGER.log("ActionBox.selectOption dynamic " + JSON.stringify(selectedOptions));
                 return executeBehavior(this, selectedOptions[0].id, selectedOptions[0].label, editor);
             } else {
-                LOGGER.log("AliasBox.selectOption : " + JSON.stringify(selectedOptions));
+                LOGGER.log("ActionBox.selectOption : " + JSON.stringify(selectedOptions));
                 return BehaviorExecutionResult.NO_MATCH;
             }
         }
     }
 
     /**
-     * Returns the options (for a dropdown component) that fit this AliasBox.
+     * Returns the options (for a dropdown component) that fit this ActionBox.
      * @param editor
      */
     getOptions(editor: PiEditor): SelectOption[] {
@@ -96,7 +96,7 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     private getCreateElementOption(propertyName: string, conceptName: string, concept: Concept): SelectOption {
-        LOGGER.log("AliasBox.createElementAction property: " + propertyName + " concept " + conceptName);
+        LOGGER.log("ActionBox.createElementAction property: " + propertyName + " concept " + conceptName);
         return {
             id: conceptName,
             label: concept.trigger,
@@ -120,7 +120,7 @@ export class AliasBox extends AbstractChoiceBox {
         // current element.  This way the new element is not part of the model and will not trigger mobx
         // reactions. But the scoper can be used to find available references, because the scoper only
         // needs the owner.
-        const self: AliasBox = this;
+        const self: ActionBox = this;
         runInAction(() => {
             const newElement = concept.constructor();
             newElement["owner"] = this.element;
@@ -145,16 +145,16 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     triggerKeyPressEvent = (key: string) => { // TODO rename this one, e.g. to triggerKeyEvent
-        console.error("AliasBox " + this.role + " has empty triggerKeyPressEvent");
+        console.error("ActionBox " + this.role + " has empty triggerKeyPressEvent");
     };
 }
 
-export function isAliasBox(b: Box): b is AliasBox {
-    return b.kind === "AliasBox"; //  b instanceof AliasBox;
+export function isActionBox(b: Box): b is ActionBox {
+    return b?.kind === "ActionBox"; //  b instanceof ActionBox;
 }
 
 export function isAliasTextBox(b: Box): boolean {
-    return b.kind === "TextBox" && isAliasBox(b.parent);
+    return b?.kind === "TextBox" && isActionBox(b?.parent);
 }
 
 

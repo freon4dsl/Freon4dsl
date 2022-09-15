@@ -229,7 +229,7 @@ export abstract class Box {
             LOGGER.info( "child: " + c.kind);
             c.getEditableChildrenRecursive(result);
         });
-        // return this.children.filter(c => (isTextBox(c) || isAliasBox(c) || isSelectBox(c)) || c.children.length);
+        // return this.children.filter(c => (isTextBox(c) || isActionBox(c) || isSelectBox(c)) || c.children.length);
     }
 
     isEditable(): boolean {

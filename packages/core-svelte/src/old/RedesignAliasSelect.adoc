@@ -2,7 +2,7 @@
 
 Textbox: allows typing text
 
-SelectBox && AliasBox:
+SelectBox && ActionBox:
 
 - also have options[]
 - have dropdowns
@@ -10,7 +10,7 @@ SelectBox && AliasBox:
 Typing is ok for all
 
 SelectBox: when text === option ==> select option (is also action)
-AliasBox: when text === option  ==> perform action
+ActionBox: when text === option  ==> perform action
 
 SelectBox
 

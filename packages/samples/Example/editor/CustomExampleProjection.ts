@@ -9,7 +9,7 @@ import {
     SvgBox,
     GridBox,
     createDefaultExpressionBox,
-    AliasBox,
+    ActionBox,
     Language,
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
@@ -106,7 +106,7 @@ export class CustomExampleProjection implements PiProjection {
         const projectionToUse = !!this.rootProjection ? this.rootProjection : this;
         return !!element[property]
             ? projectionToUse.getBox(element[property])
-            : new AliasBox(element, roleName, "[" + property + "]", { propertyName: property, conceptName: Language.getInstance().classifier(element.piLanguageConcept()).properties.get(property).type });
+            : new ActionBox(element, roleName, "[" + property + "]", { propertyName: property, conceptName: Language.getInstance().classifier(element.piLanguageConcept()).properties.get(property).type });
     }
 
     ////////////////////////////////////////////////////////////////////

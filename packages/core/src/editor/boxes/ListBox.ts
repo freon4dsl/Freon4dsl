@@ -15,7 +15,7 @@ export abstract class ListBox extends Box {
     trueList: boolean; // TODO trueList (and propertyName) is a temp hack to distinguish list properties from the model from layout lists
     propertyName: string;
 
-    protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
+    protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<ListBox>) {
         super(element, role);
         makeObservable<ListBox, "_children">(this, {
            _children: observable,
@@ -28,6 +28,7 @@ export abstract class ListBox extends Box {
         if (!!children) {
             children.forEach(b => this.addChild(b));
         }
+        this.kind = "ListBox";
     }
 
     get children(): ReadonlyArray<Box> {
@@ -79,6 +80,10 @@ export abstract class ListBox extends Box {
         return null;
     }
 
+    getDirection(): ListDirection {
+        return this.direction;
+    }
+
     toString() {
         let result: string = "List: " + this.role + " " + this.direction.toString() + "<";
         for (const child of this.children) {
@@ -107,11 +112,11 @@ export class VerticalListBox extends ListBox {
     }
 }
 
-
 export function isHorizontalBox(b: Box): b is HorizontalListBox {
     return b.kind === "HorizontalListBox" && !(b as HorizontalListBox).trueList; // b instanceof HorizontalListBox;
 }
 
+// TODO reorganise these functions
 export function isHorizontalList(b: Box): b is HorizontalListBox {
     // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
     return b.kind === "HorizontalListBox" && (b as HorizontalListBox).trueList; // b instanceof HorizontalListBox;
@@ -124,4 +129,13 @@ export function isVerticalBox(b: Box): b is VerticalListBox {
 export function isVerticalList(b: Box): b is VerticalListBox {
     // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
     return b.kind === "VerticalListBox" && (b as VerticalListBox).trueList; // b instanceof VerticalListBox;
+}
+
+// TODO trueList is a temp hack to distinguish list properties from the model from layout lists
+export function isLayoutBox(b: Box): boolean {
+    return (b.kind === "HorizontalListBox" || b.kind === "VerticalListBox") && !(b as ListBox).trueList;
+}
+
+export function isListBox(b: Box): boolean {
+    return (b.kind === "HorizontalListBox" || b.kind === "VerticalListBox") && (b as ListBox).trueList;
 }
