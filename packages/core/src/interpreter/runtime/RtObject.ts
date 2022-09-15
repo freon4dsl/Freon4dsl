@@ -1,4 +1,8 @@
-export class RtObject {
+export interface IRtObject {
+    get rtType(): string;
+}
+
+export class RtObject implements IRtObject {
     _type: string;
 
     constructor() {

@@ -4,3 +4,4 @@ export * from "./RtNumber";
 export * from "./RtString";
 export * from "./RtError";
 export * from "./RtEmpty";
+export * from "./RtArray";
