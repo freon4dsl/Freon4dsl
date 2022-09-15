@@ -10,14 +10,14 @@
         PiLogger,
         ListDirection
     } from "@projectit/core";
-    import { componentId } from "./svelte-utils";
+
 
     // Parameters
     export let box: ListBox; // todo change to LayoutBox
     export let editor: PiEditor;
 
     let LOGGER: PiLogger = new PiLogger("LayoutComponent").mute();
-    let id: string = !!box ? componentId(box) : "unknown-label-id";
+    let id: string = !!box ? box.id : "unknown-label-id";
     let element: HTMLSpanElement;
     let children: Box[];
     $: children = [...box.children];
@@ -40,11 +40,11 @@
       bind:this={element}
 >
     {#if isHorizontal }
-        {#each children as child (componentId(child))}
+        {#each children as child (child.id)}
             <RenderComponent box={child} editor={editor}/>
         {/each}
     {:else}
-        {#each children as child, i (componentId(child))}
+        {#each children as child, i (child.id)}
             {#if i > 0 && i < children.length && !(isEmptyLineBox(children[i - 1]))}
                 <br/>
             {/if}

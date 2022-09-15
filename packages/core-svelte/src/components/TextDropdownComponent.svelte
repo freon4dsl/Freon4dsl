@@ -17,7 +17,7 @@
         SelectOption,
         TextBox
     } from "@projectit/core";
-    import { componentId } from "./svelte-utils";
+
     import { autorun, runInAction } from "mobx";
 
     const LOGGER = new PiLogger("TextDropdownComponent").mute();
@@ -28,7 +28,7 @@
     $: textBox = box?.textBox;            // keeps the textBox variable in state with the box!
 
     let id: string;                             // an id for the html element
-    id = !!box ? componentId(box) : 'textdropdown-with-unknown-box';
+    id = !!box ? box.id : 'textdropdown-with-unknown-box';
     let isEditing: boolean = false;             // becomes true when the text field gets focus
     let dropdownShown: boolean = false;         // when true the dropdwon element is shown
     let text: string = "";		                // the text in the text field

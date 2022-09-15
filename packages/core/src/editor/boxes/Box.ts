@@ -48,9 +48,9 @@ export abstract class Box {
 
     get id(): string {
         if (!!this.element) {
-            return this.element.piId() + (this.role === null ? "" : "-" + this.role);
+            return `${this.element.piId()}-${this.role}`;
         } else {
-            return "=" + this.role;
+            return "unknown-element-" + this.role;
         }
     }
 

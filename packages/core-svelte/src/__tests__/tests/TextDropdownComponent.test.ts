@@ -7,7 +7,6 @@ import { ModelMaker } from "../models/ModelMaker";
 import { OptionalBox, PiCaret, PiCompositeProjection, PiEditor, TextBox } from "@projectit/core";
 import { ElementWithText } from "../models/ElementWithText";
 import Mock4Text from "../mock-components/Mock4Text.svelte";
-import { componentId } from "../../components/svelte-utils";
 import Mock4TextDouble from "../mock-components/Mock4TextDouble.svelte";
 import userEvent from "@testing-library/user-event";
 

@@ -1,7 +1,6 @@
 <script lang="ts">
     import {flip} from 'svelte/animate'; // TODO adjust rollup.config for svelte.animate
     import {Box, ListBox, ListDirection, PiEditor, PiLogger} from "@projectit/core";
-    import {componentId} from "./svelte-utils";
     import RenderComponent from "./RenderComponent.svelte";
     import { runInAction } from "mobx";
     import { checkAndDrop, moveListElement } from "./svelte-utils/dropHelpers";
@@ -20,7 +19,7 @@
 
     const LOGGER = new PiLogger("ListComponent"); //.mute();
     let id: string;                             // an id for the html element showing the list
-    id = !!box ? componentId(box) : 'list-with-unknown-box';
+    id = !!box ? box.id : 'list-with-unknown-box';
     let isHorizontal: boolean;                  // indicates whether the list should be shown horizontally or vertically
     $: isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
     let hovering = -1;                          // determines the style of a list element, when nothing is being dragged
@@ -120,7 +119,7 @@
       style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
       style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}"
 >
-    {#each shownElements as box, index  (componentId(box))}
+    {#each shownElements as box, index  (box.id)}
         <span
                 class="list-item"
                 class:hovering={hovering === index && !($activeElem?.row === index && $activeIn === id)}

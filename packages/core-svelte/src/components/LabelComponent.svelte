@@ -2,13 +2,13 @@
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
     import { PiLogger, type PiEditor, LabelBox } from "@projectit/core";
-    import { componentId, setBoxSizes } from "./svelte-utils";
+    import { setBoxSizes } from "./svelte-utils";
 
     export let box: LabelBox;
 
     const LOGGER = new PiLogger("LabelComponent").mute();
 
-    let id: string = !!box ? componentId(box) : "unknown-label-id";
+    let id: string = !!box ? box.id : "unknown-label-id";
     let element: HTMLDivElement = null;
     let style: string;
     let cssClass: string;

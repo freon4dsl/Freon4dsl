@@ -8,7 +8,6 @@ import { ModelMaker } from "../models/ModelMaker";
 import { OptionalBox, PiCaret, PiCompositeProjection, PiEditor, TextBox } from "@projectit/core";
 import { ElementWithText } from "../models/ElementWithText";
 import Mock4Text from "../mock-components/Mock4Text.svelte";
-import { componentId } from "../../components/svelte-utils";
 import Mock4TextDouble from "../mock-components/Mock4TextDouble.svelte";
 import userEvent from "@testing-library/user-event";
 
@@ -122,7 +121,7 @@ describe.skip("TextComponent", () => {
         render(Mock4TextDouble, { box1: textBox1, box2: textBox2, editor: myEditor });
         const owner1 = screen.getByTestId("mock-text1");
         expect(owner1).toBeVisible();
-        const text1 = screen.getByTestId(componentId(textBox1));
+        const text1 = screen.getByTestId(textBox1.id);
         expect(text1).toBeVisible();
 
         await fireEvent.keyPress(text1, { key: "Enter", code: "Enter", charCode: 13 });

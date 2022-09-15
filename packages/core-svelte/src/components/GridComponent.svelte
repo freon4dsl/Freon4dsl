@@ -3,14 +3,14 @@
     import { afterUpdate, onMount } from "svelte";
     import { autorun } from "mobx";
     import GridCellComponent from "./GridCellComponent.svelte";
-    import { componentId } from "./svelte-utils";
+
 
     const LOGGER = new PiLogger("GridComponent").mute();
 
     export let box: GridBox;
     export let editor: PiEditor;
 
-    let id = componentId(box);
+    let id = box.id;
     let cells: GridCellBox[];
     $: cells = box.cells;
     let templateColumns: string = `repeat(${box.numberOfColumns() - 1}, auto)`;

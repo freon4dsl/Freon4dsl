@@ -3,14 +3,13 @@
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
     import { getRoot, OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
-    import {componentId} from "./svelte-utils";
 
     export let box: OptionalBox;
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("OptionalComponent").mute();
     let id: string;                             // an id for the html element showing the optional
-    id = !!box ? componentId(box) : 'optional-with-unknown-box';
+    id = !!box ? box.id : 'optional-with-unknown-box';
     let mustShow = false;
     let showByCondition = false;
 

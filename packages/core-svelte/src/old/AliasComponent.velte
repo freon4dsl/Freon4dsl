@@ -23,14 +23,13 @@
         type SelectOption, PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
-    import { clickOutside } from "../components/clickOutside";
+    import { clickOutside } from "../components/svelte-utils";
     import { afterUpdate, onMount } from "svelte";
     import { type Writable, writable } from "svelte/store";
     import { SelectOptionList } from "../components/SelectableOptionList";
     import SelectableComponent from "./SelectableComponent.svelte";
     import TextComponent from "../components/TextComponent.svelte";
     import DropdownComponent from "../components/DropdownComponent.svelte";
-    import { componentId } from "../components/util";
 
     // Svelte Parameters
     export let choiceBox: AbstractChoiceBox;
@@ -45,7 +44,7 @@
     let selectableOptionList = new SelectOptionList(editor);
     let isEditing: boolean = false;
     // id is put in a variable to be able to access it from the component, not only from the HTML element
-    let id: string = "alias-" + componentId(choiceBox);
+    let id: string = "alias-" + choiceBox.id;
 
     function setOpen(msg: string, value: boolean) {
         // LOGGER.log("SET OPEN " + choiceBox?.role + " from " + $openStore + " to " + value + " in " + msg );

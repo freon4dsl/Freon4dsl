@@ -11,7 +11,7 @@
     import { afterUpdate, onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
     import RenderComponent from "./RenderComponent.svelte";
-    import { componentId, isOdd } from "./svelte-utils";
+    import { isOdd } from "./svelte-utils";
     import {contextMenu, contextMenuVisible, items, MenuItem} from "./svelte-utils/ContextMenuStore";
     import {
         activeElem,
@@ -34,7 +34,7 @@
     const LOGGER = new PiLogger("GridCellComponent").mute();
     // let boxStore: Writable<Box> = writable<Box>(cellBox.box);
     let cssVariables: string;
-    let id: string = componentId(box);
+    let id: string = box.id;
 
     let row: number;
     let column: number;

@@ -32,14 +32,14 @@
     import SvgComponent from "./SvgComponent.svelte";
     import { afterUpdate } from "svelte";
     import {selectedBoxes} from "./svelte-utils/DropAndSelectStore";
-    import { componentId } from "./svelte-utils";
+
 
     const LOGGER = new PiLogger("RenderComponent"); //.mute();
 
     export let box: Box;
     export let editor: PiEditor;
 
-    let id: string = `render-${componentId(box)}`;
+    let id: string = `render-${box.id}`;
     let className: string = '';
 
     const onClick = (event: MouseEvent) => {

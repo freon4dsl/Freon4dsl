@@ -6,7 +6,7 @@
 
 <script lang="ts">
     import { afterUpdate, onMount, createEventDispatcher } from "svelte";
-	import { componentId, setBoxSizes } from "./svelte-utils";
+	import { setBoxSizes } from "./svelte-utils";
 	import {
 		ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE,
 		CONTROL, DELETE, ENTER, ESCAPE,
@@ -18,7 +18,7 @@
 		TextBox,
 		CharAllowed, PiCaret, PiCaretPosition
 	} from "@projectit/core";
-    import { componentId } from "./svelte-utils";
+
     import { autorun, runInAction } from "mobx";
 	import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
 
@@ -35,7 +35,7 @@
 
     // Local variables
     let id: string;                         // an id for the html element
-    id = !!box ? componentId(box) : 'text-with-unknown-box';
+    id = !!box ? box.id : 'text-with-unknown-box';
     let spanElement: HTMLSpanElement;       // the <span> element on the screen
     let inputElement: HTMLInputElement; 	// the <input> element on the screen
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present

@@ -2,7 +2,7 @@
 <!-- this option lets us set the items prop after the component has been created -->
 
 <script lang="ts">
-    import { clickOutside } from './svelte-utils/clickOutside';
+    import { clickOutside } from './svelte-utils';
     import {tick} from "svelte";
     import {PiEditor} from "@projectit/core";
     import {contextMenuVisible, MenuItem} from "./svelte-utils/ContextMenuStore";
