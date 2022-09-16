@@ -141,13 +141,12 @@
      * @param event
      */
     function onClick(event: MouseEvent) {
-        LOGGER.log('TextComponent onClick');
-        if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
-            setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+        LOGGER.log('onClick: ' + inputElement.selectionStart + ", " + inputElement.selectionEnd);
+		setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
             LOGGER.log('dispatching from on click')
             dispatcher('textUpdate', {content: text, caret: from});
         }
-        event.preventDefault();
         event.stopPropagation();
     }
 
@@ -156,7 +155,7 @@
      * the <span> element, and stores the current text in the textbox.
      */
     function endEditing() {
-        LOGGER.log('TextComponent endEditing');
+        LOGGER.log(' endEditing');
         // reset the local variables
         isEditing = false;
         from = -1;
@@ -417,7 +416,7 @@
         }
         if (isEditing && partOfActionBox) {
             // send event to parent
-            LOGGER.log('TextComponent dispatching event with text ' + text + ' from afterUpdate');
+            LOGGER.log(' dispatching event with text ' + text + ' from afterUpdate');
             dispatcher('textUpdate', {content: text, caret: from + 1});
         }
     });
@@ -450,6 +449,18 @@
     // 		boxType = (box.parent instanceof AliasBox ? "alias" : (box.parent instanceof SelectBox ? "select" : "text"));
     // 	}
     // });
+
+	/**
+	 * Often a TextComponent is part of a list, to prevent the list capturing the drag start event, (which should actually
+	 * select (part of) the text in the input element), this function is defined.
+	 * Note that if the input element is not defined as 'draggable="true"', this function will never be called.
+	 * @param event
+	 */
+	function onDragStart(event) {
+		LOGGER.log('on drag start');
+		event.stopPropagation();
+		event.preventDefault();
+	}
 </script>
 
 
@@ -462,6 +473,8 @@
                    bind:value={text}
                    on:focusout={onFocusOut}
                    on:keydown={onKeyDown}
+				   draggable="true"
+				   on:dragstart={onDragStart}
                    size={size}
                    placeholder="{placeholder}"/>
 		</span>
