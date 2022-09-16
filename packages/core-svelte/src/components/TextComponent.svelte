@@ -20,7 +20,7 @@
 	} from "@projectit/core";
 
     import { autorun, runInAction } from "mobx";
-	import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
+	import { selectedBox } from "./svelte-utils/DropAndSelectStore";
 
     const LOGGER = new PiLogger("TextComponent"); // .mute();
     const dispatcher = createEventDispatcher();
@@ -115,13 +115,13 @@
     /**
      * When the switch is made from <span> to <input> this function is called.
      * It stores the caret position(s) to be used to set the selection of the <input>,
-     * and sets the selectedBoxes of the editor.
+     * and sets the selectedBox of the editor.
      */
     function startEditing(event: MouseEvent) {
         LOGGER.log('startEditing');
         // set the global selection
-        editor.selectedBoxes = [box];
-        $selectedBoxes = [box];
+        editor.selectedBox = box;
+        $selectedBox = box;
         // set the local variables
         isEditing = true;
         editStart = true;
@@ -369,10 +369,10 @@
                                 editor.selectPreviousLeaf();
                             }
                             // todo adjust for multiple selection
-                            LOGGER.log("    NEXT LEAF IS " + editor.selectedBoxes[0].role);
-                            // if (isActionTextBox(editor.selectedBoxes)) {
+                            LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
+                            // if (isActionTextBox(editor.selectedBox)) {
                             //     LOGGER.log("     is an alias box");
-                            //     (editor.selectedBoxes.parent as AliasBox).triggerKeyPressEvent(event.key);
+                            //     (editor.selectedBox.parent as AliasBox).triggerKeyPressEvent(event.key);
                             // } else {
                             //     LOGGER.log("     is NOT an alias box");
                             // }

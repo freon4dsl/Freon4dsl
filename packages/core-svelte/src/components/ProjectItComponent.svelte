@@ -64,7 +64,7 @@
                     break;
                 case DELETE:
                     console.log('ProjectItComponent DELETE')
-                    editor.deleteBox(editor.selectedBoxes[0]);
+                    editor.deleteBox(editor.selectedBox);
                     stopEvent(event);
                     break;
                 case TAB:
@@ -73,7 +73,7 @@
                     stopEvent(event);
                     break;
                 case ARROW_DOWN:
-                    const down = editor.boxBelow(editor.selectedBoxes[0]);
+                    const down = editor.boxBelow(editor.selectedBox);
                     LOGGER.log("!!!!!!! Select down box " + down?.role);
                     if (down !== null && down !== undefined) {
                         editor.selectBoxNew(down);
@@ -81,8 +81,8 @@
                     stopEvent(event);
                     break;
                 case ARROW_UP:
-                    LOGGER.log("Up: " + editor.selectedBoxes[0].role);
-                    const up = editor.boxAbove(editor.selectedBoxes[0]);
+                    LOGGER.log("Up: " + editor.selectedBox.role);
+                    const up = editor.boxAbove(editor.selectedBox);
                     if (up !== null) {
                         editor.selectBoxNew(up);
                     }

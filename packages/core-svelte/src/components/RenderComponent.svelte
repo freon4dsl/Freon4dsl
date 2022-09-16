@@ -30,7 +30,7 @@
     import TextDropdownComponent from "./TextDropdownComponent.svelte";
     import SvgComponent from "./SvgComponent.svelte";
     import { afterUpdate } from "svelte";
-    import {selectedBoxes} from "./svelte-utils/DropAndSelectStore";
+    import { selectedBox } from "./svelte-utils/DropAndSelectStore";
     import TableComponent from "./TableComponent.svelte";
 
     const LOGGER = new PiLogger("RenderComponent"); //.mute();
@@ -45,8 +45,8 @@
         // Note that click events on some components, like TextComponent, are already caught.
         // These components need to take care of setting the currently selected element themselves.
         if (box.selectable) {
-            editor.selectedBoxes = [box];
-            $selectedBoxes = [box];
+            editor.selectedBox = box;
+            $selectedBox = box;
             event.preventDefault();
             event.stopPropagation();
         } // else: let the parent element take care of selection
@@ -54,13 +54,13 @@
 
     // TODO remove this function in favor of autorun()
     afterUpdate(() => {
-        // LOGGER.log("RenderComponent.afterUpdate for box " + box.role + ", isSelected:" + (editor?.selectedBoxes === box));
-        let isSelected: boolean = $selectedBoxes.includes(box);
+        // LOGGER.log("RenderComponent.afterUpdate for box " + box.role + ", isSelected:" + (editor?.selectedBox === box));
+        let isSelected: boolean = $selectedBox === box;
         className = (isSelected ? "selected" : "unSelected");
     });
 
     // autorun(() => {
-    //     className = (editor?.selectedBoxes === box ? "selected" : "unSelected");
+    //     className = (editor?.selectedBox === box ? "selected" : "unSelected");
     // });
 </script>
 

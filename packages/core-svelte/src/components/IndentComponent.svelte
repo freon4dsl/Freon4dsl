@@ -3,7 +3,6 @@
     import RenderComponent from "./RenderComponent.svelte";
     import type {IndentBox, PiEditor} from "@projectit/core";
 
-
     export let box: IndentBox;
     export let editor: PiEditor;
 

@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import type { Box } from "@projectit/core";
 
-export let selectedBoxes: Writable<Box[]> = writable<Box[]>([]);                   // the currently selected model element
+export let selectedBox: Writable<Box> = writable<Box>(null);                    // the currently selected box
 
 export const draggedElem: Writable<ElementInfo> = writable<ElementInfo>(null);  // info of the model element that is currently being dragged
 export const draggedFrom: Writable<string> = writable<string>('');              // id of the svelte component that contains the dragged element

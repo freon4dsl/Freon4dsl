@@ -10,7 +10,7 @@
         activeElem,
         activeIn,
         ElementInfo,
-        selectedBoxes
+        selectedBox
     } from "./svelte-utils/DropAndSelectStore";
     import {contextMenu, contextMenuVisible, items} from "./svelte-utils/ContextMenuStore";
 
@@ -99,8 +99,8 @@
     function showContextMenu(event, index: number) {
         if (index >= 0 && index <= shownElements.length) {
             const elemBox: Box = shownElements[index];
-            editor.selectedBoxes = [elemBox];
-            $selectedBoxes = [elemBox];
+            editor.selectedBox = elemBox;
+            $selectedBox = elemBox;
             // todo determine the contents of the menu based on elemBox
             $contextMenu.items = items;
             $contextMenu.show(event); // this function sets $contextMenuVisible to true

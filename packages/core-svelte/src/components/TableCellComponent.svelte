@@ -12,7 +12,7 @@
     import { writable, type Writable } from "svelte/store";
     import RenderComponent from "./RenderComponent.svelte";
     import { isOdd } from "./svelte-utils";
-    import {contextMenu, contextMenuVisible, items, MenuItem} from "./svelte-utils/ContextMenuStore";
+    import { contextMenu, contextMenuVisible, items, MenuItem } from "./svelte-utils/ContextMenuStore";
     import {
         activeElem,
         activeIn,
@@ -20,7 +20,7 @@
         draggedFrom,
         ElementInfo,
         GridIndex,
-        selectedBoxes
+        selectedBox
     } from "./svelte-utils/DropAndSelectStore";
 
     // properties
@@ -43,7 +43,7 @@
     let isHeader = "noheader";
     let cssStyle: string = "";
     let cssClass: string = "";
-    let hovering: GridIndex = {row: -1, column: -1};      // determines the style of the element, when hovering but nothing is being dragged
+    let hovering: GridIndex = { row: -1, column: -1 };      // determines the style of the element, when hovering but nothing is being dragged
     // determine the type of the elements in the cell
     // this speeds up the check whether the element may be dropped in a certain drop-zone
     let elementType: string = box.element.piLanguageConcept();
@@ -100,14 +100,14 @@
     const drop = (event: DragEvent) => {
         const data: ElementInfo = $draggedElem;
 
-        console.log('DROPPING item [' + data.elementId + '] from grid [' + data.ownerId + '] in grid [' + parentId + '] on position [' + row + "," + column + ']');
+        console.log("DROPPING item [" + data.elementId + "] from grid [" + data.ownerId + "] in grid [" + parentId + "] on position [" + row + "," + column + "]");
         if (data.ownerId === parentId) { // dropping in the same grid
-            console.log('moving item within grid');
+            console.log("moving item within grid");
             // runInAction(() => {
             //     moveListElement(box.element, box.propertyName, data.dropInfo.index, targetIndex);
             // });
         } else { // dropping in another list
-            console.log('moving item to another grid');
+            console.log("moving item to another grid");
             // runInAction(() => {
             //     // check if item may be dropped here
             //     if (!checkAndDrop(editor.rootElement, box.element, box.propertyName, data.dropInfo, targetIndex)) {
@@ -119,81 +119,61 @@
         }
         // everything is done, so reset the variables
         $draggedElem = null;
-        $activeElem = {row: -1, column: -1};
-        $activeIn = '';
-        hovering = {row: -1, column: -1};
-    }
+        $activeElem = { row: -1, column: -1 };
+        $activeIn = "";
+        hovering = { row: -1, column: -1 };
+    };
     const dragstart = (event: DragEvent) => {
-        LOGGER.log('dragStart')
+        LOGGER.log("dragStart");
         // close any context menu
         $contextMenuVisible = false;
 
         // give the drag an effect
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.dropEffect = 'move';
-        // if there are more boxes selected and this box is one of them,
-        // then the whole row/column is selected, and we must drag the row/column
-        if ($selectedBoxes.length > 1 && $selectedBoxes.includes(box)) {
-            // todo create correct element info
-            console.log('multiple elements selected');
-            $draggedElem = new ElementInfo(id+"-ROW", elementType, parentId, 'TempPropertyName', row, column);
-        } else { // dragging single cell
-            console.log('single or no elements selected');
-            // create the data to be transferred and notify the store that something is being dragged
-            // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
-            // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
-            const propName = 'TempPropertyName'; // todo use the propertyName from the ownerDescriptor
-            const ownerId = parentId;     // todo use the owner from the ownerDescriptor
-            $draggedElem = new ElementInfo(id, elementType, ownerId, propName, row, column);
-        }
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.dropEffect = "move";
+
+        // create the data to be transferred and notify the store that something is being dragged
+        // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
+        // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
+        const propName = "TempPropertyName"; // todo use the propertyName from the ownerDescriptor
+        const ownerId = parentId;     // todo use the owner from the ownerDescriptor
+        $draggedElem = new ElementInfo(id, elementType, ownerId, propName, row, column);
         $draggedFrom = parentId;
-    }
+    };
 
     const dragenter = (event: DragEvent): boolean => {
         const data: ElementInfo = $draggedElem;
         // only show this item as active when the type of the element to be dropped is the right one
         // TODO allow subtypes
         if (elementType === data.elementType) {
-            $activeElem = {row: row, column: column};
+            $activeElem = { row: row, column: column };
             $activeIn = parentId;
             return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
         }
         return false;
-    }
+    };
     const mouseover = (): boolean => {
-        hovering = {row: row, column: column};
+        hovering = { row: row, column: column };
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
-    }
+    };
     const mouseout = (): boolean => {
-        hovering = {row: -1, column: -1};
+        hovering = { row: -1, column: -1 };
         $activeElem = null;
-        $activeIn = '';
+        $activeIn = "";
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
-    }
+    };
 
     async function showContextMenu(event) {
         // if there are more boxes selected and this box is one of them,
         // the row/column is selected, and we must show the context menu for the row/column
-        if ($selectedBoxes.length > 1 && $selectedBoxes.includes(box)) {
-            // todo determine the contents of the menu based on the complete element
-            const xxx: MenuItem = new MenuItem('Move row/column', 'Ctrl-m', (e: PiElement) => {
-                console.log('moving row/column...' + e.piId() + ' of type ' + e.piLanguageConcept());
-            });
-            $contextMenu.items = [xxx];
-        } else { // context menu for single cell
-            // todo determine the contents of the menu based on box
-            const xxx: MenuItem = new MenuItem('Select element', 'Ctrl-p', (e: PiElement) => {
-                LOGGER.log('selecting element...' + e.piId() + ' of type ' + e.piLanguageConcept());
-                editor.selectElement(e);
-            });
-            $contextMenu.items = items;
-            $contextMenu.items.unshift(xxx);
-            // set the selected boxes
-            editor.selectedBoxes = [box.content];
-            $selectedBoxes = [box.content];
-            LOGGER.log('setting selected element...' + box.content.element.piId() + ' of type ' + box.content.element.piLanguageConcept());
-            await tick();
-        }
+
+        // todo determine the contents of the menu based on box
+        $contextMenu.items = items;
+        // set the selected boxes
+        editor.selectedBox = box.content;
+        $selectedBox = box.content;
+        LOGGER.log("setting selected element..." + box.content.element.piId() + " of type " + box.content.element.piLanguageConcept());
+        await tick();
         $contextMenu.show(event); // this function sets $contextMenuVisible to true
     }
 
@@ -208,7 +188,7 @@
 
     // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
     let isSelected: boolean;
-    $: isSelected = box.content.selectable ? ($selectedBoxes.includes(box) || $selectedBoxes.includes(box.content)) : false;
+    $: isSelected = box.content.selectable ? ($selectedBox == box || $selectedBox === box.content) : false;
 </script>
 
 

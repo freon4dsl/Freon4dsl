@@ -6,7 +6,7 @@
     import {tick} from "svelte";
     import { PiLogger } from "@projectit/core";
     import {contextMenuVisible, MenuItem} from "./svelte-utils/ContextMenuStore";
-    import {selectedBoxes} from "./svelte-utils/DropAndSelectStore";
+    import {selectedBox} from "./svelte-utils/DropAndSelectStore";
     import {viewport} from "./svelte-utils/EditorViewportStore";
 
 
@@ -124,7 +124,7 @@
             openSub(itemIndex);
         } else {
             // todo adjust for multiple selections
-            let mySelection = $selectedBoxes[0].element;
+            let mySelection = $selectedBox.element;
             LOGGER.log('DOING IT for ' + mySelection.piId() + ' of type ' + mySelection.piLanguageConcept());
             item.handler(mySelection);
             hide();

@@ -56,7 +56,7 @@
         // console.log('TextDropdownComponent setFocus');
         isEditing = true;
         dropdownShown = false;
-        editor.selectedBoxes = [box];
+        editor.selectedBox = box;
         allOptions = filteredOptions = getOptions();
     };
 
@@ -173,7 +173,7 @@
         // LOGGER.log('TextDropdownComponent: startEditing');
         isEditing = true;
         dropdownShown = true;
-        editor.selectedBoxes = [box];
+        editor.selectedBox = box;
         if (!allOptions) {
             allOptions = getOptions();
         }

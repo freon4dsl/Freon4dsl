@@ -28,7 +28,6 @@ export class PiEditor {
     private _rootBox: Box | null = null;        // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
     private _selectedElement: PiElement = null; // The model element that is currently selected in the editor.
     private _selectedBox: Box | null = null;    // The box defined for _selectedElement. Note that it is a 'slave' to _selectedElement.
-    selectedBoxes: Box[]; // todo adjust this
     private _selectedPosition: PiCaret = PiCaret.UNSPECIFIED;   // The caret position within the _selectedBox.
     private _selectedRole: string = null;       // TODO not really used, remove?
     // TODO question: NOSELECT is not used, remove?
@@ -322,6 +321,7 @@ export class PiEditor {
         }
         return result;
     }
+    // TODO rethink the parameter 'box' in all of these methods => should work on currently selected box
 
     /**
      * Returns the box that is visually below `box`.
