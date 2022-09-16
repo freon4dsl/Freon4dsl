@@ -153,7 +153,7 @@ export function isActionBox(b: Box): b is ActionBox {
     return b?.kind === "ActionBox"; //  b instanceof ActionBox;
 }
 
-export function isAliasTextBox(b: Box): boolean {
+export function isActionTextBox(b: Box): boolean {
     return b?.kind === "TextBox" && isActionBox(b?.parent);
 }
 

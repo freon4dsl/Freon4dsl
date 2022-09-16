@@ -2,7 +2,7 @@ import { editorEnvironment } from "../config/WebappConfiguration";
 import {
     Box,
     isActionBox,
-    isAliasTextBox,
+    isActionTextBox,
     isTextBox,
     PiCompositeProjection,
     PiError,
@@ -99,7 +99,7 @@ export class EditorRequestsHandler {
             const currentSelection: Box = editorEnvironment.editor.selectedBox;
             const element: PiElement = currentSelection.element;
             if (!!currentSelection) {
-                if (isAliasTextBox(currentSelection)) {
+                if (isActionTextBox(currentSelection)) {
                     if (isActionBox(currentSelection.parent)) {
                         if (currentSelection.parent.conceptName === tobepasted.piLanguageConcept()) {
                             // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);

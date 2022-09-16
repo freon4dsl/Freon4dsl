@@ -33,7 +33,7 @@ describe.skip("TextDropdownComponent", () => {
             () => { return model.myText2; },
             (txt) => { model.myText2 = txt; }
         );
-        // add parent boxes, because otherwise 'isAliasTextBox' throws null pointer
+        // add parent boxes, because otherwise 'isActionTextBox' throws null pointer
         const parentBox1 = new OptionalBox(model, "parent-role1", () => {return true;}, textBox1, false, "someAliasText" );
         const parentBox2 = new OptionalBox(model, "parent-role2", () => {return true;}, textBox2, false, "someAliasText" );
     });

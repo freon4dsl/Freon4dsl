@@ -371,7 +371,7 @@
                             }
                             // todo adjust for multiple selection
                             LOGGER.log("    NEXT LEAF IS " + editor.selectedBoxes[0].role);
-                            // if (isAliasTextBox(editor.selectedBoxes)) {
+                            // if (isActionTextBox(editor.selectedBoxes)) {
                             //     LOGGER.log("     is an alias box");
                             //     (editor.selectedBoxes.parent as AliasBox).triggerKeyPressEvent(event.key);
                             // } else {
