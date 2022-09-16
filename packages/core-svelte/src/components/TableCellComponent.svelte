@@ -8,7 +8,7 @@
         GridCellBox, PiElement
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
-    import { afterUpdate, onMount } from "svelte";
+    import { afterUpdate, onMount, tick } from "svelte";
     import { writable, type Writable } from "svelte/store";
     import RenderComponent from "./RenderComponent.svelte";
     import { isOdd } from "./svelte-utils";
@@ -31,7 +31,7 @@
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
     // local variables
-    const LOGGER = new PiLogger("GridCellComponent").mute();
+    const LOGGER = new PiLogger("TableCellComponent"); //.mute();
     // let boxStore: Writable<Box> = writable<Box>(cellBox.box);
     let cssVariables: string;
     let id: string = box.id;
@@ -100,7 +100,7 @@
     const drop = (event: DragEvent) => {
         const data: ElementInfo = $draggedElem;
 
-        console.log('DROPPING item [' + data.element.piId() + '] from grid [' + data.ownerId + '] in grid [' + parentId + '] on position [' + row + "," + column + ']');
+        console.log('DROPPING item [' + data.elementId + '] from grid [' + data.ownerId + '] in grid [' + parentId + '] on position [' + row + "," + column + ']');
         if (data.ownerId === parentId) { // dropping in the same grid
             console.log('moving item within grid');
             // runInAction(() => {
@@ -171,31 +171,28 @@
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     }
 
-    function showContextMenu(event) {
+    async function showContextMenu(event) {
         // if there are more boxes selected and this box is one of them,
         // the row/column is selected, and we must show the context menu for the row/column
         if ($selectedBoxes.length > 1 && $selectedBoxes.includes(box)) {
             // todo determine the contents of the menu based on the complete element
             const xxx: MenuItem = new MenuItem('Move row/column', 'Ctrl-m', (e: PiElement) => {
-                console.log('moving row/column...' + e);
+                console.log('moving row/column...' + e.piId() + ' of type ' + e.piLanguageConcept());
             });
             $contextMenu.items = [xxx];
         } else { // context menu for single cell
-            editor.selectedBoxes = [box];
-            $selectedBoxes = [box];
             // todo determine the contents of the menu based on box
-            const xxx: MenuItem = new MenuItem('Select parent', 'Ctrl-p', (e: PiElement) => {
-                console.log('selecting parent element...' + e);
-                // if (!!box.tmpSibling) {
-                //     // $selectedBoxes.push(box.tmpSibling);
-                //     // $selectedBoxes = $selectedBoxes;
-                //     $selectedBoxes = [...$selectedBoxes, box.tmpSibling];
-                // } else {
-                //     console.log('no sibling');
-                // }
+            const xxx: MenuItem = new MenuItem('Select element', 'Ctrl-p', (e: PiElement) => {
+                LOGGER.log('selecting element...' + e.piId() + ' of type ' + e.piLanguageConcept());
+                editor.selectElement(e);
             });
             $contextMenu.items = items;
             $contextMenu.items.unshift(xxx);
+            // set the selected boxes
+            editor.selectedBoxes = [box.content];
+            $selectedBoxes = [box.content];
+            LOGGER.log('setting selected element...' + box.content.element.piId() + ' of type ' + box.content.element.piLanguageConcept());
+            await tick();
         }
         $contextMenu.show(event); // this function sets $contextMenuVisible to true
     }

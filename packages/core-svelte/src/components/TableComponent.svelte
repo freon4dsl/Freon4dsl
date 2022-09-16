@@ -5,7 +5,7 @@
     import GridCellComponent from "./TableCellComponent.svelte";
 
 
-    const LOGGER = new PiLogger("GridComponent").mute();
+    const LOGGER = new PiLogger("TableComponent"); //.mute();
 
     export let box: GridBox;
     export let editor: PiEditor;

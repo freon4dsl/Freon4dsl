@@ -62,7 +62,6 @@
     // autorun(() => {
     //     className = (editor?.selectedBoxes === box ? "selected" : "unSelected");
     // });
-
 </script>
 
 <span id="render-${box?.id}"

@@ -6,7 +6,7 @@
 
     export let box: LabelBox;
 
-    const LOGGER = new PiLogger("LabelComponent").mute();
+    const LOGGER = new PiLogger("LabelComponent"); //.mute();
 
     let id: string = !!box ? box.id : "unknown-label-id";
     let element: HTMLDivElement = null;

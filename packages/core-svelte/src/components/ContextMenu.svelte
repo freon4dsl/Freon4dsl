@@ -4,10 +4,11 @@
 <script lang="ts">
     import { clickOutside } from './svelte-utils';
     import {tick} from "svelte";
-    import {PiEditor} from "@projectit/core";
+    import { PiLogger } from "@projectit/core";
     import {contextMenuVisible, MenuItem} from "./svelte-utils/ContextMenuStore";
     import {selectedBoxes} from "./svelte-utils/DropAndSelectStore";
     import {viewport} from "./svelte-utils/EditorViewportStore";
+
 
     // export let editor: PiEditor;
 
@@ -15,6 +16,8 @@
     export let items: MenuItem[];
     let submenuItems: MenuItem[];
 
+    // local variables
+    const LOGGER = new PiLogger("ContextMenu"); //.mute();
     // dimension (height and width) of context menu
     let menuHeight = 0, menuWidth = 0;
     // position of context menu
@@ -121,8 +124,9 @@
             openSub(itemIndex);
         } else {
             // todo adjust for multiple selections
-            console.log('DOING IT for ' + $selectedBoxes[0].element.piId())
-            item.handler($selectedBoxes[0].element);
+            let mySelection = $selectedBoxes[0].element;
+            LOGGER.log('DOING IT for ' + mySelection.piId() + ' of type ' + mySelection.piLanguageConcept());
+            item.handler(mySelection);
             hide();
         }
         event.stopPropagation();

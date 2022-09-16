@@ -7,7 +7,7 @@
     export let box: OptionalBox;
     export let editor: PiEditor;
 
-    const LOGGER = new PiLogger("OptionalComponent").mute();
+    const LOGGER = new PiLogger("OptionalComponent"); //.mute();
     let id: string;                             // an id for the html element showing the optional
     id = !!box ? box.id : 'optional-with-unknown-box';
     let mustShow = false;

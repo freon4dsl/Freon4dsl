@@ -59,6 +59,7 @@
     }
 
     const dragstart = (event: DragEvent, listId: string, listIndex) => {
+        LOGGER.log('ON DRAG START');
         // close any context menu
         $contextMenuVisible = false;
 

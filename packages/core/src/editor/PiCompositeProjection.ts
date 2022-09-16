@@ -79,13 +79,13 @@ export class PiCompositeProjection implements PiProjection {
 
     enableProjection(name: string) {
         BoxFactory.clearCaches();
-        console.log("Composite: enabling Projection " + name);
+        // LOGGER.log("Composite: enabling Projection " + name);
         this.projections.get(name).isEnabled = true;
     }
 
     disableProjection(name: string) {
         BoxFactory.clearCaches();
-        console.log("Composite: disabling Projection " + name);
+        // LOGGER.log("Composite: disabling Projection " + name);
         this.projections.get(name).isEnabled = false;
     }
 

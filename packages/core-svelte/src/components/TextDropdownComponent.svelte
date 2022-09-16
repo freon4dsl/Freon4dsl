@@ -20,7 +20,7 @@
 
     import { autorun, runInAction } from "mobx";
 
-    const LOGGER = new PiLogger("TextDropdownComponent").mute();
+    const LOGGER = new PiLogger("TextDropdownComponent"); //.mute();
 
     export let box: AbstractChoiceBox;	// the accompanying AliasBox or SelectBox
     export let editor: PiEditor;			    // the editor

@@ -99,7 +99,7 @@ export class TableUtil {
             // add an extra row where a new element to the list can be added
             const location = this.calcLocation({row: property.length +1, column:1}, orientation, hasHeaders);
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
-            console.log("TableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders + " span[" + (orientation === "row" ? cellGetters.length : 1) + "/" + (orientation === "row" ? 1 : cellGetters.length) + "]");
+            LOGGER.log("TableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders + " span[" + (orientation === "row" ? cellGetters.length : 1) + "/" + (orientation === "row" ? 1 : cellGetters.length) + "]");
             cells.push( BoxFactory.gridcell(element, cellRoleName,  location.row, location.column,
                 BoxFactory.action(element, "alias-add-row-or-column", `<add new ${orientation}>`,
                 { propertyName: propertyName, conceptName: propInfo.type }),

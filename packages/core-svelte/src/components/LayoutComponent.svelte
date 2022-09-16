@@ -16,7 +16,7 @@
     export let box: ListBox; // todo change to LayoutBox
     export let editor: PiEditor;
 
-    let LOGGER: PiLogger = new PiLogger("LayoutComponent").mute();
+    let LOGGER: PiLogger = new PiLogger("LayoutComponent"); //.mute();
     let id: string = !!box ? box.id : "unknown-label-id";
     let element: HTMLSpanElement;
     let children: Box[];
