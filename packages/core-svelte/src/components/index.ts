@@ -1,7 +1,7 @@
 import DropdownComponent from './DropdownComponent.svelte';
 import EmptyLineComponent from './EmptyLineComponent.svelte';
-import GridCellComponent from './GridCellComponent.svelte';
-import GridComponent from './GridComponent.svelte';
+import TableCellComponent from './TableCellComponent.svelte';
+import TableComponent from './TableComponent.svelte';
 import IndentComponent from './IndentComponent.svelte';
 import LabelComponent from './LabelComponent.svelte';
 import ListComponent from './ListComponent.svelte';
@@ -15,8 +15,8 @@ import TextDropdownComponent from './TextDropdownComponent.svelte';
 export {
     DropdownComponent,
     EmptyLineComponent,
-    GridCellComponent,
-    GridComponent,
+    TableCellComponent,
+    TableComponent,
     IndentComponent,
     LabelComponent,
     ListComponent,

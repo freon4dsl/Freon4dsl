@@ -12,6 +12,8 @@ export class GridBox extends Box {
     cells: GridCellBox[] = [];
     private $children: Box[] = []; // TODO question: why is this prop needed?
     orientation: GridOrientation = "neutral";
+    trueList: boolean; // TODO trueList (and propertyName) is a temp hack to distinguish list properties from the model from layout grids
+    propertyName: string;
 
     constructor(exp: PiElement, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
         super(exp, role);
@@ -76,4 +78,8 @@ function compare(a: GridCellBox, b: GridCellBox): number {
 
 export function isGridBox(box: Box): box is GridBox {
     return box.kind === "GridBox"; //  box instanceof GridBox;
+}
+
+export function isTableBox(box: Box): box is GridBox {
+    return box.kind === "GridBox" && (box as GridBox).trueList; //  box instanceof GridBox;
 }

@@ -2,7 +2,7 @@
     import { GridCellBox, type GridBox, type PiEditor, PiLogger } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import { autorun } from "mobx";
-    import GridCellComponent from "./GridCellComponent.svelte";
+    import GridCellComponent from "./TableCellComponent.svelte";
 
 
     const LOGGER = new PiLogger("GridComponent").mute();

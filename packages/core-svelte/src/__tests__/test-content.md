@@ -53,16 +53,16 @@ Deze worden altijd in de bovenste component afgehandeld:
 7. als drop down geopend is dan moeten de pijl keys omhoog, omlaag bij de drop down terecht komen
 8. escape sluit drop down
 
-# GridCellComponent
+# TableCellComponent
 
-1. moet op juiste column/row staan in zijn grid
+1. moet op juiste column/row staan in zijn Table
 2. test rowSpan en columnSPan
-3. als gridCellBox.isHeader dan wordt style aangepast
+3. als TableCellBox.isHeader dan wordt style aangepast
 4. als de enter key ingetoets wordt dan wordt de keyboard shortcut command uitgevoerd,
    meestal is dat het toevoegen van een row of een column
 5. based on orientation style is adjusted
 
-# GridComponent
+# TableComponent
 
 1. afhankelijk van de orientatie wordt de header getoond
 2. als de enter key ingetoets wordt dan wordt de keyboard shortcut command uitgevoerd,

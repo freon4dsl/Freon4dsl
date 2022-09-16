@@ -7,7 +7,7 @@
     import {
         isActionBox,
         isEmptyLineBox,
-        isGridBox,
+        isTableBox,
         isIndentBox,
         isLabelBox,
         isLayoutBox,
@@ -21,7 +21,6 @@
         Box
     } from "@projectit/core";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
-    import GridComponent from "./GridComponent.svelte";
     import IndentComponent from "./IndentComponent.svelte";
     import LabelComponent from "./LabelComponent.svelte";
     import LayoutComponent from "./LayoutComponent.svelte";
@@ -32,6 +31,7 @@
     import SvgComponent from "./SvgComponent.svelte";
     import { afterUpdate } from "svelte";
     import {selectedBoxes} from "./svelte-utils/DropAndSelectStore";
+    import TableComponent from "./TableComponent.svelte";
 
     const LOGGER = new PiLogger("RenderComponent"); //.mute();
 
@@ -76,8 +76,8 @@
         <TextDropdownComponent box={box} editor={editor}/>
     {:else if isEmptyLineBox(box) }
         <EmptyLineComponent box={box}/>
-    {:else if isGridBox(box) }
-        <GridComponent box={box} editor={editor} />
+    {:else if isTableBox(box) }
+        <TableComponent box={box} editor={editor} />
     {:else if isIndentBox(box) }
         <IndentComponent box={box} editor={editor}/>
     {:else if isLabelBox(box)}
@@ -93,7 +93,7 @@
     {:else if isTextBox(box) }
        	<TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
     {:else}
-        <p class="error">UNKNOWN BOX TYPE: {box.kind}</p>
+        <p class="error">[UNKNOWN BOX TYPE: {box.kind}]</p>
     {/if}
 </span>
 

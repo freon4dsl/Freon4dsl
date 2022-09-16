@@ -111,7 +111,9 @@ export class TableUtil {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
             const nrOfRowsAndColumns = this.calcLocation( {row: property.length, column: cellGetters.length}, orientation, hasHeaders);
             this.addKeyBoardShortCuts(element, propertyName, nrOfRowsAndColumns.row, nrOfRowsAndColumns.column,editor, propInfo.type);
-            return new GridBox(element, roleName, cells, { orientation: orientation } );
+            let result = new GridBox(element, roleName, cells, { orientation: orientation } );
+            result.trueList = true;
+            return result;
         }
         return null;
     }

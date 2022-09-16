@@ -138,7 +138,7 @@
             console.log('multiple elements selected');
             $draggedElem = new ElementInfo(id+"-ROW", elementType, parentId, 'TempPropertyName', row, column);
         } else { // dragging single cell
-            console.log('sinlge or no elements selected');
+            console.log('single or no elements selected');
             // create the data to be transferred and notify the store that something is being dragged
             // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
             // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
