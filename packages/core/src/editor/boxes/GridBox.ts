@@ -10,10 +10,9 @@ export type GridOrientation = "neutral" | "row" | "column";
 export class GridBox extends Box {
     readonly kind = "GridBox";
     cells: GridCellBox[] = [];
-    private $children: Box[] = []; // TODO question: why is this prop needed?
+    private $children: Box[] = []; // TODO question: why is this prop needed, what is the difference with cells?
     orientation: GridOrientation = "neutral";
-    trueList: boolean; // TODO trueList (and propertyName) is a temp hack to distinguish list properties from the model from layout grids
-    propertyName: string;
+    trueList: boolean; // TODO trueList is a temp hack to distinguish list properties from the model from layout grids
 
     constructor(exp: PiElement, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
         super(exp, role);

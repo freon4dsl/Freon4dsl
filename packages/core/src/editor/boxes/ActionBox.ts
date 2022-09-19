@@ -13,10 +13,6 @@ export class ActionBox extends AbstractChoiceBox {
     readonly kind = "ActionBox";
     placeholder: string;
     /**
-     * Filled with the name of the property, in case the ActionBox is used to create new elements
-     */
-    propertyName?: string;
-    /**
      * Filled with the name of the concept, in case this is used to create new concept instance.
      */
     conceptName?: string;

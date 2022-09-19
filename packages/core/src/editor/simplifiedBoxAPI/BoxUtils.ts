@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../ast";
-import { Box, BoxFactory, CharAllowed, SelectOption, TextBox } from "../boxes";
+import { Box, BoxFactory, CharAllowed, HorizontalListBox, SelectBox, SelectOption, TextBox, VerticalListBox } from "../boxes";
 import { PiUtils } from "../../util";
 import { BehaviorExecutionResult } from "../util";
 import { Language, PropertyKind } from "../../language";
@@ -50,6 +50,8 @@ export class BoxUtils {
                     placeHolder: `<${propertyName}>`
                 });
             }
+            result.propertyName = propertyName;
+            result.propertyIndex = index;
         } else {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a string: " + property + "\"");
         }
@@ -102,6 +104,8 @@ export class BoxUtils {
                         }
                     });
             }
+            result.propertyName = propertyName;
+            result.propertyIndex = index;
         } else {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a number: " + property + "\"");
         }
@@ -139,8 +143,9 @@ export class BoxUtils {
 
         // all's well, create the box
         const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "booleanbox", index);
+        let result: SelectBox;
         if (isList && this.checkList(isList, index, propertyName)) {
-            return BoxFactory.select(
+            result = BoxFactory.select(
                 element,
                 roleName,
                 "<optional>",
@@ -164,7 +169,7 @@ export class BoxUtils {
                 }
             );
         } else {
-            return BoxFactory.select(
+            result = BoxFactory.select(
                 element,
                 roleName,
                 "<optional>",
@@ -188,6 +193,9 @@ export class BoxUtils {
                 }
             );
         }
+        result.propertyName = propertyName;
+        result.propertyIndex = index;
+        return result;
     }
 
     /**
@@ -222,7 +230,8 @@ export class BoxUtils {
             property = property[index];
         }
 
-        return BoxFactory.select(
+        let result: SelectBox;
+        result = BoxFactory.select(
             element,
             roleName,
             `<select ${propertyName}>`,
@@ -258,6 +267,9 @@ export class BoxUtils {
             },
             {}
         );
+        result.propertyName = propertyName;
+        result.propertyIndex = index;
+        return result;
     }
 
     /**
@@ -304,13 +316,17 @@ export class BoxUtils {
             // new-list-item"),
             // propertyName, element.piLanguageConcept(), "dummy"));
             // return the box
-            return BoxFactory.verticalList(
+            let result: VerticalListBox;
+            result = BoxFactory.verticalList(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist"),
                 true,
                 propertyName,
                 children
             );
+            result.propertyName = propertyName;
+            // result.propertyIndex = index; // todo this param should be set in case the list is part of a list
+            return result;
         } else {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or is not a part: " + property + "\"");
             return null;
@@ -326,13 +342,16 @@ export class BoxUtils {
             let children = this.makeRefItems(property, element, propertyName, scoper, listInfo);
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
-            return BoxFactory.verticalList(
+            let result: VerticalListBox;
+            result = BoxFactory.verticalList(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "vreflist"),
                 true,
                 propertyName,
                 children
             );
+            result.propertyName = propertyName;
+            return result;
         } else {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or not a reference: " + property + "\"");
             return null;
@@ -353,13 +372,16 @@ export class BoxUtils {
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
             // return the box
-            return BoxFactory.horizontalList(
+            let result: HorizontalListBox;
+            result = BoxFactory.horizontalList(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "hpartlist"),
                 true,
                 propertyName,
                 children
             );
+            result.propertyName = propertyName;
+            return result;
         } else {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or not a part: " + property + "\"");
             return null;
@@ -377,13 +399,16 @@ export class BoxUtils {
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
             // return the box
-            return BoxFactory.horizontalList(
+            let result: HorizontalListBox;
+            result = BoxFactory.horizontalList(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "hlist"),
                 true,
                 propertyName,
                 children
             );
+            result.propertyName = propertyName;
+            return result;
         } else {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or not a reference: " + property + "\"");
             return null;
@@ -395,9 +420,13 @@ export class BoxUtils {
         const property = element[propertyName];
         const roleName = RoleProvider.property(element.piLanguageConcept(), propertyName);
         const byName: boolean = !!projectionName && projectionName.length > 0;
-        return !!property
+        let result: Box;
+        result = !!property
             ? (byName ? rootProjection.getNamedBox(property, projectionName) : rootProjection.getBox(property))
             : BoxFactory.action(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
+        result.propertyName = propertyName;
+        // result.propertyIndex = ??? todo
+        return result;
     }
 
     /**

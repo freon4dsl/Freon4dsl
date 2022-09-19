@@ -10,14 +10,14 @@ export abstract class Box {
     $id: string;
     kind: string = "";
     role: string = "";
-    roleNumber: number = undefined;
-    element: PiElement = null;
-    // Custom CSS class that will be added to the component rendering this box
-    cssClass: string = "";
-    // Custom CSS Style class that will be added as inline style to the component rendering this box
-    cssStyle: string = "";
-    // Can this box be selected in the editor?
-    selectable: boolean = true;
+    // roleNumber: number = undefined; // todo unused: can be removed?
+    element: PiElement = null;  // the model element to which this box is coupled
+    propertyName: string;       // the name of the property, if any, in 'element' which this box projects
+    propertyIndex: number;      // the index within the property, if appropriate
+
+    cssClass: string = "";      // Custom CSS class that will be added to the component rendering this box
+    cssStyle: string = "";      // Custom CSS Style class that will be added as inline style to the component rendering this box
+    selectable: boolean = true; // Can this box be selected in the editor?
     parent: Box = null;
 
     // Never set these manually, these properties are set after rendering to get the
@@ -35,7 +35,7 @@ export abstract class Box {
         this.$id = PiUtils.ID(); //uuid.v4();
         makeObservable(this, {
             role: observable,
-            roleNumber: observable,
+            // roleNumber: observable,
             element: observable,
             cssStyle: observable,
             cssClass: observable
@@ -234,5 +234,11 @@ export abstract class Box {
 
     isEditable(): boolean {
         return false;
+    }
+
+    getSiblings(param: Box): Box[] {
+        return this.children.filter(c =>
+            c.element.piId() === param.element.piId()
+        );
     }
 }

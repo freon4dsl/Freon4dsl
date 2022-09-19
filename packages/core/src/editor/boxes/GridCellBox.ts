@@ -49,4 +49,7 @@ export class GridCellBox extends Box  {
         return [this.$content];
     }
 
+    getSiblings(): Box[] { // todo do we need a ReadOnlyArray here?
+        return this.parent.getSiblings(this);
+    }
 }
