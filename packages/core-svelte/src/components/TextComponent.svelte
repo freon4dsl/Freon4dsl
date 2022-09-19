@@ -16,11 +16,11 @@
 		PiEditor,
 		PiLogger,
 		TextBox,
-		CharAllowed, PiCaret, PiCaretPosition
+		CharAllowed, PiCaret, PiCaretPosition, ActionBox, isActionTextBox, SelectBox
 	} from "@projectit/core";
 
     import { autorun, runInAction } from "mobx";
-	import { selectedBox } from "./svelte-utils/DropAndSelectStore";
+	import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
 
     const LOGGER = new PiLogger("TextComponent"); // .mute();
     const dispatcher = createEventDispatcher();
@@ -121,7 +121,7 @@
         LOGGER.log('startEditing');
         // set the global selection
         editor.selectedBox = box;
-        $selectedBox = box;
+        $selectedBoxes = [box];
         // set the local variables
         isEditing = true;
         editStart = true;
@@ -163,13 +163,13 @@
 
         if (!partOfActionBox) {
             // store the current value in the textbox, or delete the box, if appropriate
-            // runInAction(() => {
-            // 	if (box.deleteWhenEmpty && text.length === 0) {
-            // 		editor.deleteBox(box);
-            // 	} else if (text !== box.getText()) {
-            // 		box.setText(text);
-            // 	}
-            // });
+            runInAction(() => {
+            	if (box.deleteWhenEmpty && text.length === 0) {
+            		editor.deleteBox(box);
+            	} else if (text !== box.getText()) {
+            		box.setText(text);
+            	}
+            });
             if (text !== box.getText()) {
                 box.setText(text);
             }
@@ -370,12 +370,12 @@
                             }
                             // todo adjust for multiple selection
                             LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
-                            // if (isActionTextBox(editor.selectedBox)) {
-                            //     LOGGER.log("     is an alias box");
-                            //     (editor.selectedBox.parent as AliasBox).triggerKeyPressEvent(event.key);
-                            // } else {
-                            //     LOGGER.log("     is NOT an alias box");
-                            // }
+                            if (isActionTextBox(editor.selectedBox)) {
+                                LOGGER.log("     is an action box");
+                                (editor.selectedBox.parent as ActionBox).triggerKeyPressEvent(event.key);
+                            } else {
+                                LOGGER.log("     is NOT an action box");
+                            }
                             event.preventDefault();
                             event.stopPropagation();
                             break;
@@ -434,21 +434,21 @@
         placeholder = box.placeHolder;
     });
 
-    // /**
-    //  * This function is called when something in the underlying model changes
-    //  */
-    // autorun(() => {
-    //     LOGGER.log("autorun");
-    // 	if (box instanceof TextBox) {
-    // 		AUTO_LOGGER.log("TextComponent role " + box.role + " text [" + text + "] box [" + box.getText() + "] innertText [" + spanElement?.innerText + "] isEditing [" + isEditing + "]");
-    // 		// TODO can the following five statements be moved to onMount() or should they be copied to onMount()?
-    // 		box.setFocus = setFocus;
-    // 		box.setCaret = setCaret;
-    // 		originalText = text = box.getText();
-    // 		placeholder = box.placeHolder;
-    // 		boxType = (box.parent instanceof AliasBox ? "alias" : (box.parent instanceof SelectBox ? "select" : "text"));
-    // 	}
-    // });
+    /**
+     * This function is called when something in the underlying model changes
+     */
+    autorun(() => {
+        LOGGER.log("autorun");
+    	if (box instanceof TextBox) {
+    		LOGGER.log("role " + box.role + " text [" + text + "] box [" + box.getText() + "] innertText [" + spanElement?.innerText + "] isEditing [" + isEditing + "]");
+    		// TODO can the following five statements be moved to onMount() or should they be copied to onMount()?
+    		box.setFocus = setFocus;
+    		box.setCaret = setCaret;
+    		originalText = text = box.getText();
+    		placeholder = box.placeHolder;
+    		boxType = (box.parent instanceof ActionBox ? "alias" : (box.parent instanceof SelectBox ? "select" : "text"));
+    	}
+    });
 
 	/**
 	 * Often a TextComponent is part of a list, to prevent the list capturing the drag start event, (which should actually

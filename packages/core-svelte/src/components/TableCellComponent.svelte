@@ -20,7 +20,7 @@
         draggedFrom,
         ElementInfo,
         GridIndex,
-        selectedBox
+        selectedBoxes
     } from "./svelte-utils/DropAndSelectStore";
 
     // properties
@@ -117,12 +117,20 @@
             //     // TODO second drop gives mobx error
             // });
         }
-        // everything is done, so reset the variables
+        // Everything is done, so reset the variables
         $draggedElem = null;
         $activeElem = { row: -1, column: -1 };
         $activeIn = "";
         hovering = { row: -1, column: -1 };
+        ghostHidden = true;
+        // Clear the drag data cache (for all formats/types)
+        event.dataTransfer.clearData();
     };
+    // todo a ghost div does not yet work as drag image
+    let ghostEle;
+    let ghostHidden: boolean = true;
+    const img = new Image();
+    img.src = "img/projectit-logo.png";
     const dragstart = (event: DragEvent) => {
         LOGGER.log("dragStart");
         // close any context menu
@@ -131,6 +139,16 @@
         // give the drag an effect
         event.dataTransfer.effectAllowed = "move";
         event.dataTransfer.dropEffect = "move";
+
+        // select the complete element and style them
+        $selectedBoxes = box.getSiblings();
+        // $selectedBoxes.forEach(b => b.style = "border: dashed");
+        ghostHidden = false;
+
+        // give the drag an image
+        // preload the image, otherwise it will not be shown on the first drag
+        event.dataTransfer.setDragImage(ghostEle, 0, 0);
+        // And Chrome seems to require the image to be in the dom: document.body.append(img), which should be hidden with some css
 
         // create the data to be transferred and notify the store that something is being dragged
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
@@ -163,17 +181,13 @@
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
 
-    async function showContextMenu(event) {
-        // if there are more boxes selected and this box is one of them,
-        // the row/column is selected, and we must show the context menu for the row/column
-
+    function showContextMenu(event) {
         // todo determine the contents of the menu based on box
         $contextMenu.items = items;
-        // set the selected boxes
-        editor.selectedBox = box.content;
-        $selectedBox = box.content;
-        LOGGER.log("setting selected element..." + box.content.element.piId() + " of type " + box.content.element.piLanguageConcept());
-        await tick();
+        // set the selected box
+        editor.selectedBox = box;
+        $selectedBoxes = box.getSiblings();
+        LOGGER.log("setting selected element..." + box.element.piId() + " of type " + box.element.piLanguageConcept());
         $contextMenu.show(event); // this function sets $contextMenuVisible to true
     }
 
@@ -188,7 +202,7 @@
 
     // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
     let isSelected: boolean;
-    $: isSelected = box.content.selectable ? ($selectedBox == box || $selectedBox === box.content) : false;
+    $: isSelected = box.content.selectable ? ($selectedBoxes.includes(box) || $selectedBoxes.includes(box.content)) : false;
 </script>
 
 
@@ -220,9 +234,16 @@
 >
     <RenderComponent box={box.content} editor={editor}/>
 </span>
+<div class="ghost" bind:this={ghostEle} style="display: {!ghostHidden ? 'flex' : 'none'};">I AM BEING DRAGGED</div>
 
 
 <style>
+    .ghost {
+        min-width: 50px;
+        min-height: 20px;
+        color: purple;
+        background-color: greenyellow;
+    }
     .gridcellcomponent {
         box-sizing: border-box;
         align-self: stretch; /* isn't this the default? */

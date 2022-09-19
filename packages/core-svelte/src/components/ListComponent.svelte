@@ -3,14 +3,14 @@
     import {Box, ListBox, ListDirection, PiEditor, PiLogger} from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import { runInAction } from "mobx";
-    import { checkAndDrop, moveListElement } from "./svelte-utils/dropHelpers";
+    import { checkAndDrop, DropInfo, moveListElement } from "./svelte-utils/dropHelpers";
     import {
         draggedElem,
         draggedFrom,
         activeElem,
         activeIn,
         ElementInfo,
-        selectedBox
+        selectedBoxes
     } from "./svelte-utils/DropAndSelectStore";
     import {contextMenu, contextMenuVisible, items} from "./svelte-utils/ContextMenuStore";
 
@@ -28,27 +28,29 @@
 
     // determine the type of the elements in the list
     // this speeds up the check whether the element may be dropped in a certain drop-zone
-    let elementType: string = box.element.piLanguageConcept();
+    let elementType: string;
+    $: elementType = box.children[0]?.element.piLanguageConcept();
 
     const drop = (event: DragEvent, targetIndex) => {
         const data: ElementInfo = $draggedElem;
 
-        console.log('DROPPING item [' + data.element.piId() + '] from [' + data.ownerId + '] in list [' + id + '] on position [' + targetIndex + ']');
+        console.log('DROPPING item [' + data.elementId + '] from [' + data.ownerId + '] in list [' + id + '] on position [' + targetIndex + ']');
         if (data.ownerId === id) { // dropping in the same list
             console.log('moving item within list');
-            // runInAction(() => {
-            //     moveListElement(box.element, box.propertyName, data.dropInfo.index, targetIndex);
-            // });
+            runInAction(() => {
+                moveListElement(box.element, box.propertyName, data.row, targetIndex);
+            });
         } else { // dropping in another list
             console.log('moving item to another list');
-            // runInAction(() => {
-            //     // check if item may be dropped here
-            //     if (!checkAndDrop(editor.rootElement, box.element, box.propertyName, data.dropInfo, targetIndex)) {
-            //         // TODO other way for error message
-            //         alert("drop is not allowed here, types do not match");
-            //     }
-            //     // TODO second drop gives mobx error
-            // });
+            let dropInfo: DropInfo = {parentElementId: data.ownerId, propertyName: data.propertyName, index: data.row, propertyType: data.elementType}
+            runInAction(() => {
+                // check if item may be dropped here
+                if (!checkAndDrop(editor.rootElement, box.element, box.propertyName, dropInfo, targetIndex)) {
+                    // TODO other way for error message
+                    alert("drop is not allowed here, types do not match");
+                }
+                // TODO second drop gives mobx error
+            });
         }
         // everything is done, so reset the variables
         $draggedElem = null;
@@ -58,7 +60,7 @@
         hovering = -1;
     }
 
-    const dragstart = (event: DragEvent, listId: string, listIndex) => {
+    const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
         LOGGER.log('ON DRAG START');
         // close any context menu
         $contextMenuVisible = false;
@@ -100,7 +102,7 @@
         if (index >= 0 && index <= shownElements.length) {
             const elemBox: Box = shownElements[index];
             editor.selectedBox = elemBox;
-            $selectedBox = elemBox;
+            $selectedBoxes = [elemBox];
             // todo determine the contents of the menu based on elemBox
             $contextMenu.items = items;
             $contextMenu.show(event); // this function sets $contextMenuVisible to true
@@ -111,7 +113,7 @@
     // The mouseout fires when the mouse cursor is over an element and then moves another element.
     // The mouseenter fires when the mouse cursor is outside an element and then moves to inside the boundaries of the element.
     // The mouseleave fires when the mouse cursor is over an element and then moves to the outside of the element’s boundaries.
-    // Both mouseenter and mouseleave does not bubble and does not fire when the mouse cursor moves over descendant elements.
+    // Both mouseenter and mouseleave do not bubble and do not fire when the mouse cursor moves over descendant elements.
 </script>
 
 <!-- on:focus is here to avoid a known bug in svelte 3.4*: "A11y: on:mouseover must be accompanied by on:focus with Svelte v3.40 #285" -->

@@ -15,7 +15,7 @@
     import { autorun } from "mobx";
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
-    import { contextMenuVisible, contextMenu } from "./svelte-utils/ContextMenuStore.js";
+    import { contextMenuVisible, contextMenu } from "./svelte-utils/ContextMenuStore";
     import {viewport} from "./svelte-utils/EditorViewportStore";
 
     let LOGGER = new PiLogger("ProjectItComponent"); //.mute();

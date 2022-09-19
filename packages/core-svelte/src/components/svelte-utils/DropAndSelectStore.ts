@@ -2,7 +2,12 @@ import { writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import type { Box } from "@projectit/core";
 
-export let selectedBox: Writable<Box> = writable<Box>(null);                    // the currently selected box
+/**
+ * Note that because of the table component we need to be able to select multiple boxes.
+ * If more than one box is selected, they all refer to the same element. It is this element that
+ * subsequently can be handled (dragged, deleted, etc...).
+ */
+export let selectedBoxes: Writable<Box[]> = writable<Box[]>([]);                // the currently selected boxes
 
 export const draggedElem: Writable<ElementInfo> = writable<ElementInfo>(null);  // info of the model element that is currently being dragged
 export const draggedFrom: Writable<string> = writable<string>('');              // id of the svelte component that contains the dragged element

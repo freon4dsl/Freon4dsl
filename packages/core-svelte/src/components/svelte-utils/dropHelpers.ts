@@ -29,6 +29,7 @@ export function checkAndDrop(model: PiElement, element: PiElement, propertyName:
     const { property, isList, isPart, type } = getPropertyInfo(element, propertyName);
     // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
     let isAllowed = type === dropped.propertyType; // TODO extend to include subtypes
+    console.log(`CHECK: ${type} === ${dropped.propertyType}`)
     if (isAllowed) {
         // find the item to be dropped in the model
         let droppedElement: PiElement;
