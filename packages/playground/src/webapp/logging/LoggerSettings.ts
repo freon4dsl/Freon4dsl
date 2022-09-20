@@ -4,18 +4,18 @@ import { PiLogger } from "@projectit/core";
 export function muteLogs() {
     // from ~/core-svelte:
     // PiLogger.mute("ContextMenu");
-    // PiLogger.mute("DropdownComponent");      // currently, there is no LOGGER for DropdownComponent
-    // PiLogger.mute("EmptyLineComponent");     // currently, there is no LOGGER for EmptyLineComponent
+    PiLogger.mute("DropdownComponent");      // currently, there is no LOGGER for DropdownComponent
+    PiLogger.mute("EmptyLineComponent");     // currently, there is no LOGGER for EmptyLineComponent
     // PiLogger.mute("TableCellComponent");
     // PiLogger.mute("TableComponent");
-    // PiLogger.mute("IndentComponent");        // currently, there is no LOGGER for IndentComponent
+    PiLogger.mute("IndentComponent");        // currently, there is no LOGGER for IndentComponent
     PiLogger.mute("LabelComponent");
     PiLogger.mute("LayoutComponent");
-    // PiLogger.mute("ListComponent");
+    PiLogger.mute("ListComponent");
     PiLogger.mute("OptionalComponent");
     PiLogger.mute("ProjectItComponent");
     PiLogger.mute("RenderComponent");
-    // PiLogger.mute("TextComponent");
+    PiLogger.mute("TextComponent");
     PiLogger.mute("TextDropdownComponent");
 
     // from ~/core:

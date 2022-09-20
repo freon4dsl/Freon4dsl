@@ -71,12 +71,8 @@
 >
     {#if box === null || box === undefined }
         <p class="error">[BOX IS NULL OR UNDEFINED]</p>
-    {:else if isActionBox(box) || isSelectBox(box)}
-        <TextDropdownComponent box={box} editor={editor}/>
     {:else if isEmptyLineBox(box) }
         <EmptyLineComponent box={box}/>
-    {:else if isTableBox(box) }
-        <TableComponent box={box} editor={editor} />
     {:else if isIndentBox(box) }
         <IndentComponent box={box} editor={editor}/>
     {:else if isLabelBox(box)}
@@ -89,8 +85,12 @@
         <OptionalComponent box={box} editor={editor}/>
     {:else if isSvgBox(box) }
         <SvgComponent box={box}/>
+    {:else if isTableBox(box) }
+        <TableComponent box={box} editor={editor} />
     {:else if isTextBox(box) }
        	<TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
+    {:else if isActionBox(box) || isSelectBox(box)}
+        <TextDropdownComponent box={box} editor={editor}/>
     {:else}
         <p class="error">[UNKNOWN BOX TYPE: {box.kind}]</p>
     {/if}

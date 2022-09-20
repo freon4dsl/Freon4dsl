@@ -1,15 +1,15 @@
 <script lang="ts">
     import {flip} from 'svelte/animate'; // TODO adjust rollup.config for svelte.animate
-    import {Box, ListBox, ListDirection, PiEditor, PiLogger} from "@projectit/core";
+    import { Box, Language, ListBox, ListDirection, PiEditor, PiLogger } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import { runInAction } from "mobx";
-    import { checkAndDrop, DropInfo, moveListElement } from "./svelte-utils/dropHelpers";
+    import { dropListElement, moveListElement } from "./svelte-utils/dropHelpers";
     import {
         draggedElem,
         draggedFrom,
         activeElem,
         activeIn,
-        ElementInfo,
+        ListElementInfo,
         selectedBoxes
     } from "./svelte-utils/DropAndSelectStore";
     import {contextMenu, contextMenuVisible, items} from "./svelte-utils/ContextMenuStore";
@@ -29,28 +29,27 @@
     // determine the type of the elements in the list
     // this speeds up the check whether the element may be dropped in a certain drop-zone
     let elementType: string;
-    $: elementType = box.children[0]?.element.piLanguageConcept();
+    $: elementType = Language.getInstance().classifierProperty(box.element.piLanguageConcept(), box.propertyName).type;
 
     const drop = (event: DragEvent, targetIndex) => {
-        const data: ElementInfo = $draggedElem;
+        const data: ListElementInfo = $draggedElem;
 
-        console.log('DROPPING item [' + data.elementId + '] from [' + data.ownerId + '] in list [' + id + '] on position [' + targetIndex + ']');
-        if (data.ownerId === id) { // dropping in the same list
-            console.log('moving item within list');
+        // console.log('DROPPING item [' + data.element.piId() + '] from [' + data.componentId + '] in list [' + id + '] on position [' + targetIndex + ']');
+        if (data.componentId === id) { // dropping in the same list
+            // console.log('moving item within list');
             runInAction(() => {
-                moveListElement(box.element, box.propertyName, data.row, targetIndex);
+                moveListElement(box.element, data.element, box.propertyName, targetIndex);
             });
         } else { // dropping in another list
-            console.log('moving item to another list');
-            let dropInfo: DropInfo = {parentElementId: data.ownerId, propertyName: data.propertyName, index: data.row, propertyType: data.elementType}
-            runInAction(() => {
-                // check if item may be dropped here
-                if (!checkAndDrop(editor.rootElement, box.element, box.propertyName, dropInfo, targetIndex)) {
-                    // TODO other way for error message
-                    alert("drop is not allowed here, types do not match");
-                }
-                // TODO second drop gives mobx error
-            });
+            // console.log('moving item to another list');
+            if (data.elementType === elementType) { // check if item may be dropped here // TODO extend to include subtypes
+                runInAction(() => {
+                    dropListElement(data, box.element, box.propertyName, targetIndex);
+                });
+            } else {
+                // TODO other way for error message
+                alert("drop is not allowed here, types do not match [" + data.elementType + " != " + elementType + "]");
+            }
         }
         // everything is done, so reset the variables
         $draggedElem = null;
@@ -58,6 +57,8 @@
         $activeElem = {row: - 1, column: -1 };
         $activeIn = '';
         hovering = -1;
+        // Clear the drag data cache (for all formats/types)
+        // event.dataTransfer.clearData();
     }
 
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
@@ -72,22 +73,19 @@
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
         // create the data to be transferred and notify the store that something is being dragged
-        $draggedElem = new ElementInfo(id, elementType, listId, box.propertyName, listIndex);
+        $draggedElem = new ListElementInfo(shownElements[listIndex].element, id);
         $draggedFrom = listId;
     }
     const dragenter= (event: DragEvent, index): boolean => {
-        const data: ElementInfo = $draggedElem;
-        // only show this item as active when the type of the element to be dropped is the right one
-        // TODO allow subtypes
+        const data: ListElementInfo = $draggedElem;
+        // only show this item as active when the type of the element to be dropped is the right one // TODO allow subtypes
         if (elementType === data.elementType) {
             $activeElem = {row: index, column: -1};
             $activeIn = id;
-            return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
         }
-        return false;
+        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     }
     const mouseover=(index): boolean => {
-        LOGGER.log('mouseover');
         hovering = index;
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     }

@@ -12,8 +12,7 @@ export enum ListDirection {
 export abstract class ListBox extends Box {
     protected direction: ListDirection = ListDirection.HORIZONTAL;
     protected _children: Box[] = [];
-    trueList: boolean; // TODO trueList (and propertyName) is a temp hack to distinguish list properties from the model from layout lists
-    propertyName: string;
+    trueList: boolean; // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
 
     protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<ListBox>) {
         super(element, role);

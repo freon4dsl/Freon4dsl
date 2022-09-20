@@ -13,6 +13,7 @@ export class GridBox extends Box {
     private $children: Box[] = []; // TODO question: why is this prop needed, what is the difference with cells?
     orientation: GridOrientation = "neutral";
     trueList: boolean; // TODO trueList is a temp hack to distinguish list properties from the model from layout grids
+    hasHeaders: boolean = false; // indication whether this grid has a header row/colum
 
     constructor(exp: PiElement, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
         super(exp, role);

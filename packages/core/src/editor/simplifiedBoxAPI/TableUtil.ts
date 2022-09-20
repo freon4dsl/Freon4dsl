@@ -66,7 +66,6 @@ export class TableUtil {
         // find the information on the property to be shown
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         const property = element[propertyName];
-        // const isList: boolean = propInfo.isList;
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
         LOGGER.log("TABLE BOX CREATION for " + propertyName + " size " + property.length)
         // const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
@@ -87,13 +86,9 @@ export class TableUtil {
             property.forEach((item: PiElement, rowIndex: number) => {
                 cellGetters.forEach((projector, columnIndex) => {
                     const location = this.calcLocation({row: rowIndex + 1, column: columnIndex + 1}, orientation, hasHeaders);
-
                     const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
                     LOGGER.log("TableUtil add " + cellRoleName + " with headers " + hasHeaders );
-                    cells.push(BoxFactory.gridcell(item, cellRoleName, location.row, location.column,
-                            projector(item)
-
-                    ));
+                    cells.push(BoxFactory.gridcell(item, cellRoleName, location.row, location.column, projector(item)));
                 });
             });
             // add an extra row where a new element to the list can be added
@@ -113,6 +108,8 @@ export class TableUtil {
             this.addKeyBoardShortCuts(element, propertyName, nrOfRowsAndColumns.row, nrOfRowsAndColumns.column,editor, propInfo.type);
             let result = new GridBox(element, roleName, cells, { orientation: orientation } );
             result.trueList = true;
+            result.hasHeaders = hasHeaders;
+            result.propertyName = propertyName;
             return result;
         }
         return null;
