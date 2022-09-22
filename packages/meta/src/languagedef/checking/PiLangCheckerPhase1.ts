@@ -67,8 +67,8 @@ export class PiLangCheckerPhase1 extends CheckerPhase<PiLanguage> {
     private checkConcept(piConcept: PiConcept): void {
         LOGGER.log("Checking concept '" + piConcept.name + "' of type " + piConcept.constructor.name);
         this.runner.simpleCheck(!!piConcept.name, `Concept should have a name ${ParseLocationUtil.location(piConcept)}.`);
-        this.runner.simpleCheck(!(piReservedWords.includes(piConcept.name.toLowerCase())), `Concept may not have a name that is equal to a reserved word ('${piConcept.name}') ${ParseLocationUtil.location(piConcept)}.`);
-        this.runner.simpleCheck(!(reservedWordsInTypescript.includes(piConcept.name.toLowerCase())),
+        this.runner.simpleCheck(!(piReservedWords.includes(piConcept.name)), `Concept may not have a name that is equal to a reserved word ('${piConcept.name}') ${ParseLocationUtil.location(piConcept)}.`);
+        this.runner.simpleCheck(!(reservedWordsInTypescript.includes(piConcept.name)),
             `Concept may not have a name that is equal to a reserved word in TypeScript ('${piConcept.name}') ${ParseLocationUtil.location(piConcept)}.`);
 
         if (!!piConcept.base) {
