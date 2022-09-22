@@ -1,3 +1,4 @@
+import { RtBoolean } from "./RtBoolean";
 import { RtObject } from "./RtObject";
 
 export class RtError extends RtObject {
@@ -14,11 +15,17 @@ export class RtError extends RtObject {
         return this._message;
     }
 
+    equals(other: RtObject): RtBoolean {
+        return RtBoolean.FALSE;
+    }
+
     toString(): string {
         return "Error: " + this._message
     }
 }
 
 export function isRtError(obj: any): obj is RtError {
-    return obj instanceof RtError;
+    const _type = (obj as any)?._type;
+    return !!_type && _type === "RtError";
 }
+

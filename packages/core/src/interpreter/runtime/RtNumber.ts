@@ -1,3 +1,4 @@
+import { RtBoolean } from "./RtBoolean";
 import { isRtError, RtError } from "./RtError";
 import { RtObject } from "./RtObject";
 import { isRtString } from "./RtString";
@@ -21,7 +22,7 @@ export class RtNumber extends RtObject { //} implements RtHasPlus  {
             return new RtNumber(this._value + other.value);
         }
         if( isRtString(other)) {
-            return new RtNumber(this._value + Number.parseFloat(other.value));
+            return new RtNumber(this._value + Number.parseFloat(other.asString()));
         } else if (isRtEmpty(other)) {
             return this;
         } else if (isRtError(other)) {
@@ -35,7 +36,7 @@ export class RtNumber extends RtObject { //} implements RtHasPlus  {
         if (isRtNumber(other)) {
             return new RtNumber(this._value * other.value);
         } else if( isRtString(other)) {
-            return new RtNumber(this._value * Number.parseFloat(other.value));
+            return new RtNumber(this._value * Number.parseFloat(other.asString()));
         } else if (isRtEmpty(other)) {
             return this;
         } else if (isRtError(other)) {
@@ -50,7 +51,7 @@ export class RtNumber extends RtObject { //} implements RtHasPlus  {
             return new RtNumber(this._value - other.value);
         }
         if( isRtString(other)) {
-            return new RtNumber(this._value - Number.parseFloat(other.value));
+            return new RtNumber(this._value - Number.parseFloat(other.asString()));
         } else if (isRtEmpty(other)) {
             return other;
         } else if (isRtError(other)) {
@@ -64,7 +65,7 @@ export class RtNumber extends RtObject { //} implements RtHasPlus  {
         if (isRtNumber(other)) {
             return new RtNumber(this._value / other.value);
         } else if( isRtString(other)) {
-            return new RtNumber(this._value / Number.parseFloat(other.value));
+            return new RtNumber(this._value / Number.parseFloat(other.asString()));
         } else if (isRtEmpty(other)) {
             return other;
         } else if (isRtError(other)) {
@@ -72,6 +73,14 @@ export class RtNumber extends RtObject { //} implements RtHasPlus  {
         }
         // @ts-ignore TS assumes other is of type 'never', but that is incorrect.
         return new RtError("RtNumber.divide: no divide found for " + other.rtType);
+    }
+
+    equals(other: RtObject): RtBoolean {
+        if (isRtNumber(other)) {
+            return RtBoolean.of(this.value === other.value);
+        } else {
+            return RtBoolean.FALSE
+        }
     }
 
     toString(): string {

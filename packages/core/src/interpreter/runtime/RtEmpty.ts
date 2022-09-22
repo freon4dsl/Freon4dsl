@@ -1,17 +1,28 @@
+import { isRtBoolean, RtBoolean } from "./RtBoolean";
 import { RtObject } from "./RtObject";
 
 export class RtEmpty extends RtObject {
-    readonly _type = "RtEmpty";
+    readonly _type: string = "RtEmpty";
 
-    constructor() {
-        super();
-    }
+    static NIX_VALUE = new RtEmpty();
 
     toString(): string {
-        return "RtEmpty";
+        return "RtNix";
     }
+
+    override equals(other: RtObject): RtBoolean {
+        if (isRtBoolean(other)) {
+            if (!other.asBoolean()) {
+                return RtBoolean.TRUE;
+            }
+        } else if (isRtEmpty(other)) {
+            return RtBoolean.TRUE;
+        }
+        return RtBoolean.FALSE;
+    }
+
 }
 
-export function isRtEmpty(obj: any): obj is RtEmpty {
-    return obj instanceof RtEmpty;
+export function isRtEmpty(object: any): object is RtEmpty {
+    return object !== undefined && object !== null && object["_type"] === "RtEmpty";
 }

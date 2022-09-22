@@ -3,38 +3,40 @@ import { RtObject } from "./RtObject";
 export class RtBoolean extends  RtObject {
     readonly _type = "RtBoolean";
 
-    static of(bool: boolean): RtBoolean {
-        return bool ? RtTrue : RtFalse;
-    }
+    static readonly TRUE = new RtBoolean(true);
+    static readonly FALSE = new RtBoolean(false);
 
+    static of(bool: boolean): RtBoolean {
+        return bool ? RtBoolean.TRUE : RtBoolean.FALSE;
+    }
     private _value: boolean;
 
-    constructor(value: boolean) {
+    private constructor(value: boolean) {
         super();
         this._value = value;
     }
 
     asBoolean(): boolean {
-        return this.value;
-    }
-
-    get value(): boolean {
         return this._value;
     }
 
     and(other: RtBoolean): RtBoolean {
-        return new RtBoolean(this._value && other.value);
+        return RtBoolean.of(this._value && other.asBoolean());
     }
 
     or(other: RtBoolean): RtBoolean {
-        return new RtBoolean(this._value || other.value);
+        return RtBoolean.of(this._value || other.asBoolean());
+    }
+
+    not(): RtBoolean {
+        return RtBoolean.of(!this._value);
     }
 
     equals(other: RtObject): RtBoolean {
         if ( isRtBoolean(other)) {
-            return new RtBoolean(this.value === other.asBoolean());
+            return RtBoolean.of(this._value === other.asBoolean());
         } else {
-            return RtFalse;
+            return RtBoolean.FALSE;
         }
     }
 
@@ -42,9 +44,6 @@ export class RtBoolean extends  RtObject {
         return "" + this._value
     }
 }
-
-export const RtTrue = new RtBoolean(true);
-export const RtFalse = new RtBoolean(false);
 
 export function isRtBoolean(object: any): object is RtBoolean {
     const _type = object?._type;

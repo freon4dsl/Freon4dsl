@@ -1,32 +1,45 @@
+import { RtBoolean } from "./RtBoolean";
+import { RtNumber } from "./RtNumber";
 import { RtObject } from "./RtObject";
 
 export class RtString extends RtObject {
-    readonly _type = "RtString";
+    readonly _type: string = "RtString";
 
-    _stringValue: string;
+    static readonly EMPTY_STRING = new RtString("");
+
+    private value: string;
 
     constructor(value: string) {
         super();
-        this._stringValue = value;
+        this.value = value;
     }
 
-    get value(): string {
-        return this._stringValue;
-    }
-
-    plus(other: RtObject): RtString {
+    equals(other: RtObject): RtBoolean {
         if (isRtString(other)) {
-            return new RtString(this._stringValue + other.value);
+            return RtBoolean.of(this.value === other.asString());
         } else {
-            return new RtString(this._stringValue + other.toString());
+            return RtBoolean.FALSE;
         }
     }
 
-    toString(): string {
-        return this.value
+    asString(): string {
+        return this.value;
+    }
+
+    startsWith(other: RtString): RtBoolean  {
+        return RtBoolean.of(this.asString().startsWith(other.asString()));
+    }
+
+    endsWith(other: RtString): RtBoolean  {
+        return RtBoolean.of(this.asString().endsWith(other.asString()));
+    }
+
+    length(): RtNumber  {
+        return new RtNumber(this.asString().length);
     }
 }
 
-export function isRtString(obj: Object): obj is RtString {
-    return Object.getPrototypeOf(obj)?.constructor?.name === "RtString";
+export function isRtString(object: any): object is RtString {
+    const _type = (object as any)?._type;
+    return !!_type && _type === "RtString";
 }

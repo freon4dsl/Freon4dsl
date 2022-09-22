@@ -1,9 +1,11 @@
+import { RtBoolean } from "./RtBoolean";
+
 export interface IRtObject {
     get rtType(): string;
 }
 
-export class RtObject implements IRtObject {
-    _type: string;
+export abstract class RtObject implements IRtObject {
+    readonly _type: string = "RtObject";
 
     constructor() {
     }
@@ -11,4 +13,6 @@ export class RtObject implements IRtObject {
     get rtType(): string {
         return this._type;
     }
+
+    abstract equals(other: RtObject) : RtBoolean ;
 }

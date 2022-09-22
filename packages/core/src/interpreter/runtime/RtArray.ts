@@ -1,4 +1,4 @@
-import { RtBoolean, RtFalse } from "./RtBoolean";
+import { RtBoolean } from "./RtBoolean";
 import { RtNumber } from "./RtNumber";
 import { RtObject } from "./RtObject";
 
@@ -10,13 +10,16 @@ import { RtObject } from "./RtObject";
 export class RtArray<T extends RtObject> extends RtObject {
     readonly _type = "RtArray";
 
-    private value: RtObject[] = [];
+    private value: T[] = [];
 
     constructor() {
         super();
     }
 
-    get array(): RtObject[] {
+    /**
+     * Returns the underlying Array object.
+     */
+    get array(): T[] {
         return this.value;
     }
 
@@ -28,7 +31,15 @@ export class RtArray<T extends RtObject> extends RtObject {
     }
 
     equals(other: RtObject): RtBoolean {
-        return RtFalse;
+        return RtBoolean.FALSE;
     }
+}
 
+/**
+ * Type guard to check whether an object is an rtArray.
+ * @param object
+ */
+export function isRtArray(object: any): object is RtArray<RtObject> {
+    const _type = (object as any)?._type;
+    return !!_type && _type === "RtArray";
 }
