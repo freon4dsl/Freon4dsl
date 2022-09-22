@@ -27,8 +27,9 @@ export class PiEditParseUtil {
             if (firstItem instanceof PiEditParsedProjectionIndent && line.items.length > 1) {
                 // indent + someething after the indent, otherwise it's just an empty line
                 ignoredIndent = Math.min(ignoredIndent, firstItem.amount);
-            } else if (!(firstItem instanceof PiOptionalPropertyProjection && firstItem.lines.length > 1)) { // multi-line optionals are handled below
-                // ignoredIndent = 0;
+            // } else if (!(firstItem instanceof PiOptionalPropertyProjection && firstItem.lines.length > 1)) { // multi-line optionals are handled below
+            } else if ((firstItem instanceof PiOptionalPropertyProjection && firstItem.lines.length > 1)) { // multi-line optionals are handled below
+                ignoredIndent = 0;
             }
             // console.log("calculated ignored indent on line " + index + " to be " + ignoredIndent + ", in \n\t" + line.toString())
             line.items.forEach(item => {
