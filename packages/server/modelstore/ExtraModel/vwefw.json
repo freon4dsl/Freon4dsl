@@ -8,9 +8,13 @@
          "construc": {
             "$typename": "Method",
             "name": "ffwefwe",
-            "body": null,
+            "body": {
+               "$typename": "NumberLiteralExpression",
+               "value": 1,
+               "appliedfeature": null
+            },
             "parameters": [],
-            "declaredType": null
+            "declaredType": "Integer"
          },
          "attributes": [
             {
@@ -49,7 +53,7 @@
                      "declaredType": "String"
                   }
                ],
-               "declaredType": "dveww"
+               "declaredType": "Integer"
             }
          ],
          "listOfReferences": [],
@@ -61,9 +65,13 @@
          "construc": {
             "$typename": "Method",
             "name": "a",
-            "body": null,
+            "body": {
+               "$typename": "StringLiteralExpression",
+               "value": "bob",
+               "appliedfeature": null
+            },
             "parameters": [],
-            "declaredType": "dveww"
+            "declaredType": "String"
          },
          "attributes": [],
          "methods": [],
@@ -71,5 +79,17 @@
          "baseEntity": null
       }
    ],
-   "methods": []
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "sqwer",
+         "body": {
+            "$typename": "BooleanLiteralExpression",
+            "value": false,
+            "appliedfeature": null
+         },
+         "parameters": [],
+         "declaredType": "Boolean"
+      }
+   ]
 }

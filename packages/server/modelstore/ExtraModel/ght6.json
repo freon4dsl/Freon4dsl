@@ -26,24 +26,50 @@
          "methods": [
             {
                "$typename": "Method",
-               "name": "",
+               "name": "dddddddd",
                "body": {
                   "$typename": "PlusExpression",
                   "left": {
-                     "$typename": "ParameterRef",
-                     "appliedfeature": {
-                        "$typename": "AttributeRef",
-                        "appliedfeature": null,
-                        "attribute": "qwe"
+                     "$typename": "PlusExpression",
+                     "left": {
+                        "$typename": "ParameterRef",
+                        "appliedfeature": {
+                           "$typename": "AttributeRef",
+                           "appliedfeature": null,
+                           "attribute": "qwe"
+                        },
+                        "parameter": "aaa"
                      },
-                     "parameter": "aaa"
+                     "right": {
+                        "$typename": "MultiplyExpression",
+                        "left": {
+                           "$typename": "ParameterRef",
+                           "appliedfeature": {
+                              "$typename": "AttributeRef",
+                              "appliedfeature": null,
+                              "attribute": "qwe"
+                           },
+                           "parameter": "asaa1"
+                        },
+                        "right": {
+                           "$typename": "ParameterRef",
+                           "appliedfeature": {
+                              "$typename": "AttributeRef",
+                              "appliedfeature": null,
+                              "attribute": "qwe"
+                           },
+                           "parameter": "asaa1"
+                        },
+                        "appliedfeature": null
+                     },
+                     "appliedfeature": null
                   },
                   "right": {
                      "$typename": "ParameterRef",
                      "appliedfeature": {
                         "$typename": "AttributeRef",
                         "appliedfeature": null,
-                        "attribute": "qwe"
+                        "attribute": "rr12"
                      },
                      "parameter": "asaa1"
                   },
@@ -84,7 +110,7 @@
             },
             {
                "$typename": "Attribute",
-               "name": "ddd",
+               "name": "ddddd",
                "declaredType": "Boolean"
             }
          ],
