@@ -1,5 +1,6 @@
 // Generated my Freon once, will NEVER be overwritten.
 import { InterpreterContext, IMainInterpreter, RtObject, RtBoolean, RtNumber } from "@projectit/core";
+import { EqualsExpression } from "../../../playground/src/Example/language/gen/index";
 import { BooleanLiteralExpression, NumberLiteralExpression, PlusExpression } from "../language/gen/index";
 import { ExampleInterpreterBase } from "./gen/ExampleInterpreterBase";
 
@@ -28,5 +29,11 @@ export class ExampleInterpreter extends ExampleInterpreterBase {
         const left = main.evaluate(node.left, ctx);
         const right = main.evaluate(node.right, ctx);
         return (left as RtNumber).plus(right as RtNumber );
+    }
+    
+    evalEqualsExpression(node: EqualsExpression, ctx: InterpreterContext): RtObject {
+        const left = main.evaluate(node.left, ctx);
+        const right = main.evaluate(node.right, ctx);
+        return (left).equals(right);
     }
 }

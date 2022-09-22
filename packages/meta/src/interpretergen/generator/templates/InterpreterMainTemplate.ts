@@ -19,7 +19,7 @@ export class InterpreterMainTemplate {
             IMainInterpreter,
             InterpreterContext,
             InterpreterTracer,
-            MainInterpreter, OwningPropertyFunction, PiElement, RtObject
+            MainInterpreter, OwningPropertyFunction, PiElement, RtObject, RtError
         } from "@projectit/core";
         import {  ${Names.interpreterInitname(language)} } from "./gen/${Names.interpreterInitname(language)}";
         
@@ -63,7 +63,11 @@ export class InterpreterMainTemplate {
         
             evaluate(node: Object): RtObject {
                 ${Names.interpreterName(language)}.main.reset();
-                return ${Names.interpreterName(language)}.main.evaluate(node, InterpreterContext.EMPTY_CONTEXT)
+                try {
+                    return ${Names.interpreterName(language)}.main.evaluate(node, InterpreterContext.EMPTY_CONTEXT);
+                } catch (e: any) {
+                    return new RtError(e.message);
+                }
             }
         }
         `
