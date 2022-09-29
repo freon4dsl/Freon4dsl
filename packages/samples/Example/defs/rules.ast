@@ -11,6 +11,7 @@ modelunit Rules {
 //    reference imports: Data;
     reference forEntity: Entity;
     rules: Rule[];
+    file-extension = "rules";
 }
 
 abstract concept Rule {
@@ -30,7 +31,6 @@ concept IfThenElseRule base Rule {
 }
 
 concept IfStatement base Statement {
-    name: string;
     Condition: Expression;
     ThenStatements: Statement[];
     ElseStatements: Statement[];

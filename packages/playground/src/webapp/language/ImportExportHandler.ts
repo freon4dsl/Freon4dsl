@@ -40,21 +40,25 @@ export class ImportExportHandler {
                 setUserMessage(reader.error.message);
             };
         } else {
-            setUserMessage(`File ${file.name} does not have the right (extension) type.
-                 Found: ${extension}, expected one of: ${this.allExtensionsToString()}.`);
+            setUserMessage(`File [${file.name}] does not have the right (extension) type.
+                 Found: [${extension}], expected one of: ${this.allExtensionsToString()}.`);
         }
     }
 
     async exportUnit(unit: PiModelUnit) {
         // get the complete unit from the server
-        await serverCommunication.loadModelUnit(EditorState.getInstance().currentModel.name, unit.name, (completeUnit: PiModelUnit) => {
-            this._exportUnit(completeUnit);
-        });
+        // await serverCommunication.loadModelUnit(EditorState.getInstance().currentModel.name, unit.name, (completeUnit: PiModelUnit) => {
+        //     this._exportUnit(completeUnit);
+        // });
+        // TODO: now only export current unit, could be extended to export other units as well.
+        //       the code above runs into an error because the loaded modelunit is not placed into a model. 
+        this._exportUnit(unit);
     }
 
     private _exportUnit(unit: PiModelUnit) {
         // do not try to export a unit with errors, parsing and unparsing will not proceed correctly
         const list = editorEnvironment.validator.validate(unit);
+        // TODO Only allow export of current unit for now.
         if (list.length > 0) {
             setUserMessage(`Cannot export a unit that has errors (found ${list.length}).`);
             console.log("Errors: " + list.map(l => l.message).join(", "))
@@ -65,7 +69,7 @@ export class ImportExportHandler {
 
         // get the default file name from the unit
         const fileExtension: string = editorEnvironment.fileExtensions.get(unit.piLanguageConcept());
-        let defaultFileName: string = unit.name + fileExtension;
+        let defaultFileName: string = unit.name + "." + fileExtension;
 
         // create a HTML element that contains the text string
         let textFile = null;

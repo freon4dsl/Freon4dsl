@@ -25,9 +25,17 @@ ExampleUnit {
         }
         ]
 }
+
+//Method {
+//    [
+//        method ${name} ( ${parameters table rows} ): ${declaredType} {
+//            ${body}
+//        }
+//    ]
+//}
 Method {
     [
-        method ${name} ( ${parameters table rows} ): ${declaredType} {
+        method ${name} ( ${parameters horizontal separator [,]} ): ${declaredType} {
             ${body}
         }
     ]
@@ -46,6 +54,12 @@ MethodCallExpression {
 AttributeRef {
     [ ${attribute} ]
     trigger = "attribute"
+    referenceShortcut = ${attribute}
+}
+
+DirectAttributeRef {
+    [ ${attribute} ]
+    trigger = "direct-attribute"
     referenceShortcut = ${attribute}
 }
 

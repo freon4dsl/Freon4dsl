@@ -1,0 +1,119 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "Customers",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "Person",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "age",
+               "declaredType": "Integer"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "name",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "isStrong",
+               "declaredType": "Boolean"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "length",
+               "declaredType": "Integer"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "livesIn",
+               "declaredType": "House"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "insures",
+               "declaredType": "House"
+            }
+         ],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "dddddddd",
+               "body": {
+                  "$typename": "ParameterRef",
+                  "appliedfeature": {
+                     "$typename": "AttributeRef",
+                     "appliedfeature": null,
+                     "attribute": "isStrong"
+                  },
+                  "parameter": "person"
+               },
+               "parameters": [
+                  {
+                     "$typename": "Parameter",
+                     "name": "person",
+                     "declaredType": "Person"
+                  },
+                  {
+                     "$typename": "Parameter",
+                     "name": "appeltje",
+                     "declaredType": "Boolean"
+                  },
+                  {
+                     "$typename": "Parameter",
+                     "name": "num",
+                     "declaredType": "Integer"
+                  }
+               ],
+               "declaredType": "Person"
+            }
+         ],
+         "listOfReferences": [],
+         "baseEntity": null
+      },
+      {
+         "$typename": "Entity",
+         "name": "House",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "street",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "num",
+               "declaredType": "Integer"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "city",
+               "declaredType": "String"
+            }
+         ],
+         "methods": [],
+         "listOfReferences": [],
+         "baseEntity": null
+      }
+   ],
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "doSomething",
+         "body": {
+            "$typename": "AndExpression",
+            "left": {
+               "$typename": "BooleanLiteralExpression",
+               "value": false,
+               "appliedfeature": null
+            },
+            "right": null,
+            "appliedfeature": null
+         },
+         "parameters": [],
+         "declaredType": "Boolean"
+      }
+   ]
+}

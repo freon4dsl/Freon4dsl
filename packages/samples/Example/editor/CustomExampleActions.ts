@@ -55,6 +55,8 @@ export const MANUAL_CUSTOM_ACTIONS: PiCustomAction[] = [
     PiCustomAction.create({
 
         activeInBoxRoles: [
+            "alias-Method-body-textbox",
+            "Method-body-textbox",
             "Method-body",
             "AbsExpression-expr",
             "SumExpression-from",

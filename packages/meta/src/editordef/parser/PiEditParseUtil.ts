@@ -24,11 +24,16 @@ export class PiEditParseUtil {
         // find the line with the least indentation
         projection.lines.forEach((line, index) => {
             const firstItem = line.items[0];
-            if (firstItem instanceof PiEditParsedProjectionIndent && line.items.length > 1) {
-                // indent + someething after the indent, otherwise it's just an empty line
-                ignoredIndent = Math.min(ignoredIndent, firstItem.amount);
+            if (firstItem instanceof PiEditParsedProjectionIndent) {
+                if (line.items.length > 1) {
+                    // indent + someething after the indent, otherwise it's just an empty line
+                    ignoredIndent = Math.min(ignoredIndent, firstItem.amount);
+                }
+                // else ignore empty line with only an indents
             // } else if (!(firstItem instanceof PiOptionalPropertyProjection && firstItem.lines.length > 1)) { // multi-line optionals are handled below
-            } else if ((firstItem instanceof PiOptionalPropertyProjection && firstItem.lines.length > 1)) { // multi-line optionals are handled below
+            } else if ((firstItem instanceof PiOptionalPropertyProjection) && firstItem.lines.length > 1) { // multi-line optionals are handled below
+                ignoredIndent = 0;
+            } else if (line.items.length !== 0) {
                 ignoredIndent = 0;
             }
             // console.log("calculated ignored indent on line " + index + " to be " + ignoredIndent + ", in \n\t" + line.toString())
