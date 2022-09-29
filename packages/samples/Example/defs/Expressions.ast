@@ -98,14 +98,14 @@ abstract binary expression ComparisonExpression base BinaryExpression {
 }
 
 binary expression LessThenExpression base ComparisonExpression {
-    priority = 10;
+    priority = 2;
 }
 
 binary expression GreaterThenExpression base ComparisonExpression {
-    priority = 10;
+    priority = 2;
 }
 
 binary expression EqualsExpression base ComparisonExpression {
-    priority = 10;
+    priority = 2;
 }
 

@@ -69,6 +69,10 @@ ComparisonExpression {
     typecheck equalsType( self.left, self.right );
 }
 
+EqualsExpression {
+    typecheck equalsType( self.left, self.right );
+}
+
 IfExpression {
     typecheck equalsType( self.condition, PrimitiveType:Boolean );
     typecheck conformsTo( self.whenTrue, self.whenFalse );
