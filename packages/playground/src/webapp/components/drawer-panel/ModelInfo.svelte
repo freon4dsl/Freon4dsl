@@ -128,7 +128,12 @@
     };
 
     const exportUnit = (index: number) => {
-        new ImportExportHandler().exportUnit($units[index]);
+        // TODO Only allow export of current unit, may be extended to other units.
+        if ($units[index].name !== $currentUnitName) {
+            setUserMessage('Can only export unit in editor', 0);
+        } else {
+            new ImportExportHandler().exportUnit($units[index]);
+        }
     };
 </script>
 
