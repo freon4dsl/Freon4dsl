@@ -23,7 +23,9 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static PiTyper:string = "PiTyper";
     // tslint:disable-next-line:variable-name
-    public static PiTyperPart: string = "PiTyperPart";
+    public static PiTyperPart: string = "IFrTyper";
+    // tslint:disable-next-line:variable-name
+    public static FreonTyperPart: string = "IFrTyper";
     // tslint:disable-next-line:variable-name
     public static PiValidator:string = "PiValidator";
     // tslint:disable-next-line:variable-name
@@ -106,6 +108,9 @@ export class Names {
     public static customTyper(language: PiLanguage): string {
         return "Custom" + this.typerPart(language);
     }
+    public static customFreonTyper(language: PiLanguage): string {
+        return "Custom" + this.freonTyperPart(language);
+    }
 
     public static customValidator(language: PiLanguage): string {
         return "Custom" + this.validator(language);
@@ -184,6 +189,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ScoperDef";
     }
 
+    public static typerDef(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "TyperDef";
+    }
+
     public static scoperUtils(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ScoperUtils";
     }
@@ -214,6 +223,10 @@ export class Names {
 
     public static typerPart(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "TyperPart";
+    }
+
+    public static freonTyperPart(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "FreonTyper";
     }
 
     public static typer(language: PiLanguage): string {

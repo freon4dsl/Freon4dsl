@@ -12,7 +12,7 @@ export class ConfigurationTemplate {
         const configurationName = Names.configuration();
         const workerName = Names.checkerInterface(language);
         return `
-            import { ${Names.PiProjection}, ${Names.PiActions}, ${Names.PiTyperPart}, ${Names.PiStdlib}} from "${PROJECTITCORE}";
+            import { ${Names.PiProjection}, ${Names.PiActions}, ${Names.PiTyperPart}, ${Names.PiStdlib} } from "${PROJECTITCORE}";
             import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}";
             import { ${Names.customTyper(language)} } from "${relativePath}${TYPER_FOLDER}";
             import { ${Names.customValidator(language)} } from "${relativePath}${VALIDATOR_FOLDER}";    
@@ -33,6 +33,8 @@ export class ConfigurationTemplate {
                 customValidations: ${workerName}[] = [new ${Names.customValidator(language)}()];
                 // add your custom type-providers here
                 customTypers: ${Names.PiTyperPart}[] = [new ${Names.customTyper(language)}()];
+                // add your custom typers NEW here
+                customTypersFreon: ${Names.FreonTyperPart}[] = [new ${Names.customTyper(language)}()];
                 // add extra predefined instances here
                 customStdLibs: ${Names.PiStdlib}[] = [new ${Names.customStdlib(language)}()];
             }

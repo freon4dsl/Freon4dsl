@@ -58,7 +58,7 @@ export class ScoperTemplate {
          * otherwise this class implements the default scoper. 
          */      
         export class ${generatedClassName} implements ${scoperInterfaceName} {
-            ${generateAlternativeScopes ? `myTyper: ${typerClassName};` : ``}
+            ${generateAlternativeScopes ? `myTyper: FrCompositeTyper;` : ``}
             // Added to avoid loop when searching for additional namespaces
             additionalNamespacesVisited: PiElementReference<PiNamedElement>[] = [];
             private     currentRoleNames: string[] = [];
@@ -119,7 +119,7 @@ export class ScoperTemplate {
              * See ${scoperInterfaceName}.
              */
             public getVisibleElements(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): PiNamedElement[] {
-                ${generateAlternativeScopes ? `this.myTyper = LanguageEnvironment.getInstance().typer as ${typerClassName};` : ``}
+                ${generateAlternativeScopes ? `this.myTyper = LanguageEnvironment.getInstance().typer;` : ``}
                 const visitedNamespaces: FreonNamespace[] = [];
                 const result: ${Names.PiNamedElement}[] = [].concat(this.getElementsFromStdlib(metatype));
                 this.getVisibleElementsIntern(modelelement, result, visitedNamespaces, metatype, excludeSurrounding);
@@ -252,9 +252,9 @@ export class ScoperTemplate {
 
         // now we have enough information to create the correct imports
         const templateImports: string = `
-        import { ${scoperInterfaceName}, ${Names.PiNamedElement}, LanguageEnvironment, PiLogger, Language, PiElement, PiElementReference, PiModelUnit, FreonNamespace, modelUnit } from "${PROJECTITCORE}"
+        import { ${scoperInterfaceName}, ${Names.PiNamedElement}, LanguageEnvironment, PiLogger, Language, PiElement, PiElementReference, PiModelUnit, FreonNamespace, modelUnit, FrCompositeTyper } from "${PROJECTITCORE}"
         import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }  `;
+        // ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }  `;
 
         return templateImports + templateBody;
     }

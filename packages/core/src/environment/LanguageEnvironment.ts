@@ -5,7 +5,7 @@ import { FreonInterpreter } from "../interpreter/index";
 import { PiReader } from "../reader/index";
 import { PiScoper } from "../scoper/index";
 import { PiStdlib } from "../stdlib/index";
-import { PiTyper } from "../typer/index";
+import { FrCompositeTyper, PiTyper } from "../typer/index";
 import { PiValidator } from "../validator/index";
 import { PiWriter } from "../writer/index";
 
@@ -24,7 +24,7 @@ export class LanguageEnvironment implements PiEnvironment {
     }
 
     public scoper: PiScoper = null;
-    public typer: PiTyper = null;
+    public typer: FrCompositeTyper = null;
     public projection: PiProjection = null;
     public editor: PiEditor;
     public fileExtensions: Map<string, string>;

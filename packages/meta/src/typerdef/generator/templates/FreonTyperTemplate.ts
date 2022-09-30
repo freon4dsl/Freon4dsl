@@ -35,7 +35,8 @@ export class FreonTyperTemplate {
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
             private generatedTyper: ${defaultTyperName};
-        
+            mainTyper: PiTyper; // TODO remove tmp needed
+            
             constructor() {
                 this.generatedTyper = new ${defaultTyperName}();
                 this.generatedTyper.mainTyper = this;
@@ -240,7 +241,6 @@ export class FreonTyperTemplate {
 
     generateGenIndex(language: PiLanguage): string {
         return `
-        export * from "./${Names.typer(language)}";
         export * from "./${Names.typerPart(language)}";
         `;
     }

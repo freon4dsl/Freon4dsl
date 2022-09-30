@@ -21,12 +21,13 @@ export class EnvironmentTemplate {
         return `
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
                     ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, ${Names.FreonInterpreter}, LanguageEnvironment
+                    ${Names.PiWriter}, ${Names.FreonInterpreter}, LanguageEnvironment, FrCompositeTyper
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoperDef(language)}";
-        import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
+        import { ${Names.typerPart(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typerPart(language)}";
+        import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typerDef(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
@@ -68,6 +69,7 @@ export class EnvironmentTemplate {
                 initializeLanguage();
                 initializeEditorDef();
                 initializeScoperDef();
+                initializeTypers(this.typer);
             }
 
             
@@ -85,7 +87,9 @@ export class EnvironmentTemplate {
             // the parts of the language environment              
             editor: ${Names.PiEditor};
             scoper: ${Names.PiScoper} = new ${Names.scoper(language)}();
-            typer: ${Names.PiTyper} = new ${Names.typer(language)}();
+            // typer: ${Names.PiTyper} = new ${Names.typer(language)}();
+            typer: FrCompositeTyper = new FrCompositeTyper("main"); 
+            freonTyper: FrCompositeTyper = new FrCompositeTyper("main"); 
             stdlib: ${Names.PiStdlib} = ${Names.stdlib(language)}.getInstance();
             validator: ${Names.PiValidator} = new ${Names.validator(language)}();
             writer: ${Names.PiWriter} = new ${Names.writer(language)}();

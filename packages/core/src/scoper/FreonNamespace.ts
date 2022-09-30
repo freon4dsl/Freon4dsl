@@ -19,8 +19,9 @@ export class FreonNamespace {
      * @param elem
      */
     public static create(elem: PiElement): FreonNamespace {
-        if (this.allNamespaces.has(elem)) {
-            return this.allNamespaces.get(elem);
+        const existingNS = this.allNamespaces.get(elem);
+        if (!!existingNS) {
+            return existingNS;
         } else {
             const result = new FreonNamespace(elem);
             this.allNamespaces.set(elem, result);

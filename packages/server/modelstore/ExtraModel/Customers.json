@@ -70,7 +70,6 @@
                "declaredType": "Person"
             }
          ],
-         "listOfReferences": [],
          "baseEntity": null
       },
       {
@@ -94,7 +93,6 @@
             }
          ],
          "methods": [],
-         "listOfReferences": [],
          "baseEntity": null
       }
    ],
@@ -109,7 +107,11 @@
                "value": false,
                "appliedfeature": null
             },
-            "right": null,
+            "right": {
+               "$typename": "BooleanLiteralExpression",
+               "value": true,
+               "appliedfeature": null
+            },
             "appliedfeature": null
          },
          "parameters": [],

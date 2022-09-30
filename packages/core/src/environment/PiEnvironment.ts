@@ -2,7 +2,7 @@ import { PiEditor } from "../editor";
 import { FreonInterpreter } from "../interpreter/index";
 import { PiValidator } from "../validator";
 import { PiScoper } from "../scoper";
-import { PiTyper } from "../typer";
+import { FrCompositeTyper, PiTyper } from "../typer";
 import { PiStdlib } from "../stdlib";
 import { PiWriter } from "../writer";
 import { PiReader } from "../reader";
@@ -16,7 +16,7 @@ export interface PiEnvironment {
     newModel(modelName: string): PiModel;
 
     scoper: PiScoper;
-    typer: PiTyper;
+    typer: FrCompositeTyper;
     validator: PiValidator;
     editor: PiEditor;
     stdlib: PiStdlib;

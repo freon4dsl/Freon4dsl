@@ -33,9 +33,9 @@ export class PiLogger {
         PiLogger.muteAll = false;
     }
 
-    static filter: string = null;
+    static filter: string;
 
-    static showString(s: string | null) {
+    static showString(s: string) {
         PiLogger.filter = s;
     }
 
@@ -87,7 +87,7 @@ export class PiLogger {
     }
 
     protected logToConsole(color: string, message: string): void {
-        if (PiLogger.filter === null) {
+        if (PiLogger.filter === undefined) {
             console.log(color, message, PiLogger.FG_BLACK, "");
             // this.colorMyText();
         } else {
@@ -101,7 +101,7 @@ export class PiLogger {
     colorMyText() {
         const text = "some text with some {special} formatting on this {keyword} and this {keyword}";
         const splitText = text.split(" ");
-        const cssRules = [];
+        const cssRules: string[] = [];
         let styledText = "";
         for (const split of splitText) {
             if (/^\{/.test(split)) {
