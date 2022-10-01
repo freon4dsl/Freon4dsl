@@ -23,12 +23,12 @@ export class FreonTyperPartTemplate {
 
     private generateDefault(language: PiLanguage): string {
         // const allLangConcepts: string = Names.allConcepts(language);
-        const typerInterfaceName: string = Names.PiTyperPart;
+        const typerInterfaceName: string = Names.FreonTyperPart;
         const generatedClassName: string = Names.typerPart(language);
 
         // Template starts here
         return `
-        import { PiElement, PiType, PiTyper, PiTyperPart, IFrTyper, FrCompositeTyper} from "${PROJECTITCORE}";
+        import { PiElement, PiType, IFrTyper, FrCompositeTyper} from "${PROJECTITCORE}";
         // import { ${Names.typer(language)} } from "./${Names.typer(language)}";
         
         export class ${generatedClassName} implements ${typerInterfaceName} {
@@ -104,7 +104,7 @@ export class FreonTyperPartTemplate {
         const allLangConcepts: string = Names.allConcepts(language);
         ListUtil.addIfNotPresent(this.imports, allLangConcepts);
         const generatedClassName: string = Names.typerPart(language);
-        const typerInterfaceName: string = Names.PiTyperPart;
+        const typerInterfaceName: string = Names.FreonTyperPart;
         const equalsMaker: FreonTypeEqualsMaker = new FreonTypeEqualsMaker();
         const inferMaker: FreonTypeInferMaker = new FreonTypeInferMaker();
         const superTypeMaker: FreonSuperTypeMaker = new FreonSuperTypeMaker();

@@ -1,9 +1,7 @@
 import { PiElement } from "../ast/index";
 import { PiType } from "./PiType";
-import { PiTyper } from "./PiTyper";
-import { PiTyperPart } from "./PiTyperPart";
 
-export interface IFrTyper { //extends PiTyperPart {
+export interface IFrTyper {
     // name: string;
     mainTyper: IFrTyper;
     

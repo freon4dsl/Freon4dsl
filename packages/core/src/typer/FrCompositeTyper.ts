@@ -2,7 +2,6 @@ import { PiElement } from "../ast/index";
 import { ListUtil } from "../util/ListUtil";
 import { IFrTyper } from "./IFrTyper";
 import { PiType } from "./PiType";
-import { PiTyper } from "./PiTyper";
 
 export class FrCompositeTyper implements IFrTyper {
     mainTyper: IFrTyper;

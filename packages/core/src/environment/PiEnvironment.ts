@@ -2,7 +2,7 @@ import { PiEditor } from "../editor";
 import { FreonInterpreter } from "../interpreter/index";
 import { PiValidator } from "../validator";
 import { PiScoper } from "../scoper";
-import { FrCompositeTyper, PiTyper } from "../typer";
+import { FrCompositeTyper } from "../typer";
 import { PiStdlib } from "../stdlib";
 import { PiWriter } from "../writer";
 import { PiReader } from "../reader";

@@ -1,6 +1,5 @@
 import { IFrTyper } from "./IFrTyper";
 import { PiType } from "./PiType";
-import { PiTyper } from "./PiTyper";
 
 export class FrTypeOrderedList<T extends PiType> implements Iterable<T> {
     protected elements: T[] = [];

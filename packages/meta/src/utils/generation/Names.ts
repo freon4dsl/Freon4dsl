@@ -21,11 +21,9 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static PiScoper:string = "PiScoper";
     // tslint:disable-next-line:variable-name
-    public static PiTyper:string = "PiTyper";
-    // tslint:disable-next-line:variable-name
-    public static PiTyperPart: string = "IFrTyper";
-    // tslint:disable-next-line:variable-name
     public static FreonTyperPart: string = "IFrTyper";
+    // tslint:disable-next-line:variable-name
+    public static FreonTyper: string = "FrCompositeTyper";
     // tslint:disable-next-line:variable-name
     public static PiValidator:string = "PiValidator";
     // tslint:disable-next-line:variable-name
