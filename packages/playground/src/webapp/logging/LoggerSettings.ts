@@ -3,11 +3,11 @@ import { PiLogger } from "@projectit/core";
 // Mute or unmute logs here (in addition to elsewhere).
 export function muteLogs() {
     // from ~/core-svelte:
-    // PiLogger.mute("ContextMenu");
+    PiLogger.mute("ContextMenu");
     PiLogger.mute("DropdownComponent");      // currently, there is no LOGGER for DropdownComponent
     PiLogger.mute("EmptyLineComponent");     // currently, there is no LOGGER for EmptyLineComponent
-    // PiLogger.mute("TableCellComponent");
-    // PiLogger.mute("TableComponent");
+    PiLogger.mute("TableCellComponent");
+    PiLogger.mute("TableComponent");
     PiLogger.mute("IndentComponent");        // currently, there is no LOGGER for IndentComponent
     PiLogger.mute("LabelComponent");
     PiLogger.mute("LayoutComponent");
@@ -29,6 +29,8 @@ export function muteLogs() {
     PiLogger.mute("SelectBox");
     PiLogger.mute("HorizontalListBox");
     PiLogger.mute("ActionBox");
+    PiLogger.mute("PiCommand");
+    PiLogger.mute("BehaviorUtils");
 
     // from ~/webapp:
     PiLogger.mute("EditorCommunication");
