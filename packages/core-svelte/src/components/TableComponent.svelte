@@ -1,7 +1,6 @@
 <script lang="ts">
     import { GridCellBox, type GridBox, type PiEditor, PiLogger, Language } from "@projectit/core";
-    import { afterUpdate, onMount } from "svelte";
-    import { autorun, runInAction } from "mobx";
+    import { runInAction } from "mobx";
     import TableCellComponent from "./TableCellComponent.svelte";
     import { activeElem, activeIn, draggedElem, draggedFrom, ListElementInfo } from "./svelte-utils/DropAndSelectStore";
     import { dropListElement, moveListElement } from "./svelte-utils/dropHelpers";
@@ -12,13 +11,18 @@
     export let editor: PiEditor;
 
     let id = box.id;
+    // the following variables use svelte reactivity, when this does not suffice they should be set in a Mobx autorun method
     let cells: GridCellBox[];
     $: cells = box.cells;
-    let templateColumns: string = `repeat(${box.numberOfColumns() - 1}, auto)`;
-    let templateRows: string = `repeat(${box.numberOfRows() - 1}, auto)`;
-    let cssClass: string = box.cssClass;
+    let templateColumns: string;
+    $: templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
+    let templateRows: string;
+    $: templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
+    let cssClass: string;
+    $: cssClass = box.cssClass;
     let gridElement: HTMLElement;
     let elementType: string;
+    // todo see how we can avoid the use of Language here
     $: elementType = Language.getInstance().classifierProperty(box.element.piLanguageConcept(), box.propertyName).type;
 
     const drop = (event: CustomEvent) => {
@@ -35,15 +39,11 @@
         }
         if (data.componentId === id) { // dropping in the same grid
             // console.log("moving item within grid");
-            runInAction(() => {
-                moveListElement(box.element, data.element, box.propertyName, targetIndex);
-            });
+            moveListElement(box.element, data.element, box.propertyName, targetIndex);
         } else { // dropping in another list
             // console.log("moving item to another grid, drop type: " + data.elementType + ", grid cell type: " + elementType);
             if (data.elementType === elementType) { // check if item may be dropped here // TODO extend to include subtypes
-                runInAction(() => {
-                    dropListElement(data, box.element, box.propertyName, targetIndex);
-                });
+                dropListElement(data, box.element, box.propertyName, targetIndex);
             } else {
                 // TODO other way for error message
                 alert("drop is not allowed here, types do not match [" + data.elementType + " != " + elementType + "]");
@@ -57,15 +57,6 @@
         // Clear the drag data cache (for all formats/types) (gives error in FireFox!)
         // event.dataTransfer.clearData();
     };
-
-    // autorun(() => {
-    //     $cells = [...box.cells];
-    //     length = $cells.length;
-    //
-    //     templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
-    //     templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
-    //     cssClass = box.cssClass;
-    // });
 </script>
 
 <span

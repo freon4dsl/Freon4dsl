@@ -15,43 +15,26 @@
 
     const setFocus = async (): Promise<void> => {
         LOGGER.log("OptionalComponent.setFocus on box " + box.role);
-        // if (mustShow || showByCondition) {
-        //     box.firstEditableChild.setFocus();
-        // } else {
-        //     box.whenNoShowingAlias.setFocus();
-        // }
+        if (mustShow || showByCondition) {
+            box.firstEditableChild.setFocus();
+        } else {
+            box.placeholder.setFocus();
+        }
     };
 
     onMount( () => {
-        // MOUNT_LOGGER.log("OptionalComponent onMount --------------------------------")
+        // LOGGER.log("onMount")
+        // Overwrite the setFocus method of the box, in order to handle focus correctly.
         box.setFocus = setFocus;
         mustShow = box.mustShow;
         showByCondition = box.showByCondition;
     });
 
-    // afterUpdate( () => {
-    //     LOGGER.log("AfterUpdate " + box.$id + " :" + box.role + " mustshow: " + box.mustShow + " condition " + box.showByCondition + "  child " + box.box.element.piLanguageConcept() + ":" + box.box.kind + " : " + box.box.$id);
-    //     LOGGER.log("   root " + getRoot(box).$id);
-    //     if(box.box.kind === "HorizontalListBox") {
-    //         box.box.children.forEach(child => {
-    //             LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
-    //         })
-    //     }
-    //     box.setFocus = setFocus;
-    // });
+    autorun( () => {
+        mustShow = box.mustShow;
+        showByCondition = box.showByCondition;
+    });
 
-    // autorun( () => {
-    //     LOGGER.log("AUTO " + box.$id + " :" + box.role + " mustshow: " + box.mustShow + " condition " + box.showByCondition + "  child " + box.box.element.piLanguageConcept() + ":" + box.box.kind + " : " + box.box.$id);
-    //     LOGGER.log("   root " + getRoot(box).$id);
-    //     if(box.box.kind === "HorizontalListBox") {
-    //         box.box.children.forEach(child => {
-    //             LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
-    //         })
-    //     }
-    //     mustShow = box.mustShow;
-    //     childBox = box.box;
-    //     showByCondition = box.showByCondition;
-    // });
 </script>
 
 <span class="optional"

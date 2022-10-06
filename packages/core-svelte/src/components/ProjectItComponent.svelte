@@ -17,6 +17,7 @@
     import ContextMenu from "./ContextMenu.svelte";
     import { contextMenuVisible, contextMenu } from "./svelte-utils/ContextMenuStore";
     import {viewport} from "./svelte-utils/EditorViewportStore";
+    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
 
     let LOGGER = new PiLogger("ProjectItComponent"); //.mute();
     export let editor: PiEditor;
@@ -31,6 +32,7 @@
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
+        // todo implement this correctly
         console.log("ProjectItComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey);
         // event.persist();
         if (event.ctrlKey || event.altKey) {
@@ -63,7 +65,6 @@
                     stopEvent(event)
                     break;
                 case DELETE:
-                    console.log('ProjectItComponent DELETE')
                     editor.deleteBox(editor.selectedBox);
                     stopEvent(event);
                     break;
@@ -74,7 +75,6 @@
                     break;
                 case ARROW_DOWN:
                     const down = editor.boxBelow(editor.selectedBox);
-                    LOGGER.log("!!!!!!! Select down box " + down?.role);
                     if (down !== null && down !== undefined) {
                         editor.selectBoxNew(down);
                     }
@@ -92,10 +92,6 @@
         }
         event.stopPropagation();
     };
-
-    autorun(() => {
-        rootBox = editor.rootBox;
-    });
 
     /**
      * Keep track of the scrolling position in the editor, so we know exactly where boxes are
@@ -134,6 +130,14 @@
 
         // This callback cleans up the observer.
         return () => resizeObserver.unobserve(element);
+    });
+
+    autorun(() => {
+        LOGGER.log('autorun XXXXXXXXZ');
+        rootBox = editor.rootBox;
+        if (!$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
+            $selectedBoxes = [editor.selectedBox];
+        }
     });
 </script>
 

@@ -19,13 +19,14 @@
     } from "@projectit/core";
 
     import { autorun, runInAction } from "mobx";
+    import { onMount } from "svelte";
 
-    const LOGGER = new PiLogger("TextDropdownComponent"); //.mute();
+    const LOGGER = new PiLogger("TextDropdownComponent").mute();
 
-    export let box: AbstractChoiceBox;	// the accompanying AliasBox or SelectBox
+    export let box: AbstractChoiceBox;	        // the accompanying ActionBox or SelectBox
     export let editor: PiEditor;			    // the editor
     let textBox: TextBox;                       // the textbox that is to be coupled to the TextComponent part
-    $: textBox = box?.textBox;            // keeps the textBox variable in state with the box!
+    $: textBox = box?.textBox;                  // keeps the textBox variable in state with the box!
 
     let id: string;                             // an id for the html element
     id = !!box ? box.id : 'textdropdown-with-unknown-box';
@@ -45,19 +46,34 @@
         return result;
     };
 
+    onMount(() => {
+        LOGGER.log("TextDropdownComponent.onMount for role [" + box.role + "]");
+        // textBox.setFocus = setFocus;
+        box.setFocus = setFocus;
+        const selected = box.getSelectedOption(); // todo why?
+        runInAction( () => {
+            textBox.cssStyle = box.cssStyle;
+            if (!!selected) {
+                textBox.setText(selected.label);
+            }
+        });
+    });
+
     // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next alias!!!
 
     /**
      * This function sets the focus on this element programmatically.
-     * It is called from the editor.
+     * It is called from the RenderComponent.
      */
     const setFocus = () => {
         // TODO to be tested
-        // console.log('TextDropdownComponent setFocus');
+        LOGGER.log('setFocus');
         isEditing = true;
         dropdownShown = false;
         editor.selectedBox = box;
         allOptions = filteredOptions = getOptions();
+        // todo should set focus to input field in TextComponent
+        textBox.setFocus();
     };
 
     /**
@@ -86,7 +102,7 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
+        // LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
         switch (event.key) {
             case ESCAPE: {
                 dropdownShown = false;
@@ -148,6 +164,11 @@
                 event.stopPropagation();
                 break;
             }
+            default: {
+                // stop editing
+                isEditing = false;
+                dropdownShown = false;
+            }
         }
     };
 
@@ -189,16 +210,15 @@
      */
     function storeAndExecute(selected: SelectOption) {
         LOGGER.log('executing option ' + selected.label);
-        // runInAction(() => {
-        //     // TODO set the new cursor through the editor
-        //     box.selectOption(editor, selected); // TODO the result of the execution is ignored
-        //     // TODO the execution of the option should set the text in the selectBox, for now this is handled here
-        //     if (isSelectBox(box)) {
-        //         box.textHelper.setText(selected.label);
-        //     }
-        // });
-        // within svelte testbed only:
-        text = selected.label;
+        runInAction(() => {
+            // TODO set the new cursor through the editor
+            box.selectOption(editor, selected); // TODO the result of the execution is ignored
+
+            // TODO the execution of the option should set the text in the selectBox, for now this is handled here
+            if (isSelectBox(box)) {
+                box.textHelper.setText(selected.label);
+            }
+        });
     }
 
     /**
@@ -209,6 +229,9 @@
      */
     const endEditing = () => {
         LOGGER.log('TextDropdownComponent: endEditing');
+        if (!isEditing) {
+            return;
+        }
         isEditing = false;
         dropdownShown = false;
         // check whether the current text is a valid option
@@ -227,25 +250,28 @@
      * This function is executed whenever there is a change in the box model.
      * It sets the text in the box, if this is a SelectBox.
      */
-    // autorun(() => {
-    //     if (isSelectBox(box)) {
-    //         // TODO see todo in 'storeOrExecute'
-    //         let selectedOption = box.getSelectedOption();
-    //         if (!!selectedOption) {
-    //             box.textHelper.setText(selectedOption.label);
-    //         }
-    //     }
-    //     // box.setFocus = setFocus;
-    // });
-
-    const onFocusOut = () => {
-            // Text component has lost focus, check where focus has moved to
-            if (!document.hasFocus()) { // Focus has moved outside the document tab/window
-                console.log("TextDropdownComponent onFocusOut OUTSIDE");
-                endEditing();
-            // } else // Focus has moved to dropdown element
+    autorun(() => {
+        if (isSelectBox(box)) {
+            // TODO see todo in 'storeOrExecute'
+            let selectedOption = box.getSelectedOption();
+            if (!!selectedOption) {
+                box.textHelper.setText(selectedOption.label);
             }
         }
+        // because the box maybe a different one than we started with ...
+        box.setFocus = setFocus;
+        // box.textBox.setFocus = setFocus;
+    });
+
+    const onFocusOut = () => {
+        // Text component has lost focus, check where focus has moved to
+        if (!document.hasFocus()) { // Focus has moved outside the document tab/window
+            console.log("TextDropdownComponent onFocusOut OUTSIDE");
+            endEditing();
+            // } else // Focus has moved to dropdown element
+        }
+    };
+
 </script>
 
 <span id="{id}"

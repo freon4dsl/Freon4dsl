@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { onDestroy, onMount, afterUpdate } from "svelte";
+    import { onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
-    import { PiLogger, type PiEditor, LabelBox } from "@projectit/core";
+    import { PiLogger, LabelBox } from "@projectit/core";
     import { setBoxSizes } from "./svelte-utils";
 
     export let box: LabelBox;

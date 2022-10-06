@@ -6,7 +6,7 @@
         PiLogger,
         toPiKey,
         GridCellBox,
-        GridBox, isActionBox, ActionBox
+        PiEditorUtil, PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
     import { afterUpdate, onMount, createEventDispatcher, tick } from "svelte";
@@ -72,21 +72,21 @@
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
-            // const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), cellBox, editor);
-            // if (cmd !== PI_NULL_COMMAND) {
-            //     let postAction: PiPostAction;
-            //     runInAction(() => {
-            //         const action = event["action"];
-            //         if (!!action) {
-            //             action();
-            //         }
-            //         postAction = cmd.execute(cellBox, toPiKey(event), editor);
-            //     });
-            //     if (!!postAction) {
-            //         postAction();
-            //     }
-            //     event.stopPropagation();
-            // }
+            const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), box, editor);
+            if (cmd !== PI_NULL_COMMAND) {
+                let postAction: PiPostAction;
+                runInAction(() => {
+                    const action = event["action"];
+                    if (!!action) {
+                        action();
+                    }
+                    postAction = cmd.execute(box, toPiKey(event), editor);
+                });
+                if (!!postAction) {
+                    postAction();
+                }
+                event.stopPropagation();
+            }
         }
 
     };
@@ -211,12 +211,6 @@
 
 
 <style>
-    .ghost {
-        min-width: 50px;
-        min-height: 20px;
-        color: purple;
-        background-color: greenyellow;
-    }
     .gridcellcomponent {
         box-sizing: border-box;
         align-self: stretch; /* isn't this the default? */

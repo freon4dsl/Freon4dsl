@@ -2,7 +2,7 @@
     import {flip} from 'svelte/animate'; // TODO adjust rollup.config for svelte.animate
     import { Box, Language, ListBox, ListDirection, PiEditor, PiLogger } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
-    import { runInAction } from "mobx";
+    import { autorun, runInAction } from "mobx";
     import { dropListElement, moveListElement } from "./svelte-utils/dropHelpers";
     import {
         draggedElem,
@@ -13,6 +13,7 @@
         selectedBoxes
     } from "./svelte-utils/DropAndSelectStore";
     import {contextMenu, contextMenuVisible, items} from "./svelte-utils/ContextMenuStore";
+    import { afterUpdate } from "svelte";
 
     export let box: ListBox;	                // the accompanying ListBox
     export let editor: PiEditor;			    // the editor
@@ -34,18 +35,14 @@
     const drop = (event: DragEvent, targetIndex) => {
         const data: ListElementInfo = $draggedElem;
 
-        // console.log('DROPPING item [' + data.element.piId() + '] from [' + data.componentId + '] in list [' + id + '] on position [' + targetIndex + ']');
+        LOGGER.log('DROPPING item [' + data.element.piId() + '] from [' + data.componentId + '] in list [' + id + '] on position [' + targetIndex + ']');
         if (data.componentId === id) { // dropping in the same list
             // console.log('moving item within list');
-            runInAction(() => {
-                moveListElement(box.element, data.element, box.propertyName, targetIndex);
-            });
+            moveListElement(box.element, data.element, box.propertyName, targetIndex);
         } else { // dropping in another list
             // console.log('moving item to another list');
             if (data.elementType === elementType) { // check if item may be dropped here // TODO extend to include subtypes
-                runInAction(() => {
-                    dropListElement(data, box.element, box.propertyName, targetIndex);
-                });
+                dropListElement(data, box.element, box.propertyName, targetIndex);
             } else {
                 // TODO other way for error message
                 alert("drop is not allowed here, types do not match [" + data.elementType + " != " + elementType + "]");
@@ -58,7 +55,7 @@
         $activeIn = '';
         hovering = -1;
         // Clear the drag data cache (for all formats/types)
-        // event.dataTransfer.clearData();
+        // event.dataTransfer.clearData(); // has problems in Firefox!
     }
 
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
@@ -106,6 +103,14 @@
             $contextMenu.show(event); // this function sets $contextMenuVisible to true
         }
     }
+    // afterUpdate(() => {
+    //     LOGGER.log("afterUpdate [" + box.children.map(c => c.element.piId()) + "]")
+    //     shownElements = [...box.children];
+    // });
+    // autorun(() => {
+    //     LOGGER.log("Autorun [" + box.children.map(c => c.element.piId()) + "]")
+    //     shownElements = [...box.children];
+    // });
 
     // The mouseover fires when the mouse cursor is outside the element and then move to inside the boundaries of the element.
     // The mouseout fires when the mouse cursor is over an element and then moves another element.

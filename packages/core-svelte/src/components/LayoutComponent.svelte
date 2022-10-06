@@ -1,6 +1,6 @@
 <script lang="ts">
     import { autorun } from "mobx";
-    import { afterUpdate, onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
     import {
         Box,
@@ -19,7 +19,7 @@
     let LOGGER: PiLogger = new PiLogger("LayoutComponent"); //.mute();
     let id: string = !!box ? box.id : "unknown-label-id";
     let element: HTMLSpanElement;
-    let children: Box[];
+    let children: Box[] = [];
     $: children = [...box.children];
     let isHorizontal: boolean;
     $: isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
@@ -31,6 +31,12 @@
     }
 
     onMount(() => {
+        box.setFocus = setFocus;
+    });
+
+    autorun(() => {
+        LOGGER.log("Autorun")
+        children = [...box.children];
         box.setFocus = setFocus;
     });
 

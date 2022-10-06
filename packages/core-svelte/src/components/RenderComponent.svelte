@@ -2,7 +2,7 @@
     // This component renders any box from the box model.
     // Depending on the box type the right component is used.
     // It also makes the rendered element selectable, including changing the style.
-    // Note also that all boxes are rendered as flex-items within a RenderComponent,
+    // Note that all boxes are rendered as flex-items within a RenderComponent,
     // which is the flex-container.
     import {
         isActionBox,
@@ -38,6 +38,7 @@
     export let box: Box;
     export let editor: PiEditor;
 
+    let id: string = `render-${box.id}`;
     let className: string = '';
 
     const onClick = (event: MouseEvent) => {
@@ -52,16 +53,18 @@
         } // else: let the parent element take care of selection
     };
 
-    // TODO remove this function in favor of autorun()
     afterUpdate(() => {
-        // LOGGER.log("RenderComponent.afterUpdate for box " + box.role + ", isSelected:" + (editor?.selectedBox === box));
+        // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
+        LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element.piId()) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
         className = (isSelected ? "selected" : "unSelected");
+        if (isSelected) {
+            LOGGER.log("RenderComponent.afterUpdate for box " + box.role + ", isSelected:" + isSelected);
+            // TODO adjust for multiple selection
+            box.setFocus();
+        }
     });
 
-    // autorun(() => {
-    //     className = (editor?.selectedBox === box ? "selected" : "unSelected");
-    // });
 </script>
 
 <span id="render-${box?.id}"
@@ -102,6 +105,7 @@
         display: flex;
     }
     .error {
+        /* todo use projectit variable */
         color: red;
     }
     .unSelected {
