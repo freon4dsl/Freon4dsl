@@ -30,7 +30,7 @@ export abstract class ListBox extends Box {
         this.kind = "ListBox";
     }
 
-    get children(): ReadonlyArray<Box> {
+    get children(): ReadonlyArray<Box> { // TODO Jos: why the ReadOnlyArray?
         return this._children as ReadonlyArray<Box>;
     }
 
