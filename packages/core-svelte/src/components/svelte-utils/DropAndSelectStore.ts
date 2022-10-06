@@ -32,24 +32,3 @@ export class ListElementInfo {
         this.propertyIndex = this.element.piOwnerDescriptor().propertyIndex;
     }
 }
-
-// export class ElementInfo {
-//     elementId: string;      // the id of the model element
-//     elementType: string;    // the piLanguageConcept() of the element
-//     ownerId: string;        // the id of the box that holds the element
-//     propertyName: string;   // the name of the property in which the element is stored by its parent
-//     index: number;
-//     row: number = -1;       // [row, column] gives the position of the element if part of a list or grid
-//     column: number = -1;    // in case that the element is part of a list, the column is unused
-//
-//     constructor(elementId: string, elementType: string, ownerId: string, propertyName: string, row: number, column?: number) {
-//         this.elementType = elementType;
-//         this.elementId = elementId;
-//         this.ownerId = ownerId;
-//         this.propertyName = propertyName;
-//         this.row = row;
-//         if (this.column !== undefined && this.column !== null) {
-//             this.column = column;
-//         }
-//     }
-// }

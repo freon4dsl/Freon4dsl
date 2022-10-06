@@ -1,4 +1,11 @@
 <script lang="ts">
+    /**
+     * This component show a single cell in a TableComponent. It supports drag and drop,
+     * in so far that when dragged, the model element, that is the parent of the part that is
+     * shown in this table cell, is the element being dragged, not the part displayed in the cell.
+     * When used as drop zone, a custom event is dispatched to the parent table, which then
+     * handles the drop.
+     */
     import {
         isMetaKey,
         ENTER,
@@ -72,6 +79,7 @@
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
+            // todo make this a separate function also to be used in TextComponent o.a.
             const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), box, editor);
             if (cmd !== PI_NULL_COMMAND) {
                 let postAction: PiPostAction;
@@ -88,9 +96,9 @@
                 event.stopPropagation();
             }
         }
-
     };
 
+    // todo renew autorun
     // autorun(() => {
     //     $boxStore = cellBox.box;
     //     LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);

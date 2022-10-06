@@ -1,4 +1,7 @@
 <script lang="ts">
+    /**
+     * This component shows to piece of non-editable text.
+     */
     import { onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
     import { PiLogger, LabelBox } from "@projectit/core";
@@ -15,6 +18,7 @@
     let text: string;
     $: text = box.getLabel();
 
+    // todo do we need a setFocus here?
     const setFocus = async (): Promise<void> => {
         LOGGER.log("LabelComponent.setFocus for box " + box?.role);
         if (!!element) {
@@ -28,7 +32,7 @@
 
     afterUpdate( () => {
         box.setFocus = setFocus;
-        setBoxSizes(box, element.getBoundingClientRect());
+        setBoxSizes(box, element.getBoundingClientRect()); // see todo in RenderComponent
     });
 
     // autorun( () => {

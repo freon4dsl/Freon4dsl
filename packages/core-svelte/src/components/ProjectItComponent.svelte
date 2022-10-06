@@ -1,4 +1,8 @@
 <script lang="ts">
+    /**
+     * This component shows a complete projection, by displaying the rootbox of
+     * the associated editor.
+     */
     import { onMount } from "svelte";
     import {
         PiEditor,
@@ -16,7 +20,7 @@
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
     import { contextMenuVisible, contextMenu } from "./svelte-utils/ContextMenuStore";
-    import {viewport} from "./svelte-utils/EditorViewportStore";
+    import { viewport } from "./svelte-utils/EditorViewportStore";
     import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
 
     let LOGGER = new PiLogger("ProjectItComponent"); //.mute();
@@ -31,26 +35,26 @@
         event.stopPropagation();
     }
 
+    // todo tabbing etc. should take into account the projection. Currently, sometimes the selected element is not visible.
     const onKeyDown = (event: KeyboardEvent) => {
-        // todo implement this correctly
-        console.log("ProjectItComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey);
-        // event.persist();
+        console.log("ProjectItComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey + " shift: " + event.shiftKey);
+        // console.log('selected BEFORE: ' + editor.selectedBox.id + ' current focused element ' + document.activeElement.id);
         if (event.ctrlKey || event.altKey) {
             switch (event.key) {
                 case ARROW_UP:
                     editor.selectParentBox();
-                    event.preventDefault();
+                    stopEvent(event);
                     break;
                 case ARROW_DOWN:
                     editor.selectFirstLeafChildBox();
-                    event.preventDefault();
+                    stopEvent(event);
                     break;
             }
         } else if (event.shiftKey) {
             switch (event.key) {
                 case TAB:
                     editor.selectPreviousLeaf();
-                    event.preventDefault();
+                    stopEvent(event);
                     break;
             }
         } else if (event.altKey) {
@@ -62,7 +66,7 @@
                 case BACKSPACE:
                 case ARROW_LEFT:
                     editor.selectPreviousLeaf();
-                    stopEvent(event)
+                    stopEvent(event);
                     break;
                 case DELETE:
                     editor.deleteBox(editor.selectedBox);
@@ -75,6 +79,7 @@
                     break;
                 case ARROW_DOWN:
                     const down = editor.boxBelow(editor.selectedBox);
+                    // todo move the following three lines to PiEditor
                     if (down !== null && down !== undefined) {
                         editor.selectBoxNew(down);
                     }
@@ -82,6 +87,7 @@
                     break;
                 case ARROW_UP:
                     LOGGER.log("Up: " + editor.selectedBox.role);
+                    // todo move the following three lines to PiEditor
                     const up = editor.boxAbove(editor.selectedBox);
                     if (up !== null) {
                         editor.selectBoxNew(up);
@@ -90,7 +96,11 @@
                     break;
             }
         }
-        event.stopPropagation();
+        // todo check whether the following always needs to be done
+        // console.log('selected AFTER: ' + editor.selectedBox.id + ' current focused element ' + document.activeElement.id);
+        editor.selectedBox.setFocus();
+        $selectedBoxes = [editor.selectedBox];
+        // event.stopPropagation(); // do not preventDefault, because this would keep printable chars to show in any input HTML element. TODO IS this true???
     };
 
     /**
@@ -100,7 +110,7 @@
     function onScroll() {
         // Hide any contextmenu upon scrolling, because its position will not be correct.
         $contextMenuVisible = false;
-        // todo should we use a timeOut here?
+        // todo shouldn't we use a timeOut here, like below in the ResizeObserver?
         editor.scrollX = element.scrollLeft;
         editor.scrollY = element.scrollTop;
     }
@@ -119,7 +129,7 @@
                 const entry = entries.at(0);
                 // Get the element's size.
                 // Note that entry.contentRect gives slightly different results to entry.target.getBoundingClientRect().
-                // But I have no idea why.
+                // A: I have no idea why.
                 let rect = entry.target.getBoundingClientRect();
                 $viewport.setSizes(rect.height, rect.width, rect.top, rect.left);
             }, 400); // Might use another value for the delay, but this seems ok.
@@ -133,7 +143,7 @@
     });
 
     autorun(() => {
-        LOGGER.log('autorun XXXXXXXXZ');
+        LOGGER.log("autorun");
         rootBox = editor.rootBox;
         if (!$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             $selectedBoxes = [editor.selectedBox];
@@ -172,7 +182,7 @@
         position: relative;
         overflow: auto;
         /* show a box shadow similar to the one for the info panel */
-        box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),0 1px 1px 0 rgba(0, 0, 0, 0.14),0 1px 3px 0 rgba(0,0,0,.12);
+        box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, .12);
         border-radius: 4px;
         /* end box shadow */
     }

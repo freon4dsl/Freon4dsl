@@ -1,16 +1,17 @@
-<svelte:options accessors={true}/>
-<!-- this option lets us set the items prop after the component has been created -->
+<svelte:options accessors={true}/> <!-- this option lets us set the items props after the component has been created -->
 
 <script lang="ts">
-    import { clickOutside } from './svelte-utils';
-    import {tick} from "svelte";
+    /**
+     *  This component combines a menu with a submenu. The positions of both the menu and the submenu are determined
+     *  such that the complete menu stays within the bounderies of the editor viewport. The state of the editor
+     *  viewport is stored in the EditorViewportStore (by ProjectItComponent).
+     */
+    import { clickOutside } from "./svelte-utils";
+    import { tick } from "svelte";
     import { PiLogger } from "@projectit/core";
-    import {contextMenuVisible, MenuItem} from "./svelte-utils/ContextMenuStore";
-    import {selectedBoxes} from "./svelte-utils/DropAndSelectStore";
-    import {viewport} from "./svelte-utils/EditorViewportStore";
-
-
-    // export let editor: PiEditor;
+    import { contextMenuVisible, MenuItem } from "./svelte-utils/ContextMenuStore";
+    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
+    import { viewport } from "./svelte-utils/EditorViewportStore";
 
     // items for the context menu
     export let items: MenuItem[];
@@ -61,7 +62,7 @@
     /**
      * This function hides the sub menu only, the context menu is still shown.
      * It is used when the sub menu is shown but the user clicks on another part of the contextmenu.
-     * todo see if this is still needed
+     * todo see if this is still needed => when the user clicks on another item, this item should be executed.
      */
     function hidesubmenu() {
         $contextMenuVisible = false;
@@ -73,8 +74,8 @@
      */
     async function openSub(itemIndex) {
         submenuOpen = true;
-        await tick();
-        // determine the 'normal' position of the sub menu:
+        await tick(); // wait in order to detemrine the size of the submenu
+        // determine the 'normal' position of the sub menu, which is
         // (itemHeight px) lower than the main menu, 20 px left to the end of the item
         topSub = top + itemHeight + itemIndex * (itemHeight + 2 + 3 + 4); // add 2 for gap, 3 for margin, 4 for padding
         leftSub = left + submenuWidth - 20;
@@ -84,35 +85,37 @@
     }
 
     /**
-     * This calculates the position of the context or sub menu, either on x-axis or y-axis
+     * This calculates the position of the context- or sub-menu, either on x-axis or y-axis
      */
     function calculatePos(editor: number, menu: number, mouse: number): number {
         let result: number;
         // see if the menu will fit in the editor view, if not: position it left/up, not right/down of the mouse click
         if (editor - mouse < menu) {
-            result = mouse - menu
+            result = mouse - menu;
         } else {
             result = mouse;
         }
         // if the result should be outside the editor view, then position it on the leftmost/uppermost point
-        if (result < 0) result = 0;
+        if (result < 0) {
+            result = 0;
+        }
         return result;
     }
 
     /**
-     * This function gets the context menu dimensions the moment that
+     * This function finds the context menu dimensions the moment that
      * $contextMenuVisible becomes true and the menu is shown.
      */
-    function getContextMenuDimension(node){
+    function getContextMenuDimension(node) {
         menuHeight = node.offsetHeight;
         menuWidth = node.offsetWidth;
     }
 
     /**
-     * This function gets the sub menu dimensions the moment that
+     * This function finds the sub menu dimensions the moment that
      * submenuOpen becomes true and the menu is shown.
      */
-    function getSubMenuDimension(node){
+    function getSubMenuDimension(node) {
         submenuHeight = node.offsetHeight;
         submenuWidth = node.offsetWidth;
     }
@@ -125,7 +128,7 @@
         } else {
             // todo adjust for multiple selections
             let mySelection = $selectedBoxes[0].element;
-            LOGGER.log('DOING IT for ' + mySelection.piId() + ' of type ' + mySelection.piLanguageConcept());
+            LOGGER.log("DOING IT for " + mySelection.piId() + " of type " + mySelection.piLanguageConcept());
             item.handler(mySelection);
             hide();
         }
@@ -135,36 +138,18 @@
     }
 </script>
 
-<div          use:clickOutside
-              on:click_outside={hide}>
-{#if $contextMenuVisible}
-    <nav use:getContextMenuDimension
-         class="contextmenu"
-         style="top: {top}px; left: {left}px"
-    >
-        {#each items as item, index}
-            {#if item.label === '---'}
-                <hr/>
-            {:else}
-                <button on:click={(event) => onClick(event, item, index)} bind:clientHeight={itemHeight}>
-                    {item.label}
-                    {#if item.shortcut}
-                        <span class="shortcut">{item.shortcut}</span>
-                    {/if}
-                </button>
-            {/if}
-        {/each}
-    </nav>
-    {#if submenuOpen}
-        <nav use:getSubMenuDimension
+<div use:clickOutside
+     on:click_outside={hide}>
+    {#if $contextMenuVisible}
+        <nav use:getContextMenuDimension
              class="contextmenu"
-             style="top: {topSub}px; left: {leftSub}px"
+             style="top: {top}px; left: {left}px"
         >
-            {#each submenuItems as item, index}
+            {#each items as item, index}
                 {#if item.label === '---'}
                     <hr/>
                 {:else}
-                    <button on:click={(event) => onClick(event, item, index)}>
+                    <button on:click={(event) => onClick(event, item, index)} bind:clientHeight={itemHeight}>
                         {item.label}
                         {#if item.shortcut}
                             <span class="shortcut">{item.shortcut}</span>
@@ -173,8 +158,26 @@
                 {/if}
             {/each}
         </nav>
+        {#if submenuOpen}
+            <nav use:getSubMenuDimension
+                 class="contextmenu"
+                 style="top: {topSub}px; left: {leftSub}px"
+            >
+                {#each submenuItems as item, index}
+                    {#if item.label === '---'}
+                        <hr/>
+                    {:else}
+                        <button on:click={(event) => onClick(event, item, index)}>
+                            {item.label}
+                            {#if item.shortcut}
+                                <span class="shortcut">{item.shortcut}</span>
+                            {/if}
+                        </button>
+                    {/if}
+                {/each}
+            </nav>
+        {/if}
     {/if}
-{/if}
 </div>
 
 <style>

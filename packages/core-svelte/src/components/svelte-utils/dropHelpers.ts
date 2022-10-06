@@ -15,9 +15,9 @@ export function moveListElement(parentElement: PiElement, movedElement: PiElemen
     runInAction(() => {
         // get info about the property that needs to be changed
         const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
-        console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+        // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
         let oldIndex: number = movedElement.piOwnerDescriptor().propertyIndex;
-        console.log(`moveListElement=> element: ${parentElement.piLanguageConcept()}, property: ${targetPropertyName}, oldIndex: ${oldIndex}, targetIndex: ${targetIndex}`);
+        // console.log(`moveListElement=> element: ${parentElement.piLanguageConcept()}, property: ${targetPropertyName}, oldIndex: ${oldIndex}, targetIndex: ${targetIndex}`);
         // Note that because of the placeholder that is shown as last element of a list, the targetIndex may be equal to the property.length.
         // The splice(), however, still functions when the targetIndex > property.length.
         if (isList && oldIndex < property.length && targetIndex <= property.length) {
@@ -31,15 +31,15 @@ export function moveListElement(parentElement: PiElement, movedElement: PiElemen
             }
             property.splice(targetIndex, 0, tmpProp);
         }
-        console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+        // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
     });
 }
 
 export function dropListElement(dropped: ListElementInfo, targetElem: PiElement, targetPropertyName: string, targetIndex: number) {
     runInAction(() => {
-        console.log(`dropListElement=> element: ${dropped.element.piLanguageConcept()}, property: ${dropped.propertyName},
-        oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
-        targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
+        // console.log(`dropListElement=> element: ${dropped.element.piLanguageConcept()}, property: ${dropped.propertyName},
+        // oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
+        // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
         const { property, isList, type } = getPropertyInfo(targetElem, targetPropertyName);
         console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
         if (type === dropped.elementType) { // TODO extend to include subtypes
@@ -52,12 +52,12 @@ export function dropListElement(dropped: ListElementInfo, targetElem: PiElement,
                 }
             }
         }
-        console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+        // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
     });
 }
 
 function getPropertyInfo(element: PiElement, propertyName: string) {
-    console.log(`element: ${element.piId()}, element type: ${element.piLanguageConcept()}, propertyName: ${propertyName}`)
+    // console.log(`element: ${element.piId()}, element type: ${element.piLanguageConcept()}, propertyName: ${propertyName}`)
     const property = element[propertyName];
     const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
     const isList: boolean = propInfo.isList;

@@ -36,6 +36,7 @@
     let selectedId: string;		                // the id of the selected option in the dropdown
     let filteredOptions: SelectOption[];        // the list of filtered options that are shown in the dropdown
     let allOptions: SelectOption[];             // all options as calculated by the editor
+    let textComponent;
 
     const noOptionsId = 'noOptions';            // constant for when the editor has no options
     let getOptions = (): SelectOption[] => {    // the function used to calculate all_options, called by onClick and setFocus
@@ -46,9 +47,22 @@
         return result;
     };
 
+    /**
+     * This function sets the focus on this element programmatically.
+     * It is called from the RenderComponent.
+     */
+    const setFocus = () => {
+        // TODO to be tested
+        // console.log("TextDropDownComponent " + box.kind)
+        if (!!textComponent) {
+            textComponent.setFocus();
+        } else {
+            console.log('TextDropdownComponent ' + id + ' has no textComponent' )
+        }
+    }
+
     onMount(() => {
         LOGGER.log("TextDropdownComponent.onMount for role [" + box.role + "]");
-        // textBox.setFocus = setFocus;
         box.setFocus = setFocus;
         const selected = box.getSelectedOption(); // todo why?
         runInAction( () => {
@@ -60,21 +74,6 @@
     });
 
     // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next alias!!!
-
-    /**
-     * This function sets the focus on this element programmatically.
-     * It is called from the RenderComponent.
-     */
-    const setFocus = () => {
-        // TODO to be tested
-        LOGGER.log('setFocus');
-        isEditing = true;
-        dropdownShown = false;
-        editor.selectedBox = box;
-        allOptions = filteredOptions = getOptions();
-        // todo should set focus to input field in TextComponent
-        textBox.setFocus();
-    };
 
     /**
      * This custom event is triggered when the text in the textComponent is altered or when the
@@ -112,13 +111,21 @@
             }
             case ARROW_DOWN: {
                 if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
-                    selectedId = filteredOptions[0].id;
+                    if (filteredOptions.length !== 0) {
+                        selectedId = filteredOptions[0].id;
+                    } else { // there are no valid options left
+                        alert('no valid selection')
+                    }
                 } else {
                     const index = filteredOptions.findIndex(o => o.id === selectedId);
                     if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
                         selectedId = filteredOptions[index + 1].id;
                     } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
-                        selectedId = filteredOptions[0].id;
+                        if (filteredOptions.length !== 0) {
+                            selectedId = filteredOptions[0].id;
+                        } else { // there are no valid options left
+                            alert('no valid selection')
+                        }
                     }
                 }
                 event.preventDefault();
@@ -127,13 +134,22 @@
             }
             case ARROW_UP: {
                 if (!selectedId || selectedId.length == 0) { // there is no current selection, start at the last option
-                    selectedId = filteredOptions[filteredOptions.length - 1].id;
+                    if (filteredOptions.length !== 0) {
+                        selectedId = filteredOptions[filteredOptions.length - 1].id;
+                    } else { // there are no valid options left
+                        alert('no valid selection')
+                    }
                 } else {
                     const index = filteredOptions.findIndex(o => o.id === selectedId);
                     if (index > 0) { // the 'normal' case: go one up
                         selectedId = filteredOptions[index - 1].id;
                     } else if (index === 0) { // the beginning of the options reached: go to the last
-                        selectedId = filteredOptions[filteredOptions.length - 1].id;
+                        // todo make separate function of the following if-statement, plus find other way to put error message out
+                        if (filteredOptions.length !== 0) {
+                            selectedId = filteredOptions[filteredOptions.length - 1].id;
+                        } else { // there are no valid options left
+                            alert('no valid selection')
+                        }
                     }
                 }
                 event.preventDefault();
@@ -144,7 +160,11 @@
                 // find the chosen option
                 let chosenOption: SelectOption = null;
                 if (filteredOptions.length === 1) { // if there is just one option left, choose that one
-                    chosenOption = filteredOptions[0];
+                    if (filteredOptions.length !== 0) {
+                        chosenOption = filteredOptions[0];
+                    } else { // there are no valid options left
+                        alert('no valid selection')
+                    }
                 } else { // find the selected option and choose that one
                     const index = filteredOptions.findIndex(o => o.id === selectedId);
                     if (index >= 0 && index < filteredOptions.length) {
@@ -187,18 +207,18 @@
     };
 
     /**
-     * This custom event is triggered when the TextComponent gets focus, either by click or tabbing.
+     * This custom event is triggered when the TextComponent gets focus by click.
      * The editor is notified of the newly selected box and the options list is filled.
      */
-    const startEditing = () => {
-        // LOGGER.log('TextDropdownComponent: startEditing');
+    const startEditing = (event: CustomEvent) => {
+        LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event.detail));
         isEditing = true;
         dropdownShown = true;
         editor.selectedBox = box;
         if (!allOptions) {
             allOptions = getOptions();
         }
-        filteredOptions = getOptions();
+        filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
     };
 
     /**
@@ -241,7 +261,7 @@
         let validOption = allOptions.find(o => o.label === text);
         if (!!validOption && validOption.id !== noOptionsId) {
             storeAndExecute(validOption);
-        } else { // no valide option, restore the previous value
+        } else { // no valid option, restore the previous value
             text = textBox.getText();
         }
     };
@@ -264,6 +284,8 @@
     });
 
     const onFocusOut = () => {
+        // todo test wether we need focusOut or blur
+        // todo maybe this should be done with custom event???
         // Text component has lost focus, check where focus has moved to
         if (!document.hasFocus()) { // Focus has moved outside the document tab/window
             console.log("TextDropdownComponent onFocusOut OUTSIDE");

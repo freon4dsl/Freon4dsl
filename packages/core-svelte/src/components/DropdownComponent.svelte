@@ -1,17 +1,26 @@
 <script lang="ts">
+    /**
+     * This component is a dropdown menu that is used with a TextDropdownComponent.
+     */
     import { createEventDispatcher } from "svelte";
     import { SelectOption } from "@projectit/core";
 
-    export let selectedId: string = '';
+    export let selectedId: string = "";
     export let options: SelectOption[] = [];
-    let id: string = 'dropdown-test'; // TODO better id
+    let id: string = "dropdown-test"; // TODO better id
     const dispatcher = createEventDispatcher();
 
     $: isSelected = (option: SelectOption) => { // determines the style of the selected option
-        if (options.length === 1) return true;
+        if (options.length === 1) {
+            return true;
+        }
         return option.id === selectedId;
-    }
+    };
 
+    /**
+     * When one of the items in the menu is clicked, a custom event is dispatched to the parent of this component.
+     * @param option
+     */
     const handleClick = (option: SelectOption) => {
         selectedId = option.id;
         // console.log("Dropdown CLICKED, option " + option.id);
@@ -75,6 +84,7 @@
 
     .dropdownerror {
         color: var(--freon-dropdownitem-component-color, darkblue);
+        /* todo add new color to freon color set */
         background-color: var(--freon-dropdownitem-component-background-color, red);
         display: block;
         white-space: nowrap;

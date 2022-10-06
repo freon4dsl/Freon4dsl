@@ -1,4 +1,10 @@
 <script lang="ts">
+    /**
+     * This component shows a list of elements that have the same type (a 'true' list) as
+     * a table. It can be shown row-based or column-based, both are displayed as a grid.
+     * This component functions as a drop zone for dragged elements from either a ListComponent
+     * or a TableCellComponent.
+     */
     import { GridCellBox, type GridBox, type PiEditor, PiLogger, Language } from "@projectit/core";
     import { runInAction } from "mobx";
     import TableCellComponent from "./TableCellComponent.svelte";

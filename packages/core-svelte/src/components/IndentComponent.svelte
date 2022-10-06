@@ -1,5 +1,8 @@
 <script lang="ts">
-    import { autorun } from "mobx";
+    /**
+     * This component indents the child of its (Indent)Box.
+     * Every indent is 8px wide.
+     */
     import RenderComponent from "./RenderComponent.svelte";
     import type {IndentBox, PiEditor} from "@projectit/core";
 
@@ -9,6 +12,7 @@
     const style=`margin-left: ${box.indent * 8}px;`;
     let id: string = box.id;
 
+    // todo use autorun here ?
     // autorun( () => {
     //   box.indent;
     // });

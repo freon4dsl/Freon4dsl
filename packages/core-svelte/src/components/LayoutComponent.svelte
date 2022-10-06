@@ -1,4 +1,9 @@
 <script lang="ts">
+    /**
+     * This component shows a list of various boxes (no 'true' list). It can be shown
+     * horizontally or vertically. In the latter case, the elements are each separated by
+     * a break ('<br>').
+     */
     import { autorun } from "mobx";
     import { onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
@@ -11,9 +16,8 @@
         ListDirection
     } from "@projectit/core";
 
-
     // Parameters
-    export let box: ListBox; // todo change to LayoutBox
+    export let box: ListBox; // todo change to LayoutBox, when this change has been processed in ~/core
     export let editor: PiEditor;
 
     let LOGGER: PiLogger = new PiLogger("LayoutComponent"); //.mute();

@@ -4,6 +4,9 @@
     // It also makes the rendered element selectable, including changing the style.
     // Note that all boxes are rendered as flex-items within a RenderComponent,
     // which is the flex-container.
+    // Note also that this component has no 'setFocus' method because it is not
+    // strongly coupled to a box. Each box is coupled to the corresponding
+    // component in the if-statement.
     import {
         isActionBox,
         isEmptyLineBox,
@@ -32,6 +35,7 @@
     import { afterUpdate } from "svelte";
     import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
     import TableComponent from "./TableComponent.svelte";
+    import { setBoxSizes } from "./svelte-utils";
 
     const LOGGER = new PiLogger("RenderComponent"); //.mute();
 
@@ -40,6 +44,7 @@
 
     let id: string = `render-${box.id}`;
     let className: string = '';
+    let element: HTMLElement;
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log("RenderComponent.onClick for box " + box.role + ", selectable:" + box.selectable);
@@ -63,6 +68,8 @@
             // TODO adjust for multiple selection
             box.setFocus();
         }
+        // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?
+        setBoxSizes(box, element.getBoundingClientRect());
     });
 
 </script>
@@ -70,7 +77,7 @@
 <span id="render-${box?.id}"
       class="render-component {className}"
       on:click={onClick}
-      tabIndex={0}
+      bind:this={element}
 >
     {#if box === null || box === undefined }
         <p class="error">[BOX IS NULL OR UNDEFINED]</p>

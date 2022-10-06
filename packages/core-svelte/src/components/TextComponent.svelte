@@ -67,24 +67,21 @@
 
     /**
      * This function sets the focus on this element programmatically.
-     * It is called from the editor.
+     * It is called from the box.
      */
-    const setFocus = async () => {
-        // TODO should we check here whether the box is selectable? If so, where else is this check needed?
-        LOGGER.log("setFocus " + ": box[" + box.role + "]");
-        if (document.activeElement === inputElement || isEditing) { // this or the surrounding TextDropdownComponent already has focus
-            return;
-        }
-        // set the local variables, but do not set 'from' and 'to'
-        // we assume they are set programmatically before or after the call to this function
-        isEditing = true;
-        editStart = true;
-        originalText = text;
-        size = text.length === 0 ? 10 : text.length;
-        // inputElement.focus(); is done by afterUpdate()
-		LOGGER.log("setFocus END " + ": box[" + box.id + "]" + "isEditing: " + isEditing);
-		await tick();
-	};
+    export const setFocus = () => {
+		if (!!inputElement) {
+			inputElement.focus();
+		} else {
+			// set the local variables
+			isEditing = true;
+			editStart = true;
+			originalText = text;
+			size = text.length === 0 ? 10 : text.length;
+			let {anchorOffset, focusOffset} = document.getSelection();
+			setFromAndTo(anchorOffset, focusOffset);
+		}
+	}
 
     /**
      * This function ensures that 'from <= to' always holds.
@@ -139,7 +136,11 @@
         LOGGER.log('startEditing ' + id);
         // set the global selection
         editor.selectedBox = box;
-        $selectedBoxes = [box];
+		if (partOfActionBox) {
+			$selectedBoxes = [box, box.parent]
+		} else {
+			$selectedBoxes = [box];
+		}
         // set the local variables
         isEditing = true;
         editStart = true;
@@ -149,7 +150,7 @@
         setFromAndTo(anchorOffset, focusOffset);
         event.preventDefault();
         event.stopPropagation();
-        dispatcher('startEditing'); // tell the TextDropdown that the edit has started
+        dispatcher('startEditing', {content: text, caret: from}); // tell the TextDropdown that the edit has started
     }
 
     /**
@@ -159,7 +160,7 @@
      * @param event
      */
     function onClick(event: MouseEvent) {
-        LOGGER.log('onClick: ' + id + ', ' + inputElement.selectionStart + ", " + inputElement.selectionEnd);
+        LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 		setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
 		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
             LOGGER.log('dispatching from on click')
@@ -292,7 +293,7 @@
 						dispatcher('textUpdate', {content: text, caret: from - 1});
 					} else { // the key will cause this element to lose focus, its content should be saved
 						endEditing();
-						editor.selectPreviousLeaf();
+						// let the parent take care of handling the event
 					}
 					break;
 				}
@@ -306,7 +307,7 @@
 						dispatcher('textUpdate', {content: text, caret: from + 1});
 					} else { // the key will cause this element to lose focus, its content should be saved
 						endEditing();
-						editor.selectNextLeaf();
+						// let the parent take care of handling the event
 					}
 					break;
 				}
@@ -360,12 +361,13 @@
 					}
 					break;
 				}
-				default: { // the event.key is a printable character
+				default: { // the event.key is SHIFT or a printable character
 					getCaretPosition(event);
 					switch (box.isCharAllowed(text, event.key, from)) {
 						case CharAllowed.OK: // add to text, handled by browser
 							LOGGER.log('CharAllowed');
-							// afterupdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
+							event.stopPropagation();
+							// afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
 							break;
 						case CharAllowed.NOT_OK: // ignore
 							// ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
@@ -428,26 +430,24 @@
      * box sizes in the textbox.
      */
     afterUpdate(() => {
-        LOGGER.log("afterUpdate " + id);
-		if (box.id === "ID-38-alias-Entity-baseEntity-referencebox-textbox") {
-			LOGGER.log("afterUpdate EXTRA: " + "editStart: " + editStart + ", " + isEditing + ", " + partOfActionBox);
-		}
-        if (editStart && !!inputElement) { // switch from <span> to <input>
-			LOGGER.log("afterUpdate INPUT: " + isEditing + ", " + partOfActionBox);
+        LOGGER.log("afterUpdate " + from + ", " + to);
+        if (editStart && !!inputElement) {
+			LOGGER.log('éditStart')
             inputElement.selectionStart = from >= 0 ? from : 0;
             inputElement.selectionEnd = to >= 0 ? to : 0;
             inputElement.focus();
             editStart = false;
         }
-        if (!isEditing && !!spanElement) { // switch from <input> to <span>
+        if (!isEditing && !!spanElement) {
             // TODO test this
-            setBoxSizes(box, spanElement.getBoundingClientRect());
+            setBoxSizes(box, spanElement.getBoundingClientRect()); // see todo in RenderComponent
         }
-
         if (isEditing && partOfActionBox) {
-            // send event to parent
-            LOGGER.log(' dispatching event with text ' + text + ' from afterUpdate');
-            dispatcher('textUpdate', {content: text, caret: from + 1});
+			if (text !== originalText) {
+				// send event to parent
+				LOGGER.log('TextComponent dispatching event with text ' + text + ' from afterUpdate');
+				dispatcher('textUpdate', {content: text, caret: from + 1});
+			}
         }
     });
 
