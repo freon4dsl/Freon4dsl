@@ -6,6 +6,9 @@ import { Box } from "../boxes";
 import { PiEditor } from "../PiEditor";
 import { CustomAction, EMPTY_POST_ACTION, PiPostAction, ReferenceShortcut } from "./PiAction";
 import { isString, PiTriggerUse, triggerTypeToString } from "./PiTriggers";
+import { PiLogger } from "../../logging";
+
+const LOGGER = new PiLogger("PiCommand"); //.mute();
 
 /**
  * Abstract supercass for all commands in ProjectIt.
@@ -188,15 +191,13 @@ export class PiCustomCommand extends PiCommand {
     }
 
     execute(box: Box, trigger: PiTriggerUse, editor: PiEditor): PiPostAction {
-        // LOGGER.log("execute custom action, text is [" + text + "] refShort [" + this.referenceShortcut + "]" );
-        console.log("PiCustomCommand: trigger [" + triggerTypeToString(trigger) + "]");
+        LOGGER.log("PiCustomCommand: trigger [" + triggerTypeToString(trigger) + "]");
         const self = this;
         const selected = self.action(box, triggerTypeToString(trigger), editor);
 
         if (!!selected) {
             if (!!self.boxRoleToSelect) {
                 return function () {
-                    console.log("PiCommand select " + box.element.piLanguageConcept() + " box " + self.boxRoleToSelect);
                     editor.selectElement(selected, self.boxRoleToSelect);
                 };
             } else {
