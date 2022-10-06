@@ -33,11 +33,11 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                     "  results in " + (!!matchArray ? matchArray.length : "null"));
                 let execresult: PiPostAction;
                 if (matchArray !== null && label === matchArray[0]) {
-                    runInAction( () => {
+                    runInAction(() => {
                         const command = action.command(box);
                         execresult = command.execute(box, label, editor);
                     });
-                    if(!!execresult) {
+                    if (!!execresult) {
                         execresult();
                     }
                     return BehaviorExecutionResult.EXECUTED;
@@ -46,7 +46,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                 if (trigger === text) {
                     LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + action.referenceShortcut + "]");
                     let postAction: PiPostAction;
-                    runInAction( () => {
+                    runInAction(() => {
                         const command = action.command(box);
                         postAction = command.execute(box, label, editor);
                     });
@@ -76,33 +76,15 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
  * @param editor
  */
 export function executeSingleBehavior(action: PiAction, box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
-    console.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
-    let partialMatch: boolean = false;
+    LOGGER.log("Enter executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
     let execresult: PiPostAction;
 
-    const trigger = action.trigger;
-    runInAction( () => {
-        console.log("========================== START");
+    runInAction(() => {
         const command = action.command(box);
         execresult = command.execute(box, label, editor);
-        console.log("===============================")
     });
-    if( !!execresult){
+    if (!!execresult) {
         execresult();
-
-        // if (!!action.boxRoleToSelect) {
-        //     editor.selectBoxByRoleAndElementId(execresult.piId(),action.boxRoleToSelect,action.caretPosition);
-        // }else {
-        //     editor.selectFirstLeafChildBox();
-        //     if (editor.selectedBox.role.includes(LEFT_MOST)){
-        //         // Special expression prefix box, don't select it
-        //         editor.selectNextLeaf()
-        //     }
-        // }
     }
-    // if( !!execresult){
-    //     await editor.selectElement(execresult, LEFT_MOST);
-    //     editor.selectFirstLeafChildBox();
-    // }
     return BehaviorExecutionResult.EXECUTED;
 }
