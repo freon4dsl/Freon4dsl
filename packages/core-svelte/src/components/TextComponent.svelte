@@ -37,7 +37,8 @@
     import { autorun, runInAction } from "mobx";
 	import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
 
-    const LOGGER = new PiLogger("TextComponent").mute();
+	// TODO finger out better way to handle muting/unmuting of LOGGERs
+    const LOGGER = new PiLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
     const dispatcher = createEventDispatcher();
     type BoxType = "alias" | "select" | "text";
 

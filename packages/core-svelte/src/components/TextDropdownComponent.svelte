@@ -21,7 +21,7 @@
     import { autorun, runInAction } from "mobx";
     import { onMount } from "svelte";
 
-    const LOGGER = new PiLogger("TextDropdownComponent").mute();
+    const LOGGER = new PiLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
 
     export let box: AbstractChoiceBox;	        // the accompanying ActionBox or SelectBox
     export let editor: PiEditor;			    // the editor
