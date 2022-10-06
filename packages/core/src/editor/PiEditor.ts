@@ -13,7 +13,7 @@ import {
     PiCombinedActions, PiCaret, wait
 } from "./internal";
 
-const LOGGER = new PiLogger("PiEditor").mute();
+const LOGGER = new PiLogger("PiEditor"); //.mute();
 
 export class PiEditor {
     readonly actions?: PiCombinedActions;   // All actions with which this editor is created.
@@ -45,9 +45,10 @@ export class PiEditor {
         this.environment = environment;
         this.initializeAliases(actions);
         // TODO rethink whether selectedBox should be observable
-        makeObservable<PiEditor, "_rootElement" | "_selectedElement" | "_selectedBox" | "_selectedRole">(this, {
+        makeObservable<PiEditor, "_rootBox" | "_rootElement" | "_selectedElement" | "_selectedBox" | "_selectedRole">(this, {
             theme: observable,
             _rootElement: observable,
+            _rootBox: observable,
             _selectedElement: observable,
             _selectedBox: observable,
             _selectedRole: observable,
@@ -99,7 +100,10 @@ export class PiEditor {
     }
 
     get rootBox(): Box {
-        this._rootBox = this.projection.getBox(this.rootElement);
+        // runInAction( () =>
+            // TODO runInAction to avoid mobx warning: changing (observed) observable values without using an action is not allowed.
+            this._rootBox = this.projection.getBox(this.rootElement)
+        // );
         return this._rootBox;
     }
 
@@ -409,8 +413,7 @@ export class PiEditor {
                 box.setCaret(PiCaret.RIGHT_MOST);
             }
         }
-        // LOGGER.log("setting focus on box " + this.selectedBox.role);
-        // box.setFocus(); TODO why not set focus?
+        // we do not set focus, see the comment for the setFocus method in Box.ts
     }
 
     /**
