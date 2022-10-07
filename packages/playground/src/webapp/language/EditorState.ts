@@ -2,7 +2,8 @@
 import {
     PiError,
     PiErrorSeverity,
-    PiLogger, PiOwnerDescriptor, Property
+    PiLogger,
+    PiOwnerDescriptor
 } from "@projectit/core";
 import type {
     PiElement,
@@ -14,9 +15,10 @@ import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
+    editorProgressShown,
     noUnitAvailable,
     units,
-    editorProgressShown, unitNames, copiedElement
+    unitNames
 } from "../components/stores/ModelStore";
 import { setUserMessage, SeverityType } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
@@ -442,13 +444,22 @@ export class EditorState {
 
     pasteInElement(element: PiElement, propertyName: string, index?: number) {
         const property = element[propertyName];
+        // todo make new copy to keep in 'editorEnvironment.editor.copiedElement'
         if (Array.isArray(property)) {
-            runInAction(() =>
-                property.push(get(copiedElement))
+            // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+            runInAction(() => {
+                    if (index !== null && index !== undefined && index > 0) {
+                        property.splice(index, 0, editorEnvironment.editor.copiedElement);
+                    } else {
+                        property.push(editorEnvironment.editor.copiedElement);
+                    }
+                }
             );
+            // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
         } else {
+            // console.log('property ' + propertyName + ' is no list');
             runInAction(() =>
-                element[propertyName] = get(copiedElement)
+                element[propertyName] = editorEnvironment.editor.copiedElement
             );
         }
     }

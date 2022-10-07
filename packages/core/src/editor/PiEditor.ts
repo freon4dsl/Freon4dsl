@@ -24,6 +24,8 @@ export class PiEditor {
     scrollX: number = 0;                    // The amount of scrolling horizontally, to find the element above and under.
     scrollY: number = 0;                    // The amount of scrolling vertically, to find the element above and under.
 
+    copiedElement: PiElement;               // The element that is currently handled in a cut/copy-paste situation.
+
     private _rootElement: PiElement = null;     // The model element to be shown in this editor.
     private _rootBox: Box | null = null;        // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
     private _selectedElement: PiElement = null; // The model element that is currently selected in the editor.
