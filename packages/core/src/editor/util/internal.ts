@@ -17,7 +17,8 @@ export * from "./PiEditorUtil";
 export * from "./PiCaret";
 
 // the others
-export * from "./ListBoxUtil";
+export * from "./ListUtil";
+export * from "./MenuItem";
 
 // the following depends on BalanceTreeUtils and BehaviorUtils
 export * from "./PiExpressionHelpers";

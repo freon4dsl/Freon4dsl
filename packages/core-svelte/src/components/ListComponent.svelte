@@ -18,7 +18,7 @@
         ListElementInfo,
         selectedBoxes
     } from "./svelte-utils/DropAndSelectStore";
-    import { contextMenu, contextMenuVisible, items } from "./svelte-utils/ContextMenuStore";
+    import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
     import { afterUpdate } from "svelte";
 
     export let box: ListBox;	                // the accompanying ListBox
@@ -36,7 +36,7 @@
     // determine the type of the elements in the list
     // this speeds up the check whether the element may be dropped in a certain drop-zone
     let elementType: string;
-    $: elementType = Language.getInstance().classifierProperty(box.element.piLanguageConcept(), box.propertyName).type;
+    $: elementType = box.conceptName;
 
     const drop = (event: DragEvent, targetIndex) => {
         const data: ListElementInfo = $draggedElem;
@@ -104,8 +104,8 @@
             const elemBox: Box = shownElements[index];
             editor.selectedBox = elemBox;
             $selectedBoxes = [elemBox];
-            // todo determine the contents of the menu based on elemBox
-            $contextMenu.items = items;
+            // determine the contents of the menu based on listBox, before showing the menu!
+            $contextMenu.items = box.options();
             $contextMenu.show(event); // this function sets $contextMenuVisible to true
         }
     }

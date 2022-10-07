@@ -15,6 +15,7 @@ export * from "./AbstractChoiceBox";
 export * from "./GridBox";
 export * from "./IndentBox";
 export * from "./LabelBox";
+export * from "./LayoutBox";
 export * from "./ListBox";
 export * from "./ActionBox"; // inherits from AbstractChoiceBox, is needed in OptionalBox
 export * from "./OptionalBox";

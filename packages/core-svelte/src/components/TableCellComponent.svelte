@@ -19,7 +19,7 @@
     import { afterUpdate, onMount, createEventDispatcher, tick } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
     import { isOdd } from "./svelte-utils";
-    import { contextMenu, contextMenuVisible, items, MenuItem } from "./svelte-utils/ContextMenuStore";
+    import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
     import {
         activeElem,
         activeIn,
@@ -79,6 +79,7 @@
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
+            let index: number = parentOrientation === "row" ? row : column;
             // todo make this a separate function also to be used in TextComponent o.a.
             const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), box, editor);
             if (cmd !== PI_NULL_COMMAND) {
@@ -88,7 +89,7 @@
                     if (!!action) {
                         action();
                     }
-                    postAction = cmd.execute(box, toPiKey(event), editor);
+                    postAction = cmd.execute(box, toPiKey(event), editor, index);
                 });
                 if (!!postAction) {
                     postAction();
@@ -164,7 +165,7 @@
 
     function showContextMenu(event) {
         // todo determine the contents of the menu based on box
-        $contextMenu.items = items;
+        $contextMenu.items = box.options();
         // set the selected box
         editor.selectedBox = box;
         $selectedBoxes = box.getSiblings();

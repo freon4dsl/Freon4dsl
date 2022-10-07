@@ -1,4 +1,4 @@
-import { Box} from "./Box";
+import { Box } from "./Box";
 import { PiElement } from "../../ast";
 import { Language } from "../../language";
 import { PiLogger } from "../../logging";
@@ -7,12 +7,16 @@ import { LayoutBox, ListDirection } from "./LayoutBox";
 
 const LOGGER = new PiLogger("ListBox");
 
+/**
+ * This Box represents a list in the PiElement model, i.e. one that is defined in the .ast file
+ * as 'propName: conceptName[]' or 'reference propName: conceptName[]'.
+ */
 export class ListBox extends LayoutBox {
-    conceptName: string; // tmp: the name of the type of the elements in the 'trueList'
+    conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
     protected constructor(element: PiElement, propertyName: string, role: string, children?: Box[], initializer?: Partial<ListBox>) {
         super(element, role, children, initializer);
-        // todo is this the corret way to use mobx?
+        // todo is this the correct way to use mobx?
         // makeObservable<LayoutBox, "_children">(this, {
         //     _children: observable,
         //     insertChild: action,
@@ -25,55 +29,58 @@ export class ListBox extends LayoutBox {
         //     children.forEach(b => this.addChild(b));
         // }
         this.kind = "ListBox";
-        // this.conceptName = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName).type;
-        this.conceptName = 'Parameter';
-        console.log('element.piLanguageConcept() ' + element.piLanguageConcept() + ', propertyName ' + propertyName)
+        this.conceptName = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
     }
+
     options(): MenuItem[] {
-        // todo implement this
-        // if (this.trueList) {
-            console.log('trueList ' + this.conceptName);
-            const clsOtIntf = Language.getInstance().concept(this.conceptName) ?? Language.getInstance().interface(this.conceptName);
-            if (!clsOtIntf) {
-                return [ new MenuItem( 'No options available', '', (e: PiElement) => {}) ];
-            }
-            if (clsOtIntf.subConceptNames.length > 0) { // there are sub concepts, so create sub menu items
-                let submenuItems: MenuItem[] = [];
-                clsOtIntf.subConceptNames.forEach((creatableConceptname: string) => {
-                    const creatableConcept = Language.getInstance().concept(creatableConceptname);
-                    submenuItems.push(new MenuItem(
-                        creatableConceptname, '', (e: PiElement) => console.log(creatableConceptname + ' chosen...' + e)
-                    ));
-                });
-                const items: MenuItem[] = [
-                    new MenuItem( 'Add before', 'Ctrl+A"', (e: PiElement) => {}, submenuItems),
-                    new MenuItem( 'Add after', 'Ctrl+I"', (e: PiElement) => {}, submenuItems),
-                    new MenuItem( 'Delete', '', (e: PiElement) => console.log('Deleting ' + e)),
-                    new MenuItem( '---', '', (e: PiElement) => {}),
-                    new MenuItem( 'Cut', '', (e: PiElement) => console.log('Cut...' + e)),
-                    new MenuItem( 'Copy', '', (e: PiElement) => console.log('Copy...' + e)),
-                    new MenuItem( 'Paste before', '', (e: PiElement) => console.log('Paste before...' + e)),
-                    new MenuItem( 'Paste after', '', (e: PiElement) => console.log('Paste after...' + e)),
-                ];
-                return items;
-            }
-        // } else {
-        //     console.log('NO trueList ' + this.conceptName);
-        //     const items: MenuItem[] = [
-        //         new MenuItem( 'Add before', 'Ctrl+A"', (e: PiElement) => console.log('Adding ' + this.conceptName + e)),
-        //         new MenuItem( 'Add after', 'Ctrl+I"', (e: PiElement) => console.log('Adding ' + this.conceptName + e)),
-        //         new MenuItem( 'Delete', '', (e: PiElement) => console.log('Deleting ' + e)),
-        //         new MenuItem( '---', '', (e: PiElement) => {}),
-        //         new MenuItem( 'Cut', '', (e: PiElement) => console.log('Cut...' + e)),
-        //         new MenuItem( 'Copy', '', (e: PiElement) => console.log('Copy...' + e)),
-        //         new MenuItem( 'Paste before', '', (e: PiElement) => console.log('Paste before...' + e)),
-        //         new MenuItem( 'Paste after', '', (e: PiElement) => console.log('Paste after...' + e)),
-        //     ];
-        //     return items;
-        // }
-        return [];
+        console.log("trueList " + this.conceptName);
+        const clsOtIntf = Language.getInstance().concept(this.conceptName) ?? Language.getInstance().interface(this.conceptName);
+        let errorItem: MenuItem = new MenuItem("No options available", "", (e: PiElement) => {});
+        if (!clsOtIntf) {
+            return [errorItem];
+        }
+        if (clsOtIntf.subConceptNames.length > 0) { // there are sub concepts, so create sub menu items
+            let submenuItems: MenuItem[] = [];
+            clsOtIntf.subConceptNames.forEach((creatableConceptname: string) => {
+                const creatableConcept = Language.getInstance().concept(creatableConceptname);
+                submenuItems.push(new MenuItem(
+                    creatableConceptname, "", (e: PiElement) => console.log(creatableConceptname + " chosen..." + e)
+                ));
+            });
+            const items: MenuItem[] = [
+                new MenuItem("Add before", "Ctrl+A", (e: PiElement) => {
+                }, submenuItems),
+                new MenuItem("Add after", "Ctrl+I", (e: PiElement) => {
+                }, submenuItems),
+                new MenuItem("Delete", "", (e: PiElement) => console.log("Deleting " + e)),
+                new MenuItem("---", "", (e: PiElement) => {
+                }),
+                new MenuItem("Cut", "", (e: PiElement) => console.log("Cut..." + e)),
+                new MenuItem("Copy", "", (e: PiElement) => console.log("Copy..." + e)),
+                new MenuItem("Paste before", "", (e: PiElement) => console.log("Paste before..." + e)),
+                new MenuItem("Paste after", "", (e: PiElement) => console.log("Paste after..." + e))
+            ];
+            return items;
+        } else {
+            const items: MenuItem[] = [
+                new MenuItem("Add before", "Ctrl+A", (e: PiElement) => console.log("Adding " + this.conceptName + e)),
+                new MenuItem("Add after", "Ctrl+I", (e: PiElement) => console.log("Adding " + this.conceptName + e)),
+                new MenuItem("Delete", "", (e: PiElement) => console.log("Deleting " + e)),
+                new MenuItem("---", "", (e: PiElement) => {
+                }),
+                new MenuItem("Cut", "", (e: PiElement) => console.log("Cut..." + e)),
+                new MenuItem("Copy", "", (e: PiElement) => console.log("Copy..." + e)),
+                new MenuItem("Paste before", "", (e: PiElement) => console.log("Paste before..." + e)),
+                new MenuItem("Paste after", "", (e: PiElement) => console.log("Paste after..." + e))
+            ];
+            return items;
+        }
+        return [errorItem];
     }
 }
+
+
+
 // const submenuItems: MenuItem[] = [
 //     new MenuItem("Subclass1", 'Alt+X', (e: PiElement) => console.log('Subclass1 chosen...' + e)),
 //     new MenuItem("Subclass2", '', (e: PiElement) => console.log('Subclass2 chosen...' + e)),
