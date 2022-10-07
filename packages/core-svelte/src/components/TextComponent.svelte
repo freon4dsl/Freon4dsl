@@ -77,7 +77,8 @@
 			isEditing = true;
 			editStart = true;
 			originalText = text;
-			size = text.length === 0 ? 10 : text.length;
+			// Look at either the real text or the placeholder to set the size.
+			size = text.length === 0 ? (placeholder === 0 ? 10 : placeholder.length + 1) : text.length + 1;
 			let {anchorOffset, focusOffset} = document.getSelection();
 			setFromAndTo(anchorOffset, focusOffset);
 		}
@@ -145,7 +146,8 @@
         isEditing = true;
         editStart = true;
         originalText = text;
-        size = text.length === 0 ? 10 : text.length;
+		// Look at either the real text or the placeholder to set the size.
+        size = text.length === 0 ? (placeholder === 0 ? 10 : placeholder.length) : text.length;
         let {anchorOffset, focusOffset} = document.getSelection();
         setFromAndTo(anchorOffset, focusOffset);
         event.preventDefault();

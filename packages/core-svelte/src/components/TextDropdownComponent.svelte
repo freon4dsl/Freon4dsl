@@ -174,6 +174,8 @@
                 // store or execute the option
                 if (!!chosenOption) {
                     storeAndExecute(chosenOption);
+                    isEditing = false;
+                    dropdownShown = false;
                 } else { //  no valid option, restore the original text
                     text = textBox.getText();
                 }
@@ -191,6 +193,11 @@
             }
         }
     };
+    
+    function clearText() {
+        box.textHelper.setText("");
+        text = "";
+    }
 
     /**
      * This custom event is triggered by a click in the dropdown. The option that is clicked
@@ -200,10 +207,14 @@
         LOGGER.log('Textdropdown itemSelected')
         const index = filteredOptions.findIndex(o => o.id === selectedId);
         if (index >= 0 && index < filteredOptions.length) {
-            storeAndExecute(filteredOptions[index]);
+            const chosenOption = filteredOptions[index];
+            if (!!chosenOption) {
+                storeAndExecute(chosenOption);
+            }
         }
         isEditing = false;
         dropdownShown = false;
+        clearText();
     };
 
     /**
@@ -237,6 +248,9 @@
             // TODO the execution of the option should set the text in the selectBox, for now this is handled here
             if (isSelectBox(box)) {
                 box.textHelper.setText(selected.label);
+            } else {
+                // ActionBox, action done, clear input text
+                clearText();
             }
         });
     }
