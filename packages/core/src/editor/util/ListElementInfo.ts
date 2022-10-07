@@ -1,5 +1,9 @@
 import { PiElement } from "../../ast";
 
+/**
+ * This class represent information on a single element from a list in the PiElement model.
+ * It is used to keep information on the element being handled in case of drag-and-drop, cut-and-paste, etc.
+ */
 export class ListElementInfo {
     element: PiElement;     // the element that is part of a list and which is currently being dragged
     componentId: string;    // the id of the component that holds the element

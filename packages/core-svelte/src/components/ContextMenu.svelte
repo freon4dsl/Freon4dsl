@@ -8,8 +8,8 @@
      */
     import { clickOutside } from "./svelte-utils";
     import { tick } from "svelte";
-    import { PiLogger } from "@projectit/core";
-    import { contextMenuVisible, MenuItem } from "./svelte-utils/ContextMenuStore";
+    import { PiLogger, MenuItem } from "@projectit/core";
+    import { contextMenuVisible } from "./svelte-utils/ContextMenuStore";
     import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
     import { viewport } from "./svelte-utils/EditorViewportStore";
 
@@ -126,7 +126,7 @@
             submenuItems = item.subItems;
             openSub(itemIndex);
         } else {
-            // todo adjust for multiple selections
+            // todo adjust for multiple selections, or use editor.selectedBox.element
             let mySelection = $selectedBoxes[0].element;
             LOGGER.log("DOING IT for " + mySelection.piId() + " of type " + mySelection.piLanguageConcept());
             item.handler(mySelection);

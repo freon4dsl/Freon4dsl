@@ -2,7 +2,7 @@
 import { MetaKey } from "./Keys";
 import * as Keys from "./Keys";
 import { PiLogger } from "../../logging";
-import { ListElementInfo, MenuItem, PiCreatePartAction } from "../index";
+import { EMPTY_POST_ACTION, ListElementInfo, MenuItem, PiCreatePartAction } from "../index";
 import { Language, PropertyKind } from "../../language";
 import { PiElement } from "../../ast";
 import { runInAction } from "mobx";
@@ -32,19 +32,23 @@ export function getContextMenuOptions(conceptName: string): MenuItem[] {
         return [errorItem];
     }
     if (clsOtIntf.subConceptNames.length > 0) { // there are sub concepts, so create sub menu items
-        let submenuItems: MenuItem[] = [];
+        // todo to be tested in different project than Example
+        let submenuItemsBefore: MenuItem[] = [];
+        let submenuItemsAfter: MenuItem[] = [];
         clsOtIntf.subConceptNames.forEach((creatableConceptname: string) => {
-            const creatableConcept = Language.getInstance().concept(creatableConceptname);
-            submenuItems.push(new MenuItem(
-                creatableConceptname, "", (e: PiElement) => console.log(creatableConceptname + " chosen..." + e)
+            submenuItemsBefore.push(new MenuItem(
+                creatableConceptname, "", (e: PiElement) => addListElement(e, creatableConceptname, true)
+            ));
+            submenuItemsAfter.push(new MenuItem(
+                creatableConceptname, "", (e: PiElement) => addListElement(e, creatableConceptname, false)
             ));
         });
         const items: MenuItem[] = [
             new MenuItem("Add before", "Ctrl+A", (e: PiElement) => {
-            }, submenuItems),
+            }, submenuItemsBefore),
             new MenuItem("Add after", "Ctrl+I", (e: PiElement) => {
-            }, submenuItems),
-            new MenuItem("Delete", "", (e: PiElement) => console.log("Deleting " + e)),
+            }, submenuItemsAfter),
+            new MenuItem("Delete", "", (e: PiElement) => deleteListElement(e)),
             new MenuItem("---", "", (e: PiElement) => {
             }),
             new MenuItem("Cut", "", (e: PiElement) => console.log("Cut..." + e)),
@@ -55,9 +59,9 @@ export function getContextMenuOptions(conceptName: string): MenuItem[] {
         return items;
     } else {
         const items: MenuItem[] = [
-            new MenuItem("Add before", "Ctrl+A", (e: PiElement) => console.log("Adding " + conceptName + e)),
-            new MenuItem("Add after", "Ctrl+I", (e: PiElement) => console.log("Adding " + conceptName + e)),
-            new MenuItem("Delete", "", (e: PiElement) => console.log("Deleting " + e)),
+            new MenuItem("Add before", "Ctrl+A", (e: PiElement) => addListElement(e, conceptName, true)),
+            new MenuItem("Add after", "Ctrl+I", (e: PiElement) => addListElement(e, conceptName, false)),
+            new MenuItem("Delete", "", (e: PiElement) => deleteListElement(e)),
             new MenuItem("---", "", (e: PiElement) => {
             }),
             new MenuItem("Cut", "", (e: PiElement) => console.log("Cut..." + e)),
@@ -68,14 +72,55 @@ export function getContextMenuOptions(conceptName: string): MenuItem[] {
         return items;
     }
 }
-// const submenuItems: MenuItem[] = [
-//     new MenuItem("Subclass1", 'Alt+X', (e: PiElement) => console.log('Subclass1 chosen...' + e)),
-//     new MenuItem("Subclass2", '', (e: PiElement) => console.log('Subclass2 chosen...' + e)),
-//     new MenuItem("Subclass3", '', (e: PiElement) => console.log('Subclass3 chosen...' + e)),
-//     new MenuItem("Subclass4", '', (e: PiElement) => console.log('Subclass4 chosen...' + e))
-// ];
 
+function addListElement(e: PiElement, type: string, before: boolean) {
+    // console.log("Adding new element of type " + type + (before ? ' before ' : ' after ') + e.piId());
+    // get info about the property that needs to be changed
+    const parentElement: PiElement = e.piOwnerDescriptor().owner;
+    const targetPropertyName: string = e.piOwnerDescriptor().propertyName;
+    let targetIndex: number = e.piOwnerDescriptor().propertyIndex;
+    if (!before) {
+        targetIndex++;
+    }
+    const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
+    // console.log(`addListElement=> element: ${e.piLanguageConcept()}, isList: ${isList},
+    // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
 
+    // make the change
+    if (isList) {
+        // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+        runInAction(() => {
+            const newElement: PiElement = Language.getInstance().concept(type)?.constructor();
+            if (newElement === undefined || newElement === null) {
+                // TODO Find out why this happens sometimes
+                console.error("New element undefined");
+                return;
+            }
+            if (targetIndex <= property.length) {
+                property.splice(targetIndex, 0, newElement);
+            }
+        });
+        // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+    }
+}
+
+function deleteListElement(e: PiElement) {
+    // get info about the property that needs to be changed
+    const parentElement: PiElement = e.piOwnerDescriptor().owner;
+    const targetPropertyName: string = e.piOwnerDescriptor().propertyName;
+    const targetIndex: number = e.piOwnerDescriptor().propertyIndex;
+    const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
+    // make the change
+    if (isList) {
+        // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+        runInAction(() => {
+            if (targetIndex <= property.length) {
+                property.splice(targetIndex, 1);
+            }
+        });
+        // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+    }
+}
 
 export function moveListElement(parentElement: PiElement, movedElement: PiElement, targetPropertyName: string, targetIndex: number) {
     runInAction(() => {
@@ -107,7 +152,7 @@ export function dropListElement(dropped: ListElementInfo, targetElem: PiElement,
         // oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
         // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
         const { property, isList, type } = getPropertyInfo(targetElem, targetPropertyName);
-        console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+        // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
         if (type === dropped.elementType) { // TODO extend to include subtypes
             if (!!dropped.element) {
                 // Add the found element to 'targetElem[targetPropertyName]' at position 'targetIndex'.

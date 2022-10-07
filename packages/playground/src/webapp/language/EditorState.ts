@@ -420,18 +420,22 @@ export class EditorState {
             // find the owner of the element to be deleted and remove the element there
             const owner: PiElement = tobeDeleted.piOwner();
             const desc: PiOwnerDescriptor = tobeDeleted.piOwnerDescriptor();
-            // console.log("deleting " + desc.propertyName + "[" + desc.propertyIndex + "]");
-            if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
-                const propList = owner[desc.propertyName];
-                if (Array.isArray(propList) && propList.length > desc.propertyIndex) {
+            if (!!desc) {
+                // console.log("deleting " + desc.propertyName + "[" + desc.propertyIndex + "]");
+                if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
+                    const propList = owner[desc.propertyName];
+                    if (Array.isArray(propList) && propList.length > desc.propertyIndex) {
+                        runInAction(() =>
+                            propList.splice(desc.propertyIndex, 1)
+                        );
+                    }
+                } else {
                     runInAction(() =>
-                        propList.splice(desc.propertyIndex, 1)
+                        owner[desc.propertyName] = null
                     );
                 }
             } else {
-                runInAction(() =>
-                    owner[desc.propertyName] = null
-                );
+                console.error("deleting of " + tobeDeleted.piId() + " not succeeded, because owner descriptor is empty.");
             }
         }
     }

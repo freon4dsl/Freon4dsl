@@ -306,6 +306,7 @@
     <TextComponent
             bind:isEditing={isEditing}
             bind:text={text}
+            bind:this={textComponent}
             partOfActionBox={true}
             box={textBox}
             editor={editor}
