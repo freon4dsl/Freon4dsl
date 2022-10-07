@@ -98,7 +98,7 @@ export class EditorRequestsHandler {
             if (!!currentSelection) {
                 if (isActionTextBox(currentSelection)) {
                     if (isActionBox(currentSelection.parent)) {
-                        if (currentSelection.parent.conceptName === tobepasted.piLanguageConcept()) {
+                        if (currentSelection.parent.conceptName === tobepasted.piLanguageConcept()) { // todo allow subtypes
                             // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
                             EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName);
                         } else {
@@ -106,8 +106,12 @@ export class EditorRequestsHandler {
                         }
                     }
                 } else if (isListBox(currentSelection.parent)) {
-                    // console.log('pasting in ' + currentSelection.role + ', prop: ' + currentSelection.parent.propertyName);
-                    EditorState.getInstance().pasteInElement(element.piOwnerDescriptor().owner, currentSelection.parent.propertyName, element.piOwnerDescriptor().propertyIndex + 1);
+                    if (element.piLanguageConcept() === tobepasted.piLanguageConcept() ) { // todo allow subtypes
+                        // console.log('pasting in ' + currentSelection.role + ', prop: ' + currentSelection.parent.propertyName);
+                        EditorState.getInstance().pasteInElement(element.piOwnerDescriptor().owner, currentSelection.parent.propertyName, element.piOwnerDescriptor().propertyIndex + 1);
+                    } else {
+                        setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
+                    }
                 } else {
                     // todo other pasting options ...
                 }
