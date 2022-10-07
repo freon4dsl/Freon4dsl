@@ -163,7 +163,7 @@
     };
 
     function showContextMenu(event) {
-        // todo determine the contents of the menu based on box
+        // determine the contents of the menu based on box
         $contextMenu.items = box.options();
         // set the selected box
         editor.selectedBox = box;

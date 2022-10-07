@@ -1,12 +1,13 @@
 import { PiElement } from "../../ast";
+import { PiEditor } from "../PiEditor";
 
 export class MenuItem {
     label: string;
     shortcut: string;
-    handler: (e: PiElement) => void;
+    handler: (element: PiElement, editor: PiEditor) => void;
     subItems: MenuItem[] = [];
 
-    constructor(label: string, shortcut: string, handler: (e: PiElement) => void, subItems?: MenuItem[]) {
+    constructor(label: string, shortcut: string, handler: (element: PiElement, editor: PiEditor) => void, subItems?: MenuItem[]) {
         this.label = label;
         this.shortcut = shortcut;
         this.handler = handler;

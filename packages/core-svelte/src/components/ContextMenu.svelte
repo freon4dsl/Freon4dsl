@@ -8,13 +8,14 @@
      */
     import { clickOutside } from "./svelte-utils";
     import { tick } from "svelte";
-    import { PiLogger, MenuItem } from "@projectit/core";
+    import { PiLogger, MenuItem, PiEditor } from "@projectit/core";
     import { contextMenuVisible } from "./svelte-utils/ContextMenuStore";
     import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
     import { viewport } from "./svelte-utils/EditorViewportStore";
 
     // items for the context menu
     export let items: MenuItem[];
+    export let editor: PiEditor;
     let submenuItems: MenuItem[];
 
     // local variables
@@ -129,7 +130,7 @@
             // todo adjust for multiple selections, or use editor.selectedBox.element
             let mySelection = $selectedBoxes[0].element;
             LOGGER.log("DOING IT for " + mySelection.piId() + " of type " + mySelection.piLanguageConcept());
-            item.handler(mySelection);
+            item.handler(mySelection, editor);
             hide();
         }
         event.stopPropagation();
