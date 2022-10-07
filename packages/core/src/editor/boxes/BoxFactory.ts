@@ -296,12 +296,12 @@ export class BoxFactory {
 
     }
 
-    static gridcell(element: PiElement, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>): GridCellBox {
+    static gridcell(element: PiElement, propertyName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>): GridCellBox {
         if (cacheGridcellOff) {
-            return new GridCellBox(element, role, row, column, box, initializer);
+            return new GridCellBox(element, propertyName, role, row, column, box, initializer);
         }
         // 1. Create the grid cell box, or find the one that already exists for this element and role
-        const creator = () => new GridCellBox(element, role, row, column, box, initializer);
+        const creator = () => new GridCellBox(element, propertyName, role, row, column, box, initializer);
         const result: GridCellBox = this.find<GridCellBox>(element, role, creator, gridcellCache);
 
         runInAction(() => {

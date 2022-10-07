@@ -77,7 +77,7 @@ export class TableUtil {
             columnHeaders.forEach((item: string, index: number) => {
                 const location = this.calcHeaderLocation({row: 1, column: index + 1}, orientation, hasHeaders);
                 LOGGER.log("TableUtil header " + location.row + " - " + location.column + " with headers " + hasHeaders );
-                cells.push( BoxFactory.gridcell(element, "cell-" + location.row + "-" + location.column, location.row, location.column,
+                cells.push( BoxFactory.gridcell(element, propertyName, "cell-" + location.row + "-" + location.column, location.row, location.column,
                     BoxUtils.labelBox(element, item, "" + index),
                     { isHeader: true })
                 );
@@ -88,14 +88,14 @@ export class TableUtil {
                     const location = this.calcLocation({row: rowIndex + 1, column: columnIndex + 1}, orientation, hasHeaders);
                     const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
                     LOGGER.log("TableUtil add " + cellRoleName + " with headers " + hasHeaders );
-                    cells.push(BoxFactory.gridcell(item, cellRoleName, location.row, location.column, projector(item)));
+                    cells.push(BoxFactory.gridcell(item, propertyName, cellRoleName, location.row, location.column, projector(item)));
                 });
             });
             // add an extra row where a new element to the list can be added
             const location = this.calcLocation({row: property.length +1, column:1}, orientation, hasHeaders);
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
             LOGGER.log("TableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders + " span[" + (orientation === "row" ? cellGetters.length : 1) + "/" + (orientation === "row" ? 1 : cellGetters.length) + "]");
-            cells.push( BoxFactory.gridcell(element, cellRoleName,  location.row, location.column,
+            cells.push( BoxFactory.gridcell(element, propertyName, cellRoleName,  location.row, location.column,
                 BoxFactory.action(element, "alias-add-row-or-column", `<add new ${orientation}>`,
                 { propertyName: propertyName, conceptName: propInfo.type }),
                 {

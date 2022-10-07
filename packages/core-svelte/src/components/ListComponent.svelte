@@ -6,9 +6,9 @@
      * This component supports drag and drop.
      */
     import { flip } from "svelte/animate"; // TODO adjust rollup.config for svelte.animate
-    import { Box, Language, ListBox, ListDirection, PiEditor, PiLogger } from "@projectit/core";
+    import { Box, isActionBox, ListBox, ListDirection, PiEditor, PiLogger } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
-    import { autorun, runInAction } from "mobx";
+    import { autorun } from "mobx";
     import { dropListElement, moveListElement, ListElementInfo } from "@projectit/core";
     import {
         draggedElem,
@@ -101,11 +101,18 @@
     function showContextMenu(event, index: number) {
         if (index >= 0 && index <= shownElements.length) {
             const elemBox: Box = shownElements[index];
-            editor.selectedBox = elemBox;
-            $selectedBoxes = [elemBox];
+            if (editor.selectedBox !== elemBox) {
+                editor.selectedBox = elemBox;
+                $selectedBoxes = [elemBox];
+            }
             // determine the contents of the menu based on listBox, before showing the menu!
-            $contextMenu.items = box.options();
-            $contextMenu.show(event); // this function sets $contextMenuVisible to true
+            if (isActionBox(elemBox)){ // the selected box is the placeholder => show different menu items
+                console.log('index of ActionBox: ' + index);
+                $contextMenu.items = box.options('placeholder');
+            } else {
+                $contextMenu.items = box.options('normal');
+            }
+            $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
         }
     }
 

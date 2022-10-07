@@ -2,7 +2,7 @@ import { Box } from "./Box";
 import { PiElement } from "../../ast";
 import { Language } from "../../language";
 import { PiLogger } from "../../logging";
-import { getContextMenuOptions, MenuItem } from "../util";
+import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
 import { LayoutBox, ListDirection } from "./LayoutBox";
 
 const LOGGER = new PiLogger("ListBox");
@@ -24,16 +24,13 @@ export class ListBox extends LayoutBox {
         //     clearChildren: action,
         //     addChildren: action,
         // });
-        // PiUtils.initializeObject(this, initializer);
-        // if (!!children) {
-        //     children.forEach(b => this.addChild(b));
-        // }
         this.kind = "ListBox";
+        this.propertyName = propertyName;
         this.conceptName = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
     }
 
-    options(): MenuItem[] {
-        return getContextMenuOptions(this.conceptName);
+    options(type: MenuOptionsType): MenuItem[] {
+        return getContextMenuOptions(this.conceptName, this.element, this.propertyName, type);
     }
 }
 

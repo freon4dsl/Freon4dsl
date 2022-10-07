@@ -10,16 +10,17 @@
     import { tick } from "svelte";
     import { PiLogger, MenuItem, PiEditor } from "@projectit/core";
     import { contextMenuVisible } from "./svelte-utils/ContextMenuStore";
-    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
     import { viewport } from "./svelte-utils/EditorViewportStore";
 
     // items for the context menu
     export let items: MenuItem[];
     export let editor: PiEditor;
-    let submenuItems: MenuItem[];
 
     // local variables
     const LOGGER = new PiLogger("ContextMenu"); //.mute();
+    let submenuItems: MenuItem[];
+    let elementIndex: number;                   // the index of the element in a list to which this menu is coupled
+
     // dimension (height and width) of context menu
     let menuHeight = 0, menuWidth = 0;
     // position of context menu
@@ -38,7 +39,8 @@
      * This function shows the context menu
      * @param event
      */
-    export async function show(event: MouseEvent) {
+    export async function show(event: MouseEvent, index: number) {
+        elementIndex = index;
         // todo determine the items based on the box to which the menu is coupled
         $contextMenuVisible = true;
         submenuOpen = false;
@@ -127,10 +129,7 @@
             submenuItems = item.subItems;
             openSub(itemIndex);
         } else {
-            // todo adjust for multiple selections, or use editor.selectedBox.element
-            let mySelection = $selectedBoxes[0].element;
-            LOGGER.log("DOING IT for " + mySelection.piId() + " of type " + mySelection.piLanguageConcept());
-            item.handler(mySelection, editor);
+            item.handler(editor.selectedBox.element, elementIndex, editor);
             hide();
         }
         event.stopPropagation();

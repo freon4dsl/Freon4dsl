@@ -2,10 +2,11 @@ import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../ast";
 import { PiUtils } from "../../util/index";
 import { Box } from "./Box";
-import { MenuItem } from "../util";
+import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
+import { Language } from "../../language";
 
 // TODO state in every box which element we assume to be getting as param, e.g. is the element in a GridCellBox the same as in the corresponding GridBox?
-export class GridCellBox extends Box  {
+export class GridCellBox extends Box {
     row: number = 1;
     column: number = 1;
     private $content: Box = null;
@@ -13,13 +14,15 @@ export class GridCellBox extends Box  {
     rowSpan?: number;
     columnSpan?: number;
     kind: string = "GridCellBox";
+    conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    constructor(element: PiElement, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>) {
+    constructor(element: PiElement, propertyName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>) {
         super(element, role);
         this.row = row;
         this.column = column;
+        this.propertyName = propertyName;
         this.$content = box;
-        if(!!box){
+        if (!!box) {
             box.parent = this;
         }
         PiUtils.initializeObject(this, initializer);
@@ -30,6 +33,12 @@ export class GridCellBox extends Box  {
             isHeader: observable
         });
         this.selectable = false;
+
+        this.conceptName = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
+        if (!this.conceptName) { // try the parent
+            this.conceptName = Language.getInstance().classifierProperty(element.piOwner().piLanguageConcept(), propertyName)?.type;
+        }
+        console.log('table cell for property ' + propertyName+ ' of '+ element.piLanguageConcept() + ": " + this.conceptName );
     }
 
     get content(): Box {
@@ -54,24 +63,7 @@ export class GridCellBox extends Box  {
         return this.parent.getSiblings(this);
     }
 
-    options() {
-        // todo implement this
-        const submenuItems: MenuItem[] = [
-            new MenuItem("Subclass1", "Alt+X", (e: PiElement) => console.log("Subclass1 chosen..." + e)),
-            new MenuItem("Subclass2", "", (e: PiElement) => console.log("Subclass2 chosen..." + e)),
-            new MenuItem("Subclass3", "", (e: PiElement) => console.log("Subclass3 chosen..." + e)),
-            new MenuItem("Subclass4", "", (e: PiElement) => console.log("Subclass4 chosen..." + e))
-        ];
-        const items: MenuItem[] = [
-            new MenuItem( 'Add before', 'Ctrl+A"', (e: PiElement) => {}, submenuItems),
-            new MenuItem( 'Add after', 'Ctrl+I"', (e: PiElement) => {}, submenuItems),
-            new MenuItem( 'Delete', '', (e: PiElement) => console.log('Deleting ' + e)),
-            new MenuItem( '---', '', (e: PiElement) => {}),
-            new MenuItem( 'Cut', '', (e: PiElement) => console.log('Cut...' + e)),
-            new MenuItem( 'Copy', '', (e: PiElement) => console.log('Copy...' + e)),
-            new MenuItem( 'Paste before', '', (e: PiElement) => console.log('Paste before...' + e)),
-            new MenuItem( 'Paste after', '', (e: PiElement) => console.log('Paste after...' + e)),
-        ];
-        return items;
+    options(type: MenuOptionsType): MenuItem[] {
+        return getContextMenuOptions(this.conceptName, this.element, this.propertyName, type);
     }
 }

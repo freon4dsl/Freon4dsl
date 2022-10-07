@@ -13,7 +13,7 @@
         PiLogger,
         toPiKey,
         GridCellBox,
-        PiEditorUtil, PiCommand, PI_NULL_COMMAND, PiPostAction, ListElementInfo
+        PiEditorUtil, PiCommand, PI_NULL_COMMAND, PiPostAction, ListElementInfo, isActionBox
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
     import { afterUpdate, onMount, createEventDispatcher, tick } from "svelte";
@@ -34,6 +34,7 @@
     export let editor: PiEditor;
     export let parentComponentId: string;
     export let parentOrientation: string;
+    export let parentHasHeader: boolean;
     // determine the type of the elements in the cell
     // this speeds up the check whether the element may be dropped in a certain drop-zone
     export let elementType: string;
@@ -43,13 +44,11 @@
     // local variables
     const LOGGER = new PiLogger("TableCellComponent"); //.mute();
     const dispatcher = createEventDispatcher();
-    // let boxStore: Writable<Box> = writable<Box>(cellBox.box);
     let cssVariables: string;
     let id: string = box.id;
 
     let row: number;
     let column: number;
-    let int: number = 0;
     let orientation: BoxTypeName = "gridcellNeutral";
 
     let isHeader = "noheader";
@@ -114,7 +113,7 @@
 
     const drop = (event: DragEvent) => {
         LOGGER.log("drop, dispatching");
-        dispatcher('dropOnCell', {row: row, column: column});
+        dispatcher("dropOnCell", { row: row, column: column });
         hovering = { row: -1, column: -1 };
     };
 
@@ -164,12 +163,25 @@
 
     function showContextMenu(event) {
         // determine the contents of the menu based on box
-        $contextMenu.items = box.options();
+        // if the selected box is the placeholder or a title/header => show different menu items
+        if (isActionBox(box.content)) {
+            $contextMenu.items = box.options("placeholder");
+        } else if (box.isHeader) {
+            $contextMenu.items = box.options("header");
+        } else {
+            $contextMenu.items = box.options("normal");
+        }
         // set the selected box
-        editor.selectedBox = box;
-        $selectedBoxes = box.getSiblings();
-        LOGGER.log("setting selected element..." + box.element.piId() + " of type " + box.element.piLanguageConcept());
-        $contextMenu.show(event); // this function sets $contextMenuVisible to true
+        if (editor.selectedBox !== box) {
+            editor.selectedBox = box;
+            $selectedBoxes = box.getSiblings();
+        }
+        // console.log("setting selected element..." + box.element.piId() + " of type " + box.element.piLanguageConcept());
+        let index: number = parentOrientation === "row" ? row : column;
+        if (parentHasHeader) {
+            index--;
+        }
+        $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
     }
 
     let isHovering: boolean;

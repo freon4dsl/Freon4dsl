@@ -78,6 +78,7 @@
                 elementType={elementType}
                 box={cell}
                 editor={editor}
+                parentHasHeader={box.hasHeaders}
                 on:dropOnCell={drop}/>
     {/each}
 </span>
