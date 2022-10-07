@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
-import { HorizontalListBox, LabelBox, PiEditor } from "@projectit/core";
+import { HorizontalLayoutBox, LabelBox, PiEditor } from "@projectit/core";
 import { ModelMaker } from "../models/ModelMaker";
 import ListComponent from "../../components/ListComponent.svelte"; // Note that this form of import is neccessary for jest to function!
 
 describe.skip("List component", () => {
-    let horizontalBox: HorizontalListBox;
+    let horizontalBox: HorizontalLayoutBox;
     const myEditor = new PiEditor(null, null);
 
     beforeEach(() => {
@@ -15,7 +15,7 @@ describe.skip("List component", () => {
         model.myList.forEach((xx, index) => {
             boxes[index] = new LabelBox(xx, "list-element" + index, () => "Label" + index);
         });
-        horizontalBox = new HorizontalListBox(model, "", boxes);
+        horizontalBox = new HorizontalLayoutBox(model, "", boxes);
     });
 
     it("all elements are visible", () => {

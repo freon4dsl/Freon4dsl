@@ -13,7 +13,7 @@
         PiLogger,
         toPiKey,
         GridCellBox,
-        PiEditorUtil, PiCommand, PI_NULL_COMMAND, PiPostAction
+        PiEditorUtil, PiCommand, PI_NULL_COMMAND, PiPostAction, ListElementInfo
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
     import { afterUpdate, onMount, createEventDispatcher, tick } from "svelte";
@@ -25,7 +25,6 @@
         activeIn,
         draggedElem,
         draggedFrom,
-        ListElementInfo,
         GridIndex,
         selectedBoxes
     } from "./svelte-utils/DropAndSelectStore";

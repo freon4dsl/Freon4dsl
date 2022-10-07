@@ -5,11 +5,11 @@
      * This component functions as a drop zone for dragged elements from either a ListComponent
      * or a TableCellComponent.
      */
-    import { GridCellBox, type GridBox, type PiEditor, PiLogger, Language } from "@projectit/core";
+    import { GridCellBox, type GridBox, type PiEditor, PiLogger, Language, ListElementInfo } from "@projectit/core";
     import { runInAction } from "mobx";
     import TableCellComponent from "./TableCellComponent.svelte";
-    import { activeElem, activeIn, draggedElem, draggedFrom, ListElementInfo } from "./svelte-utils/DropAndSelectStore";
-    import { dropListElement, moveListElement } from "./svelte-utils/dropHelpers";
+    import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils/DropAndSelectStore";
+    import { dropListElement, moveListElement } from "@projectit/core";
 
     const LOGGER = new PiLogger("TableComponent"); //.mute();
 

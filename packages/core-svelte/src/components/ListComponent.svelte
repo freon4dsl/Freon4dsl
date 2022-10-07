@@ -9,13 +9,12 @@
     import { Box, Language, ListBox, ListDirection, PiEditor, PiLogger } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import { autorun, runInAction } from "mobx";
-    import { dropListElement, moveListElement } from "./svelte-utils/dropHelpers";
+    import { dropListElement, moveListElement, ListElementInfo } from "@projectit/core";
     import {
         draggedElem,
         draggedFrom,
         activeElem,
         activeIn,
-        ListElementInfo,
         selectedBoxes
     } from "./svelte-utils/DropAndSelectStore";
     import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";

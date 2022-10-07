@@ -2,7 +2,7 @@ import { Box } from "./Box";
 import { PiElement } from "../../ast";
 import { Language } from "../../language";
 import { PiLogger } from "../../logging";
-import { MenuItem } from "../util";
+import { getContextMenuOptions, MenuItem } from "../util";
 import { LayoutBox, ListDirection } from "./LayoutBox";
 
 const LOGGER = new PiLogger("ListBox");
@@ -33,60 +33,9 @@ export class ListBox extends LayoutBox {
     }
 
     options(): MenuItem[] {
-        console.log("trueList " + this.conceptName);
-        const clsOtIntf = Language.getInstance().concept(this.conceptName) ?? Language.getInstance().interface(this.conceptName);
-        let errorItem: MenuItem = new MenuItem("No options available", "", (e: PiElement) => {});
-        if (!clsOtIntf) {
-            return [errorItem];
-        }
-        if (clsOtIntf.subConceptNames.length > 0) { // there are sub concepts, so create sub menu items
-            let submenuItems: MenuItem[] = [];
-            clsOtIntf.subConceptNames.forEach((creatableConceptname: string) => {
-                const creatableConcept = Language.getInstance().concept(creatableConceptname);
-                submenuItems.push(new MenuItem(
-                    creatableConceptname, "", (e: PiElement) => console.log(creatableConceptname + " chosen..." + e)
-                ));
-            });
-            const items: MenuItem[] = [
-                new MenuItem("Add before", "Ctrl+A", (e: PiElement) => {
-                }, submenuItems),
-                new MenuItem("Add after", "Ctrl+I", (e: PiElement) => {
-                }, submenuItems),
-                new MenuItem("Delete", "", (e: PiElement) => console.log("Deleting " + e)),
-                new MenuItem("---", "", (e: PiElement) => {
-                }),
-                new MenuItem("Cut", "", (e: PiElement) => console.log("Cut..." + e)),
-                new MenuItem("Copy", "", (e: PiElement) => console.log("Copy..." + e)),
-                new MenuItem("Paste before", "", (e: PiElement) => console.log("Paste before..." + e)),
-                new MenuItem("Paste after", "", (e: PiElement) => console.log("Paste after..." + e))
-            ];
-            return items;
-        } else {
-            const items: MenuItem[] = [
-                new MenuItem("Add before", "Ctrl+A", (e: PiElement) => console.log("Adding " + this.conceptName + e)),
-                new MenuItem("Add after", "Ctrl+I", (e: PiElement) => console.log("Adding " + this.conceptName + e)),
-                new MenuItem("Delete", "", (e: PiElement) => console.log("Deleting " + e)),
-                new MenuItem("---", "", (e: PiElement) => {
-                }),
-                new MenuItem("Cut", "", (e: PiElement) => console.log("Cut..." + e)),
-                new MenuItem("Copy", "", (e: PiElement) => console.log("Copy..." + e)),
-                new MenuItem("Paste before", "", (e: PiElement) => console.log("Paste before..." + e)),
-                new MenuItem("Paste after", "", (e: PiElement) => console.log("Paste after..." + e))
-            ];
-            return items;
-        }
-        return [errorItem];
+        return getContextMenuOptions(this.conceptName);
     }
 }
-
-
-
-// const submenuItems: MenuItem[] = [
-//     new MenuItem("Subclass1", 'Alt+X', (e: PiElement) => console.log('Subclass1 chosen...' + e)),
-//     new MenuItem("Subclass2", '', (e: PiElement) => console.log('Subclass2 chosen...' + e)),
-//     new MenuItem("Subclass3", '', (e: PiElement) => console.log('Subclass3 chosen...' + e)),
-//     new MenuItem("Subclass4", '', (e: PiElement) => console.log('Subclass4 chosen...' + e))
-// ];
 
 export class HorizontalListBox extends ListBox {
     kind = "HorizontalListBox";

@@ -18,6 +18,7 @@ export * from "./PiCaret";
 
 // the others
 export * from "./ListUtil";
+export * from "./ListElementInfo";
 export * from "./MenuItem";
 
 // the following depends on BalanceTreeUtils and BehaviorUtils
