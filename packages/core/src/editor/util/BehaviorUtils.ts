@@ -22,6 +22,7 @@ export enum BehaviorExecutionResult {
 export function executeBehavior(box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
     LOGGER.log("Enter executeBehavior text [" + text + "] label [" + label + "] box role [" + box.role + "]");
     let partialMatch: boolean = false;
+    let index = -1; // todo get the correct index
 
     for (const action of editor.newPiActions) {
         const trigger = action.trigger;
@@ -35,7 +36,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                 if (matchArray !== null && label === matchArray[0]) {
                     runInAction(() => {
                         const command = action.command(box);
-                        execresult = command.execute(box, label, editor);
+                        execresult = command.execute(box, label, editor, index);
                     });
                     if (!!execresult) {
                         execresult();
@@ -48,7 +49,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                     let postAction: PiPostAction;
                     runInAction(() => {
                         const command = action.command(box);
-                        postAction = command.execute(box, label, editor);
+                        postAction = command.execute(box, label, editor, index);
                     });
                     postAction();
                     return BehaviorExecutionResult.EXECUTED;
@@ -79,9 +80,10 @@ export function executeSingleBehavior(action: PiAction, box: Box, text: string, 
     LOGGER.log("Enter executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
     let execresult: PiPostAction;
 
+    let index = -1; // todo get the correct index
     runInAction(() => {
         const command = action.command(box);
-        execresult = command.execute(box, label, editor);
+        execresult = command.execute(box, label, editor, index);
     });
     if (!!execresult) {
         execresult();

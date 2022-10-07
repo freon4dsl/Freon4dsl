@@ -13,7 +13,7 @@ import {
     SelectBox,
     IndentBox,
     OptionalBox,
-    HorizontalListBox, VerticalListBox, SvgBox, BoolFunctie, GridCellBox
+    HorizontalListBox, VerticalListBox, SvgBox, BoolFunctie, GridCellBox, HorizontalLayoutBox, VerticalLayoutBox
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -181,18 +181,50 @@ export class BoxFactory {
         // return result;
     }
 
+    static horizontalLayout(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
+        // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
+        if (cacheHorizontalOff) {
+            return new HorizontalLayoutBox(element, role, children, initializer);
+        }
+        const creator = () => new HorizontalLayoutBox(element, role, children, initializer);
+        const result: HorizontalLayoutBox = this.find<HorizontalLayoutBox>(element, role, creator, horizontalListCache);
+        runInAction( () => {
+            // 2. Apply the other arguments in case they have changed
+            if( !equals(result.children, children)) {
+                result.clearChildren();
+                result.addChildren(children);
+            }
+            PiUtils.initializeObject(result, initializer);
+        });
+
+        return result;
+    }
+
+    static verticalLayout(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
+        // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
+        if (cacheVerticalOff) {
+            return new VerticalLayoutBox(element, role, children, initializer);
+        }
+        const creator = () => new VerticalLayoutBox(element, role, children, initializer);
+        const result: VerticalLayoutBox = this.find<VerticalLayoutBox>(element, role, creator, verticalListCache);
+        runInAction(() => {
+            // 2. Apply the other arguments in case they have changed
+            if (!equals(result.children, children)) {
+                result.clearChildren();
+                result.addChildren(children);
+            }
+            PiUtils.initializeObject(result, initializer);
+        });
+        return result;
+    }
+
     static horizontalList(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
         // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
         if (cacheHorizontalOff) {
-            const result = new HorizontalListBox(element, role, children, initializer);
-            result.trueList = trueList;
-            result.propertyName = propertyName;
-            return result;
+            return new HorizontalListBox(element, role, propertyName, children, initializer);
         }
-        const creator = () => new HorizontalListBox(element, role, children, initializer);
+        const creator = () => new HorizontalListBox(element, role, propertyName, children, initializer);
         const result: HorizontalListBox = this.find<HorizontalListBox>(element, role, creator, horizontalListCache);
-        result.trueList = trueList;
-        result.propertyName = propertyName;
         runInAction( () => {
             // 2. Apply the other arguments in case they have changed
             if( !equals(result.children, children)) {
@@ -208,15 +240,10 @@ export class BoxFactory {
     static verticalList(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
         // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
         if (cacheVerticalOff) {
-            const result = new VerticalListBox(element, role, children, initializer);
-            result.trueList = trueList;
-            result.propertyName = propertyName;
-            return result;
+            return new VerticalListBox(element, role, propertyName, children, initializer);
         }
-        const creator = () => new VerticalListBox(element, role, children, initializer);
+        const creator = () => new VerticalListBox(element, role, propertyName, children, initializer);
         const result: VerticalListBox = this.find<VerticalListBox>(element, role, creator, verticalListCache);
-        result.trueList = trueList;
-        result.propertyName = propertyName;
         runInAction(() => {
             // 2. Apply the other arguments in case they have changed
             if (!equals(result.children, children)) {
@@ -225,7 +252,6 @@ export class BoxFactory {
             }
             PiUtils.initializeObject(result, initializer);
         });
-
         return result;
     }
 

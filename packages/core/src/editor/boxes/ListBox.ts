@@ -1,103 +1,91 @@
-import { observable, makeObservable, action } from "mobx";
-
-import { PiUtils } from "../../util";
 import { Box} from "./Box";
 import { PiElement } from "../../ast";
+import { Language } from "../../language";
+import { PiLogger } from "../../logging";
+import { MenuItem } from "../util";
+import { LayoutBox, ListDirection } from "./LayoutBox";
 
-export enum ListDirection {
-    HORIZONTAL = "Horizontal",
-    VERTICAL = "Vertical"
-}
+const LOGGER = new PiLogger("ListBox");
 
-export abstract class ListBox extends Box {
-    protected direction: ListDirection = ListDirection.HORIZONTAL;
-    protected _children: Box[] = [];
-    trueList: boolean; // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
+export class ListBox extends LayoutBox {
+    conceptName: string; // tmp: the name of the type of the elements in the 'trueList'
 
-    protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<ListBox>) {
-        super(element, role);
-        makeObservable<ListBox, "_children">(this, {
-           _children: observable,
-            insertChild: action,
-            addChild: action,
-            clearChildren: action,
-            addChildren: action,
-        });
-        PiUtils.initializeObject(this, initializer);
-        if (!!children) {
-            children.forEach(b => this.addChild(b));
-        }
+    protected constructor(element: PiElement, propertyName: string, role: string, children?: Box[], initializer?: Partial<ListBox>) {
+        super(element, role, children, initializer);
+        // todo is this the corret way to use mobx?
+        // makeObservable<LayoutBox, "_children">(this, {
+        //     _children: observable,
+        //     insertChild: action,
+        //     addChild: action,
+        //     clearChildren: action,
+        //     addChildren: action,
+        // });
+        // PiUtils.initializeObject(this, initializer);
+        // if (!!children) {
+        //     children.forEach(b => this.addChild(b));
+        // }
         this.kind = "ListBox";
+        // this.conceptName = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName).type;
+        this.conceptName = 'Parameter';
+        console.log('element.piLanguageConcept() ' + element.piLanguageConcept() + ', propertyName ' + propertyName)
     }
-
-    get children(): ReadonlyArray<Box> { // TODO Jos: why the ReadOnlyArray?
-        return this._children as ReadonlyArray<Box>;
-    }
-
-    clearChildren(): void {
-        this._children.splice(0, this._children.length);
-    }
-
-    addChild(child: Box | null): ListBox {
-        if (!!child) {
-            this._children.push(child);
-            child.parent = this;
-        }
-        return this;
-    }
-
-    insertChild(child: Box | null): ListBox {
-        if (!!child) {
-            this._children.splice(0, 0, child);
-            child.parent = this;
-        }
-        return this;
-    }
-
-    addChildren(children?: Box[]): ListBox {
-        if (!!children) {
-            children.forEach(child => this.addChild(child));
-        }
-        return this;
-    }
-
-    nextSibling(box: Box): Box | null {
-        const index = this.children.indexOf(box);
-        if (index !== -1) {
-            if (index + 1 < this.children.length) {
-                return this.children[index + 1];
+    options(): MenuItem[] {
+        // todo implement this
+        // if (this.trueList) {
+            console.log('trueList ' + this.conceptName);
+            const clsOtIntf = Language.getInstance().concept(this.conceptName) ?? Language.getInstance().interface(this.conceptName);
+            if (!clsOtIntf) {
+                return [ new MenuItem( 'No options available', '', (e: PiElement) => {}) ];
             }
-        }
-        return null;
-    }
-
-    previousSibling(box: Box): Box | null {
-        const index = this.children.indexOf(box);
-        if (index > 0) {
-            return this.children[index - 1];
-        }
-        return null;
-    }
-
-    getDirection(): ListDirection {
-        return this.direction;
-    }
-
-    toString() {
-        let result: string = "List: " + this.role + " " + this.direction.toString() + "<";
-        for (const child of this.children) {
-            result += "\n    " + child.toString();
-        }
-        result += ">";
-        return result;
+            if (clsOtIntf.subConceptNames.length > 0) { // there are sub concepts, so create sub menu items
+                let submenuItems: MenuItem[] = [];
+                clsOtIntf.subConceptNames.forEach((creatableConceptname: string) => {
+                    const creatableConcept = Language.getInstance().concept(creatableConceptname);
+                    submenuItems.push(new MenuItem(
+                        creatableConceptname, '', (e: PiElement) => console.log(creatableConceptname + ' chosen...' + e)
+                    ));
+                });
+                const items: MenuItem[] = [
+                    new MenuItem( 'Add before', 'Ctrl+A"', (e: PiElement) => {}, submenuItems),
+                    new MenuItem( 'Add after', 'Ctrl+I"', (e: PiElement) => {}, submenuItems),
+                    new MenuItem( 'Delete', '', (e: PiElement) => console.log('Deleting ' + e)),
+                    new MenuItem( '---', '', (e: PiElement) => {}),
+                    new MenuItem( 'Cut', '', (e: PiElement) => console.log('Cut...' + e)),
+                    new MenuItem( 'Copy', '', (e: PiElement) => console.log('Copy...' + e)),
+                    new MenuItem( 'Paste before', '', (e: PiElement) => console.log('Paste before...' + e)),
+                    new MenuItem( 'Paste after', '', (e: PiElement) => console.log('Paste after...' + e)),
+                ];
+                return items;
+            }
+        // } else {
+        //     console.log('NO trueList ' + this.conceptName);
+        //     const items: MenuItem[] = [
+        //         new MenuItem( 'Add before', 'Ctrl+A"', (e: PiElement) => console.log('Adding ' + this.conceptName + e)),
+        //         new MenuItem( 'Add after', 'Ctrl+I"', (e: PiElement) => console.log('Adding ' + this.conceptName + e)),
+        //         new MenuItem( 'Delete', '', (e: PiElement) => console.log('Deleting ' + e)),
+        //         new MenuItem( '---', '', (e: PiElement) => {}),
+        //         new MenuItem( 'Cut', '', (e: PiElement) => console.log('Cut...' + e)),
+        //         new MenuItem( 'Copy', '', (e: PiElement) => console.log('Copy...' + e)),
+        //         new MenuItem( 'Paste before', '', (e: PiElement) => console.log('Paste before...' + e)),
+        //         new MenuItem( 'Paste after', '', (e: PiElement) => console.log('Paste after...' + e)),
+        //     ];
+        //     return items;
+        // }
+        return [];
     }
 }
+// const submenuItems: MenuItem[] = [
+//     new MenuItem("Subclass1", 'Alt+X', (e: PiElement) => console.log('Subclass1 chosen...' + e)),
+//     new MenuItem("Subclass2", '', (e: PiElement) => console.log('Subclass2 chosen...' + e)),
+//     new MenuItem("Subclass3", '', (e: PiElement) => console.log('Subclass3 chosen...' + e)),
+//     new MenuItem("Subclass4", '', (e: PiElement) => console.log('Subclass4 chosen...' + e))
+// ];
 
 export class HorizontalListBox extends ListBox {
     kind = "HorizontalListBox";
 
-    constructor(element: PiElement, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>) {
-        super(element, role, children, initializer);
+    constructor(element: PiElement, propertyName: string, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>) {
+        super(element, role, propertyName, children, initializer);
         this.direction = ListDirection.HORIZONTAL;
     }
 }
@@ -105,36 +93,20 @@ export class HorizontalListBox extends ListBox {
 export class VerticalListBox extends ListBox {
     kind = "VerticalListBox";
 
-    constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
-        super(element, role, children, initializer);
+    constructor(element: PiElement, propertyName: string, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
+        super(element, role, propertyName, children, initializer);
         this.direction = ListDirection.VERTICAL;
     }
 }
 
-export function isHorizontalBox(b: Box): b is HorizontalListBox {
-    return b.kind === "HorizontalListBox" && !(b as HorizontalListBox).trueList; // b instanceof HorizontalListBox;
-}
-
-// TODO reorganise these functions
 export function isHorizontalList(b: Box): b is HorizontalListBox {
-    // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
-    return b.kind === "HorizontalListBox" && (b as HorizontalListBox).trueList; // b instanceof HorizontalListBox;
-}
-
-export function isVerticalBox(b: Box): b is VerticalListBox {
-    return b.kind === "VerticalListBox" && !(b as VerticalListBox).trueList; // b instanceof VerticalListBox;
+    return b.kind === "HorizontalListBox"; // b instanceof HorizontalListBox;
 }
 
 export function isVerticalList(b: Box): b is VerticalListBox {
-    // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
-    return b.kind === "VerticalListBox" && (b as VerticalListBox).trueList; // b instanceof VerticalListBox;
-}
-
-// TODO trueList is a temp hack to distinguish list properties from the model from layout lists
-export function isLayoutBox(b: Box): boolean {
-    return (b.kind === "HorizontalListBox" || b.kind === "VerticalListBox") && !(b as ListBox).trueList;
+    return b.kind === "VerticalListBox"; // b instanceof VerticalListBox;
 }
 
 export function isListBox(b: Box): boolean {
-    return (b.kind === "HorizontalListBox" || b.kind === "VerticalListBox") && (b as ListBox).trueList;
+    return (b.kind === "HorizontalListBox" || b.kind === "VerticalListBox");
 }

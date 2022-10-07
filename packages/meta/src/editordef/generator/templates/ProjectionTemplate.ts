@@ -160,7 +160,7 @@ export class ProjectionTemplate {
                             !!exp.piOwnerDescriptor().owner &&
                             isPiBinaryExpression(exp.piOwnerDescriptor().owner)
                         ) {
-                            return BoxFactory.horizontalList(exp, "brackets", false, '', [
+                            return BoxFactory.horizontalLayout(exp, "brackets", false, '', [
                                 BoxUtils.labelBox(exp, "(", "bracket-open", true),
                                 binBox,
                                 BoxUtils.labelBox(exp, ")", "bracket-close", true)
@@ -246,7 +246,7 @@ export class ProjectionTemplate {
         });
         if (lines.length > 1) { // multi-line projection, so surround with vertical box
             this.addToIfNotPresent(this.coreImports, "BoxFactory");
-            result = `BoxFactory.verticalList(${elementVarName}, "${boxLabel}-overall", false, '', [
+            result = `BoxFactory.verticalLayout(${elementVarName}, "${boxLabel}-overall", false, '', [
                 ${result} 
             ])`;
         }
@@ -272,7 +272,7 @@ export class ProjectionTemplate {
             if (line.items.length > 1) { // surround with horizontal box
                 // TODO Too many things are now selectable, but if false, you cannot select e.g. an attribute
                 this.addToIfNotPresent(this.coreImports, "BoxFactory");
-                result = `BoxFactory.horizontalList(${elementVarName}, "${boxLabel}-hlist-line-${index}", false, '', [ ${result} ], { selectable: true } ) `;
+                result = `BoxFactory.horizontalLayout(${elementVarName}, "${boxLabel}-hlist-line-${index}", false, '', [ ${result} ], { selectable: true } ) `;
             }
             if (line.indent > 0) { // surround with indentBox
                 this.addToIfNotPresent(this.coreImports, "BoxUtils");
