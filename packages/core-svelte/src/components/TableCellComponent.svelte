@@ -164,22 +164,24 @@
     function showContextMenu(event) {
         // determine the contents of the menu based on box
         // if the selected box is the placeholder or a title/header => show different menu items
+        let index: number;
         if (isActionBox(box.content)) {
             $contextMenu.items = box.options("placeholder");
+            index = Number.MAX_VALUE;
         } else if (box.isHeader) {
             $contextMenu.items = box.options("header");
+            index = 0;
         } else {
             $contextMenu.items = box.options("normal");
+            index = parentOrientation === "row" ? row : column;
+            if (parentHasHeader) {
+                index--;
+            }
         }
         // set the selected box
         if (editor.selectedBox !== box) {
             editor.selectedBox = box;
             $selectedBoxes = box.getSiblings();
-        }
-        // console.log("setting selected element..." + box.element.piId() + " of type " + box.element.piLanguageConcept());
-        let index: number = parentOrientation === "row" ? row : column;
-        if (parentHasHeader) {
-            index--;
         }
         $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
     }

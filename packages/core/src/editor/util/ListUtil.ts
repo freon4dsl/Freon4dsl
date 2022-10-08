@@ -208,14 +208,15 @@ function addListElement(listParent: PiElement, propertyName: string, index: numb
  */
 function deleteListElement(listParent: PiElement, propertyName: string, element: PiElement) {
     // get info about the property that needs to be changed
-    const parentElement: PiElement = element.piOwnerDescriptor().owner;
-    const targetPropertyName: string = element.piOwnerDescriptor().propertyName;
+    // const parentElement: PiElement = element.piOwnerDescriptor().owner;
+    // const targetPropertyName: string = element.piOwnerDescriptor().propertyName;
     const targetIndex: number = element.piOwnerDescriptor().propertyIndex;
-    const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
-    if (parentElement !== listParent || targetPropertyName !== propertyName) {
-        console.error("not a correct list item");
-        return;
-    }
+    // TODO HIER GESTOPT!!!
+    const { property, isList } = getPropertyInfo(listParent, propertyName);
+    // if (parentElement !== listParent || targetPropertyName !== propertyName) {
+    //     console.error("not a correct list item: " + parentElement.piId() + '?== ' + listParent.piId() + ', ' + targetPropertyName + '?== ' + propertyName);
+    //     return;
+    // }
     // make the change
     if (isList) {
         // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');

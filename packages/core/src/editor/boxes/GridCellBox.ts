@@ -38,7 +38,6 @@ export class GridCellBox extends Box {
         if (!this.conceptName) { // try the parent
             this.conceptName = Language.getInstance().classifierProperty(element.piOwner().piLanguageConcept(), propertyName)?.type;
         }
-        console.log('table cell for property ' + propertyName+ ' of '+ element.piLanguageConcept() + ": " + this.conceptName );
     }
 
     get content(): Box {
