@@ -498,7 +498,7 @@ export class ProjectionTemplate {
         this.addToIfNotPresent(this.coreImports, "BoxFactory");
         this.addToIfNotPresent(this.coreImports, "Box");
         // TODO Create Action for the role to actually add an element.
-        return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-hlist", true, "${property.name}",
+        return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-hlist", "${property.name}",
                             (${element}.${property.name}.map( (item, index)  =>
                                 ${this.singlePrimitivePropertyProjection(property, element, boolInfo)}
                             ) as Box[]).concat( [
