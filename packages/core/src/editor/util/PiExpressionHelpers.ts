@@ -1,6 +1,6 @@
 import {
     Box,
-    HorizontalListBox,
+    HorizontalLayoutBox,
     isHorizontalBox,
     SelectBox,
     SelectOption,
@@ -27,15 +27,15 @@ import { BehaviorExecutionResult } from "./BehaviorUtils";
 
 // const LOGGER = new PiLogger("PiExpressionHelpers");
 
-export function createDefaultExpressionBox(exp: PiExpression, role: string, children: Box[], initializer?: Partial<HorizontalListBox>): Box {
+export function createDefaultExpressionBox(exp: PiExpression, role: string, children: Box[], initializer?: Partial<HorizontalLayoutBox>): Box {
     const isLeftMost: Boolean = BTREE.isLeftMostChild(exp);
     const isRightMost: Boolean = BTREE.isRightMostChild(exp);
     if (isLeftMost || isRightMost) {
-        let result: HorizontalListBox;
+        let result: HorizontalLayoutBox;
         if (children.length === 1 && isHorizontalBox(children[0])) {
-            result = children[0] as HorizontalListBox;
+            result = children[0] as HorizontalLayoutBox;
         } else {
-            result = BoxFactory.horizontalList(exp, EXPRESSION, false, '', children);
+            result = BoxFactory.horizontalLayout(exp, EXPRESSION, '', children);
         }
         if (isLeftMost) {
             // TODO Change into Svelte Style
@@ -52,7 +52,7 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
         if (children.length === 1) {
             return children[0];
         } else {
-            return BoxFactory.horizontalList(exp, EXPRESSION, false, '', children);
+            return BoxFactory.horizontalLayout(exp, EXPRESSION, '', children);
         }
     }
 }
@@ -65,8 +65,8 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
  * @param editor
  * @param style
  */
-export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, editor: PiEditor, style?: string): HorizontalListBox {
-    const result = BoxFactory.horizontalList(exp, BINARY_EXPRESSION, false, '');
+export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, editor: PiEditor, style?: string): HorizontalLayoutBox {
+    const result = BoxFactory.horizontalLayout(exp, BINARY_EXPRESSION, '');
     const projection = editor.projection;
     const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 

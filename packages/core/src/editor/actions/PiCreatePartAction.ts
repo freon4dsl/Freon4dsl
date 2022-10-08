@@ -1,6 +1,6 @@
 import { PiUtils } from "../../util";
 import { PiLogger } from "../../logging";
-import { Box } from "../boxes/index";
+import { Box } from "../boxes";
 import { PiAction } from "./PiAction";
 import { PiCommand } from "./PiCommand";
 import { PiCreatePartCommand } from "./PiCreatePartCommand";

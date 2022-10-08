@@ -1,9 +1,9 @@
 import { runInAction } from "mobx";
 import { PiElement } from "../../ast";
-import { BehaviorExecutionResult } from "../util/BehaviorUtils";
+import { PiUtils } from "../../util";
 import { PiLogger } from "../../logging";
-import { PiUtils } from "../../util/PiUtils";
 import { PiEditor } from "../PiEditor";
+import { BehaviorExecutionResult } from "../util";
 import {
     Box,
     ActionBox,
@@ -13,9 +13,15 @@ import {
     SelectBox,
     IndentBox,
     OptionalBox,
-    HorizontalListBox, VerticalListBox, SvgBox, BoolFunctie, GridCellBox, HorizontalLayoutBox, VerticalLayoutBox
-} from "./internal";
-import { TableCellBox } from "./TableCellBox";
+    HorizontalListBox,
+    VerticalListBox,
+    SvgBox,
+    BoolFunctie,
+    GridCellBox,
+    TableCellBox,
+    HorizontalLayoutBox,
+    VerticalLayoutBox
+} from "./index";
 
 type RoleCache<T extends Box> = {
     [role: string]: T;
@@ -200,16 +206,15 @@ export class BoxFactory {
         // return result;
     }
 
-    static horizontalLayout(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
-        // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
+    static horizontalLayout(element: PiElement, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
         if (cacheHorizontalLayoutOff) {
             return new HorizontalLayoutBox(element, role, children, initializer);
         }
         const creator = () => new HorizontalLayoutBox(element, role, children, initializer);
         const result: HorizontalLayoutBox = this.find<HorizontalLayoutBox>(element, role, creator, horizontalLayoutCache);
-        runInAction( () => {
+        runInAction(() => {
             // 2. Apply the other arguments in case they have changed
-            if( !equals(result.children, children)) {
+            if (!equals(result.children, children)) {
                 result.clearChildren();
                 result.addChildren(children);
             }
@@ -219,8 +224,7 @@ export class BoxFactory {
         return result;
     }
 
-    static verticalLayout(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
-        // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
+    static verticalLayout(element: PiElement, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
         if (cacheVerticalLayoutOff) {
             return new VerticalLayoutBox(element, role, children, initializer);
         }
@@ -237,16 +241,15 @@ export class BoxFactory {
         return result;
     }
 
-    static horizontalList(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
-        // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
+    static horizontalList(element: PiElement, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
         if (cacheHorizontalListOff) {
             return new HorizontalListBox(element, role, propertyName, children, initializer);
         }
         const creator = () => new HorizontalListBox(element, role, propertyName, children, initializer);
         const result: HorizontalListBox = this.find<HorizontalListBox>(element, role, creator, horizontalListCache);
-        runInAction( () => {
+        runInAction(() => {
             // 2. Apply the other arguments in case they have changed
-            if( !equals(result.children, children)) {
+            if (!equals(result.children, children)) {
                 result.clearChildren();
                 result.addChildren(children);
             }
@@ -256,8 +259,7 @@ export class BoxFactory {
         return result;
     }
 
-    static verticalList(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
-        // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
+    static verticalList(element: PiElement, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
         if (cacheVerticalListOff) {
             return new VerticalListBox(element, role, propertyName, children, initializer);
         }
@@ -274,13 +276,7 @@ export class BoxFactory {
         return result;
     }
 
-    static select(element: PiElement,
-                  role: string,
-                  placeHolder: string,
-                  getOptions: (editor: PiEditor) => SelectOption[],
-                  getSelectedOption: () => SelectOption | null,
-                  selectOption: (editor: PiEditor, option: SelectOption) => BehaviorExecutionResult,
-                  initializer?: Partial<SelectBox>): SelectBox {
+    static select(element: PiElement, role: string, placeHolder: string, getOptions: (editor: PiEditor) => SelectOption[], getSelectedOption: () => SelectOption | null, selectOption: (editor: PiEditor, option: SelectOption) => BehaviorExecutionResult, initializer?: Partial<SelectBox>): SelectBox {
         if (cacheSelectOff) {
             return new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
         }
@@ -346,7 +342,6 @@ export class BoxFactory {
 
         return result;
     }
-
 }
 
 const equals = (a, b) => { // TODO use isNullOrUndefined here

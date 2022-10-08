@@ -10,14 +10,14 @@
     import {
         Box,
         isEmptyLineBox,
-        ListBox,
         PiEditor,
         PiLogger,
-        ListDirection
+        ListDirection,
+        LayoutBox
     } from "@projectit/core";
 
     // Parameters
-    export let box: ListBox; // todo change to LayoutBox, when this change has been processed in ~/core
+    export let box: LayoutBox;
     export let editor: PiEditor;
 
     let LOGGER: PiLogger = new PiLogger("LayoutComponent"); //.mute();
