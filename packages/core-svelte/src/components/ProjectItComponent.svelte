@@ -142,9 +142,15 @@
         return () => resizeObserver.unobserve(element);
     });
 
+    // If a box changes ...
     autorun(() => {
-        LOGGER.log("autorun");
+        LOGGER.log("autorun rootbox");
         rootBox = editor.rootBox;
+    });
+    // If the selection is not ok anymore
+    autorun(() => {
+        LOGGER.log("autorun selection");
+        // TODO THis now runs for each selection change, is this really needed?
         if (!$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             $selectedBoxes = [editor.selectedBox];
         }

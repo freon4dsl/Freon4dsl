@@ -31,7 +31,7 @@
 		isMetaKey,
 		PiCommand,
 		PiEditorUtil,
-		toPiKey, PI_NULL_COMMAND, PiPostAction
+		toPiKey, PI_NULL_COMMAND, PiPostAction, SHIFT, CONTROL, ALT
 	} from "@projectit/core";
 
     import { autorun, runInAction } from "mobx";
@@ -77,7 +77,8 @@
 			isEditing = true;
 			editStart = true;
 			originalText = text;
-			size = text.length === 0 ? 10 : text.length;
+			// Look at either the real text or the placeholder to set the size.
+			size = text.length === 0 ? (placeholder === 0 ? 10 : placeholder.length + 1) : text.length + 1;
 			let {anchorOffset, focusOffset} = document.getSelection();
 			setFromAndTo(anchorOffset, focusOffset);
 		}
@@ -145,7 +146,8 @@
         isEditing = true;
         editStart = true;
         originalText = text;
-        size = text.length === 0 ? 10 : text.length;
+		// Look at either the real text or the placeholder to set the size.
+        size = text.length === 0 ? (placeholder === 0 ? 10 : placeholder.length) : text.length;
         let {anchorOffset, focusOffset} = document.getSelection();
         setFromAndTo(anchorOffset, focusOffset);
         event.preventDefault();
@@ -221,7 +223,7 @@
         // preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
         LOGGER.log("TextComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
 
-		if (isMetaKey(event)) {
+		if (event.altKey || event.ctrlKey) {  // No shift, because that is handled as normal text
 			// first check if this event has a command defined for it
 			const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), box, editor);
 			if (cmd !== PI_NULL_COMMAND) {
@@ -269,6 +271,9 @@
 				// navigator.clipboard.readText().then(
 				// 		clipText => LOGGER.log('adding ' + clipText + ' after ' + text[to - 1]));
 				// TODO add the clipText to 'text'
+			} else if (event.key === SHIFT || event.key === CONTROL || event.key === ALT) { // ignore meta keys
+				LOGGER.log("SHIFT: stop propagation")
+				event.stopPropagation();
 			}
 		} else { // handle non meta keys
 			switch (event.key) {
@@ -463,6 +468,15 @@
         originalText = text = box.getText();
         placeholder = box.placeHolder;
     });
+	
+	afterUpdate( () => {
+		box.setFocus = setFocus;
+		// box.setCaret = setCaret;
+		// if (!isEditing) {
+		// 	originalText = text = box.getText();
+		// 	placeholder = box.placeHolder;
+		// }
+	})
 
     /**
      * This function is called when something in the underlying model changes
