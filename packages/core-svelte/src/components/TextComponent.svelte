@@ -232,7 +232,7 @@
 			        if (text !== originalText) {
 			            box.setText(text);
 			        }
-			        postAction = cmd.execute(box, toPiKey(event), editor);
+			        postAction = cmd.execute(box, toPiKey(event), editor, 0);
 			    });
 			    if (!!postAction) {
 			        postAction();

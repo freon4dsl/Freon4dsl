@@ -10,6 +10,7 @@
     import {
         isActionBox,
         isEmptyLineBox,
+        isGridBox,
         isTableBox,
         isIndentBox,
         isLabelBox,
@@ -24,17 +25,18 @@
         Box
     } from "@projectit/core";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
+    import GridComponent from "./GridComponent.svelte";
     import IndentComponent from "./IndentComponent.svelte";
     import LabelComponent from "./LabelComponent.svelte";
     import LayoutComponent from "./LayoutComponent.svelte";
     import ListComponent from "./ListComponent.svelte";
     import OptionalComponent from "./OptionalComponent.svelte";
+    import TableComponent from "./TableComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
     import TextDropdownComponent from "./TextDropdownComponent.svelte";
     import SvgComponent from "./SvgComponent.svelte";
     import { afterUpdate } from "svelte";
     import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
-    import TableComponent from "./TableComponent.svelte";
     import { setBoxSizes } from "./svelte-utils";
 
     const LOGGER = new PiLogger("RenderComponent"); //.mute();
@@ -71,8 +73,7 @@
         // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?
         setBoxSizes(box, element.getBoundingClientRect());
     });
-
-    // todo add a GridComponent to the if-statement
+    // todo test GridComponent
 </script>
 
 <span id="render-${box?.id}"
@@ -84,6 +85,8 @@
         <p class="error">[BOX IS NULL OR UNDEFINED]</p>
     {:else if isEmptyLineBox(box) }
         <EmptyLineComponent box={box}/>
+    {:else if isGridBox(box) }
+        <GridComponent box={box} editor={editor} />
     {:else if isIndentBox(box) }
         <IndentComponent box={box} editor={editor}/>
     {:else if isLabelBox(box)}
