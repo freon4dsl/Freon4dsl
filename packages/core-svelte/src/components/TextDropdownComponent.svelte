@@ -19,7 +19,7 @@
     } from "@projectit/core";
 
     import { autorun, runInAction } from "mobx";
-    import { onMount } from "svelte";
+    import { afterUpdate, onMount } from "svelte";
 
     const LOGGER = new PiLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
 
@@ -61,6 +61,17 @@
         }
     }
 
+    afterUpdate( () => {
+        box.setFocus = setFocus;
+        const selected = box.getSelectedOption(); // todo why?
+        runInAction( () => {
+            textBox.cssStyle = box.cssStyle;
+            if (!!selected) {
+                textBox.setText(selected.label);
+            }
+        });
+    });
+    
     onMount(() => {
         LOGGER.log("TextDropdownComponent.onMount for role [" + box.role + "]");
         box.setFocus = setFocus;
@@ -212,9 +223,12 @@
                 storeAndExecute(chosenOption);
             }
         }
+        if (!isSelectBox(box)) {
+            // c;lear text for an action box
+            clearText();
+        }
         isEditing = false;
         dropdownShown = false;
-        clearText();
     };
 
     /**
@@ -241,6 +255,8 @@
      */
     function storeAndExecute(selected: SelectOption) {
         LOGGER.log('executing option ' + selected.label);
+        isEditing = false;
+        dropdownShown = false;
         runInAction(() => {
             // TODO set the new cursor through the editor
             box.selectOption(editor, selected); // TODO the result of the execution is ignored
@@ -290,6 +306,7 @@
             let selectedOption = box.getSelectedOption();
             if (!!selectedOption) {
                 box.textHelper.setText(selectedOption.label);
+                text = box.textHelper.getText();
             }
         }
         // because the box maybe a different one than we started with ...
@@ -308,6 +325,8 @@
         }
     };
 
+
+    // TOD: on:TextUpdate, on:
 </script>
 
 <span id="{id}"

@@ -468,6 +468,13 @@
         originalText = text = box.getText();
         placeholder = box.placeHolder;
     });
+	
+	afterUpdate( () => {
+		box.setFocus = setFocus;
+		// box.setCaret = setCaret;
+		originalText = text = box.getText();
+		placeholder = box.placeHolder;
+	})
 
     /**
      * This function is called when something in the underlying model changes
