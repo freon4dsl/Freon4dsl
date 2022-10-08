@@ -20,10 +20,12 @@ export * from "./ListBox";
 export * from "./ActionBox"; // inherits from AbstractChoiceBox, is needed in OptionalBox
 export * from "./OptionalBox";
 export * from "./SvgBox";
+export * from "./TableBox";
 export * from "./TextBox";
 export * from "./SelectBox";
 export * from "./BoxFactory";
 export * from "./GridCellBox";
+export * from "./TableCellBox";
 
 // the following files contain export that do not depend on any other file
 export * from "./SelectOption";

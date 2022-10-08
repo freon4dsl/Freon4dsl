@@ -5,7 +5,7 @@
      * This component functions as a drop zone for dragged elements from either a ListComponent
      * or a TableCellComponent.
      */
-    import { GridCellBox, type GridBox, type PiEditor, PiLogger, Language, ListElementInfo } from "@projectit/core";
+    import { TableCellBox, type TableBox, type PiEditor, PiLogger, Language, ListElementInfo } from "@projectit/core";
     import { runInAction } from "mobx";
     import TableCellComponent from "./TableCellComponent.svelte";
     import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils/DropAndSelectStore";
@@ -13,12 +13,12 @@
 
     const LOGGER = new PiLogger("TableComponent"); //.mute();
 
-    export let box: GridBox;
+    export let box: TableBox;
     export let editor: PiEditor;
 
     let id = box.id;
     // the following variables use svelte reactivity, when this does not suffice they should be set in a Mobx autorun method
-    let cells: GridCellBox[];
+    let cells: TableCellBox[];
     $: cells = box.cells;
     let templateColumns: string;
     $: templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;

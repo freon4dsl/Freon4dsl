@@ -1,13 +1,13 @@
 import { runInAction } from "mobx";
 import { PiCreateSiblingAction } from "../actions";
-import { GridCellBox } from "../boxes";
 import {
     ActionBox,
-    Box, BoxFactory,
+    Box,
+    BoxFactory,
     BoxUtils,
-    GridBox,
     GridOrientation,
-    isActionBox, PiCustomAction,
+    isActionBox,
+    PiCustomAction,
     PiEditor
 } from "../index";
 import { PiElement } from "../../ast";
@@ -18,8 +18,9 @@ import { PiUtils } from "../../util";
 import { Language } from "../../language";
 import { RoleProvider } from "./RoleProvider";
 import { PiLogger } from "../../logging";
+import { TableBox, TableCellBox } from "../boxes";
 
-type Location = { row: number, column: number};
+type Location = { row: number, column: number };
 const LOGGER = new PiLogger("TableUtil");
 
 export class TableUtil {
@@ -27,7 +28,7 @@ export class TableUtil {
     // They differ in the indexes etc. and can therefore not (easily) be combined.
 
     /**
-     * Returns a GridBox that is a table representation of property with name 'propertyName'
+     * Returns a TableBox that is a table representation of property with name 'propertyName'
      * within 'element'. The property must be a list. Each element of the list is shown in a row of the table.
      * A series of getters that each return a Box object must be present: one per column.
      *
@@ -38,13 +39,13 @@ export class TableUtil {
      * @param editor        The editor that should know about KeyboardShortCuts.
      */
     public static tableBoxRowOriented(element: PiElement, propertyName: string, columnHeaders: string[],
-                           cellGetters: ((e: PiElement) => Box)[],
-                           editor: PiEditor): Box {
+                                      cellGetters: ((e: PiElement) => Box)[],
+                                      editor: PiEditor): Box {
         return this.tableBox("row", element, propertyName, columnHeaders, cellGetters, editor);
     }
 
     /**
-     * Returns a GridBox that is a table representation of property with name 'propertyName'
+     * Returns a TableBox that is a table representation of property with name 'propertyName'
      * within 'element'. The property must be a list. Each element of the list is shown in a column of the table.
      * A series of getters that each return a Box object must be present: one per row.
      *
@@ -61,23 +62,23 @@ export class TableUtil {
     }
 
     private static tableBox(orientation: GridOrientation, element: PiElement, propertyName: string, columnHeaders: string[],
-                                      cellGetters: ((e: PiElement) => Box)[],
-                                      editor: PiEditor): Box {
+                            cellGetters: ((e: PiElement) => Box)[],
+                            editor: PiEditor): Box {
         // find the information on the property to be shown
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         const property = element[propertyName];
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
-        LOGGER.log("TABLE BOX CREATION for " + propertyName + " size " + property.length)
+        LOGGER.log("TABLE BOX CREATION for " + propertyName + " size " + property.length);
         // const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
         const hasHeaders = columnHeaders !== null && columnHeaders !== undefined && columnHeaders.length > 0;
         // create the box
         if (property !== undefined && property !== null) {
-            const cells: GridCellBox[] = [];
+            const cells: TableCellBox[] = [];
             // add the headers - all in row 1
             columnHeaders.forEach((item: string, index: number) => {
-                const location = this.calcHeaderLocation({row: 1, column: index + 1}, orientation, hasHeaders);
-                LOGGER.log("TableUtil header " + location.row + " - " + location.column + " with headers " + hasHeaders );
-                cells.push( BoxFactory.gridcell(element, propertyName, "cell-" + location.row + "-" + location.column, location.row, location.column,
+                const location = this.calcHeaderLocation({ row: 1, column: index + 1 }, orientation, hasHeaders);
+                LOGGER.log("TableUtil header " + location.row + " - " + location.column + " with headers " + hasHeaders);
+                cells.push(BoxFactory.tablecell(element, propertyName, "cell-" + location.row + "-" + location.column, location.row, location.column,
                     BoxUtils.labelBox(element, item, "" + index),
                     { isHeader: true })
                 );
@@ -85,29 +86,28 @@ export class TableUtil {
             // add the cells for each element of the list
             property.forEach((item: PiElement, rowIndex: number) => {
                 cellGetters.forEach((projector, columnIndex) => {
-                    const location = this.calcLocation({row: rowIndex + 1, column: columnIndex + 1}, orientation, hasHeaders);
+                    const location = this.calcLocation({ row: rowIndex + 1, column: columnIndex + 1 }, orientation, hasHeaders);
                     const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
-                    LOGGER.log("TableUtil add " + cellRoleName + " with headers " + hasHeaders );
-                    cells.push(BoxFactory.gridcell(item, propertyName, cellRoleName, location.row, location.column, projector(item)));
+                    LOGGER.log("TableUtil add " + cellRoleName + " with headers " + hasHeaders);
+                    cells.push(BoxFactory.tablecell(item, propertyName, cellRoleName, location.row, location.column, projector(item)));
                 });
             });
             // add an extra row where a new element to the list can be added
-            const location = this.calcLocation({row: property.length +1, column:1}, orientation, hasHeaders);
+            const location = this.calcLocation({ row: property.length + 1, column: 1 }, orientation, hasHeaders);
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
             LOGGER.log("TableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders + " span[" + (orientation === "row" ? cellGetters.length : 1) + "/" + (orientation === "row" ? 1 : cellGetters.length) + "]");
-            cells.push( BoxFactory.gridcell(element, propertyName, cellRoleName,  location.row, location.column,
+            cells.push(BoxFactory.tablecell(element, propertyName, cellRoleName, location.row, location.column,
                 BoxFactory.action(element, "alias-add-row-or-column", `<add new ${orientation}>`,
-                { propertyName: propertyName, conceptName: propInfo.type }),
+                    { propertyName: propertyName, conceptName: propInfo.type }),
                 {
                     columnSpan: (orientation === "row" ? cellGetters.length : 1),
                     rowSpan: (orientation === "row" ? 1 : cellGetters.length)
-            }));
+                }));
             // Add keyboard actions to grid such that new rows can be added by Return Key
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
-            const nrOfRowsAndColumns = this.calcLocation( {row: property.length, column: cellGetters.length}, orientation, hasHeaders);
-            this.addKeyBoardShortCuts(element, propertyName, nrOfRowsAndColumns.row, nrOfRowsAndColumns.column,editor, propInfo.type);
-            let result = new GridBox(element, roleName, cells, { orientation: orientation } );
-            result.trueList = true;
+            const nrOfRowsAndColumns = this.calcLocation({ row: property.length, column: cellGetters.length }, orientation, hasHeaders);
+            this.addKeyBoardShortCuts(element, propertyName, nrOfRowsAndColumns.row, nrOfRowsAndColumns.column, editor, propInfo.type);
+            let result = new TableBox(element, propertyName, roleName, cells, { orientation: orientation });
             result.hasHeaders = hasHeaders;
             result.propertyName = propertyName;
             return result;
@@ -117,11 +117,12 @@ export class TableUtil {
 
     private static tilt(location: Location, orientation: GridOrientation): Location {
         if (orientation === "column") {
-            return { row: location.column, column: location.row};
+            return { row: location.column, column: location.row };
         } else {
             return location;
         }
     }
+
     private static calcHeaderLocation(location: Location, orientation: GridOrientation, hasHeaders: boolean): Location {
         return this.tilt(location, orientation);
     }
@@ -129,7 +130,7 @@ export class TableUtil {
     private static calcLocation(location: Location, orientation: GridOrientation, hasHeaders: boolean): Location {
         const result = this.tilt(location, orientation);
         if (hasHeaders) {
-            if (orientation === "column" ) {
+            if (orientation === "column") {
                 result.column = result.column + 1;
             } else {
                 result.row = result.row + 1;
@@ -150,7 +151,7 @@ export class TableUtil {
      * @param conceptName
      * @private
      */
-    private static addKeyBoardShortCuts(element: PiElement,propertyName: string, nrOfRows: number, nrOfColumns: number, editor: PiEditor, conceptName: string) {
+    private static addKeyBoardShortCuts(element: PiElement, propertyName: string, nrOfRows: number, nrOfColumns: number, editor: PiEditor, conceptName: string) {
         // editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(element, propertyName, nrOfRows, nrOfColumns, elementBuilder));
         // editor.keyboardActions.splice(
         //     0,
@@ -174,21 +175,20 @@ export class TableUtil {
      */
     private static createKeyboardShortcutForCollectionGrid(element: PiElement, propertyName: string, nrOfRows: number, nrOfColumns: number, conceptName: string): PiCreateSiblingAction {
         const rolenames: string[] = [];
-        for(let row = 1; row <= nrOfRows; row++) {
-            for(let column = 1; column <= nrOfColumns; column++) {
+        for (let row = 1; row <= nrOfRows; row++) {
+            for (let column = 1; column <= nrOfColumns; column++) {
                 const rolename = RoleProvider.cell(element.piLanguageConcept(), propertyName, row, column);
                 rolenames.push(rolename);
                 // LOGGER.log("Add keyboard [" + rolename + "] for r/c " + row + "." + column);
             }
         }
         // LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
-        const result = new PiCreateSiblingAction({
+        return new PiCreateSiblingAction({
             trigger: { meta: MetaKey.None, key: Keys.ENTER, code: Keys.ENTER },
             activeInBoxRoles: rolenames,
-            conceptName: conceptName,
+            conceptName: conceptName
 
         });
-        return result;
     }
 
     /**
@@ -204,15 +204,15 @@ export class TableUtil {
                 const actionBox = (isActionBox(box) ? box : box.parent as ActionBox);
                 LOGGER.log("2 New table row/column for " + actionBox.propertyName + " concept " + actionBox.conceptName);
                 const newElement: PiElement = Language.getInstance().concept(actionBox?.conceptName)?.constructor();
-                if( newElement === undefined) {
+                if (newElement === undefined) {
                     // TODO Find out why this happenss sometimes
                     LOGGER.log("EMPTY grid: Unexpected new element undefined");
                     return null;
                 }
-                runInAction( () => {
+                runInAction(() => {
                     element[actionBox.propertyName].push(newElement);
                 });
-                LOGGER.log("runInaction finished.")
+                LOGGER.log("runInaction finished.");
                 return newElement;
             }
         });

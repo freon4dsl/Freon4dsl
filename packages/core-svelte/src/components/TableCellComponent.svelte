@@ -12,7 +12,7 @@
         type PiEditor,
         PiLogger,
         toPiKey,
-        GridCellBox,
+        TableCellBox,
         PiEditorUtil, PiCommand, PI_NULL_COMMAND, PiPostAction, ListElementInfo, isActionBox
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
@@ -30,7 +30,7 @@
     } from "./svelte-utils/DropAndSelectStore";
 
     // properties
-    export let box: GridCellBox;
+    export let box: TableCellBox;
     export let editor: PiEditor;
     export let parentComponentId: string;
     export let parentOrientation: string;

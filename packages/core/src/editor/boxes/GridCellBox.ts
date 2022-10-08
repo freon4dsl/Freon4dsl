@@ -1,9 +1,7 @@
 import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../ast";
-import { PiUtils } from "../../util/index";
+import { PiUtils } from "../../util";
 import { Box } from "./Box";
-import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
-import { Language } from "../../language";
 
 // TODO state in every box which element we assume to be getting as param, e.g. is the element in a GridCellBox the same as in the corresponding GridBox?
 export class GridCellBox extends Box {
@@ -14,13 +12,12 @@ export class GridCellBox extends Box {
     rowSpan?: number;
     columnSpan?: number;
     kind: string = "GridCellBox";
-    conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    constructor(element: PiElement, propertyName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>) {
+    constructor(element: PiElement, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>) {
         super(element, role);
         this.row = row;
         this.column = column;
-        this.propertyName = propertyName;
+
         this.$content = box;
         if (!!box) {
             box.parent = this;
@@ -33,11 +30,6 @@ export class GridCellBox extends Box {
             isHeader: observable
         });
         this.selectable = false;
-
-        this.conceptName = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
-        if (!this.conceptName) { // try the parent
-            this.conceptName = Language.getInstance().classifierProperty(element.piOwner().piLanguageConcept(), propertyName)?.type;
-        }
     }
 
     get content(): Box {
@@ -60,9 +52,5 @@ export class GridCellBox extends Box {
 
     getSiblings(): Box[] { // todo do we need a ReadOnlyArray here?
         return this.parent.getSiblings(this);
-    }
-
-    options(type: MenuOptionsType): MenuItem[] {
-        return getContextMenuOptions(this.conceptName, this.element, this.propertyName, type);
     }
 }

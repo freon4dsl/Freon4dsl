@@ -15,6 +15,7 @@ import {
     OptionalBox,
     HorizontalListBox, VerticalListBox, SvgBox, BoolFunctie, GridCellBox, HorizontalLayoutBox, VerticalLayoutBox
 } from "./internal";
+import { TableCellBox } from "./TableCellBox";
 
 type RoleCache<T extends Box> = {
     [role: string]: T;
@@ -33,9 +34,12 @@ let selectCache: BoxCache<SelectBox> = {};
 let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
 let svgCache: BoxCache<SvgBox> = {};
+let horizontalLayoutCache: BoxCache<HorizontalListBox> = {};
+let verticalLayoutCache: BoxCache<VerticalListBox> = {};
 let horizontalListCache: BoxCache<HorizontalListBox> = {};
 let verticalListCache: BoxCache<VerticalListBox> = {};
-const gridcellCache: BoxCache<GridCellBox> = {};
+let gridcellCache: BoxCache<GridCellBox> = {};
+let tableCellCache: BoxCache<TableCellBox> = {};
 
 let cacheAliasOff: boolean = false;
 let cacheLabelOff: boolean = false;
@@ -43,9 +47,12 @@ let cacheTextOff: boolean = false;
 let cacheSelectOff: boolean = false;
 let cacheIndentOff: boolean = false;
 let cacheOptionalOff: boolean = false;
-let cacheHorizontalOff: boolean = false;
-let cacheVerticalOff: boolean = false;
-const cacheGridcellOff = true;
+let cacheHorizontalLayoutOff: boolean = false;
+let cacheVerticalLayoutOff: boolean = false;
+let cacheHorizontalListOff: boolean = false;
+let cacheVerticalListOff: boolean = false;
+let cacheGridcellOff = true;
+let cacheTablecellOff = true;
 
 /**
  * Caching of boxes, avoid recalculating them.
@@ -59,8 +66,12 @@ export class BoxFactory {
         indentCache = {};
         optionalCache = {};
         svgCache = {};
+        horizontalLayoutCache = {};
+        verticalLayoutCache = {};
         horizontalListCache = {};
         verticalListCache = {};
+        gridcellCache = {};
+        tableCellCache = {};
     }
 
     public static cachesOff() {
@@ -70,8 +81,12 @@ export class BoxFactory {
         cacheSelectOff = true;
         cacheIndentOff = true;
         cacheOptionalOff = true;
-        cacheHorizontalOff = true;
-        cacheVerticalOff = true;
+        cacheHorizontalLayoutOff = true;
+        cacheVerticalLayoutOff = true;
+        cacheHorizontalListOff = true;
+        cacheVerticalListOff = true;
+        cacheGridcellOff = true;
+        cacheTablecellOff = true;
     }
 
     public static cachesOn() {
@@ -81,8 +96,12 @@ export class BoxFactory {
         cacheSelectOff = false;
         cacheIndentOff = false;
         cacheOptionalOff = false;
-        cacheHorizontalOff = false;
-        cacheVerticalOff = false;
+        cacheHorizontalLayoutOff = false;
+        cacheVerticalLayoutOff = false;
+        cacheHorizontalListOff = false;
+        cacheVerticalListOff = false;
+        cacheGridcellOff = false;
+        cacheTablecellOff = false;
     }
 
     /**
@@ -183,11 +202,11 @@ export class BoxFactory {
 
     static horizontalLayout(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
         // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
-        if (cacheHorizontalOff) {
+        if (cacheHorizontalLayoutOff) {
             return new HorizontalLayoutBox(element, role, children, initializer);
         }
         const creator = () => new HorizontalLayoutBox(element, role, children, initializer);
-        const result: HorizontalLayoutBox = this.find<HorizontalLayoutBox>(element, role, creator, horizontalListCache);
+        const result: HorizontalLayoutBox = this.find<HorizontalLayoutBox>(element, role, creator, horizontalLayoutCache);
         runInAction( () => {
             // 2. Apply the other arguments in case they have changed
             if( !equals(result.children, children)) {
@@ -202,11 +221,11 @@ export class BoxFactory {
 
     static verticalLayout(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
         // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
-        if (cacheVerticalOff) {
+        if (cacheVerticalLayoutOff) {
             return new VerticalLayoutBox(element, role, children, initializer);
         }
         const creator = () => new VerticalLayoutBox(element, role, children, initializer);
-        const result: VerticalLayoutBox = this.find<VerticalLayoutBox>(element, role, creator, verticalListCache);
+        const result: VerticalLayoutBox = this.find<VerticalLayoutBox>(element, role, creator, verticalLayoutCache);
         runInAction(() => {
             // 2. Apply the other arguments in case they have changed
             if (!equals(result.children, children)) {
@@ -220,7 +239,7 @@ export class BoxFactory {
 
     static horizontalList(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
         // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
-        if (cacheHorizontalOff) {
+        if (cacheHorizontalListOff) {
             return new HorizontalListBox(element, role, propertyName, children, initializer);
         }
         const creator = () => new HorizontalListBox(element, role, propertyName, children, initializer);
@@ -239,7 +258,7 @@ export class BoxFactory {
 
     static verticalList(element: PiElement, role: string, trueList: boolean, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
         // TODO trueList is a temp hack to distinguish list properties from the model from layout lists
-        if (cacheVerticalOff) {
+        if (cacheVerticalListOff) {
             return new VerticalListBox(element, role, propertyName, children, initializer);
         }
         const creator = () => new VerticalListBox(element, role, propertyName, children, initializer);
@@ -298,11 +317,27 @@ export class BoxFactory {
 
     static gridcell(element: PiElement, propertyName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>): GridCellBox {
         if (cacheGridcellOff) {
-            return new GridCellBox(element, propertyName, role, row, column, box, initializer);
+            return new GridCellBox(element, role, row, column, box, initializer);
         }
         // 1. Create the grid cell box, or find the one that already exists for this element and role
-        const creator = () => new GridCellBox(element, propertyName, role, row, column, box, initializer);
+        const creator = () => new GridCellBox(element, role, row, column, box, initializer);
         const result: GridCellBox = this.find<GridCellBox>(element, role, creator, gridcellCache);
+
+        runInAction(() => {
+            // 2. Apply the other arguments in case they have changed
+            PiUtils.initializeObject(result, initializer);
+        });
+
+        return result;
+    }
+
+    static tablecell(element: PiElement, propertyName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>): TableCellBox {
+        if (cacheTablecellOff) {
+            return new TableCellBox(element, propertyName, role, row, column, box, initializer);
+        }
+        // 1. Create the table cell box, or find the one that already exists for this element and role
+        const creator = () => new TableCellBox(element, propertyName, role, row, column, box, initializer);
+        const result: TableCellBox = this.find<TableCellBox>(element, role, creator, tableCellCache);
 
         runInAction(() => {
             // 2. Apply the other arguments in case they have changed

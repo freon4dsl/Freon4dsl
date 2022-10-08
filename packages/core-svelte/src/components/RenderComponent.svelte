@@ -72,6 +72,7 @@
         setBoxSizes(box, element.getBoundingClientRect());
     });
 
+    // todo add a GridComponent to the if-statement
 </script>
 
 <span id="render-${box?.id}"

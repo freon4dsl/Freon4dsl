@@ -8,11 +8,10 @@ import { PiUtils } from "../../util";
 export type GridOrientation = "neutral" | "row" | "column";
 
 export class GridBox extends Box {
-    readonly kind = "GridBox";
+    kind = "GridBox";
     cells: GridCellBox[] = [];
     private $children: Box[] = []; // TODO question: why is this prop needed, what is the difference with cells?
     orientation: GridOrientation = "neutral";
-    trueList: boolean; // TODO trueList is a temp hack to distinguish list properties from the model from layout grids
     hasHeaders: boolean = false; // indication whether this grid has a header row/colum
 
     constructor(exp: PiElement, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
@@ -28,7 +27,7 @@ export class GridBox extends Box {
             }
         });
         this.sortCellsAndAddChildren();
-        makeObservable<GridBox, "$children">(this, {
+        makeObservable<GridBox, "$children" | "cells">(this, {
             $children: observable,
             cells: observable
         });
@@ -78,8 +77,4 @@ function compare(a: GridCellBox, b: GridCellBox): number {
 
 export function isGridBox(box: Box): box is GridBox {
     return box.kind === "GridBox"; //  box instanceof GridBox;
-}
-
-export function isTableBox(box: Box): box is GridBox {
-    return box.kind === "GridBox" && (box as GridBox).trueList; //  box instanceof GridBox;
 }
