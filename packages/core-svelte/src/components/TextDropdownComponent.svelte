@@ -63,13 +63,13 @@
 
     afterUpdate( () => {
         box.setFocus = setFocus;
-        const selected = box.getSelectedOption(); // todo why?
-        runInAction( () => {
-            textBox.cssStyle = box.cssStyle;
-            if (!!selected) {
-                textBox.setText(selected.label);
-            }
-        });
+        // const selected = box.getSelectedOption(); // todo why?
+        // runInAction( () => {
+        //     textBox.cssStyle = box.cssStyle;
+        //     if (!!selected) {
+        //         textBox.setText(selected.label);
+        //     }
+        // });
     });
     
     onMount(() => {
@@ -264,6 +264,7 @@
             // TODO the execution of the option should set the text in the selectBox, for now this is handled here
             if (isSelectBox(box)) {
                 box.textHelper.setText(selected.label);
+                text = selected.label;
             } else {
                 // ActionBox, action done, clear input text
                 clearText();

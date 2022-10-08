@@ -472,8 +472,10 @@
 	afterUpdate( () => {
 		box.setFocus = setFocus;
 		// box.setCaret = setCaret;
-		originalText = text = box.getText();
-		placeholder = box.placeHolder;
+		// if (!isEditing) {
+		// 	originalText = text = box.getText();
+		// 	placeholder = box.placeHolder;
+		// }
 	})
 
     /**
