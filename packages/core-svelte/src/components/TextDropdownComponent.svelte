@@ -19,7 +19,7 @@
     } from "@projectit/core";
 
     import { autorun, runInAction } from "mobx";
-    import { onMount } from "svelte";
+    import { afterUpdate, onMount } from "svelte";
 
     const LOGGER = new PiLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
 
@@ -61,6 +61,17 @@
         }
     }
 
+    afterUpdate( () => {
+        box.setFocus = setFocus;
+        // const selected = box.getSelectedOption(); // todo why?
+        // runInAction( () => {
+        //     textBox.cssStyle = box.cssStyle;
+        //     if (!!selected) {
+        //         textBox.setText(selected.label);
+        //     }
+        // });
+    });
+    
     onMount(() => {
         LOGGER.log("TextDropdownComponent.onMount for role [" + box.role + "]");
         box.setFocus = setFocus;
@@ -174,6 +185,8 @@
                 // store or execute the option
                 if (!!chosenOption) {
                     storeAndExecute(chosenOption);
+                    isEditing = false;
+                    dropdownShown = false;
                 } else { //  no valid option, restore the original text
                     text = textBox.getText();
                 }
@@ -191,6 +204,11 @@
             }
         }
     };
+    
+    function clearText() {
+        box.textHelper.setText("");
+        text = "";
+    }
 
     /**
      * This custom event is triggered by a click in the dropdown. The option that is clicked
@@ -200,7 +218,14 @@
         LOGGER.log('Textdropdown itemSelected')
         const index = filteredOptions.findIndex(o => o.id === selectedId);
         if (index >= 0 && index < filteredOptions.length) {
-            storeAndExecute(filteredOptions[index]);
+            const chosenOption = filteredOptions[index];
+            if (!!chosenOption) {
+                storeAndExecute(chosenOption);
+            }
+        }
+        if (!isSelectBox(box)) {
+            // c;lear text for an action box
+            clearText();
         }
         isEditing = false;
         dropdownShown = false;
@@ -230,6 +255,8 @@
      */
     function storeAndExecute(selected: SelectOption) {
         LOGGER.log('executing option ' + selected.label);
+        isEditing = false;
+        dropdownShown = false;
         runInAction(() => {
             // TODO set the new cursor through the editor
             box.selectOption(editor, selected); // TODO the result of the execution is ignored
@@ -237,6 +264,10 @@
             // TODO the execution of the option should set the text in the selectBox, for now this is handled here
             if (isSelectBox(box)) {
                 box.textHelper.setText(selected.label);
+                text = selected.label;
+            } else {
+                // ActionBox, action done, clear input text
+                clearText();
             }
         });
     }
@@ -276,6 +307,7 @@
             let selectedOption = box.getSelectedOption();
             if (!!selectedOption) {
                 box.textHelper.setText(selectedOption.label);
+                text = box.textHelper.getText();
             }
         }
         // because the box maybe a different one than we started with ...
@@ -294,6 +326,8 @@
         }
     };
 
+
+    // TOD: on:TextUpdate, on:
 </script>
 
 <span id="{id}"

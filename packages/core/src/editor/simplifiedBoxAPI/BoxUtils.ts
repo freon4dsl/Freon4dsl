@@ -368,7 +368,7 @@ export class BoxUtils {
         // check whether the property is a part list
         if (property !== undefined && property !== null && isList && isPart !== "reference") {
             // find the children to show in this listBox, depending on whether it is a list of parts or of references
-            let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin, projName);
+            let children: Box[] = this.findPartItems(property, element, propertyName, rootProjection, listJoin, projName);
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
             // return the box
