@@ -173,7 +173,7 @@
             index = 0;
         } else {
             $contextMenu.items = box.options("normal");
-            index = parentOrientation === "row" ? row : column;
+            index = parentOrientation === "row" ? row - 1 : column - 1;
             if (parentHasHeader) {
                 index--;
             }

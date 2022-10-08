@@ -14,12 +14,12 @@ export class TableBox extends GridBox {
     cells: TableCellBox[] = [];
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    constructor(element: PiElement, propertyName: string, role: string, cells: TableCellBox[], initializer?: Partial<GridBox>) {
+    constructor(element: PiElement, propertyName: string, conceptName: string, role: string, cells: TableCellBox[], initializer?: Partial<GridBox>) {
         super(element, role, cells, initializer);
         this.cells = cells; // need to overwrite the parent property, because of the difference in type
         this.propertyName = propertyName;
         // todo check whether the conceptName is correct
-        this.conceptName = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
+        this.conceptName = conceptName;
     }
 }
 

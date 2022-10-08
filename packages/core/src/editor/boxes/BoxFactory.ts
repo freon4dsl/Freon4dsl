@@ -331,12 +331,12 @@ export class BoxFactory {
         return result;
     }
 
-    static tablecell(element: PiElement, propertyName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>): TableCellBox {
+    static tablecell(element: PiElement, propertyName: string, conceptName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>): TableCellBox {
         if (cacheTablecellOff) {
-            return new TableCellBox(element, propertyName, role, row, column, box, initializer);
+            return new TableCellBox(element, propertyName, conceptName, role, row, column, box, initializer);
         }
         // 1. Create the table cell box, or find the one that already exists for this element and role
-        const creator = () => new TableCellBox(element, propertyName, role, row, column, box, initializer);
+        const creator = () => new TableCellBox(element, propertyName, conceptName, role, row, column, box, initializer);
         const result: TableCellBox = this.find<TableCellBox>(element, role, creator, tableCellCache);
 
         runInAction(() => {

@@ -69,7 +69,6 @@ export class TableUtil {
         const property = element[propertyName];
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
         LOGGER.log("TABLE BOX CREATION for " + propertyName + " size " + property.length);
-        // const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
         const hasHeaders = columnHeaders !== null && columnHeaders !== undefined && columnHeaders.length > 0;
         // create the box
         if (property !== undefined && property !== null) {
@@ -78,7 +77,7 @@ export class TableUtil {
             columnHeaders.forEach((item: string, index: number) => {
                 const location = this.calcHeaderLocation({ row: 1, column: index + 1 }, orientation, hasHeaders);
                 LOGGER.log("TableUtil header " + location.row + " - " + location.column + " with headers " + hasHeaders);
-                cells.push(BoxFactory.tablecell(element, propertyName, "cell-" + location.row + "-" + location.column, location.row, location.column,
+                cells.push(BoxFactory.tablecell(element, propertyName, propInfo.type, "cell-" + location.row + "-" + location.column, location.row, location.column,
                     BoxUtils.labelBox(element, item, "" + index),
                     { isHeader: true })
                 );
@@ -89,14 +88,14 @@ export class TableUtil {
                     const location = this.calcLocation({ row: rowIndex + 1, column: columnIndex + 1 }, orientation, hasHeaders);
                     const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
                     LOGGER.log("TableUtil add " + cellRoleName + " with headers " + hasHeaders);
-                    cells.push(BoxFactory.tablecell(item, propertyName, cellRoleName, location.row, location.column, projector(item)));
+                    cells.push(BoxFactory.tablecell(item, propertyName, propInfo.type, cellRoleName, location.row, location.column, projector(item)));
                 });
             });
             // add an extra row where a new element to the list can be added
             const location = this.calcLocation({ row: property.length + 1, column: 1 }, orientation, hasHeaders);
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
             LOGGER.log("TableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders + " span[" + (orientation === "row" ? cellGetters.length : 1) + "/" + (orientation === "row" ? 1 : cellGetters.length) + "]");
-            cells.push(BoxFactory.tablecell(element, propertyName, cellRoleName, location.row, location.column,
+            cells.push(BoxFactory.tablecell(element, propertyName, propInfo.type, cellRoleName, location.row, location.column,
                 BoxFactory.action(element, "alias-add-row-or-column", `<add new ${orientation}>`,
                     { propertyName: propertyName, conceptName: propInfo.type }),
                 {
@@ -107,9 +106,8 @@ export class TableUtil {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
             const nrOfRowsAndColumns = this.calcLocation({ row: property.length, column: cellGetters.length }, orientation, hasHeaders);
             this.addKeyBoardShortCuts(element, propertyName, nrOfRowsAndColumns.row, nrOfRowsAndColumns.column, editor, propInfo.type);
-            let result = new TableBox(element, propertyName, roleName, cells, { orientation: orientation });
+            let result = new TableBox(element, propertyName, propInfo.type, roleName, cells, { orientation: orientation });
             result.hasHeaders = hasHeaders;
-            result.propertyName = propertyName;
             return result;
         }
         return null;

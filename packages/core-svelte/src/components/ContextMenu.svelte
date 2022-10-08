@@ -36,12 +36,13 @@
     let contextmenu, submenu: HTMLElement;
 
     /**
-     * This function shows the context menu
+     * This function shows the context menu. Note that the items to be shown should
+     * already be set (based on the box to which the menu is coupled)
      * @param event
      */
     export async function show(event: MouseEvent, index: number) {
+        console.log('showing contextmenu for index ' + index);
         elementIndex = index;
-        // todo determine the items based on the box to which the menu is coupled
         $contextMenuVisible = true;
         submenuOpen = false;
         // wait for the menu to be rendered, because we need its sizes for the positioning

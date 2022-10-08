@@ -118,7 +118,7 @@ export function getContextMenuOptions(conceptName: string, listParent: PiElement
     let addBefore: MenuItem;
     let addAfter: MenuItem;
     if (clsOtIntf.subConceptNames.length > 0) { // there are sub concepts, so create sub menu items
-        // todo to be tested in different project than Example
+        // todo subclasses to be tested in different project than Example
         let submenuItemsBefore: MenuItem[] = [];
         let submenuItemsAfter: MenuItem[] = [];
         clsOtIntf.subConceptNames.forEach((creatableConceptname: string) => {
@@ -211,12 +211,10 @@ function deleteListElement(listParent: PiElement, propertyName: string, element:
     // const parentElement: PiElement = element.piOwnerDescriptor().owner;
     // const targetPropertyName: string = element.piOwnerDescriptor().propertyName;
     const targetIndex: number = element.piOwnerDescriptor().propertyIndex;
-    // TODO HIER GESTOPT!!!
+    // console.log(`deleteListElement=> listParent: ${listParent.piLanguageConcept()},
+    // propertyName ${propertyName}, index: ${targetIndex}`);
+
     const { property, isList } = getPropertyInfo(listParent, propertyName);
-    // if (parentElement !== listParent || targetPropertyName !== propertyName) {
-    //     console.error("not a correct list item: " + parentElement.piId() + '?== ' + listParent.piId() + ', ' + targetPropertyName + '?== ' + propertyName);
-    //     return;
-    // }
     // make the change
     if (isList) {
         // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
@@ -266,7 +264,7 @@ function pasteListElement(listParent: PiElement, propertyName: string, element: 
         console.error("nothing to paste"); // todo error message to webapp
         return;
     }
-    console.log("Pasting element of type " + editor.copiedElement.piLanguageConcept() + (before ? " before " : " after ") + element.piLanguageConcept());
+    // console.log("Pasting element of type " + editor.copiedElement.piLanguageConcept() + (before ? " before " : " after ") + element.piLanguageConcept());
     if (editor.copiedElement.piLanguageConcept() !== element.piLanguageConcept()) { // todo allow subtypes
         console.error("types do not conform"); // todo error message to webapp
         return;
@@ -285,8 +283,8 @@ function pasteListElement(listParent: PiElement, propertyName: string, element: 
         // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
         runInAction(() => {
             // make a copy before the element is added as part of the model,
-            // because mobx decorators change the element's owner info
-            // todo is this comment correct?
+            // because mobx decorators change the element's owner info:
+            // it is removed from 'editor.copiedElement'!
             const tmp: PiElement = editor.copiedElement.copy();
             if (targetIndex <= property.length) {
                 property.splice(targetIndex, 0, editor.copiedElement);
