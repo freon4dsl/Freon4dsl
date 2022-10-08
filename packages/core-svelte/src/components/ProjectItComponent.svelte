@@ -61,7 +61,6 @@
             // All alt keys here
         } else {
             // No meta key pressed
-            // todo adjust to multiple selections
             switch (event.key) {
                 case BACKSPACE:
                 case ARROW_LEFT:
@@ -78,20 +77,12 @@
                     stopEvent(event);
                     break;
                 case ARROW_DOWN:
-                    const down = editor.boxBelow(editor.selectedBox);
-                    // todo move the following three lines to PiEditor
-                    if (down !== null && down !== undefined) {
-                        editor.selectBoxNew(down);
-                    }
+                    editor.selectBoxBelow(editor.selectedBox);
                     stopEvent(event);
                     break;
                 case ARROW_UP:
                     LOGGER.log("Up: " + editor.selectedBox.role);
-                    // todo move the following three lines to PiEditor
-                    const up = editor.boxAbove(editor.selectedBox);
-                    if (up !== null) {
-                        editor.selectBoxNew(up);
-                    }
+                    editor.selectBoxAbove(editor.selectedBox);
                     stopEvent(event);
                     break;
             }

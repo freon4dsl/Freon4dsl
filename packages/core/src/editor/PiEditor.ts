@@ -360,6 +360,20 @@ export class PiEditor {
         return result;
     }
 
+    selectBoxBelow(box: Box) {
+        const down = this.boxBelow(box);
+        if (down !== null && down !== undefined) {
+            this.selectBoxNew(down);
+        }
+    }
+
+    selectBoxAbove(box: Box) {
+        const up = this.boxAbove(box);
+        if (up !== null) {
+            this.selectBoxNew(up);
+        }
+    }
+
     /**
      * TODO
      * @param piCustomAction
