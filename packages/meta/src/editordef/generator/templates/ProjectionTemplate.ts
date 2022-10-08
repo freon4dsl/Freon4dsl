@@ -160,7 +160,7 @@ export class ProjectionTemplate {
                             !!exp.piOwnerDescriptor().owner &&
                             isPiBinaryExpression(exp.piOwnerDescriptor().owner)
                         ) {
-                            return BoxFactory.horizontalLayout(exp, "brackets", false, '', [
+                            return BoxFactory.horizontalLayout(exp, "brackets", '', [
                                 BoxUtils.labelBox(exp, "(", "bracket-open", true),
                                 binBox,
                                 BoxUtils.labelBox(exp, ")", "bracket-close", true)
