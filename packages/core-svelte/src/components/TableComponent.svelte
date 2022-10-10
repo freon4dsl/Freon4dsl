@@ -37,8 +37,7 @@
     // determine the type of the elements in the list
     // this speeds up the check whether the element may be dropped in a certain drop-zone
     let myMetaType: string;
-    // todo see how we can avoid the use of Language here
-    $: myMetaType = Language.getInstance().classifierProperty(box.element.piLanguageConcept(), box.propertyName).type;
+    $: myMetaType = box.conceptName;
 
     const drop = (event: CustomEvent) => {
         const data: ListElementInfo = $draggedElem;

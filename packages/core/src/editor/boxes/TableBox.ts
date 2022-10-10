@@ -18,7 +18,6 @@ export class TableBox extends GridBox {
         super(element, role, cells, initializer);
         this.cells = cells; // need to overwrite the parent property, because of the difference in type
         this.propertyName = propertyName;
-        // todo check whether the conceptName is correct
         this.conceptName = conceptName;
     }
 }

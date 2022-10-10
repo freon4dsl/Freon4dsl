@@ -103,6 +103,22 @@
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
     };
 
+    function selectLastOption() {
+        if (filteredOptions.length !== 0) {
+            selectedId = filteredOptions[filteredOptions.length - 1].id;
+        } else { // there are no valid options left
+            editor.setUserMessage("no valid selection");
+        }
+    }
+
+    function selectFirstOption() {
+        if (filteredOptions.length !== 0) {
+            selectedId = filteredOptions[0].id;
+        } else { // there are no valid options left
+            editor.setUserMessage("No valid selection");
+        }
+    }
+
     /**
      * These events are either not handled by the textComponent, or not handled by the dropdownComponent.
      * In case of an arrow down or up event in the textComponent, the currently selected option in the dropdown is changed.
@@ -122,21 +138,13 @@
             }
             case ARROW_DOWN: {
                 if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
-                    if (filteredOptions.length !== 0) {
-                        selectedId = filteredOptions[0].id;
-                    } else { // there are no valid options left
-                        editor.setUserMessage('No valid selection')
-                    }
+                    selectFirstOption();
                 } else {
                     const index = filteredOptions.findIndex(o => o.id === selectedId);
                     if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
                         selectedId = filteredOptions[index + 1].id;
                     } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
-                        if (filteredOptions.length !== 0) {
-                            selectedId = filteredOptions[0].id;
-                        } else { // there are no valid options left
-                            editor.setUserMessage('No valid selection')
-                        }
+                        selectFirstOption();
                     }
                 }
                 event.preventDefault();
@@ -145,22 +153,13 @@
             }
             case ARROW_UP: {
                 if (!selectedId || selectedId.length == 0) { // there is no current selection, start at the last option
-                    if (filteredOptions.length !== 0) {
-                        selectedId = filteredOptions[filteredOptions.length - 1].id;
-                    } else { // there are no valid options left
-                        editor.setUserMessage('no valid selection')
-                    }
+                    selectLastOption();
                 } else {
                     const index = filteredOptions.findIndex(o => o.id === selectedId);
                     if (index > 0) { // the 'normal' case: go one up
                         selectedId = filteredOptions[index - 1].id;
                     } else if (index === 0) { // the beginning of the options reached: go to the last
-                        // todo make separate function of the following if-statement, plus find other way to put error message out
-                        if (filteredOptions.length !== 0) {
-                            selectedId = filteredOptions[filteredOptions.length - 1].id;
-                        } else { // there are no valid options left
-                            editor.setUserMessage('no valid selection')
-                        }
+                        selectLastOption();
                     }
                 }
                 event.preventDefault();
@@ -174,7 +173,7 @@
                     if (filteredOptions.length !== 0) {
                         chosenOption = filteredOptions[0];
                     } else { // there are no valid options left
-                        editor.setUserMessage('no valid selection')
+                        editor.setUserMessage('No valid selection')
                     }
                 } else { // find the selected option and choose that one
                     const index = filteredOptions.findIndex(o => o.id === selectedId);
@@ -312,7 +311,6 @@
         }
         // because the box maybe a different one than we started with ...
         box.setFocus = setFocus;
-        // box.textBox.setFocus = setFocus;
     });
 
     const onFocusOut = () => {

@@ -59,6 +59,7 @@
     // the drag ghost image, preload  it, otherwise it will not be shown on the first drag
     const img = new Image();
     img.src = "img/projectit-logo.png";
+    // img.src = "img/open_with.svg"; // todo svg image is not shown as drag ghost
 
     // todo see which function we need to set the row and column: onMOunt autorun, afterUpdate???
     onMount(() => {
