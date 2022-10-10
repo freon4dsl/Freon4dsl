@@ -12,6 +12,7 @@ import {
     Box,
     PiCombinedActions, PiCaret, wait
 } from "./internal";
+import { SeverityType } from "../validator";
 
 const LOGGER = new PiLogger("PiEditor"); //.mute();
 
@@ -393,6 +394,10 @@ export class PiEditor {
         } else {
             this.newPiActions.splice(0, 0, piCustomAction);
         }
+    }
+
+    setUserMessage(message: string, sever?: SeverityType) {
+        console.log('This message should be shown elsewhere: "' + message + '", please override this method appropriately.', sever)
     }
 
     /**

@@ -5,36 +5,41 @@
 <!-- its own <span> that gets a handle to actually resize it. -->
 
 <script lang="ts">
-	import { afterUpdate, onMount, createEventDispatcher, tick, beforeUpdate } from "svelte";
+	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
 	import { setBoxSizes } from "./svelte-utils";
 	import {
+		ActionBox,
+		ALT,
 		ARROW_DOWN,
 		ARROW_LEFT,
 		ARROW_RIGHT,
 		ARROW_UP,
 		BACKSPACE,
+		CharAllowed,
+		CONTROL,
 		DELETE,
 		ENTER,
 		ESCAPE,
-		TAB,
 		isActionBox,
+		isActionTextBox,
 		isSelectBox,
-		PiEditor,
-		PiLogger,
-		TextBox,
-		CharAllowed,
+		PI_NULL_COMMAND,
 		PiCaret,
 		PiCaretPosition,
-		ActionBox,
-		isActionTextBox,
-		SelectBox,
-		isMetaKey,
 		PiCommand,
+		PiEditor,
 		PiEditorUtil,
-		toPiKey, PI_NULL_COMMAND, PiPostAction, SHIFT, CONTROL, ALT
+		PiLogger,
+		PiPostAction,
+		SelectBox,
+		SeverityType,
+		SHIFT,
+		TAB,
+		TextBox,
+		toPiKey
 	} from "@projectit/core";
 
-    import { autorun, runInAction } from "mobx";
+	import { autorun, runInAction } from "mobx";
 	import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
 
 	// TODO finger out better way to handle muting/unmuting of LOGGERs
@@ -255,10 +260,10 @@
 				event.stopPropagation();
 				navigator.clipboard.writeText(text) // TODO get only the selected text from document.getSelection
 						.then(() => {
-							alert('Text copied to clipboard');
+							editor.setUserMessage('Text copied to clipboard', SeverityType.info);
 						})
 						.catch(err => {
-							alert('Error in copying text: ' + err.message);
+							editor.setUserMessage('Error in copying text: ' + err.message);
 						});
 			} else if (event.ctrlKey && !event.altKey && event.key === 'v') { // ctrl-v
 				// PASTE

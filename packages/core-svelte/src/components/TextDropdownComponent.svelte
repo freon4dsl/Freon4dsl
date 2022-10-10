@@ -125,7 +125,7 @@
                     if (filteredOptions.length !== 0) {
                         selectedId = filteredOptions[0].id;
                     } else { // there are no valid options left
-                        alert('no valid selection')
+                        editor.setUserMessage('No valid selection')
                     }
                 } else {
                     const index = filteredOptions.findIndex(o => o.id === selectedId);
@@ -135,7 +135,7 @@
                         if (filteredOptions.length !== 0) {
                             selectedId = filteredOptions[0].id;
                         } else { // there are no valid options left
-                            alert('no valid selection')
+                            editor.setUserMessage('No valid selection')
                         }
                     }
                 }
@@ -148,7 +148,7 @@
                     if (filteredOptions.length !== 0) {
                         selectedId = filteredOptions[filteredOptions.length - 1].id;
                     } else { // there are no valid options left
-                        alert('no valid selection')
+                        editor.setUserMessage('no valid selection')
                     }
                 } else {
                     const index = filteredOptions.findIndex(o => o.id === selectedId);
@@ -159,7 +159,7 @@
                         if (filteredOptions.length !== 0) {
                             selectedId = filteredOptions[filteredOptions.length - 1].id;
                         } else { // there are no valid options left
-                            alert('no valid selection')
+                            editor.setUserMessage('no valid selection')
                         }
                     }
                 }
@@ -174,7 +174,7 @@
                     if (filteredOptions.length !== 0) {
                         chosenOption = filteredOptions[0];
                     } else { // there are no valid options left
-                        alert('no valid selection')
+                        editor.setUserMessage('no valid selection')
                     }
                 } else { // find the selected option and choose that one
                     const index = filteredOptions.findIndex(o => o.id === selectedId);

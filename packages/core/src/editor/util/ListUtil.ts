@@ -4,17 +4,18 @@
  */
 
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
-import { MetaKey } from "./Keys";
 import * as Keys from "./Keys";
+import { MetaKey } from "./Keys";
 import { PiLogger } from "../../logging";
 import { ListElementInfo, MenuItem, PiCreatePartAction, PiEditor } from "../index";
 import { Language, PropertyKind } from "../../language";
 import { PiElement } from "../../ast";
 import { runInAction } from "mobx";
+import { SeverityType } from "../../validator";
 
 const LOGGER = new PiLogger("ListBoxUtil");
 
-export type MenuOptionsType = 'normal' | 'placeholder' | 'header';
+export type MenuOptionsType = "normal" | "placeholder" | "header";
 
 /**
  * When the user hits 'ENTER', this action is triggered.
@@ -23,12 +24,7 @@ export type MenuOptionsType = 'normal' | 'placeholder' | 'header';
  * @param conceptName
  * @param roleToSelect
  */
-export function createKeyboardShortcutForList2(
-    role: string,
-    propertyName: string,
-    conceptName: string,
-    roleToSelect: string
-): PiCreatePartAction {
+export function createKeyboardShortcutForList2(role: string, propertyName: string, conceptName: string, roleToSelect: string): PiCreatePartAction {
     LOGGER.log("LIST role [" + role + "]");
     return new PiCreatePartAction({
         trigger: { meta: MetaKey.None, key: Keys.ENTER, code: Keys.ENTER },
@@ -77,21 +73,23 @@ export function moveListElement(parentElement: PiElement, movedElement: PiElemen
  * @param targetPropertyName
  * @param targetIndex
  */
-export function dropListElement(dropped: ListElementInfo, targetElem: PiElement, targetPropertyName: string, targetIndex: number) {
+export function dropListElement(editor: PiEditor, dropped: ListElementInfo, targetMetaType: string, targetElem: PiElement, targetPropertyName: string, targetIndex: number) {
+    if (!Language.getInstance().metaConformsToType(dropped.element, targetMetaType)) { // check if item may be dropped here
+        editor.setUserMessage("Drop is not allowed here, because the types do not match (" + dropped.element.piLanguageConcept() + " does not conform to " + targetMetaType + ").", SeverityType.error);
+        return;
+    }
     runInAction(() => {
         // console.log(`dropListElement=> element: ${dropped.element.piLanguageConcept()}, property: ${dropped.propertyName},
         // oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
         // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
-        const { property, isList, type } = getPropertyInfo(targetElem, targetPropertyName);
+        const { property, isList } = getPropertyInfo(targetElem, targetPropertyName);
         // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
-        if (type === dropped.elementType) { // TODO extend to include subtypes
-            if (!!dropped.element) {
-                // Add the found element to 'targetElem[targetPropertyName]' at position 'targetIndex'.
-                // Note that we need not explicitly remove the item from its old position, the mobx decorators do that.
-                // Note that because of the placeholder that is shown as last element of a list, the targetIndex may be equal to the property.length.
-                if (isList && targetIndex <= property.length) {
-                    property.splice(targetIndex, 0, dropped.element);
-                }
+        if (!!dropped.element) {
+            // Add the found element to 'targetElem[targetPropertyName]' at position 'targetIndex'.
+            // Note that we need not explicitly remove the item from its old position, the mobx decorators do that.
+            // Note that because of the placeholder that is shown as last element of a list, the targetIndex may be equal to the property.length.
+            if (isList && targetIndex <= property.length) {
+                property.splice(targetIndex, 0, dropped.element);
             }
         }
         // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
@@ -122,12 +120,8 @@ export function getContextMenuOptions(conceptName: string, listParent: PiElement
         let submenuItemsBefore: MenuItem[] = [];
         let submenuItemsAfter: MenuItem[] = [];
         clsOtIntf.subConceptNames.forEach((creatableConceptname: string) => {
-            submenuItemsBefore.push(new MenuItem(
-                creatableConceptname, "", (element: PiElement, index: number, editor: PiEditor) => addListElement(listParent, propertyName, index, creatableConceptname, true)
-            ));
-            submenuItemsAfter.push(new MenuItem(
-                creatableConceptname, "", (element: PiElement, index: number, editor: PiEditor) => addListElement(listParent, propertyName, index, creatableConceptname, false)
-            ));
+            submenuItemsBefore.push(new MenuItem(creatableConceptname, "", (element: PiElement, index: number, editor: PiEditor) => addListElement(listParent, propertyName, index, creatableConceptname, true)));
+            submenuItemsAfter.push(new MenuItem(creatableConceptname, "", (element: PiElement, index: number, editor: PiEditor) => addListElement(listParent, propertyName, index, creatableConceptname, false)));
         });
         addBefore = new MenuItem("Add before", "Ctrl+A", (element: PiElement, index: number, editor: PiEditor) => {
         }, submenuItemsBefore);
@@ -141,27 +135,12 @@ export function getContextMenuOptions(conceptName: string, listParent: PiElement
     let pasteAfter = new MenuItem("Paste after", "", (element: PiElement, index: number, editor: PiEditor) => pasteListElement(listParent, propertyName, element, editor, false));
 
     // now create the whole item list
-    if (optionsType === 'placeholder') { // add lesser items for a placeholder
-        items = [
-            addBefore,
-            pasteBefore
-        ];
-    } else if (optionsType === 'header') { // add lesser items for a placeholder
-        items = [
-            addAfter,
-            pasteAfter
-        ];
+    if (optionsType === "placeholder") { // add lesser items for a placeholder
+        items = [addBefore, pasteBefore];
+    } else if (optionsType === "header") { // add lesser items for a placeholder
+        items = [addAfter, pasteAfter];
     } else {
-        items = [
-            addBefore,
-            addAfter,
-            new MenuItem("Delete", "", (element: PiElement, index: number, editor: PiEditor) => deleteListElement(listParent, propertyName, element)),
-            new MenuItem("---", "", (element: PiElement, index: number, editor: PiEditor) => console.log('this is not an option')),
-            new MenuItem("Cut", "", (element: PiElement, index: number, editor: PiEditor) => cutListElement(listParent, propertyName, element, editor)),
-            new MenuItem("Copy", "", (element: PiElement, index: number, editor: PiEditor) => copyListElement(element, editor)),
-            pasteBefore,
-            pasteAfter
-        ];
+        items = [addBefore, addAfter, new MenuItem("Delete", "", (element: PiElement, index: number, editor: PiEditor) => deleteListElement(listParent, propertyName, element)), new MenuItem("---", "", (element: PiElement, index: number, editor: PiEditor) => console.log("this is not an option")), new MenuItem("Cut", "", (element: PiElement, index: number, editor: PiEditor) => cutListElement(listParent, propertyName, element, editor)), new MenuItem("Copy", "", (element: PiElement, index: number, editor: PiEditor) => copyListElement(element, editor)), pasteBefore, pasteAfter];
     }
     return items;
 }
@@ -185,15 +164,13 @@ function addListElement(listParent: PiElement, propertyName: string, index: numb
     // targetPropertyName ${propertyName}, index: ${index}`);
 
     // make the change, if the property is a list and the type of the new element conforms to the type of elements in the list
-    if (isList && typeOfAdded === type) { // todo allow subtyping
+    const newElement: PiElement = Language.getInstance().concept(typeOfAdded)?.constructor();
+    if (newElement === undefined || newElement === null) {
+        console.error("New element undefined"); // TODO Find out why this happens sometimes
+        return;
+    } else if (isList && Language.getInstance().metaConformsToType(newElement, type)) { // allow subtyping
         // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
         runInAction(() => {
-            const newElement: PiElement = Language.getInstance().concept(typeOfAdded)?.constructor();
-            if (newElement === undefined || newElement === null) {
-                // TODO Find out why this happens sometimes
-                console.error("New element undefined");
-                return;
-            }
             property.splice(index, 0, newElement);
         });
         // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
@@ -261,12 +238,15 @@ function copyListElement(element: PiElement, editor: PiEditor) {
 function pasteListElement(listParent: PiElement, propertyName: string, element: PiElement, editor: PiEditor, before: boolean) {
     // first, do some checks
     if (editor.copiedElement === null || editor.copiedElement === undefined) {
-        console.error("nothing to paste"); // todo error message to webapp
+        editor.setUserMessage("Nothing to paste", SeverityType.warning);
         return;
     }
     // console.log("Pasting element of type " + editor.copiedElement.piLanguageConcept() + (before ? " before " : " after ") + element.piLanguageConcept());
-    if (editor.copiedElement.piLanguageConcept() !== element.piLanguageConcept()) { // todo allow subtypes
-        console.error("types do not conform"); // todo error message to webapp
+    // check whether the pasted element has the correct type
+    if (Language.getInstance().metaConformsToType(editor.copiedElement, element.piLanguageConcept())) {
+        editor.setUserMessage(
+            "Types do not conform (" + editor.copiedElement.piLanguageConcept() + " does not conform to " + element.piLanguageConcept() + ").",
+            SeverityType.error);
         return;
     }
     // get info about the property that needs to be changed

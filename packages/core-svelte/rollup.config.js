@@ -35,9 +35,10 @@ export default {
 			globals: {
 				'@projectit/core': '@projectit/core',
 				'mobx': 'mobx',
+				'svelte': 'svelte',
+				'svelte/animate': 'svelte/animate',
 				'svelte/internal': 'svelte/internal',
-				'svelte/store': 'svelte/store',
-				'svelte': 'svelte'
+				'svelte/store': 'svelte/store'
 			}
 		},
 		{
@@ -48,9 +49,10 @@ export default {
 			globals: {
 				'@projectit/core': '@projectit/core',
 				'mobx': 'mobx',
+				'svelte': 'svelte',
+				'svelte/animate': 'svelte/animate',
 				'svelte/internal': 'svelte/internal',
 				'svelte/store': 'svelte/store',
-				'svelte': 'svelte',
 				"tslib": "tslib"
 			}
 		}

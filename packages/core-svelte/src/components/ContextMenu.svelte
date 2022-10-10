@@ -64,16 +64,6 @@
     }
 
     /**
-     * This function hides the sub menu only, the context menu is still shown.
-     * It is used when the sub menu is shown but the user clicks on another part of the contextmenu.
-     * todo see if this is still needed => when the user clicks on another item, this item should be executed.
-     */
-    function hidesubmenu() {
-        $contextMenuVisible = false;
-        submenuOpen = false;
-    }
-
-    /**
      * This function shows the sub menu
      */
     async function openSub(itemIndex) {

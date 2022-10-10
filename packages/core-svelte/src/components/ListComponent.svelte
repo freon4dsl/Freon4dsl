@@ -5,8 +5,16 @@
      * row or column, respectively.
      * This component supports drag and drop.
      */
-    import { flip } from "svelte/animate"; // TODO adjust rollup.config for svelte.animate
-    import { Box, isActionBox, ListBox, ListDirection, PiEditor, PiLogger } from "@projectit/core";
+    import { flip } from "svelte/animate";
+    import {
+        Box,
+        isActionBox,
+        Language,
+        ListBox,
+        ListDirection,
+        PiEditor,
+        PiLogger
+    } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import { autorun } from "mobx";
     import { dropListElement, moveListElement, ListElementInfo } from "@projectit/core";
@@ -33,9 +41,9 @@
     $: shownElements = [...box.children];
 
     // determine the type of the elements in the list
-    // this speeds up the check whether the element may be dropped in a certain drop-zone
-    let elementType: string;
-    $: elementType = box.conceptName;
+    // this speeds up the check whether an element may be dropped here
+    let myMetaType: string;
+    $: myMetaType = box.conceptName;
 
     const drop = (event: DragEvent, targetIndex) => {
         const data: ListElementInfo = $draggedElem;
@@ -46,12 +54,7 @@
             moveListElement(box.element, data.element, box.propertyName, targetIndex);
         } else { // dropping in another list
             // console.log('moving item to another list');
-            if (data.elementType === elementType) { // check if item may be dropped here // TODO extend to include subtypes
-                dropListElement(data, box.element, box.propertyName, targetIndex);
-            } else {
-                // TODO other way for error message
-                alert("drop is not allowed here, types do not match [" + data.elementType + " != " + elementType + "]");
-            }
+            dropListElement(editor, data, myMetaType, box.element, box.propertyName, targetIndex);
         }
         // everything is done, so reset the variables
         $draggedElem = null;
@@ -80,8 +83,8 @@
     };
     const dragenter = (event: DragEvent, index): boolean => {
         const data: ListElementInfo = $draggedElem;
-        // only show this item as active when the type of the element to be dropped is the right one // TODO allow subtypes
-        if (elementType === data.elementType) {
+        // only show this item as active when the type of the element to be dropped is the right one
+        if (Language.getInstance().metaConformsToType(data.element, myMetaType)) {
             $activeElem = { row: index, column: -1 };
             $activeIn = id;
         }

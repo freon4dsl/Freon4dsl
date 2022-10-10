@@ -67,7 +67,6 @@
         className = (isSelected ? "selected" : "unSelected");
         if (isSelected) {
             LOGGER.log("RenderComponent.afterUpdate for box " + box.role + ", isSelected:" + isSelected);
-            // TODO adjust for multiple selection
             box.setFocus();
         }
         // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?

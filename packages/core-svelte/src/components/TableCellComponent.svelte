@@ -13,7 +13,7 @@
         PiLogger,
         toPiKey,
         TableCellBox,
-        PiEditorUtil, PiCommand, PI_NULL_COMMAND, PiPostAction, ListElementInfo, isActionBox
+        PiEditorUtil, PiCommand, PI_NULL_COMMAND, PiPostAction, ListElementInfo, isActionBox, Language
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
     import { afterUpdate, onMount, createEventDispatcher, tick } from "svelte";
@@ -36,8 +36,8 @@
     export let parentOrientation: string;
     export let parentHasHeader: boolean;
     // determine the type of the elements in the cell
-    // this speeds up the check whether the element may be dropped in a certain drop-zone
-    export let elementType: string;
+    // this speeds up the check whether an element may be dropped here
+    export let myMetaType: string;
 
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
@@ -143,8 +143,8 @@
 
     const dragenter = (event: DragEvent): boolean => {
         const data: ListElementInfo = $draggedElem;
-        // only show this item as active when the type of the element to be dropped is the right one // TODO allow subtypes
-        if (elementType === data.elementType) {
+        // only show this item as active when the type of the element to be dropped is the right one
+        if (Language.getInstance().metaConformsToType(data.element, myMetaType)) {
             $activeElem = { row: row, column: column };
             $activeIn = parentComponentId;
         }

@@ -3,7 +3,8 @@ import {
     PiError,
     PiErrorSeverity,
     PiLogger,
-    PiOwnerDescriptor
+    PiOwnerDescriptor,
+    SeverityType
 } from "@projectit/core";
 import type {
     PiElement,
@@ -20,7 +21,7 @@ import {
     units,
     unitNames
 } from "../components/stores/ModelStore";
-import { setUserMessage, SeverityType } from "../components/stores/UserMessageStore";
+import { setUserMessage  } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
 import { modelErrors } from "../components/stores/InfoPanelStore";
 import { ServerCommunication } from "../server/ServerCommunication";

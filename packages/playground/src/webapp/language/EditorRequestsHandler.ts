@@ -2,17 +2,18 @@ import { editorEnvironment } from "../config/WebappConfiguration";
 import {
     Box,
     isActionBox,
-    isActionTextBox, isListBox,
+    isActionTextBox, isListBox, Language,
     PiCompositeProjection,
     PiError,
     PiLogger,
     PiUndoManager,
-    Searcher
+    Searcher,
+    SeverityType
 } from "@projectit/core";
 import type { PiElement } from "@projectit/core";
 import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore";
 import { EditorState } from "./EditorState";
-import { setUserMessage, SeverityType } from "../components/stores/UserMessageStore";
+import { setUserMessage } from "../components/stores/UserMessageStore";
 
 const LOGGER = new PiLogger("EditorRequestsHandler"); // .mute();
 
@@ -98,7 +99,7 @@ export class EditorRequestsHandler {
             if (!!currentSelection) {
                 if (isActionTextBox(currentSelection)) {
                     if (isActionBox(currentSelection.parent)) {
-                        if (currentSelection.parent.conceptName === tobepasted.piLanguageConcept()) { // todo allow subtypes
+                        if (Language.getInstance().metaConformsToType(tobepasted, currentSelection.parent.conceptName)) { // allow subtypes
                             // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
                             EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName);
                         } else {
@@ -106,7 +107,7 @@ export class EditorRequestsHandler {
                         }
                     }
                 } else if (isListBox(currentSelection.parent)) {
-                    if (element.piLanguageConcept() === tobepasted.piLanguageConcept() ) { // todo allow subtypes
+                    if (Language.getInstance().metaConformsToType(tobepasted, element.piLanguageConcept())) { // allow subtypes
                         // console.log('pasting in ' + currentSelection.role + ', prop: ' + currentSelection.parent.propertyName);
                         EditorState.getInstance().pasteInElement(element.piOwnerDescriptor().owner, currentSelection.parent.propertyName, element.piOwnerDescriptor().propertyIndex + 1);
                     } else {

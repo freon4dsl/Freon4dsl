@@ -7,7 +7,7 @@
 
     export let selectedId: string = "";
     export let options: SelectOption[] = [];
-    let id: string = "dropdown-test"; // TODO better id
+    let id: string = "dropdown";
     const dispatcher = createEventDispatcher();
 
     $: isSelected = (option: SelectOption) => { // determines the style of the selected option
@@ -23,7 +23,6 @@
      */
     const handleClick = (option: SelectOption) => {
         selectedId = option.id;
-        // console.log("Dropdown CLICKED, option " + option.id);
         dispatcher("piItemSelected", option);
     };
 </script>

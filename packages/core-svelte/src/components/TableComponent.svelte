@@ -5,7 +5,14 @@
      * This component functions as a drop zone for dragged elements from either a ListComponent
      * or a TableCellComponent.
      */
-    import { TableCellBox, type TableBox, type PiEditor, PiLogger, Language, ListElementInfo } from "@projectit/core";
+    import {
+        TableCellBox,
+        type TableBox,
+        type PiEditor,
+        PiLogger,
+        Language,
+        ListElementInfo
+    } from "@projectit/core";
     import { runInAction } from "mobx";
     import TableCellComponent from "./TableCellComponent.svelte";
     import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils/DropAndSelectStore";
@@ -27,9 +34,11 @@
     let cssClass: string;
     $: cssClass = box.cssClass;
     let gridElement: HTMLElement;
-    let elementType: string;
+    // determine the type of the elements in the list
+    // this speeds up the check whether the element may be dropped in a certain drop-zone
+    let myMetaType: string;
     // todo see how we can avoid the use of Language here
-    $: elementType = Language.getInstance().classifierProperty(box.element.piLanguageConcept(), box.propertyName).type;
+    $: myMetaType = Language.getInstance().classifierProperty(box.element.piLanguageConcept(), box.propertyName).type;
 
     const drop = (event: CustomEvent) => {
         const data: ListElementInfo = $draggedElem;
@@ -48,12 +57,7 @@
             moveListElement(box.element, data.element, box.propertyName, targetIndex);
         } else { // dropping in another list
             // console.log("moving item to another grid, drop type: " + data.elementType + ", grid cell type: " + elementType);
-            if (data.elementType === elementType) { // check if item may be dropped here // TODO extend to include subtypes
-                dropListElement(data, box.element, box.propertyName, targetIndex);
-            } else {
-                // TODO other way for error message
-                alert("drop is not allowed here, types do not match [" + data.elementType + " != " + elementType + "]");
-            }
+            dropListElement(editor, data, myMetaType, box.element, box.propertyName, targetIndex);
         }
         // Everything is done, so reset the variables
         $draggedElem = null;
@@ -75,7 +79,7 @@
         <TableCellComponent
                 parentComponentId={id}
                 parentOrientation={box.orientation}
-                elementType={elementType}
+                myMetaType={myMetaType}
                 box={cell}
                 editor={editor}
                 parentHasHeader={box.hasHeaders}

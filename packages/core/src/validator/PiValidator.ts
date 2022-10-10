@@ -34,10 +34,23 @@ export class PiError {
     }
 }
 
+// TODO combine these two Severities
 export enum PiErrorSeverity {
     Error = "Error",
     Improvement = "Improvement",
     ToDo = "TODO",
     Info = "Info",
     NONE = "NONE"
+}
+
+// severity can range from 0 to 4
+// 0 means information
+// 1 means hint
+// 2 means warning
+// 3 means error
+export enum SeverityType {
+    info = 0,
+    hint = 1,
+    warning = 2,
+    error= 3
 }
