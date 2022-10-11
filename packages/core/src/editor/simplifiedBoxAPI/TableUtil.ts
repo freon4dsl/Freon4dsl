@@ -96,7 +96,7 @@ export class TableUtil {
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
             LOGGER.log("TableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders + " span[" + (orientation === "row" ? cellGetters.length : 1) + "/" + (orientation === "row" ? 1 : cellGetters.length) + "]");
             cells.push(BoxFactory.tablecell(element, propertyName, propInfo.type, cellRoleName, location.row, location.column,
-                BoxFactory.action(element, "alias-add-row-or-column", `<add new ${orientation}>`,
+                BoxFactory.action(element, "action-add-row-or-column", `<add new ${orientation}>`,
                     { propertyName: propertyName, conceptName: propInfo.type }),
                 {
                     columnSpan: (orientation === "row" ? cellGetters.length : 1),
@@ -196,7 +196,7 @@ export class TableUtil {
     private static createKeyboardShortcutForEmptyCollectionGrid(): PiCustomAction {
         return PiCustomAction.create({
             trigger: { meta: MetaKey.None, key: Keys.ENTER, code: Keys.ENTER },
-            activeInBoxRoles: ["alias-add-row-or-column", "alias-alias-add-row-or-column-textbox"],
+            activeInBoxRoles: ["action-add-row-or-column", "action-action-add-row-or-column-textbox"],
             action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
                 const element = box.element;
                 const actionBox = (isActionBox(box) ? box : box.parent as ActionBox);

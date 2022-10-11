@@ -58,8 +58,8 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
 }
 
 /**
- * Create a binary box with eleft and right expression boxes, or alias boxes as placeholders for missing left and/or right children.
- * Also add an alias box between the operator and the left and right child to enable the user to add more operators.
+ * Create a binary box with eleft and right expression boxes, or action boxes as placeholders for missing left and/or right children.
+ * Also add an action box between the operator and the left and right child to enable the user to add more operators.
  * @param exp
  * @param symbol
  * @param editor
@@ -116,9 +116,9 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
         () => null,
         (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
             if (editor.actions && editor.actions.binaryExpressionActions) {
-                const alias = editor.actions.binaryExpressionActions.filter(e => (e.trigger as string) === option.id)[0];
-                if (!!alias) {
-                    const newExp = alias.expressionBuilder(operatorBox, triggerTypeToString(alias.trigger), editor);
+                const action = editor.actions.binaryExpressionActions.filter(e => (e.trigger as string) === option.id)[0];
+                if (!!action) {
+                    const newExp = action.expressionBuilder(operatorBox, triggerTypeToString(action.trigger), editor);
                     newExp.piSetLeft(exp.piLeft());
                     newExp.piSetRight(exp.piRight());
                     PiUtils.replaceExpression(exp, newExp, editor);

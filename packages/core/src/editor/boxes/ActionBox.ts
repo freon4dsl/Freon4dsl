@@ -58,7 +58,7 @@ export class ActionBox extends AbstractChoiceBox {
     getOptions(editor: PiEditor): SelectOption[] {
         const result: SelectOption[] = [];
         if( !!this.propertyName && !!this.conceptName) {
-            // If the alias box has a property and concept name, then this can be used to create element of the
+            // If the action box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
             const clsOtIntf = Language.getInstance().concept(this.conceptName) ?? Language.getInstance().interface(this.conceptName);
             clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (creatableConceptname: string) => {
@@ -71,10 +71,10 @@ export class ActionBox extends AbstractChoiceBox {
                 }
             });
         } else {
-            LOGGER.log("No property and concept defined for alias box " + this.role);
+            LOGGER.log("No property and concept defined for action box " + this.role);
         }
         // Using the new actions:
-        // Now look in all actions defined in the editor whether they fit this alias, except for the keyboard shortcuts
+        // Now look in all actions defined in the editor whether they fit this action, except for the keyboard shortcuts
         editor.newPiActions
             .filter(action => !isProKey(action.trigger) && action.activeInBoxRoles.includes(this.role))
             .forEach(action => {
@@ -83,7 +83,7 @@ export class ActionBox extends AbstractChoiceBox {
                     id: triggerTypeToString(action.trigger) ,//+ "_action",
                     label: triggerTypeToString(action.trigger),// + "_action",
                     action: action,
-                    description: "alias " + triggerTypeToString(action.trigger)
+                    description: "action " + triggerTypeToString(action.trigger)
                 });
                 // }
                 result.push(...options);
@@ -100,7 +100,7 @@ export class ActionBox extends AbstractChoiceBox {
                 propertyName: propertyName,
                 conceptName: conceptName,
             }),
-            description: "alias auto"
+            description: "action auto"
         };
     }
 

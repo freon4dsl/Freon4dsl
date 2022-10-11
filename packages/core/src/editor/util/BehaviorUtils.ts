@@ -12,7 +12,7 @@ export enum BehaviorExecutionResult {
 }
 
 /**
- * Try to execute the alias `text`, and return true if this succeeds
+ * Try to execute the action `text`, and return true if this succeeds
  * Matching on full text only.
  * @param {Box} box
  * @param {string} text
@@ -60,7 +60,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
             }
         }
     }
-    LOGGER.log("executeBehavior: no alias match, ;partial is " + partialMatch);
+    LOGGER.log("executeBehavior: no action match, ;partial is " + partialMatch);
     if (partialMatch) {
         return BehaviorExecutionResult.PARTIAL_MATCH;
     } else {

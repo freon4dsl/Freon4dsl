@@ -355,7 +355,7 @@ export class ProjectionTemplate {
                     }
                 } else { // single element
                     this.addToIfNotPresent(this.coreImports, "BoxUtils");
-                    result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${property.name}", "${property.type.name}", this.rootProjection ${projNameStr}) `;
+                    result += `BoxUtils.getBoxOrAction(${elementVarName}, "${property.name}", "${property.type.name}", this.rootProjection ${projNameStr}) `;
                 }
             } else { // reference
                 if (property.isList) {

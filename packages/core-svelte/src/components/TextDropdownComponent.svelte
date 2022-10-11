@@ -83,7 +83,7 @@
         });
     });
 
-    // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next alias!!!
+    // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next action!!!
 
     /**
      * This custom event is triggered when the text in the textComponent is altered or when the

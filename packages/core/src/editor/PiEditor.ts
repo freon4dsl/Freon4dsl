@@ -21,7 +21,8 @@ export class PiEditor {
     readonly projection: PiProjection;      // The root projection with which this editor is created.
     newPiActions: PiAction[] = [];          // List of PiActions composed of all the actions in 'actions'
     theme: string = "light";                // The current theme.
-    environment: PiEnvironment;             // The generated language environment, needed to find reference shortcuts in the Alias box.
+    environment: PiEnvironment;             // The generated language environment, needed to find reference shortcuts in the Action box.
+    // todo are the scroll values needed? Do not the boundingRectable values for each HTML element depend on the page, not on the viewport?
     scrollX: number = 0;                    // The amount of scrolling horizontally, to find the element above and under.
     scrollY: number = 0;                    // The amount of scrolling vertically, to find the element above and under.
 
@@ -46,8 +47,14 @@ export class PiEditor {
         this.actions = actions;
         this.projection = projection;
         this.environment = environment;
-        this.initializeAliases(actions);
+        this.initializeActions(actions);
         // TODO rethink whether selectedBox should be observable
+        // observable defines a trackable field that stores the state.
+        // action marks a method as action that will modify the state.
+        // computed marks a getter that will derive new facts from the state and cache its output.
+        // todo taken the above notions into account, _rootBox, _selectedBox, _selectedRole should be computed,
+        // or rather their getters should be computed
+        // todo shouldn't the setters be mobx actions, or at least the setter for _rootElement
         makeObservable<PiEditor, "_rootBox" | "_rootElement" | "_selectedElement" | "_selectedBox" | "_selectedRole">(this, {
             theme: observable,
             _rootElement: observable,
@@ -183,7 +190,7 @@ export class PiEditor {
         LOGGER.log("==> SelectParent of " + this.selectedBox?.role + this.selectedBox?.parent.kind);
         let parent = this.selectedBox?.parent;
         if (!!parent && (isActionBox(parent) || isSelectBox(parent))) {
-            // Coming from (hidden) textbox in Select/Alias box
+            // Coming from (hidden) textbox in Select/Action box
             parent = parent.parent;
         }
         if (!!parent) {
@@ -443,7 +450,7 @@ export class PiEditor {
      * @param actions
      * @private
      */
-    private initializeAliases(actions?: PiCombinedActions) {
+    private initializeActions(actions?: PiCombinedActions) {
         if (!actions) {
             return;
         }

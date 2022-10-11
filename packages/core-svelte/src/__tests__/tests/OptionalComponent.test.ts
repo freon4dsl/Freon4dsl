@@ -23,47 +23,47 @@ describe.skip("Optional component", () => {
         childBox = new LabelBox(model.myOptional, "optional-element", () => "OptionalLabel");
     });
 
-    it("condition true, mustShow false => optional is visible, alias not", () => {
+    it("condition true, mustShow false => optional is visible, action not", () => {
         ownerBox = new OptionalBox(model, "opt-role", () => {return true;}, childBox, false, "someAliasText" );
         const result = render(OptionalComponent, { optionalBox: ownerBox, editor: myEditor });
         const myOwner = screen.getByTestId("OPTIONAL-OWNER-opt-role");
         expect(myOwner).toBeVisible();
         const myOptional = screen.getByTestId("OPTIONAL_ELEMENT-optional-element");
         expect(myOptional).toBeVisible();
-        const myAlias = screen.queryByTestId("OPTIONAL-OWNER-alias-opt-role-textbox");
+        const myAlias = screen.queryByTestId("OPTIONAL-OWNER-action-opt-role-textbox");
         expect(myAlias).toBeNull();
     });
 
-    it("condition true, mustShow true => optional is visible, alias not", () => {
+    it("condition true, mustShow true => optional is visible, action not", () => {
         ownerBox = new OptionalBox(model, "opt-role", () => {return true;}, childBox, true, "someAliasText" );
         const result = render(OptionalComponent, { optionalBox: ownerBox, editor: myEditor });
         const myOwner = screen.getByTestId("OPTIONAL-OWNER-opt-role");
         expect(myOwner).toBeVisible();
         const myOptional = screen.getByTestId("OPTIONAL_ELEMENT-optional-element");
         expect(myOptional).toBeVisible();
-        const myAlias = screen.queryByTestId("OPTIONAL-OWNER-alias-opt-role-textbox");
+        const myAlias = screen.queryByTestId("OPTIONAL-OWNER-action-opt-role-textbox");
         expect(myAlias).toBeNull();
     });
 
-    it("condition false, mustShow true => optional is visible, alias not", () => {
+    it("condition false, mustShow true => optional is visible, action not", () => {
         ownerBox = new OptionalBox(model, "opt-role", () => {return false;}, childBox, true, "someAliasText" );
         const result = render(OptionalComponent, { optionalBox: ownerBox, editor: myEditor });
         const myOwner = screen.getByTestId("OPTIONAL-OWNER-opt-role");
         expect(myOwner).toBeVisible();
         const myOptional = screen.getByTestId("OPTIONAL_ELEMENT-optional-element");
         expect(myOptional).toBeVisible();
-        const myAlias = screen.queryByTestId("OPTIONAL-OWNER-alias-opt-role-textbox");
+        const myAlias = screen.queryByTestId("OPTIONAL-OWNER-action-opt-role-textbox");
         expect(myAlias).toBeNull();
     });
 
-    it("condition false, mustShow false => alias is visible, optional is not visible", () => {
+    it("condition false, mustShow false => action is visible, optional is not visible", () => {
         ownerBox = new OptionalBox(model, "opt-role", () => {return false;}, childBox, false, "someAliasText" );
         const result = render(OptionalComponent, { optionalBox: ownerBox, editor: myEditor });
         const myOwner = screen.getByTestId("OPTIONAL-OWNER-opt-role");
         expect(myOwner).toBeVisible();
         const myOptional = screen.queryByTestId("OPTIONAL_ELEMENT-optional-element");
         expect(myOptional).toBeNull();
-        const myAlias = screen.queryByTestId("OPTIONAL-OWNER-alias-opt-role-textbox");
+        const myAlias = screen.queryByTestId("OPTIONAL-OWNER-action-opt-role-textbox");
         expect(myAlias).not.toBeNull();
         expect(myAlias).toBeVisible();
     });

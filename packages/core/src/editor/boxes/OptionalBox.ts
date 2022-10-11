@@ -22,7 +22,7 @@ export class OptionalBox extends Box {
     mustShow: boolean = false;  // is set to true by action that does not (yet) change the model, but causes part of the optional to be shown
     condition: () => boolean;   // a condition based on the model that determines whether the optional is shown
 
-    constructor(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string) {
+    constructor(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string) {
         // TODO remove mustShow from params, as it is always false?
         super(element, role);
         makeObservable(this, {
@@ -33,7 +33,7 @@ export class OptionalBox extends Box {
         });
         this.content = box;
         box.parent = this;
-        this.placeholder = BoxFactory.action(element, role, aliasText); // TODO question: should not the role be diff from role of this box? Where is the "alias" prefix added?
+        this.placeholder = BoxFactory.action(element, role, actionText); // TODO question: should not the role be diff from role of this box? Where is the "action" prefix added?
         this.placeholder.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;

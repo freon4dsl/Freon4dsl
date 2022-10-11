@@ -10,8 +10,7 @@ import {
     PiElement,
     OptionalBox,
     PiCreateBinaryExpressionAction,
-    isString,
-    PiTriggerUse
+    PiTriggerUse, isString
 } from "@projectit/core";
 import { RoleProvider } from "@projectit/core";
 import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";

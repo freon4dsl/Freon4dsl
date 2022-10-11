@@ -11,8 +11,8 @@
 
 
 <div id="{id1}">
-        <TextComponent textBox={box1} editor={editor} partOfAlias={false} isEditing={false} text=""/>
+        <TextComponent textBox={box1} editor={editor} partOfActionBox={false} isEditing={false} text=""/>
 </div>
 <div id="{id2}">
-        <TextComponent textBox={box2} editor={editor} partOfAlias={false} isEditing={false} text=""/>
+        <TextComponent textBox={box2} editor={editor} partOfActionBox={false} isEditing={false} text=""/>
 </div>

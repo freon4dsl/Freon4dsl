@@ -28,7 +28,7 @@ export function createKeyboardShortcutForList2(role: string, propertyName: strin
     LOGGER.log("LIST role [" + role + "]");
     return new PiCreatePartAction({
         trigger: { meta: MetaKey.None, key: Keys.ENTER, code: Keys.ENTER },
-        activeInBoxRoles: [role, "alias-" + role + "-textbox"],
+        activeInBoxRoles: [role, "action-" + role + "-textbox"],
         conceptName: conceptName,
         propertyName: propertyName,
         boxRoleToSelect: roleToSelect

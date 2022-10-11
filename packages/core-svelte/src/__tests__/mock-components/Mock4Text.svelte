@@ -9,5 +9,5 @@
 
 
 <div id="{id}">
-        <TextComponent textBox={box} editor={editor} partOfAlias={false} isEditing={false} text=""/>
+        <TextComponent textBox={box} editor={editor} partOfActionBox={false} isEditing={false} text=""/>
 </div>

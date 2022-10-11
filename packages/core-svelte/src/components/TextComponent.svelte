@@ -45,7 +45,7 @@
 	// TODO finger out better way to handle muting/unmuting of LOGGERs
     const LOGGER = new PiLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
     const dispatcher = createEventDispatcher();
-    type BoxType = "alias" | "select" | "text";
+    type BoxType = "action" | "select" | "text";
 
     // Parameters
     export let box: TextBox;				// the accompanying textbox
@@ -68,7 +68,7 @@
     										// Note that 'from <= to' always holds.
 
     let boxType: BoxType = "text";          // indication how is this text component used, determines styling
-    $: boxType = !!box.parent ? (isActionBox(box?.parent) ? "alias" : isSelectBox(box?.parent) ? "select" : "text") : "text";
+    $: boxType = !!box.parent ? (isActionBox(box?.parent) ? "action" : isSelectBox(box?.parent) ? "select" : "text") : "text";
 
     /**
      * This function sets the focus on this element programmatically.

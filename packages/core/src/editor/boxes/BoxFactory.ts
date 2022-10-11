@@ -33,7 +33,7 @@ type BoxCache<T extends Box> = {
 const LOGGER: PiLogger = new PiLogger("BoxFactory").mute();
 
 // The box caches
-let aliasCache: BoxCache<ActionBox> = {};
+let actionCache: BoxCache<ActionBox> = {};
 let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
@@ -47,7 +47,7 @@ let verticalListCache: BoxCache<VerticalListBox> = {};
 let gridcellCache: BoxCache<GridCellBox> = {};
 let tableCellCache: BoxCache<TableCellBox> = {};
 
-let cacheAliasOff: boolean = false;
+let cacheActionOff: boolean = false;
 let cacheLabelOff: boolean = false;
 let cacheTextOff: boolean = false;
 let cacheSelectOff: boolean = false;
@@ -65,7 +65,7 @@ let cacheTablecellOff = true;
  */
 export class BoxFactory {
     public static clearCaches() {
-        aliasCache = {};
+        actionCache = {};
         labelCache = {};
         textCache = {};
         selectCache = {};
@@ -81,7 +81,7 @@ export class BoxFactory {
     }
 
     public static cachesOff() {
-        cacheAliasOff = true;
+        cacheActionOff = true;
         cacheLabelOff = true;
         cacheTextOff = true;
         cacheSelectOff = true;
@@ -96,7 +96,7 @@ export class BoxFactory {
     }
 
     public static cachesOn() {
-        cacheAliasOff = false;
+        cacheActionOff = false;
         cacheLabelOff = false;
         cacheTextOff = false;
         cacheSelectOff = false;
@@ -142,12 +142,12 @@ export class BoxFactory {
     }
 
     static action(element: PiElement, role: string, placeHolder: string, initializer?: Partial<ActionBox>): ActionBox {
-        if (cacheAliasOff) {
+        if (cacheActionOff) {
             return new ActionBox(element, role, placeHolder, initializer);
         }
         // 1. Create the action box, or find the one that already exists for this element and role
         const creator = () => new ActionBox(element, role, placeHolder, initializer);
-        const result: ActionBox = this.find<ActionBox>(element, role, creator, aliasCache);
+        const result: ActionBox = this.find<ActionBox>(element, role, creator, actionCache);
 
         runInAction(() => {
             // 2. Apply the other arguments in case they have changed
@@ -296,12 +296,12 @@ export class BoxFactory {
         return result;
     }
 
-    static optional(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string): OptionalBox {
+    static optional(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string): OptionalBox {
         if (cacheOptionalOff) {
-            return new OptionalBox(element, role, condition, box, mustShow, aliasText);
+            return new OptionalBox(element, role, condition, box, mustShow, actionText);
         }
         // 1. Create the optional box, or find the one that already exists for this element and role
-        const creator = () => new OptionalBox(element, role, condition, box, mustShow, aliasText);
+        const creator = () => new OptionalBox(element, role, condition, box, mustShow, actionText);
         const result: OptionalBox = this.find<OptionalBox>(element, role, creator, optionalCache);
 
         // 2. Apply the other arguments in case they have changed
