@@ -154,12 +154,13 @@ export class PiEditor {
             console.error("PiEditor.selectElement is null !");
             return;
         }
-        this._selectedElement = element;
-        this._selectedRole = role;
-        this._selectedPosition = caretPosition;
         const box = this._rootBox.findBox(element.piId(), role);
-        // LOGGER.log("selectElement: selectElement found box " + box?.kind);
-        if (!!box) {
+        // todo although element is created in CreatePartCommand, the corresponding box cannot be found. WHY?
+        console.log("selectElement: selectElement found box: " + box?.kind);
+        if (!!box) { // only (re)set the local variables when the box can be found
+            this._selectedElement = element;
+            this._selectedRole = role;
+            this._selectedPosition = caretPosition;
             this.selectBoxNew(box, caretPosition);
         }
     }
@@ -254,7 +255,7 @@ export class PiEditor {
      * @param caretPosition
      */
     selectBoxNew(box: Box, caretPosition?: PiCaret) {
-        LOGGER.log("SelectBoxNEW: " + (box ? box.role : box) + "  caret " + caretPosition?.position + " NOSELECT[" + this.NOSELECT + "]");
+        console.log("SelectBoxNEW: " + (box ? box.role : box) + "  caret " + caretPosition?.position + " NOSELECT[" + this.NOSELECT + "]");
         if (this.NOSELECT) {
             return;
         }

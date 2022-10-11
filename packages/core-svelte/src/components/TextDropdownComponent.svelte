@@ -52,7 +52,6 @@
      * It is called from the RenderComponent.
      */
     const setFocus = () => {
-        // TODO to be tested
         // console.log("TextDropDownComponent " + box.kind)
         if (!!textComponent) {
             textComponent.setFocus();

@@ -60,6 +60,7 @@ export class PiCreatePartCommand extends PiCommand {
                 theModelElement.push(newElement);
             }
         } else {
+            console.log(`PiCreatePartCommand: setting ${propName} of ${box.element.piId()} (${box.element.piLanguageConcept()}) to ${newElement.piId()} (${newElement.piLanguageConcept()})`);
             theModelElement = newElement;
         }
         if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
@@ -68,6 +69,7 @@ export class PiCreatePartCommand extends PiCommand {
 
         return function () {
             editor.selectElement(newElement);
+            console.log('CreatePartCommand: newElement:' + newElement.piId() + ", selected element: " + editor.selectedBox.element.piId() + " of kind " + editor.selectedBox.kind)
             editor.selectFirstEditableChildBox();
         };
     }

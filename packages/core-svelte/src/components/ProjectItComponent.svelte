@@ -25,10 +25,10 @@
 
     let LOGGER = new PiLogger("ProjectItComponent"); //.mute();
     export let editor: PiEditor;
-    // TODO add id
-    // let id: string = `${box.element.piId()}-${box.role}`;
     let element: HTMLDivElement; // The current main element of this component.
     let rootBox: Box;
+    let id: string;              // an id for the html element showing the rootBox
+    id = !!rootBox ? rootBox.id : "projectit-component-with-unknown-box";
 
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();
@@ -141,7 +141,7 @@
     // If the selection is not ok anymore
     autorun(() => {
         LOGGER.log("autorun selection");
-        // TODO THis now runs for each selection change, is this really needed?
+        // TODO This now runs for each selection change, is this really needed?
         if (!$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             $selectedBoxes = [editor.selectedBox];
         }
@@ -153,6 +153,7 @@
      on:keydown={onKeyDown}
      on:scroll={onScroll}
      bind:this={element}
+     id="{id}"
 >
     <RenderComponent editor={editor}
                      box={rootBox}
