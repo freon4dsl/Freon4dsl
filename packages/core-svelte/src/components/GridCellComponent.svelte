@@ -11,10 +11,9 @@
         PI_NULL_COMMAND,
         PiPostAction, PiEditorUtil, Box
     } from "@projectit/core";
-    import { autorun, runInAction } from "mobx";
-    import { afterUpdate } from "svelte";
+    import { autorun } from "mobx";
     import RenderComponent from "./RenderComponent.svelte";
-    import { isOdd } from "./svelte-utils";
+    import { executeCustomKeyboardShortCut, isOdd } from "./svelte-utils";
     import { writable, Writable } from "svelte/store";
 
     // properties
@@ -30,39 +29,19 @@
     let cssVariables: string;
     let id: string = box.id;
 
-    afterUpdate(() => {
-        LOGGER.log("GridCellComponent.afterUpdate");
-        // Triggers autorun
-        // $boxStore = cellBox.box;
-    });
-
     const onKeydown = (event: KeyboardEvent) => {
         LOGGER.log("GridCellComponent onKeyDown");
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
-            const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), box, editor);
-            if (cmd !== PI_NULL_COMMAND) {
-                let postAction: PiPostAction;
-                runInAction(() => {
-                    const action = event["action"];
-                    if (!!action) {
-                        action();
-                    }
-                    // todo adjust the index, so that we know where to execute the command
-                    const index = 0;
-                    postAction = cmd.execute(box, toPiKey(event), editor, index);
-                });
-                if (!!postAction) {
-                    postAction();
-                }
-                event.stopPropagation();
-            }
+            // todo adjust the index, so that we know where to execute the command
+            const index = 0;
+            executeCustomKeyboardShortCut(event, index, box, editor);
         }
-
     };
 
     const onCellClick = (() => {
+        // todo remove this or implement...
         LOGGER.log("GridCellComponent.onCellClick " + box.row + ", " + box.column);
     });
 

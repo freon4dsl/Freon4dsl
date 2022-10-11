@@ -18,7 +18,7 @@
     import { autorun, runInAction } from "mobx";
     import { afterUpdate, onMount, createEventDispatcher, tick } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
-    import { isOdd } from "./svelte-utils";
+    import { executeCustomKeyboardShortCut, isOdd } from "./svelte-utils";
     import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
     import {
         activeElem,
@@ -79,22 +79,7 @@
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
             let index: number = parentOrientation === "row" ? row : column;
-            // todo make this a separate function also to be used in TextComponent o.a.
-            const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), box, editor);
-            if (cmd !== PI_NULL_COMMAND) {
-                let postAction: PiPostAction;
-                runInAction(() => {
-                    const action = event["action"];
-                    if (!!action) {
-                        action();
-                    }
-                    postAction = cmd.execute(box, toPiKey(event), editor, index);
-                });
-                if (!!postAction) {
-                    postAction();
-                }
-                event.stopPropagation();
-            }
+            executeCustomKeyboardShortCut(event, index, box, editor);
         }
     };
 

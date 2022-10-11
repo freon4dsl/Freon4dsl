@@ -1,4 +1,25 @@
 import type { Box } from "@projectit/core";
+import { PI_NULL_COMMAND, PiCommand, PiEditor, PiEditorUtil, PiPostAction, toPiKey } from "@projectit/core";
+import { runInAction } from "mobx";
+
+export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: number, box: Box, editor: PiEditor) {
+    const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), box, editor);
+    if (cmd !== PI_NULL_COMMAND) {
+        let postAction: PiPostAction;
+        runInAction(() => {
+            const action = event["action"];
+            if (!!action) {
+                action();
+            }
+            postAction = cmd.execute(box, toPiKey(event), editor, index);
+        });
+        if (!!postAction) {
+            postAction();
+        }
+        // todo this method will stop the event from propagating, but does not prevent default!! Should it do so?
+        event.stopPropagation();
+    }
+}
 
 export function isOdd(n: number): boolean {
     return (n & 1) === 1;

@@ -6,7 +6,7 @@
 
 <script lang="ts">
 	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
-	import { setBoxSizes } from "./svelte-utils";
+	import { executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils";
 	import {
 		ActionBox,
 		ALT,
@@ -230,20 +230,7 @@
 
 		if (event.altKey || event.ctrlKey) {  // No shift, because that is handled as normal text
 			// first check if this event has a command defined for it
-			const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), box, editor);
-			if (cmd !== PI_NULL_COMMAND) {
-			    let postAction: PiPostAction;
-			    runInAction(() => {
-			        if (text !== originalText) {
-			            box.setText(text);
-			        }
-			        postAction = cmd.execute(box, toPiKey(event), editor, 0);
-			    });
-			    if (!!postAction) {
-			        postAction();
-			    }
-			    return;
-			}
+			executeCustomKeyboardShortCut(event, 0, box, editor); // this method will stop the event from propagating, but does not prevent default!!
 			// next handle any key that should have a special effect within the text
 			if (event.ctrlKey && !event.altKey && event.key === 'z') { // ctrl-z
 				// UNDO handled by browser
