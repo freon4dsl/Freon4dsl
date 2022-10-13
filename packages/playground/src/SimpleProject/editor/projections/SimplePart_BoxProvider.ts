@@ -9,7 +9,7 @@ import {
 import { SimplePart } from "../../language/gen";
 import { BoxProvider } from "./BoxProvider";
 import { NewCompositeProjection } from "./NewCompositeProjection";
-import { Utils } from "./Utils";
+import { NewBoxUtils } from "./NewBoxUtils";
 
 export class SimplePart_BoxProvider implements BoxProvider {
     private _mainBox: ElementBox;
@@ -58,7 +58,7 @@ export class SimplePart_BoxProvider implements BoxProvider {
             "SimplePart-hlist-line-0",
             [
                 BoxUtils.labelBox(this._element, "SIMPLE", "top-1-line-0-item-0"),
-                Utils.getBoxOrAlias(this._element, "basis", "ConceptA"),
+                NewBoxUtils.getBoxOrAlias(this._element, "basis", "ConceptA"),
                 BoxUtils.labelBox(this._element, "END", "top-1-line-0-item-2")
             ],
             { selectable: true }
