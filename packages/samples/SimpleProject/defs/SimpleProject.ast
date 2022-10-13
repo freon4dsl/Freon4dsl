@@ -8,22 +8,22 @@ modelunit SimplePart {
     basis: ConceptA;
 }
 
-concept conceptA {
+concept ConceptA {
     name: string;
-    partA1: conceptB;
-    partA2: conceptC;
+    partA1: ConceptB;
+    partA2: ConceptE;
 }
 
-concept conceptB {
-    list1: conceptD[];
-    partB2: conceptE;
+concept ConceptB {
+    list1: ConceptD[];
+    partB2: ConceptE;
 }
 
-concept conceptD {
+concept ConceptD {
     street: string;
     nr: number;
 }
 
-concept conceptD {
+concept ConceptE {
     leaf: string;
 }

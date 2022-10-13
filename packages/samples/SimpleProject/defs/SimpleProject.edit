@@ -8,21 +8,21 @@ SimplePart {[
     SIMPLE ${self.basis} END
 ]}
 
-conceptA {[
+ConceptA {[
     Name: ${name}
     Tree: ${partA1}
     Leaf: ${partA2}
 ]}
 
-conceptB {[
+ConceptB {[
     List: ${list1}
     Leaf: ${partB2}
 ]}
 
-conceptD {[
+ConceptD {[
     Street: ${street} ${nr}
 ]}
 
-conceptD {[
+ConceptE {[
     Leaf content: ${leaf}
 ]}
