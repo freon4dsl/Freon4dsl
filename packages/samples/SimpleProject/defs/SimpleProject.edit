@@ -1,0 +1,28 @@
+editor default
+
+boolean [YES | NO] // the strings used to display a boolean value
+
+referenceSeparator [:] // the string that separates the names in a path name, e.g. pack1:cls3:part
+
+SimplePart {[
+    SIMPLE ${self.basis} END
+]}
+
+conceptA {[
+    Name: ${name}
+    Tree: ${partA1}
+    Leaf: ${partA2}
+]}
+
+conceptB {[
+    List: ${list1}
+    Leaf: ${partB2}
+]}
+
+conceptD {[
+    Street: ${street} ${nr}
+]}
+
+conceptD {[
+    Leaf content: ${leaf}
+]}

@@ -1,6 +1,14 @@
 typer
 
-hastype { Parameter, Attribute, Method, AttributeRef, ParameterRef }
+// for now: first is considered to be the root of the type hierarchy
+istype {  BaseType }
+
+hastype { ExExpression, Parameter, Attribute, Method, AttributeRef, ParameterRef }
+
+anytype {
+    conformsto AttributeType:ANY;
+    equalsto AttributeType:ANY;
+}
 
 Parameter {
     infertype self.declaredType;
@@ -22,10 +30,68 @@ Method {
     infertype self.declaredType;
 }
 
+StringLiteralExpression {
+    infertype AttributeType:String;
+}
+NumberLiteralExpression {
+    infertype AttributeType:Integer;
+}
+BooleanLiteralExpression {
+    infertype AttributeType:Boolean;
+}
+AbsExpression {
+    infertype self.expr;
+}
+OrExpression {
+    infertype AttributeType:Boolean;
+}
+AndExpression {
+    infertype AttributeType:Boolean;
+}
+MultiplyExpression {
+    infertype self.left;
+}
+PlusExpression {
+    infertype self.left;
+//    infertype self.left == AttributeType:Number && self.right == AttributeType:Number then self.left == AttributeType:Number ;
+//    infertype self.left == AttributeType:String && self.right == AttributeType:String then self.left == AttributeType:String ;
+}
+DivideExpression {
+    infertype self.left;
+}
+ComparisonExpression {
+    infertype AttributeType:Boolean;
+}
 MethodCallExpression {
     infertype self.methodDefinition;
 }
-
+IfExpression    {
+    infertype self.whenTrue;
+}
 AttributeRef   {
     infertype self.attribute.declaredType;
 }
+SumExpression {
+    infertype AttributeType:Integer;
+}
+GroupedExpression {
+    infertype self.inner;
+}
+LoopVariableRef {
+    // TODO this rule should be different
+    infertype AttributeType:Integer;
+}
+LessThenExpression {
+    infertype AttributeType:Boolean;
+}
+GreaterThenExpression {
+    infertype AttributeType:Boolean;
+}
+EqualsExpression {
+    infertype AttributeType:Boolean;
+}
+
+// TODO add LoopVariableRef
+/*
+
+*/

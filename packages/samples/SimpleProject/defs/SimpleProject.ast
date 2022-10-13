@@ -1,0 +1,29 @@
+language SimpleProject
+
+model SimpleModel {
+    parts: SimplePart[];
+}
+
+modelunit SimplePart {
+    basis: ConceptA;
+}
+
+concept conceptA {
+    name: string;
+    partA1: conceptB;
+    partA2: conceptC;
+}
+
+concept conceptB {
+    list1: conceptD[];
+    partB2: conceptE;
+}
+
+concept conceptD {
+    street: string;
+    nr: number;
+}
+
+concept conceptD {
+    leaf: string;
+}

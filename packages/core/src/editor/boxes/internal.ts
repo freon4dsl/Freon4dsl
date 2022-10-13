@@ -23,6 +23,7 @@ export * from "./TextBox";
 export * from "./SelectBox";
 export * from "./BoxFactory";
 export * from "./GridCellBox";
+export * from "./ElementBox";
 
 // the following files contain export that do not depend on any other file
 export * from "./SelectOption";

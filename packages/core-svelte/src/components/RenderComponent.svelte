@@ -26,10 +26,10 @@
         isHorizontalBox,
         isSvgBox,
         isEmptyLineBox,
-        LabelBox, PiEditor, PiLogger
+        LabelBox, PiEditor, PiLogger, ElementBox, isElementBox
     } from "@projectit/core";
 
-    const LOGGER = new PiLogger("RenderComponent").mute();
+    const LOGGER = new PiLogger("RenderComponent"); //.mute();
 
     onDestroy(() => {
         LOGGER.log("DESTROY for box: " + box.role);
@@ -45,19 +45,29 @@
         selectable: false,
     });
 
+    function setShowBox() {
+        LOGGER.log('setShowBox for element ' + box.element?.piId() )
+        if (isElementBox(box)) {
+            LOGGER.log('found ElementBox, content for element: ' + (box as ElementBox).content?.element?.piId())
+            showBox = (box as ElementBox).content;
+        } else {
+            showBox = box;
+        }
+    }
+
     afterUpdate(() => {
         // LOGGER.log("<< RenderComponent.afterUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
-        showBox = box;
+        setShowBox();
     });
     beforeUpdate(() => {
         // LOGGER
         // .log(">> RenderComponent.beforeUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
-        showBox = box;
+        setShowBox();
     });
 
     autorun(() => {
         AUTO_LOGGER.log("RenderComponent: " + box.kind + " for element " + box.element.piLanguageConcept());
-        showBox = box;
+        setShowBox();
     });
 </script>
 

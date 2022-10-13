@@ -1,13 +1,5 @@
 editor myTables
 
-Method {
-    [
-        method ${name} ( ${parameters table rows} ): ${declaredType} {
-            ${body}
-        }
-    ]
-}
-
 Parameter {
     table [
         Type            | Name
@@ -19,10 +11,9 @@ Attribute {
         ${name} | ${declaredType}
     ]
 }
-
-//Method {
-//    [
-//        Name    | parameters    | type            | body
-//        ${name} | ${parameters} | ${declaredType} | ${body}
-//    ]
-//}
+Method {
+    table [
+        Name    | parameters            | type            | body
+        ${name} | ${parameters:CALLOUT} | ${declaredType} | ${body}
+    ]
+}

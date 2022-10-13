@@ -10,6 +10,8 @@ Attribute {
 Entity {
     [
         entity ${name} [? base ${baseEntity}] {
+            ${construc}
+            list of references: ${listOfReferences}
             ${attributes }
             ${methods vertical }
         }
@@ -25,17 +27,9 @@ ExampleUnit {
         }
         ]
 }
-
-//Method {
-//    [
-//        method ${name} ( ${parameters table rows} ): ${declaredType} {
-//            ${body}
-//        }
-//    ]
-//}
 Method {
     [
-        method ${name} ( ${parameters horizontal separator [,]} ): ${declaredType} {
+        method ${name} ( ${parameters table rows} ): ${declaredType} {
             ${body}
         }
     ]
@@ -44,22 +38,63 @@ Parameter {
      [${name} : ${declaredType}]
     table [${name} | ${declaredType}]
 }
-
 MethodCallExpression {
     [CALL ${methodDefinition} ( ${args horizontal separator[,] } )]
     referenceShortcut = ${methodDefinition}
     trigger = "method"
 }
-
+SumExpression {
+    [sum from ${variable} = ${from} to ${to} of ${body}]
+    trigger = "sum"
+}
+GroupedExpression {
+    [( ${inner} )]
+}
+LoopVariableRef {
+    [ ${variable} ]
+}
+LoopVariable {
+    [ ${name} ]
+    trigger = "var"
+}
+NumberLiteralExpression {
+    [${value}]
+}
+StringLiteralExpression {
+    ['${value}']
+    trigger = "'"
+}
+PlusExpression {
+    symbol = "+"
+}
+MultiplyExpression {
+    symbol = "*"
+}
+DivideExpression {
+    symbol = "/"
+}
+LessThenExpression {
+    symbol = "<"
+}
+OrExpression {
+    symbol = "or"
+}
+AndExpression {
+    symbol = "and"
+}
+GreaterThenExpression {
+    symbol = ">"
+}
+EqualsExpression {
+    symbol = "=="
+}
+BooleanLiteralExpression {
+    [ ${value} ]
+    trigger = "boolean"
+}
 AttributeRef {
     [ ${attribute} ]
     trigger = "attribute"
-    referenceShortcut = ${attribute}
-}
-
-DirectAttributeRef {
-    [ ${attribute} ]
-    trigger = "direct-attribute"
     referenceShortcut = ${attribute}
 }
 
@@ -67,3 +102,23 @@ ParameterRef {
     [ ${parameter} [? . ${appliedfeature}] ]
     referenceShortcut = ${parameter}
 }
+IfExpression {
+        [
+        if (${condition}) then
+            ${whenTrue}
+        else
+            ${whenFalse}
+        endif
+        ]
+    trigger = "if"
+}
+AbsExpression {
+    [ \| ${expr} \| ]
+}
+
+//IfExpression {
+//        [
+//        ${ condition } ? ${ whenTrue } : ${whenFalse}
+//        ]
+//    trigger = "if"
+//}
