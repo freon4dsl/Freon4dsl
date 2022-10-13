@@ -1,3 +1,4 @@
+import { projectitConfiguration } from "../config/ProjectitConfiguration";
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoModel, Demo } from "../language/gen";
 import { initializeScoperDef } from "../scoper/gen/index";
@@ -70,7 +71,7 @@ describe("testing Scoper on model units", () => {
         });
 
         test("visible elements in units in JSON model", () => {
-            initializeScoperDef();
+            initializeScoperDef(DemoEnvironment.getInstance().scoper);
             let readModel = new DemoUnitCreator().modelToJsonToModel();
             const unit1 = readModel.models[0];      // a 'complete' unit
             const unit2 = readModel.models[1];      // a 'unit interface'

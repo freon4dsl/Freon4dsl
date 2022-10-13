@@ -11,8 +11,8 @@ export class TyperDefTemplate {
             import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
     
             /**
-             * Adds all known projection groups to the root projection.
-             * @param rootProjection
+             * Adds all known type- providers the root typer.
+             * @param rootTyper
              */
             export function initializeTypers(rootTyper: FrCompositeTyper) {
                 for (const p of projectitConfiguration.customTypersFreon) {

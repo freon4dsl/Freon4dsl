@@ -1,16 +1,19 @@
 import { PiElement, PiNamedElement } from "../ast";
+import { FrScoperComposite } from "./FrScoperComposite";
 
-// Part of the ProjectIt Framework
+// Part of the Freon Framework
 
-export interface PiScoper {
-
+export interface FrScoper {
+    mainScoper: FrScoperComposite;
+    
     /**
      * Returns the element to which the 'pathname' refers. If the element cannot be found, or if the element is
      * not visible (private) from the location of 'modelelement', then null is returned.
      * If present, then the search is limited to elements which type is 'metatype'.
+     * If this scoper does not handle the scope for 'modelelement' 'undefined' is returned.
      *
      * @param modelelement: the containing element, where 'pathname' should be visible
-     * @param doNotSearch: the property name of the element that we are searching for
+     * @param doNotSearch: the role or property name of the element that we are searching for
      * @param pathname: the name or series of names of the element that we are searching for
      * @param metatype: the metatype of the element that we are searching for
      */
@@ -19,6 +22,7 @@ export interface PiScoper {
     /**
      *   Returns true if 'name' is known in the namespace containing 'modelelement' or one
      *   of its surrounding namespaces.
+     *   If this scoper does not handle the scope for 'modelelement' 'undefined' is returned.     *
      *
      *   When parameter 'metatype' is present, it returns true if the element named 'name'
      *   is an instance of 'metatype'. There is no default setting for this parameter.

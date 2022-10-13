@@ -4,7 +4,7 @@ import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes
 import { BehaviorExecutionResult, PiUtils } from "../../util";
 import { Language, PropertyKind } from "../../language";
 import { PiEditor } from "../PiEditor";
-import { PiScoper } from "../../scoper";
+import { FrScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
 import { PiCompositeProjection } from "../PiCompositeProjection";
 import { EmptyLineBox } from "../boxes/EmptyLineBox";
@@ -200,7 +200,7 @@ export class BoxUtils {
         element: PiElement,
         propertyName: string,
         setFunc: (selected: string) => void,
-        scoper: PiScoper,
+        scoper: FrScoper,
         index?: number
     ): Box {
         const propType: string = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
@@ -304,7 +304,7 @@ export class BoxUtils {
         }
     }
 
-    static verticalReferenceListBox(element: PiElement, propertyName: string, scoper: PiScoper, listInfo?: PiListInfo): Box {
+    static verticalReferenceListBox(element: PiElement, propertyName: string, scoper: FrScoper, listInfo?: PiListInfo): Box {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a reference list
@@ -345,7 +345,7 @@ export class BoxUtils {
         }
     }
 
-    static horizontalReferenceListBox(element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListInfo): Box {
+    static horizontalReferenceListBox(element: PiElement, propertyName: string, scoper: FrScoper, listJoin?: PiListInfo): Box {
         // TODO this one is not yet functioning correctly
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
@@ -444,7 +444,7 @@ export class BoxUtils {
         });
     }
 
-    private static makeRefItems(properties: PiNamedElement[], element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListInfo): Box[] {
+    private static makeRefItems(properties: PiNamedElement[], element: PiElement, propertyName: string, scoper: FrScoper, listJoin?: PiListInfo): Box[] {
         const result: Box[] = [];
         const numberOfItems = properties.length;
         properties.forEach((listElem, index) => {

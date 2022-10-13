@@ -19,7 +19,13 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static PiBinaryExpression:string = "PiBinaryExpression";
     // tslint:disable-next-line:variable-name
-    public static PiScoper:string = "PiScoper";
+    public static PiScoper:string = "FrScoper";
+    // tslint:disable-next-line:variable-name
+    public static FrScoperBase:string = "FrScoperBase";
+    // tslint:disable-next-line:variable-name
+    public static FrScoperComposite:string = "FrScoperComposite";
+    // tslint:disable-next-line:variable-name
+    public static FrScoperPart:string = "FrScoper";
     // tslint:disable-next-line:variable-name
     public static FreonTyperPart: string = "IFrTyper";
     // tslint:disable-next-line:variable-name
@@ -101,6 +107,10 @@ export class Names {
 
     public static customActions(language: PiLanguage): string {
         return "Custom" + this.actions(language);
+    }
+
+    public static customScoper(language: PiLanguage): string {
+        return "Custom" + this.scoper(language);
     }
 
     public static customTyper(language: PiLanguage): string {

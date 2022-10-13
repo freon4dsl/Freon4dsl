@@ -3,7 +3,7 @@ import { PiEnvironment } from "../environment/index";
 import { PiModel } from "../ast/index";
 import { FreonInterpreter } from "../interpreter/index";
 import { PiReader } from "../reader/index";
-import { PiScoper } from "../scoper/index";
+import { FrScoperComposite } from "../scoper/index";
 import { PiStdlib } from "../stdlib/index";
 import { FrCompositeTyper } from "../typer/index";
 import { PiValidator } from "../validator/index";
@@ -23,7 +23,7 @@ export class LanguageEnvironment implements PiEnvironment {
         return LanguageEnvironment.theInstance;
     }
 
-    public scoper: PiScoper = null;
+    public scoper: FrScoperComposite = null;
     public typer: FrCompositeTyper = null;
     public projection: PiProjection = null;
     public editor: PiEditor;

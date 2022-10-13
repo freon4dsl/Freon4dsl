@@ -30,6 +30,11 @@ describe("Testing Default Scoper", () => {
     const scoper = environment.scoper;
     const unparser = environment.writer;
 
+    beforeEach(done => {
+        ScoperTestEnvironment.getInstance();
+        done();
+    });
+
     test("validator messages in model with 1 unit of depth 3", () => {
         const model: DSmodel = creator.createModel(1, 3 );
         // run the scoper to test all names in the model

@@ -1,3 +1,5 @@
 export * from "./FreonNamespace";
-export * from "./PiScoper";
+export * from "./FrScoper";
 export * from "./CollectNamesWorker";
+export * from "./FrScoperBase";
+export * from "./FrScoperComposite";
