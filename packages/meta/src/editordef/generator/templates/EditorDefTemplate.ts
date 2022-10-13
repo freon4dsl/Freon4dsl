@@ -41,7 +41,7 @@ export class EditorDefTemplate {
         
             import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
             import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";      
-            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";       
+            // import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";       
     
             /**
              * Adds all known projection groups to the root projection.
@@ -53,7 +53,7 @@ export class EditorDefTemplate {
                 }         
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
                 `rootProjection.addProjection(new ${Names.projection(group)}());`).join("\n")}
-                rootProjection.addProjection(new ${Names.projection(editorDef.getDefaultProjectiongroup())}());
+                // rootProjection.addProjection(new ${Names.projection(editorDef.getDefaultProjectiongroup())}());
             }    
             
             /**

@@ -4,17 +4,16 @@ import {
     PiElement,
     Box,
     BoxUtils,
-    BoxFactory, 
-    ElementBox
+    BoxFactory,
+    ElementBox, PiBoxProvider
 } from "@projectit/core";
 
 import { ConceptB } from "../../language/gen";
-import { BoxProvider } from "./BoxProvider";
-import { NewCompositeProjection } from "./NewCompositeProjection";
-import { NewBoxUtils } from "./NewBoxUtils";
+import { SimpleBoxProviderCache } from "./SimpleBoxProviderCache";
+import { NewBoxUtils } from "@projectit/core/dist/editor/projections/NewBoxUtils";
 
 
-export class ConceptB_BoxProvider implements BoxProvider {
+export class ConceptB_BoxProvider implements PiBoxProvider {
     private _mainBox: ElementBox;
     private _element: ConceptB;
     private knownProjections: string[] = ['default'];
@@ -42,7 +41,7 @@ export class ConceptB_BoxProvider implements BoxProvider {
     }
 
     private getContent(): Box {
-        let projToUse = NewCompositeProjection.getProjectionNames().filter(p => this.knownProjections.includes(p))[0];
+        let projToUse = SimpleBoxProviderCache.getInstance().getProjectionNames().filter(p => this.knownProjections.includes(p))[0];
         if ( projToUse === 'default') {
             return this.getDefault();
         }
@@ -56,7 +55,7 @@ export class ConceptB_BoxProvider implements BoxProvider {
                 "ConceptB-hlist-line-0",
                 [
                     BoxUtils.labelBox(this._element, "List:", "top-1-line-0-item-0"),
-                    NewBoxUtils.verticalPartListBox(this._element, this._element.list1, "list1", null),  // the boxes for the elements in property 'list1'
+                    NewBoxUtils.verticalPartListBox(this._element, this._element.list1, "list1", null, SimpleBoxProviderCache.getInstance()),  // the boxes for the elements in property 'list1'
                 ],
                 { selectable: true }
             ),
@@ -65,7 +64,7 @@ export class ConceptB_BoxProvider implements BoxProvider {
                 "ConceptB-hlist-line-1",
                 [
                     BoxUtils.labelBox(this._element, "Leaf:", "top-1-line-1-item-0"),
-                    NewBoxUtils.getBoxOrAlias(this._element, "partB2", "ConceptE"),
+                    NewBoxUtils.getBoxOrAlias(this._element, "partB2", "ConceptE", SimpleBoxProviderCache.getInstance()),
                 ],
                 { selectable: true }
             )

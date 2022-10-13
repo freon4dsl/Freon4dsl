@@ -9,7 +9,7 @@ export class EditorIndexTemplate {
         export * from "./${Names.actions(language)}";
         export * from "./${Names.defaultActions(language)}";
         ${editorDef.projectiongroups.map(group => 
-            `export * from "./${Names.projection(group)}";`
+            `// export * from "./${Names.projection(group)}";`
         ).join("")}
         export * from "./EditorDef";
         `;

@@ -4,27 +4,26 @@ import {
     Box,
     BoxUtils,
     BoxFactory,
-    ElementBox, PiElement
+    ElementBox, PiElement, PiBoxProvider
 } from "@projectit/core";
 
 import { ConceptA } from "../../language/gen";
-import { BoxProvider } from "./BoxProvider";
-import { NewCompositeProjection } from "./NewCompositeProjection";
-import { NewBoxUtils } from "./NewBoxUtils";
+import { SimpleBoxProviderCache } from "./SimpleBoxProviderCache";
+import { NewBoxUtils } from "@projectit/core/dist/editor/projections/NewBoxUtils";
 
-export class ConceptA_BoxProvider implements BoxProvider {
+export class ConceptA_BoxProvider implements PiBoxProvider {
     private _mainBox: ElementBox;
     private _element: ConceptA;
-    private knownProjections: string[] = ['default'];
+    private knownProjections: string[] = ["default"];
 
     set element(element: PiElement) {
-        if (element.piLanguageConcept() === 'ConceptA') {
+        if (element.piLanguageConcept() === "ConceptA") {
             this._element = element as ConceptA;
         } else {
-            console.log('setelement: wrong type (' + element.piLanguageConcept() + '!= ConceptA)')
+            console.log("setelement: wrong type (" + element.piLanguageConcept() + "!= ConceptA)");
         }
     }
-    
+
     @computed
     get box(): Box {
         if (this._element === null) {
@@ -32,7 +31,7 @@ export class ConceptA_BoxProvider implements BoxProvider {
         }
 
         if (this._mainBox === null || this._mainBox === undefined) {
-            this._mainBox = new ElementBox(this._element, 'main-box-for-' + this._element.piLanguageConcept() + '-' + this._element.piId());
+            this._mainBox = new ElementBox(this._element, "main-box-for-" + this._element.piLanguageConcept() + "-" + this._element.piId());
         }
 
         this._mainBox.content = this.getContent();
@@ -40,8 +39,10 @@ export class ConceptA_BoxProvider implements BoxProvider {
     }
 
     private getContent(): Box {
-        let projToUse = NewCompositeProjection.getProjectionNames().filter(p => this.knownProjections.includes(p))[0];
-        if ( projToUse === 'default') {
+        let projToUse = SimpleBoxProviderCache.getInstance()
+            .getProjectionNames()
+            .filter(p => this.knownProjections.includes(p))[0];
+        if (projToUse === "default") {
             return this.getDefault();
         }
         return this.getDefault();
@@ -60,7 +61,7 @@ export class ConceptA_BoxProvider implements BoxProvider {
                 "ConceptA-hlist-line-1",
                 [
                     BoxUtils.labelBox(this._element, "Tree:", "top-1-line-1-item-0"),
-                    NewBoxUtils.getBoxOrAlias(this._element, "partA1", "ConceptB"),
+                    NewBoxUtils.getBoxOrAlias(this._element, "partA1", "ConceptB", SimpleBoxProviderCache.getInstance())
                 ],
                 { selectable: true }
             ),
@@ -69,7 +70,7 @@ export class ConceptA_BoxProvider implements BoxProvider {
                 "ConceptA-hlist-line-2",
                 [
                     BoxUtils.labelBox(this._element, "Leaf:", "top-1-line-2-item-0"),
-                    NewBoxUtils.getBoxOrAlias(this._element, "partA2", "ConceptE"),
+                    NewBoxUtils.getBoxOrAlias(this._element, "partA2", "ConceptE", SimpleBoxProviderCache.getInstance())
                 ],
                 { selectable: true }
             )

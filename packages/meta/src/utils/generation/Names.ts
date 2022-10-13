@@ -3,7 +3,7 @@ import {
     PiLanguage, PiPrimitiveProperty, PiProperty
 } from "../../languagedef/metalanguage";
 import { PiModelDescription, PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
-import { PiEditProjectionGroup } from "../../editordef/metalanguage";
+import { PiEditClassifierProjection, PiEditProjectionGroup } from "../../editordef/metalanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -321,5 +321,17 @@ export class Names {
 
     public static interpreterName(language: PiLanguage): string {
         return "Main" + Names.interpreterClassname(language);
+    }
+
+    public static boxProvider(concept: PiClassifier): string {
+        return Names.startWithUpperCase(concept.name) + "_BoxProvider";
+    }
+
+    public static boxProviderCache(language: PiLanguage): string {
+        return Names.startWithUpperCase(language.name) + "BoxProviderCache";
+    }
+
+    static projectionMethod(proj: PiEditClassifierProjection): string {
+        return "get" + this.startWithUpperCase(proj.name);
     }
 }

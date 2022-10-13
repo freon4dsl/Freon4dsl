@@ -37,6 +37,7 @@ export class EditorRequestsHandler {
         LOGGER.log("enabling Projection " + name);
         const proj = editorEnvironment.editor.projection;
         if (proj instanceof PiCompositeProjection) {
+            // todo adjust for new projections
             proj.enableProjection(name);
         }
     }

@@ -3,14 +3,13 @@ import { computed } from "mobx";
 import {
     Box,
     BoxUtils,
-    BoxFactory, ElementBox, PiElement
+    BoxFactory, ElementBox, PiElement, PiBoxProvider
 } from "@projectit/core";
 
 import { ConceptD } from "../../language/gen";
-import { BoxProvider } from "./BoxProvider";
-import { NewCompositeProjection } from "./NewCompositeProjection";
+import { SimpleBoxProviderCache } from "./SimpleBoxProviderCache";
 
-export class ConceptD_BoxProvider implements BoxProvider {
+export class ConceptD_BoxProvider implements PiBoxProvider {
     private _mainBox: ElementBox;
     private _element: ConceptD;
     private knownProjections: string[] = ['default'];
@@ -38,7 +37,7 @@ export class ConceptD_BoxProvider implements BoxProvider {
     }
 
     private getContent(): Box {
-        let projToUse = NewCompositeProjection.getProjectionNames().filter(p => this.knownProjections.includes(p))[0];
+        let projToUse = SimpleBoxProviderCache.getInstance().getProjectionNames().filter(p => this.knownProjections.includes(p))[0];
         if ( projToUse === 'default') {
             return this.getDefault();
         }

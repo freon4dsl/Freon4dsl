@@ -13,8 +13,8 @@ import {
 import { PiEditUnit } from "../metalanguage";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
-import { EditorDefTemplate } from "./templates/EditorDefTemplate";
-import { LOG2USER } from "../../utils/UserLogger";
+import { EditorDefTemplate } from "./templates";
+import { LOG2USER } from "../../utils";
 
 const LOGGER = new MetaLogger("EditorGenerator").mute();
 
@@ -59,11 +59,27 @@ export class EditorGenerator {
         const relativePath = "../../";
 
         // Generate the projection groups
-        editDef.projectiongroups.forEach(group => {
-            LOGGER.log(`Generating projection group: ${this.editorGenFolder}/${Names.projection(group)}.ts`);
-            const projectionfile = FileUtil.pretty(projection.generateProjectionGroup(this.language, group, relativePath),
-                "Projection " + group.name, generationStatus);
-            fs.writeFileSync(`${this.editorGenFolder}/${Names.projection(group)}.ts`, projectionfile);
+        // editDef.projectiongroups.forEach(group => {
+        //     LOGGER.log(`Generating projection group: ${this.editorGenFolder}/${Names.projection(group)}.ts`);
+        //     const projectionfile = FileUtil.pretty(projection.generateProjectionGroup(this.language, group, relativePath),
+        //         "Projection " + group.name, generationStatus);
+        //     fs.writeFileSync(`${this.editorGenFolder}/${Names.projection(group)}.ts`, projectionfile);
+        // });
+
+        // Generate the box providers
+        const providercache = FileUtil.pretty(projection.generateBoxProviderCache(this.language, editDef, relativePath), "providercache", generationStatus);
+        fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProviderCache(this.language)}.ts`, providercache);
+
+        this.language.concepts.forEach(concept => {
+            const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language, concept, editDef, relativePath),
+                "Box provider " + concept.name, generationStatus);
+            fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
+        });
+
+        this.language.units.forEach(concept => {
+            const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language, concept, editDef, relativePath),
+                "Box provider " + concept.name, generationStatus);
+            fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
         });
 
         // Generate the actions

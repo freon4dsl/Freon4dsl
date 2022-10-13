@@ -1,20 +1,24 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 
 import {
     Box,
     BoxUtils,
-    BoxFactory, ElementBox, PiElement, isNullOrUndefined, RoleProvider
+    BoxFactory, ElementBox, PiElement, isNullOrUndefined, PiBoxProvider, NewBoxUtils
 } from "@projectit/core";
 
 import { SimplePart } from "../../language/gen";
-import { BoxProvider } from "./BoxProvider";
-import { NewCompositeProjection } from "./NewCompositeProjection";
-import { NewBoxUtils } from "./NewBoxUtils";
+import { SimpleBoxProviderCache } from "./SimpleBoxProviderCache";
 
-export class SimplePart_BoxProvider implements BoxProvider {
-    private _mainBox: ElementBox;
+export class SimplePart_BoxProvider implements PiBoxProvider {
+    private _mainBox: ElementBox = null; // init is need for mobx!
     private _element: SimplePart;
     private knownProjections: string[] = ['default'];
+
+    constructor() {
+        makeObservable(this, {
+            box: computed
+        })
+    }
 
     set element(element: PiElement) {
         if (element.piLanguageConcept() === 'SimplePart') {
@@ -24,7 +28,6 @@ export class SimplePart_BoxProvider implements BoxProvider {
         }
     }
 
-    @computed
     get box(): Box {
         if (this._element === null) {
             return null;
@@ -40,7 +43,7 @@ export class SimplePart_BoxProvider implements BoxProvider {
     }
 
     private getContent(): Box {
-        let projToUse = NewCompositeProjection.getProjectionNames().filter(p => this.knownProjections.includes(p))[0];
+        let projToUse = SimpleBoxProviderCache.getInstance().getProjectionNames().filter(p => this.knownProjections.includes(p))[0];
         if ( projToUse === 'default') {
             return this.getDefault();
         }
@@ -58,7 +61,7 @@ export class SimplePart_BoxProvider implements BoxProvider {
             "SimplePart-hlist-line-0",
             [
                 BoxUtils.labelBox(this._element, "SIMPLE", "top-1-line-0-item-0"),
-                NewBoxUtils.getBoxOrAlias(this._element, "basis", "ConceptA"),
+                NewBoxUtils.getBoxOrAlias(this._element, "basis", "ConceptA", SimpleBoxProviderCache.getInstance()),
                 BoxUtils.labelBox(this._element, "END", "top-1-line-0-item-2")
             ],
             { selectable: true }
