@@ -10,7 +10,7 @@ export class FreonCustomTyperPartTemplate {
         // TODO add comments to generated class
         // Template starts here
         return `
-        import { PiElement, PiType, IFrTyper } from "${PROJECTITCORE}";
+        import { PiElement, PiType, FreTyper } from "${PROJECTITCORE}";
         // import { ${Names.typer(language)} } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
         
         /**
@@ -18,7 +18,7 @@ export class FreonCustomTyperPartTemplate {
          * custom code for type checking.
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
-            mainTyper: IFrTyper; // ${Names.typer(language)};
+            mainTyper: FreTyper; // ${Names.typer(language)};
         
             isType(modelelement: PiElement): boolean | null {
                 return null;

@@ -1,9 +1,9 @@
 import { PiElement } from "../ast/index";
 import { PiType } from "./PiType";
 
-export interface IFrTyper {
+export interface FreTyper {
     // name: string;
-    mainTyper: IFrTyper;
+    mainTyper: FreTyper;
     
     /**
      * Returns true if 'elem' is marked as 'isType' in the Typer definition

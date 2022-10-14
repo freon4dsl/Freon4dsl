@@ -1,22 +1,22 @@
 import { PiElement, PiNamedElement } from "../ast/index";
-import { FrScoper } from "./FrScoper";
+import { FreScoper } from "./FreScoper";
 
-export class FrScoperComposite implements FrScoper {
+export class FreScoperComposite implements FreScoper {
     // TOD: What of this?
-    mainScoper: FrScoperComposite;
-    private scopers: FrScoper[] =[];
+    mainScoper: FreScoperComposite;
+    private scopers: FreScoper[] =[];
     name: string = "";
 
     constructor(name: string) {
         this.name = name;
     }
 
-    appendScoper(t: FrScoper) {
+    appendScoper(t: FreScoper) {
         this.scopers.push(t);
         t.mainScoper = this;
     }
 
-    insertScoper(t: FrScoper) {
+    insertScoper(t: FreScoper) {
         this.scopers.splice(0, 0, t);
         t.mainScoper = this;
     }

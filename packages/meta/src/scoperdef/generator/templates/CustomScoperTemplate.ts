@@ -9,14 +9,14 @@ export class CustomScoperTemplate {
         // TODO add comments to generated class
         // Template starts here
         return `
-        import { PiElement, PiNamedElement, ${Names.FrScoperPart}, ${Names.FrScoperComposite}  } from "${PROJECTITCORE}";
+        import { PiElement, PiNamedElement, ${Names.FrScoperPart}, ${Names.FreScoperComposite}  } from "${PROJECTITCORE}";
         
         /**
          * Class '${generatedClassName}' is meant to be a convient place to add any
          * custom code for scoping.
          */
         export class ${generatedClassName} implements ${scoperInterfaceName} {
-            mainScoper: ${Names.FrScoperComposite};
+            mainScoper: ${Names.FreScoperComposite};
             
             resolvePathName(modelelement: PiElement, doNotSearch: string, pathname: string[], metatype?: string): PiNamedElement {
                 return undefined;

@@ -40,7 +40,7 @@ export class ScoperTemplate {
 
         const langConceptType: string = Names.metaType(language);
         const generatedClassName: string = Names.scoper(language);
-        const scoperBaseName: string = Names.FrScoperBase;
+        const scoperBaseName: string = Names.FreScoperBase;
         const scoperInterfaceName: string = Names.FrScoperPart;
         const typerClassName: string = Names.typer(language);
 

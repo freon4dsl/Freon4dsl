@@ -1,8 +1,8 @@
 import { PiEditor } from "../editor";
 import { FreonInterpreter } from "../interpreter/index";
 import { PiValidator } from "../validator";
-import { FrScoperComposite } from "../scoper";
-import { FrCompositeTyper } from "../typer";
+import { FreScoperComposite } from "../scoper";
+import { FreCompositeTyper } from "../typer";
 import { PiStdlib } from "../stdlib";
 import { PiWriter } from "../writer";
 import { PiReader } from "../reader";
@@ -15,8 +15,8 @@ export interface PiEnvironment {
      */
     newModel(modelName: string): PiModel;
 
-    scoper: FrScoperComposite;
-    typer: FrCompositeTyper;
+    scoper: FreScoperComposite;
+    typer: FreCompositeTyper;
     validator: PiValidator;
     editor: PiEditor;
     stdlib: PiStdlib;

@@ -3,16 +3,16 @@ import { PiElement, PiElementReference, PiModelUnit, PiNamedElement } from "../a
 import { LanguageEnvironment } from "../environment/index";
 import { Language } from "../language/index";
 import { PiLogger } from "../logging/index";
-import { FrCompositeTyper } from "../typer/index";
-import { FrScoperComposite } from "./FrScoperComposite";
+import { FreCompositeTyper } from "../typer/index";
+import { FreScoperComposite } from "./FreScoperComposite";
 import { FreonNamespace } from "./FreonNamespace";
-import { FrScoper } from "./FrScoper";
+import { FreScoper } from "./FreScoper";
 
-const LOGGER = new PiLogger("FrScoperBase");
+const LOGGER = new PiLogger("FreScoperBase");
 
-export abstract class FrScoperBase implements FrScoper {
-    mainScoper: FrScoperComposite;
-    myTyper: FrCompositeTyper;
+export abstract class FreScoperBase implements FreScoper {
+    mainScoper: FreScoperComposite;
+    myTyper: FreCompositeTyper;
     // Added to avoid loop when searching for additional namespaces
     additionalNamespacesVisited: PiElementReference<PiNamedElement>[] = [];
     protected currentRoleNames: string[] = [];
@@ -74,7 +74,7 @@ export abstract class FrScoperBase implements FrScoper {
     }
 
     /**
-     * See FrScoper.
+     * See FreScoper.
      */
     public getVisibleElements(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): PiNamedElement[] {
         this.myTyper = LanguageEnvironment.getInstance().typer;
@@ -122,7 +122,7 @@ export abstract class FrScoperBase implements FrScoper {
     }
 
     /**
-     * See FrScoper.
+     * See FreScoper.
      */
     public getFromVisibleElements(modelelement: PiElement, name: string, metatype?: string, excludeSurrounding?: boolean): PiNamedElement {
         const visibleElements = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
@@ -138,7 +138,7 @@ export abstract class FrScoperBase implements FrScoper {
     }
 
     /**
-     * See FrScoper.
+     * See FreScoper.
      */
     public getVisibleNames(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): string[] {
         const result: string[] = [];
@@ -151,7 +151,7 @@ export abstract class FrScoperBase implements FrScoper {
     }
 
     /**
-     * See FrScoper.
+     * See FreScoper.
      */
     public isInScope(modelElement: PiElement, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
         return this.getFromVisibleElements(modelElement, name, metatype, excludeSurrounding) !== null;

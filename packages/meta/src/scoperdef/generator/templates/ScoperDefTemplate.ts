@@ -14,7 +14,7 @@ export class ScoperDefTemplate {
         const concreteNamespaces: PiClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scoperDef.namespaces);
         // const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
 
-        return `import { Language, ${Names.FrScoperComposite} } from "${PROJECTITCORE}";
+        return `import { Language, ${Names.FreScoperComposite} } from "${PROJECTITCORE}";
             import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
             import { ${Names.scoper(language)} } from "./${Names.scoper(language)}";     
 
@@ -22,7 +22,7 @@ export class ScoperDefTemplate {
              * Adds all known scopers to the main scoper.
              * @param rootScoper
              */
-            export function initializeScopers(rootScoper: ${Names.FrScoperComposite}) {
+            export function initializeScopers(rootScoper: ${Names.FreScoperComposite}) {
                 for (const p of projectitConfiguration.customScopers) {
                     rootScoper.appendScoper(p);
                 }
@@ -32,7 +32,7 @@ export class ScoperDefTemplate {
             /**
              * Adds namespace info to the in-memory representation of the language metamodel.
              */
-             export function initializeScoperDef(rootScoper: FrScoperComposite) {
+             export function initializeScoperDef(rootScoper: FreScoperComposite) {
                  ${concreteNamespaces.map( element =>
                     `Language.getInstance().classifier("${Names.classifier(element)}").isNamespace = true;`
                 ).join("\n")}

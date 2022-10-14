@@ -1,14 +1,14 @@
-import { IFrTyper } from "./IFrTyper";
+import { FreTyper } from "./FreTyper";
 import { PiType } from "./PiType";
 
-export class FrTypeOrderedList<T extends PiType> implements Iterable<T> {
+export class FreTypeOrderedList<T extends PiType> implements Iterable<T> {
     protected elements: T[] = [];
 
     toArray(): T[] {
         return  this.elements;
     }
 
-    add(p: T, typer: IFrTyper) {
+    add(p: T, typer: FreTyper) {
         if (!!typer) {
             if (!this.elements.find(e => typer.equals(e, p))) {
                 this.elements.push(p);
@@ -16,7 +16,7 @@ export class FrTypeOrderedList<T extends PiType> implements Iterable<T> {
         }
     }
 
-    addAll(list: FrTypeOrderedList<T>, typer: IFrTyper) {
+    addAll(list: FreTypeOrderedList<T>, typer: FreTyper) {
         for (const t of list) {
             this.add(t, typer);
         }
@@ -26,7 +26,7 @@ export class FrTypeOrderedList<T extends PiType> implements Iterable<T> {
      * Retains only the elements that are contained in the "list".
      * @param list
      */
-    retainAll(list: FrTypeOrderedList<T>, typer: IFrTyper) {
+    retainAll(list: FreTypeOrderedList<T>, typer: FreTyper) {
         const toRetain: T[] = [];
         this.elements.forEach((old, index) => {
             if (list.includes(old, typer)) {
@@ -44,7 +44,7 @@ export class FrTypeOrderedList<T extends PiType> implements Iterable<T> {
         return this.elements[index];
     }
 
-    includes(p: T, typer: IFrTyper): boolean {
+    includes(p: T, typer: FreTyper): boolean {
         let result: boolean = false;
         if (!!typer) {
             for (const elem of this.elements) {
@@ -64,9 +64,9 @@ export class FrTypeOrderedList<T extends PiType> implements Iterable<T> {
 
 export class FrOrderedListIterator<T extends PiType> implements Iterator<T> {
     private index = 0;
-    private list: FrTypeOrderedList<T>;
+    private list: FreTypeOrderedList<T>;
 
-    constructor(list: FrTypeOrderedList<T>) {
+    constructor(list: FreTypeOrderedList<T>) {
         this.list = list;
     }
 

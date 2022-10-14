@@ -19,17 +19,17 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static PiBinaryExpression:string = "PiBinaryExpression";
     // tslint:disable-next-line:variable-name
-    public static PiScoper:string = "FrScoper";
+    public static PiScoper:string = "FreScoper";
     // tslint:disable-next-line:variable-name
-    public static FrScoperBase:string = "FrScoperBase";
+    public static FreScoperBase:string = "FreScoperBase";
     // tslint:disable-next-line:variable-name
-    public static FrScoperComposite:string = "FrScoperComposite";
+    public static FreScoperComposite:string = "FreScoperComposite";
     // tslint:disable-next-line:variable-name
-    public static FrScoperPart:string = "FrScoper";
+    public static FrScoperPart:string = "FreScoper";
     // tslint:disable-next-line:variable-name
-    public static FreonTyperPart: string = "IFrTyper";
+    public static FreonTyperPart: string = "FreTyper";
     // tslint:disable-next-line:variable-name
-    public static FreonTyper: string = "FrCompositeTyper";
+    public static FreonTyper: string = "FreCompositeTyper";
     // tslint:disable-next-line:variable-name
     public static PiValidator:string = "PiValidator";
     // tslint:disable-next-line:variable-name

@@ -5,7 +5,7 @@ import { PiTyperDef } from "../../metalanguage/index";
 export class TyperDefTemplate {
 
     generateTyperDef(language: PiLanguage, typerDef: PiTyperDef, relativePath: string): string {
-        return `import { FrCompositeTyper } from "${PROJECTITCORE}";
+        return `import { FreCompositeTyper } from "${PROJECTITCORE}";
         
             import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}";     
             import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
@@ -14,7 +14,7 @@ export class TyperDefTemplate {
              * Adds all known type- providers the root typer.
              * @param rootTyper
              */
-            export function initializeTypers(rootTyper: FrCompositeTyper) {
+            export function initializeTypers(rootTyper: FreCompositeTyper) {
                 for (const p of projectitConfiguration.customTypersFreon) {
                     rootTyper.appendTyper(p);
                 }

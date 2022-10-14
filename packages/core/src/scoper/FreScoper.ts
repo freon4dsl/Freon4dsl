@@ -1,10 +1,10 @@
 import { PiElement, PiNamedElement } from "../ast";
-import { FrScoperComposite } from "./FrScoperComposite";
+import { FreScoperComposite } from "./FreScoperComposite";
 
 // Part of the Freon Framework
 
-export interface FrScoper {
-    mainScoper: FrScoperComposite;
+export interface FreScoper {
+    mainScoper: FreScoperComposite;
     
     /**
      * Returns the element to which the 'pathname' refers. If the element cannot be found, or if the element is

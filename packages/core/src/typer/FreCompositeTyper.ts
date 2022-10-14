@@ -1,24 +1,24 @@
 import { PiElement } from "../ast/index";
 import { ListUtil } from "../util/ListUtil";
-import { IFrTyper } from "./IFrTyper";
+import { FreTyper } from "./FreTyper";
 import { PiType } from "./PiType";
 
-export class FrCompositeTyper implements IFrTyper {
-    mainTyper: IFrTyper;
+export class FreCompositeTyper implements FreTyper {
+    mainTyper: FreTyper;
     
-    private typers: IFrTyper[] =[];
+    private typers: FreTyper[] =[];
     name: string = "";
 
     constructor(name: string) {
         this.name = name;
     }
 
-    appendTyper(t: IFrTyper) {
+    appendTyper(t: FreTyper) {
         this.typers.push(t);
         t.mainTyper = this;
     }
 
-    insertTyper(t: IFrTyper) {
+    insertTyper(t: FreTyper) {
         this.typers.splice(0, 0, t);
         t.mainTyper = this;
     }
