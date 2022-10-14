@@ -6,8 +6,8 @@ import { ServerCommunication } from "../server/ServerCommunication";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { SimpleProjectEnvironment } from "../../SimpleProject/config/gen/SimpleProjectEnvironment";
-export const editorEnvironment: PiEnvironment = SimpleProjectEnvironment.getInstance();
+import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
+export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 LanguageInitializer.initialize();
 
 /**

@@ -9,11 +9,9 @@ import {
     STDLIB_GEN_FOLDER,
     WRITER_GEN_FOLDER,
     READER_GEN_FOLDER,
-    STYLES_FOLDER,
-    GenerationUtil,
     INTERPRETER_FOLDER
 } from "../../../utils/";
-import { PiClassifier, PiLanguage } from "../../metalanguage";
+import { PiLanguage } from "../../metalanguage";
 
 export class EnvironmentTemplate {
 
@@ -21,7 +19,7 @@ export class EnvironmentTemplate {
         return `
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
                     ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, ${Names.FreonInterpreter}, LanguageEnvironment
+                    ${Names.PiWriter}, ${Names.FreonInterpreter}, LanguageEnvironment, NewCompositeProjection
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
@@ -33,6 +31,7 @@ export class EnvironmentTemplate {
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
         import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}";
         import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.boxProviderCache(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}/${Names.boxProviderCache(language)}";
 
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.
@@ -60,10 +59,10 @@ export class EnvironmentTemplate {
              */  
             private constructor() {
                 const actions = new ${Names.actions(language)}();
-                const rootProjection = new ${Names.CompositeProjection}("root");
-                initializeProjections(rootProjection);
-                this.editor = new PiEditor(rootProjection, actions);
-                this.editor.rootElement = null;
+                const myComposite = new NewCompositeProjection();
+                // todo adjust the next line for other projects: move to webapp, because every unit has different rootType?
+                myComposite.rootProvider = ${Names.boxProviderCache(language)}.getInstance().getConstructor('SimplePart')();
+                this.editor = new PiEditor(myComposite, actions);
                 this.editor.environment = this;
                 initializeLanguage();
                 initializeEditorDef();
