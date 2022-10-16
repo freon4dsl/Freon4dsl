@@ -81,3 +81,13 @@ export function clickOutside(node) {
         }
     }
 }
+
+/**
+ * Replace HTML tags and spaces with HTML Entities.
+ * Used to make text containing these acce[table as HTML Text.
+ * SPACE => @nbsp;
+ * "<"   => &lt;
+ */
+export function replaceHTML(s: string): string {
+    return s.replace(/\s/g, '&nbsp;').replace(/\</, "&lt;");
+}
