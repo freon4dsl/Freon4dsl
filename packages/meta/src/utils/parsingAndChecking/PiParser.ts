@@ -102,7 +102,7 @@ export class PiParser<DEFINITION> {
                     // throw syntax error, but adjust the location first
                     // to avoid a newline in the output, we do not put this if-stat in a smart string
                     let location: string = "";
-                    if (e.location && e.location.start) {
+                    if (!!e.location && !!e.location.start) {
                         location = ParseLocationUtil.locationPlus(file, e.location);
                     }
                     const errorstr = `${e.message.trimEnd()} ${location}`;

@@ -64,6 +64,12 @@
 
 	--freon-verticallist-component-padding: 0px;
 	--freon-verticallist-component-margin: 0px;
+	--freon-verticallist-component-border-color: inherited;
+	--freon-verticallist-component-border-width: inherited;
+	--freon-verticallist-component-border-style: inherited;
+	--freon-horizontallist-component-border-color: inherited;
+	--freon-horizontallist-component-border-width: inherited;
+	--freon-horizontallist-component-border-style: inherited;
 
 }
 

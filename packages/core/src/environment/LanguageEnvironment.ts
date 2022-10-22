@@ -1,6 +1,7 @@
 import { PiEditor, PiProjection } from "../editor/index";
 import { PiEnvironment } from "../environment/index";
 import { PiModel } from "../ast/index";
+import { FreonInterpreter } from "../interpreter/index";
 import { PiReader } from "../reader/index";
 import { PiScoper } from "../scoper/index";
 import { PiStdlib } from "../stdlib/index";
@@ -33,6 +34,7 @@ export class LanguageEnvironment implements PiEnvironment {
     public unitNames: string[];
     public validator: PiValidator;
     public writer: PiWriter;
+    public interpreter: FreonInterpreter;
 
     public newModel(modelName: string): PiModel {
         return undefined;

@@ -66,7 +66,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         LOGGER.log("Checking namespace definition for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
-            error: `Cannot add namespaces to a concept that is not a namespace itself [line: ${namespaceAddition.location?.start.line}, column: ${namespaceAddition.location?.start.column}].`,
+            error: `Cannot add namespaces to concept ${enclosingConcept.name} that is not a namespace itself [file: ${namespaceAddition.location.filename}: line: ${namespaceAddition.location?.start.line}, column: ${namespaceAddition.location?.start.column}].`,
             whenOk: () => {
                 namespaceAddition.expressions.forEach(exp => {
                     this.myExpressionChecker.checkLangExp(exp, enclosingConcept);

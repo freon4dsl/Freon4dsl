@@ -1,0 +1,41 @@
+language RulesLanguage
+
+modelunit Data {
+    public name: identifier;
+    public entities: Entity[];
+}
+
+concept Entity {
+    public name: identifier;
+    public attributes: Attribute[];
+}
+
+interface Type {
+    name: identifier;
+}
+
+concept Attribute {
+    public name: identifier;
+    reference declaredType: Type;
+}
+
+limited AttributeType implements Type {
+    name: identifier;
+
+    String = { name: "String" }
+    Integer = { name: "Integer" }
+    Boolean = { name: "Boolean" }
+    Date = { name: "Date" }
+    ANY = { name: "ANY" }
+}
+
+limited Gender {
+    name: identifier;
+    code: number;
+
+    Male = { name: "Male", code: 0}
+    Female = { name: "Female", code: 1}
+    Unknown = { name: "Unknown", code: 2}
+}
+
+

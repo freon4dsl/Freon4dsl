@@ -11,9 +11,7 @@ Rules {
 
 CheckingRule {
     [
-
         Validation ${self.name}: ${self.check}
-
             description: ${self.description}
 
     ]
@@ -24,7 +22,6 @@ IfThenElseRule {
         Rule ${self.name}
             description: ${self.description}
         ${self.IfStatement}
-
     ]
 }
 
@@ -37,6 +34,10 @@ IfStatement {
         else
             ${self.ElseStatements vertical}
     ]
+}
+
+NumberLiteral {
+    [ ${self.value}]
 }
 
 SetValue {

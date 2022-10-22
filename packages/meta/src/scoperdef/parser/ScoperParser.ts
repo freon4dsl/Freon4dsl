@@ -21,6 +21,7 @@ export class ScoperParser extends PiParser<PiScopeDef> {
             let result: PiScopeDef = submodels[0];
             submodels.forEach((sub, index) => {
                 if (index > 0) {
+                    result.namespaces.push(...sub.namespaces);
                     result.scopeConceptDefs.push(...sub.scopeConceptDefs);
                 }
             });

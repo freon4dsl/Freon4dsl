@@ -9,7 +9,7 @@
     export let editor: PiEditor;
 
     // only exported for testing purposes
-    export const style=`${indentBox.indent * 8}px;`;
+    export const style=`margin-left: ${indentBox.indent * 8}px;`;
     let id: string = componentId(indentBox);
 
     autorun( () => {
@@ -28,7 +28,7 @@
 <span
     class="indentStyle"
     tabIndex={0}
-    style:margin-left="{style}"
+    style="{style}"
     on:focus={onFocus}
     on:blur={onBlur}
     id="{id}"
@@ -38,7 +38,7 @@
 
 <style>
     .indentStyle {
-        margin-left: 50px;
+        /*margin-left: 50px;*/
     }
 </style>
 

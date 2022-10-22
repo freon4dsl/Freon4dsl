@@ -1,4 +1,5 @@
 import { PiEditor } from "../editor";
+import { FreonInterpreter } from "../interpreter/index";
 import { PiValidator } from "../validator";
 import { PiScoper } from "../scoper";
 import { PiTyper } from "../typer";
@@ -21,6 +22,7 @@ export interface PiEnvironment {
     stdlib: PiStdlib;
     writer: PiWriter;
     reader: PiReader;
+    interpreter: FreonInterpreter;
 
     languageName: string;
     unitNames: string[];

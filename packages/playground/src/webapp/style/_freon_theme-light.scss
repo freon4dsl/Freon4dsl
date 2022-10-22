@@ -192,12 +192,17 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 
-  --freon-horizontallist-component-padding: 0px;
-  --freon-horizontallist-component-margin: 0px;
+  --freon-horizontallist-component-padding: 1px;
+  --freon-horizontallist-component-margin: 1px;
+  --freon-horizontallist-component-border-color: color-palette.$light-green-600;
+  --freon-horizontallist-component-border-width: 2px;
+  --freon-horizontallist-component-border-style: transparent;
 
-  --freon-verticallist-component-padding: 0px;
-  --freon-verticallist-component-margin: 0px;
-
+  --freon-verticallist-component-padding: 1px;
+  --freon-verticallist-component-margin: 1px;
+  --freon-verticallist-component-border-color: yellow;
+  --freon-verticallist-component-border-width: 2px;
+  --freon-verticallist-component-border-style: transparent;
 
 }
 
@@ -211,44 +216,43 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 .gridcell-header {
   --freon-gridcell-component-background-color: #{theme.$grey-500};
 }
-.Rules-name-textbox, .CheckingRule-name-textbox {
-  --freon-text-component-background-color: lightgreen;
-}
-.Entity-name-textbox {
-  --freon-text-component-background-color: lightgreen;
-}
-.StringLiteralExpression-value-textbox {
-  --freon-text-component-color: green;
-}
-
-.\/\*, .\*\/ {
-  //--freon-label-component-font-weight: lighter;
-  --freon-label-component-font-style: italic;
-  --freon-label-component-color: #{theme.$grey-500};
-}
-.\{ {
-  --freon-label-component-font-weight: bold;
-}
-.using.entity\: , .Validation {
-  --freon-label-component-font-weight: bold;
-  --freon-label-component-color: red;
-}
-.unit {
-  --freon-label-component-font-weight: bold;
-  --freon-label-component-color: darkmagenta;
-}
-.alias-SetValue-attribute-referencebox-textbox {
-  --freon-text-component-background-color: orange;
-}
-
-.\,, .\%, .\. {
-  --freon-label-component-margin: 0px 0px 0px 0px;
-  --freon-label-component-padding: 0px 0px 0px 0px;
-}
-//.EuroLiteral-cents-numberbox {
-//  --freon-label-component-margin: 0px;
-//  --freon-label-component-padding: 0px 1px 0px 1px;
+//
+//.Rules-name-textbox, .CheckingRule-name-textbox {
+//  --freon-text-component-background-color: lightgreen;
 //}
+//.Entity-name-textbox {
+//  --freon-text-component-background-color: lightgreen;
+//}
+//.StringLiteralExpression-value-textbox {
+//  --freon-text-component-color: green;
+//}
+//
+//.\/\*, .\*\/ {
+//  //--freon-label-component-font-weight: lighter;
+//  --freon-label-component-font-style: italic;
+//  --freon-label-component-color: #{theme.$grey-500};
+//}
+//.\{ {
+//  --freon-label-component-font-weight: bold;
+//}
+//.using.entity\: , .Validation {
+//  --freon-label-component-font-weight: bold;
+//  --freon-label-component-color: red;
+//}
+//.unit {
+//  --freon-label-component-font-weight: bold;
+//  --freon-label-component-color: darkmagenta;
+//}
+//.alias-SetValue-attribute-referencebox-textbox {
+//  --freon-text-component-color: #{color-palette.$brown-600};
+//  //--freon-text-component-background-color: #{color-palette.$yellow-300};
+//}
+//
+//.\,, .\%, .\. {
+//  --freon-label-component-margin: 0px 0px 0px 0px;
+//  --freon-label-component-padding: 0px 0px 0px 0px;
+//}
+
 .alias-binary-pre-textbox, .alias-binary-post-textbox, .alias-exp-left-textbox, .alias-exp-right-textbox {
   --freon-text-component-margin: 0px;
   --freon-text-component-padding: -1px 1px 0px 1px;

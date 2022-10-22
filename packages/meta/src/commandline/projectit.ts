@@ -1,4 +1,5 @@
 import { CommandLineParser, CommandLineFlagParameter } from "@rushstack/ts-command-line";
+import { ProjectItGenerateInterpreter } from "./ProjectItGenerateInterpreter";
 import { ProjectItGenerateLanguage } from "./ProjectItGenerateLanguage";
 import { ProjectItGenerateAllAction } from "./ProjectItGenerateAllAction";
 import { ProjectItGenerateEditor } from "./ProjectItGenerateEditor";
@@ -22,6 +23,7 @@ export class ProjectIt extends CommandLineParser {
     private scoperAction: ProjectItGenerateScoper;
     private validatorAction: ProjectItGenerateValidator;
     private typerAction: ProjectItGenerateTyper;
+    private interpreterAction: ProjectItGenerateInterpreter;
     private cleanAction: ProjectItCleanAction;
     private verboseArg: CommandLineFlagParameter;
     private watchArg: CommandLineFlagParameter;
@@ -40,6 +42,7 @@ export class ProjectIt extends CommandLineParser {
         this.scoperAction = new ProjectItGenerateScoper();
         this.validatorAction = new ProjectItGenerateValidator();
         this.typerAction = new ProjectItGenerateTyper();
+        this.interpreterAction = new ProjectItGenerateInterpreter();
         this.cleanAction = new ProjectItCleanAction();
         this.addAction(this.allAction);
         this.addAction(this.languageAction);
@@ -49,6 +52,7 @@ export class ProjectIt extends CommandLineParser {
         this.addAction(this.scoperAction);
         this.addAction(this.validatorAction);
         this.addAction(this.typerAction);
+        this.addAction(this.interpreterAction);
         this.addAction(this.cleanAction);
     }
 

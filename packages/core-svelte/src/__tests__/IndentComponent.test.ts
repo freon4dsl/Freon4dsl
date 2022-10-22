@@ -23,11 +23,12 @@ describe("Indent component", () => {
         const indentComp = screen.getByTestId(`${myIndentBox.element.piId()}-${myIndentBox.role}`);
         // Cannot test the dynamic value of margin-left TODO find out how to
         // For now, we test the static value of margin-left
-        expect(indentComp).toHaveStyle('margin-left: 50px');
+        // TODO: This seems to work now, probably newer versions
+        expect(indentComp).toHaveStyle('margin-left: 32px');
         // and ... the dynamic value of 'style' in the Svelte component
         // Note, that 'style' needs to be exported from IndentComponent for this to work.
         const xxx = result.component;
-        expect(xxx.style).toBe("32px;");
+        expect(xxx.style).toBe("margin-left: 32px;");
     });
 
 });

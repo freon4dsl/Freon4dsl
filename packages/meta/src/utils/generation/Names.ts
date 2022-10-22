@@ -35,6 +35,8 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static PiError:string = "PiError";
     // tslint:disable-next-line:variable-name
+    public static FreonInterpreter:string = "FreonInterpreter";
+    // tslint:disable-next-line:variable-name
     public static PiErrorSeverity:string = "PiErrorSeverity";
     // tslint:disable-next-line:variable-name
     public static PiActions:string = "PiCombinedActions";
@@ -299,5 +301,25 @@ export class Names {
 
     public static refName(property: PiProperty): string {
         return  "$" + property.name;
+    }
+
+    public static interpreterClassname(language : PiLanguage): string {
+        return Names.startWithUpperCase(language.name)+ "Interpreter";
+    }
+
+    public static interpreterBaseClassname(language: PiLanguage): string {
+        return Names.interpreterClassname(language) + "Base";
+    }
+
+    public static interpreterInterfacename(language: PiLanguage): string {
+        return "I" + Names.interpreterClassname(language);
+    }
+
+    public static interpreterInitname(language: PiLanguage): string {
+        return Names.interpreterClassname(language) + "Init";
+    }
+
+    public static interpreterName(language: PiLanguage): string {
+        return "Main" + Names.interpreterClassname(language);
     }
 }

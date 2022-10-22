@@ -120,6 +120,9 @@
         display: inline-block;
         padding: var(--freon-horizontallist-component-padding, 1px);
         background-color: var(--freon-editor-component-background-color, white);
+        border-color: var(--freon-horizontallist-component-border-color, darkgreen);
+        border-width: var(--freon-horizontallist-component-border-width, 1pt);
+        border-style: var(--freon-horizontallist-component-border-style, solid);
         margin: var(--freon-horizontallist-component-margin, 1px);
         box-sizing: border-box;
     }
@@ -131,6 +134,10 @@
         background-color: var(--freon-editor-component-background-color, white);
         padding: var(--freon-verticallist-component-padding, 1px);
         margin: var(--freon-verticallist-component-margin, 1px);
+        border-color: var(--freon-verticallist-component-border-color, darkgreen);
+        border-width: var(--freon-verticallist-component-border-width, 1pt);
+        border-style: var(--freon-verticallist-component-border-style, solid);
+
         /*margin-top: 10px;*/
         box-sizing: border-box;
     }
