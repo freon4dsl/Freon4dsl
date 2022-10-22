@@ -23,16 +23,16 @@ export class FreonTyperPartTemplate {
 
     private generateDefault(language: PiLanguage): string {
         // const allLangConcepts: string = Names.allConcepts(language);
-        const typerInterfaceName: string = Names.PiTyperPart;
+        const typerInterfaceName: string = Names.FreonTyperPart;
         const generatedClassName: string = Names.typerPart(language);
 
         // Template starts here
         return `
-        import { PiElement, PiType, PiTyper, PiTyperPart } from "${PROJECTITCORE}";
-        import { ${Names.typer(language)} } from "./${Names.typer(language)}";
+        import { PiElement, PiType, FreTyper, FreCompositeTyper} from "${PROJECTITCORE}";
+        // import { ${Names.typer(language)} } from "./${Names.typer(language)}";
         
         export class ${generatedClassName} implements ${typerInterfaceName} {
-            mainTyper: ${Names.typer(language)};
+            mainTyper: FreCompositeTyper;
             
             /**
              * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
@@ -104,7 +104,7 @@ export class FreonTyperPartTemplate {
         const allLangConcepts: string = Names.allConcepts(language);
         ListUtil.addIfNotPresent(this.imports, allLangConcepts);
         const generatedClassName: string = Names.typerPart(language);
-        const typerInterfaceName: string = Names.PiTyperPart;
+        const typerInterfaceName: string = Names.FreonTyperPart;
         const equalsMaker: FreonTypeEqualsMaker = new FreonTypeEqualsMaker();
         const inferMaker: FreonTypeInferMaker = new FreonTypeInferMaker();
         const superTypeMaker: FreonSuperTypeMaker = new FreonSuperTypeMaker();
@@ -119,7 +119,7 @@ export class FreonTyperPartTemplate {
          * otherwise this class implements the default typer.
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
-            mainTyper: ${Names.typer(language)};
+            mainTyper: FreCompositeTyper; //  ${Names.typer(language)};
 
             /**
              * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
@@ -192,7 +192,7 @@ export class FreonTyperPartTemplate {
              * @param typelist
              */
             public commonSuper(typelist: PiType[]): PiType | null {
-                const result: PiType[] = CommonSuperTypeUtil.commonSuperType(typelist, this.mainTyper);        
+                const result: PiType[] = FreCommonSuperTypeUtil.commonSuperType(typelist, this.mainTyper);        
                 if (!!result && result.length > 0) {
                     return result[0];
                 }
@@ -242,10 +242,10 @@ export class FreonTyperPartTemplate {
 
         });
 
-        const imports = `import { ${typerInterfaceName}, PiType, AstType, PiElement, Language, PiElementReference, CommonSuperTypeUtil } from "${PROJECTITCORE}";
+        const imports = `import { ${typerInterfaceName}, FreCompositeTyper, PiType, AstType, PiElement, Language, PiElementReference, FreCommonSuperTypeUtil } from "${PROJECTITCORE}";
         import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}
-        import { ${Names.typer(language)} } from "./${Names.typer(language)}";`;
+        // import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}";`;
 
         return imports + baseClass;
     }

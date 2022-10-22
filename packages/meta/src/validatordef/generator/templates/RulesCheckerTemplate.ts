@@ -32,7 +32,7 @@ export class RulesCheckerTemplate {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName: string = Names.PiError;
         const checkerClassName: string = Names.rulesChecker(language);
-        const typerInterfaceName: string = Names.PiTyper;
+        const typerInterfaceName: string = Names.FreonTyper;
         const writerInterfaceName: string = Names.PiWriter;
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const commentBefore = `/**

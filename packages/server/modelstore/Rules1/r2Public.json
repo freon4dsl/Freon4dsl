@@ -2,9 +2,46 @@
    "$typename": "Rules",
    "name": "r2",
    "Rules": [
-      null,
-      null,
-      null,
-      null
-   ]
+      {
+         "$typename": "CheckingRule",
+         "name": "sqs",
+         "description": "",
+         "check": {
+            "$typename": "AttributeRef",
+            "attr": "Name"
+         }
+      },
+      {
+         "$typename": "CheckingRule",
+         "name": "b",
+         "description": "",
+         "check": {
+            "$typename": "AttributeRef",
+            "attr": null
+         }
+      },
+      {
+         "$typename": "CheckingRule",
+         "name": "a",
+         "description": "",
+         "check": null
+      },
+      {
+         "$typename": "IfThenElseRule",
+         "name": "",
+         "description": "",
+         "IfStatement": {
+            "$typename": "IfStatement",
+            "name": "",
+            "Condition": {
+               "$typename": "CheckingRuleCall",
+               "rule": "sqs"
+            },
+            "ThenStatements": [],
+            "ElseStatements": []
+         }
+      }
+   ],
+   "imports": "Entities",
+   "forEntity": "Patient"
 }

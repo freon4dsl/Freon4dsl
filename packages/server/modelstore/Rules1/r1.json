@@ -82,7 +82,11 @@
          "$typename": "CheckingRule",
          "name": "",
          "description": "",
-         "check": null
+         "check": {
+            "$typename": "Or",
+            "left": null,
+            "right": null
+         }
       }
    ],
    "imports": "House",

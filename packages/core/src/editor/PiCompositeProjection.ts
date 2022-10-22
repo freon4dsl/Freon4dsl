@@ -77,13 +77,13 @@ export class PiCompositeProjection implements PiProjection {
         p.rootProjection = this; //(!!this.rootProjection ? this : this.rootProjection);
     }
 
-    enableProjection(name: string) {
+    enableProjection(name: string): void {
         BoxFactory.clearCaches();
         console.log("Composite: enabling Projection " + name);
         this.projections.get(name).isEnabled = true;
     }
 
-    disableProjection(name: string) {
+    disableProjection(name: string): void {
         BoxFactory.clearCaches();
         console.log("Composite: disabling Projection " + name);
         this.projections.get(name).isEnabled = false;
@@ -97,7 +97,7 @@ export class PiCompositeProjection implements PiProjection {
     checkSuper(nameOfSuper: string, elementName: string ): boolean {
         // find the names of the subclasses of 'nameOfSuper'
         const myConcept = Language.getInstance().concept(nameOfSuper);
-        let names: string[] = [];
+        let names: string[] | undefined ;
         if (!!myConcept) {
             names = myConcept.subConceptNames;
         } else {

@@ -3,7 +3,6 @@ import { PiWriter } from "../writer";
 import { PiType } from "./PiType";
 import { PiParseLocation } from "../reader";
 
-
 class NamedElement implements PiNamedElement {
     name: string = "ANY";
     static environment: NamedElement;
@@ -24,7 +23,7 @@ class NamedElement implements PiNamedElement {
     private constructor() {
     }
 
-    piOwner(): PiElement {
+    piOwner(): PiElement | undefined {
         return undefined;
     }
 

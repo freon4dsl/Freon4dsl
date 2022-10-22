@@ -10,7 +10,7 @@ export interface PiElement {
 
     piLanguageConcept(): string;
 
-    piOwner(): PiElement;
+    piOwner(): PiElement | undefined;
 
     piOwnerDescriptor(): PiOwnerDescriptor;
 
