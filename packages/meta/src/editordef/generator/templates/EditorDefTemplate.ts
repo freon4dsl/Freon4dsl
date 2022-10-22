@@ -52,7 +52,7 @@ export class EditorDefTemplate {
                     rootProjection.addProjection(p);
                 }         
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
-                `rootProjection.addProjection(new ${Names.projection(group)}());`).join("\n")}
+                `// rootProjection.addProjection(new ${Names.projection(group)}());`).join("\n")}
                 // rootProjection.addProjection(new ${Names.projection(editorDef.getDefaultProjectiongroup())}());
             }    
             

@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { PiLanguage, PiLimitedConcept } from "../../languagedef/metalanguage";
 import {
     EDITOR_FOLDER,
     EDITOR_GEN_FOLDER,
@@ -71,9 +71,11 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProviderCache(this.language)}.ts`, providercache);
 
         this.language.concepts.forEach(concept => {
-            const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language, concept, editDef, relativePath),
-                "Box provider " + concept.name, generationStatus);
-            fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
+            if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
+                const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language, concept, editDef, relativePath),
+                    "Box provider " + concept.name, generationStatus);
+                fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
+            }
         });
 
         this.language.units.forEach(concept => {

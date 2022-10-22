@@ -61,14 +61,14 @@ export class EnvironmentTemplate {
                 const actions = new ${Names.actions(language)}();
                 const myComposite = new NewCompositeProjection();
                 // todo adjust the next line for other projects: move to webapp, because every unit has different rootType?
-                myComposite.rootProvider = ${Names.boxProviderCache(language)}.getInstance().getConstructor('SimplePart')();
+                myComposite.rootProvider = 
+                    ${Names.boxProviderCache(language)}.getInstance().getConstructor('${Names.classifier(language.modelConcept.unitTypes()[0])}')();
                 this.editor = new PiEditor(myComposite, actions);
                 this.editor.environment = this;
                 initializeLanguage();
                 initializeEditorDef();
                 initializeScoperDef();
             }
-
             
             /**
              * Returns a new model with name 'modelName'.

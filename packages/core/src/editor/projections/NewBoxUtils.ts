@@ -1,6 +1,6 @@
 import { PiElement } from "../../ast";
 import { PiListInfo, RoleProvider } from "../simplifiedBoxAPI";
-import { Box, BoxFactory, VerticalListBox } from "../boxes";
+import { Box, BoxFactory, HorizontalListBox, VerticalListBox } from "../boxes";
 import { Language } from "../../language";
 import { PiBoxProviderCache } from "./PiBoxProviderCache";
 
@@ -19,6 +19,17 @@ export class NewBoxUtils {
         let role: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist");
         // return the box
         return new VerticalListBox(element, role, children);
+    }
+
+    static horizontalPartListBox(element: PiElement, list: PiElement[], propertyName: string, listJoin: PiListInfo, boxProviderCache: PiBoxProviderCache): VerticalListBox {
+        // make the boxes for the children
+        let children: Box[] = this.findPartItems(list, element, propertyName, listJoin, boxProviderCache);
+        // add a placeholder where a new element can be added
+        children = this.addPlaceholder(children, element, propertyName);
+        // determine the role
+        let role: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist");
+        // return the box
+        return new HorizontalListBox(element, role, children);
     }
 
     private static findPartItems(property: PiElement[], element: PiElement, propertyName: string, listJoin: PiListInfo, boxProviderCache: PiBoxProviderCache) {

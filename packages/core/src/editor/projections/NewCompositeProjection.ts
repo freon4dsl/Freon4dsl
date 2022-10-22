@@ -3,6 +3,7 @@ import { PiCompositeProjection } from "../PiCompositeProjection";
 import { Box, BoxFactory, LabelBox } from "../boxes";
 import { createDefaultBinaryBox, isNullOrUndefined } from "../../util";
 import { PiBinaryExpression, PiElement } from "../../ast";
+import { PiTableDefinition } from "../PiTables";
 
 
 export class NewCompositeProjection extends PiCompositeProjection {
@@ -37,5 +38,23 @@ export class NewCompositeProjection extends PiCompositeProjection {
         return new LabelBox(element, "unknown-projection", () => "unknown box for " + element);
     }
 
-
+    getTableDefinition(conceptName: string): PiTableDefinition {
+        console.log('NewCompositeProjection getTableDefinition ' + conceptName + ", root projection: " + this._myRootProvider.constructor.name)
+        // todo re-implement this
+        // for (let p of this.projections.values()) {
+        //     if (p.isEnabled) {
+        //         const result = p.getTableDefinition(conceptName);
+        //         if (result !== null) {
+        //             return result;
+        //         }
+        //     }
+        // }
+        // return a default box if nothing has been found.
+        return {
+            headers: [conceptName],
+            cells: [(element: PiElement) => {
+                return this.getBox(element);
+            }]
+        };
+    }
 }

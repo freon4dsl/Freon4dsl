@@ -251,6 +251,10 @@ export class Names {
         return "get" + Names.classifier(c) + "TableDefinition";
     }
 
+    public static tabelDefinitionFunctionNew(projectionName: string): string {
+        return "getTableFor" + this.startWithUpperCase(projectionName);
+    }
+
     public static writer(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
