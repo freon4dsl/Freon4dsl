@@ -54,7 +54,6 @@
     let isHeader = "noheader";
     let cssStyle: string = "";
     let cssClass: string = "";
-    let hovering: GridIndex = { row: -1, column: -1 };      // determines the style of the element, when hovering but nothing is being dragged
 
     // the drag ghost image, preload  it, otherwise it will not be shown on the first drag
     const img = new Image();
@@ -100,7 +99,6 @@
     const drop = (event: DragEvent) => {
         LOGGER.log("drop, dispatching");
         dispatcher("dropOnCell", { row: row, column: column });
-        hovering = { row: -1, column: -1 };
     };
 
     const dragstart = (event: DragEvent) => {
@@ -137,11 +135,9 @@
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
     const mouseover = (): boolean => {
-        hovering = { row: row, column: column };
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
     const mouseout = (): boolean => {
-        hovering = { row: -1, column: -1 };
         $activeElem = null;
         $activeIn = "";
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
@@ -173,7 +169,6 @@
     }
 
     let isHovering: boolean;
-    $: isHovering = (parentOrientation === "row" ? hovering.row === row : hovering.column === column) && !isActive;
 
     let isActive: boolean;
     $: isActive = (parentOrientation === "row" ? $activeElem?.row === row : $activeElem?.column === column) && $activeIn === parentComponentId;
@@ -196,7 +191,6 @@
         id="{id}"
         class="gridcellcomponent {orientation} {isHeader} {cssClass} "
         class:selected={isSelected}
-        class:hovering="{isHovering}"
         class:is-active={isActive}
         class:dragged={isBeingDragged}
         style:grid-row="{row}"
@@ -231,10 +225,6 @@
     .is-active {
         outline: solid 1px red; /* TODO adjust the colors to freon colors */
         /*border-top: solid 10px transparent; !* move the element a little down to show where the drop can take place *!*/
-    }
-
-    .hovering {
-        /*cursor: grab;*/
     }
 
     .dragged {
