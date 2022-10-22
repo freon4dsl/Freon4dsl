@@ -18,13 +18,13 @@ export class EnvironmentTemplate {
     generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
-                    ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, ${Names.FreonInterpreter}, LanguageEnvironment, NewCompositeProjection
+                    ${Names.PiScoper}, ${Names.FreonTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
+                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, LanguageEnvironment, NewCompositeProjection
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoperDef(language)}";
-        import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
+        import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typerDef(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
@@ -67,7 +67,8 @@ export class EnvironmentTemplate {
                 this.editor.environment = this;
                 initializeLanguage();
                 initializeEditorDef();
-                initializeScoperDef();
+                initializeScoperDef(this.scoper);
+                initializeTypers(this.typer);
             }
             
             /**
@@ -83,8 +84,8 @@ export class EnvironmentTemplate {
                             
             // the parts of the language environment              
             editor: ${Names.PiEditor};
-            scoper: ${Names.PiScoper} = new ${Names.scoper(language)}();
-            typer: ${Names.PiTyper} = new ${Names.typer(language)}();
+            scoper: ${Names.FreScoperComposite} = new ${Names.FreScoperComposite}("main");
+            typer: ${Names.FreonTyper} = new ${Names.FreonTyper}("main"); 
             stdlib: ${Names.PiStdlib} = ${Names.stdlib(language)}.getInstance();
             validator: ${Names.PiValidator} = new ${Names.validator(language)}();
             writer: ${Names.PiWriter} = new ${Names.writer(language)}();

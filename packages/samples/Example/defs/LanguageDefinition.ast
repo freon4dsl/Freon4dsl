@@ -3,6 +3,7 @@ language Example
 model Demo {
     name: identifier;
     units: ExampleUnit[];
+    rules: Rules[];
 }
 
 modelunit ExampleUnit {
@@ -11,12 +12,11 @@ modelunit ExampleUnit {
     methods: Method[];
     file-extension = "exm";
 }
+
 interface Type base BaseType {
 }
 
 concept Entity implements Type {
-    construc: Method;
-    reference listOfReferences: Entity[];
     attributes: Attribute[];
     methods: Method[];
     reference baseEntity?: Entity;
@@ -25,22 +25,13 @@ concept Entity implements Type {
 concept Method {
     name: identifier;
     reference declaredType : Type;
-    body: ExExpression;
+    body: Expression;
     parameters: Parameter[];
 }
 
 concept Attribute {
     reference declaredType: Type;
     name: identifier;
-}
-
-limited AttributeType implements Type {
-    name: identifier;
-    extra: number;
-    String = { "extra": 199}
-    Integer = { "extra": 240261}
-    Boolean = { "extra": 5479}
-    ANY = { name: "++", "extra": 456}
 }
 
 concept Parameter  {
@@ -52,20 +43,19 @@ concept Parameter  {
 //       Expressions
 ////////////////////////////////////
 
-abstract expression ExExpression {
-    appliedfeature?: AppliedFeature;
-}
-
 concept AttributeRef base AppliedFeature {
     reference attribute: Attribute;
 }
 
-expression ParameterRef base ExExpression {
+expression DirectAttributeRef base Expression {
+    reference attribute: Attribute;
+}
+
+expression ParameterRef base Expression {
     reference parameter: Parameter;
 }
 
-expression MethodCallExpression base ExExpression {
+expression MethodCallExpression base Expression {
     reference methodDefinition: Method;
-    args: ExExpression[];
+    args: Expression[];
 }
-

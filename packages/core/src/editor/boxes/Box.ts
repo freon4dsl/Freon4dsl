@@ -10,7 +10,6 @@ export abstract class Box {
     $id: string;
     kind: string = "";
     role: string = "";
-    roleNumber: number = undefined;
     element: PiElement = null;
     // Custom CSS class that will be added to the conponent rendering this box
     cssClass: string = "";
@@ -35,7 +34,6 @@ export abstract class Box {
         this.$id = PiUtils.ID(); //uuid.v4();
         makeObservable(this, {
             role: observable,
-            roleNumber: observable,
             element: observable,
             cssStyle: observable,
             cssClass: observable

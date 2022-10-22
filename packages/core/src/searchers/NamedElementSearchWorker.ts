@@ -3,7 +3,7 @@ import { SearchWorker } from "./SearchWorker";
 
 export class NamedElementSearchWorker implements SearchWorker {
     private readonly nameToFind: string;
-    private readonly metatype: string;
+    private readonly metatype: string | undefined ;
     private readonly caseSensitive: boolean;
     private __result: PiElement[] = [];
 

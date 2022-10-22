@@ -1,0 +1,13 @@
+{
+   "$typename": "DemoUnit",
+   "name": "unit",
+   "main": {
+      "$typename": "DemoEntity",
+      "name": "entity1",
+      "attributes": [],
+      "entAttributes": [],
+      "functions": [],
+      "baseEntity": []
+   },
+   "functions": []
+}

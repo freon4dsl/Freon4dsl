@@ -3,14 +3,13 @@ import { PiError, PiErrorSeverity } from "@projectit/core";
 import { ProjectYDefaultWorker } from "../utils/gen/ProjectYDefaultWorker";
 import { ProjectYCheckerInterface } from "./gen/ProjectYValidator";
 import { ExpWithType } from "../language/gen";
-import { ProjectYTyper } from "../typer/gen";
 import { ProjectYEnvironment } from "../config/gen/ProjectYEnvironment";
 
 export class CustomProjectYValidator extends ProjectYDefaultWorker implements ProjectYCheckerInterface {
     errorList: PiError[] = [];
     public execBeforeExpWithType(modelelement: ExpWithType): boolean {
         let hasFatalError: boolean = false;
-        const typer = new ProjectYTyper();
+        const typer = ProjectYEnvironment.getInstance().typer;
         const writer = ProjectYEnvironment.getInstance().writer;
         // typecheck equalsType (self.expr, self.type)
         if (!typer.equalsType(modelelement.expr, modelelement.type)) {

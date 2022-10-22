@@ -19,11 +19,17 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static PiBinaryExpression:string = "PiBinaryExpression";
     // tslint:disable-next-line:variable-name
-    public static PiScoper:string = "PiScoper";
+    public static PiScoper:string = "FreScoper";
     // tslint:disable-next-line:variable-name
-    public static PiTyper:string = "PiTyper";
+    public static FreScoperBase:string = "FreScoperBase";
     // tslint:disable-next-line:variable-name
-    public static PiTyperPart: string = "PiTyperPart";
+    public static FreScoperComposite:string = "FreScoperComposite";
+    // tslint:disable-next-line:variable-name
+    public static FrScoperPart:string = "FreScoper";
+    // tslint:disable-next-line:variable-name
+    public static FreonTyperPart: string = "FreTyper";
+    // tslint:disable-next-line:variable-name
+    public static FreonTyper: string = "FreCompositeTyper";
     // tslint:disable-next-line:variable-name
     public static PiValidator:string = "PiValidator";
     // tslint:disable-next-line:variable-name
@@ -103,8 +109,15 @@ export class Names {
         return "Custom" + this.actions(language);
     }
 
+    public static customScoper(language: PiLanguage): string {
+        return "Custom" + this.scoper(language);
+    }
+
     public static customTyper(language: PiLanguage): string {
         return "Custom" + this.typerPart(language);
+    }
+    public static customFreonTyper(language: PiLanguage): string {
+        return "Custom" + this.freonTyperPart(language);
     }
 
     public static customValidator(language: PiLanguage): string {
@@ -184,6 +197,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ScoperDef";
     }
 
+    public static typerDef(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "TyperDef";
+    }
+
     public static scoperUtils(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ScoperUtils";
     }
@@ -214,6 +231,10 @@ export class Names {
 
     public static typerPart(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "TyperPart";
+    }
+
+    public static freonTyperPart(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "FreonTyper";
     }
 
     public static typer(language: PiLanguage): string {

@@ -1,11 +1,11 @@
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoModel, DemoAttributeType } from "../language/gen";
-import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("Testing Typer", () => {
     describe("Typer.isType on DemoModel Instance", () => {
         let model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
-        let typer = new DemoTyper();
+        let typer = DemoEnvironment.getInstance().typer;
 
         beforeEach(done => {
             done();

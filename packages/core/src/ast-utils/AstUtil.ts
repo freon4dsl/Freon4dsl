@@ -13,7 +13,7 @@ export function isPiBinaryExpression(element: PiElement): element is PiBinaryExp
     return !!element && element.piIsExpression && element.piIsExpression() && element.piIsBinaryExpression && element.piIsBinaryExpression();
 }
 
-export function ownerOfType(element: PiElement, typename: string, exact?: boolean): PiElement {
+export function ownerOfType(element: PiElement, typename: string, exact?: boolean): PiElement | null {
     let parent = element.piOwnerDescriptor()?.owner;
     while (!!parent) {
         if (exact ? instanceOfExact(parent, typename) : instanceOfSub(parent, typename)) {
@@ -29,7 +29,7 @@ export function ownerOfType(element: PiElement, typename: string, exact?: boolea
  * Returns the modelunit that owns this `element'
  * @param element
  */
-export function modelUnit(element: PiElement): PiModelUnit {
+export function modelUnit(element: PiElement): PiModelUnit | null {
     let current = element;
     while (!!current) {
         if (current.piIsUnit()) {
