@@ -234,7 +234,7 @@
     }
 
     .hovering {
-        cursor: grab;
+        /*cursor: grab;*/
     }
 
     .dragged {

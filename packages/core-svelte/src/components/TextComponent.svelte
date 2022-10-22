@@ -5,7 +5,7 @@
 <!-- its own <span> that gets a handle to actually resize it. -->
 
 <script lang="ts">
-	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
+	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount, tick } from "svelte";
 	import { executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils";
 	import {
 		ActionBox,
@@ -71,6 +71,7 @@
      * It is called from the box.
      */
     export const setFocus = () => {
+		LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {
@@ -173,12 +174,13 @@
      * the <span> element, and stores the current text in the textbox.
      */
     function endEditing() {
-        LOGGER.log(' endEditing' + id);
+        LOGGER.log(' endEditing ' + id);
         // reset the local variables
         isEditing = false;
         from = -1;
         to = -1;
-
+		editor.selectedBox = null;
+	
         if (!partOfActionBox) {
             // store the current value in the textbox, or delete the box, if appropriate
             runInAction(() => {
@@ -188,9 +190,9 @@
             		box.setText(text);
             	}
             });
-            if (text !== box.getText()) {
-                box.setText(text);
-            }
+            // if (text !== box.getText()) {
+            //     box.setText(text);
+            // }
         } else {
             dispatcher('endEditing');
         }
@@ -393,7 +395,7 @@
      * When this component loses focus, do everything that is needed to end the editing state.
      */
     const onFocusOut = (e) => {
-        LOGGER.log("TextComponent onFocusOut")
+        LOGGER.log("TextComponent onFocusOut " + id)
         if (!partOfActionBox) {
             endEditing();
         } // else let TextDropdownComponent handle it
@@ -423,7 +425,7 @@
 		box.setFocus = setFocus;
 
 		if (editStart && !!inputElement) {
-			LOGGER.log('editStart')
+			LOGGER.log('    editStart in afterupdate for ' + id)
             inputElement.selectionStart = from >= 0 ? from : 0;
             inputElement.selectionEnd = to >= 0 ? to : 0;
             inputElement.focus();
@@ -455,7 +457,7 @@
         // box.setCaret = setCaret;
         originalText = text = box.getText();
         placeholder = box.placeHolder;
-		setInputWidth()
+		// setInputWidth()
     });
 
 	/**
@@ -484,16 +486,16 @@
      * This function is called when something in the underlying model changes
      */
     autorun(() => {
-        LOGGER.log("autorun");
-    	if (box instanceof TextBox) {
-    		// LOGGER.log("role " + box.role + " text [" + text + "] box [" + box.getText() + "] innertText [" + spanElement?.innerText + "] isEditing [" + isEditing + "]");
-    		// TODO can the following five statements be moved to onMount() or should they be copied to onMount()?
-    		box.setFocus = setFocus;
-    		box.setCaret = setCaret;
-    		originalText = text = box.getText();
-    		placeholder = box.placeHolder;
-    		boxType = (box.parent instanceof ActionBox ? "alias" : (box.parent instanceof SelectBox ? "select" : "text"));
-    	}
+        LOGGER.log("autorun " + id);
+    	// if (box instanceof TextBox) {
+    	// 	// LOGGER.log("role " + box.role + " text [" + text + "] box [" + box.getText() + "] innertText [" + spanElement?.innerText + "] isEditing [" + isEditing + "]");
+    	// 	// TODO can the following five statements be moved to onMount() or should they be copied to onMount()?
+    	// 	box.setFocus = setFocus;
+    	// 	box.setCaret = setCaret;
+    	// 	originalText = text = box.getText();
+    	// 	placeholder = box.placeHolder;
+    	// 	boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
+    	// }
     });
 
 	/**
@@ -578,7 +580,7 @@
         box-sizing: border-box;
 		margin: var(--freon-text-component-margin, 1px);
         border: none;
-        background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
+        background-color: lightgreen; /*var(--freon-selected-background-color, rgba(211, 227, 253, 255));*/
         /*outline-color: var(--freon-selected-outline-color, darkblue);*/
         /*outline-style: var(--freon-selected-outline-style, solid);*/
         /*outline-width: var(--freon-selected-outline-width, 1px);*/
@@ -591,7 +593,7 @@
     .text {
         /*content: attr(data-placeholdertext);*/
         color: var(--freon-text-component-color, blue);
-        background-color: var(--freon-text-component-background-color, inherit);
+        background-color: yellow; /* var(--freon-text-component-background-color, inherit); */
         font-family: var(--freon-text-component-font-family, "Arial");
         font-size: var(--freon-text-component-font-size, 14pt);
         font-weight: var(--freon-text-component-font-weight, inherit);

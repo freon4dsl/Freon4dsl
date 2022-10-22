@@ -67,7 +67,9 @@
     };
 
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
-        LOGGER.log("ON DRAG START");
+        LOGGER.log("LIST Drag Start " + box.id);
+
+        // LOGGER.log("ON DRAG START");
         // close any context menu
         $contextMenuVisible = false;
 
@@ -82,6 +84,7 @@
         $draggedFrom = listId;
     };
     const dragenter = (event: DragEvent, index): boolean => {
+        LOGGER.log("LIST Drag Enter" + box.id)
         const data: ListElementInfo = $draggedElem;
         // only show this item as active when the type of the element to be dropped is the right one
         if (Language.getInstance().metaConformsToType(data.element, myMetaType)) {
@@ -91,13 +94,15 @@
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
     const mouseover = (index): boolean => {
+        LOGGER.log("LIST Mouse Over " + box.id);
         hovering = index;
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
     const mouseout = (): boolean => {
-        hovering = -1;
-        $activeElem = { row: -1, column: -1 };
-        $activeIn = "";
+        LOGGER.log("LIST mouse out " + box.id)
+        // hovering = -1;
+        // $activeElem = { row: -1, column: -1 };
+        // $activeIn = "";
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
 
@@ -125,7 +130,7 @@
         shownElements = [...box.children];
     });
     autorun(() => {
-        LOGGER.log("Autorun [" + box.children.map(c => c.element.piId()) + "]")
+        // LOGGER.log("Autorun [" + box.children.map(c => c.element.piId()) + "]")
         shownElements = [...box.children];
     });
 
@@ -145,8 +150,6 @@
     {#each shownElements as box, index (box.id)}
         <span
                 class="list-item"
-                class:hovering={hovering === index && !($activeElem?.row === index && $activeIn === id)}
-                class:is-active={$activeElem?.row === index && $activeIn === id}
                 class:dragged={$draggedElem?.row === index && $draggedFrom === id}
                 style:grid-column="{!isHorizontal ? 1 : index+1}"
                 style:grid-row="{isHorizontal ? 1 : index+1}"
@@ -198,7 +201,7 @@
     }
 
     .list-item.hovering {
-        cursor: grab;
+        /*cursor: grab;*/
     }
 
     .list-item.dragged {
