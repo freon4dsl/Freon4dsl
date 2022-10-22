@@ -1,6 +1,7 @@
 import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../ast";
-import { BehaviorExecutionResult, PiCaret, PiKey, PiUtils } from "../../util";
+import { PiUtils } from "../../util";
+import { BehaviorExecutionResult, PiCaret, PiKey } from "../util";
 import { BoxFactory, PiEditor } from "../internal";
 import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
 
@@ -10,8 +11,6 @@ export abstract class AbstractChoiceBox extends Box {
     caretPosition: number = -1;
     textBox: TextBox;
     textHelper: ChoiceTextHelper;
-    getSelectedOption(): SelectOption | null { return null; };
-    getOptions(editor: PiEditor): SelectOption[] { return [] };
 
     constructor(exp: PiElement, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
         super(exp, role);
@@ -42,15 +41,21 @@ export abstract class AbstractChoiceBox extends Box {
 
     }
 
+    getSelectedOption(): SelectOption | null {
+        return null;
+    }
 
+    getOptions(editor: PiEditor): SelectOption[] {
+        return [];
+    }
 
     selectOption(editor: PiEditor, option: SelectOption): BehaviorExecutionResult {
-        console.error("AbstractChoiceBox.selectOption")
+        console.error("AbstractChoiceBox.selectOption");
         return BehaviorExecutionResult.NULL;
     };
 
     setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
-        if( !!this.textBox) {
+        if (!!this.textBox) {
             this.textBox.setCaret(caret);
         }
     };

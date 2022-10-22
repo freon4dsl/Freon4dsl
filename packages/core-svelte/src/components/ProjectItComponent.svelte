@@ -3,13 +3,13 @@
         PiEditor,
         PiLogger,
         Box,
-        KEY_ARROW_UP,
-        KEY_ARROW_DOWN,
-        KEY_TAB,
-        KEY_BACKSPACE,
-        KEY_ARROW_LEFT,
-        KEY_DELETE,
-        KEY_ARROW_RIGHT
+        ARROW_UP,
+        ARROW_DOWN,
+        TAB,
+        BACKSPACE,
+        ARROW_LEFT,
+        DELETE,
+        ARROW_RIGHT
     } from "@projectit/core";
     import { autorun } from "mobx";
     import { AUTO_LOGGER } from "./ChangeNotifier";
@@ -30,18 +30,18 @@
         // event.persist();
         if (event.ctrlKey || event.altKey) {
             switch (event.key) {
-                case KEY_ARROW_UP:
+                case ARROW_UP:
                     editor.selectParentBox();
                     event.preventDefault();
                     break;
-                case KEY_ARROW_DOWN:
+                case ARROW_DOWN:
                     editor.selectFirstLeafChildBox();
                     event.preventDefault();
                     break;
             }
         } else if (event.shiftKey) {
             switch (event.key) {
-                case KEY_TAB:
+                case TAB:
                     editor.selectPreviousLeaf();
                     event.preventDefault();
                     break;
@@ -51,21 +51,21 @@
         } else {
             // No meta key pressed
             switch (event.key) {
-                case KEY_BACKSPACE:
-                case KEY_ARROW_LEFT:
+                case BACKSPACE:
+                case ARROW_LEFT:
                     editor.selectPreviousLeaf();
                     stopEvent(event)
                     break;
-                case KEY_DELETE:
+                case DELETE:
                     editor.deleteBox(editor.selectedBox);
                     stopEvent(event);
                     break;
-                case KEY_TAB:
-                case KEY_ARROW_RIGHT:
+                case TAB:
+                case ARROW_RIGHT:
                     editor.selectNextLeaf();
                     stopEvent(event);
                     break;
-                case KEY_ARROW_DOWN:
+                case ARROW_DOWN:
                     const down = editor.boxBelow(editor.selectedBox);
                     LOGGER.log("!!!!!!! Select down box " + down?.role);
                     if (down !== null && down !== undefined) {
@@ -73,7 +73,7 @@
                     }
                     stopEvent(event);
                     break;
-                case KEY_ARROW_UP:
+                case ARROW_UP:
                     LOGGER.log("Up: " + editor.selectedBox.role);
                     const up = editor.boxAbove(editor.selectedBox);
                     if (up !== null) {

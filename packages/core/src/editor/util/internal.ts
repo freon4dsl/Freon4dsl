@@ -7,11 +7,17 @@
  * concepts that are using them.
  */
 
-// dependent only upon editor
-export * from "./MatchUtil";
+// files without dependencies
+export * from "./Keys";
 
-// the rest of this package depends on PiUtils
-export * from "./PiUtils";
+// dependent only upon editor
+export * from "./BehaviorUtils";
+export * from "./PiActionsUtil";
+export * from "./PiEditorUtil";
+export * from "./PiCaret";
 
 // the others
-export * from "./BalanceTreeUtils";
+export * from "./ListBoxUtil";
+
+// the following depends on BalanceTreeUtils and BehaviorUtils
+export * from "./PiExpressionHelpers";

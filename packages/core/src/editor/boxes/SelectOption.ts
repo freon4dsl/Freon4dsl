@@ -13,9 +13,9 @@ export interface SelectOption {
      */
     label: string;
 
-    action?: PiAction,
+    action?: PiAction;
     /**
-     * A more vervose description, keep this to a single short line.
+     * A more verbose description, keep this to a single short line.
      */
     description?: string;
 }
@@ -32,11 +32,6 @@ export interface SelectedOption {
      * The option that the user has selected.
      */
     option: SelectOption;
-    /**
-     * An optional parameter to the seleected option.
-     */
-    parameter?: string;
-
 }
 
 export function findOption(options: SelectOption[], id: string): SelectOption | null {

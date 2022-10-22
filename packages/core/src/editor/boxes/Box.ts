@@ -11,15 +11,15 @@ export abstract class Box {
     kind: string = "";
     role: string = "";
     element: PiElement = null;
-    // Custom CSS class that will be added to the conponent rendering this box
+    // Custom CSS class that will be added to the component rendering this box
     cssClass: string = "";
-    // Custom CSS Style class that will be added as inline style to the conponent rendering this box
+    // Custom CSS Style class that will be added as inline style to the component rendering this box
     cssStyle: string = "";
     // Can this box be selected in the editor?
     selectable: boolean = true;
     parent: Box = null;
 
-    // Never set these manually,  these properties are set after rendering to get the
+    // Never set these manually, these properties are set after rendering to get the
     // actual coordinates as rendered in the browser,
     // TODO see whether these can be set on demand and whether this is useful ???
     actualX: number = -1;

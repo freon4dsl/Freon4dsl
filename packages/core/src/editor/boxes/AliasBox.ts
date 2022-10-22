@@ -1,7 +1,7 @@
 import { Concept, Language } from "../../language";
-import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../../util";
-import { PiCreatePartAction } from "../actions/PiCreatePartAction";
-import { triggerToString, PiEditor, TextBox, isProKey } from "../internal";
+import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../util";
+import { PiCreatePartAction } from "../actions";
+import { triggerTypeToString, PiEditor, TextBox, isProKey } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
 import { PiElement } from "../../ast";
 import { runInAction } from "mobx";
@@ -38,7 +38,7 @@ export class AliasBox extends AbstractChoiceBox {
             return executeSingleBehavior(option.action, this, option.id, option.label, editor);
         } else {
             // Try all statically defined actions
-            let result = executeBehavior(this, option.id, option.label, editor);
+            const result = executeBehavior(this, option.id, option.label, editor);
             if (result === BehaviorExecutionResult.EXECUTED) {
                 return result;
             }
@@ -61,7 +61,7 @@ export class AliasBox extends AbstractChoiceBox {
             // If the alias box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
             const clsOtIntf = Language.getInstance().concept(this.conceptName) ?? Language.getInstance().interface(this.conceptName);
-             clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (creatableConceptname: string) => {
+            clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (creatableConceptname: string) => {
                 const creatableConcept = Language.getInstance().concept(creatableConceptname);
                 if (!!creatableConcept && !creatableConcept.isAbstract) {
                     if (!!(creatableConcept.referenceShortcut)) {
@@ -75,15 +75,15 @@ export class AliasBox extends AbstractChoiceBox {
         }
         // Using the new actions:
         // Now look in all actions defined in the editor whether they fit this alias, except for the keyboard shortcuts
-        editor.new_pi_actions
+        editor.newPiActions
             .filter(action => !isProKey(action.trigger) && action.activeInBoxRoles.includes(this.role))
             .forEach(action => {
                 const options: SelectOption[] = [];
                 options.push({
-                    id: triggerToString(action.trigger) ,//+ "_action",
-                    label: triggerToString(action.trigger),// + "_action",
+                    id: triggerTypeToString(action.trigger) ,//+ "_action",
+                    label: triggerTypeToString(action.trigger),// + "_action",
                     action: action,
-                    description: "alias " + triggerToString(action.trigger)
+                    description: "alias " + triggerTypeToString(action.trigger)
                 });
                 // }
                 result.push(...options);
@@ -92,7 +92,7 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     private getCreateElementOption(propertyName: string, conceptName: string, concept: Concept): SelectOption {
-        LOGGER.log("AliasBox.createElementAction proeprty: " + propertyName + " concept " + conceptName);
+        LOGGER.log("AliasBox.createElementAction property: " + propertyName + " concept " + conceptName);
         return {
             id: conceptName,
             label: concept.trigger,
@@ -140,7 +140,7 @@ export class AliasBox extends AbstractChoiceBox {
         });
     }
 
-    triggerKeyPressEvent = (key: string) => {
+    triggerKeyPressEvent = (key: string) => { // TODO rename this one, e.g. to triggerKeyEvent
         console.error("AliasBox " + this.role + " has empty triggerKeyPressEvent");
     };
 }

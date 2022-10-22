@@ -9,8 +9,10 @@
 
 export * from "./PiTables";
 export * from "./boxes";
+export * from "./actions";
+export * from "./util";
 export * from "./simplifiedBoxAPI";
-export * from "./PiAction";
+export * from "./PiCombinedActions";
 export * from "./PiCompositeProjection";
 export * from "./PiProjection";
 export * from "./PiStyle";
@@ -18,4 +20,4 @@ export * from "./PiStyle";
 // load PiEditor last, as it needs one or more of the above definitions
 export * from "./PiEditor";
 
-export * from "./actions";
+

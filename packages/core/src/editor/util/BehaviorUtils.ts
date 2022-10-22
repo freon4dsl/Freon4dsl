@@ -1,33 +1,8 @@
 import { runInAction } from "mobx";
-import { isRegExp, isString, Box, PiEditor, PiPostAction, PiAction } from "../editor";
-import { PiLogger } from "../logging";
+import { isRegExp, isString, Box, PiEditor, PiPostAction, PiAction } from "../index";
+import { PiLogger } from "../../logging";
 
 const LOGGER = new PiLogger("BehaviorUtils");
-
-export enum PiCaretPosition {
-    UNSPECIFIED,
-    LEFT_MOST,
-    RIGHT_MOST,
-    INDEX
-}
-
-export class PiCaret {
-    static RIGHT_MOST = new PiCaret(PiCaretPosition.RIGHT_MOST, 0);
-    static LEFT_MOST = new PiCaret(PiCaretPosition.LEFT_MOST, 0);
-    static UNSPECIFIED = new PiCaret(PiCaretPosition.UNSPECIFIED, 0);
-
-    static IndexPosition(i: number): PiCaret {
-        return new PiCaret(PiCaretPosition.INDEX, i);
-    }
-
-    position: PiCaretPosition;
-    index: number;
-
-    constructor(p: PiCaretPosition, i: number) {
-        this.position = p;
-        this.index = i;
-    }
-}
 
 export enum BehaviorExecutionResult {
     NULL,
@@ -48,7 +23,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
     LOGGER.log("Enter executeBehavior text [" + text + "] label [" + label + "] box role [" + box.role + "]");
     let partialMatch: boolean = false;
 
-    for (const action of editor.new_pi_actions) {
+    for (const action of editor.newPiActions) {
         const trigger = action.trigger;
         LOGGER.log("  executeBehavior trigger " + trigger + "  roles " + action.activeInBoxRoles);
         if (action.activeInBoxRoles.includes(box.role)) {

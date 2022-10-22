@@ -62,15 +62,12 @@ export class EnvironmentTemplate {
                 const actions = new ${Names.actions(language)}();
                 const rootProjection = new ${Names.CompositeProjection}("root");
                 initializeProjections(rootProjection);
-                this.editor = new PiEditor(rootProjection, actions);
-                this.editor.rootElement = null;
-                this.editor.environment = this;
+                this.editor = new PiEditor(rootProjection, this, actions);
                 initializeLanguage();
                 initializeEditorDef();
                 initializeScoperDef(this.scoper);
                 initializeTypers(this.typer);
             }
-
             
             /**
              * Returns a new model with name 'modelName'.
