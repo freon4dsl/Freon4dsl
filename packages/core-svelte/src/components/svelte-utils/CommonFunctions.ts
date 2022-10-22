@@ -84,7 +84,7 @@ export function clickOutside(node) {
 
 /**
  * Replace HTML tags and spaces with HTML Entities.
- * Used to make text containing these acce[table as HTML Text.
+ * Used to make text containing these acceptable as HTML Text.
  * SPACE => @nbsp;
  * "<"   => &lt;
  */
