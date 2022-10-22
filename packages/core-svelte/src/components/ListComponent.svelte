@@ -36,7 +36,6 @@
     id = !!box ? box.id : "list-with-unknown-box";
     let isHorizontal: boolean;                  // indicates whether the list should be shown horizontally or vertically
     $: isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
-    let hovering = -1;                          // determines the style of a list element, when nothing is being dragged
     let shownElements: Box[];                   // the parts of the list that are being shown
     $: shownElements = [...box.children];
 
@@ -61,7 +60,6 @@
         $draggedFrom = "";
         $activeElem = { row: -1, column: -1 };
         $activeIn = "";
-        hovering = -1;
         // Clear the drag data cache (for all formats/types)
         // event.dataTransfer.clearData(); // has problems in Firefox!
     };
@@ -95,14 +93,12 @@
     };
     const mouseover = (index): boolean => {
         LOGGER.log("LIST Mouse Over " + box.id);
-        hovering = index;
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
     const mouseout = (): boolean => {
         LOGGER.log("LIST mouse out " + box.id)
-        // hovering = -1;
-        // $activeElem = { row: -1, column: -1 };
-        // $activeIn = "";
+        $activeElem = { row: -1, column: -1 };
+        $activeIn = "";
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
 
@@ -150,6 +146,7 @@
     {#each shownElements as box, index (box.id)}
         <span
                 class="list-item"
+                class:is-active={$activeElem?.row === index && $activeIn === id}
                 class:dragged={$draggedElem?.row === index && $draggedFrom === id}
                 style:grid-column="{!isHorizontal ? 1 : index+1}"
                 style:grid-row="{isHorizontal ? 1 : index+1}"
@@ -198,10 +195,6 @@
     .list-item.is-active {
         outline: solid 1px red; /* TODO adjust the colors to freon colors */
         /*border-top: solid 10px transparent; !* move the element a little down to show where the drop can take place *!*/
-    }
-
-    .list-item.hovering {
-        /*cursor: grab;*/
     }
 
     .list-item.dragged {
