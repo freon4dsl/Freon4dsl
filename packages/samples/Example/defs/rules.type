@@ -1,8 +1,8 @@
 typer
 
-DirectAttributeRef   {
-    infertype self.attribute.declaredType;
-}
+//DirectAttributeRef   {
+//    infertype self.attribute.declaredType;
+//}
 
 HasAnyValue {
     infertype PrimitiveType:Boolean;

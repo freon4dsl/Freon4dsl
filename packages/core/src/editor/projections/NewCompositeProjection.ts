@@ -1,10 +1,9 @@
 import { PiBoxProvider } from "./PiBoxProvider";
 import { PiCompositeProjection } from "../PiCompositeProjection";
-import { Box, LabelBox } from "../boxes";
-import { isNullOrUndefined } from "../../util";
-import { PiElement } from "../../ast";
+import { Box, BoxFactory, LabelBox } from "../boxes";
+import { createDefaultBinaryBox, isNullOrUndefined } from "../../util";
+import { PiBinaryExpression, PiElement } from "../../ast";
 
-// todo this class can be moved to core
 
 export class NewCompositeProjection extends PiCompositeProjection {
     // the following overrides the same stuff as there is in the 'old' CompositeProjection
@@ -37,4 +36,6 @@ export class NewCompositeProjection extends PiCompositeProjection {
         // return a default box if nothing has been  found. // todo what to return if element if null/undefined?
         return new LabelBox(element, "unknown-projection", () => "unknown box for " + element);
     }
+
+
 }

@@ -43,77 +43,14 @@ MethodCallExpression {
     referenceShortcut = ${methodDefinition}
     trigger = "method"
 }
-SumExpression {
-    [sum from ${variable} = ${from} to ${to} of ${body}]
-    trigger = "sum"
-}
-GroupedExpression {
-    [( ${inner} )]
-}
-LoopVariableRef {
-    [ ${variable} ]
-}
-LoopVariable {
-    [ ${name} ]
-    trigger = "var"
-}
-NumberLiteralExpression {
-    [${value}]
-}
-StringLiteralExpression {
-    ['${value}']
-    trigger = "'"
-}
-PlusExpression {
-    symbol = "+"
-}
-MultiplyExpression {
-    symbol = "*"
-}
-DivideExpression {
-    symbol = "/"
-}
-LessThenExpression {
-    symbol = "<"
-}
-OrExpression {
-    symbol = "or"
-}
-AndExpression {
-    symbol = "and"
-}
-GreaterThenExpression {
-    symbol = ">"
-}
-EqualsExpression {
-    symbol = "=="
-}
-BooleanLiteralExpression {
-    [ ${value} ]
-    trigger = "boolean"
-}
 AttributeRef {
     [ ${attribute} ]
     trigger = "attribute"
     referenceShortcut = ${attribute}
 }
-
 ParameterRef {
     [ ${parameter} [? . ${appliedfeature}] ]
     referenceShortcut = ${parameter}
-}
-IfExpression {
-        [
-        if (${condition}) then
-            ${whenTrue}
-        else
-            ${whenFalse}
-        endif
-        ]
-    trigger = "if"
-}
-AbsExpression {
-    [ \| ${expr} \| ]
 }
 
 //IfExpression {

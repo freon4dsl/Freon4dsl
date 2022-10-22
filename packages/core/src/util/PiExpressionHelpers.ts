@@ -67,6 +67,7 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
  * @param style
  */
 export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, editor: PiEditor, style?: string): HorizontalListBox {
+    // TODO move this method to BoxUtils
     const result = BoxFactory.horizontalList(exp, BINARY_EXPRESSION);
     const projection = editor.projection;
     const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
