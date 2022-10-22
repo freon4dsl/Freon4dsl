@@ -10,8 +10,6 @@ Attribute {
 Entity {
     [
         entity ${name} [? base ${baseEntity}] {
-            ${construc}
-            list of references: ${listOfReferences}
             ${attributes }
             ${methods vertical }
         }
