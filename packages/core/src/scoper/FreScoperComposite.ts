@@ -1,5 +1,8 @@
 import { PiElement, PiNamedElement } from "../ast/index";
+import { PiLogger } from "../logging/index";
 import { FreScoper } from "./FreScoper";
+
+const LOGGER = new PiLogger("FreScoperComposite").mute();
 
 export class FreScoperComposite implements FreScoper {
     // TOD: What of this?
@@ -52,8 +55,9 @@ export class FreScoperComposite implements FreScoper {
     }
 
     getVisibleNames(node: PiElement, metatype?: string, excludeSurrounding?: boolean): string[] {
+        LOGGER.log("getVisibleNames for " + node.piLanguageConcept() + " of type " + metatype);
         for (const scoper of this.scopers) {
-            const result = scoper.getVisibleNames(node);
+            const result = scoper.getVisibleNames(node, metatype, excludeSurrounding);
             if (result !== undefined && result !== null) {
                 return result;
             }
