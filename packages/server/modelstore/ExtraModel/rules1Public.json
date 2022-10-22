@@ -1,0 +1,200 @@
+{
+   "$typename": "Rules",
+   "name": "rules1",
+   "rules": [
+      {
+         "$typename": "CheckingRule",
+         "name": "V1",
+         "description": "This validation will fail",
+         "check": {
+            "$typename": "EqualsExpression",
+            "left": {
+               "$typename": "PlusExpression",
+               "left": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": 10,
+                  "appliedfeature": null
+               },
+               "right": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": 12,
+                  "appliedfeature": null
+               },
+               "appliedfeature": null
+            },
+            "right": {
+               "$typename": "NumberLiteralExpression",
+               "value": 32,
+               "appliedfeature": null
+            },
+            "appliedfeature": null
+         }
+      },
+      {
+         "$typename": "IfThenElseRule",
+         "name": "R1",
+         "description": "Conditional rule folllows:",
+         "IfStatement": {
+            "$typename": "IfStatement",
+            "name": "",
+            "Condition": {
+               "$typename": "EqualsExpression",
+               "left": {
+                  "$typename": "DirectAttributeRef",
+                  "appliedfeature": null,
+                  "attribute": "insures"
+               },
+               "right": {
+                  "$typename": "DirectAttributeRef",
+                  "appliedfeature": null,
+                  "attribute": "livesIn"
+               },
+               "appliedfeature": null
+            },
+            "ThenStatements": [
+               {
+                  "$typename": "SetValue",
+                  "value": {
+                     "$typename": "NumberLiteralExpression",
+                     "value": 10,
+                     "appliedfeature": null
+                  },
+                  "attribute": "length"
+               }
+            ],
+            "ElseStatements": [
+               {
+                  "$typename": "SetValue",
+                  "value": {
+                     "$typename": "NumberLiteralExpression",
+                     "value": 20,
+                     "appliedfeature": null
+                  },
+                  "attribute": "length"
+               }
+            ]
+         }
+      },
+      {
+         "$typename": "CheckingRule",
+         "name": "Insure",
+         "description": "Can only insure home",
+         "check": {
+            "$typename": "EqualsExpression",
+            "left": {
+               "$typename": "DirectAttributeRef",
+               "appliedfeature": null,
+               "attribute": "insures"
+            },
+            "right": {
+               "$typename": "DirectAttributeRef",
+               "appliedfeature": null,
+               "attribute": "livesIn"
+            },
+            "appliedfeature": null
+         }
+      },
+      {
+         "$typename": "CheckingRule",
+         "name": "Yes",
+         "description": "sum",
+         "check": {
+            "$typename": "EqualsExpression",
+            "left": {
+               "$typename": "SumExpression",
+               "variable": {
+                  "$typename": "LoopVariable",
+                  "name": "index"
+               },
+               "from": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": 1,
+                  "appliedfeature": null
+               },
+               "to": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": 12,
+                  "appliedfeature": null
+               },
+               "body": {
+                  "$typename": "MultiplyExpression",
+                  "left": {
+                     "$typename": "LoopVariableRef",
+                     "appliedfeature": null,
+                     "variable": "index"
+                  },
+                  "right": {
+                     "$typename": "NumberLiteralExpression",
+                     "value": 22,
+                     "appliedfeature": null
+                  },
+                  "appliedfeature": null
+               },
+               "appliedfeature": null
+            },
+            "right": {
+               "$typename": "NumberLiteralExpression",
+               "value": 167,
+               "appliedfeature": null
+            },
+            "appliedfeature": null
+         }
+      },
+      {
+         "$typename": "CheckingRule",
+         "name": "Or",
+         "description": "or",
+         "check": {
+            "$typename": "OrExpression",
+            "left": {
+               "$typename": "OrExpression",
+               "left": {
+                  "$typename": "GreaterThenExpression",
+                  "left": {
+                     "$typename": "NumberLiteralExpression",
+                     "value": 12,
+                     "appliedfeature": null
+                  },
+                  "right": {
+                     "$typename": "DirectAttributeRef",
+                     "appliedfeature": null,
+                     "attribute": "age"
+                  },
+                  "appliedfeature": null
+               },
+               "right": {
+                  "$typename": "EqualsExpression",
+                  "left": {
+                     "$typename": "DirectAttributeRef",
+                     "appliedfeature": null,
+                     "attribute": "name"
+                  },
+                  "right": {
+                     "$typename": "StringLiteralExpression",
+                     "value": "Jos",
+                     "appliedfeature": null
+                  },
+                  "appliedfeature": null
+               },
+               "appliedfeature": null
+            },
+            "right": {
+               "$typename": "LessThenExpression",
+               "left": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": 10,
+                  "appliedfeature": null
+               },
+               "right": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": 90,
+                  "appliedfeature": null
+               },
+               "appliedfeature": null
+            },
+            "appliedfeature": null
+         }
+      }
+   ],
+   "forEntity": "Person"
+}

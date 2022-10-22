@@ -4,21 +4,21 @@ import { Names, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
 export class FreonCustomTyperPartTemplate {
     generateCustomTyperPart(language: PiLanguage, relativePath: string): string {
         // const allLangConcepts: string = Names.allConcepts(language);
-        const typerInterfaceName: string = Names.PiTyperPart;
+        const typerInterfaceName: string = Names.FreonTyperPart;
         const generatedClassName: string = Names.customTyper(language);
 
         // TODO add comments to generated class
         // Template starts here
         return `
-        import { PiElement, PiType, PiTyper, PiTyperPart } from "${PROJECTITCORE}";
-        import { ${Names.typer(language)} } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
+        import { PiElement, PiType, FreTyper } from "${PROJECTITCORE}";
+        // import { ${Names.typer(language)} } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
         
         /**
          * Class '${generatedClassName}' is meant to be a convient place to add any
          * custom code for type checking.
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
-            mainTyper: ${Names.typer(language)};
+            mainTyper: FreTyper; // ${Names.typer(language)};
         
             isType(modelelement: PiElement): boolean | null {
                 return null;

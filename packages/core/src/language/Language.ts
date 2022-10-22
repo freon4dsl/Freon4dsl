@@ -60,10 +60,10 @@ export type Interface = {
 export type Classifier = Model | ModelUnit | Concept | Interface;
 
 export class Language {
-    private static theInstance: Language = null;
+    private static theInstance: Language;
 
     static getInstance() {
-        if (Language.theInstance === null) {
+        if (Language.theInstance === undefined) {
             Language.theInstance = new Language();
         }
         return Language.theInstance;
@@ -90,20 +90,20 @@ export class Language {
         }
     }
 
-    unit(typeName: string): ModelUnit {
+    unit(typeName: string): ModelUnit | undefined {
         return this.units.get(typeName);
     }
 
-    concept(typeName: string): Concept {
+    concept(typeName: string): Concept | undefined {
         // console.log("Language find concept " + typeName);
         return this.concepts.get(typeName);
     }
 
-    interface(typeName: string): Interface {
+    interface(typeName: string): Interface | undefined {
         return this.interfaces.get(typeName);
     }
 
-    classifier(typeName: string): Classifier {
+    classifier(typeName: string): Classifier | undefined {
         let concept1 = this.concepts.get(typeName);
         if (!!concept1) {
             return concept1;
@@ -124,23 +124,23 @@ export class Language {
             }
         }
         console.log("RETURNING NULL FOR " + typeName)
-        return null;
+        return undefined;
     }
 
-    conceptProperty(typeName: string, propertyName: string): Property {
+    conceptProperty(typeName: string, propertyName: string): Property | undefined {
         // LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
-        return this.concepts.get(typeName).properties.get(propertyName);
+        return this.concepts.get(typeName)?.properties.get(propertyName);
     }
 
-    unitProperty(typeName: string, propertyName: string): Property {
-        return this.units.get(typeName).properties.get(propertyName);
+    unitProperty(typeName: string, propertyName: string): Property | undefined {
+        return this.units.get(typeName)?.properties.get(propertyName);
     }
 
-    interfaceProperty(typeName: string, propertyName: string): Property {
-        return this.interfaces.get(typeName).properties.get(propertyName);
+    interfaceProperty(typeName: string, propertyName: string): Property | undefined {
+        return this.interfaces.get(typeName)?.properties.get(propertyName);
     }
 
-    classifierProperty(typeName: string, propertyName: string): Property {
+    classifierProperty(typeName: string, propertyName: string): Property | undefined {
         // LOGGER.log("CLASSIFIERPROPERTY " + typeName + "." + propertyName);
         let concept1 = this.concepts.get(typeName);
         if (!!concept1) {
@@ -161,12 +161,12 @@ export class Language {
                 }
             }
         }
-        return null;
+        return undefined;
     }
 
-    allConceptProperties(typeName: string): IterableIterator<Property> {
+    allConceptProperties(typeName: string): IterableIterator<Property> | undefined {
         // console.log("Looking up properties for "+ typeName);
-        let myType: Concept | ModelUnit = this.concept(typeName);
+        let myType: Concept | ModelUnit | undefined = this.concept(typeName);
         if (isNullOrUndefined(myType)) {
             myType = this.unit(typeName);
         }
@@ -179,7 +179,7 @@ export class Language {
      * @param ptype
      */
     public getPropertiesOfKind(typename: string, ptype: PropertyKind): Property[]  {
-        let classifier: Classifier = Language.getInstance().classifier(typename);
+        let classifier: Classifier | undefined = Language.getInstance().classifier(typename);
         const foundProperties: Property[] = [];
         if (!!classifier) {
             for (const prop of classifier.properties.values()) {
@@ -237,16 +237,16 @@ export class Language {
         return this.pmodel?.constructor();
     }
 
-    createUnit(typeName: string): PiModelUnit {
-        return this.units.get(typeName).constructor();
+    createUnit(typeName: string): PiModelUnit | undefined {
+        return this.units.get(typeName)?.constructor();
     }
 
     /**
      * Create a new instance of the class `typeName`.
      * @param typeName
      */
-    createConceptOrUnit(typeName: string): PiElement {
-        let myType: Concept | ModelUnit = this.concept(typeName);
+    createConceptOrUnit(typeName: string): PiElement | undefined {
+        let myType: Concept | ModelUnit | undefined = this.concept(typeName);
         if (isNullOrUndefined(myType)) {
             myType = this.unit(typeName);
         }

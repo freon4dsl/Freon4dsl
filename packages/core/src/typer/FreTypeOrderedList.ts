@@ -1,14 +1,14 @@
+import { FreTyper } from "./FreTyper";
 import { PiType } from "./PiType";
-import { PiTyper } from "./PiTyper";
 
-export class TypeOrderedList<T extends PiType> implements Iterable<T> {
+export class FreTypeOrderedList<T extends PiType> implements Iterable<T> {
     protected elements: T[] = [];
 
     toArray(): T[] {
         return  this.elements;
     }
 
-    add(p: T, typer: PiTyper) {
+    add(p: T, typer: FreTyper) {
         if (!!typer) {
             if (!this.elements.find(e => typer.equals(e, p))) {
                 this.elements.push(p);
@@ -16,7 +16,7 @@ export class TypeOrderedList<T extends PiType> implements Iterable<T> {
         }
     }
 
-    addAll(list: TypeOrderedList<T>, typer: PiTyper) {
+    addAll(list: FreTypeOrderedList<T>, typer: FreTyper) {
         for (const t of list) {
             this.add(t, typer);
         }
@@ -26,7 +26,7 @@ export class TypeOrderedList<T extends PiType> implements Iterable<T> {
      * Retains only the elements that are contained in the "list".
      * @param list
      */
-    retainAll(list: TypeOrderedList<T>, typer: PiTyper) {
+    retainAll(list: FreTypeOrderedList<T>, typer: FreTyper) {
         const toRetain: T[] = [];
         this.elements.forEach((old, index) => {
             if (list.includes(old, typer)) {
@@ -44,7 +44,7 @@ export class TypeOrderedList<T extends PiType> implements Iterable<T> {
         return this.elements[index];
     }
 
-    includes(p: T, typer: PiTyper): boolean {
+    includes(p: T, typer: FreTyper): boolean {
         let result: boolean = false;
         if (!!typer) {
             for (const elem of this.elements) {
@@ -57,16 +57,16 @@ export class TypeOrderedList<T extends PiType> implements Iterable<T> {
     }
 
     [Symbol.iterator](): Iterator<T> {
-        return new OrderedListIterator<T>(this);
+        return new FrOrderedListIterator<T>(this);
     }
 
 }
 
-export class OrderedListIterator<T extends PiType> implements Iterator<T> {
+export class FrOrderedListIterator<T extends PiType> implements Iterator<T> {
     private index = 0;
-    private list: TypeOrderedList<T>;
+    private list: FreTypeOrderedList<T>;
 
-    constructor(list: TypeOrderedList<T>) {
+    constructor(list: FreTypeOrderedList<T>) {
         this.list = list;
     }
 

@@ -1,6 +1,6 @@
-import { TypeOrderedList } from "./TypeOrderedList";
+import { FreTypeOrderedList } from "./FreTypeOrderedList";
+import { FreTyper } from "./FreTyper";
 import { PiType } from "./PiType";
-import { PiTyper } from "./PiTyper";
 
 
 // algorithm from https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla
@@ -9,12 +9,12 @@ import { PiTyper } from "./PiTyper";
 // 3. The remaining "ordered" list is the common ancestors, first in list is "nearest", last is furthest.
 // 4. Empty list implies no ancestors.
 
-export class CommonSuperTypeUtil {
+export class FreCommonSuperTypeUtil {
 
-    public static commonSuperType(inList: PiType[], typer: PiTyper): PiType[] {
+    public static commonSuperType(inList: PiType[], typer: FreTyper): PiType[] {
         if (!!inList && inList.length > 0) {
             // start with the supers from the first element
-            const rollingIntersect: TypeOrderedList<PiType> = this.getSupers(inList[0], typer);
+            const rollingIntersect: FreTypeOrderedList<PiType> = this.getSupers(inList[0], typer);
             // intersect with the next
             for (let i = 1; i < inList.length; i++) {
                 // this.printOrderedList("rollingIntersect at " + i.toString(), rollingIntersect);
@@ -43,17 +43,17 @@ export class CommonSuperTypeUtil {
      * @param inCls
      * @private
      */
-    private static getSupers(inCls: PiType, typer: PiTyper): TypeOrderedList<PiType>  {
-        const classes: TypeOrderedList<PiType> = new TypeOrderedList<PiType>();
+    private static getSupers(inCls: PiType, typer: FreTyper): FreTypeOrderedList<PiType>  {
+        const classes: FreTypeOrderedList<PiType> = new FreTypeOrderedList<PiType>();
         if (!!inCls) {
-            let nextLevel: TypeOrderedList<PiType> = new TypeOrderedList<PiType>();
+            let nextLevel: FreTypeOrderedList<PiType> = new FreTypeOrderedList<PiType>();
             nextLevel.add(inCls, typer);
             // this.printOrderedList("nextLevel: ", nextLevel );
             while (nextLevel.length() > 0) {
                 classes.addAll(nextLevel, typer);
-                const thisLevel: TypeOrderedList<PiType> = new TypeOrderedList<PiType>();
+                const thisLevel: FreTypeOrderedList<PiType> = new FreTypeOrderedList<PiType>();
                 thisLevel.addAll(nextLevel, typer);
-                nextLevel = new TypeOrderedList<PiType>();
+                nextLevel = new FreTypeOrderedList<PiType>();
                 for (const elem of thisLevel) {
                     const supers: PiType[] = typer.getSuperTypes(elem);
                     // console.log(`found supers for ${writer.writeToString(elem.internal)} [${elem.internal.piLanguageConcept()}] : ${supers.map(sup => `${writer.writeToString(sup.internal)} [${sup.internal.piLanguageConcept()}]`).join(", ")}`)

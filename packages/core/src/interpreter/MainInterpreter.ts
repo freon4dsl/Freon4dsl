@@ -24,7 +24,7 @@ export class MainInterpreter implements IMainInterpreter {
     // Function to get the name of the property in which a node is stored.
     private getProperty: OwningPropertyFunction;
 
-    private static privateInstance = null;
+    private static privateInstance ;
 
     /**
      *
@@ -33,7 +33,7 @@ export class MainInterpreter implements IMainInterpreter {
      * @param getPropertyFunction Function that gets the property name in which an object is stored in its parent
      */
     public static instance(init: InitFunction, getConceptFunction: ConceptFunction, getPropertyFunction: OwningPropertyFunction): IMainInterpreter {
-        if (MainInterpreter.privateInstance === null) {
+        if (MainInterpreter.privateInstance === undefined) {
             MainInterpreter.privateInstance = new MainInterpreter(init, getConceptFunction, getPropertyFunction);
         }
         return MainInterpreter.privateInstance;
