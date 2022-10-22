@@ -179,6 +179,7 @@
         isEditing = false;
         from = -1;
         to = -1;
+		// make this box unselected, otherwise it will get the focus even before rerendering.
 		editor.selectedBox = null;
 	
         if (!partOfActionBox) {
