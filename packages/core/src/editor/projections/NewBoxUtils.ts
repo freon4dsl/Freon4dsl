@@ -40,25 +40,25 @@ export class NewBoxUtils {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
                         return BoxFactory.horizontalList(element, roleName, [
-                            boxProviderCache.getConceptProjection(listElem).box,
+                            boxProviderCache.getBoxProvider(listElem).box,
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]);
                     } else {
-                        return boxProviderCache.getConceptProjection(listElem).box;
+                        return boxProviderCache.getBoxProvider(listElem).box;
                     }
                 } else if (listJoin.type === this.terminatorName) {
                     return BoxFactory.horizontalList(element, roleName, [
-                        boxProviderCache.getConceptProjection(listElem).box,
+                        boxProviderCache.getBoxProvider(listElem).box,
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]);
                 } else if (listJoin.type === this.initiatorName) {
                     return BoxFactory.horizontalList(element, roleName, [
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                        boxProviderCache.getConceptProjection(listElem).box,
+                        boxProviderCache.getBoxProvider(listElem).box,
                     ]);
                 }
             } else {
-                return boxProviderCache.getConceptProjection(listElem).box;
+                return boxProviderCache.getBoxProvider(listElem).box;
             }
             return null;
         });
@@ -83,7 +83,7 @@ export class NewBoxUtils {
         const roleName = RoleProvider.property(element.piLanguageConcept(), propertyName);
         console.log('getBoxOrAlias ' + property?.piId())
         return !!property
-            ? boxProviderCache.getConceptProjection(property).box
+            ? boxProviderCache.getBoxProvider(property).box
             : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
     }
 }

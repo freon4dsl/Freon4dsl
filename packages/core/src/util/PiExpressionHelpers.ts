@@ -77,13 +77,13 @@ export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, 
     // console.log("RIGHT CONCEPT for "+ exp.piLanguageConcept()  + " is " + Language.getInstance().classifier(exp.piLanguageConcept()) );
     // console.log("            ===> " + Language.getInstance().classifier(exp.piLanguageConcept())?.properties.get("right") + " is " + rightConceptName);
     result.addChildren([
-        (!!exp.piLeft() ? boxProviderCache.getConceptProjection(exp.piLeft()).box : BoxFactory.alias(exp, PI_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left", conceptName: leftConceptName  })),
+        (!!exp.piLeft() ? boxProviderCache.getBoxProvider(exp.piLeft()).box : BoxFactory.alias(exp, PI_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left", conceptName: leftConceptName  })),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
         BoxFactory.alias(exp, BEFORE_BINARY_OPERATOR, NBSP),
         createOperatorBox(editor, exp, symbol),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
         BoxFactory.alias(exp, AFTER_BINARY_OPERATOR, NBSP),
-        (!!exp.piRight() ? boxProviderCache.getConceptProjection(exp.piRight()).box : BoxFactory.alias(exp, PI_BINARY_EXPRESSION_RIGHT, "[add-right]", { propertyName: "right", conceptName: rightConceptName }))
+        (!!exp.piRight() ? boxProviderCache.getBoxProvider(exp.piRight()).box : BoxFactory.alias(exp, PI_BINARY_EXPRESSION_RIGHT, "[add-right]", { propertyName: "right", conceptName: rightConceptName }))
     ]);
     return result;
 }

@@ -102,7 +102,7 @@ export class ProjectionTemplate {
                 this.elementToProvider.set(elementId, provider);
             }
         
-            getConceptProjection(element: PiElement): PiBoxProvider {
+            getBoxProvider(element: PiElement): PiBoxProvider {
                 // let boxType: string = element.piLanguageConcept();
                 // if (!!nameOfSuper && nameOfSuper.length > 0) {
                 //     if (!this.rootProjection.checkSuper(nameOfSuper, element.piLanguageConcept())) {
@@ -116,7 +116,7 @@ export class ProjectionTemplate {
         
                 // try {
                 if (isNullOrUndefined(element)) {
-                    throw Error('${Names.boxProviderCache(language)}.getConceptProjection: element is null/undefined');
+                    throw Error('${Names.boxProviderCache(language)}.getBoxProvider: element is null/undefined');
                 }
                 // } catch (e) {
                 //     console.log(e.stack);
