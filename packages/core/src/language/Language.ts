@@ -231,7 +231,12 @@ export class Language {
         return this.getNamedConcepts().concat(this.getNamedInterfaces());
     }
 
-    intfc
+    /**
+     * Return the names of all model unit types.
+     */
+    public getUnitNames(): string[] {
+        return Array.from(this.units.values()).map(unit => unit.typeName);
+    }
 
     createModel(): PiModel {
         return this.pmodel?.constructor();

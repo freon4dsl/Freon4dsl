@@ -90,8 +90,6 @@ export class EnvironmentTemplate {
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
             interpreter: ${Names.FreonInterpreter} = new ${Names.interpreterName(language)};
             languageName: string = "${language.name}";
-            // the type names of all units
-            unitNames: string[] = [${language.modelConcept.unitTypes().map(unit => `"${Names.classifier(unit)}"`)}];  
             fileExtensions: Map<string, string> = new Map([
                 ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
             ]);
