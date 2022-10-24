@@ -37,6 +37,7 @@ export enum ListJoinType {
 export class PiEditUnit extends PiDefinitionElement {
     language: PiLanguage;
     projectiongroups: PiEditProjectionGroup[] = [];
+    classifiersUsedInSuperProjection: string[] = []; // holds the names of all classifiers that are refered in an PiEditSuperProjection
 
     getDefaultProjectiongroup(): PiEditProjectionGroup {
         return this.projectiongroups.find(group => group.name == Names.defaultProjectionName);

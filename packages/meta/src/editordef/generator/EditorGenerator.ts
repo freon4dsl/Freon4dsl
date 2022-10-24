@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils";
+import { ListUtil, MetaLogger } from "../../utils";
 import { PiClassifier, PiConcept, PiLanguage, PiLimitedConcept } from "../../languagedef/metalanguage";
 import {
     EDITOR_FOLDER,
@@ -87,16 +87,22 @@ export class EditorGenerator {
             fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
         });
 
-        extraClassifiers.forEach(cls => {
-            // todo what if one of these contains a request for a super projection?
-            if (cls instanceof PiConcept && !cls.isAbstract) {
-                // do nothing, already generated
-            } else {
-                const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language, cls, editDef, extraClassifiers, relativePath),
-                    "Box provider " + cls.name, generationStatus);
-                fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(cls)}.ts`, projectionfile);
-            }
-        });
+        const allExtraClassifiers: PiClassifier[] = []; // remember these in order to add them to the index file
+        ListUtil.addListIfNotPresent(allExtraClassifiers, extraClassifiers);
+        while (extraClassifiers.length > 0) { // super projections may call other super projections, make sure every one has a BoxProvider
+            let newExtraClassifiers: PiClassifier[] = [];
+            extraClassifiers.forEach(cls => {
+                if (cls instanceof PiConcept && !cls.isAbstract) {
+                    // do nothing, already generated
+                } else {
+                    const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language, cls, editDef, newExtraClassifiers, relativePath),
+                        "Box provider " + cls.name, generationStatus);
+                    fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(cls)}.ts`, projectionfile);
+                }
+            });
+            extraClassifiers = newExtraClassifiers;
+            ListUtil.addListIfNotPresent(allExtraClassifiers, extraClassifiers);
+        }
 
         // Generate the actions
         LOGGER.log(`Generating actions default: ${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`);
@@ -125,7 +131,7 @@ export class EditorGenerator {
         // FileUtil.generateManualFile(`${this.stylesFolder}/CustomStyles.ts`, editorStylesConst, "Editor Styles Constant");
 
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
-        const editorIndexGenFile = FileUtil.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef, extraClassifiers), "Editor Gen Index", generationStatus);
+        const editorIndexGenFile = FileUtil.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef, allExtraClassifiers), "Editor Gen Index", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/index.ts`, editorIndexGenFile);
 
         LOGGER.log(`Generating editor index: ${this.editorFolder}/index.ts`);
