@@ -1,7 +1,4 @@
 <script>
-    import CssTree from "./CssTree.svelte";
-    import Tree from "./Tree.svelte";
-    import CompactTreeView from "./CompactTreeView.svelte";
     import { interpreterTrace } from "../stores/InfoPanelStore";
     const tree = [
         {
