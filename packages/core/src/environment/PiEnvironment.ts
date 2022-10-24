@@ -25,7 +25,6 @@ export interface PiEnvironment {
     interpreter: FreonInterpreter;
 
     languageName: string;
-    unitNames: string[];
     fileExtensions: Map<string, string>;
 }
 

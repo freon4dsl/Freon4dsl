@@ -5,7 +5,7 @@
     import {
         PiLogger,
         type SelectOption,
-        KEY_ESCAPE, KEY_ARROW_DOWN, KEY_ARROW_UP, KEY_DELETE, KEY_ENTER
+        ESCAPE, ARROW_DOWN, ARROW_UP, DELETE, ENTER
     } from "@projectit/core";
     import DropdownItemComponent from "./DropdownItemComponent.svelte";
 
@@ -43,17 +43,17 @@
         const index = options.findIndex(o => o.id === selectedOptionId);
         LOGGER.log("handleKeyDown " + e.key + " index="+ index);
         switch (e.key) {
-            case KEY_ARROW_DOWN:
+            case ARROW_DOWN:
                 if (index + 1 < options.length) {
                     setSelectedOption(options[index + 1].id);
                 }
                 return true;
-            case KEY_ARROW_UP:
+            case ARROW_UP:
                 if (index > 0) {
                     setSelectedOption(options[index - 1].id);
                 }
                 return true;
-            case KEY_ENTER:
+            case ENTER:
                 if (index >= 0 && index < options.length) {
                     e.stopPropagation();
                     dispatcher("pi-ItemSelected", options[index]);
@@ -61,9 +61,9 @@
                 } else {
                     return false;
                 }
-            case KEY_DELETE:
+            case DELETE:
                 return true;
-            case KEY_ESCAPE:
+            case ESCAPE:
                 return true;
         }
         return false;

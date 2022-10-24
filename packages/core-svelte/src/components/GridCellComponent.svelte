@@ -2,7 +2,7 @@
     import {
         GridBox,
         isMetaKey,
-        KEY_ENTER,
+        ENTER,
         type PiEditor,
         PiLogger,
         PiUtils,
@@ -38,7 +38,7 @@
     const onKeydown = (event: KeyboardEvent) => {
         LOGGER.log("GridCellComponent onKeyDown");
         const piKey = toPiKey(event);
-        if (isMetaKey(event) || event.key === KEY_ENTER) {
+        if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
             const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), cellBox, editor);
             if (cmd !== PI_NULL_COMMAND) {

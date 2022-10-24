@@ -63,8 +63,7 @@ export class EnvironmentTemplate {
                 // todo adjust the next line for other projects: move to webapp, because every unit has different rootType?
                 myComposite.rootProvider = 
                     ${Names.boxProviderCache(language)}.getInstance().getConstructor('${Names.classifier(language.modelConcept.unitTypes()[0])}')();
-                this.editor = new PiEditor(myComposite, actions);
-                this.editor.environment = this;
+                this.editor = new PiEditor(myComposite, this, actions);
                 initializeLanguage();
                 initializeEditorDef();
                 initializeScoperDef(this.scoper);
@@ -92,8 +91,6 @@ export class EnvironmentTemplate {
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
             interpreter: ${Names.FreonInterpreter} = new ${Names.interpreterName(language)};
             languageName: string = "${language.name}";
-            // the type names of all units
-            unitNames: string[] = [${language.modelConcept.unitTypes().map(unit => `"${Names.classifier(unit)}"`)}];  
             fileExtensions: Map<string, string> = new Map([
                 ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
             ]);

@@ -1,8 +1,8 @@
 import { runInAction } from "mobx";
 import { PiElement } from "../../ast";
-import { BehaviorExecutionResult } from "../../util/BehaviorUtils";
+import { BehaviorExecutionResult } from "../util/BehaviorUtils";
 import { PiLogger } from "../../logging";
-import { PiUtils } from "../../util/PiUtils";
+import { isNullOrUndefined, PiUtils } from "../../util/PiUtils";
 import { PiEditor } from "../PiEditor";
 import {
     Box,
@@ -35,7 +35,7 @@ let optionalCache: BoxCache<OptionalBox> = {};
 let svgCache: BoxCache<SvgBox> = {};
 let horizontalListCache: BoxCache<HorizontalListBox> = {};
 let verticalListCache: BoxCache<VerticalListBox> = {};
-let gridcellCache: BoxCache<GridCellBox> = {};
+const gridcellCache: BoxCache<GridCellBox> = {};
 
 let cacheAliasOff: boolean = false;
 let cacheLabelOff: boolean = false;
@@ -45,7 +45,7 @@ let cacheIndentOff: boolean = false;
 let cacheOptionalOff: boolean = false;
 let cacheHorizontalOff: boolean = false;
 let cacheVerticalOff: boolean = false;
-let cacheGridcellOff = true;
+const cacheGridcellOff = true;
 
 /**
  * Caching of boxes, avoid recalculating them.
@@ -62,6 +62,7 @@ export class BoxFactory {
         horizontalListCache = {};
         verticalListCache = {};
     }
+
     public static cachesOff() {
         cacheAliasOff = true;
         cacheLabelOff = true;
@@ -72,6 +73,7 @@ export class BoxFactory {
         cacheHorizontalOff = true;
         cacheVerticalOff = true;
     }
+
     public static cachesOn() {
         cacheAliasOff = false;
         cacheLabelOff = false;
@@ -122,7 +124,7 @@ export class BoxFactory {
         const creator = () => new AliasBox(element, role, placeHolder, initializer);
         const result: AliasBox = this.find<AliasBox>(element, role, creator, aliasCache);
 
-        runInAction( () => {
+        runInAction(() => {
             // 2. Apply the other arguments in case they have changed
             result.placeholder = placeHolder;
             result.textHelper.setText("");
@@ -139,7 +141,7 @@ export class BoxFactory {
         const creator = () => new LabelBox(element, role, getLabel, initializer);
         const result: LabelBox = this.find<LabelBox>(element, role, creator, labelCache);
 
-        runInAction( () => {
+        runInAction(() => {
             // 2. Apply the other arguments in case they have changed
             result.setLabel(getLabel);
             PiUtils.initializeObject(result, initializer);
@@ -156,7 +158,7 @@ export class BoxFactory {
         const creator = () => new TextBox(element, role, getText, setText, initializer);
         const result: TextBox = this.find<TextBox>(element, role, creator, textCache);
 
-        runInAction( () => {
+        runInAction(() => {
             // 2. Apply the other arguments in case they have changed
             result.getText = getText;
             result.setText = setText;
@@ -203,9 +205,9 @@ export class BoxFactory {
         }
         const creator = () => new VerticalListBox(element, role, children, initializer);
         const result: VerticalListBox = this.find<VerticalListBox>(element, role, creator, verticalListCache);
-        runInAction( () => {
+        runInAction(() => {
             // 2. Apply the other arguments in case they have changed
-            if( !equals(result.children, children)) {
+            if (!equals(result.children, children)) {
                 result.clearChildren();
                 result.addChildren(children);
             }
@@ -229,7 +231,7 @@ export class BoxFactory {
         const creator = () => new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
         const result: SelectBox = this.find<SelectBox>(element, role, creator, selectCache);
 
-        runInAction( () => {
+        runInAction(() => {
             // 2. Apply the other arguments in case they have changed
             result.placeholder = placeHolder;
             result.getOptions = getOptions;
@@ -246,7 +248,7 @@ export class BoxFactory {
             return new OptionalBox(element, role, condition, box, mustShow, aliasText);
         }
         // 1. Create the alias box, or find the one that already exists for this element and role
-        const creator = () => new OptionalBox(element, role, condition ,box, mustShow, aliasText);
+        const creator = () => new OptionalBox(element, role, condition, box, mustShow, aliasText);
         const result: OptionalBox = this.find<OptionalBox>(element, role, creator, optionalCache);
 
         // 2. Apply the other arguments in case they have changed
@@ -264,7 +266,7 @@ export class BoxFactory {
         const creator = () => new GridCellBox(element, role, row, column, box, initializer);
         const result: GridCellBox = this.find<GridCellBox>(element, role, creator, gridcellCache);
 
-        runInAction( () => {
+        runInAction(() => {
             // 2. Apply the other arguments in case they have changed
             PiUtils.initializeObject(result, initializer);
         });
@@ -272,15 +274,14 @@ export class BoxFactory {
         return result;
     }
 
-
 }
 
 const equals = (a, b) => {
-    if( a === undefined && b !== undefined || a !== undefined && b === undefined ) {
+    if (isNullOrUndefined(a)  && !isNullOrUndefined(b) || !isNullOrUndefined(a) && isNullOrUndefined(b)) {
         return false;
     }
-    if( a=== undefined && b === undefined) {
+    if (isNullOrUndefined(a) && isNullOrUndefined(b)) {
         return true;
     }
-    return a.length === b.length && a.every((v, i) => v === b[i])
+    return a.length === b.length && a.every((v, i) => v === b[i]);
 };
