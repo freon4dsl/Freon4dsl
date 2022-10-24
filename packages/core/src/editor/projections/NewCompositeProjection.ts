@@ -1,8 +1,8 @@
 import { PiBoxProvider } from "./PiBoxProvider";
 import { PiCompositeProjection } from "../PiCompositeProjection";
-import { Box, BoxFactory, LabelBox } from "../boxes";
-import { createDefaultBinaryBox, isNullOrUndefined } from "../../util";
-import { PiBinaryExpression, PiElement } from "../../ast";
+import { Box, LabelBox } from "../boxes";
+import { isNullOrUndefined } from "../../util";
+import { PiElement } from "../../ast";
 import { PiTableDefinition } from "../PiTables";
 
 
