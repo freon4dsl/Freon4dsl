@@ -11,7 +11,11 @@ export class ElementBox extends Box {
         super(element, role);
         makeObservable(this, {
             content: observable
-        })
+        });
+    }
+
+    get children(): ReadonlyArray<Box> {
+        return [this.content];
     }
 }
 

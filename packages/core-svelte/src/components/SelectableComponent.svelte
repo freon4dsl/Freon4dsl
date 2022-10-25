@@ -16,7 +16,7 @@
     import { AUTO_LOGGER } from "./ChangeNotifier";
 
     // Parameters
-    export let box: Box = new LabelBox(null, "DUMMY", "LABEL");
+    export let box: Box;
     export let editor: PiEditor;
 
     let LOGGER = new PiLogger("SelectableComponent").mute();

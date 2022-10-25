@@ -6,8 +6,8 @@ import { ServerCommunication } from "../server/ServerCommunication";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
-export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+import { OctopusEnvironment } from "../../octopus/config/gen/OctopusEnvironment";
+export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
 LanguageInitializer.initialize();
 
 /**

@@ -8,6 +8,7 @@ export class FreonCustomTyperPartTemplate {
         const generatedClassName: string = Names.customTyper(language);
 
         // TODO add comments to generated class
+        // todo remove commented statements
         // Template starts here
         return `
         import { PiElement, PiType, FreTyper } from "${PROJECTITCORE}";

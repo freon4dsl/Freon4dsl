@@ -28,7 +28,7 @@ export abstract class Box {
     actualHeight: number = -1;
 
     constructor(element: PiElement, role: string) {
-        // ProUtil.CHECK(!!element, "Element cannot be empty in Box constructor");
+        PiUtils.CHECK(!!element, "Element cannot be empty in Box constructor");
         this.element = element;
         this.role = role;
         this.$id = PiUtils.ID(); //uuid.v4();

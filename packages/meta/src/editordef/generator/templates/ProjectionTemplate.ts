@@ -187,7 +187,7 @@ export class ProjectionTemplate {
 
         // start template
         const coreText: string = ` 
-                private _mainBox: ElementBox = null; // init is need for mobx!
+                private _mainBox: ElementBox = null; // init is needed for mobx!
                 private _element: ${Names.classifier(concept)};
                 private knownProjections: string[] = ['default'];
             

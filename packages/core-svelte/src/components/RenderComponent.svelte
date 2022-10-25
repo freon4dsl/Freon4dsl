@@ -41,17 +41,27 @@
     let showBox: Box;
     let id: string = `render-${box.element.piId()}-${box.role}`;
 
-    const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)), {
-        selectable: false,
-    });
+    // const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)), {
+    //     selectable: false,
+    // });
 
     function setShowBox() {
         LOGGER.log('setShowBox for element ' + box.element?.piId() )
-        if (isElementBox(box)) {
-            LOGGER.log('found ElementBox, content for element: ' + (box as ElementBox).content?.element?.piId())
-            showBox = (box as ElementBox).content;
+        showBox = getRenderContent(box);
+        id = `render-${box.element.piId()}-${box.role}`;
+    }
+
+    /**
+     * Because the type ElementBox should not be rendered, this function returns the first child in
+     * the box tree that is renderable.
+     * @param b
+     */
+    function getRenderContent(b: Box): Box {
+        if (isElementBox(b)) {
+            console.log('found ElementBox, content for element: ' + showBox?.element?.piId() + '' + showBox?.kind);
+            return getRenderContent((b as ElementBox).content);
         } else {
-            showBox = box;
+            return b;
         }
     }
 
@@ -106,9 +116,7 @@
     {:else if isEmptyLineBox(showBox) }
         <EmptyLineComponent box={showBox} editor={editor}/>
     {:else}
-        <SelectableComponent box={UNKNOWN} editor={editor}>
-            <LabelComponent label={UNKNOWN} editor={editor}/>
-        </SelectableComponent>
+        <p class="error">[UNKNOWN BOX TYPE: {showBox.kind}]</p>
     {/if}
 </span>
 
