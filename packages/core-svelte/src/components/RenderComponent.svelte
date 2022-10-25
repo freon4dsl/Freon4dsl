@@ -58,7 +58,7 @@
      */
     function getRenderContent(b: Box): Box {
         if (isElementBox(b)) {
-            console.log('found ElementBox, content for element: ' + showBox?.element?.piId() + '' + showBox?.kind);
+            // console.log('found ElementBox, content for element: ' + showBox?.element?.piId() + '' + showBox?.kind);
             return getRenderContent((b as ElementBox).content);
         } else {
             return b;

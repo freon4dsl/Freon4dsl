@@ -9,6 +9,7 @@ import { FreCompositeTyper } from "../typer/index";
 import { PiValidator } from "../validator/index";
 import { PiWriter } from "../writer/index";
 
+// todo explain the relationship between this class and the generated environment
 export class LanguageEnvironment implements PiEnvironment {
     private static theInstance: PiEnvironment = null;
 

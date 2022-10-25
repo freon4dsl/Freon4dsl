@@ -86,6 +86,10 @@
 		activeTab.set(interpreterTab);
 	}
 
+	const toggleShowBrackets = () => {
+		editorEnvironment.editor.toggleShowBrackets();
+	}
+
 	const findStructureElement = () => {
 		$findStructureDialogVisible = true;
 	}
@@ -118,6 +122,7 @@
 		{ title: 'Find Structure Element', action: findStructureElement, id: 8 },
 		{ title: 'Find Text', action: findText, id: 9 },
 		{ title: 'Run Interpreter', action: runInterpreter, id: 10 },
+		{ title: 'Show/Hide Brackets', action: toggleShowBrackets, id: 11 },
 	];
 
 	function isDisabled(id): boolean {

@@ -81,7 +81,7 @@ export class NewBoxUtils {
         // find the information on the property to be shown
         const property = element[propertyName];
         const roleName = RoleProvider.property(element.piLanguageConcept(), propertyName);
-        console.log('getBoxOrAlias ' + property?.piId())
+        // console.log('getBoxOrAlias ' + property?.piId())
         return !!property
             ? boxProviderCache.getBoxProvider(property).box
             : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });

@@ -73,11 +73,10 @@ export class ProjectionTemplate {
 
         // template starts here
         return `
-        import { isNullOrUndefined, PiBoxProvider, PiCompositeProjection, PiElement, PiTableDefinition } from "@projectit/core";
+        import { isNullOrUndefined, PiBoxProvider, PiBoxProviderCache, PiElement, PiTableDefinition } from "@projectit/core";
         ${imports.map(imp => imp).join("\n")}            
         
-        export class ${Names.boxProviderCache(language)} extends PiCompositeProjection {
-            public static showBrackets: boolean = false;
+        export class ${Names.boxProviderCache(language)} implements PiBoxProviderCache {
             private static theInstance: ${Names.boxProviderCache(language)} = null; // the only instance of this class
         
             /**
@@ -94,7 +93,6 @@ export class ProjectionTemplate {
              * A private constructor, as demanded by the singleton pattern.
              */
             private constructor() {
-                super();
             }
         
             private elementToProvider: Map<string, PiBoxProvider> = new Map<string, PiBoxProvider>();
@@ -103,30 +101,14 @@ export class ProjectionTemplate {
                     ${constructors.map(constr => constr).join(",\n")} 
                 ]);
         
-            addConceptProjection(elementId: string, provider: PiBoxProvider) {
+            addBoxProvider(elementId: string, provider: PiBoxProvider) {
                 this.elementToProvider.set(elementId, provider);
             }
         
-            getBoxProvider(element: PiElement): PiBoxProvider {
-                // let boxType: string = element.piLanguageConcept();
-                // if (!!nameOfSuper && nameOfSuper.length > 0) {
-                //     if (!this.rootProjection.checkSuper(nameOfSuper, element.piLanguageConcept())) {
-                //         throw new Error(
-                //             \`A box requested for '\${nameOfSuper}', which is not a super class or interface of '\${element.piLanguageConcept()}'\`
-                //         );
-                //     } else {
-                //         boxType = nameOfSuper;
-                //     }
-                // }
-        
-                // try {
+            getBoxProvider(element: PiElement): PiBoxProvider {       
                 if (isNullOrUndefined(element)) {
                     throw Error('${Names.boxProviderCache(language)}.getBoxProvider: element is null/undefined');
                 }
-                // } catch (e) {
-                //     console.log(e.stack);
-                //     return null;
-                // }
         
                 // return if present, else create a new provider based on the language concept
                 let boxProvider = this.elementToProvider.get(element.piId());
@@ -156,7 +138,7 @@ export class ProjectionTemplate {
                 return {
                     headers: [conceptName],
                     cells: [(element: PiElement) => {
-                        return this.getBox(element);
+                        return this.getBoxProvider(element).box;
                     }]
                 };
             }
@@ -205,6 +187,10 @@ export class ProjectionTemplate {
                     }
                 }
             
+                /**
+                 * This getter may not have parameters, therefore there is a copy of this function called getNamedBox,
+                 * that takes a projectionName as parameter.
+                 */
                 get box(): Box {
                     if (this._element === null) {
                         return null;
@@ -218,6 +204,21 @@ export class ProjectionTemplate {
                     this._mainBox.content = this.getContent();
                     // console.log('BOX: ' + this._mainBox.role + ' for ' + this._mainBox.element.piId());
                     return this._mainBox;
+                }
+                
+                public getNamedBox(projectionName: string): Box {
+                    if (this._element === null) {
+                        return null;
+                    }
+            
+                    if (this._mainBox === null || this._mainBox === undefined) {
+                        this._mainBox = new ElementBox(this._element, "main-box-for-" + this._element.piLanguageConcept() + "-" + this._element.piId());
+                    }
+            
+                    // the main box always stays the same for this element, but the content may differ
+                    this._mainBox.content = this.getContent(projectionName);
+                    // console.log('BOX: ' + this._mainBox.role + ' for ' + this._mainBox.element.piId());
+                    return this._mainBox;   
                 }
             
                 public getContent(projectionName?: string): Box {
@@ -249,7 +250,7 @@ export class ProjectionTemplate {
                     private getDefault(): Box {
                         const binBox = createDefaultBinaryBox(this._element, "${symbol}", LanguageEnvironment.getInstance().editor, ${Names.boxProviderCache(language)}.getInstance());
                         if (
-                            ${Names.boxProviderCache(language)}.showBrackets &&
+                            LanguageEnvironment.getInstance().editor.showBrackets &&
                             !!this._element.piOwnerDescriptor().owner &&
                             isPiBinaryExpression(this._element.piOwnerDescriptor().owner)
                         ) {

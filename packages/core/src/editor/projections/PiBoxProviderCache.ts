@@ -2,7 +2,7 @@ import { PiBoxProvider } from "."
 import { PiElement } from "../../ast";
 
 export interface PiBoxProviderCache {
-    addConceptProjection(elementId: string, provider: PiBoxProvider);
+    addBoxProvider(elementId: string, provider: PiBoxProvider);
 
     getBoxProvider(element: PiElement): PiBoxProvider ;
 

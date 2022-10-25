@@ -94,7 +94,7 @@ export class PiCompositeProjection implements PiProjection {
     }
 
     // TODO move to Language.ts
-    checkSuper(nameOfSuper: string, elementName: string ): boolean {
+    private checkSuper(nameOfSuper: string, elementName: string ): boolean {
         // find the names of the subclasses of 'nameOfSuper'
         const myConcept = Language.getInstance().concept(nameOfSuper);
         let names: string[] | undefined ;

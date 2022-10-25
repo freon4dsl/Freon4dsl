@@ -17,12 +17,11 @@ export class EnvironmentTemplate {
 
     generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
-        import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
-                    ${Names.PiScoper}, ${Names.FreonTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, LanguageEnvironment, NewCompositeProjection
+        import { ${Names.PiEditor}, ${Names.PiEnvironment}, ${Names.PiReader}, 
+                    ${Names.FreonTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
+                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, LanguageEnvironment, FreProjectionHandler
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
-        import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoperDef(language)}";
         import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typerDef(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
@@ -59,10 +58,8 @@ export class EnvironmentTemplate {
              */  
             private constructor() {
                 const actions = new ${Names.actions(language)}();
-                const myComposite = new NewCompositeProjection();
-                // todo adjust the next line for other projects: move to webapp, because every unit has different rootType?
-                myComposite.rootProvider = 
-                    ${Names.boxProviderCache(language)}.getInstance().getConstructor('${Names.classifier(language.modelConcept.unitTypes()[0])}')();
+                const myComposite = new FreProjectionHandler();
+                myComposite.rootProvider = ${Names.boxProviderCache(language)}.getInstance();
                 this.editor = new PiEditor(myComposite, this, actions);
                 initializeLanguage();
                 initializeEditorDef();
