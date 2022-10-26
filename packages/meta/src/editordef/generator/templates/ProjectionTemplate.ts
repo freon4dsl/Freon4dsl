@@ -158,7 +158,7 @@ export class ProjectionTemplate {
     generateBoxProvider(language: PiLanguage, concept: PiClassifier, editDef: PiEditUnit, extraClassifiers: PiClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        this.coreImports.push(...['Box', 'BoxUtils', 'BoxFactory', 'PiElement', 'FreBoxProvider', 'FreBoxProviderBase', 'PiTableDefinition', 'FreProjectionHandler']);
+        this.coreImports.push(...['Box', 'BoxUtils', 'BoxFactory', 'PiElement', 'FreBoxProvider', 'FreBoxProviderBase', 'PiTableDefinition', 'FreProjectionHandler', 'Language']);
 
         // see which projections there are for this concept
         // myProjections: all non table projections
@@ -182,10 +182,10 @@ export class ProjectionTemplate {
                 private knownProjections: string[] = ['default'];
             
                 set element(element: PiElement) {
-                    if (element.piLanguageConcept() === '${Names.classifier(concept)}') {
+                    if (Language.getInstance().metaConformsToType(element, '${Names.classifier(concept)}')) {
                         this._element = element as ${Names.classifier(concept)};
                     } else {
-                        console.log('setelement: wrong type (' + element.piLanguageConcept() + '!= ${Names.classifier(concept)})')
+                        console.log('setelement: wrong type (' + element.piLanguageConcept() + ' != ${Names.classifier(concept)})')
                     }
                 }
                        
@@ -247,9 +247,8 @@ export class ProjectionTemplate {
                     proj.customProjections.forEach(cp => {
                         if (proj.enabledProjections().includes(cp.name)) {
                             const customFuction = cp.nodeTypeToBoxMethod.get(this._element.piLanguageConcept());
-                            console.log("FreProjectionHandler custom function for : " + cp.name + ": " + Array.from(cp.nodeTypeToBoxMethod.keys()) + ", element: " + this._element.piLanguageConcept());
                             if (!!customFuction) {
-                                console.log("FreProjectionHandler enabled projections: " + proj.enabledProjections().map(p => p));
+                                // console.log("FreProjectionHandler enabled projections: " + proj.enabledProjections().map(p => p));
                                 BOX = customFuction.bind(cp)(this._element);
                                 // console.log('FreProjectionHandler found custom BOX: ' + BOX.role + ' for ' + BOX.element.piId());
                             }
