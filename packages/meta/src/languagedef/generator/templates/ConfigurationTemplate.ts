@@ -9,6 +9,7 @@ import { PiLanguage } from "../../metalanguage";
 export class ConfigurationTemplate {
 
     generate(language: PiLanguage, relativePath: string): string {
+        // todo choose one of 'customTypers' and 'customTypersFreon'
         const configurationName = Names.configuration();
         const workerName = Names.checkerInterface(language);
         return `

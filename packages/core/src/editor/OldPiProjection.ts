@@ -1,11 +1,12 @@
-import { Box, PiCompositeProjection } from "./internal";
+import { Box } from "./internal";
 import { PiElement } from "../ast";
 import { PiTableDefinition } from "./PiTables";
+import { OldPiCompositeProjection } from "./OldPiCompositeProjection";
 
 /**
  * Interface for the projection.
  */
-export interface PiProjection {
+export interface OldPiProjection {
     /**
      * Returns the box for `element`. If 'nameOfSuper' is present, it returns the box for the
      * super concept or implemented interface with that name.
@@ -20,7 +21,7 @@ export interface PiProjection {
      */
     getTableDefinition(conceptName: string): PiTableDefinition ;
 
-    rootProjection: PiCompositeProjection;
+    rootProjection: OldPiCompositeProjection;
     name: string;
     isEnabled: boolean;
 }

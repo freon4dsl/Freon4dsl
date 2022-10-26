@@ -30,7 +30,6 @@ export class EnvironmentTemplate {
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
         import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}";
         import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${Names.boxProviderCache(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}/${Names.boxProviderCache(language)}";
 
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.
@@ -59,9 +58,9 @@ export class EnvironmentTemplate {
             private constructor() {
                 const actions = new ${Names.actions(language)}();
                 const myComposite = new FreProjectionHandler();
-                myComposite.rootProvider = ${Names.boxProviderCache(language)}.getInstance();
                 this.editor = new PiEditor(myComposite, this, actions);
                 initializeLanguage();
+                initializeProjections(myComposite);
                 initializeEditorDef();
                 initializeScoperDef(this.scoper);
                 initializeTypers(this.typer);

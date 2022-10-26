@@ -6,7 +6,7 @@ import {
     unitTypes
 } from "../components/stores/LanguageStore";
 import { editorEnvironment } from "../config/WebappConfiguration";
-import { Language, PiCompositeProjection, PiUndoManager } from "@projectit/core";
+import { FreProjectionHandler, Language, PiUndoManager } from "@projectit/core";
 
 export class LanguageInitializer {
 
@@ -31,7 +31,7 @@ export class LanguageInitializer {
 
         // the names of the projections / views
         const proj = editorEnvironment.editor.projection;
-        let nameList: string[] = proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name];
+        let nameList: string[] = proj instanceof FreProjectionHandler ? proj.projectionNames() : ['default'];
         projectionNames.set(nameList);
         projectionsShown.set(nameList); // initialy, all projections are shown
 

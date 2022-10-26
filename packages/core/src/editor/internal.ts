@@ -13,8 +13,8 @@ export * from "./actions";
 export * from "./util";
 export * from "./simplifiedBoxAPI";
 export * from "./PiCombinedActions";
-export * from "./PiCompositeProjection";
-export * from "./PiProjection";
+// export * from "./PiCompositeProjection"; // todo remove these lines
+// export * from "./PiProjection";
 export * from "./PiStyle";
 
 export * from "./projections";

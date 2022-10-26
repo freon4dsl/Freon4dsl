@@ -5,7 +5,7 @@ import {
     SelectBox,
     SelectOption,
     PiEditor,
-    triggerTypeToString, BoxFactory, PiBoxProviderCache
+    triggerTypeToString, BoxFactory, FreProjectionHandler
 } from "../index";
 import { PiBinaryExpression, PiExpression } from "../../ast";
 import { Language } from "../../language";
@@ -65,7 +65,7 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
  * @param editor
  * @param style
  */
-export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, editor: PiEditor, boxProviderCache: PiBoxProviderCache, style?: string): HorizontalListBox {
+export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, editor: PiEditor, boxProviderCache: FreProjectionHandler, style?: string): HorizontalListBox {
     // TODO move this method to BoxUtils
     const result = BoxFactory.horizontalList(exp, BINARY_EXPRESSION);
     // const projection = editor.projection;

@@ -1,10 +1,8 @@
 import { editorEnvironment } from "../config/WebappConfiguration";
 import {
-    Box,
+    Box, FreProjectionHandler,
     isAliasBox,
     isAliasTextBox,
-    isTextBox,
-    PiCompositeProjection,
     PiError,
     PiLogger,
     PiUndoManager,
@@ -36,8 +34,7 @@ export class EditorRequestsHandler {
     enableProjection(name: string): void {
         LOGGER.log("enabling Projection " + name);
         const proj = editorEnvironment.editor.projection;
-        if (proj instanceof PiCompositeProjection) {
-            // todo adjust for new projections
+        if (proj instanceof FreProjectionHandler) {
             proj.enableProjection(name);
         }
     }
@@ -49,7 +46,7 @@ export class EditorRequestsHandler {
     disableProjection(name: string): void {
         LOGGER.log("disabling Projection " + name);
         const proj = editorEnvironment.editor.projection;
-        if (proj instanceof PiCompositeProjection) {
+        if (proj instanceof FreProjectionHandler) {
             proj.disableProjection(name);
         }
     }

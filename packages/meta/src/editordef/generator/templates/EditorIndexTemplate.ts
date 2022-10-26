@@ -18,7 +18,6 @@ export class EditorIndexTemplate {
         return `
         export * from "./${Names.actions(language)}";
         export * from "./${Names.defaultActions(language)}";
-        export * from "./${Names.boxProviderCache(language)}";
         ${boxProviderConcepts.map(cls => 
             `export * from "./${Names.boxProvider(cls)}";`
         ).join("")}

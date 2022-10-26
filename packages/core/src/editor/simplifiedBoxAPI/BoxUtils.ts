@@ -7,7 +7,6 @@ import { Language, PropertyKind } from "../../language";
 import { PiEditor } from "../PiEditor";
 import { FreScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
-import { PiCompositeProjection } from "../PiCompositeProjection";
 import { EmptyLineBox } from "../boxes";
 
 export class PiListInfo {
@@ -288,33 +287,33 @@ export class BoxUtils {
         );
     }
 
-    static verticalPartListBox(element: PiElement, propertyName: string, rootProjection: PiCompositeProjection, listJoin: PiListInfo, projName?: string): Box {
-        // find the information on the property to be shown
-        const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
-        // check whether the property is a part list
-        if (property !== undefined && propertyName !== null && isList && isPart === "part") {
-            // find the children to show in this listBox
-            let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin, projName);
-            // add a placeholder where a new element can be added
-            children = this.addPlaceholder(children, element, propertyName);
-            // TODO: Add keboard action for Enter:
-            // TODO for role:RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item")
-            // CANNO DO< no EDIGOR AVAILABLE:
-            // editor.addOrReplaceAction(createKeyboardShortcutForList2(RoleProvider.property(element.piLanguageConcept(),
-            // propertyName, "
-            // new-list-item"),
-            // propertyName, element.piLanguageConcept(), "dummy"));
-            // return the box
-            return BoxFactory.verticalList(
-                element,
-                RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist"),
-                children
-            );
-        } else {
-            PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or is not a part: " + property + "\"");
-            return null;
-        }
-    }
+    // static verticalPartListBox(element: PiElement, propertyName: string, rootProjection: OldPiCompositeProjection, listJoin: PiListInfo, projName?: string): Box {
+    //     // find the information on the property to be shown
+    //     const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
+    //     // check whether the property is a part list
+    //     if (property !== undefined && propertyName !== null && isList && isPart === "part") {
+    //         // find the children to show in this listBox
+    //         let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin, projName);
+    //         // add a placeholder where a new element can be added
+    //         children = this.addPlaceholder(children, element, propertyName);
+    //         // TODO: Add keboard action for Enter:
+    //         // TODO for role:RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item")
+    //         // CANNO DO< no EDIGOR AVAILABLE:
+    //         // editor.addOrReplaceAction(createKeyboardShortcutForList2(RoleProvider.property(element.piLanguageConcept(),
+    //         // propertyName, "
+    //         // new-list-item"),
+    //         // propertyName, element.piLanguageConcept(), "dummy"));
+    //         // return the box
+    //         return BoxFactory.verticalList(
+    //             element,
+    //             RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist"),
+    //             children
+    //         );
+    //     } else {
+    //         PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or is not a part: " + property + "\"");
+    //         return null;
+    //     }
+    // }
 
     static verticalReferenceListBox(element: PiElement, propertyName: string, scoper: FreScoper, listInfo?: PiListInfo): Box {
         // find the information on the property to be shown
@@ -336,30 +335,30 @@ export class BoxUtils {
         }
     }
 
-    static horizontalPartListBox(element: PiElement,
-                                 propertyName: string,
-                                 rootProjection: PiCompositeProjection,
-                                 listJoin: PiListInfo,
-                                 projName?: string): Box {
-        // find the information on the property to be shown
-        const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
-        // check whether the property is a part list
-        if (property !== undefined && property !== null && isList && isPart !== "reference") {
-            // find the children to show in this listBox, depending on whether it is a list of parts or of references
-            let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin, projName);
-            // add a placeholder where a new element can be added
-            children = this.addPlaceholder(children, element, propertyName);
-            // return the box
-            return BoxFactory.horizontalList(
-                element,
-                RoleProvider.property(element.piLanguageConcept(), propertyName, "hpartlist"),
-                children
-            );
-        } else {
-            PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or not a part: " + property + "\"");
-            return null;
-        }
-    }
+    // static horizontalPartListBox(element: PiElement,
+    //                              propertyName: string,
+    //                              rootProjection: OldPiCompositeProjection,
+    //                              listJoin: PiListInfo,
+    //                              projName?: string): Box {
+    //     // find the information on the property to be shown
+    //     const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
+    //     // check whether the property is a part list
+    //     if (property !== undefined && property !== null && isList && isPart !== "reference") {
+    //         // find the children to show in this listBox, depending on whether it is a list of parts or of references
+    //         let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin, projName);
+    //         // add a placeholder where a new element can be added
+    //         children = this.addPlaceholder(children, element, propertyName);
+    //         // return the box
+    //         return BoxFactory.horizontalList(
+    //             element,
+    //             RoleProvider.property(element.piLanguageConcept(), propertyName, "hpartlist"),
+    //             children
+    //         );
+    //     } else {
+    //         PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or not a part: " + property + "\"");
+    //         return null;
+    //     }
+    // }
 
     static horizontalReferenceListBox(element: PiElement, propertyName: string, scoper: FreScoper, listJoin?: PiListInfo): Box {
         // TODO this one is not yet functioning correctly
@@ -383,15 +382,15 @@ export class BoxUtils {
         }
     }
 
-    static getBoxOrAlias(element: PiElement, propertyName: string, conceptName: string, rootProjection: PiCompositeProjection, projectionName?: string): Box {
-        // find the information on the property to be shown
-        const property = element[propertyName];
-        const roleName = RoleProvider.property(element.piLanguageConcept(), propertyName);
-        const byName: boolean = !!projectionName && projectionName.length > 0;
-        return !!property
-            ? (byName ? rootProjection.getNamedBox(property, projectionName) : rootProjection.getBox(property))
-            : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
-    }
+    // static getBoxOrAlias(element: PiElement, propertyName: string, conceptName: string, rootProjection: OldPiCompositeProjection, projectionName?: string): Box {
+    //     // find the information on the property to be shown
+    //     const property = element[propertyName];
+    //     const roleName = RoleProvider.property(element.piLanguageConcept(), propertyName);
+    //     const byName: boolean = !!projectionName && projectionName.length > 0;
+    //     return !!property
+    //         ? (byName ? rootProjection.getNamedBox(property, projectionName) : rootProjection.getBox(property))
+    //         : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
+    // }
 
     /**
      *
@@ -426,44 +425,44 @@ export class BoxUtils {
         );
     }
 
-    private static findPartItems(property: PiElement[],
-                                 element: PiElement,
-                                 propertyName: string,
-                                 rootProjection: PiCompositeProjection,
-                                 listJoin: PiListInfo,
-                                 projectionName?: string) {
-        const numberOfItems = property.length;
-        return property.map((listElem, index) => {
-            const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
-            const byName: boolean = !!projectionName && projectionName.length > 0;
-            if (listJoin !== null && listJoin !== undefined) {
-                if (listJoin.type === this.separatorName) {
-                    if (index < numberOfItems - 1) {
-                        return BoxFactory.horizontalList(element, roleName, [
-                            (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
-                            BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
-                        ]);
-                    } else {
-                        return (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem));
-                    }
-                } else if (listJoin.type === this.terminatorName) {
-                    return BoxFactory.horizontalList(element, roleName, [
-                        (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
-                        BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
-                    ]);
-                } else if (listJoin.type === this.initiatorName) {
-                    // TODO test "Initiator"
-                    return BoxFactory.horizontalList(element, roleName, [
-                        BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                        (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem))
-                    ]);
-                }
-            } else {
-                return (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem));
-            }
-            return null;
-        });
-    }
+    // private static findPartItems(property: PiElement[],
+    //                              element: PiElement,
+    //                              propertyName: string,
+    //                              rootProjection: OldPiCompositeProjection,
+    //                              listJoin: PiListInfo,
+    //                              projectionName?: string) {
+    //     const numberOfItems = property.length;
+    //     return property.map((listElem, index) => {
+    //         const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
+    //         const byName: boolean = !!projectionName && projectionName.length > 0;
+    //         if (listJoin !== null && listJoin !== undefined) {
+    //             if (listJoin.type === this.separatorName) {
+    //                 if (index < numberOfItems - 1) {
+    //                     return BoxFactory.horizontalList(element, roleName, [
+    //                         (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
+    //                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
+    //                     ]);
+    //                 } else {
+    //                     return (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem));
+    //                 }
+    //             } else if (listJoin.type === this.terminatorName) {
+    //                 return BoxFactory.horizontalList(element, roleName, [
+    //                     (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem)),
+    //                     BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
+    //                 ]);
+    //             } else if (listJoin.type === this.initiatorName) {
+    //                 // TODO test "Initiator"
+    //                 return BoxFactory.horizontalList(element, roleName, [
+    //                     BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
+    //                     (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem))
+    //                 ]);
+    //             }
+    //         } else {
+    //             return (byName ? rootProjection.getNamedBox(listElem, projectionName) : rootProjection.getBox(listElem));
+    //         }
+    //         return null;
+    //     });
+    // }
 
     private static makeRefItems(properties: PiNamedElement[], element: PiElement, propertyName: string, scoper: FreScoper, listJoin?: PiListInfo): Box[] {
         const result: Box[] = [];

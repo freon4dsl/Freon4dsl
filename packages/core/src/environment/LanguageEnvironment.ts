@@ -1,4 +1,4 @@
-import { PiEditor, PiProjection } from "../editor/index";
+import { FreProjectionHandler, PiEditor } from "../editor/index";
 import { PiEnvironment } from "../environment/index";
 import { PiModel } from "../ast/index";
 import { FreonInterpreter } from "../interpreter/index";
@@ -26,7 +26,7 @@ export class LanguageEnvironment implements PiEnvironment {
 
     public scoper: FreScoperComposite = null;
     public typer: FreCompositeTyper = null;
-    public projection: PiProjection = null;
+    public projection: FreProjectionHandler = null;
     public editor: PiEditor;
     public fileExtensions: Map<string, string>;
     public languageName: string;

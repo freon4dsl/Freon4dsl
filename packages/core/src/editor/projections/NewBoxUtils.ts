@@ -2,7 +2,7 @@ import { PiElement } from "../../ast";
 import { PiListInfo, RoleProvider } from "../simplifiedBoxAPI";
 import { Box, BoxFactory, HorizontalListBox, VerticalListBox } from "../boxes";
 import { Language } from "../../language";
-import { PiBoxProviderCache } from "./PiBoxProviderCache";
+import { FreProjectionHandler } from "./FreProjectionHandler";
 
 
 export class NewBoxUtils {
@@ -10,7 +10,7 @@ export class NewBoxUtils {
     static terminatorName: string = "Terminator";
     static initiatorName: string = "Initiator";
 
-    static verticalPartListBox(element: PiElement, list: PiElement[], propertyName: string, listJoin: PiListInfo, boxProviderCache: PiBoxProviderCache): VerticalListBox {
+    static verticalPartListBox(element: PiElement, list: PiElement[], propertyName: string, listJoin: PiListInfo, boxProviderCache: FreProjectionHandler): VerticalListBox {
         // make the boxes for the children
         let children: Box[] = this.findPartItems(list, element, propertyName, listJoin, boxProviderCache);
         // add a placeholder where a new element can be added
@@ -21,7 +21,7 @@ export class NewBoxUtils {
         return new VerticalListBox(element, role, children);
     }
 
-    static horizontalPartListBox(element: PiElement, list: PiElement[], propertyName: string, listJoin: PiListInfo, boxProviderCache: PiBoxProviderCache): VerticalListBox {
+    static horizontalPartListBox(element: PiElement, list: PiElement[], propertyName: string, listJoin: PiListInfo, boxProviderCache: FreProjectionHandler): VerticalListBox {
         // make the boxes for the children
         let children: Box[] = this.findPartItems(list, element, propertyName, listJoin, boxProviderCache);
         // add a placeholder where a new element can be added
@@ -32,7 +32,7 @@ export class NewBoxUtils {
         return new HorizontalListBox(element, role, children);
     }
 
-    private static findPartItems(property: PiElement[], element: PiElement, propertyName: string, listJoin: PiListInfo, boxProviderCache: PiBoxProviderCache) {
+    private static findPartItems(property: PiElement[], element: PiElement, propertyName: string, listJoin: PiListInfo, boxProviderCache: FreProjectionHandler) {
         const numberOfItems = property.length;
         return property.map((listElem, index) => {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
@@ -77,7 +77,7 @@ export class NewBoxUtils {
         );
     }
 
-    static getBoxOrAlias(element: PiElement, propertyName: string, conceptName: string, boxProviderCache: PiBoxProviderCache): Box {
+    static getBoxOrAlias(element: PiElement, propertyName: string, conceptName: string, boxProviderCache: FreProjectionHandler): Box {
         // find the information on the property to be shown
         const property = element[propertyName];
         const roleName = RoleProvider.property(element.piLanguageConcept(), propertyName);

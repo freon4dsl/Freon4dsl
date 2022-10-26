@@ -58,6 +58,7 @@ export class EditorGenerator {
         // Set relative path to get the imports right
         const relativePath = "../../";
 
+        // todo removed commented lines
         // Generate the projection groups
         // editDef.projectiongroups.forEach(group => {
         //     LOGGER.log(`Generating projection group: ${this.editorGenFolder}/${Names.projection(group)}.ts`);
@@ -67,8 +68,8 @@ export class EditorGenerator {
         // });
 
         // Generate the box providers
-        const providercache = FileUtil.pretty(projection.generateBoxProviderCache(this.language, editDef, relativePath), "providercache", generationStatus);
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProviderCache(this.language)}.ts`, providercache);
+        // const providercache = FileUtil.pretty(projection.generateBoxProviderCache(this.language, editDef, relativePath), "providercache", generationStatus);
+        // fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProviderCache(this.language)}.ts`, providercache);
 
         // During generation, we may conclude that extra box providers classes need to be generated.
         // We keep the classifiers for which this is necessary in the list 'extraClassifiers'.

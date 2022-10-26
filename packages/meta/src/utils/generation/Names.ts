@@ -133,7 +133,7 @@ export class Names {
     // }
 
     public static projection(group: PiEditProjectionGroup): string {
-        return "Projection" + this.startWithUpperCase(group.name);
+        return this.startWithUpperCase(group.name);
     }
 
     public static customProjection(language: PiLanguage): string {
@@ -350,10 +350,6 @@ export class Names {
 
     public static boxProvider(concept: PiClassifier): string {
         return Names.startWithUpperCase(concept.name) + "_BoxProvider";
-    }
-
-    public static boxProviderCache(language: PiLanguage): string {
-        return Names.startWithUpperCase(language.name) + "BoxProviderCache";
     }
 
     static projectionMethod(proj: PiEditClassifierProjection): string {

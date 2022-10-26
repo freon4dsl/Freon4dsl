@@ -1,16 +1,17 @@
 import { observable, makeObservable, action } from "mobx";
 import { PiElement } from "../ast";
-import { Box, BoxFactory, LabelBox, PiProjection } from "./internal";
+import { Box, BoxFactory, LabelBox } from "./internal";
 import { PiTableDefinition } from "./PiTables";
 import { Language } from "../language";
+import { OldPiProjection } from "./OldPiProjection";
 
-export class PiCompositeProjection implements PiProjection {
-    private projections: Map<string, PiProjection> = new Map<string, PiProjection>();
-    private _rootProjection: PiProjection | null = null;
+export class OldPiCompositeProjection implements OldPiProjection {
+    private projections: Map<string, OldPiProjection> = new Map<string, OldPiProjection>();
+    private _rootProjection: OldPiProjection | null = null;
     name: string = "";
     isEnabled: boolean = true;
 
-    set rootProjection(p: PiCompositeProjection) {
+    set rootProjection(p: OldPiCompositeProjection) {
         this._rootProjection = p;
         for(let child of this.projections.values()) {
             child.rootProjection = p;
@@ -21,7 +22,7 @@ export class PiCompositeProjection implements PiProjection {
         if (!!name) {
             this.name = name;
         }
-        makeObservable<PiCompositeProjection, "projections">(this, {
+        makeObservable<OldPiCompositeProjection, "projections">(this, {
             projections: observable,
             disableProjection: action,
             enableProjection: action,
@@ -72,7 +73,7 @@ export class PiCompositeProjection implements PiProjection {
         };
     }
 
-    addProjection(p: PiProjection) {
+    addProjection(p: OldPiProjection) {
         this.projections.set(p.name, p);
         p.rootProjection = this; //(!!this.rootProjection ? this : this.rootProjection);
     }

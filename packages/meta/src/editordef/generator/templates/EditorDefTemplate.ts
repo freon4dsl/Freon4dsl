@@ -1,5 +1,5 @@
 import { PiConcept, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
-import { CONFIGURATION_FOLDER, EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
+import { CONFIGURATION_FOLDER, EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
 import { PiEditUnit } from "../../metalanguage";
 
 export class EditorDefTemplate {
@@ -33,27 +33,48 @@ export class EditorDefTemplate {
             }
         });
 
-        editorDef.projectiongroups.map(group => {
-            editorImports.push(Names.projection(group));
+        // editorDef.projectiongroups.map(group => {
+        //     editorImports.push(Names.projection(group));
+        // });
+
+        // get all the constructors
+        let constructors: string[] = [];
+        language.concepts.forEach(concept => {
+            if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
+                constructors.push(`["${Names.concept(concept)}", () => {
+                        return new ${Names.boxProvider(concept)}()
+                    }]`);
+                ListUtil.addIfNotPresent(editorImports, Names.boxProvider(concept));
+            }
+        });
+        language.units.forEach(unit => {
+            constructors.push(`["${Names.classifier(unit)}", () => {
+                        return new ${Names.boxProvider(unit)}()
+                    }]`);
+            ListUtil.addIfNotPresent(editorImports, Names.boxProvider(unit));
         });
 
-        return `import { Language, Model, ModelUnit, Property, Concept, Interface, PiCompositeProjection, PiProjection } from "${PROJECTITCORE}";
+        return `import { Language, FreProjectionHandler, FreBoxProvider } from "${PROJECTITCORE}";
         
             import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
-            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";      
-            // import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";       
+            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";         
+            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";  
     
             /**
              * Adds all known projection groups to the root projection.
-             * @param rootProjection
+             * @param handler
              */
-            export function initializeProjections(rootProjection: PiCompositeProjection) {
-                for (const p of projectitConfiguration.customProjection) {
-                    rootProjection.addProjection(p);
-                }         
+            export function initializeProjections(handler: FreProjectionHandler) {
+                // for (const p of projectitConfiguration.customProjection) {
+                //     handler.addProjection(p);
+                // }         
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
-                `// rootProjection.addProjection(new ${Names.projection(group)}());`).join("\n")}
-                // rootProjection.addProjection(new ${Names.projection(editorDef.getDefaultProjectiongroup())}());
+                `handler.addProjection("${Names.projection(group)}")`).join(";\n")}
+                 handler.addProjection("${Names.projection(editorDef.getDefaultProjectiongroup())}");
+                 handler.initProviderConstructors(new Map<string, () => FreBoxProvider>(
+                [
+                    ${constructors.map(constr => constr).join(",\n")} 
+                ]));
             }    
             
             /**
