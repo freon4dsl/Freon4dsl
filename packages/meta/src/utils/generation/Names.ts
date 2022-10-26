@@ -49,7 +49,7 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static PiEditor:string = "PiEditor";
     // tslint:disable-next-line:variable-name
-    public static PiProjection:string = "PiProjection";
+    public static PiProjection:string = "FreProjection";
     public static PiCompositeProjection:string = "PiCompositeProjection";
     // tslint:disable-next-line:variable-name
     public static PiModelInitialization:string = "PiModelInitialization";

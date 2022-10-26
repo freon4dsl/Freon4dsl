@@ -340,7 +340,7 @@ export class ProjectionTemplate {
                  * @private
                  */
                 private getSuper(superName: string, projectionName?: string): Box {                   
-                    let superBoxProvider: PiBoxProvider = null;
+                    let superBoxProvider: FreBoxProvider = null;
                     switch (superName) {
                         ${supers.map(s => `case "${s.name}": {
                             superBoxProvider = new ${Names.boxProvider(s)}();

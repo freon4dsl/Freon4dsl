@@ -4,8 +4,9 @@ import { PiLanguage } from "../../../languagedef/metalanguage";
 export class CustomProjectionTemplate {
 
     generate(language: PiLanguage): string {
+        // todo adjust comment
         return `
-            import { ${Names.PiProjection}, ${Names.PiCompositeProjection}, ${Names.PiElement}, ${Names.Box}, PiTableDefinition } from "${PROJECTITCORE}";
+            import { ${Names.PiElement}, ${Names.Box}, ${Names.PiProjection} } from "${PROJECTITCORE}";
             
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to
@@ -17,25 +18,12 @@ export class CustomProjectionTemplate {
              * (3) if neither (1) nor (2) yields a result, the default is used.
              */           
             export class ${Names.customProjection(language)} implements ${Names.PiProjection} {
-                rootProjection: ${Names.PiCompositeProjection};
                 name: string = "manual";
-                isEnabled: boolean = true;
+                nodeTypeToBoxMethod: Map<string, (node: PiElement) => Box>= new Map<string, (node: PiElement) => Box>([
+                    // ['NAME_OF_CONCEPT', this.FUNCTION_FOR_CONCEPT],            
+                ]);  
                 
-                constructor(name?: string) {
-                    if (!!name) {
-                        this.name = name;
-                    }
-                }
-                
-                getBox(element: ${Names.PiElement}) : Box {
-                    // Add any handmade projections of your own before next statement 
-                    return null;
-                }            
-                
-                getTableDefinition(conceptName: string): PiTableDefinition {
-                    // Add any handmade table cells of your own before next statement 
-                    return null;
-                }              
+                // FUNCTION_FOR_CONCEPT(node: NAME_OF_CONCEPT) : Box { ... }   
             }
         `;
     }

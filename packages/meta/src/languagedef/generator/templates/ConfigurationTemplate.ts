@@ -28,7 +28,7 @@ export class ConfigurationTemplate {
              */
             class ${configurationName} {
                 // add your custom editor projections here
-                customProjection: ${Names.PiProjection}[] = [new ${Names.customProjection(language)}("manual")];
+                customProjection: ${Names.PiProjection}[] = [new ${Names.customProjection(language)}()];
                 // add your custom editor actions here
                 customActions: ${Names.PiActions}[] = [new ${Names.customActions(language)}()];
                 // add your custom validations here
