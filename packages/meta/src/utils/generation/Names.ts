@@ -60,8 +60,6 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static PiEnvironment:string = "PiEnvironment";
     // tslint:disable-next-line:variable-name
-    public static CompositeProjection:string = "PiCompositeProjection";
-    // tslint:disable-next-line:variable-name
     public static ProjectionalEditor:string = "ProjectionalEditor";
     public static mainProjectionalEditor:string = "MainProjectionalEditor";
     public static styles:string = "projectitStyles";
