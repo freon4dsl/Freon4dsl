@@ -19,7 +19,6 @@ import {
     CONFIGURATION_GEN_FOLDER,
     EDITOR_GEN_FOLDER,
     LANGUAGE_GEN_FOLDER,
-    LangUtil,
     ListUtil,
     LOG2USER,
     Names,
@@ -159,7 +158,7 @@ export class ProjectionTemplate {
     generateBoxProvider(language: PiLanguage, concept: PiClassifier, editDef: PiEditUnit, extraClassifiers: PiClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        this.coreImports.push(...['Box', 'BoxUtils', 'BoxFactory', 'PiElement', 'FreBoxProvider', 'FreBoxProviderBase', 'PiTableDefinition', 'LanguageEnvironment']);
+        this.coreImports.push(...['Box', 'BoxUtils', 'BoxFactory', 'PiElement', 'FreBoxProvider', 'FreBoxProviderBase', 'PiTableDefinition', 'FreProjectionHandler']);
 
         // see which projections there are for this concept
         // myProjections: all non table projections
@@ -191,23 +190,30 @@ export class ProjectionTemplate {
                 }
                        
                 public getContent(projectionName?: string): Box {
-                    let projToUse: string;
-                    if (projectionName !== null && projectionName !== undefined && projectionName.length > 0) {
-                        // if present, select the projection named 'projectionName'
-                        projToUse = projectionName;
-                    } else {
-                        // from the list of projections that are enabled, select the first one that is available for this type of Freon node 
-                        const proj = LanguageEnvironment.getInstance().editor.projection;
-                        projToUse = proj.enabledProjections().filter(p => this.knownProjections.includes(p))[0];
-                    }
-                    ${myProjections.length > 0 ? 
-                        `// select the box to return based on the chosen selection
-                        ${myProjections.map(proj => `if ( projToUse === '${proj.name}') {
-                            return this.${Names.projectionMethod(proj)}();
-                        }`).join(" else ")}                  
-                        // in all other cases, return the default`
-                    : ``
-                    }
+                    const proj = ${Names.environment(language)}.getInstance().editor.projection;
+                    // see if we need to use a custom projection
+                    let BOX: Box = this.findCustomProjection(proj);
+                    if (!!BOX) { // found one, so return it
+                        return BOX;                 
+                    ${myProjections.length > 0 ?
+                        `} else { // get one of the generated methods to create the content box
+                        let projToUse: string;
+                        if (projectionName !== null && projectionName !== undefined && projectionName.length > 0) {
+                            // if present, select the projection named 'projectionName'
+                            projToUse = projectionName;
+                        } else {
+                            // from the list of projections that are enabled, select the first one that is available for this type of Freon node 
+                            const proj = ${Names.environment(language)}.getInstance().editor.projection;
+                            projToUse = proj.enabledProjections().filter(p => this.knownProjections.includes(p))[0];
+                        }
+                        // select the box to return based on the chosen selection
+                            ${myProjections.map(proj => `if ( projToUse === '${proj.name}') {
+                                return this.${Names.projectionMethod(proj)}();
+                            }`).join(" else ")}   
+                            }               
+                            // in all other cases, return the default`
+                        : `}`
+                        }
                     return this.getDefault();
                 }
             
@@ -218,9 +224,9 @@ export class ProjectionTemplate {
                      *  Create a standard binary box to ensure binary expressions can be edited easily
                      */
                     private getDefault(): Box {
-                        const binBox = createDefaultBinaryBox(this._element as ${Names.PiBinaryExpression}, "${symbol}", LanguageEnvironment.getInstance().editor, ${Names.environment(language)}.getInstance().editor.projection);
+                        const binBox = createDefaultBinaryBox(this._element as ${Names.PiBinaryExpression}, "${symbol}", ${Names.environment(language)}.getInstance().editor, ${Names.environment(language)}.getInstance().editor.projection);
                         if (
-                            LanguageEnvironment.getInstance().editor.showBrackets &&
+                            ${Names.environment(language)}.getInstance().editor.showBrackets &&
                             !!this._element.piOwnerDescriptor().owner &&
                             isPiBinaryExpression(this._element.piOwnerDescriptor().owner)
                         ) {
@@ -235,6 +241,23 @@ export class ProjectionTemplate {
                     }`
                 } 
                 
+                private findCustomProjection(proj: FreProjectionHandler): Box {
+                    let BOX: Box = null;
+                    // todo take priorities of custom projections into account
+                    proj.customProjections.forEach(cp => {
+                        if (proj.enabledProjections().includes(cp.name)) {
+                            const customFuction = cp.nodeTypeToBoxMethod.get(this._element.piLanguageConcept());
+                            console.log("FreProjectionHandler custom function for : " + cp.name + ": " + Array.from(cp.nodeTypeToBoxMethod.keys()) + ", element: " + this._element.piLanguageConcept());
+                            if (!!customFuction) {
+                                console.log("FreProjectionHandler enabled projections: " + proj.enabledProjections().map(p => p));
+                                BOX = customFuction.bind(cp)(this._element);
+                                // console.log('FreProjectionHandler found custom BOX: ' + BOX.role + ' for ' + BOX.element.piId());
+                            }
+                        }
+                    });
+                    return BOX;
+                }
+    
                 getTableDefinition(): PiTableDefinition {
                     // from the list of projections that must be shown, select the first one for this type of Freon node
                     let projToUse = ${Names.environment(language)}.getInstance().editor.projection
@@ -507,7 +530,6 @@ export class ProjectionTemplate {
      */
     private generatePropertyAsTable(orientation: PiEditProjectionDirection, property: PiConceptProperty, elementVarName: string, language: PiLanguage): string {
         ListUtil.addIfNotPresent(this.coreImports, "TableUtil");
-        ListUtil.addIfNotPresent(this.coreImports, "LanguageEnvironment");
         // return the projection based on the orientation of the table
         if (orientation === PiEditProjectionDirection.Vertical) {
             return `TableUtil.tableBoxColumnOriented(
@@ -515,14 +537,14 @@ export class ProjectionTemplate {
                 "${property.name}",
                 ${Names.environment(language)}.getInstance().editor.projection.getTableDefinition("${property.type.name}").headers,
                 ${Names.environment(language)}.getInstance().editor.projection.getTableDefinition("${property.type.name}").cells,
-                LanguageEnvironment.getInstance().editor)`;
+                ${Names.environment(language)}.getInstance().editor)`;
         } else {
             return `TableUtil.tableBoxRowOriented(
                 ${elementVarName},
                 "${property.name}",
                 ${Names.environment(language)}.getInstance().editor.projection.getTableDefinition("${property.type.name}").headers,
                 ${Names.environment(language)}.getInstance().editor.projection.getTableDefinition("${property.type.name}").cells,
-                LanguageEnvironment.getInstance().editor)`;
+                ${Names.environment(language)}.getInstance().editor)`;
         }
     }
 
@@ -549,30 +571,28 @@ export class ProjectionTemplate {
         ListUtil.addIfNotPresent(this.modelImports, featureType);
         ListUtil.addIfNotPresent(this.coreImports, Names.PiElementReference);
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtils");
-        ListUtil.addIfNotPresent(this.coreImports, "LanguageEnvironment");
         return `BoxUtils.referenceBox(
                                 ${element},
                                 "${appliedFeature.name}",
                                 (selected: string) => {
                                     ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(
-                                       LanguageEnvironment.getInstance().scoper.getFromVisibleElements(
+                                       ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
                                             ${element},
                                             selected,
                                             "${featureType}"
                                        ) as ${featureType}, "${featureType}");
                                 },
-                                LanguageEnvironment.getInstance().scoper
+                                ${Names.environment(language)}.getInstance().scoper
                )`;
     }
 
     private generateReferenceAsList(language: PiLanguage, listJoin: ListInfo, reference: PiConceptProperty, element: string) {
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtils");
-        ListUtil.addIfNotPresent(this.coreImports, "LanguageEnvironment");
         let joinEntry = this.getJoinEntry(listJoin);
         if (listJoin.direction === PiEditProjectionDirection.Vertical) {
-            return `BoxUtils.verticalReferenceListBox(${element}, "${reference.name}", LanguageEnvironment.getInstance().scoper, ${joinEntry})`;
+            return `BoxUtils.verticalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
         } // else
-        return `BoxUtils.horizontalReferenceListBox(${element}, "${reference.name}", LanguageEnvironment.getInstance().scoper, ${joinEntry})`;
+        return `BoxUtils.horizontalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
     }
 
     private getJoinEntry(listJoin: ListInfo) {

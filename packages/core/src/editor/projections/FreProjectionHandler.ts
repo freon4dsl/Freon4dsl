@@ -3,14 +3,24 @@ import { isNullOrUndefined } from "../../util";
 import { PiElement } from "../../ast";
 import { PiTableDefinition } from "../PiTables";
 import { FreBoxProvider } from "./FreBoxProvider";
+import { FreProjection } from "./FreProjection";
 
 export class FreProjectionHandler {
     private elementToProvider: Map<string, FreBoxProvider> = new Map<string, FreBoxProvider>();
     private projections: Map<string, boolean> = new Map<string, boolean>();  // a map from projection name to enabled
     private conceptNameToProviderConstructor: Map<string, () => FreBoxProvider> = new Map<string, () => FreBoxProvider>([]);
+    private _customProjections: FreProjection[] = [];
 
     initProviderConstructors(constructorMap: Map<string, () => FreBoxProvider>) {
         this.conceptNameToProviderConstructor = constructorMap;
+    }
+
+    get customProjections() : FreProjection[] {
+        return this._customProjections;
+    }
+    addCustomProjection(p: FreProjection) {
+        this._customProjections.push(p); // todo check if already present
+        this.addProjection(p.name);
     }
 
     getBox(element: PiElement): Box {
@@ -20,13 +30,30 @@ export class FreProjectionHandler {
             }
         } catch (e) {
             console.log(e.stack);
-            return new LabelBox(element, "unknown-projection", () => "element is null or undefined ");
+            return null;
         }
-        // console.log('FreProjectionHandler getBox ' + element?.piId() + ", root projection: " + this._myCache.constructor.name)
+        // console.log('FreProjectionHandler getBox ' + element?.piId())
         if (!!element) {
+            // get the box provider
             const provider = this.getBoxProvider(element);
-            const BOX = provider.box;
-            console.log('FreProjectionHandler found BOX: ' + BOX.role + ' for ' + BOX.element.piId());
+            let BOX: Box = null;
+            // see if we need to use a custom projection
+            this._customProjections.forEach(cp => {
+                if (this.enabledProjections().includes(cp.name)){
+                    const customFuction = cp.nodeTypeToBoxMethod.get(element.piLanguageConcept());
+                    console.log('FreProjectionHandler custom function for : ' + cp.name + ': ' + Array.from(cp.nodeTypeToBoxMethod.keys()) + ', element: ' + element.piLanguageConcept() );
+                    if (!!customFuction) {
+                        console.log('FreProjectionHandler enabled projections: ' + this.enabledProjections().map(p => p));
+                        BOX = provider.getCustomBox(customFuction);
+                        console.log('FreProjectionHandler found custom BOX: ' + BOX.role + ' for ' + BOX.element.piId());
+                    }
+                }
+            })
+            // no custom projection found, then use the 'normal' box
+            if (BOX === null) {
+                BOX = provider.box;
+                // console.log("FreProjectionHandler found BOX: " + BOX.role + " for " + BOX.element.piId());
+            }
             return BOX;
         }
         // return a default box if nothing has been  found.

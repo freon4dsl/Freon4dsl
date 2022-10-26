@@ -65,9 +65,9 @@ export class EditorDefTemplate {
              * @param handler
              */
             export function initializeProjections(handler: FreProjectionHandler) {
-                // for (const p of projectitConfiguration.customProjection) {
-                //     handler.addProjection(p);
-                // }         
+                for (const p of projectitConfiguration.customProjection) {
+                    handler.addCustomProjection(p);
+                }         
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
                 `handler.addProjection("${Names.projection(group)}")`).join(";\n")}
                  handler.addProjection("${Names.projection(editorDef.getDefaultProjectiongroup())}");

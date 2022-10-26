@@ -214,7 +214,7 @@ export class BoxUtils {
         if (!propType) {
             throw new Error("Cannot find property type '" + propertyName + "'");
         }
-        console.log("referenceBox for type: " + propType)
+        // console.log("referenceBox for type: " + propType)
         let property = element[propertyName];
         const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "referencebox", index);
         // set the value for use in lists
