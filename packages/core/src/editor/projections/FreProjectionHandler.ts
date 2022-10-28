@@ -73,10 +73,7 @@ export class FreProjectionHandler {
         if (!!element) {
             // get the box provider
             const provider = this.getBoxProvider(element);
-            // if (!provider.mainHandler) {
-            //     provider.mainHandler = this;
-            // }
-            let BOX: Box = provider.box;
+            let BOX: Box = provider.box; // todo remove console.log and adjust return statement
             // console.log("FreProjectionHandler found BOX: " + BOX.role + " for " + BOX.element.piId());
             return BOX;
         }
@@ -87,9 +84,6 @@ export class FreProjectionHandler {
     getTableDefinition(conceptName: string): PiTableDefinition {
         // console.log('FreProjectionHandler getTableDefinition ' + conceptName)
         const boxProvider = this.conceptNameToProviderConstructor.get(conceptName)(this);
-        // if (!boxProvider.mainHandler) {
-        //     boxProvider.mainHandler = this;
-        // }
         let tableDef = boxProvider.getTableDefinition();
         if (!!tableDef) {
             return tableDef;
@@ -120,7 +114,6 @@ export class FreProjectionHandler {
             boxProvider = this.conceptNameToProviderConstructor.get(element.piLanguageConcept())(this);
             this.elementToProvider.set(element.piId(), boxProvider);
             boxProvider.element = element;
-            // boxProvider.mainHandler = this; // todo remove in favor of param to constructor
         }
         return boxProvider;
     }

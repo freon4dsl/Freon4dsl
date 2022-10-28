@@ -181,10 +181,6 @@ export class ProjectionTemplate {
         // todo adjust knownProjections
         const coreText: string = ` 
                 private knownProjections: string[] = ['default'];
-                
-                constructor(mainHandler: FreProjectionHandler) {
-                    super(mainHandler);
-                }
             
                 set element(element: PiElement) {
                     if (Language.getInstance().metaConformsToType(element, '${Names.classifier(concept)}')) {
