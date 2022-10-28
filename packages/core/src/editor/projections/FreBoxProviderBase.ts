@@ -1,15 +1,20 @@
 import { PiElement } from "../../ast";
 import { Box, ElementBox, LabelBox } from "../boxes";
 import { computed, makeObservable } from "mobx";
+import { FreProjectionHandler } from "./FreProjectionHandler";
+import { FreBoxProvider } from "./FreBoxProvider";
+import { PiTableDefinition } from "../PiTables";
 
 /**
  * Base class for all classes that implement FreBoxProvider.
  */
-export class FreBoxProviderBase {
+export class FreBoxProviderBase implements FreBoxProvider {
+    mainHandler: FreProjectionHandler;
     private _mainBox: ElementBox = null; // init is needed for mobx!
     protected _element: PiElement;
 
-    constructor() {
+    constructor(mainHandler: FreProjectionHandler) {
+        this.mainHandler = mainHandler;
         makeObservable(this, {
             box: computed
         });
@@ -71,6 +76,16 @@ export class FreBoxProviderBase {
 
     public getContent(projectionName?: string): Box {
         return new LabelBox(this._element, "unknown-projection", () => "Content should be determined by the appropriate subclass of PiBoxProvider.");
+    }
+
+    public getTableDefinition(): PiTableDefinition {
+        console.log('FreBoxProviderBase.getTableDefinition() should be overwritten by its subclass');
+        return {
+            headers: [this._element.piLanguageConcept()],
+            cells: [(element: PiElement) => {
+                return this.mainHandler.getBox(element);
+            }]
+        };
     }
 }
 

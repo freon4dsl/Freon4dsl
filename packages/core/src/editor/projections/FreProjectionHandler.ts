@@ -5,10 +5,19 @@ import { PiTableDefinition } from "../PiTables";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjection } from "./FreProjection";
 
+/**
+ * This class, of which there should be one instance per editor, registers all
+ * custom projections (of type FreProjection) and all box providers (of type
+ * FreBoxProvider). Based on these registrations in the two main methods 'getBox',
+ * and 'getTableDefinition', it is determined which of these should create the box for
+ * a certain element. However, because box providers have a one-to-one relationship
+ * with nodes (of type PiElement), it is always the box provider that ultimately
+ * returns the requested box.
+ */
 export class FreProjectionHandler {
     private elementToProvider: Map<string, FreBoxProvider> = new Map<string, FreBoxProvider>();
     private projections: Map<string, boolean> = new Map<string, boolean>();  // a map from projection name to enabled
-    private conceptNameToProviderConstructor: Map<string, () => FreBoxProvider> = new Map<string, () => FreBoxProvider>([]);
+    private conceptNameToProviderConstructor: Map<string, (h: FreProjectionHandler) => FreBoxProvider> = new Map<string, (h: FreProjectionHandler) => FreBoxProvider>([]);
     private _customProjections: FreProjection[] = [];
 
     // methods for custom projections
@@ -64,6 +73,9 @@ export class FreProjectionHandler {
         if (!!element) {
             // get the box provider
             const provider = this.getBoxProvider(element);
+            // if (!provider.mainHandler) {
+            //     provider.mainHandler = this;
+            // }
             let BOX: Box = provider.box;
             // console.log("FreProjectionHandler found BOX: " + BOX.role + " for " + BOX.element.piId());
             return BOX;
@@ -74,7 +86,10 @@ export class FreProjectionHandler {
 
     getTableDefinition(conceptName: string): PiTableDefinition {
         // console.log('FreProjectionHandler getTableDefinition ' + conceptName)
-        const boxProvider = this.conceptNameToProviderConstructor.get(conceptName)();
+        const boxProvider = this.conceptNameToProviderConstructor.get(conceptName)(this);
+        // if (!boxProvider.mainHandler) {
+        //     boxProvider.mainHandler = this;
+        // }
         let tableDef = boxProvider.getTableDefinition();
         if (!!tableDef) {
             return tableDef;
@@ -102,9 +117,10 @@ export class FreProjectionHandler {
         // return if present, else create a new provider based on the language concept
         let boxProvider = this.elementToProvider.get(element.piId());
         if (isNullOrUndefined(boxProvider)) {
-            boxProvider = this.conceptNameToProviderConstructor.get(element.piLanguageConcept())();
+            boxProvider = this.conceptNameToProviderConstructor.get(element.piLanguageConcept())(this);
             this.elementToProvider.set(element.piId(), boxProvider);
             boxProvider.element = element;
+            // boxProvider.mainHandler = this; // todo remove in favor of param to constructor
         }
         return boxProvider;
     }
