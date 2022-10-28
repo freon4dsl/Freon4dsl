@@ -180,7 +180,8 @@ export class ProjectionTemplate {
         // start template
         // todo adjust knownProjections
         const coreText: string = ` 
-                private knownProjections: string[] = ['default'];
+                private knownProjections: string[] = [${myProjections.map(p => `"${p.name}"`)}];
+                private knownTableProjections: string[] = [${myTableProjections.map(p => `"${p.name}"`)}];
             
                 set element(element: PiElement) {
                     if (Language.getInstance().metaConformsToType(element, '${Names.classifier(concept)}')) {
@@ -244,7 +245,7 @@ export class ProjectionTemplate {
                     // from the list of projections that must be shown, select the first one for this type of Freon node
                     let projToUse = this.mainHandler
                         .enabledProjections()
-                        .filter(p => this.knownProjections.includes(p))[0];
+                        .filter(p => this.knownTableProjections.includes(p))[0];
                     
                     ${myTableProjections.length > 0 ?
                         `// select the table definition to return based on the chosen selection

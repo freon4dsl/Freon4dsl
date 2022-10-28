@@ -82,7 +82,7 @@ export class FreProjectionHandler {
     }
 
     getTableDefinition(conceptName: string): PiTableDefinition {
-        // console.log('FreProjectionHandler getTableDefinition ' + conceptName)
+        console.log('FreProjectionHandler getTableDefinition ' + conceptName)
         const boxProvider = this.conceptNameToProviderConstructor.get(conceptName)(this);
         let tableDef = boxProvider.getTableDefinition();
         if (!!tableDef) {
