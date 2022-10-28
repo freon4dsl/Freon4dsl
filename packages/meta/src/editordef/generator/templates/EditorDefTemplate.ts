@@ -33,23 +33,20 @@ export class EditorDefTemplate {
             }
         });
 
-        // editorDef.projectiongroups.map(group => {
-        //     editorImports.push(Names.projection(group));
-        // });
-
+        const handlerVarName: string = 'handler';
         // get all the constructors
         let constructors: string[] = [];
         language.concepts.forEach(concept => {
             if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
                 constructors.push(`["${Names.concept(concept)}", () => {
-                        return new ${Names.boxProvider(concept)}()
+                        return new ${Names.boxProvider(concept)}(${handlerVarName})
                     }]`);
                 ListUtil.addIfNotPresent(editorImports, Names.boxProvider(concept));
             }
         });
         language.units.forEach(unit => {
             constructors.push(`["${Names.classifier(unit)}", () => {
-                        return new ${Names.boxProvider(unit)}()
+                        return new ${Names.boxProvider(unit)}(${handlerVarName})
                     }]`);
             ListUtil.addIfNotPresent(editorImports, Names.boxProvider(unit));
         });
@@ -62,16 +59,16 @@ export class EditorDefTemplate {
     
             /**
              * Adds all known projection groups to the root projection.
-             * @param handler
+             * @param ${handlerVarName}
              */
-            export function initializeProjections(handler: FreProjectionHandler) {
+            export function initializeProjections(${handlerVarName}: FreProjectionHandler) {
                 for (const p of projectitConfiguration.customProjection) {
-                    handler.addCustomProjection(p);
+                    ${handlerVarName}.addCustomProjection(p);
                 }         
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
-                `handler.addProjection("${Names.projection(group)}")`).join(";\n")}
-                 handler.addProjection("${Names.projection(editorDef.getDefaultProjectiongroup())}");
-                 handler.initProviderConstructors(new Map<string, () => FreBoxProvider>(
+                `${handlerVarName}.addProjection("${Names.projection(group)}")`).join(";\n")}
+                 ${handlerVarName}.addProjection("${Names.projection(editorDef.getDefaultProjectiongroup())}");
+                 ${handlerVarName}.initProviderConstructors(new Map<string, () => FreBoxProvider>(
                 [
                     ${constructors.map(constr => constr).join(",\n")} 
                 ]));
