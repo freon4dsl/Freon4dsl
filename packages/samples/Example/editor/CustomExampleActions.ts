@@ -5,7 +5,7 @@ import {
     Box,
     PiTriggerType,
     PiEditor,
-    ActionBox,
+    AliasBox,
     PiCaret,
     PiElement,
     OptionalBox,
@@ -91,7 +91,7 @@ export const MANUAL_CUSTOM_ACTIONS: PiCustomAction[] = [
             if( isString(trigger) ) {
                 x.value = Number.parseInt(trigger.toString());
             }
-            parent[(box as ActionBox).propertyName] = x;
+            parent[(box as AliasBox).propertyName] = x;
             return x;
         },
         boxRoleToSelect: RoleProvider.property("NumberLiteralExpression", "value", "numberbox"),

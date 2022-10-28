@@ -374,7 +374,7 @@ export class PiEditor {
     toggleShowBrackets() {
         this._showBrackets = !this._showBrackets;
         console.log('show brackets: ' + this._showBrackets);
-        this.rootBox; // todo make sure the projection is recalculated
+        // this.rootBox; // todo make sure the projection is recalculated
     }
 
     get showBrackets(): boolean {

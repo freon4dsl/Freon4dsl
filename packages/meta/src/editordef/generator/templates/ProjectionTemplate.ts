@@ -11,7 +11,7 @@ import {
     PiClassifier,
     PiConceptProperty,
     PiExpressionConcept,
-    PiLanguage, PiLimitedConcept,
+    PiLanguage,
     PiPrimitiveProperty, PiPrimitiveType,
     PiProperty
 } from "../../../languagedef/metalanguage";
@@ -51,114 +51,114 @@ export class ProjectionTemplate {
         }
     }
 
-    generateBoxProviderCache(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
-        // get the imports
-        let imports: string[] = [];
-        language.concepts.forEach(concept => {
-            if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
-                imports.push(`import { ${Names.boxProvider(concept)}  } from "./${Names.boxProvider(concept)}";`);
-            }
-        });
-        language.units.forEach(unit => {
-            imports.push(`import { ${Names.boxProvider(unit)}  } from "./${Names.boxProvider(unit)}";`);
-        });
-
-        // get all the constructors
-        let constructors: string[] = [];
-        language.concepts.forEach(concept => {
-            if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
-                constructors.push(`["${Names.concept(concept)}", () => {
-                        return new ${Names.boxProvider(concept)}()
-                    }]`);
-            }
-        });
-        language.units.forEach(unit => {
-            constructors.push(`["${Names.classifier(unit)}", () => {
-                        return new ${Names.boxProvider(unit)}()
-                    }]`);
-        });
-
-        // todo add methods for the projections names
-
-        // template starts here
-        return '';
-        // return `
-        // import { isNullOrUndefined, PiBoxProvider, PiBoxProviderCache, PiElement, PiTableDefinition } from "@projectit/core";
-        // ${imports.map(imp => imp).join("\n")}
-        //
-        // export class ${Names.boxProviderCache(language)} implements PiBoxProviderCache {
-        //     private static theInstance: ${Names.boxProviderCache(language)} = null; // the only instance of this class
-        //
-        //     /**
-        //      * This method implements the singleton pattern
-        //      */
-        //     public static getInstance(): ${Names.boxProviderCache(language)} {
-        //         if (this.theInstance === undefined || this.theInstance === null) {
-        //             this.theInstance = new ${Names.boxProviderCache(language)}();
-        //         }
-        //         return this.theInstance;
-        //     }
-        //
-        //     /**
-        //      * A private constructor, as demanded by the singleton pattern.
-        //      */
-        //     private constructor() {
-        //     }
-        //
-        //     private elementToProvider: Map<string, PiBoxProvider> = new Map<string, PiBoxProvider>();
-        //     private conceptNameToProviderConstructor: Map<string, () => PiBoxProvider> = new Map<string, () => PiBoxProvider>(
-        //         [
-        //             ${constructors.map(constr => constr).join(",\n")}
-        //         ]);
-        //
-        //     addBoxProvider(elementId: string, provider: PiBoxProvider) {
-        //         this.elementToProvider.set(elementId, provider);
-        //     }
-        //
-        //     getBoxProvider(element: PiElement): PiBoxProvider {
-        //         if (isNullOrUndefined(element)) {
-        //             throw Error('${Names.boxProviderCache(language)}.getBoxProvider: element is null/undefined');
-        //         }
-        //
-        //         // return if present, else create a new provider based on the language concept
-        //         let boxProvider = this.elementToProvider.get(element.piId());
-        //         if (isNullOrUndefined(boxProvider)) {
-        //             boxProvider = this.conceptNameToProviderConstructor.get(element.piLanguageConcept())();
-        //             this.elementToProvider.set(element.piId(), boxProvider);
-        //             boxProvider.element = element;
-        //         }
-        //         return boxProvider;
-        //     }
-        //
-        //     getProjectionNames(): string[] {
-        //         return ['default'];
-        //     }
-        //
-        //     getConstructor(conceptName: string): () => PiBoxProvider {
-        //         return this.conceptNameToProviderConstructor.get(conceptName);
-        //     }
-        //
-        //     getTableDefinition(conceptName: string): PiTableDefinition {
-        //         let boxProvider: PiBoxProvider = this.conceptNameToProviderConstructor.get(conceptName)();
-        //         const result = boxProvider.getTableDefinition();
-        //         if (result !== null) {
-        //             return result;
-        //         }
-        //         // return a default box if nothing has been found.
-        //         return {
-        //             headers: [conceptName],
-        //             cells: [(element: PiElement) => {
-        //                 return this.getBoxProvider(element).box;
-        //             }]
-        //         };
-        //     }
-        // }`;
-    }
+    // generateBoxProviderCache(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
+    //     // get the imports
+    //     let imports: string[] = [];
+    //     language.concepts.forEach(concept => {
+    //         if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
+    //             imports.push(`import { ${Names.boxProvider(concept)}  } from "./${Names.boxProvider(concept)}";`);
+    //         }
+    //     });
+    //     language.units.forEach(unit => {
+    //         imports.push(`import { ${Names.boxProvider(unit)}  } from "./${Names.boxProvider(unit)}";`);
+    //     });
+    //
+    //     // get all the constructors
+    //     let constructors: string[] = [];
+    //     language.concepts.forEach(concept => {
+    //         if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
+    //             constructors.push(`["${Names.concept(concept)}", () => {
+    //                     return new ${Names.boxProvider(concept)}()
+    //                 }]`);
+    //         }
+    //     });
+    //     language.units.forEach(unit => {
+    //         constructors.push(`["${Names.classifier(unit)}", () => {
+    //                     return new ${Names.boxProvider(unit)}()
+    //                 }]`);
+    //     });
+    //
+    //     // todo add methods for the projections names
+    //
+    //     // template starts here
+    //     return '';
+    //     // return `
+    //     // import { isNullOrUndefined, PiBoxProvider, PiBoxProviderCache, PiElement, PiTableDefinition } from "@projectit/core";
+    //     // ${imports.map(imp => imp).join("\n")}
+    //     //
+    //     // export class ${Names.boxProviderCache(language)} implements PiBoxProviderCache {
+    //     //     private static theInstance: ${Names.boxProviderCache(language)} = null; // the only instance of this class
+    //     //
+    //     //     /**
+    //     //      * This method implements the singleton pattern
+    //     //      */
+    //     //     public static getInstance(): ${Names.boxProviderCache(language)} {
+    //     //         if (this.theInstance === undefined || this.theInstance === null) {
+    //     //             this.theInstance = new ${Names.boxProviderCache(language)}();
+    //     //         }
+    //     //         return this.theInstance;
+    //     //     }
+    //     //
+    //     //     /**
+    //     //      * A private constructor, as demanded by the singleton pattern.
+    //     //      */
+    //     //     private constructor() {
+    //     //     }
+    //     //
+    //     //     private elementToProvider: Map<string, PiBoxProvider> = new Map<string, PiBoxProvider>();
+    //     //     private conceptNameToProviderConstructor: Map<string, () => PiBoxProvider> = new Map<string, () => PiBoxProvider>(
+    //     //         [
+    //     //             ${constructors.map(constr => constr).join(",\n")}
+    //     //         ]);
+    //     //
+    //     //     addBoxProvider(elementId: string, provider: PiBoxProvider) {
+    //     //         this.elementToProvider.set(elementId, provider);
+    //     //     }
+    //     //
+    //     //     getBoxProvider(element: PiElement): PiBoxProvider {
+    //     //         if (isNullOrUndefined(element)) {
+    //     //             throw Error('${Names.boxProviderCache(language)}.getBoxProvider: element is null/undefined');
+    //     //         }
+    //     //
+    //     //         // return if present, else create a new provider based on the language concept
+    //     //         let boxProvider = this.elementToProvider.get(element.piId());
+    //     //         if (isNullOrUndefined(boxProvider)) {
+    //     //             boxProvider = this.conceptNameToProviderConstructor.get(element.piLanguageConcept())();
+    //     //             this.elementToProvider.set(element.piId(), boxProvider);
+    //     //             boxProvider.element = element;
+    //     //         }
+    //     //         return boxProvider;
+    //     //     }
+    //     //
+    //     //     getProjectionNames(): string[] {
+    //     //         return ['default'];
+    //     //     }
+    //     //
+    //     //     getConstructor(conceptName: string): () => PiBoxProvider {
+    //     //         return this.conceptNameToProviderConstructor.get(conceptName);
+    //     //     }
+    //     //
+    //     //     getTableDefinition(conceptName: string): PiTableDefinition {
+    //     //         let boxProvider: PiBoxProvider = this.conceptNameToProviderConstructor.get(conceptName)();
+    //     //         const result = boxProvider.getTableDefinition();
+    //     //         if (result !== null) {
+    //     //             return result;
+    //     //         }
+    //     //         // return a default box if nothing has been found.
+    //     //         return {
+    //     //             headers: [conceptName],
+    //     //             cells: [(element: PiElement) => {
+    //     //                 return this.getBoxProvider(element).box;
+    //     //             }]
+    //     //         };
+    //     //     }
+    //     // }`;
+    // }
 
     generateBoxProvider(language: PiLanguage, concept: PiClassifier, editDef: PiEditUnit, extraClassifiers: PiClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        this.coreImports.push(...['Box', 'BoxUtils', 'BoxFactory', 'PiElement', 'FreBoxProvider', 'FreBoxProviderBase', 'PiTableDefinition', 'FreProjectionHandler', 'Language']);
+        this.coreImports.push(...['Box', 'BoxUtils', 'BoxFactory', 'PiElement', 'FreBoxProvider', 'FreBoxProviderBase', 'PiTableDefinition', 'Language']);
 
         // see which projections there are for this concept
         // myProjections: all non table projections
@@ -173,8 +173,6 @@ export class ProjectionTemplate {
             isBinExp = true;
             symbol = editDef.getDefaultProjectiongroup().findExtrasForType(concept).symbol;
             this.coreImports.push(...['createDefaultBinaryBox', 'isPiBinaryExpression', Names.PiBinaryExpression]);
-        } else {
-            this.coreImports.push('NewBoxUtils');
         }
 
         // start template
@@ -192,7 +190,7 @@ export class ProjectionTemplate {
                 public getContent(projectionName?: string): Box {
                     const proj = ${Names.environment(language)}.getInstance().editor.projection;
                     // see if we need to use a custom projection
-                    let BOX: Box = this.findCustomProjection(proj);
+                    let BOX: Box = proj.executeCustomProjection(this._element, projectionName);
                     if (!!BOX) { // found one, so return it
                         return BOX;                 
                     ${myProjections.length > 0 ?
@@ -240,22 +238,6 @@ export class ProjectionTemplate {
                         }
                     }`
                 } 
-                
-                private findCustomProjection(proj: FreProjectionHandler): Box {
-                    let BOX: Box = null;
-                    // todo take priorities of custom projections into account
-                    proj.customProjections.forEach(cp => {
-                        if (proj.enabledProjections().includes(cp.name)) {
-                            const customFuction = cp.nodeTypeToBoxMethod.get(this._element.piLanguageConcept());
-                            if (!!customFuction) {
-                                // console.log("FreProjectionHandler enabled projections: " + proj.enabledProjections().map(p => p));
-                                BOX = customFuction.bind(cp)(this._element);
-                                // console.log('FreProjectionHandler found custom BOX: ' + BOX.role + ' for ' + BOX.element.piId());
-                            }
-                        }
-                    });
-                    return BOX;
-                }
     
                 getTableDefinition(): PiTableDefinition {
                     // from the list of projections that must be shown, select the first one for this type of Freon node
@@ -499,7 +481,7 @@ export class ProjectionTemplate {
                     }
                 } else { // single element
                     ListUtil.addIfNotPresent(this.coreImports, "BoxUtils");
-                    result += `NewBoxUtils.getBoxOrAlias(${elementVarName}, "${property.name}", "${property.type.name}", ${Names.environment(language)}.getInstance().editor.projection) `;
+                    result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${property.name}", "${property.type.name}", ${Names.environment(language)}.getInstance().editor.projection) `;
                 }
             } else { // reference
                 if (property.isList) {
@@ -553,16 +535,16 @@ export class ProjectionTemplate {
      * @param item
      * @param propertyConcept   The property for which the projection is generated.
      * @param elementVarName    The name of the element parameter of the getBox projection method.
-     * @param projNameStr
+     * @param language
      * @private
      */
     private generatePartAsList(item: PiEditPropertyProjection, propertyConcept: PiConceptProperty, elementVarName: string, language: PiLanguage) {
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtils");
         let joinEntry = this.getJoinEntry(item.listInfo);
         if (item.listInfo.direction === PiEditProjectionDirection.Vertical) {
-            return `NewBoxUtils.verticalPartListBox(${elementVarName}, ${elementVarName}.${item.property.name}, "${propertyConcept.name}", ${joinEntry}, ${Names.environment(language)}.getInstance().editor.projection)`;
+            return `BoxUtils.verticalPartListBox(${elementVarName}, ${elementVarName}.${item.property.name}, "${propertyConcept.name}", ${joinEntry}, ${Names.environment(language)}.getInstance().editor.projection)`;
         } // else
-        return `NewBoxUtils.horizontalPartListBox(${elementVarName}, ${elementVarName}.${item.property.name}, "${propertyConcept.name}", ${joinEntry}, ${Names.environment(language)}.getInstance().editor.projection)`;
+        return `BoxUtils.horizontalPartListBox(${elementVarName}, ${elementVarName}.${item.property.name}, "${propertyConcept.name}", ${joinEntry}, ${Names.environment(language)}.getInstance().editor.projection)`;
     }
 
     private generateReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {

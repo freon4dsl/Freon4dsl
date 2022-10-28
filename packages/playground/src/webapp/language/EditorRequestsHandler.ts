@@ -40,7 +40,7 @@ export class EditorRequestsHandler {
     }
 
     /**
-     * Makes sure that the editor show the current unit using the projections selected or unselected by the user
+     * Makes sure that the editor shows the current unit using the projections selected or unselected by the user
      * @param name
      */
     disableProjection(name: string): void {

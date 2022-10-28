@@ -4,6 +4,7 @@ import { PiTableDefinition } from "../PiTables";
 
 
 export interface FreBoxProvider {
+    // todo probably good idea to add a link to the FreProjectionHandler here, to avoid looking up
     set element(element: PiElement);
 
     get box(): Box;

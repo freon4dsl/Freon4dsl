@@ -4,7 +4,7 @@ import { Box, BoxFactory, HorizontalListBox, VerticalListBox } from "../boxes";
 import { Language } from "../../language";
 import { FreProjectionHandler } from "./FreProjectionHandler";
 
-
+// todo remove this class: all functions should be part of BoxUtils
 export class NewBoxUtils {
     static separatorName: string = "Separator";
     static terminatorName: string = "Terminator";

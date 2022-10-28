@@ -26,6 +26,7 @@ import { NBSP } from "../index";
 import { BehaviorExecutionResult } from "./BehaviorUtils";
 
 // const LOGGER = new PiLogger("PiExpressionHelpers");
+// todo maybe moved these functions to BoxUtils?
 
 export function createDefaultExpressionBox(exp: PiExpression, role: string, children: Box[], initializer?: Partial<HorizontalListBox>): Box {
     const isLeftMost: Boolean = BTREE.isLeftMostChild(exp);

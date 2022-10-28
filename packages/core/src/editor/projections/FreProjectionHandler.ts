@@ -11,6 +11,7 @@ export class FreProjectionHandler {
     private conceptNameToProviderConstructor: Map<string, () => FreBoxProvider> = new Map<string, () => FreBoxProvider>([]);
     private _customProjections: FreProjection[] = [];
 
+    // methods for custom projections
     initProviderConstructors(constructorMap: Map<string, () => FreBoxProvider>) {
         this.conceptNameToProviderConstructor = constructorMap;
     }
@@ -23,6 +24,33 @@ export class FreProjectionHandler {
         this.addProjection(p.name);
     }
 
+    executeCustomProjection(element: PiElement, projectionName?: string): Box {
+        let BOX: Box = null;
+        let customFuction: (node: PiElement) => Box = null;
+        this.customProjections.forEach(cp => {
+            // first look for the specific projection that is asked for
+            if (projectionName !== null && projectionName !== undefined && projectionName.length > 0) {
+                if (cp.name === projectionName) {
+                    // bind(cp) binds the projection 'cp' to the 'this' variable, for use within the custom function
+                    customFuction = cp.nodeTypeToBoxMethod.get(element.piLanguageConcept())?.bind(cp);
+                }
+            }
+            // no specific projection asked for, then find the first in the enabled projections
+            // todo take priorities of custom projections into account
+            if (this.enabledProjections().includes(cp.name)) {
+                // bind(cp) binds the projection 'cp' to the 'this' variable, for use within the custom function
+                customFuction = cp.nodeTypeToBoxMethod.get(element.piLanguageConcept())?.bind(cp);
+            }
+        });
+        if (!!customFuction) {
+            // console.log("FreProjectionHandler enabled projections: " + proj.enabledProjections().map(p => p));
+            BOX = customFuction(element);
+            // console.log('FreProjectionHandler found custom BOX: ' + BOX.role + ' for ' + BOX.element.piId());
+        }
+        return BOX;
+    }
+
+    // the main methods
     getBox(element: PiElement): Box {
         try {
             if (isNullOrUndefined(element)) {
@@ -36,24 +64,8 @@ export class FreProjectionHandler {
         if (!!element) {
             // get the box provider
             const provider = this.getBoxProvider(element);
-            let BOX: Box = null;
-            // see if we need to use a custom projection
-            this._customProjections.forEach(cp => {
-                if (this.enabledProjections().includes(cp.name)){
-                    const customFuction = cp.nodeTypeToBoxMethod.get(element.piLanguageConcept());
-                    console.log('FreProjectionHandler custom function for : ' + cp.name + ': ' + Array.from(cp.nodeTypeToBoxMethod.keys()) + ', element: ' + element.piLanguageConcept() );
-                    if (!!customFuction) {
-                        console.log('FreProjectionHandler enabled projections: ' + this.enabledProjections().map(p => p));
-                        BOX = provider.getCustomBox(customFuction);
-                        console.log('FreProjectionHandler found custom BOX: ' + BOX.role + ' for ' + BOX.element.piId());
-                    }
-                }
-            })
-            // no custom projection found, then use the 'normal' box
-            if (BOX === null) {
-                BOX = provider.box;
-                // console.log("FreProjectionHandler found BOX: " + BOX.role + " for " + BOX.element.piId());
-            }
+            let BOX: Box = provider.box;
+            // console.log("FreProjectionHandler found BOX: " + BOX.role + " for " + BOX.element.piId());
             return BOX;
         }
         // return a default box if nothing has been  found.
@@ -61,26 +73,23 @@ export class FreProjectionHandler {
     }
 
     getTableDefinition(conceptName: string): PiTableDefinition {
-        // console.log('FreProjectionHandler getTableDefinition ' + conceptName + ", root projection: " + this._myCache.constructor.name)
-        // todo re-implement this
-        // for (let p of this.projections.values()) {
-        //     if (p.isEnabled) {
-        //         const result = p.getTableDefinition(conceptName);
-        //         if (result !== null) {
-        //             return result;
-        //         }
-        //     }
-        // }
-        // return a default box if nothing has been found.
-        return {
-            headers: [conceptName],
-            cells: [(element: PiElement) => {
-                return this.getBox(element);
-            }]
-        };
+        // console.log('FreProjectionHandler getTableDefinition ' + conceptName)
+        const boxProvider = this.conceptNameToProviderConstructor.get(conceptName)();
+        let tableDef = boxProvider.getTableDefinition();
+        if (!!tableDef) {
+            return tableDef;
+        } else {
+            // return default values if nothing has been found.
+            return {
+                headers: [conceptName],
+                cells: [(element: PiElement) => {
+                    return this.getBox(element);
+                }]
+            };
+        }
     }
 
-    // functions for the boxproviders
+    // methods for registring the boxproviders
     addBoxProvider(elementId: string, provider: FreBoxProvider) {
         this.elementToProvider.set(elementId, provider);
     }
@@ -100,21 +109,24 @@ export class FreProjectionHandler {
         return boxProvider;
     }
 
-    // functions for the projections
+    // functions for registring the projections
     addProjection(p: string) {
         this.projections.set(p, true);
     }
 
     enableProjection(name: string): void {
+        // todo maybe enable/disable all projections in one method?
         BoxFactory.clearCaches();
         console.log("Composite: enabling Projection " + name);
         this.projections.set(name, true);
+        // todo make sure the editor.rootProjection is recalculated
     }
 
     disableProjection(name: string): void {
         BoxFactory.clearCaches();
         console.log("Composite: disabling Projection " + name);
         this.projections.set(name, false);
+        // todo make sure the editor.rootProjection is recalculated
     }
 
     /**
