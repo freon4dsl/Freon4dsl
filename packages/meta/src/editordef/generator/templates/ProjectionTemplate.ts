@@ -175,6 +175,7 @@ export class ProjectionTemplate {
             isBinExp = true;
             symbol = editDef.getDefaultProjectiongroup().findExtrasForType(concept).symbol;
             this.coreImports.push(...['createDefaultBinaryBox', 'isPiBinaryExpression', Names.PiBinaryExpression]);
+            this.configImports.push(Names.environment(language));
         }
 
         // start template
@@ -196,14 +197,16 @@ export class ProjectionTemplate {
                 }
                        
                 public getContent(projectionName: string): Box {
-                console.log("GET CONTENT " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept() + ' ' +  this.usedProjection);
+                console.log("GET CONTENT " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept() + ' ' + projectionName);
                     // see if we need to use a custom projection
-                    let BOX: Box = this.mainHandler.executeCustomProjection(this._element, projectionName);
-                    if (!!BOX) { // found one, so return it
-                        return BOX;                 
+                    if (!this.knownProjections.includes(projectionName)) {
+                        let BOX: Box = this.mainHandler.executeCustomProjection(this._element, projectionName);
+                        if (!!BOX) { // found one, so return it
+                            return BOX;
+                        }      
                     ${myProjections.length > 0 ?
-                        `} else { // select the box to return based on the chosen selection
-                            ${myProjections.map(proj => `if (this.usedProjection === '${proj.name}') {
+                        `} else { // select the box to return based on the projectionName
+                            ${myProjections.map(proj => `if (projectionName === '${proj.name}') {
                                 return this.${Names.projectionMethod(proj)}();
                             }`).join(" else ")}   
                             }               
@@ -301,6 +304,7 @@ export class ProjectionTemplate {
         // reset the imports
         this.modelImports = [];
         this.coreImports = [];
+        this.configImports = [];
 
         // reset the variables for super projections
         this.useSuper = false;
@@ -311,6 +315,7 @@ export class ProjectionTemplate {
     }
 
     private createdGetSuperMethod(supers: PiClassifier[], elementVarName: string): string {
+        ListUtil.addIfNotPresent(this.coreImports, "FreBoxProvider");
         return `
                 /**
                  * This method returns the content for one of the superconcepts or interfaces of 'this._element'.
@@ -325,7 +330,7 @@ export class ProjectionTemplate {
                     let superBoxProvider: FreBoxProvider = null;
                     switch (superName) {
                         ${supers.map(s => `case "${s.name}": {
-                            superBoxProvider = new ${Names.boxProvider(s)}();
+                            superBoxProvider = new ${Names.boxProvider(s)}(this.mainHandler);
                             break;
                         }`).join("\n")}
                     }
@@ -512,6 +517,7 @@ export class ProjectionTemplate {
      */
     private generatePropertyAsTable(orientation: PiEditProjectionDirection, property: PiConceptProperty, elementVarName: string, language: PiLanguage): string {
         ListUtil.addIfNotPresent(this.coreImports, "TableUtil");
+        ListUtil.addIfNotPresent(this.configImports, Names.environment(language));
         // return the projection based on the orientation of the table
         if (orientation === PiEditProjectionDirection.Vertical) {
             return `TableUtil.tableBoxColumnOriented(

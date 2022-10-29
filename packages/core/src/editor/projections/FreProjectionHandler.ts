@@ -42,24 +42,12 @@ export class FreProjectionHandler {
         this.addProjection(p.name);
     }
 
-    executeCustomProjection(element: PiElement, projectionName?: string): Box {
+    executeCustomProjection(element: PiElement, projectionName: string): Box {
         let BOX: Box = null;
-        let customFuction: (node: PiElement) => Box = null;
-        this.customProjections.forEach(cp => {
-            // first look for the specific projection that is asked for
-            if (projectionName !== null && projectionName !== undefined && projectionName.length > 0) {
-                if (cp.name === projectionName) {
-                    // bind(cp) binds the projection 'cp' to the 'this' variable, for use within the custom function
-                    customFuction = cp.nodeTypeToBoxMethod.get(element.piLanguageConcept())?.bind(cp);
-                }
-            }
-            // no specific projection asked for, then find the first in the enabled projections
-            // todo take priorities of custom projections into account
-            if (this.enabledProjections().includes(cp.name)) {
-                // bind(cp) binds the projection 'cp' to the 'this' variable, for use within the custom function
-                customFuction = cp.nodeTypeToBoxMethod.get(element.piLanguageConcept())?.bind(cp);
-            }
-        });
+        const customToUse = this.customProjections.find(cp => cp.name === projectionName);
+        // bind(customToUse) binds the projection 'customToUse' to the 'this' variable, for use within the custom function
+        let customFuction: (node: PiElement) => Box = customToUse.nodeTypeToBoxMethod.get(element.piLanguageConcept())?.bind(customToUse);
+
         if (!!customFuction) {
             // console.log("FreProjectionHandler enabled projections: " + proj.enabledProjections().map(p => p));
             BOX = customFuction(element);
