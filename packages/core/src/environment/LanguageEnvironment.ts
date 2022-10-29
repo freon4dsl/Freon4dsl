@@ -34,10 +34,9 @@ export class LanguageEnvironment implements PiEnvironment {
     public unitNames: string[];
     public validator: PiValidator;
     public writer: PiWriter;
-    public interpreter: FreonInterpreter;
+    public interpreter: FreonInterpreter<Object, Object>;
 
     public newModel(modelName: string): PiModel {
         return undefined;
     }
-
 }

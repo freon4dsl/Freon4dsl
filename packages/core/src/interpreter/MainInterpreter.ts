@@ -1,30 +1,23 @@
 import { InterpreterContext } from "./InterpreterContext";
 import { InterpreterError } from "./InterpreterException";
 import { InterpreterTracer } from "./InterpreterTracer";
-import {
-    ConceptFunction,
-    EvaluateFunction,
-    IMainInterpreter,
-    InitFunction,
-    OwningPropertyFunction
-} from "./IMainInterpreter";
-import { isRtError, RtError, RtObject } from "./runtime/index";
-import { RtArray } from "./runtime/RtArray";
+import { ConceptFunction, EvaluateFunction, IMainInterpreter, InitFunction, OwningPropertyFunction } from "./IMainInterpreter";
+import { isRtError } from "./runtime/index";
 
 /**
  * The main interpreter class, usually hidden by a facade specific for a project.
  */
-export class MainInterpreter implements IMainInterpreter {
+export class MainInterpreter<ASTNODE, RTVALUE> implements IMainInterpreter<ASTNODE, RTVALUE> {
     // Lookup map of all evaluate functions from all interpreters
-    private functions: Map<string, EvaluateFunction> = new Map<string, EvaluateFunction>();
+    private functions: Map<string, EvaluateFunction<ASTNODE, RTVALUE>> = new Map<string, EvaluateFunction<ASTNODE, RTVALUE>>();
     private tracing: boolean = false;
-    private tracer: InterpreterTracer;
+    private tracer: InterpreterTracer<ASTNODE, RTVALUE>;
     // Function to get the concept name / type of a node
-    private getConcept: ConceptFunction;
+    private getConcept: ConceptFunction<ASTNODE>;
     // Function to get the name of the property in which a node is stored.
-    private getProperty: OwningPropertyFunction;
+    private getProperty: OwningPropertyFunction<ASTNODE>;
 
-    private static privateInstance ;
+    private static privateInstance;
 
     /**
      *
@@ -32,17 +25,23 @@ export class MainInterpreter implements IMainInterpreter {
      * @param getConceptFunction  Function that gets the typeName from an object
      * @param getPropertyFunction Function that gets the property name in which an object is stored in its parent
      */
-    public static instance(init: InitFunction, getConceptFunction: ConceptFunction, getPropertyFunction: OwningPropertyFunction): IMainInterpreter {
+
+    public static instance(
+        init: InitFunction<any, any>,
+        getConceptFunction: ConceptFunction<any>,
+        getPropertyFunction: OwningPropertyFunction<any>
+    ): IMainInterpreter<any, any> {
         if (MainInterpreter.privateInstance === undefined) {
             MainInterpreter.privateInstance = new MainInterpreter(init, getConceptFunction, getPropertyFunction);
         }
+        console.log("MainInterpreter.instance is now " + MainInterpreter.privateInstance);
         return MainInterpreter.privateInstance;
     }
 
-    constructor(init: InitFunction, getConceptFunction: ConceptFunction, getPropertyFunction: OwningPropertyFunction){``
+    constructor(init: InitFunction<ASTNODE, RTVALUE>, getConceptFunction: ConceptFunction<ASTNODE>, getPropertyFunction: OwningPropertyFunction<ASTNODE>) {
         init(this);
         this.getConcept = getConceptFunction;
-        this.getProperty = getPropertyFunction
+        this.getProperty = getPropertyFunction;
         this.tracer = new InterpreterTracer(getConceptFunction, getPropertyFunction);
     }
 
@@ -53,7 +52,7 @@ export class MainInterpreter implements IMainInterpreter {
     /**
      * @see IMainInterpreter.registerFunction
      */
-    public registerFunction(name: string, func: EvaluateFunction): void {
+    public registerFunction(name: string, func: EvaluateFunction<ASTNODE, RTVALUE>): void {
         this.functions.set(name, func);
     }
 
@@ -67,7 +66,7 @@ export class MainInterpreter implements IMainInterpreter {
     /**
      * @see IMainInterpreter.getTrace
      */
-    public getTrace(): InterpreterTracer {
+    public getTrace(): InterpreterTracer<ASTNODE, RTVALUE> {
         return this.tracer;
     }
 
@@ -75,7 +74,7 @@ export class MainInterpreter implements IMainInterpreter {
      * @see IMainInterpreter.evaluate
      * Evaluate `node` with context `ctx` aand return the value
      */
-    public evaluate(node: Object, ctx: InterpreterContext): RtObject {
+    public evaluate(node: ASTNODE, ctx: InterpreterContext<ASTNODE, RTVALUE>): RTVALUE {
         if (node === undefined || node === null) {
             throw new InterpreterError("Cannot interpret node that is null or undefined");
         }
@@ -86,7 +85,7 @@ export class MainInterpreter implements IMainInterpreter {
         if (this.tracing) {
             this.tracer.start(node, ctx);
         }
-        const value: RtObject = interpreterFunction(node, ctx);
+        const value: RTVALUE = interpreterFunction(node, ctx);
         if (value === undefined) {
             console.log("Concept " + this.getConcept(node) + " evaluates to undefined");
         }
@@ -95,7 +94,7 @@ export class MainInterpreter implements IMainInterpreter {
             this.tracer.end(node);
         }
         if (isRtError(value)) {
-            console.error(value.toString())
+            console.error(value.toString());
             throw value;
         }
         return value;

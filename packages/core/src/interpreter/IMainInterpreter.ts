@@ -1,28 +1,27 @@
 import { InterpreterContext } from "./InterpreterContext";
 import { InterpreterTracer } from "./InterpreterTracer";
-import { RtObject } from "./runtime/RtObject";
 
-export type ConceptFunction = (node: Object) => string;
-export type OwningPropertyFunction = (node: Object) => string;
-export type EvaluateFunction = (node: Object, ctx: InterpreterContext) => RtObject;
-export type InitFunction = (i: IMainInterpreter) => void;
+export type ConceptFunction<ASTNODE> = (node: ASTNODE) => string;
+export type OwningPropertyFunction<ASTNODE> = (node: ASTNODE) => string;
+export type EvaluateFunction<ASTNODE, RTVALUE> = (node: Object, ctx: InterpreterContext<ASTNODE, RTVALUE>) => RTVALUE;
+export type InitFunction<ASTNODE, RTVALUE> = (i: IMainInterpreter<ASTNODE, RTVALUE>) => void;
 
-export interface IMainInterpreter {
+export interface IMainInterpreter<ASTNODE, RTVALUE> {
     /**
      * Register function `func`  for node with type `name`
      */
-    registerFunction(name: string, func: EvaluateFunction): void;
+    registerFunction(name: string, func: EvaluateFunction<ASTNODE, RTVALUE>): void;
 
     /**
      * Evaluate `node` with context `ctx` and return the  value.
      */
-    evaluate(node: Object, ctx: InterpreterContext): RtObject;
+    evaluate(node: ASTNODE, ctx: InterpreterContext<ASTNODE, RTVALUE>): RTVALUE;
 
     /**
      * Get the tracer instance that is filled by `evaluate`.
      * Used to print a pretty printed trace of the full calculation.
      */
-    getTrace(): InterpreterTracer;
+    getTrace(): InterpreterTracer<ASTNODE, RTVALUE>;
 
     /**
      * Turn tracing on or off.

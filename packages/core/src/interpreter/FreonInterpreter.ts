@@ -1,10 +1,9 @@
 import { InterpreterTracer } from "./InterpreterTracer";
-import { RtObject } from "./runtime/RtObject";
 
-export interface FreonInterpreter {
+export interface FreonInterpreter<ASTNODE, RTVALUE> {
     setTracing(value: boolean): void;
 
-    getTrace(): InterpreterTracer;
+    getTrace(): InterpreterTracer<ASTNODE, RTVALUE>;
 
-    evaluate(node: Object): RtObject;
+    evaluate(node: ASTNODE): RTVALUE;
 }
