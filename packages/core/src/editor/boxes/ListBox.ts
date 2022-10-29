@@ -15,13 +15,13 @@ export abstract class ListBox extends Box {
 
     protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role);
-        makeObservable<ListBox, "_children">(this, {
-           _children: observable,
-            insertChild: action,
-            addChild: action,
-            clearChildren: action,
-            addChildren: action,
-        });
+        // makeObservable<ListBox, "_children">(this, {
+        //    _children: observable,
+        //     insertChild: action,
+        //     addChild: action,
+        //     clearChildren: action,
+        //     addChildren: action,
+        // });
         PiUtils.initializeObject(this, initializer);
         if (children) {
             children.forEach(b => this.addChild(b));

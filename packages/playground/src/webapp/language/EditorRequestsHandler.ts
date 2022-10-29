@@ -31,11 +31,11 @@ export class EditorRequestsHandler {
      * Makes sure that the editor show the current unit using the projections selected by the user
      * @param name
      */
-    enableProjection(name: string): void {
-        LOGGER.log("enabling Projection " + name);
+    enableProjections(names: string[]): void {
+        LOGGER.log("enabling Projection " + names);
         const proj = editorEnvironment.editor.projection;
         if (proj instanceof FreProjectionHandler) {
-            proj.enableProjection(name);
+            proj.enableProjections(names);
         }
     }
 
@@ -43,13 +43,13 @@ export class EditorRequestsHandler {
      * Makes sure that the editor shows the current unit using the projections selected or unselected by the user
      * @param name
      */
-    disableProjection(name: string): void {
-        LOGGER.log("disabling Projection " + name);
-        const proj = editorEnvironment.editor.projection;
-        if (proj instanceof FreProjectionHandler) {
-            proj.disableProjection(name);
-        }
-    }
+    // disableProjection(name: string): void {
+    //     LOGGER.log("disabling Projection " + name);
+    //     const proj = editorEnvironment.editor.projection;
+    //     if (proj instanceof FreProjectionHandler) {
+    //         proj.disableProjection(name);
+    //     }
+    // }
 
     redo() {
         const unitInEditor = EditorState.getInstance().currentUnit;

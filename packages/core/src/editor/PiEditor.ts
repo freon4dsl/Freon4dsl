@@ -45,14 +45,14 @@ export class PiEditor {
         this.environment = environment;
         this.initializeAliases(actions);
         // TODO rethink whether selectedBox should be observable
-        makeObservable<PiEditor, "_rootElement" | "_selectedElement" | "_selectedBox">(this, {
-            theme: observable,
-            _rootElement: observable,
-            _selectedElement: observable,
-            _selectedBox: observable,
-            selectedBox: computed,
-            deleteBox: action
-        });
+        // makeObservable<PiEditor, "_rootElement" | "_selectedElement" | "_selectedBox">(this, {
+        //     theme: observable,
+        //     _rootElement: observable,
+        //     _selectedElement: observable,
+        //     _selectedBox: observable,
+        //     selectedBox: computed,
+        //     deleteBox: action
+        // });
     }
 
     // Static helper methods
@@ -88,7 +88,7 @@ export class PiEditor {
     set rootElement(exp: PiElement) {
         runInAction(() => {
                 this._rootElement = exp;
-                this._rootBox = this.projection.getBox(this._rootElement);
+                // this._rootBox = this.projection.getBox(this._rootElement);
             }
         );
     }
@@ -98,6 +98,7 @@ export class PiEditor {
     }
 
     get rootBox(): Box {
+        console.log('PiEditor.get RootBox, enabled projections: ' + this.projection.enabledProjections());
         this._rootBox = this.projection.getBox(this.rootElement);
         return this._rootBox;
     }

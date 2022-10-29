@@ -4,6 +4,7 @@ import { PiElement } from "../../ast";
 import { PiTableDefinition } from "../PiTables";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjection } from "./FreProjection";
+import { action, makeObservable, observable } from "mobx";
 
 /**
  * This class, of which there should be one instance per editor, registers all
@@ -16,10 +17,18 @@ import { FreProjection } from "./FreProjection";
  */
 export class FreProjectionHandler {
     private elementToProvider: Map<string, FreBoxProvider> = new Map<string, FreBoxProvider>();
-    private projections: Map<string, boolean> = new Map<string, boolean>();  // a map from projection name to enabled
+    // private projections: Map<string, boolean> = new Map<string, boolean>();  // a map from projection name to enabled
+    private _allProjections: string[] = [];
+    private _enabledProjections: string[] = [];
     private conceptNameToProviderConstructor: Map<string, (h: FreProjectionHandler) => FreBoxProvider> = new Map<string, (h: FreProjectionHandler) => FreBoxProvider>([]);
     private _customProjections: FreProjection[] = [];
 
+    constructor() {
+        makeObservable<FreProjectionHandler>(this, {
+            // _enabledProjections: observable,
+            enableProjections: action
+        });
+    }
     // methods for custom projections
     initProviderConstructors(constructorMap: Map<string, () => FreBoxProvider>) {
         this.conceptNameToProviderConstructor = constructorMap;
@@ -69,7 +78,7 @@ export class FreProjectionHandler {
             console.log(e.stack);
             return null;
         }
-        // console.log('FreProjectionHandler getBox ' + element?.piId())
+        console.log('FreProjectionHandler getBox ' + element?.piId())
         if (!!element) {
             // get the box provider
             const provider = this.getBoxProvider(element);
@@ -82,7 +91,7 @@ export class FreProjectionHandler {
     }
 
     getTableDefinition(conceptName: string): PiTableDefinition {
-        console.log('FreProjectionHandler getTableDefinition ' + conceptName)
+        // console.log('FreProjectionHandler getTableDefinition ' + conceptName)
         const boxProvider = this.conceptNameToProviderConstructor.get(conceptName)(this);
         let tableDef = boxProvider.getTableDefinition();
         if (!!tableDef) {
@@ -114,45 +123,48 @@ export class FreProjectionHandler {
             boxProvider = this.conceptNameToProviderConstructor.get(element.piLanguageConcept())(this);
             this.elementToProvider.set(element.piId(), boxProvider);
             boxProvider.element = element;
+            boxProvider.initUsedProjection(this.enabledProjections());
         }
         return boxProvider;
     }
 
     // functions for registring the projections
     addProjection(p: string) {
-        this.projections.set(p, true);
+        this._allProjections.push(p); // todo check for duplicates
+        if (p !== 'default') {
+            this._enabledProjections.push(p);
+        }
     }
 
-    enableProjection(name: string): void {
-        // todo maybe enable/disable all projections in one method?
+    enableProjections(names: string[]) {
         BoxFactory.clearCaches();
-        console.log("Composite: enabling Projection " + name);
-        this.projections.set(name, true);
-        // todo make sure the editor.rootProjection is recalculated
-    }
+        // Because priority needs to be taken into account, we loop over all projections
+        // in order to get the order of enabled projections correct.
+        const newList: string[] = [];
+        for (const proj of this._allProjections) {
+            if (names.includes(proj)) {
+                newList.push(proj);
+            }
+        }
+        this._enabledProjections = newList;
 
-    disableProjection(name: string): void {
-        BoxFactory.clearCaches();
-        console.log("Composite: disabling Projection " + name);
-        this.projections.set(name, false);
-        // todo make sure the editor.rootProjection is recalculated
+        //  Let all providers know that projection may be changed.
+        for (const provider of this.elementToProvider.values()) {
+            provider.checkUsedProjection(this.enabledProjections());
+        }
     }
 
     /**
      * Returns the names of all known projections.
      */
     projectionNames(): string[] {
-        return Array.from(this.projections.keys());
+        return this._allProjections;
     }
 
     /**
      * Returns the names of enabled projections.
      */
     enabledProjections(): string[] {
-        const result: string[] = [];
-        for (const [key, value] of this.projections) {
-            if (value) result.push(key);
-        }
-        return result;
+        return this._enabledProjections;
     }
 }

@@ -50,10 +50,10 @@ export class TextBox extends Box {
         PiUtils.initializeObject(this, initializer);
         this.getText = getText;
         this.$setText = setText;
-        makeObservable(this, {
-            placeHolder: observable,
-            setText: action
-        });
+        // makeObservable(this, {
+        //     placeHolder: observable,
+        //     setText: action
+        // });
     }
 
     public deleteWhenEmpty1(): boolean {

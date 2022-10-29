@@ -9,9 +9,9 @@ export class ElementBox extends Box {
     
     constructor(element: PiElement, role: string) {
         super(element, role);
-        makeObservable(this, {
-            content: observable
-        });
+        // makeObservable(this, {
+        //     content: observable
+        // });
     }
 
     get children(): ReadonlyArray<Box> {

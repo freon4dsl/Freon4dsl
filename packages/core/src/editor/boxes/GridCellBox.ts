@@ -22,12 +22,12 @@ export class GridCellBox extends Box  {
             box.parent = this;
         }
         PiUtils.initializeObject(this, initializer);
-        makeObservable<GridCellBox, "$box">(this, {
-            $box: observable,
-            row: observable,
-            column: observable,
-            isHeader: observable
-        });
+        // makeObservable<GridCellBox, "$box">(this, {
+        //     $box: observable,
+        //     row: observable,
+        //     column: observable,
+        //     isHeader: observable
+        // });
         this.selectable = false;
     }
 

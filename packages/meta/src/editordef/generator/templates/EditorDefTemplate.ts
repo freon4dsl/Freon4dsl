@@ -67,7 +67,6 @@ export class EditorDefTemplate {
                 }         
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
                 `${handlerVarName}.addProjection("${Names.projection(group)}")`).join(";\n")}
-                 ${handlerVarName}.addProjection("${Names.projection(editorDef.getDefaultProjectiongroup())}");
                  ${handlerVarName}.initProviderConstructors(new Map<string, () => FreBoxProvider>(
                 [
                     ${constructors.map(constr => constr).join(",\n")} 

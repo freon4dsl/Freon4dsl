@@ -34,10 +34,10 @@ export abstract class AbstractChoiceBox extends Box {
                 placeHolder: placeHolder
             }
         );
-        makeObservable(this, {
-            textHelper: observable,
-            textBox: observable
-        });
+        // makeObservable(this, {
+        //     textHelper: observable,
+        //     textBox: observable
+        // });
 
     }
 

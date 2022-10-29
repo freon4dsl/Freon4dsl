@@ -18,12 +18,12 @@ export class OptionalBox extends Box {
 
     constructor(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string) {
         super(element, role);
-        makeObservable(this, {
-            box: observable,
-            whenNoShowingAlias: observable,
-            mustShow: observable,
-            showByCondition: computed
-        });
+        // makeObservable(this, {
+        //     box: observable,
+        //     whenNoShowingAlias: observable,
+        //     mustShow: observable,
+        //     showByCondition: computed
+        // });
         this.box = box;
         box.parent = this;
         this.whenNoShowingAlias = BoxFactory.alias(element, role, aliasText); // TODO question: should not the role be diff from role of this box? Where is the "alias" prefix added?

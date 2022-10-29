@@ -179,9 +179,13 @@ export class ProjectionTemplate {
 
         // start template
         // todo adjust knownProjections
-        const coreText: string = ` 
-                private knownProjections: string[] = [${myProjections.map(p => `"${p.name}"`)}];
-                private knownTableProjections: string[] = [${myTableProjections.map(p => `"${p.name}"`)}];
+        const coreText: string = `                
+                constructor(mainHandler: FreProjectionHandler) {
+                    super(mainHandler);
+                    this.knownProjections = [${myProjections.length > 0 ? myProjections.map(p => `"${p.name}"`) : `"default"`}];
+                    this.knownTableProjections = [${myTableProjections.length > 0 ? myTableProjections.map(p => `"${p.name}"`) : `"default"`}];
+                    this.conceptName = '${Names.classifier(concept)}';
+                }
             
                 set element(element: PiElement) {
                     if (Language.getInstance().metaConformsToType(element, '${Names.classifier(concept)}')) {
@@ -191,23 +195,15 @@ export class ProjectionTemplate {
                     }
                 }
                        
-                public getContent(projectionName?: string): Box {
+                public getContent(projectionName: string): Box {
+                console.log("GET CONTENT " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept() + ' ' +  this.usedProjection);
                     // see if we need to use a custom projection
                     let BOX: Box = this.mainHandler.executeCustomProjection(this._element, projectionName);
                     if (!!BOX) { // found one, so return it
                         return BOX;                 
                     ${myProjections.length > 0 ?
-                        `} else { // get one of the generated methods to create the content box
-                        let projToUse: string;
-                        if (projectionName !== null && projectionName !== undefined && projectionName.length > 0) {
-                            // if present, select the projection named 'projectionName'
-                            projToUse = projectionName;
-                        } else {
-                            // from the list of projections that are enabled, select the first one that is available for this type of Freon node 
-                            projToUse = this.mainHandler.enabledProjections().filter(p => this.knownProjections.includes(p))[0];
-                        }
-                        // select the box to return based on the chosen selection
-                            ${myProjections.map(proj => `if ( projToUse === '${proj.name}') {
+                        `} else { // select the box to return based on the chosen selection
+                            ${myProjections.map(proj => `if (this.usedProjection === '${proj.name}') {
                                 return this.${Names.projectionMethod(proj)}();
                             }`).join(" else ")}   
                             }               

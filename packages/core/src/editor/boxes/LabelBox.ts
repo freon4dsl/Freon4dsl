@@ -13,9 +13,9 @@ export class LabelBox extends Box {
         super(element, role);
         PiUtils.initializeObject(this, initializer);
         this.setLabel(getLabel);
-        makeObservable<LabelBox, "$label">(this, {
-            $label: observable
-        });
+        // makeObservable<LabelBox, "$label">(this, {
+        //     $label: observable
+        // });
     }
 
     setLabel(getLabel: string | (() => string)) {

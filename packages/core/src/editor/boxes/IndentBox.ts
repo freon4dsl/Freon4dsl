@@ -27,10 +27,10 @@ export class IndentBox extends Box {
         this.indent = indent;
         this.child = child;
         this.selectable = false;
-        makeObservable(this, {
-            child: computed,
-            indent: observable
-        });
+        // makeObservable(this, {
+        //     child: computed,
+        //     indent: observable
+        // });
     }
 
     /**

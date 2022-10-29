@@ -25,9 +25,9 @@ export class GridBox extends Box {
             }
         });
         this.sortCellsAndAddChildren();
-        makeObservable(this, {
-            cells: observable
-        });
+        // makeObservable(this, {
+        //     cells: observable
+        // });
     }
 
     get children(): ReadonlyArray<Box> {

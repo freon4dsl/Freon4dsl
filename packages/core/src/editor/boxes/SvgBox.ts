@@ -13,11 +13,11 @@ export class SvgBox extends Box {
 
     constructor(element: PiElement, role: string, svgPath: string, initializer?: Partial<SvgBox>) {
         super(element, role);
-        makeObservable(this, {
-            svgPath: observable,
-            width: observable,
-            height: observable
-        });
+        // makeObservable(this, {
+        //     svgPath: observable,
+        //     width: observable,
+        //     height: observable
+        // });
         PiUtils.initializeObject(this, initializer);
         this.svgPath = svgPath;
     }

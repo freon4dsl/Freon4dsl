@@ -32,16 +32,16 @@ export abstract class Box {
         this.element = element;
         this.role = role;
         this.$id = PiUtils.ID(); //uuid.v4();
-        makeObservable(this, {
-            role: observable,
-            element: observable,
-            cssStyle: observable,
-            cssClass: observable
-            // actualHeight: observable,
-            // actualWidth: observable,
-            // actualX: observable,
-            // actualY: observable
-        })
+        // makeObservable(this, {
+        //     role: observable,
+        //     element: observable,
+        //     cssStyle: observable,
+        //     cssClass: observable
+        //     // actualHeight: observable,
+        //     // actualWidth: observable,
+        //     // actualX: observable,
+        //     // actualY: observable
+        // })
     }
 
     get id(): string {
