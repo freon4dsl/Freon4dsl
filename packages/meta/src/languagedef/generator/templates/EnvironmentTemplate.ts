@@ -11,17 +11,17 @@ import {
     READER_GEN_FOLDER,
     STYLES_FOLDER,
     GenerationUtil,
-    INTERPRETER_FOLDER
+    INTERPRETER_FOLDER,
 } from "../../../utils/";
 import { PiClassifier, PiLanguage } from "../../metalanguage";
 
 export class EnvironmentTemplate {
-
     generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
                     ${Names.PiScoper}, ${Names.FreonTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, LanguageEnvironment
+                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, LanguageEnvironment,
+                    RtObject, PiElement
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
@@ -32,7 +32,9 @@ export class EnvironmentTemplate {
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
         import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}";
-        import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${
+            Names.initializeLanguage
+        } } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.
@@ -88,10 +90,10 @@ export class EnvironmentTemplate {
             validator: ${Names.PiValidator} = new ${Names.validator(language)}();
             writer: ${Names.PiWriter} = new ${Names.writer(language)}();
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
-            interpreter: ${Names.FreonInterpreter} = new ${Names.interpreterName(language)};
+            interpreter: ${Names.FreonInterpreter}<PiElement, RtObject> = new ${Names.interpreterName(language)};
             languageName: string = "${language.name}";
             fileExtensions: Map<string, string> = new Map([
-                ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
+                ${language.modelConcept.unitTypes().map((unit) => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
             ]);
         }`;
     }

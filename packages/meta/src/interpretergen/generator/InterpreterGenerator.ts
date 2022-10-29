@@ -1,14 +1,10 @@
 import * as fs from "fs";
 import { PiLanguage } from "../../languagedef/metalanguage";
-import {
-    GenerationStatus,
-    FileUtil,
-    MetaLogger,
-    INTERPRETER_FOLDER, INTERPRETER_GEN_FOLDER, Names
-} from "../../utils";
+import { GenerationStatus, FileUtil, MetaLogger, INTERPRETER_FOLDER, INTERPRETER_GEN_FOLDER, Names } from "../../utils";
 import { PiInterpreterDef } from "../metalanguage/PiInterpreterDef";
 import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate";
 import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate";
+import { InterpreterTypesTemplate } from "./templates/InterpreterTypesTemplate";
 
 const LOGGER = new MetaLogger("InterpreterGenerator").mute();
 
@@ -32,33 +28,38 @@ export class InterpreterGenerator {
 
         const template = new InterpreterBaseTemplate();
         const mainTemplate = new InterpreterMainTemplate();
+        const typesTemplate = new InterpreterTypesTemplate();
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.interpreterGenFolder);
         FileUtil.deleteFilesInDir(this.interpreterGenFolder, generationStatus);
 
         let generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
-        let generatedContent  = template.interpreterBase(this.language, interpreterDef);
+        let generatedContent = template.interpreterBase(this.language, interpreterDef);
         this.makeFile("interpreter base", generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterClassname(this.language)}.ts`;
-        generatedContent  = template.interpreterClass(this.language, interpreterDef);
+        generatedContent = template.interpreterClass(this.language, interpreterDef);
         FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter class");
         // this.makeFile("interpreter class", generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterInitname(this.language)}.ts`;
-        generatedContent  = template.interpreterInit(this.language, interpreterDef);
+        generatedContent = template.interpreterInit(this.language, interpreterDef);
         this.makeFile("interpreter init", generatedFilePath, generatedContent, generationStatus);
         // FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter init")
 
+        generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterTypesname(this.language)}.ts`;
+        generatedContent = typesTemplate.interpreterTypes(this.language, interpreterDef);
+        this.makeFile("interpreter types", generatedFilePath, generatedContent, generationStatus);
+
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterName(this.language)}.ts`;
-        generatedContent  = mainTemplate.interpreterMain(this.language, interpreterDef);
+        generatedContent = mainTemplate.interpreterMain(this.language, interpreterDef);
         this.makeFile("interpreter main", generatedFilePath, generatedContent, generationStatus);
     }
 
     private makeFile(generationMessage: string, generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {
         LOGGER.log(`Generating: ${generatedFilePath}`);
-        const generated = FileUtil.pretty(generatedContent, "interpreter " , generationStatus);
+        const generated = FileUtil.pretty(generatedContent, "interpreter ", generationStatus);
         fs.writeFileSync(generatedFilePath, generated);
     }
 
