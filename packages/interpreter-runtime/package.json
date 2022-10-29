@@ -1,0 +1,32 @@
+{
+  "private": false,
+  "name": "@projectit/interpreter-runtime",
+  "version": "0.4.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joswarmer/ProjectIt.git"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "build-release": "yarn run build",
+    "cleanup": "bash ../../scripts/cleanup.sh",
+    "test": "jest --config ./jest.config.js",
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
+    "release": "npm publish",
+    "publish-local": "npm publish --registry http://localhost:4873",
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "republish-local": "yarn unpublish-local && yarn publish-local"
+  },
+  "dependencies": {
+    "bignumber.js": "9.1.0",
+    "@js-joda/core": "5.4.2",
+    "tslib": "2.4.0"
+  }
+}
