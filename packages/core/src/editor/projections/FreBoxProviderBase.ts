@@ -56,6 +56,7 @@ export class FreBoxProviderBase implements FreBoxProvider {
         // console.log('INIT usedProjection for ' + this._element.piId() + " " + this._element.piLanguageConcept() + ": " + this.usedProjection);
     }
 
+    // todo maybe remove parameter in favor of this.mainHandler.enabledProjections()
     private findProjectionToUse(enabledProjections: string[]): string {
         // see if we need to use a custom projection
         let projToUse: string = null;
@@ -124,6 +125,41 @@ export class FreBoxProviderBase implements FreBoxProvider {
 
     public getContent(projectionName: string): Box {
         return new LabelBox(this._element, "unknown-projection", () => "Content should be determined by the appropriate subclass of PiBoxProvider.");
+    }
+
+    // todo maybe remove parameter in favor of this.mainHandler.enabledProjections()
+    protected findTableProjectionToUse(): string {
+        // see if we need to use a custom projection
+        let projToUse: string = null;
+        // todo add custom table definitions
+        // this.mainHandler.customProjections.forEach(cp => {
+        //     // get the name of the first of the customs that fits
+        //     // todo see whether we should loop backwards as in the enabledProjections
+        //     if (projToUse === null && !!cp.nodeTypeToTableDefinition.get(this.conceptName)) {
+        //         projToUse = cp.name;
+        //     }
+        // });
+        if (projToUse === null) {
+            // From the list of projections that are enabled, select the first one that is available for this type of Freon node.
+            // Loop through the projections backwards, because the last one takes precedence.
+            const enabledProjections = this.mainHandler.enabledProjections();
+            for (let i = enabledProjections.length - 1; i >= 0 ; i--) {
+                const proj = enabledProjections[i];
+                // get the name of the first of the generated projections that fits
+                if (this.knownTableProjections.includes(proj)) {
+                    projToUse = proj;
+                    break;
+                }
+            }
+            // } else {
+            //     console.log('found custom projection ' + projToUse + ' for ' + this.conceptName);
+        }
+        if (projToUse === null) { // still nothing found, then use the default
+            projToUse = "default";
+            // } else {
+            //     console.log('found generated projection ' + projToUse + ' for ' + this.conceptName + ' from ' + this.knownProjections);
+        }
+        return projToUse;
     }
 
     public getTableDefinition(): PiTableDefinition {
