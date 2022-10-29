@@ -42,13 +42,22 @@
                "$typename": "Method",
                "name": "dddddddd",
                "body": {
-                  "$typename": "ParameterRef",
-                  "appliedfeature": {
-                     "$typename": "AttributeRef",
-                     "appliedfeature": null,
-                     "attribute": "isStrong"
+                  "$typename": "PlusExpression",
+                  "left": {
+                     "$typename": "ParameterRef",
+                     "appliedfeature": {
+                        "$typename": "AttributeRef",
+                        "appliedfeature": null,
+                        "attribute": "isStrong"
+                     },
+                     "parameter": "person"
                   },
-                  "parameter": "person"
+                  "right": {
+                     "$typename": "NumberLiteralExpression",
+                     "value": 1,
+                     "appliedfeature": null
+                  },
+                  "appliedfeature": null
                },
                "parameters": [
                   {
