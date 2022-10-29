@@ -1,4 +1,3 @@
-import { OwningPropertyFunction } from "@projectit/core";
 import { PiClassifier, PiConcept, PiInstance, PiInterface, PiLanguage, PiPrimitiveProperty, PiProperty } from "../../languagedef/metalanguage";
 import { PiModelDescription, PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
 import { PiEditProjectionGroup } from "../../editordef/metalanguage";
