@@ -10,7 +10,7 @@
         GridCellBox, Box, PiCommand, PI_NULL_COMMAND, PiPostAction
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
-    import { afterUpdate } from "svelte";
+    import { afterUpdate, onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
     import { UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
@@ -29,10 +29,39 @@
     let cssVariables: string;
     let id: string = componentId(cellBox);
 
+    let row: string;
+    let column: string;
+    let int: number = 0;
+    let orientation: BoxTypeName = "gridcellNeutral";
+    let isHeader = "noheader";
+    let cssStyle: string = "";
+    let cssClass: string = "";
+
+    function refresh(from? : string): void {
+        console.log("DIRTY GridCellComponent " + (!!from?" from " + from + " ": "") + cellBox?.element?.piLanguageConcept() + "-" + cellBox?.element?.piId());
+        $boxStore = cellBox.box;
+        LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);
+        row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
+        column = cellBox.column + (cellBox.columnSpan ? " / span " + cellBox.columnSpan : "");
+        orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ? "gridcellOdd" : "gridcellEven")));
+        if (cellBox.isHeader) {
+            isHeader = "gridcell-header";
+        }
+        cssStyle = $boxStore.cssStyle;
+        cssClass = cellBox.cssClass;
+    }
+
+    refresh("init component");
+    
+    onMount( () => {
+        $boxStore = cellBox.box;
+        cellBox.refreshComponent = refresh;
+    }) ;
+
     afterUpdate(() => {
         UPDATE_LOGGER.log("GridCellComponent.afterUpdate");
-        // Triggers autorun
         $boxStore = cellBox.box;
+        cellBox.refreshComponent = refresh;
     });
 
     const onKeydown = (event: KeyboardEvent) => {
@@ -63,26 +92,19 @@
         LOGGER.log("GridCellComponent.onCellClick " + cellBox.row + ", " + cellBox.column);
     });
 
-    let row: string;
-    let column: string;
-    let int: number = 0;
-    let orientation: BoxTypeName = "gridcellNeutral";
-    let isHeader = "noheader";
-    let cssStyle: string = "";
-    let cssClass: string = "";
 
-    autorun(() => {
-        $boxStore = cellBox.box;
-        LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);
-        row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
-        column = cellBox.column + (cellBox.columnSpan ? " / span " + cellBox.columnSpan : "");
-        orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ? "gridcellOdd" : "gridcellEven")));
-        if (cellBox.isHeader) {
-            isHeader = "gridcell-header";
-        }
-        cssStyle = $boxStore.cssStyle;
-        cssClass = cellBox.cssClass;
-    });
+    // autorun(() => {
+        // $boxStore = cellBox.box;
+        // LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);
+        // row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
+        // column = cellBox.column + (cellBox.columnSpan ? " / span " + cellBox.columnSpan : "");
+        // orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ? "gridcellOdd" : "gridcellEven")));
+        // if (cellBox.isHeader) {
+        //     isHeader = "gridcell-header";
+        // }
+        // cssStyle = $boxStore.cssStyle;
+        // cssClass = cellBox.cssClass;
+    // });
 
 </script>
 

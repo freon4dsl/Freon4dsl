@@ -28,6 +28,7 @@ export function muteLogs() {
     PiLogger.mute("SelectBox");
     PiLogger.mute("HorizontalListBox");
     PiLogger.mute("AliasBox");
+    PiLogger.mute("Box");
 
 // PiLogger.mute("EditorCommunication");
 

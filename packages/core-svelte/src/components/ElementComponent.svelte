@@ -1,8 +1,7 @@
 <script lang="ts">
     import RenderComponent from "./RenderComponent.svelte";
-    import { onDestroy, onMount, afterUpdate } from "svelte";
+    import { onMount, afterUpdate } from "svelte";
     import { PiLogger, type PiEditor, ElementBox } from "@projectit/core";
-    import { FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
 
     export let elementBox: ElementBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
     export let editor: PiEditor;
@@ -11,17 +10,17 @@
     let id: string = `${elementBox.element.piId()}-${elementBox.role}`;
     let childBox = elementBox.content ;
 
-    const dirty = (): void =>  {
+    const refresh = (): void =>  {
         console.log("DIRTY ElementBox for " + elementBox.element.piLanguageConcept() + "-" + elementBox.element.piId());
         childBox = elementBox.content;
     }
 
     onMount( () => {
-        elementBox.dirty = dirty;
+        elementBox.refreshComponent = refresh;
     });
     
     afterUpdate( () => {
-        elementBox.dirty = dirty;
+        elementBox.refreshComponent = refresh;
     });
 
 </script>

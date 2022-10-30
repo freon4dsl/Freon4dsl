@@ -1,4 +1,3 @@
-import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../ast";
 import { PiUtils } from "../../util/index";
 import { Box } from "./Box";
@@ -22,12 +21,6 @@ export class GridCellBox extends Box  {
             box.parent = this;
         }
         PiUtils.initializeObject(this, initializer);
-        // makeObservable<GridCellBox, "$box">(this, {
-        //     $box: observable,
-        //     row: observable,
-        //     column: observable,
-        //     isHeader: observable
-        // });
         this.selectable = false;
     }
 
@@ -43,6 +36,7 @@ export class GridCellBox extends Box  {
         if (!!b) {
             b.parent = this;
         }
+        this.isDirty();
     }
 
     get children(): ReadonlyArray<Box> {

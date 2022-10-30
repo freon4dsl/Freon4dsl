@@ -19,7 +19,7 @@
         LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ optionalBox.id + "]")
     });
 
-    const dirty = (): void =>  {
+    function refresh() : void  {
         console.log("DIRTY OptionalBox");
         mustShow = optionalBox.mustShow;
         childBox = optionalBox.box;
@@ -37,7 +37,7 @@
     onMount( () => {
         MOUNT_LOGGER.log("OptionalComponent onMount --------------------------------")
         optionalBox.setFocus = setFocus;
-        optionalBox.dirty = dirty;
+        optionalBox.refreshComponent = refresh;
     });
 
     afterUpdate( () => {
@@ -49,7 +49,7 @@
             })
         }
         optionalBox.setFocus = setFocus;
-        optionalBox.dirty = dirty;
+        optionalBox.refreshComponent = refresh;
     });
 
     // autorun( () => {
