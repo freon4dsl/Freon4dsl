@@ -4,9 +4,8 @@ import { PiLanguage } from "../../../languagedef/metalanguage";
 export class CustomProjectionTemplate {
 
     generate(language: PiLanguage): string {
-        // todo adjust comment
         return `
-            import { ${Names.PiElement}, ${Names.Box}, ${Names.PiProjection} } from "${PROJECTITCORE}";
+            import { ${Names.PiElement}, ${Names.Box}, ${Names.PiProjection}, PiTableDefinition } from "${PROJECTITCORE}";
             
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to
@@ -18,12 +17,23 @@ export class CustomProjectionTemplate {
              * (3) if neither (1) nor (2) yields a result, the default is used.
              */           
             export class ${Names.customProjection(language)} implements ${Names.PiProjection} {
-                name: string = "manual";
-                nodeTypeToBoxMethod: Map<string, (node: PiElement) => Box>= new Map<string, (node: PiElement) => Box>([
-                    // ['NAME_OF_CONCEPT', this.FUNCTION_FOR_CONCEPT],            
-                ]);  
+                name: string = "Manual";
+                nodeTypeToBoxMethod: Map<string, (node: ${Names.PiElement}) => ${Names.Box}> = 
+                    new Map<string, (node: ${Names.PiElement}) => ${Names.Box}>([
+                        // register your custom box methods here
+                        // ['NAME_OF_CONCEPT', this.BOX_FOR_CONCEPT],            
+                    ]);  
+                nodeTypeToTableDefinition: Map<string, () => PiTableDefinition> =
+                    new Map<string, () => PiTableDefinition>([
+                        // register your custom table definition methods here                       
+                        // ['NAME_OF_CONCEPT', this.TABLE_DEFINITION_FOR_CONCEPT],            
+                    ]);                  
                 
-                // FUNCTION_FOR_CONCEPT(node: NAME_OF_CONCEPT) : Box { ... }   
+                // add your custom methods here
+                
+                // BOX_FOR_CONCEPT(node: NAME_OF_CONCEPT) : ${Names.Box} { ... }   
+                
+                // TABLE_DEFINITION_FOR_CONCEPT() : PiTableDefinition { ... }
             }
         `;
     }

@@ -38,7 +38,7 @@ export class ProjectionTemplate {
     private configImports: string[] = [];   // imports from ../config/gen
     // Information about the use of projections from superconcepts or interfaces is also collected during the content
     // creation. This avoids the generation of unused classes and methods.
-    private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
+    private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being usedknownBoxProjections
     private supersUsed: PiClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
 
     setStandardBooleanKeywords(editorDef: PiEditUnit) {
@@ -53,7 +53,8 @@ export class ProjectionTemplate {
     generateBoxProvider(language: PiLanguage, concept: PiClassifier, editDef: PiEditUnit, extraClassifiers: PiClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        this.coreImports.push(...['Box', 'BoxUtils', 'BoxFactory', 'PiElement', 'FreBoxProviderBase', 'FreProjectionHandler', 'PiTableDefinition', 'Language']);
+        this.coreImports.push(...['Box', 'BoxUtils', 'BoxFactory', 'PiElement', 'FreBoxProvider' +
+        '', 'FreProjectionHandler', 'PiTableDefinition', 'Language']);
 
         // see which projections there are for this concept
         // myProjections: all non table projections
@@ -75,7 +76,7 @@ export class ProjectionTemplate {
         const coreText: string = `                
                 constructor(mainHandler: FreProjectionHandler) {
                     super(mainHandler);
-                    this.knownProjections = [${myProjections.length > 0 ? myProjections.map(p => `"${p.name}"`) : `"default"`}];
+                    this.knownBoxProjections = [${myProjections.length > 0 ? myProjections.map(p => `"${p.name}"`) : `"default"`}];
                     this.knownTableProjections = [${myTableProjections.length > 0 ? myTableProjections.map(p => `"${p.name}"`) : `"default"`}];
                     this.conceptName = '${Names.classifier(concept)}';
                 }
@@ -89,9 +90,9 @@ export class ProjectionTemplate {
                 }
                        
                 public getContent(projectionName: string): Box {
-                console.log("GET CONTENT " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept() + ' ' + projectionName);
+                // console.log("GET CONTENT " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept() + ' ' + projectionName);
                     // see if we need to use a custom projection
-                    if (!this.knownProjections.includes(projectionName)) {
+                    if (!this.knownBoxProjections.includes(projectionName)) {
                         let BOX: Box = this.mainHandler.executeCustomProjection(this._element, projectionName);
                         if (!!BOX) { // found one, so return it
                             return BOX;
@@ -106,6 +107,25 @@ export class ProjectionTemplate {
                         : `}`
                         }
                     return this.getDefault();
+                }
+    
+                protected getTableDefinitionFor(projToUse: string): PiTableDefinition {
+                    // search within custom table definitions
+                    if (!this.knownTableProjections.includes(projToUse)) {
+                        let DEF: PiTableDefinition = this.mainHandler.executeCustomTableDefinition(this._element, projToUse);
+                        if (!!DEF) { // found one, so return it
+                            return DEF;
+                        }                  
+                    ${myTableProjections.length > 0 ?
+                        `} else { // select the table definition to return based on the chosen selection
+                         ${myTableProjections.map(proj => `if ( projToUse === '${proj.name}') {
+                            return this.${Names.tabelDefinitionFunctionNew(proj.name)}();
+                         }`).join(" else ")}  
+                         }                
+                         // in all other cases, return the null`
+                        : `}`
+                    }
+                    return null;
                 }
             
                 ${!isBinExp ?
@@ -130,22 +150,6 @@ export class ProjectionTemplate {
                             return binBox;
                         }
                     }`
-                } 
-    
-                getTableDefinition(): PiTableDefinition {
-                    // from the list of projections that must be shown, select the first one for this type of Freon node
-                    let projToUse = this.findTableProjectionToUse();
-                    // todo search within custom table definitions
-                    
-                    ${myTableProjections.length > 0 ?
-                        `// select the table definition to return based on the chosen selection
-                         ${myTableProjections.map(proj => `if ( projToUse === '${proj.name}') {
-                            return this.${Names.tabelDefinitionFunctionNew(proj.name)}();
-                         }`).join(" else ")}                  
-                         // in all other cases, return null`
-                        : ``
-                    }
-                    return null;
                 }`;
 
         // If 'concept' extends a superconcept or implements interfaces, create the method to produce the box for the superprojection
@@ -187,7 +191,7 @@ export class ProjectionTemplate {
              * a box that will never be rendered itself, only its content will. Thus, we 
              * have a stable entry in the complete box tree for every PiElement node.
              */       
-            export class ${Names.boxProvider(concept)} extends FreBoxProviderBase {
+            export class ${Names.boxProvider(concept)} extends FreBoxProvider {
                 ${coreText}
                 ${this.useSuper ? superMethod : ''}       
             }`;
@@ -545,12 +549,12 @@ export class ProjectionTemplate {
                     },\n`;
             });
 
-            return `${Names.tabelDefinitionFunctionNew(myTableProjection.name)}(): PiTableDefinition {
-                const result: PiTableDefinition = {
+            return `
+            private ${Names.tabelDefinitionFunctionNew(myTableProjection.name)}(): PiTableDefinition {
+                return {
                     headers: [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")} ],
                     cells: [${cellGetters}]
                 };
-                return result;
             }
         `;
         } else {
