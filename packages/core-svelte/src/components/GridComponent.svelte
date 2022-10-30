@@ -3,9 +3,7 @@
     import { afterUpdate, onMount } from "svelte";
     import { ChangeNotifier, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import GridCellComponent from "./GridCellComponent.svelte";
-    import { autorun } from "mobx";
     import { writable, type Writable } from "svelte/store";
-    import { optionalBox } from "./OptionalComponent.svelte";
     import { componentId } from "./util";
 
     export let gridBox: GridBox;
@@ -13,36 +11,35 @@
 
     let notifier = new ChangeNotifier();
     let id = componentId(gridBox);
-
-    const dirty = (): void =>  {
-        console.log("DIRTY GridComponent ");
-    }
-
-    onMount( () => {
-        MOUNT_LOGGER.log("GridComponent onmount")
-        $cells = gridBox.cells;
-    })
-
-    afterUpdate(() => {
-        UPDATE_LOGGER.log("GridComponent afterUpdate for girdBox " + gridBox.element.piLanguageConcept())
-        $cells = gridBox.cells;
-        // Triggers autorun
-        notifier.notifyChange();
-    });
     let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(gridBox.cells);
     let templateColumns: string;
     let templateRows: string;
-
     let cssClass: string = "";
-    // TODO either use svelte store for cells or mobx observable???
-    // autorun(() => {
-    //     $cells = [...gridBox.cells];
-    //     length = $cells.length;
-    //
-    //     templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
-    //     templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
-    //     cssClass = gridBox.cssClass;
-    // });
+
+    const refresh = (): void =>  {
+        console.log("DIRTY GridComponent "+ gridBox?.element?.piLanguageConcept() + "-" + gridBox?.element?.piId());
+        $cells = [...gridBox.cells];
+
+            length = $cells.length;
+        templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
+        templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
+        cssClass = gridBox.cssClass;
+
+    }
+    onMount( () => {
+        MOUNT_LOGGER.log("GridComponent onmount")
+        $cells = gridBox.cells;
+        gridBox.refreshComponent = refresh;
+
+    })
+    afterUpdate(() => {
+        UPDATE_LOGGER.log("GridComponent afterUpdate for girdBox " + gridBox.element.piLanguageConcept())
+        $cells = gridBox.cells;
+        gridBox.refreshComponent = refresh;
+        // Triggers autorun
+        notifier.notifyChange();
+    });
+
 </script>
 
 <div

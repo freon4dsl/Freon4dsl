@@ -35,7 +35,7 @@
         }
     }
 
-    const dirty = (): void =>  {
+    const refresh = (): void =>  {
         console.log("DIRTY ListComponent " + list?.element?.piLanguageConcept() + "-" + list?.element?.piId() + ", " + list.role);
         svNotifier.dummy
         svList = list;
@@ -45,13 +45,13 @@
     onMount( () => {
         MOUNT_LOGGER.log("ListComponent onMount --------------------------------")
         list.setFocus = setFocus;
-        list.dirty = dirty;
+        list.refreshComponent = refresh;
     });
 
     afterUpdate(() => {
         UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
         list.setFocus = setFocus;
-        list.dirty = dirty;
+        list.refreshComponent = refresh;
         // NOTE: Triggers autorun whenever an element is added or delete from the list
         svNotifier.notifyChange();
     });

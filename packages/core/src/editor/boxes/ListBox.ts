@@ -12,7 +12,6 @@ export enum ListDirection {
 export abstract class ListBox extends Box {
     protected direction: ListDirection = ListDirection.HORIZONTAL;
     protected _children: Box[] = [];
-    dirty: () => void;
 
     protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role);
@@ -26,13 +25,6 @@ export abstract class ListBox extends Box {
         PiUtils.initializeObject(this, initializer);
         if (children) {
             children.forEach(b => this.addChild(b));
-        }
-    }
-
-
-    isDirty(): void {
-        if (!!this.dirty) {
-            this.dirty();
         }
     }
 

@@ -45,13 +45,15 @@ export class FreProjectionHandler {
     executeCustomProjection(element: PiElement, projectionName: string): Box {
         let BOX: Box = null;
         const customToUse = this.customProjections.find(cp => cp.name === projectionName);
-        // bind(customToUse) binds the projection 'customToUse' to the 'this' variable, for use within the custom function
-        let customFuction: (node: PiElement) => Box = customToUse.nodeTypeToBoxMethod.get(element.piLanguageConcept())?.bind(customToUse);
+        if(!!customToUse) {
+            // bind(customToUse) binds the projection 'customToUse' to the 'this' variable, for use within the custom function
+            let customFuction: (node: PiElement) => Box = customToUse.nodeTypeToBoxMethod.get(element.piLanguageConcept())?.bind(customToUse);
 
-        if (!!customFuction) {
-            // console.log("FreProjectionHandler enabled projections: " + proj.enabledProjections().map(p => p));
-            BOX = customFuction(element);
-            // console.log('FreProjectionHandler found custom BOX: ' + BOX.role + ' for ' + BOX.element.piId());
+            if (!!customFuction) {
+                // console.log("FreProjectionHandler enabled projections: " + proj.enabledProjections().map(p => p));
+                BOX = customFuction(element);
+                // console.log('FreProjectionHandler found custom BOX: ' + BOX.role + ' for ' + BOX.element.piId());
+            }
         }
         return BOX;
     }
@@ -66,7 +68,7 @@ export class FreProjectionHandler {
             console.log(e.stack);
             return null;
         }
-        console.log('FreProjectionHandler getBox ' + element?.piId())
+        console.log('FreProjectionHandler getBox ' + element?.piLanguageConcept() + "-" + element?.piId())
         if (!!element) {
             // get the box provider
             const provider = this.getBoxProvider(element);

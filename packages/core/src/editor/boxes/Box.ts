@@ -19,6 +19,16 @@ export abstract class Box {
     selectable: boolean = true;
     parent: Box = null;
 
+    // The refresh method from the component that displays this box.
+    refreshComponent: () => void;
+    
+    // Called when the box is dirty, refreshes the corresponding component.
+    isDirty(): void {
+        if (this.refreshComponent !== undefined && this.refreshComponent !== null) {
+            this.refreshComponent();
+        }
+    }
+
     // Never set these manually, these properties are set after rendering to get the
     // actual coordinates as rendered in the browser,
     // TODO see whether these can be set on demand and whether this is useful ???
