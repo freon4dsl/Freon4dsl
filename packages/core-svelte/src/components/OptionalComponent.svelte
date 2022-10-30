@@ -11,13 +11,19 @@
     const LOGGER = new PiLogger("OptionalComponent").mute();
     let id: string = `${optionalBox.element.piId()}-${optionalBox.role}`;
     let childBox ;
-    let mustShow = false;
+    let mustShow = optionalBox.mustShow;
     let showByCondition = false;
     let element: HTMLDivElement = null;
 
     onDestroy(() => {
         LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ optionalBox.id + "]")
     });
+
+    const dirty = (): void =>  {
+        console.log("DIRTY OptionalBox");
+        mustShow = optionalBox.mustShow;
+        childBox = optionalBox.box;
+    }
 
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
@@ -31,6 +37,7 @@
     onMount( () => {
         MOUNT_LOGGER.log("OptionalComponent onMount --------------------------------")
         optionalBox.setFocus = setFocus;
+        optionalBox.dirty = dirty;
     });
 
     afterUpdate( () => {
@@ -42,20 +49,21 @@
             })
         }
         optionalBox.setFocus = setFocus;
+        optionalBox.dirty = dirty;
     });
 
-    autorun( () => {
-        LOGGER.log("AUTO " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
-        LOGGER.log("   root " + getRoot(optionalBox).$id);
-        if(optionalBox.box.kind === "HorizontalListBox") {
-            optionalBox.box.children.forEach( child => {
-                LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
-            })
-        }
-        mustShow = optionalBox.mustShow;
-        childBox = optionalBox.box;
-        showByCondition = optionalBox.showByCondition;
-    });
+    // autorun( () => {
+        // LOGGER.log("AUTO " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
+        // LOGGER.log("   root " + getRoot(optionalBox).$id);
+        // if(optionalBox.box.kind === "HorizontalListBox") {
+        //     optionalBox.box.children.forEach( child => {
+        //         LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
+        //     })
+        // }
+        // mustShow = optionalBox.mustShow;
+        // childBox = optionalBox.box;
+        // showByCondition = optionalBox.showByCondition;
+    // });
 </script>
 
 <div class="optional"

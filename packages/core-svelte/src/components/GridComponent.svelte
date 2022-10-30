@@ -5,6 +5,7 @@
     import GridCellComponent from "./GridCellComponent.svelte";
     import { autorun } from "mobx";
     import { writable, type Writable } from "svelte/store";
+    import { optionalBox } from "./OptionalComponent.svelte";
     import { componentId } from "./util";
 
     export let gridBox: GridBox;
@@ -12,6 +13,10 @@
 
     let notifier = new ChangeNotifier();
     let id = componentId(gridBox);
+
+    const dirty = (): void =>  {
+        console.log("DIRTY GridComponent ");
+    }
 
     onMount( () => {
         MOUNT_LOGGER.log("GridComponent onmount")
@@ -30,14 +35,14 @@
 
     let cssClass: string = "";
     // TODO either use svelte store for cells or mobx observable???
-    autorun(() => {
-        $cells = [...gridBox.cells];
-        length = $cells.length;
-
-        templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
-        templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
-        cssClass = gridBox.cssClass;
-    });
+    // autorun(() => {
+    //     $cells = [...gridBox.cells];
+    //     length = $cells.length;
+    //
+    //     templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
+    //     templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
+    //     cssClass = gridBox.cssClass;
+    // });
 </script>
 
 <div

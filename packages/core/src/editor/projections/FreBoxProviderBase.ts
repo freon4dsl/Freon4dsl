@@ -27,6 +27,13 @@ export class FreBoxProviderBase implements FreBoxProvider {
         3. the actions are present, because the observable 'usedProjection' may be changed in one
         of these methods.
          */
+        makeObservable<FreBoxProviderBase, "usedProjection">(this, {
+            usedProjection: observable,
+            box: computed,
+            checkUsedProjection: action,
+            initUsedProjection: action,
+            getNamedBox: action
+        });
         // makeObservable<FreBoxProviderBase, "usedProjection">(this, {
         //     usedProjection: observable,
         //     box: computed,
@@ -47,7 +54,7 @@ export class FreBoxProviderBase implements FreBoxProvider {
         if (this.usedProjection !== projToUse) {
             console.log('checkUsedProjection for ' + this._element.piId() + " " + this._element.piLanguageConcept() + ", old: " + this.usedProjection + ", new: " + projToUse);
             this.usedProjection = projToUse;
-            this._mainBox.content = this.getContent(this.usedProjection);
+            // this._mainBox.content = this.getContent(this.usedProjection);
         }
     }
 

@@ -181,6 +181,12 @@ export class BoxFactory {
         // return result;
     }
 
+    static sameChildren(one: Box[], two: Box[]): boolean {
+        const oneOk: boolean = one.every(o => two.includes(o));
+        const twoOk = two.every(o => one.includes(o));
+        return oneOk && twoOk;
+    }
+    
     static horizontalList(element: PiElement, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
         if (cacheHorizontalOff) {
             return new HorizontalListBox(element, role, children, initializer);
@@ -189,9 +195,10 @@ export class BoxFactory {
         const result: HorizontalListBox = this.find<HorizontalListBox>(element, role, creator, horizontalListCache);
         runInAction( () => {
             // 2. Apply the other arguments in case they have changed
-            if( !equals(result.children, children)) {
-                result.clearChildren();
-                result.addChildren(children);
+            if((children === undefined) || !BoxFactory.sameChildren(result.children as Box[], children)) {
+                result.replaceChildren(children);
+                // result.clearChildren();
+                // result.addChildren(children);
             }
             PiUtils.initializeObject(result, initializer);
         });
@@ -207,9 +214,10 @@ export class BoxFactory {
         const result: VerticalListBox = this.find<VerticalListBox>(element, role, creator, verticalListCache);
         runInAction(() => {
             // 2. Apply the other arguments in case they have changed
-            if (!equals(result.children, children)) {
-                result.clearChildren();
-                result.addChildren(children);
+            if((children === undefined) || !BoxFactory.sameChildren(result.children as Box[], children)) {
+                result.replaceChildren(children);
+                // result.clearChildren();
+                // result.addChildren(children);
             }
             PiUtils.initializeObject(result, initializer);
         });

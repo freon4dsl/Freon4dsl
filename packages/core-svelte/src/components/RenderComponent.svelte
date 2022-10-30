@@ -1,4 +1,5 @@
 <script lang="ts">
+    import ElementComponent from "./ElementComponent.svelte";
     import AliasComponent from "./AliasComponent.svelte";
     import { AUTO_LOGGER } from "./ChangeNotifier";
     import GridComponent from "./GridComponent.svelte";
@@ -47,7 +48,7 @@
 
     function setShowBox() {
         LOGGER.log('setShowBox for element ' + box.element?.piId() )
-        showBox = getRenderContent(box);
+        showBox = box;
         id = `render-${box.element.piId()}-${box.role}`;
     }
 
@@ -109,6 +110,8 @@
         <GridComponent gridBox={showBox} editor={editor}/>
     {:else if isSvgBox(showBox) }
         <SvgComponent svgBox={showBox} editor={editor}/>
+    {:else if isElementBox(showBox) }
+        <ElementComponent elementBox={showBox} editor={editor}/>
     {:else if isOptionalBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
             <OptionalComponent optionalBox={showBox} editor={editor}/>

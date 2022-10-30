@@ -12,6 +12,7 @@ export enum ListDirection {
 export abstract class ListBox extends Box {
     protected direction: ListDirection = ListDirection.HORIZONTAL;
     protected _children: Box[] = [];
+    dirty: () => void;
 
     protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role);
@@ -28,18 +29,47 @@ export abstract class ListBox extends Box {
         }
     }
 
+
+    isDirty(): void {
+        if (!!this.dirty) {
+            this.dirty();
+        }
+    }
+
     get children(): ReadonlyArray<Box> {
         return this._children as ReadonlyArray<Box>;
     }
 
-    clearChildren(): void {
+    replaceChildren(children: Box[]): ListBox {
         this._children.splice(0, this._children.length);
+        if (!!children) {
+            children.forEach((child) => {
+                if (!!child) {
+                    this._children.push(child);
+                    child.parent = this;
+                }
+            });
+        }
+        console.log("List replaceChildren dirty " + this.role)
+        this.isDirty();
+        return this;
+    }
+
+    clearChildren(): void {
+        const dirty = (this._children.length !== 0);
+        this._children.splice(0, this._children.length);
+        if (dirty) {
+            console.log("List clearChildren dirty " + this.role)
+            this.isDirty();
+        }
     }
 
     addChild(child: Box | null): ListBox {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
+            console.log("List addChild dirty " + this.role)
+            this.isDirty();
         }
         return this;
     }
@@ -48,6 +78,8 @@ export abstract class ListBox extends Box {
         if (!!child) {
             this._children.splice(0, 0, child);
             child.parent = this;
+            console.log("List insertChild dirty " + this.role)
+            this.isDirty();
         }
         return this;
     }
@@ -55,6 +87,8 @@ export abstract class ListBox extends Box {
     addChildren(children?: Box[]): ListBox {
         if (!!children) {
             children.forEach(child => this.addChild(child));
+            console.log("List addChildren dirty")
+            this.isDirty();
         }
         return this;
     }

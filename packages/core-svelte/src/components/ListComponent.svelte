@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { autorun } from "mobx";
     import { afterUpdate, onDestroy, onMount } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
@@ -17,7 +16,6 @@
     export let list: ListBox ; //= new HorizontalListBox(null, "l1");
     export let editor: PiEditor;
 
-    // console.log("LIST COMPONET READ " + list?.role)
     // Local state variables
     let LOGGER: PiLogger = new PiLogger("ListComponent").mute();
     let svList: ListBox = list; // TODO question: why a new variable, cannot use 'list'?
@@ -36,23 +34,26 @@
             element.focus();
         }
     }
+
+    const dirty = (): void =>  {
+        console.log("DIRTY ListComponent " + list?.element?.piLanguageConcept() + "-" + list?.element?.piId() + ", " + list.role);
+        svNotifier.dummy
+        svList = list;
+        children = [...list.children];
+    }
+
     onMount( () => {
         MOUNT_LOGGER.log("ListComponent onMount --------------------------------")
         list.setFocus = setFocus;
+        list.dirty = dirty;
     });
 
     afterUpdate(() => {
         UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
         list.setFocus = setFocus;
+        list.dirty = dirty;
         // NOTE: Triggers autorun whenever an element is added or delete from the list
         svNotifier.notifyChange();
-    });
-    autorun(() => {
-        AUTO_LOGGER.log("AUtorun list")
-        svNotifier.dummy
-        svList = list;
-        children = [...list.children];
-        list.setFocus = setFocus;
     });
 
     // TODO Empty vertical list gives empty line, try to add entities in the example.

@@ -1,5 +1,3 @@
-import { computed, observable, makeObservable } from "mobx";
-
 import { PiElement } from "../../ast";
 import { Box, AliasBox, BoxFactory } from "./internal";
 
@@ -13,7 +11,22 @@ export class OptionalBox extends Box {
 
     box: Box = null;
     whenNoShowingAlias: AliasBox = null; // TODO question: should name be whenShowingAlias or alternativeBox?
-    mustShow: boolean = false;
+
+    _mustShow: boolean = false;
+    
+    get mustShow() {
+        return this._mustShow;
+    }
+    
+    set mustShow(v: boolean) {
+        this._mustShow = v;
+        if (!!this.dirty) {
+            this.dirty();
+        }
+    }
+    
+    dirty: () => void;
+
     condition: () => boolean;
 
     constructor(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string) {
