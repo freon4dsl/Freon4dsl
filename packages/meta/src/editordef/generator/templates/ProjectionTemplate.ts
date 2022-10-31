@@ -40,6 +40,8 @@ export class ProjectionTemplate {
     // creation. This avoids the generation of unused classes and methods.
     private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being usedknownBoxProjections
     private supersUsed: PiClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
+    // To be able to add a projections for showing/hiding brakets to binary expression, this dummy projection is used.
+    private static dummyProjection: PiEditProjection = new PiEditProjection();
 
     setStandardBooleanKeywords(editorDef: PiEditUnit) {
         // get the standard labels for true and false
@@ -59,7 +61,7 @@ export class ProjectionTemplate {
         // see which projections there are for this concept
         // myProjections: all non table projections
         // myTableProjections: all table projections
-        const myProjections: PiEditClassifierProjection[] = editDef.findProjectionsForType(concept).filter(proj => !(proj instanceof PiEditTableProjection));
+        const myBoxProjections: PiEditClassifierProjection[] = editDef.findProjectionsForType(concept).filter(proj => !(proj instanceof PiEditTableProjection));
         const myTableProjections: PiEditTableProjection[] = editDef.findTableProjectionsForType(concept);
 
         // if concept is a binary expression, handle it differently
@@ -70,13 +72,17 @@ export class ProjectionTemplate {
             symbol = editDef.getDefaultProjectiongroup().findExtrasForType(concept).symbol;
             this.coreImports.push(...['createDefaultBinaryBox', 'isPiBinaryExpression', Names.PiBinaryExpression]);
             this.configImports.push(Names.environment(language));
+            // add the projection to show/hide brackets
+            ProjectionTemplate.dummyProjection.name = Names.brackets;
+            myBoxProjections.splice(0,0, ProjectionTemplate.dummyProjection);
+            // todo the current implementation does not work on non-standard projections, is this a problem?
         }
 
         // start template
         const coreText: string = `                
                 constructor(mainHandler: FreProjectionHandler) {
                     super(mainHandler);
-                    this.knownBoxProjections = [${myProjections.length > 0 ? myProjections.map(p => `"${p.name}"`) : `"default"`}];
+                    this.knownBoxProjections = [${myBoxProjections.length > 0 ? myBoxProjections.map(p => `"${p.name}"`) : `"default"`}];
                     this.knownTableProjections = [${myTableProjections.length > 0 ? myTableProjections.map(p => `"${p.name}"`) : `"default"`}];
                     this.conceptName = '${Names.classifier(concept)}';
                 }
@@ -97,9 +103,9 @@ export class ProjectionTemplate {
                         if (!!BOX) { // found one, so return it
                             return BOX;
                         }      
-                    ${myProjections.length > 0 ?
+                    ${myBoxProjections.length > 0 ?
                         `} else { // select the box to return based on the projectionName
-                            ${myProjections.map(proj => `if (projectionName === '${proj.name}') {
+                            ${myBoxProjections.map(proj => `if (projectionName === '${proj.name}') {
                                 return this.${Names.projectionMethod(proj)}();
                             }`).join(" else ")}   
                             }               
@@ -129,16 +135,23 @@ export class ProjectionTemplate {
                 }
             
                 ${!isBinExp ?
-                    `${myProjections.map(proj => `${this.generateProjectionForClassfier(language, concept, proj)}`).join("\n\n")}
+                    `${myBoxProjections.map(proj => `${this.generateProjectionForClassfier(language, concept, proj)}`).join("\n\n")}
                     ${myTableProjections.map(proj => `${this.generateTableDefinition(language, concept, proj)}`).join("\n\n")}`
                 : ` /**
                      *  Create a standard binary box to ensure binary expressions can be edited easily
                      */
                     private getDefault(): Box {
-                        const binBox = createDefaultBinaryBox(this._element as ${Names.PiBinaryExpression}, "${symbol}", ${Names.environment(language)}.getInstance().editor, this.mainHandler);
-                        if (
-                            ${Names.environment(language)}.getInstance().editor.showBrackets &&
-                            !!this._element.piOwnerDescriptor().owner &&
+                        return createDefaultBinaryBox(
+                            this._element as ${Names.PiBinaryExpression}, 
+                            "${symbol}", 
+                            ${Names.environment(language)}.getInstance().editor, 
+                            this.mainHandler
+                        );               
+                    }
+                
+                    private getBrackets(): Box {
+                        const binBox = this.getDefault(); 
+                        if (!!this._element.piOwnerDescriptor().owner &&
                             isPiBinaryExpression(this._element.piOwnerDescriptor().owner)
                         ) {
                             return BoxFactory.horizontalList(this._element, "brackets", [

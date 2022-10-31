@@ -115,8 +115,8 @@ export abstract class FreBoxProvider {
             this.usedBoxProjection = projToUse;
         }
         let tableProjToUse = this.findTableProjectionToUse();
-        console.log('checkUsedProjection for ' + this._element.piId() + " " + this._element.piLanguageConcept() +
-            ", old: " + this.usedTableProjection + ", new: " + tableProjToUse);
+        // console.log('checkUsedProjection for ' + this._element.piId() + " " + this._element.piLanguageConcept() +
+        //     ", old: " + this.usedTableProjection + ", new: " + tableProjToUse);
         if (this.usedTableProjection !== tableProjToUse) {
             this.usedTableProjection = tableProjToUse;
         }
@@ -207,13 +207,13 @@ export abstract class FreBoxProvider {
         // todo maybe remove parameter in favor of this.mainHandler.enabledProjections()
         // see if we need to use a custom projection
         let projToUse: string = null;
-        this.mainHandler.customProjections.forEach(cp => {
+        for (const cp of this.mainHandler.customProjections) {
             // get the name of the first of the customs that fits
             // todo see whether we should loop backwards as in the enabledProjections
             if (projToUse === null && !!cp.nodeTypeToBoxMethod.get(this.conceptName)) {
                 projToUse = cp.name;
             }
-        });
+        }
         if (projToUse === null) {
             // From the list of projections that are enabled, select the first one that is available for this type of Freon node.
             // Loop through the projections backwards, because the last one takes precedence.
@@ -229,6 +229,7 @@ export abstract class FreBoxProvider {
         if (projToUse === null) { // still nothing found, then use the default
             projToUse = "default";
         }
+        console.log('FOUND projection for ' + this.conceptName + ' : ' + projToUse);
         return projToUse;
     }
 }

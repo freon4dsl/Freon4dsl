@@ -1,4 +1,4 @@
-import { PiConcept, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
+import { PiBinaryExpressionConcept, PiConcept, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
 import { CONFIGURATION_FOLDER, EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
 import { PiEditUnit } from "../../metalanguage";
 
@@ -51,6 +51,10 @@ export class EditorDefTemplate {
             ListUtil.addIfNotPresent(editorImports, Names.boxProvider(unit));
         });
 
+        const hasBinExps: boolean = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept)).length > 0;
+        // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
+
+        // template starts here
         return `import { Language, FreProjectionHandler, FreBoxProvider } from "${PROJECTITCORE}";
         
             import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
@@ -64,7 +68,10 @@ export class EditorDefTemplate {
             export function initializeProjections(${handlerVarName}: FreProjectionHandler) {
                 for (const p of projectitConfiguration.customProjection) {
                     ${handlerVarName}.addCustomProjection(p);
-                }         
+                }     
+                ${hasBinExps ? `${handlerVarName}.addProjection("${Names.brackets}");`
+                : ``
+                }    
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
                 `${handlerVarName}.addProjection("${Names.projection(group)}")`).join(";\n")}
                  ${handlerVarName}.initProviderConstructors(new Map<string, () => FreBoxProvider>(

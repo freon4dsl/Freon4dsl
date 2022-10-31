@@ -31,8 +31,6 @@ export class PiEditor {
     // TODO question: NOSELECT is not used, remove?
     private NOSELECT: Boolean = false;          // Do not accept "select" actions, used e.g. when an undo is going to come.
 
-    private _showBrackets: boolean = false;       // A toggle, which determines whether to show brackets surrounding a binary expression
-
     /**
      * The constructor makes a number of private properties observable.
      * @param projection
@@ -370,16 +368,6 @@ export class PiEditor {
         } else {
             this.newPiActions.splice(0, 0, piCustomAction);
         }
-    }
-
-    toggleShowBrackets() {
-        this._showBrackets = !this._showBrackets;
-        console.log('show brackets: ' + this._showBrackets);
-        // this.rootBox; // todo make sure the projection is recalculated
-    }
-
-    get showBrackets(): boolean {
-        return this._showBrackets;
     }
 
     /**

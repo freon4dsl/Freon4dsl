@@ -42,7 +42,7 @@ export abstract class ListBox extends Box {
                 }
             });
         }
-        console.log("List replaceChildren dirty " + this.role)
+        // console.log("List replaceChildren dirty " + this.role)
         this.isDirty();
         return this;
     }
@@ -51,7 +51,7 @@ export abstract class ListBox extends Box {
         const dirty = (this._children.length !== 0);
         this._children.splice(0, this._children.length);
         if (dirty) {
-            console.log("List clearChildren dirty " + this.role)
+            // console.log("List clearChildren dirty " + this.role)
             this.isDirty();
         }
     }
@@ -60,7 +60,7 @@ export abstract class ListBox extends Box {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
-            console.log("List addChild dirty " + this.role)
+            // console.log("List addChild dirty " + this.role)
             this.isDirty();
         }
         return this;
@@ -70,7 +70,7 @@ export abstract class ListBox extends Box {
         if (!!child) {
             this._children.splice(0, 0, child);
             child.parent = this;
-            console.log("List insertChild dirty " + this.role)
+            // console.log("List insertChild dirty " + this.role)
             this.isDirty();
         }
         return this;
@@ -79,7 +79,7 @@ export abstract class ListBox extends Box {
     addChildren(children?: Box[]): ListBox {
         if (!!children) {
             children.forEach(child => this.addChild(child));
-            console.log("List addChildren dirty")
+            // console.log("List addChildren dirty")
             this.isDirty();
         }
         return this;

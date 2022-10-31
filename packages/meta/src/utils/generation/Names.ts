@@ -78,8 +78,9 @@ export class Names {
 
     // because the below names are used to generate TypeScript classes
     // they all have to start with an uppercase character
-    static referenceSeparator: string = "/"; // TODO use value from editDef
-    static listUtil: string = "ListUtil";
+    public static referenceSeparator: string = "/"; // TODO use value from editDef
+    public static listUtil: string = "ListUtil";
+    public static brackets: string = "Brackets";
 
     public static configuration() {
         return "ProjectitConfiguration";
