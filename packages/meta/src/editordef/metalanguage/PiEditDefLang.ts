@@ -44,13 +44,13 @@ export class PiEditUnit extends PiDefinitionElement {
     }
 
     /**
-     * Returns a list of all projection groups except the default group, sorted by their precendence.
-     * Highest presence first!
+     * Returns a list of all projection groups except the default group, sorted by their precedence.
+     * Lowest precedence first!
      */
     getAllNonDefaultProjectiongroups(): PiEditProjectionGroup[] {
         const result = this.projectiongroups.filter(group => group.name !== Names.defaultProjectionName);
         result.sort ( (a, b) => {
-            return b.precedence - a.precedence;
+            return a.precedence - b.precedence;
         });
         // result.forEach(g => {
         //     console.log(`group ${g.name} has precendence ${g.precedence}`);

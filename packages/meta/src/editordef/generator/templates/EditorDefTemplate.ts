@@ -66,18 +66,19 @@ export class EditorDefTemplate {
              * @param ${handlerVarName}
              */
             export function initializeProjections(${handlerVarName}: FreProjectionHandler) {
-                for (const p of projectitConfiguration.customProjection) {
-                    ${handlerVarName}.addCustomProjection(p);
-                }     
                 ${hasBinExps ? `${handlerVarName}.addProjection("${Names.brackets}");`
                 : ``
                 }    
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
-                `${handlerVarName}.addProjection("${Names.projection(group)}")`).join(";\n")}
-                 ${handlerVarName}.initProviderConstructors(new Map<string, () => FreBoxProvider>(
+                    `${handlerVarName}.addProjection("${Names.projection(group)}")`
+                ).join(";\n")}
+                for (const p of projectitConfiguration.customProjection) {
+                    ${handlerVarName}.addCustomProjection(p);
+                }
+                ${handlerVarName}.initProviderConstructors(new Map<string, () => FreBoxProvider>(
                 [
                     ${constructors.map(constr => constr).join(",\n")} 
-                ]));
+                ])); 
             }    
             
             /**
