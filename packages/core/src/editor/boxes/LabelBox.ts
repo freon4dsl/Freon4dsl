@@ -1,5 +1,3 @@
-import { observable, makeObservable } from "mobx";
-
 import { Box } from "./internal";
 import { PiUtils } from "../../util";
 import { PiElement } from "../../ast";
@@ -12,7 +10,7 @@ export class LabelBox extends Box {
     constructor(element: PiElement, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>) {
         super(element, role);
         PiUtils.initializeObject(this, initializer);
-        this.setLabel(getLabel);
+        this.setLabel(getLabel); 
         // makeObservable<LabelBox, "$label">(this, {
         //     $label: observable
         // });

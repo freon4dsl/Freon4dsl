@@ -22,6 +22,7 @@
     function refresh() : void  {
         console.log("DIRTY OptionalBox");
         mustShow = optionalBox.mustShow;
+        showByCondition =optionalBox.condition();
         childBox = optionalBox.box;
     }
 
@@ -52,6 +53,7 @@
         optionalBox.refreshComponent = refresh;
     });
 
+    refresh();
     // autorun( () => {
         // LOGGER.log("AUTO " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
         // LOGGER.log("   root " + getRoot(optionalBox).$id);

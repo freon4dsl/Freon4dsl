@@ -40,6 +40,8 @@ describe("Label component", () => {
         fireEvent.click(myContainer1);
         expect(myLabel).not.toHaveFocus();
 
+        expect(myLabelBox.selectable).toBeTruthy();
+        
         fireEvent.click(myLabel);
         expect(myLabel).toHaveFocus();
     });
