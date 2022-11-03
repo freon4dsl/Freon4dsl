@@ -33,6 +33,7 @@
         if (box.selectable) {
             LOGGER.log("       ===> selected box " + box.role);
             editor.selectedBox = box;
+            box.setFocus();
             event.preventDefault();
             event.stopPropagation();
         }
