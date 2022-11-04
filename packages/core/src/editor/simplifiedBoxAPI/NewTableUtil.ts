@@ -63,9 +63,10 @@ export class NewTableUtil {
     }
 
     public static rowBox(element: PiElement, propertyName: string, cells: Box[], mainIndex: number): TableRowBox {
+        // todo check whether the indexes are set correctly
         const myContent = cells.map((cell, index) => {
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, index, mainIndex);
-            return new TableCellBox(element, cellRoleName, index, mainIndex, cell);
+            return new TableCellBox(element, cellRoleName, mainIndex, index, cell);
         });
         const role: string = RoleProvider.row(element.piLanguageConcept(), propertyName, mainIndex);
         return new TableRowBox(element, role, myContent);

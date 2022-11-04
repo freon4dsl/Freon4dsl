@@ -161,5 +161,5 @@ export function isColumnBox(b: Box): b is TableBoxColumnOriented {
 }
 
 export function isTableBox(box: Box): box is TableBox {
-    return box.kind === "TableBox";
+    return isRowBox(box) || isColumnBox(box);
 }

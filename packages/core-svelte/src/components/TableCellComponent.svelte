@@ -201,7 +201,7 @@
         draggable=true
         on:keydown={onKeydown}
 >
-    <RenderComponent box={box.content} editor={editor}/>
+    <RenderComponent box={box.box} editor={editor}/>
 </span>
 
 
