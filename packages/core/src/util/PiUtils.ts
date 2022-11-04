@@ -75,3 +75,10 @@ export class PiUtils {
 export function isNullOrUndefined(obj: Object | null | undefined): obj is null | undefined {
     return obj === undefined || obj === null;
 }
+
+export function startWithUpperCase(word: string): string {
+    if (!!word) {
+        return word[0].toUpperCase() + word.substring(1);
+    }
+    return "";
+}

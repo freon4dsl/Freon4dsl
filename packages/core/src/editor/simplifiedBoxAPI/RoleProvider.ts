@@ -38,4 +38,8 @@ export class RoleProvider {
         roleName += "-row-" + rowIndex + "-column-" + columnIndex;
         return roleName;
     }
+
+    static row(owningConceptName: string, propertyName: string, index: number) {
+        return RoleProvider.startWithUpperCase(owningConceptName) + "-" + propertyName + "-row-" + index;
+    }
 }

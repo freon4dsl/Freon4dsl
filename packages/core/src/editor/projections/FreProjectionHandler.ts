@@ -1,7 +1,6 @@
-import { Box, BoxFactory, LabelBox } from "../boxes";
+import { Box, BoxFactory } from "../boxes";
 import { isNullOrUndefined } from "../../util";
 import { PiElement } from "../../ast";
-import { PiTableDefinition } from "../PiTables";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjection } from "./FreProjection";
 import { action, makeObservable, observable } from "mobx";
@@ -67,22 +66,22 @@ export class FreProjectionHandler {
      * Internally, a tempory box provider for type 'conceptName' is used.
      * @param conceptName
      */
-    getTableDefinition(conceptName: string): PiTableDefinition {
-        console.log('FreProjectionHandler getTableDefinition ' + conceptName)
-        const boxProvider = this.conceptNameToProviderConstructor.get(conceptName)(this);
-        let tableDef = boxProvider?.tableDefinition;
-        if (!!tableDef) {
-            return tableDef;
-        } else {
-            // return default values if nothing has been found.
-            return {
-                headers: [conceptName],
-                cells: [(element: PiElement) => {
-                    return this.getBox(element);
-                }]
-            };
-        }
-    }
+    // getTableDefinition(conceptName: string): PiTableDefinition {
+    //     console.log('FreProjectionHandler getTableDefinition ' + conceptName)
+    //     const boxProvider = this.conceptNameToProviderConstructor.get(conceptName)(this);
+    //     let tableDef = boxProvider?.tableDefinition;
+    //     if (!!tableDef) {
+    //         return tableDef;
+    //     } else {
+    //         // return default values if nothing has been found.
+    //         return {
+    //             headers: [conceptName],
+    //             cells: [(element: PiElement) => {
+    //                 return this.getBox(element);
+    //             }]
+    //         };
+    //     }
+    // }
 
     ////////// Methods for registring the boxproviders ////////////
 
@@ -145,6 +144,7 @@ export class FreProjectionHandler {
             }
         }
         this._enabledProjections = newList;
+        console.log(" ============== enabled projections: " + this._enabledProjections);
 
         //  Let all providers know that projection may be changed.
         for (const provider of this.elementToProvider.values()) {
@@ -211,18 +211,18 @@ export class FreProjectionHandler {
      * @param element
      * @param projectionName
      */
-    executeCustomTableDefinition(element: PiElement, projectionName: string): PiTableDefinition {
-        let DEF: PiTableDefinition = null;
-        let customFuction: () => PiTableDefinition = null;
-        const customToUse = this.customProjections.find(cp => cp.name === projectionName);
-        if (!!customToUse) {
-            // bind(customToUse) binds the projection 'customToUse' to the 'this' variable, for use within the custom function
-            customFuction = customToUse.nodeTypeToTableDefinition.get(element.piLanguageConcept())?.bind(customToUse);
-        }
-
-        if (!!customFuction) {
-            DEF = customFuction();
-        }
-        return DEF;
-    }
+    // executeCustomTableDefinition(element: PiElement, projectionName: string): PiTableDefinition {
+    //     let DEF: PiTableDefinition = null;
+    //     let customFuction: () => PiTableDefinition = null;
+    //     const customToUse = this.customProjections.find(cp => cp.name === projectionName);
+    //     if (!!customToUse) {
+    //         // bind(customToUse) binds the projection 'customToUse' to the 'this' variable, for use within the custom function
+    //         customFuction = customToUse.nodeTypeToTableDefinition.get(element.piLanguageConcept())?.bind(customToUse);
+    //     }
+    //
+    //     if (!!customFuction) {
+    //         DEF = customFuction();
+    //     }
+    //     return DEF;
+    // }
 }

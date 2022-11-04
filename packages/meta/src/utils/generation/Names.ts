@@ -262,12 +262,12 @@ export class Names {
         return "";
     }
 
-    public static projectionFunction(c: PiClassifier): string {
-        return "get" + Names.classifier(c) + "Box";
+    public static projectionMethod(proj: PiEditClassifierProjection): string {
+        return "get" + this.startWithUpperCase(proj.name);
     }
 
-    public static tabelDefinitionFunction(c: PiClassifier): string {
-        return "get" + Names.classifier(c) + "TableDefinition";
+    public static tableProjectionMethod(proj: PiEditClassifierProjection): string {
+        return "get" + this.startWithUpperCase(proj.name);
     }
 
     public static tabelDefinitionFunctionNew(projectionName: string): string {
@@ -350,7 +350,4 @@ export class Names {
         return Names.startWithUpperCase(concept.name) + "BoxProvider";
     }
 
-    static projectionMethod(proj: PiEditClassifierProjection): string {
-        return "get" + this.startWithUpperCase(proj.name);
-    }
 }

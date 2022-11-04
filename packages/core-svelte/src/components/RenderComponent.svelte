@@ -27,8 +27,9 @@
         isHorizontalBox,
         isSvgBox,
         isEmptyLineBox,
-        LabelBox, PiEditor, PiLogger, ElementBox, isElementBox
+        LabelBox, PiEditor, PiLogger, ElementBox, isElementBox, isTableBox, isTableCellBox
     } from "@projectit/core";
+    import TableComponent from "./TableComponent.svelte";
 
     const LOGGER = new PiLogger("RenderComponent"); //.mute();
 
@@ -118,6 +119,8 @@
         </SelectableComponent>
     {:else if isEmptyLineBox(showBox) }
         <EmptyLineComponent box={showBox} editor={editor}/>
+    {:else if isTableBox(showBox) }
+        <TableComponent box={showBox} editor={editor}/>
     {:else}
         <p class="error">[UNKNOWN BOX TYPE: {showBox.kind}]</p>
     {/if}

@@ -8,7 +8,7 @@ import { PiUtils } from "../../util";
 export type GridOrientation = "neutral" | "row" | "column";
 
 export class GridBox extends Box {
-    readonly kind = "GridBox";
+    kind = "GridBox";
     cells: GridCellBox[] = [];
     orientation: GridOrientation = "neutral";
 
