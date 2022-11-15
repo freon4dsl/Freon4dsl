@@ -1,7 +1,7 @@
 import {
     PiClassifier, PiConcept, PiInstance, PiInterface, PiLanguage, PiPrimitiveProperty, PiProperty, PiModelDescription, PiUnitDescription
 } from "../../languagedef/metalanguage";
-import { PiEditClassifierProjection, PiEditProjectionGroup } from "../../editordef/metalanguage";
+import { PiEditClassifierProjection, PiEditProjectionGroup, PiEditTableProjection } from "../../editordef/metalanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -271,7 +271,11 @@ export class Names {
     }
 
     public static tabelDefinitionFunctionNew(projectionName: string): string {
-        return "getTableFor" + this.startWithUpperCase(projectionName);
+        return "getRowFor" + this.startWithUpperCase(projectionName);
+    }
+
+    public static tableHeadersMethod(proj: PiEditTableProjection): string {
+        return "getHeadersFor" + this.startWithUpperCase(proj.name);
     }
 
     public static writer(language: PiLanguage): string {

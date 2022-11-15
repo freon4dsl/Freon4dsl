@@ -26,6 +26,7 @@ import {
     Roles
 } from "../../../utils";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
+import { BoxUtils, NewTableUtil } from "@projectit/core";
 
 export class ProjectionTemplate {
     // The values for the boolean keywords are set on initialization (by a call to 'setStandardBooleanKeywords').
@@ -56,7 +57,7 @@ export class ProjectionTemplate {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
         this.coreImports.push(...['Box', 'BoxUtils', 'BoxFactory', 'PiElement', 'FreBoxProvider' +
-        '', 'FreProjectionHandler', 'PiTableDefinition', 'Language']);
+        '', 'FreProjectionHandler', 'Language']);
 
         // see which projections there are for this concept
         // myProjections: all non table projections
@@ -98,7 +99,7 @@ export class ProjectionTemplate {
                     }
                 }
                        
-                public getContent(projectionName: string): Box {
+                protected getContent(projectionName: string): Box {
                 // console.log("GET CONTENT " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept() + ' ' + projectionName);
                     // see if we need to use a custom projection
                     if (!this.knownBoxProjections.includes(projectionName) && !this.knownTableProjections.includes(projectionName)) {
@@ -117,12 +118,36 @@ export class ProjectionTemplate {
                         }
                     return this.getDefault();
                 }
-             
-                ${myTableProjections.length > 0 ?
-                        `${myTableProjections.map(proj => `${this.generateTableProjection(language, concept, proj)}`).join("\n\n")}`
-                        : ``
+               
+                protected getTableHeadersFor(projectionName: string): TableRowBox {
+                    // console.log("GET getTableHeadersFor " + projectionName);
+                    // see if we need to use a custom projection
+                    if (!this.knownBoxProjections.includes(projectionName) && !this.knownTableProjections.includes(projectionName)) {
+                        let BOX: TableRowBox = this.mainHandler.getTableHeadersFor(projectionName);
+                        if (!!BOX) {
+                            // found one, so return it
+                            return BOX;
+                        }
+                    ${myTableProjections.length > 0 ?
+                        `} else { // select the box to return based on the projectionName
+                            ${myTableProjections.map(proj => `if (projectionName === '${proj.name}') {
+                                return this.${Names.tableHeadersMethod(proj)}();
+                            }`).join(" else ")}   
+                            }               
+                            // in all other cases, return the default`
+                        : `}`
+                    }
+                    return null;
                 }
             
+                ${myTableProjections.length > 0 ?
+                    `${myTableProjections.map(proj => 
+                        `${this.generateTableProjection(language, concept, proj)}\n
+                        ${this.generateHeaderProjection(language, concept, proj)}`
+                    ).join("\n\n")}`
+                    : ``
+                }
+        
                 ${!isBinExp ?
                     `${myBoxProjections.map(proj => `${this.generateProjectionForClassifier(language, concept, proj)}`).join("\n\n")}`
                 : ` /**
@@ -245,6 +270,10 @@ export class ProjectionTemplate {
     private generateTableProjection(language: PiLanguage, concept: PiClassifier, projection: PiEditTableProjection) {
         // TODO Check whether 999 argument to generateItem()n should be different.
         if (!!projection) {
+            let hasHeaders: boolean = false;
+            if (!!projection.headers && projection.headers.length > 0) {
+                hasHeaders = true;
+            }
             let cellDefs: string[] = [];
             projection.cells.forEach((cell, index) => { // because we need the index, this is done outside the template
                 ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
@@ -252,16 +281,45 @@ export class ProjectionTemplate {
             });
             ListUtil.addIfNotPresent(this.coreImports, "TableRowBox");
             ListUtil.addIfNotPresent(this.coreImports, "NewTableUtil");
-            return `${Names.tableProjectionMethod(projection)}(): TableRowBox {
+            return `private ${Names.tableProjectionMethod(projection)}(): TableRowBox {
                         const cells: Box[] = [];
                         ${cellDefs.map(cellDef => `cells.push(${cellDef})`).join(';\n')}
-                        return NewTableUtil.rowBox(this._element, this._element.piOwnerDescriptor().propertyName, cells, this._element.piOwnerDescriptor().propertyIndex);
+                        return NewTableUtil.rowBox(this._element, this._element.piOwnerDescriptor().propertyName, cells, this._element.piOwnerDescriptor().propertyIndex, ${hasHeaders});
                     }`;
         } else {
             console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
             return "";
         }
+    }
 
+    private generateHeaderProjection(language: PiLanguage, concept: PiClassifier, projection: PiEditTableProjection): string {
+
+        if (!!projection) {
+            if (!!projection.headers && projection.headers.length > 0) {
+                ListUtil.addIfNotPresent(this.coreImports, "NewTableUtil");
+                ListUtil.addIfNotPresent(this.coreImports, "BoxUtils");
+                // todo this._element is null and propertyName should be set differently
+                return `private ${Names.tableHeadersMethod(projection)}(): TableRowBox {
+                    return NewTableUtil.rowBox(
+                        this._element,
+                        this._element.piOwnerDescriptor().propertyName,
+                        [ ${projection.headers.map((head, index) => 
+                            `BoxUtils.labelBox(this._element, "${head}", "table-header-${index}")`
+                        ).join(",\n")}
+                        ],
+                        0, 
+                        true
+                    );
+                }`;
+            } else {
+                return `private ${Names.tableHeadersMethod(projection)}(): TableRowBox {
+                    return null;
+                }`;
+            }
+        } else {
+            console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
+            return "";
+        }
     }
 
     private generateProjectionForClassifier(language: PiLanguage, concept: PiClassifier, projection: PiEditClassifierProjection): string {
@@ -560,31 +618,31 @@ export class ProjectionTemplate {
                         )`;
     }
 
-    private generateTableDefinition(language: PiLanguage, c: PiClassifier, myTableProjection: PiEditTableProjection): string {
-        // TODO Check whether 999 argument to generateItem()n should be different.
-        if (!!myTableProjection) {
-            // create the cell getters
-            let cellGetters: string = '';
-            myTableProjection.cells.forEach((cell, index) => {
-                ListUtil.addIfNotPresent(this.modelImports, Names.classifier(c));
-                cellGetters += `(cell${index}: ${Names.classifier(c)}): Box => {
-                        return ${this.generateItem(cell, `cell${index}`, index, index, c.name + "_table", language, 999)}
-                    },\n`;
-            });
-
-            return `
-            private ${Names.tabelDefinitionFunctionNew(myTableProjection.name)}(): PiTableDefinition {
-                return {
-                    headers: [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")} ],
-                    cells: [${cellGetters}]
-                };
-            }
-        `;
-        } else {
-            console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
-            return "";
-        }
-    }
+    // private generateTableDefinition(language: PiLanguage, c: PiClassifier, myTableProjection: PiEditTableProjection): string {
+    //     // TODO Check whether 999 argument to generateItem()n should be different.
+    //     if (!!myTableProjection) {
+    //         // create the cell getters
+    //         let cellGetters: string = '';
+    //         myTableProjection.cells.forEach((cell, index) => {
+    //             ListUtil.addIfNotPresent(this.modelImports, Names.classifier(c));
+    //             cellGetters += `(cell${index}: ${Names.classifier(c)}): Box => {
+    //                     return ${this.generateItem(cell, `cell${index}`, index, index, c.name + "_table", language, 999)}
+    //                 },\n`;
+    //         });
+    //
+    //         return `
+    //         private ${Names.tabelDefinitionFunctionNew(myTableProjection.name)}(): PiTableDefinition {
+    //             return {
+    //                 headers: [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")} ],
+    //                 cells: [${cellGetters}]
+    //             };
+    //         }
+    //     `;
+    //     } else {
+    //         console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
+    //         return "";
+    //     }
+    // }
 
     private generateSuperProjection(item: PiEditSuperProjection) {
         const myClassifier: PiClassifier = item.superRef.referred; // to avoid the lookup by '.referred' to happen more than once

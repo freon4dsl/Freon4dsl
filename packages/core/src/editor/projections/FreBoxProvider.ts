@@ -1,5 +1,5 @@
 import { PiElement } from "../../ast";
-import { Box, ElementBox, LabelBox } from "../boxes";
+import { Box, ElementBox, LabelBox, TableRowBox } from "../boxes";
 import { action, computed, makeObservable, observable } from "mobx";
 import { FreProjectionHandler } from "./FreProjectionHandler";
 import { startWithUpperCase } from "../../util";
@@ -76,32 +76,6 @@ export abstract class FreBoxProvider {
         return this._mainBox;
     }
 
-    // public getBoxAsTable(projectionName?: string): Box {
-    //     console.log('getBoxAsTable')
-    //     if (projectionName !== null && projectionName !== undefined && projectionName.length > 0) {
-    //         projectionName = this.transformToTableProjectionName(projectionName);
-    //         if (this.knownTableProjections.includes(projectionName)) {
-    //             // select the projection named 'projectionName' => overrule 'this.usedProjection'!!
-    //             if (this.usedProjection !== projectionName) {
-    //                 this.usedProjection = projectionName;
-    //             }
-    //         }
-    //     } else {
-    //         this.usedProjection = this.findTableProjectionToUse();
-    //     }
-    //     if (this._element === null) {
-    //         return null;
-    //     }
-    //
-    //     if (this._mainBox === null || this._mainBox === undefined) {
-    //         this._mainBox = new ElementBox(this._element, "main-box-for-" + this._element.piLanguageConcept() + "-" + this._element.piId());
-    //     }
-    //
-    //     // the main box always stays the same for this element, but the content may differ
-    //     this._mainBox.content = this.getContent(this.usedProjection);
-    //     return this._mainBox;
-    // }
-
     public getNamedBox(projectionName: string): Box {
         if (projectionName !== null && projectionName !== undefined && projectionName.length > 0) {
             // select the projection named 'projectionName' => overrule 'this.usedProjection'!!
@@ -118,7 +92,7 @@ export abstract class FreBoxProvider {
      * This method should be overwritten by each box provider.
      * @param projectionName
      */
-    public getContent(projectionName: string): Box {
+    protected getContent(projectionName: string): Box {
         return new LabelBox(this._element, "unknown-projection", () => "Content should be determined by the appropriate subclass of PiBoxProvider.");
     }
 
@@ -240,5 +214,15 @@ export abstract class FreBoxProvider {
         return projToUse;
     }
 
+    getTableHeaders(): TableRowBox {
+        // find which projection to use
+        const projToUse = this.findTableProjectionToUse();
+        return this.getTableHeadersFor(projToUse);
+    }
+
+    protected getTableHeadersFor(projToUse: string) {
+        console.error('This method should be overwritten by concrete subclasses of FreBoxProvider.');
+        return undefined;
+    }
 }
 

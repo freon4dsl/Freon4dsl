@@ -19,13 +19,15 @@ export enum TableDirection {
 export abstract class TableBox extends Box {
     protected direction: TableDirection = TableDirection.HORIZONTAL;
     protected _children: Box[] = [];
+    protected hasHeaders: boolean = false;
 
-    protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
+    protected constructor(element: PiElement, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
         super(element, role);
         PiUtils.initializeObject(this, initializer);
         if (children) {
             children.forEach(b => this.addChild(b));
         }
+        this.hasHeaders = hasHeaders;
     }
 
     get cells(): TableCellBox[] {
@@ -137,8 +139,8 @@ export abstract class TableBox extends Box {
 export class TableBoxRowOriented extends TableBox {
     kind = "TableBoxRowOriented";
 
-    constructor(element: PiElement, role: string, children?: (Box | null)[], initializer?: Partial<TableBoxRowOriented>) {
-        super(element, role, children, initializer);
+    constructor(element: PiElement, role: string, hasHeaders: boolean, children?: (Box | null)[], initializer?: Partial<TableBoxRowOriented>) {
+        super(element, role, hasHeaders, children, initializer);
         this.direction = TableDirection.HORIZONTAL;
     }
 }
@@ -146,8 +148,8 @@ export class TableBoxRowOriented extends TableBox {
 export class TableBoxColumnOriented extends TableBox {
     kind = "TableBoxColumnOriented";
 
-    constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
-        super(element, role, children, initializer);
+    constructor(element: PiElement, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
+        super(element, role, hasHeaders, children, initializer);
         this.direction = TableDirection.VERTICAL;
     }
 }

@@ -1,4 +1,4 @@
-import { Box, BoxFactory } from "../boxes";
+import { Box, BoxFactory, TableRowBox } from "../boxes";
 import { isNullOrUndefined } from "../../util";
 import { PiElement } from "../../ast";
 import { FreBoxProvider } from "./FreBoxProvider";
@@ -115,6 +115,10 @@ export class FreProjectionHandler {
         return boxProvider;
     }
 
+    getBoxProviderForType(conceptName: string): FreBoxProvider {
+        return this.conceptNameToProviderConstructor.get(conceptName)(this);
+    }
+
     //////////// Methods for registring the projections ///////////
 
     /**
@@ -136,7 +140,7 @@ export class FreProjectionHandler {
         BoxFactory.clearCaches();
         // Because priority needs to be taken into account, we loop over all projections
         // in order to get the order of enabled projections correct.
-        // This assumes that 'this._allProjections' always has the right order or priorities.
+        // This assumes that 'this._allProjections' always has the right order of priorities.
         const newList: string[] = [];
         for (const proj of this._allProjections) {
             if (names.includes(proj)) {
@@ -144,7 +148,7 @@ export class FreProjectionHandler {
             }
         }
         this._enabledProjections = newList;
-        console.log(" ============== enabled projections: " + this._enabledProjections);
+        // console.log(" ============== enabled projections: " + this._enabledProjections);
 
         //  Let all providers know that projection may be changed.
         for (const provider of this.elementToProvider.values()) {
@@ -203,6 +207,14 @@ export class FreProjectionHandler {
             BOX = customFuction(element);
         }
         return BOX;
+    }
+
+    getTableHeadersFor(projectionName: string): TableRowBox {
+        const customToUse: FreProjection = this.customProjections.find(cp => cp.name === projectionName);
+        if (!!customToUse) {
+            return customToUse.getTableHeadersFor(projectionName);
+        }
+        return null;
     }
 
     /**

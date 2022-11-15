@@ -62,7 +62,10 @@ export class NewTableUtil {
         return this.tableBox("column", element, list, propertyName, boxProviderCache, editor);
     }
 
-    public static rowBox(element: PiElement, propertyName: string, cells: Box[], mainIndex: number): TableRowBox {
+    public static rowBox(element: PiElement, propertyName: string, cells: Box[], mainIndex: number, hasHeaders: boolean): TableRowBox {
+        if (hasHeaders) {
+            mainIndex = mainIndex + 1;
+        }
         // todo check whether the indexes are set correctly
         const myContent = cells.map((cell, index) => {
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, index, mainIndex);
@@ -73,20 +76,37 @@ export class NewTableUtil {
     }
 
     private static tableBox(orientation: GridOrientation, element: PiElement, list: PiElement[], propertyName: string, boxProviderCache: FreProjectionHandler, editor: PiEditor) {
+        // find the information on the property to be shown and check it
+        const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
+        PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
+        // create a list to hold all TableRowBoxes;
+        let children: Box[] = [];
+        let hasHeaders: boolean = false;
+        // add the headers, if there are any
+        const headerProvider: FreBoxProvider = boxProviderCache.getBoxProviderForType(propInfo.type);
+        headerProvider.mustUseTable(true);
+        const headerBox: TableRowBox = headerProvider.getTableHeaders();
+        if (!!headerBox) {
+            children.push(headerBox);
+            hasHeaders = true;
+            // todo adjust the indexes of the other children to the headers
+        }
         // add the children for each element of the list
-        let children: Box[] = list.map((item: PiElement, index: number) => {
+        list.forEach((item: PiElement, index: number) => {
             // const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "table-item", index);
             // todo get rolename ok
             const myProvider: FreBoxProvider = boxProviderCache.getBoxProvider(item);
             myProvider.mustUseTable(true); // todo find out when to set mustUseTable back to false
-            return myProvider.box;
+            children.push(myProvider.box);
         });
+        // todo add an extra row where a new element to the list can be added
+
         // return the actual table box
         const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
         if (orientation === "column") {
-            return new TableBoxColumnOriented(element, roleName, children);
+            return new TableBoxColumnOriented(element, roleName, hasHeaders, children);
         } else {
-            return new TableBoxRowOriented(element, roleName, children);
+            return new TableBoxRowOriented(element, roleName, hasHeaders, children);
         }
     }
 
