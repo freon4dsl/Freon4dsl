@@ -1,14 +1,11 @@
 import { runInAction } from "mobx";
 import { PiCreateSiblingAction } from "../actions";
-import { ElementBox, GridCellBox, TableBoxColumnOriented, TableBoxRowOriented, TableCellBox, TableRowBox } from "../boxes";
+import { BoxFactory, ElementBox, TableBoxColumnOriented, TableBoxRowOriented, TableCellBox, TableRowBox } from "../boxes";
 import {
     AliasBox,
-    Box,
-    BoxFactory,
-    BoxUtils,
+    Box, BoxUtils,
     FreBoxProvider,
     FreProjectionHandler,
-    GridBox,
     GridOrientation,
     isAliasBox,
     PiCustomAction,
@@ -22,8 +19,6 @@ import { PiUtils } from "../../util";
 import { Language } from "../../language";
 import { RoleProvider } from "./RoleProvider";
 import { PiLogger } from "../../logging";
-import { TableBox } from "../boxes/TableBox";
-import { element } from "svelte/internal";
 
 type Location = { row: number, column: number };
 const LOGGER = new PiLogger("NewTableUtil");
@@ -38,10 +33,10 @@ export class NewTableUtil {
      * A series of getters that each return a Box object must be present: one per column.
      *
      * @param element       The element that holds the list property.
+     * @param list
      * @param propertyName  The name of the list property to be shown.
-     * @param columnHeaders The titles that are to be shown above each column.
-     * @param cellGetters   A series of functions that return the Box to be shown in a cell.
-     * @param editor        The editor that should know about KeyboardShortCuts.
+     * @param boxProviderCache
+     * @param editor
      */
     public static tableBoxRowOriented(element: PiElement, list: PiElement[], propertyName: string, boxProviderCache: FreProjectionHandler, editor: PiEditor): Box {
         return this.tableBox("row", element, list, propertyName, boxProviderCache, editor);
@@ -53,10 +48,10 @@ export class NewTableUtil {
      * A series of getters that each return a Box object must be present: one per row.
      *
      * @param element       The element that holds the list property.
+     * @param list
      * @param propertyName  The name of the list property to be shown.
-     * @param rowHeaders    The titles that are to be shown before each row.
-     * @param cellGetters   A series of functions that return the Box to be shown in a cell.
-     * @param editor        The editor that should know about KeyboardShortCuts.
+     * @param boxProviderCache
+     * @param editor
      */
     public static tableBoxColumnOriented(element: PiElement, list: PiElement[], propertyName: string, boxProviderCache: FreProjectionHandler, editor: PiEditor): Box {
         return this.tableBox("column", element, list, propertyName, boxProviderCache, editor);
@@ -64,12 +59,15 @@ export class NewTableUtil {
 
     public static rowBox(element: PiElement, propertyName: string, cells: Box[], mainIndex: number, hasHeaders: boolean): TableRowBox {
         if (hasHeaders) {
-            mainIndex = mainIndex + 1;
+            mainIndex = mainIndex + 2;
+        } else {
+            mainIndex = mainIndex + 1; // css grid counts from 1, not 0
         }
         // todo check whether the indexes are set correctly
         const myContent = cells.map((cell, index) => {
-            const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, index, mainIndex);
-            return new TableCellBox(element, cellRoleName, mainIndex, index, cell);
+            const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, index + 1, mainIndex);
+            // console.log(`creating content cell for ${element.piLanguageConcept()+element.piId()} row ${mainIndex}, column ${index+1}`);
+            return new TableCellBox(element, cellRoleName, mainIndex, index + 1, cell);
         });
         const role: string = RoleProvider.row(element.piLanguageConcept(), propertyName, mainIndex);
         return new TableRowBox(element, role, myContent);
@@ -83,23 +81,31 @@ export class NewTableUtil {
         let children: Box[] = [];
         let hasHeaders: boolean = false;
         // add the headers, if there are any
-        const headerProvider: FreBoxProvider = boxProviderCache.getBoxProviderForType(propInfo.type);
-        headerProvider.mustUseTable(true);
-        const headerBox: TableRowBox = headerProvider.getTableHeaders();
-        if (!!headerBox) {
-            children.push(headerBox);
+        const headers: string[] = boxProviderCache.getTableHeaders(propInfo.type);
+        if (!!headers && headers.length > 0) {
+            children.push(this.createHeaderBox(element, propertyName, headers, orientation));
             hasHeaders = true;
-            // todo adjust the indexes of the other children to the headers
         }
+        console.log('Adding headers to ' + element.piLanguageConcept() + element.piId() + ": " + headers + ", number of children: " + children.length)
+
         // add the children for each element of the list
         list.forEach((item: PiElement, index: number) => {
-            // const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "table-item", index);
-            // todo get rolename ok
             const myProvider: FreBoxProvider = boxProviderCache.getBoxProvider(item);
             myProvider.mustUseTable(true); // todo find out when to set mustUseTable back to false
+            const itemBox = myProvider.box;
             children.push(myProvider.box);
         });
+        console.log('Adding rows to ' + element.piLanguageConcept() + element.piId() + ", number of children: " + children.length)
         // todo add an extra row where a new element to the list can be added
+        // debugging log statement begin:
+        for (const child of children) {
+            if (child instanceof TableRowBox) {
+                child.cells.map(cl => {
+                    console.log(`[${cl.row} ${cl.column}] ${cl.element.piLanguageConcept()}-${cl.element.piId()}` );
+                }).join(",\n")
+            }
+        }
+        // debugging log statement end
 
         // return the actual table box
         const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
@@ -109,53 +115,6 @@ export class NewTableUtil {
             return new TableBoxRowOriented(element, roleName, hasHeaders, children);
         }
     }
-
-    // private static xxx(orientation: GridOrientation, element: PiElement, propertyName: string, columnHeaders: string[], cells: Box[], editor: PiEditor): Box {
-    //     // find the information on the property to be shown
-    //     const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
-    //     const property = element[propertyName];
-    //     // const isList: boolean = propInfo.isList;
-    //     PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
-    //     LOGGER.log("TABLE BOX CREATION for " + propertyName + " size " + property.length);
-    //     // const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
-    //     const hasHeaders = columnHeaders !== null && columnHeaders !== undefined && columnHeaders.length > 0;
-    //     // create the box
-    //     if (property !== undefined && property !== null) {
-    //         const cells: GridCellBox[] = [];
-    //         // add the headers - all in row 1
-    //         columnHeaders.forEach((item: string, index: number) => {
-    //             const location = this.calcHeaderLocation({ row: 1, column: index + 1 }, orientation, hasHeaders);
-    //             LOGGER.log("NewTableUtil header " + location.row + " - " + location.column + " with headers " + hasHeaders);
-    //             cells.push(BoxFactory.gridcell(element, "cell-" + location.row + "-" + location.column, location.row, location.column, BoxUtils.labelBox(element, item, "" + index), { isHeader: true }));
-    //         });
-    //         // add the cells for each element of the list
-    //         property.forEach((item: PiElement, rowIndex: number) => {
-    //             cells.forEach((projector, columnIndex) => {
-    //                 const location = this.calcLocation({ row: rowIndex + 1, column: columnIndex + 1 }, orientation, hasHeaders);
-    //
-    //                 const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
-    //                 LOGGER.log("NewTableUtil add " + cellRoleName + " with headers " + hasHeaders);
-    //                 cells.push(BoxFactory.gridcell(item, cellRoleName, location.row, location.column, projector));
-    //             });
-    //         });
-    //         // add an extra row where a new element to the list can be added
-    //         const location = this.calcLocation({ row: property.length + 1, column: 1 }, orientation, hasHeaders);
-    //         const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
-    //         // console.log("NewTableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders + " span[" + (orientation === "row" ? cellGetters.length : 1) + "/" + (orientation === "row" ? 1 : cellGetters.length) + "]");
-    //         cells.push(BoxFactory.gridcell(element, cellRoleName, location.row, location.column, BoxFactory.alias(element, "alias-add-row-or-column", `<add new ${orientation}>`, {
-    //             propertyName: propertyName,
-    //             conceptName: propInfo.type
-    //         }), {
-    //             columnSpan: (orientation === "row" ? cells.length : 1), rowSpan: (orientation === "row" ? 1 : cells.length)
-    //         }));
-    //         // Add keyboard actions to grid such that new rows can be added by Return Key
-    //         const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
-    //         const nrOfRowsAndColumns = this.calcLocation({ row: property.length, column: cells.length }, orientation, hasHeaders);
-    //         this.addKeyBoardShortCuts(element, propertyName, nrOfRowsAndColumns.row, nrOfRowsAndColumns.column, editor, propInfo.type);
-    //         return new GridBox(element, roleName, cells, { orientation: orientation });
-    //     }
-    //     return null;
-    // }
 
     private static tilt(location: Location, orientation: GridOrientation): Location {
         if (orientation === "column") {
@@ -224,11 +183,10 @@ export class NewTableUtil {
             }
         }
         // LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
-        const result = new PiCreateSiblingAction({
+        return new PiCreateSiblingAction({
             trigger: { meta: MetaKey.None, key: Keys.ENTER, code: Keys.ENTER }, activeInBoxRoles: rolenames, conceptName: conceptName
 
         });
-        return result;
     }
 
     /**
@@ -245,7 +203,7 @@ export class NewTableUtil {
                 LOGGER.log("2 New table row/column for " + aliasBox.propertyName + " concept " + aliasBox.conceptName);
                 const newElement: PiElement = Language.getInstance().concept(aliasBox?.conceptName)?.constructor();
                 if (newElement === undefined) {
-                    // TODO Find out why this happenss sometimes
+                    // TODO Find out why this happens sometimes
                     LOGGER.log("EMPTY grid: Unexpected new element undefined");
                     return null;
                 }
@@ -258,4 +216,20 @@ export class NewTableUtil {
         });
     }
 
+    private static createHeaderBox(element: PiElement, propertyName: string, headers: string[], orientation: GridOrientation): TableRowBox {
+        // todo take orientation into account in indexes
+        const cells: Box[] = [];
+        headers.forEach((head, index) => {
+            const indexToUse: number = index + 1; // css grid counts from 1, not 0
+            cells.push(BoxUtils.labelBox(element, head, `table-header-${indexToUse}`));
+        });
+        let result = NewTableUtil.rowBox(
+            element,
+            propertyName,
+            cells,
+            0,
+            false
+        );
+        return result;
+    }
 }

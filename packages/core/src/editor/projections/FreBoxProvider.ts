@@ -1,8 +1,9 @@
 import { PiElement } from "../../ast";
-import { Box, ElementBox, LabelBox, TableRowBox } from "../boxes";
+import { Box, ElementBox, LabelBox } from "../boxes";
 import { action, computed, makeObservable, observable } from "mobx";
 import { FreProjectionHandler } from "./FreProjectionHandler";
-import { startWithUpperCase } from "../../util";
+import { FreProjectionCalculator } from "./FreProjectionCalculator";
+
 
 /**
  * Base class for all box providers.
@@ -12,11 +13,12 @@ export abstract class FreBoxProvider {
     conceptName: string;                                // Name of the concept/interface for which this provider is defined.
     protected _element: PiElement;                      // The node in the model which this provider is serving.
     protected _mainBox: ElementBox = null;              // The box that is return by the method box(). Note that the initialization is needed for mobx!
-    protected usedProjection: string = 'default';       // Name of the projection that currently is used to determine the contents of _mainBox.
-    protected knownBoxProjections: string[] = [];       // The names of all generated projections, i.e. these are the projections for which this
+    public usedProjection: string = 'default';       // Name of the projection that currently is used to determine the contents of _mainBox.
+    public knownBoxProjections: string[] = [];       // The names of all generated projections, i.e. these are the projections for which this
     // provider itself has methods that can provide the contents of the _mainBox.
-    protected knownTableProjections: string[] = [];     // The names of the generated table projections for this type of concept.
+    public knownTableProjections: string[] = [];     // The names of the generated table projections for this type of concept.
     protected _mustUseTable: boolean = false;
+    protected _mustUseNamed: boolean = false;
 
     constructor(mainHandler: FreProjectionHandler) {
         this.mainHandler = mainHandler;
@@ -48,10 +50,6 @@ export abstract class FreBoxProvider {
         this._element = element;
     }
 
-    public mustUseTable(value: boolean) {
-        this._mustUseTable = value;
-        this.usedProjection = this.findTableProjectionToUse();
-    }
     /**
      * This is the main method in the box provider, which returns a Box for use in the
      * web application. Once the box provider is created, the box that is returned,
@@ -76,8 +74,14 @@ export abstract class FreBoxProvider {
         return this._mainBox;
     }
 
+    public mustUseTable(value: boolean) {
+        this._mustUseTable = value;
+        this.usedProjection = this.findProjectionToUse();
+    }
+
     public getNamedBox(projectionName: string): Box {
         if (projectionName !== null && projectionName !== undefined && projectionName.length > 0) {
+            this._mustUseNamed = true;
             // select the projection named 'projectionName' => overrule 'this.usedProjection'!!
             if (this.usedProjection !== projectionName) {
                 this.usedProjection = projectionName;
@@ -110,11 +114,24 @@ export abstract class FreBoxProvider {
      * the last is the projection with the highest priority.
      * @param enabledProjections
      */
-    checkUsedProjection(enabledProjections: string[]) {
-        let projToUse: string = this.findProjectionToUse(enabledProjections);
+    checkUsedProjection() {
+        let projToUse = this.findProjectionToUse();
         if (this.usedProjection !== projToUse) {
             this.usedProjection = projToUse;
         }
+    }
+
+    private findProjectionToUse() {
+        if (!this._mustUseNamed) {
+            let knownProjections: string[];
+            if (this._mustUseTable) {
+                knownProjections = this.knownTableProjections;
+            } else {
+                knownProjections = this.knownBoxProjections;
+            }
+            return FreProjectionCalculator.findProjectionToUse(this.mainHandler, this.conceptName, knownProjections, this._mustUseTable);
+        }
+        return this.usedProjection;
     }
 
     /**
@@ -122,105 +139,11 @@ export abstract class FreBoxProvider {
      * does.
      * @param enabledProjections
      */
-    initUsedProjection(enabledProjections: string[]) {
-        this.usedProjection = this.findProjectionToUse(enabledProjections);
+    initUsedProjection() {
+        this.usedProjection = this.findProjectionToUse();
     }
 
-    private findProjectionToUse(enabledProjections: string[]) {
-        let projToUse: string = '';
-        if (!this._mustUseTable) {
-            projToUse = this.findBoxProjectionToUse(enabledProjections);
-        } else {
-            projToUse = this.findTableProjectionToUse();
-        }
-        return projToUse;
-    }
-
-    /**
-     * Method used to determine which projection to use for getting the table definition for
-     * this type of concept.
-     * @protected
-     */
-    private findTableProjectionToUse(): string {
-        // see if we need to use a custom projection
-        let projToUse: string = null;
-        this.mainHandler.customProjections.forEach(cp => {
-            // get the name of the first of the customs that fits
-            // todo see whether we should loop backwards as in the enabledProjections
-            if (projToUse === null && !!cp.nodeTypeToTableDefinition.get(this.conceptName)) {
-                projToUse = cp.name;
-            }
-        });
-        if (projToUse === null) {
-            // From the list of projections that are enabled, select the first one that is available for this type of Freon node.
-            // Loop through the projections backwards, because the last one takes precedence.
-            const enabledProjections = this.mainHandler.enabledProjections();
-            for (let i = enabledProjections.length - 1; i >= 0; i--) {
-                const proj = this.transformToTableProjectionName(enabledProjections[i]);
-                // get the name of the first of the generated projections that fits
-                if (this.knownTableProjections.includes(proj)) {
-                    projToUse = proj;
-                    break;
-                }
-            }
-            // } else {
-            //     console.log('found custom table projection ' + projToUse + ' for ' + this.conceptName);
-        }
-        if (projToUse === null) { // still nothing found, then use the default
-            projToUse = "default";
-            // } else {
-            //     console.log("found generated table projection " + projToUse + " for " + this.conceptName + " from " + this.knownTableProjections);
-        }
-        return projToUse;
-    }
-
-    private transformToTableProjectionName(projToUse: string) {
-        return "tableFor" + startWithUpperCase(projToUse);
-    }
-
-    /**
-     * Method used by both checkUsedProjection and InitUsedProjection, which determines
-     * which projection to use for this type of concept.
-     * @param enabledProjections
-     * @private
-     */
-    private findBoxProjectionToUse(enabledProjections: string[]): string {
-        // todo maybe remove parameter in favor of this.mainHandler.enabledProjections()
-        // see if we need to use a custom projection
-        let projToUse: string = null;
-        for (const cp of this.mainHandler.customProjections) {
-            // get the name of the first of the customs that fits
-            // todo see whether we should loop backwards as in the enabledProjections
-            if (projToUse === null && !!cp.nodeTypeToBoxMethod.get(this.conceptName)) {
-                projToUse = cp.name;
-            }
-        }
-        if (projToUse === null) {
-            // From the list of projections that are enabled, select the first one that is available for this type of Freon node.
-            // Loop through the projections backwards, because the last one takes precedence.
-            for (let i = enabledProjections.length - 1; i >= 0 ; i--) {
-                const proj = enabledProjections[i];
-                // get the name of the first of the generated projections that fits
-                if (this.knownBoxProjections.includes(proj)) {
-                    projToUse = proj;
-                    break;
-                }
-            }
-        }
-        if (projToUse === null) { // still nothing found, then use the default
-            projToUse = "default";
-        }
-        // console.log('FOUND projection for ' + this.conceptName + ' : ' + projToUse);
-        return projToUse;
-    }
-
-    getTableHeaders(): TableRowBox {
-        // find which projection to use
-        const projToUse = this.findTableProjectionToUse();
-        return this.getTableHeadersFor(projToUse);
-    }
-
-    protected getTableHeadersFor(projToUse: string) {
+    protected static getTableHeadersFor(projToUse: string) {
         console.error('This method should be overwritten by concrete subclasses of FreBoxProvider.');
         return undefined;
     }

@@ -1,10 +1,12 @@
-import { Box, BoxFactory, TableRowBox } from "../boxes";
+import { Box, BoxFactory } from "../boxes";
 import { isNullOrUndefined } from "../../util";
 import { PiElement } from "../../ast";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjection } from "./FreProjection";
-import { action, makeObservable, observable } from "mobx";
+import { action, makeObservable } from "mobx";
 import { ListUtil } from "../../util/ListUtil";
+import { FreProjectionCalculator } from "./FreProjectionCalculator";
+import { FreTableHeaderInfo } from "./FreTableHeaderInfo";
 
 /**
  * This class, of which there should be one instance per editor, registers all
@@ -30,6 +32,8 @@ export class FreProjectionHandler {
     private _enabledProjections: string[] = [];
     // '_customProjections' holds the list of all custom projections (not only the names but the projections themselves!)
     private _customProjections: FreProjection[] = [];
+    //
+    private tableHeaderInfo: FreTableHeaderInfo[] = [];
 
     constructor() {
         /* The function enableProjections is a mobx action in order for all box providers to
@@ -110,7 +114,7 @@ export class FreProjectionHandler {
             boxProvider = this.conceptNameToProviderConstructor.get(element.piLanguageConcept())(this);
             this.elementToProvider.set(element.piId(), boxProvider);
             boxProvider.element = element;
-            boxProvider.initUsedProjection(this.enabledProjections());
+            boxProvider.initUsedProjection();
         }
         return boxProvider;
     }
@@ -150,9 +154,10 @@ export class FreProjectionHandler {
         this._enabledProjections = newList;
         // console.log(" ============== enabled projections: " + this._enabledProjections);
 
+        FreProjectionCalculator.clearCaches();
         //  Let all providers know that projection may be changed.
         for (const provider of this.elementToProvider.values()) {
-            provider.checkUsedProjection(this.enabledProjections());
+            provider.checkUsedProjection();
         }
     }
 
@@ -209,32 +214,20 @@ export class FreProjectionHandler {
         return BOX;
     }
 
-    getTableHeadersFor(projectionName: string): TableRowBox {
-        const customToUse: FreProjection = this.customProjections.find(cp => cp.name === projectionName);
-        if (!!customToUse) {
-            return customToUse.getTableHeadersFor(projectionName);
-        }
-        return null;
+    ////////////// Methods for table headers //////////////
+
+    initTableHeaders(list: FreTableHeaderInfo[]) {
+        this.tableHeaderInfo = list;
     }
 
-    /**
-     * Method that executes the function to create a table definition for 'element' that is registered
-     * in the property 'nodeTypeToTableDefinition' of the custom projection named 'projectionName'.
-     * @param element
-     * @param projectionName
-     */
-    // executeCustomTableDefinition(element: PiElement, projectionName: string): PiTableDefinition {
-    //     let DEF: PiTableDefinition = null;
-    //     let customFuction: () => PiTableDefinition = null;
-    //     const customToUse = this.customProjections.find(cp => cp.name === projectionName);
-    //     if (!!customToUse) {
-    //         // bind(customToUse) binds the projection 'customToUse' to the 'this' variable, for use within the custom function
-    //         customFuction = customToUse.nodeTypeToTableDefinition.get(element.piLanguageConcept())?.bind(customToUse);
-    //     }
-    //
-    //     if (!!customFuction) {
-    //         DEF = customFuction();
-    //     }
-    //     return DEF;
-    // }
+    getTableHeaders(conceptName: string) : string[] {
+        let knownTableProjections = this.conceptNameToProviderConstructor.get(conceptName)(this).knownTableProjections;
+        let projectionName: string = FreProjectionCalculator.findProjectionToUse(this, conceptName, knownTableProjections, true);
+        for (const part of this.tableHeaderInfo) {
+            if (part.conceptName === conceptName && part.projectionName === projectionName) {
+                return part.headerRow;
+            }
+        }
+        return [];
+    }
 }

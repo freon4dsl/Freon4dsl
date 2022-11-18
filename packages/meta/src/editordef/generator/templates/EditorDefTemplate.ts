@@ -1,6 +1,12 @@
-import { PiBinaryExpressionConcept, PiConcept, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
+import {
+    PiBinaryExpressionConcept,
+    PiConcept,
+    PiLanguage,
+    PiLimitedConcept,
+    PiProperty
+} from "../../../languagedef/metalanguage";
 import { CONFIGURATION_FOLDER, EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
-import { PiEditUnit } from "../../metalanguage";
+import { PiEditTableProjection, PiEditUnit } from "../../metalanguage";
 
 export class EditorDefTemplate {
 
@@ -11,6 +17,7 @@ export class EditorDefTemplate {
         let conceptsWithRefShortcut: ConceptShortCutElement[] = [];
         let languageImports: string[] = [];
         let editorImports: string[] = [];
+        let coreImports: string[] = ['Language', 'FreProjectionHandler', 'FreBoxProvider'];
 
         language.concepts.filter(c => !(c instanceof PiLimitedConcept || c.isAbstract)).forEach(concept => {
             // TODO handle other sub types of PiClassifier
@@ -51,11 +58,22 @@ export class EditorDefTemplate {
             ListUtil.addIfNotPresent(editorImports, Names.boxProvider(unit));
         });
 
+        // get all the table header info
+        let tableHeaderInfo: string[] = [];
+        language.concepts.forEach(concept => {
+            editorDef.findTableProjectionsForType(concept).map(proj => {
+                const entry = this.generateHeaderInfo(proj, coreImports);
+                if (!!entry && entry.length > 0) {
+                    tableHeaderInfo.push(entry);
+                }
+            });
+        });
+
         const hasBinExps: boolean = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept)).length > 0;
         // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
 
         // template starts here
-        return `import { Language, FreProjectionHandler, FreBoxProvider } from "${PROJECTITCORE}";
+        return `import { ${coreImports.join(", ")} } from "${PROJECTITCORE}";
         
             import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
             import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";         
@@ -79,6 +97,10 @@ export class EditorDefTemplate {
                 [
                     ${constructors.map(constr => constr).join(",\n")} 
                 ])); 
+                ${handlerVarName}.initTableHeaders(
+                [
+                    ${tableHeaderInfo.map(constr => constr).join(",\n")} 
+                ]); 
             }    
             
             /**
@@ -97,6 +119,17 @@ export class EditorDefTemplate {
                 ;`
             ).join("\n")}
             }`
+    }
+
+    private generateHeaderInfo(projection: PiEditTableProjection, coreImports: string[]): string {
+        if (!!projection && !!projection.headers && projection.headers.length > 0) {
+            ListUtil.addIfNotPresent(coreImports, "BoxUtils");
+            ListUtil.addIfNotPresent(coreImports, "FreTableHeaderInfo");
+            return `new FreTableHeaderInfo("${projection.classifier.name}", "${projection.name}", [${projection.headers.map(head =>
+                `"${head}"`
+            ).join(",\n")}])`;
+        }
+        return '';
     }
 }
 

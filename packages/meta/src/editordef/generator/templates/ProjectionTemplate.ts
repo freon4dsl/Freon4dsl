@@ -118,32 +118,10 @@ export class ProjectionTemplate {
                         }
                     return this.getDefault();
                 }
-               
-                protected getTableHeadersFor(projectionName: string): TableRowBox {
-                    // console.log("GET getTableHeadersFor " + projectionName);
-                    // see if we need to use a custom projection
-                    if (!this.knownBoxProjections.includes(projectionName) && !this.knownTableProjections.includes(projectionName)) {
-                        let BOX: TableRowBox = this.mainHandler.getTableHeadersFor(projectionName);
-                        if (!!BOX) {
-                            // found one, so return it
-                            return BOX;
-                        }
-                    ${myTableProjections.length > 0 ?
-                        `} else { // select the box to return based on the projectionName
-                            ${myTableProjections.map(proj => `if (projectionName === '${proj.name}') {
-                                return this.${Names.tableHeadersMethod(proj)}();
-                            }`).join(" else ")}   
-                            }               
-                            // in all other cases, return the default`
-                        : `}`
-                    }
-                    return null;
-                }
             
                 ${myTableProjections.length > 0 ?
                     `${myTableProjections.map(proj => 
-                        `${this.generateTableProjection(language, concept, proj)}\n
-                        ${this.generateHeaderProjection(language, concept, proj)}`
+                        `${this.generateTableProjection(language, concept, proj)}`
                     ).join("\n\n")}`
                     : ``
                 }
@@ -284,38 +262,9 @@ export class ProjectionTemplate {
             return `private ${Names.tableProjectionMethod(projection)}(): TableRowBox {
                         const cells: Box[] = [];
                         ${cellDefs.map(cellDef => `cells.push(${cellDef})`).join(';\n')}
-                        return NewTableUtil.rowBox(this._element, this._element.piOwnerDescriptor().propertyName, cells, this._element.piOwnerDescriptor().propertyIndex, ${hasHeaders});
+                        // Note that css grid counts from 1, not 0, therefore we increase the propertyIndex
+                        return NewTableUtil.rowBox(this._element, this._element.piOwnerDescriptor().propertyName, cells, this._element.piOwnerDescriptor().propertyIndex + 1, ${hasHeaders});
                     }`;
-        } else {
-            console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
-            return "";
-        }
-    }
-
-    private generateHeaderProjection(language: PiLanguage, concept: PiClassifier, projection: PiEditTableProjection): string {
-
-        if (!!projection) {
-            if (!!projection.headers && projection.headers.length > 0) {
-                ListUtil.addIfNotPresent(this.coreImports, "NewTableUtil");
-                ListUtil.addIfNotPresent(this.coreImports, "BoxUtils");
-                // todo this._element is null and propertyName should be set differently
-                return `private ${Names.tableHeadersMethod(projection)}(): TableRowBox {
-                    return NewTableUtil.rowBox(
-                        this._element,
-                        this._element.piOwnerDescriptor().propertyName,
-                        [ ${projection.headers.map((head, index) => 
-                            `BoxUtils.labelBox(this._element, "${head}", "table-header-${index}")`
-                        ).join(",\n")}
-                        ],
-                        0, 
-                        true
-                    );
-                }`;
-            } else {
-                return `private ${Names.tableHeadersMethod(projection)}(): TableRowBox {
-                    return null;
-                }`;
-            }
         } else {
             console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
             return "";
