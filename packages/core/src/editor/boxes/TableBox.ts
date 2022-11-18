@@ -17,7 +17,7 @@ export enum TableDirection {
  * list.
  */
 export abstract class TableBox extends Box {
-    protected direction: TableDirection = TableDirection.HORIZONTAL;
+    protected _direction: TableDirection = TableDirection.HORIZONTAL;
     protected _children: Box[] = [];
     protected hasHeaders: boolean = false;
 
@@ -44,6 +44,10 @@ export abstract class TableBox extends Box {
             }
         })
         return _cells;
+    }
+
+    get direction() : TableDirection {
+        return this._direction;
     }
 
     numberOfRows(): number {
@@ -130,7 +134,7 @@ export abstract class TableBox extends Box {
     }
 
     toString() {
-        let result: string = "List: " + this.role + " " + this.direction.toString() + "<";
+        let result: string = "List: " + this.role + " " + this._direction.toString() + "<";
         for (const child of this.children) {
             result += "\n    " + child.toString();
         }
@@ -144,7 +148,7 @@ export class TableBoxRowOriented extends TableBox {
 
     constructor(element: PiElement, role: string, hasHeaders: boolean, children?: (Box | null)[], initializer?: Partial<TableBoxRowOriented>) {
         super(element, role, hasHeaders, children, initializer);
-        this.direction = TableDirection.HORIZONTAL;
+        this._direction = TableDirection.HORIZONTAL;
     }
 }
 
@@ -153,7 +157,7 @@ export class TableBoxColumnOriented extends TableBox {
 
     constructor(element: PiElement, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
         super(element, role, hasHeaders, children, initializer);
-        this.direction = TableDirection.VERTICAL;
+        this._direction = TableDirection.VERTICAL;
     }
 }
 

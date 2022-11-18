@@ -18,6 +18,4 @@ export interface FreProjection {
     // A map from the name of the concept (or the piLanguageConcept() of the PiElement node) to
     // the function that may return the custom box for a node of that type.
     nodeTypeToTableDefinition: Map<string, () => PiTableDefinition>; // todo change name and remove Tabledefintion type
-
-    getTableHeadersFor(projectionName: string): TableRowBox;
 }

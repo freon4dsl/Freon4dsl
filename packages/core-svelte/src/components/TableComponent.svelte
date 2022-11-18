@@ -75,7 +75,7 @@
     {#each cells as cell (cell.box.element.piId() + '-' + cell.row + '-' + cell.column)}
         <TableCellComponent
                 parentComponentId={id}
-                parentOrientation={box.orientation}
+                parentOrientation={box._direction}
                 box={cell}
                 editor={editor}
                 parentHasHeader={box.hasHeaders}

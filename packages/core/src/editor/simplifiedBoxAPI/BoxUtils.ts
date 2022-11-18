@@ -8,7 +8,7 @@ import { PiEditor } from "../PiEditor";
 import { FreScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
 import { EmptyLineBox } from "../boxes";
-import { FreProjectionHandler } from "../projections";
+import { FreBoxProvider, FreProjectionHandler } from "../projections";
 
 export class PiListInfo {
     text: string;
@@ -393,36 +393,37 @@ export class BoxUtils {
                     conceptName: Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName).type
                 })
         );
-
     }
 
     private static findPartItems(property: PiElement[], element: PiElement, propertyName: string, listJoin: PiListInfo, boxProviderCache: FreProjectionHandler) {
         const numberOfItems = property.length;
         return property.map((listElem, index) => {
+            const myProvider: FreBoxProvider = boxProviderCache.getBoxProvider(listElem);
+            myProvider.mustUseTable(false);
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
                         return BoxFactory.horizontalList(element, roleName, [
-                            boxProviderCache.getBoxProvider(listElem).box,
+                            myProvider.box,
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]);
                     } else {
-                        return boxProviderCache.getBoxProvider(listElem).box;
+                        return myProvider.box;
                     }
                 } else if (listJoin.type === this.terminatorName) {
                     return BoxFactory.horizontalList(element, roleName, [
-                        boxProviderCache.getBoxProvider(listElem).box,
+                        myProvider.box,
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]);
                 } else if (listJoin.type === this.initiatorName) {
                     return BoxFactory.horizontalList(element, roleName, [
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                        boxProviderCache.getBoxProvider(listElem).box,
+                        myProvider.box,
                     ]);
                 }
             } else {
-                return boxProviderCache.getBoxProvider(listElem).box;
+                return myProvider.box;
             }
             return null;
         });

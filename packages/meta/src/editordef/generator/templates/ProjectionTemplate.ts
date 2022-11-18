@@ -26,7 +26,6 @@ import {
     Roles
 } from "../../../utils";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
-import { BoxUtils, NewTableUtil } from "@projectit/core";
 
 export class ProjectionTemplate {
     // The values for the boolean keywords are set on initialization (by a call to 'setStandardBooleanKeywords').
@@ -235,7 +234,7 @@ export class ProjectionTemplate {
                     }
                     if (!!superBoxProvider) {
                         superBoxProvider.element = ${elementVarName};
-                        return superBoxProvider.getContent(projectionName);
+                        return superBoxProvider.getContentForSuper(projectionName);
                     } else {
                         return BoxUtils.labelBox(${elementVarName},
                             "ERROR: '" + superName + "' is not a super concept or interface for element of type '" + ${elementVarName}.piLanguageConcept() + "'",
@@ -258,12 +257,12 @@ export class ProjectionTemplate {
                 cellDefs.push(this.generateItem(cell, `(this._element as ${Names.classifier(concept)})`, index, index, concept.name + "_table", language, 999));
             });
             ListUtil.addIfNotPresent(this.coreImports, "TableRowBox");
-            ListUtil.addIfNotPresent(this.coreImports, "NewTableUtil");
+            ListUtil.addIfNotPresent(this.coreImports, "TableUtil");
             return `private ${Names.tableProjectionMethod(projection)}(): TableRowBox {
                         const cells: Box[] = [];
                         ${cellDefs.map(cellDef => `cells.push(${cellDef})`).join(';\n')}
                         // Note that css grid counts from 1, not 0, therefore we increase the propertyIndex
-                        return NewTableUtil.rowBox(this._element, this._element.piOwnerDescriptor().propertyName, cells, this._element.piOwnerDescriptor().propertyIndex + 1, ${hasHeaders});
+                        return TableUtil.rowBox(this._element, this._element.piOwnerDescriptor().propertyName, cells, this._element.piOwnerDescriptor().propertyIndex + 1, ${hasHeaders});
                     }`;
         } else {
             console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
@@ -441,23 +440,21 @@ export class ProjectionTemplate {
      * @private
      */
     private generatePropertyAsTable(orientation: PiEditProjectionDirection, property: PiConceptProperty, elementVarName: string, language: PiLanguage): string {
-        ListUtil.addIfNotPresent(this.coreImports, "NewTableUtil");
+        ListUtil.addIfNotPresent(this.coreImports, "TableUtil");
         ListUtil.addIfNotPresent(this.configImports, Names.environment(language));
         // return the projection based on the orientation of the table
         if (orientation === PiEditProjectionDirection.Vertical) {
-            return `NewTableUtil.tableBoxColumnOriented(
+            return `TableUtil.tableBoxColumnOriented(
                 ${elementVarName},
                 ${elementVarName}.${property.name},
                 "${property.name}",
-                this.mainHandler,
-                ${Names.environment(language)}.getInstance().editor)`;
+                this.mainHandler)`;
         } else {
-            return `NewTableUtil.tableBoxRowOriented(
+            return `TableUtil.tableBoxRowOriented(
                 ${elementVarName},
                 ${elementVarName}.${property.name},
                 "${property.name}",
-                this.mainHandler,
-                ${Names.environment(language)}.getInstance().editor)`;
+                this.mainHandler)`;
         }
     }
 

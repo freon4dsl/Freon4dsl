@@ -100,6 +100,10 @@ export abstract class FreBoxProvider {
         return new LabelBox(this._element, "unknown-projection", () => "Content should be determined by the appropriate subclass of PiBoxProvider.");
     }
 
+    public getContentForSuper(projectionName: string): Box {
+        return this.getContent(projectionName);
+    }
+
     /**
      * When the user of the webapp request a different projection, this method is called.
      * The currently enabled projections are compared to the projections known for this

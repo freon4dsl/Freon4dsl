@@ -13,7 +13,7 @@
         PiLogger,
         toPiKey,
         TableCellBox,
-        Language
+        Language, TableDirection
     } from "@projectit/core";
     // import { autorun, runInAction } from "mobx";
     import { onMount, createEventDispatcher } from "svelte";
@@ -61,10 +61,15 @@
     // img.src = "img/projectit-logo.png";
     // img.src = "img/open_with.svg"; // todo svg image is not shown as drag ghost
 
-    // todo see which function we need to set the row and column: onMOunt autorun, afterUpdate???
+    // todo see which function we need to set the row and column: onMount, autorun, afterUpdate???
     onMount(() => {
-        row = box.row;
-        column = box.column;
+        if (parentOrientation === TableDirection.HORIZONTAL) {
+            row = box.row;
+            column = box.column;
+        } else {
+            row = box.column;
+            column = box.row;
+        }
     });
 
     // afterUpdate(() => {
@@ -78,7 +83,8 @@
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
-            let index: number = parentOrientation === "row" ? row : column;
+            let index: number = parentOrientation === TableDirection.HORIZONTAL ? row : column;
+            // todo handle this here, because there are no shortcuts for Enter created by TableUtils anymore
             // executeCustomKeyboardShortCut(event, index, box, editor);
         }
     };
