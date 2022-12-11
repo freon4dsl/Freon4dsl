@@ -23,6 +23,7 @@ export class GridBox extends Box {
             if (!c.rowSpan) {
                 c.rowSpan = 1;
             }
+            c.parent = this;
         });
         this.sortCellsAndAddChildren();
         // makeObservable(this, {
