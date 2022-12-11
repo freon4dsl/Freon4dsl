@@ -329,7 +329,9 @@
             textBox.caretPosition = getCaretPosition();
             if (value !== originalText) {
                 textBox.setText(value);
-            }            editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
+            }
+            // TODO selectPosition does not exist aanymore, is this still needed?
+            // editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         }
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info("delete empty text");

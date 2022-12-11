@@ -72,10 +72,10 @@
         class="maingridcomponent {cssClass}"
         id="{id}"
 >
-    {#each cells as cell (cell.box.element.piId() + '-' + cell.row + '-' + cell.column)}
+    {#each cells as cell (cell.box.element.piId() + "-" + cell.row + "-" + cell.column)}
         <TableCellComponent
                 parentComponentId={id}
-                parentOrientation={box._direction}
+                parentOrientation={box.direction}
                 box={cell}
                 editor={editor}
                 parentHasHeader={box.hasHeaders}

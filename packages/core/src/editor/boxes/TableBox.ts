@@ -19,7 +19,7 @@ export enum TableDirection {
 export abstract class TableBox extends Box {
     protected _direction: TableDirection = TableDirection.HORIZONTAL;
     protected _children: Box[] = [];
-    protected hasHeaders: boolean = false;
+    public hasHeaders: boolean = false;
 
     protected constructor(element: PiElement, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
         super(element, role);

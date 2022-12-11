@@ -37,7 +37,7 @@
     export let parentHasHeader: boolean;
     // determine the type of the elements in the cell
     // this speeds up the check whether an element may be dropped here
-    export let myMetaType: string;
+    // export let myMetaType: string;
 
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
@@ -201,8 +201,8 @@
 <span
         id="{id}"
         class="gridcellcomponent {orientation} {isHeader} {cssClass} "
-        style:grid-row="{row}"
-        style:grid-column="{column}"
+        style:grid-row="{row.toString()}"
+        style:grid-column="{column.toString()}"
         style="{cssStyle}"
         draggable=true
         on:keydown={onKeydown}

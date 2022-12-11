@@ -122,7 +122,7 @@
     {:else if isTableBox(showBox) }
         <TableComponent box={showBox} editor={editor}/>
     {:else}
-        <p class="error">[UNKNOWN BOX TYPE: {showBox.kind}]</p>
+        <p class="error">{"UNKNOWN BOX TYPE: " + showBox.kind}"</p>
     {/if}
 </span>
 

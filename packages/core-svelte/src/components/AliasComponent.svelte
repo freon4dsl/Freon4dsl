@@ -11,7 +11,6 @@
         isPrintable,
         PiEditor,
         PiLogger,
-        PiUtils,
         toPiKey,
         isSelectBox,
         findOption,
@@ -20,7 +19,7 @@
         ARROW_DOWN,
         ARROW_UP,
         SPACEBAR, ESCAPE, DELETE, ARROW_LEFT, BACKSPACE, ARROW_RIGHT,
-        type SelectOption, PiCommand, PI_NULL_COMMAND, PiPostAction
+        type SelectOption, PiCommand, PI_NULL_COMMAND, PiPostAction, PiEditorUtil
     } from "@projectit/core";
     import { autorun, runInAction } from "mobx";
     import { clickOutside } from "./clickOutside";
@@ -234,7 +233,7 @@
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
                         console.log("Keyboard shortcut in AliasComponentg ===============")
-                        const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(e), choiceBox, editor);
+                        const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(e), choiceBox, editor);
                         if( cmd !== PI_NULL_COMMAND) {
                             let postAction: PiPostAction;
                             runInAction( () => {

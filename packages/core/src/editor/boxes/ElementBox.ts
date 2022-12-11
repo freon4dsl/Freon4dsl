@@ -14,17 +14,17 @@ export class ElementBox extends Box {
     get content() {
         return this._content;
     }
-    
+
     set content(v: Box) {
         this._content = v;
         this.isDirty();
     }
-    
+
     get children(): ReadonlyArray<Box> {
         return [this.content];
     }
 }
 
-export function isElementBox(b: Box): b is EmptyLineBox {
+export function isElementBox(b: Box): b is ElementBox {
     return b.kind === "ElementBox"; // b instanceof ElementBox;
 }
