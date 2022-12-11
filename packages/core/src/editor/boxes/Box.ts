@@ -21,7 +21,7 @@ export abstract class Box {
 
     // The refresh method from the component that displays this box.
     refreshComponent: () => void;
-    
+
     // Called when the box is dirty, refreshes the corresponding component.
     isDirty(): void {
         if (this.refreshComponent !== undefined && this.refreshComponent !== null) {
@@ -137,7 +137,7 @@ export abstract class Box {
      * Return the next selectable leaf in the tree.
      */
     get nextLeafLeft(): Box {
-        if (!this.parent) {
+        if (this.parent === null || this.parent === undefined) {
             return null;
         }
         const thisIndex = this.parent.children.indexOf(this);

@@ -17,6 +17,7 @@ export class ElementBox extends Box {
 
     set content(v: Box) {
         this._content = v;
+        v.parent = this;
         this.isDirty();
     }
 
