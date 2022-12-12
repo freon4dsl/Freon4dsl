@@ -24,7 +24,7 @@ export abstract class TableBox extends Box {
     protected constructor(element: PiElement, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
         super(element, role);
         PiUtils.initializeObject(this, initializer);
-        if (children) {
+        if (!!children) {
             children.forEach(b => this.addChild(b));
         }
         this.hasHeaders = hasHeaders;
@@ -72,7 +72,7 @@ export abstract class TableBox extends Box {
                 }
             });
         }
-        // console.log("List replaceChildren dirty " + this.role)
+        console.log("TableBox replaceChildren dirty " + this.role)
         this.isDirty();
         return this;
     }
@@ -81,7 +81,7 @@ export abstract class TableBox extends Box {
         const dirty = (this._children.length !== 0);
         this._children.splice(0, this._children.length);
         if (dirty) {
-            // console.log("List clearChildren dirty " + this.role)
+            console.log("TableBox clearChildren dirty " + this.role)
             this.isDirty();
         }
     }
@@ -90,7 +90,7 @@ export abstract class TableBox extends Box {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
-            // console.log("List addChild dirty " + this.role)
+            console.log("TableBox addChild dirty " + this.role)
             this.isDirty();
         }
         return this;
@@ -100,7 +100,7 @@ export abstract class TableBox extends Box {
         if (!!child) {
             this._children.splice(0, 0, child);
             child.parent = this;
-            // console.log("List insertChild dirty " + this.role)
+            console.log("TableBox insertChild dirty " + this.role)
             this.isDirty();
         }
         return this;
@@ -109,7 +109,7 @@ export abstract class TableBox extends Box {
     addChildren(children?: Box[]): TableBox {
         if (!!children) {
             children.forEach(child => this.addChild(child));
-            // console.log("List addChildren dirty")
+            console.log("TableBox addChildren dirty")
             this.isDirty();
         }
         return this;
@@ -161,14 +161,14 @@ export class TableBoxColumnOriented extends TableBox {
     }
 }
 
-export function isRowBox(b: Box): b is TableBoxRowOriented {
-    return b.kind === "TableBoxRowOriented";
+export function isTableBoxRowOrientedBox(b: Box): b is TableBoxRowOriented {
+    return b?.kind === "TableBoxRowOriented";
 }
 
-export function isColumnBox(b: Box): b is TableBoxColumnOriented {
-    return b.kind === "TableBoxColumnOriented";
+export function isTableBoxColumnOrientedBox(b: Box): b is TableBoxColumnOriented {
+    return b?.kind === "TableBoxColumnOriented";
 }
 
 export function isTableBox(box: Box): box is TableBox {
-    return isRowBox(box) || isColumnBox(box);
+    return isTableBoxRowOrientedBox(box) || isTableBoxColumnOrientedBox(box);
 }

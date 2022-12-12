@@ -9,10 +9,23 @@ export type BoolFunctie = () => boolean;
 export class OptionalBox extends Box {
     readonly kind = "OptionalBox";
 
-    box: Box = null;
+    private _box: Box = null;
     whenNoShowingAlias: AliasBox = null; // TODO question: should name be whenShowingAlias or alternativeBox?
     condition: () => boolean;
     _mustShow: boolean = false;
+
+    get box(): Box {
+        return this._box;
+    }
+    set box(v: Box) {
+        if (!!this._box) {
+            this._box.parent = null;
+        }
+        this._box = v;
+        if (!!this._box) {
+            this._box.parent = this;
+        }
+    }
 
     get mustShow() {
         return this._mustShow;
@@ -25,7 +38,6 @@ export class OptionalBox extends Box {
     constructor(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string) {
         super(element, role);
         this.box = box;
-        box.parent = this;
         this.whenNoShowingAlias = BoxFactory.alias(element, role, aliasText); // TODO question: should not the role be diff from role of this box? Where is the "alias" prefix added?
         this.whenNoShowingAlias.parent = this;
         this.mustShow = mustShow;
@@ -74,5 +86,5 @@ export class OptionalBox extends Box {
 }
 
 export function isOptionalBox(b: Box): b is OptionalBox {
-    return b.kind === "OptionalBox"; // b instanceof OptionalBox;
+    return b?.kind === "OptionalBox"; // b instanceof OptionalBox;
 }

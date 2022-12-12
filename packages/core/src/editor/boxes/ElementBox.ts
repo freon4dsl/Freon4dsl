@@ -5,7 +5,7 @@ import { EmptyLineBox } from "./EmptyLineBox";
 
 export class ElementBox extends Box {
     kind: string = 'ElementBox';
-    _content: Box = null;
+    private _content: Box = null;
 
     constructor(element: PiElement, role: string) {
         super(element, role);
@@ -27,5 +27,5 @@ export class ElementBox extends Box {
 }
 
 export function isElementBox(b: Box): b is ElementBox {
-    return b.kind === "ElementBox"; // b instanceof ElementBox;
+    return b?.kind === "ElementBox"; // b instanceof ElementBox;
 }

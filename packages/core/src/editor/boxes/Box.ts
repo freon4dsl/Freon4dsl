@@ -26,6 +26,8 @@ export abstract class Box {
     isDirty(): void {
         if (this.refreshComponent !== undefined && this.refreshComponent !== null) {
             this.refreshComponent();
+        } else {
+            console.log("No refreshComponent() for " + this.role);
         }
     }
 

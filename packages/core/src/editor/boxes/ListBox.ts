@@ -133,9 +133,9 @@ export class VerticalListBox extends ListBox {
 
 
 export function isHorizontalBox(b: Box): b is HorizontalListBox {
-    return b.kind === "HorizontalListBox"; // b instanceof HorizontalListBox;
+    return b?.kind === "HorizontalListBox"; // b instanceof HorizontalListBox;
 }
 
 export function isVerticalBox(b: Box): b is VerticalListBox {
-    return b.kind === "VerticalListBox";//b instanceof VerticalListBox || b instanceof VerticalPiElementListBox;
+    return b?.kind === "VerticalListBox";//b instanceof VerticalListBox || b instanceof VerticalPiElementListBox;
 }

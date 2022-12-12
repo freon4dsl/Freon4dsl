@@ -14,6 +14,7 @@ export class TableRowBox extends Box {
         PiUtils.initializeObject(this, initializer);
         this.cells = cells;
         this.rowIndex = rowIndex;
+        this.cells.forEach( c => c.parent = this);
     }
 }
 

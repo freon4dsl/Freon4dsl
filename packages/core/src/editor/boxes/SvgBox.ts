@@ -24,5 +24,5 @@ export class SvgBox extends Box {
 }
 
 export function isSvgBox(box: Box): box is SvgBox {
-    return box.kind === "SvgBox";
+    return box?.kind === "SvgBox";
 }
