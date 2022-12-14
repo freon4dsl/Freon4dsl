@@ -14,13 +14,19 @@ export class FreProjectionCalculator {
     }
 
     public static findProjectionToUse(mainHandler: FreProjectionHandler, conceptName: string, knownProjections: string[], mustUseTable: boolean): string {
+        if (conceptName === "SumExpression") {
+            console.log("FPC: " + knownProjections + " useTable " + mustUseTable);
+        }
         let projToUse: string;
         if (mustUseTable) {
             projToUse = this.findTableProjectionToUse(mainHandler, conceptName, knownProjections);
         } else {
             projToUse = this.findBoxProjectionToUse(mainHandler, conceptName, knownProjections);
         }
-        // console.log('FOUND projection for ' + conceptName + ' : ' + projToUse);
+        if (conceptName === "SumExpression") {
+            console.log('      FOUND projection for ' + conceptName + ' : ' + projToUse);
+            // console.log("FPC: " + knownProjections + " useTable " + mustUseTable);
+        }
         return projToUse;
     }
 
@@ -81,22 +87,23 @@ export class FreProjectionCalculator {
      */
     private static findBoxProjectionToUse(mainHandler: FreProjectionHandler, conceptName: string, knownBoxProjections: string[]): string {
         // See if the projection for this concept is in our cache.
-        if (FreProjectionCalculator.conceptNameToTableProjection.has(conceptName)) {
-            return FreProjectionCalculator.conceptNameToTableProjection.get(conceptName);
+        if (FreProjectionCalculator.conceptNameToBoxProjection.has(conceptName)) {
+            console.error("HELP HELP")
+            return FreProjectionCalculator.conceptNameToBoxProjection.get(conceptName);
         }
         // See if we need to use a custom projection.
         let projToUse: string = null;
+        const enabledProjections = mainHandler.enabledProjections();
         for (const cp of mainHandler.customProjections) {
             // get the name of the first of the customs that fits
             // todo see whether we should loop backwards as in the enabledProjections
-            if (projToUse === null && !!cp.nodeTypeToBoxMethod.get(conceptName)) {
+            if (projToUse === null && enabledProjections.includes(cp.name) && !!cp.nodeTypeToBoxMethod.get(conceptName)) {
                 projToUse = cp.name;
             }
         }
         // From the list of projections that are enabled, select the first one that is available for this type of Freon node.
         if (projToUse === null) {
             // Loop through the projections backwards, because the last one takes precedence.
-            const enabledProjections = mainHandler.enabledProjections();
             for (let i = enabledProjections.length - 1; i >= 0 ; i--) {
                 const proj = enabledProjections[i];
                 // get the name of the first of the generated projections that fits
