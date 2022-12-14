@@ -11,9 +11,9 @@
         PiEditor,
         PiLogger
     } from "@projectit/core";
-    import { autorun } from "mobx";
-    import { afterUpdate } from "svelte";
-    import { AUTO_LOGGER } from "./ChangeNotifier";
+import { autorun } from "mobx";
+import { afterUpdate, onMount } from "svelte";
+import { selectedBoxInEditor } from "./SelectedTmp"
 
     // Parameters
     export let box: Box;
@@ -36,9 +36,13 @@
             box.setFocus();
             event.preventDefault();
             event.stopPropagation();
+            $selectedBoxInEditor = box;
         }
     };
 
+    onMount( () => {
+        // box.refreshComponent = refresh;
+    });
     afterUpdate( () => {
         LOGGER.log("!!!!! SelectableComponent.afterupdate for box " + box.role + " element " + box.element.piId());
         if (element === null) {
@@ -57,17 +61,20 @@
             // console.log("     setting focus from afterupdate to box " + box.role);
             box.setFocus();
         }
+        // box.refreshComponent = refresh;
     });
 
-    autorun(() => {
-        AUTO_LOGGER.log("SelectableComponent for box: " + box.role);
-        isSelected = editor?.selectedBox === box;
+    autorun( () => {
+
+    });
+    $: {
+        isSelected = $selectedBoxInEditor === box;
         className = (isSelected ? "selectedComponent" : "unSelectedComponent");
         if (isSelected) {
-            // console.log("     setting focus from AUTO  to box " + box.role);
             box.setFocus();
         }
-    });
+    }
+
 </script>
 
 <!-- NOTE The clientHeight binding is here to ensure that the afterUpdate is fired.

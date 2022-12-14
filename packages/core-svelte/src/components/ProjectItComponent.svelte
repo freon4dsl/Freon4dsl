@@ -14,6 +14,7 @@
     import { autorun } from "mobx";
     import { AUTO_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
+    import { selectedBoxInEditor } from "./SelectedTmp";
 
     let LOGGER = new PiLogger("ProjectItComponent");//.mute();
     export let editor: PiEditor;
@@ -84,6 +85,7 @@
                     break;
             }
         }
+        $selectedBoxInEditor = editor.selectedBox;
         event.stopPropagation();
     };
 
