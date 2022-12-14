@@ -82,7 +82,7 @@
         <p class="error">{"UNDEFINED BOX TYPE: " + (!!showBox ? showBox.kind : "NULL box")}"</p>
     {:else if isLabelBox(showBox)}
         <SelectableComponent box={showBox} editor={editor}>
-            <LabelComponent label={showBox} editor={editor}/>
+            <LabelComponent box={showBox} editor={editor}/>
         </SelectableComponent>
     {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
