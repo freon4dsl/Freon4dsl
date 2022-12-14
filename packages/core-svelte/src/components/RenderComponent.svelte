@@ -1,11 +1,11 @@
 <script lang="ts">
+    import TableRowComponent from "./TableRowComponent.svelte";
+    import TableComponent from "./TableComponent.svelte";
     import ElementComponent from "./ElementComponent.svelte";
     import AliasComponent from "./AliasComponent.svelte";
-    import { AUTO_LOGGER } from "./ChangeNotifier";
     import GridComponent from "./GridComponent.svelte";
     import SvgComponent from "./SvgComponent.svelte";
     import IndentComponent from "./IndentComponent.svelte";
-    import { autorun } from "mobx";
     import TextComponent from "./TextComponent.svelte";
     import SelectableComponent from "./SelectableComponent.svelte";
     import LabelComponent from "./LabelComponent.svelte";
@@ -27,30 +27,27 @@
         isHorizontalBox,
         isSvgBox,
         isEmptyLineBox,
-        LabelBox, PiEditor, PiLogger, ElementBox, isElementBox, isTableBox, isTableCellBox
+        LabelBox, PiEditor, PiLogger, ElementBox, isElementBox, isTableBox, isTableCellBox, isTableRowBox,
     } from "@projectit/core";
-    import TableComponent from "./TableComponent.svelte";
 
     const LOGGER = new PiLogger("RenderComponent"); //.mute();
 
-    onDestroy(() => {
-        LOGGER.log("DESTROY for box: " + box.role);
-    });
-
-    export let box: Box;
+    export let box: Box = null;
     export let editor: PiEditor;
 
-    let showBox: Box;
-    let id: string = `render-${box.element.piId()}-${box.role}`;
+    let showBox: Box = null;
+    let id: string = `render-${box?.element?.piId()}-${box?.role}`;
 
     // const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)), {
     //     selectable: false,
     // });
 
     function setShowBox() {
-        LOGGER.log('setShowBox for element ' + box.element?.piId() )
-        showBox = box;
-        id = `render-${box.element.piId()}-${box.role}`;
+        // console.log('setShowBox for element ' + box?.element?.piId());
+        if (!!box) {
+            showBox = box;
+            id = `render-${box.element.piId()}-${box.role}`;
+        }
     }
 
     /**
@@ -77,15 +74,13 @@
         setShowBox();
     });
 
-    autorun(() => {
-        AUTO_LOGGER.log("RenderComponent: " + box.kind + " for element " + box.element.piLanguageConcept());
-        setShowBox();
-    });
 </script>
 
-<span id="{id}">
+
 <!--    <svelte:component this={boxComponent(box)}/> -->
-    {#if isLabelBox(showBox)}
+    {#if (showBox === null || showBox === undefined)}
+        <p class="error">{"UNDEFINED BOX TYPE: " + (!!showBox ? showBox.kind : "NULL box")}"</p>
+    {:else if isLabelBox(showBox)}
         <SelectableComponent box={showBox} editor={editor}>
             <LabelComponent label={showBox} editor={editor}/>
         </SelectableComponent>
@@ -112,7 +107,9 @@
     {:else if isSvgBox(showBox) }
         <SvgComponent svgBox={showBox} editor={editor}/>
     {:else if isElementBox(showBox) }
-        <ElementComponent elementBox={showBox} editor={editor}/>
+        <ElementComponent box={showBox} editor={editor}/>
+    {:else if isTableRowBox(showBox) }
+        <TableRowComponent box={showBox} editor={editor}/>
     {:else if isOptionalBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
             <OptionalComponent optionalBox={showBox} editor={editor}/>
@@ -122,9 +119,9 @@
     {:else if isTableBox(showBox) }
         <TableComponent box={showBox} editor={editor}/>
     {:else}
-        <p class="error">{"UNKNOWN BOX TYPE: " + showBox.kind}"</p>
+        <p class="error">{"UNKNOWN BOX TYPE: " + (!!showBox ? showBox.kind : "NULL box")}"</p>
     {/if}
-</span>
+
 
 <style>
 

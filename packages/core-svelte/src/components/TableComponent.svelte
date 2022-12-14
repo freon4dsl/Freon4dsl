@@ -6,13 +6,13 @@
      * or a TableCellComponent.
      */
     import {
-        TableCellBox,
         type TableBox,
         type PiEditor,
-        PiLogger
+        PiLogger, Box, isElementBox
     } from "@projectit/core";
-    import { runInAction } from "mobx";
-    import TableCellComponent from "./TableCellComponent.svelte";
+    import ElementComponent from "./ElementComponent.svelte";
+    import { afterUpdate, onMount } from "svelte";
+    import TableRowComponent from "./TableRowComponent.svelte";
     // import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils/DropAndSelectStore";
     // import { dropListElement, moveListElement } from "@projectit/core";
 
@@ -21,17 +21,33 @@
     export let box: TableBox;
     export let editor: PiEditor;
 
-    let id = box.id;
+    let id = box?.id;
     // the following variables use svelte reactivity, when this does not suffice they should be set in a Mobx autorun method
-    let cells: TableCellBox[];
-    $: cells = box.cells;
+    let children: Box[];
     let templateColumns: string;
-    $: templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
     let templateRows: string;
-    $: templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
     let cssClass: string;
-    $: cssClass = box.cssClass;
     let gridElement: HTMLElement;
+
+    const refresh = () => {
+        console.log("Refresh TableBox, box: " + box);
+        if (!!box) {
+            children = box.children;
+            templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
+            templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
+            cssClass = box.cssClass;
+        }
+    } ;
+    onMount( () => {
+        box.refreshComponent = refresh;
+        refresh();
+    })
+    afterUpdate( () => {
+        box.refreshComponent = refresh;
+        refresh();
+    });
+
+    refresh();
     // determine the type of the elements in the list
     // this speeds up the check whether the element may be dropped in a certain drop-zone
     // let myMetaType: string;
@@ -72,14 +88,12 @@
         class="maingridcomponent {cssClass}"
         id="{id}"
 >
-    {#each cells as cell (cell.box.element.piId() + "-" + cell.row + "-" + cell.column)}
-        <TableCellComponent
-                parentComponentId={id}
-                parentOrientation={box.direction}
-                box={cell}
-                editor={editor}
-                parentHasHeader={box.hasHeaders}
-        />
+    {#each children as child}
+        {#if (isElementBox(child))}
+            <ElementComponent box={child} editor={editor}/>
+        {:else}
+            <TableRowComponent box={child} editor={editor}/>
+        {/if}
     {/each}
 </span>
 

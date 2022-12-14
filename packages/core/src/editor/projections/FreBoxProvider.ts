@@ -60,7 +60,7 @@ export abstract class FreBoxProvider {
      * case a specific projection is requested.
      */
     get box(): Box {
-        // console.log("GET BOX " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept());
+        console.log("GET BOX " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept());
         if (this._element === null) {
             return null;
         }

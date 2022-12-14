@@ -24,10 +24,6 @@
     let children: Box[];
     $: children = [...list.children];
 
-    onDestroy(() => {
-        LOGGER.log("DESTROY LIST  COMPONENT")
-    });
-
     async function setFocus(): Promise<void> {
         FOCUS_LOGGER.log("ListComponent.setFocus for box " + list.role);
         if (!!element) {

@@ -15,7 +15,7 @@
     import { AUTO_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
 
-    let LOGGER = new PiLogger("ProjectItComponent").mute();
+    let LOGGER = new PiLogger("ProjectItComponent");//.mute();
     export let editor: PiEditor;
     // TODO add id
     // let id: string = `${box.element.piId()}-${box.role}`;
@@ -53,6 +53,7 @@
             switch (event.key) {
                 case BACKSPACE:
                 case ARROW_LEFT:
+                    LOGGER.log("Select Previous leaf")
                     editor.selectPreviousLeaf();
                     stopEvent(event)
                     break;

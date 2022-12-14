@@ -119,6 +119,7 @@ export class PiEditor {
         if (!!this._selectedBox) {
             this._selectedElement = this._selectedBox.element;
         }
+        LOGGER.log("SELECTED [" + this._selectedBox.role + "] elem [" + this?._selectedElement?.piLanguageConcept() + "]")
     }
 
     get selectedBox(): Box {
@@ -225,10 +226,12 @@ export class PiEditor {
      * TODO what if there is no previous sibling?
      */
     selectPreviousLeaf() {
+        console.log("selectPreviosLeaf, selected is: " + this.selectedBox?.role)
         const previous = this.selectedBox?.nextLeafLeft;
+        console.log("Previous is " + previous);
         if (!!previous) {
             this.selectBoxNew(previous, PiCaret.RIGHT_MOST);
-            // previous.setFocus();
+            previous.setFocus();
             // if (isTextBox(previous) || isSelectBox(previous)) {
             //     LOGGER.log("!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
             //     previous.setCaret(PiCaret.RIGHT_MOST);

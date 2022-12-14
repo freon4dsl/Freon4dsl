@@ -12,10 +12,6 @@
 
     let id: string = componentId(label);
 
-    onDestroy(() => {
-        LOGGER.log("LabelComponent.onDestroy ["+ text + "]")
-    });
-
     let element: HTMLDivElement = null;
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("LabelComponent.setFocus for box " + label?.role);

@@ -13,10 +13,10 @@
         PiLogger,
         toPiKey,
         TableCellBox,
-        Language, TableDirection
+        Language, TableDirection, Box
     } from "@projectit/core";
     // import { autorun, runInAction } from "mobx";
-    import { onMount, createEventDispatcher } from "svelte";
+    import { onMount, createEventDispatcher, afterUpdate } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
     // import { executeCustomKeyboardShortCut, isOdd } from "./svelte-utils";
     // import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
@@ -50,6 +50,7 @@
     let row: number;
     let column: number;
     let orientation: BoxTypeName = "gridcellNeutral";
+    let childBox: Box;
 
     let isHeader = "noheader";
     let cssStyle: string = "";
@@ -61,22 +62,29 @@
     // img.src = "img/projectit-logo.png";
     // img.src = "img/open_with.svg"; // todo svg image is not shown as drag ghost
 
+    const refresh = () => {
+        console.log("TableCellComponent refresh, box: " + box);
+        if (!!box) {
+            if (parentOrientation === TableDirection.HORIZONTAL) {
+                row = box.row;
+                column = box.column;
+            } else {
+                row = box.column;
+                column = box.row;
+            }
+            childBox = box.box;
+        }
+    }
     // todo see which function we need to set the row and column: onMount, autorun, afterUpdate???
     onMount(() => {
-        if (parentOrientation === TableDirection.HORIZONTAL) {
-            row = box.row;
-            column = box.column;
-        } else {
-            row = box.column;
-            column = box.row;
-        }
+        box.refreshComponent = refresh;
+        refresh();
     });
 
-    // afterUpdate(() => {
-    //     UPDATE_LOGGER.log("GridCellComponent.afterUpdate");
-    //     // Triggers autorun
-    //     $boxStore = cellBox.box;
-    // });
+    afterUpdate(() => {
+        box.refreshComponent = refresh;
+        refresh();
+    });
 
     const onKeydown = (event: KeyboardEvent) => {
         LOGGER.log("GridCellComponent onKeyDown");
@@ -201,13 +209,13 @@
 <span
         id="{id}"
         class="gridcellcomponent {orientation} {isHeader} {cssClass} "
-        style:grid-row="{row.toString()}"
-        style:grid-column="{column.toString()}"
+        style:grid-row="{row}"
+        style:grid-column="{column}"
         style="{cssStyle}"
         draggable=true
         on:keydown={onKeydown}
 >
-    <RenderComponent box={box.box} editor={editor}/>
+    <RenderComponent box={childBox} editor={editor}/>
 </span>
 
 

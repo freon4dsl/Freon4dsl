@@ -13,5 +13,5 @@ export class TableCellBox extends GridCellBox {
 }
 
 export function isTableCellBox(box: Box): box is TableCellBox {
-    return box.kind === "TableCellBox"; //  box instanceof TableCellBox;
+    return box?.kind === "TableCellBox"; //  box instanceof TableCellBox;
 }

@@ -1,7 +1,6 @@
 <script lang="ts">
     import RenderComponent from "./RenderComponent.svelte";
     import { onDestroy, onMount, afterUpdate } from "svelte";
-    import { autorun } from "mobx";
     import { getRoot, OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
     import { FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
 
@@ -15,15 +14,13 @@
     let showByCondition = false;
     let element: HTMLDivElement = null;
 
-    onDestroy(() => {
-        LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ optionalBox.id + "]")
-    });
-
     function refresh() : void  {
         console.log("DIRTY OptionalBox");
         mustShow = optionalBox.mustShow;
         showByCondition =optionalBox.condition();
         childBox = optionalBox.box;
+        optionalBox.setFocus = setFocus;
+        optionalBox.refreshComponent = refresh;
     }
 
     const setFocus = async (): Promise<void> => {
@@ -37,8 +34,9 @@
 
     onMount( () => {
         MOUNT_LOGGER.log("OptionalComponent onMount --------------------------------")
-        optionalBox.setFocus = setFocus;
-        optionalBox.refreshComponent = refresh;
+        refresh();
+        // optionalBox.setFocus = setFocus;
+        // optionalBox.refreshComponent = refresh;
     });
 
     afterUpdate( () => {
@@ -46,7 +44,7 @@
         LOGGER.log("   root " + getRoot(optionalBox).$id);
         if(optionalBox.box.kind === "HorizontalListBox") {
             optionalBox.box.children.forEach( child => {
-                LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
+                LOGGER.log("    child " + child?.$id + " role " + child?.role + " : " + child?.kind);
             })
         }
         optionalBox.setFocus = setFocus;

@@ -58,8 +58,8 @@ export abstract class TableBox extends Box {
         return 0;
     }
 
-    get children(): ReadonlyArray<Box> {
-        return this._children as ReadonlyArray<Box>;
+    get children(): Box[] {
+        return this._children;
     }
 
     replaceChildren(children: Box[]): TableBox {

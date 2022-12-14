@@ -19,5 +19,5 @@ export class TableRowBox extends Box {
 }
 
 export function isTableRowBox(box: Box): box is TableRowBox {
-    return box.kind === "TableRowBox"; //  box instanceof TableRowBox;
+    return box?.kind === "TableRowBox"; //  box instanceof TableRowBox;
 }

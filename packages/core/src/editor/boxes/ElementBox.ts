@@ -27,5 +27,5 @@ export class ElementBox extends Box {
 }
 
 export function isElementBox(b: Box): b is ElementBox {
-    return b?.kind === "ElementBox"; // b instanceof ElementBox;
+    return (!!b) && b.kind === "ElementBox"; // b instanceof ElementBox;
 }
