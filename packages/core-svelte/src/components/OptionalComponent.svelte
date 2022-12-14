@@ -14,14 +14,12 @@
     let showByCondition = false;
     let element: HTMLDivElement = null;
 
-    function refresh() : void  {
-        console.log("DIRTY OptionalBox");
+    const refresh = (): void => {
+        LOGGER.log("DIRTY OptionalBox");
         mustShow = optionalBox.mustShow;
         showByCondition =optionalBox.condition();
         childBox = optionalBox.box;
-        optionalBox.setFocus = setFocus;
-        optionalBox.refreshComponent = refresh;
-    }
+    };
 
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
@@ -33,37 +31,17 @@
     };
 
     onMount( () => {
-        MOUNT_LOGGER.log("OptionalComponent onMount --------------------------------")
-        refresh();
-        // optionalBox.setFocus = setFocus;
-        // optionalBox.refreshComponent = refresh;
+        optionalBox.setFocus = setFocus;
+        optionalBox.refreshComponent = refresh;
     });
 
     afterUpdate( () => {
-        LOGGER.log("AfterUpdate " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
-        LOGGER.log("   root " + getRoot(optionalBox).$id);
-        if(optionalBox.box.kind === "HorizontalListBox") {
-            optionalBox.box.children.forEach( child => {
-                LOGGER.log("    child " + child?.$id + " role " + child?.role + " : " + child?.kind);
-            })
-        }
         optionalBox.setFocus = setFocus;
         optionalBox.refreshComponent = refresh;
     });
 
     refresh();
-    // autorun( () => {
-        // LOGGER.log("AUTO " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
-        // LOGGER.log("   root " + getRoot(optionalBox).$id);
-        // if(optionalBox.box.kind === "HorizontalListBox") {
-        //     optionalBox.box.children.forEach( child => {
-        //         LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
-        //     })
-        // }
-        // mustShow = optionalBox.mustShow;
-        // childBox = optionalBox.box;
-        // showByCondition = optionalBox.showByCondition;
-    // });
+
 </script>
 
 <div class="optional"

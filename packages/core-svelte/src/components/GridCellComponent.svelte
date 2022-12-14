@@ -37,17 +37,19 @@
     let cssClass: string = "";
 
     function refresh(from? : string): void {
-        console.log("DIRTY GridCellComponent " + (!!from?" from " + from + " ": "") + cellBox?.element?.piLanguageConcept() + "-" + cellBox?.element?.piId());
-        $boxStore = cellBox.box;
-        LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);
-        row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
-        column = cellBox.column + (cellBox.columnSpan ? " / span " + cellBox.columnSpan : "");
-        orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ? "gridcellOdd" : "gridcellEven")));
-        if (cellBox.isHeader) {
-            isHeader = "gridcell-header";
+        if (!!cellBox) {
+            LOGGER.log("DIRTY GridCellComponent " + (!!from ? " from " + from + " " : "") + cellBox?.element?.piLanguageConcept() + "-" + cellBox?.element?.piId());
+            $boxStore = cellBox.box;
+            LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);
+            row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
+            column = cellBox.column + (cellBox.columnSpan ? " / span " + cellBox.columnSpan : "");
+            orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ? "gridcellOdd" : "gridcellEven")));
+            if (cellBox.isHeader) {
+                isHeader = "gridcell-header";
+            }
+            cssStyle = $boxStore.cssStyle;
+            cssClass = cellBox.cssClass;
         }
-        cssStyle = $boxStore.cssStyle;
-        cssClass = cellBox.cssClass;
     }
 
     refresh("init component");

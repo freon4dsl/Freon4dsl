@@ -12,7 +12,7 @@ export class OptionalBox extends Box {
     private _box: Box = null;
     whenNoShowingAlias: AliasBox = null; // TODO question: should name be whenShowingAlias or alternativeBox?
     condition: () => boolean;
-    _mustShow: boolean = false;
+    protected _mustShow: boolean = false;
 
     get box(): Box {
         return this._box;
@@ -25,6 +25,7 @@ export class OptionalBox extends Box {
         if (!!this._box) {
             this._box.parent = this;
         }
+        this.isDirty();
     }
 
     get mustShow() {

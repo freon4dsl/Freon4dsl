@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { afterUpdate, onDestroy, onMount } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { afterUpdate, onMount } from "svelte";
+    import { FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import {
         Box,
@@ -19,7 +19,6 @@
     // Local state variables
     let LOGGER: PiLogger = new PiLogger("ListComponent").mute();
     let svList: ListBox = list; // TODO question: why a new variable, cannot use 'list'?
-    let svNotifier = new ChangeNotifier();
     let element: HTMLSpanElement;
     let children: Box[];
     $: children = [...list.children];
@@ -32,8 +31,7 @@
     }
 
     const refresh = (): void =>  {
-        console.log("DIRTY ListComponent " + list?.element?.piLanguageConcept() + "-" + list?.element?.piId() + ", " + list.role);
-        svNotifier.dummy
+        LOGGER.log("DIRTY ListComponent " + list?.element?.piLanguageConcept() + "-" + list?.element?.piId() + ", " + list.role);
         svList = list;
         children = [...list.children];
     }
@@ -48,8 +46,6 @@
         UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
         list.setFocus = setFocus;
         list.refreshComponent = refresh;
-        // NOTE: Triggers autorun whenever an element is added or delete from the list
-        svNotifier.notifyChange();
     });
 
     // TODO Empty vertical list gives empty line, try to add entities in the example.

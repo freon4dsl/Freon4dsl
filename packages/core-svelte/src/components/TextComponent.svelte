@@ -1,7 +1,6 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
-    import { reduceRight } from "lodash";
     import { runInAction } from "mobx";
     import {
         BACKSPACE,
@@ -29,7 +28,7 @@
         PiCommand, PI_NULL_COMMAND, PiPostAction, PiEditorUtil, CharAllowed
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import { componentId } from "./util";
 
     const LOGGER = new PiLogger("TextComponent");

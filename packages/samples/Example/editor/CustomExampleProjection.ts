@@ -11,7 +11,7 @@ import {
     Language,
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
-    HorizontalListBox, FreProjection
+    HorizontalListBox, FreProjection, PiTableDefinition
 } from "@projectit/core";
 import { OrExpression, SumExpression } from "../language/gen/";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment";
@@ -23,42 +23,18 @@ const OPERAND_COLUMN = 2;
 /**
  * Class CustomExampleProjection provides an entry point for the language engineer to
  * define custom build additions to the editor.
- * These custom build additions are merged with the default and definition-based editor parts
+ * These are merged with the custom build additions and other definition-based editor parts
  * in a three-way manner. For each modelelement,
  * (1) if a custom build creator/behavior is present, this is used,
- * (2) if a creator/behavior based on the editor definition is present, this is used,
+ * (2) if a creator/behavior based on one of the editor definition is present, this is used,
  * (3) if neither (1) nor (2) yields a result, the default is used.
  */
-
 export class CustomExampleProjection implements FreProjection {
-    name: string = "manual";
-    // isEnabled: boolean = true;
-
-    constructor(name?: string) {
-        if (!!name) {
-            this.name = name;
-        }
-    }
-
-    // getTableDefinition(conceptName: string): PiTableDefinition {
-    //     // Add any handmade table cells of your own before next statement
-    //     return null;
-    // }
-    //
-    // getBox(element: PiElement): Box {
-    //     // Add any handmade projections of your own before next statement
-    //
-    //     // Uncomment to see a mathematical Sum symbol
-    //     if (element instanceof SumExpression) {
-    //         return this.createSumBox(element);
-    //     }
-    //
-    //     // Uncomment to see an alternative OR notation (only works up to two nested ors
-    //     if (element instanceof OrExpression) {
-    //         return this.createOrBoxGrid(element);
-    //     }
-    //     return null;
-    // }
+    name: string = "Manual";
+    nodeTypeToTableDefinition: Map<string, () => PiTableDefinition> = new Map<string, () => PiTableDefinition>([
+        // register your custom table definition methods here
+        // ['NAME_OF_CONCEPT', this.TABLE_DEFINITION_FOR_CONCEPT],
+    ]);
 
     nodeTypeToBoxMethod: Map<string, (node: PiElement) => Box> = new Map<string, (node: PiElement) => Box>([
         ['SumExpression', this.createSumBox],
@@ -153,8 +129,5 @@ export class CustomExampleProjection implements FreProjection {
             ? ExampleEnvironment.getInstance().editor.projection.getBox(element[property])
             : new AliasBox(element, roleName, "[" + property + "]", { propertyName: property, conceptName: Language.getInstance().classifier(element.piLanguageConcept()).properties.get(property).type });
     }
-
-    ////////////////////////////////////////////////////////////////////
-
 
 }

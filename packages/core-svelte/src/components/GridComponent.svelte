@@ -1,7 +1,7 @@
 <script lang="ts">
     import { GridCellBox, type GridBox, type PiEditor } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { ChangeNotifier, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import GridCellComponent from "./GridCellComponent.svelte";
     import { writable, type Writable } from "svelte/store";
     import { componentId } from "./util";
@@ -9,7 +9,6 @@
     export let gridBox: GridBox;
     export let editor: PiEditor;
 
-    let notifier = new ChangeNotifier();
     let id = componentId(gridBox);
     let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(gridBox.cells);
     let templateColumns: string;
@@ -17,14 +16,15 @@
     let cssClass: string = "";
 
     const refresh = (): void =>  {
-        console.log("DIRTY GridComponent "+ gridBox?.element?.piLanguageConcept() + "-" + gridBox?.element?.piId());
-        $cells = [...gridBox.cells];
+        if (!!gridBox) {
+            // console.log("DIRTY GridComponent " + gridBox?.element?.piLanguageConcept() + "-" + gridBox?.element?.piId());
+            $cells = [...gridBox.cells];
 
             length = $cells.length;
-        templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
-        templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
-        cssClass = gridBox.cssClass;
-
+            templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
+            templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
+            cssClass = gridBox.cssClass;
+        }
     }
     onMount( () => {
         MOUNT_LOGGER.log("GridComponent onmount")
@@ -36,10 +36,9 @@
         UPDATE_LOGGER.log("GridComponent afterUpdate for girdBox " + gridBox.element.piLanguageConcept())
         $cells = gridBox.cells;
         gridBox.refreshComponent = refresh;
-        // Triggers autorun
-        notifier.notifyChange();
     });
 
+    let dummy = 0;
 </script>
 
 <div
@@ -48,7 +47,7 @@
         class="maingridcomponent {cssClass}"
         id="{id}"
 >
-    {#each $cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid" + "-" + notifier.dummy)}
+    {#each $cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid" + "-" + dummy)}
         <GridCellComponent grid={gridBox} cellBox={cell} editor={editor}/>
     {/each}
 </div>
