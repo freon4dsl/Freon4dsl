@@ -81,8 +81,8 @@ export class FreProjectionCalculator {
      */
     private static findBoxProjectionToUse(mainHandler: FreProjectionHandler, conceptName: string, knownBoxProjections: string[]): string {
         // See if the projection for this concept is in our cache.
-        if (FreProjectionCalculator.conceptNameToTableProjection.has(conceptName)) {
-            return FreProjectionCalculator.conceptNameToTableProjection.get(conceptName);
+        if (FreProjectionCalculator.conceptNameToBoxProjection.has(conceptName)) {
+            return FreProjectionCalculator.conceptNameToBoxProjection.get(conceptName);
         }
         // See if we need to use a custom projection.
         let projToUse: string = null;

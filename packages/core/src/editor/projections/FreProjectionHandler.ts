@@ -7,6 +7,7 @@ import { action, makeObservable } from "mobx";
 import { ListUtil } from "../../util/ListUtil";
 import { FreProjectionCalculator } from "./FreProjectionCalculator";
 import { FreTableHeaderInfo } from "./FreTableHeaderInfo";
+import { FreHeaderProvider } from "./FreHeaderProvider";
 
 /**
  * This class, of which there should be one instance per editor, registers all
@@ -26,6 +27,11 @@ export class FreProjectionHandler {
     // such that the right box provider can be instantiated for a certain (type of) PiElement node.
     private conceptNameToProviderConstructor: Map<string, (h: FreProjectionHandler) => FreBoxProvider> =
         new Map<string, (h: FreProjectionHandler) => FreBoxProvider>([]);
+    // 'headerProviders' holds all boxproviders that are responsible for the headers in a table.
+    // Its key is <elementId, propertyName>, where elementId is the id of the element that holds the table,
+    // and propertyName the name of the property that must be shown in the table.
+    private headerProviders: Map<string[], FreHeaderProvider> =
+        new Map<string[], FreHeaderProvider>();
     // '_allProjections' holds the list of names of all available projections, including all custom ones
     private _allProjections: string[] = [];
     // '_enabledProjections' holds the list of names of all enabled projections
@@ -159,6 +165,9 @@ export class FreProjectionHandler {
         for (const provider of this.elementToProvider.values()) {
             provider.checkUsedProjection();
         }
+        for (const provider of this.headerProviders.values()) {
+            provider.checkUsedProjection();
+        }
     }
 
     /**
@@ -220,9 +229,30 @@ export class FreProjectionHandler {
         this.tableHeaderInfo = list;
     }
 
-    getTableHeaders(conceptName: string) : string[] {
-        let knownTableProjections = this.conceptNameToProviderConstructor.get(conceptName)(this).knownTableProjections;
-        let projectionName: string = FreProjectionCalculator.findProjectionToUse(this, conceptName, knownTableProjections, true);
+    getHeaderProvider(element: PiElement, propertyName: string, conceptName: string): FreHeaderProvider {
+        if (isNullOrUndefined(element)) {
+            console.error("FreProjectionHandler.getHeaderProvider: element is null/undefined");
+            return null;
+        }
+
+        // return if present, else create a new provider
+        let headerProvider = this.headerProviders.get([element.piId(), propertyName]);
+        if (isNullOrUndefined(headerProvider)) {
+            headerProvider = new FreHeaderProvider(element, propertyName, conceptName, this);
+            this.headerProviders.set([element.piId(), propertyName], headerProvider);
+            headerProvider.initUsedProjection();
+        }
+        return headerProvider;
+    }
+
+    getKnownTableProjectionsFor(conceptName: string): string[] {
+        return this.conceptNameToProviderConstructor.get(conceptName)(this).knownTableProjections;
+    }
+
+    getTableHeaderInfo(conceptName: string, projectionName: string): string[] {
+        // let knownTableProjections = this.getKnownTableProjectionsFor(conceptName);
+        // let projectionName: string = FreProjectionCalculator.findProjectionToUse(this, conceptName, knownTableProjections, true);
+
         for (const part of this.tableHeaderInfo) {
             if (part.conceptName === conceptName && part.projectionName === projectionName) {
                 return part.headerRow;

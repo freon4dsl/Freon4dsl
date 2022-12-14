@@ -123,7 +123,7 @@ export class Language {
                 }
             }
         }
-        console.log("RETURNING NULL FOR " + typeName)
+        // console.log("RETURNING NULL FOR " + typeName)
         return undefined;
     }
 

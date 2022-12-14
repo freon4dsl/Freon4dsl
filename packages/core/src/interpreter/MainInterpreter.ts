@@ -88,7 +88,7 @@ export class MainInterpreter implements IMainInterpreter {
         }
         const value: RtObject = interpreterFunction(node, ctx);
         if (value === undefined) {
-            console.log("Concept " + this.getConcept(node) + " evaluates to undefined");
+            // console.log("Concept " + this.getConcept(node) + " evaluates to undefined");
         }
         if (this.tracing) {
             this.tracer.push(node, value);

@@ -70,20 +70,20 @@ export class PiCreatePartCommand extends PiCommand {
         this.propertyName = propertyName;
         this.conceptName = conceptName;
         this.referenceShortcut = referenceShortcut;
-        console.log("+++++++++++++++ Create part command " + propertyName + ", " + conceptName);
+        // console.log("+++++++++++++++ Create part command " + propertyName + ", " + conceptName);
     }
 
     execute(box: Box, trigger: PiTriggerUse, editor: PiEditor): PiPostAction {
-        console.log(
-            "CreatePartCommand: trigger [" +
-                triggerTypeToString(trigger) +
-                "] part: " +
-                this.conceptName +
-                " in " +
-                this.propertyName +
-                " refshort " +
-                this.referenceShortcut
-        );
+        // console.log(
+        //     "CreatePartCommand: trigger [" +
+        //         triggerTypeToString(trigger) +
+        //         "] part: " +
+        //         this.conceptName +
+        //         " in " +
+        //         this.propertyName +
+        //         " refshort " +
+        //         this.referenceShortcut
+        // );
         const newElement: PiElement = Language.getInstance().concept(this.conceptName)?.constructor();
         if (newElement === undefined || newElement === null) {
             // TODO Find out why this happens sometimes
@@ -121,7 +121,7 @@ export class PiCreateSiblingCommand extends PiCommand {
     }
 
     execute(box: Box, trigger: PiTriggerUse, editor: PiEditor): PiPostAction {
-        console.log("CreateSiblingCommand: trigger [" + triggerTypeToString(trigger) + "] part: " + this.conceptName + " refshort " + this.referenceShortcut);
+        // console.log("CreateSiblingCommand: trigger [" + triggerTypeToString(trigger) + "] part: " + this.conceptName + " refshort " + this.referenceShortcut);
         const newElement: PiElement = Language.getInstance().concept(this.conceptName)?.constructor();
         if (newElement === undefined || newElement === null) {
             // TODO Find out why this happens sometimes
@@ -166,7 +166,7 @@ export class PiCreateBinaryExpressionCommand extends PiCommand {
     }
 
     execute(box: Box, trigger: PiTriggerUse, editor: PiEditor): PiPostAction {
-        console.log("PiCreateBinaryExpressionCommand: trigger [" + triggerTypeToString(trigger) + "] part: ");
+        // console.log("PiCreateBinaryExpressionCommand: trigger [" + triggerTypeToString(trigger) + "] part: ");
         const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, triggerTypeToString(trigger), editor), box, editor);
         return function () {
             editor.selectElement(selected.element, selected.boxRoleToSelect)
@@ -189,14 +189,14 @@ export class PiCustomCommand extends PiCommand {
 
     execute(box: Box, trigger: PiTriggerUse, editor: PiEditor): PiPostAction {
         // LOGGER.log("execute custom action, text is [" + text + "] refShort [" + this.referenceShortcut + "]" );
-        console.log("PiCustomCommand: trigger [" + triggerTypeToString(trigger) + "]");
+        // console.log("PiCustomCommand: trigger [" + triggerTypeToString(trigger) + "]");
         const self = this;
         const selected = self.action(box, triggerTypeToString(trigger), editor);
 
         if (!!selected) {
             if (!!self.boxRoleToSelect) {
                 return function () {
-                    console.log("PiCommand select " + box.element.piLanguageConcept() + " box " + self.boxRoleToSelect);
+                    // console.log("PiCommand select " + box.element.piLanguageConcept() + " box " + self.boxRoleToSelect);
                     editor.selectElement(selected, self.boxRoleToSelect);
                 };
             } else {

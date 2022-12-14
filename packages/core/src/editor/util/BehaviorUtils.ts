@@ -76,16 +76,16 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
  * @param editor
  */
 export function executeSingleBehavior(action: PiAction, box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
-    console.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
+    // console.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
     let partialMatch: boolean = false;
     let execresult: PiPostAction;
 
     const trigger = action.trigger;
     runInAction( () => {
-        console.log("========================== START");
+        // console.log("========================== START");
         const command = action.command(box);
         execresult = command.execute(box, label, editor);
-        console.log("===============================")
+        // console.log("===============================")
     });
     if( !!execresult){
         execresult();
