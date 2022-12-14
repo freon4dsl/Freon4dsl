@@ -1,7 +1,8 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
-    import { autorun, runInAction } from "mobx";
+    import { reduceRight } from "lodash";
+    import { runInAction } from "mobx";
     import {
         BACKSPACE,
         DELETE,
@@ -31,7 +32,7 @@
     import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import { componentId } from "./util";
 
-    const LOGGER = new PiLogger("TextComponent").mute();
+    const LOGGER = new PiLogger("TextComponent");
     // Is this component currently being edited by the user?
     export let isEditing: boolean = false;
     export let textBox: TextBox ; // new TextBox(null, "role:", () => "Editable textbox", (v: string) => { });
@@ -118,8 +119,7 @@
 
     onMount(() => {
         MOUNT_LOGGER.log("TextComponent.onMount for role [" + textBox.role + "]");
-        textBox.setFocus = setFocus;
-        textBox.setCaret = setCaret;
+        refresh();
         originalText = textBox.getText();
     });
 
@@ -329,7 +329,9 @@
             textBox.caretPosition = getCaretPosition();
             if (value !== originalText) {
                 textBox.setText(value);
-            }            editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
+            }
+            // TODO selectPosition does not exist aanymore, is this still needed?
+            // editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         }
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info("delete empty text");
@@ -340,12 +342,7 @@
 
     afterUpdate(() => {
         UPDATE_LOGGER.log("TextComponent update [" + isEditing + "] [" + currentText() + "] getText [" + textBox.getText() + "] text [" + text + "] box [" + textBox.role + "] caret [" + textBox.caretPosition + "]");
-        textBox.setFocus = setFocus;
-        textBox.setCaret = setCaret;
-        // If being edited, do not set the value, let the user type whatever (s)he wants
-        if (!isEditing) {
-            text = textBox.getText();
-        }
+        refresh();
     });
 
     export const getCaretPosition = (): number => {
@@ -357,16 +354,28 @@
 
     let boxType: string = "";
 
-    autorun(() => {
-        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "] isEditing [" + isEditing + "]");
+    const refresh = () => {
         placeholder = textBox.placeHolder;
         // If being edited, do not set the value, let the user type whatever (s)he wants
-        // if (!isEditing) {
+        if (!isEditing) {
             text = textBox.getText();
-        // }
+        }
         boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
         textBox.setFocus = setFocus;
-    });
+        textBox.setCaret = setCaret;
+        textBox.refreshComponent = refresh;
+    }
+
+    // autorun(() => {
+    //     AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "] isEditing [" + isEditing + "]");
+    //     placeholder = textBox.placeHolder;
+    //     // If being edited, do not set the value, let the user type whatever (s)he wants
+    //     // if (!isEditing) {
+    //         text = textBox.getText();
+    //     // }
+    //     boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
+    //     textBox.setFocus = setFocus;
+    // });
 
     // const onFocus = async (e: FocusEvent) => {
     //     FOCUS_LOGGER.log("TextComponent.onFocus for box " + textBox.role);

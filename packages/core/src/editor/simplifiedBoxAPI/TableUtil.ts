@@ -1,4 +1,12 @@
-import { BoxFactory, isTableRowBox, TableBoxColumnOriented, TableBoxRowOriented, TableCellBox, TableRowBox } from "../boxes";
+import {
+    BoxFactory,
+    isTableRowBox,
+    TableBox,
+    TableBoxColumnOriented,
+    TableBoxRowOriented,
+    TableCellBox,
+    TableRowBox
+} from "../boxes";
 import {
     Box, BoxUtils,
     FreBoxProvider,
@@ -60,7 +68,7 @@ export class TableUtil {
         return new TableRowBox(element, role, myContent, rowIndex);
     }
 
-    private static tableBox(orientation: GridOrientation, element: PiElement, list: PiElement[], propertyName: string, boxProviderCache: FreProjectionHandler) {
+    private static tableBox(orientation: GridOrientation, element: PiElement, list: PiElement[], propertyName: string, boxProviderCache: FreProjectionHandler): TableBox {
         // Find the information on the property to be shown and check it.
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
@@ -72,7 +80,8 @@ export class TableUtil {
             // Add the headers, if there are any.
             const headers: string[] = boxProviderCache.getTableHeaders(propInfo.type);
             if (!!headers && headers.length > 0) {
-                children.push(this.createHeaderBox(element, propertyName, headers));
+                const headerBox = this.createHeaderBox(element, propertyName, headers);
+                children.push(headerBox);
                 hasHeaders = true;
             }
             // Add the children for each element of the list.

@@ -3,25 +3,31 @@
     import { onMount, afterUpdate } from "svelte";
     import { PiLogger, type PiEditor, ElementBox } from "@projectit/core";
 
-    export let elementBox: ElementBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
+    export let box: ElementBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
     export let editor: PiEditor;
 
-    const LOGGER = new PiLogger("ElementComponent").mute();
-    let id: string = `${elementBox.element.piId()}-${elementBox.role}`;
-    let childBox = elementBox.content ;
+    const LOGGER = new PiLogger("ElementComponent");
+    let id: string = `${box?.element?.piId()}-${box?.role}`;
+    let childBox = box?.content ;
 
     const refresh = (): void =>  {
-        console.log("DIRTY ElementBox for " + elementBox.element.piLanguageConcept() + "-" + elementBox.element.piId());
-        childBox = elementBox.content;
+        console.log("DIRTY ElementBox for " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
+        if (!!box) {
+            childBox = box.content;
+        }
     }
 
     onMount( () => {
-        elementBox.refreshComponent = refresh;
+        box.refreshComponent = refresh;
+        refresh();
     });
-    
+
     afterUpdate( () => {
-        elementBox.refreshComponent = refresh;
+        box.refreshComponent = refresh;
+        refresh();
     });
+
+    refresh();
 
 </script>
 

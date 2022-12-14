@@ -5,11 +5,10 @@
         ENTER,
         type PiEditor,
         PiLogger,
-        PiUtils,
         toPiKey,
-        GridCellBox, Box, PiCommand, PI_NULL_COMMAND, PiPostAction
+        GridCellBox, Box, PiCommand, PI_NULL_COMMAND, PiPostAction, PiEditorUtil
     } from "@projectit/core";
-    import { autorun, runInAction } from "mobx";
+    import { runInAction } from "mobx";
     import { afterUpdate, onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
     import { UPDATE_LOGGER } from "./ChangeNotifier";
@@ -52,7 +51,7 @@
     }
 
     refresh("init component");
-    
+
     onMount( () => {
         $boxStore = cellBox.box;
         cellBox.refreshComponent = refresh;
@@ -69,7 +68,7 @@
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
-            const cmd: PiCommand = PiUtils.findKeyboardShortcutCommand(toPiKey(event), cellBox, editor);
+            const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), cellBox, editor);
             if (cmd !== PI_NULL_COMMAND) {
                 let postAction: PiPostAction;
                 runInAction(() => {

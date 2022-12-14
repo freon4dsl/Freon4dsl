@@ -23,6 +23,7 @@ export class GridBox extends Box {
             if (!c.rowSpan) {
                 c.rowSpan = 1;
             }
+            c.parent = this;
         });
         this.sortCellsAndAddChildren();
         // makeObservable(this, {
@@ -64,5 +65,5 @@ function compare(a: GridCellBox, b: GridCellBox): number {
 }
 
 export function isGridBox(box: Box): box is GridBox {
-    return box.kind === "GridBox"; //  box instanceof GridBox;
+    return box?.kind === "GridBox"; //  box instanceof GridBox;
 }

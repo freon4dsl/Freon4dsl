@@ -16,10 +16,7 @@ export class GridCellBox extends Box  {
         super(element, role);
         this.row = row;
         this.column = column;
-        this.$box = box;
-        if(!!box){
-            box.parent = this;
-        }
+        this.box = box;
         PiUtils.initializeObject(this, initializer);
         this.selectable = false;
     }

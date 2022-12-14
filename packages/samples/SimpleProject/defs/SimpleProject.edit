@@ -26,9 +26,3 @@ ConceptD {[
 ConceptE {[
     Leaf content: ${leaf}
 ]}
-PlusExpression {
-    symbol = "+"
-}
-NumberLiteralExpression {
-    [${self.value}]
-}

@@ -25,26 +25,5 @@ concept ConceptD {
 }
 
 concept ConceptE {
-    leaf: PlusExpression;
-}
-
-abstract expression Expression {
-    appliedfeature?: AppliedFeature;
-}
-
-abstract concept AppliedFeature {
-    appliedfeature?: AppliedFeature;
-}
-
-abstract binary expression BinaryExpression base Expression {
-    left: Expression;
-    right: Expression;
-}
-
-binary expression PlusExpression base BinaryExpression {
-    priority = 1;
-}
-
-expression NumberLiteralExpression base Expression   {
-    value: number;
+    leaf: string;
 }

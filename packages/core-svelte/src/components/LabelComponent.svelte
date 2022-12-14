@@ -5,47 +5,52 @@
     import { FOCUS_LOGGER } from "./ChangeNotifier";
     import { componentId } from "./util";
 
-    export let label: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
+    export let box: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("LabelComponent").mute();
 
-    let id: string = componentId(label);
-
-    onDestroy(() => {
-        LOGGER.log("LabelComponent.onDestroy ["+ text + "]")
-    });
+    let id: string = componentId(box);
 
     let element: HTMLDivElement = null;
     const setFocus = async (): Promise<void> => {
-        FOCUS_LOGGER.log("LabelComponent.setFocus for box " + label?.role);
+        FOCUS_LOGGER.log("LabelComponent.setFocus for box " + box?.role);
         if (!!element) {
             element.focus();
         }
     };
 
     onMount( () => {
-       label.setFocus = setFocus;
+        if (!!box) {
+            box.setFocus = setFocus;
+            box.refreshComponent = refresh;
+        }
     });
     afterUpdate( () => {
-        label.setFocus = setFocus;
+        if (!!box) {
+            box.setFocus = setFocus;
+            box.refreshComponent = refresh;
+        }
     });
 
-    let text: string;
     const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("LabelComponent.onFocus for box " + label.role);
+        FOCUS_LOGGER.log("LabelComponent.onFocus for box " + box.role);
     }
     const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("LabelComponent.onBlur for box " + label.role);
+        FOCUS_LOGGER.log("LabelComponent.onBlur for box " + box.role);
     }
+    let text: string;
     let style: string;
     let cssClass: string;
 
-    autorun( () => {
-        text = label.getLabel();
-        style = label.cssStyle;
-        cssClass = label.cssClass
-    });
+    const refresh = () => {
+        if (!!box) {
+            text = box.getLabel();
+            style = box.cssStyle;
+            cssClass = box.cssClass;
+        }
+    };
+    refresh();
 </script>
 
 <div class="label {text} {cssClass}"
