@@ -43,14 +43,14 @@ export class PiEditor {
         this.environment = environment;
         this.initializeAliases(actions);
         // TODO rethink whether selectedBox should be observable
-        // makeObservable<PiEditor, "_rootElement" | "_selectedElement" | "_selectedBox">(this, {
-        //     theme: observable,
-        //     _rootElement: observable,
-        //     _selectedElement: observable,
-        //     _selectedBox: observable,
-        //     selectedBox: computed,
-        //     deleteBox: action
-        // });
+        makeObservable<PiEditor, "_rootElement" | "_selectedElement" | "_selectedBox">(this, {
+            theme: observable,
+            _rootElement: observable,
+            _selectedElement: observable,
+            _selectedBox: observable,
+            selectedBox: computed,
+            deleteBox: action
+        });
     }
 
     // Static helper methods
