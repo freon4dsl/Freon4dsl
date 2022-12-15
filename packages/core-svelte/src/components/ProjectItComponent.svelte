@@ -90,16 +90,12 @@
     };
 
     let rootBox: Box;
-    autorun(() => {
-        AUTO_LOGGER.log("==================> ProjectItComponent")
-        rootBox = editor.rootBox;
-    });
-
     /**
      * The current main element os this component.
      */
     let element: HTMLDivElement;
 
+    let renderElement: RenderComponent;
     /**
      * Keep track of the scrolling position in the editor, so we know exactly where bozes are
      * in relationship with each other.
@@ -108,6 +104,12 @@
                     editor.scrollX = element.scrollLeft;
         editor.scrollY = element.scrollTop;
     }
+
+    autorun(() => {
+        AUTO_LOGGER.log("==================> ProjectItComponent")
+        rootBox = editor.rootBox;
+        renderElement?.setShowBox();
+    });
 </script>
 
 <div class={"projectit"}
@@ -116,9 +118,9 @@
      on:scroll={onScroll}
      bind:this={element}
 >
-    <RenderComponent editor={editor}
-                     box={rootBox}
-    />
+    <RenderComponent bind:this={renderElement}
+                     editor={editor}
+                     box={rootBox}    />
 </div>
 
 <style>

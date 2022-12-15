@@ -27,7 +27,7 @@
         isHorizontalBox,
         isSvgBox,
         isEmptyLineBox,
-        LabelBox, PiEditor, PiLogger, ElementBox, isElementBox, isTableBox, isTableCellBox, isTableRowBox,
+        PiEditor, PiLogger, ElementBox, isElementBox, isTableBox, isTableRowBox,
     } from "@projectit/core";
 
     const LOGGER = new PiLogger("RenderComponent"); //.mute();
@@ -38,11 +38,7 @@
     let showBox: Box = null;
     let id: string = `render-${box?.element?.piId()}-${box?.role}`;
 
-    // const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)), {
-    //     selectable: false,
-    // });
-
-    function setShowBox() {
+    export function setShowBox() {
         // console.log('setShowBox for element ' + box?.element?.piId());
         if (!!box) {
             showBox = box;
