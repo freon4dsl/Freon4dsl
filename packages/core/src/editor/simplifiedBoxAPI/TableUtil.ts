@@ -18,6 +18,7 @@ import { isNullOrUndefined, PiUtils } from "../../util";
 import { Language } from "../../language";
 import { RoleProvider } from "./RoleProvider";
 import { PiLogger } from "../../logging";
+import { FreHeaderProvider } from "../projections/FreHeaderProvider";
 
 const LOGGER = new PiLogger("NewTableUtil");
 
@@ -69,6 +70,7 @@ export class TableUtil {
     }
 
     private static tableBox(orientation: GridOrientation, element: PiElement, list: PiElement[], propertyName: string, boxProviderCache: FreProjectionHandler): TableBox {
+        console.log('calling tableBox')
         // Find the information on the property to be shown and check it.
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
@@ -77,11 +79,10 @@ export class TableUtil {
         let hasHeaders: boolean = false;
         let nrOfColumns: number = 0;
         if (!isNullOrUndefined(list) && list.length > 0) {
-            // Add the headers, if there are any.
-            const headers: string[] = boxProviderCache.getTableHeaders(propInfo.type);
-            if (!!headers && headers.length > 0) {
-                const headerBox = this.createHeaderBox(element, propertyName, headers);
-                children.push(headerBox);
+            // Add the headers, an empty TableRowBox if there are none.
+            const headerProvider: FreHeaderProvider = boxProviderCache.getHeaderProvider(element, propertyName, propInfo.type);
+            children.push(headerProvider.box);
+            if (headerProvider.hasContent()) {
                 hasHeaders = true;
             }
             // Add the children for each element of the list.
@@ -106,20 +107,6 @@ export class TableUtil {
         } else {
             return new TableBoxRowOriented(element, roleName, hasHeaders, children);
         }
-    }
-
-    private static createHeaderBox(element: PiElement, propertyName: string, headers: string[]): TableRowBox {
-        const cells: Box[] = [];
-        headers.forEach((head, index) => {
-            cells.push(BoxUtils.labelBox(element, head, `table-header-${index+1}`));
-        });
-        return TableUtil.rowBox(
-            element,
-            propertyName,
-            cells,
-            0,
-            false
-        );
     }
 
     private static createPlaceHolder(element: PiElement, propertyName: string, conceptName: string, orientation: GridOrientation): TableRowBox {

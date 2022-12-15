@@ -96,7 +96,7 @@ export class PiEditor {
     }
 
     get rootBox(): Box {
-        console.log('PiEditor.get RootBox, enabled projections: ' + this.projection.enabledProjections());
+        // console.log('PiEditor.get RootBox, enabled projections: ' + this.projection.enabledProjections());
         this._rootBox = this.projection.getBox(this.rootElement);
         return this._rootBox;
     }
@@ -226,9 +226,9 @@ export class PiEditor {
      * TODO what if there is no previous sibling?
      */
     selectPreviousLeaf() {
-        console.log("selectPreviosLeaf, selected is: " + this.selectedBox?.role)
+        // console.log("selectPreviosLeaf, selected is: " + this.selectedBox?.role)
         const previous = this.selectedBox?.nextLeafLeft;
-        console.log("Previous is " + previous);
+        // console.log("Previous is " + previous);
         if (!!previous) {
             this.selectBoxNew(previous, PiCaret.RIGHT_MOST);
             previous.setFocus();

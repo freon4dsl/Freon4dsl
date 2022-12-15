@@ -14,19 +14,13 @@ export class FreProjectionCalculator {
     }
 
     public static findProjectionToUse(mainHandler: FreProjectionHandler, conceptName: string, knownProjections: string[], mustUseTable: boolean): string {
-        if (conceptName === "SumExpression") {
-            console.log("FPC: " + knownProjections + " useTable " + mustUseTable);
-        }
         let projToUse: string;
         if (mustUseTable) {
             projToUse = this.findTableProjectionToUse(mainHandler, conceptName, knownProjections);
         } else {
             projToUse = this.findBoxProjectionToUse(mainHandler, conceptName, knownProjections);
         }
-        if (conceptName === "SumExpression") {
-            console.log('      FOUND projection for ' + conceptName + ' : ' + projToUse);
-            // console.log("FPC: " + knownProjections + " useTable " + mustUseTable);
-        }
+        // console.log('FOUND projection for ' + conceptName + ' : ' + projToUse);
         return projToUse;
     }
 
@@ -88,7 +82,6 @@ export class FreProjectionCalculator {
     private static findBoxProjectionToUse(mainHandler: FreProjectionHandler, conceptName: string, knownBoxProjections: string[]): string {
         // See if the projection for this concept is in our cache.
         if (FreProjectionCalculator.conceptNameToBoxProjection.has(conceptName)) {
-            console.error("HELP HELP")
             return FreProjectionCalculator.conceptNameToBoxProjection.get(conceptName);
         }
         // See if we need to use a custom projection.

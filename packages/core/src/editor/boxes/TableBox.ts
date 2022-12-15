@@ -31,20 +31,20 @@ export abstract class TableBox extends Box {
     }
 
     // todo this method should be mobx enabled
-    get cells(): TableCellBox[] {
-        const _cells: TableCellBox[] = []
-        this._children.forEach(ch => {
-            if (ch instanceof ElementBox) {
-                const rowBox = ch.content;
-                if (rowBox instanceof TableRowBox) {
-                    _cells.push(...rowBox.cells)
-                }
-            } else if (ch instanceof TableRowBox) {
-                _cells.push(...ch.cells);
-            }
-        })
-        return _cells;
-    }
+    // get cells(): TableCellBox[] {
+    //     const _cells: TableCellBox[] = []
+    //     this._children.forEach(ch => {
+    //         if (ch instanceof ElementBox) {
+    //             const rowBox = ch.content;
+    //             if (rowBox instanceof TableRowBox) {
+    //                 _cells.push(...rowBox.cells)
+    //             }
+    //         } else if (ch instanceof TableRowBox) {
+    //             _cells.push(...ch.cells);
+    //         }
+    //     })
+    //     return _cells;
+    // }
 
     get direction() : TableDirection {
         return this._direction;
@@ -72,7 +72,7 @@ export abstract class TableBox extends Box {
                 }
             });
         }
-        console.log("TableBox replaceChildren dirty " + this.role)
+        // console.log("TableBox replaceChildren dirty " + this.role)
         this.isDirty();
         return this;
     }
@@ -81,7 +81,7 @@ export abstract class TableBox extends Box {
         const dirty = (this._children.length !== 0);
         this._children.splice(0, this._children.length);
         if (dirty) {
-            console.log("TableBox clearChildren dirty " + this.role)
+            // console.log("TableBox clearChildren dirty " + this.role)
             this.isDirty();
         }
     }
@@ -90,7 +90,7 @@ export abstract class TableBox extends Box {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
-            console.log("TableBox addChild dirty " + this.role)
+            // console.log("TableBox addChild dirty " + this.role)
             this.isDirty();
         }
         return this;
@@ -100,7 +100,7 @@ export abstract class TableBox extends Box {
         if (!!child) {
             this._children.splice(0, 0, child);
             child.parent = this;
-            console.log("TableBox insertChild dirty " + this.role)
+            // console.log("TableBox insertChild dirty " + this.role)
             this.isDirty();
         }
         return this;
@@ -109,7 +109,7 @@ export abstract class TableBox extends Box {
     addChildren(children?: Box[]): TableBox {
         if (!!children) {
             children.forEach(child => this.addChild(child));
-            console.log("TableBox addChildren dirty")
+            // console.log("TableBox addChildren dirty")
             this.isDirty();
         }
         return this;
