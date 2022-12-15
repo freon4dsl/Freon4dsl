@@ -18,6 +18,7 @@ export class IndentBox extends Box {
     set child(v: Box) {
         this.$child = v;
         this.$child.parent = this;
+        this.isDirty();
     }
 
     indent: number = 4;
@@ -27,10 +28,6 @@ export class IndentBox extends Box {
         this.indent = indent;
         this.child = child;
         this.selectable = false;
-        // makeObservable(this, {
-        //     child: computed,
-        //     indent: observable
-        // });
     }
 
     /**

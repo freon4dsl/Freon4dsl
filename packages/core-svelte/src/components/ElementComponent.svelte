@@ -10,8 +10,8 @@
     let id: string = `${box?.element?.piId()}-${box?.role}`;
     let childBox = box?.content ;
 
-    const refresh = (): void =>  {
-        console.log("DIRTY ElementBox for " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
+    const refresh = (why?: string): void =>  {
+        LOGGER.log("REFRESH ElementBox for " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId() + " why: " + why);
         if (!!box) {
             childBox = box.content;
         }
@@ -19,16 +19,15 @@
 
     onMount( () => {
         box.refreshComponent = refresh;
-        refresh();
     });
 
     afterUpdate( () => {
         box.refreshComponent = refresh;
-        refresh();
     });
 
-    refresh();
-
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
+    }
 </script>
 
 <RenderComponent box={childBox} editor={editor} />

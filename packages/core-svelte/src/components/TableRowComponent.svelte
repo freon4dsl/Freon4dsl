@@ -20,8 +20,8 @@
     let hasHeaders: boolean;
     let direction: TableDirection;
 
-    const refresh = (): void =>  {
-        console.log("DIRTY TableRowBox for " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
+    const refresh = (why?: string): void =>  {
+        LOGGER.log("REFRESH TableRowBox for " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
         if (!!box) {
             cells = box.cells;
             let parent = box.parent;
@@ -46,7 +46,9 @@
         refresh();
     });
 
-    refresh();
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
+    }
 
 </script>
 

@@ -13,57 +13,57 @@
     } from "@projectit/core";
 
     // Parameters
-    export let list: ListBox ; //= new HorizontalListBox(null, "l1");
+    export let box: ListBox ; //= new HorizontalListBox(null, "l1");
     export let editor: PiEditor;
 
     // Local state variables
-    let LOGGER: PiLogger = new PiLogger("ListComponent").mute();
-    let svList: ListBox = list; // TODO question: why a new variable, cannot use 'list'?
+    let LOGGER: PiLogger = new PiLogger("ListComponent");
+    let svList: ListBox = box; // TODO question: why a new variable, cannot use 'box'?
     let element: HTMLSpanElement;
     let children: Box[];
-    $: children = [...list.children];
+    $: children = [...box.children];
 
     async function setFocus(): Promise<void> {
-        FOCUS_LOGGER.log("ListComponent.setFocus for box " + list.role);
+        FOCUS_LOGGER.log("ListComponent.setFocus for box " + box.role);
         if (!!element) {
             element.focus();
         }
     }
 
-    const refresh = (): void =>  {
-        LOGGER.log("DIRTY ListComponent " + list?.element?.piLanguageConcept() + "-" + list?.element?.piId() + ", " + list.role);
-        svList = list;
-        children = [...list.children];
+    const refresh = (why?: string): void =>  {
+        LOGGER.log("REFRESH ListComponent " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId() + ", " + box.role);
+        svList = box;
+        children = [...box.children];
     }
 
     onMount( () => {
         MOUNT_LOGGER.log("ListComponent onMount --------------------------------")
-        list.setFocus = setFocus;
-        list.refreshComponent = refresh;
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
 
     afterUpdate(() => {
-        UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
-        list.setFocus = setFocus;
-        list.refreshComponent = refresh;
+        UPDATE_LOGGER.log("ListComponent.afterUpdate for " + box.role);
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
 
-    // TODO Empty vertical list gives empty line, try to add entities in the example.
+    // TODO Empty vertical box gives empty line, try to add entities in the example.
     const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("ListComponent.onFocus for box " + list.role);
+        FOCUS_LOGGER.log("ListComponent.onFocus for box " + box.role);
         // e.preventDefault();
         // e.stopPropagation();
     }
     const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("ListComponent.onBlur for box " + list.role);
+        FOCUS_LOGGER.log("ListComponent.onBlur for box " + box.role);
         // e.preventDefault();
         // e.stopPropagation();
     }
 
-    function box(box: Box): Box {
-        LOGGER.log("render box " + box.role);
-        return box;
-    }
+    // function box(box: Box): Box {
+    //     LOGGER.log("render box " + box.role);
+    //     return box;
+    // }
 
     function setPrevious(b: Box): string {
         previousBox = b;
@@ -71,6 +71,11 @@
     }
 
     let previousBox = null;
+
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
+    }
+
 </script>
 
 <span class="list-component"

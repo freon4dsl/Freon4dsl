@@ -1,11 +1,10 @@
 <script lang="ts">
-    import { onDestroy, onMount, afterUpdate } from "svelte";
-    import { autorun } from "mobx";
+    import { onMount, afterUpdate } from "svelte";
     import { PiLogger, type PiEditor, LabelBox } from "@projectit/core";
     import { FOCUS_LOGGER } from "./ChangeNotifier";
     import { componentId } from "./util";
 
-    export let box: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
+    export let box: LabelBox;
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("LabelComponent");
@@ -43,14 +42,17 @@
     let style: string;
     let cssClass: string;
 
-    const refresh = () => {
+    const refresh = (why?: string) => {
         if (!!box) {
             text = box.getLabel();
             style = box.cssStyle;
             cssClass = box.cssClass;
         }
     };
-    refresh();
+
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
+    }
 </script>
 
 <div class="label {text} {cssClass}"

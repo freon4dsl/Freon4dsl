@@ -8,7 +8,7 @@
     import {
         type TableBox,
         type PiEditor,
-        PiLogger, Box, isElementBox
+        PiLogger, Box, isElementBox, isTableRowBox
     } from "@projectit/core";
     import ElementComponent from "./ElementComponent.svelte";
     import { afterUpdate, onMount } from "svelte";
@@ -16,7 +16,7 @@
     // import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils/DropAndSelectStore";
     // import { dropListElement, moveListElement } from "@projectit/core";
 
-    const LOGGER = new PiLogger("TableComponent"); //.mute();
+    const LOGGER = new PiLogger("TableComponent");
 
     export let box: TableBox;
     export let editor: PiEditor;
@@ -29,7 +29,7 @@
     let cssClass: string;
     let gridElement: HTMLElement;
 
-    const refresh = () => {
+    const refresh = (why?: string): void => {
         console.log("Refresh TableBox, box: " + box);
         if (!!box) {
             children = box.children;
@@ -47,7 +47,9 @@
         refresh();
     });
 
-    refresh();
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
+    }
     // determine the type of the elements in the list
     // this speeds up the check whether the element may be dropped in a certain drop-zone
     // let myMetaType: string;
@@ -91,7 +93,7 @@
     {#each children as child}
         {#if (isElementBox(child))}
             <ElementComponent box={child} editor={editor}/>
-        {:else}
+        {:else if isTableRowBox(child)}
             <TableRowComponent box={child} editor={editor}/>
         {/if}
     {/each}

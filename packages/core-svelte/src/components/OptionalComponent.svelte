@@ -4,44 +4,45 @@
     import { getRoot, OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
     import { FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
 
-    export let optionalBox: OptionalBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
+    export let box: OptionalBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("OptionalComponent").mute();
-    let id: string = `${optionalBox.element.piId()}-${optionalBox.role}`;
+    let id: string = `${box.element.piId()}-${box.role}`;
     let childBox ;
-    let mustShow = optionalBox.mustShow;
+    let mustShow = box.mustShow;
     let showByCondition = false;
     let element: HTMLDivElement = null;
 
-    const refresh = (): void => {
-        LOGGER.log("DIRTY OptionalBox");
-        mustShow = optionalBox.mustShow;
-        showByCondition =optionalBox.condition();
-        childBox = optionalBox.box;
+    const refresh = (why?: string): void => {
+        LOGGER.log("REFRESH OptionalBox");
+        mustShow = box.mustShow;
+        showByCondition =box.condition();
+        childBox = box.box;
     };
 
     const setFocus = async (): Promise<void> => {
-        FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
+        FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + box.role);
         if (mustShow || showByCondition) {
-            optionalBox.box.firstEditableChild.setFocus();
+            box.box.firstEditableChild.setFocus();
         } else {
-            optionalBox.whenNoShowingAlias.setFocus();
+            box.whenNoShowingAlias.setFocus();
         }
     };
 
     onMount( () => {
-        optionalBox.setFocus = setFocus;
-        optionalBox.refreshComponent = refresh;
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
 
     afterUpdate( () => {
-        optionalBox.setFocus = setFocus;
-        optionalBox.refreshComponent = refresh;
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
 
-    refresh();
-
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
+    }
 </script>
 
 <div class="optional"
@@ -50,9 +51,9 @@
      id="{id}"
 >
     {#if mustShow || showByCondition}
-        <RenderComponent box={optionalBox.box} editor={editor} />
+        <RenderComponent box={childBox} editor={editor} />
     {:else}
-        <RenderComponent box={optionalBox.whenNoShowingAlias} editor={editor} />
+        <RenderComponent box={box.whenNoShowingAlias} editor={editor} />
     {/if}
 </div>
 

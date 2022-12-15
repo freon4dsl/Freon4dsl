@@ -12,7 +12,7 @@
     import ListComponent from "./ListComponent.svelte";
     import OptionalComponent from "./OptionalComponent.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
-    import { afterUpdate, beforeUpdate, onDestroy } from "svelte";
+    import { afterUpdate, beforeUpdate } from "svelte";
 
     import type { Box } from "@projectit/core";
     import {
@@ -30,7 +30,7 @@
         PiEditor, PiLogger, ElementBox, isElementBox, isTableBox, isTableRowBox,
     } from "@projectit/core";
 
-    const LOGGER = new PiLogger("RenderComponent"); //.mute();
+    const LOGGER = new PiLogger("RenderComponent");
 
     export let box: Box = null;
     export let editor: PiEditor;
@@ -43,20 +43,6 @@
         if (!!box) {
             showBox = box;
             id = `render-${box.element.piId()}-${box.role}`;
-        }
-    }
-
-    /**
-     * Because the type ElementBox should not be rendered, this function returns the first child in
-     * the box tree that is renderable.
-     * @param b
-     */
-    function getRenderContent(b: Box): Box {
-        if (isElementBox(b)) {
-            // console.log('found ElementBox, content for element: ' + showBox?.element?.piId() + '' + showBox?.kind);
-            return getRenderContent((b as ElementBox).content);
-        } else {
-            return b;
         }
     }
 
@@ -82,7 +68,7 @@
         </SelectableComponent>
     {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
-        	<ListComponent list={showBox} editor={editor}/>
+        	<ListComponent box={showBox} editor={editor}/>
         </SelectableComponent>
     {:else if isAliasBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
@@ -97,9 +83,9 @@
         	<TextComponent textBox={showBox} editor={editor}/>
         </SelectableComponent>
     {:else if isIndentBox(showBox) }
-        <IndentComponent indentBox={showBox} editor={editor}/>
+        <IndentComponent box={showBox} editor={editor}/>
     {:else if isGridBox(showBox) }
-        <GridComponent gridBox={showBox} editor={editor}/>
+        <GridComponent box={showBox} editor={editor}/>
     {:else if isSvgBox(showBox) }
         <SvgComponent svgBox={showBox} editor={editor}/>
     {:else if isElementBox(showBox) }
@@ -108,7 +94,7 @@
         <TableRowComponent box={showBox} editor={editor}/>
     {:else if isOptionalBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
-            <OptionalComponent optionalBox={showBox} editor={editor}/>
+            <OptionalComponent box={showBox} editor={editor}/>
         </SelectableComponent>
     {:else if isEmptyLineBox(showBox) }
         <EmptyLineComponent box={showBox} editor={editor}/>

@@ -21,6 +21,6 @@
           on:keydown={onKeyDown}
 id="mock-environment">
     <MockSurroundingComponent>
-        <OptionalComponent optionalBox={box} editor={editor}/>
+        <OptionalComponent box={box} editor={editor}/>
     </MockSurroundingComponent>
 </div>

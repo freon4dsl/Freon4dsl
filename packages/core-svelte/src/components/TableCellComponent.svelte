@@ -15,7 +15,6 @@
         TableCellBox,
         Language, TableDirection, Box
     } from "@projectit/core";
-    // import { autorun, runInAction } from "mobx";
     import { onMount, createEventDispatcher, afterUpdate } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
     // import { executeCustomKeyboardShortCut, isOdd } from "./svelte-utils";
@@ -62,7 +61,7 @@
     // img.src = "img/projectit-logo.png";
     // img.src = "img/open_with.svg"; // todo svg image is not shown as drag ghost
 
-    const refresh = () => {
+    const refresh = (why?: string) => {
         console.log("TableCellComponent refresh, box: " + box);
         if (!!box) {
             if (parentOrientation === TableDirection.HORIZONTAL) {
@@ -96,6 +95,10 @@
             // executeCustomKeyboardShortCut(event, index, box, editor);
         }
     };
+
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
+    }
 
     // todo renew autorun
     // autorun(() => {

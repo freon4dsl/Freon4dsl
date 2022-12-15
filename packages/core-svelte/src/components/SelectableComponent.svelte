@@ -5,12 +5,7 @@
 // when its slot component is (un)selected. Also, the dimensions of the slot
 // component are calculated after each update.
 
-    import {
-        Box,
-        LabelBox,
-        PiEditor,
-        PiLogger
-    } from "@projectit/core";
+import { Box, PiEditor, PiLogger } from "@projectit/core";
 import { autorun } from "mobx";
 import { afterUpdate, onMount } from "svelte";
 import { selectedBoxInEditor } from "./SelectedTmp"
@@ -19,7 +14,7 @@ import { selectedBoxInEditor } from "./SelectedTmp"
     export let box: Box;
     export let editor: PiEditor;
 
-    let LOGGER = new PiLogger("SelectableComponent").mute();
+    let LOGGER = new PiLogger("SelectableComponent");
 
     let isSelected: boolean = false;
     let className: string;
@@ -40,9 +35,6 @@ import { selectedBoxInEditor } from "./SelectedTmp"
         }
     };
 
-    onMount( () => {
-        // box.refreshComponent = refresh;
-    });
     afterUpdate( () => {
         LOGGER.log("!!!!! SelectableComponent.afterupdate for box " + box.role + " element " + box.element.piId());
         if (element === null) {
@@ -61,12 +53,8 @@ import { selectedBoxInEditor } from "./SelectedTmp"
             // console.log("     setting focus from afterupdate to box " + box.role);
             box.setFocus();
         }
-        // box.refreshComponent = refresh;
     });
 
-    autorun( () => {
-
-    });
     $: {
         isSelected = $selectedBoxInEditor === box;
         className = (isSelected ? "selectedComponent" : "unSelectedComponent");

@@ -6,39 +6,43 @@
     import { writable, type Writable } from "svelte/store";
     import { componentId } from "./util";
 
-    export let gridBox: GridBox;
+    export let box: GridBox;
     export let editor: PiEditor;
 
-    let id = componentId(gridBox);
-    let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(gridBox.cells);
+    let id = componentId(box);
+    let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(box.cells);
     let templateColumns: string;
     let templateRows: string;
     let cssClass: string = "";
 
-    const refresh = (): void =>  {
-        if (!!gridBox) {
-            // console.log("DIRTY GridComponent " + gridBox?.element?.piLanguageConcept() + "-" + gridBox?.element?.piId());
-            $cells = [...gridBox.cells];
+    const refresh = (why?: string): void =>  {
+        if (!!box) {
+            // console.log("REFRESH GridComponent " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
+            $cells = [...box.cells];
 
             length = $cells.length;
-            templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
-            templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
-            cssClass = gridBox.cssClass;
+            templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
+            templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
+            cssClass = box.cssClass;
         }
     }
     onMount( () => {
         MOUNT_LOGGER.log("GridComponent onmount")
-        $cells = gridBox.cells;
-        gridBox.refreshComponent = refresh;
+        $cells = box.cells;
+        box.refreshComponent = refresh;
 
     })
     afterUpdate(() => {
-        UPDATE_LOGGER.log("GridComponent afterUpdate for girdBox " + gridBox.element.piLanguageConcept())
-        $cells = gridBox.cells;
-        gridBox.refreshComponent = refresh;
+        UPDATE_LOGGER.log("GridComponent afterUpdate for girdBox " + box.element.piLanguageConcept())
+        $cells = box.cells;
+        box.refreshComponent = refresh;
     });
 
     let dummy = 0;
+
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
+    }
 </script>
 
 <div
@@ -48,7 +52,7 @@
         id="{id}"
 >
     {#each $cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid" + "-" + dummy)}
-        <GridCellComponent grid={gridBox} cellBox={cell} editor={editor}/>
+        <GridCellComponent grid={box} cellBox={cell} editor={editor}/>
     {/each}
 </div>
 
