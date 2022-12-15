@@ -23,11 +23,12 @@ export function muteLogs() {
     PiLogger.mute("LabelComponent");
     PiLogger.mute("ListComponent");
     PiLogger.mute("IndentComponent");
+    PiLogger.mute("ElementComponent");
     PiLogger.mute("DropdownComponent");
     PiLogger.mute("DropdownItemComponent");
     PiLogger.mute("GridCellComponent");
-    PiLogger.unmute("TextComponent");
-    PiLogger.unmute("ProjectItComponent");
+    PiLogger.mute("TextComponent");
+    PiLogger.mute("ProjectItComponent");
 
     PiLogger.mute("AUTORUN");
     PiLogger.mute("FOCUS")

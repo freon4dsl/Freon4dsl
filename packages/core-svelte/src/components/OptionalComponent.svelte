@@ -1,13 +1,13 @@
 <script lang="ts">
     import RenderComponent from "./RenderComponent.svelte";
-    import { onDestroy, onMount, afterUpdate } from "svelte";
-    import { getRoot, OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
-    import { FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
+    import { onMount, afterUpdate } from "svelte";
+    import { OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
+    import { FOCUS_LOGGER } from "./ChangeNotifier";
 
-    export let box: OptionalBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
+    export let box: OptionalBox;
     export let editor: PiEditor;
 
-    const LOGGER = new PiLogger("OptionalComponent").mute();
+    const LOGGER = new PiLogger("OptionalComponent");
     let id: string = `${box.element.piId()}-${box.role}`;
     let childBox ;
     let mustShow = box.mustShow;

@@ -27,7 +27,7 @@
         isHorizontalBox,
         isSvgBox,
         isEmptyLineBox,
-        PiEditor, PiLogger, ElementBox, isElementBox, isTableBox, isTableRowBox,
+        PiEditor, PiLogger, isElementBox, isTableBox, isTableRowBox,
     } from "@projectit/core";
 
     const LOGGER = new PiLogger("RenderComponent");
