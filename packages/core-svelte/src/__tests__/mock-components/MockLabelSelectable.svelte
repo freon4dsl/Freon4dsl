@@ -11,12 +11,12 @@
 
 <div data-testid="test-label1">
 <SelectableComponent box={box1} editor={editor} >
-    <LabelComponent label={box1} editor={editor}/>
+    <LabelComponent box={box1} editor={editor}/>
 </SelectableComponent>
 </div>
 <div data-testid="test-label2">
     <SelectableComponent box={box2} editor={editor} >
-        <LabelComponent label={box2} editor={editor}/>
+        <LabelComponent box={box2} editor={editor}/>
     </SelectableComponent>
 </div>
 
