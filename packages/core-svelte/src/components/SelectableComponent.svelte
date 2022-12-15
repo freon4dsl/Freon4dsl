@@ -6,8 +6,7 @@
 // component are calculated after each update.
 
 import { Box, PiEditor, PiLogger } from "@projectit/core";
-import { autorun } from "mobx";
-import { afterUpdate, onMount } from "svelte";
+import { afterUpdate } from "svelte";
 import { selectedBoxInEditor } from "./SelectedTmp"
 
     // Parameters

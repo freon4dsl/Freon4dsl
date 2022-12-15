@@ -49,7 +49,6 @@
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
     }
-
 </script>
 
 {#each cells as cell (cell.box.element.piId() + "-" + cell.row + "-" + cell.column)}

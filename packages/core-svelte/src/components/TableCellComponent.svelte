@@ -77,12 +77,10 @@
     // todo see which function we need to set the row and column: onMount, autorun, afterUpdate???
     onMount(() => {
         box.refreshComponent = refresh;
-        refresh();
     });
 
     afterUpdate(() => {
         box.refreshComponent = refresh;
-        refresh();
     });
 
     const onKeydown = (event: KeyboardEvent) => {
@@ -99,20 +97,6 @@
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
     }
-
-    // todo renew autorun
-    // autorun(() => {
-    //     $boxStore = cellBox.box;
-    //     LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);
-    //     row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
-    //     column = cellBox.column + (cellBox.columnSpan ? " / span " + cellBox.columnSpan : "");
-    //     orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ? "gridcellOdd" : "gridcellEven")));
-    //     if (cellBox.isHeader) {
-    //         isHeader = "gridcell-header";
-    //     }
-    //     cssStyle = $boxStore.cssStyle;
-    //     cssClass = cellBox.cssClass;
-    // });
 
     // const drop = (event: DragEvent) => {
     //     LOGGER.log("drop, dispatching");

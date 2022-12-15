@@ -5,6 +5,7 @@
     import type {IndentBox, PiEditor} from "@projectit/core";
     import { componentId } from "./util";
 
+    // Parameters
     export let box: IndentBox;
     export let editor: PiEditor;
 
