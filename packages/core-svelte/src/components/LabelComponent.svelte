@@ -8,7 +8,7 @@
     export let box: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
 
-    const LOGGER = new PiLogger("LabelComponent").mute();
+    const LOGGER = new PiLogger("LabelComponent");
 
     let id: string = componentId(box);
 

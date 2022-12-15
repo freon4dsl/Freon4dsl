@@ -24,6 +24,7 @@ export class LabelBox extends Box {
         } else {
             throw new Error("LabelBox: incorrect label type");
         }
+        this.isDirty();
     }
 
     getLabel(): string {
