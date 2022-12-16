@@ -23,8 +23,9 @@ export abstract class PiCommand {
      * @param box    The box that is selected when imvoking this command.
      * @param text   The text or keyboard shortcut or menu that invoked this command.
      * @param editor The editor instance in which this command is invoked.
+     * @param index  If the action is executed on a list, the index at which to execute the action.
      */
-    abstract execute(box: Box, text: PiTriggerUse, editor: PiEditor): PiPostAction;
+    abstract execute(box: Box, text: PiTriggerUse, editor: PiEditor, index: number): PiPostAction;
 
     /**
      * Undo this command.

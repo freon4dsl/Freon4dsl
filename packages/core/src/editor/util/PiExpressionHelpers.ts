@@ -36,7 +36,7 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
         if (children.length === 1 && isHorizontalBox(children[0])) {
             result = children[0] as HorizontalListBox;
         } else {
-            result = BoxFactory.horizontalList(exp, EXPRESSION, children);
+            result = BoxFactory.horizontalList(exp, EXPRESSION, '', children);
         }
         if (isLeftMost) {
             // TODO Change into Svelte Style
@@ -53,7 +53,7 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
         if (children.length === 1) {
             return children[0];
         } else {
-            return BoxFactory.horizontalList(exp, EXPRESSION, children);
+            return BoxFactory.horizontalList(exp, EXPRESSION, '', children);
         }
     }
 }
@@ -68,7 +68,7 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
  */
 export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, editor: PiEditor, boxProviderCache: FreProjectionHandler, style?: string): HorizontalListBox {
     // TODO move this method to BoxUtils
-    const result = BoxFactory.horizontalList(exp, BINARY_EXPRESSION);
+    const result = BoxFactory.horizontalList(exp, BINARY_EXPRESSION, '');
     // const projection = editor.projection;
     // const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 

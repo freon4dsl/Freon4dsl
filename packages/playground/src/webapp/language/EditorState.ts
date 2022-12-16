@@ -422,31 +422,44 @@ export class EditorState {
             // find the owner of the element to be deleted and remove the element there
             const owner: PiElement = tobeDeleted.piOwner();
             const desc: PiOwnerDescriptor = tobeDeleted.piOwnerDescriptor();
-            // console.log("deleting " + desc.propertyName + "[" + desc.propertyIndex + "]");
-            if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
-                const propList = owner[desc.propertyName];
-                if (Array.isArray(propList) && propList.length > desc.propertyIndex) {
+            if (!!desc) {
+                // console.log("deleting " + desc.propertyName + "[" + desc.propertyIndex + "]");
+                if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
+                    const propList = owner[desc.propertyName];
+                    if (Array.isArray(propList) && propList.length > desc.propertyIndex) {
+                        runInAction(() =>
+                            propList.splice(desc.propertyIndex, 1)
+                        );
+                    }
+                } else {
                     runInAction(() =>
-                        propList.splice(desc.propertyIndex, 1)
+                        owner[desc.propertyName] = null
                     );
                 }
             } else {
-                runInAction(() =>
-                    owner[desc.propertyName] = null
-                );
+                console.error("deleting of " + tobeDeleted.piId() + " not succeeded, because owner descriptor is empty.");
             }
         }
     }
 
     pasteInElement(element: PiElement, propertyName: string, index?: number) {
         const property = element[propertyName];
+        // todo make new copy to keep in 'editorEnvironment.editor.copiedElement'
         if (Array.isArray(property)) {
-            runInAction(() =>
-                property.push(get(copiedElement))
+            // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+            runInAction(() => {
+                    if (index !== null && index !== undefined && index > 0) {
+                        property.splice(index, 0, editorEnvironment.editor.copiedElement);
+                    } else {
+                        property.push(editorEnvironment.editor.copiedElement);
+                    }
+                }
             );
+            // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
         } else {
+            // console.log('property ' + propertyName + ' is no list');
             runInAction(() =>
-                element[propertyName] = get(copiedElement)
+                element[propertyName] = editorEnvironment.editor.copiedElement
             );
         }
     }

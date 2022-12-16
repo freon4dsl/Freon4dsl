@@ -1,16 +1,31 @@
 <script lang="ts">
-    import { afterUpdate, onMount } from "svelte";
-    import { FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
-    import RenderComponent from "./RenderComponent.svelte";
+    /**
+     * This component shows a list of elements that have the same type (a 'true' list).
+     * It can be shown horizontally or vertically, both are displayed as a grid with one
+     * row or column, respectively.
+     * This component supports drag and drop.
+     */
+    import { flip } from "svelte/animate";
     import {
         Box,
-        HorizontalListBox,
-        isEmptyLineBox,
+        isActionBox,
+        Language,
         ListBox,
+        ListDirection,
         PiEditor,
-        PiLogger,
-        isHorizontalBox
+        PiLogger
     } from "@projectit/core";
+    import RenderComponent from "./RenderComponent.svelte";
+    import { dropListElement, moveListElement, ListElementInfo } from "@projectit/core";
+    import {
+        draggedElem,
+        draggedFrom,
+        activeElem,
+        activeIn,
+        selectedBoxes
+    } from "./svelte-utils/DropAndSelectStore";
+    import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
+    import { afterUpdate, onMount } from "svelte";
 
     // Parameters
     export let box: ListBox ; //= new HorizontalListBox(null, "l1");
@@ -18,13 +33,97 @@
 
     // Local state variables
     let LOGGER: PiLogger = new PiLogger("ListComponent");
-    let svList: ListBox = box; // TODO question: why a new variable, cannot use 'box'?
+    let id: string;                             // an id for the html element showing the list
+    id = !!box ? box.id : "list-with-unknown-box";
     let element: HTMLSpanElement;
-    let children: Box[];
-    $: children = [...box.children];
+    let isHorizontal: boolean;                  // indicates whether the list should be shown horizontally or vertically
+    $: isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
+    let shownElements: Box[];                   // the parts of the list that are being shown
+    $: shownElements = [...box.children];
+
+    // determine the type of the elements in the list
+    // this speeds up the check whether an element may be dropped here
+    let myMetaType: string;
+    $: myMetaType = box.conceptName;
+
+    const drop = (event: DragEvent, targetIndex) => {
+        const data: ListElementInfo = $draggedElem;
+
+        LOGGER.log("DROPPING item [" + data.element.piId() + "] from [" + data.componentId + "] in list [" + id + "] on position [" + targetIndex + "]");
+        if (data.componentId === id) { // dropping in the same list
+            // console.log('moving item within list');
+            moveListElement(box.element, data.element, box.propertyName, targetIndex);
+        } else { // dropping in another list
+            // console.log('moving item to another list');
+            dropListElement(editor, data, myMetaType, box.element, box.propertyName, targetIndex);
+        }
+        // everything is done, so reset the variables
+        $draggedElem = null;
+        $draggedFrom = "";
+        $activeElem = { row: -1, column: -1 };
+        $activeIn = "";
+        // Clear the drag data cache (for all formats/types)
+        // event.dataTransfer.clearData(); // has problems in Firefox!
+    };
+
+    const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
+        LOGGER.log("LIST Drag Start " + box.id);
+
+        // LOGGER.log("ON DRAG START");
+        // close any context menu
+        $contextMenuVisible = false;
+
+        // give the drag an effect
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.dropEffect = "move";
+
+        // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
+        // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
+        // create the data to be transferred and notify the store that something is being dragged
+        $draggedElem = new ListElementInfo(shownElements[listIndex].element, id);
+        $draggedFrom = listId;
+    };
+    const dragenter = (event: DragEvent, index): boolean => {
+        LOGGER.log("LIST Drag Enter" + box.id)
+        const data: ListElementInfo = $draggedElem;
+        // only show this item as active when the type of the element to be dropped is the right one
+        if (Language.getInstance().metaConformsToType(data.element, myMetaType)) {
+            $activeElem = { row: index, column: -1 };
+            $activeIn = id;
+        }
+        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
+    };
+    const mouseover = (index): boolean => {
+        LOGGER.log("LIST Mouse Over " + box.id);
+        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
+    };
+    const mouseout = (): boolean => {
+        LOGGER.log("LIST mouse out " + box.id)
+        $activeElem = { row: -1, column: -1 };
+        $activeIn = "";
+        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
+    };
+
+    function showContextMenu(event, index: number) {
+        if (index >= 0 && index <= shownElements.length) {
+            const elemBox: Box = shownElements[index];
+            if (editor.selectedBox !== elemBox) {
+                editor.selectedBox = elemBox;
+                $selectedBoxes = [elemBox];
+            }
+            // determine the contents of the menu based on listBox, before showing the menu!
+            if (isActionBox(elemBox)){ // the selected box is the placeholder => show different menu items
+                console.log('index of ActionBox: ' + index);
+                $contextMenu.items = box.options('placeholder');
+            } else {
+                $contextMenu.items = box.options('normal');
+            }
+            $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
+        }
+    }
 
     async function setFocus(): Promise<void> {
-        FOCUS_LOGGER.log("ListComponent.setFocus for box " + box.role);
+        LOGGER.log("ListComponent.setFocus for box " + box.role);
         if (!!element) {
             element.focus();
         }
@@ -32,30 +131,29 @@
 
     const refresh = (why?: string): void =>  {
         LOGGER.log("REFRESH ListComponent " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId() + ", " + box.role);
-        svList = box;
-        children = [...box.children];
+        shownElements = [...box.children];
     }
 
     onMount( () => {
-        MOUNT_LOGGER.log("ListComponent onMount --------------------------------")
+        LOGGER.log("ListComponent onMount --------------------------------")
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
     afterUpdate(() => {
-        UPDATE_LOGGER.log("ListComponent.afterUpdate for " + box.role);
+        LOGGER.log("ListComponent.afterUpdate for " + box.role);
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
     // TODO Empty vertical box gives empty line, try to add entities in the example.
     const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("ListComponent.onFocus for box " + box.role);
+        LOGGER.log("ListComponent.onFocus for box " + box.role);
         // e.preventDefault();
         // e.stopPropagation();
     }
     const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("ListComponent.onBlur for box " + box.role);
+        LOGGER.log("ListComponent.onBlur for box " + box.role);
         // e.preventDefault();
         // e.stopPropagation();
     }
@@ -70,35 +168,42 @@
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
     }
-
+    // The mouseover fires when the mouse cursor is outside the element and then move to inside the boundaries of the element.
+    // The mouseout fires when the mouse cursor is over an element and then moves another element.
+    // The mouseenter fires when the mouse cursor is outside an element and then moves to inside the boundaries of the element.
+    // The mouseleave fires when the mouse cursor is over an element and then moves to the outside of the element’s boundaries.
+    // Both mouseenter and mouseleave do not bubble and do not fire when the mouse cursor moves over descendant elements.
 </script>
 
-<span class="list-component"
-      on:click
-      on:focus={onFocusHandler}
-      on:blur={onBlurHandler}
-      tabIndex={0}
+<!-- on:focus is here to avoid a known bug in svelte 3.4*: "A11y: on:mouseover must be accompanied by on:focus with Svelte v3.40 #285" -->
+<!-- Likewise on:blur is needed for on:mouseout -->
+<span class="list" id="{id}"
+      style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
+      style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}"
       bind:this={element}
 >
-    {#if isHorizontalBox(svList) }
-        <div class="horizontalList"  on:click>
-            {#each children as box (box.id)}
-                <RenderComponent box={box} editor={editor}/>
-            {/each}
-        </div>
-    {:else}
-        <div class="verticalList"  on:click>
-            {#each children as box, i (box.id)}
-                {#if i > 0 && i < children.length
-                     && !(i === 1 && isEmptyLineBox(previousBox))
-                }
-                    <br/>
-                {/if}
-                <RenderComponent box={box} editor={editor}/>
-                { setPrevious(box) }
-            {/each}
-        </div>
-    {/if}
+    {#each shownElements as box, index (box.id)}
+        <span
+                class="list-item"
+                class:is-active={$activeElem?.row === index && $activeIn === id}
+                class:dragged={$draggedElem?.row === index && $draggedFrom === id}
+                style:grid-column="{!isHorizontal ? 1 : index+1}"
+                style:grid-row="{isHorizontal ? 1 : index+1}"
+                animate:flip
+                draggable=true
+                on:dragstart|stopPropagation={event => dragstart(event, id, index)}
+                on:drop|stopPropagation={event => drop(event, index)}
+                ondragover="return false"
+                on:dragenter|stopPropagation={(event) => dragenter(event, index)}
+                on:mouseover|stopPropagation={() => mouseover(index)}
+                on:mouseout|stopPropagation={mouseout}
+                on:focus={() => {}}
+                on:blur={() => {}}
+                on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event, index)}
+        >
+            <RenderComponent box={box} editor={editor}/>
+		</span>
+    {/each}
 </span>
 
 <style>

@@ -1,19 +1,18 @@
 import { editorEnvironment } from "../config/WebappConfiguration";
 import {
     Box, FreProjectionHandler,
-    isAliasBox,
-    isAliasTextBox,
+    isActionBox,
+    isActionTextBox, isListBox, Language,
     PiError,
     PiLogger,
     PiUndoManager,
-    Searcher
+    Searcher,
+    SeverityType
 } from "@projectit/core";
 import type { PiElement } from "@projectit/core";
 import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore";
 import { EditorState } from "./EditorState";
-import { copiedElement } from "../components/stores/ModelStore";
-import { get } from "svelte/store";
-import { setUserMessage, SeverityType, userMessage } from "../components/stores/UserMessageStore";
+import { setUserMessage } from "../components/stores/UserMessageStore";
 
 const LOGGER = new PiLogger("EditorRequestsHandler"); // .mute();
 
@@ -72,8 +71,8 @@ export class EditorRequestsHandler {
         const tobecut: PiElement = editorEnvironment.editor.selectedItem;
         if (!!tobecut) {
             EditorState.getInstance().deleteElement(tobecut);
-            copiedElement.set(tobecut);
-            // console.log("saved: " + editorEnvironment.writer.writeToString(get(copiedElement)));
+            editorEnvironment.editor.copiedElement = tobecut;
+            // console.log("element " + editorEnvironment.editor.copiedElement.piId() + " is stored ");
         } else {
             setUserMessage("Nothing selected", SeverityType.warning);
         }
@@ -83,8 +82,8 @@ export class EditorRequestsHandler {
         LOGGER.log("copy called");
         const tobecopied: PiElement = editorEnvironment.editor.selectedItem;
         if (!!tobecopied) {
-            copiedElement.set(tobecopied.copy());
-            // console.log("saved: " + editorEnvironment.writer.writeToString(get(copiedElement)));
+            editorEnvironment.editor.copiedElement = tobecopied.copy();
+            // console.log("element " + editorEnvironment.editor.copiedElement.piId() + " is stored ");
         } else {
             setUserMessage("Nothing selected", SeverityType.warning);
         }
@@ -92,22 +91,29 @@ export class EditorRequestsHandler {
 
     paste() {
         LOGGER.log("paste called");
-        const tobepasted = get(copiedElement);
+        const tobepasted = editorEnvironment.editor.copiedElement;
         if (!!tobepasted) {
             const currentSelection: Box = editorEnvironment.editor.selectedBox;
             const element: PiElement = currentSelection.element;
             if (!!currentSelection) {
-                if (isAliasTextBox(currentSelection)) {
-                    if (isAliasBox(currentSelection.parent)) {
-                        if (currentSelection.parent.conceptName === tobepasted.piLanguageConcept()) {
+                if (isActionTextBox(currentSelection)) {
+                    if (isActionBox(currentSelection.parent)) {
+                        if (Language.getInstance().metaConformsToType(tobepasted, currentSelection.parent.conceptName)) { // allow subtypes
                             // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
                             EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName )
                         } else {
                             setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
                         }
                     }
+                } else if (isListBox(currentSelection.parent)) {
+                    if (Language.getInstance().metaConformsToType(tobepasted, element.piLanguageConcept())) { // allow subtypes
+                        // console.log('pasting in ' + currentSelection.role + ', prop: ' + currentSelection.parent.propertyName);
+                        EditorState.getInstance().pasteInElement(element.piOwnerDescriptor().owner, currentSelection.parent.propertyName, element.piOwnerDescriptor().propertyIndex + 1);
+                    } else {
+                        setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
+                    }
                 } else {
-                    // console.log(currentSelection.role);
+                    // todo other pasting options ...
                 }
             } else {
                 setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);

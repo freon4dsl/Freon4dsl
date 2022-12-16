@@ -49,7 +49,7 @@
 
 	let menu: MenuComponentDev;
 
-	// stuff for positoning the menu
+	// stuff for positioning the menu
 	let anchor: HTMLDivElement;
 	let anchorClasses: { [k: string]: boolean } = {}; // a list of name - boolean pairs
 

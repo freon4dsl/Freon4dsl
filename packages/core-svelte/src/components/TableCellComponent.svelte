@@ -13,20 +13,20 @@
         PiLogger,
         toPiKey,
         TableCellBox,
-        Language, TableDirection, Box
+        Language, TableDirection, Box, isActionBox, ListElementInfo
     } from "@projectit/core";
     import { onMount, createEventDispatcher, afterUpdate } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
-    // import { executeCustomKeyboardShortCut, isOdd } from "./svelte-utils";
-    // import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
-    // import {
-    //     activeElem,
-    //     activeIn,
-    //     draggedElem,
-    //     draggedFrom,
-    //     GridIndex,
-    //     selectedBoxes
-    // } from "./svelte-utils/DropAndSelectStore";
+    import { executeCustomKeyboardShortCut } from "./svelte-utils";
+    import {
+        activeElem,
+        activeIn,
+        draggedElem,
+        draggedFrom,
+        GridIndex,
+        selectedBoxes
+    } from "./svelte-utils/DropAndSelectStore";
+    import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
 
     // properties
     export let box: TableCellBox;
@@ -34,9 +34,8 @@
     export let parentComponentId: string;
     export let parentOrientation: string;
     export let parentHasHeader: boolean;
-    // determine the type of the elements in the cell
-    // this speeds up the check whether an element may be dropped here
-    // export let myMetaType: string;
+    // determine the type of the elements in the cell, this speeds up the check whether an element may be dropped here
+    export let myMetaType: string;
 
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
@@ -54,11 +53,11 @@
     let isHeader = "noheader";
     let cssStyle: string = "";
     let cssClass: string = "";
-    // let hovering: GridIndex = { row: -1, column: -1 };      // determines the style of the element, when hovering but nothing is being dragged
+    let hovering: GridIndex = { row: -1, column: -1 };      // determines the style of the element, when hovering but nothing is being dragged
 
     // the drag ghost image, preload  it, otherwise it will not be shown on the first drag
-    // const img = new Image();
-    // img.src = "img/projectit-logo.png";
+    const img = new Image();
+    img.src = "img/projectit-logo.png";
     // img.src = "img/open_with.svg"; // todo svg image is not shown as drag ghost
 
     const refresh = (why?: string) => {
@@ -71,12 +70,14 @@
                 row = box.column;
                 column = box.row;
             }
-            childBox = box.box;
+            childBox = box.content;
         }
     }
     // todo see which function we need to set the row and column: onMount, autorun, afterUpdate???
     onMount(() => {
         box.refreshComponent = refresh;
+        row = box.row;
+        column = box.column;
     });
 
     afterUpdate(() => {
@@ -89,8 +90,7 @@
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
             let index: number = parentOrientation === TableDirection.HORIZONTAL ? row : column;
-            // todo handle this here, because there are no shortcuts for Enter created by TableUtils anymore
-            // executeCustomKeyboardShortCut(event, index, box, editor);
+            executeCustomKeyboardShortCut(event, index, box, editor);
         }
     };
 
@@ -98,94 +98,95 @@
         refresh(box?.$id);
     }
 
-    // const drop = (event: DragEvent) => {
-    //     LOGGER.log("drop, dispatching");
-    //     dispatcher("dropOnCell", { row: row, column: column });
-    //     hovering = { row: -1, column: -1 };
-    // };
-    //
-    // const dragstart = (event: DragEvent) => {
-    //     LOGGER.log("dragStart");
-    //     // close any context menu
-    //     $contextMenuVisible = false;
-    //
-    //     // give the drag an effect
-    //     event.dataTransfer.effectAllowed = "move";
-    //     event.dataTransfer.dropEffect = "move";
-    //
-    //     // select the complete element and style them
-    //     $selectedBoxes = box.getSiblings();
-    //     // $selectedBoxes.forEach(b => b.style = "border: dashed");
-    //
-    //     // give the drag an image
-    //     event.dataTransfer.setDragImage(img, 0, 0);
-    //     // And Chrome seems to require the image to be in the dom: document.body.append(img), which should be hidden with some css
-    //
-    //     // create the data to be transferred and notify the store that something is being dragged
-    //     // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
-    //     // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
-    //     $draggedElem = new ListElementInfo(box.element, parentComponentId);
-    //     $draggedFrom = parentComponentId;
-    // };
-    //
-    // const dragenter = (event: DragEvent): boolean => {
-    //     const data: ListElementInfo = $draggedElem;
-    //     // only show this item as active when the type of the element to be dropped is the right one
-    //     if (Language.getInstance().metaConformsToType(data.element, myMetaType)) {
-    //         $activeElem = { row: row, column: column };
-    //         $activeIn = parentComponentId;
-    //     }
-    //     return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
-    // };
-    // const mouseover = (): boolean => {
-    //     hovering = { row: row, column: column };
-    //     return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
-    // };
-    // const mouseout = (): boolean => {
-    //     hovering = { row: -1, column: -1 };
-    //     $activeElem = null;
-    //     $activeIn = "";
-    //     return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
-    // };
-    //
-    // function showContextMenu(event) {
-    //     // determine the contents of the menu based on box
-    //     // if the selected box is the placeholder or a title/header => show different menu items
-    //     let index: number;
-    //     if (isActionBox(box.content)) {
-    //         $contextMenu.items = box.options("placeholder");
-    //         index = Number.MAX_VALUE;
-    //     } else if (box.isHeader) {
-    //         $contextMenu.items = box.options("header");
-    //         index = 0;
-    //     } else {
-    //         $contextMenu.items = box.options("normal");
-    //         index = parentOrientation === "row" ? row - 1 : column - 1;
-    //         if (parentHasHeader) {
-    //             index--;
-    //         }
-    //     }
-    //     // set the selected box
-    //     if (editor.selectedBox !== box) {
-    //         editor.selectedBox = box;
-    //         $selectedBoxes = box.getSiblings();
-    //     }
-    //     $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
-    // }
-    //
-    // let isHovering: boolean;
-    // $: isHovering = (parentOrientation === "row" ? hovering.row === row : hovering.column === column) && !isActive;
-    //
-    // let isActive: boolean;
-    // $: isActive = (parentOrientation === "row" ? $activeElem?.row === row : $activeElem?.column === column) && $activeIn === parentComponentId;
-    //
-    // let isBeingDragged: boolean;
-    // $: isBeingDragged = ((parentOrientation === "row") ? $draggedElem?.propertyIndex === row : $draggedElem?.propertyIndex === column)
-    //     && $draggedElem?.componentId === parentComponentId;
-    //
-    // // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
-    // let isSelected: boolean;
-    // $: isSelected = box.content.selectable ? ($selectedBoxes.includes(box) || $selectedBoxes.includes(box.content)) : false;
+    // TODO rethink drag and drop now that there is a TableRowComponent
+    const drop = (event: DragEvent) => {
+        LOGGER.log("drop, dispatching");
+        dispatcher("dropOnCell", { row: row, column: column });
+        hovering = { row: -1, column: -1 };
+    };
+
+    const dragstart = (event: DragEvent) => {
+        LOGGER.log("dragStart");
+        // close any context menu
+        $contextMenuVisible = false;
+
+        // give the drag an effect
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.dropEffect = "move";
+
+        // select the complete element and style them
+        $selectedBoxes = box.getSiblings();
+        // $selectedBoxes.forEach(b => b.style = "border: dashed");
+
+        // give the drag an image
+        event.dataTransfer.setDragImage(img, 0, 0);
+        // And Chrome seems to require the image to be in the dom: document.body.append(img), which should be hidden with some css
+
+        // create the data to be transferred and notify the store that something is being dragged
+        // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
+        // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
+        $draggedElem = new ListElementInfo(box.element, parentComponentId);
+        $draggedFrom = parentComponentId;
+    };
+
+    const dragenter = (event: DragEvent): boolean => {
+        const data: ListElementInfo = $draggedElem;
+        // only show this item as active when the type of the element to be dropped is the right one
+        if (Language.getInstance().metaConformsToType(data.element, myMetaType)) {
+            $activeElem = { row: row, column: column };
+            $activeIn = parentComponentId;
+        }
+        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
+    };
+    const mouseover = (): boolean => {
+        hovering = { row: row, column: column };
+        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
+    };
+    const mouseout = (): boolean => {
+        hovering = { row: -1, column: -1 };
+        $activeElem = null;
+        $activeIn = "";
+        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
+    };
+
+    function showContextMenu(event) {
+        // determine the contents of the menu based on box
+        // if the selected box is the placeholder or a title/header => show different menu items
+        let index: number;
+        if (isActionBox(box.content)) {
+            $contextMenu.items = box.options("placeholder");
+            index = Number.MAX_VALUE;
+        } else if (box.isHeader) {
+            $contextMenu.items = box.options("header");
+            index = 0;
+        } else {
+            $contextMenu.items = box.options("normal");
+            index = parentOrientation === "row" ? row - 1 : column - 1;
+            if (parentHasHeader) {
+                index--;
+            }
+        }
+        // set the selected box
+        if (editor.selectedBox !== box) {
+            editor.selectedBox = box;
+            $selectedBoxes = box.getSiblings();
+        }
+        $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
+    }
+
+    let isHovering: boolean;
+    $: isHovering = (parentOrientation === "row" ? hovering.row === row : hovering.column === column) && !isActive;
+
+    let isActive: boolean;
+    $: isActive = (parentOrientation === "row" ? $activeElem?.row === row : $activeElem?.column === column) && $activeIn === parentComponentId;
+
+    let isBeingDragged: boolean;
+    $: isBeingDragged = ((parentOrientation === "row") ? $draggedElem?.propertyIndex === row : $draggedElem?.propertyIndex === column)
+        && $draggedElem?.componentId === parentComponentId;
+
+    // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
+    let isSelected: boolean;
+    $: isSelected = box.content.selectable ? ($selectedBoxes.includes(box) || $selectedBoxes.includes(box.content)) : false;
 </script>
 
 

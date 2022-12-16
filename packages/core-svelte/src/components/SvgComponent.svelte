@@ -1,9 +1,8 @@
 <script lang="ts">
-    import type { PiEditor, SvgBox } from "@projectit/core";
+    import type { SvgBox } from "@projectit/core";
     import { componentId } from "./util";
 
     export let svgBox: SvgBox;
-    export let editor: PiEditor;
 
     let id: string = componentId(svgBox);
 </script>

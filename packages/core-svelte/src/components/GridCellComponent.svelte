@@ -6,14 +6,14 @@
         type PiEditor,
         PiLogger,
         toPiKey,
-        GridCellBox, Box, PiCommand, PI_NULL_COMMAND, PiPostAction, PiEditorUtil
+        GridCellBox,
+        Box
     } from "@projectit/core";
-    import { runInAction } from "mobx";
     import { afterUpdate, onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
-    import { UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import { componentId, isOdd } from "./util";
+    import { executeCustomKeyboardShortCut, isOdd } from "./svelte-utils";
 
     // properties
     export let grid: GridBox;
@@ -22,9 +22,9 @@
 
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
-    //local variable
+    //local variables
     const LOGGER = new PiLogger("GridCellComponent");
-    let boxStore: Writable<Box> = writable<Box>(cellBox.box);
+    let boxStore: Writable<Box> = writable<Box>(cellBox.content); // todo see if we can do without this store
     let cssVariables: string;
     let id: string = componentId(cellBox);
 
@@ -39,8 +39,8 @@
     function refresh(from? : string): void {
         if (!!cellBox) {
             LOGGER.log("REFRESH GridCellComponent " + (!!from ? " from " + from + " " : "") + cellBox?.element?.piLanguageConcept() + "-" + cellBox?.element?.piId());
-            $boxStore = cellBox.box;
-            LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.box.role + "--- " + int++);
+            $boxStore = cellBox.content;
+            LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.content.role + "--- " + int++);
             row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
             column = cellBox.column + (cellBox.columnSpan ? " / span " + cellBox.columnSpan : "");
             orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ? "gridcellOdd" : "gridcellEven")));
@@ -55,13 +55,12 @@
     refresh("init component");
 
     onMount( () => {
-        $boxStore = cellBox.box;
+        $boxStore = cellBox.content;
         cellBox.refreshComponent = refresh;
     }) ;
 
     afterUpdate(() => {
-        UPDATE_LOGGER.log("GridCellComponent.afterUpdate");
-        $boxStore = cellBox.box;
+        $boxStore = cellBox.content;
         cellBox.refreshComponent = refresh;
     });
 
@@ -70,26 +69,14 @@
         const piKey = toPiKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
-            const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), cellBox, editor);
-            if (cmd !== PI_NULL_COMMAND) {
-                let postAction: PiPostAction;
-                runInAction(() => {
-                    const action = event["action"];
-                    if (!!action) {
-                        action();
-                    }
-                    postAction = cmd.execute(cellBox, toPiKey(event), editor);
-                });
-                if (!!postAction) {
-                    postAction();
-                }
-                event.stopPropagation();
-            }
+            // todo adjust the index, so that we know where to execute the command
+            const index = 0;
+            executeCustomKeyboardShortCut(event, index, cellBox, editor);
         }
-
     };
 
     const onCellClick = (() => {
+        // todo remove this or implement...
         LOGGER.log("GridCellComponent.onCellClick " + cellBox.row + ", " + cellBox.column);
     });
 

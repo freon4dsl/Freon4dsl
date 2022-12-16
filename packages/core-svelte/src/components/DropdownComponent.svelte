@@ -1,136 +1,103 @@
 <script lang="ts">
-    import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
-    import { autorun } from "mobx";
-    import { createEventDispatcher } from "svelte";
-    import {
-        PiLogger,
-        type SelectOption,
-        ESCAPE, ARROW_DOWN, ARROW_UP, DELETE, ENTER
-    } from "@projectit/core";
-    import DropdownItemComponent from "./DropdownItemComponent.svelte";
-
-    export let getOptions: () => SelectOption[];
-    export let selectedOptionId: string = "1";
-    // Needed to know when the dropdownlist has changed
-    // export let notifier: ChangeNotifier;
-
-    const LOGGER = new PiLogger("DropdownComponent").mute();
-    const dispatcher = createEventDispatcher();
-    // TODO add id
-    // let id: string = `${box.element.piId()}-${box.role}`;
-
-    const getOptionsLogged = (): SelectOption[] => {
-        const options = getOptions();
-        // check for duplicate keys and give a usefull error
-        const alreadySeen: string[] = [];
-        options.forEach(o => {
-            const key = o.id + o.label;
-            if (alreadySeen.includes(key)) {
-                console.error("Dropdowncomponent duplicate key for option [" + JSON.stringify(o) + "]");
-            } else {
-                alreadySeen.push(key);
-            }
-        });
-        return options;//.filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos);
-    }
-
-    /** Supports Arrow up and down keys, Enter for selection
-     * Escape is forwarded to owning component, so it may use it to close the dropdown.
-     * NB: Called by owning component to forward key event !!
+    /**
+     * This component is a dropdown menu that is used with a TextDropdownComponent.
      */
-    export const handleKeyDown = (e: KeyboardEvent): boolean => {
-        const options = getOptions();
-        const index = options.findIndex(o => o.id === selectedOptionId);
-        LOGGER.log("handleKeyDown " + e.key + " index="+ index);
-        switch (e.key) {
-            case ARROW_DOWN:
-                if (index + 1 < options.length) {
-                    setSelectedOption(options[index + 1].id);
-                }
-                return true;
-            case ARROW_UP:
-                if (index > 0) {
-                    setSelectedOption(options[index - 1].id);
-                }
-                return true;
-            case ENTER:
-                if (index >= 0 && index < options.length) {
-                    e.stopPropagation();
-                    dispatcher("pi-ItemSelected", options[index]);
-                    return true;
-                } else {
-                    return false;
-                }
-            case DELETE:
-                return true;
-            case ESCAPE:
-                return true;
+    import { createEventDispatcher } from "svelte";
+    import { SelectOption } from "@projectit/core";
+
+    export let selectedId: string = "";
+    export let options: SelectOption[] = [];
+    let id: string = "dropdown";
+    const dispatcher = createEventDispatcher();
+
+    $: isSelected = (option: SelectOption) => { // determines the style of the selected option
+        if (options.length === 1) {
+            return true;
         }
-        return false;
+        return option.id === selectedId;
     };
 
-    const setSelectedOption = (index: string): void => {
-        LOGGER.log("set selected option to "+ index);
-        selectedOptionId = index;
-    }
-
-    let getOptionsForHtml : SelectOption[];
-    autorun(()=> {
-        AUTO_LOGGER.log("autorun");
-        // const dummy = notifier.dummy;
-        getOptionsForHtml = getOptionsLogged();
-    });
-
-    const onFocus = (e: FocusEvent) =>  {
-        FOCUS_LOGGER.log("DropdownComponent.onFocus")
+    /**
+     * When one of the items in the menu is clicked, a custom event is dispatched to the parent of this component.
+     * @param option
+     */
+    const handleClick = (option: SelectOption) => {
+        selectedId = option.id;
+        dispatcher("piItemSelected", option);
     };
-    const onBlur = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("DropdownComponent.onBlur")
-    }
 </script>
 
-<div class="dropdown"
-        on:focus={onFocus}
-        on:blur={onBlur}
+<nav class="dropdown"
+     id="{id}"
 >
-    <div tabIndex={0}  />
-    <div class="popupWrapper">
-        {#each getOptionsForHtml as option (option.id + option.label)}
-            <div class="popup">
-                <div>
-                    <DropdownItemComponent on:pi-ItemSelected option={option} isSelected={option.id === selectedOptionId} />
-                </div>
+    {#if options.length > 0 }
+        {#each options as option (option.id + option.label)}
+            <div class="dropdownitem"
+                 class:isSelected={isSelected(option)}
+                 on:click={(event) => {event.preventDefault(); event.stopPropagation(); handleClick(option); }}
+            >
+                {option.label}
             </div>
         {/each}
-    </div>
-</div>
+    {:else}
+        <div class="dropdownerror">
+            Invalid input!
+        </div>
+    {/if}
+</nav>
+
 
 <style>
     .dropdown {
-        position: relative;
-    }
-
-    .popup {
-        position: relative;
-        min-width: 60px;
-        overflow-y: auto;
-        overflow-x: auto;
-        padding: 4px;
-
-        opacity: 1;
-        z-index: 99;
-        background-color: var(--freon-dropdown-component-background-color, lightblue);
-        color: var(--freon-dropdown-component-color, blue);
-    }
-
-    .popupWrapper {
-        position: absolute;
         border: 1px solid var(--freon-dropdown-component-border-color, darkblue);
         box-shadow: var(--freon-popup-box-shadow, 0 0 6px 0 rgba(0, 0, 0, 0.5));
         border-radius: 2px;
-        top: 10px;
-        left: -1px;
         opacity: 1;
         z-index: 95;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        background: #e5e5e5;
+        min-width: 120px;
+        width: fit-content;
+        margin-top: 3px;
+        position: absolute;
+    }
+
+    .dropdownitem {
+        color: var(--freon-dropdownitem-component-color, darkblue);
+        background-color: var(--freon-dropdownitem-component-background-color, inherit);
+        white-space: nowrap;
+        border: none;
+        background: none;
+        border-radius: 2px;
+        padding: 4px;
+        margin: 3px;
+        cursor: pointer;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        gap: 2px;
+        place-items: center;
+    }
+
+    .dropdownerror {
+        color: var(--freon-dropdownitem-component-color, darkblue);
+        /* todo add new color to freon color set */
+        background-color: var(--freon-dropdownitem-component-background-color, red);
+        display: block;
+        white-space: nowrap;
+        border: none;
+    }
+
+    .dropdownitem:hover {
+        color: var(--freon-dropdownitem-component-hover-color, darkblue);
+        background-color: var(--freon-dropdownitem-component-hover-background-color, #f4f4f4);
+    }
+
+    .isSelected {
+        color: var(--freon-dropdownitem-component-selected-color, darkblue);
+        background-color: var(--freon-dropdownitem-component-selected-background-color, lightblue);
+        border: none;
     }
 </style>

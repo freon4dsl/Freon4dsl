@@ -40,8 +40,8 @@ export class ImportExportHandler {
                 setUserMessage(reader.error.message);
             };
         } else {
-            setUserMessage(`File [${file.name}] does not have the right (extension) type.
-                 Found: [${extension}], expected one of: ${this.allExtensionsToString()}.`);
+            setUserMessage(`File ${file.name} does not have the right (extension) type.
+                 Found: ${extension}, expected one of: ${this.allExtensionsToString()}.`);
         }
     }
 

@@ -35,6 +35,7 @@ export class FreHeaderProvider extends FreBoxProvider {
         return TableUtil.rowBox(
             this._element,
             this.propertyName,
+            this.conceptName,
             cells,
             0,
             false

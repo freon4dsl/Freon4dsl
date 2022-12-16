@@ -144,7 +144,7 @@ export class ProjectionTemplate {
                         if (!!this._element.piOwnerDescriptor().owner &&
                             isPiBinaryExpression(this._element.piOwnerDescriptor().owner)
                         ) {
-                            return BoxFactory.horizontalList(this._element, "brackets", [
+                            return BoxFactory.horizontalLayout(this._element, "brackets", '', [
                                 BoxUtils.labelBox(this._element, "(", "bracket-open", true),
                                 binBox,
                                 BoxUtils.labelBox(this._element, ")", "bracket-close", true)
@@ -262,7 +262,7 @@ export class ProjectionTemplate {
                         const cells: Box[] = [];
                         ${cellDefs.map(cellDef => `cells.push(${cellDef})`).join(';\n')}
                         // Note that css grid counts from 1, not 0, therefore we increase the propertyIndex
-                        return TableUtil.rowBox(this._element, this._element.piOwnerDescriptor().propertyName, cells, this._element.piOwnerDescriptor().propertyIndex + 1, ${hasHeaders});
+                        return TableUtil.rowBox(this._element, this._element.piOwnerDescriptor().propertyName, "${Names.classifier(concept)}", cells, this._element.piOwnerDescriptor().propertyIndex + 1, ${hasHeaders});
                     }`;
         } else {
             console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
@@ -306,7 +306,7 @@ export class ProjectionTemplate {
         });
         if (lines.length > 1) { // multi-line projection, so surround with vertical box
             ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
-            result = `BoxFactory.verticalList(${elementVarName}, "${boxLabel}-overall", [
+            result = `BoxFactory.verticalLayout(${elementVarName}, "${boxLabel}-overall", '', [
                 ${result} 
             ])`;
         }
@@ -332,7 +332,7 @@ export class ProjectionTemplate {
             if (line.items.length > 1) { // surround with horizontal box
                 // TODO Too many things are now selectable, but if false, you cannot select e.g. an attribute
                 ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
-                result = `BoxFactory.horizontalList(${elementVarName}, "${boxLabel}-hlist-line-${index}", [ ${result} ], { selectable: true } ) `;
+                result = `BoxFactory.horizontalLayout(${elementVarName}, "${boxLabel}-hlist-line-${index}", '', [ ${result} ], { selectable: true } ) `;
             }
             if (line.indent > 0) { // surround with indentBox
                 ListUtil.addIfNotPresent(this.coreImports, "BoxUtils");
@@ -559,7 +559,7 @@ export class ProjectionTemplate {
                             (${element}.${property.name}.map( (item, index)  =>
                                 ${this.singlePrimitivePropertyProjection(property, element, boolInfo)}
                             ) as Box[]).concat( [
-                                BoxFactory.alias(${element}, "new-${Roles.property(property)}-hlist", "<+ ${property.name}>")
+                                BoxFactory.action(${element}, "new-${Roles.property(property)}-hlist", "<+ ${property.name}>")
                             ])
                         )`;
     }

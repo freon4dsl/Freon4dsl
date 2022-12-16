@@ -10,13 +10,13 @@ export abstract class Box {
     $id: string;
     kind: string = "";
     role: string = "";
-    element: PiElement = null;
-    // Custom CSS class that will be added to the component rendering this box
-    cssClass: string = "";
-    // Custom CSS Style class that will be added as inline style to the component rendering this box
-    cssStyle: string = "";
-    // Can this box be selected in the editor?
-    selectable: boolean = true;
+    element: PiElement = null;  // the model element to which this box is coupled
+    propertyName: string;       // the name of the property, if any, in 'element' which this box projects
+    propertyIndex: number;      // the index within the property, if appropriate
+
+    cssClass: string = "";      // Custom CSS class that will be added to the component rendering this box
+    cssStyle: string = "";      // Custom CSS Style class that will be added as inline style to the component rendering this box
+    selectable: boolean = true; // Can this box be selected in the editor?
     parent: Box = null;
 
     // The refresh method from the component that displays this box.
@@ -244,5 +244,11 @@ export abstract class Box {
 
     isEditable(): boolean {
         return false;
+    }
+
+    getSiblings(param: Box): Box[] {
+        return this.children.filter(c =>
+            c.element.piId() === param.element.piId()
+        );
     }
 }

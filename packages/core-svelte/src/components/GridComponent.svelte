@@ -1,19 +1,23 @@
 <script lang="ts">
-    import { GridCellBox, type GridBox, type PiEditor } from "@projectit/core";
+    import { GridCellBox, type GridBox, type PiEditor, PiLogger } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import GridCellComponent from "./GridCellComponent.svelte";
-    import { writable, type Writable } from "svelte/store";
     import { componentId } from "./util";
+
+    const LOGGER = new PiLogger("GridComponent"); //.mute();
 
     export let box: GridBox;
     export let editor: PiEditor;
 
     let id = componentId(box);
-    let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(box.cells);
+    let cells: GridCellBox[];
+    $: cells = box.cells;
     let templateColumns: string;
+    $: templateColumns = `repeat(${box.numberOfRows() - 1}, auto)`;
     let templateRows: string;
+    $: templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
     let cssClass: string = "";
+    $: cssClass = box.cssClass;
 
     const refresh = (why?: string): void =>  {
         if (!!box) {
@@ -27,13 +31,13 @@
         }
     }
     onMount( () => {
-        MOUNT_LOGGER.log("GridComponent onmount")
+        LOGGER.log("GridComponent onmount")
         $cells = box.cells;
         box.refreshComponent = refresh;
 
     })
     afterUpdate(() => {
-        UPDATE_LOGGER.log("GridComponent afterUpdate for girdBox " + box.element.piLanguageConcept())
+        LOGGER.log("GridComponent afterUpdate for girdBox " + box.element.piLanguageConcept())
         $cells = box.cells;
         box.refreshComponent = refresh;
     });
@@ -51,7 +55,7 @@
         class="maingridcomponent {cssClass}"
         id="{id}"
 >
-    {#each $cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid" + "-" + dummy)}
+    {#each cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid")}
         <GridCellComponent grid={box} cellBox={cell} editor={editor}/>
     {/each}
 </div>

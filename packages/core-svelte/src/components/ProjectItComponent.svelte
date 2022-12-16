@@ -1,4 +1,8 @@
 <script lang="ts">
+    /**
+     * This component shows a complete projection, by displaying the rootbox of
+     * the associated editor.
+     */
     import {
         PiEditor,
         PiLogger,
@@ -12,39 +16,45 @@
         ARROW_RIGHT
     } from "@projectit/core";
     import { autorun } from "mobx";
-    import { AUTO_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
-    import { selectedBoxInEditor } from "./SelectedTmp";
+    import ContextMenu from "./ContextMenu.svelte";
+    import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
+    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
+    import { onMount } from "svelte";
+    import { viewport } from "./svelte-utils/EditorViewportStore";
 
     let LOGGER = new PiLogger("ProjectItComponent");//.mute();
     export let editor: PiEditor;
-    // TODO add id
-    // let id: string = `${box.element.piId()}-${box.role}`;
+    let element: HTMLDivElement; // The current main element of this component.
+    let rootBox: Box;
+    let id: string;              // an id for the html element showing the rootBox
+    id = !!rootBox ? rootBox.id : "projectit-component-with-unknown-box";
 
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
     }
 
+    // todo tabbing etc. should take into account the projection. Currently, sometimes the selected element is not visible.
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log("onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey);
-        // event.persist();
+        console.log("ProjectItComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey + " shift: " + event.shiftKey);
+        // console.log('selected BEFORE: ' + editor.selectedBox.id + ' current focused element ' + document.activeElement.id);
         if (event.ctrlKey || event.altKey) {
             switch (event.key) {
                 case ARROW_UP:
                     editor.selectParentBox();
-                    event.preventDefault();
+                    stopEvent(event);
                     break;
                 case ARROW_DOWN:
                     editor.selectFirstLeafChildBox();
-                    event.preventDefault();
+                    stopEvent(event);
                     break;
             }
         } else if (event.shiftKey) {
             switch (event.key) {
                 case TAB:
                     editor.selectPreviousLeaf();
-                    event.preventDefault();
+                    stopEvent(event);
                     break;
             }
         } else if (event.altKey) {
@@ -54,9 +64,8 @@
             switch (event.key) {
                 case BACKSPACE:
                 case ARROW_LEFT:
-                    LOGGER.log("Select Previous leaf")
                     editor.selectPreviousLeaf();
-                    stopEvent(event)
+                    stopEvent(event);
                     break;
                 case DELETE:
                     editor.deleteBox(editor.selectedBox);
@@ -68,60 +77,87 @@
                     stopEvent(event);
                     break;
                 case ARROW_DOWN:
-                    const down = editor.boxBelow(editor.selectedBox);
-                    LOGGER.log("!!!!!!! Select down box " + down?.role);
-                    if (down !== null && down !== undefined) {
-                        editor.selectBoxNew(down);
-                    }
+                    editor.selectBoxBelow(editor.selectedBox);
                     stopEvent(event);
                     break;
                 case ARROW_UP:
                     LOGGER.log("Up: " + editor.selectedBox.role);
-                    const up = editor.boxAbove(editor.selectedBox);
-                    if (up !== null) {
-                        editor.selectBoxNew(up);
-                    }
+                    editor.selectBoxAbove(editor.selectedBox);
                     stopEvent(event);
                     break;
             }
         }
-        $selectedBoxInEditor = editor.selectedBox;
-        event.stopPropagation();
+        // todo check whether the following always needs to be done
+        // console.log('selected AFTER: ' + editor.selectedBox.id + ' current focused element ' + document.activeElement.id);
+        editor.selectedBox.setFocus();
+        $selectedBoxes = [editor.selectedBox];
+        // event.stopPropagation(); // do not preventDefault, because this would keep printable chars to show in any input HTML element. TODO IS this true???
     };
 
-    let rootBox: Box;
     /**
-     * The current main element os this component.
-     */
-    let element: HTMLDivElement;
-
-    let renderElement: RenderComponent;
-    /**
-     * Keep track of the scrolling position in the editor, so we know exactly where bozes are
+     * Keep track of the scrolling position in the editor, so we know exactly where boxes are
      * in relationship with each other.
      */
     function onScroll() {
-                    editor.scrollX = element.scrollLeft;
+        // Hide any contextmenu upon scrolling, because its position will not be correct.
+        $contextMenuVisible = false;
+        // todo shouldn't we use a timeOut here, like below in the ResizeObserver?
+        editor.scrollX = element.scrollLeft;
         editor.scrollY = element.scrollTop;
     }
 
+    onMount(() => {
+        // We keep track of the size of the editor component, to be able to position any context menu correctly.
+        // For this we use a ResizeObserver.
+
+        // Define the observer and its callback.
+        const resizeObserver = new ResizeObserver(entries => {
+            // Hide any contextmenu upon resize, because its position will not be correct.
+            $contextMenuVisible = false;
+            // Use a timeOut to improve performance, otherwise every slight change will activate this function.
+            setTimeout(() => {
+                // We're only watching one element, this is the first of the entries.
+                const entry = entries.at(0);
+                // Get the element's size.
+                // Note that entry.contentRect gives slightly different results to entry.target.getBoundingClientRect().
+                // A: I have no idea why.
+                let rect = entry.target.getBoundingClientRect();
+                $viewport.setSizes(rect.height, rect.width, rect.top, rect.left);
+            }, 400); // Might use another value for the delay, but this seems ok.
+        });
+
+        // Observe the ProjectItComponent element.
+        resizeObserver.observe(element);
+
+        // This callback cleans up the observer.
+        return () => resizeObserver.unobserve(element);
+    });
+
     autorun(() => {
-        AUTO_LOGGER.log("==================> ProjectItComponent")
+        LOGGER.log("==================> ProjectItComponent")
+        // If a box changes ...
         rootBox = editor.rootBox;
-        renderElement?.setShowBox();
+        // If the selection is not ok anymore ...
+        // TODO This now runs for each selection change, is this really needed?
+        if (!$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
+            $selectedBoxes = [editor.selectedBox];
+        }
     });
 </script>
 
 <div class={"projectit"}
-     tabIndex={0}
      on:keydown={onKeyDown}
      on:scroll={onScroll}
      bind:this={element}
+     id="{id}"
 >
-    <RenderComponent bind:this={renderElement}
-                     editor={editor}
-                     box={rootBox}    />
+    <RenderComponent editor={editor}
+                     box={rootBox}
+    />
 </div>
+<!-- Here the only instance of ContextMenu is defined -->
+<!-- TODO make some default items for the context menu -->
+<ContextMenu bind:this={$contextMenu} items={[]} editor={editor}/>
 
 <style>
     .projectit {

@@ -22,11 +22,11 @@ export let userMessageOpen: Writable<boolean> = writable<boolean>(false);
 
 export function setUserMessage(message: string, sever?: SeverityType) {
 	userMessage.set(message);
-	if (sever) {
+	if (sever !== null && sever !== undefined) {
 		severity.set(sever);
 	} else {
 		severity.set(SeverityType.error);
 	}
-	console.log("ProjectIt User Message: " + message);
+	// console.log("ProjectIt User Message: " + message + ", " + get(severity));
 	userMessageOpen.set(true);
 }

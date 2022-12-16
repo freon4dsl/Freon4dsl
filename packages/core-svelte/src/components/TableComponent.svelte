@@ -6,15 +6,19 @@
      * or a TableCellComponent.
      */
     import {
+        TableCellBox,
         type TableBox,
         type PiEditor,
-        PiLogger, Box, isElementBox, isTableRowBox
+        PiLogger,
+        Box,
+        isElementBox,
+        isTableRowBox, ListElementInfo, TableDirection
     } from "@projectit/core";
     import ElementComponent from "./ElementComponent.svelte";
     import { afterUpdate, onMount } from "svelte";
     import TableRowComponent from "./TableRowComponent.svelte";
-    // import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils/DropAndSelectStore";
-    // import { dropListElement, moveListElement } from "@projectit/core";
+    import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils/DropAndSelectStore";
+    import { dropListElement, moveListElement } from "@projectit/core";
 
     const LOGGER = new PiLogger("TableComponent");
 
@@ -25,9 +29,16 @@
     // the following variables use svelte reactivity, when this does not suffice they should be set in a Mobx autorun method
     let children: Box[];
     let templateColumns: string;
+    $: templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
     let templateRows: string;
+    $: templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
     let cssClass: string;
+    $: cssClass = box.cssClass;
     let gridElement: HTMLElement;
+    // determine the type of the elements in the list
+    // this speeds up the check whether the element may be dropped in a certain drop-zone
+    let myMetaType: string;
+    $: myMetaType = box.conceptName;
 
     const refresh = (why?: string): void => {
         console.log("Refresh TableBox, box: " + box);
@@ -50,38 +61,34 @@
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
     }
-    // determine the type of the elements in the list
-    // this speeds up the check whether the element may be dropped in a certain drop-zone
-    // let myMetaType: string;
-    // $: myMetaType = box.conceptName;
 
-    // const drop = (event: CustomEvent) => {
-    //     const data: ListElementInfo = $draggedElem;
-    //     let targetIndex = event.detail.row - 1;
-    //     if (box.orientation === 'column') {
-    //         targetIndex = event.detail.column - 1;
-    //     }
-    //
-    //     // console.log("DROPPING item [" + data.element.piId() + "] from [" + data.componentId + "] in grid [" + id + "] on position [" + targetIndex + "]");
-    //     if (box.hasHeaders) { // take headers into account for the target index
-    //         targetIndex = targetIndex - 1;
-    //         // console.log("grid has headers, targetIndex: " + targetIndex);
-    //     }
-    //     if (data.componentId === id) { // dropping in the same grid
-    //         // console.log("moving item within grid");
-    //         moveListElement(box.element, data.element, box.propertyName, targetIndex);
-    //     } else { // dropping in another list
-    //         // console.log("moving item to another grid, drop type: " + data.elementType + ", grid cell type: " + elementType);
-    //         dropListElement(editor, data, myMetaType, box.element, box.propertyName, targetIndex);
-    //     }
-    //     // Everything is done, so reset the variables
-    //     $draggedElem = null;
-    //     $draggedFrom = '';
-    //     $activeElem = {row: - 1, column: -1 };
-    //     $activeIn = '';
-    //     // Clear the drag data cache (for all formats/types) (gives error in FireFox!)
-    //     // event.dataTransfer.clearData();
-    // };
+    const drop = (event: CustomEvent) => {
+        const data: ListElementInfo = $draggedElem;
+        let targetIndex = event.detail.row - 1;
+        if (box.direction === TableDirection.VERTICAL) {
+            targetIndex = event.detail.column - 1;
+        }
+
+        // console.log("DROPPING item [" + data.element.piId() + "] from [" + data.componentId + "] in grid [" + id + "] on position [" + targetIndex + "]");
+        if (box.hasHeaders) { // take headers into account for the target index
+            targetIndex = targetIndex - 1;
+            // console.log("grid has headers, targetIndex: " + targetIndex);
+        }
+        if (data.componentId === id) { // dropping in the same grid
+            // console.log("moving item within grid");
+            moveListElement(box.element, data.element, box.propertyName, targetIndex);
+        } else { // dropping in another list
+            // console.log("moving item to another grid, drop type: " + data.elementType + ", grid cell type: " + elementType);
+            dropListElement(editor, data, myMetaType, box.element, box.propertyName, targetIndex);
+        }
+        // Everything is done, so reset the variables
+        $draggedElem = null;
+        $draggedFrom = '';
+        $activeElem = {row: - 1, column: -1 };
+        $activeIn = '';
+        // Clear the drag data cache (for all formats/types) (gives error in FireFox!)
+        // event.dataTransfer.clearData();
+    };
 </script>
 
 <span

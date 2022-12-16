@@ -1,4 +1,8 @@
 <script lang="ts">
+    /**
+     * This component indents the child of its (Indent)Box.
+     * Every indent is 8px wide.
+     */
     import { Box, PiLogger } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
@@ -11,8 +15,8 @@
 
     const LOGGER = new PiLogger("IndentComponent");
 
-    // only exported for testing purposes
-    let style;
+    const indentWidth: number = 8;
+    let style: string = `margin-left: ${box?.indent * indentWidth}px;`;
     let id: string = componentId(box);
     let child: Box;
 
@@ -26,7 +30,7 @@
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH Indent for box " + box?.role + " child " + box?.child?.role);
         child = box?.child;
-        style = `margin-left: ${box?.indent * 8}px;`
+        style = `margin-left: ${box?.indent * indentWidth}px;`
     };
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
@@ -34,17 +38,8 @@
 </script>
 
 <span
-    class="indentStyle"
-    tabIndex={0}
     style="{style}"
     id="{id}"
 >
     <RenderComponent box={child} editor={editor}/>
 </span>
-
-<style>
-    .indentStyle {
-        /*margin-left: 50px;*/
-    }
-</style>
-

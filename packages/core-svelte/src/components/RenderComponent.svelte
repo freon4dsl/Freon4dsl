@@ -1,110 +1,140 @@
 <script lang="ts">
-    import TableRowComponent from "./TableRowComponent.svelte";
-    import TableComponent from "./TableComponent.svelte";
-    import ElementComponent from "./ElementComponent.svelte";
-    import AliasComponent from "./AliasComponent.svelte";
-    import GridComponent from "./GridComponent.svelte";
-    import SvgComponent from "./SvgComponent.svelte";
-    import IndentComponent from "./IndentComponent.svelte";
-    import TextComponent from "./TextComponent.svelte";
-    import SelectableComponent from "./SelectableComponent.svelte";
-    import LabelComponent from "./LabelComponent.svelte";
-    import ListComponent from "./ListComponent.svelte";
-    import OptionalComponent from "./OptionalComponent.svelte";
-    import EmptyLineComponent from "./EmptyLineComponent.svelte";
-    import { afterUpdate, beforeUpdate } from "svelte";
-
-    import type { Box } from "@projectit/core";
+    // This component renders any box from the box model.
+    // Depending on the box type the right component is used.
+    // It also makes the rendered element selectable, including changing the style.
+    // Note that all boxes are rendered as flex-items within a RenderComponent,
+    // which is the flex-container.
+    // Note also that this component has no 'setFocus' method because it is not
+    // strongly coupled to a box. Each box is coupled to the corresponding
+    // component in the if-statement.
     import {
-        isAliasBox,
+        isActionBox,
+        isEmptyLineBox,
         isGridBox,
+        isTableBox,
         isIndentBox,
         isLabelBox,
-        isSelectBox,
+        isLayoutBox,
+        isListBox,
         isOptionalBox,
+        isSelectBox,
+        isTableRowBox,
         isTextBox,
-        isVerticalBox,
-        isHorizontalBox,
         isSvgBox,
-        isEmptyLineBox,
-        PiEditor, PiLogger, isElementBox, isTableBox, isTableRowBox,
+        PiEditor,
+        PiLogger,
+        Box, isElementBox
     } from "@projectit/core";
+    import EmptyLineComponent from "./EmptyLineComponent.svelte";
+    import GridComponent from "./GridComponent.svelte";
+    import IndentComponent from "./IndentComponent.svelte";
+    import LabelComponent from "./LabelComponent.svelte";
+    import LayoutComponent from "./LayoutComponent.svelte";
+    import ListComponent from "./ListComponent.svelte";
+    import OptionalComponent from "./OptionalComponent.svelte";
+    import TableComponent from "./TableComponent.svelte";
+    import TableRowComponent from "./TableRowComponent.svelte";
+    import TextComponent from "./TextComponent.svelte";
+    import TextDropdownComponent from "./TextDropdownComponent.svelte";
+    import SvgComponent from "./SvgComponent.svelte";
+    import { afterUpdate } from "svelte";
+    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
+    import { setBoxSizes } from "./svelte-utils";
+    import ElementComponent from "./ElementComponent.svelte";
 
     const LOGGER = new PiLogger("RenderComponent");
 
     export let box: Box = null;
     export let editor: PiEditor;
 
-    let showBox: Box = null;
     let id: string = `render-${box?.element?.piId()}-${box?.role}`;
+    let className: string = '';
+    let element: HTMLElement;
 
-    export function setShowBox() {
-        // console.log('setShowBox for element ' + box?.element?.piId());
-        if (!!box) {
-            showBox = box;
-            id = `render-${box.element.piId()}-${box.role}`;
-        }
-    }
+    const onClick = (event: MouseEvent) => {
+        LOGGER.log("RenderComponent.onClick for box " + box.role + ", selectable:" + box.selectable);
+        // Note that click events on some components, like TextComponent, are already caught.
+        // These components need to take care of setting the currently selected element themselves.
+        if (box.selectable) {
+            editor.selectedBox = box;
+            $selectedBoxes = [box];
+            event.preventDefault();
+            event.stopPropagation();
+        } // else: let the parent element take care of selection
+    };
 
     afterUpdate(() => {
-        // LOGGER.log("<< RenderComponent.afterUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
-        setShowBox();
+        // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
+        LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element.piId()) + "]");
+        let isSelected: boolean = $selectedBoxes.includes(box);
+        className = (isSelected ? "selected" : "unSelected");
+        if (isSelected) {
+            LOGGER.log("RenderComponent.afterUpdate for box " + box?.role + ", isSelected:" + isSelected);
+            // todo NEW find out why box is null!!!
+            box?.setFocus();
+        }
+        // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?
+        setBoxSizes(box, element.getBoundingClientRect());
     });
-    beforeUpdate(() => {
-        // LOGGER
-        // .log(">> RenderComponent.beforeUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
-        setShowBox();
-    });
+    // todo test GridComponent
 
 </script>
 
-
-<!--    <svelte:component this={boxComponent(box)}/> -->
-    {#if (showBox === null || showBox === undefined)}
-        <p class="error">{"UNDEFINED BOX TYPE: " + (!!showBox ? showBox.kind : "NULL box")}"</p>
-    {:else if isLabelBox(showBox)}
-        <SelectableComponent box={showBox} editor={editor}>
-            <LabelComponent box={showBox} editor={editor}/>
-        </SelectableComponent>
-    {:else if isHorizontalBox(showBox) || isVerticalBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-        	<ListComponent box={showBox} editor={editor}/>
-        </SelectableComponent>
-    {:else if isAliasBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-        	<AliasComponent choiceBox={showBox} editor={editor}/>
-        </SelectableComponent>
-    {:else if isSelectBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-        	<AliasComponent choiceBox={showBox} editor={editor}/>
-        </SelectableComponent>
-    {:else if isTextBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-        	<TextComponent textBox={showBox} editor={editor}/>
-        </SelectableComponent>
-    {:else if isIndentBox(showBox) }
-        <IndentComponent box={showBox} editor={editor}/>
-    {:else if isGridBox(showBox) }
-        <GridComponent box={showBox} editor={editor}/>
-    {:else if isSvgBox(showBox) }
-        <SvgComponent svgBox={showBox} editor={editor}/>
-    {:else if isElementBox(showBox) }
-        <ElementComponent box={showBox} editor={editor}/>
-    {:else if isTableRowBox(showBox) }
-        <TableRowComponent box={showBox} editor={editor}/>
-    {:else if isOptionalBox(showBox) }
-        <SelectableComponent box={showBox} editor={editor}>
-            <OptionalComponent box={showBox} editor={editor}/>
-        </SelectableComponent>
-    {:else if isEmptyLineBox(showBox) }
-        <EmptyLineComponent box={showBox} editor={editor}/>
-    {:else if isTableBox(showBox) }
-        <TableComponent box={showBox} editor={editor}/>
+<span id="render-${box?.id}"
+      class="render-component {className}"
+      on:click={onClick}
+      bind:this={element}
+>
+    {#if box === null || box === undefined }
+        <p class="error">[BOX IS NULL OR UNDEFINED]</p>
+    {:else if isElementBox(box) }
+        <ElementComponent box={box} editor={editor}/>
+    {:else if isEmptyLineBox(box) }
+        <EmptyLineComponent box={box}/>
+    {:else if isGridBox(box) }
+        <GridComponent box={box} editor={editor} />
+    {:else if isIndentBox(box) }
+        <IndentComponent box={box} editor={editor}/>
+    {:else if isLabelBox(box)}
+        <LabelComponent box={box}/>
+    {:else if isLayoutBox(box) }
+       	<LayoutComponent box={box} editor={editor}/>
+    {:else if isListBox(box) }
+       	<ListComponent box={box} editor={editor}/>
+    {:else if isOptionalBox(box) }
+        <OptionalComponent box={box} editor={editor}/>
+    {:else if isSvgBox(box) }
+        <SvgComponent box={box}/>
+    {:else if isTableBox(box) }
+        <TableComponent box={box} editor={editor} />
+    {:else if isTableRowBox(box) }
+        <TableRowComponent box={box} editor={editor}/>
+    {:else if isTextBox(box) }
+       	<TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
+    {:else if isActionBox(box) || isSelectBox(box)}
+        <TextDropdownComponent box={box} editor={editor}/>
     {:else}
-        <p class="error">{"UNKNOWN BOX TYPE: " + (!!showBox ? showBox.kind : "NULL box")}"</p>
+        <p class="error">[UNKNOWN BOX TYPE: {box.kind}]</p>
     {/if}
-
+</span>
 
 <style>
-
+    .render-component {
+        box-sizing: border-box;
+        display: flex;
+    }
+    .error {
+        /* todo use projectit variable */
+        color: red;
+    }
+    .unSelected {
+        background: transparent;
+        border: none;
+    }
+    .selected {
+        background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
+        outline-color: var(--freon-selected-outline-color, darkblue);
+        outline-style: var(--freon-selected-outline-style, solid);
+        outline-width: var(--freon-selected-outline-width, 1px);
+    }
 </style>

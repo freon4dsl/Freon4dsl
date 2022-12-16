@@ -7,11 +7,13 @@ import {
 } from "../components/stores/LanguageStore";
 import { editorEnvironment } from "../config/WebappConfiguration";
 import { FreProjectionHandler, Language, PiUndoManager } from "@projectit/core";
+import { setUserMessage } from "../components/stores/UserMessageStore";
 
 export class LanguageInitializer {
 
     /**
-     * fills the Webapp Stores with initial values that describe the language
+     * Fills the Webapp Stores with initial values that describe the language,
+     * and make sure that the editor is able to get user message to the webapp.
      */
     static initialize(): void {
         // the language name
@@ -34,6 +36,10 @@ export class LanguageInitializer {
         let nameList: string[] = proj instanceof FreProjectionHandler ? proj.projectionNames() : ['default'];
         projectionNames.set(nameList);
         projectionsShown.set(nameList); // initialy, all projections are shown
+
+        // let the editor know how to set the user message,
+        // we do this by assigning our own method to the editor's method
+        editorEnvironment.editor.setUserMessage = setUserMessage;
 
         // start the undo manager
         PiUndoManager.getInstance();

@@ -1,12 +1,14 @@
 <script lang="ts">
-    import type { EmptyLineBox, PiEditor } from "@projectit/core";
-    import { componentId } from "./util";
+    /**
+     * This component shows an empty line in the projection.
+     */
+    import type { EmptyLineBox } from "@projectit/core";
 
     export let box: EmptyLineBox;
-    export let editor: PiEditor;
-    let id: string = componentId(box);
+    let id: string = box.id;
 </script>
 
-<span id="{id}">
+<span id="{id}" >
     <br>
 </span>
+

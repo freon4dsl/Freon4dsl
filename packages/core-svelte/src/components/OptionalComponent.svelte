@@ -1,18 +1,23 @@
 <script lang="ts">
+    /**
+     * This component display an optional part. It either shows the content of the
+     * corresponding OptionalBox, or its placeholder.
+     */
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
     import { OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
-    import { FOCUS_LOGGER } from "./ChangeNotifier";
 
     export let box: OptionalBox;
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("OptionalComponent");
-    let id: string = `${box.element.piId()}-${box.role}`;
+    let id: string;                             // an id for the html element showing the optional
+    id = !!box ? box.id : "optional-with-unknown-box";
     let childBox ;
-    let mustShow = box.mustShow;
+    let mustShow = false;
     let showByCondition = false;
-    let element: HTMLDivElement = null;
+    let contentComponent;
+    let placeholderComponent;
 
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH OptionalBox");
@@ -22,11 +27,13 @@
     };
 
     const setFocus = async (): Promise<void> => {
-        FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + box.role);
-        if (mustShow || showByCondition) {
+        LOGGER.log("OptionalComponent.setFocus on box " + box.role);
+        if (mustShow || showByCondition && !!contentComponent) {
             box.box.firstEditableChild.setFocus();
-        } else {
+        } else if (!!placeholderComponent) {
             box.whenNoShowingAlias.setFocus();
+        } else {
+            console.error("OptionalComponent " + id + " has no elements to put focus on");
         }
     };
 
@@ -45,17 +52,15 @@
     }
 </script>
 
-<div class="optional"
-     tabIndex={0}
-     bind:this={element}
-     id="{id}"
+<span class="optional"
+      id="{id}"
 >
     {#if mustShow || showByCondition}
-        <RenderComponent box={childBox} editor={editor} />
+        <RenderComponent box={childBox} editor={editor} bind:this={contentComponent}/>
     {:else}
-        <RenderComponent box={box.whenNoShowingAlias} editor={editor} />
+        <RenderComponent box={box.whenNoShowingAlias} editor={editor} bind:this={placeholderComponent}/>
     {/if}
-</div>
+</span>
 
 <style>
     .optional:empty:before {

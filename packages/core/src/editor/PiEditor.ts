@@ -5,12 +5,16 @@ import { PiOwnerDescriptor, PiElement } from "../ast";
 import { PiLogger } from "../logging";
 import { PiAction } from "./actions/index";
 import {
-    isAliasBox,
+    isActionBox,
     isSelectBox,
     isTextBox,
     Box,
-    PiCombinedActions, PiCaret, wait, FreProjectionHandler
+    PiCombinedActions,
+    PiCaret,
+    wait,
+    FreProjectionHandler
 } from "./internal";
+import { SeverityType } from "../validator";
 
 const LOGGER = new PiLogger("PiEditor").mute();
 
@@ -30,6 +34,8 @@ export class PiEditor {
     private _selectedPosition: PiCaret = PiCaret.UNSPECIFIED;   // The caret position within the _selectedBox.
     // TODO question: NOSELECT is not used, remove?
     private NOSELECT: Boolean = false;          // Do not accept "select" actions, used e.g. when an undo is going to come.
+
+    copiedElement: PiElement;               // The element that is currently handled in a cut/copy-paste situation.
 
     /**
      * The constructor makes a number of private properties observable.
@@ -105,13 +111,13 @@ export class PiEditor {
      * Sets the selected box programmatically, and adjusts the selected element as well.
      * @param box
      */
-    set selectedBox(box: Box) { // TODO question how does this method relate to the other setters for _selectedBox? The check on AliasBox is also there.
+    set selectedBox(box: Box) { // TODO question how does this method relate to the other setters for _selectedBox? The check on ActionBox is also there.
         LOGGER.log("selectedBox:  set selected box to: " + (!!box ? box.role : "null") + "  NOSELECT [" + this.NOSELECT + "]");
         if (this.NOSELECT) {
             return;
         }
 
-        if (!!box && isAliasBox(box)) {
+        if (!!box && isActionBox(box)) {
             this._selectedBox = box.textBox;
         } else {
             this._selectedBox = box;
@@ -171,7 +177,7 @@ export class PiEditor {
     selectParentBox() {
         LOGGER.log("==> SelectParent of " + this.selectedBox?.role + this.selectedBox?.parent.kind);
         let parent = this.selectedBox?.parent;
-        if (!!parent && (isAliasBox(parent) || isSelectBox(parent))) {
+        if (!!parent && (isActionBox(parent) || isSelectBox(parent))) {
             // Coming from (hidden) textbox in Select/Alias box
             parent = parent.parent;
         }
@@ -352,6 +358,20 @@ export class PiEditor {
         return result;
     }
 
+    selectBoxBelow(box: Box) {
+        const down = this.boxBelow(box);
+        if (down !== null && down !== undefined) {
+            this.selectBoxNew(down);
+        }
+    }
+
+    selectBoxAbove(box: Box) {
+        const up = this.boxAbove(box);
+        if (up !== null) {
+            this.selectBoxNew(up);
+        }
+    }
+
     /**
      * TODO
      * @param piCustomAction
@@ -392,13 +412,13 @@ export class PiEditor {
             LOGGER.info("box already selected");
             return;
         }
-        if (isAliasBox(box)) {
+        if (isActionBox(box)) {
             this.selectedBox = box.textBox;
         } else {
             this.selectedBox = box;
         }
         LOGGER.log("selectBox: select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
-        if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
+        if (isTextBox(box) || isActionBox(box) || isSelectBox(box)) {
             if (!!caretPosition) {
                 LOGGER.log("caret position is " + caretPosition.position);
                 box.setCaret(caretPosition);
@@ -422,5 +442,9 @@ export class PiEditor {
         }
         actions.customActions.forEach(ca => this.newPiActions.push(ca));
         actions.binaryExpressionActions.forEach(ca => this.newPiActions.push(ca));
+    }
+
+    setUserMessage(message: string, sever?: SeverityType) {
+        console.log('This message should be shown elsewhere: "' + message + '", please override this method appropriately.', sever)
     }
 }

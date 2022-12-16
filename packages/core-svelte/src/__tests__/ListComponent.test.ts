@@ -15,7 +15,7 @@ describe("List component", () => {
         model.myList.forEach((xx, index) => {
             boxes[index] = new LabelBox(xx, "list-element" + index, () => "Label" + index);
         });
-        horizontalBox = new HorizontalListBox(model, "", boxes);
+        horizontalBox = new HorizontalListBox(model, "", "", boxes);
     });
 
     it("all elements are visible", () => {

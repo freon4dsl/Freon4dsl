@@ -1,5 +1,5 @@
 import { PiElement } from "../../ast";
-import { Box, AliasBox, BoxFactory } from "./internal";
+import { Box, ActionBox, BoxFactory } from "./internal";
 
 export type BoolFunctie = () => boolean;
 
@@ -10,7 +10,7 @@ export class OptionalBox extends Box {
     readonly kind = "OptionalBox";
 
     private _box: Box = null;
-    whenNoShowingAlias: AliasBox = null; // TODO question: should name be whenShowingAlias or alternativeBox?
+    whenNoShowingAlias: ActionBox = null; // TODO question: should name be whenShowingAlias or alternativeBox?
     condition: () => boolean;
     protected _mustShow: boolean = false;
 

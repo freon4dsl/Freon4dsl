@@ -6,7 +6,7 @@ import { Box } from "./Box";
 export class GridCellBox extends Box  {
     row: number = 1;
     column: number = 1;
-    private $box: Box = null;
+    private $content: Box = null;
     isHeader: boolean = false;
     rowSpan?: number;
     columnSpan?: number;
@@ -16,20 +16,23 @@ export class GridCellBox extends Box  {
         super(element, role);
         this.row = row;
         this.column = column;
-        this.box = box;
+        this.content = box;
+        if (!!box) {
+            box.parent = this;
+        }
         PiUtils.initializeObject(this, initializer);
         this.selectable = false;
     }
 
-    get box(): Box {
-        return this.$box;
+    get content(): Box {
+        return this.$content;
     }
 
-    set box(b: Box) {
-        if (!!this.$box) {
-            this.$box.parent = null;
+    set content(b: Box) {
+        if (!!this.$content) {
+            this.$content.parent = null;
         }
-        this.$box = b;
+        this.$content = b;
         if (!!b) {
             b.parent = this;
         }
@@ -37,7 +40,10 @@ export class GridCellBox extends Box  {
     }
 
     get children(): ReadonlyArray<Box> {
-        return [this.$box];
+        return [this.$content];
     }
 
+    getSiblings(): Box[] { // todo do we need a ReadOnlyArray here?
+        return this.parent.getSiblings(this);
+    }
 }

@@ -1,19 +1,26 @@
 <script lang="ts">
+    /**
+     * This component shows to piece of non-editable text.
+     */
     import { onMount, afterUpdate } from "svelte";
-    import { PiLogger, type PiEditor, LabelBox } from "@projectit/core";
-    import { FOCUS_LOGGER } from "./ChangeNotifier";
+    import { PiLogger, LabelBox } from "@projectit/core";
     import { componentId } from "./util";
+    import { setBoxSizes } from "./svelte-utils";
 
     export let box: LabelBox;
-    export let editor: PiEditor;
 
     const LOGGER = new PiLogger("LabelComponent");
 
     let id: string = componentId(box);
-
     let element: HTMLDivElement = null;
+    let style: string;
+    let cssClass: string;
+    let text: string;
+    $: text = box.getLabel();
+
+    // todo do we need a setFocus here?
     const setFocus = async (): Promise<void> => {
-        FOCUS_LOGGER.log("LabelComponent.setFocus for box " + box?.role);
+        LOGGER.log("LabelComponent.setFocus for box " + box?.role);
         if (!!element) {
             element.focus();
         }
@@ -25,22 +32,14 @@
             box.refreshComponent = refresh;
         }
     });
+
     afterUpdate( () => {
         if (!!box) {
             box.setFocus = setFocus;
             box.refreshComponent = refresh;
+            setBoxSizes(box, element.getBoundingClientRect()); // see todo in RenderComponent
         }
     });
-
-    const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("LabelComponent.onFocus for box " + box.role);
-    }
-    const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("LabelComponent.onBlur for box " + box.role);
-    }
-    let text: string;
-    let style: string;
-    let cssClass: string;
 
     const refresh = (why?: string) => {
         if (!!box) {
@@ -55,16 +54,13 @@
     }
 </script>
 
-<div class="label {text} {cssClass}"
-     style="{style}"
-     tabIndex={0}
-     on:focus={onFocusHandler}
-     on:blur={onBlurHandler}
-     bind:this={element}
-     id="{id}"
+<span class="label {text} {cssClass}"
+      style="{style}"
+      bind:this={element}
+      id="{id}"
 >
     {text}
-</div>
+</span>
 
 <style>
     .label:empty:before {

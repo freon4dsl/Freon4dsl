@@ -54,7 +54,7 @@ export class TableUtil {
         return this.tableBox("column", element, list, propertyName, boxProviderCache);
     }
 
-    public static rowBox(element: PiElement, propertyName: string, cells: Box[], rowIndex: number, hasHeaders: boolean): TableRowBox {
+    public static rowBox(element: PiElement, propertyName: string, conceptName: string, cells: Box[], rowIndex: number, hasHeaders: boolean): TableRowBox {
         // Note that css grid counts from 1, not 0, which is common in lists.
         if (hasHeaders) {
             rowIndex = rowIndex + 2;
@@ -63,7 +63,7 @@ export class TableUtil {
         }
         const myContent = cells.map((cell, index) => {
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, rowIndex, index + 1);
-            return new TableCellBox(element, cellRoleName, rowIndex, index + 1, cell);
+            return new TableCellBox(element, cellRoleName, propertyName, conceptName, rowIndex, index + 1, cell);
         });
         const role: string = RoleProvider.row(element.piLanguageConcept(), propertyName, rowIndex);
         return new TableRowBox(element, role, myContent, rowIndex);
@@ -103,9 +103,9 @@ export class TableUtil {
         // return the actual table box
         const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
         if (orientation === "column") {
-            return new TableBoxColumnOriented(element, roleName, hasHeaders, children);
+            return new TableBoxColumnOriented(element, propertyName, propInfo.type, roleName, hasHeaders, children);
         } else {
-            return new TableBoxRowOriented(element, roleName, hasHeaders, children);
+            return new TableBoxRowOriented(element, propertyName, propInfo.type, roleName, hasHeaders, children);
         }
     }
 
@@ -116,6 +116,7 @@ export class TableUtil {
         return  TableUtil.rowBox(
             element,
             propertyName,
+            conceptName,
             [content],
             0,
             false
