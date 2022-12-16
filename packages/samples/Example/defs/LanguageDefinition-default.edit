@@ -46,6 +46,11 @@ AttributeRef {
     trigger = "attribute"
     referenceShortcut = ${attribute}
 }
+DirectAttributeRef {
+    [ ${attribute} ]
+    trigger = "attributeref"
+    referenceShortcut = ${attribute}
+}
 ParameterRef {
     [ ${parameter} [? . ${appliedfeature}] ]
     referenceShortcut = ${parameter}
