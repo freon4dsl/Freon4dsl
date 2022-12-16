@@ -42,13 +42,31 @@
                "$typename": "Method",
                "name": "dddddddd",
                "body": {
-                  "$typename": "ParameterRef",
-                  "appliedfeature": {
-                     "$typename": "AttributeRef",
-                     "appliedfeature": null,
-                     "attribute": "isStrong"
+                  "$typename": "PlusExpression",
+                  "left": {
+                     "$typename": "MultiplyExpression",
+                     "left": {
+                        "$typename": "NumberLiteralExpression",
+                        "value": 1,
+                        "appliedfeature": null
+                     },
+                     "right": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": false,
+                        "appliedfeature": null
+                     },
+                     "appliedfeature": null
                   },
-                  "parameter": "person"
+                  "right": {
+                     "$typename": "ParameterRef",
+                     "appliedfeature": {
+                        "$typename": "AttributeRef",
+                        "appliedfeature": null,
+                        "attribute": "isStrong"
+                     },
+                     "parameter": "person"
+                  },
+                  "appliedfeature": null
                },
                "parameters": [
                   {
@@ -116,6 +134,13 @@
          },
          "parameters": [],
          "declaredType": "Boolean"
+      },
+      {
+         "$typename": "Method",
+         "name": "",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
       }
    ]
 }
