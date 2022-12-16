@@ -29,7 +29,6 @@ export class CustomExampleActions implements PiCombinedActions {
     customActions: PiCustomAction[] = MANUAL_CUSTOM_ACTIONS;
 }
 
-
 const cust: PiCustomAction[] = [
     PiCustomAction.create({
         activeInBoxRoles: [],
