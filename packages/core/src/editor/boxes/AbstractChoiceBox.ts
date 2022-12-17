@@ -19,7 +19,7 @@ export abstract class AbstractChoiceBox extends Box {
         PiUtils.initializeObject(this, initializer);
         this.textBox = BoxFactory.text(
             exp,
-            "alias-" + role + "-textbox",
+            "action-" + role + "-textbox",
             () => {
                 /* To be overwritten by `SelectComponent` */
                 return this.textHelper.getText();
@@ -65,7 +65,7 @@ export abstract class AbstractChoiceBox extends Box {
      * It ensures that the SelectableComponent will calculate the new coordinates.
      */
     update: () => void = () => {
-        /* To be overwritten by `AliasComponent` */
+        /* To be overwritten by `ActionComponent` */
     };
 
     /** @internal

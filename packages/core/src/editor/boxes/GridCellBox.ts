@@ -1,9 +1,9 @@
 import { PiElement } from "../../ast";
-import { PiUtils } from "../../util/index";
+import { PiUtils } from "../../util";
 import { Box } from "./Box";
 
 // TODO state in every box which element we assume to be getting as param, e.g. is the element in a GridCellBox the same as in the corresponding GridBox?
-export class GridCellBox extends Box  {
+export class GridCellBox extends Box {
     row: number = 1;
     column: number = 1;
     private $content: Box = null;

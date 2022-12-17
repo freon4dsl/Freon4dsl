@@ -110,7 +110,7 @@ export class TableUtil {
     }
 
     private static createPlaceHolder(element: PiElement, propertyName: string, conceptName: string, orientation: GridOrientation): TableRowBox {
-        const content = BoxFactory.alias(element, "alias-add-row-or-column", `<add new ${orientation}>`,
+        const content = BoxFactory.action(element, "alias-add-row-or-column", `<add new ${orientation}>`,
             { propertyName: propertyName, conceptName: conceptName });
         // Note that a placeholder is only added when there are no other elements in the table, therefore its index is always 0.
         return  TableUtil.rowBox(

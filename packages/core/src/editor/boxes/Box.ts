@@ -60,7 +60,7 @@ export abstract class Box {
         if (!!this.element) {
             return this.element.piId() + (this.role === null ? "" : "-" + this.role);
         } else {
-            return "=" + this.role;
+            return "unknown-element-" + this.role;
         }
     }
 
@@ -202,8 +202,15 @@ export abstract class Box {
         return null;
     }
 
-    /** @internal
-     * This function is called to set the focus on this element.
+    /**
+     * This function is called to set the focus on this element programmatically. Because of
+     * asynchonicity and both mobx and svelte reactivity, this is done as follows.
+     * 1. The box model is changed as requested by the user or programmatically.
+     * 2. The 'editor.selectedBox' attribute gets a new value.
+     * 3. The RenderComponent determines which of the shown boxes needs the focus, based
+     * on 'editor.selectedBox', and the setFocus() method of this box is called.
+     * 4. In various boxes the setFocus() method is overwritten by the Svelte component that
+     * shows the box. Thus, the correct handling of the focus is done by this Svelte component.
      */
     setFocus: () => void = async () => {
         console.error(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id);
@@ -239,7 +246,7 @@ export abstract class Box {
             LOGGER.info( "child: " + c.kind);
             c.getEditableChildrenRecursive(result);
         });
-        // return this.children.filter(c => (isTextBox(c) || isAliasBox(c) || isSelectBox(c)) || c.children.length);
+        // return this.children.filter(c => (isTextBox(c) || isActionBox(c) || isSelectBox(c)) || c.children.length);
     }
 
     isEditable(): boolean {

@@ -9,6 +9,7 @@ export class LabelBox extends Box {
 
     constructor(element: PiElement, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>) {
         super(element, role);
+        this.selectable = false; // default
         PiUtils.initializeObject(this, initializer);
         this.setLabel(getLabel);
         // makeObservable<LabelBox, "$label">(this, {

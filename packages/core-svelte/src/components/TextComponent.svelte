@@ -59,6 +59,7 @@
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
     let originalText: string;               // variable to remember the text that was in the box previously
     let editStart = false;					// indicates whether we are just starting to edit, so we need to set the cursor in the <input>
+    let size = 10;							// the size of the <input>
     let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
     let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
     										// Note that 'from <= to' always holds.
@@ -79,6 +80,8 @@
 			isEditing = true;
 			editStart = true;
 			originalText = text;
+			// Look at either the real text or the placeholder to set the size.
+			size = text.length === 0 ? (placeholder === 0 ? 10 : placeholder.length + 1) : text.length + 1;
 			let {anchorOffset, focusOffset} = document.getSelection();
 			setFromAndTo(anchorOffset, focusOffset);
 		}
@@ -146,9 +149,11 @@
         isEditing = true;
         editStart = true;
         originalText = text;
+		// Look at either the real text or the placeholder to set the size.
+        size = text.length === 0 ? (placeholder === 0 ? 10 : placeholder.length) : text.length;
         let {anchorOffset, focusOffset} = document.getSelection();
-		setFromAndTo(anchorOffset, focusOffset);
-	    event.preventDefault();
+        setFromAndTo(anchorOffset, focusOffset);
+        event.preventDefault();
         event.stopPropagation();
         dispatcher('startEditing', {content: text, caret: from}); // tell the TextDropdown that the edit has started
     }
@@ -179,9 +184,7 @@
         isEditing = false;
         from = -1;
         to = -1;
-		// make this box unselected, otherwise it will get the focus even before rerendering.
-		editor.selectedBox = null;
-	
+
         if (!partOfActionBox) {
             // store the current value in the textbox, or delete the box, if appropriate
             runInAction(() => {
@@ -191,9 +194,9 @@
             		box.setText(text);
             	}
             });
-            // if (text !== box.getText()) {
-            //     box.setText(text);
-            // }
+            if (text !== box.getText()) {
+                box.setText(text);
+            }
         } else {
             dispatcher('endEditing');
         }
@@ -537,27 +540,21 @@
 	{#if isEditing}
 		<span class="resizable-input">
 			<input type="text"
-                   class="inputtext"
 				   id="{id}-input"
-                   bind:this={inputElement}
-				   on:input={onInput}
-                   bind:value={text}
-                   on:focusout={onFocusOut}
-                   on:keydown={onKeyDown}
+				   bind:this={inputElement}
+				   bind:value={text}
+				   on:focusout={onFocusOut}
+				   on:keydown={onKeyDown}
 				   draggable="true"
 				   on:dragstart={onDragStart}
-                   placeholder="{placeholder}"/>
-			<span class="inputttext width" bind:this={widthSpan}></span>
+				   size={size}
+				   placeholder="{placeholder}"/>
 		</span>
 	{:else}
-		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
-		     But ... this is only a problem when this components is inside a draggable element (like List ot table) 
-		-->
 		<span class="{box.role} text-box-{boxType} text"
-              on:click={startEditing}
-              bind:this={spanElement}
-			  contenteditable=true
-              id="{id}-span">
+			  on:click={startEditing}
+			  bind:this={spanElement}
+			  id="{id}-span">
 			{#if !!text && text.length > 0}
 				{text}
 			{:else}
@@ -568,54 +565,63 @@
 </span>
 
 <style>
-	.width {
-		position: absolute;
-		left: -9999px;
+	.resizable-input {
+		/* make resizable */
+		overflow-x: hidden;
+		resize: horizontal;
 		display: inline-block;
-		/*line-height: 6px;*/
-		margin: var(--freon-text-component-margin, 1px);
+
+		/* no extra spaces */
+		padding: 0;
+		margin-bottom: -5px;
+		white-space: nowrap;
+
+		/* default widths */
+		min-width: 2em;
+		max-width: 30em;
+	}
+
+	/* let <input> assume the size of the wrapper */
+	.resizable-input > input {
+		/* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
+		padding: 1px 1px;
+		line-height: 6px;
+		width: 100%;
+		box-sizing: border-box;
+		margin: 0;
 		border: none;
-		/*box-sizing: border-box;*/
-		padding: var(--freon-text-component-padding, 1px);
-		/*outline-color: var(--freon-selected-outline-color, darkblue);*/
-		/*outline-style: var(--freon-selected-outline-style, solid);*/
-		/*outline-width: var(--freon-selected-outline-width, 1px);*/
+		background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
+		outline-color: var(--freon-selected-outline-color, darkblue);
+		outline-style: var(--freon-selected-outline-style, solid);
+		outline-width: var(--freon-selected-outline-width, 1px);
 		font-family: var(--freon-text-component-font-family, "Arial");
 		font-size: var(--freon-text-component-font-size, 14pt);
 		font-weight: var(--freon-text-component-font-weight, inherit);
 		font-style: var(--freon-text-component-font-style, inherit);
 	}
 
-    /* let <input> assume the size of the wrapper */
-    .inputtext {
-        /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
-		padding: var(--freon-text-component-padding, 1px);
-        /*line-height: 6px;*/
-        /*width: 100%;*/
-        box-sizing: border-box;
-		margin: var(--freon-text-component-margin, 1px);
-        border: none;
-        background-color: lightgreen; /*var(--freon-selected-background-color, rgba(211, 227, 253, 255));*/
-        /*outline-color: var(--freon-selected-outline-color, darkblue);*/
-        /*outline-style: var(--freon-selected-outline-style, solid);*/
-        /*outline-width: var(--freon-selected-outline-width, 1px);*/
-        font-family: var(--freon-text-component-font-family, "Arial");
-        font-size: var(--freon-text-component-font-size, 14pt);
-        font-weight: var(--freon-text-component-font-weight, inherit);
-        font-style: var(--freon-text-component-font-style, inherit);
-    }
+	/* add a visible handle */
+	.resizable-input::after {
+		display: inline-block;
+		vertical-align: bottom;
+		margin-left: -16px;
+		width: 16px;
+		height: 16px;
+		background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
+		cursor: ew-resize;
+	}
 
-    .text {
-        /*content: attr(data-placeholdertext);*/
-        color: var(--freon-text-component-color, blue);
-        background-color: yellow; /* var(--freon-text-component-background-color, inherit); */
-        font-family: var(--freon-text-component-font-family, "Arial");
-        font-size: var(--freon-text-component-font-size, 14pt);
-        font-weight: var(--freon-text-component-font-weight, inherit);
-        font-style: var(--freon-text-component-font-style, inherit);
-        padding: var(--freon-text-component-padding, 1px);
-        margin: var(--freon-text-component-margin, 1px);
-        white-space: normal;
-        display: inline-block;
-    }
+	.text {
+		/*content: attr(data-placeholdertext);*/
+		color: var(--freon-text-component-color, blue);
+		background-color: var(--freon-text-component-background-color, inherit);
+		font-family: var(--freon-text-component-font-family, "Arial");
+		font-size: var(--freon-text-component-font-size, 14pt);
+		font-weight: var(--freon-text-component-font-weight, inherit);
+		font-style: var(--freon-text-component-font-style, inherit);
+		padding: var(--freon-text-component-padding, 1px);
+		margin: var(--freon-text-component-margin, 1px);
+		white-space: normal;
+		display: inline-block;
+	}
 </style>

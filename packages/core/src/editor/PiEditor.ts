@@ -23,9 +23,12 @@ export class PiEditor {
     readonly projection: FreProjectionHandler;      // The root projection with which this editor is created.
     newPiActions: PiAction[] = [];          // List of PiActions composed of all the actions in 'actions'
     theme: string = "light";                // The current theme.
-    environment: PiEnvironment;             // The generated language environment, needed to find reference shortcuts in the Alias box.
+    environment: PiEnvironment;             // The generated language environment, needed to find reference shortcuts in the Action box.
+    // todo are the scroll values needed? Do not the boundingRectable values for each HTML element depend on the page, not on the viewport?
     scrollX: number = 0;                    // The amount of scrolling horizontally, to find the element above and under.
     scrollY: number = 0;                    // The amount of scrolling vertically, to find the element above and under.
+
+    copiedElement: PiElement;               // The element that is currently handled in a cut/copy-paste situation.
 
     private _rootElement: PiElement = null;     // The model element to be shown in this editor.
     private _rootBox: Box | null = null;        // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
@@ -34,8 +37,6 @@ export class PiEditor {
     private _selectedPosition: PiCaret = PiCaret.UNSPECIFIED;   // The caret position within the _selectedBox.
     // TODO question: NOSELECT is not used, remove?
     private NOSELECT: Boolean = false;          // Do not accept "select" actions, used e.g. when an undo is going to come.
-
-    copiedElement: PiElement;               // The element that is currently handled in a cut/copy-paste situation.
 
     /**
      * The constructor makes a number of private properties observable.
@@ -47,7 +48,7 @@ export class PiEditor {
         this.actions = actions;
         this.projection = projection;
         this.environment = environment;
-        this.initializeAliases(actions);
+        this.initializeActions(actions);
         // TODO rethink whether selectedBox should be observable
         makeObservable<PiEditor, "_rootElement" | "_selectedElement" | "_selectedBox">(this, {
             theme: observable,
@@ -151,11 +152,12 @@ export class PiEditor {
             console.error("PiEditor.selectElement is null !");
             return;
         }
-        this._selectedElement = element;
-        this._selectedPosition = caretPosition;
         const box = this._rootBox.findBox(element.piId(), role);
-        // LOGGER.log("selectElement: selectElement found box " + box?.kind);
-        if (!!box) {
+        // todo although element is created in CreatePartCommand, the corresponding box cannot be found. WHY?
+        console.log("selectElement: selectElement found box: " + box?.kind);
+        if (!!box) { // only (re)set the local variables when the box can be found
+            this._selectedElement = element;
+            this._selectedPosition = caretPosition;
             this.selectBoxNew(box, caretPosition);
         }
     }
@@ -178,7 +180,7 @@ export class PiEditor {
         LOGGER.log("==> SelectParent of " + this.selectedBox?.role + this.selectedBox?.parent.kind);
         let parent = this.selectedBox?.parent;
         if (!!parent && (isActionBox(parent) || isSelectBox(parent))) {
-            // Coming from (hidden) textbox in Select/Alias box
+            // Coming from (hidden) textbox in Select/Action box
             parent = parent.parent;
         }
         if (!!parent) {
@@ -326,6 +328,7 @@ export class PiEditor {
         }
         return result;
     }
+    // TODO rethink the parameter 'box' in all of these methods => should work on currently selected box
 
     /**
      * Returns the box that is visually below `box`.
@@ -393,6 +396,10 @@ export class PiEditor {
         }
     }
 
+    setUserMessage(message: string, sever?: SeverityType) {
+        console.log('This message should be shown elsewhere: "' + message + '", please override this method appropriately.', sever)
+    }
+
     /**
      * TODO
      * @param box
@@ -427,8 +434,7 @@ export class PiEditor {
                 box.setCaret(PiCaret.RIGHT_MOST);
             }
         }
-        // LOGGER.log("setting focus on box " + this.selectedBox.role);
-        // box.setFocus(); TODO why not set focus?
+        // we do not set focus, see the comment for the setFocus method in Box.ts
     }
 
     /**
@@ -436,15 +442,11 @@ export class PiEditor {
      * @param actions
      * @private
      */
-    private initializeAliases(actions?: PiCombinedActions) {
+    private initializeActions(actions?: PiCombinedActions) {
         if (!actions) {
             return;
         }
         actions.customActions.forEach(ca => this.newPiActions.push(ca));
         actions.binaryExpressionActions.forEach(ca => this.newPiActions.push(ca));
-    }
-
-    setUserMessage(message: string, sever?: SeverityType) {
-        console.log('This message should be shown elsewhere: "' + message + '", please override this method appropriately.', sever)
     }
 }

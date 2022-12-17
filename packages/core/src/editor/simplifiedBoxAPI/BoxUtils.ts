@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../ast";
-import { Box, BoxFactory, CharAllowed, HorizontalListBox, SelectOption, TextBox, VerticalListBox } from "../boxes";
+import { Box, BoxFactory, CharAllowed, HorizontalListBox, SelectBox, SelectOption, TextBox, VerticalListBox } from "../boxes";
 import { PiUtils } from "../../util";
 import { BehaviorExecutionResult } from "../util";
 import { Language, PropertyKind } from "../../language";
@@ -50,6 +50,8 @@ export class BoxUtils {
                     placeHolder: `<${propertyName}>`
                 });
             }
+            result.propertyName = propertyName;
+            result.propertyIndex = index;
         } else {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a string: " + property + "\"");
         }
@@ -102,6 +104,8 @@ export class BoxUtils {
                         }
                     });
             }
+            result.propertyName = propertyName;
+            result.propertyIndex = index;
         } else {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a number: " + property + "\"");
         }
@@ -139,8 +143,9 @@ export class BoxUtils {
 
         // all's well, create the box
         const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "booleanbox", index);
+        let result: SelectBox;
         if (isList && this.checkList(isList, index, propertyName)) {
-            return BoxFactory.select(
+            result = BoxFactory.select(
                 element,
                 roleName,
                 "<optional>",
@@ -164,7 +169,7 @@ export class BoxUtils {
                 }
             );
         } else {
-            return BoxFactory.select(
+            result = BoxFactory.select(
                 element,
                 roleName,
                 "<optional>",
@@ -188,6 +193,9 @@ export class BoxUtils {
                 }
             );
         }
+        result.propertyName = propertyName;
+        result.propertyIndex = index;
+        return result;
     }
 
     /**
@@ -223,7 +231,8 @@ export class BoxUtils {
             property = property[index];
         }
 
-        return BoxFactory.select(
+        let result: SelectBox;
+        result = BoxFactory.select(
             element,
             roleName,
             `<select ${propertyName}>`,
@@ -259,6 +268,9 @@ export class BoxUtils {
             },
             {}
         );
+        result.propertyName = propertyName;
+        result.propertyIndex = index;
+        return result;
     }
 
     /**
@@ -296,7 +308,9 @@ export class BoxUtils {
         // determine the role
         let role: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist");
         // return the box
-        return new VerticalListBox(element, role, propertyName, children);
+        let result = new VerticalListBox(element, role, propertyName, children);
+        result.propertyName = propertyName;
+        return result;
     }
 
     static verticalReferenceListBox(element: PiElement, propertyName: string, scoper: FreScoper, listInfo?: PiListInfo): Box {
@@ -308,12 +322,15 @@ export class BoxUtils {
             let children = this.makeRefItems(property, element, propertyName, scoper, listInfo);
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
-            return BoxFactory.verticalList(
+            let result: VerticalListBox;
+            result = BoxFactory.verticalList(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "vreflist"),
                 propertyName,
                 children
             );
+            result.propertyName = propertyName;
+            return result;
         } else {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or not a reference: " + property + "\"");
             return null;
@@ -328,7 +345,9 @@ export class BoxUtils {
         // determine the role
         let role: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist");
         // return the box
-        return new HorizontalListBox(element, role, propertyName, children);
+        let result = new HorizontalListBox(element, role, propertyName, children);
+        result.propertyName = propertyName;
+        return result;
     }
 
     static horizontalReferenceListBox(element: PiElement, propertyName: string, scoper: FreScoper, listJoin?: PiListInfo): Box {
@@ -342,26 +361,33 @@ export class BoxUtils {
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
             // return the box
-            return BoxFactory.horizontalList(
+            let result: HorizontalListBox;
+            result = BoxFactory.horizontalList(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "hlist"),
                 propertyName,
                 children
             );
+            result.propertyName = propertyName;
+            return result;
         } else {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or not a reference: " + property + "\"");
             return null;
         }
     }
 
-    static getBoxOrAlias(element: PiElement, propertyName: string, conceptName: string, boxProviderCache: FreProjectionHandler): Box {
+    static getBoxOrAction(element: PiElement, propertyName: string, conceptName: string, boxProviderCache: FreProjectionHandler): Box {
         // find the information on the property to be shown
         const property = element[propertyName];
         const roleName = RoleProvider.property(element.piLanguageConcept(), propertyName);
-        // console.log('getBoxOrAlias ' + property?.piId())
-        return !!property
+        // console.log('getBoxOrAction ' + property?.piId())
+        let result: Box;
+        result = !!property
             ? boxProviderCache.getBoxProvider(property).box
-            : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
+            : BoxFactory.action(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
+        result.propertyName = propertyName;
+        // result.propertyIndex = ??? todo
+        return result;
     }
 
     /**
@@ -386,7 +412,7 @@ export class BoxUtils {
 
     private static addPlaceholder(children: Box[], element: PiElement, propertyName: string) {
         return children.concat(
-            BoxFactory.alias(
+            BoxFactory.action(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item"),
                 `<+ ${propertyName}>`,
@@ -443,7 +469,8 @@ export class BoxUtils {
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
-                        result.push(BoxFactory.horizontalList(element, roleName, propertyName, [
+                        result.push(BoxFactory.horizontalList(element, roleName, propertyName,
+                            [
                             BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]));
@@ -451,13 +478,15 @@ export class BoxUtils {
                         result.push(BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index));
                     }
                 } else if (listJoin.type === this.terminatorName) {
-                    result.push(BoxFactory.horizontalList(element, roleName, propertyName,[
+                    result.push(BoxFactory.horizontalList(element, roleName, propertyName,
+                        [
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]));
                 } else if (listJoin.type === this.initiatorName) {
                     // TODO test this code
-                    result.push(BoxFactory.horizontalList(element, roleName, propertyName, [
+                    result.push(BoxFactory.horizontalList(element, roleName, propertyName,
+                        [
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index)
                     ]));

@@ -2,7 +2,9 @@
 import {
     PiError,
     PiErrorSeverity,
-    PiLogger, PiOwnerDescriptor, Property
+    PiLogger,
+    PiOwnerDescriptor,
+    SeverityType
 } from "@projectit/core";
 import type {
     PiElement,
@@ -14,15 +16,14 @@ import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
+    editorProgressShown,
     noUnitAvailable,
     units,
-    editorProgressShown, unitNames, copiedElement
+    unitNames
 } from "../components/stores/ModelStore";
-import { setUserMessage, SeverityType } from "../components/stores/UserMessageStore";
+import { setUserMessage  } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
-import {
-    modelErrors
-} from "../components/stores/InfoPanelStore";
+import { modelErrors } from "../components/stores/InfoPanelStore";
 import { ServerCommunication } from "../server/ServerCommunication";
 import { runInAction } from "mobx";
 
