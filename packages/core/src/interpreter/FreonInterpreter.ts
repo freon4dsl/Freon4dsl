@@ -1,10 +1,10 @@
+import { PiElement } from "../ast/index";
 import { InterpreterTracer } from "./InterpreterTracer";
-import { RtObject } from "./runtime/RtObject";
 
-export interface FreonInterpreter {
+export interface FreonInterpreter<RT_OBJECT> {
     setTracing(value: boolean): void;
 
-    getTrace(): InterpreterTracer;
+    getTrace(): InterpreterTracer<RT_OBJECT>;
 
-    evaluate(node: Object): RtObject;
+    evaluate(node: PiElement): RT_OBJECT;
 }

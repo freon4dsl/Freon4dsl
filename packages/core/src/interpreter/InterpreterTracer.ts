@@ -1,6 +1,6 @@
+import { PiElement } from "../ast/index";
 import { ConceptFunction, OwningPropertyFunction } from "./IMainInterpreter";
 import { InterpreterContext } from "./InterpreterContext";
-import { RtObject } from "./runtime/RtObject";
 
 const INDENT = "    ";
 const INDENT_DIRECT = "|-- ";
@@ -8,15 +8,15 @@ const INDENT_INDIRECT = "|   ";
 /**
  * A map of trace objects where we can find the value based on the element is enough.
  */
-class TraceNode {
-    tracer: InterpreterTracer;
-    value: RtObject;
-    node: Object;
-    parent: TraceNode;
-    children: TraceNode[] = [];
-    ctx: InterpreterContext;
+class TraceNode<RT_VALUE> {
+    tracer: InterpreterTracer<RT_VALUE>;
+    value: RT_VALUE;
+    node: PiElement;
+    parent: TraceNode<RT_VALUE>;
+    children: TraceNode<RT_VALUE>[] = [];
+    ctx: InterpreterContext<RT_VALUE>;
 
-    constructor(t: InterpreterTracer) {
+    constructor(t: InterpreterTracer<RT_VALUE>) {
         this.tracer = t;
     }
 
@@ -38,7 +38,7 @@ class TraceNode {
         } else {
             result = indent + this.tracer.property(this.node) + ": " + this.tracer.concept(this.node) + " = " + this.value + (this.idValid(this.ctx)? " Ctx " + this.ctx.toString() : "")  + "\n";
         }
-        this.children.forEach((child: TraceNode, index: number) => {
+        this.children.forEach((child: TraceNode<RT_VALUE>, index: number) => {
             let baseIndent = "    ";
             if( !thisIsLast) {
                 baseIndent = (index === this.children.length ? indent : indent.replace(INDENT_DIRECT, INDENT_INDIRECT));
@@ -50,14 +50,14 @@ class TraceNode {
         return result;
     }
 
-    idValid(ctx: InterpreterContext){
+    idValid(ctx: InterpreterContext<RT_VALUE>){
         return !!ctx && (ctx !== InterpreterContext.EMPTY_CONTEXT);
     }
 }
 
-export class InterpreterTracer {
-    root: TraceNode;
-    current: TraceNode;
+export class InterpreterTracer< RT_VALUE> {
+    root: TraceNode<RT_VALUE>;
+    current: TraceNode<RT_VALUE>;
     concept: ConceptFunction;
     property: OwningPropertyFunction;
 
@@ -67,14 +67,14 @@ export class InterpreterTracer {
         this.current = this.root;
         this.concept = concept;
         this.property = property;
-        this.current.ctx = InterpreterContext.EMPTY_CONTEXT;
+        this.current.ctx = InterpreterContext.EMPTY_CONTEXT as InterpreterContext<RT_VALUE>;
     }
 
     /**
      * Start tracing `node` with context `ctx`.
      * This trace will be a child of the current traced node.
      */
-    start(node: Object, ctx?: InterpreterContext) {
+    start(node: PiElement, ctx?: InterpreterContext<RT_VALUE> ) {
         const newTrace = new TraceNode(this);
         newTrace.node = node;
         newTrace.parent = this.current;
@@ -85,7 +85,7 @@ export class InterpreterTracer {
         this.current = newTrace;
     }
 
-    push(node: Object, value: RtObject, ctx?: InterpreterContext) {
+    push(node: PiElement, value: RT_VALUE, ctx?: InterpreterContext<RT_VALUE> ) {
         if(this.current.node !== node) {
             console.error("INCORRECT ELEMENT IN TRACE");
             throw new Error("INCORRECT ELEMENT IN TRACE")
@@ -97,7 +97,7 @@ export class InterpreterTracer {
      * Stop tracing `node`.
      * The current node becomes the parent traced node
      */
-    end(node: Object, ctx?: InterpreterContext) {
+    end(node: Object, ctx?: InterpreterContext<RT_VALUE> ) {
         this.current = this.current.parent;
     }
 }

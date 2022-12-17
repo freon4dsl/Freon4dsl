@@ -82,3 +82,21 @@ export function startWithUpperCase(word: string): string {
     }
     return "";
 }
+
+
+/**
+ * To be used as argument for JSON.stringify, so it will print Maps as a string (the default ignores maps)
+ *
+ * @param key
+ * @param value
+ */
+function doMap(key: string, value: any) {
+    if (value instanceof Map) {
+        return Array.from(value.entries());
+    }
+    return value;
+}
+
+export function toJsonString(object: any, indent?: number) {
+    return JSON.stringify(object, doMap, indent);
+}

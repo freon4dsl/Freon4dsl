@@ -2,7 +2,7 @@ import { RtBoolean } from "./RtBoolean";
 import { isRtError, RtError } from "./RtError";
 import { RtObject } from "./RtObject";
 import { isRtString } from "./RtString";
-import { isRtEmpty, RtEmpty } from "./RtEmpty";
+import { isRtEmpty } from "./RtEmpty";
 
 export class RtNumber extends RtObject { //} implements RtHasPlus  {
     readonly _type = "RtNumber";

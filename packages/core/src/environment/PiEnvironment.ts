@@ -22,7 +22,7 @@ export interface PiEnvironment {
     stdlib: PiStdlib;
     writer: PiWriter;
     reader: PiReader;
-    interpreter: FreonInterpreter;
+    interpreter: FreonInterpreter<any>;
 
     languageName: string;
     fileExtensions: Map<string, string>;

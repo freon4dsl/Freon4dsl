@@ -12,6 +12,12 @@ export class RtArray<T extends RtObject> extends RtObject {
 
     private value: T[] = [];
 
+    static of(array: RtObject[]): RtArray<RtObject> {
+        const result = new RtArray();
+        result.array.push(...array);
+        return result;
+    }
+
     constructor() {
         super();
     }
@@ -31,6 +37,16 @@ export class RtArray<T extends RtObject> extends RtObject {
     }
 
     equals(other: RtObject): RtBoolean {
+        if (isRtArray(other)) {
+            if (this.array.length === other.array.length) {
+                for (let i = 0; i < this.array.length; i++) {
+                    if ( !this.array[i].equals(other.array[i])) {
+                        return RtBoolean.FALSE;
+                    }
+                }
+                return RtBoolean.TRUE;
+            }
+        }
         return RtBoolean.FALSE;
     }
 }
