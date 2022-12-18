@@ -51,7 +51,7 @@
     }
 </script>
 
-{#each cells as cell (cell.box.element.piId() + "-" + cell.row + "-" + cell.column)}
+{#each cells as cell (cell.element.piId() + "-" + cell.row + "-" + cell.column)}
     <TableCellComponent
             parentComponentId={id}
             parentOrientation={direction}

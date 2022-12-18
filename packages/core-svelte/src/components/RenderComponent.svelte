@@ -73,8 +73,13 @@
             // todo NEW find out why box is null!!!
             box?.setFocus();
         }
-        // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?
-        setBoxSizes(box, element.getBoundingClientRect());
+        if (!!element) {
+            // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?
+            // todo why is 'element' sometimes null?
+            setBoxSizes(box, element.getBoundingClientRect());
+        } else {
+            LOGGER.log('No element for ' + box.id + ' ' + box.kind);
+        }
     });
     // todo test GridComponent
 

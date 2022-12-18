@@ -14,7 +14,7 @@ export function muteLogs() {
     PiLogger.mute("ListComponent");
     PiLogger.mute("OptionalComponent");
     PiLogger.mute("ProjectItComponent");
-    PiLogger.mute("RenderComponent");
+    // PiLogger.mute("RenderComponent");
     PiLogger.mute("TextComponent");
     PiLogger.mute("TextDropdownComponent");
 

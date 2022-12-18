@@ -26,19 +26,11 @@
     export let editor: PiEditor;
 
     let id = box?.id;
-    // the following variables use svelte reactivity, when this does not suffice they should be set in a Mobx autorun method
     let children: Box[];
     let templateColumns: string;
-    $: templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
     let templateRows: string;
-    $: templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
     let cssClass: string;
-    $: cssClass = box.cssClass;
     let gridElement: HTMLElement;
-    // determine the type of the elements in the list
-    // this speeds up the check whether the element may be dropped in a certain drop-zone
-    let myMetaType: string;
-    $: myMetaType = box.conceptName;
 
     const refresh = (why?: string): void => {
         console.log("Refresh TableBox, box: " + box);
@@ -61,6 +53,10 @@
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
     }
+    // determine the type of the elements in the list
+    // this speeds up the check whether the element may be dropped in a certain drop-zone
+    let myMetaType: string;
+    $: myMetaType = box.conceptName;
 
     const drop = (event: CustomEvent) => {
         const data: ListElementInfo = $draggedElem;

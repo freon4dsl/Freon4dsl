@@ -22,16 +22,16 @@
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH OptionalBox");
         mustShow = box.mustShow;
-        showByCondition =box.condition();
-        childBox = box.box;
+        showByCondition = box.condition();
+        childBox = box.content;
     };
 
     const setFocus = async (): Promise<void> => {
         LOGGER.log("OptionalComponent.setFocus on box " + box.role);
         if (mustShow || showByCondition && !!contentComponent) {
-            box.box.firstEditableChild.setFocus();
+            box.content.firstEditableChild.setFocus();
         } else if (!!placeholderComponent) {
-            box.whenNoShowingAlias.setFocus();
+            box.placeholder.setFocus();
         } else {
             console.error("OptionalComponent " + id + " has no elements to put focus on");
         }
@@ -58,7 +58,7 @@
     {#if mustShow || showByCondition}
         <RenderComponent box={childBox} editor={editor} bind:this={contentComponent}/>
     {:else}
-        <RenderComponent box={box.whenNoShowingAlias} editor={editor} bind:this={placeholderComponent}/>
+        <RenderComponent box={box.placeholder} editor={editor} bind:this={placeholderComponent}/>
     {/if}
 </span>
 

@@ -25,9 +25,9 @@
         box.refreshComponent = refresh;
     });
 
-    $: { // Evaluated and re-evaluated when the box changes.
+    // $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
-    }
+    // }
 </script>
 
 <RenderComponent box={childBox} editor={editor} />

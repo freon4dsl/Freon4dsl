@@ -90,7 +90,9 @@
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
             let index: number = parentOrientation === TableDirection.HORIZONTAL ? row : column;
-            executeCustomKeyboardShortCut(event, index, box, editor);
+            // todo handle this here, because there are no shortcuts for Enter created by TableUtils anymore,
+            // or add the shortcuts
+            // executeCustomKeyboardShortCut(event, index, box, editor);
         }
     };
 
