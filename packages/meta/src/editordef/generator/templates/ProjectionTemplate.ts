@@ -555,7 +555,7 @@ export class ProjectionTemplate {
         ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
         ListUtil.addIfNotPresent(this.coreImports, "Box");
         // TODO Create Action for the role to actually add an element.
-        return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-hlist",
+        return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-hlist", "",
                             (${element}.${property.name}.map( (item, index)  =>
                                 ${this.singlePrimitivePropertyProjection(property, element, boolInfo)}
                             ) as Box[]).concat( [
@@ -563,32 +563,6 @@ export class ProjectionTemplate {
                             ])
                         )`;
     }
-
-    // private generateTableDefinition(language: PiLanguage, c: PiClassifier, myTableProjection: PiEditTableProjection): string {
-    //     // TODO Check whether 999 argument to generateItem()n should be different.
-    //     if (!!myTableProjection) {
-    //         // create the cell getters
-    //         let cellGetters: string = '';
-    //         myTableProjection.cells.forEach((cell, index) => {
-    //             ListUtil.addIfNotPresent(this.modelImports, Names.classifier(c));
-    //             cellGetters += `(cell${index}: ${Names.classifier(c)}): Box => {
-    //                     return ${this.generateItem(cell, `cell${index}`, index, index, c.name + "_table", language, 999)}
-    //                 },\n`;
-    //         });
-    //
-    //         return `
-    //         private ${Names.tabelDefinitionFunctionNew(myTableProjection.name)}(): PiTableDefinition {
-    //             return {
-    //                 headers: [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")} ],
-    //                 cells: [${cellGetters}]
-    //             };
-    //         }
-    //     `;
-    //     } else {
-    //         console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
-    //         return "";
-    //     }
-    // }
 
     private generateSuperProjection(item: PiEditSuperProjection) {
         const myClassifier: PiClassifier = item.superRef.referred; // to avoid the lookup by '.referred' to happen more than once
