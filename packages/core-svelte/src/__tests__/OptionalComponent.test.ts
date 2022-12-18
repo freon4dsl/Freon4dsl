@@ -9,7 +9,7 @@ import TestOptional from "./mock-components/TestOptional.svelte";
 import { configure } from '@testing-library/dom'
 configure({ testIdAttribute: 'id' })
 
-describe("Optional component", () => {
+describe.skip("Optional component", () => {
 
     let model: ElementWithOptional;
     let ownerBox: OptionalBox;
