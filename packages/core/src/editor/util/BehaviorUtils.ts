@@ -79,31 +79,14 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
 export function executeSingleBehavior(action: PiAction, box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
     LOGGER.log("Enter executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
     let execresult: PiPostAction;
-    let index = -1; // todo get the correct index
 
-    const trigger = action.trigger;
-    runInAction( () => {
-        // console.log("========================== START");
+    let index = -1; // todo get the correct index
+    runInAction(() => {
         const command = action.command(box);
         execresult = command.execute(box, label, editor, index);
-        // console.log("===============================")
     });
     if (!!execresult) {
         execresult();
-
-        // if (!!action.boxRoleToSelect) {
-        //     editor.selectBoxByRoleAndElementId(execresult.piId(),action.boxRoleToSelect,action.caretPosition);
-        // }else {
-        //     editor.selectFirstLeafChildBox();
-        //     if (editor.selectedBox.role.includes(LEFT_MOST)){
-        //         // Special expression prefix box, don't select it
-        //         editor.selectNextLeaf()
-        //     }
-        // }
     }
-    // if( !!execresult){
-    //     await editor.selectElement(execresult, LEFT_MOST);
-    //     editor.selectFirstLeafChildBox();
-    // }
     return BehaviorExecutionResult.EXECUTED;
 }

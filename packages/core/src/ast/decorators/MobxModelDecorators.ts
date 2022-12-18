@@ -53,7 +53,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
     const setter = function(this: any, newValue: DecoratedModelElement) {
         let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         const storedValue = !!storedObserver ? storedObserver.get() : null;
-        // console.log("newValue is " + newValue );
+        // console.log("newValue is " + JSON.stringify(newValue) );
         // console.log("newValue is " + JSON.stringify(newValue, ["$typename", "$id"]) + " owners: " + JSON.stringify(allOwners(this as any as PiElement), ["$typename", "$id"]) );
         if (allOwners(this as any as PiElement).includes(newValue as any as PiElement)) {
             throw Error("CYCLE IN AST");
