@@ -59,17 +59,8 @@ expression CheckingRuleCall base RuleExpression {
     reference rule: CheckingRule;
 }
 
-expression FunctionCall base RuleExpression {
-    reference func: RFunction;
-    arguments: RuleExpression[];
-}
-
-expression ParameterRef base RuleExpression {
-    reference par: Parameter;
-}
-
 //////////////////// Literal expressions ////////////////////////
-expression NumberLiteral base RuleExpression {
+expression NumberLiteral {
     value: string;
 }
 
@@ -132,12 +123,4 @@ binary expression And base BinaryExpression {
 
 binary expression Or base BinaryExpression {
     priority = 5;
-}
-
-binary expression Plus base BinaryExpression {
-    priority = 15;
-}
-
-binary expression Multiply base BinaryExpression {
-    priority = 20;
 }

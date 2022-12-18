@@ -114,10 +114,6 @@ export class Names {
         return "Custom" + this.typerPart(language);
     }
 
-    public static customFreonTyper(language: PiLanguage): string {
-        return "Custom" + this.freonTyperPart(language);
-    }
-
     public static customValidator(language: PiLanguage): string {
         return "Custom" + this.validator(language);
     }
@@ -229,10 +225,6 @@ export class Names {
 
     public static typerPart(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "TyperPart";
-    }
-
-    public static freonTyperPart(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "FreonTyper";
     }
 
     public static typer(language: PiLanguage): string {

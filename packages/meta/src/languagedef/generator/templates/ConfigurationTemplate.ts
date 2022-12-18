@@ -9,7 +9,6 @@ import { PiLanguage } from "../../metalanguage";
 export class ConfigurationTemplate {
 
     generate(language: PiLanguage, relativePath: string): string {
-        // todo choose one of 'customTypers' and 'customTypersFreon'
         const configurationName = Names.configuration();
         const workerName = Names.checkerInterface(language);
         return `
@@ -37,8 +36,6 @@ export class ConfigurationTemplate {
                 customScopers: ${Names.FrScoperPart}[] = [new ${Names.customScoper(language)}()];
                 // add your custom type-providers here
                 customTypers: ${Names.FreonTyperPart}[] = [new ${Names.customTyper(language)}()];
-                // add your custom typers NEW here
-                customTypersFreon: ${Names.FreonTyperPart}[] = [new ${Names.customTyper(language)}()];
                 // add extra predefined instances here
                 customStdLibs: ${Names.PiStdlib}[] = [new ${Names.customStdlib(language)}()];
             }
