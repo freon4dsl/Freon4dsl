@@ -261,8 +261,7 @@ export class ProjectionTemplate {
             return `private ${Names.tableProjectionMethod(projection)}(): TableRowBox {
                         const cells: Box[] = [];
                         ${cellDefs.map(cellDef => `cells.push(${cellDef})`).join(';\n')}
-                        // Note that css grid counts from 1, not 0, therefore we increase the propertyIndex
-                        return TableUtil.rowBox(this._element, this._element.piOwnerDescriptor().propertyName, "${Names.classifier(concept)}", cells, this._element.piOwnerDescriptor().propertyIndex + 1, ${hasHeaders});
+                        return TableUtil.rowBox(this._element, this._element.piOwnerDescriptor().propertyName, "${Names.classifier(concept)}", cells, this._element.piOwnerDescriptor().propertyIndex, ${hasHeaders});
                     }`;
         } else {
             console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
