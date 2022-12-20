@@ -3,7 +3,7 @@
     import { onMount, afterUpdate } from "svelte";
     import { PiLogger, type PiEditor, ElementBox } from "@projectit/core";
 
-    export let box: ElementBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
+    export let box: ElementBox;
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("ElementComponent");

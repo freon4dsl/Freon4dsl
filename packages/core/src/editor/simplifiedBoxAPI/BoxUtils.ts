@@ -432,7 +432,7 @@ export class BoxUtils {
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
-                        return BoxFactory.horizontalList(element, roleName, propertyName,[
+                        return BoxFactory.horizontalLayout(element, roleName, propertyName,[
                             myProvider.box,
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]);
@@ -440,12 +440,12 @@ export class BoxUtils {
                         return myProvider.box;
                     }
                 } else if (listJoin.type === this.terminatorName) {
-                    return BoxFactory.horizontalList(element, roleName, propertyName,[
+                    return BoxFactory.horizontalLayout(element, roleName, propertyName,[
                         myProvider.box,
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]);
                 } else if (listJoin.type === this.initiatorName) {
-                    return BoxFactory.horizontalList(element, roleName, propertyName,[
+                    return BoxFactory.horizontalLayout(element, roleName, propertyName,[
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                         myProvider.box,
                     ]);
