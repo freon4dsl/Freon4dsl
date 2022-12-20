@@ -2,6 +2,7 @@ import { PiElement, PiModel } from "../ast";
 import { AstWalker } from "./AstWalker";
 import { FindElementByIdWorker } from "./FindElementByIdWorker";
 
+// TODO does not seems to be used, remove?
 export class FindElementUtil {
 
     public static findElementById(model: PiElement, id: string): PiElement {

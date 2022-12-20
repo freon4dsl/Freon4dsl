@@ -1,6 +1,7 @@
 import { AstWorker } from "./AstWorker";
 import { PiElement } from "../ast";
 
+// TODO does not seems to be used, remove?
 export class FindElementByIdWorker implements AstWorker {
     private idToBeFound: string;
     found: PiElement = null;
