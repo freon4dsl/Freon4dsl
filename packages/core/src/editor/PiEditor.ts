@@ -144,7 +144,7 @@ export class PiEditor {
      * @param caretPosition
      */
     selectElement(element: PiElement, role?: string, caretPosition?: PiCaret) {
-        LOGGER.log("selectElement " + element?.piLanguageConcept());
+        console.log("selectElement " + element?.piLanguageConcept() + " with id " + element.piId());
         if (this.NOSELECT) {
             return;
         }
@@ -154,6 +154,7 @@ export class PiEditor {
         }
         const box = this._rootBox.findBox(element.piId(), role);
         // todo although element is created in CreatePartCommand, the corresponding box cannot be found. WHY?
+        // the box provider has not yet been created? Even though this is being run after the 'runInAction' that creates the element.
         console.log("selectElement: selectElement found box: " + box?.kind);
         if (!!box) { // only (re)set the local variables when the box can be found
             this._selectedElement = element;

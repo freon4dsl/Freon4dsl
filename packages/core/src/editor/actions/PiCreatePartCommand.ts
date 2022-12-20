@@ -53,6 +53,7 @@ export class PiCreatePartCommand extends PiCommand {
             console.error("ActionBox action: Unexpected new element undefined");
             return EMPTY_POST_ACTION;
         }
+        console.log(`PiCreatePartCommand: setting/adding to ${propName} of ${box.element.piId()} (${box.element.piLanguageConcept()}) to ${newElement.piId()} (${newElement.piLanguageConcept()})`);
         if (Language.getInstance().classifierProperty(ownerConcept, propName).isList) {
             if (index >= 0) {
                 theModelElement.splice(index, 0, newElement);
@@ -60,7 +61,6 @@ export class PiCreatePartCommand extends PiCommand {
                 theModelElement.push(newElement);
             }
         } else {
-            console.log(`PiCreatePartCommand: setting ${propName} of ${box.element.piId()} (${box.element.piLanguageConcept()}) to ${newElement.piId()} (${newElement.piLanguageConcept()})`);
             theModelElement = newElement;
         }
         if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
