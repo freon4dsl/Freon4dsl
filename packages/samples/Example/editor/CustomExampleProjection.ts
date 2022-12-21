@@ -7,11 +7,10 @@ import {
     SvgBox,
     GridBox,
     createDefaultExpressionBox,
-    AliasBox,
     Language,
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
-    HorizontalListBox, FreProjection, PiTableDefinition
+    HorizontalListBox, FreProjection, PiTableDefinition, ActionBox
 } from "@projectit/core";
 import { OrExpression, SumExpression } from "../language/gen/";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment";
@@ -45,7 +44,7 @@ export class CustomExampleProjection implements FreProjection {
         console.log("THIS is " + this)
         const cells: GridCellBox[] = [
             new GridCellBox(sum, "Sum-from-cell",  3, 1,
-                new HorizontalListBox(sum, "Sum-from-part", [
+                new HorizontalListBox(sum, "", "Sum-from-part", [
                     this.optionalPartBox(sum, "SumExpression-variable", "variable"),
                     new LabelBox(sum, "sum-from-equals", "="),
                     this.optionalPartBox(sum, "SumExpression-from", "from")
@@ -66,7 +65,7 @@ export class CustomExampleProjection implements FreProjection {
                 { columnSpan: 2, cssClass: "mycell" }
             ),
             new GridCellBox(sum, "sum-body-cell", 2, 2,
-                new HorizontalListBox(sum, "sum-body", [
+                new HorizontalListBox(sum, "","sum-body", [
                     new LabelBox(sum, "sum-body-open", "["),
                     this.optionalPartBox(sum, "SumExpression-body", "body"),
                     new LabelBox(sum, "sum-body-close", "]")
@@ -127,7 +126,7 @@ export class CustomExampleProjection implements FreProjection {
         // todo reimplement or rethink this
         return !!element[property]
             ? ExampleEnvironment.getInstance().editor.projection.getBox(element[property])
-            : new AliasBox(element, roleName, "[" + property + "]", { propertyName: property, conceptName: Language.getInstance().classifier(element.piLanguageConcept()).properties.get(property).type });
+            : new ActionBox(element, roleName, "[" + property + "]", { propertyName: property, conceptName: Language.getInstance().classifier(element.piLanguageConcept()).properties.get(property).type });
     }
 
 }
