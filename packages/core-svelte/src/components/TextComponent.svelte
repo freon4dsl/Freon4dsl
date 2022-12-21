@@ -402,9 +402,6 @@
 			text = box.getText();
 		}
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
-		box.setFocus = setFocus;
-		box.setCaret = setCaret;
-		box.refreshComponent = refresh;
 	}
 
 	/**
@@ -428,8 +425,6 @@
      */
     afterUpdate(() => {
         LOGGER.log("Start afterUpdate  " + from + ", " + to + " id: " + id);
-		box.setFocus = setFocus;
-
 		if (editStart && !!inputElement) {
 			LOGGER.log('    editStart in afterupdate for ' + id)
             inputElement.selectionStart = from >= 0 ? from : 0;
@@ -450,7 +445,9 @@
         }
 		// Always set the input width explicitly.
 		setInputWidth();
-		refresh(); // todo should this ALWAYS be done?
+		box.setFocus = setFocus;
+		box.setCaret = setCaret;
+		box.refreshComponent = refresh;
 	});
 
     /**
@@ -465,7 +462,9 @@
         originalText = text = box.getText();
         placeholder = box.placeHolder;
 		// setInputWidth()
-		refresh();
+		box.setFocus = setFocus;
+		box.setCaret = setCaret;
+		box.refreshComponent = refresh;
     });
 
 	/**
@@ -501,12 +500,14 @@
 		event.stopPropagation();
 		event.preventDefault();
 	}
-	
+
 	let widthSpan: HTMLSpanElement;
-	
-	function onInput(event: InputEvent) { 
+
+	function onInput(event: InputEvent) {
 		setInputWidth();
 	}
+
+	refresh();
 </script>
 
 
