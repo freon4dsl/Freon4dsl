@@ -16,7 +16,6 @@
     let style: string;
     let cssClass: string;
     let text: string;
-    $: text = box.getLabel();
 
     // todo do we need a setFocus here?
     const setFocus = async (): Promise<void> => {
@@ -42,6 +41,7 @@
     });
 
     const refresh = (why?: string) => {
+        LOGGER.log("REFRESH LabelComponent (" + why + ")");
         if (!!box) {
             text = box.getLabel();
             style = box.cssStyle;
@@ -50,8 +50,8 @@
     };
 
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh(box?.$id);
     }
+    refresh("FROM component " + box?.id);
 </script>
 
 <span class="label {text} {cssClass}"

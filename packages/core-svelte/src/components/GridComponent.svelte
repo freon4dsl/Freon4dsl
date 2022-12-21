@@ -9,22 +9,19 @@
     export let box: GridBox;
     export let editor: PiEditor;
 
-    let id = componentId(box);
+    let id ;
     let cells: GridCellBox[];
-    $: cells = box.cells;
     let templateColumns: string;
-    $: templateColumns = `repeat(${box.numberOfRows() - 1}, auto)`;
     let templateRows: string;
-    $: templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
     let cssClass: string = "";
-    $: cssClass = box.cssClass;
 
     const refresh = (why?: string): void =>  {
         if (!!box) {
             // console.log("REFRESH GridComponent " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
-            $cells = [...box.cells];
+            id = componentId(box);
+            cells = [...box.cells];
 
-            length = $cells.length;
+            length = cells.length;
             templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
             templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
             cssClass = box.cssClass;
@@ -32,13 +29,11 @@
     }
     onMount( () => {
         LOGGER.log("GridComponent onmount")
-        $cells = box.cells;
         box.refreshComponent = refresh;
 
     })
     afterUpdate(() => {
         LOGGER.log("GridComponent afterUpdate for girdBox " + box.element.piLanguageConcept())
-        $cells = box.cells;
         box.refreshComponent = refresh;
     });
 
@@ -55,7 +50,7 @@
         class="maingridcomponent {cssClass}"
         id="{id}"
 >
-    {#each cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid")}
+    {#each cells as cell (cell?.box?.element?.piId() + "-" + cell?.box?.id + cell?.role + "-grid")}
         <GridCellComponent grid={box} cellBox={cell} editor={editor}/>
     {/each}
 </div>

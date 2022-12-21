@@ -49,18 +49,15 @@
             }
             cssStyle = $boxStore.cssStyle;
             cssClass = cellBox.cssClass;
+            $boxStore = cellBox.content;
         }
     }
 
-    refresh("init component");
-
     onMount( () => {
-        $boxStore = cellBox.content;
         cellBox.refreshComponent = refresh;
     }) ;
 
     afterUpdate(() => {
-        $boxStore = cellBox.content;
         cellBox.refreshComponent = refresh;
     });
 
@@ -81,7 +78,7 @@
     });
 
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh(cellBox?.$id);
+        refresh(cellBox?.id);
     }
 </script>
 
