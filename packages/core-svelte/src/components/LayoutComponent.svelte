@@ -4,8 +4,7 @@
      * horizontally or vertically. In the latter case, the elements are each separated by
      * a break ('<br>').
      */
-    import { autorun } from "mobx";
-    import { onMount } from "svelte";
+    import { afterUpdate, onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
     import {
         Box,
@@ -20,13 +19,11 @@
     export let box: LayoutBox;
     export let editor: PiEditor;
 
-    let LOGGER: PiLogger = new PiLogger("LayoutComponent"); //.mute();
-    let id: string = !!box ? box.id : "unknown-label-id";
+    let LOGGER: PiLogger = new PiLogger("LayoutComponent");
+    let id: string ;
     let element: HTMLSpanElement;
     let children: Box[] = [];
-    $: children = [...box.children];
     let isHorizontal: boolean;
-    $: isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
 
     async function setFocus(): Promise<void> {
         if (!!element) {
@@ -34,23 +31,27 @@
         }
     }
 
-    const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH LayoutComponent " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId() + ", " + box.role);
-        children = [...box.children];
-    }
-
     onMount(() => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
-    autorun(() => {
-        LOGGER.log("Autorun")
-        children = [...box.children];
+    afterUpdate(() => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
+    const refresh = (why?: string): void => {
+        LOGGER.log("REFRESH LayoutComponent (" + why +")" + box?.element?.piLanguageConcept());
+        id = !!box ? box.id : "unknown-label-id";
+        children = [...box.children];
+        isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
+    };
+    let first = true;
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh((first ? "first" : "later") + "   " + box?.id);
+        first = false;
+    }
 </script>
 
 <span class="layout-component" class:horizontal="{isHorizontal}" class:vertical="{!isHorizontal}"
