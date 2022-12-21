@@ -7,12 +7,12 @@
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("ElementComponent");
-    let id: string = `${box?.element?.piId()}-${box?.role}`;
-    let childBox = box?.content ;
+    let id: string;
+    let childBox ;
 
     const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH ElementBox for " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId() + " why: " + why);
-        if (!!box) {
+        LOGGER.log("REFRESH ElementComponent (" + why +")" + box?.element?.piLanguageConcept());        if (!!box) {
+            id = `${box?.element?.piId()}-${box?.role}`;
             childBox = box.content;
         }
     }
@@ -25,9 +25,9 @@
         box.refreshComponent = refresh;
     });
 
-    // $: { // Evaluated and re-evaluated when the box changes.
+    $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
-    // }
+    }
 </script>
 
 <RenderComponent box={childBox} editor={editor} />
