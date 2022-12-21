@@ -323,8 +323,6 @@
         }
     };
 
-
-    // TOD: on:TextUpdate, on:
 </script>
 
 <span id="{id}"
@@ -332,7 +330,7 @@
       use:clickOutside
       on:click_outside={endEditing}
       on:focusout={onFocusOut}
-
+      class="dropdown"
 >
     <TextComponent
             bind:isEditing={isEditing}
@@ -352,3 +350,11 @@
                 on:piItemSelected={itemSelected}/>
     {/if}
 </span>
+
+<style>
+    /* The container styling - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+</style>

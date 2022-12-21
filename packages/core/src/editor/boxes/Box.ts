@@ -1,5 +1,5 @@
 import { PiElement } from "../../ast";
-import { PiUtils } from "../../util";
+import { isNullOrUndefined, PiUtils } from "../../util";
 import { PiLogger } from "../../logging";
 
 const LOGGER = new PiLogger("Box");
@@ -172,7 +172,7 @@ export abstract class Box {
      */
     findBox(elementId: string, role?: string): Box {
         if (!!this.element && this.element.piId() === elementId) {
-            if (role !== null && role !== undefined) {
+            if (!isNullOrUndefined(role)) {
                 if (this.role === role) {
                     return this;
                 }
