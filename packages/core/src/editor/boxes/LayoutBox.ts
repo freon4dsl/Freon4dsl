@@ -1,5 +1,3 @@
-import { observable, makeObservable, action } from "mobx";
-
 import { PiUtils } from "../../util";
 import { Box} from "./Box";
 import { PiElement } from "../../ast";
@@ -16,23 +14,24 @@ export enum ListDirection {
 }
 
 export abstract class LayoutBox extends Box {
+    kind = "LayoutBox";
     protected direction: ListDirection = ListDirection.HORIZONTAL;
     protected _children: Box[] = [];
 
     protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<LayoutBox>) {
         super(element, role);
-        makeObservable<LayoutBox, "_children">(this, {
-           _children: observable,
-            insertChild: action,
-            addChild: action,
-            clearChildren: action,
-            addChildren: action,
-        });
         PiUtils.initializeObject(this, initializer);
         if (!!children) {
-            children.forEach(b => this.addChild(b));
+            children.forEach(b => this.addChildNoDirty(b));
         }
-        this.kind = "LayoutBox";
+    }
+
+    private addChildNoDirty(child: Box | null): LayoutBox {
+        if (!!child) {
+            this._children.push(child);
+            child.parent = this;
+        }
+        return this;
     }
 
     get children(): ReadonlyArray<Box> { // TODO Jos: why the ReadOnlyArray?
@@ -58,7 +57,7 @@ export abstract class LayoutBox extends Box {
         const dirty = (this._children.length !== 0);
         this._children.splice(0, this._children.length);
         if (dirty) {
-            // console.log("List clearChildren dirty " + this.role)
+            LOGGER.log("List clearChildren dirty " + this.role)
             this.isDirty();
         }
     }
@@ -67,7 +66,7 @@ export abstract class LayoutBox extends Box {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
-            // console.log("List addChild dirty " + this.role)
+            LOGGER.log("List addChild dirty " + this.role)
             this.isDirty();
         }
         return this;
@@ -77,7 +76,7 @@ export abstract class LayoutBox extends Box {
         if (!!child) {
             this._children.splice(0, 0, child);
             child.parent = this;
-            // console.log("List insertChild dirty " + this.role)
+            LOGGER.log("List insertChild dirty " + this.role)
             this.isDirty();
         }
         return this;
@@ -86,7 +85,7 @@ export abstract class LayoutBox extends Box {
     addChildren(children?: Box[]): LayoutBox {
         if (!!children) {
             children.forEach(child => this.addChild(child));
-            // console.log("List addChildren dirty")
+            // LOGGER.log("List addChildren dirty")
             this.isDirty();
         }
         return this;
