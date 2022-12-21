@@ -270,6 +270,7 @@ export class EditorState {
      * @private
      */
     private swapInterfaceAndUnits(newCompleteUnit: PiModelUnit, newUnitInterface: PiModelUnit) {
+        LOGGER.log("swapInterfaceAndUnits called");
         if (!!EditorState.getInstance().currentUnit) {
             // get the interface of the current unit from the server
             serverCommunication.loadModelUnitInterface(
