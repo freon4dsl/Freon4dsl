@@ -21,7 +21,7 @@
     let direction: TableDirection;
 
     const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH TableRowBox for " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
+        LOGGER.log("REFRESH TableRowBox for " + why);
         if (!!box) {
             cells = box.cells;
             let parent = box.parent;
@@ -38,16 +38,14 @@
 
     onMount( () => {
         box.refreshComponent = refresh;
-        refresh();
     });
 
     afterUpdate( () => {
         box.refreshComponent = refresh;
-        refresh();
     });
 
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh(box?.$id);
+        refresh(box?.id);
     }
 </script>
 

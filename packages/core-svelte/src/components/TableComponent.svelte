@@ -33,7 +33,7 @@
     let gridElement: HTMLElement;
 
     const refresh = (why?: string): void => {
-        console.log("Refresh TableBox, box: " + box);
+        console.log("Refresh TableBox, box: " + why);
         if (!!box) {
             children = box.children;
             templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
@@ -43,15 +43,13 @@
     } ;
     onMount( () => {
         box.refreshComponent = refresh;
-        refresh();
     })
     afterUpdate( () => {
         box.refreshComponent = refresh;
-        refresh();
     });
 
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh(box?.$id);
+        refresh(box?.id);
     }
     // determine the type of the elements in the list
     // this speeds up the check whether the element may be dropped in a certain drop-zone
