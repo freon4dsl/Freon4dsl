@@ -47,7 +47,7 @@
         children = [...box.children];
         isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
     };
-    let first = true;
+    let first = true; // debug: know when next refresh is called.
     $: { // Evaluated and re-evaluated when the box changes.
         refresh((first ? "first" : "later") + "   " + box?.id);
         first = false;
