@@ -1,6 +1,5 @@
-import { observable, action, makeObservable } from "mobx";
 import { PiUtils } from "../../util";
-import { PiCaret } from "../util";
+import { PiCaret, PiCaretPosition } from "../util";
 import { PiElement } from "../../ast";
 import { Box } from "./internal";
 import { PiLogger } from "../../logging";
@@ -50,10 +49,6 @@ export class TextBox extends Box {
         PiUtils.initializeObject(this, initializer);
         this.getText = getText;
         this.$setText = setText;
-        // makeObservable(this, {
-        //     placeHolder: observable,
-        //     setText: action
-        // });
     }
 
     public deleteWhenEmpty1(): boolean {
@@ -67,7 +62,23 @@ export class TextBox extends Box {
     setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
         LOGGER.log("setCaret: " + caret.position);
         /* To be overwritten by `TextComponent` */
-    };
+        //TODO The followimng is needed to keep the cursor at the end when creating a nu8mberliteral in example
+        //     Check in new components whether this is needed.
+        switch (caret.position) {
+            case PiCaretPosition.RIGHT_MOST:
+                this.caretPosition = this.getText().length;
+                break;
+            case PiCaretPosition.LEFT_MOST:
+                this.caretPosition = 0;
+                break;
+            case PiCaretPosition.INDEX:
+                this.caretPosition = caret.position;
+                break;
+            case PiCaretPosition.UNSPECIFIED:
+                break;
+            default:
+                break;
+        }    };
 
     /** @internal
      * This function is called after the text changes in the browser.
