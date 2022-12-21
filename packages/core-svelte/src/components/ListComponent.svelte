@@ -28,18 +28,15 @@
     import { afterUpdate, onMount } from "svelte";
 
     // Parameters
-    export let box: ListBox ; //= new HorizontalListBox(null, "l1");
+    export let box: ListBox ;
     export let editor: PiEditor;
 
     // Local state variables
     let LOGGER: PiLogger = new PiLogger("ListComponent");
     let id: string;                             // an id for the html element showing the list
-    id = !!box ? box.id : "list-with-unknown-box";
     let element: HTMLSpanElement;
     let isHorizontal: boolean;                  // indicates whether the list should be shown horizontally or vertically
-    $: isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
     let shownElements: Box[];                   // the parts of the list that are being shown
-    $: shownElements = [...box.children];
 
     // determine the type of the elements in the list
     // this speeds up the check whether an element may be dropped here
@@ -130,7 +127,10 @@
     }
 
     const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH ListComponent " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId() + ", " + box.role);
+        LOGGER.log("REFRESH ListComponent( " + why + ") " + box?.element?.piLanguageConcept());
+        shownElements = [...box.children];
+        id = !!box ? box.id : "list-with-unknown-box";
+        isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
         shownElements = [...box.children];
     }
 
@@ -165,8 +165,10 @@
 
     let previousBox = null;
 
+    let first = true;
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh(box?.$id);
+        refresh((first ? "first" : "later") + "   " + box?.id);
+        first = false;
     }
     // The mouseover fires when the mouse cursor is outside the element and then move to inside the boundaries of the element.
     // The mouseout fires when the mouse cursor is over an element and then moves another element.
