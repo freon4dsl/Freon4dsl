@@ -103,7 +103,7 @@ export class PiEditor {
     }
 
     get rootBox(): Box {
-        // console.log('PiEditor.get RootBox, enabled projections: ' + this.projection.enabledProjections());
+        LOGGER.log('PiEditor.get RootBox, enabled projections: ' + this.projection.enabledProjections());
         this._rootBox = this.projection.getBox(this.rootElement);
         return this._rootBox;
     }
