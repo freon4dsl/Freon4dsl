@@ -13,7 +13,7 @@
         BACKSPACE,
         ARROW_LEFT,
         DELETE,
-        ARROW_RIGHT
+        ARROW_RIGHT, ElementBox
     } from "@projectit/core";
     import { autorun } from "mobx";
     import RenderComponent from "./RenderComponent.svelte";
@@ -134,9 +134,10 @@
     });
 
     autorun(() => {
-        LOGGER.log("==================> ProjectItComponent")
-        // If a box changes ...
+        // If anything observable changes ...
         rootBox = editor.rootBox;
+        LOGGER.log("==================> ProjectItComponent with rootbox " + rootBox?.id);
+        LOGGER.log("      ProjectItComponent with rootbox " + (rootBox as ElementBox).content?.id);
         // If the selection is not ok anymore ...
         // TODO This now runs for each selection change, is this really needed?
         if (!$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
