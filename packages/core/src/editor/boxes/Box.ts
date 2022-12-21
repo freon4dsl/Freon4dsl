@@ -1,5 +1,3 @@
-import { observable, makeObservable } from "mobx";
-
 import { PiElement } from "../../ast";
 import { PiUtils } from "../../util";
 import { PiLogger } from "../../logging";
@@ -20,12 +18,12 @@ export abstract class Box {
     parent: Box = null;
 
     // The refresh method from the component that displays this box.
-    refreshComponent: () => void;
+    refreshComponent: (why?: string) => void;
 
     // Called when the box is dirty, refreshes the corresponding component.
     isDirty(): void {
         if (this.refreshComponent !== undefined && this.refreshComponent !== null) {
-            this.refreshComponent();
+            this.refreshComponent("====== FROM Box " + this.kind + " " + this.id);
         } else {
             LOGGER.log("No refreshComponent() for " + this.role);
         }
@@ -44,16 +42,6 @@ export abstract class Box {
         this.element = element;
         this.role = role;
         this.$id = PiUtils.ID(); //uuid.v4();
-        // makeObservable(this, {
-        //     role: observable,
-        //     element: observable,
-        //     cssStyle: observable,
-        //     cssClass: observable
-        //     // actualHeight: observable,
-        //     // actualWidth: observable,
-        //     // actualX: observable,
-        //     // actualY: observable
-        // })
     }
 
     get id(): string {

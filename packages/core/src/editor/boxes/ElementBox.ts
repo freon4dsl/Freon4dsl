@@ -1,7 +1,5 @@
-import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../ast/index";
 import { Box } from "./Box";
-import { EmptyLineBox } from "./EmptyLineBox";
 
 export class ElementBox extends Box {
     kind: string = 'ElementBox';
@@ -16,8 +14,13 @@ export class ElementBox extends Box {
     }
 
     set content(v: Box) {
+        if (!!(this?._content)) {
+            this._content.parent = null;
+        }
         this._content = v;
-        v.parent = this;
+        if (!!v) {
+            v.parent = this;
+        }
         this.isDirty();
     }
 

@@ -1,4 +1,3 @@
-import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../ast";
 import { PiUtils } from "../../util";
 import { BehaviorExecutionResult, PiCaret, PiKey } from "../util";
@@ -34,11 +33,6 @@ export abstract class AbstractChoiceBox extends Box {
                 placeHolder: placeHolder
             }
         );
-        // makeObservable(this, {
-        //     textHelper: observable,
-        //     textBox: observable
-        // });
-
     }
 
     getSelectedOption(): SelectOption | null {

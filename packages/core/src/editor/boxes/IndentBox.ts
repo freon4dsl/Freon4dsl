@@ -1,5 +1,3 @@
-import { observable, makeObservable, computed } from "mobx";
-
 import { PiElement } from "../../ast";
 import { Box } from "./internal";
 

@@ -1,5 +1,3 @@
-import { observable, makeObservable } from "mobx";
-
 import { PiUtils } from "../../util";
 import { PiElement } from "../../ast";
 import { Box } from "./internal";
@@ -13,11 +11,6 @@ export class SvgBox extends Box {
 
     constructor(element: PiElement, role: string, svgPath: string, initializer?: Partial<SvgBox>) {
         super(element, role);
-        // makeObservable(this, {
-        //     svgPath: observable,
-        //     width: observable,
-        //     height: observable
-        // });
         PiUtils.initializeObject(this, initializer);
         this.svgPath = svgPath;
     }

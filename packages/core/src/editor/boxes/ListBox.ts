@@ -11,19 +11,11 @@ const LOGGER = new PiLogger("ListBox");
  * This Box represents a list in the PiElement model, i.e. one that is defined in the .ast file
  * as 'propName: conceptName[]' or 'reference propName: conceptName[]'.
  */
-export class ListBox extends LayoutBox {
+export abstract class ListBox extends LayoutBox {
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
     protected constructor(element: PiElement, propertyName: string, role: string, children?: Box[], initializer?: Partial<ListBox>) {
         super(element, role, children, initializer);
-        // todo is this the correct way to use mobx?
-        // makeObservable<LayoutBox, "_children">(this, {
-        //     _children: observable,
-        //     insertChild: action,
-        //     addChild: action,
-        //     clearChildren: action,
-        //     addChildren: action,
-        // });
         this.kind = "ListBox";
         this.propertyName = propertyName;
         this.conceptName = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;

@@ -1,4 +1,3 @@
-import { observable, makeObservable } from "mobx";
 import { GridCellBox } from "./GridCellBox";
 
 import { Box } from "./internal";
@@ -26,9 +25,6 @@ export class GridBox extends Box {
             c.parent = this;
         });
         this.sortCellsAndAddChildren();
-        // makeObservable(this, {
-        //     cells: observable
-        // });
     }
 
     get children(): ReadonlyArray<Box> {
