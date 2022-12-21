@@ -396,6 +396,7 @@
     }
 
 	const refresh = () => {
+		LOGGER.log("REFRESH TextComponent")
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
 		if (!isEditing) {
