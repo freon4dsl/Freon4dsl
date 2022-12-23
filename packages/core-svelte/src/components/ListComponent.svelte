@@ -201,6 +201,7 @@
                 on:mouseout|stopPropagation={mouseout}
                 on:focus={() => {}}
                 on:blur={() => {}}
+                on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event, index)}
         >
             <RenderComponent box={box} editor={editor}/>
 		</span>
