@@ -11,7 +11,8 @@
     let childBox ;
 
     const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH ElementComponent (" + why +")" + box?.element?.piLanguageConcept());        if (!!box) {
+        LOGGER.log("REFRESH ElementComponent (" + why +")" + box?.element?.piLanguageConcept());
+        if (!!box) {
             id = `${box?.element?.piId()}-${box?.role}`;
             childBox = box.content;
         }

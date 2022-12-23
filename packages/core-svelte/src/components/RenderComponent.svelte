@@ -95,43 +95,48 @@
 
 </script>
 
-<span id={id}
-      class="render-component {className}"
-      on:click={onClick}
-      bind:this={element}
->
-    {#if box === null || box === undefined }
-        <p class="error">[BOX IS NULL OR UNDEFINED]</p>
-    {:else if isElementBox(box) }
-        <ElementComponent box={box} editor={editor}/>
-    {:else if isEmptyLineBox(box) }
-        <EmptyLineComponent box={box}/>
-    {:else if isGridBox(box) }
-        <GridComponent box={box} editor={editor} />
-    {:else if isIndentBox(box) }
-        <IndentComponent box={box} editor={editor}/>
-    {:else if isLabelBox(box)}
-        <LabelComponent box={box}/>
-    {:else if isLayoutBox(box) }
-       	<LayoutComponent box={box} editor={editor}/>
-    {:else if isListBox(box) }
-       	<ListComponent box={box} editor={editor}/>
-    {:else if isOptionalBox(box) }
-        <OptionalComponent box={box} editor={editor}/>
-    {:else if isSvgBox(box) }
-        <SvgComponent box={box}/>
-    {:else if isTableBox(box) }
-        <TableComponent box={box} editor={editor} />
-    {:else if isTableRowBox(box) }
-        <TableRowComponent box={box} editor={editor}/>
-    {:else if isTextBox(box) }
-       	<TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
-    {:else if isActionBox(box) || isSelectBox(box)}
-        <TextDropdownComponent box={box} editor={editor}/>
-    {:else}
-        <p class="error">[UNKNOWN BOX TYPE: {box.kind}]</p>
-    {/if}
-</span>
+<!-- TableRows are without span, becuase they use the CSS grid and tablecells must in HTML
+     always be directly under the main grid.
+-->
+{#if isTableRowBox(box) }
+    <TableRowComponent box={box} editor={editor}/>
+{:else}
+    <span id={id}
+          class="render-component {className}"
+          on:click={onClick}
+          bind:this={element}
+    >
+        {#if box === null || box === undefined }
+            <p class="error">[BOX IS NULL OR UNDEFINED]</p>
+        {:else if isElementBox(box) }
+            <ElementComponent box={box} editor={editor}/>
+        {:else if isEmptyLineBox(box) }
+            <EmptyLineComponent box={box}/>
+        {:else if isGridBox(box) }
+            <GridComponent box={box} editor={editor} />
+        {:else if isIndentBox(box) }
+            <IndentComponent box={box} editor={editor}/>
+        {:else if isLabelBox(box)}
+            <LabelComponent box={box}/>
+        {:else if isLayoutBox(box) }
+            <LayoutComponent box={box} editor={editor}/>
+        {:else if isListBox(box) }
+            <ListComponent box={box} editor={editor}/>
+        {:else if isOptionalBox(box) }
+            <OptionalComponent box={box} editor={editor}/>
+        {:else if isSvgBox(box) }
+            <SvgComponent box={box}/>
+        {:else if isTableBox(box) }
+            <TableComponent box={box} editor={editor} />
+        {:else if isTextBox(box) }
+            <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
+        {:else if isActionBox(box) || isSelectBox(box)}
+            <TextDropdownComponent box={box} editor={editor}/>
+        {:else}
+            <p class="error">[UNKNOWN BOX TYPE: {box.kind}]</p>
+        {/if}
+    </span>
+{/if}
 
 <style>
     .render-component {
