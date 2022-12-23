@@ -61,7 +61,7 @@
     // img.src = "img/open_with.svg"; // todo svg image is not shown as drag ghost
 
     const refresh = (why?: string) => {
-        console.log("TableCellComponent refresh, box: " + box);
+        LOGGER.log("TableCellComponent refresh, box: " + box);
         if (!!box) {
             if (parentOrientation === TableDirection.HORIZONTAL) {
                 row = box.row;
@@ -73,7 +73,7 @@
             childBox = box.content;
         }
     }
-    // todo see which function we need to set the row and column: onMount, autorun, afterUpdate???
+    // todo see which function we need to set the row and column: onMount, refresh, afterUpdate???
     onMount(() => {
         box.refreshComponent = refresh;
         row = box.row;

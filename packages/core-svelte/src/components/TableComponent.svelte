@@ -33,7 +33,7 @@
     let gridElement: HTMLElement;
 
     const refresh = (why?: string): void => {
-        console.log("Refresh TableBox, box: " + why);
+        LOGGER.log("Refresh TableBox, box: " + why);
         if (!!box) {
             children = box.children;
             templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
