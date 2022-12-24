@@ -105,7 +105,7 @@
         if (index >= 0 && index <= shownElements.length) {
             const elemBox: Box = shownElements[index];
             if (editor.selectedBox !== elemBox) {
-                editor.selectedBox = elemBox;
+                editor.selectElementForBox(elemBox);
                 $selectedBoxes = [elemBox];
             }
             // determine the contents of the menu based on listBox, before showing the menu!

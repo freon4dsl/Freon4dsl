@@ -24,6 +24,7 @@ export abstract class LayoutBox extends Box {
         if (!!children) {
             children.forEach(b => this.addChildNoDirty(b));
         }
+        this.selectable = false;
     }
 
     private addChildNoDirty(child: Box | null): LayoutBox {

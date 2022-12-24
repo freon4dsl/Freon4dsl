@@ -140,6 +140,7 @@
     } );
 
     const refreshSelection = (why?: string) => {
+        console.log('setting selectedBox ' + why);
         if (!$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             $selectedBoxes = [editor.selectedBox];
         }

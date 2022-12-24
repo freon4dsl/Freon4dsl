@@ -110,9 +110,9 @@
 		if (!!$modelErrors && $modelErrors.length > 0) {
 			const item = $modelErrors[index];
 			if (Array.isArray(item.reportedOn)) {
-				EditorState.getInstance().selectElement(item.reportedOn[0]);
+				EditorState.getInstance().selectElement(item.reportedOn[0], 'declaredType');
 			} else {
-				EditorState.getInstance().selectElement(item.reportedOn);
+				EditorState.getInstance().selectElement(item.reportedOn, 'declaredType');
 			}
 		}
 	}

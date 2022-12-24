@@ -73,7 +73,7 @@
 	const runInterpreter = () => {
 		const intp = editorEnvironment.interpreter;
 		intp.setTracing(true);
-		const node: PiElement = editorEnvironment.editor.selectedItem;
+		const node: PiElement = editorEnvironment.editor.selectedElement;
 
 		const value = intp.evaluate(node);
 		if(isRtError(value)){

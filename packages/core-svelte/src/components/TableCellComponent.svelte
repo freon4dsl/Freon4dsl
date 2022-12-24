@@ -170,7 +170,7 @@
         }
         // set the selected box
         if (editor.selectedBox !== box) {
-            editor.selectedBox = box;
+            editor.selectElementForBox(box);
             $selectedBoxes = box.getSiblings();
         }
         $contextMenu.show(event, index); // this function sets $contextMenuVisible to true

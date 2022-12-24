@@ -134,7 +134,7 @@
     function startEditing(event: MouseEvent) {
         LOGGER.log('startEditing ' + id);
         // set the global selection
-        editor.selectedBox = box;
+        editor.selectElementForBox(box);
 		if (partOfActionBox) {
 			$selectedBoxes = [box, box.parent]
 		} else {

@@ -71,7 +71,7 @@ export class EditorRequestsHandler {
 
     cut() {
         LOGGER.log("cut called");
-        const tobecut: PiElement = editorEnvironment.editor.selectedItem;
+        const tobecut: PiElement = editorEnvironment.editor.selectedElement;
         if (!!tobecut) {
             EditorState.getInstance().deleteElement(tobecut);
             editorEnvironment.editor.copiedElement = tobecut;
@@ -83,7 +83,7 @@ export class EditorRequestsHandler {
 
     copy() {
         LOGGER.log("copy called");
-        const tobecopied: PiElement = editorEnvironment.editor.selectedItem;
+        const tobecopied: PiElement = editorEnvironment.editor.selectedElement;
         if (!!tobecopied) {
             editorEnvironment.editor.copiedElement = tobecopied.copy();
             // console.log("element " + editorEnvironment.editor.copiedElement.piId() + " is stored ");

@@ -11,6 +11,7 @@ export abstract class Box {
     element: PiElement = null;  // the model element to which this box is coupled
     propertyName: string;       // the name of the property, if any, in 'element' which this box projects
     propertyIndex: number;      // the index within the property, if appropriate
+    // todo make sure propertyName and index are correctly set
 
     cssClass: string = "";      // Custom CSS class that will be added to the component rendering this box
     cssStyle: string = "";      // Custom CSS Style class that will be added as inline style to the component rendering this box
@@ -168,25 +169,64 @@ export abstract class Box {
     /**
      * Find first box for element with `piId()` equals elementId and with `role` inside `this`
      * and all of its children recursively.
-     * @param role
+     * @param propertyName
      */
-    findBox(elementId: string, role?: string): Box {
-        if (!!this.element && this.element.piId() === elementId) {
-            if (!isNullOrUndefined(role)) {
-                if (this.role === role) {
-                    return this;
+    // findBox(elementId: string, propertyName?: string, propertyIndex?: number): Box {
+    //     if (!isNullOrUndefined(this.element) && this.element.piId() === elementId) {
+    //         if (!isNullOrUndefined(propertyName)) {
+    //             if (!isNullOrUndefined(propertyIndex)) {
+    //                 if (this.propertyName === propertyName && this.propertyIndex === propertyIndex) {
+    //                     return this;
+    //                 }
+    //             } else {
+    //                 if (this.propertyName === propertyName) {
+    //                     return this;
+    //                 }
+    //             }
+    //         } else {
+    //             return this;
+    //         }
+    //     }
+    //
+    //     for (const box of this.children) {
+    //         const result = box.findBox(elementId, propertyName, propertyIndex);
+    //         if (result !== null) {
+    //             return result;
+    //         }
+    //     }
+    //     return null;
+    // }
+
+    /**
+     * Searches within the children of this box for a box that represents the property
+     * with requested name and index. If not found it returns null.
+     * @param propertyName
+     * @param propertyIndex
+     */
+    findChildBoxForProperty(propertyName?: string, propertyIndex?: number) : Box {
+        // console.log('findChildBoxForProperty ' + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+        for (const child of this.children) {
+            // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
+            if (!isNullOrUndefined(propertyName)) {
+                if (!isNullOrUndefined(propertyIndex)) {
+                    if (child.propertyName === propertyName && child.propertyIndex === propertyIndex) {
+                        return child;
+                    }
+                } else {
+                    if (child.propertyName === propertyName) {
+                        // console.log('returning child box ' + child.role);
+                        return child;
+                    }
                 }
             } else {
-                return this;
+                return child;
             }
-        }
-
-        for (const box of this.children) {
-            const result = box.findBox(elementId, role);
-            if (result !== null) {
+            const result = child.findChildBoxForProperty(propertyName, propertyIndex);
+            if (!isNullOrUndefined(result) && result.element === this.element) {
                 return result;
             }
         }
+        // console.log('not found!!!');
         return null;
     }
 

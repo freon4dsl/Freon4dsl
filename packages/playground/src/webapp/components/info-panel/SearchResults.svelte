@@ -99,9 +99,10 @@
         if (!!$searchResults && $searchResults.length > 0) {
             const item = $searchResults[index];
             if (Array.isArray(item.reportedOn)) {
-                EditorState.getInstance().selectElement(item.reportedOn[0]);
+                // todo get info on property from 'reportedOn'
+                EditorState.getInstance().selectElement(item.reportedOn[0], 'declaredType');
             } else {
-                EditorState.getInstance().selectElement(item.reportedOn);
+                EditorState.getInstance().selectElement(item.reportedOn, 'declaredType');
             }
         }
     }

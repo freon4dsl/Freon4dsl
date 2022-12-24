@@ -398,9 +398,9 @@ export class EditorState {
      * When an error in the errorlist is selected, or a search result is selected, the editor jumps to the faulty element.
      * @param item
      */
-    selectElement(item: PiElement) {
+    selectElement(item: PiElement, propertyName?: string) {
         LOGGER.log("Item selected");
-        editorEnvironment.editor.selectElement(item);
+        editorEnvironment.editor.selectElement(item, propertyName);
     }
 
     /**

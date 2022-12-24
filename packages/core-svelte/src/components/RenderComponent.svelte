@@ -56,8 +56,8 @@
         // Note that click events on some components, like TextComponent, are already caught.
         // These components need to take care of setting the currently selected element themselves.
         if (box.selectable) {
-            editor.selectedBox = box;
-            $selectedBoxes = [box];
+            editor.selectElementForBox(box);
+            // $selectedBoxes = [box];
             event.preventDefault();
             event.stopPropagation();
         } // else: let the parent element take care of selection

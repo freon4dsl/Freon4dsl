@@ -126,7 +126,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
                     PiUtils.replaceExpression(exp, newExp, editor);
                     BTREE.balanceTree(newExp, editor);
                     exp = newExp;
-                    editor.selectElement(newExp, AFTER_BINARY_OPERATOR);
+                    editor.selectElement(newExp, AFTER_BINARY_OPERATOR); // todo adjust property name
                     // editor.selectBoxNew(operatorBox.nextLeafRight.firstLeaf, PiCaret.LEFT_MOST);
                     return BehaviorExecutionResult.EXECUTED;
                 }
