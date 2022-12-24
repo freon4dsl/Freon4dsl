@@ -8,7 +8,7 @@ export abstract class AbstractChoiceBox extends Box {
     kind = "AbstractChoiceBox";
     placeholder: string;
     caretPosition: number = -1;
-    textBox: TextBox;
+    _textBox: TextBox;
     textHelper: ChoiceTextHelper;
 
     constructor(exp: PiElement, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
@@ -16,7 +16,7 @@ export abstract class AbstractChoiceBox extends Box {
         this.placeholder = placeHolder;
         this.textHelper = new ChoiceTextHelper();
         PiUtils.initializeObject(this, initializer);
-        this.textBox = BoxFactory.text(
+        this._textBox = BoxFactory.text(
             exp,
             "action-" + role + "-textbox",
             () => {
@@ -33,6 +33,13 @@ export abstract class AbstractChoiceBox extends Box {
                 placeHolder: placeHolder
             }
         );
+
+    }
+
+    get textBox(): TextBox {
+        this._textBox.propertyName = this.propertyName;
+        this._textBox.propertyIndex = this.propertyIndex;
+        return this._textBox;
     }
 
     getSelectedOption(): SelectOption | null {

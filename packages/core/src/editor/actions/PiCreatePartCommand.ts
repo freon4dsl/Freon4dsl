@@ -68,9 +68,9 @@ export class PiCreatePartCommand extends PiCommand {
         }
 
         return function () {
-            editor.selectElement(newElement);
+            // editor.selectElement(newElement);
             console.log('CreatePartCommand: newElement:' + newElement.piId() + ", selected element: " + editor.selectedBox.element.piId() + " of kind " + editor.selectedBox.kind)
-            editor.selectFirstEditableChildBox();
+            editor.selectFirstEditableChildBox(newElement);
         };
     }
 

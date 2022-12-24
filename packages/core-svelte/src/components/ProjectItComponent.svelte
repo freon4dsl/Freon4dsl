@@ -13,7 +13,7 @@
         BACKSPACE,
         ARROW_LEFT,
         DELETE,
-        ARROW_RIGHT, ElementBox
+        ARROW_RIGHT, ElementBox, isNullOrUndefined
     } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
@@ -89,7 +89,7 @@
         // todo check whether the following always needs to be done
         // console.log('selected AFTER: ' + editor.selectedBox.id + ' current focused element ' + document.activeElement.id);
         editor.selectedBox.setFocus();
-        $selectedBoxes = [editor.selectedBox];
+        // $selectedBoxes = [editor.selectedBox];
         // event.stopPropagation(); // do not preventDefault, because this would keep printable chars to show in any input HTML element. TODO IS this true???
     };
 
@@ -141,8 +141,9 @@
 
     const refreshSelection = (why?: string) => {
         console.log('setting selectedBox ' + why);
-        if (!$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
-            $selectedBoxes = [editor.selectedBox];
+        if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
+            $selectedBoxes = [editor.selectedBox]; // todo allow for multiple selected boxes in PiEditor
+            editor.selectedBox.setFocus();
         }
     };
 

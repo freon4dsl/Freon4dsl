@@ -106,7 +106,7 @@
             const elemBox: Box = shownElements[index];
             if (editor.selectedBox !== elemBox) {
                 editor.selectElementForBox(elemBox);
-                $selectedBoxes = [elemBox];
+                // $selectedBoxes = [elemBox];
             }
             // determine the contents of the menu based on listBox, before showing the menu!
             if (isActionBox(elemBox)){ // the selected box is the placeholder => show different menu items

@@ -61,7 +61,7 @@ export class PiCreateSiblingCommand extends PiCommand {
         } else {
             return function () {
                 editor.selectElement(newElement);
-                editor.selectFirstEditableChildBox();
+                editor.selectFirstEditableChildBox(newElement);
             };
         }
     }

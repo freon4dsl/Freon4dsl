@@ -237,28 +237,27 @@
 //         LOGGER.log("SELECTED [" + this._selectedBox.role + "] elem [" + this?._selectedElement?.piLanguageConcept() + "]")
 //     }
 //
-// // Static helper methods
+//     // Static helper methods
 //
-// /**
-//  * Returns true when 'other' is on the line above 'ref'.
-//  * @param ref
-//  * @param other
-//  * @private
-//  */
-// import { Box } from "../boxes";
+//     /**
+//      * Returns true when 'other' is on the line above 'ref'.
+//      * @param ref
+//      * @param other
+//      * @private
+//      */
 //
-// private static isOnPreviousLine(ref: Box, other: Box): boolean {
-//     const margin = 5;
-//     return other.actualY + margin < ref.actualY;
-// }
+//     private static isOnPreviousLine(ref: Box, other: Box): boolean {
+//         const margin = 5;
+//         return other.actualY + margin < ref.actualY;
+//     }
 //
-// /**
-//  * Returns true when 'other' is on the line below 'ref'.
-//  * @param ref
-//  * @param other
-//  * @private
-//  */
-// private static isOnNextLine(ref: Box, other: Box): boolean {
-//     return this.isOnPreviousLine(other, ref);
-// }
+//     /**
+//      * Returns true when 'other' is on the line below 'ref'.
+//      * @param ref
+//      * @param other
+//      * @private
+//      */
+//     private static isOnNextLine(ref: Box, other: Box): boolean {
+//         return this.isOnPreviousLine(other, ref);
+//     }
 // }

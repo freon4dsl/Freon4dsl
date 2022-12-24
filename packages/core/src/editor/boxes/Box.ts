@@ -249,18 +249,13 @@ export abstract class Box {
      * Get the first editable leaf box in the tree with `this` as root.
      */
     get firstEditableChild(): Box {
-        const editableChildren = this.getEditableChildren();
+        const editableChildren = [];
+        this.getEditableChildrenRecursive(editableChildren);
         if (editableChildren.length > 0) {
             return editableChildren[0];
         } else {
             return this;
         }
-    }
-
-    private getEditableChildren(): Box[] {
-        const result: Box[] = [];
-        this.getEditableChildrenRecursive(result);
-        return result;
     }
 
     private getEditableChildrenRecursive(result: Box[]) {

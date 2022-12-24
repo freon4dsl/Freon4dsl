@@ -126,25 +126,48 @@ export class PiEditor {
      */
     selectElement(element: PiElement, propertyName?: string, propertyIndex?: number, caretPosition?: PiCaret) {
         console.log("selectElement " + element?.piLanguageConcept() + " with id " + element.piId() + ", property: ["  + propertyName + ", " + propertyIndex + "]");
+        if (this.checkParam(element)) {
+            let box = this.projection.getBox(element);
+            let propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
+            if (!isNullOrUndefined(propBox)) {
+                this._selectedBox = propBox;
+                this._selectedProperty = propertyName;
+                this._selectedIndex = propertyIndex;
+                this._selectedPosition = caretPosition;
+            } else {
+                this._selectedBox = box;
+                this._selectedProperty = '';
+                this._selectedIndex = -1;
+                this._selectedPosition = PiCaret.UNSPECIFIED;
+            }
+            this._selectedElement = element;
+            this.selectionChanged();
+        }
+    }
+
+    selectFirstEditableChildBox(element: PiElement) {
+        if (this.checkParam(element)) {
+            const first = this.projection.getBox(element).firstEditableChild;
+            if (!isNullOrUndefined(first)) {
+                this._selectedBox = first;
+                this._selectedProperty = first.propertyName;
+                this._selectedIndex = first.propertyIndex;
+                this._selectedPosition = PiCaret.LEFT_MOST;
+            }
+            this._selectedElement = element;
+            this.selectionChanged();
+        }
+    }
+
+    private checkParam(element: PiElement): boolean  {
         if (this.NOSELECT) {
-            return;
+            return false;
         }
         if (isNullOrUndefined(element)) {
             console.error("PiEditor.selectElement is null !");
-            return;
+            return false;
         }
-        let box = this.projection.getBox(element);
-        let propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
-        if (!isNullOrUndefined(propBox)) {
-            this._selectedBox = propBox;
-            this._selectedProperty = propertyName;
-            this._selectedIndex = propertyIndex;
-            this._selectedPosition = caretPosition;
-        } else {
-            this._selectedBox = box;
-        }
-        this._selectedElement = element;
-        this.selectionChanged();
+        return true;
     }
 
     /**
@@ -246,7 +269,6 @@ export class PiEditor {
     }
 
     //    TODO
-    selectFirstEditableChildBox() {}
     selectParentBox() {}
     selectFirstLeafChildBox() {}
     selectPreviousLeaf() {}

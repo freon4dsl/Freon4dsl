@@ -237,7 +237,7 @@
         LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event.detail));
         isEditing = true;
         dropdownShown = true;
-        editor.selectElementForBox(box);
+        // editor.selectElementForBox(box);
         if (!allOptions) {
             allOptions = getOptions();
         }

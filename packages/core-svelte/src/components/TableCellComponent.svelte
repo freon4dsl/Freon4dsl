@@ -117,7 +117,8 @@
         event.dataTransfer.dropEffect = "move";
 
         // select the complete element and style them
-        $selectedBoxes = box.getSiblings();
+        editor.selectElementForBox(box.parent);
+        // $selectedBoxes = box.getSiblings();
         // $selectedBoxes.forEach(b => b.style = "border: dashed");
 
         // give the drag an image
@@ -171,7 +172,7 @@
         // set the selected box
         if (editor.selectedBox !== box) {
             editor.selectElementForBox(box);
-            $selectedBoxes = box.getSiblings();
+            // $selectedBoxes = box.getSiblings();
         }
         $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
     }

@@ -1,11 +1,10 @@
-import { PiBinaryExpression, PiElement } from "../../ast";
-import { Language } from "../../language";
+import { PiBinaryExpression } from "../../ast";
 import { BTREE } from "../../util";
 import { PiCaret, PiCaretPosition } from "../util";
 import { Box } from "../boxes";
 import { PiEditor } from "../PiEditor";
-import { CustomAction, EMPTY_POST_ACTION, PiPostAction, ReferenceShortcut } from "./PiAction";
-import { isString, PiTriggerUse, triggerTypeToString } from "./PiTriggers";
+import { CustomAction, EMPTY_POST_ACTION, PiPostAction } from "./PiAction";
+import { PiTriggerUse, triggerTypeToString } from "./PiTriggers";
 import { PiLogger } from "../../logging";
 
 const LOGGER = new PiLogger("PiCommand"); //.mute();
@@ -101,8 +100,7 @@ export class PiCustomCommand extends PiCommand {
             } else {
                 // Default: select the first editable child of the selected element
                 return function () {
-                    editor.selectElement(selected);
-                    editor.selectFirstEditableChildBox();
+                    editor.selectFirstEditableChildBox(selected);
                 };
             }
         }
