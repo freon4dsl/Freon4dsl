@@ -396,13 +396,14 @@
     }
 
 	const refresh = () => {
-		LOGGER.log("REFRESH TextComponent")
+		LOGGER.log("REFRESH TextComponent " + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ")")
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
 		if (!isEditing) {
 			text = box.getText();
 		}
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
+		setInputWidth();
 	}
 
 	/**
@@ -412,7 +413,8 @@
 	beforeUpdate(() => {
 		if (editStart && !!inputElement) {
 			LOGGER.log('Before update : ' + id + ", " + inputElement);
-			// inputElement.focus();
+			setInputWidth();
+			inputElement.focus();
 			editStart = false;
 		}
 	});
@@ -425,12 +427,13 @@
      * box sizes in the textbox.
      */
     afterUpdate(() => {
-        LOGGER.log("Start afterUpdate  " + from + ", " + to + " id: " + id);
+        // LOGGER.log("Start afterUpdate  " + from + ", " + to + " id: " + id);
 		if (editStart && !!inputElement) {
 			LOGGER.log('    editStart in afterupdate for ' + id)
             inputElement.selectionStart = from >= 0 ? from : 0;
             inputElement.selectionEnd = to >= 0 ? to : 0;
-            inputElement.focus();
+			setInputWidth();
+			inputElement.focus();
             editStart = false;
         }
         if (!isEditing && !!spanElement) {
@@ -445,7 +448,8 @@
 			}
         }
 		// Always set the input width explicitly.
-		setInputWidth();
+		// setInputWidth();
+		placeholder =box.placeHolder
 		box.setFocus = setFocus;
 		box.setCaret = setCaret;
 		box.refreshComponent = refresh;
@@ -457,12 +461,12 @@
      * are set.
      */
     onMount(() => {
-        LOGGER.log('onMount');
+        LOGGER.log("onMount" + " for element "  + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ")");
         box.setFocus = setFocus;
         // box.setCaret = setCaret;
         originalText = text = box.getText();
         placeholder = box.placeHolder;
-		// setInputWidth()
+		setInputWidth()
 		box.setFocus = setFocus;
 		box.setCaret = setCaret;
 		box.refreshComponent = refresh;
@@ -486,7 +490,9 @@
 			widthSpan.innerHTML = replaceHTML(value);
 			const width = widthSpan.offsetWidth + "px";
 			inputElement.style.width = width;
-			LOGGER.log("setInputWidth mirror [" + value + "] input [" + inputElement.value + "] placeholder [" + placeholder + "] w: " + width + " " + widthSpan.clientWidth)
+			LOGGER.log("setInputWidth mirror [" + value + "] input [" + inputElement.value + "] placeholder [" + placeholder + "] w: " + width + " " + widthSpan.clientWidth + " for element "  + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ")")
+		} else {
+			LOGGER.log("SetInputWidth do nothing for element " + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ") " + widthSpan + "::" + inputElement + "::" + spanElement);
 		}
 	}
 
