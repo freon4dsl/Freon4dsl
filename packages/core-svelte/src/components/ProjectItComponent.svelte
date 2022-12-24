@@ -15,12 +15,11 @@
         DELETE,
         ARROW_RIGHT, ElementBox
     } from "@projectit/core";
-    import { autorun } from "mobx";
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
     import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
     import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
-    import { onMount } from "svelte";
+    import { afterUpdate, onMount } from "svelte";
     import { viewport } from "./svelte-utils/EditorViewportStore";
 
     let LOGGER = new PiLogger("ProjectItComponent");//.mute();
@@ -128,22 +127,31 @@
 
         // Observe the ProjectItComponent element.
         resizeObserver.observe(element);
+        editor.refreshComponentSelection = refreshSelection
+        editor.refreshComponentRootBox= refreshRootBox;
 
         // This callback cleans up the observer.
         return () => resizeObserver.unobserve(element);
     });
 
-    autorun(() => {
-        // If anything observable changes ...
-        rootBox = editor.rootBox;
-        LOGGER.log("==================> ProjectItComponent with rootbox " + rootBox?.id);
-        LOGGER.log("      ProjectItComponent with rootbox " + (rootBox as ElementBox).content?.id);
-        // If the selection is not ok anymore ...
-        // TODO This now runs for each selection change, is this really needed?
+    afterUpdate( () => {
+        editor.refreshComponentSelection = refreshSelection
+        editor.refreshComponentRootBox= refreshRootBox;
+    } );
+
+    const refreshSelection = (why?: string) => {
         if (!$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             $selectedBoxes = [editor.selectedBox];
         }
-    });
+    };
+
+    const refreshRootBox = (why?: string) => {
+        rootBox = editor.rootBox;
+        LOGGER.log("==================> ProjectItComponent with rootbox " + rootBox?.id);
+    };
+
+    refreshRootBox("Initialize ProjectItComponent");
+    refreshSelection("Initialize ProjectItComponent");
 </script>
 
 <div class={"projectit"}

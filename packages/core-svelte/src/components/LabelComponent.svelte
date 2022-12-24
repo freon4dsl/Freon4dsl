@@ -50,8 +50,8 @@
     };
 
     $: { // Evaluated and re-evaluated when the box changes.
+        refresh("FROM component " + box?.id);
     }
-    refresh("FROM component " + box?.id);
 </script>
 
 <span class="label {text} {cssClass}"

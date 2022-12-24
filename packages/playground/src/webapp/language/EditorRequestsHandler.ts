@@ -36,6 +36,9 @@ export class EditorRequestsHandler {
         if (proj instanceof FreProjectionHandler) {
             proj.enableProjections(names);
         }
+        // Let the editor know that the projections have changed.
+        // TODO rootBoxChanged should NOT be called from outside PiEditor.
+        // editorEnvironment.editor.rootBoxChanged();
     }
 
     /**

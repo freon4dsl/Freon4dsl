@@ -65,14 +65,14 @@
 
     afterUpdate(() => {
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
-        // LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element.piId()) + "]");
-        // let isSelected: boolean = $selectedBoxes.includes(box);
-        // className = (isSelected ? "selected" : "unSelected");
-        // if (isSelected) {
-        //     LOGGER.log("RenderComponent.afterUpdate for box " + box?.role + ", isSelected:" + isSelected);
-        //     // todo NEW find out why box is null!!!
-        //     box?.setFocus();
-        // }
+        LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element.piId()) + "]");
+        let isSelected: boolean = $selectedBoxes.includes(box);
+        className = (isSelected ? "selected" : "unSelected");
+        if (isSelected) {
+            LOGGER.log("RenderComponent.afterUpdate for box " + box?.role + ", isSelected:" + isSelected);
+            // todo NEW find out why box is null!!!
+            box?.setFocus();
+        }
         if (!!element) {
             // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?
             // todo why is 'element' sometimes null?

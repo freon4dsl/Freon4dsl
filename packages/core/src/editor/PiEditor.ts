@@ -1,5 +1,5 @@
 import { isEqual } from "lodash";
-import { makeObservable, observable, computed, action, trace, runInAction } from "mobx";
+import { autorun, computed, makeObservable, observable } from "mobx";
 import { PiEnvironment } from "../environment/PiEnvironment";
 import { PiOwnerDescriptor, PiElement } from "../ast";
 import { PiLogger } from "../logging";
@@ -38,6 +38,28 @@ export class PiEditor {
     // TODO question: NOSELECT is not used, remove?
     private NOSELECT: Boolean = false;          // Do not accept "select" actions, used e.g. when an undo is going to come.
 
+    // The refresh method from the component that displays this box.
+    refreshComponentSelection: (why?: string) => void;
+    refreshComponentRootBox: (why?: string) => void;
+
+    // Called when the editorselection has changed
+    selectionChanged(): void {
+        if (this.refreshComponentSelection !== undefined && this.refreshComponentSelection !== null) {
+            this.refreshComponentSelection("====== FROM PiEditor");
+        } else {
+            LOGGER.log("No selectionChanged() for PiEditor");
+        }
+    }
+
+    // Called when the editor/rootbox is dirty, refreshes the main component.
+    rootBoxChanged(): void {
+        if (this.refreshComponentRootBox !== undefined && this.refreshComponentRootBox !== null) {
+            this.refreshComponentRootBox("====== FROM PiEditor");
+        } else {
+            LOGGER.log("No refreshComponentRootBox() for PiEditor");
+        }
+    }
+
     /**
      * The constructor makes a number of private properties observable.
      * @param projection
@@ -49,14 +71,18 @@ export class PiEditor {
         this.projection = projection;
         this.environment = environment;
         this.initializeActions(actions);
-        // TODO rethink whether selectedBox should be observable
-        makeObservable<PiEditor, "_rootElement" | "_selectedElement" | "_selectedBox">(this, {
+        makeObservable<PiEditor, "_rootElement">(this, {
             theme: observable,
             _rootElement: observable,
-            _selectedElement: observable,
-            _selectedBox: observable,
-            selectedBox: computed,
-            deleteBox: action
+            rootElement: computed
+        });
+
+        autorun( () => {
+            console.log("CALCULATE NEW ROOTBOX")
+            if (this.rootElement !== null) {
+                this._rootBox = this.projection.getBox(this.rootElement);
+                this.rootBoxChanged();
+            }
         });
     }
 
@@ -91,11 +117,7 @@ export class PiEditor {
      * @param exp
      */
     set rootElement(exp: PiElement) {
-        runInAction(() => {
-                this._rootElement = exp;
-                // this._rootBox = this.projection.getBox(this._rootElement);
-            }
-        );
+        this._rootElement = exp;
     }
 
     get rootElement(): PiElement {
@@ -104,7 +126,6 @@ export class PiEditor {
 
     get rootBox(): Box {
         LOGGER.log('PiEditor.get RootBox, enabled projections: ' + this.projection.enabledProjections());
-        this._rootBox = this.projection.getBox(this.rootElement);
         return this._rootBox;
     }
 
@@ -126,6 +147,7 @@ export class PiEditor {
         if (!!this._selectedBox) {
             this._selectedElement = this._selectedBox.element;
         }
+        this.refreshComponentSelection();
         LOGGER.log("SELECTED [" + this._selectedBox.role + "] elem [" + this?._selectedElement?.piLanguageConcept() + "]")
     }
 
@@ -152,7 +174,9 @@ export class PiEditor {
             console.error("PiEditor.selectElement is null !");
             return;
         }
-        const box = this._rootBox.findBox(element.piId(), role);
+        // TODO IS not the right solution: this.refreshRootbox();
+        this._rootBox = this.projection.getBox(this._rootElement);
+        const box = this.rootBox.findBox(element.piId(), role);
         // todo although element is created in CreatePartCommand, the corresponding box cannot be found. WHY?
         // the box provider has not yet been created? Even though this is being run after the 'runInAction' that creates the element.
         console.log("selectElement: selectElement found box: " + box?.kind);
@@ -161,6 +185,7 @@ export class PiEditor {
             this._selectedPosition = caretPosition;
             this.selectBoxNew(box, caretPosition);
         }
+        this.refreshComponentSelection();
     }
 
     // A series of setters for _selectedBox
@@ -329,6 +354,7 @@ export class PiEditor {
         }
         return result;
     }
+
     // TODO rethink the parameter 'box' in all of these methods => should work on currently selected box
 
     /**
@@ -435,6 +461,7 @@ export class PiEditor {
                 box.setCaret(PiCaret.RIGHT_MOST);
             }
         }
+        this.refreshComponentSelection();
         // we do not set focus, see the comment for the setFocus method in Box.ts
     }
 

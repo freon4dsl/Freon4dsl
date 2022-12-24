@@ -9,9 +9,9 @@
 </script>
 
 <div data-testid="test-label1">
-    <LabelComponent box={box1} editor={editor}/>
+    <LabelComponent box={box1}/>
 </div>
 <div data-testid="test-label2">
-        <LabelComponent box={box2} editor={editor}/>
+        <LabelComponent box={box2}/>
 </div>
 

@@ -1,6 +1,7 @@
 import { Box, BoxFactory } from "../boxes";
 import { isNullOrUndefined } from "../../util";
 import { PiElement } from "../../ast";
+import { PiEditor } from "../PiEditor";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjection } from "./FreProjection";
 import { action, makeObservable } from "mobx";
@@ -50,6 +51,7 @@ export class FreProjectionHandler {
             enableProjections: action
         });
     }
+
 
     /////////// The main methods ///////////
 
