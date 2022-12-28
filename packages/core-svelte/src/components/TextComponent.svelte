@@ -467,7 +467,6 @@
         originalText = text = box.getText();
         placeholder = box.placeHolder;
 		setInputWidth()
-		box.setFocus = setFocus;
 		box.setCaret = setCaret;
 		box.refreshComponent = refresh;
     });
@@ -542,6 +541,7 @@
               on:click={startEditing}
               bind:this={spanElement}
 			  contenteditable=true
+			  spellcheck=false
               id="{id}-span">
 			{#if !!text && text.length > 0}
 				{text}
