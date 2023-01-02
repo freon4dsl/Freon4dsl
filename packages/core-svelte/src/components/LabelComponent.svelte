@@ -1,3 +1,4 @@
+<svelte:options immutable={true}/>
 <script lang="ts">
     /**
      * This component shows to piece of non-editable text.
@@ -36,7 +37,9 @@
         if (!!box) {
             box.setFocus = setFocus;
             box.refreshComponent = refresh;
-            setBoxSizes(box, element.getBoundingClientRect()); // see todo in RenderComponent
+            if(!!element) {
+                setBoxSizes(box, element.getBoundingClientRect()); // see todo in RenderComponent
+            }
         }
     });
 

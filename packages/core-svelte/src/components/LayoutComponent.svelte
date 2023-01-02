@@ -1,3 +1,5 @@
+<svelte:options immutable={true}/>
+
 <script lang="ts">
     /**
      * This component shows a list of various boxes (no 'true' list). It can be shown
@@ -22,7 +24,7 @@
     let LOGGER: PiLogger = new PiLogger("LayoutComponent");
     let id: string ;
     let element: HTMLSpanElement;
-    let children: Box[] = [];
+    let children: Box[];
     let isHorizontal: boolean;
 
     async function setFocus(): Promise<void> {
@@ -47,14 +49,15 @@
         children = [...box.children];
         isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
     };
-    let first = true; // debug: know when next refresh is called.
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh((first ? "first" : "later") + "   " + box?.id);
-        first = false;
+        refresh("Refresh Layout box changed " + box?.id);
     }
 </script>
 
-<span class="layout-component" class:horizontal="{isHorizontal}" class:vertical="{!isHorizontal}"
+<span class="layout-component"
+      id="{id}"
+      class:horizontal="{isHorizontal}"
+      class:vertical="{!isHorizontal}"
       bind:this={element}
 >
     {#if isHorizontal }

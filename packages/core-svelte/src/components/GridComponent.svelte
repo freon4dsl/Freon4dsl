@@ -65,6 +65,6 @@
         justify-items: center;
         border-color: var(--freon-grid-component-border-color, darkgreen);
         border-width: var(--freon-grid-component-border-width, 1pt);
-        border-style: var(--freon-grid-component-border-style, solid);
+        border-style: var(--freon-grid-component-border-style, dot-dot-dash);
     }
 </style>

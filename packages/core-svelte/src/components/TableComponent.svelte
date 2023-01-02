@@ -1,3 +1,4 @@
+<svelte:options immutable={true}/>
 <script lang="ts">
     /**
      * This component shows a list of elements that have the same type (a 'true' list) as
@@ -31,14 +32,16 @@
     let templateRows: string;
     let cssClass: string;
     let gridElement: HTMLElement;
+    let myMetaType: string;
 
     const refresh = (why?: string): void => {
         LOGGER.log("Refresh TableBox, box: " + why);
         if (!!box) {
-            children = box.children;
+            children = [...box.children];
             templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
             templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
             cssClass = box.cssClass;
+            myMetaType = box.conceptName;
         }
     } ;
     onMount( () => {
@@ -49,12 +52,10 @@
     });
 
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh(box?.id);
+        refresh("Refresh new box: " + box?.id);
     }
     // determine the type of the elements in the list
     // this speeds up the check whether the element may be dropped in a certain drop-zone
-    let myMetaType: string;
-    $: myMetaType = box.conceptName;
 
     const drop = (event: CustomEvent) => {
         const data: ListElementInfo = $draggedElem;
@@ -110,7 +111,7 @@
         align-content: center;
         border-color: var(--freon-grid-component-border-color, darkgreen);
         border-width: var(--freon-grid-component-border-width, 1pt);
-        border-style: var(--freon-grid-component-border-style, solid);
+        border-style: var(--freon-grid-component-border-style, dashed);
         border-radius: 4px;
     }
 </style>

@@ -1,3 +1,4 @@
+<svelte:options immutable={true}/>
 <script lang="ts">
     /**
      * This component indents the child of its (Indent)Box.

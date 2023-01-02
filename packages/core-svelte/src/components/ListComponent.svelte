@@ -1,3 +1,4 @@
+<svelte:options immutable={true}/>
 <script lang="ts">
     /**
      * This component shows a list of elements that have the same type (a 'true' list).
@@ -126,14 +127,6 @@
         }
     }
 
-    const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH ListComponent( " + why + ") " + box?.element?.piLanguageConcept());
-        shownElements = [...box.children];
-        id = !!box ? box.id : "list-with-unknown-box";
-        isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
-        shownElements = [...box.children];
-    }
-
     onMount( () => {
         LOGGER.log("ListComponent onMount --------------------------------")
         box.setFocus = setFocus;
@@ -165,10 +158,15 @@
 
     let previousBox = null;
 
-    let first = true;
+    const refresh = (why?: string): void =>  {
+        LOGGER.log("REFRESH ListComponent( " + why + ") " + box?.element?.piLanguageConcept());
+        shownElements = [...box.children];
+        id = !!box ? box.id : "list-with-unknown-box";
+        isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
+    }
+
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh((first ? "first" : "later") + "   " + box?.id);
-        first = false;
+        refresh("Refresh from ListCom[onent box changed:   " + box?.id);
     }
     // The mouseover fires when the mouse cursor is outside the element and then move to inside the boundaries of the element.
     // The mouseout fires when the mouse cursor is over an element and then moves another element.

@@ -466,7 +466,8 @@
         // box.setCaret = setCaret;
         originalText = text = box.getText();
         placeholder = box.placeHolder;
-		setInputWidth()
+		setInputWidth();
+		box.setFocus = setFocus;
 		box.setCaret = setCaret;
 		box.refreshComponent = refresh;
     });
