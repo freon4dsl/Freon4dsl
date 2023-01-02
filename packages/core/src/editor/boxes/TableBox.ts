@@ -78,6 +78,7 @@ export abstract class TableBox extends Box {
     }
 
     clearChildren(): void {
+        this._children.forEach(ch => ch.parent = null);
         const dirty = (this._children.length !== 0);
         this._children.splice(0, this._children.length);
         if (dirty) {

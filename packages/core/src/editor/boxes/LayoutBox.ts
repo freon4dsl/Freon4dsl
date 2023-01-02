@@ -40,6 +40,7 @@ export abstract class LayoutBox extends Box {
     }
 
     replaceChildren(children: Box[]): LayoutBox {
+        this._children.forEach(ch => ch.parent = null);
         this._children.splice(0, this._children.length);
         if (!!children) {
             children.forEach((child) => {
@@ -49,7 +50,7 @@ export abstract class LayoutBox extends Box {
                 }
             });
         }
-        // console.log("List replaceChildren dirty " + this.role)
+        LOGGER.log("Layout replaceChildren dirty " + this.role)
         this.isDirty();
         return this;
     }
@@ -58,7 +59,7 @@ export abstract class LayoutBox extends Box {
         const dirty = (this._children.length !== 0);
         this._children.splice(0, this._children.length);
         if (dirty) {
-            LOGGER.log("List clearChildren dirty " + this.role)
+            LOGGER.log("Layout clearChildren dirty " + this.role)
             this.isDirty();
         }
     }
@@ -67,7 +68,7 @@ export abstract class LayoutBox extends Box {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
-            LOGGER.log("List addChild dirty " + this.role)
+            LOGGER.log("Layout addChild dirty " + this.role + " child added " + child.id)
             this.isDirty();
         }
         return this;
@@ -77,7 +78,7 @@ export abstract class LayoutBox extends Box {
         if (!!child) {
             this._children.splice(0, 0, child);
             child.parent = this;
-            LOGGER.log("List insertChild dirty " + this.role)
+            LOGGER.log("Layout insertChild dirty " + this.role + " child inserted " + child.id);
             this.isDirty();
         }
         return this;
@@ -115,7 +116,7 @@ export abstract class LayoutBox extends Box {
     }
 
     toString() {
-        let result: string = "List: " + this.role + " " + this.direction.toString() + "<";
+        let result: string = "Layout: " + this.role + " " + this.direction.toString() + "<";
         for (const child of this.children) {
             result += "\n    " + child.toString();
         }
