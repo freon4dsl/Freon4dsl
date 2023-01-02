@@ -12,20 +12,22 @@ export class LabelBox extends Box {
         this.selectable = false; // default
         PiUtils.initializeObject(this, initializer);
         this.setLabel(getLabel);
-        // makeObservable<LabelBox, "$label">(this, {
-        //     $label: observable
-        // });
     }
 
     setLabel(getLabel: string | (() => string)) {
         if (typeof getLabel === "function") {
-            this.getLabel = getLabel;
+            if (this.getLabel !== getLabel) {
+                this.getLabel = getLabel;
+                this.isDirty();
+            }
         } else if (typeof getLabel === "string") {
-            this.$label = getLabel;
+            if (this.$label !== getLabel) {
+                this.$label = getLabel;
+                this.isDirty();
+            }
         } else {
             throw new Error("LabelBox: incorrect label type");
         }
-        this.isDirty();
     }
 
     getLabel(): string {
