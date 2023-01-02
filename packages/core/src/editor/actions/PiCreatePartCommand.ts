@@ -41,7 +41,8 @@ export class PiCreatePartCommand extends PiCommand {
             " in " +
             this.propertyName +
             " refshort " +
-            this.referenceShortcut
+            this.referenceShortcut +
+            " parentbox " + box?.element?.piLanguageConcept()
         );
         let ownerConcept: string = box.element.piLanguageConcept();
         let propName: string = this.propertyName;
@@ -61,7 +62,7 @@ export class PiCreatePartCommand extends PiCommand {
                 theModelElement.push(newElement);
             }
         } else {
-            theModelElement = newElement;
+            box.element[propName] = newElement;
         }
         if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
             newElement[this.referenceShortcut.propertyName] = Language.getInstance().referenceCreator(trigger, this.referenceShortcut.conceptName);
@@ -69,7 +70,7 @@ export class PiCreatePartCommand extends PiCommand {
 
         return function () {
             // editor.selectElement(newElement);
-            console.log('CreatePartCommand: newElement:' + newElement.piId() + ", selected element: " + editor.selectedBox.element.piId() + " of kind " + editor.selectedBox.kind)
+            console.log('CreatePartCommand: newElement:' + newElement.piId() + " " + newElement.piLanguageConcept() + ", selected element: " + editor.selectedBox.element.piId() + " of kind " + editor.selectedBox.kind)
             editor.selectFirstEditableChildBox(newElement);
         };
     }
