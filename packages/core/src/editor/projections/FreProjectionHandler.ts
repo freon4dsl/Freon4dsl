@@ -1,4 +1,4 @@
-import { Box, BoxFactory } from "../boxes";
+import { Box, BoxFactory, ElementBox } from "../boxes";
 import { isNullOrUndefined } from "../../util";
 import { PiElement } from "../../ast";
 import { PiEditor } from "../PiEditor";
@@ -60,7 +60,7 @@ export class FreProjectionHandler {
      * Internally, one of the box providers in 'elementToProvider' is used.
      * @param element
      */
-    getBox(element: PiElement): Box {
+    getBox(element: PiElement): ElementBox {
         try {
             if (isNullOrUndefined(element)) {
                 throw Error('FreProjectionHandler.getBox: element is null/undefined');

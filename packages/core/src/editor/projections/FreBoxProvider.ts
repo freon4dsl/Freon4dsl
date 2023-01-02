@@ -59,7 +59,7 @@ export abstract class FreBoxProvider {
      * called getNamedBox, that takes a projectionName as parameter, which can be used in
      * case a specific projection is requested.
      */
-    get box(): Box {
+    get box(): ElementBox {
         console.log("GET BOX " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept());
         if (this._element === null) {
             return null;
