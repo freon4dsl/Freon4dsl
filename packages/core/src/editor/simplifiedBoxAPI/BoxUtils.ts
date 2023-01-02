@@ -308,7 +308,7 @@ export class BoxUtils {
         // determine the role
         let role: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist");
         // return the box
-        let result = new VerticalListBox(element, role, propertyName, children);
+        let result = BoxFactory.verticalList(element, role, propertyName, children);
         result.propertyName = propertyName;
         return result;
     }
@@ -345,7 +345,7 @@ export class BoxUtils {
         // determine the role
         let role: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "vpartlist");
         // return the box
-        let result = new HorizontalListBox(element, role, propertyName, children);
+        let result = BoxFactory.horizontalList(element, role, propertyName, children);
         result.propertyName = propertyName;
         return result;
     }
