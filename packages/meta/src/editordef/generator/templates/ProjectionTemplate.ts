@@ -331,7 +331,7 @@ export class ProjectionTemplate {
             if (line.items.length > 1) { // surround with horizontal box
                 // TODO Too many things are now selectable, but if false, you cannot select e.g. an attribute
                 ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
-                result = `BoxFactory.horizontalLayout(${elementVarName}, "${boxLabel}-hlist-line-${index}", '', [ ${result} ], { selectable: true } ) `;
+                result = `BoxFactory.horizontalLayout(${elementVarName}, "${boxLabel}-hlist-line-${index}", '', [ ${result} ], { selectable: false } ) `;
             }
             if (line.indent > 0) { // surround with indentBox
                 ListUtil.addIfNotPresent(this.coreImports, "BoxUtils");
