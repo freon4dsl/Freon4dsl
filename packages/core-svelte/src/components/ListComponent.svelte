@@ -9,7 +9,7 @@
     import { flip } from "svelte/animate";
     import {
         Box,
-        isActionBox,
+        isActionBox, isNullOrUndefined,
         Language,
         ListBox,
         ListDirection,
@@ -84,6 +84,10 @@
     const dragenter = (event: DragEvent, index): boolean => {
         LOGGER.log("LIST Drag Enter" + box.id)
         const data: ListElementInfo = $draggedElem;
+        // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
+        if (isNullOrUndefined($draggedElem)) {
+            return;
+        }
         // only show this item as active when the type of the element to be dropped is the right one
         if (Language.getInstance().metaConformsToType(data.element, myMetaType)) {
             $activeElem = { row: index, column: -1 };
@@ -92,11 +96,15 @@
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
     const mouseover = (index): boolean => {
-        LOGGER.log("LIST Mouse Over " + box.id);
+        LOGGER.log("LIST Mouse Over " + box.id + " index: " + index);
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
     const mouseout = (): boolean => {
-        LOGGER.log("LIST mouse out " + box.id)
+        LOGGER.log("LIST mouse out " + box.id);
+        // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
+        if (isNullOrUndefined($draggedElem)) {
+            return;
+        }
         $activeElem = { row: -1, column: -1 };
         $activeIn = "";
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
