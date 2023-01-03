@@ -149,7 +149,7 @@
 
     const refreshRootBox = (why?: string) => {
         rootBox = editor.rootBox;
-        LOGGER.log("==================> ProjectItComponent with rootbox " + rootBox?.id);
+        LOGGER.log("REFRESH " + why + " ==================> ProjectItComponent with rootbox " + rootBox?.id);
     };
 
     refreshRootBox("Initialize ProjectItComponent");
