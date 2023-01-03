@@ -15,6 +15,11 @@ export class TableRowBox extends Box {
         this.cells = cells;
         this.rowIndex = rowIndex;
         this.cells.forEach( c => c.parent = this);
+        this.selectable = false;
+    }
+
+    get children(): ReadonlyArray<Box> {
+        return this.cells;
     }
 }
 
