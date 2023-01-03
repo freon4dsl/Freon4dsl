@@ -27,3 +27,5 @@ export {
     TextComponent,
     TextDropdownComponent
 }
+
+export * from "./svelte-utils";
