@@ -75,13 +75,15 @@ export class PiEditor {
             rootElement: computed
         });
 
-        autorun( () => {
-            console.log("CALCULATE NEW ROOTBOX")
-            if (this.rootElement !== null) {
-                this._rootBox = this.projection.getBox(this.rootElement);
-                this.rootBoxChanged();
-            }
-        });
+        autorun( this.auto );
+    }
+
+    auto = () => {
+        console.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.piLanguageConcept());
+        if (this.rootElement !== null) {
+            this._rootBox = this.projection.getBox(this.rootElement);
+            this.rootBoxChanged();
+        }
     }
 
     // Getters and Setters
@@ -125,7 +127,7 @@ export class PiEditor {
      * @param caretPosition
      */
     selectElement(element: PiElement, propertyName?: string, propertyIndex?: number, caretPosition?: PiCaret) {
-        console.log("selectElement " + element?.piLanguageConcept() + " with id " + element.piId() + ", property: ["  + propertyName + ", " + propertyIndex + "]");
+        console.log("selectElement " + element?.piLanguageConcept() + " with id " + element?.piId() + ", property: ["  + propertyName + ", " + propertyIndex + "]");
         if (this.checkParam(element)) {
             let box = this.projection.getBox(element);
             let propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
@@ -171,7 +173,7 @@ export class PiEditor {
     }
 
     /**
-     * Selects the element for which 'box' is the ElementBox, or which holds 'box' as a direct child.
+     * Selects the element associated with 'box'.
      * @param box
      */
     selectElementForBox(box: Box) {
@@ -182,12 +184,13 @@ export class PiEditor {
             this._selectedIndex = box.propertyIndex;
             this._selectedProperty = box.propertyName;
             this._selectedPosition = PiCaret.UNSPECIFIED;
+            // TODO Only needed when ssomething actually changed
+            this.selectionChanged();
         }
         console.log(`this._selectedElement = ${this._selectedElement.piId()};
         this._selectedBox = ${this._selectedBox.kind};
         this._selectedIndex = ${this._selectedIndex};
         this._selectedProperty = ${this._selectedProperty};`);
-        this.selectionChanged();
     }
 
     /**
@@ -198,11 +201,6 @@ export class PiEditor {
         LOGGER.log("deleteBox");
         const exp: PiElement = box.element;
         const ownerDescriptor: PiOwnerDescriptor = exp.piOwnerDescriptor();
-        // if (isPiExpression(exp)) {
-        //     const newExp = this.getPlaceHolderExpression();
-        //     PiUtils.replaceExpression(exp, newExp, this);
-        //     await this.selectElement(newExp);
-        // } else {
         if (ownerDescriptor !== null) {
             LOGGER.log("remove from parent splice " + [ownerDescriptor.propertyIndex] + ", 1");
             const propertyIndex = ownerDescriptor.propertyIndex;
@@ -268,11 +266,24 @@ export class PiEditor {
         actions.binaryExpressionActions.forEach(ca => this.newPiActions.push(ca));
     }
 
+    selectPreviousLeaf() {
+        this.selectElementForBox(this._selectedBox.nextLeafLeft);
+    }
+    selectNextLeaf() {
+        this.selectElementForBox(this._selectedBox.nextLeafRight);
+    }
+
     //    TODO
-    selectParentBox() {}
-    selectFirstLeafChildBox() {}
-    selectPreviousLeaf() {}
-    selectNextLeaf() {}
-    selectBoxBelow(box: Box) {}
-    selectBoxAbove(box: Box) {}
+    selectParentBox() {
+        console.error("TODO: selectParentBox not implemented yet");
+    }
+    selectFirstLeafChildBox() {
+        console.error("TODO: selectFirstLeafChildBox not implemented yet");
+    }
+    selectBoxBelow(box: Box) {
+        console.error("TODO: selectBoxBelow not implemented yet");
+    }
+    selectBoxAbove(box: Box) {
+        console.error("TODO: selectBoxAbove not implemented yet");
+    }
 }

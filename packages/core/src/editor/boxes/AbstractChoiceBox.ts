@@ -37,6 +37,8 @@ export abstract class AbstractChoiceBox extends Box {
     }
 
     get textBox(): TextBox {
+        // TODO Does this need to be done every time the textbox is requested?
+        //      Or could this move to the constructor?
         this._textBox.propertyName = this.propertyName;
         this._textBox.propertyIndex = this.propertyIndex;
         return this._textBox;

@@ -27,6 +27,11 @@ export abstract class LayoutBox extends Box {
         this.selectable = false;
     }
 
+    /**
+     * To be used when adding multiple children in one go, avoiding spurious isDirty() calls.
+     * @param child
+     * @private
+     */
     private addChildNoDirty(child: Box | null): LayoutBox {
         if (!!child) {
             this._children.push(child);

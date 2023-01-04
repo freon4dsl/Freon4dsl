@@ -4,6 +4,9 @@ import { PiLogger } from "../../logging";
 
 const LOGGER = new PiLogger("Box");
 
+/**
+ * The root of the Box class hierarchy, contains all generic properties and a number of navigation/search functions.
+ */
 export abstract class Box {
     $id: string;
     kind: string = "";
@@ -18,10 +21,11 @@ export abstract class Box {
     selectable: boolean = true; // Can this box be selected in the editor?
     parent: Box = null;
 
-    // The refresh method from the component that displays this box.
-    refreshComponent: (why?: string) => void;
+    refreshComponent: (why?: string) => void;   // The refresh method from the component that displays this box.
 
-    // Called when the box is dirty, refreshes the corresponding component.
+    /**
+     *  Called when the box is dirty, refreshes the corresponding component.
+     */
     isDirty(): void {
         if (this.refreshComponent !== undefined && this.refreshComponent !== null) {
             this.refreshComponent("====== FROM Box " + this.kind + " " + this.id);
@@ -32,7 +36,7 @@ export abstract class Box {
 
     // Never set these manually, these properties are set after rendering to get the
     // actual coordinates as rendered in the browser,
-    // TODO see whether these can be set on demand and whether this is useful ???
+    // TODO see whether these can be set on demand and whether this is useful ??? Probably yes.
     actualX: number = -1;
     actualY: number = -1;
     actualWidth: number = -1;
@@ -103,6 +107,7 @@ export abstract class Box {
         return null;
     }
 
+    // TODO chnage name into nextSelectableLeafRight or something similar?
     /**
      * Return the previous selectable leaf in the tree.
      */
@@ -124,6 +129,7 @@ export abstract class Box {
         return this.parent.nextLeafRight;
     }
 
+    // TODO chnage name into nextSelectableLeafLeft or something similar?
     /**
      * Return the next selectable leaf in the tree.
      */
@@ -197,6 +203,8 @@ export abstract class Box {
     //     return null;
     // }
 
+    // TODO Needs element as parameter otherwise any property of any element can be found.
+    //      For thee same reason, recursively searching children should only be done if the child has the same element.
     /**
      * Searches within the children of this box for a box that represents the property
      * with requested name and index. If not found it returns null.
@@ -258,6 +266,8 @@ export abstract class Box {
         }
     }
 
+    // TODO This will find all editable children, but not editable children of an editable child.
+    //      Looking at the usage, we only need the first editable child, so maybe this could be simplified.
     private getEditableChildrenRecursive(result: Box[]) {
         LOGGER.info( "getEditableChildrenRecursive for " + this.kind);
         if (this.isEditable()) {
@@ -276,6 +286,10 @@ export abstract class Box {
         return false;
     }
 
+    /**
+     * TODO This finds children, not siblings, fix when doing table row selection
+     * @param param
+     */
     getSiblings(param: Box): Box[] {
         return this.children.filter(c =>
             c.element.piId() === param.element.piId()

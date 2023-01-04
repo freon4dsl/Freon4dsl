@@ -109,6 +109,7 @@
 	const handleClick = (index: number) => {
 		if (!!$modelErrors && $modelErrors.length > 0) {
 			const item = $modelErrors[index];
+			// TODO declaredType should be changed to property coming from error object.
 			if (Array.isArray(item.reportedOn)) {
 				EditorState.getInstance().selectElement(item.reportedOn[0], 'declaredType');
 			} else {
