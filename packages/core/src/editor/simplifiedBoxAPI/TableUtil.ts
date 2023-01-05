@@ -55,22 +55,29 @@ export class TableUtil {
     }
 
     public static rowBox(element: PiElement, propertyName: string, conceptName: string, cells: Box[], rowIndex: number, hasHeaders: boolean): TableRowBox {
+        if (isNullOrUndefined(rowIndex)) {
+            console.log('NO rowIndex for TableRowBox! ' + element.piLanguageConcept() + element.piId());
+        }
         // Note that css grid counts from 1, not 0, which is common in lists.
+        let gridIndex: number;
         if (hasHeaders) {
-            rowIndex = rowIndex + 2;
+            gridIndex = rowIndex + 2;
         } else {
-            rowIndex = rowIndex + 1;
+            gridIndex = rowIndex + 1;
         }
         const myContent = cells.map((cell, index) => {
-            const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, rowIndex, index + 1);
-            return new TableCellBox(element, cellRoleName, propertyName, conceptName, rowIndex, index + 1, cell);
+            const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, gridIndex, index + 1);
+            return new TableCellBox(element, cellRoleName, propertyName, conceptName, gridIndex, index + 1, cell);
         });
-        const role: string = RoleProvider.row(element.piLanguageConcept(), propertyName, rowIndex);
-        return new TableRowBox(element, role, myContent, rowIndex);
+        const role: string = RoleProvider.row(element.piLanguageConcept(), propertyName, gridIndex);
+        let result = new TableRowBox(element, role, myContent, gridIndex);
+        result.propertyName = propertyName;
+        result.propertyIndex = rowIndex;
+        return result;
     }
 
     private static tableBox(orientation: GridOrientation, element: PiElement, list: PiElement[], propertyName: string, boxProviderCache: FreProjectionHandler): TableBox {
-        console.log('calling tableBox')
+        // console.log('calling tableBox')
         // Find the information on the property to be shown and check it.
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);

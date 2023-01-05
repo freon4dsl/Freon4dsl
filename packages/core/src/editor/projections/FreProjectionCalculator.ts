@@ -69,7 +69,7 @@ export class FreProjectionCalculator {
 
     private static transformToTableProjectionName(projToUse: string) {
         // todo remove this hack, when all projectiongroups have one projection per concept
-        return "tableFor" + startWithUpperCase(projToUse);
+        return "tableRowFor" + startWithUpperCase(projToUse);
     }
 
     /**

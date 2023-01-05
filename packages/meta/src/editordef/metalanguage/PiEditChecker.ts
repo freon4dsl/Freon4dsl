@@ -122,7 +122,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         this.runner.simpleCheck(!!group.name, `Editor should have a name, it is empty ${ParseLocationUtil.location(group)}.`);
         for (const projection of group.projections) {
             if (projection instanceof PiEditTableProjection) {
-                projection.name = 'tableFor' + Names.startWithUpperCase(group.name);
+                projection.name = 'tableRowFor' + Names.startWithUpperCase(group.name);
             } else {
                 projection.name = group.name;
             }

@@ -13,7 +13,7 @@
         BACKSPACE,
         ARROW_LEFT,
         DELETE,
-        ARROW_RIGHT, ElementBox, isNullOrUndefined
+        ARROW_RIGHT, ElementBox, isNullOrUndefined, isTableRowBox, isElementBox
     } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
@@ -41,7 +41,7 @@
         if (event.ctrlKey || event.altKey) {
             switch (event.key) {
                 case ARROW_UP:
-                    editor.selectParentBox();
+                    editor.selectParent();
                     stopEvent(event);
                     break;
                 case ARROW_DOWN:
@@ -86,9 +86,9 @@
                     break;
             }
         }
-        // todo check whether the following always needs to be done
+        // todo check whether the following always (or never?) needs to be done
         // console.log('selected AFTER: ' + editor.selectedBox.id + ' current focused element ' + document.activeElement.id);
-        editor.selectedBox.setFocus();
+        // editor.selectedBox.setFocus();
         // $selectedBoxes = [editor.selectedBox];
         // event.stopPropagation(); // do not preventDefault, because this would keep printable chars to show in any input HTML element. TODO IS this true???
     };
@@ -140,12 +140,31 @@
     } );
 
     const refreshSelection = (why?: string) => {
-        console.log('setting selectedBox ' + why);
+        // console.log("setting selectedBox " + why);
         if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
-            $selectedBoxes = [editor.selectedBox]; // todo allow for multiple selected boxes in PiEditor
-            editor.selectedBox.setFocus();
+            if (isTableRowBox(editor.selectedBox) || isElementBox(editor.selectedBox)) {
+                // Because neither a tableRowComponent nor an ElementBox has its own HTML equivalent,
+                // its children are regarded to be selected.
+                $selectedBoxes = getSelectableChildren(editor.selectedBox);
+                $selectedBoxes.push(editor.selectedBox); // keep this one as well because of the test above
+            } else {
+                $selectedBoxes = [editor.selectedBox];
+                // editor.selectedBox.setFocus(); is done by RenderComponent
+            }
         }
     };
+
+    function getSelectableChildren(box: Box): Box[] {
+        const result: Box[] = [];
+        for (const child of box.children) {
+            if (isTableRowBox(child) || isElementBox(child)) {
+                result.push(...getSelectableChildren(child));
+            } else {
+                result.push(child);
+            }
+        }
+        return result;
+    }
 
     const refreshRootBox = (why?: string) => {
         rootBox = editor.rootBox;

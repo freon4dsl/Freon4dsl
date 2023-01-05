@@ -57,19 +57,19 @@
         return selectableOptionList.getFilteredOptions();
     };
 
-    const setFocus = async (): Promise<void> => {
-        FOCUS_LOGGER.log("AliasComponent set focus " + choiceBox.role);
-        if (!!textComponent && !!textComponent.setFocus) {
-            textComponent.setFocus();
-        } else {
-            FOCUS_LOGGER.log("?ERROR? textComponent is null in setFocus.");
-        }
-    };
+    // const setFocus = async (): Promise<void> => {
+    //     FOCUS_LOGGER.log("AliasComponent set focus " + choiceBox.role);
+    //     if (!!textComponent && !!textComponent.setFocus) {
+    //         textComponent.setFocus();
+    //     } else {
+    //         FOCUS_LOGGER.log("?ERROR? textComponent is null in setFocus.");
+    //     }
+    // };
 
     onMount(() => {
         MOUNT_LOGGER.log("AliasComponent.onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
-        choiceBox.textBox.setFocus = setFocus;
-        choiceBox.setFocus = setFocus;
+        // choiceBox.textBox.setFocus = setFocus;
+        // choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
         runInAction( () => {
             choiceBox.textBox.cssStyle = choiceBox.cssStyle;
@@ -82,8 +82,8 @@
     afterUpdate(() => {
         UPDATE_LOGGER.log("AfterUpdate");
         choiceBox.triggerKeyPressEvent = triggerKeyPressEvent;
-        choiceBox.textBox.setFocus = setFocus;
-        choiceBox.setFocus = setFocus;
+        // choiceBox.textBox.setFocus = setFocus;
+        // choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
         if (!!selected) {
             choiceBox.textBox.setText(selected.label);

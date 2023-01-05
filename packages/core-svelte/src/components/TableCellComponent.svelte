@@ -35,7 +35,7 @@
     export let parentOrientation: string;
     export let parentHasHeader: boolean;
     // determine the type of the elements in the cell, this speeds up the check whether an element may be dropped here
-    export let myMetaType: string;
+    let myMetaType: string;
 
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
@@ -71,8 +71,14 @@
                 column = box.row;
             }
             childBox = box.content;
+            myMetaType = box.conceptName;
         }
     }
+
+    // async function setFocus(): Promise<void> {
+    //     childBox.setFocus();
+    // }
+
     // todo see which function we need to set the row and column: onMount, refresh, afterUpdate???
     onMount(() => {
         box.refreshComponent = refresh;
@@ -82,6 +88,8 @@
 
     afterUpdate(() => {
         box.refreshComponent = refresh;
+        let isSelected: boolean = $selectedBoxes.includes(box);
+        cssClass = (isSelected ? "selected" : "unSelected");
     });
 
     const onKeydown = (event: KeyboardEvent) => {
@@ -118,7 +126,6 @@
 
         // select the complete element and style them
         editor.selectElementForBox(box.parent);
-        // $selectedBoxes = box.getSiblings();
         // $selectedBoxes.forEach(b => b.style = "border: dashed");
 
         // give the drag an image
@@ -205,6 +212,7 @@
         style="{cssStyle}"
         draggable=true
         on:keydown={onKeydown}
+        on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event)}
 >
     <RenderComponent box={childBox} editor={editor}/>
 </span>
@@ -234,6 +242,10 @@
         cursor: grabbing;
     }
 
+    .unSelected {
+        background: transparent;
+        border: none;
+    }
     .selected {
         background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
         outline-color: var(--freon-selected-outline-color, darkblue);

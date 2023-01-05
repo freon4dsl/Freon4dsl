@@ -28,9 +28,9 @@ export class ElementBox extends Box {
         return [this.content];
     }
 
-    setFocus: () => void = async () => {
-        this._content.setFocus();
-    };
+    // setFocus: () => void = async () => {
+    //     this._content.setFocus();
+    // };
 }
 
 export function isElementBox(b: Box): b is ElementBox {

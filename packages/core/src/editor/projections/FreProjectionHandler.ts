@@ -160,7 +160,7 @@ export class FreProjectionHandler {
             }
         }
         this._enabledProjections = newList;
-        console.log(" ============== enabled projections: " + this._enabledProjections);
+        // console.log(" ============== enabled projections: " + this._enabledProjections);
 
         FreProjectionCalculator.clearCaches();
         //  Let all providers know that projection may be changed.

@@ -51,17 +51,17 @@
      * This function sets the focus on this element programmatically.
      * It is called from the RenderComponent.
      */
-    const setFocus = () => {
-        // console.log("TextDropDownComponent " + box.kind)
-        if (!!textComponent) {
-            textComponent.setFocus();
-        } else {
-            console.log('TextDropdownComponent ' + id + ' has no textComponent' )
-        }
-    }
+    // const setFocus = () => {
+    //     // console.log("TextDropDownComponent " + box.kind)
+    //     if (!!textComponent) {
+    //         textComponent.setFocus();
+    //     } else {
+    //         console.log('TextDropdownComponent ' + id + ' has no textComponent' )
+    //     }
+    // }
 
     afterUpdate( () => {
-        box.setFocus = setFocus;
+        // box.setFocus = setFocus;
         // const selected = box.getSelectedOption(); // todo why?
         // runInAction( () => {
         //     textBox.cssStyle = box.cssStyle;
@@ -73,7 +73,7 @@
     
     onMount(() => {
         LOGGER.log("TextDropdownComponent.onMount for role [" + box.role + "]");
-        box.setFocus = setFocus;
+        // box.setFocus = setFocus;
         const selected = box.getSelectedOption(); // todo why?
         runInAction( () => {
             textBox.cssStyle = box.cssStyle;
@@ -128,6 +128,7 @@
      */
     const onKeyDown = (event: KeyboardEvent) => {
         // LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
+        if (!event.ctrlKey && !event.altKey) {
         switch (event.key) {
             case ESCAPE: {
                 dropdownShown = false;
@@ -201,6 +202,7 @@
                 dropdownShown = false;
             }
         }
+        }
     };
     
     function clearText() {
@@ -237,7 +239,6 @@
         LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event.detail));
         isEditing = true;
         dropdownShown = true;
-        // editor.selectElementForBox(box);
         if (!allOptions) {
             allOptions = getOptions();
         }
@@ -309,7 +310,7 @@
             }
         }
         // because the box maybe a different one than we started with ...
-        box.setFocus = setFocus;
+        // box.setFocus = setFocus;
     });
 
     const onFocusOut = () => {

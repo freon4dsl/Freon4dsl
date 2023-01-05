@@ -24,6 +24,7 @@ export class GridBox extends Box {
             }
             c.parent = this;
         });
+        this.selectable = false;
         this.sortCellsAndAddChildren();
     }
 

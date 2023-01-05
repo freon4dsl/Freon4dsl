@@ -65,13 +65,13 @@
 
     afterUpdate(() => {
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
-        LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element.piId()) + "]");
+        console.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element.piId() + '=' + b?.element.piLanguageConcept() + '=' + b.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
         className = (isSelected ? "selected" : "unSelected");
         if (isSelected) {
             LOGGER.log("RenderComponent.afterUpdate for box " + box?.role + ", isSelected:" + isSelected);
             // todo NEW find out why box is null!!!
-            box?.setFocus();
+            // box?.setFocus();
         }
         if (!!element) {
             // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?
@@ -95,11 +95,16 @@
 
 </script>
 
-<!-- TableRows are without span, becuase they use the CSS grid and tablecells must in HTML
+<!-- TableRows are without span, because they use the CSS grid and tablecells must in HTML
      always be directly under the main grid.
 -->
 {#if isTableRowBox(box) }
     <TableRowComponent box={box} editor={editor}/>
+<!-- ElementBoxes are without span, because they they are not shown themselves.
+     Their children are, and each child gets its own surrounding RenderComponent.
+-->
+{:else if isElementBox(box) }
+    <ElementComponent box={box} editor={editor}/>
 {:else}
     <span id={id}
           class="render-component {className}"
@@ -108,8 +113,6 @@
     >
         {#if box === null || box === undefined }
             <p class="error">[BOX IS NULL OR UNDEFINED]</p>
-        {:else if isElementBox(box) }
-            <ElementComponent box={box} editor={editor}/>
         {:else if isEmptyLineBox(box) }
             <EmptyLineComponent box={box}/>
         {:else if isGridBox(box) }

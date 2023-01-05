@@ -13,6 +13,7 @@ export class SvgBox extends Box {
         super(element, role);
         PiUtils.initializeObject(this, initializer);
         this.svgPath = svgPath;
+        this.selectable = false;
     }
 }
 

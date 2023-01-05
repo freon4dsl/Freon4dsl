@@ -21,6 +21,11 @@ export class TableRowBox extends Box {
     get children(): ReadonlyArray<Box> {
         return this.cells;
     }
+
+    // setFocus: () => void = async () => {
+    //     // todo check if the first child if the one with the first column index
+    //     this.children[0]?.setFocus();
+    // };
 }
 
 export function isTableRowBox(box: Box): box is TableRowBox {

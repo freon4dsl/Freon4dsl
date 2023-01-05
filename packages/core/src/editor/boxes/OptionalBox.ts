@@ -36,7 +36,6 @@ export class OptionalBox extends Box {
         this.placeholder.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;
-        this.selectable = false;
     }
 
     get showByCondition(): boolean {

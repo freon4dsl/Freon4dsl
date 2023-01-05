@@ -28,6 +28,7 @@ export abstract class TableBox extends Box {
         this.hasHeaders = hasHeaders;
         this.propertyName = propertyName;
         this.conceptName = conceptName;
+        this.selectable = false;
     }
 
     // todo this method should be mobx enabled

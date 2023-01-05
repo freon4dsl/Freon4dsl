@@ -36,6 +36,7 @@ export function muteLogs() {
     PiLogger.mute("BehaviorUtils");
     PiLogger.mute("Box");
     // PiLogger.mute("ListBox");
+    PiLogger.mute("LayoutBox");
 
     // from ~/webapp:
     PiLogger.mute("EditorCommunication");

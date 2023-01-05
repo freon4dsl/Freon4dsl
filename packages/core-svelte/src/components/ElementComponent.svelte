@@ -33,6 +33,3 @@
 </script>
 
 <RenderComponent box={childBox} editor={editor} />
-
-<style>
-</style>

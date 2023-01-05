@@ -8,7 +8,7 @@ import {
     Box,
     PiCombinedActions,
     PiCaret,
-    FreProjectionHandler
+    FreProjectionHandler, isActionBox, isSelectBox, isOptionalBox
 } from "./internal";
 import { SeverityType } from "../validator";
 import { isNullOrUndefined } from "../util";
@@ -95,7 +95,8 @@ export class PiEditor {
      */
     set rootElement(exp: PiElement) {
         this._rootElement = exp;
-        // todo select first editable child
+        // select first editable child
+        this.selectFirstEditableChildBox(exp);
     }
 
     get rootElement(): PiElement {
@@ -178,19 +179,41 @@ export class PiEditor {
      */
     selectElementForBox(box: Box) {
         // todo not correct yet!
-        if (!isNullOrUndefined(box)) { // only (re)set the local variables when the box can be found
+        if (!isNullOrUndefined(box) && box !== this._selectedBox) { // only (re)set the local variables when the box can be found
             this._selectedElement = box.element;
-            this._selectedBox = box;
-            this._selectedIndex = box.propertyIndex;
-            this._selectedProperty = box.propertyName;
+            if (!box.selectable) {
+                // get the ElementBox for the selected element
+                this._selectedBox = this.projection.getBox(box.element);
+            } else {
+                this._selectedBox = box;
+            }
+            this._selectedIndex = this._selectedBox.propertyIndex;
+            this._selectedProperty = this._selectedBox.propertyName;
             this._selectedPosition = PiCaret.UNSPECIFIED;
-            // TODO Only needed when ssomething actually changed
+            // TODO Only needed when something actually changed
             this.selectionChanged();
         }
-        console.log(`this._selectedElement = ${this._selectedElement.piId()};
-        this._selectedBox = ${this._selectedBox.kind};
+        console.log(`==>     this._selectedElement = ${this._selectedElement.piId()}=${this._selectedElement.piLanguageConcept()};
+        this._selectedBox = ${this._selectedBox.role} of kind ${this._selectedBox.kind};
         this._selectedIndex = ${this._selectedIndex};
         this._selectedProperty = ${this._selectedProperty};`);
+    }
+
+    selectParent() {
+        this.selectParentForBox(this.selectedBox);
+    }
+
+    private selectParentForBox(box: Box) { // private method needed because of recursion
+        console.log("==> selectParent of " + box?.role + ' of kind ' + box?.kind);
+        let parent = box?.parent;
+        if (!!parent) {
+            // todo too much recursion when called from a Dropdown!!!
+            if (parent.selectable) {
+                this.selectElementForBox(parent);
+            } else {
+                this.selectParentForBox(parent);
+            }
+        }
     }
 
     /**
@@ -274,9 +297,6 @@ export class PiEditor {
     }
 
     //    TODO
-    selectParentBox() {
-        console.error("TODO: selectParentBox not implemented yet");
-    }
     selectFirstLeafChildBox() {
         console.error("TODO: selectFirstLeafChildBox not implemented yet");
     }

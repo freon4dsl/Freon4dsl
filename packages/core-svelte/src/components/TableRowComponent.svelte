@@ -58,8 +58,3 @@
             parentHasHeader={hasHeaders}
     />
 {/each}
-
-
-
-<style>
-</style>

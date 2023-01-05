@@ -19,23 +19,23 @@
     let text: string;
 
     // todo do we need a setFocus here?
-    const setFocus = async (): Promise<void> => {
-        LOGGER.log("LabelComponent.setFocus for box " + box?.role);
-        if (!!element) {
-            element.focus();
-        }
-    };
+    // const setFocus = async (): Promise<void> => {
+    //     LOGGER.log("LabelComponent.setFocus for box " + box?.role);
+    //     if (!!element) {
+    //         element.focus();
+    //     }
+    // };
 
     onMount( () => {
         if (!!box) {
-            box.setFocus = setFocus;
+            // box.setFocus = setFocus;
             box.refreshComponent = refresh;
         }
     });
 
     afterUpdate( () => {
         if (!!box) {
-            box.setFocus = setFocus;
+            // box.setFocus = setFocus;
             box.refreshComponent = refresh;
             if(!!element) {
                 setBoxSizes(box, element.getBoundingClientRect()); // see todo in RenderComponent

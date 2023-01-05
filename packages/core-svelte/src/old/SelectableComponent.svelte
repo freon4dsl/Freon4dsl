@@ -27,7 +27,7 @@ import { selectedBoxInEditor } from "./SelectedTmp"
         if (box.selectable) {
             LOGGER.log("       ===> selected box " + box.role);
             editor.selectedBox = box;
-            box.setFocus();
+            // box.setFocus();
             event.preventDefault();
             event.stopPropagation();
             $selectedBoxInEditor = box;
@@ -48,18 +48,18 @@ import { selectedBoxInEditor } from "./SelectedTmp"
             // XLOGGER.log("   actual is (" + Math.round(box.actualX) + ", " + Math.round(box.actualY) + ")");
         }
 
-        if (isSelected) {
-            // console.log("     setting focus from afterupdate to box " + box.role);
-            box.setFocus();
-        }
+        // if (isSelected) {
+        //     // console.log("     setting focus from afterupdate to box " + box.role);
+        //     box.setFocus();
+        // }
     });
 
     $: {
         isSelected = $selectedBoxInEditor === box;
         className = (isSelected ? "selectedComponent" : "unSelectedComponent");
-        if (isSelected) {
-            box.setFocus();
-        }
+        // if (isSelected) {
+        //     box.setFocus();
+        // }
     }
 
 </script>

@@ -118,8 +118,8 @@
                 // $selectedBoxes = [elemBox];
             }
             // determine the contents of the menu based on listBox, before showing the menu!
-            if (isActionBox(elemBox)){ // the selected box is the placeholder => show different menu items
-                console.log('index of ActionBox: ' + index);
+            if (isActionBox(elemBox)) { // the selected box is the placeholder => show different menu items
+                // console.log('index of ActionBox: ' + index);
                 $contextMenu.items = box.options('placeholder');
             } else {
                 $contextMenu.items = box.options('normal');
@@ -128,22 +128,22 @@
         }
     }
 
-    async function setFocus(): Promise<void> {
-        LOGGER.log("ListComponent.setFocus for box " + box.role);
-        if (!!element) {
-            element.focus();
-        }
-    }
+    // async function setFocus(): Promise<void> {
+    //     LOGGER.log("ListComponent.setFocus for box " + box.role);
+    //     if (!!element) {
+    //         element.focus();
+    //     }
+    // }
 
     onMount( () => {
         LOGGER.log("ListComponent onMount --------------------------------")
-        box.setFocus = setFocus;
+        // box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
     afterUpdate(() => {
         LOGGER.log("ListComponent.afterUpdate for " + box.role);
-        box.setFocus = setFocus;
+        // box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 

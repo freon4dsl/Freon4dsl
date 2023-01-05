@@ -68,19 +68,19 @@
      * This function sets the focus on this element programmatically.
      * It is called from the box.
      */
-    export const setFocus = () => {
-		LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
-		if (!!inputElement) {
-			inputElement.focus();
-		} else {
-			// set the local variables
-			isEditing = true;
-			editStart = true;
-			originalText = text;
-			let {anchorOffset, focusOffset} = document.getSelection();
-			setFromAndTo(anchorOffset, focusOffset);
-		}
-	}
+    // export const setFocus = () => {
+	// 	LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
+	// 	if (!!inputElement) {
+	// 		inputElement.focus();
+	// 	} else {
+	// 		// set the local variables
+	// 		isEditing = true;
+	// 		editStart = true;
+	// 		originalText = text;
+	// 		let {anchorOffset, focusOffset} = document.getSelection();
+	// 		setFromAndTo(anchorOffset, focusOffset);
+	// 	}
+	// }
 
     /**
      * This function ensures that 'from <= to' always holds.
@@ -135,11 +135,11 @@
         LOGGER.log('startEditing ' + id);
         // set the global selection
         editor.selectElementForBox(box);
-		if (partOfActionBox) {
-			$selectedBoxes = [box, box.parent]
-		} else {
-			$selectedBoxes = [box];
-		}
+		// if (partOfActionBox) {
+		// 	$selectedBoxes = [box, box.parent]
+		// } else {
+		// 	$selectedBoxes = [box];
+		// }
         // set the local variables
         isEditing = true;
         editStart = true;
@@ -450,7 +450,7 @@
 		// Always set the input width explicitly.
 		// setInputWidth();
 		placeholder =box.placeHolder
-		box.setFocus = setFocus;
+		// box.setFocus = setFocus;
 		box.setCaret = setCaret;
 		box.refreshComponent = refresh;
 	});
@@ -462,12 +462,12 @@
      */
     onMount(() => {
         LOGGER.log("onMount" + " for element "  + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ")");
-        box.setFocus = setFocus;
+        // box.setFocus = setFocus;
         // box.setCaret = setCaret;
         originalText = text = box.getText();
         placeholder = box.placeHolder;
 		setInputWidth();
-		box.setFocus = setFocus;
+		// box.setFocus = setFocus;
 		box.setCaret = setCaret;
 		box.refreshComponent = refresh;
     });
@@ -517,7 +517,7 @@
 	refresh();
 </script>
 
-
+<!-- todo there is a double selection here: two borders are showing -->
 <span on:click={onClick} id="{id}">
 	{#if isEditing}
 		<span class="resizable-input">
@@ -536,7 +536,7 @@
 		</span>
 	{:else}
 		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
-		     But ... this is only a problem when this components is inside a draggable element (like List ot table)
+		     But ... this is only a problem when this components is inside a draggable element (like List or table)
 		-->
 		<span class="{box.role} text-box-{boxType} text"
               on:click={startEditing}

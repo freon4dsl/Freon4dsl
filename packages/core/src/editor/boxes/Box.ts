@@ -19,6 +19,7 @@ export abstract class Box {
     cssClass: string = "";      // Custom CSS class that will be added to the component rendering this box
     cssStyle: string = "";      // Custom CSS Style class that will be added as inline style to the component rendering this box
     selectable: boolean = true; // Can this box be selected in the editor?
+    // todo because most boxes are not selectable the default could be set to false
     parent: Box = null;
 
     refreshComponent: (why?: string) => void;   // The refresh method from the component that displays this box.
@@ -107,7 +108,7 @@ export abstract class Box {
         return null;
     }
 
-    // TODO chnage name into nextSelectableLeafRight or something similar?
+    // TODO change name into nextSelectableLeafRight or something similar?
     /**
      * Return the previous selectable leaf in the tree.
      */
@@ -129,7 +130,7 @@ export abstract class Box {
         return this.parent.nextLeafRight;
     }
 
-    // TODO chnage name into nextSelectableLeafLeft or something similar?
+    // TODO change name into nextSelectableLeafLeft or something similar?
     /**
      * Return the next selectable leaf in the tree.
      */
@@ -250,7 +251,6 @@ export abstract class Box {
      */
     setFocus: () => void = async () => {
         console.error(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id);
-        /* To be overwritten by `TextComponent` */
     };
 
     /**
@@ -284,15 +284,5 @@ export abstract class Box {
 
     isEditable(): boolean {
         return false;
-    }
-
-    /**
-     * TODO This finds children, not siblings, fix when doing table row selection
-     * @param param
-     */
-    getSiblings(param: Box): Box[] {
-        return this.children.filter(c =>
-            c.element.piId() === param.element.piId()
-        );
     }
 }

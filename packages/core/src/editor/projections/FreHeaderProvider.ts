@@ -24,7 +24,7 @@ export class FreHeaderProvider extends FreBoxProvider {
         console.log('getting headers for ' + this.conceptName + ', with projection ' + projectionName + ' : ' + headers )
         if (!!headers && headers.length > 0) {
             headers.forEach((head, index) => {
-                console.log('pushing cell: ' + head);
+                // console.log('pushing cell: ' + head);
                 cells.push(BoxUtils.labelBox(this._element, head, `table-header-${index+1}`));
             });
             this._hasContent = true;
