@@ -326,12 +326,13 @@ export class BoxFactory {
         return result;
     }
 
-    static tablecell(element: PiElement, propertyName: string, conceptName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>): TableCellBox {
+    // todo this method is currently unused, maybe change TableUtil?
+    static tablecell(element: PiElement, propertyName: string, propertyIndex: number, conceptName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>): TableCellBox {
         if (cacheTablecellOff) {
-            return new TableCellBox(element, propertyName, conceptName, role, row, column, box, initializer);
+            return new TableCellBox(element, propertyName, propertyIndex, conceptName, role, row, column, box, initializer);
         }
         // 1. Create the table cell box, or find the one that already exists for this element and role
-        const creator = () => new TableCellBox(element, propertyName, conceptName, role, row, column, box, initializer);
+        const creator = () => new TableCellBox(element, propertyName, propertyIndex, conceptName, role, row, column, box, initializer);
         const result: TableCellBox = this.find<TableCellBox>(element, role, creator, tableCellCache);
 
         runInAction(() => {

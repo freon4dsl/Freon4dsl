@@ -104,6 +104,11 @@ export function dropListElement(editor: PiEditor, dropped: ListElementInfo, targ
  * @param optionsType       in case the options are created for a placeholder or header, we add lesser items (e.g. no DELETE)
  */
 export function getContextMenuOptions(conceptName: string, listParent: PiElement, propertyName: string, optionsType: MenuOptionsType): MenuItem[] {
+    // console.log(`getContextMenuOptions
+    // conceptname: ${conceptName}
+    // listparent: ${listParent.piId()}=${listParent.piLanguageConcept()}
+    // propertyName: ${propertyName}
+    // optionsType ${optionsType}`);
     // do some checks
     const clsOtIntf = Language.getInstance().concept(conceptName) ?? Language.getInstance().interface(conceptName);
     let errorItem: MenuItem = new MenuItem("No options available", "", (element: PiElement, index: number, editor: PiEditor) => {
@@ -155,6 +160,7 @@ export function getContextMenuOptions(conceptName: string, listParent: PiElement
  * @param before
  */
 function addListElement(listParent: PiElement, propertyName: string, index: number, typeOfAdded: string, before: boolean) {
+    console.log(`addListElement index: ${index}`)
     // get info about the property that needs to be changed
     const { property, isList, type } = getPropertyInfo(listParent, propertyName);
     if (!before) {
@@ -236,6 +242,8 @@ function copyListElement(element: PiElement, editor: PiEditor) {
  * @param before
  */
 function pasteListElement(listParent: PiElement, propertyName: string, element: PiElement, editor: PiEditor, before: boolean) {
+    console.log(`pasteListElement index: ${element.piOwnerDescriptor().propertyIndex}`)
+
     // first, do some checks
     if (editor.copiedElement === null || editor.copiedElement === undefined) {
         editor.setUserMessage("Nothing to paste", SeverityType.warning);
@@ -243,7 +251,7 @@ function pasteListElement(listParent: PiElement, propertyName: string, element: 
     }
     // console.log("Pasting element of type " + editor.copiedElement.piLanguageConcept() + (before ? " before " : " after ") + element.piLanguageConcept());
     // check whether the pasted element has the correct type
-    if (Language.getInstance().metaConformsToType(editor.copiedElement, element.piLanguageConcept())) {
+    if (!Language.getInstance().metaConformsToType(editor.copiedElement, element.piLanguageConcept())) {
         editor.setUserMessage(
             "Types do not conform (" + editor.copiedElement.piLanguageConcept() + " does not conform to " + element.piLanguageConcept() + ").",
             SeverityType.error);

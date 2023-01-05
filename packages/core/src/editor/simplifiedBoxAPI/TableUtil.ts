@@ -67,7 +67,7 @@ export class TableUtil {
         }
         const myContent = cells.map((cell, index) => {
             const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, gridIndex, index + 1);
-            return new TableCellBox(element, cellRoleName, propertyName, conceptName, gridIndex, index + 1, cell);
+            return new TableCellBox(element, propertyName, rowIndex, conceptName, cellRoleName, gridIndex, index + 1, cell);
         });
         const role: string = RoleProvider.row(element.piLanguageConcept(), propertyName, gridIndex);
         let result = new TableRowBox(element, role, myContent, gridIndex);

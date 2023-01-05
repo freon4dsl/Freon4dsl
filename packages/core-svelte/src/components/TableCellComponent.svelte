@@ -88,6 +88,7 @@
 
     afterUpdate(() => {
         box.refreshComponent = refresh;
+        // selection is handled here because TableCells are not included in the RenderComponent
         let isSelected: boolean = $selectedBoxes.includes(box);
         cssClass = (isSelected ? "selected" : "unSelected");
     });
@@ -125,7 +126,7 @@
         event.dataTransfer.dropEffect = "move";
 
         // select the complete element and style them
-        editor.selectElementForBox(box.parent);
+        editor.selectElementForBox(box);
         // $selectedBoxes.forEach(b => b.style = "border: dashed");
 
         // give the drag an image
@@ -171,10 +172,12 @@
             index = 0;
         } else {
             $contextMenu.items = box.options("normal");
-            index = parentOrientation === "row" ? row - 1 : column - 1;
-            if (parentHasHeader) {
-                index--;
-            }
+            console.log(`showContextMenu row: ${row}, column: ${column}, box.propertyIndex: ${box.propertyIndex}`)
+            index = box.propertyIndex
+            // index = parentOrientation === "row" ? row - 1 : column - 1;
+            // if (parentHasHeader) {
+            //     index--;
+            // }
         }
         // set the selected box
         if (editor.selectedBox !== box) {

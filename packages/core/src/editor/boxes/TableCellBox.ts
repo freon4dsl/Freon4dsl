@@ -8,16 +8,17 @@ export class TableCellBox extends GridCellBox {
     kind = "TableCellBox";
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    constructor(element: PiElement, propertyName: string, conceptName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>) {
+    constructor(element: PiElement, propertyName: string, propertyIndex: number, conceptName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>) {
         super(element, role, row, column, box, initializer);
         // console.log("TableCellBox creating " + box.role)
-        // both propertyName and conceptName should be equal to the same attributes of the parent TableBox
+        // both propertyName and conceptName should be equal to the same attributes of the parent TableBox and TableRowBox
         this.propertyName = propertyName;
+        this.propertyIndex = propertyIndex;
         this.conceptName = conceptName;
     }
 
     options(type: MenuOptionsType): MenuItem[] {
-        return getContextMenuOptions(this.conceptName, this.parent.element, this.propertyName, type);
+        return getContextMenuOptions(this.conceptName, this.element.piOwner(), this.propertyName, type);
     }
 }
 
