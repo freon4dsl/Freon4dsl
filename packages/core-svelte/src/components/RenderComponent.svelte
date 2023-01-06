@@ -53,12 +53,9 @@
         LOGGER.log("RenderComponent.onClick for box " + box.role + ", selectable:" + box.selectable);
         // Note that click events on some components, like TextComponent, are already caught.
         // These components need to take care of setting the currently selected element themselves.
-        if (box.selectable) {
-            editor.selectElementForBox(box);
-            // $selectedBoxes = [box];
-            event.preventDefault();
-            event.stopPropagation();
-        } // else: let the parent element take care of selection
+        editor.selectElementForBox(box);
+        event.preventDefault();
+        event.stopPropagation();
     };
 
     afterUpdate(() => {

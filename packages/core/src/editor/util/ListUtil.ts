@@ -15,7 +15,7 @@ import { SeverityType } from "../../validator";
 
 const LOGGER = new PiLogger("ListBoxUtil");
 
-export type MenuOptionsType = "normal" | "placeholder" | "header";
+export enum MenuOptionsType { normal, placeholder, header }
 
 /**
  * When the user hits 'ENTER', this action is triggered.
@@ -136,13 +136,13 @@ export function getContextMenuOptions(conceptName: string, listParent: PiElement
         addBefore = new MenuItem("Add before", "Ctrl+A", (element: PiElement, index: number, editor: PiEditor) => addListElement(listParent, propertyName, index, conceptName, true));
         addAfter = new MenuItem("Add after", "Ctrl+I", (element: PiElement, index: number, editor: PiEditor) => addListElement(listParent, propertyName, index, conceptName, false));
     }
-    let pasteBefore = new MenuItem("Paste before", "", (element: PiElement, index: number, editor: PiEditor) => pasteListElement(listParent, propertyName, element, editor, true));
-    let pasteAfter = new MenuItem("Paste after", "", (element: PiElement, index: number, editor: PiEditor) => pasteListElement(listParent, propertyName, element, editor, false));
+    let pasteBefore = new MenuItem("Paste before", "", (element: PiElement, index: number, editor: PiEditor) => pasteListElement(listParent, propertyName, index, editor, true));
+    let pasteAfter = new MenuItem("Paste after", "", (element: PiElement, index: number, editor: PiEditor) => pasteListElement(listParent, propertyName, index, editor, false));
 
     // now create the whole item list
-    if (optionsType === "placeholder") { // add lesser items for a placeholder
+    if (optionsType === MenuOptionsType.placeholder) { // add lesser items for a placeholder
         items = [addBefore, pasteBefore];
-    } else if (optionsType === "header") { // add lesser items for a placeholder
+    } else if (optionsType === MenuOptionsType.header) { // add lesser items for a header
         items = [addAfter, pasteAfter];
     } else {
         items = [addBefore, addAfter, new MenuItem("Delete", "", (element: PiElement, index: number, editor: PiEditor) => deleteListElement(listParent, propertyName, element)), new MenuItem("---", "", (element: PiElement, index: number, editor: PiEditor) => console.log("this is not an option")), new MenuItem("Cut", "", (element: PiElement, index: number, editor: PiEditor) => cutListElement(listParent, propertyName, element, editor)), new MenuItem("Copy", "", (element: PiElement, index: number, editor: PiEditor) => copyListElement(element, editor)), pasteBefore, pasteAfter];
@@ -241,34 +241,33 @@ function copyListElement(element: PiElement, editor: PiEditor) {
  * @param editor
  * @param before
  */
-function pasteListElement(listParent: PiElement, propertyName: string, element: PiElement, editor: PiEditor, before: boolean) {
-    console.log(`pasteListElement index: ${element.piOwnerDescriptor().propertyIndex}`)
+function pasteListElement(listParent: PiElement, propertyName: string, index: number, editor: PiEditor, before: boolean) {
+    console.log(`pasteListElement index: ${index}`)
 
     // first, do some checks
     if (editor.copiedElement === null || editor.copiedElement === undefined) {
         editor.setUserMessage("Nothing to paste", SeverityType.warning);
         return;
     }
-    // console.log("Pasting element of type " + editor.copiedElement.piLanguageConcept() + (before ? " before " : " after ") + element.piLanguageConcept());
+
+    // get info about the property that needs to be changed
+    const { property, isList, type } = getPropertyInfo(listParent, propertyName);
+    let targetIndex: number = index;
+    if (!before || index === -1) {
+        targetIndex++;
+    }
+
     // check whether the pasted element has the correct type
-    if (!Language.getInstance().metaConformsToType(editor.copiedElement, element.piLanguageConcept())) {
+    if (!Language.getInstance().metaConformsToType(editor.copiedElement, type)) {
         editor.setUserMessage(
-            "Types do not conform (" + editor.copiedElement.piLanguageConcept() + " does not conform to " + element.piLanguageConcept() + ").",
+            "Types do not conform (" + editor.copiedElement.piLanguageConcept() + " does not conform to " + type + ").",
             SeverityType.error);
         return;
     }
-    // get info about the property that needs to be changed
-    let targetIndex: number = element.piOwnerDescriptor().propertyIndex;
-    if (!before) {
-        targetIndex++;
-    }
-    const { property, isList } = getPropertyInfo(listParent, propertyName);
-    // console.log(`pasteListElement=> element type: ${element.piLanguageConcept()}, isList: ${isList},
-    // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
 
     // make the change
     if (isList) {
-        // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+        console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
         runInAction(() => {
             // make a copy before the element is added as part of the model,
             // because mobx decorators change the element's owner info:
@@ -280,7 +279,7 @@ function pasteListElement(listParent: PiElement, propertyName: string, element: 
             // make sure the element can be pasted elsewhere
             editor.copiedElement = tmp;
         });
-        // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+        console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
     }
 }
 

@@ -13,7 +13,15 @@
         PiLogger,
         toPiKey,
         TableCellBox,
-        Language, TableDirection, Box, isActionBox, ListElementInfo
+        Language,
+        TableDirection,
+        Box,
+        isActionBox,
+        ListElementInfo,
+        MenuOptionsType,
+        PiUtils,
+        isTableRowBox,
+        TableRowBox
     } from "@projectit/core";
     import { onMount, createEventDispatcher, afterUpdate } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
@@ -108,7 +116,6 @@
         refresh('FROM TableCellComponent box changed ' + box?.$id);
     }
 
-    // TODO rethink drag and drop now that there is a TableRowComponent
     const drop = (event: DragEvent) => {
         LOGGER.log("drop, dispatching");
         dispatcher("dropOnCell", { row: row, column: column });
@@ -123,9 +130,8 @@
         event.dataTransfer.effectAllowed = "move";
         event.dataTransfer.dropEffect = "move";
 
-        // select the complete element and style them
+        // select the complete element
         editor.selectElementForBox(box);
-        // $selectedBoxes.forEach(b => b.style = "border: dashed");
 
         // give the drag an image
         event.dataTransfer.setDragImage(img, 0, 0);
@@ -157,20 +163,26 @@
         // determine the contents of the menu based on box
         // if the selected box is the placeholder or a title/header => show different menu items
         let index: number;
+        PiUtils.CHECK(isTableRowBox(box.parent));
+        let parent: TableRowBox = box.parent as TableRowBox;
         if (isActionBox(box.content)) {
-            $contextMenu.items = box.options("placeholder");
+            $contextMenu.items = box.options(MenuOptionsType.placeholder);
             index = Number.MAX_VALUE;
-        } else if (box.isHeader) {
-            $contextMenu.items = box.options("header");
-            index = 0;
+        } else if (parent.isHeader) {
+            $contextMenu.items = box.options(MenuOptionsType.header);
+            index = -1;
         } else {
-            $contextMenu.items = box.options("normal");
-            // console.log(`showContextMenu row: ${row}, column: ${column}, box.propertyIndex: ${box.propertyIndex}`);
+            $contextMenu.items = box.options(MenuOptionsType.normal);
+            // console.log(`showContextMenu row: ${row}, column: ${column}, box.propertyIndex: ${box.propertyIndex}, box.propertyName: ${box.propertyName}`);
             index = box.propertyIndex;
         }
         // set the selected box
         if (editor.selectedBox !== box) {
-            editor.selectElementForBox(box);
+            if (isActionBox(box.content) || parent.isHeader) {
+                $selectedBoxes = [...parent.children];
+            } else {
+                editor.selectElementForBox(box);
+            }
         }
         $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
     }

@@ -167,7 +167,7 @@ export class PiEditor {
             return false;
         }
         if (isNullOrUndefined(element)) {
-            console.error("PiEditor.selectElement is null !");
+            console.error("PiEditor.selectedElement is null !");
             return false;
         }
         return true;
@@ -183,6 +183,7 @@ export class PiEditor {
             if (!box.selectable) {
                 // get the ElementBox for the selected element
                 this._selectedBox = this.projection.getBox(box.element);
+                // console.log('box not selectable: ' + box.kind)
             } else {
                 this._selectedBox = box;
             }
@@ -192,10 +193,10 @@ export class PiEditor {
             // TODO Only needed when something actually changed
             this.selectionChanged();
         }
-        // console.log(`==>     this._selectedElement = ${this._selectedElement.piId()}=${this._selectedElement.piLanguageConcept()};
-        // this._selectedBox = ${this._selectedBox.role} of kind ${this._selectedBox.kind};
-        // this._selectedIndex = ${this._selectedIndex};
-        // this._selectedProperty = ${this._selectedProperty};`);
+        console.log(`==>     this._selectedElement = ${this._selectedElement.piId()}=${this._selectedElement.piLanguageConcept()};
+        this._selectedBox = ${this._selectedBox.role} of kind ${this._selectedBox.kind};
+        this._selectedIndex = ${this._selectedIndex};
+        this._selectedProperty = ${this._selectedProperty};`);
     }
 
     selectParent() {

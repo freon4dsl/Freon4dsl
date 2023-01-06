@@ -17,7 +17,15 @@ export class TableCellBox extends GridCellBox {
     }
 
     options(type: MenuOptionsType): MenuItem[] {
-        return getContextMenuOptions(this.conceptName, this.element.piOwner(), this.propertyName, type);
+        let listParent: PiElement;
+        if (type ===  MenuOptionsType.placeholder || type === MenuOptionsType.header) {
+            // the element associated with this box is the listParent itself
+            listParent = this.element;
+        } else {
+            listParent = this.element.piOwner();
+        }
+        // console.log(`listParent ${listParent.piLanguageConcept()}, conceptName: ${this.conceptName}`);
+        return getContextMenuOptions(this.conceptName, listParent, this.propertyName, type);
     }
 }
 

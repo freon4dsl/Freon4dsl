@@ -318,11 +318,15 @@
         // todo maybe this should be done with custom event???
         // Text component has lost focus, check where focus has moved to
         if (!document.hasFocus()) { // Focus has moved outside the document tab/window
-            console.log("TextDropdownComponent onFocusOut OUTSIDE");
+            LOGGER.log("TextDropdownComponent onFocusOut OUTSIDE");
             endEditing();
             // } else // Focus has moved to dropdown element
         }
     };
+
+    const closeDropDown = () => {
+        dropdownShown = false;
+    }
 
 </script>
 
@@ -331,6 +335,7 @@
       use:clickOutside
       on:click_outside={endEditing}
       on:focusout={onFocusOut}
+      on:contextmenu={(event) => closeDropDown()}
       class="dropdown"
 >
     <TextComponent

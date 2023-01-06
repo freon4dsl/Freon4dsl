@@ -41,7 +41,7 @@
      * @param event
      */
     export async function show(event: MouseEvent, index: number) {
-        console.log('showing contextmenu for index ' + index);
+        // console.log('showing contextmenu for index ' + index);
         elementIndex = index;
         $contextMenuVisible = true;
         submenuOpen = false;

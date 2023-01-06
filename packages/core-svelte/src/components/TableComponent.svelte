@@ -33,6 +33,7 @@
     let elementType: string;
 
     const refresh = (why?: string): void => {
+        // todo refresh is not yet working correctly when an element is pasted or added by contextmenu into a table
         LOGGER.log("Refresh TableBox, box: " + why);
         if (!!box) {
             cells = getCells();
@@ -54,7 +55,9 @@
             } else if (isTableRowBox(ch)) {
                 _cells.push(...ch.cells);
             }
-        })
+        });
+        // console.log("all cell ids: ")
+        // console.log(_cells.map(c => `   ${c.id}`).join("\n"));
         return _cells;
     }
 

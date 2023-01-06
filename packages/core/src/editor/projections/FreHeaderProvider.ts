@@ -1,7 +1,7 @@
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjectionHandler } from "./FreProjectionHandler";
 import { PiElement } from "../../ast";
-import { Box } from "../boxes";
+import { Box, TableRowBox } from "../boxes";
 import { BoxUtils, TableUtil } from "../simplifiedBoxAPI";
 
 export class FreHeaderProvider extends FreBoxProvider {
@@ -21,10 +21,11 @@ export class FreHeaderProvider extends FreBoxProvider {
     protected getContent(projectionName: string): Box {
         const cells: Box[] = [];
         let headers = this.mainHandler.getTableHeaderInfo(this.conceptName, projectionName);
-        console.log('getting headers for ' + this.conceptName + ', with projection ' + projectionName + ' : ' + headers )
+        // console.log('getting headers for ' + this.conceptName + ', with projection ' + projectionName + ' : ' + headers )
         if (!!headers && headers.length > 0) {
             headers.forEach((head, index) => {
                 // console.log('pushing cell: ' + head);
+                // todo should the labelBox be wrapped in a TableCellBox?
                 cells.push(BoxUtils.labelBox(this._element, head, `table-header-${index+1}`));
             });
             this._hasContent = true;
@@ -32,7 +33,7 @@ export class FreHeaderProvider extends FreBoxProvider {
             this._hasContent = false;
         }
 
-        return TableUtil.rowBox(
+        let result: TableRowBox = TableUtil.rowBox(
             this._element,
             this.propertyName,
             this.conceptName,
@@ -40,6 +41,8 @@ export class FreHeaderProvider extends FreBoxProvider {
             0,
             false
         );
+        result.isHeader = true;
+        return result;
     }
 
     hasContent() {

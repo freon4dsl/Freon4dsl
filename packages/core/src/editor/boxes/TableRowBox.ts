@@ -2,14 +2,15 @@ import { Box } from "./Box";
 import { PiElement } from "../../ast";
 import { PiUtils } from "../../util";
 import { TableCellBox } from "./TableCellBox";
-import { TableDirection } from "./TableBox";
 
 export class TableRowBox extends Box {
     kind = "TableRowBox";
     rowIndex: number = -1;
     _cells: TableCellBox[] = [];
+    _isHeader: boolean = false;
 
     constructor(element: PiElement, role: string, cells: TableCellBox[], rowIndex: number, initializer?: Partial<TableRowBox>) {
+        // todo add isHeader to the params
         super(element, role);
         PiUtils.initializeObject(this, initializer);
         this.cells = cells;
@@ -34,6 +35,14 @@ export class TableRowBox extends Box {
             c.parent = this;
         }
         this.isDirty();
+    }
+
+    set isHeader(b: boolean) {
+        this._isHeader = b;
+    }
+
+    get isHeader(): boolean {
+        return this._isHeader;
     }
 
     // setFocus: () => void = async () => {

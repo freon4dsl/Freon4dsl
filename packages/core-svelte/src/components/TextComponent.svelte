@@ -135,11 +135,6 @@
         LOGGER.log('startEditing ' + id);
         // set the global selection
         editor.selectElementForBox(box);
-		// if (partOfActionBox) {
-		// 	$selectedBoxes = [box, box.parent]
-		// } else {
-		// 	$selectedBoxes = [box];
-		// }
         // set the local variables
         isEditing = true;
         editStart = true;
