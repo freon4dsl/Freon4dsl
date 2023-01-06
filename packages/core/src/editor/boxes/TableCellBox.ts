@@ -10,7 +10,6 @@ export class TableCellBox extends GridCellBox {
 
     constructor(element: PiElement, propertyName: string, propertyIndex: number, conceptName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>) {
         super(element, role, row, column, box, initializer);
-        // console.log("TableCellBox creating " + box.role)
         // both propertyName and conceptName should be equal to the same attributes of the parent TableBox and TableRowBox
         this.propertyName = propertyName;
         this.propertyIndex = propertyIndex;

@@ -178,7 +178,6 @@ export class PiEditor {
      * @param box
      */
     selectElementForBox(box: Box) {
-        // todo not correct yet!
         if (!isNullOrUndefined(box) && box !== this._selectedBox) { // only (re)set the local variables when the box can be found
             this._selectedElement = box.element;
             if (!box.selectable) {
@@ -193,10 +192,10 @@ export class PiEditor {
             // TODO Only needed when something actually changed
             this.selectionChanged();
         }
-        console.log(`==>     this._selectedElement = ${this._selectedElement.piId()}=${this._selectedElement.piLanguageConcept()};
-        this._selectedBox = ${this._selectedBox.role} of kind ${this._selectedBox.kind};
-        this._selectedIndex = ${this._selectedIndex};
-        this._selectedProperty = ${this._selectedProperty};`);
+        // console.log(`==>     this._selectedElement = ${this._selectedElement.piId()}=${this._selectedElement.piLanguageConcept()};
+        // this._selectedBox = ${this._selectedBox.role} of kind ${this._selectedBox.kind};
+        // this._selectedIndex = ${this._selectedIndex};
+        // this._selectedProperty = ${this._selectedProperty};`);
     }
 
     selectParent() {

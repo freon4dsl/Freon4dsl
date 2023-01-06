@@ -23,7 +23,6 @@
         activeIn,
         draggedElem,
         draggedFrom,
-        GridIndex,
         selectedBoxes
     } from "./svelte-utils/DropAndSelectStore";
     import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
@@ -34,8 +33,8 @@
     export let parentComponentId: string;
     export let parentOrientation: string;
     export let parentHasHeader: boolean;
-    // determine the type of the elements in the cell, this speeds up the check whether an element may be dropped here
-    let myMetaType: string;
+    // the type of the elements in the cell, this speeds up the check whether an element may be dropped here
+    export let myMetaType: string;
 
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
@@ -53,7 +52,7 @@
     let isHeader = "noheader";
     let cssStyle: string = "";
     let cssClass: string = "";
-    let hovering: GridIndex = { row: -1, column: -1 };      // determines the style of the element, when hovering but nothing is being dragged
+    // let hovering: GridIndex = { row: -1, column: -1 };      // determines the style of the element, when hovering but nothing is being dragged
 
     // the drag ghost image, preload  it, otherwise it will not be shown on the first drag
     const img = new Image();
@@ -61,7 +60,7 @@
     // img.src = "img/open_with.svg"; // todo svg image is not shown as drag ghost
 
     const refresh = (why?: string) => {
-        LOGGER.log("TableCellComponent refresh, box: " + box);
+        LOGGER.log("TableCellComponent refresh, why: " + why);
         if (!!box) {
             if (parentOrientation === TableDirection.HORIZONTAL) {
                 row = box.row;
@@ -106,14 +105,13 @@
     };
 
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh(box?.$id);
+        refresh('FROM TableCellComponent box changed ' + box?.$id);
     }
 
     // TODO rethink drag and drop now that there is a TableRowComponent
     const drop = (event: DragEvent) => {
         LOGGER.log("drop, dispatching");
         dispatcher("dropOnCell", { row: row, column: column });
-        hovering = { row: -1, column: -1 };
     };
 
     const dragstart = (event: DragEvent) => {
@@ -141,20 +139,15 @@
     };
 
     const dragenter = (event: DragEvent): boolean => {
-        const data: ListElementInfo = $draggedElem;
         // only show this item as active when the type of the element to be dropped is the right one
-        if (Language.getInstance().metaConformsToType(data.element, myMetaType)) {
+        if (Language.getInstance().metaConformsToType($draggedElem.element, myMetaType)) {
             $activeElem = { row: row, column: column };
             $activeIn = parentComponentId;
         }
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
-    const mouseover = (): boolean => {
-        hovering = { row: row, column: column };
-        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
-    };
+
     const mouseout = (): boolean => {
-        hovering = { row: -1, column: -1 };
         $activeElem = null;
         $activeIn = "";
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
@@ -172,30 +165,15 @@
             index = 0;
         } else {
             $contextMenu.items = box.options("normal");
-            console.log(`showContextMenu row: ${row}, column: ${column}, box.propertyIndex: ${box.propertyIndex}`)
-            index = box.propertyIndex
-            // index = parentOrientation === "row" ? row - 1 : column - 1;
-            // if (parentHasHeader) {
-            //     index--;
-            // }
+            // console.log(`showContextMenu row: ${row}, column: ${column}, box.propertyIndex: ${box.propertyIndex}`);
+            index = box.propertyIndex;
         }
         // set the selected box
         if (editor.selectedBox !== box) {
             editor.selectElementForBox(box);
-            // $selectedBoxes = box.getSiblings();
         }
         $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
     }
-
-    let isHovering: boolean;
-    $: isHovering = (parentOrientation === "row" ? hovering.row === row : hovering.column === column) && !isActive;
-
-    let isActive: boolean;
-    $: isActive = (parentOrientation === "row" ? $activeElem?.row === row : $activeElem?.column === column) && $activeIn === parentComponentId;
-
-    let isBeingDragged: boolean;
-    $: isBeingDragged = ((parentOrientation === "row") ? $draggedElem?.propertyIndex === row : $draggedElem?.propertyIndex === column)
-        && $draggedElem?.componentId === parentComponentId;
 
     // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
     let isSelected: boolean;
@@ -215,6 +193,14 @@
         style="{cssStyle}"
         draggable=true
         on:keydown={onKeydown}
+        on:dragstart|stopPropagation={event => dragstart(event)}
+        on:drop|stopPropagation={event => drop(event)}
+        ondragover="return false"
+        on:dragenter|stopPropagation={(event) => dragenter(event)}
+        on:mouseout|stopPropagation={mouseout}
+        on:focus={() => {}}
+        on:blur={() => {}}
+        on:keydown={onKeydown}
         on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event)}
 >
     <RenderComponent box={childBox} editor={editor}/>
@@ -229,20 +215,6 @@
         padding: var(--freon-gridcell-component-padding, 1px);
         background-color: var(--freon-gridcell-component-background-color, transparent);
         color: var(--freon-gridcell-component-color, inherit);
-    }
-
-    .is-active {
-        outline: solid 1px red; /* TODO adjust the colors to freon colors */
-        /*border-top: solid 10px transparent; !* move the element a little down to show where the drop can take place *!*/
-    }
-
-    .hovering {
-        cursor: grab;
-    }
-
-    .dragged {
-        opacity: 0.5;
-        cursor: grabbing;
     }
 
     .unSelected {

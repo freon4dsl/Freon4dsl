@@ -31,22 +31,6 @@ export abstract class TableBox extends Box {
         this.selectable = false;
     }
 
-    // todo this method should be mobx enabled
-    // get cells(): TableCellBox[] {
-    //     const _cells: TableCellBox[] = []
-    //     this._children.forEach(ch => {
-    //         if (ch instanceof ElementBox) {
-    //             const rowBox = ch.content;
-    //             if (rowBox instanceof TableRowBox) {
-    //                 _cells.push(...rowBox.cells)
-    //             }
-    //         } else if (ch instanceof TableRowBox) {
-    //             _cells.push(...ch.cells);
-    //         }
-    //     })
-    //     return _cells;
-    // }
-
     get direction() : TableDirection {
         return this._direction;
     }

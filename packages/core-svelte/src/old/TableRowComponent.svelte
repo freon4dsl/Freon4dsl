@@ -13,6 +13,7 @@
 
     export let box: TableRowBox;
     export let editor: PiEditor;
+    export let tableComponentId: string;
 
     const LOGGER = new PiLogger("TableRowComponent");
     let id: string = `${box?.element?.piId()}-${box?.role}`;
@@ -51,7 +52,7 @@
 
 {#each cells as cell (cell.element.piId() + "-" + cell.row + "-" + cell.column)}
     <TableCellComponent
-            parentComponentId={id}
+            parentComponentId={tableComponentId}
             parentOrientation={direction}
             box={cell}
             editor={editor}

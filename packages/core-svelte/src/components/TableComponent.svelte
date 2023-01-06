@@ -7,19 +7,17 @@
      * or a TableCellComponent.
      */
     import {
-        TableCellBox,
         type TableBox,
         type PiEditor,
         PiLogger,
         Box,
-        isElementBox,
-        isTableRowBox, ListElementInfo, TableDirection
+        ListElementInfo,
+        TableDirection, GridCellBox, isTableRowBox, isElementBox, TableCellBox
     } from "@projectit/core";
-    import ElementComponent from "./ElementComponent.svelte";
     import { afterUpdate, onMount } from "svelte";
-    import TableRowComponent from "./TableRowComponent.svelte";
     import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils/DropAndSelectStore";
     import { dropListElement, moveListElement } from "@projectit/core";
+    import TableCellComponent from "./TableCellComponent.svelte";
 
     const LOGGER = new PiLogger("TableComponent");
 
@@ -27,28 +25,61 @@
     export let editor: PiEditor;
 
     let id = box?.id;
-    let children: Box[];
+    let cells: GridCellBox[];
     let templateColumns: string;
     let templateRows: string;
     let cssClass: string;
     let gridElement: HTMLElement;
-    let myMetaType: string;
+    let elementType: string;
 
     const refresh = (why?: string): void => {
         LOGGER.log("Refresh TableBox, box: " + why);
         if (!!box) {
-            children = [...box.children];
+            cells = getCells();
             templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
             templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
             cssClass = box.cssClass;
-            myMetaType = box.conceptName;
+            elementType = box.conceptName;
         }
-    } ;
+    };
+
+    function getCells(): TableCellBox[] {
+        const _cells: TableCellBox[] = []
+        box.children.forEach(ch => {
+            if (isElementBox(ch)) {
+                const rowBox = ch.content;
+                if (isTableRowBox(rowBox)) {
+                    _cells.push(...rowBox.cells)
+                }
+            } else if (isTableRowBox(ch)) {
+                _cells.push(...ch.cells);
+            }
+        })
+        return _cells;
+    }
+
     onMount( () => {
         box.refreshComponent = refresh;
-    })
+        // We also set the refresh to each child that is a TableRowBox,
+        // because TableRowBoxes do not have an equivalent Svelte component.
+        for (const child of box.children) {
+            if (isTableRowBox(child)) {
+                child.refreshComponent = refresh;
+            } else if (isElementBox(child) && isTableRowBox(child.content)){
+                child.refreshComponent = refresh;
+            }
+        }
+    });
+
     afterUpdate( () => {
         box.refreshComponent = refresh;
+        for (const child of box.children) {
+            if (isTableRowBox(child)) {
+                child.refreshComponent = refresh;
+            } else if (isElementBox(child) && isTableRowBox(child.content)){
+                child.content.refreshComponent = refresh;
+            }
+        }
     });
 
     $: { // Evaluated and re-evaluated when the box changes.
@@ -74,7 +105,7 @@
             moveListElement(box.element, data.element, box.propertyName, targetIndex);
         } else { // dropping in another list
             // console.log("moving item to another grid, drop type: " + data.elementType + ", grid cell type: " + elementType);
-            dropListElement(editor, data, myMetaType, box.element, box.propertyName, targetIndex);
+            dropListElement(editor, data, elementType, box.element, box.propertyName, targetIndex);
         }
         // Everything is done, so reset the variables
         $draggedElem = null;
@@ -92,12 +123,15 @@
         class="maingridcomponent {cssClass}"
         id="{id}"
 >
-    {#each children as child}
-        {#if (isElementBox(child))}
-            <ElementComponent box={child} editor={editor}/>
-        {:else if isTableRowBox(child)}
-            <TableRowComponent box={child} editor={editor}/>
-        {/if}
+    {#each cells as cell (cell.content.elementId + '-' + cell.row + '-' + cell.column)}
+        <TableCellComponent
+                box={cell}
+                editor={editor}
+                parentComponentId={id}
+                parentOrientation={box.direction}
+                parentHasHeader={box.hasHeaders}
+                myMetaType={elementType}
+                on:dropOnCell={drop}/>
     {/each}
 </span>
 

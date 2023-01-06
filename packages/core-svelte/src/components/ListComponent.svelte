@@ -66,8 +66,6 @@
 
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
         LOGGER.log("LIST Drag Start " + box.id);
-
-        // LOGGER.log("ON DRAG START");
         // close any context menu
         $contextMenuVisible = false;
 
@@ -95,10 +93,7 @@
         }
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
-    const mouseover = (index): boolean => {
-        LOGGER.log("LIST Mouse Over " + box.id + " index: " + index);
-        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
-    };
+
     const mouseout = (): boolean => {
         LOGGER.log("LIST mouse out " + box.id);
         // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
@@ -174,7 +169,7 @@
     }
 
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh("Refresh from ListCom[onent box changed:   " + box?.id);
+        refresh("Refresh from ListComponent box changed:   " + box?.id);
     }
     // The mouseover fires when the mouse cursor is outside the element and then move to inside the boundaries of the element.
     // The mouseout fires when the mouse cursor is over an element and then moves another element.
@@ -203,7 +198,6 @@
                 on:drop|stopPropagation={event => drop(event, index)}
                 ondragover="return false"
                 on:dragenter|stopPropagation={(event) => dragenter(event, index)}
-                on:mouseover|stopPropagation={() => mouseover(index)}
                 on:mouseout|stopPropagation={mouseout}
                 on:focus={() => {}}
                 on:blur={() => {}}

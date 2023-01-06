@@ -7,19 +7,33 @@ import { TableDirection } from "./TableBox";
 export class TableRowBox extends Box {
     kind = "TableRowBox";
     rowIndex: number = -1;
-    cells: TableCellBox[] = [];
+    _cells: TableCellBox[] = [];
 
     constructor(element: PiElement, role: string, cells: TableCellBox[], rowIndex: number, initializer?: Partial<TableRowBox>) {
         super(element, role);
         PiUtils.initializeObject(this, initializer);
         this.cells = cells;
         this.rowIndex = rowIndex;
-        this.cells.forEach( c => c.parent = this);
         this.selectable = false;
     }
 
     get children(): ReadonlyArray<Box> {
-        return this.cells;
+        return this._cells;
+    }
+
+    get cells(): TableCellBox[] {
+        return this._cells;
+    }
+
+    set cells(boxes: TableCellBox[]) {
+        for (const c of this._cells) {
+            c.parent = null;
+        }
+        this._cells = boxes;
+        for (const c of this._cells) {
+            c.parent = this;
+        }
+        this.isDirty();
     }
 
     // setFocus: () => void = async () => {

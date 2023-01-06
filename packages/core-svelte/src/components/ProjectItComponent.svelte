@@ -143,7 +143,7 @@
         // console.log("setting selectedBox " + why);
         if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             if (isTableRowBox(editor.selectedBox) || isElementBox(editor.selectedBox)) {
-                // Because neither a tableRowComponent nor an ElementBox has its own HTML equivalent,
+                // Because neither a TableRowBox nor an ElementBox has its own HTML equivalent,
                 // its children are regarded to be selected.
                 $selectedBoxes = getSelectableChildren(editor.selectedBox);
                 $selectedBoxes.push(editor.selectedBox); // keep this one as well because of the test above

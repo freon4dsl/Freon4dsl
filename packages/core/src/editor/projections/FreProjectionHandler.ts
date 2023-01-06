@@ -72,29 +72,6 @@ export class FreProjectionHandler {
         return this.getBoxProvider(element)?.box;
     }
 
-    /**
-     * Returns a table definition for type 'conceptName'. Which table definition is returned
-     * is determined by the enabled projections.
-     * Internally, a tempory box provider for type 'conceptName' is used.
-     * @param conceptName
-     */
-    // getTableDefinition(conceptName: string): PiTableDefinition {
-    //     console.log('FreProjectionHandler getTableDefinition ' + conceptName)
-    //     const boxProvider = this.conceptNameToProviderConstructor.get(conceptName)(this);
-    //     let tableDef = boxProvider?.tableDefinition;
-    //     if (!!tableDef) {
-    //         return tableDef;
-    //     } else {
-    //         // return default values if nothing has been found.
-    //         return {
-    //             headers: [conceptName],
-    //             cells: [(element: PiElement) => {
-    //                 return this.getBox(element);
-    //             }]
-    //         };
-    //     }
-    // }
-
     ////////// Methods for registring the boxproviders ////////////
 
     /**
