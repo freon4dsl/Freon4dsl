@@ -166,15 +166,7 @@
 //         }
 //     }
 //
-//     /**
-//      * Sets the first editable/selectable child of the currently selected box to be the selected box.
-//      */
-//     selectFirstLeafChildBox() {
-//         const first = this.selectedBox?.firstLeaf;
-//         if (!!first) {
-//             this.selectBoxNew(first);
-//         }
-//     }
+//
 //
 //
 //     /**
@@ -237,27 +229,5 @@
 //         LOGGER.log("SELECTED [" + this._selectedBox.role + "] elem [" + this?._selectedElement?.piLanguageConcept() + "]")
 //     }
 //
-//     // Static helper methods
 //
-//     /**
-//      * Returns true when 'other' is on the line above 'ref'.
-//      * @param ref
-//      * @param other
-//      * @private
-//      */
-//
-//     private static isOnPreviousLine(ref: Box, other: Box): boolean {
-//         const margin = 5;
-//         return other.actualY + margin < ref.actualY;
-//     }
-//
-//     /**
-//      * Returns true when 'other' is on the line below 'ref'.
-//      * @param ref
-//      * @param other
-//      * @private
-//      */
-//     private static isOnNextLine(ref: Box, other: Box): boolean {
-//         return this.isOnPreviousLine(other, ref);
-//     }
 // }

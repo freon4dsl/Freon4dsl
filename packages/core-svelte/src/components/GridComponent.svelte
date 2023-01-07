@@ -14,8 +14,10 @@
     let templateColumns: string;
     let templateRows: string;
     let cssClass: string = "";
+    let htmlElement: HTMLElement;
 
     const refresh = (why?: string): void =>  {
+        LOGGER.log("refresh " + why);
         if (!!box) {
             // console.log("REFRESH GridComponent " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
             id = componentId(box);
@@ -27,14 +29,27 @@
             cssClass = box.cssClass;
         }
     }
+
+    /**
+     * This function sets the focus on this element programmatically.
+     * It is called from the box. Note that because focus can be set,
+     * the html needs to have its tabindex set, and its needs to be bound
+     * to a variable.
+     */
+    async function setFocus(): Promise<void> {
+        htmlElement.focus();
+    }
+
     onMount( () => {
         LOGGER.log("GridComponent onmount")
         box.refreshComponent = refresh;
+        box.setFocus = setFocus;
+    });
 
-    })
     afterUpdate(() => {
         LOGGER.log("GridComponent afterUpdate for girdBox " + box.element.piLanguageConcept())
         box.refreshComponent = refresh;
+        box.setFocus = setFocus;
     });
 
     let dummy = 0;
@@ -49,6 +64,8 @@
         style:grid-template-rows="{templateRows}"
         class="maingridcomponent {cssClass}"
         id="{id}"
+        tabIndex={0}
+        bind:this={htmlElement}
 >
     {#each cells as cell (cell?.box?.element?.piId() + "-" + cell?.box?.id + cell?.role + "-grid")}
         <GridCellComponent grid={box} cellBox={cell} editor={editor}/>

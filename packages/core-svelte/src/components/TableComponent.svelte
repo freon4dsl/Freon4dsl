@@ -10,12 +10,15 @@
         type TableBox,
         type PiEditor,
         PiLogger,
-        Box,
         ListElementInfo,
-        TableDirection, GridCellBox, isTableRowBox, isElementBox, TableCellBox
+        TableDirection,
+        GridCellBox,
+        isTableRowBox,
+        isElementBox,
+        TableCellBox
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils/DropAndSelectStore";
+    import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils";
     import { dropListElement, moveListElement } from "@projectit/core";
     import TableCellComponent from "./TableCellComponent.svelte";
 
@@ -29,7 +32,7 @@
     let templateColumns: string;
     let templateRows: string;
     let cssClass: string;
-    let gridElement: HTMLElement;
+    let htmlElement: HTMLElement;
     let elementType: string;
 
     const refresh = (why?: string): void => {
@@ -43,6 +46,16 @@
             elementType = box.conceptName;
         }
     };
+
+    /**
+     * This function sets the focus on this element programmatically.
+     * It is called from the box. Note that because focus can be set,
+     * the html needs to have its tabindex set, and its needs to be bound
+     * to a variable.
+     */
+    async function setFocus(): Promise<void> {
+        htmlElement.focus();
+    }
 
     function getCells(): TableCellBox[] {
         const _cells: TableCellBox[] = []
@@ -63,6 +76,7 @@
 
     onMount( () => {
         box.refreshComponent = refresh;
+        box.setFocus = setFocus;
         // We also set the refresh to each child that is a TableRowBox,
         // because TableRowBoxes do not have an equivalent Svelte component.
         for (const child of box.children) {
@@ -76,6 +90,7 @@
 
     afterUpdate( () => {
         box.refreshComponent = refresh;
+        box.setFocus = setFocus;
         for (const child of box.children) {
             if (isTableRowBox(child)) {
                 child.refreshComponent = refresh;
@@ -125,6 +140,8 @@
         style:grid-template-rows="{templateRows}"
         class="maingridcomponent {cssClass}"
         id="{id}"
+        tabIndex={0}
+        bind:this={htmlElement}
 >
     {#each cells as cell (cell.content.elementId + '-' + cell.row + '-' + cell.column)}
         <TableCellComponent

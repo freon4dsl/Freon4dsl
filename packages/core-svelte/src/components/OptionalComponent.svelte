@@ -27,24 +27,24 @@
         childBox = box.content;
     };
 
-    // const setFocus = async (): Promise<void> => {
-    //     LOGGER.log("OptionalComponent.setFocus on box " + box.role);
-    //     if (mustShow || showByCondition && !!contentComponent) {
-    //         box.content.firstEditableChild.setFocus();
-    //     } else if (!!placeholderComponent) {
-    //         box.placeholder.setFocus();
-    //     } else {
-    //         console.error("OptionalComponent " + id + " has no elements to put focus on");
-    //     }
-    // };
+    async function setFocus(): Promise<void> {
+        LOGGER.log("OptionalComponent.setFocus on box " + box.role);
+        if (mustShow || showByCondition && !!contentComponent) {
+            box.content.firstEditableChild.setFocus();
+        } else if (!!placeholderComponent) {
+            box.placeholder.setFocus();
+        } else {
+            console.error("OptionalComponent " + id + " has no elements to put focus on");
+        }
+    };
 
     onMount( () => {
-        // box.setFocus = setFocus;
+        box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
     afterUpdate( () => {
-        // box.setFocus = setFocus;
+        box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 

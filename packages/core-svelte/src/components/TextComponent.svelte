@@ -3,7 +3,7 @@
 <!-- (cursor or selected text), when the switch is being made. -->
 
 <script lang="ts">
-	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount, tick } from "svelte";
+	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
 	import { executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils";
 	import {
 		ActionBox,
@@ -21,7 +21,6 @@
 		isActionBox,
 		isActionTextBox,
 		isSelectBox,
-		PI_NULL_COMMAND,
 		PiCaret,
 		PiCaretPosition,
 		PiEditor,
@@ -34,10 +33,9 @@
 	} from "@projectit/core";
 
 	import { runInAction } from "mobx";
-	import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
-	import { replaceHTML } from "./svelte-utils/index";
+	import { replaceHTML } from "./svelte-utils";
 
-	// TODO finger out better way to handle muting/unmuting of LOGGERs
+	// TODO find out better way to handle muting/unmuting of LOGGERs
     const LOGGER = new PiLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
     const dispatcher = createEventDispatcher();
     type BoxType = "action" | "select" | "text";
@@ -61,26 +59,27 @@
     let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
     										// Note that 'from <= to' always holds.
 
-    let boxType: BoxType = "text";          // indication how is this text component used, determines styling
+    let boxType: BoxType = "text";          // indication how is this text component is used, determines styling
     $: boxType = !!box.parent ? (isActionBox(box?.parent) ? "action" : isSelectBox(box?.parent) ? "select" : "text") : "text";
 
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box.
      */
-    // export const setFocus = () => {
-	// 	LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
-	// 	if (!!inputElement) {
-	// 		inputElement.focus();
-	// 	} else {
-	// 		// set the local variables
-	// 		isEditing = true;
-	// 		editStart = true;
-	// 		originalText = text;
-	// 		let {anchorOffset, focusOffset} = document.getSelection();
-	// 		setFromAndTo(anchorOffset, focusOffset);
-	// 	}
-	// }
+	export async function setFocus(): Promise<void> {
+		LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
+		if (!!inputElement) {
+			inputElement.focus();
+		} else {
+			// todo where should focus be???
+			// set the local variables
+			isEditing = true;
+			editStart = true;
+			originalText = text;
+			let {anchorOffset, focusOffset} = document.getSelection();
+			setFromAndTo(anchorOffset, focusOffset);
+		}
+	}
 
     /**
      * This function ensures that 'from <= to' always holds.
@@ -443,9 +442,9 @@
 			}
         }
 		// Always set the input width explicitly.
-		// setInputWidth();
-		placeholder =box.placeHolder
-		// box.setFocus = setFocus;
+		setInputWidth();
+		placeholder = box.placeHolder
+		box.setFocus = setFocus;
 		box.setCaret = setCaret;
 		box.refreshComponent = refresh;
 	});
@@ -457,12 +456,10 @@
      */
     onMount(() => {
         LOGGER.log("onMount" + " for element "  + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ")");
-        // box.setFocus = setFocus;
-        // box.setCaret = setCaret;
         originalText = text = box.getText();
-        placeholder = box.placeHolder;
+		placeholder = box.placeHolder;
 		setInputWidth();
-		// box.setFocus = setFocus;
+		box.setFocus = setFocus;
 		box.setCaret = setCaret;
 		box.refreshComponent = refresh;
     });
@@ -531,7 +528,7 @@
 		</span>
 	{:else}
 		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
-		     But ... this is only a problem when this components is inside a draggable element (like List or table)
+		     But ... this is only a problem when this component is inside a draggable element (like List or table)
 		-->
 		<span class="{box.role} text-box-{boxType} text"
               on:click={startEditing}

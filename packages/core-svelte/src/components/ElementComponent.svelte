@@ -19,12 +19,21 @@
         }
     }
 
+    async function setFocus(): Promise<void> {
+        LOGGER.log("ListComponent.setFocus for box " + box.role);
+        if (!!box) {
+            box.content.setFocus();
+        }
+    }
+
     onMount( () => {
         box.refreshComponent = refresh;
+        box.setFocus = setFocus;
     });
 
     afterUpdate( () => {
         box.refreshComponent = refresh;
+        box.setFocus = setFocus;
     });
 
     $: { // Evaluated and re-evaluated when the box changes.

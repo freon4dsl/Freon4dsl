@@ -12,7 +12,7 @@
     import { afterUpdate, onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
     import RenderComponent from "./RenderComponent.svelte";
-    import { componentId, isOdd } from "./util";
+    import { componentId } from "./util";
     import { executeCustomKeyboardShortCut, isOdd } from "./svelte-utils";
 
     // properties
@@ -35,6 +35,7 @@
     let isHeader = "noheader";
     let cssStyle: string = "";
     let cssClass: string = "";
+    let htmlElement: HTMLElement;
 
     function refresh(from? : string): void {
         if (!!cellBox) {
@@ -53,12 +54,24 @@
         }
     }
 
+    /**
+     * This function sets the focus on this element programmatically.
+     * It is called from the box. Note that because focus can be set,
+     * the html needs to have its tabindex set, and its needs to be bound
+     * to a variable.
+     */
+    async function setFocus(): Promise<void> {
+        htmlElement.focus();
+    }
+
     onMount( () => {
         cellBox.refreshComponent = refresh;
+        cellBox.setFocus = setFocus;
     }) ;
 
     afterUpdate(() => {
         cellBox.refreshComponent = refresh;
+        cellBox.setFocus = setFocus;
     });
 
     const onKeydown = (event: KeyboardEvent) => {
@@ -90,6 +103,8 @@
         onClick={onCellClick}
         on:keydown={onKeydown}
         id="{id}"
+        tabIndex={0}
+        bind:this={htmlElement}
 >
     <RenderComponent box={$boxStore} editor={editor}/>
 </div>
@@ -101,7 +116,6 @@
         justify-self: var(--freon-gridcell-component-justify-left, stretch);
         display: flex;
         padding: var(--freon-gridcell-component-padding, 1px);
-        padding: var(--freon-gridcell-component-margin, 1px);
         background-color: var(--freon-gridcell-component-background-color, white);
         color: var(--freon-gridcell-component-color, inherit);
     }

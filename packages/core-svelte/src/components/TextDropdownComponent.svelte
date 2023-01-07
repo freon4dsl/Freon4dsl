@@ -51,29 +51,29 @@
      * This function sets the focus on this element programmatically.
      * It is called from the RenderComponent.
      */
-    // const setFocus = () => {
-    //     // console.log("TextDropDownComponent " + box.kind)
-    //     if (!!textComponent) {
-    //         textComponent.setFocus();
-    //     } else {
-    //         console.log('TextDropdownComponent ' + id + ' has no textComponent' )
-    //     }
-    // }
+    const setFocus = () => {
+        LOGGER.log("setFocus " + box.kind + id);
+        if (!!textComponent) {
+            textComponent.setFocus();
+        } else {
+            console.log('TextDropdownComponent ' + id + ' has no textComponent' )
+        }
+    }
 
     afterUpdate( () => {
-        // box.setFocus = setFocus;
-        // const selected = box.getSelectedOption(); // todo why?
-        // runInAction( () => {
-        //     textBox.cssStyle = box.cssStyle;
-        //     if (!!selected) {
-        //         textBox.setText(selected.label);
-        //     }
-        // });
+        box.setFocus = setFocus;
+        const selected = box.getSelectedOption(); // todo why?
+        runInAction( () => {
+            textBox.cssStyle = box.cssStyle;
+            if (!!selected) {
+                textBox.setText(selected.label);
+            }
+        });
     });
     
     onMount(() => {
-        LOGGER.log("TextDropdownComponent.onMount for role [" + box.role + "]");
-        // box.setFocus = setFocus;
+        LOGGER.log("onMount for role [" + box.role + "]");
+        box.setFocus = setFocus;
         const selected = box.getSelectedOption(); // todo why?
         runInAction( () => {
             textBox.cssStyle = box.cssStyle;
@@ -103,18 +103,22 @@
     };
 
     function selectLastOption() {
-        if (filteredOptions.length !== 0) {
-            selectedId = filteredOptions[filteredOptions.length - 1].id;
-        } else { // there are no valid options left
-            editor.setUserMessage("no valid selection");
+        if (dropdownShown) {
+            if (filteredOptions?.length !== 0) {
+                selectedId = filteredOptions[filteredOptions.length - 1].id;
+            } else { // there are no valid options left
+                editor.setUserMessage("no valid selection");
+            }
         }
     }
 
     function selectFirstOption() {
-        if (filteredOptions.length !== 0) {
-            selectedId = filteredOptions[0].id;
-        } else { // there are no valid options left
-            editor.setUserMessage("No valid selection");
+        if (dropdownShown) {
+            if (filteredOptions?.length !== 0) {
+                selectedId = filteredOptions[0].id;
+            } else { // there are no valid options left
+                editor.setUserMessage("No valid selection");
+            }
         }
     }
 
@@ -127,81 +131,96 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        // LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
-        if (!event.ctrlKey && !event.altKey) {
-        switch (event.key) {
-            case ESCAPE: {
-                dropdownShown = false;
-                event.preventDefault();
-                event.stopPropagation();
-                break;
-            }
-            case ARROW_DOWN: {
-                if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
-                    selectFirstOption();
-                } else {
-                    const index = filteredOptions.findIndex(o => o.id === selectedId);
-                    if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
-                        selectedId = filteredOptions[index + 1].id;
-                    } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
-                        selectFirstOption();
+        if (dropdownShown) {
+            // LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
+            if (!event.ctrlKey && !event.altKey) {
+                switch (event.key) {
+                    case ESCAPE: {
+                        dropdownShown = false;
+                        event.preventDefault();
+                        event.stopPropagation();
+                        break;
+                    }
+                    case ARROW_DOWN: {
+                        if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
+                            selectFirstOption();
+                        } else {
+                            const index = filteredOptions.findIndex(o => o.id === selectedId);
+                            if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
+                                selectedId = filteredOptions[index + 1].id;
+                            } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
+                                selectFirstOption();
+                            }
+                        }
+                        event.preventDefault();
+                        event.stopPropagation();
+                        break;
+                    }
+                    case ARROW_UP: {
+                        if (!selectedId || selectedId.length == 0) { // there is no current selection, start at the last option
+                            selectLastOption();
+                        } else {
+                            const index = filteredOptions.findIndex(o => o.id === selectedId);
+                            if (index > 0) { // the 'normal' case: go one up
+                                selectedId = filteredOptions[index - 1].id;
+                            } else if (index === 0) { // the beginning of the options reached: go to the last
+                                selectLastOption();
+                            }
+                        }
+                        event.preventDefault();
+                        event.stopPropagation();
+                        break;
+                    }
+                    case ENTER: { // user wants current selection
+                        // find the chosen option
+                        let chosenOption: SelectOption = null;
+                        if (filteredOptions.length === 1) { // if there is just one option left, choose that one
+                            if (filteredOptions.length !== 0) {
+                                chosenOption = filteredOptions[0];
+                            } else { // there are no valid options left
+                                editor.setUserMessage('No valid selection')
+                            }
+                        } else { // find the selected option and choose that one
+                            const index = filteredOptions.findIndex(o => o.id === selectedId);
+                            if (index >= 0 && index < filteredOptions.length) {
+                                chosenOption = filteredOptions[index];
+                            }
+                        }
+                        // store or execute the option
+                        if (!!chosenOption) {
+                            storeAndExecute(chosenOption);
+                            isEditing = false;
+                            dropdownShown = false;
+                        } else { //  no valid option, restore the original text
+                            text = textBox.getText();
+                        }
+                        // stop editing
+                        isEditing = false;
+                        dropdownShown = false;
+                        event.preventDefault();
+                        event.stopPropagation();
+                        break;
+                    }
+                    default: {
+                        // stop editing
+                        isEditing = false;
+                        dropdownShown = false;
                     }
                 }
-                event.preventDefault();
-                event.stopPropagation();
-                break;
             }
-            case ARROW_UP: {
-                if (!selectedId || selectedId.length == 0) { // there is no current selection, start at the last option
-                    selectLastOption();
-                } else {
-                    const index = filteredOptions.findIndex(o => o.id === selectedId);
-                    if (index > 0) { // the 'normal' case: go one up
-                        selectedId = filteredOptions[index - 1].id;
-                    } else if (index === 0) { // the beginning of the options reached: go to the last
-                        selectLastOption();
+        } else { // this component was entered using keystrokes, no dropdown is shown
+            if (!event.ctrlKey && !event.altKey) {
+                switch (event.key) {
+                    case ENTER: {
+                        // todo replace this by calling function startEditing, but without event parameter
+                        isEditing = true;
+                        dropdownShown = true;
+                        if (!allOptions) {
+                            allOptions = getOptions();
+                        }
                     }
                 }
-                event.preventDefault();
-                event.stopPropagation();
-                break;
             }
-            case ENTER: { // user wants current selection
-                // find the chosen option
-                let chosenOption: SelectOption = null;
-                if (filteredOptions.length === 1) { // if there is just one option left, choose that one
-                    if (filteredOptions.length !== 0) {
-                        chosenOption = filteredOptions[0];
-                    } else { // there are no valid options left
-                        editor.setUserMessage('No valid selection')
-                    }
-                } else { // find the selected option and choose that one
-                    const index = filteredOptions.findIndex(o => o.id === selectedId);
-                    if (index >= 0 && index < filteredOptions.length) {
-                        chosenOption = filteredOptions[index];
-                    }
-                }
-                // store or execute the option
-                if (!!chosenOption) {
-                    storeAndExecute(chosenOption);
-                    isEditing = false;
-                    dropdownShown = false;
-                } else { //  no valid option, restore the original text
-                    text = textBox.getText();
-                }
-                // stop editing
-                isEditing = false;
-                dropdownShown = false;
-                event.preventDefault();
-                event.stopPropagation();
-                break;
-            }
-            default: {
-                // stop editing
-                isEditing = false;
-                dropdownShown = false;
-            }
-        }
         }
     };
     

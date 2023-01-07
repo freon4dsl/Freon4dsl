@@ -45,10 +45,10 @@ export class TableRowBox extends Box {
         return this._isHeader;
     }
 
-    // setFocus: () => void = async () => {
-    //     // todo check if the first child if the one with the first column index
-    //     this.children[0]?.setFocus();
-    // };
+    setFocus: () => void = async () => {
+        // todo check if the first child is the one with the first column index
+        this.children[0]?.setFocus();
+    };
 }
 
 export function isTableRowBox(box: Box): box is TableRowBox {

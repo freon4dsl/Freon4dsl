@@ -27,19 +27,19 @@
     let children: Box[];
     let isHorizontal: boolean;
 
-    // async function setFocus(): Promise<void> {
-    //     if (!!element) {
-    //         element.focus();
-    //     }
-    // }
+    async function setFocus(): Promise<void> {
+        if (!!element) {
+            element.focus();
+        }
+    }
 
     onMount(() => {
-        // box.setFocus = setFocus;
+        box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
     afterUpdate(() => {
-        // box.setFocus = setFocus;
+        box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
@@ -58,6 +58,7 @@
       id="{id}"
       class:horizontal="{isHorizontal}"
       class:vertical="{!isHorizontal}"
+      tabIndex={0}
       bind:this={element}
 >
     {#if isHorizontal }

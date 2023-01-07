@@ -140,7 +140,7 @@
     } );
 
     const refreshSelection = (why?: string) => {
-        // console.log("setting selectedBox " + why);
+        console.log("setting selectedBox " + why);
         if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             if (isTableRowBox(editor.selectedBox) || isElementBox(editor.selectedBox)) {
                 // Because neither a TableRowBox nor an ElementBox has its own HTML equivalent,
@@ -149,8 +149,8 @@
                 $selectedBoxes.push(editor.selectedBox); // keep this one as well because of the test above
             } else {
                 $selectedBoxes = [editor.selectedBox];
-                // editor.selectedBox.setFocus(); is done by RenderComponent
             }
+            editor.selectedBox.setFocus();
         }
     };
 

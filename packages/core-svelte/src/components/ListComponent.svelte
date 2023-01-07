@@ -9,23 +9,20 @@
     import { flip } from "svelte/animate";
     import {
         Box,
-        isActionBox, isNullOrUndefined,
+        dropListElement,
+        isActionBox,
+        isNullOrUndefined,
         Language,
         ListBox,
         ListDirection,
+        ListElementInfo,
+        MenuOptionsType,
+        moveListElement,
         PiEditor,
         PiLogger
     } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
-    import { dropListElement, moveListElement, ListElementInfo } from "@projectit/core";
-    import {
-        draggedElem,
-        draggedFrom,
-        activeElem,
-        activeIn,
-        selectedBoxes
-    } from "./svelte-utils/DropAndSelectStore";
-    import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
+    import { activeElem, activeIn, draggedElem, draggedFrom, contextMenu, contextMenuVisible } from "./svelte-utils/";
     import { afterUpdate, onMount } from "svelte";
 
     // Parameters
@@ -35,7 +32,7 @@
     // Local state variables
     let LOGGER: PiLogger = new PiLogger("ListComponent");
     let id: string;                             // an id for the html element showing the list
-    let element: HTMLSpanElement;
+    let htmlElement: HTMLSpanElement;
     let isHorizontal: boolean;                  // indicates whether the list should be shown horizontally or vertically
     let shownElements: Box[];                   // the parts of the list that are being shown
 
@@ -115,30 +112,30 @@
             // determine the contents of the menu based on listBox, before showing the menu!
             if (isActionBox(elemBox)) { // the selected box is the placeholder => show different menu items
                 // console.log('index of ActionBox: ' + index);
-                $contextMenu.items = box.options('placeholder');
+                $contextMenu.items = box.options(MenuOptionsType.placeholder);
             } else {
-                $contextMenu.items = box.options('normal');
+                $contextMenu.items = box.options(MenuOptionsType.normal);
             }
             $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
         }
     }
 
-    // async function setFocus(): Promise<void> {
-    //     LOGGER.log("ListComponent.setFocus for box " + box.role);
-    //     if (!!element) {
-    //         element.focus();
-    //     }
-    // }
+    async function setFocus(): Promise<void> {
+        LOGGER.log("ListComponent.setFocus for box " + box.role);
+        if (!!htmlElement) {
+            htmlElement.focus();
+        }
+    }
 
     onMount( () => {
         LOGGER.log("ListComponent onMount --------------------------------")
-        // box.setFocus = setFocus;
+        box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
     afterUpdate(() => {
         LOGGER.log("ListComponent.afterUpdate for " + box.role);
-        // box.setFocus = setFocus;
+        box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
@@ -183,7 +180,8 @@
 <span class="list" id="{id}"
       style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
       style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}"
-      bind:this={element}
+      bind:this={htmlElement}
+      tabindex={0}
 >
     {#each shownElements as box, index (box.id)}
         <span

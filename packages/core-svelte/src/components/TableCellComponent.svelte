@@ -56,11 +56,10 @@
     let column: number;
     let orientation: BoxTypeName = "gridcellNeutral";
     let childBox: Box;
-
+    let htmlElement: HTMLElement;
     let isHeader = "noheader";
     let cssStyle: string = "";
     let cssClass: string = "";
-    // let hovering: GridIndex = { row: -1, column: -1 };      // determines the style of the element, when hovering but nothing is being dragged
 
     // the drag ghost image, preload  it, otherwise it will not be shown on the first drag
     const img = new Image();
@@ -82,9 +81,15 @@
         }
     }
 
-    // async function setFocus(): Promise<void> {
-    //     childBox.setFocus();
-    // }
+    /**
+     * This function sets the focus on this element programmatically.
+     * It is called from the box. Note that because focus can be set,
+     * the html needs to have its tabindex set, and its needs to be bound
+     * to a variable.
+     */
+    async function setFocus(): Promise<void> {
+        htmlElement.focus();
+    }
 
     // todo see which function we need to set the row and column: onMount, refresh, afterUpdate???
     onMount(() => {
@@ -214,6 +219,8 @@
         on:blur={() => {}}
         on:keydown={onKeydown}
         on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event)}
+        tabIndex={0}
+        bind:this={htmlElement}
 >
     <RenderComponent box={childBox} editor={editor}/>
 </span>
