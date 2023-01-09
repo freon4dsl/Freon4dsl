@@ -4,7 +4,7 @@ import { PiLogger } from "@projectit/core";
 export function muteLogs() {
     // from ~/core-svelte:
     PiLogger.mute("ContextMenu");
-    PiLogger.mute("DropdownComponent");      // currently, there is no LOGGER for DropdownComponent
+    PiLogger.mute("DropdownComponent");
     PiLogger.mute("EmptyLineComponent");     // currently, there is no LOGGER for EmptyLineComponent
     PiLogger.mute("ElementComponent");
     PiLogger.mute("TableCellComponent");
