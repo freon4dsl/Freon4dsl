@@ -11,14 +11,14 @@
         AbstractChoiceBox,
         ARROW_DOWN,
         ARROW_UP,
-        ENTER, ESCAPE,
+        ENTER, ESCAPE, isNullOrUndefined,
         isSelectBox,
         PiEditor, PiLogger,
         SelectOption,
         TextBox
     } from "@projectit/core";
 
-    import { runInAction } from "mobx";
+    import { autorun, runInAction } from "mobx";
     import { afterUpdate, onMount } from "svelte";
 
     const LOGGER = new PiLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -61,13 +61,14 @@
     }
 
     const refresh = (why?: string) => {
-        const selected = box.getSelectedOption(); // todo why?
-        textBox.cssStyle = box.cssStyle;
-        if (!!selected) {
-            textBox.setText(selected.label);
+        if (!isNullOrUndefined(textBox)) {
+            const selected = box?.getSelectedOption(); // todo why?
+            textBox.cssStyle = box?.cssStyle;
+            if (!!selected) {
+                textBox?.setText(selected?.label);
+            }
         }
     }
-    refresh();
 
     afterUpdate( () => {
         box.setFocus = setFocus;
@@ -345,6 +346,8 @@
     const closeDropDown = () => {
         dropdownShown = false;
     }
+
+    refresh();
 
 </script>
 
