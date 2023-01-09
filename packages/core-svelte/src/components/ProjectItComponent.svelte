@@ -148,7 +148,9 @@
                 $selectedBoxes = getSelectableChildren(editor.selectedBox);
                 $selectedBoxes.push(editor.selectedBox); // keep this one as well because of the test above
             } else {
-                $selectedBoxes = [editor.selectedBox];
+                // $selectedBoxes = [editor.selectedBox];
+                $selectedBoxes.pop();
+                $selectedBoxes.push(editor.selectedBox);
             }
             editor.selectedBox.setFocus();
         }
