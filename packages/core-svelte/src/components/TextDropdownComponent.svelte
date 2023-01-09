@@ -18,7 +18,7 @@
         TextBox
     } from "@projectit/core";
 
-    import { autorun, runInAction } from "mobx";
+    import { runInAction } from "mobx";
     import { afterUpdate, onMount } from "svelte";
 
     const LOGGER = new PiLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -60,27 +60,26 @@
         }
     }
 
+    const refresh = (why?: string) => {
+        const selected = box.getSelectedOption(); // todo why?
+        textBox.cssStyle = box.cssStyle;
+        if (!!selected) {
+            textBox.setText(selected.label);
+        }
+    }
+    refresh();
+
     afterUpdate( () => {
         box.setFocus = setFocus;
-        const selected = box.getSelectedOption(); // todo why?
-        runInAction( () => {
-            textBox.cssStyle = box.cssStyle;
-            if (!!selected) {
-                textBox.setText(selected.label);
-            }
-        });
+        box.refreshComponent = refresh;
+
     });
-    
+
     onMount(() => {
         LOGGER.log("onMount for role [" + box.role + "]");
         box.setFocus = setFocus;
-        const selected = box.getSelectedOption(); // todo why?
-        runInAction( () => {
-            textBox.cssStyle = box.cssStyle;
-            if (!!selected) {
-                textBox.setText(selected.label);
-            }
-        });
+        box.refreshComponent = refresh;
+
     });
 
     // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next action!!!
@@ -223,7 +222,7 @@
             }
         }
     };
-    
+
     function clearText() {
         box.textHelper.setText("");
         text = "";
