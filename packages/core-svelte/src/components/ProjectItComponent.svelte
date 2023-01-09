@@ -140,7 +140,7 @@
     } );
 
     const refreshSelection = (why?: string) => {
-        console.log("setting selectedBox " + why);
+        console.log("ProjectItComponent.refreshSelection: " + why + " editor selectedBox is " + editor.selectedBox.kind);
         if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             if (isTableRowBox(editor.selectedBox) || isElementBox(editor.selectedBox)) {
                 // Because neither a TableRowBox nor an ElementBox has its own HTML equivalent,

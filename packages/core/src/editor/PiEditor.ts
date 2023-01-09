@@ -15,7 +15,7 @@ import {
 import { SeverityType } from "../validator";
 import { isNullOrUndefined } from "../util";
 
-const LOGGER = new PiLogger("PiEditor").mute();
+const LOGGER = new PiLogger("PiEditor");
 
 export class PiEditor {
     readonly actions?: PiCombinedActions;       // All actions with which this editor is created.
