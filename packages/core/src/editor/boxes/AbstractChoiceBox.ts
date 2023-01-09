@@ -29,7 +29,7 @@ export abstract class AbstractChoiceBox extends Box {
             },
             {
                 parent: this,
-                selectable: false, // todo why is this textbox not selectable?
+                selectable: true,
                 placeHolder: placeHolder
             }
         );
