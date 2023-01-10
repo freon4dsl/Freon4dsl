@@ -71,13 +71,11 @@
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {
-			// todo where should focus be???
-			// set the local variables
+			// set the local variables, then the inputElement will be shown
 			isEditing = true;
 			editStart = true;
 			originalText = text;
-			let {anchorOffset, focusOffset} = document.getSelection();
-			setFromAndTo(anchorOffset, focusOffset);
+			setCaret(editor.selectedCaretPosition);
 		}
 	}
 
@@ -99,27 +97,28 @@
 
     /**
      * This function sets the caret position of the <input> element programmatically.
-     * It is called from the editor.
+     * It is called from setFocus, so indirectly by the editor.
      * @param piCaret
      */
     const setCaret = (piCaret: PiCaret) => {
-        LOGGER.log("setCaretPosition " + id);
+		LOGGER.log(`TextComponent.setCaret ${piCaret.position} [${piCaret.from}, ${piCaret.to}]` );
         switch (piCaret.position) {
-            case PiCaretPosition.RIGHT_MOST:
+            case PiCaretPosition.RIGHT_MOST:  // type nr 2
                 from = to = text.length;
                 break;
-            case PiCaretPosition.LEFT_MOST:
-            case PiCaretPosition.UNSPECIFIED:
+            case PiCaretPosition.LEFT_MOST:   // type nr 1
+            case PiCaretPosition.UNSPECIFIED: // type nr 0
                 from = to = 0;
                 break;
-            case PiCaretPosition.INDEX:
+            case PiCaretPosition.INDEX:       // type nr 3
 				setFromAndTo(piCaret.from, piCaret.to);
 				break;
             default:
+				from = to = 0;
                 break;
         }
-        if (isEditing) {
-            inputElement.selectionStart = from >= 0 ? from : 0;
+        if (isEditing && !!inputElement) {
+			inputElement.selectionStart = from >= 0 ? from : 0;
             inputElement.selectionEnd = to >= 0 ? to : 0;
             inputElement.focus();
         }

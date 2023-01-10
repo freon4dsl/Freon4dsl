@@ -118,6 +118,10 @@ export class PiEditor {
         return { owner: this._selectedElement, propertyName: this._selectedProperty, propertyIndex: this._selectedIndex};
     }
 
+    get selectedCaretPosition(): PiCaret {
+        return this._selectedPosition;
+    }
+
     /**
      * The only setter for _selectedElement, used to programmatically select an element,
      * e.g. from the webapp or caused by a model change on the server.
@@ -135,11 +139,14 @@ export class PiEditor {
                 this._selectedBox = propBox;
                 this._selectedProperty = propertyName;
                 this._selectedIndex = propertyIndex;
-                this._selectedPosition = caretPosition;
             } else {
                 this._selectedBox = box;
                 this._selectedProperty = '';
                 this._selectedIndex = -1;
+            }
+            if (!isNullOrUndefined(caretPosition)) {
+                this._selectedPosition = caretPosition;
+            } else {
                 this._selectedPosition = PiCaret.UNSPECIFIED;
             }
             this._selectedElement = element;

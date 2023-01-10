@@ -13,7 +13,7 @@
         BACKSPACE,
         ARROW_LEFT,
         DELETE,
-        ARROW_RIGHT, ElementBox, isNullOrUndefined, isTableRowBox, isElementBox
+        ARROW_RIGHT, ElementBox, isNullOrUndefined, isTableRowBox, isElementBox, isTextBox
     } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
