@@ -577,7 +577,6 @@
     }
 
     .text {
-        /*content: attr(data-placeholdertext);*/
         color: var(--freon-text-component-color, blue);
         background: var(--freon-text-component-background-color, inherit);
         font-family: var(--freon-text-component-font-family, "Arial");

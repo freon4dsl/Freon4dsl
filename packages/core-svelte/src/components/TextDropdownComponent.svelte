@@ -58,7 +58,7 @@
         if (!!textComponent) {
             textComponent.setFocus();
         } else {
-            console.log('TextDropdownComponent ' + id + ' has no textComponent' )
+            console.error('TextDropdownComponent ' + id + ' has no textComponent' )
         }
     }
 
@@ -67,13 +67,6 @@
      * It sets the text in the box, if this is a SelectBox.
      */
     const refresh = (why?: string) => {
-        // if (!isNullOrUndefined(textBox)) {
-        //     const selected = box?.getSelectedOption(); // todo why?
-        //     textBox.cssStyle = box?.cssStyle;
-        //     if (!!selected) {
-        //         textBox?.setText(selected?.label);
-        //     }
-        // }
         if (isSelectBox(box)) {
             // TODO see todo in 'storeOrExecute'
             let selectedOption = box.getSelectedOption();
@@ -83,7 +76,7 @@
             }
         }
         // because the box maybe a different one than we started with ...
-        // box.setFocus = setFocus;
+        // box.setFocus = setFocus; todo remove?
     }
 
     afterUpdate( () => {
@@ -145,8 +138,8 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
+        LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
         if (dropdownShown) {
-            // LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
                     case ESCAPE: {
@@ -224,12 +217,7 @@
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
                     case ENTER: {
-                        // todo replace this by calling function startEditing, but without event parameter
-                        isEditing = true;
-                        dropdownShown = true;
-                        if (!allOptions) {
-                            allOptions = getOptions();
-                        }
+                        startEditing();
                     }
                 }
             }
@@ -267,15 +255,19 @@
      * This custom event is triggered when the TextComponent gets focus by click.
      * The editor is notified of the newly selected box and the options list is filled.
      */
-    const startEditing = (event: CustomEvent) => {
-        LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event.detail));
+    const startEditing = (event?: CustomEvent) => {
+        LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event?.detail));
         isEditing = true;
         dropdownShown = true;
         editor.selectElementForBox(box);
         if (!allOptions) {
             allOptions = getOptions();
         }
-        filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+        if (!!event) {
+            filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+        } else {
+            filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, 0)));
+        }
     };
 
     /**
@@ -346,13 +338,13 @@
 
 </script>
 
-<!--      on:contextmenu={(event) => endEditing()}-->
+
 <span id="{id}"
       on:keydown={onKeyDown}
       use:clickOutsideConditional={{enabled: dropdownShown}}
       on:click_outside={endEditing}
       on:focusout={onFocusOut}
-
+      on:contextmenu={(event) => endEditing()}
       class="dropdown"
 >
     <TextComponent
