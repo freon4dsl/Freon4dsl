@@ -2,7 +2,7 @@
     import { GridCellBox, type GridBox, type PiEditor, PiLogger } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import GridCellComponent from "./GridCellComponent.svelte";
-    import { componentId } from "./util";
+    import { componentId } from "./svelte-utils";
 
     const LOGGER = new PiLogger("GridComponent"); //.mute();
 
@@ -22,11 +22,12 @@
             // console.log("REFRESH GridComponent " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
             id = componentId(box);
             cells = [...box.cells];
-
             length = cells.length;
             templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
             templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
             cssClass = box.cssClass;
+        } else {
+            id = 'grid-for-unknown-box';
         }
     }
 

@@ -12,7 +12,6 @@
 
     const LOGGER = new PiLogger("DropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
 
-
     $: isSelected = (option: SelectOption) => { // determines the style of the selected option
         if (options.length === 1) {
             return true;

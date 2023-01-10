@@ -21,13 +21,14 @@
     import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
     import { afterUpdate, onMount } from "svelte";
     import { viewport } from "./svelte-utils/EditorViewportStore";
+    import { componentId } from "./svelte-utils";
 
     let LOGGER = new PiLogger("ProjectItComponent");//.mute();
     export let editor: PiEditor;
     let element: HTMLDivElement; // The current main element of this component.
     let rootBox: Box;
     let id: string;              // an id for the html element showing the rootBox
-    id = !!rootBox ? rootBox.id : "projectit-component-with-unknown-box";
+    id = !!rootBox ? componentId(rootBox) : "projectit-component-with-unknown-box";
 
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();

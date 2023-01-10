@@ -8,7 +8,7 @@
     import { afterUpdate, onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
     import type {IndentBox, PiEditor} from "@projectit/core";
-    import { componentId } from "./util";
+    import { componentId } from "./svelte-utils";
 
     // Parameters
     export let box: IndentBox;
@@ -18,7 +18,7 @@
 
     const indentWidth: number = 8;
     let style: string = `margin-left: ${box?.indent * indentWidth}px;`;
-    let id: string = componentId(box);
+    let id: string = !!box ? componentId(box) : 'indent-for-unknow-box';
     let child: Box;
 
     onMount( () => {

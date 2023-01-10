@@ -12,7 +12,7 @@
     import { afterUpdate, onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
     import RenderComponent from "./RenderComponent.svelte";
-    import { componentId } from "./util";
+    import { componentId } from "./svelte-utils";
     import { executeCustomKeyboardShortCut, isOdd } from "./svelte-utils";
 
     // properties
@@ -26,7 +26,7 @@
     const LOGGER = new PiLogger("GridCellComponent");
     let boxStore: Writable<Box> = writable<Box>(cellBox.content); // todo see if we can do without this store
     let cssVariables: string;
-    let id: string = componentId(cellBox);
+    let id: string = !!cellBox? componentId(cellBox) : 'gridcell-for-unknown-box';
 
     let row: string;
     let column: string;

@@ -38,7 +38,7 @@
     import SvgComponent from "./SvgComponent.svelte";
     import { afterUpdate } from "svelte";
     import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
-    import { setBoxSizes } from "./svelte-utils";
+    import { componentId, setBoxSizes } from "./svelte-utils";
     import ElementComponent from "./ElementComponent.svelte";
 
     const LOGGER = new PiLogger("RenderComponent");
@@ -75,7 +75,7 @@
     // todo test GridComponent
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH RenderComponent (" + why + ")");
-        id = `render-${box?.element?.piId()}-${box?.role}`;
+        id = !!box? `render-${componentId(box)}` : 'render-for-unknown-box';
     };
 
     let first = true;

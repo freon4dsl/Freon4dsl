@@ -4,7 +4,7 @@
 
 <script lang="ts">
 	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
-	import { executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils";
+	import { componentId, executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils";
 	import {
 		ActionBox,
 		ALT,
@@ -49,7 +49,7 @@
 
     // Local variables
     let id: string;                         // an id for the html element
-    id = !!box ? box.id : 'text-with-unknown-box';
+    id = !!box ? componentId(box) : 'text-with-unknown-box';
     let spanElement: HTMLSpanElement;       // the <span> element on the screen
     let inputElement: HTMLInputElement; 	// the <input> element on the screen
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
