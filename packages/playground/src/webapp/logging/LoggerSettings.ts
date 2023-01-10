@@ -7,8 +7,8 @@ export function muteLogs() {
     PiLogger.mute("DropdownComponent");
     PiLogger.mute("EmptyLineComponent");     // currently, there is no LOGGER for EmptyLineComponent
     PiLogger.mute("ElementComponent");
-    PiLogger.mute("TableCellComponent");
-    PiLogger.mute("TableComponent");
+    PiLogger.mute("GridCellComponent");
+    PiLogger.mute("GridComponent");
     PiLogger.mute("IndentComponent");        // currently, there is no LOGGER for IndentComponent
     PiLogger.mute("LabelComponent");
     PiLogger.mute("LayoutComponent");
@@ -16,6 +16,8 @@ export function muteLogs() {
     PiLogger.mute("OptionalComponent");
     PiLogger.mute("ProjectItComponent");
     PiLogger.mute("RenderComponent");
+    PiLogger.mute("TableCellComponent");
+    PiLogger.mute("TableComponent");
     PiLogger.mute("TextComponent");
     PiLogger.mute("TextDropdownComponent");
 

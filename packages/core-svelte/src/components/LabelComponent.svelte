@@ -5,14 +5,14 @@
      */
     import { onMount, afterUpdate } from "svelte";
     import { PiLogger, LabelBox } from "@projectit/core";
-    import { componentId } from "./util";
+    import { componentId } from "./svelte-utils";
     import { setBoxSizes } from "./svelte-utils";
 
     export let box: LabelBox;
 
     const LOGGER = new PiLogger("LabelComponent");
 
-    let id: string = componentId(box);
+    let id: string = !!box ? componentId(box) : 'label-for-unknwon-box';
     let element: HTMLDivElement = null;
     let style: string;
     let cssClass: string;

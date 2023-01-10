@@ -41,9 +41,7 @@
      * @param event
      */
     export async function show(event: MouseEvent, index: number) {
-        console.log("CONTEXTMENU show");
-
-        // console.log('showing contextmenu for index ' + index);
+        LOGGER.log("CONTEXTMENU show for index " + index);
         elementIndex = index;
         $contextMenuVisible = true;
         submenuOpen = false;
@@ -61,7 +59,7 @@
      * This function hides the context menu
      */
     export function hide() {
-        console.log("CONTEXTMENU hide");
+        LOGGER.log("CONTEXTMENU hide");
         $contextMenuVisible = false;
         submenuOpen = false;
     }
@@ -118,7 +116,7 @@
     }
 
     function onClick(event: MouseEvent, item: MenuItem, itemIndex: number): boolean {
-        console.log("CONTEXTMENU onClick");
+        LOGGER.log("CONTEXTMENU onClick");
         submenuOpen = false;
         if (item.hasSubItems()) {
             submenuItems = item.subItems;

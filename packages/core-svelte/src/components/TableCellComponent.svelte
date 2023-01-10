@@ -25,7 +25,7 @@
     } from "@projectit/core";
     import { onMount, createEventDispatcher, afterUpdate } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
-    import { executeCustomKeyboardShortCut } from "./svelte-utils";
+    import { componentId, executeCustomKeyboardShortCut } from "./svelte-utils";
     import {
         activeElem,
         activeIn,
@@ -50,7 +50,7 @@
     const LOGGER = new PiLogger("TableCellComponent"); //.mute();
     const dispatcher = createEventDispatcher();
     let cssVariables: string;
-    let id: string = box.id;
+    let id: string = !!box ? `cell-${componentId(box)}` : 'table-cell-for-unknown-box';
 
     let row: number;
     let column: number;
@@ -202,6 +202,7 @@
 <!-- Likewise on:blur is needed for on:mouseout -->
 <!-- Apparently, we cannot combine multiple inline style directives, as in -->
 <!--  style="grid-row: '{row}' grid-column: '{column}' {cssStyle}"-->
+
 <span
         id="{id}"
         class="gridcellcomponent {orientation} {isHeader} {cssClass} "

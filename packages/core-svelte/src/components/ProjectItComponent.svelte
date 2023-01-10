@@ -21,13 +21,14 @@
     import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
     import { afterUpdate, onMount } from "svelte";
     import { viewport } from "./svelte-utils/EditorViewportStore";
+    import { componentId } from "./svelte-utils";
 
     let LOGGER = new PiLogger("ProjectItComponent");//.mute();
     export let editor: PiEditor;
     let element: HTMLDivElement; // The current main element of this component.
     let rootBox: Box;
     let id: string;              // an id for the html element showing the rootBox
-    id = !!rootBox ? rootBox.id : "projectit-component-with-unknown-box";
+    id = !!rootBox ? componentId(rootBox) : "projectit-component-with-unknown-box";
 
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();
@@ -36,7 +37,7 @@
 
     // todo tabbing etc. should take into account the projection. Currently, sometimes the selected element is not visible.
     const onKeyDown = (event: KeyboardEvent) => {
-        console.log("ProjectItComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey + " shift: " + event.shiftKey);
+        LOGGER.log("ProjectItComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey + " shift: " + event.shiftKey);
         // console.log('selected BEFORE: ' + editor.selectedBox.id + ' current focused element ' + document.activeElement.id);
         if (event.ctrlKey || event.altKey) {
             switch (event.key) {
@@ -140,7 +141,7 @@
     } );
 
     const refreshSelection = (why?: string) => {
-        console.log("ProjectItComponent.refreshSelection: " + why + " editor selectedBox is " + editor?.selectedBox?.kind);
+        LOGGER.log("ProjectItComponent.refreshSelection: " + why + " editor selectedBox is " + editor?.selectedBox?.kind);
         if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             $selectedBoxes = getSelectableChildren(editor.selectedBox);
             editor.selectedBox.setFocus();

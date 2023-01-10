@@ -22,7 +22,15 @@
         PiLogger
     } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
-    import { activeElem, activeIn, draggedElem, draggedFrom, contextMenu, contextMenuVisible } from "./svelte-utils/";
+    import {
+        activeElem,
+        activeIn,
+        draggedElem,
+        draggedFrom,
+        contextMenu,
+        contextMenuVisible,
+        componentId
+    } from "./svelte-utils/";
     import { afterUpdate, onMount } from "svelte";
 
     // Parameters
@@ -161,7 +169,7 @@
     const refresh = (why?: string): void =>  {
         LOGGER.log("REFRESH ListComponent( " + why + ") " + box?.element?.piLanguageConcept());
         shownElements = [...box.children];
-        id = !!box ? box.id : "list-with-unknown-box";
+        id = !!box ? componentId(box) : 'list-for-unknown-box';
         isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
     }
 
@@ -205,6 +213,7 @@
 		</span>
     {/each}
 </span>
+
 
 <style>
     .list-component {

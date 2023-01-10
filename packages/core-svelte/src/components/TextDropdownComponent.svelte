@@ -6,19 +6,21 @@
     // within the text.
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
-    import { clickOutsideConditional } from "./svelte-utils";
+    import { clickOutsideConditional, componentId, selectedBoxes } from "./svelte-utils";
     import {
         AbstractChoiceBox,
         ARROW_DOWN,
         ARROW_UP,
-        ENTER, ESCAPE, isNullOrUndefined,
+        ENTER,
+        ESCAPE,
         isSelectBox,
-        PiEditor, PiLogger,
+        PiEditor,
+        PiLogger,
         SelectOption,
         TextBox
     } from "@projectit/core";
 
-    import { autorun, runInAction } from "mobx";
+    import { runInAction } from "mobx";
     import { afterUpdate, onMount } from "svelte";
 
     const LOGGER = new PiLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -29,7 +31,7 @@
     $: textBox = box?.textBox;                  // keeps the textBox variable in state with the box!
 
     let id: string;                             // an id for the html element
-    id = !!box ? box.id : 'textdropdown-with-unknown-box';
+    id = !!box ? componentId(box) : 'textdropdown-with-unknown-box';
     let isEditing: boolean = false;             // becomes true when the text field gets focus
     let dropdownShown: boolean = false;         // when true the dropdwon element is shown
     let text: string = "";		                // the text in the text field
@@ -56,31 +58,36 @@
         if (!!textComponent) {
             textComponent.setFocus();
         } else {
-            console.log('TextDropdownComponent ' + id + ' has no textComponent' )
+            console.error('TextDropdownComponent ' + id + ' has no textComponent' )
         }
     }
 
+    /**
+     * This function is executed whenever there is a change in the box model.
+     * It sets the text in the box, if this is a SelectBox.
+     */
     const refresh = (why?: string) => {
-        if (!isNullOrUndefined(textBox)) {
-            const selected = box?.getSelectedOption(); // todo why?
-            textBox.cssStyle = box?.cssStyle;
-            if (!!selected) {
-                textBox?.setText(selected?.label);
+        if (isSelectBox(box)) {
+            // TODO see todo in 'storeOrExecute'
+            let selectedOption = box.getSelectedOption();
+            if (!!selectedOption) {
+                box.textHelper.setText(selectedOption.label);
+                text = box.textHelper.getText();
             }
         }
+        // because the box maybe a different one than we started with ...
+        // box.setFocus = setFocus; todo remove?
     }
 
     afterUpdate( () => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
-
     });
 
     onMount(() => {
         LOGGER.log("onMount for role [" + box.role + "]");
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
-
     });
 
     // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next action!!!
@@ -131,8 +138,8 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
+        LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
         if (dropdownShown) {
-            // LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
                     case ESCAPE: {
@@ -189,20 +196,18 @@
                         // store or execute the option
                         if (!!chosenOption) {
                             storeAndExecute(chosenOption);
-                            isEditing = false;
-                            dropdownShown = false;
                         } else { //  no valid option, restore the original text
                             text = textBox.getText();
+                            // stop editing
+                            isEditing = false;
+                            dropdownShown = false;
                         }
-                        // stop editing
-                        isEditing = false;
-                        dropdownShown = false;
                         event.preventDefault();
                         event.stopPropagation();
                         break;
                     }
                     default: {
-                        // stop editing
+                        // stop editing todo is this the correct default?
                         isEditing = false;
                         dropdownShown = false;
                     }
@@ -212,12 +217,7 @@
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
                     case ENTER: {
-                        // todo replace this by calling function startEditing, but without event parameter
-                        isEditing = true;
-                        dropdownShown = true;
-                        if (!allOptions) {
-                            allOptions = getOptions();
-                        }
+                        startEditing();
                     }
                 }
             }
@@ -225,6 +225,7 @@
     };
 
     function clearText() {
+        // todo find out whether we can do without this textHelper
         box.textHelper.setText("");
         text = "";
     }
@@ -254,14 +255,19 @@
      * This custom event is triggered when the TextComponent gets focus by click.
      * The editor is notified of the newly selected box and the options list is filled.
      */
-    const startEditing = (event: CustomEvent) => {
-        LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event.detail));
+    const startEditing = (event?: CustomEvent) => {
+        LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event?.detail));
         isEditing = true;
         dropdownShown = true;
+        editor.selectElementForBox(box);
         if (!allOptions) {
             allOptions = getOptions();
         }
-        filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+        if (!!event) {
+            filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+        } else {
+            filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, 0)));
+        }
     };
 
     /**
@@ -317,50 +323,28 @@
         }
     };
 
-    /**
-     * This function is executed whenever there is a change in the box model.
-     * It sets the text in the box, if this is a SelectBox.
-     */
-    autorun(() => {
-        if (isSelectBox(box)) {
-            // TODO see todo in 'storeOrExecute'
-            let selectedOption = box.getSelectedOption();
-            if (!!selectedOption) {
-                box.textHelper.setText(selectedOption.label);
-                text = box.textHelper.getText();
-            }
-        }
-        // because the box maybe a different one than we started with ...
-        // box.setFocus = setFocus;
-    });
-
     const onFocusOut = () => {
+        LOGGER.log("TextDropdownComponent.onFocusOut");
         // todo test wether we need focusOut or blur
         // todo maybe this should be done with custom event???
-        // Text component has lost focus, check where focus has moved to
-        if (!document.hasFocus()) { // Focus has moved outside the document tab/window
-            LOGGER.log("TextDropdownComponent onFocusOut OUTSIDE");
+        // Text component has lost focus, check where focus has moved to.
+        // Focus may have moved outside the document tab/window or to another box.
+        if (!document.hasFocus() || !$selectedBoxes.includes(box)) {
             endEditing();
-            // } else // Focus has moved to dropdown element
-        } else {
-            // endEditing();
         }
     };
-
-    const closeDropDown = () => {
-        dropdownShown = false;
-    }
 
     refresh();
 
 </script>
+
 
 <span id="{id}"
       on:keydown={onKeyDown}
       use:clickOutsideConditional={{enabled: dropdownShown}}
       on:click_outside={endEditing}
       on:focusout={onFocusOut}
-      on:contextmenu={(event) => closeDropDown()}
+      on:contextmenu={(event) => endEditing()}
       class="dropdown"
 >
     <TextComponent

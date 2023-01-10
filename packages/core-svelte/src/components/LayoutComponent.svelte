@@ -16,6 +16,7 @@
         ListDirection,
         LayoutBox
     } from "@projectit/core";
+    import { componentId } from "./svelte-utils";
 
     // Parameters
     export let box: LayoutBox;
@@ -45,7 +46,7 @@
 
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH LayoutComponent (" + why +")" + box?.element?.piLanguageConcept());
-        id = !!box ? box.id : "unknown-label-id";
+        id = !!box ? componentId(box) : 'layout-for-unknown-box';
         children = [...box.children];
         isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
     };

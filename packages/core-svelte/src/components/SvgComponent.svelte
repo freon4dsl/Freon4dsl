@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { SvgBox } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { componentId } from "./util";
+    import { componentId } from "./svelte-utils";
 
     export let box: SvgBox;
 
@@ -17,7 +17,7 @@
         box.refreshComponent = refresh;
     });
     const refresh = (why?: string) => {
-        id = componentId(box);
+        id = !!box? componentId(box) : 'SVG-for-unknown-box';
         svgPath = box.svgPath;
         width = box.width;
         height = box.height;

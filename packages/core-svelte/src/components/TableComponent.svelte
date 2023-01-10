@@ -18,7 +18,7 @@
         TableCellBox
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { activeElem, activeIn, draggedElem, draggedFrom } from "./svelte-utils";
+    import { activeElem, activeIn, componentId, draggedElem, draggedFrom } from "./svelte-utils";
     import { dropListElement, moveListElement } from "@projectit/core";
     import TableCellComponent from "./TableCellComponent.svelte";
 
@@ -27,7 +27,7 @@
     export let box: TableBox;
     export let editor: PiEditor;
 
-    let id = box?.id;
+    let id = !!box ? componentId(box) : 'table-for-unknown-box';
     let cells: GridCellBox[];
     let templateColumns: string;
     let templateRows: string;

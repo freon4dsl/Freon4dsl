@@ -7,13 +7,14 @@
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
     import { OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
+    import { componentId } from "./svelte-utils";
 
     export let box: OptionalBox;
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("OptionalComponent");
     let id: string;                             // an id for the html element showing the optional
-    id = !!box ? box.id : "optional-with-unknown-box";
+    id = !!box ? componentId(box) : 'optional-for-unknown-box';
     let childBox ;
     let mustShow = false;
     let showByCondition = false;

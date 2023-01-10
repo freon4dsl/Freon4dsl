@@ -4,7 +4,7 @@
 
 <script lang="ts">
 	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
-	import { executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils";
+	import { componentId, executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils";
 	import {
 		ActionBox,
 		ALT,
@@ -49,7 +49,7 @@
 
     // Local variables
     let id: string;                         // an id for the html element
-    id = !!box ? box.id : 'text-with-unknown-box';
+    id = !!box ? componentId(box) : 'text-with-unknown-box';
     let spanElement: HTMLSpanElement;       // the <span> element on the screen
     let inputElement: HTMLInputElement; 	// the <input> element on the screen
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
@@ -512,7 +512,7 @@
 <!-- todo there is a double selection here: two borders are showing -->
 <span on:click={onClick} id="{id}">
 	{#if isEditing}
-		<span class="resizable-input">
+		<span class="inputtext">
 			<input type="text"
                    class="inputtext"
 				   id="{id}-input"
@@ -555,16 +555,12 @@
 		border: none;
 		box-sizing: border-box;
 		padding: var(--freon-text-component-padding, 1px);
-		outline-color: var(--freon-selected-outline-color, darkblue);
-		outline-style: var(--freon-selected-outline-style, solid);
-		outline-width: var(--freon-selected-outline-width, 1px);
 		font-family: var(--freon-text-component-font-family, "Arial");
 		font-size: var(--freon-text-component-font-size, 14pt);
 		font-weight: var(--freon-text-component-font-weight, inherit);
 		font-style: var(--freon-text-component-font-style, inherit);
 	}
 
-    /* let <input> assume the size of the wrapper */
     .inputtext {
         /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
 		padding: var(--freon-text-component-padding, 1px);
@@ -574,9 +570,6 @@
 		margin: var(--freon-text-component-margin, 1px);
         border: none;
         background: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
-        outline-color: var(--freon-selected-outline-color, darkblue);
-        outline-style: var(--freon-selected-outline-style, solid);
-        outline-width: var(--freon-selected-outline-width, 1px);
         font-family: var(--freon-text-component-font-family, "Arial");
         font-size: var(--freon-text-component-font-size, 14pt);
         font-weight: var(--freon-text-component-font-weight, inherit);
@@ -584,7 +577,6 @@
     }
 
     .text {
-        /*content: attr(data-placeholdertext);*/
         color: var(--freon-text-component-color, blue);
         background: var(--freon-text-component-background-color, inherit);
         font-family: var(--freon-text-component-font-family, "Arial");
