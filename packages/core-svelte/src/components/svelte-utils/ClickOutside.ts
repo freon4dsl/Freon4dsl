@@ -19,8 +19,10 @@ export function clickOutsideConditional(node, { enabled: boolean }) {
     function update({enabled}) {
         if (enabled) {
             document.addEventListener('click', handleClick, true);
+            document.addEventListener('contextmenu', handleClick, true);
         } else {
             document.removeEventListener('click', handleClick, true);
+            document.removeEventListener('contextmenu', handleClick, true);
         }
     }
 
@@ -29,6 +31,7 @@ export function clickOutsideConditional(node, { enabled: boolean }) {
         update,
         destroy() {
             document.removeEventListener( 'click', handleClick, true );
+            document.removeEventListener( 'contextmenu', handleClick, true );
         }
     };
 }
