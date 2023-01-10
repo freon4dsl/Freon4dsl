@@ -163,7 +163,7 @@ export class PiParser<DEFINITION> {
 
     protected location(elem: PiDefinitionElement): string {
         if (!!elem.location) {
-            return `[file: ${elem.location.filename}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
+            return `[file: ${elem.location.filename}:${elem.location.start.line}:${elem.location.start.column}]`;
         }
         return `[no location]`;
     }
