@@ -6,7 +6,7 @@
     // within the text.
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
-    import { clickOutside } from "./svelte-utils";
+    import { clickOutsideConditional } from "./svelte-utils";
     import {
         AbstractChoiceBox,
         ARROW_DOWN,
@@ -357,7 +357,7 @@
 
 <span id="{id}"
       on:keydown={onKeyDown}
-      use:clickOutside
+      use:clickOutsideConditional={{enabled: dropdownShown}}
       on:click_outside={endEditing}
       on:focusout={onFocusOut}
       on:contextmenu={(event) => closeDropDown()}

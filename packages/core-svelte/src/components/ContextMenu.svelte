@@ -6,7 +6,7 @@
      *  such that the complete menu stays within the bounderies of the editor viewport. The state of the editor
      *  viewport is stored in the EditorViewportStore (by ProjectItComponent).
      */
-    import { clickOutside } from "./svelte-utils";
+    import { clickOutsideConditional } from "./svelte-utils";
     import { tick } from "svelte";
     import { PiLogger, MenuItem, PiEditor } from "@projectit/core";
     import { contextMenuVisible } from "./svelte-utils/ContextMenuStore";
@@ -41,6 +41,8 @@
      * @param event
      */
     export async function show(event: MouseEvent, index: number) {
+        console.log("CONTEXTMENU show");
+
         // console.log('showing contextmenu for index ' + index);
         elementIndex = index;
         $contextMenuVisible = true;
@@ -59,6 +61,7 @@
      * This function hides the context menu
      */
     export function hide() {
+        console.log("CONTEXTMENU hide");
         $contextMenuVisible = false;
         submenuOpen = false;
     }
@@ -115,6 +118,7 @@
     }
 
     function onClick(event: MouseEvent, item: MenuItem, itemIndex: number): boolean {
+        console.log("CONTEXTMENU onClick");
         submenuOpen = false;
         if (item.hasSubItems()) {
             submenuItems = item.subItems;
@@ -129,7 +133,7 @@
     }
 </script>
 
-<div use:clickOutside
+<div use:clickOutsideConditional={{enabled: $contextMenuVisible}}
      on:click_outside={hide}>
     {#if $contextMenuVisible}
         <nav use:getContextMenuDimension
