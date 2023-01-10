@@ -555,16 +555,12 @@
 		border: none;
 		box-sizing: border-box;
 		padding: var(--freon-text-component-padding, 1px);
-		outline-color: var(--freon-selected-outline-color, darkblue);
-		outline-style: var(--freon-selected-outline-style, solid);
-		outline-width: var(--freon-selected-outline-width, 1px);
 		font-family: var(--freon-text-component-font-family, "Arial");
 		font-size: var(--freon-text-component-font-size, 14pt);
 		font-weight: var(--freon-text-component-font-weight, inherit);
 		font-style: var(--freon-text-component-font-style, inherit);
 	}
 
-    /* let <input> assume the size of the wrapper */
     .inputtext {
         /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
 		padding: var(--freon-text-component-padding, 1px);
@@ -574,9 +570,6 @@
 		margin: var(--freon-text-component-margin, 1px);
         border: none;
         background: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
-        outline-color: var(--freon-selected-outline-color, darkblue);
-        outline-style: var(--freon-selected-outline-style, solid);
-        outline-width: var(--freon-selected-outline-width, 1px);
         font-family: var(--freon-text-component-font-family, "Arial");
         font-size: var(--freon-text-component-font-size, 14pt);
         font-weight: var(--freon-text-component-font-weight, inherit);
