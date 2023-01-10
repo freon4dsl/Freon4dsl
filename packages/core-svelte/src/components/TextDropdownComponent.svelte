@@ -243,7 +243,7 @@
             }
         }
         if (!isSelectBox(box)) {
-            // c;lear text for an action box
+            // clear text for an action box
             clearText();
         }
         isEditing = false;
@@ -302,16 +302,18 @@
             return;
         }
         isEditing = false;
-        dropdownShown = false;
-        // check whether the current text is a valid option
-        if (!allOptions) {
-            allOptions = getOptions();
-        }
-        let validOption = allOptions.find(o => o.label === text);
-        if (!!validOption && validOption.id !== noOptionsId) {
-            storeAndExecute(validOption);
-        } else { // no valid option, restore the previous value
-            text = textBox.getText();
+        if (dropdownShown) {
+            // check whether the current text is a valid option
+            if (!allOptions) {
+                allOptions = getOptions();
+            }
+            let validOption = allOptions.find(o => o.label === text);
+            if (!!validOption && validOption.id !== noOptionsId) {
+                storeAndExecute(validOption);
+            } else { // no valid option, restore the previous value
+                text = textBox.getText();
+            }
+            dropdownShown = false;
         }
     };
 
@@ -340,6 +342,8 @@
             LOGGER.log("TextDropdownComponent onFocusOut OUTSIDE");
             endEditing();
             // } else // Focus has moved to dropdown element
+        } else {
+            // endEditing();
         }
     };
 

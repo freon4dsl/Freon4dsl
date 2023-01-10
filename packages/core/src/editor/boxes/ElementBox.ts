@@ -5,6 +5,12 @@ export class ElementBox extends Box {
     kind: string = 'ElementBox';
     private _content: Box = null;
 
+    refreshComponent = (w?:string) => {
+        if( this._content  !== undefined && this._content.refreshComponent !== undefined) {
+            this._content.refreshComponent(w);
+        }
+    };
+
     constructor(element: PiElement, role: string) {
         super(element, role);
     }

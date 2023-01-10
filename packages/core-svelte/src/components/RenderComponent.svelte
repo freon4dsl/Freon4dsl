@@ -1,3 +1,4 @@
+<svelte:options immutable={true}/>
 <script lang="ts">
     // This component renders any box from the box model.
     // Depending on the box type the right component is used.
@@ -60,7 +61,7 @@
 
     afterUpdate(() => {
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
-        LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element.piId() + '=' + b?.element.piLanguageConcept() + '=' + b.kind) + "]");
+        LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element?.piId() + '=' + b?.element?.piLanguageConcept() + '=' + b?.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
         className = (isSelected ? "selected" : "unSelected");
         if (!!element) {

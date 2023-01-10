@@ -140,30 +140,25 @@
     } );
 
     const refreshSelection = (why?: string) => {
-        console.log("ProjectItComponent.refreshSelection: " + why + " editor selectedBox is " + editor.selectedBox.kind);
+        console.log("ProjectItComponent.refreshSelection: " + why + " editor selectedBox is " + editor?.selectedBox?.kind);
         if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
-            if (isTableRowBox(editor.selectedBox) || isElementBox(editor.selectedBox)) {
-                // Because neither a TableRowBox nor an ElementBox has its own HTML equivalent,
-                // its children are regarded to be selected.
-                $selectedBoxes = getSelectableChildren(editor.selectedBox);
-                $selectedBoxes.push(editor.selectedBox); // keep this one as well because of the test above
-            } else {
-                // $selectedBoxes = [editor.selectedBox];
-                $selectedBoxes.pop();
-                $selectedBoxes.push(editor.selectedBox);
-            }
+            $selectedBoxes = getSelectableChildren(editor.selectedBox);
             editor.selectedBox.setFocus();
         }
     };
 
     function getSelectableChildren(box: Box): Box[] {
         const result: Box[] = [];
-        for (const child of box.children) {
-            if (isTableRowBox(child) || isElementBox(child)) {
+        // Because neither a TableRowBox nor an ElementBox has its own HTML equivalent,
+        // its children are regarded to be selected.
+        if (isTableRowBox(box) ) {
+            for (const child of box.children) {
                 result.push(...getSelectableChildren(child));
-            } else {
-                result.push(child);
             }
+        } else if (isElementBox(box)) {
+            result.push(...getSelectableChildren(box.content));
+        } else {
+            result.push(box);
         }
         return result;
     }

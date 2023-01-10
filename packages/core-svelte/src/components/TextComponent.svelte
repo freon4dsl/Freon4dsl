@@ -155,7 +155,7 @@
         LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 		setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
 		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
-            LOGGER.log('dispatching from on click')
+            LOGGER.log('dispatching from on click');
             dispatcher('textUpdate', {content: text, caret: from});
         }
         event.stopPropagation();
@@ -482,9 +482,9 @@
 			widthSpan.innerHTML = replaceHTML(value);
 			const width = widthSpan.offsetWidth + "px";
 			inputElement.style.width = width;
-			LOGGER.log("setInputWidth mirror [" + value + "] input [" + inputElement.value + "] placeholder [" + placeholder + "] w: " + width + " " + widthSpan.clientWidth + " for element "  + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ")")
+			// LOGGER.log("setInputWidth mirror [" + value + "] input [" + inputElement.value + "] placeholder [" + placeholder + "] w: " + width + " " + widthSpan.clientWidth + " for element "  + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ")")
 		} else {
-			LOGGER.log("SetInputWidth do nothing for element " + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ") " + widthSpan + "::" + inputElement + "::" + spanElement);
+			// LOGGER.log("SetInputWidth do nothing for element " + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ") " + widthSpan + "::" + inputElement + "::" + spanElement);
 		}
 	}
 
