@@ -202,6 +202,7 @@
 <!-- Likewise on:blur is needed for on:mouseout -->
 <!-- Apparently, we cannot combine multiple inline style directives, as in -->
 <!--  style="grid-row: '{row}' grid-column: '{column}' {cssStyle}"-->
+<!--        on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event)}-->
 <span
         id="{id}"
         class="gridcellcomponent {orientation} {isHeader} {cssClass} "
@@ -218,7 +219,7 @@
         on:focus={() => {}}
         on:blur={() => {}}
         on:keydown={onKeydown}
-        on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event)}
+
         tabIndex={0}
         bind:this={htmlElement}
 >

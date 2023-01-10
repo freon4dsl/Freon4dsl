@@ -144,7 +144,10 @@
         if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             $selectedBoxes = getSelectableChildren(editor.selectedBox);
             editor.selectedBox.setFocus();
+        } else {
+            console.log("ProjectItComponent.refreshSelection: NEW selected BOX, editor selectedBox is " + editor?.selectedBox?.kind)
         }
+        console.log("ProjectItComponent.refreshSelection: AFTER " + $selectedBoxes.map(b => b.id));
     };
 
     function getSelectableChildren(box: Box): Box[] {

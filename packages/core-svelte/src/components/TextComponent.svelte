@@ -512,7 +512,7 @@
 <!-- todo there is a double selection here: two borders are showing -->
 <span on:click={onClick} id="{id}">
 	{#if isEditing}
-		<span class="resizable-input">
+		<span class="inputtext">
 			<input type="text"
                    class="inputtext"
 				   id="{id}-input"
