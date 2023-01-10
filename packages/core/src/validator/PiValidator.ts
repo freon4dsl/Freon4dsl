@@ -20,9 +20,12 @@ export interface PiValidator {
 export class PiError {
     message: string;                        // human-readable error message
     reportedOn: PiElement | PiElement[];    // the model element that does not comply
+    propertyName: string;                   // the property of the model element that does not comply, if appropriate
+    propertyIndex: number;                  // the property index of the model element that does not comply, if appropriate
     locationdescription: string;            // human-readable indication of 'reportedOn'
     severity: PiErrorSeverity;              // indication of how serious the error is, default is 'To Do'
-    constructor(message: string, element: PiElement | PiElement[], locationdescription: string, severity?: PiErrorSeverity) {
+    constructor(message: string, element: PiElement | PiElement[], locationdescription: string, propertyName: string, severity?: PiErrorSeverity, propertyIndex?: number) {
+        // todo check whether propertyIndex is really needed
         this.message = message;
         this.reportedOn = element;
         this.locationdescription = locationdescription;
@@ -31,6 +34,8 @@ export class PiError {
         } else {
             this.severity = PiErrorSeverity.ToDo;
         }
+        this.propertyName = propertyName;
+        this.propertyIndex = propertyIndex;
     }
 }
 

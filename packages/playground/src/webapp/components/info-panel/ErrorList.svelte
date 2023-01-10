@@ -108,12 +108,12 @@
 
 	const handleClick = (index: number) => {
 		if (!!$modelErrors && $modelErrors.length > 0) {
-			const item = $modelErrors[index];
+			const item: PiError = $modelErrors[index];
 			// TODO declaredType should be changed to property coming from error object.
 			if (Array.isArray(item.reportedOn)) {
-				EditorState.getInstance().selectElement(item.reportedOn[0], 'declaredType');
+				EditorState.getInstance().selectElement(item.reportedOn[0], item.propertyName);
 			} else {
-				EditorState.getInstance().selectElement(item.reportedOn, 'declaredType');
+				EditorState.getInstance().selectElement(item.reportedOn, item.propertyName);
 			}
 		}
 	}

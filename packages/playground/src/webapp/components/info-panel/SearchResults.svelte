@@ -100,9 +100,9 @@
             const item = $searchResults[index];
             if (Array.isArray(item.reportedOn)) {
                 // todo get info on property from 'reportedOn'
-                EditorState.getInstance().selectElement(item.reportedOn[0], 'declaredType');
+                EditorState.getInstance().selectElement(item.reportedOn[0], item.propertyName);
             } else {
-                EditorState.getInstance().selectElement(item.reportedOn, 'declaredType');
+                EditorState.getInstance().selectElement(item.reportedOn, item.propertyName);
             }
         }
     }
