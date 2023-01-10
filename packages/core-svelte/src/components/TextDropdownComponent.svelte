@@ -6,7 +6,7 @@
     // within the text.
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
-    import { clickOutside, selectedBoxes } from "./svelte-utils";
+    import { clickOutsideConditional, selectedBoxes } from "./svelte-utils";
     import {
         AbstractChoiceBox,
         ARROW_DOWN,
@@ -268,7 +268,7 @@
      * The editor is notified of the newly selected box and the options list is filled.
      */
     const startEditing = (event: CustomEvent) => {
-        console.log('TextDropdownComponent: startEditing' + JSON.stringify(event.detail));
+        LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event.detail));
         isEditing = true;
         dropdownShown = true;
         editor.selectElementForBox(box);
@@ -311,7 +311,7 @@
      * original value.
      */
     const endEditing = () => {
-        console.log('TextDropdownComponent: endEditing');
+        LOGGER.log('TextDropdownComponent: endEditing');
         if (!isEditing) {
             return;
         }
@@ -349,7 +349,7 @@
 <!--      on:contextmenu={(event) => endEditing()}-->
 <span id="{id}"
       on:keydown={onKeyDown}
-      use:clickOutside
+      use:clickOutsideConditional={{enabled: dropdownShown}}
       on:click_outside={endEditing}
       on:focusout={onFocusOut}
 
