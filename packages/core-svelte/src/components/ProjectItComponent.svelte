@@ -13,15 +13,13 @@
         BACKSPACE,
         ARROW_LEFT,
         DELETE,
-        ARROW_RIGHT, ElementBox, isNullOrUndefined, isTableRowBox, isElementBox, isTextBox, ENTER
+        ENTER,
+        ARROW_RIGHT, isNullOrUndefined, isTableRowBox, isElementBox,
     } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
-    import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
-    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
     import { afterUpdate, onMount } from "svelte";
-    import { viewport } from "./svelte-utils/EditorViewportStore";
-    import { componentId } from "./svelte-utils";
+    import { contextMenu, contextMenuVisible, selectedBoxes, viewport, componentId } from "./svelte-utils";
 
     let LOGGER = new PiLogger("ProjectItComponent");//.mute();
     export let editor: PiEditor;
@@ -87,11 +85,6 @@
                     break;
             }
         }
-        // todo check whether the following always (or never?) needs to be done
-        // console.log('selected AFTER: ' + editor.selectedBox.id + ' current focused element ' + document.activeElement.id);
-        // editor.selectedBox.setFocus();
-        // $selectedBoxes = [editor.selectedBox];
-        // event.stopPropagation(); // do not preventDefault, because this would keep printable chars to show in any input HTML element. TODO IS this true???
     };
 
     /**

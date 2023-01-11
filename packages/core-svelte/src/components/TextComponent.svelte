@@ -165,7 +165,7 @@
      * the <span> element, and stores the current text in the textbox.
      */
     function endEditing() {
-        LOGGER.log(' endEditing ' + id);
+        console.log(' endEditing ' + id);
 		if (isEditing) {
 			// reset the local variables
 			isEditing = false;
@@ -257,8 +257,10 @@
 				case ENTER:
 				case ESCAPE:
 				case TAB: {
+					// todo Maybe this option could be completely handled by TextDropDown and ProjectIt,
+					// this would avoid a second call to endEditing when the selection is changed.
 					LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
-					if (!partOfActionBox) {
+					if (!partOfActionBox && isEditing) {
 						endEditing();
 						// do not switch selection, this will be done by ProjectItComponent
 					} // else, let TextDropDownComponent handle this
@@ -386,7 +388,7 @@
      */
     const onFocusOut = (e) => {
         LOGGER.log("TextComponent onFocusOut " + id)
-        if (!partOfActionBox) {
+        if (!partOfActionBox && isEditing) {
             endEditing();
         } // else let TextDropdownComponent handle it
     }
