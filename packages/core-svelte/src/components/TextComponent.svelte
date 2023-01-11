@@ -67,7 +67,7 @@
      * It is called from the box.
      */
 	export async function setFocus(): Promise<void> {
-		console.log("setFocus "+ id + " input is there: " + !!inputElement);
+		LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {
