@@ -67,7 +67,7 @@
      * It is called from the box.
      */
 	export async function setFocus(): Promise<void> {
-		LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
+		console.log("setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {
@@ -166,23 +166,25 @@
      */
     function endEditing() {
         LOGGER.log(' endEditing ' + id);
-        // reset the local variables
-        isEditing = false;
-        from = -1;
-        to = -1;
+		if (isEditing) {
+			// reset the local variables
+			isEditing = false;
+			from = -1;
+			to = -1;
 
-        if (!partOfActionBox) {
-            // store the current value in the textbox, or delete the box, if appropriate
-            runInAction(() => {
-            	if (box.deleteWhenEmpty && text.length === 0) {
-            		editor.deleteBox(box);
-            	} else if (text !== box.getText()) {
-            		box.setText(text);
-            	}
-            });
-        } else {
-            dispatcher('endEditing');
-        }
+			if (!partOfActionBox) {
+				// store the current value in the textbox, or delete the box, if appropriate
+				runInAction(() => {
+					if (box.deleteWhenEmpty && text.length === 0) {
+						editor.deleteBox(box);
+					} else if (text !== box.getText()) {
+						box.setText(text);
+					}
+				});
+			} else {
+				dispatcher('endEditing');
+			}
+		}
     }
 
     /**
@@ -258,7 +260,8 @@
 					LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
 					if (!partOfActionBox) {
 						endEditing();
-					} // else, let alias box handle this
+						// do not switch selection, this will be done by ProjectItComponent
+					} // else, let TextDropDownComponent handle this
 					break;
 				}
 				case ARROW_LEFT: {
@@ -297,9 +300,9 @@
 					} else { // backspace
 						getCaretPosition(event);
 						LOGGER.log("Caret at: " + from);
-						if (from !== 0) { // when there are still chars remaining to the left, do not let the parent handle it
-							// without propagation, the browser handles which char(s) to be deleted
-							// with event.ctrlKey: delete text from caret to end => handled by browser
+						if (from !== 0) { // When there are still chars remaining to the left, do not let the parent handle it.
+							// Without propagation, the browser handles which char(s) to be deleted.
+							// With event.ctrlKey: delete text from caret to end => handled by browser.
 							event.stopPropagation();
 						} else if (text === "" || !!text) { // nothing left in this component to delete
 							if (box.deleteWhenEmptyAndErase) {

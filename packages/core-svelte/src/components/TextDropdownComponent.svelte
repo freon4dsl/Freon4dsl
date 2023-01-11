@@ -218,6 +218,8 @@
                 switch (event.key) {
                     case ENTER: {
                         startEditing();
+                        event.stopPropagation();
+                        event.preventDefault();
                     }
                 }
             }
@@ -273,7 +275,7 @@
     /**
      * When the user has selected an option, in whatever manner, this function is called.
      * The action that is associated with the option is executed. This changes the model,
-     * thus it triggers the creation of a new box model. The 'autorun' function is triggered
+     * thus it triggers the creation of a new box model. The 'refresh' function is triggered
      * by these changes.
      * @param selected
      */

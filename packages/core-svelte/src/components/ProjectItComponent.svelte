@@ -13,7 +13,7 @@
         BACKSPACE,
         ARROW_LEFT,
         DELETE,
-        ARROW_RIGHT, ElementBox, isNullOrUndefined, isTableRowBox, isElementBox, isTextBox
+        ARROW_RIGHT, ElementBox, isNullOrUndefined, isTableRowBox, isElementBox, isTextBox, ENTER
     } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
@@ -38,7 +38,6 @@
     // todo tabbing etc. should take into account the projection. Currently, sometimes the selected element is not visible.
     const onKeyDown = (event: KeyboardEvent) => {
         LOGGER.log("ProjectItComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey + " shift: " + event.shiftKey);
-        // console.log('selected BEFORE: ' + editor.selectedBox.id + ' current focused element ' + document.activeElement.id);
         if (event.ctrlKey || event.altKey) {
             switch (event.key) {
                 case ARROW_UP:
@@ -72,6 +71,7 @@
                     stopEvent(event);
                     break;
                 case TAB:
+                case ENTER:
                 case ARROW_RIGHT:
                     editor.selectNextLeaf();
                     stopEvent(event);
