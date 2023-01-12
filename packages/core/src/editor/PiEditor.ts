@@ -405,8 +405,6 @@ export class PiEditor {
         const down = this.boxBelow(box);
         if (down !== null && down !== undefined) {
             this.selectElementForBox(down);
-        } else {
-            this.selectionChanged(); // make sure the current box has focus
         }
     }
 
@@ -414,8 +412,6 @@ export class PiEditor {
         const up = this.boxAbove(box);
         if (up !== null) {
             this.selectElementForBox(up);
-        } else {
-            this.selectionChanged(); // make sure the current box has focus
         }
     }
 
