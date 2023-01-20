@@ -1,6 +1,12 @@
-import { PiConcept, PiLanguage, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
-import { CONFIGURATION_FOLDER, EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
-import { PiEditUnit } from "../../metalanguage";
+import {
+    PiBinaryExpressionConcept,
+    PiConcept,
+    PiLanguage,
+    PiLimitedConcept,
+    PiProperty
+} from "../../../languagedef/metalanguage";
+import { CONFIGURATION_FOLDER, EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
+import { PiEditTableProjection, PiEditUnit } from "../../metalanguage";
 
 export class EditorDefTemplate {
 
@@ -11,6 +17,7 @@ export class EditorDefTemplate {
         let conceptsWithRefShortcut: ConceptShortCutElement[] = [];
         let languageImports: string[] = [];
         let editorImports: string[] = [];
+        let coreImports: string[] = ['Language', 'FreProjectionHandler', 'FreBoxProvider'];
 
         language.concepts.filter(c => !(c instanceof PiLimitedConcept || c.isAbstract)).forEach(concept => {
             // TODO handle other sub types of PiClassifier
@@ -33,27 +40,67 @@ export class EditorDefTemplate {
             }
         });
 
-        editorDef.projectiongroups.map(group => {
-            editorImports.push(Names.projection(group));
+        const handlerVarName: string = 'handler';
+        // get all the constructors
+        let constructors: string[] = [];
+        language.concepts.forEach(concept => {
+            if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
+                constructors.push(`["${Names.concept(concept)}", () => {
+                        return new ${Names.boxProvider(concept)}(${handlerVarName})
+                    }]`);
+                ListUtil.addIfNotPresent(editorImports, Names.boxProvider(concept));
+            }
+        });
+        language.units.forEach(unit => {
+            constructors.push(`["${Names.classifier(unit)}", () => {
+                        return new ${Names.boxProvider(unit)}(${handlerVarName})
+                    }]`);
+            ListUtil.addIfNotPresent(editorImports, Names.boxProvider(unit));
         });
 
-        return `import { Language, Model, ModelUnit, Property, Concept, Interface, PiCompositeProjection, PiProjection } from "${PROJECTITCORE}";
+        // get all the table header info
+        let tableHeaderInfo: string[] = [];
+        language.concepts.forEach(concept => {
+            editorDef.findTableProjectionsForType(concept).map(proj => {
+                const entry = this.generateHeaderInfo(proj, coreImports);
+                if (!!entry && entry.length > 0) {
+                    tableHeaderInfo.push(entry);
+                }
+            });
+        });
+
+        const hasBinExps: boolean = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept)).length > 0;
+        // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
+
+        // template starts here
+        return `import { ${coreImports.join(", ")} } from "${PROJECTITCORE}";
         
             import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
-            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";      
-            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";       
+            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";         
+            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";  
     
             /**
              * Adds all known projection groups to the root projection.
-             * @param rootProjection
+             * @param ${handlerVarName}
              */
-            export function initializeProjections(rootProjection: PiCompositeProjection) {
-                for (const p of projectitConfiguration.customProjection) {
-                    rootProjection.addProjection(p);
-                }         
+            export function initializeProjections(${handlerVarName}: FreProjectionHandler) {
+                ${hasBinExps ? `${handlerVarName}.addProjection("${Names.brackets}");`
+                : ``
+                }    
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
-                `rootProjection.addProjection(new ${Names.projection(group)}());`).join("\n")}
-                rootProjection.addProjection(new ${Names.projection(editorDef.getDefaultProjectiongroup())}());
+                    `${handlerVarName}.addProjection("${Names.projection(group)}")`
+                ).join(";\n")}
+                for (const p of projectitConfiguration.customProjection) {
+                    ${handlerVarName}.addCustomProjection(p);
+                }
+                ${handlerVarName}.initProviderConstructors(new Map<string, () => FreBoxProvider>(
+                [
+                    ${constructors.map(constr => constr).join(",\n")} 
+                ])); 
+                ${handlerVarName}.initTableHeaders(
+                [
+                    ${tableHeaderInfo.map(constr => constr).join(",\n")} 
+                ]); 
             }    
             
             /**
@@ -72,6 +119,17 @@ export class EditorDefTemplate {
                 ;`
             ).join("\n")}
             }`
+    }
+
+    private generateHeaderInfo(projection: PiEditTableProjection, coreImports: string[]): string {
+        if (!!projection && !!projection.headers && projection.headers.length > 0) {
+            ListUtil.addIfNotPresent(coreImports, "BoxUtils");
+            ListUtil.addIfNotPresent(coreImports, "FreTableHeaderInfo");
+            return `new FreTableHeaderInfo("${projection.classifier.name}", "${projection.name}", [${projection.headers.map(head =>
+                `"${head}"`
+            ).join(",\n")}])`;
+        }
+        return '';
     }
 }
 

@@ -9,22 +9,19 @@ import {
     STDLIB_GEN_FOLDER,
     WRITER_GEN_FOLDER,
     READER_GEN_FOLDER,
-    STYLES_FOLDER,
-    GenerationUtil,
     INTERPRETER_FOLDER
 } from "../../../utils/";
-import { PiClassifier, PiLanguage } from "../../metalanguage";
+import { PiLanguage } from "../../metalanguage";
 
 export class EnvironmentTemplate {
 
     generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
-        import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
-                    ${Names.PiScoper}, ${Names.FreonTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, LanguageEnvironment
+        import { ${Names.PiEditor}, ${Names.PiEnvironment}, ${Names.PiReader}, 
+                    ${Names.FreonTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
+                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, LanguageEnvironment, FreProjectionHandler
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
-        import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoperDef(language)}";
         import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typerDef(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
@@ -60,10 +57,10 @@ export class EnvironmentTemplate {
              */  
             private constructor() {
                 const actions = new ${Names.actions(language)}();
-                const rootProjection = new ${Names.CompositeProjection}("root");
-                initializeProjections(rootProjection);
-                this.editor = new PiEditor(rootProjection, this, actions);
+                const myComposite = new FreProjectionHandler();
+                this.editor = new PiEditor(myComposite, this, actions);
                 initializeLanguage();
+                initializeProjections(myComposite);
                 initializeEditorDef();
                 initializeScoperDef(this.scoper);
                 initializeTypers(this.typer);

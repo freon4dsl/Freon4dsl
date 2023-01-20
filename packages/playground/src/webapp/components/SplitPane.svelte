@@ -1,13 +1,9 @@
-<!-- copied from https://github.com/sveltejs/svelte-repl/blob/master/src/SplitPane.svelte -->
-<!-- with these changes: -->
-<!-- verbatim inclusion of function clamp (line 23) -->
-<!-- change of border value in '.pane' (line 108) -->
-<!-- change of background color in '.divider::after' (line 127) -->
-<!-- added initial values to all export let variables -->
-<script>
+<!-- adjusted from https://github.com/sveltejs/svelte-repl/blob/master/src/SplitPane.svelte -->
+<script lang="ts">
     // todo comment on changes
-    import { createEventDispatcher, onMount } from 'svelte';
-    const dispatch = createEventDispatcher();
+    // import { createEventDispatcher, onMount } from 'svelte';
+    // const dispatch = createEventDispatcher();
+
     export let type = 'vertical'; /* difference with original */
     export let pos = 50;
     export let fixed = false;
@@ -26,7 +22,7 @@
     $: min = 100 * (buffer / size);
     $: max = 100 - min;
     $: pos = clamp(pos, min, max);
-    const refs = {};
+    let container: HTMLElement;
     let dragging = false;
 
     /* difference with original */
@@ -42,20 +38,20 @@
     }
 
     function setPos(event) {
-        const { top, left } = refs.container.getBoundingClientRect();
+        const { top, left } = container.getBoundingClientRect();
         const px = type === 'vertical'
             ? (event.clientY - top)
             : (event.clientX - left);
         pos = 100 * px / size;
-        dispatch('change');
+        // dispatch('change');
     }
     function setTouchPos(event) {
-        const { top, left } = refs.container.getBoundingClientRect();
+        const { top, left } = container.getBoundingClientRect();
         const px = type === 'vertical'
             ? (event.touches[0].clientY - top)
             : (event.touches[0].clientX - left);
         pos = 100 * px / size;
-        dispatch('change');
+        // dispatch('change');
     }
     function drag(node, callback) {
         const mousedown = event => {
@@ -106,7 +102,7 @@
     .container {
         position: relative;
         width: calc(100vw);
-        height: calc(100vh - 86px); /* minus 96px, bcause this is the height of the top-app-bar plus the status-bar plus padding round main frame (48 + 24 + 1 * 10) */
+        height: calc(100vh - 96px); /* minus 96px, because this is the height of the top-app-bar plus the status-bar plus padding round main frame (48 + 24 + 1 * 10) TODO change this comment */
         min-height: 400px;
     }
     .pane {
@@ -114,7 +110,7 @@
         float: left;
         width: 100%;
         height: 100%;
-        overflow: auto;
+        box-sizing: border-box;
     }
     .mousecatcher {
         position: absolute;
@@ -167,12 +163,13 @@
     }
 </style>
 
-<div class="container" bind:this={refs.container} >
-    <div class="pane" style="{dimension}: {pos}%; top: 0px;" bind:clientWidth={wa} bind:clientHeight={ha}>
+<!-- we use offsetWidth and offsetHeight instead of clientWidth and clientHeight, because these include any scrollbars -->
+<div class="container" bind:this={container} >
+    <div class="pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
         <slot name="a"></slot>
     </div>
 
-    <div class="pane" style="{dimension}: {100 - (pos)}%; top:{ topB}px;" bind:clientWidth={wb} bind:clientHeight={hb}>
+    <div class="pane" style="{dimension}: {100 - (pos)}%; top:{ topB}px; overflow: auto;" bind:offsetWidth={wb} bind:offsetHeight={hb}>
         <slot name="b"></slot>
     </div>
 

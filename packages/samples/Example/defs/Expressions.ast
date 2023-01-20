@@ -67,7 +67,7 @@ expression IfExpression base Expression {
 }
 
 ////////////////////////////////////
-//    Binary ExExpressions
+//    Binary Expressions
 ////////////////////////////////////
 abstract binary expression BinaryExpression base Expression {
     left: Expression;

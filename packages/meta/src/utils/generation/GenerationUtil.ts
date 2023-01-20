@@ -10,7 +10,6 @@ import {
 import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp, PiElementReference, PiPrimitiveType } from "../../languagedef/metalanguage";
 import { Names } from "./Names";
 import { LangUtil } from "./LangUtil";
-import { PiModelDescription, PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
 
 export class GenerationUtil {
 

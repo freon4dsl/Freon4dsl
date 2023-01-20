@@ -1,5 +1,3 @@
-import { observable, makeObservable, computed } from "mobx";
-
 import { PiElement } from "../../ast";
 import { Box } from "./internal";
 
@@ -18,6 +16,7 @@ export class IndentBox extends Box {
     set child(v: Box) {
         this.$child = v;
         this.$child.parent = this;
+        this.isDirty();
     }
 
     indent: number = 4;
@@ -27,10 +26,6 @@ export class IndentBox extends Box {
         this.indent = indent;
         this.child = child;
         this.selectable = false;
-        makeObservable(this, {
-            child: computed,
-            indent: observable
-        });
     }
 
     /**
@@ -54,5 +49,5 @@ export class IndentBox extends Box {
 }
 
 export function isIndentBox(b: Box): b is IndentBox {
-    return b.kind === "IndentBox"; // " b instanceof IndentBox;
+    return b?.kind === "IndentBox"; // " b instanceof IndentBox;
 }

@@ -1,75 +1,162 @@
+<svelte:options immutable={true}/>
 <script lang="ts">
-    import { autorun } from "mobx";
-    import { afterUpdate, onDestroy, onMount } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
-    import RenderComponent from "./RenderComponent.svelte";
+    /**
+     * This component shows a list of elements that have the same type (a 'true' list).
+     * It can be shown horizontally or vertically, both are displayed as a grid with one
+     * row or column, respectively.
+     * This component supports drag and drop.
+     */
+    import { flip } from "svelte/animate";
     import {
         Box,
-        HorizontalListBox,
-        isEmptyLineBox,
+        dropListElement,
+        isActionBox,
+        isNullOrUndefined,
+        Language,
         ListBox,
+        ListDirection,
+        ListElementInfo,
+        MenuOptionsType,
+        moveListElement,
         PiEditor,
-        PiLogger,
-        isHorizontalBox
+        PiLogger
     } from "@projectit/core";
+    import RenderComponent from "./RenderComponent.svelte";
+    import {
+        activeElem,
+        activeIn,
+        draggedElem,
+        draggedFrom,
+        contextMenu,
+        contextMenuVisible,
+        componentId
+    } from "./svelte-utils/";
+    import { afterUpdate, onMount } from "svelte";
 
     // Parameters
-    export let list: ListBox ; //= new HorizontalListBox(null, "l1");
+    export let box: ListBox ;
     export let editor: PiEditor;
 
-    // console.log("LIST COMPONET READ " + list?.role)
     // Local state variables
-    let LOGGER: PiLogger = new PiLogger("ListComponent").mute();
-    let svList: ListBox = list; // TODO question: why a new variable, cannot use 'list'?
-    let svNotifier = new ChangeNotifier();
-    let element: HTMLSpanElement;
-    let children: Box[];
-    $: children = [...list.children];
+    let LOGGER: PiLogger = new PiLogger("ListComponent");
+    let id: string;                             // an id for the html element showing the list
+    let htmlElement: HTMLSpanElement;
+    let isHorizontal: boolean;                  // indicates whether the list should be shown horizontally or vertically
+    let shownElements: Box[];                   // the parts of the list that are being shown
 
-    onDestroy(() => {
-        LOGGER.log("DESTROY LIST  COMPONENT")
-    });
+    // determine the type of the elements in the list
+    // this speeds up the check whether an element may be dropped here
+    let myMetaType: string;
+    $: myMetaType = box.conceptName;
 
-    async function setFocus(): Promise<void> {
-        FOCUS_LOGGER.log("ListComponent.setFocus for box " + list.role);
-        if (!!element) {
-            element.focus();
+    const drop = (event: DragEvent, targetIndex) => {
+        const data: ListElementInfo = $draggedElem;
+
+        LOGGER.log("DROPPING item [" + data.element.piId() + "] from [" + data.componentId + "] in list [" + id + "] on position [" + targetIndex + "]");
+        if (data.componentId === id) { // dropping in the same list
+            // console.log('moving item within list');
+            moveListElement(box.element, data.element, box.propertyName, targetIndex);
+        } else { // dropping in another list
+            // console.log('moving item to another list');
+            dropListElement(editor, data, myMetaType, box.element, box.propertyName, targetIndex);
+        }
+        // everything is done, so reset the variables
+        $draggedElem = null;
+        $draggedFrom = "";
+        $activeElem = { row: -1, column: -1 };
+        $activeIn = "";
+        // Clear the drag data cache (for all formats/types)
+        // event.dataTransfer.clearData(); // has problems in Firefox!
+    };
+
+    const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
+        LOGGER.log("LIST Drag Start " + box.id);
+        // close any context menu
+        $contextMenuVisible = false;
+
+        // give the drag an effect
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.dropEffect = "move";
+
+        // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
+        // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
+        // create the data to be transferred and notify the store that something is being dragged
+        $draggedElem = new ListElementInfo(shownElements[listIndex].element, id);
+        $draggedFrom = listId;
+    };
+    const dragenter = (event: DragEvent, index): boolean => {
+        LOGGER.log("LIST Drag Enter" + box.id)
+        const data: ListElementInfo = $draggedElem;
+        // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
+        if (isNullOrUndefined($draggedElem)) {
+            return;
+        }
+        // only show this item as active when the type of the element to be dropped is the right one
+        if (Language.getInstance().metaConformsToType(data.element, myMetaType)) {
+            $activeElem = { row: index, column: -1 };
+            $activeIn = id;
+        }
+        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
+    };
+
+    const mouseout = (): boolean => {
+        LOGGER.log("LIST mouse out " + box.id);
+        // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
+        if (isNullOrUndefined($draggedElem)) {
+            return;
+        }
+        $activeElem = { row: -1, column: -1 };
+        $activeIn = "";
+        return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
+    };
+
+    function showContextMenu(event, index: number) {
+        if (index >= 0 && index <= shownElements.length) {
+            const elemBox: Box = shownElements[index];
+            if (editor.selectedBox !== elemBox) {
+                editor.selectElementForBox(elemBox);
+                // $selectedBoxes = [elemBox];
+            }
+            // determine the contents of the menu based on listBox, before showing the menu!
+            if (isActionBox(elemBox)) { // the selected box is the placeholder => show different menu items
+                // console.log('index of ActionBox: ' + index);
+                $contextMenu.items = box.options(MenuOptionsType.placeholder);
+            } else {
+                $contextMenu.items = box.options(MenuOptionsType.normal);
+            }
+            $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
         }
     }
+
+    async function setFocus(): Promise<void> {
+        LOGGER.log("ListComponent.setFocus for box " + box.role);
+        if (!!htmlElement) {
+            htmlElement.focus();
+        }
+    }
+
     onMount( () => {
-        MOUNT_LOGGER.log("ListComponent onMount --------------------------------")
-        list.setFocus = setFocus;
+        LOGGER.log("ListComponent onMount --------------------------------")
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
 
     afterUpdate(() => {
-        UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
-        list.setFocus = setFocus;
-        // NOTE: Triggers autorun whenever an element is added or delete from the list
-        svNotifier.notifyChange();
-    });
-    autorun(() => {
-        AUTO_LOGGER.log("AUtorun list")
-        svNotifier.dummy
-        svList = list;
-        children = [...list.children];
-        list.setFocus = setFocus;
+        LOGGER.log("ListComponent.afterUpdate for " + box.role);
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
 
-    // TODO Empty vertical list gives empty line, try to add entities in the example.
+    // TODO Empty vertical box gives empty line, try to add entities in the example.
     const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("ListComponent.onFocus for box " + list.role);
+        LOGGER.log("ListComponent.onFocus for box " + box.role);
         // e.preventDefault();
         // e.stopPropagation();
     }
     const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("ListComponent.onBlur for box " + list.role);
+        LOGGER.log("ListComponent.onBlur for box " + box.role);
         // e.preventDefault();
         // e.stopPropagation();
-    }
-
-    function box(box: Box): Box {
-        LOGGER.log("render box " + box.role);
-        return box;
     }
 
     function setPrevious(b: Box): string {
@@ -78,35 +165,55 @@
     }
 
     let previousBox = null;
+
+    const refresh = (why?: string): void =>  {
+        LOGGER.log("REFRESH ListComponent( " + why + ") " + box?.element?.piLanguageConcept());
+        shownElements = [...box.children];
+        id = !!box ? componentId(box) : 'list-for-unknown-box';
+        isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
+    }
+
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh("Refresh from ListComponent box changed:   " + box?.id);
+    }
+    // The mouseover fires when the mouse cursor is outside the element and then move to inside the boundaries of the element.
+    // The mouseout fires when the mouse cursor is over an element and then moves another element.
+    // The mouseenter fires when the mouse cursor is outside an element and then moves to inside the boundaries of the element.
+    // The mouseleave fires when the mouse cursor is over an element and then moves to the outside of the element’s boundaries.
+    // Both mouseenter and mouseleave do not bubble and do not fire when the mouse cursor moves over descendant elements.
 </script>
 
-<span class="list-component"
-      on:click
-      on:focus={onFocusHandler}
-      on:blur={onBlurHandler}
-      tabIndex={0}
-      bind:this={element}
+<!-- on:focus is here to avoid a known bug in svelte 3.4*: "A11y: on:mouseover must be accompanied by on:focus with Svelte v3.40 #285" -->
+<!-- Likewise on:blur is needed for on:mouseout -->
+<span class="list" id="{id}"
+      style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
+      style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}"
+      bind:this={htmlElement}
+      tabindex={0}
 >
-    {#if isHorizontalBox(svList) }
-        <div class="horizontalList"  on:click>
-            {#each children as box (box.id)}
-                <RenderComponent box={box} editor={editor}/>
-            {/each}
-        </div>
-    {:else}
-        <div class="verticalList"  on:click>
-            {#each children as box, i (box.id)}
-                {#if i > 0 && i < children.length
-                     && !(i === 1 && isEmptyLineBox(previousBox))
-                }
-                    <br/>
-                {/if}
-                <RenderComponent box={box} editor={editor}/>
-                { setPrevious(box) }
-            {/each}
-        </div>
-    {/if}
+    {#each shownElements as box, index (box.id)}
+        <span
+                class="list-item"
+                class:is-active={$activeElem?.row === index && $activeIn === id}
+                class:dragged={$draggedElem?.row === index && $draggedFrom === id}
+                style:grid-column="{!isHorizontal ? 1 : index+1}"
+                style:grid-row="{isHorizontal ? 1 : index+1}"
+                animate:flip
+                draggable=true
+                on:dragstart|stopPropagation={event => dragstart(event, id, index)}
+                on:drop|stopPropagation={event => drop(event, index)}
+                ondragover="return false"
+                on:dragenter|stopPropagation={(event) => dragenter(event, index)}
+                on:mouseout|stopPropagation={mouseout}
+                on:focus={() => {}}
+                on:blur={() => {}}
+                on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event, index)}
+        >
+            <RenderComponent box={box} editor={editor}/>
+		</span>
+    {/each}
 </span>
+
 
 <style>
     .list-component {

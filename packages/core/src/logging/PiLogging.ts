@@ -33,9 +33,9 @@ export class PiLogger {
         PiLogger.muteAll = false;
     }
 
-    static filter: string;
+    static filter: string = null;
 
-    static showString(s: string) {
+    static showString(s: string | null) {
         PiLogger.filter = s;
     }
 
@@ -87,7 +87,7 @@ export class PiLogger {
     }
 
     protected logToConsole(color: string, message: string): void {
-        if (PiLogger.filter === undefined) {
+        if (PiLogger.filter === null) {
             console.log(color, message, PiLogger.FG_BLACK, "");
             // this.colorMyText();
         } else {

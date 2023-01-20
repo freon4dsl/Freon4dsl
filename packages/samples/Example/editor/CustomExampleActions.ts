@@ -10,7 +10,7 @@ import {
     PiElement,
     OptionalBox,
     PiCreateBinaryExpressionAction,
-    PiActionTrigger, isString
+    PiTriggerUse, isString
 } from "@projectit/core";
 import { RoleProvider } from "@projectit/core";
 import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
@@ -28,7 +28,6 @@ export class CustomExampleActions implements PiCombinedActions {
     binaryExpressionActions: PiCreateBinaryExpressionAction[] = MANUAL_BINARY_EXPRESSION_ACTIONS;
     customActions: PiCustomAction[] = MANUAL_CUSTOM_ACTIONS;
 }
-
 
 const cust: PiCustomAction[] = [
     PiCustomAction.create({
@@ -55,8 +54,6 @@ export const MANUAL_CUSTOM_ACTIONS: PiCustomAction[] = [
     PiCustomAction.create({
 
         activeInBoxRoles: [
-            "alias-Method-body-textbox",
-            "Method-body-textbox",
             "Method-body",
             "AbsExpression-expr",
             "SumExpression-from",
@@ -87,7 +84,7 @@ export const MANUAL_CUSTOM_ACTIONS: PiCustomAction[] = [
             "EqualsExpression-right"
         ],
         trigger: /[0-9]/,
-        action: (box: Box, trigger: PiActionTrigger, editor: PiEditor) => {
+        action: (box: Box, trigger: PiTriggerUse, editor: PiEditor) => {
             const parent = box.element;
             const x = new NumberLiteralExpression();
             if( isString(trigger) ) {

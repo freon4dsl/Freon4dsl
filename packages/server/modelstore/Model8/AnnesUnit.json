@@ -5,7 +5,6 @@
       {
          "$typename": "Entity",
          "name": "Robert",
-         "construc": null,
          "attributes": [
             {
                "$typename": "Attribute",
@@ -22,7 +21,6 @@
                "declaredType": null
             }
          ],
-         "listOfReferences": [],
          "baseEntity": null
       }
    ],

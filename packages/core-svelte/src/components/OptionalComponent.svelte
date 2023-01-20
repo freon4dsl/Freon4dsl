@@ -1,74 +1,68 @@
+<svelte:options immutable={true}/>
 <script lang="ts">
+    /**
+     * This component display an optional part. It either shows the content of the
+     * corresponding OptionalBox, or its placeholder.
+     */
     import RenderComponent from "./RenderComponent.svelte";
-    import { onDestroy, onMount, afterUpdate } from "svelte";
-    import { autorun } from "mobx";
-    import { getRoot, OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
-    import { FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
+    import { onMount, afterUpdate } from "svelte";
+    import { OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
+    import { componentId } from "./svelte-utils";
 
-    export let optionalBox: OptionalBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
+    export let box: OptionalBox;
     export let editor: PiEditor;
 
-    const LOGGER = new PiLogger("OptionalComponent").mute();
-    let id: string = `${optionalBox.element.piId()}-${optionalBox.role}`;
+    const LOGGER = new PiLogger("OptionalComponent");
+    let id: string;                             // an id for the html element showing the optional
+    id = !!box ? componentId(box) : 'optional-for-unknown-box';
     let childBox ;
     let mustShow = false;
     let showByCondition = false;
-    let element: HTMLDivElement = null;
+    let contentComponent;
+    let placeholderComponent;
 
-    onDestroy(() => {
-        LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ optionalBox.id + "]")
-    });
+    const refresh = (why?: string): void => {
+        LOGGER.log("REFRESH OptionalBox");
+        mustShow = box.mustShow;
+        showByCondition = box.condition();
+        childBox = box.content;
+    };
 
-    const setFocus = async (): Promise<void> => {
-        FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
-        if (mustShow || showByCondition) {
-            optionalBox.box.firstEditableChild.setFocus();
+    async function setFocus(): Promise<void> {
+        LOGGER.log("OptionalComponent.setFocus on box " + box.role);
+        if (mustShow || showByCondition && !!contentComponent) {
+            box.content.firstEditableChild.setFocus();
+        } else if (!!placeholderComponent) {
+            box.placeholder.setFocus();
         } else {
-            optionalBox.whenNoShowingAlias.setFocus();
+            console.error("OptionalComponent " + id + " has no elements to put focus on");
         }
     };
 
     onMount( () => {
-        MOUNT_LOGGER.log("OptionalComponent onMount --------------------------------")
-        optionalBox.setFocus = setFocus;
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
 
     afterUpdate( () => {
-        LOGGER.log("AfterUpdate " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
-        LOGGER.log("   root " + getRoot(optionalBox).$id);
-        if(optionalBox.box.kind === "HorizontalListBox") {
-            optionalBox.box.children.forEach( child => {
-                LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
-            })
-        }
-        optionalBox.setFocus = setFocus;
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
 
-    autorun( () => {
-        LOGGER.log("AUTO " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
-        LOGGER.log("   root " + getRoot(optionalBox).$id);
-        if(optionalBox.box.kind === "HorizontalListBox") {
-            optionalBox.box.children.forEach( child => {
-                LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
-            })
-        }
-        mustShow = optionalBox.mustShow;
-        childBox = optionalBox.box;
-        showByCondition = optionalBox.showByCondition;
-    });
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
+    }
 </script>
 
-<div class="optional"
-     tabIndex={0}
-     bind:this={element}
-     id="{id}"
+<span class="optional"
+      id="{id}"
 >
     {#if mustShow || showByCondition}
-        <RenderComponent box={optionalBox.box} editor={editor} />
+        <RenderComponent box={childBox} editor={editor} bind:this={contentComponent}/>
     {:else}
-        <RenderComponent box={optionalBox.whenNoShowingAlias} editor={editor} />
+        <RenderComponent box={box.placeholder} editor={editor} bind:this={placeholderComponent}/>
     {/if}
-</div>
+</span>
 
 <style>
     .optional:empty:before {

@@ -1,16 +1,34 @@
 <script lang="ts">
-    import type { PiEditor, SvgBox } from "@projectit/core";
-    import { componentId } from "./util";
+    import type { SvgBox } from "@projectit/core";
+    import { afterUpdate, onMount } from "svelte";
+    import { componentId } from "./svelte-utils";
 
-    export let svgBox: SvgBox;
-    export let editor: PiEditor;
+    export let box: SvgBox;
 
-    let id: string = componentId(svgBox);
+    let id: string;
+    let svgPath: string;
+    let width: number;
+    let height: number;
+
+    onMount( () => {
+        box.refreshComponent = refresh;
+    });
+    afterUpdate(() => {
+        box.refreshComponent = refresh;
+    });
+    const refresh = (why?: string) => {
+        id = !!box? componentId(box) : 'SVG-for-unknown-box';
+        svgPath = box.svgPath;
+        width = box.width;
+        height = box.height;
+    }
+
+    refresh();
 </script>
 
 <!--TODO 500, 500 in viewbox is dependent on the SVG image !!-->
-<svg width={svgBox.width} height={svgBox.height} viewBox={"0 0 500 500"} id="{id}">
-        <path d={svgBox.svgPath}/>
+<svg width={width} height={height} viewBox={"0 0 500 500"} id="{id}">
+        <path d={svgPath}/>
 </svg>
 
 <style>

@@ -1,21 +1,18 @@
 import { editorEnvironment } from "../config/WebappConfiguration";
 import {
-    Box,
-    isAliasBox,
-    isAliasTextBox,
-    isTextBox,
-    PiCompositeProjection,
+    Box, FreProjectionHandler,
+    isActionBox,
+    isActionTextBox, isListBox, Language,
     PiError,
     PiLogger,
     PiUndoManager,
-    Searcher
+    Searcher,
+    SeverityType
 } from "@projectit/core";
 import type { PiElement } from "@projectit/core";
 import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore";
 import { EditorState } from "./EditorState";
-import { copiedElement } from "../components/stores/ModelStore";
-import { get } from "svelte/store";
-import { setUserMessage, SeverityType, userMessage } from "../components/stores/UserMessageStore";
+import { setUserMessage } from "../components/stores/UserMessageStore";
 
 const LOGGER = new PiLogger("EditorRequestsHandler"); // .mute();
 
@@ -33,25 +30,28 @@ export class EditorRequestsHandler {
      * Makes sure that the editor show the current unit using the projections selected by the user
      * @param name
      */
-    enableProjection(name: string): void {
-        LOGGER.log("enabling Projection " + name);
+    enableProjections(names: string[]): void {
+        LOGGER.log("enabling Projection " + names);
         const proj = editorEnvironment.editor.projection;
-        if (proj instanceof PiCompositeProjection) {
-            proj.enableProjection(name);
+        if (proj instanceof FreProjectionHandler) {
+            proj.enableProjections(names);
         }
+        // Let the editor know that the projections have changed.
+        // TODO rootBoxChanged should NOT be called from outside PiEditor.
+        // editorEnvironment.editor.rootBoxChanged();
     }
 
     /**
-     * Makes sure that the editor show the current unit using the projections selected or unselected by the user
+     * Makes sure that the editor shows the current unit using the projections selected or unselected by the user
      * @param name
      */
-    disableProjection(name: string): void {
-        LOGGER.log("disabling Projection " + name);
-        const proj = editorEnvironment.editor.projection;
-        if (proj instanceof PiCompositeProjection) {
-            proj.disableProjection(name);
-        }
-    }
+    // disableProjection(name: string): void {
+    //     LOGGER.log("disabling Projection " + name);
+    //     const proj = editorEnvironment.editor.projection;
+    //     if (proj instanceof FreProjectionHandler) {
+    //         proj.disableProjection(name);
+    //     }
+    // }
 
     redo() {
         const unitInEditor = EditorState.getInstance().currentUnit;
@@ -71,11 +71,11 @@ export class EditorRequestsHandler {
 
     cut() {
         LOGGER.log("cut called");
-        const tobecut: PiElement = editorEnvironment.editor.selectedItem;
+        const tobecut: PiElement = editorEnvironment.editor.selectedElement;
         if (!!tobecut) {
             EditorState.getInstance().deleteElement(tobecut);
-            copiedElement.set(tobecut);
-            // console.log("saved: " + editorEnvironment.writer.writeToString(get(copiedElement)));
+            editorEnvironment.editor.copiedElement = tobecut;
+            // console.log("element " + editorEnvironment.editor.copiedElement.piId() + " is stored ");
         } else {
             setUserMessage("Nothing selected", SeverityType.warning);
         }
@@ -83,10 +83,10 @@ export class EditorRequestsHandler {
 
     copy() {
         LOGGER.log("copy called");
-        const tobecopied: PiElement = editorEnvironment.editor.selectedItem;
+        const tobecopied: PiElement = editorEnvironment.editor.selectedElement;
         if (!!tobecopied) {
-            copiedElement.set(tobecopied.copy());
-            // console.log("saved: " + editorEnvironment.writer.writeToString(get(copiedElement)));
+            editorEnvironment.editor.copiedElement = tobecopied.copy();
+            // console.log("element " + editorEnvironment.editor.copiedElement.piId() + " is stored ");
         } else {
             setUserMessage("Nothing selected", SeverityType.warning);
         }
@@ -94,22 +94,29 @@ export class EditorRequestsHandler {
 
     paste() {
         LOGGER.log("paste called");
-        const tobepasted = get(copiedElement);
+        const tobepasted = editorEnvironment.editor.copiedElement;
         if (!!tobepasted) {
             const currentSelection: Box = editorEnvironment.editor.selectedBox;
             const element: PiElement = currentSelection.element;
             if (!!currentSelection) {
-                if (isAliasTextBox(currentSelection)) {
-                    if (isAliasBox(currentSelection.parent)) {
-                        if (currentSelection.parent.conceptName === tobepasted.piLanguageConcept()) {
+                if (isActionTextBox(currentSelection)) {
+                    if (isActionBox(currentSelection.parent)) {
+                        if (Language.getInstance().metaConformsToType(tobepasted, currentSelection.parent.conceptName)) { // allow subtypes
                             // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
                             EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName )
                         } else {
                             setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
                         }
                     }
+                } else if (isListBox(currentSelection.parent)) {
+                    if (Language.getInstance().metaConformsToType(tobepasted, element.piLanguageConcept())) { // allow subtypes
+                        // console.log('pasting in ' + currentSelection.role + ', prop: ' + currentSelection.parent.propertyName);
+                        EditorState.getInstance().pasteInElement(element.piOwnerDescriptor().owner, currentSelection.parent.propertyName, element.piOwnerDescriptor().propertyIndex + 1);
+                    } else {
+                        setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
+                    }
                 } else {
-                    // console.log(currentSelection.role);
+                    // todo other pasting options ...
                 }
             } else {
                 setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);

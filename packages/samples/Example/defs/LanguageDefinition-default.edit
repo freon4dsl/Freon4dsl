@@ -25,17 +25,9 @@ ExampleUnit {
         }
         ]
 }
-
-//Method {
-//    [
-//        method ${name} ( ${parameters table rows} ): ${declaredType} {
-//            ${body}
-//        }
-//    ]
-//}
 Method {
     [
-        method ${name} ( ${parameters horizontal separator [,]} ): ${declaredType} {
+        method ${name} ( ${parameters table rows} ): ${declaredType} {
             ${body}
         }
     ]
@@ -44,26 +36,29 @@ Parameter {
      [${name} : ${declaredType}]
     table [${name} | ${declaredType}]
 }
-
 MethodCallExpression {
     [CALL ${methodDefinition} ( ${args horizontal separator[,] } )]
     referenceShortcut = ${methodDefinition}
     trigger = "method"
 }
-
 AttributeRef {
     [ ${attribute} ]
     trigger = "attribute"
     referenceShortcut = ${attribute}
 }
-
 DirectAttributeRef {
     [ ${attribute} ]
-    trigger = "direct-attribute"
+    trigger = "attributeref"
     referenceShortcut = ${attribute}
 }
-
 ParameterRef {
     [ ${parameter} [? . ${appliedfeature}] ]
     referenceShortcut = ${parameter}
 }
+
+//IfExpression {
+//        [
+//        ${ condition } ? ${ whenTrue } : ${whenFalse}
+//        ]
+//    trigger = "if"
+//}

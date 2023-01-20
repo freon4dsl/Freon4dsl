@@ -12,7 +12,7 @@ export enum BehaviorExecutionResult {
 }
 
 /**
- * Try to execute the alias `text`, and return true if this succeeds
+ * Try to execute the action `text`, and return true if this succeeds
  * Matching on full text only.
  * @param {Box} box
  * @param {string} text
@@ -22,6 +22,7 @@ export enum BehaviorExecutionResult {
 export function executeBehavior(box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
     LOGGER.log("Enter executeBehavior text [" + text + "] label [" + label + "] box role [" + box.role + "]");
     let partialMatch: boolean = false;
+    let index = -1; // todo get the correct index
 
     for (const action of editor.newPiActions) {
         const trigger = action.trigger;
@@ -33,11 +34,11 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                     "  results in " + (!!matchArray ? matchArray.length : "null"));
                 let execresult: PiPostAction;
                 if (matchArray !== null && label === matchArray[0]) {
-                    runInAction( () => {
+                    runInAction(() => {
                         const command = action.command(box);
-                        execresult = command.execute(box, label, editor);
+                        execresult = command.execute(box, label, editor, index);
                     });
-                    if(!!execresult) {
+                    if (!!execresult) {
                         execresult();
                     }
                     return BehaviorExecutionResult.EXECUTED;
@@ -46,9 +47,9 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                 if (trigger === text) {
                     LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + action.referenceShortcut + "]");
                     let postAction: PiPostAction;
-                    runInAction( () => {
+                    runInAction(() => {
                         const command = action.command(box);
-                        postAction = command.execute(box, label, editor);
+                        postAction = command.execute(box, label, editor, index);
                     });
                     postAction();
                     return BehaviorExecutionResult.EXECUTED;
@@ -59,7 +60,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
             }
         }
     }
-    LOGGER.log("executeBehavior: no alias match, ;partial is " + partialMatch);
+    LOGGER.log("executeBehavior: no action match, ;partial is " + partialMatch);
     if (partialMatch) {
         return BehaviorExecutionResult.PARTIAL_MATCH;
     } else {
@@ -76,20 +77,18 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
  * @param editor
  */
 export function executeSingleBehavior(action: PiAction, box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
-    console.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
-    let partialMatch: boolean = false;
+    LOGGER.log("Enter executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
     let execresult: PiPostAction;
 
-    const trigger = action.trigger;
-    runInAction( () => {
-        console.log("========================== START");
+    let index = -1; // todo get the correct index
+    runInAction(() => {
         const command = action.command(box);
-        execresult = command.execute(box, label, editor);
-        console.log("===============================")
+        execresult = command.execute(box, label, editor, index);
     });
-    if( !!execresult){
+    if (!!execresult) {
         execresult();
 
+        // TODO The following ensured that the cursor gwets the correct focus after the change.  probably still needed.
         // if (!!action.boxRoleToSelect) {
         //     editor.selectBoxByRoleAndElementId(execresult.piId(),action.boxRoleToSelect,action.caretPosition);
         // }else {
@@ -100,6 +99,7 @@ export function executeSingleBehavior(action: PiAction, box: Box, text: string, 
         //     }
         // }
     }
+    // TODO Probably needed to focus on the correct element.
     // if( !!execresult){
     //     await editor.selectElement(execresult, LEFT_MOST);
     //     editor.selectFirstLeafChildBox();

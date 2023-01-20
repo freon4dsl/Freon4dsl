@@ -124,7 +124,7 @@ class BTree {
                 this.balanceTree(newBinExp, editor);
                 break;
             case BEFORE_BINARY_OPERATOR:
-                PiUtils.CHECK(isPiBinaryExpression(exp), "Operator alias only allowed in binary operator");
+                PiUtils.CHECK(isPiBinaryExpression(exp), "Operator action only allowed in binary operator");
                 selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_RIGHT };
                 const left = (exp as PiBinaryExpression).piLeft();
                 (exp as PiBinaryExpression).piSetLeft(newBinExp);
@@ -133,7 +133,7 @@ class BTree {
                 this.balanceTree(newBinExp, editor);
                 break;
             case AFTER_BINARY_OPERATOR:
-                PiUtils.CHECK(isPiBinaryExpression(exp), "Operator alias only allowed in binary operator");
+                PiUtils.CHECK(isPiBinaryExpression(exp), "Operator action only allowed in binary operator");
                 selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
                 const right = (exp as PiBinaryExpression).piRight();
                 (exp as PiBinaryExpression).piSetRight(newBinExp);

@@ -41,13 +41,13 @@ export class FreonTyperGenerator {
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.typerFolder);
         FileUtil.createDirIfNotExisting(this.typerGenFolder);
-        // TODO re-introduce deletion of files
-        // Helpers.deleteFilesInDir(this.typerGenFolder, generationStatus);
         // Note that the creation of the concepts folder must follow the deletion of
         // files in the gen folder, because the concepts folder is part of the gen folder.
         // TODO find more elegant manner
         FileUtil.createDirIfNotExisting(this.typerConceptsFolder);
         FileUtil.deleteFilesInDir(this.typerConceptsFolder, generationStatus);
+        // TODO re-introduce deletion of files => take care of correct order of deletion
+        FileUtil.deleteFilesInDir(this.typerGenFolder, generationStatus);
 
         // set relative path to get the imports right
         let relativePath = "../../";

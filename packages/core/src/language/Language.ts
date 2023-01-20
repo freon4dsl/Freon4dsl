@@ -123,7 +123,7 @@ export class Language {
                 }
             }
         }
-        console.log("RETURNING NULL FOR " + typeName)
+        // console.log("RETURNING NULL FOR " + typeName)
         return undefined;
     }
 
@@ -326,4 +326,30 @@ export class Language {
         }
         return false;
     }
+
+    // TODO moved from PiCompositeProjection to Language.ts. Still needed???
+    // private checkSuper(nameOfSuper: string, elementName: string ): boolean {
+    //     // find the names of the subclasses of 'nameOfSuper'
+    //     const myConcept = Language.getInstance().concept(nameOfSuper);
+    //     let names: string[] | undefined ;
+    //     if (!!myConcept) {
+    //         names = myConcept.subConceptNames;
+    //     } else {
+    //         names = Language.getInstance().interface(nameOfSuper)?.subConceptNames;
+    //     }
+    //     // now search the names for 'elementName'
+    //     let result: boolean = false;
+    //     if (!!names && names.length > 0) {
+    //         result = names.includes(elementName);
+    //         // NB Below not needed, as subconcepts includes _all_ subconcepts already.
+    //         // if (!result) { // do recursive
+    //         //     myConcept.subConceptNames.forEach(n => {
+    //         //         if (this.checkSuper(n, elementName)) { // to avoid overwriting 'result' with next element
+    //         //             result = true;
+    //         //         }
+    //         //     });
+    //         // }
+    //     }
+    //     return result;
+    // }
 }

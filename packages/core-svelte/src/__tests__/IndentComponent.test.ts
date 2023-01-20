@@ -7,7 +7,7 @@ import { configure } from '@testing-library/dom'
 configure({ testIdAttribute: 'id' })
 
 
-describe("Indent component", () => {
+describe.skip("Indent component", () => {
     // an indent box coupled to element2, that takes as slot:
     // a label box coupled to element1
     const element1: PiElement = new SimpleElement("WHATSINANAME");

@@ -1,5 +1,5 @@
-import { PiElement, PiNamedElement } from "../ast/index";
-import { PiLogger } from "../logging/index";
+import { PiElement, PiNamedElement } from "../ast";
+import { PiLogger } from "../logging";
 import { FreScoper } from "./FreScoper";
 
 const LOGGER = new PiLogger("FreScoperComposite").mute();

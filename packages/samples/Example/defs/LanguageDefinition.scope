@@ -1,9 +1,18 @@
 scoper ExampleScoper for language Example
 
-isnamespace { Method, Entity, SumExpression }
+// isnamespace { Entity,Model }
+
+// isnamespace { Entity, Model }
+
+// 2 isnamespace { Method, Entity }
+
+isnamespace { Method, Entity, ExampleUnit, SumExpression }
 
 Entity {
     namespace_addition = self.baseEntity;
+    // How to tell that there is no namespace_addition for self.baseEntity ??
+    // namespace_addition = self.baseEntity for Type
+    // NOT namespace_addition = self.baseEntity for Entity
 }
 
 AppliedFeature {

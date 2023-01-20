@@ -17,7 +17,7 @@ import {
     PiEditUnit,
     PiOptionalPropertyProjection
 } from "../metalanguage";
-import { MetaLogger } from "../../utils";
+import { ListUtil, MetaLogger } from "../../utils";
 import { PiClassifier, PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
 import { PiEditParseUtil } from "./PiEditParseUtil";
 // The next import should be separate and the last of the imports.
@@ -29,6 +29,7 @@ import { PiElementReference } from "../../languagedef/metalanguage";
 const LOGGER = new MetaLogger("EditorCreators").mute();
 
 let currentFileName: string = "SOME_FILENAME";
+let classifiersUsedInSuperProjection: string[] = []; // remember these to add this list to the overall PiEditUnit
 export function setCurrentFileName(newName: string) {
     currentFileName = newName;
 }
@@ -41,6 +42,7 @@ export function createEditUnit(group: PiEditProjectionGroup): PiEditUnit {
     if (!!group) {
         result.projectiongroups.push(group);
     }
+    result.classifiersUsedInSuperProjection = classifiersUsedInSuperProjection;
     return result;
 }
 
@@ -281,6 +283,7 @@ export function createSuperProjection(data: Partial<PiEditSuperProjection>) : Pi
     const result = new PiEditSuperProjection();
     if (!!data.superRef) {
         result.superRef = data.superRef;
+        ListUtil.addIfNotPresent(classifiersUsedInSuperProjection, data.superRef.name);
     }
     if (!!data.projectionName) {
         result.projectionName = data.projectionName;

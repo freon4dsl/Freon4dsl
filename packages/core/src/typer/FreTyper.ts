@@ -1,4 +1,4 @@
-import { PiElement } from "../ast/index";
+import { PiElement } from "../ast";
 import { PiType } from "./PiType";
 
 export interface FreTyper {

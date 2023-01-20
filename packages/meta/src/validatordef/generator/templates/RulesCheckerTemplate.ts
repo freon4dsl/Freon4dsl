@@ -190,7 +190,7 @@ export class RulesCheckerTemplate {
             message = `"List '${r.property.toPiString()}' may not be empty"`;
         }
         return `if (${GenerationUtil.langExpToTypeScript(r.property)}.length == 0) {
-                    this.errorList.push(new PiError(${message}, modelelement, ${locationdescription}, ${severity}));
+                    this.errorList.push(new PiError(${message}, modelelement, ${locationdescription}, "${r.property.toPiString()}", ${severity}));
                     ${r.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
     }
@@ -249,6 +249,7 @@ export class RulesCheckerTemplate {
                 this.errorList.push(new PiError(\`Element[\$\{index\}] of property '${listName}' has no value\`,
                  ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
                  ${locationdescription},
+                 "${listpropertyName}",
                  ${severity}));
                     ${rule.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
             } else {
@@ -258,6 +259,7 @@ export class RulesCheckerTemplate {
                     this.errorList.push(new PiError(${message},
                      ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
                      ${locationdescription},
+                     "${listpropertyName}",
                      ${severity}));                }
                     ${rule.severity.severity === PiErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
             }

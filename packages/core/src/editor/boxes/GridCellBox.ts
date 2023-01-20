@@ -1,13 +1,12 @@
-import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../ast";
-import { PiUtils } from "../../util/index";
+import { PiUtils } from "../../util";
 import { Box } from "./Box";
 
 // TODO state in every box which element we assume to be getting as param, e.g. is the element in a GridCellBox the same as in the corresponding GridBox?
-export class GridCellBox extends Box  {
+export class GridCellBox extends Box {
     row: number = 1;
     column: number = 1;
-    private $box: Box = null;
+    private $content: Box = null;
     isHeader: boolean = false;
     rowSpan?: number;
     columnSpan?: number;
@@ -17,36 +16,30 @@ export class GridCellBox extends Box  {
         super(element, role);
         this.row = row;
         this.column = column;
-        this.$box = box;
-        if(!!box){
+        this.content = box;
+        if (!!box) {
             box.parent = this;
         }
         PiUtils.initializeObject(this, initializer);
-        makeObservable<GridCellBox, "$box">(this, {
-            $box: observable,
-            row: observable,
-            column: observable,
-            isHeader: observable
-        });
         this.selectable = false;
     }
 
-    get box(): Box {
-        return this.$box;
+    get content(): Box {
+        return this.$content;
     }
 
-    set box(b: Box) {
-        if (!!this.$box) {
-            this.$box.parent = null;
+    set content(b: Box) {
+        if (!!this.$content) {
+            this.$content.parent = null;
         }
-        this.$box = b;
+        this.$content = b;
         if (!!b) {
             b.parent = this;
         }
+        this.isDirty();
     }
 
     get children(): ReadonlyArray<Box> {
-        return [this.$box];
+        return [this.$content];
     }
-
 }

@@ -1,9 +1,7 @@
 import {
-    PiClassifier, PiConcept, PiInstance, PiInterface,
-    PiLanguage, PiPrimitiveProperty, PiProperty
+    PiClassifier, PiConcept, PiInstance, PiInterface, PiLanguage, PiPrimitiveProperty, PiProperty, PiModelDescription, PiUnitDescription
 } from "../../languagedef/metalanguage";
-import { PiModelDescription, PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
-import { PiEditProjectionGroup } from "../../editordef/metalanguage";
+import { PiEditClassifierProjection, PiEditProjectionGroup, PiEditTableProjection } from "../../editordef/metalanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -11,80 +9,79 @@ import { PiEditProjectionGroup } from "../../editordef/metalanguage";
  */
 export class Names {
     // tslint:disable-next-line:variable-name
-    public static PiNamedElement:string = "PiNamedElement";
+    public static PiNamedElement: string = "PiNamedElement";
     // tslint:disable-next-line:variable-name
-    public static PiElement:string = "PiElement";
+    public static PiElement: string = "PiElement";
     // tslint:disable-next-line:variable-name
-    public static PiExpression:string = "PiExpression";
+    public static PiExpression: string = "PiExpression";
     // tslint:disable-next-line:variable-name
-    public static PiBinaryExpression:string = "PiBinaryExpression";
+    public static PiBinaryExpression: string = "PiBinaryExpression";
     // tslint:disable-next-line:variable-name
-    public static PiScoper:string = "FreScoper";
+    public static PiScoper: string = "FreScoper";
     // tslint:disable-next-line:variable-name
-    public static FreScoperBase:string = "FreScoperBase";
+    public static FreScoperBase: string = "FreScoperBase";
     // tslint:disable-next-line:variable-name
-    public static FreScoperComposite:string = "FreScoperComposite";
+    public static FreScoperComposite: string = "FreScoperComposite";
     // tslint:disable-next-line:variable-name
-    public static FrScoperPart:string = "FreScoper";
+    public static FrScoperPart: string = "FreScoper";
     // tslint:disable-next-line:variable-name
     public static FreonTyperPart: string = "FreTyper";
     // tslint:disable-next-line:variable-name
     public static FreonTyper: string = "FreCompositeTyper";
     // tslint:disable-next-line:variable-name
-    public static PiValidator:string = "PiValidator";
+    public static PiValidator: string = "PiValidator";
     // tslint:disable-next-line:variable-name
-    public static PiStdlib:string = "PiStdlib";
+    public static PiStdlib: string = "PiStdlib";
     // tslint:disable-next-line:variable-name
-    public static PiWriter:string = "PiWriter";
+    public static PiWriter: string = "PiWriter";
     // tslint:disable-next-line:variable-name
-    public static PiReader:string = "PiReader";
+    public static PiReader: string = "PiReader";
     // tslint:disable-next-line:variable-name
-    public static PiError:string = "PiError";
+    public static PiError: string = "PiError";
     // tslint:disable-next-line:variable-name
-    public static FreonInterpreter:string = "FreonInterpreter";
+    public static FreonInterpreter: string = "FreonInterpreter";
     // tslint:disable-next-line:variable-name
-    public static PiErrorSeverity:string = "PiErrorSeverity";
+    public static PiErrorSeverity: string = "PiErrorSeverity";
     // tslint:disable-next-line:variable-name
-    public static PiActions:string = "PiCombinedActions";
+    public static PiActions: string = "PiCombinedActions";
     // tslint:disable-next-line:variable-name
-    public static PiEditor:string = "PiEditor";
+    public static PiEditor: string = "PiEditor";
     // tslint:disable-next-line:variable-name
-    public static PiProjection:string = "PiProjection";
-    public static PiCompositeProjection:string = "PiCompositeProjection";
+    public static PiProjection: string = "FreProjection";
+    public static PiCompositeProjection: string = "PiCompositeProjection";
     // tslint:disable-next-line:variable-name
-    public static PiModelInitialization:string = "PiModelInitialization";
+    public static PiModelInitialization: string = "PiModelInitialization";
     // tslint:disable-next-line:variable-name
-    public static Box:string = "Box";
+    public static Box: string = "Box";
     // tslint:disable-next-line:variable-name
-    public static PiElementReference:string = "PiElementReference";
+    public static PiElementReference: string = "PiElementReference";
     // tslint:disable-next-line:variable-name
-    public static PiEnvironment:string = "PiEnvironment";
+    public static PiEnvironment: string = "PiEnvironment";
     // tslint:disable-next-line:variable-name
-    public static CompositeProjection:string = "PiCompositeProjection";
-    // tslint:disable-next-line:variable-name
-    public static ProjectionalEditor:string = "ProjectionalEditor";
-    public static mainProjectionalEditor:string = "MainProjectionalEditor";
-    public static styles:string = "projectitStyles";
-    public static nameForSelf:string = "self";
-    public static initializeLanguage:string = "initializeLanguage";
+    public static ProjectionalEditor: string = "ProjectionalEditor";
+    public static mainProjectionalEditor: string = "MainProjectionalEditor";
+    public static styles: string = "projectitStyles";
+    public static nameForSelf: string = "self";
+    public static initializeLanguage: string = "initializeLanguage";
     public static defaultProjectionName: string = "default";
     // reserved role names for expressions, use with care.
     // Should remain identical to the definitions in @projectit/core !!
-    public static PI_BINARY_EXPRESSION_LEFT:string = "PiBinaryExpression-left";
-    public static PI_BINARY_EXPRESSION_RIGHT:string = "PiBinaryExpression-right";
-    public static BEFORE_BINARY_OPERATOR:string = "binary-pre";
-    public static AFTER_BINARY_OPERATOR:string = "binary-post";
-    public static LEFT_MOST:string = "exp-left";
-    public static RIGHT_MOST:string = "exp-right";
-    public static BINARY_EXPRESSION:string = "binary-expression";
-    public static EXPRESSION:string = "expression";
-    public static EXPRESSION_SYMBOL:string = "symbol";
-
+    public static PI_BINARY_EXPRESSION_LEFT: string = "PiBinaryExpression-left";
+    public static PI_BINARY_EXPRESSION_RIGHT: string = "PiBinaryExpression-right";
+    public static BEFORE_BINARY_OPERATOR: string = "binary-pre";
+    public static AFTER_BINARY_OPERATOR: string = "binary-post";
+    public static LEFT_MOST: string = "exp-left";
+    public static RIGHT_MOST: string = "exp-right";
+    public static BINARY_EXPRESSION: string = "binary-expression";
+    public static EXPRESSION: string = "expression";
+    public static EXPRESSION_SYMBOL: string = "symbol";
 
     // because the below names are used to generate TypeScript classes
     // they all have to start with an uppercase character
-    static referenceSeparator: string = "/"; // TODO use value from editDef
-    static listUtil: string = "ListUtil";
+    public static referenceSeparator: string = "/"; // TODO use value from editDef
+    public static listUtil: string = "ListUtil";
+    public static brackets: string = "Brackets";
+
     public static configuration() {
         return "ProjectitConfiguration";
     }
@@ -116,9 +113,6 @@ export class Names {
     public static customTyper(language: PiLanguage): string {
         return "Custom" + this.typerPart(language);
     }
-    public static customFreonTyper(language: PiLanguage): string {
-        return "Custom" + this.freonTyperPart(language);
-    }
 
     public static customValidator(language: PiLanguage): string {
         return "Custom" + this.validator(language);
@@ -133,7 +127,7 @@ export class Names {
     // }
 
     public static projection(group: PiEditProjectionGroup): string {
-        return "Projection" + this.startWithUpperCase(group.name);
+        return this.startWithUpperCase(group.name);
     }
 
     public static customProjection(language: PiLanguage): string {
@@ -233,10 +227,6 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "TyperPart";
     }
 
-    public static freonTyperPart(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "FreonTyper";
-    }
-
     public static typer(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Typer";
     }
@@ -264,12 +254,20 @@ export class Names {
         return "";
     }
 
-    public static projectionFunction(c: PiClassifier): string {
-        return "get" + Names.classifier(c) + "Box";
+    public static projectionMethod(proj: PiEditClassifierProjection): string {
+        return "get" + this.startWithUpperCase(proj.name);
     }
 
-    public static tabelDefinitionFunction(c: PiClassifier): string {
-        return "get" + Names.classifier(c) + "TableDefinition";
+    public static tableProjectionMethod(proj: PiEditClassifierProjection): string {
+        return "get" + this.startWithUpperCase(proj.name);
+    }
+
+    public static tabelDefinitionFunctionNew(projectionName: string): string {
+        return "getRowFor" + this.startWithUpperCase(projectionName);
+    }
+
+    public static tableHeadersMethod(proj: PiEditTableProjection): string {
+        return "getHeadersFor" + this.startWithUpperCase(proj.name);
     }
 
     public static writer(language: PiLanguage): string {
@@ -321,11 +319,11 @@ export class Names {
     }
 
     public static refName(property: PiProperty): string {
-        return  "$" + property.name;
+        return "$" + property.name;
     }
 
-    public static interpreterClassname(language : PiLanguage): string {
-        return Names.startWithUpperCase(language.name)+ "Interpreter";
+    public static interpreterClassname(language: PiLanguage): string {
+        return Names.startWithUpperCase(language.name) + "Interpreter";
     }
 
     public static interpreterBaseClassname(language: PiLanguage): string {
@@ -343,4 +341,9 @@ export class Names {
     public static interpreterName(language: PiLanguage): string {
         return "Main" + Names.interpreterClassname(language);
     }
+
+    public static boxProvider(concept: PiClassifier): string {
+        return Names.startWithUpperCase(concept.name) + "BoxProvider";
+    }
+
 }

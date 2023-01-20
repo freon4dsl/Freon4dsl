@@ -1,63 +1,69 @@
+<svelte:options immutable={true}/>
 <script lang="ts">
-    import { onDestroy, onMount, afterUpdate } from "svelte";
-    import { autorun } from "mobx";
-    import { PiLogger, type PiEditor, LabelBox } from "@projectit/core";
-    import { FOCUS_LOGGER } from "./ChangeNotifier";
-    import { componentId } from "./util";
+    /**
+     * This component shows to piece of non-editable text.
+     */
+    import { onMount, afterUpdate } from "svelte";
+    import { PiLogger, LabelBox } from "@projectit/core";
+    import { componentId } from "./svelte-utils";
+    import { setBoxSizes } from "./svelte-utils";
 
-    export let label: LabelBox;// = new LabelBox(null, "boxRole", "This is a box");
-    export let editor: PiEditor;
+    export let box: LabelBox;
 
-    const LOGGER = new PiLogger("LabelComponent").mute();
+    const LOGGER = new PiLogger("LabelComponent");
 
-    let id: string = componentId(label);
+    let id: string = !!box ? componentId(box) : 'label-for-unknwon-box';
+    let element: HTMLDivElement = null;
+    let style: string;
+    let cssClass: string;
+    let text: string;
 
-    onDestroy(() => {
-        LOGGER.log("LabelComponent.onDestroy ["+ text + "]")
+    // todo do we need a setFocus here?
+    // const setFocus = async (): Promise<void> => {
+    //     LOGGER.log("LabelComponent.setFocus for box " + box?.role);
+    //     if (!!element) {
+    //         element.focus();
+    //     }
+    // };
+
+    onMount( () => {
+        if (!!box) {
+            // box.setFocus = setFocus;
+            box.refreshComponent = refresh;
+        }
     });
 
-    let element: HTMLDivElement = null;
-    const setFocus = async (): Promise<void> => {
-        FOCUS_LOGGER.log("LabelComponent.setFocus for box " + label?.role);
-        if (!!element) {
-            element.focus();
+    afterUpdate( () => {
+        if (!!box) {
+            // box.setFocus = setFocus;
+            box.refreshComponent = refresh;
+            if(!!element) {
+                setBoxSizes(box, element.getBoundingClientRect()); // see todo in RenderComponent
+            }
+        }
+    });
+
+    const refresh = (why?: string) => {
+        LOGGER.log("REFRESH LabelComponent (" + why + ")");
+        if (!!box) {
+            text = box.getLabel();
+            style = box.cssStyle;
+            cssClass = box.cssClass;
         }
     };
 
-    onMount( () => {
-       label.setFocus = setFocus;
-    });
-    afterUpdate( () => {
-        label.setFocus = setFocus;
-    });
-
-    let text: string;
-    const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("LabelComponent.onFocus for box " + label.role);
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh("FROM component " + box?.id);
     }
-    const onBlurHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("LabelComponent.onBlur for box " + label.role);
-    }
-    let style: string;
-    let cssClass: string;
-
-    autorun( () => {
-        text = label.getLabel();
-        style = label.cssStyle;
-        cssClass = label.cssClass
-    });
 </script>
 
-<div class="label {text} {cssClass}"
-     style="{style}"
-     tabIndex={0}
-     on:focus={onFocusHandler}
-     on:blur={onBlurHandler}
-     bind:this={element}
-     id="{id}"
+<span class="label {text} {cssClass}"
+      style="{style}"
+      bind:this={element}
+      id="{id}"
 >
     {text}
-</div>
+</span>
 
 <style>
     .label:empty:before {

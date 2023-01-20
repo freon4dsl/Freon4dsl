@@ -2,7 +2,9 @@
 import {
     PiError,
     PiErrorSeverity,
-    PiLogger, PiOwnerDescriptor, Property
+    PiLogger,
+    PiOwnerDescriptor,
+    SeverityType
 } from "@projectit/core";
 import type {
     PiElement,
@@ -14,15 +16,14 @@ import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
+    editorProgressShown,
     noUnitAvailable,
     units,
-    editorProgressShown, unitNames, copiedElement
+    unitNames
 } from "../components/stores/ModelStore";
-import { setUserMessage, SeverityType } from "../components/stores/UserMessageStore";
+import { setUserMessage  } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
-import {
-    modelErrors
-} from "../components/stores/InfoPanelStore";
+import { modelErrors } from "../components/stores/InfoPanelStore";
 import { ServerCommunication } from "../server/ServerCommunication";
 import { runInAction } from "mobx";
 
@@ -269,6 +270,7 @@ export class EditorState {
      * @private
      */
     private swapInterfaceAndUnits(newCompleteUnit: PiModelUnit, newUnitInterface: PiModelUnit) {
+        LOGGER.log("swapInterfaceAndUnits called");
         if (!!EditorState.getInstance().currentUnit) {
             // get the interface of the current unit from the server
             serverCommunication.loadModelUnitInterface(
@@ -396,9 +398,9 @@ export class EditorState {
      * When an error in the errorlist is selected, or a search result is selected, the editor jumps to the faulty element.
      * @param item
      */
-    selectElement(item: PiElement) {
+    selectElement(item: PiElement, propertyName?: string) {
         LOGGER.log("Item selected");
-        editorEnvironment.editor.selectElement(item);
+        editorEnvironment.editor.selectElement(item, propertyName);
     }
 
     /**
@@ -422,31 +424,44 @@ export class EditorState {
             // find the owner of the element to be deleted and remove the element there
             const owner: PiElement = tobeDeleted.piOwner();
             const desc: PiOwnerDescriptor = tobeDeleted.piOwnerDescriptor();
-            // console.log("deleting " + desc.propertyName + "[" + desc.propertyIndex + "]");
-            if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
-                const propList = owner[desc.propertyName];
-                if (Array.isArray(propList) && propList.length > desc.propertyIndex) {
+            if (!!desc) {
+                // console.log("deleting " + desc.propertyName + "[" + desc.propertyIndex + "]");
+                if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
+                    const propList = owner[desc.propertyName];
+                    if (Array.isArray(propList) && propList.length > desc.propertyIndex) {
+                        runInAction(() =>
+                            propList.splice(desc.propertyIndex, 1)
+                        );
+                    }
+                } else {
                     runInAction(() =>
-                        propList.splice(desc.propertyIndex, 1)
+                        owner[desc.propertyName] = null
                     );
                 }
             } else {
-                runInAction(() =>
-                    owner[desc.propertyName] = null
-                );
+                console.error("deleting of " + tobeDeleted.piId() + " not succeeded, because owner descriptor is empty.");
             }
         }
     }
 
     pasteInElement(element: PiElement, propertyName: string, index?: number) {
         const property = element[propertyName];
+        // todo make new copy to keep in 'editorEnvironment.editor.copiedElement'
         if (Array.isArray(property)) {
-            runInAction(() =>
-                property.push(get(copiedElement))
+            // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+            runInAction(() => {
+                    if (index !== null && index !== undefined && index > 0) {
+                        property.splice(index, 0, editorEnvironment.editor.copiedElement);
+                    } else {
+                        property.push(editorEnvironment.editor.copiedElement);
+                    }
+                }
             );
+            // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
         } else {
+            // console.log('property ' + propertyName + ' is no list');
             runInAction(() =>
-                element[propertyName] = get(copiedElement)
+                element[propertyName] = editorEnvironment.editor.copiedElement
             );
         }
     }

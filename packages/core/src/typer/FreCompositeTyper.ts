@@ -1,4 +1,4 @@
-import { PiElement } from "../ast/index";
+import { PiElement } from "../ast";
 import { ListUtil } from "../util/ListUtil";
 import { FreTyper } from "./FreTyper";
 import { PiType } from "./PiType";
@@ -153,19 +153,19 @@ export class FreCompositeTyper implements FreTyper {
     }    
 }
 
-export class Composite<PART> {
-    private typers: PART[] =[];
-    name: string = "";
-
-    constructor(name: string) {
-        this.name = name;
-    }
-
-    appendTyper(t: PART) {
-        this.typers.push(t)
-    }
-
-    insertTyper(t: PART) {
-        this.typers.splice(0, 0, t);
-    }    
-}
+// export class Composite<PART> {
+//     private typers: PART[] =[];
+//     name: string = "";
+//
+//     constructor(name: string) {
+//         this.name = name;
+//     }
+//
+//     appendTyper(t: PART) {
+//         this.typers.push(t)
+//     }
+//
+//     insertTyper(t: PART) {
+//         this.typers.splice(0, 0, t);
+//     }
+// }

@@ -1,43 +1,63 @@
 <script lang="ts">
-    import { GridCellBox, type GridBox, type PiEditor } from "@projectit/core";
+    import { GridCellBox, type GridBox, type PiEditor, PiLogger } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { ChangeNotifier, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import GridCellComponent from "./GridCellComponent.svelte";
-    import { autorun } from "mobx";
-    import { writable, type Writable } from "svelte/store";
-    import { componentId } from "./util";
+    import { componentId } from "./svelte-utils";
 
-    export let gridBox: GridBox;
+    const LOGGER = new PiLogger("GridComponent"); //.mute();
+
+    export let box: GridBox;
     export let editor: PiEditor;
 
-    let notifier = new ChangeNotifier();
-    let id = componentId(gridBox);
-
-    onMount( () => {
-        MOUNT_LOGGER.log("GridComponent onmount")
-        $cells = gridBox.cells;
-    })
-
-    afterUpdate(() => {
-        UPDATE_LOGGER.log("GridComponent afterUpdate for girdBox " + gridBox.element.piLanguageConcept())
-        $cells = gridBox.cells;
-        // Triggers autorun
-        notifier.notifyChange();
-    });
-    let cells: Writable<GridCellBox[]> = writable<GridCellBox[]>(gridBox.cells);
+    let id ;
+    let cells: GridCellBox[];
     let templateColumns: string;
     let templateRows: string;
-
     let cssClass: string = "";
-    // TODO either use svelte store for cells or mobx observable???
-    autorun(() => {
-        $cells = [...gridBox.cells];
-        length = $cells.length;
+    let htmlElement: HTMLElement;
 
-        templateRows = `repeat(${gridBox.numberOfRows() - 1}, auto)`;
-        templateColumns = `repeat(${gridBox.numberOfColumns() - 1}, auto)`;
-        cssClass = gridBox.cssClass;
+    const refresh = (why?: string): void =>  {
+        LOGGER.log("refresh " + why);
+        if (!!box) {
+            // console.log("REFRESH GridComponent " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
+            id = componentId(box);
+            cells = [...box.cells];
+            length = cells.length;
+            templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
+            templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
+            cssClass = box.cssClass;
+        } else {
+            id = 'grid-for-unknown-box';
+        }
+    }
+
+    /**
+     * This function sets the focus on this element programmatically.
+     * It is called from the box. Note that because focus can be set,
+     * the html needs to have its tabindex set, and its needs to be bound
+     * to a variable.
+     */
+    async function setFocus(): Promise<void> {
+        htmlElement.focus();
+    }
+
+    onMount( () => {
+        LOGGER.log("GridComponent onmount")
+        box.refreshComponent = refresh;
+        box.setFocus = setFocus;
     });
+
+    afterUpdate(() => {
+        LOGGER.log("GridComponent afterUpdate for girdBox " + box.element.piLanguageConcept())
+        box.refreshComponent = refresh;
+        box.setFocus = setFocus;
+    });
+
+    let dummy = 0;
+
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
+    }
 </script>
 
 <div
@@ -45,9 +65,11 @@
         style:grid-template-rows="{templateRows}"
         class="maingridcomponent {cssClass}"
         id="{id}"
+        tabIndex={0}
+        bind:this={htmlElement}
 >
-    {#each $cells as cell (cell.box.element.piId() + "-" + cell.box.id + cell.role + "-grid" + "-" + notifier.dummy)}
-        <GridCellComponent grid={gridBox} cellBox={cell} editor={editor}/>
+    {#each cells as cell (cell?.box?.element?.piId() + "-" + cell?.box?.id + cell?.role + "-grid")}
+        <GridCellComponent grid={box} cellBox={cell} editor={editor}/>
     {/each}
 </div>
 
@@ -61,6 +83,6 @@
         justify-items: center;
         border-color: var(--freon-grid-component-border-color, darkgreen);
         border-width: var(--freon-grid-component-border-width, 1pt);
-        border-style: var(--freon-grid-component-border-style, solid);
+        border-style: var(--freon-grid-component-border-style, dot-dot-dash);
     }
 </style>

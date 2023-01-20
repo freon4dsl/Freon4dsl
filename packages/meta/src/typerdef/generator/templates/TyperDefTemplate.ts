@@ -15,7 +15,7 @@ export class TyperDefTemplate {
              * @param rootTyper
              */
             export function initializeTypers(rootTyper: FreCompositeTyper) {
-                for (const p of projectitConfiguration.customTypersFreon) {
+                for (const p of projectitConfiguration.customTypers) {
                     rootTyper.appendTyper(p);
                 }
                 rootTyper.appendTyper(new ${Names.typerPart(language)}());

@@ -13,7 +13,7 @@ export let unitNames: Writable<string[]> = writable<string[]>([]);
 export let toBeDeleted: Writable<PiModelUnit> = writable<PiModelUnit>(null);
 export let toBeRenamed: Writable<PiModelUnit> = writable<PiModelUnit>(null);
 
-export let copiedElement: Writable<PiElement> = writable<PiElement>(null);
-
 export let editorProgressShown: Writable<boolean> = writable<boolean>(false);
+
+export let unsavedChanges: Writable<boolean> = writable<boolean>(false); // TODO set this value somewhere
 

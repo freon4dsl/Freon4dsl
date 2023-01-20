@@ -1,15 +1,25 @@
 import { Names } from "../../../utils";
-import { PiLanguage } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiLanguage, PiLimitedConcept } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 
 export class EditorIndexTemplate {
 
-    generateGenIndex(language: PiLanguage, editorDef: PiEditUnit): string {
+    generateGenIndex(language: PiLanguage, editorDef: PiEditUnit, extraClassifiers: PiClassifier[]): string {
+        let boxProviderConcepts: PiClassifier[] = [];
+        language.concepts.forEach(concept => {
+            if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
+                boxProviderConcepts.push(concept);
+            }
+        });
+        language.units.forEach(concept => {
+            boxProviderConcepts.push(concept);
+        });
+        boxProviderConcepts.push(...extraClassifiers);
         return `
         export * from "./${Names.actions(language)}";
         export * from "./${Names.defaultActions(language)}";
-        ${editorDef.projectiongroups.map(group => 
-            `export * from "./${Names.projection(group)}";`
+        ${boxProviderConcepts.map(cls => 
+            `export * from "./${Names.boxProvider(cls)}";`
         ).join("")}
         export * from "./EditorDef";
         `;

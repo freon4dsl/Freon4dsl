@@ -1,36 +1,41 @@
-import { computed, observable, makeObservable } from "mobx";
-
 import { PiElement } from "../../ast";
-import { Box, AliasBox, BoxFactory } from "./internal";
+import { Box, ActionBox, BoxFactory } from "./internal";
 
 export type BoolFunctie = () => boolean;
 
 /**
- * Box to indent another box with parameter "indent".
+ * OptionalBox holds the content from a projection that is optional. This content is always present in the
+ * attribute 'content'. Next to the context there is a 'placeholder' box, which is shown when the content is not
+ * present in the PiElement model.
+ * The attributes 'mustShow' and 'condition' determine which of the pair [content, placeholder] is shown. If the 'condition'
+ * results in true, then the content box is shown. If 'mustShow' is true, then the content box is also shown, even though
+ * there may not be actual content within the PiElement model. The latter is set by the custom action, that is coupled
+ * to this OptionalBox, which is triggered by the user.
  */
 export class OptionalBox extends Box {
     readonly kind = "OptionalBox";
 
-    box: Box = null;
-    whenNoShowingAlias: AliasBox = null; // TODO question: should name be whenShowingAlias or alternativeBox?
-    mustShow: boolean = false;
-    condition: () => boolean;
+    content: Box = null;
+    placeholder: ActionBox = null;
+    _mustShow: boolean = false;  // is set to true by action that does not (yet) change the model, but causes part of the optional to be shown
+    condition: () => boolean;   // a condition based on the model that determines whether the optional is shown
 
-    constructor(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string) {
+    get mustShow() {
+        return this._mustShow;
+    }
+    set mustShow(v: boolean) {
+        this._mustShow = v;
+        this.isDirty();
+    }
+
+    constructor(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string) {
         super(element, role);
-        makeObservable(this, {
-            box: observable,
-            whenNoShowingAlias: observable,
-            mustShow: observable,
-            showByCondition: computed
-        });
-        this.box = box;
+        this.content = box;
         box.parent = this;
-        this.whenNoShowingAlias = BoxFactory.alias(element, role, aliasText); // TODO question: should not the role be diff from role of this box? Where is the "alias" prefix added?
-        this.whenNoShowingAlias.parent = this;
+        this.placeholder = BoxFactory.action(element, role, actionText); // TODO question: should not the role be diff from role of this box? Where is the "action" prefix added?
+        this.placeholder.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;
-        this.selectable = false;
     }
 
     get showByCondition(): boolean {
@@ -42,37 +47,37 @@ export class OptionalBox extends Box {
      */
     get firstLeaf(): Box {
         if (this.condition() || this.mustShow) {
-            return this.box.firstLeaf;
+            return this.content.firstLeaf;
         } else {
-            return this.whenNoShowingAlias;
+            return this.placeholder;
         }
     }
 
     get lastLeaf(): Box {
         if (this.condition() || this.mustShow) {
-            return this.box.lastLeaf;
+            return this.content.lastLeaf;
         } else {
-            return this.whenNoShowingAlias;
+            return this.placeholder;
         }
     }
 
     get firstEditableChild(): Box {
         if (this.condition() || this.mustShow) {
-            return this.box.firstEditableChild;
+            return this.content.firstEditableChild;
         } else {
-            return this.whenNoShowingAlias;
+            return this.placeholder;
         }
     }
 
     get children(): ReadonlyArray<Box> {
         if (this.condition() || this.mustShow) {
-            return [this.box];
+            return [this.content];
         } else {
-            return [this.whenNoShowingAlias];
+            return [this.placeholder];
         }
     }
 }
 
 export function isOptionalBox(b: Box): b is OptionalBox {
-    return b.kind === "OptionalBox"; // b instanceof OptionalBox;
+    return b?.kind === "OptionalBox"; // b instanceof OptionalBox;
 }

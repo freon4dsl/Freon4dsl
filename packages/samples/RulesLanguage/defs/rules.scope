@@ -1,9 +1,9 @@
 scoper RulesScope for language RulesLanguage
 
-isnamespace { Rules }
+isnamespace { Data, Rules, Entity, Type }
 
-//Rules {
-//    namespace_addition = self.imports  + self.forEntity;
-//}
+Rules {
+    namespace_addition = self.imports  + self.forEntity;
+}
 
 

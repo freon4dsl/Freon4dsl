@@ -1,35 +1,39 @@
 import { isEqual } from "lodash";
-import { makeObservable, observable, computed, action, trace, runInAction } from "mobx";
-import { PiEnvironment } from "../environment/PiEnvironment";
+import { autorun, computed, makeObservable, observable } from "mobx";
+import { PiEnvironment } from "../environment";
 import { PiOwnerDescriptor, PiElement } from "../ast";
 import { PiLogger } from "../logging";
-import { PiAction } from "./actions/index";
+import { PiAction } from "./actions";
 import {
-    PiProjection,
-    isAliasBox,
-    isSelectBox,
-    isTextBox,
     Box,
-    PiCombinedActions, PiCaret, wait
-} from "./internal";
+    PiCombinedActions,
+    PiCaret,
+    FreProjectionHandler,
+    wait,
+    isTextBox
+} from "./index";
+import { SeverityType } from "../validator";
+import { isNullOrUndefined } from "../util";
 
-const LOGGER = new PiLogger("PiEditor").mute();
+const LOGGER = new PiLogger("PiEditor");
 
 export class PiEditor {
-    readonly actions?: PiCombinedActions;   // All actions with which this editor is created.
-    readonly projection: PiProjection;      // The root projection with which this editor is created.
-    newPiActions: PiAction[] = [];          // List of PiActions composed of all the actions in 'actions'
-    theme: string = "light";                // The current theme.
-    environment: PiEnvironment;             // The generated language environment, needed to find reference shortcuts in the Alias box.
-    scrollX: number = 0;                    // The amount of scrolling horizontally, to find the element above and under.
-    scrollY: number = 0;                    // The amount of scrolling vertically, to find the element above and under.
+    readonly actions?: PiCombinedActions;       // All actions with which this editor is created.
+    readonly projection: FreProjectionHandler;  // The root projection with which this editor is created.
+    newPiActions: PiAction[] = [];              // List of PiActions composed of all the actions in 'actions'
+    environment: PiEnvironment;                 // The generated language environment, needed to find reference shortcuts in the Action box.
+    copiedElement: PiElement;                   // The element that is currently handled in a cut/copy-paste situation.
+    // todo are the scroll values needed? Do not the boundingRectable values for each HTML element depend on the page, not on the viewport?
+    scrollX: number = 0;                        // The amount of scrolling horizontally, to find the element above and under.
+    scrollY: number = 0;                        // The amount of scrolling vertically, to find the element above and under.
 
     private _rootElement: PiElement = null;     // The model element to be shown in this editor.
     private _rootBox: Box | null = null;        // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
-    private _selectedElement: PiElement = null; // The model element that is currently selected in the editor.
+    private _selectedElement: PiElement = null; // The model element, or the parent element of the property, that is currently selected in the editor.
+    private _selectedProperty: string = '';     // The property that is currectly selected in the editor, if applicable.
+    private _selectedIndex: number = -1;        // The index within the property that is currectly selected in the editor, if applicable.
     private _selectedBox: Box | null = null;    // The box defined for _selectedElement. Note that it is a 'slave' to _selectedElement.
     private _selectedPosition: PiCaret = PiCaret.UNSPECIFIED;   // The caret position within the _selectedBox.
-    // TODO question: NOSELECT is not used, remove?
     private NOSELECT: Boolean = false;          // Do not accept "select" actions, used e.g. when an undo is going to come.
 
     /**
@@ -38,43 +42,47 @@ export class PiEditor {
      * @param environment
      * @param actions
      */
-    constructor(projection: PiProjection, environment: PiEnvironment, actions?: PiCombinedActions) {
+    constructor(projection: FreProjectionHandler, environment: PiEnvironment, actions?: PiCombinedActions) {
         this.actions = actions;
         this.projection = projection;
         this.environment = environment;
-        this.initializeAliases(actions);
-        // TODO rethink whether selectedBox should be observable
-        makeObservable<PiEditor, "_rootElement" | "_selectedElement" | "_selectedBox">(this, {
-            theme: observable,
+        this.initializeActions(actions);
+        makeObservable<PiEditor, "_rootElement">(this, {
+            // theme: observable,
             _rootElement: observable,
-            _selectedElement: observable,
-            _selectedBox: observable,
-            selectedBox: computed,
-            deleteBox: action
+            rootElement: computed
         });
+        autorun(this.auto);
     }
 
-    // Static helper methods
+    // The refresh method from the component that displays this box.
+    refreshComponentSelection: (why?: string) => void;
+    refreshComponentRootBox: (why?: string) => void;
 
-    /**
-     * Returns true when 'other' is on the line above 'ref'.
-     * @param ref
-     * @param other
-     * @private
-     */
-    private static isOnPreviousLine(ref: Box, other: Box): boolean {
-        const margin = 5;
-        return other.actualY + margin < ref.actualY;
+    // Called when the editor selection has changed
+    selectionChanged(): void {
+        if (this.refreshComponentSelection !== undefined && this.refreshComponentSelection !== null) {
+            this.refreshComponentSelection("====== FROM PiEditor");
+        } else {
+            LOGGER.log("No selectionChanged() for PiEditor");
+        }
     }
 
-    /**
-     * Returns true when 'other' is on the line below 'ref'.
-     * @param ref
-     * @param other
-     * @private
-     */
-    private static isOnNextLine(ref: Box, other: Box): boolean {
-        return this.isOnPreviousLine(other, ref);
+    // Called when the editor/rootbox is dirty, refreshes the main component.
+    rootBoxChanged(): void {
+        if (this.refreshComponentRootBox !== undefined && this.refreshComponentRootBox !== null) {
+            this.refreshComponentRootBox("====== FROM PiEditor");
+        } else {
+            LOGGER.log("No refreshComponentRootBox() for PiEditor");
+        }
+    }
+
+    auto = () => {
+        console.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.piLanguageConcept());
+        if (this.rootElement !== null) {
+            this._rootBox = this.projection.getBox(this.rootElement);
+            this.rootBoxChanged();
+        }
     }
 
     // Getters and Setters
@@ -85,11 +93,9 @@ export class PiEditor {
      * @param exp
      */
     set rootElement(exp: PiElement) {
-        runInAction(() => {
-                this._rootElement = exp;
-                this._rootBox = this.projection.getBox(this._rootElement);
-            }
-        );
+        this._rootElement = exp;
+        // select first editable child
+        this.selectFirstEditableChildBox(exp);
     }
 
     get rootElement(): PiElement {
@@ -97,157 +103,128 @@ export class PiEditor {
     }
 
     get rootBox(): Box {
-        this._rootBox = this.projection.getBox(this.rootElement);
         return this._rootBox;
-    }
-
-    /**
-     * Sets the selected box programmatically, and adjusts the selected element as well.
-     * @param box
-     */
-    set selectedBox(box: Box) { // TODO question how does this method relate to the other setters for _selectedBox? The check on AliasBox is also there.
-        LOGGER.log("selectedBox:  set selected box to: " + (!!box ? box.role : "null") + "  NOSELECT [" + this.NOSELECT + "]");
-        if (this.NOSELECT) {
-            return;
-        }
-
-        if (!!box && isAliasBox(box)) {
-            this._selectedBox = box.textBox;
-        } else {
-            this._selectedBox = box;
-        }
-        if (!!this._selectedBox) {
-            this._selectedElement = this._selectedBox.element;
-        }
     }
 
     get selectedBox(): Box {
         return this._selectedBox;
     }
 
-    get selectedItem(): PiElement {
+    get selectedElement(): PiElement {
         return this._selectedElement;
     }
 
+    get selectedItem(): PiOwnerDescriptor {
+        return { owner: this._selectedElement, propertyName: this._selectedProperty, propertyIndex: this._selectedIndex};
+    }
+
+    get selectedCaretPosition(): PiCaret {
+        return this._selectedPosition;
+    }
+
     /**
-     * The only setter for _selectedElement, used to programmatically select an element.
+     * The only setter for _selectedElement, used to programmatically select an element,
+     * e.g. from the webapp or caused by a model change on the server.
      * @param element
-     * @param role
+     * @param propertyName
+     * @param propertyIndex
      * @param caretPosition
      */
-    selectElement(element: PiElement, role?: string, caretPosition?: PiCaret) {
-        LOGGER.log("selectElement " + element?.piLanguageConcept());
-        if (this.NOSELECT) {
-            return;
+    selectElement(element: PiElement, propertyName?: string, propertyIndex?: number, caretPosition?: PiCaret) {
+        console.log("selectElement " + element?.piLanguageConcept() + " with id " + element?.piId() + ", property: ["  + propertyName + ", " + propertyIndex + "]");
+        if (this.checkParam(element)) {
+            let box = this.projection.getBox(element);
+            let propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
+            if (!isNullOrUndefined(propBox)) {
+                this._selectedBox = propBox;
+                this._selectedProperty = propertyName;
+                this._selectedIndex = propertyIndex;
+            } else {
+                this._selectedBox = box;
+                this._selectedProperty = '';
+                this._selectedIndex = -1;
+            }
+            if (!isNullOrUndefined(caretPosition)) {
+                this._selectedPosition = caretPosition;
+            } else {
+                this._selectedPosition = PiCaret.UNSPECIFIED;
+            }
+            this._selectedElement = element;
+            this.selectionChanged();
         }
-        if (element === null || element === undefined) {
-            console.error("PiEditor.selectElement is null !");
-            return;
-        }
-        this._selectedElement = element;
-        this._selectedPosition = caretPosition;
-        const box = this._rootBox.findBox(element.piId(), role);
-        // LOGGER.log("selectElement: selectElement found box " + box?.kind);
-        if (!!box) {
-            this.selectBoxNew(box, caretPosition);
-        }
-    }
-
-    // A series of setters for _selectedBox
-
-    // TODO this method is unused, remove?
-    selectBoxByRoleAndElementId(elementId: string, role: string) {
-        LOGGER.log("selectBoxByRoleAndElementId " + elementId + "  role " + role);
-        if (this.NOSELECT) {
-            return;
-        }
-        this.selectBox(this._rootBox.findBox(elementId, role));
     }
 
     /**
-     * Sets the parent of the currently selected box to be the selected box.
+     * Sets 'element' to be the selectedElement, and its first child, which is editable, to the selectedBox.
+     * @param element
      */
-    selectParentBox() {
-        LOGGER.log("==> SelectParent of " + this.selectedBox?.role + this.selectedBox?.parent.kind);
-        let parent = this.selectedBox?.parent;
-        if (!!parent && (isAliasBox(parent) || isSelectBox(parent))) {
-            // Coming from (hidden) textbox in Select/Alias box
-            parent = parent.parent;
+    selectFirstEditableChildBox(element: PiElement) {
+        if (this.checkParam(element)) {
+            const first = this.projection.getBox(element).firstEditableChild;
+            if (!isNullOrUndefined(first)) {
+                this._selectedBox = first;
+                this._selectedProperty = first.propertyName;
+                this._selectedIndex = first.propertyIndex;
+                this._selectedPosition = PiCaret.LEFT_MOST;
+            }
+            this._selectedElement = element;
+            this.selectionChanged();
         }
-        if (!!parent) {
-            if (parent.selectable) {
-                this.selectBoxNew(parent);
+    }
+
+    private checkParam(element: PiElement): boolean  {
+        if (this.NOSELECT) {
+            return false;
+        }
+        if (isNullOrUndefined(element)) {
+            console.error("PiEditor.selectedElement is null !");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Selects the element associated with 'box'.
+     * @param box
+     * @param caret
+     */
+    selectElementForBox(box: Box, caret?: PiCaret) {
+        if (!isNullOrUndefined(box) && box !== this._selectedBox) { // only (re)set the local variables when the box can be found
+            this._selectedElement = box.element;
+            if (!box.selectable) {
+                // get the ElementBox for the selected element
+                this._selectedBox = this.projection.getBox(box.element);
+                // console.log('box not selectable: ' + box.kind)
             } else {
-                this.selectBoxNew(parent);
-                this.selectParentBox();
+                this._selectedBox = box;
+            }
+            this._selectedIndex = this._selectedBox.propertyIndex;
+            this._selectedProperty = this._selectedBox.propertyName;
+            this._selectedPosition = !!caret? caret : PiCaret.UNSPECIFIED;
+            // TODO Only needed when something actually changed
+            this.selectionChanged();
+        }
+        // console.log(`==>     this._selectedElement = ${this._selectedElement.piId()}=${this._selectedElement.piLanguageConcept()};
+        // this._selectedBox = ${this._selectedBox.role} of kind ${this._selectedBox.kind};
+        // this._selectedIndex = ${this._selectedIndex};
+        // this._selectedProperty = ${this._selectedProperty};`);
+    }
+
+    selectParent() {
+        this.selectParentForBox(this.selectedBox);
+    }
+
+    private selectParentForBox(box: Box) { // private method needed because of recursion
+        console.log("==> selectParent of " + box?.role + ' of kind ' + box?.kind);
+        let parent = box?.parent;
+        if (!!parent) {
+            // todo too much recursion when called from a Dropdown!!!
+            if (parent.selectable) {
+                this.selectElementForBox(parent);
+            } else {
+                this.selectParentForBox(parent);
             }
         }
-    }
-
-    /**
-     * Sets the first editable/selectable child of the currently selected box to be the selected box.
-     */
-    selectFirstLeafChildBox() {
-        const first = this.selectedBox?.firstLeaf;
-        if (!!first) {
-            this.selectBoxNew(first);
-        }
-    }
-
-    /**
-     * Sets the first editable/selectable child of the currently selected box to be the selected box.
-     * TODO question: what is the diff with the previous method?
-     */
-    selectFirstEditableChildBox() {
-        const first = this.selectedBox?.firstEditableChild;
-        if (!!first) {
-            this.selectBoxNew(first);
-        }
-    }
-
-    /**
-     * Sets the next sibling of the currently selected box to be the selected box.
-     * TODO what if there is no next sibling?
-     */
-    selectNextLeaf() {
-        const next = this.selectedBox?.nextLeafRight;
-        LOGGER.log("!!!!!!! Select next leaf is box " + next?.role);
-        if (!!next) {
-            this.selectBoxNew(next, PiCaret.LEFT_MOST);
-            // if (isTextBox(next) || isSelectBox(next)) {
-            //     next.setCaret(PiCaret.LEFT_MOST);
-            // }
-        }
-    }
-
-    /**
-     * Sets the previous sibling of the currently selected box to be the selected box.
-     * TODO what if there is no previous sibling?
-     */
-    selectPreviousLeaf() {
-        const previous = this.selectedBox?.nextLeafLeft;
-        if (!!previous) {
-            this.selectBoxNew(previous, PiCaret.RIGHT_MOST);
-            // previous.setFocus();
-            // if (isTextBox(previous) || isSelectBox(previous)) {
-            //     LOGGER.log("!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
-            //     previous.setCaret(PiCaret.RIGHT_MOST);
-            // }
-        }
-    }
-
-    /**
-     * Finds a new box for the element attached to 'box' within the projection, and selects this one.
-     * TODO more explanation why this is needed
-     * @param box
-     * @param caretPosition
-     */
-    selectBoxNew(box: Box, caretPosition?: PiCaret) {
-        LOGGER.log("SelectBoxNEW: " + (box ? box.role : box) + "  caret " + caretPosition?.position + " NOSELECT[" + this.NOSELECT + "]");
-        if (this.NOSELECT) {
-            return;
-        }
-        this.selectBox(this._rootBox.findBox(box.element.piId(), box.role), caretPosition);
     }
 
     /**
@@ -258,11 +235,6 @@ export class PiEditor {
         LOGGER.log("deleteBox");
         const exp: PiElement = box.element;
         const ownerDescriptor: PiOwnerDescriptor = exp.piOwnerDescriptor();
-        // if (isPiExpression(exp)) {
-        //     const newExp = this.getPlaceHolderExpression();
-        //     PiUtils.replaceExpression(exp, newExp, this);
-        //     await this.selectElement(newExp);
-        // } else {
         if (ownerDescriptor !== null) {
             LOGGER.log("remove from parent splice " + [ownerDescriptor.propertyIndex] + ", 1");
             const propertyIndex = ownerDescriptor.propertyIndex;
@@ -290,10 +262,88 @@ export class PiEditor {
     }
 
     /**
+     * TODO
+     * @param piCustomAction
+     */
+    addOrReplaceAction(piCustomAction: PiAction) {
+        // LOGGER.log("   addOrReplaceAction [" + triggerTypeToString(piCustomAction.trigger) + "] [" + piCustomAction.activeInBoxRoles + "]");
+
+        // this.new_pi_actions.forEach(act => {
+        //     LOGGER.log("   Trigger [" + triggerTypeToString(act.trigger) + "] [" + act.activeInBoxRoles + "]");
+        // })
+        const alreadyThere = this.newPiActions.findIndex(action => {
+            return isEqual(action.trigger, piCustomAction.trigger) && isEqual(action.activeInBoxRoles, piCustomAction.activeInBoxRoles);
+        });
+        // console.log("  alreadyThere: " + alreadyThere);
+        if (alreadyThere !== -1) { // found it
+            this.newPiActions.splice(alreadyThere, 1, piCustomAction);
+        } else {
+            this.newPiActions.splice(0, 0, piCustomAction);
+        }
+    }
+
+    /**
+     * TODO
+     * @param actions
+     * @private
+     */
+    private initializeActions(actions?: PiCombinedActions) {
+        if (!actions) {
+            return;
+        }
+        actions.customActions.forEach(ca => this.newPiActions.push(ca));
+        actions.binaryExpressionActions.forEach(ca => this.newPiActions.push(ca));
+    }
+
+    /**
+     * Relays any message to the user. Function should be overridden by the webapp or any other part that is able to show
+     * the message to the user.
+     * @param message       The message.
+     * @param severityType  The severity of the message (information, hint, warning, or error).
+     */
+    setUserMessage(message: string, severityType?: SeverityType) {
+        console.log('This message should be shown elsewhere: "' + message + '", please override this method appropriately.', severityType)
+    }
+
+    /**
+     * Sets the previous sibling of the currently selected box to be the selected box.
+     * TODO what if there is no previous sibling?
+     */
+    selectPreviousLeaf() {
+        const previous = this.selectedBox?.nextLeafLeft;
+        LOGGER.log("Select previous leaf is box " + previous?.role);
+        if (!!previous) {
+            this.selectElementForBox(previous, PiCaret.RIGHT_MOST);
+        }
+    }
+
+    /**
+     * Sets the next sibling of the currently selected box to be the selected box.
+     * TODO what if there is no next sibling?
+     */
+    selectNextLeaf() {
+        const next = this._selectedBox?.nextLeafRight;
+        LOGGER.log("Select next leaf is box " + next?.role);
+        if (!!next) {
+            this.selectElementForBox(next, PiCaret.LEFT_MOST);
+        }
+    }
+
+    /**
+     * Sets the first editable/selectable child of the currently selected box to be the selected box.
+     */
+    selectFirstLeafChildBox() {
+        const first = this.selectedBox?.firstLeaf;
+        if (!!first) {
+            this.selectElementForBox(first);
+        }
+    }
+
+    /**
      * Returns the box that is visually above `box`.
      * @param box
      */
-    boxAbove(box: Box): Box {
+    private boxAbove(box: Box): Box {
         wait(0);
         const x = box.actualX + this.scrollX;
         const y = box.actualY + this.scrollY;
@@ -318,11 +368,13 @@ export class PiEditor {
         return result;
     }
 
+    // TODO rethink the parameter 'box' in all of these methods => should work on currently selected box
+
     /**
      * Returns the box that is visually below `box`.
      * @param box
      */
-    boxBelow(box: Box): Box {
+    private boxBelow(box: Box): Box {
         const x = box.actualX + this.scrollX;
         const y = box.actualY + this.scrollX;
         let result: Box = box.nextLeafRight;
@@ -349,75 +401,42 @@ export class PiEditor {
         return result;
     }
 
-    /**
-     * TODO
-     * @param piCustomAction
-     */
-    addOrReplaceAction(piCustomAction: PiAction) {
-        // LOGGER.log("   addOrReplaceAction [" + triggerTypeToString(piCustomAction.trigger) + "] [" + piCustomAction.activeInBoxRoles + "]");
-
-        // this.new_pi_actions.forEach(act => {
-        //     LOGGER.log("   Trigger [" + triggerTypeToString(act.trigger) + "] [" + act.activeInBoxRoles + "]");
-        // })
-        const alreadyThere = this.newPiActions.findIndex(action => {
-            return isEqual(action.trigger, piCustomAction.trigger) && isEqual(action.activeInBoxRoles, piCustomAction.activeInBoxRoles);
-        });
-        // console.log("  alreadyThere: " + alreadyThere);
-        if (alreadyThere !== -1) { // found it
-            this.newPiActions.splice(alreadyThere, 1, piCustomAction);
-        } else {
-            this.newPiActions.splice(0, 0, piCustomAction);
+    selectBoxBelow(box: Box) {
+        const down = this.boxBelow(box);
+        if (down !== null && down !== undefined) {
+            this.selectElementForBox(down);
         }
     }
 
+    selectBoxAbove(box: Box) {
+        const up = this.boxAbove(box);
+        if (up !== null) {
+            this.selectElementForBox(up);
+        }
+    }
+
+    // Static helper methods
+
     /**
-     * TODO
-     * @param box
-     * @param caretPosition
+     * Returns true when 'other' is on the line above 'ref'.
+     * @param ref
+     * @param other
      * @private
      */
-    private selectBox(box: Box | null, caretPosition?: PiCaret) {
-        if (this.NOSELECT) {
-            return;
-        }
-        if (box === null || box === undefined) {
-            console.error("PiEditor.selectBox is null !");
-            return;
-        }
-        LOGGER.log("selectBox: " + (!!box ? box.role : box) + " caret " + caretPosition?.position);
-        if (box === this.selectedBox) {
-            LOGGER.info("box already selected");
-            return;
-        }
-        if (isAliasBox(box)) {
-            this.selectedBox = box.textBox;
-        } else {
-            this.selectedBox = box;
-        }
-        LOGGER.log("selectBox: select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
-        if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
-            if (!!caretPosition) {
-                LOGGER.log("caret position is " + caretPosition.position);
-                box.setCaret(caretPosition);
-            } else {
-                LOGGER.log("caret position is empty");
-                box.setCaret(PiCaret.RIGHT_MOST);
-            }
-        }
-        // LOGGER.log("setting focus on box " + this.selectedBox.role);
-        // box.setFocus(); TODO why not set focus?
+
+    private static isOnPreviousLine(ref: Box, other: Box): boolean {
+        const margin = 5;
+        return other.actualY + margin < ref.actualY;
     }
 
     /**
-     * TODO
-     * @param actions
+     * Returns true when 'other' is on the line below 'ref'.
+     * @param ref
+     * @param other
      * @private
      */
-    private initializeAliases(actions?: PiCombinedActions) {
-        if (!actions) {
-            return;
-        }
-        actions.customActions.forEach(ca => this.newPiActions.push(ca));
-        actions.binaryExpressionActions.forEach(ca => this.newPiActions.push(ca));
+    private static isOnNextLine(ref: Box, other: Box): boolean {
+        return this.isOnPreviousLine(other, ref);
     }
+
 }

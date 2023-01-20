@@ -1,44 +1,46 @@
+<svelte:options immutable={true}/>
 <script lang="ts">
-    import { autorun } from "mobx";
-    import { FOCUS_LOGGER } from "./ChangeNotifier";
+    /**
+     * This component indents the child of its (Indent)Box.
+     * Every indent is 8px wide.
+     */
+    import { Box, PiLogger } from "@projectit/core";
+    import { afterUpdate, onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
     import type {IndentBox, PiEditor} from "@projectit/core";
-    import { componentId } from "./util";
+    import { componentId } from "./svelte-utils";
 
-    export let indentBox: IndentBox;
+    // Parameters
+    export let box: IndentBox;
     export let editor: PiEditor;
 
-    // only exported for testing purposes
-    export const style=`margin-left: ${indentBox.indent * 8}px;`;
-    let id: string = componentId(indentBox);
+    const LOGGER = new PiLogger("IndentComponent");
 
-    autorun( () => {
-       indentBox.indent;
+    const indentWidth: number = 8;
+    let style: string = `margin-left: ${box?.indent * indentWidth}px;`;
+    let id: string = !!box ? componentId(box) : 'indent-for-unknow-box';
+    let child: Box;
+
+    onMount( () => {
+        box.refreshComponent = refresh;
     });
+    afterUpdate( () => {
+        box.refreshComponent = refresh;
+    })
 
-    const onFocus = (e: FocusEvent) =>  {
-        FOCUS_LOGGER.log("IndentComponent.onFocus")
+    const refresh = (why?: string): void => {
+        LOGGER.log("REFRESH Indent for box " + box?.role + " child " + box?.child?.role);
+        child = box?.child;
+        style = `margin-left: ${box?.indent * indentWidth}px;`
     };
-    const onBlur = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("IndentComponent.onBlur")
+    $: { // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
     }
-
 </script>
 
 <span
-    class="indentStyle"
-    tabIndex={0}
     style="{style}"
-    on:focus={onFocus}
-    on:blur={onBlur}
     id="{id}"
 >
-    <RenderComponent box={indentBox.child} editor={editor}/>
+    <RenderComponent box={child} editor={editor}/>
 </span>
-
-<style>
-    .indentStyle {
-        /*margin-left: 50px;*/
-    }
-</style>
-

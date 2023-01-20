@@ -1,4 +1,3 @@
-import { observable, makeObservable } from "mobx";
 import { GridCellBox } from "./GridCellBox";
 
 import { Box } from "./internal";
@@ -8,7 +7,7 @@ import { PiUtils } from "../../util";
 export type GridOrientation = "neutral" | "row" | "column";
 
 export class GridBox extends Box {
-    readonly kind = "GridBox";
+    kind = "GridBox";
     cells: GridCellBox[] = [];
     orientation: GridOrientation = "neutral";
 
@@ -23,11 +22,10 @@ export class GridBox extends Box {
             if (!c.rowSpan) {
                 c.rowSpan = 1;
             }
+            c.parent = this;
         });
+        this.selectable = false;
         this.sortCellsAndAddChildren();
-        makeObservable(this, {
-            cells: observable
-        });
     }
 
     get children(): ReadonlyArray<Box> {
@@ -64,5 +62,5 @@ function compare(a: GridCellBox, b: GridCellBox): number {
 }
 
 export function isGridBox(box: Box): box is GridBox {
-    return box.kind === "GridBox"; //  box instanceof GridBox;
+    return box?.kind === "GridBox"; //  box instanceof GridBox;
 }

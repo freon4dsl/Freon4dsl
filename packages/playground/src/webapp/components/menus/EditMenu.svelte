@@ -49,7 +49,7 @@
 
 	let menu: MenuComponentDev;
 
-	// stuff for posiitoning the menu
+	// stuff for positioning the menu
 	let anchor: HTMLDivElement;
 	let anchorClasses: { [k: string]: boolean } = {}; // a list of name - boolean pairs
 
@@ -73,7 +73,7 @@
 	const runInterpreter = () => {
 		const intp = editorEnvironment.interpreter;
 		intp.setTracing(true);
-		const node: PiElement = editorEnvironment.editor.selectedItem;
+		const node: PiElement = editorEnvironment.editor.selectedElement;
 
 		const value = intp.evaluate(node);
 		if(isRtError(value)){

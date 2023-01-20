@@ -3,6 +3,7 @@ import { PiEditor } from "../internal";
 import { AbstractChoiceBox, SelectOption, Box } from "./internal";
 import { PiElement } from "../../ast";
 
+// TODO can we rename this one? It is confusing to distinguish between the selectedBox in the editor and SelectBox instances.
 export class SelectBox extends AbstractChoiceBox {
     readonly kind = "SelectBox";
     // getOptions: () => SelectOption[];
@@ -48,5 +49,5 @@ export class SelectBox extends AbstractChoiceBox {
 }
 
 export function isSelectBox(b: Box): b is SelectBox {
-    return b.kind === "SelectBox"; // b instanceof SelectBox;
+    return b?.kind === "SelectBox"; // b instanceof SelectBox;
 }

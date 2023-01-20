@@ -1,4 +1,3 @@
-import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../ast";
 import { PiUtils } from "../../util";
 import { BehaviorExecutionResult, PiCaret, PiKey } from "../util";
@@ -9,7 +8,7 @@ export abstract class AbstractChoiceBox extends Box {
     kind = "AbstractChoiceBox";
     placeholder: string;
     caretPosition: number = -1;
-    textBox: TextBox;
+    _textBox: TextBox;
     textHelper: ChoiceTextHelper;
 
     constructor(exp: PiElement, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
@@ -17,9 +16,9 @@ export abstract class AbstractChoiceBox extends Box {
         this.placeholder = placeHolder;
         this.textHelper = new ChoiceTextHelper();
         PiUtils.initializeObject(this, initializer);
-        this.textBox = BoxFactory.text(
+        this._textBox = BoxFactory.text(
             exp,
-            "alias-" + role + "-textbox",
+            "action-" + role + "-textbox",
             () => {
                 /* To be overwritten by `SelectComponent` */
                 return this.textHelper.getText();
@@ -30,15 +29,18 @@ export abstract class AbstractChoiceBox extends Box {
             },
             {
                 parent: this,
-                selectable: false,
+                selectable: true,
                 placeHolder: placeHolder
             }
         );
-        makeObservable(this, {
-            textHelper: observable,
-            textBox: observable
-        });
+    }
 
+    get textBox(): TextBox {
+        // TODO Does this need to be done every time the textbox is requested?
+        //      Or could this move to the constructor?
+        this._textBox.propertyName = this.propertyName;
+        this._textBox.propertyIndex = this.propertyIndex;
+        return this._textBox;
     }
 
     getSelectedOption(): SelectOption | null {
@@ -65,7 +67,7 @@ export abstract class AbstractChoiceBox extends Box {
      * It ensures that the SelectableComponent will calculate the new coordinates.
      */
     update: () => void = () => {
-        /* To be overwritten by `AliasComponent` */
+        /* To be overwritten by `ActionComponent` */
     };
 
     /** @internal

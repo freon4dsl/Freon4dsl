@@ -1,15 +1,8 @@
-editor Verbose precedence 20
+editor CALLOUT precedence 20
 
 Attribute {
-    [ The attribute with name \"${name}\" has type ${declaredType} ]
+    [ Attribute named \"${name}\" has type ${declaredType} ]
 }
-
-Method {
-    [ 
-        The method with name \"${name}\" has the following parameters
-            ${parameters}
-        and has a result of type \"${declaredType}\".
-        It is calculated by the following expression:
-            ${body}
-    ]
+Parameter {
+    [Parameter named \"${name}\" has type ${declaredType}]
 }

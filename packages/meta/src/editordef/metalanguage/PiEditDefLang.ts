@@ -37,19 +37,20 @@ export enum ListJoinType {
 export class PiEditUnit extends PiDefinitionElement {
     language: PiLanguage;
     projectiongroups: PiEditProjectionGroup[] = [];
+    classifiersUsedInSuperProjection: string[] = []; // holds the names of all classifiers that are refered in an PiEditSuperProjection
 
     getDefaultProjectiongroup(): PiEditProjectionGroup {
         return this.projectiongroups.find(group => group.name == Names.defaultProjectionName);
     }
 
     /**
-     * Returns a list of all projection groups except the default group, sorted by their precendence.
-     * Highest presence first!
+     * Returns a list of all projection groups except the default group, sorted by their precedence.
+     * Lowest precedence first!
      */
     getAllNonDefaultProjectiongroups(): PiEditProjectionGroup[] {
         const result = this.projectiongroups.filter(group => group.name !== Names.defaultProjectionName);
         result.sort ( (a, b) => {
-            return b.precedence - a.precedence;
+            return a.precedence - b.precedence;
         });
         // result.forEach(g => {
         //     console.log(`group ${g.name} has precendence ${g.precedence}`);

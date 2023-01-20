@@ -27,7 +27,7 @@ export class ConfigurationTemplate {
              */
             class ${configurationName} {
                 // add your custom editor projections here
-                customProjection: ${Names.PiProjection}[] = [new ${Names.customProjection(language)}("manual")];
+                customProjection: ${Names.PiProjection}[] = [new ${Names.customProjection(language)}()];
                 // add your custom editor actions here
                 customActions: ${Names.PiActions}[] = [new ${Names.customActions(language)}()];
                 // add your custom validations here
@@ -36,8 +36,6 @@ export class ConfigurationTemplate {
                 customScopers: ${Names.FrScoperPart}[] = [new ${Names.customScoper(language)}()];
                 // add your custom type-providers here
                 customTypers: ${Names.FreonTyperPart}[] = [new ${Names.customTyper(language)}()];
-                // add your custom typers NEW here
-                customTypersFreon: ${Names.FreonTyperPart}[] = [new ${Names.customTyper(language)}()];
                 // add extra predefined instances here
                 customStdLibs: ${Names.PiStdlib}[] = [new ${Names.customStdlib(language)}()];
             }
