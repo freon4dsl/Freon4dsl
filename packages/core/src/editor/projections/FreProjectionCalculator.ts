@@ -60,7 +60,7 @@ export class FreProjectionCalculator {
             //     console.log('found custom table projection ' + projToUse + ' for ' + this.conceptName);
         }
         if (projToUse === null) { // Still nothing found, use the default.
-            projToUse = "default";
+            projToUse = FreProjectionCalculator.transformToTableProjectionName("default");
             // } else {
             //     console.log("found generated table projection " + projToUse + " for " + this.conceptName + " from " + this.knownTableProjections);
         }

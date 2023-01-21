@@ -166,12 +166,12 @@ export class EditorRequestsHandler {
     private showSearchResults(results: PiElement[], stringToFind: string) {
         const itemsToShow: PiError[] = [];
         if (!results || results.length === 0) {
-            itemsToShow.push(new PiError("No results for " + stringToFind, null, ""));
+            itemsToShow.push(new PiError("No results for " + stringToFind, null, "", ""));
         } else {
             for (const elem of results) {
                 // message: string, element: PiElement | PiElement[], locationdescription: string, severity?: PiErrorSeverity
                 // todo show some part of the text string instead of the element id
-                itemsToShow.push(new PiError(elem.piId(), elem, elem.piId()));
+                itemsToShow.push(new PiError(elem.piId(), elem, elem.piId(), ""));
             }
         }
         searchResults.set(itemsToShow);
