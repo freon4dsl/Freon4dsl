@@ -345,7 +345,7 @@
       on:keydown={onKeyDown}
       use:clickOutsideConditional={{enabled: dropdownShown}}
       on:click_outside={endEditing}
-      on:focusout={onFocusOut}
+      on:blur={onFocusOut}
       on:contextmenu={(event) => endEditing()}
       class="dropdown"
 >

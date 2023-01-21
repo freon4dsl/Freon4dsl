@@ -24,7 +24,7 @@
      * @param option
      */
     const handleClick = (option: SelectOption) => {
-        LOGGER.error("handleClick")
+        LOGGER.log("handleClick")
         selectedId = option.id;
         dispatcher("piItemSelected", option);
     };

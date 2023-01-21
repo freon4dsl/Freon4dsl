@@ -18,7 +18,7 @@
     } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
-    import { afterUpdate, onMount } from "svelte";
+    import { afterUpdate, onMount, tick } from "svelte";
     import { contextMenu, contextMenuVisible, selectedBoxes, viewport, componentId } from "./svelte-utils";
 
     let LOGGER = new PiLogger("ProjectItComponent");//.mute();
@@ -133,9 +133,10 @@
         editor.refreshComponentRootBox= refreshRootBox;
     } );
 
-    const refreshSelection = (why?: string) => {
-        LOGGER.log("ProjectItComponent.refreshSelection: " + why + " editor selectedBox is " + editor?.selectedBox?.kind);
+    const refreshSelection = async  (why?: string) => {
+        console.log("ProjectItComponent.refreshSelection: " + why + " editor selectedBox is " + editor?.selectedBox?.kind);
         if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
+            await tick();
             $selectedBoxes = getSelectableChildren(editor.selectedBox);
             editor.selectedBox.setFocus();
         }
