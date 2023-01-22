@@ -36,8 +36,7 @@ export abstract class FreBoxProvider {
             // box: computed,
             checkUsedProjection: action,
             initUsedProjection: action,
-            getNamedBox: action,
-            mustUseTable: action
+            getNamedBox: action
         });
     }
 
@@ -76,7 +75,6 @@ export abstract class FreBoxProvider {
 
     public mustUseTable(value: boolean) {
         this._mustUseTable = value;
-        this.usedProjection = this.findProjectionToUse();
     }
 
     public getNamedBox(projectionName: string): Box {

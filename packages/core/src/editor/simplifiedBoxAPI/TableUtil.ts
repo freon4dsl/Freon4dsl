@@ -100,7 +100,7 @@ export class TableUtil {
                 if (nrOfColumns === 0 && isTableRowBox(itemBox)) {
                     nrOfColumns = (itemBox as TableRowBox).cells.length;
                 }
-                children.push(myProvider.box);
+                children.push(itemBox);
             });
         } else {
             // Add an extra row where a new element to the list can be added.

@@ -69,8 +69,8 @@
                 _cells.push(...ch.cells);
             }
         });
-        console.log("all cell ids: ")
-        console.log(_cells.map(cell => `   ${cell.content.id + '-' + cell.row + '-' + cell.column}`).join("\n"));
+        // console.log("all cell ids: ")
+        // console.log(_cells.map(cell => `   ${cell.content.id + '-' + cell.row + '-' + cell.column}`).join("\n"));
 
         return _cells;
     }
