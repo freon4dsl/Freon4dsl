@@ -69,8 +69,9 @@
                 _cells.push(...ch.cells);
             }
         });
-        // console.log("all cell ids: ")
-        // console.log(_cells.map(c => `   ${c.id}`).join("\n"));
+        console.log("all cell ids: ")
+        console.log(_cells.map(cell => `   ${cell.content.id + '-' + cell.row + '-' + cell.column}`).join("\n"));
+
         return _cells;
     }
 
@@ -143,7 +144,7 @@
         tabIndex={0}
         bind:this={htmlElement}
 >
-    {#each cells as cell (cell.content.elementId + '-' + cell.row + '-' + cell.column)}
+    {#each cells as cell (cell.content.id + '-' + cell.row + '-' + cell.column)}
         <TableCellComponent
                 box={cell}
                 editor={editor}

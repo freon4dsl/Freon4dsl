@@ -1,3 +1,4 @@
+<svelte:options immutable={true}/>
 <script lang="ts">
     /**
      * This component show a single cell in a TableComponent. It supports drag and drop,
@@ -118,7 +119,7 @@
     };
 
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh('FROM TableCellComponent box changed ' + box?.$id);
+        refresh('New TableCellComponent created for ' + box?.id );//+ " element name: " + box?.element["name"]);
     }
 
     const drop = (event: DragEvent) => {

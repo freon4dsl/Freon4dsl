@@ -33,7 +33,7 @@ export abstract class FreBoxProvider {
          */
         makeObservable<FreBoxProvider, "usedProjection">(this, {
             usedProjection: observable,
-            box: computed,
+            // box: computed,
             checkUsedProjection: action,
             initUsedProjection: action,
             getNamedBox: action,
