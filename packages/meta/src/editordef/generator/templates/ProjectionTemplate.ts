@@ -90,14 +90,6 @@ export class ProjectionTemplate {
                     this.conceptName = '${Names.classifier(concept)}';
                 }
             
-                set element(element: PiElement) {
-                    if (Language.getInstance().metaConformsToType(element, '${Names.classifier(concept)}')) {
-                        this._element = element as ${Names.classifier(concept)};
-                    } else {
-                        console.log('setelement: wrong type (' + element.piLanguageConcept() + ' != ${Names.classifier(concept)})')
-                    }
-                }
-                       
                 protected getContent(projectionName: string): Box {
                 // console.log("GET CONTENT " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept() + ' ' + projectionName);
                     // see if we need to use a custom projection
