@@ -185,6 +185,18 @@ export class PiEditProjection extends PiEditClassifierProjection {
         return null;
     }
 
+    findAllPartProjections(): PiEditPropertyProjection[] {
+        const result: PiEditPropertyProjection[] = [];
+        this.lines.forEach(line => {
+            line.items.forEach(item => {
+                if (item instanceof PiEditPropertyProjection) {
+                    result.push(item)
+                }
+            })
+        })
+        return result;
+    }
+
     toString() {
         return `${this.classifier?.name} {
         [ // #lines: ${this.lines.length}
@@ -283,6 +295,7 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
     // projection info if the referred property is a primitive of boolean type
     boolInfo: BoolKeywords = null;
     // projection to be used for this property
+    // TODO Only used in parser?
     projectionName: string = null;
 
     toString(): string {

@@ -21,6 +21,13 @@ import { FreHeaderProvider } from "./FreHeaderProvider";
  * that ultimately returns the requested box/tableDefinition.
  */
 export class FreProjectionHandler {
+    // Stores for each element
+
+    private conceptToPropertyProjection: Map<string, Map<string, Map<string, string>>>;
+    public initConceptToPropertyProjection(map: Map<string, Map<string, Map<string, string>>>) {
+        this.conceptToPropertyProjection = map;
+    }
+
     // 'elementToProvider' stores the boxprovider that is servicing a certain node (of type PiElement).
     private elementToProvider: Map<string, FreBoxProvider> =
         new Map<string, FreBoxProvider>();

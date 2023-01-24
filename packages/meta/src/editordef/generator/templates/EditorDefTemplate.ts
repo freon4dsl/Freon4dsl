@@ -5,8 +5,16 @@ import {
     PiLimitedConcept,
     PiProperty
 } from "../../../languagedef/metalanguage";
-import { CONFIGURATION_FOLDER, EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
-import { PiEditTableProjection, PiEditUnit } from "../../metalanguage";
+import {
+    CONFIGURATION_FOLDER,
+    EDITOR_GEN_FOLDER,
+    isNullOrUndefined,
+    LANGUAGE_GEN_FOLDER,
+    ListUtil,
+    Names,
+    PROJECTITCORE
+} from "../../../utils";
+import { PiEditProjection, PiEditPropertyProjection, PiEditTableProjection, PiEditUnit } from "../../metalanguage";
 
 export class EditorDefTemplate {
 
@@ -69,6 +77,42 @@ export class EditorDefTemplate {
             });
         });
 
+        // Get all special child projections for a concept: tables or named
+        let conceptProjectionToPropertyProjection: Map<string, Map<string, Map<string, string>>> = new Map<string, Map<string, Map<string, string>>>();
+        language.classifiers().forEach(concept => {
+            editorDef.findProjectionsForType(concept).forEach(conceptProjection => {
+                if (conceptProjection instanceof PiEditProjection) {
+                    const partProjections: PiEditPropertyProjection[] = conceptProjection.findAllPartProjections();
+                    partProjections.filter(pp => !isNullOrUndefined(pp.projectionName)).forEach(p => {
+                        let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
+                        if (conceptMap === undefined) {
+                            conceptMap = new Map<string, Map<string, string>>();
+                            conceptProjectionToPropertyProjection.set(concept.name, conceptMap);
+                        }
+                        let projectionMap = conceptMap.get(conceptProjection.name);
+                        if (projectionMap === undefined) {
+                            projectionMap = new Map<string, string>();
+                            conceptMap.set(conceptProjection.name, projectionMap);
+                        }
+                        projectionMap.set(p.property.name, p.projectionName);
+                    });
+                    partProjections.filter(pp => !isNullOrUndefined(pp.listInfo) && pp.listInfo.isTable).forEach(p => {
+                        let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
+                        if (conceptMap === undefined) {
+                            conceptMap = new Map<string, Map<string, string>>();
+                            conceptProjectionToPropertyProjection.set(concept.name, conceptMap);
+                        }
+                        let projectionMap = conceptMap.get(conceptProjection.name);
+                        if (projectionMap === undefined) {
+                            projectionMap = new Map<string, string>();
+                            conceptMap.set(conceptProjection.name, projectionMap);
+                        }
+                        projectionMap.set(p.property.name, "__TABLE__");
+                    });
+                }
+            })
+        })
+
         const hasBinExps: boolean = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept)).length > 0;
         // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
 
@@ -79,6 +123,8 @@ export class EditorDefTemplate {
             import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";         
             import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";  
     
+            const map = ${conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyProjection)};
+
             /**
              * Adds all known projection groups to the root projection.
              * @param ${handlerVarName}
@@ -86,23 +132,24 @@ export class EditorDefTemplate {
             export function initializeProjections(${handlerVarName}: FreProjectionHandler) {
                 ${hasBinExps ? `${handlerVarName}.addProjection("${Names.brackets}");`
                 : ``
-                }    
-                ${editorDef.getAllNonDefaultProjectiongroups().map(group => 
+                }
+                ${editorDef.getAllNonDefaultProjectiongroups().map(group =>
                     `${handlerVarName}.addProjection("${Names.projection(group)}")`
                 ).join(";\n")}
                 for (const p of projectitConfiguration.customProjection) {
                     ${handlerVarName}.addCustomProjection(p);
                 }
+                handler.initConceptToPropertyProjection(map);
                 ${handlerVarName}.initProviderConstructors(new Map<string, () => FreBoxProvider>(
                 [
-                    ${constructors.map(constr => constr).join(",\n")} 
-                ])); 
+                    ${constructors.map(constr => constr).join(",\n")}
+                ]));
                 ${handlerVarName}.initTableHeaders(
                 [
-                    ${tableHeaderInfo.map(constr => constr).join(",\n")} 
-                ]); 
-            }    
-            
+                    ${tableHeaderInfo.map(constr => constr).join(",\n")}
+                ]);
+            }
+
             /**
              * Adds trigger and reference shortcut info to the in-memory representation of structure of the language metamodel.
              */
@@ -118,6 +165,8 @@ export class EditorDefTemplate {
                     }
                 ;`
             ).join("\n")}
+
+            const conceptProjectionToPropertyProjection = new Map();
             }`
     }
 
@@ -153,4 +202,25 @@ class ConceptShortCutElement {
         this.concept = concept;
         this.property = property;
     }
+}
+
+function conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyProjection: Map<string, Map<string, Map<string, string>>>): string {
+    let result: string = "new Map([                                        // the main map \n";
+    for(const conceptName of conceptProjectionToPropertyProjection.keys()) {
+        result += '    [                           // Concept has special projection for (one of) its parts\n';
+        result += '        "' + conceptName + '", new Map( [                          // Projection has special projection for (one of) the parts\n';
+        const conceptMap = conceptProjectionToPropertyProjection.get(conceptName);
+        for (const projection of conceptMap.keys()) {
+            result += '            [' + "                                       // Projection has special projection for some part \n";
+            result += '                "' + projection + '", new Map ([\n'
+            const projectionMap = conceptMap.get(projection);
+            for (const propertyProjection of projectionMap) {
+                result += '            [ "' + propertyProjection[0] + '", "' + propertyProjection[1] + '" ],             // special projection\n'
+            }
+            result += "         ])],"
+        }
+        result += "     ])],"
+    }
+    result += '])'
+    return result;
 }
