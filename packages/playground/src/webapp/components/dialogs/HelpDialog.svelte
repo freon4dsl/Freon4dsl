@@ -2,10 +2,9 @@
     import { versionNumber } from "../stores/UserMessageStore.js";
     import { helpDialogVisible } from "../stores/DialogStore.js";
     import Dialog, { Actions, Title } from "@smui/dialog";
-    import { Content } from "@smui/card";
-    import Textfield from "@smui/textfield";
     import Button, { Label } from "@smui/button";
     import List, { Item, Text } from "@smui/list";
+    import Card, { Content } from '@smui/card';
 </script>
 
 <Dialog
@@ -16,7 +15,7 @@
     <Title id="event-title">Help for ProjectIt</Title>
     <Content id="event-content">
         <div class="mdc-typography--body2">
-            Currently there is no in-build help functionality, other than a list of keybindings. We refer you to our
+            Currently there is no in-build help functionality, other than the following. For more, we refer you to our
             website:
             <a href="http://www.projectit.org/" target="_blank">
                 www.projectit.org
@@ -25,8 +24,27 @@
 
         <hr>
 
-        <div class="mdc-typography--headline6">Keybindings</div>
+        <div class="mdc-typography--headline6">Context menu</div>
+        <div class="mdc-typography--body2">
+        Using the right mouse button a context menu can be shown for elements that are
+        part of a list. This menu offers some functionality on the selected list element, like cut/copy/paste.
+        </div>
 
+        <div class="mdc-typography--headline6">Drag and drop</div>
+        <div class="mdc-typography--body2">
+        Drag and drop functionality is provided for list elements. An element can be dragged from a list (or table),
+        and dropped in a list (or table). Note that you should click outside of any editable text to grab the element.
+        </div>
+
+        <div class="mdc-typography--headline6">Keybindings</div>
+        <div class="mdc-typography--body2">
+            When editing a text field, e.g. a name, the ENTER key stops the editing and stores the value in the model,
+            whereas the ESC key stops the editing without storing the value.
+        </div>
+
+        <div class="mdc-typography--body2">
+        Keys that can be used anywhere:
+        </div>
         <List class="keybinding" dense>
             <Item>
                 <Text>Arrow Keys move in the expected direction</Text>
@@ -49,20 +67,21 @@
         </List>
 
         <hr>
-        <div class="mdc-typography--headline6">About ProjectIt</div>
-
-        <div class="mdc-typography--body2">
-            ProjectIt is an open source project which can be found at:
-            <a href="https://github.com/projectit-org" target="_blank">
-                https://github.com/projectit-org.
-            </a>
-        </div>
-        <div class="mdc-typography--body2">
-            Current version: <b>{versionNumber}</b>.
-        </div>
-        <div class="mdc-typography--body2">
-            Created by: <a href="http://www.openmodeling.nl/" target="_blank">www.openmodeling.nl</a>.
-        </div>
+        <Card padded>
+            <div style="text-align: center">
+                <div class="mdc-typography--body2">
+                    <b>Freon</b> is an open source project which can be found at:
+                    <br>
+                    <a href="https://github.com/projectit-org" target="_blank">
+                        https://github.com/projectit-org.
+                    </a>
+                    <br>
+                    Current version: <b>{versionNumber}</b>.
+                    <br>
+                    Created by: <a href="http://www.openmodeling.nl/" target="_blank">www.openmodeling.nl</a>.
+                </div>
+            </div>
+        </Card>
 
     </Content>
     <Actions>

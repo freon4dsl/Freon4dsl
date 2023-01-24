@@ -1,22 +1,20 @@
 [![Build Status](https://app.travis-ci.com/projectit-org/ProjectIt.svg?branch=development)](https://app.travis-ci.com/github/projectit-org/ProjectIt)
 
-# ProjectIt
+# Freon, previously know as ProjectIt
 Projectional Editor for the Web. The current release (version 0.3.0) can be found on npm.
 
-**NOTE**: ProjectIt has changed significantly since the last release and includes quite a lot more functionality
-for developing languages.
-You should look into the _development_ branch to see the current state of ProjectIt.
+**NOTE**: Check out the _development_ branch for the current state of Freon.
 
 ![logo](/public/images/projectit.png)
 
-## What is ProjectIt
+## What is Freon
 
-ProjectIt is a TypeScript/JavaScript framework to create and implement projectional editors for Domain-Specific Languages (DSLs). 
+Freon is a TypeScript/JavaScript framework to create and implement projectional editors for Domain-Specific Languages (DSLs). 
 Additional to the core framework, there are generators for many parts of the work environment for your DSL.
 
-For more information see the <a href="https://www.projectit.org">ProjectIt </a> website.
+For more information see the <a href="https://www.projectit.org">Freon/ProjectIt</a> website.
 
-## Developing ProjectIt
+## Developing Freon
 
 The main prerequisites are: [Node.js](https://nodejs.org/) and [yarn](https://yarnpkg.com/).
 We are typically using the latest versions of both, although older versions likely work just as well.
@@ -32,7 +30,7 @@ Setup the lerna structure:
   yarn bootstrap
 ```
 
-Now you can build ProjectIt with:
+Now you can build Freon with:
 ```bash
   yarn build
 ```
@@ -54,7 +52,7 @@ Go to directory `packages/server` and start the server:
     yarn start
 ```
 
-Goto the playground directory `packages/playground` (or stay there if you are already there) and start ProjectIt:
+Goto the playground directory `packages/playground` (or stay there if you are already there) and start Freon:
 ```bash
     cd packages/playground
     yarn dev
@@ -65,13 +63,13 @@ work in progress.
 
 ## Source organisation
 
-The source code for ProjectIt is organised into the following packages.
+The source code for Freon is organised into the following packages.
 
 * *docs*: documentation, i.e. this website
 * *packages/core*: framework source code.
 * *packages/core/src/editor*: the editor framework source code.
 * *packages/core/src/language/decorators*: source code for <a href="https://mobx.js.org/" target="_blank">MobX</a> decorators that can be used to easily implement a language that can be
-  directly used by ProjectIt.
+  directly used by Freon.
 * *packages/meta*: source code that reads the language definition files and generates the language environment.
 * *packages/meta/src/languagedef*: source code that generates code from a language structure definition (*.ast*) file.
 * *packages/meta/src/editordef*: source code that generates code from an editor definition (*.edit*) file.

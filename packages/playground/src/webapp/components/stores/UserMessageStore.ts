@@ -3,7 +3,7 @@ import type { Writable } from 'svelte/store';
 import { SeverityType } from "@projectit/core";
 
 // info about ProjectIt
-export const versionNumber = "0.4.0";
+export const versionNumber = "0.5.0";
 
 export let severity: Writable<number> = writable<number>(SeverityType.error);
 export let userMessage: Writable<string> = writable<string>("This is an important message. Once " +
