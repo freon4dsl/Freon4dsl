@@ -111,7 +111,7 @@ export class EditorDefTemplate {
                     });
                 }
             });
-            // TODO Might refactor this with almost the ssame code above.
+            // TODO Might refactor this with almost the same code above.
             editorDef.findTableProjectionsForType(concept).forEach(conceptProjection => {
                 if (conceptProjection instanceof PiEditTableProjection) {
                     const partProjections: PiEditPropertyProjection[] = conceptProjection.findAllPartProjections();

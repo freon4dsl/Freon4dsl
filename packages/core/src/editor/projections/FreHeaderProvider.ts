@@ -21,11 +21,11 @@ export class FreHeaderProvider extends FreBoxProvider {
     protected getContent(projectionName: string): Box {
         const cells: Box[] = [];
         let headers = this.mainHandler.getTableHeaderInfo(this.conceptName, projectionName);
-        console.log('getting headers for ' + this.conceptName + ', with projection ' + projectionName + ' : ' + headers )
-        console.log('    know table projections ' + this.knownTableProjections )
+        // console.log('getting headers for ' + this.conceptName + ', with projection ' + projectionName + ' : ' + headers )
+        // console.log('    know table projections ' + this.knownTableProjections )
         if (!!headers && headers.length > 0) {
             headers.forEach((head, index) => {
-                console.log('pushing cell: ' + head);
+                // console.log('pushing cell: ' + head);
                 // todo should the labelBox be wrapped in a TableCellBox?
                 cells.push(BoxUtils.labelBox(this._element, head, `table-header-${index+1}`));
             });
@@ -61,10 +61,10 @@ export class FreHeaderProvider extends FreBoxProvider {
             // TODO Only need first to lowercae
             myProjection = myProjection.toLowerCase();
         }
-        console.log("   Muy projection  is " + myProjection)
+        // console.log("   My projection  is " + myProjection)
         const ownerRequired = this.mainHandler.getRequiredProjection(this._element.piLanguageConcept(), myProjection, this.propertyName);
-        if (ownerRequired === null || ownerRequired === undefined) {
-            console.error("SHOULD NOT HAPPEN")
+        if (isNullOrUndefined(ownerRequired)) {
+            // console.error("SHOULD NOT HAPPEN");
             // No requirement from owner projection: just find the first projection in the active list of projections
             this.usedProjection = this.findProjectionToUse(false);
         } else {
@@ -76,10 +76,7 @@ export class FreHeaderProvider extends FreBoxProvider {
                 this.usedProjection = ownerRequired
             }
         }
-        // }
-        // }
-        console.log("PHeader Provider Rojection for " + this._element.piLanguageConcept() + " is " + this.usedProjection)
-
+        // console.log("Header Provider Projection for " + this._element.piLanguageConcept() + " is " + this.usedProjection);
         return this.usedProjection;
     }
 

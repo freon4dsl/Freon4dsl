@@ -13,7 +13,7 @@ export abstract class FreBoxProvider {
     conceptName: string;                             // Name of the concept/interface for which this provider is defined.
     protected _element: PiElement;                   // The node in the model which this provider is serving.
     protected _mainBox: ElementBox = null;           // The box that is return by the method box(). Note that the initialization is needed for mobx!
-    public usedProjection: string = null;       // Name of the projection that currently is used to determine the contents of _mainBox.
+    public usedProjection: string = null;            // Name of the projection that currently is used to determine the contents of _mainBox.
     public knownBoxProjections: string[] = [];       // The names of all generated projections, i.e. these are the projections for which this
     // provider itself has methods that can provide the contents of the _mainBox.
     public knownTableProjections: string[] = [];     // The names of the generated table projections for this type of concept.
