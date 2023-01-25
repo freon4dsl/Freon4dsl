@@ -241,6 +241,9 @@ class ConceptShortCutElement {
  * @param conceptProjectionToPropertyProjection
  */
 function conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyProjection: Map<string, Map<string, Map<string, string>>>): string {
+    if (conceptProjectionToPropertyProjection.size === 0) {
+        return "new Map<string, Map<string, Map<string, string>>>();";
+    }
     let result: string = "new Map([                                        // the main map \n";
     for(const conceptName of conceptProjectionToPropertyProjection.keys()) {
         result += '    [                           // Concept has special projection for (one of) its parts\n';
