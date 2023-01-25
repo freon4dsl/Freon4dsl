@@ -427,7 +427,6 @@ export class BoxUtils {
         const numberOfItems = property.length;
         return property.map((listElem, index) => {
             const myProvider: FreBoxProvider = boxProviderCache.getBoxProvider(listElem);
-            myProvider.mustUseTable(false);
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {

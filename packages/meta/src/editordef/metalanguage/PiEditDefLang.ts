@@ -212,6 +212,13 @@ export class PiEditTableProjection extends PiEditClassifierProjection {
     headers: string[] = [];
     cells: PiEditPropertyProjection[] = [];
 
+    /**
+     * Find all projections or parts.
+     */
+    findAllPartProjections(): PiEditPropertyProjection[] {
+        return this.cells;
+    }
+
     toString() {
         return `${this.classifier?.name} {
         table [ 

@@ -110,7 +110,39 @@ export class EditorDefTemplate {
                         projectionMap.set(p.property.name, "__TABLE__");
                     });
                 }
-            })
+            });
+            // TODO Might refactor this with almost the ssame code above.
+            editorDef.findTableProjectionsForType(concept).forEach(conceptProjection => {
+                if (conceptProjection instanceof PiEditTableProjection) {
+                    const partProjections: PiEditPropertyProjection[] = conceptProjection.findAllPartProjections();
+                    partProjections.filter(pp => !isNullOrUndefined(pp.projectionName)).forEach(p => {
+                        let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
+                        if (conceptMap === undefined) {
+                            conceptMap = new Map<string, Map<string, string>>();
+                            conceptProjectionToPropertyProjection.set(concept.name, conceptMap);
+                        }
+                        let projectionMap = conceptMap.get(conceptProjection.name);
+                        if (projectionMap === undefined) {
+                            projectionMap = new Map<string, string>();
+                            conceptMap.set(conceptProjection.name, projectionMap);
+                        }
+                        projectionMap.set(p.property.name, p.projectionName);
+                    });
+                    partProjections.filter(pp => !isNullOrUndefined(pp.listInfo) && pp.listInfo.isTable).forEach(p => {
+                        let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
+                        if (conceptMap === undefined) {
+                            conceptMap = new Map<string, Map<string, string>>();
+                            conceptProjectionToPropertyProjection.set(concept.name, conceptMap);
+                        }
+                        let projectionMap = conceptMap.get(conceptProjection.name);
+                        if (projectionMap === undefined) {
+                            projectionMap = new Map<string, string>();
+                            conceptMap.set(conceptProjection.name, projectionMap);
+                        }
+                        projectionMap.set(p.property.name, "__TABLE__");
+                    });
+                }
+            });
         })
 
         const hasBinExps: boolean = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept)).length > 0;
@@ -204,6 +236,10 @@ class ConceptShortCutElement {
     }
 }
 
+/**
+ * Generate the (nested) map from Classi fier + Projection + property to required projection for that property.
+ * @param conceptProjectionToPropertyProjection
+ */
 function conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyProjection: Map<string, Map<string, Map<string, string>>>): string {
     let result: string = "new Map([                                        // the main map \n";
     for(const conceptName of conceptProjectionToPropertyProjection.keys()) {

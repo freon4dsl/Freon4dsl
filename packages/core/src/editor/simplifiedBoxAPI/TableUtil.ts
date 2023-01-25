@@ -95,7 +95,6 @@ export class TableUtil {
             // Add the children for each element of the list.
             list.forEach(item => {
                 const myProvider: FreBoxProvider = boxProviderCache.getBoxProvider(item);
-                myProvider.mustUseTable(true); // mustUseTable is set back to false when a ListBox is requested
                 const itemBox = myProvider.box;
                 if (nrOfColumns === 0 && isTableRowBox(itemBox)) {
                     nrOfColumns = (itemBox as TableRowBox).cells.length;

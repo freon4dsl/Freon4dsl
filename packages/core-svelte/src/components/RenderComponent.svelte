@@ -69,7 +69,7 @@
             // todo why is 'element' sometimes null?
             setBoxSizes(box, element.getBoundingClientRect());
         } else {
-            LOGGER.log('No element for ' + box.id + ' ' + box.kind);
+            LOGGER.log('No element for ' + box?.id + ' ' + box?.kind);
         }
     });
     // todo test GridComponent
@@ -80,7 +80,7 @@
 
     let first = true;
     // $: { // Evaluated and re-evaluated when the box changes.
-        refresh((first ? "first" : "later") + "   " + box.id);
+        refresh((first ? "first" : "later") + "   " + box?.id);
         first = false;
     // }
 

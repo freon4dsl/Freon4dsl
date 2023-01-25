@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from "../../util/index";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjectionHandler } from "./FreProjectionHandler";
 import { PiElement } from "../../ast";
@@ -13,7 +14,6 @@ export class FreHeaderProvider extends FreBoxProvider {
         this._element = element;
         this.propertyName = propertyName;
         this.conceptName = conceptName;
-        this._mustUseTable = true;
         this.knownTableProjections = mainHandler.getKnownTableProjectionsFor(conceptName);
         this.knownBoxProjections = [];
     }
@@ -21,10 +21,11 @@ export class FreHeaderProvider extends FreBoxProvider {
     protected getContent(projectionName: string): Box {
         const cells: Box[] = [];
         let headers = this.mainHandler.getTableHeaderInfo(this.conceptName, projectionName);
-        // console.log('getting headers for ' + this.conceptName + ', with projection ' + projectionName + ' : ' + headers )
+        console.log('getting headers for ' + this.conceptName + ', with projection ' + projectionName + ' : ' + headers )
+        console.log('    know table projections ' + this.knownTableProjections )
         if (!!headers && headers.length > 0) {
             headers.forEach((head, index) => {
-                // console.log('pushing cell: ' + head);
+                console.log('pushing cell: ' + head);
                 // todo should the labelBox be wrapped in a TableCellBox?
                 cells.push(BoxUtils.labelBox(this._element, head, `table-header-${index+1}`));
             });
@@ -48,4 +49,38 @@ export class FreHeaderProvider extends FreBoxProvider {
     hasContent() {
         return this._hasContent;
     }
+
+    /** Special for HeaderProvider, because we do not start from the child in the property.
+     */
+    projection() {
+        const myBoxProvider: FreBoxProvider = this.mainHandler.getBoxProvider(this._element);
+        let myProjection = myBoxProvider.projection();
+        // TODO A hack, since the name may already be "table-ified" and the nontable-ified name is needed
+        if (myProjection.startsWith("tableRowFor")) {
+            myProjection = myProjection.replace("tableRowFor", "");
+            // TODO Only need first to lowercae
+            myProjection = myProjection.toLowerCase();
+        }
+        console.log("   Muy projection  is " + myProjection)
+        const ownerRequired = this.mainHandler.getRequiredProjection(this._element.piLanguageConcept(), myProjection, this.propertyName);
+        if (ownerRequired === null || ownerRequired === undefined) {
+            console.error("SHOULD NOT HAPPEN")
+            // No requirement from owner projection: just find the first projection in the active list of projections
+            this.usedProjection = this.findProjectionToUse(false);
+        } else {
+            // The projection to use is defined by the parent element
+            if (ownerRequired === "__TABLE__") {
+                this.usedProjection = this.findProjectionToUse(true);
+            } else {
+                // Named projection
+                this.usedProjection = ownerRequired
+            }
+        }
+        // }
+        // }
+        console.log("PHeader Provider Rojection for " + this._element.piLanguageConcept() + " is " + this.usedProjection)
+
+        return this.usedProjection;
+    }
+
 }
