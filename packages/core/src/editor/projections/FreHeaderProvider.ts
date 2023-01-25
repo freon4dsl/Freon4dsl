@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from "../../util/index";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjectionHandler } from "./FreProjectionHandler";
 import { PiElement } from "../../ast";
@@ -13,7 +14,6 @@ export class FreHeaderProvider extends FreBoxProvider {
         this._element = element;
         this.propertyName = propertyName;
         this.conceptName = conceptName;
-        this._mustUseTable = true;
         this.knownTableProjections = mainHandler.getKnownTableProjectionsFor(conceptName);
         this.knownBoxProjections = [];
     }
@@ -22,6 +22,7 @@ export class FreHeaderProvider extends FreBoxProvider {
         const cells: Box[] = [];
         let headers = this.mainHandler.getTableHeaderInfo(this.conceptName, projectionName);
         // console.log('getting headers for ' + this.conceptName + ', with projection ' + projectionName + ' : ' + headers )
+        // console.log('    know table projections ' + this.knownTableProjections )
         if (!!headers && headers.length > 0) {
             headers.forEach((head, index) => {
                 // console.log('pushing cell: ' + head);
@@ -48,4 +49,35 @@ export class FreHeaderProvider extends FreBoxProvider {
     hasContent() {
         return this._hasContent;
     }
+
+    /** Special for HeaderProvider, because we do not start from the child in the property.
+     */
+    projection() {
+        const myBoxProvider: FreBoxProvider = this.mainHandler.getBoxProvider(this._element);
+        let myProjection = myBoxProvider.projection();
+        // TODO A hack, since the name may already be "table-ified" and the nontable-ified name is needed
+        if (myProjection.startsWith("tableRowFor")) {
+            myProjection = myProjection.replace("tableRowFor", "");
+            // TODO Only need first to lowercae
+            myProjection = myProjection.toLowerCase();
+        }
+        // console.log("   My projection  is " + myProjection)
+        const ownerRequired = this.mainHandler.getRequiredProjection(this._element.piLanguageConcept(), myProjection, this.propertyName);
+        if (isNullOrUndefined(ownerRequired)) {
+            // console.error("SHOULD NOT HAPPEN");
+            // No requirement from owner projection: just find the first projection in the active list of projections
+            this.usedProjection = this.findProjectionToUse(false);
+        } else {
+            // The projection to use is defined by the parent element
+            if (ownerRequired === "__TABLE__") {
+                this.usedProjection = this.findProjectionToUse(true);
+            } else {
+                // Named projection
+                this.usedProjection = ownerRequired
+            }
+        }
+        // console.log("Header Provider Projection for " + this._element.piLanguageConcept() + " is " + this.usedProjection);
+        return this.usedProjection;
+    }
+
 }

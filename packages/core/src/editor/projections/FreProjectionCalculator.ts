@@ -5,13 +5,6 @@ import { FreProjectionHandler } from "./FreProjectionHandler";
  * Contains all logic to determine which projection should be used by a BoxProvider for a certain concept.
  */
 export class FreProjectionCalculator {
-    private static conceptNameToBoxProjection: Map<string, string> = new Map<string, string>();
-    private static conceptNameToTableProjection: Map<string, string> = new Map<string, string>();
-
-    public static clearCaches() {
-        FreProjectionCalculator.conceptNameToBoxProjection = new Map<string, string>();
-        FreProjectionCalculator.conceptNameToTableProjection = new Map<string, string>();
-    }
 
     public static findProjectionToUse(mainHandler: FreProjectionHandler, conceptName: string, knownProjections: string[], mustUseTable: boolean): string {
         let projToUse: string;
@@ -20,7 +13,6 @@ export class FreProjectionCalculator {
         } else {
             projToUse = this.findBoxProjectionToUse(mainHandler, conceptName, knownProjections);
         }
-        // console.log('FOUND projection for ' + conceptName + ' : ' + projToUse);
         return projToUse;
     }
 
@@ -30,12 +22,6 @@ export class FreProjectionCalculator {
      * @protected
      */
     private static findTableProjectionToUse(mainHandler: FreProjectionHandler, conceptName: string, knownTableProjections: string[]): string {
-        // See if the projection for this concept is in our cache.
-        if (FreProjectionCalculator.conceptNameToTableProjection.has(conceptName)) {
-            return FreProjectionCalculator.conceptNameToTableProjection.get(conceptName);
-        }
-        // Not found in the cache, so calculate it.
-        // First, search for a custom projection.
         let projToUse: string = null;
         mainHandler.customProjections.forEach(cp => {
             // get the name of the first of the customs that fits
@@ -80,10 +66,6 @@ export class FreProjectionCalculator {
      * @private
      */
     private static findBoxProjectionToUse(mainHandler: FreProjectionHandler, conceptName: string, knownBoxProjections: string[]): string {
-        // See if the projection for this concept is in our cache.
-        if (FreProjectionCalculator.conceptNameToBoxProjection.has(conceptName)) {
-            return FreProjectionCalculator.conceptNameToBoxProjection.get(conceptName);
-        }
         // See if we need to use a custom projection.
         let projToUse: string = null;
         const enabledProjections = mainHandler.enabledProjections();

@@ -1,12 +1,10 @@
 import { Box, BoxFactory, ElementBox } from "../boxes";
 import { isNullOrUndefined } from "../../util";
 import { PiElement } from "../../ast";
-import { PiEditor } from "../PiEditor";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjection } from "./FreProjection";
-import { action, makeObservable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { ListUtil } from "../../util/ListUtil";
-import { FreProjectionCalculator } from "./FreProjectionCalculator";
 import { FreTableHeaderInfo } from "./FreTableHeaderInfo";
 import { FreHeaderProvider } from "./FreHeaderProvider";
 
@@ -21,6 +19,11 @@ import { FreHeaderProvider } from "./FreHeaderProvider";
  * that ultimately returns the requested box/tableDefinition.
  */
 export class FreProjectionHandler {
+    // 'conceptToPropertyProjection' stores the information on how a property should be projected for each concept
+    private conceptToPropertyProjection: Map<string, Map<string, Map<string, string>>>;
+    public initConceptToPropertyProjection(map: Map<string, Map<string, Map<string, string>>>) {
+        this.conceptToPropertyProjection = map;
+    }
     // 'elementToProvider' stores the boxprovider that is servicing a certain node (of type PiElement).
     private elementToProvider: Map<string, FreBoxProvider> =
         new Map<string, FreBoxProvider>();
@@ -47,8 +50,10 @@ export class FreProjectionHandler {
         determine their contents in one go, thus resulting in only one (big) change in
         the web application.
          */
-        makeObservable<FreProjectionHandler>(this, {
-            enableProjections: action
+        makeObservable<FreProjectionHandler, "_enabledProjections">(this, {
+            enableProjections: action,
+            _enabledProjections:observable
+
         });
     }
 
@@ -82,6 +87,12 @@ export class FreProjectionHandler {
         this.conceptNameToProviderConstructor = constructorMap;
     }
 
+    /** Returns the required projection for 'property', like a table projection, or a named projection.
+     */
+    public getRequiredProjection(concept: string, projection: string, property: string): string {
+        return this.conceptToPropertyProjection.get(concept)?.get(projection)?.get(property);
+    }
+
     /**
      * Returns a box provider for element. Either it is newly created or it is found in
      * 'this.elementToProvider'.
@@ -99,7 +110,6 @@ export class FreProjectionHandler {
             boxProvider = this.conceptNameToProviderConstructor.get(element.piLanguageConcept())(this);
             this.elementToProvider.set(element.piId(), boxProvider);
             boxProvider.element = element;
-            boxProvider.initUsedProjection();
         }
         return boxProvider;
     }
@@ -139,13 +149,12 @@ export class FreProjectionHandler {
         this._enabledProjections = newList;
         // console.log(" ============== enabled projections: " + this._enabledProjections);
 
-        FreProjectionCalculator.clearCaches();
         //  Let all providers know that projection may be changed.
         for (const provider of this.elementToProvider.values()) {
-            provider.checkUsedProjection();
+            provider.clearUsedProjection();
         }
         for (const provider of this.headerProviders.values()) {
-            provider.checkUsedProjection();
+            provider.clearUsedProjection();
         }
     }
 
@@ -219,7 +228,7 @@ export class FreProjectionHandler {
         if (isNullOrUndefined(headerProvider)) {
             headerProvider = new FreHeaderProvider(element, propertyName, conceptName, this);
             this.headerProviders.set([element.piId(), propertyName], headerProvider);
-            headerProvider.initUsedProjection();
+            // headerProvider.initUsedProjection();
         }
         return headerProvider;
     }
@@ -229,9 +238,6 @@ export class FreProjectionHandler {
     }
 
     getTableHeaderInfo(conceptName: string, projectionName: string): string[] {
-        // let knownTableProjections = this.getKnownTableProjectionsFor(conceptName);
-        // let projectionName: string = FreProjectionCalculator.findProjectionToUse(this, conceptName, knownTableProjections, true);
-
         for (const part of this.tableHeaderInfo) {
             if (part.conceptName === conceptName && part.projectionName === projectionName) {
                 return part.headerRow;

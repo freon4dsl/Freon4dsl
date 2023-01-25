@@ -1,6 +1,6 @@
 import { PiElement } from "../../ast";
+import { isNullOrUndefined } from "../../util";
 import { Box, ElementBox, LabelBox } from "../boxes";
-import { action, computed, makeObservable, observable } from "mobx";
 import { FreProjectionHandler } from "./FreProjectionHandler";
 import { FreProjectionCalculator } from "./FreProjectionCalculator";
 
@@ -13,31 +13,13 @@ export abstract class FreBoxProvider {
     conceptName: string;                             // Name of the concept/interface for which this provider is defined.
     protected _element: PiElement;                   // The node in the model which this provider is serving.
     protected _mainBox: ElementBox = null;           // The box that is return by the method box(). Note that the initialization is needed for mobx!
-    public usedProjection: string = 'default';       // Name of the projection that currently is used to determine the contents of _mainBox.
+    public usedProjection: string = null;            // Name of the projection that currently is used to determine the contents of _mainBox.
     public knownBoxProjections: string[] = [];       // The names of all generated projections, i.e. these are the projections for which this
     // provider itself has methods that can provide the contents of the _mainBox.
     public knownTableProjections: string[] = [];     // The names of the generated table projections for this type of concept.
-    protected _mustUseTable: boolean = false;
-    protected _mustUseNamed: boolean = false;
 
     constructor(mainHandler: FreProjectionHandler) {
         this.mainHandler = mainHandler;
-        /*
-        1. 'usedProjection' is observable, because a change in projection must trigger a change in the
-        content of the '_mainBox'.
-        2. 'box' is computed, because then a cache is kept such that the contents of '_mainBox' are
-        recalculated only when either 'usedProjection' has changed, or when the underlying part of the
-        PiElement model has changed.
-        3. checkUsedProjection, initUsedProjection, and getNamedBox are 'actions', because the observable
-        'usedProjection' may be changed in one of these methods.
-         */
-        makeObservable<FreBoxProvider, "usedProjection">(this, {
-            usedProjection: observable,
-            // box: computed,
-            checkUsedProjection: action,
-            initUsedProjection: action,
-            getNamedBox: action
-        });
     }
 
     /**
@@ -54,9 +36,6 @@ export abstract class FreBoxProvider {
      * web application. Once the box provider is created, the box that is returned,
      * remains the same. However, its contents may change (see getContent). The box
      * that is returned is an ElementBox that itself is not rendered, but its content is.
-     * Note that this getter may not have parameters, therefore there is another function
-     * called getNamedBox, that takes a projectionName as parameter, which can be used in
-     * case a specific projection is requested.
      */
     get box(): ElementBox {
         // console.log("GET BOX " + this._element?.piId() + ' ' +  this._element?.piLanguageConcept());
@@ -69,23 +48,8 @@ export abstract class FreBoxProvider {
         }
 
         // the main box always stays the same for this element, but the content may differ
-        this._mainBox.content = this.getContent(this.usedProjection);
+        this._mainBox.content = this.getContent(this.projection());
         return this._mainBox;
-    }
-
-    public mustUseTable(value: boolean) {
-        this._mustUseTable = value;
-    }
-
-    public getNamedBox(projectionName: string): Box {
-        if (projectionName !== null && projectionName !== undefined && projectionName.length > 0) {
-            this._mustUseNamed = true;
-            // select the projection named 'projectionName' => overrule 'this.usedProjection'!!
-            if (this.usedProjection !== projectionName) {
-                this.usedProjection = projectionName;
-            }
-        }
-        return this.box;
     }
 
     /**
@@ -104,45 +68,53 @@ export abstract class FreBoxProvider {
 
     /**
      * When the user of the webapp request a different projection, this method is called.
-     * The currently enabled projections are compared to the projections known for this
-     * type of concept (this.conceptName), and the name of the projection to use is changed
-     * accordingly. Based on the projection name, it is determined whether the contents
-     * of the _mainBox shoudl be recalculated. (See also comment in constructor.)
-     *
-     * The order is: (1) see if there is a custom projection for this type of concept,
-     * (2) see if one of the generated projections is enabled,
-     * (3) if nothing has been found return 'default'.
-     * In all this it is assumed that the parameter enabledProjections is sorted such that
-     * the last is the projection with the highest priority.
+     * It clears the current used projection, so it will be recalculated when needed.
      * @param enabledProjections
      */
-    checkUsedProjection() {
-        let projToUse = this.findProjectionToUse();
-        if (this.usedProjection !== projToUse) {
-            this.usedProjection = projToUse;
-        }
+    clearUsedProjection(): void {
+        this.usedProjection = null;
     }
 
-    private findProjectionToUse() {
-        if (!this._mustUseNamed) {
-            let knownProjections: string[];
-            if (this._mustUseTable) {
-                knownProjections = this.knownTableProjections;
-            } else {
-                knownProjections = this.knownBoxProjections;
-            }
-            return FreProjectionCalculator.findProjectionToUse(this.mainHandler, this.conceptName, knownProjections, this._mustUseTable);
+    /**
+     * Find projection based on known (table) projections and active projections
+     * @protected
+     */
+    protected findProjectionToUse(table: boolean): string {
+        if (table) {
+            this.usedProjection = FreProjectionCalculator.findProjectionToUse(this.mainHandler, this.conceptName, this.knownTableProjections, table);
+        } else {
+            this.usedProjection = FreProjectionCalculator.findProjectionToUse(this.mainHandler, this.conceptName, this.knownBoxProjections, table);
         }
         return this.usedProjection;
     }
 
     /**
-     * Initializes the name of the projection to use in a similar way as checkUsedProjection
-     * does.
-     * @param enabledProjections
+     * Return (or calculate if needed) the projection to be used for this._element
      */
-    initUsedProjection() {
-        this.usedProjection = this.findProjectionToUse();
+    projection() {
+        if (isNullOrUndefined(this.usedProjection)) {
+            const ownerDescriptor = this?._element?.piOwnerDescriptor();
+            if (isNullOrUndefined(ownerDescriptor) || ownerDescriptor.owner.piIsModel() ) {
+                // just find the first projection in the active list of projections
+                this.usedProjection = this.findProjectionToUse(false);
+            } else {
+                const ownerBoxProvider: FreBoxProvider = this.mainHandler.getBoxProvider(ownerDescriptor.owner);
+                const ownerRequired = this.mainHandler.getRequiredProjection(ownerDescriptor.owner.piLanguageConcept(), ownerBoxProvider.projection() ,ownerDescriptor.propertyName);
+                if (ownerRequired === null || ownerRequired === undefined) {
+                    // No requirement from owner projection: just find the first projection in the active list of projections
+                    this.usedProjection = this.findProjectionToUse(false);
+                } else {
+                    // The projection to use is defined by the parent element
+                    if (ownerRequired === "__TABLE__") {
+                        this.usedProjection = this.findProjectionToUse(true);
+                    } else {
+                        // Named projection
+                        this.usedProjection = ownerRequired
+                    }
+                }
+            }
+        }
+        return this.usedProjection;
     }
 }
 
