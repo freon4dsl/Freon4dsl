@@ -4,7 +4,7 @@
     "access": "public"
   },
   "name": "@projectit/core-svelte",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
     "jest-transform-stub": "^2.0.0"
   },
   "dependencies": {
-    "@projectit/core": "0.4.0",
+    "@projectit/core": "0.5.0",
     "mobx": "6.3.3",
     "tslib": "2.4.0"
   }

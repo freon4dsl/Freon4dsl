@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@projectit/test",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -54,8 +54,8 @@
     "test":         "jest"
   },
   "dependencies": {
-    "@projectit/core": "0.4.0",
-    "@projectit/meta": "0.4.0",
+    "@projectit/core": "0.5.0",
+    "@projectit/meta": "0.5.0",
     "@types/history": "^4.7.5",
     "net.akehurst.language-agl-processor": "4.0.0-rc.5",
     "kotlin": "^1.5.21",
