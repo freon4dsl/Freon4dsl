@@ -192,6 +192,7 @@
     };
 
     const setCaret = (caret: PiCaret) => {
+        console.log("TextComponent.setCaret called")
         switch (caret.position) {
             case PiCaretPosition.RIGHT_MOST:
                 LOGGER.log("setCaretPosition RIGHT");

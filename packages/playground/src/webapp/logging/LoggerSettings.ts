@@ -2,9 +2,9 @@ import { PiLogger } from "@projectit/core";
 
 // Mute or unmute logs here (in addition to elsewhere).
 export function muteLogs() {
-    PiLogger.mute("PiEditor");
+    PiLogger.unmute("PiEditor");
     PiLogger.mute("PiUtils");
-    PiLogger.mute("TextComponent");
+    PiLogger.unmute("TextComponent");
     PiLogger.mute("AliasComponent");
     PiLogger.mute("AUTORUN");
     PiLogger.mute("FOCUS")
@@ -28,6 +28,7 @@ export function muteLogs() {
     PiLogger.mute("SelectBox");
     PiLogger.mute("HorizontalListBox");
     PiLogger.mute("AliasBox");
+    PiLogger.mute("BehaviorUtils");
 
 // PiLogger.mute("EditorCommunication");
 

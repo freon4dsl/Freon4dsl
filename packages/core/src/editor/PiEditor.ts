@@ -406,6 +406,7 @@ export class PiEditor {
         }
         // LOGGER.log("setting focus on box " + this.selectedBox.role);
         // box.setFocus(); TODO why not set focus?
+        LOGGER.log("selectedbox is now " + this.selectedBox);
     }
 
     /**

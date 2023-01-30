@@ -50,7 +50,7 @@ export class InterpreterMainTemplate {
          * Ensures all internal interpreter state is cleaned when creating a new instance.
          */
         export class ${Names.interpreterName(language)} implements FreonInterpreter<${AST_TYPE}, ${RT_TYPE}>{
-            private static  main: ${Names.mainInterpreterInterface(language)};
+            private static  main: ${Names.mainInterpreterInterface(language)} = null;
         
             constructor() {
                 if(${Names.interpreterName(language)}.main === null) {

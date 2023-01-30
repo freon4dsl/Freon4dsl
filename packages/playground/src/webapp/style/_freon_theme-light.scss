@@ -62,6 +62,7 @@
   border: lightgrey;
   border-style: solid;
   border-width: 1px;
+  border-color: goldenrod;
   --freon-gridcell-component-background-color: lightblue;
 };
 
@@ -104,6 +105,7 @@
   align-items: center;
   align-content: center;
   justify-items: stretch;
+  border-color: goldenrod;
   --freon-grid-component-border-color: orange;
   --freon-grid-component-border-width: 3pt;
   --freon-grid-component-border-style: dotted;

@@ -8,11 +8,6 @@
          "attributes": [
             {
                "$typename": "Attribute",
-               "name": "age",
-               "declaredType": "Integer"
-            },
-            {
-               "$typename": "Attribute",
                "name": "name",
                "declaredType": "String"
             },
@@ -23,17 +18,7 @@
             },
             {
                "$typename": "Attribute",
-               "name": "length",
-               "declaredType": "Integer"
-            },
-            {
-               "$typename": "Attribute",
                "name": "livesIn",
-               "declaredType": "House"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "insures",
                "declaredType": "House"
             }
          ],
@@ -64,16 +49,6 @@
                      "$typename": "Parameter",
                      "name": "person",
                      "declaredType": "Person"
-                  },
-                  {
-                     "$typename": "Parameter",
-                     "name": "appeltje",
-                     "declaredType": "Boolean"
-                  },
-                  {
-                     "$typename": "Parameter",
-                     "name": "num",
-                     "declaredType": "Integer"
                   }
                ],
                "declaredType": "Person"

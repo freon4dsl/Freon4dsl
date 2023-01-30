@@ -5,11 +5,12 @@ export class ParseLocationUtil {
     static location(elem: PiDefinitionElement): string {
         if (!!elem) {
             if (!!elem.location) {
-                const shortFileName: string = ParseLocationUtil.getShortFileName(elem.location.filename);
-                return `[file: ${shortFileName}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
+                // const shortFileName: string = ParseLocationUtil.getShortFileName(elem.location.filename);
+                const shortFileName: string = elem.location.filename;
+                return `[file: ${shortFileName}:${elem.location.start.line}:${elem.location.start.column}]`;
             } else if (!!elem.agl_location) {
-                const shortFileName: string = ParseLocationUtil.getShortFileName(elem.agl_location.filename);
-                return `[file: ${shortFileName}, line: ${elem.agl_location.line}, column: ${elem.agl_location.column}]`;
+                const shortFileName: string = elem.agl_location.filename;
+                return `[file: ${shortFileName}:${elem.agl_location.line}:${elem.agl_location.column}]`;
             }
         }
         return `[no location]`;
@@ -17,8 +18,8 @@ export class ParseLocationUtil {
 
     static locationPlus(fileName: string, location: ParseLocation) {
         if (!!location && !!fileName) {
-            const shortFileName: string = this.getShortFileName(fileName);
-            return `[file: ${shortFileName}, line: ${location.start.line}, column: ${location.start.column}]`;
+            const shortFileName: string = fileName;
+            return `[file: ${shortFileName}:${location.start.line}:${location.start.column}]`;
         }
         return `[no location]`;
     }

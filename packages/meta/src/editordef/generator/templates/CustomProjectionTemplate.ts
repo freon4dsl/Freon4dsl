@@ -18,7 +18,7 @@ export class CustomProjectionTemplate {
              */           
             export class ${Names.customProjection(language)} implements ${Names.PiProjection} {
                 rootProjection: ${Names.PiCompositeProjection};
-                name: string = "manual";
+                name: string = "custom";
                 isEnabled: boolean = true;
                 
                 constructor(name?: string) {

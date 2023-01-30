@@ -60,7 +60,7 @@ export class MetaLogger {
 
     error(msg: LogMessage) {
         if (!MetaLogger.muteErrors) {
-            this.logToConsole(MetaLogger.FgRed, "ERROR: " + this.message(msg));
+            this.logToConsole(MetaLogger.FgRed, "at " + this.message(msg));
         }
     }
 

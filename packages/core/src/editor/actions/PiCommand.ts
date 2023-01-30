@@ -197,7 +197,7 @@ export class PiCustomCommand extends PiCommand {
             if (!!self.boxRoleToSelect) {
                 return function () {
                     console.log("PiCommand select " + box.element.piLanguageConcept() + " box " + self.boxRoleToSelect);
-                    editor.selectElement(selected, self.boxRoleToSelect);
+                    editor.selectElement(selected, self.boxRoleToSelect, PiCaret.RIGHT_MOST);
                 };
             } else {
                 // Default: select the first editable child of the selected element

@@ -124,7 +124,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         if (!!tr.property) {
             const myProp = tr.property.findRefOfLastAppliedFeature();
             this.runner.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.type === PiPrimitiveType.identifier,
-                `Validname rule expression '${tr.property.toPiString()}' should have type 'identifier' ${ParseLocationUtil.location(tr.property)}.`);
+                `${ParseLocationUtil.location(tr.property)} Validname rule expression '${tr.property.toPiString()}' should have type 'identifier' .`);
         }
     }
 
