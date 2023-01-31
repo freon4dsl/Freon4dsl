@@ -127,7 +127,7 @@ export class Names {
     // }
 
     public static projection(group: PiEditProjectionGroup): string {
-        return this.startWithUpperCase(group.name);
+        return group.name;
     }
 
     public static customProjection(language: PiLanguage): string {
