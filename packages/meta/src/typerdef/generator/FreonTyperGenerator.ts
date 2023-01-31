@@ -1,13 +1,13 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { FreLanguage } from "../../languagedef/metalanguage";
-import { PiTyperDef } from "../metalanguage";
+import { TyperDef } from "../metalanguage";
 import { GenerationStatus, FileUtil, Names, TYPER_FOLDER, TYPER_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../utils";
-import { FreonTyperTemplate } from "./templates/FreonTyperTemplate";
-import { FreonTyperPartTemplate } from "./templates/FreonTyperPartTemplate";
-import { FreonCustomTyperPartTemplate } from "./templates/FreonCustomTyperPartTemplate";
+import { FreTyperTemplate } from "./templates/FreTyperTemplate";
+import { FreTyperPartTemplate } from "./templates/FreTyperPartTemplate";
+import { FreCustomTyperPartTemplate } from "./templates/FreCustomTyperPartTemplate";
 import { LOG2USER } from "../../utils/UserLogger";
-import { FreonTypeConceptMaker } from "./templates/FreonTypeConceptMaker";
+import { FreTypeConceptMaker } from "./templates/FreTypeConceptMaker";
 import { TyperDefTemplate } from "./templates/TyperDefTemplate";
 
 const LOGGER = new MetaLogger("FreonTyperGenerator").mute();
@@ -23,7 +23,7 @@ export class FreonTyperGenerator {
     protected typerConceptsFolder: string;
     protected typerFolder: string;
 
-    generate(typerdef: PiTyperDef): void {
+    generate(typerdef: TyperDef): void {
         if (this.language == null) {
             LOGGER.error("Cannot generate typer because language is not set.");
             return;
@@ -32,11 +32,11 @@ export class FreonTyperGenerator {
         this.getFolderNames();
         LOGGER.log("Generating typer in folder " + this.typerGenFolder);
 
-        const typer = new FreonTyperTemplate();
+        const typer = new FreTyperTemplate();
         const typerDef = new TyperDefTemplate();
-        const typeConceptMaker = new FreonTypeConceptMaker();
-        const customPart = new FreonCustomTyperPartTemplate();
-        const typerPart = new FreonTyperPartTemplate();
+        const typeConceptMaker = new FreTypeConceptMaker();
+        const customPart = new FreCustomTyperPartTemplate();
+        const typerPart = new FreTyperPartTemplate();
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.typerFolder);

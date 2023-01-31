@@ -6,7 +6,7 @@ import {
     FreProperty,
     FreClassifier
 } from "../../languagedef/metalanguage";
-import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./FreScopeDefLang";
+import { PiAlternativeScope, PiNamespaceAddition, ScopeDef } from "./FreScopeDefLang";
 import { LangUtil, MetaLogger } from "../../utils";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -19,7 +19,7 @@ import { CommonChecker } from "../../languagedef/checking/CommonChecker";
 const LOGGER = new MetaLogger("ScoperChecker").mute();
 
 // TODO use ParseLocatonUtil
-export class ScoperChecker extends Checker<PiScopeDef> {
+export class ScoperChecker extends Checker<ScopeDef> {
     runner = new CheckRunner(this.errors, this.warnings);
     myExpressionChecker: FreLangExpressionChecker;
     myNamespaces: FreClassifier[] = [];
@@ -31,7 +31,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         // this.myExpressionChecker.strictUseOfThis = false;
     }
 
-    public check(definition: PiScopeDef): void {
+    public check(definition: ScopeDef): void {
         LOGGER.log("Checking scope definition " + definition.scoperName);
         if ( this.language === null || this.language === undefined ) {
             throw new Error(`Scoper definition checker does not known the language.`);

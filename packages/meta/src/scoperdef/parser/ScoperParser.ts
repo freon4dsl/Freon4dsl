@@ -1,12 +1,12 @@
 import { FreLanguage } from "../../languagedef/metalanguage";
 import { FreGenericParser } from "../../utils";
-import { PiScopeDef, ScoperChecker } from "../metalanguage";
+import { ScopeDef, ScoperChecker } from "../metalanguage";
 import { setCurrentFileName } from "./ScoperCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 
 const scoperParser = require("./ScoperGrammar");
 
-export class ScoperParser extends FreGenericParser<PiScopeDef> {
+export class ScoperParser extends FreGenericParser<ScopeDef> {
     public language: FreLanguage;
 
     constructor(language: FreLanguage) {
@@ -16,9 +16,9 @@ export class ScoperParser extends FreGenericParser<PiScopeDef> {
         this.checker = new ScoperChecker(language);
     }
 
-    protected merge(submodels: PiScopeDef[]): PiScopeDef {
+    protected merge(submodels: ScopeDef[]): ScopeDef {
         if (submodels.length > 0) {
-            let result: PiScopeDef = submodels[0];
+            let result: ScopeDef = submodels[0];
             submodels.forEach((sub, index) => {
                 if (index > 0) {
                     result.namespaces.push(...sub.namespaces);

@@ -17,7 +17,7 @@ import {
     ExpressionRule,
     IsuniqueRule,
     NotEmptyRule,
-    PiValidatorDef,
+    ValidatorDef,
     ValidationMessage,
     ValidationMessageReference,
     ValidationMessageText,
@@ -28,7 +28,7 @@ import { ValidationUtils } from "../ValidationUtils";
 
 export class RulesCheckerTemplate {
 
-    generateRulesChecker(language: FreLanguage, validdef: PiValidatorDef, relativePath: string): string {
+    generateRulesChecker(language: FreLanguage, validdef: ValidatorDef, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName: string = Names.FreError;
         const checkerClassName: string = Names.rulesChecker(language);

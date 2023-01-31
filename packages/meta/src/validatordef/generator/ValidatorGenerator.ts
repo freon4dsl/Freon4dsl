@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { FreLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils";
-import { PiValidatorDef } from "../metalanguage";
+import { ValidatorDef } from "../metalanguage";
 import { RulesCheckerTemplate } from "./templates/RulesCheckerTemplate";
 import { ValidatorTemplate } from "./templates/ValidatorTemplate";
 import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate";
@@ -19,7 +19,7 @@ export class ValidatorGenerator {
     protected validatorGenFolder: string;
     protected validatorFolder: string;
 
-    generate(validdef: PiValidatorDef): void {
+    generate(validdef: ValidatorDef): void {
         if (this.language == null) {
             LOGGER.error("Cannot generate validator because language is not set.");
             return;

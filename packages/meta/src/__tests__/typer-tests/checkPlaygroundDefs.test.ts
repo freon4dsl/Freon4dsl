@@ -1,12 +1,12 @@
 import { FreLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
-import { PiTyperDef } from "../../typerdef/metalanguage";
-import { PiTyperMerger } from "../../typerdef/parser/PiTyperMerger";
+import { TyperDef } from "../../typerdef/metalanguage";
+import { FreTyperMerger } from "../../typerdef/parser/FreTyperMerger";
 
 describe("Checking new typer", () => {
     const testdir = "src/__tests__/typer-tests/";
-    let parser: PiTyperMerger;
+    let parser: FreTyperMerger;
 
     let language: FreLanguage;
     MetaLogger.muteAllLogs();
@@ -15,7 +15,7 @@ describe("Checking new typer", () => {
     beforeEach(() => {
         try {
             language = new LanguageParser().parse(testdir + "playgroundDefs/types.ast");
-            parser = new PiTyperMerger(language);
+            parser = new FreTyperMerger(language);
         } catch (e) {
             console.log("Language could not be read: " + e.stack);
         }
@@ -27,7 +27,7 @@ describe("Checking new typer", () => {
             expect(conc).not.toBeNull();
             expect(conc).not.toBeUndefined();
             if (!!parser) {
-                const typeUnit: PiTyperDef = parser.parse(testdir + "playgroundDefs/type-rules.type");
+                const typeUnit: TyperDef = parser.parse(testdir + "playgroundDefs/type-rules.type");
 
                 const simpleExpRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "NumberLiteral");
                 expect(simpleExpRule).not.toBeNull();

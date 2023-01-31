@@ -1,10 +1,10 @@
 import { FreLanguage } from "../../../languagedef/metalanguage";
 import { CONFIGURATION_FOLDER, Names, PROJECTITCORE } from "../../../utils";
-import { PiTyperDef } from "../../metalanguage/index";
+import { TyperDef } from "../../metalanguage/index";
 
 export class TyperDefTemplate {
 
-    generateTyperDef(language: FreLanguage, typerDef: PiTyperDef, relativePath: string): string {
+    generateTyperDef(language: FreLanguage, typerDef: TyperDef, relativePath: string): string {
         return `import { FreCompositeTyper } from "${PROJECTITCORE}";
         
             import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}";     

@@ -1,12 +1,12 @@
 import { FreLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
-import { PiTyperDef } from "../../typerdef/metalanguage";
-import { PiTyperMerger } from "../../typerdef/parser/PiTyperMerger";
+import { TyperDef } from "../../typerdef/metalanguage";
+import { FreTyperMerger } from "../../typerdef/parser/FreTyperMerger";
 
 describe("Checking new typer", () => {
     const testdir = "src/__tests__/typer-tests/faultyDefFiles/";
-    let parser: PiTyperMerger;
+    let parser: FreTyperMerger;
 
     let language: FreLanguage;
     MetaLogger.muteAllLogs();
@@ -15,7 +15,7 @@ describe("Checking new typer", () => {
     beforeEach(() => {
         try {
             language = new LanguageParser().parse(testdir + "types.ast");
-            parser = new PiTyperMerger(language);
+            parser = new FreTyperMerger(language);
         } catch (e) {
             console.log("Language could not be read: " + e.stack);
         }
@@ -24,7 +24,7 @@ describe("Checking new typer", () => {
     test( " on type-rules1 file", () => {
         try {
             if (!!parser) {
-                const typeUnit: PiTyperDef = parser.parse(testdir + "type-rules1.type");
+                const typeUnit: TyperDef = parser.parse(testdir + "type-rules1.type");
 
                 expect(typeUnit).not.toBeNull();
                 expect(typeUnit.types.length).toBe(8);
@@ -50,7 +50,7 @@ describe("Checking new typer", () => {
     test( " on type-rules2 file", () => {
         try {
             if (!!parser) {
-                const typeUnit: PiTyperDef = parser.parse(testdir + "type-rules2.type");
+                const typeUnit: TyperDef = parser.parse(testdir + "type-rules2.type");
 
                 expect(typeUnit.types.length).toBe(8);
                 expect(typeUnit.conceptsWithType.length).toBe(7);
@@ -77,7 +77,7 @@ describe("Checking new typer", () => {
     test( " on type-rules4 file", () => {
         try {
             if (!!parser) {
-                const typeUnit: PiTyperDef = parser.parse(testdir + "type-rules4.type");
+                const typeUnit: TyperDef = parser.parse(testdir + "type-rules4.type");
 
                 expect(typeUnit.types.length).toBe(7);
                 expect(typeUnit.conceptsWithType.length).toBe(7);
@@ -98,7 +98,7 @@ describe("Checking new typer", () => {
         // TODO this one gives a parse error: "NullPointerException", wait for David to come back on this
         try {
             if (!!parser) {
-                const typeUnit: PiTyperDef = parser.parse(testdir + "type-rules5.type");
+                const typeUnit: TyperDef = parser.parse(testdir + "type-rules5.type");
 
                 expect(typeUnit.types.length).toBe(8);
                 expect(typeUnit.conceptsWithType.length).toBe(7);
@@ -116,7 +116,7 @@ describe("Checking new typer", () => {
         // TODO make new input file
         try {
             if (!!parser) {
-                const typeUnit: PiTyperDef = parser.parse(testdir + "type-rules6.type");
+                const typeUnit: TyperDef = parser.parse(testdir + "type-rules6.type");
 
                 expect(typeUnit.types.length).toBe(8);
                 expect(typeUnit.conceptsWithType.length).toBe(7);

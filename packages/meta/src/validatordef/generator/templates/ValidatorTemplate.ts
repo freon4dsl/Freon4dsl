@@ -1,13 +1,13 @@
 import { CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names, PathProvider, PROJECTITCORE } from "../../../utils";
 import { FreLanguage } from "../../../languagedef/metalanguage";
-import { PiValidatorDef } from "../../metalanguage";
+import { ValidatorDef } from "../../metalanguage";
 
 export class ValidatorTemplate {
     errorClassName: string = Names.FreError;
     validatorInterfaceName: string = Names.FreValidator;
     typerInterfaceName: string = Names.FreTyper;
 
-    generateValidator(language: FreLanguage, validdef: PiValidatorDef, relativePath: string): string {
+    generateValidator(language: FreLanguage, validdef: ValidatorDef, relativePath: string): string {
         const doValidDef = validdef !== null && validdef !== undefined;
 
         const allLangConcepts: string = Names.allConcepts(language);
@@ -95,7 +95,7 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateGenIndex(language: FreLanguage, validdef: PiValidatorDef): string {
+    generateGenIndex(language: FreLanguage, validdef: ValidatorDef): string {
         return `
         export * from "./${Names.nonOptionalsChecker(language)}";
         export * from "./${Names.validator(language)}";

@@ -3,7 +3,7 @@ import {
     CheckEqualsTypeRule,
     ConceptRuleSet, ExpressionRule, IsuniqueRule,
     NotEmptyRule,
-    PiValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText, ValidationRule, ValidationSeverity,
+    ValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText, ValidationRule, ValidationSeverity,
     ValidNameRule
 } from "../metalanguage";
 import { FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
@@ -17,8 +17,8 @@ export function setCurrentFileName(newName: string) {
     currentFileName = newName;
 }
 
-export function createValidatorDef(data: Partial<PiValidatorDef>): PiValidatorDef {
-    const result = new PiValidatorDef();
+export function createValidatorDef(data: Partial<ValidatorDef>): ValidatorDef {
+    const result = new ValidatorDef();
 
     if (!!data.validatorName) {
         result.validatorName = data.validatorName;

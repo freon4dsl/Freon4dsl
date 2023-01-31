@@ -4,12 +4,12 @@ import {
     PROJECTITCORE,
     GenerationUtil, CONFIGURATION_FOLDER
 } from "../../../utils";
-import { PiScopeDef } from "../../metalanguage";
+import { ScopeDef } from "../../metalanguage";
 
 
 export class ScoperDefTemplate {
 
-    generateScoperDef(language: FreLanguage, scoperDef: PiScopeDef, relativePath: string): string {
+    generateScoperDef(language: FreLanguage, scoperDef: ScopeDef, relativePath: string): string {
         // const allLangConcepts: string = Names.allConcepts(language);
         const concreteNamespaces: FreClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scoperDef.namespaces);
         // const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);

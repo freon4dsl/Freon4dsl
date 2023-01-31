@@ -10,7 +10,7 @@ import { FreLangExp, FreConcept } from "../../languagedef/metalanguage";
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference";
 
-export class PiValidatorDef extends FreDefinitionElement {
+export class ValidatorDef extends FreDefinitionElement {
     validatorName: string;
     languageName: string;
     conceptRules: ConceptRuleSet[];

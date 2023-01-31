@@ -6,7 +6,7 @@ import { FreDefinitionElement } from "../../utils";
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { MetaElementReference } from "../../languagedef/metalanguage";
 
-export class PiScopeDef extends FreDefinitionElement {
+export class ScopeDef extends FreDefinitionElement {
     scoperName: string;
     languageName: string;
     namespaces: MetaElementReference<FreClassifier>[] = [];

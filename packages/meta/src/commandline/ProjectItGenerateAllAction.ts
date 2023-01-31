@@ -12,13 +12,13 @@ import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorG
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { ScoperParser } from "../scoperdef/parser/ScoperParser";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
-import { PiScopeDef } from "../scoperdef/metalanguage";
+import { ScopeDef } from "../scoperdef/metalanguage";
 import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
-import { PiValidatorDef } from "../validatordef/metalanguage";
+import { ValidatorDef } from "../validatordef/metalanguage";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
-import { PiTyperDef } from "../typerdef/metalanguage";
-import { PiTyperMerger } from "../typerdef/parser";
+import { TyperDef } from "../typerdef/metalanguage";
+import { FreTyperMerger } from "../typerdef/parser";
 import { LOG2USER } from "../utils/UserLogger";
 import { DiagramGenerator } from "../diagramgen/DiagramGenerator";
 
@@ -97,10 +97,10 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     private generateTyper = () => {
         LOG2USER.info("Generating typer");
-        let typer: PiTyperDef;
+        let typer: TyperDef;
         try {
             if (this.typerFiles.length > 0) {
-                typer = new PiTyperMerger(this.language).parseMulti(this.typerFiles);
+                typer = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
             }
             this.typerGenerator.language = this.language;
             this.typerGenerator.outputfolder = this.outputFolder;
@@ -129,7 +129,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     private generateScoper = () => {
         LOG2USER.info("Generating scoper");
-        let scoper: PiScopeDef;
+        let scoper: ScopeDef;
         try {
             if (this.scopeFiles.length > 0) {
                 scoper = new ScoperParser(this.language).parseMulti(this.scopeFiles);
@@ -145,7 +145,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     private generateValidator = () => {
         LOG2USER.info("Generating validator");
-        let validator: PiValidatorDef;
+        let validator: ValidatorDef;
         try {
             if (this.validFiles.length > 0) {
                 validator = new ValidatorParser(this.language).parseMulti(this.validFiles);

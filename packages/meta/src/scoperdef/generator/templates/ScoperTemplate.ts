@@ -13,7 +13,7 @@ import {
     CONFIGURATION_GEN_FOLDER,
     GenerationUtil, LangUtil, ListUtil
 } from "../../../utils";
-import { PiScopeDef, ScopeConceptDef } from "../../metalanguage";
+import { ScopeDef, ScopeConceptDef } from "../../metalanguage";
 
 export class ScoperTemplate {
     languageImports: string[] = []; // holds the names of all classifiers that need to be imported from the generated language structure
@@ -34,7 +34,7 @@ export class ScoperTemplate {
         `;
     }
 
-    generateScoper(language: FreLanguage, scopedef: PiScopeDef, relativePath: string): string {
+    generateScoper(language: FreLanguage, scopedef: ScopeDef, relativePath: string): string {
         this.hasAlternativeScopeText = "";
         this.getAlternativeScopeText = "";
 
@@ -105,7 +105,7 @@ export class ScoperTemplate {
         return templateImports + templateBody;
     }
 
-    private makeAdditionalNamespaceTexts(scopedef: PiScopeDef, language: FreLanguage) {
+    private makeAdditionalNamespaceTexts(scopedef: ScopeDef, language: FreLanguage) {
         const generatedConcepts: FreConcept[] = [];
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceAdditions) {
@@ -156,7 +156,7 @@ export class ScoperTemplate {
             `}\n`);
     }
 
-    private makeAlternativeScopeTexts(scopedef: PiScopeDef, language: FreLanguage) {
+    private makeAlternativeScopeTexts(scopedef: ScopeDef, language: FreLanguage) {
         const allLangConcepts: string = Names.allConcepts(language);
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.alternativeScope) {

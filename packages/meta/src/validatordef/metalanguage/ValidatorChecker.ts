@@ -16,7 +16,7 @@ import {
     ExpressionRule,
     IsuniqueRule,
     NotEmptyRule,
-    PiValidatorDef,
+    ValidatorDef,
     ValidationMessage,
     ValidationMessageReference,
     ValidationRule,
@@ -34,7 +34,7 @@ const conformsToName = "conformsTo";
 // all names should be in lowercase
 const severityLevels = ["error", "improvement", "todo", "info"];
 
-export class ValidatorChecker extends Checker<PiValidatorDef> {
+export class ValidatorChecker extends Checker<ValidatorDef> {
     myExpressionChecker: FreLangExpressionChecker;
     runner = new CheckRunner(this.errors, this.warnings);
 
@@ -43,7 +43,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.myExpressionChecker = new FreLangExpressionChecker(this.language);
     }
 
-    public check(definition: PiValidatorDef): void {
+    public check(definition: ValidatorDef): void {
         LOGGER.log("Checking validator Definition '" + definition.validatorName + "'");
 
         if ( this.language === null || this.language === undefined ) {

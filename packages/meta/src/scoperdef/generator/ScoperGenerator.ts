@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { MetaLogger } from "../../utils";
 import { FreLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
-import { PiScopeDef } from "../metalanguage";
+import { ScopeDef } from "../metalanguage";
 import { CustomScoperTemplate } from "./templates/CustomScoperTemplate";
 import { ScoperDefTemplate } from "./templates/ScoperDefTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
@@ -16,14 +16,14 @@ export class ScoperGenerator {
     protected scoperGenFolder: string;
     protected scoperFolder: string;
 
-    generate(scopedef: PiScopeDef): void {
+    generate(scopedef: ScopeDef): void {
         if (this.language == null) {
             LOGGER.error("Cannot generate scoper because language is not set.");
             return;
         }
         // generate default, if the scoper definition is not present, i.e. was not read from file
         if (isNullOrUndefined(scopedef)) {
-            scopedef = new PiScopeDef();
+            scopedef = new ScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
             scopedef.namespaces.push(MetaElementReference.create<FreModelDescription>(this.language.modelConcept, "FreModelDescription"));
