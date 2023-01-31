@@ -10,10 +10,10 @@ export class FreonTypeConceptMaker {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? `extends ${Names.classifier(concept.base.referred)}` : `implements ${this.piTypeName}`;
-        const coreImports: string[] = [Names.PiUtils, Names.PiWriter, Names.PiParseLocation ];
+        const coreImports: string[] = [Names.FreUtils, Names.FreWriter, Names.FreParseLocation ];
         if (!hasSuper) {
             coreImports.push(this.piTypeName);
-            coreImports.push(Names.PiElement);
+            coreImports.push(Names.FreNode);
         }
         const modelImports: string[] = this.findModelImports(concept, language);
         const typeImports: string[] = this.findTypeImports(concept, hasSuper);
@@ -35,12 +35,12 @@ export class FreonTypeConceptMaker {
                 ${this.makeConstructor(hasSuper)} 
                 ${ConceptUtils.makeCopyMethod(concept, myName, false)}     
                 
-                toFreString(writer: ${Names.PiWriter}): string {
+                toFreString(writer: ${Names.FreWriter}): string {
                     // take into account indentation
                     return ${this.makeToPiString(myName, concept)};
                 }                  
                 
-                ${!hasSuper ? `toAstElement(): ${Names.PiElement} {
+                ${!hasSuper ? `toAstElement(): ${Names.FreNode} {
                     return null;
                 }` : ``}                    
             }
@@ -80,7 +80,7 @@ export class FreonTypeConceptMaker {
                         if (!!id) { 
                             this.$id = id;
                         } else {
-                            this.$id = ${Names.PiUtils}.ID(); // uuid.v4();
+                            this.$id = ${Names.FreUtils}.ID(); // uuid.v4();
                         }`
                         : "super(id);"
                     }                 

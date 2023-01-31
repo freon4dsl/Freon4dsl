@@ -16,11 +16,11 @@ export class NonOptionalsCheckerTemplate {
 
     generateChecker(language: FreLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
-        const errorClassName: string = Names.PiError;
-        const errorSeverityName: string = Names.PiErrorSeverity;
+        const errorClassName: string = Names.FreError;
+        const errorSeverityName: string = Names.FreErrorSeverity;
         const checkerClassName: string = Names.nonOptionalsChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
-        const writerInterfaceName: string = Names.PiWriter;
+        const writerInterfaceName: string = Names.FreWriter;
         const classifiersToDo: FreClassifier[] = [];
         classifiersToDo.push(language.modelConcept);
         classifiersToDo.push(...language.units);
@@ -81,7 +81,7 @@ export class NonOptionalsCheckerTemplate {
 
                 result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ${additionalStringCheck? additionalStringCheck : ""}) {
                     hasFatalError = true;
-                    this.errorList.push(new ${Names.PiError}("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, '${prop.name}', ${Names.PiErrorSeverity}.Error));
+                    this.errorList.push(new ${Names.FreError}("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, '${prop.name}', ${Names.FreErrorSeverity}.Error));
                 }
                 `;
             }

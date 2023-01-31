@@ -3,7 +3,7 @@ import { GenerationUtil } from "./GenerationUtil";
 
 /**
  * This class contains a series of helper functions over the language.
- * Note that a number of similar functions can be found in PiLanguage.ts.
+ * Note that a number of similar functions can be found in FreLanguage.ts.
  */
 export class LangUtil {
     /**

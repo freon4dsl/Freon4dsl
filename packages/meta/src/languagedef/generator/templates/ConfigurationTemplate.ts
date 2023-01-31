@@ -12,7 +12,7 @@ export class ConfigurationTemplate {
         const configurationName = Names.configuration();
         const workerName = Names.checkerInterface(language);
         return `
-            import { ${Names.PiProjection}, ${Names.PiActions}, ${Names.FreonTyperPart}, ${Names.PiStdlib}, ${Names.FrScoperPart} } from "${PROJECTITCORE}";
+            import { ${Names.FreProjection}, ${Names.FreActions}, ${Names.FreTyperPart}, ${Names.FreStdlib}, ${Names.FrScoperPart} } from "${PROJECTITCORE}";
             import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}";
             import { ${Names.customScoper(language)} } from "${relativePath}${SCOPER_FOLDER}";
             import { ${Names.customTyper(language)} } from "${relativePath}${TYPER_FOLDER}";
@@ -27,17 +27,17 @@ export class ConfigurationTemplate {
              */
             class ${configurationName} {
                 // add your custom editor projections here
-                customProjection: ${Names.PiProjection}[] = [new ${Names.customProjection(language)}()];
+                customProjection: ${Names.FreProjection}[] = [new ${Names.customProjection(language)}()];
                 // add your custom editor actions here
-                customActions: ${Names.PiActions}[] = [new ${Names.customActions(language)}()];
+                customActions: ${Names.FreActions}[] = [new ${Names.customActions(language)}()];
                 // add your custom validations here
                 customValidations: ${workerName}[] = [new ${Names.customValidator(language)}()];
                 // add your custom scopers here
                 customScopers: ${Names.FrScoperPart}[] = [new ${Names.customScoper(language)}()];
                 // add your custom type-providers here
-                customTypers: ${Names.FreonTyperPart}[] = [new ${Names.customTyper(language)}()];
+                customTypers: ${Names.FreTyperPart}[] = [new ${Names.customTyper(language)}()];
                 // add extra predefined instances here
-                customStdLibs: ${Names.PiStdlib}[] = [new ${Names.customStdlib(language)}()];
+                customStdLibs: ${Names.FreStdlib}[] = [new ${Names.customStdlib(language)}()];
             }
             
             export const projectitConfiguration = new ${configurationName}();

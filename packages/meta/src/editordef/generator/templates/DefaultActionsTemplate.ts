@@ -6,14 +6,14 @@ import {
 } from "../../../languagedef/metalanguage";
 import { Roles } from "../../../utils";
 import {
-    PiEditProjection,
-    PiEditUnit,
-    PiOptionalPropertyProjection
+    FreEditProjection,
+    FreEditUnit,
+    FreOptionalPropertyProjection
 } from "../../metalanguage";
 
 export class DefaultActionsTemplate {
 
-    generate(language: FreLanguage, editorDef: PiEditUnit, relativePath: string): string {
+    generate(language: FreLanguage, editorDef: FreEditUnit, relativePath: string): string {
         const modelImports: string[] = language.conceptsAndInterfaces().map(c => `${Names.classifier(c)}`)
             .concat(language.units.map(u => `${Names.classifier(u)}`));
         return `
@@ -23,19 +23,19 @@ export class DefaultActionsTemplate {
                 BEFORE_BINARY_OPERATOR,
                 Box,
                 MetaKey,
-                ${Names.PiActions},
+                ${Names.FreActions},
                 ${Names.FreCreateBinaryExpressionAction},
                 FreCaret,
                 ${Names.FreCustomAction},
-                ${Names.PiEditor},
-                ${Names.PiElement},
-                ${Names.PiBinaryExpression},
+                ${Names.FreEditor},
+                ${Names.FreNode},
+                ${Names.FreBinaryExpression},
                 FreKey,
                 FreLogger,
                 ${Names.FreTriggerType},
                 ActionBox,
                 OptionalBox,
-                ${Names.PiElementReference},
+                ${Names.FreNodeReference},
                 LEFT_MOST,
                 RIGHT_MOST
             } from "${PROJECTITCORE}";
@@ -60,7 +60,7 @@ export class DefaultActionsTemplate {
                         BEFORE_BINARY_OPERATOR,
                         AFTER_BINARY_OPERATOR
                     ],
-                    expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.PiEditor}) => {
+                    expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
                         const parent = box.element;
                         const newExpression = new ${Names.concept(c)}();
                         parent[(box as ActionBox).propertyName] = newExpression;
@@ -78,20 +78,20 @@ export class DefaultActionsTemplate {
             `;
         }
 
-    customActionsForOptional(language: FreLanguage, editorDef: PiEditUnit): string {
+    customActionsForOptional(language: FreLanguage, editorDef: FreEditUnit): string {
         let result: string = "";
         editorDef.getDefaultProjectiongroup().projections.forEach( projection => {
-            if (!!projection && projection instanceof PiEditProjection) {
+            if (!!projection && projection instanceof FreEditProjection) {
                 projection.lines.forEach(line => {
                     line.items.forEach(item => {
-                        if (item instanceof PiOptionalPropertyProjection) {
+                        if (item instanceof FreOptionalPropertyProjection) {
                             const firstLiteral: string = item.firstLiteral();
                             const myClassifier = projection.classifier.referred;
                             // TODO check this change
-                            // const propertyProjection: PiEditPropertyProjection = item.findPropertyProjection();
+                            // const propertyProjection: FreEditPropertyProjection = item.findPropertyProjection();
                             // const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.property.name);
                             // console.log("Looking for [" + optionalPropertyName + "] in [" + myClassifier.name + "]")
-                            // const prop: PiProperty = myClassifier.allProperties().find(prop => prop.name === optionalPropertyName);
+                            // const prop: FreProperty = myClassifier.allProperties().find(prop => prop.name === optionalPropertyName);
                             const prop: FreProperty = item.property.referred;
                             const optionalPropertyName = prop.name;
                             // end change
@@ -115,7 +115,7 @@ export class DefaultActionsTemplate {
                                     {
                                         trigger: "${firstLiteral === "" ? optionalPropertyName : firstLiteral}",
                                         activeInBoxRoles: ["optional-${optionalPropertyName}"],
-                                        action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.PiEditor}): ${Names.PiElement} | null => {
+                                        action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
                                             ((box.parent) as OptionalBox).mustShow = true;
                                             return box.element;
                                         },
@@ -130,7 +130,7 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    customActionForReferences(language: FreLanguage, editorDef: PiEditUnit): string {
+    customActionForReferences(language: FreLanguage, editorDef: FreEditUnit): string {
         let result = "";
         const allClassifiers: FreClassifier[] = [];
         allClassifiers.push(...language.units);
@@ -143,9 +143,9 @@ export class DefaultActionsTemplate {
                 {   // Action to insert new reference to a concept
                     activeInBoxRoles: ["${Roles.newConceptReferencePart(reference)}"],
                     trigger: "${trigger}",
-                    action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.PiEditor}): ${Names.PiElement} | null => {
+                    action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
                         const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                        const newBase: ${Names.PiElementReference}<${Names.classifier(referredConcept)}> = ${Names.PiElementReference}.create<${Names.classifier(referredConcept)}>("", null);
+                        const newBase: ${Names.FreNodeReference}<${Names.classifier(referredConcept)}> = ${Names.FreNodeReference}.create<${Names.classifier(referredConcept)}>("", null);
                         parent.${reference.name}.push(newBase);
                         return newBase.referred;
                     }
@@ -157,7 +157,7 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    customActionForParts(language: FreLanguage, editorDef: PiEditUnit): string {
+    customActionForParts(language: FreLanguage, editorDef: FreEditUnit): string {
         let result = "";
         // Nothing to do for the moment
         return result;

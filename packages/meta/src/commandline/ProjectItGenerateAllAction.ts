@@ -1,8 +1,8 @@
 import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator";
 import { PiInterpreterDef } from "../interpretergen/metalanguage/PiInterpreterDef";
 import { FreLanguage } from "../languagedef/metalanguage";
-import { PiEditUnit } from "../editordef/metalanguage";
-import { PiEditParser } from "../editordef/parser/PiEditParser";
+import { FreEditUnit } from "../editordef/metalanguage";
+import { FreEditParser } from "../editordef/parser/FreEditParser";
 import { FileWatcher } from "../utils/generation/FileWatcher";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
@@ -161,7 +161,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     private generateEditorAndParser = () => {
         LOG2USER.info("Generating editor, reader and writer");
-        let editor: PiEditUnit = null;
+        let editor: FreEditUnit = null;
         try {
             this.editorGenerator.outputfolder = this.outputFolder;
             this.editorGenerator.language = this.language;
@@ -169,7 +169,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.parserGenerator.language = this.language;
 
             if (this.editFiles.length > 0) {
-                editor = new PiEditParser(this.language).parseMulti(this.editFiles);
+                editor = new FreEditParser(this.language).parseMulti(this.editFiles);
             } else {
                 editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
             }

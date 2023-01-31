@@ -1,30 +1,30 @@
-import { FreBinaryExpressionConcept, FreLanguage } from "../../languagedef/metalanguage";
-import { Checker, Names, ParseLocationUtil, PiParser } from "../../utils";
-import { setCurrentFileName as editFileName } from "./PiEditCreators";
+import { FreLanguage } from "../../languagedef/metalanguage";
+import { Names, ParseLocationUtil, PiParser } from "../../utils";
+import { setCurrentFileName as editFileName } from "./FreEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
-import { ExtraClassifierInfo, PiEditProjectionGroup, PiEditUnit } from "../metalanguage/PiEditDefLang";
-import { PiEditChecker } from "../metalanguage/PiEditChecker";
+import { ExtraClassifierInfo, FreEditProjectionGroup, FreEditUnit } from "../metalanguage/FreEditDefLang";
+import { FreEditChecker } from "../metalanguage/FreEditChecker";
 
-const editorParser = require("./PiEditGrammar");
+const editorParser = require("./FreEditGrammar");
 
-export class PiEditParser extends PiParser<PiEditUnit> {
+export class FreEditParser extends PiParser<FreEditUnit> {
     language: FreLanguage;
 
     constructor(language: FreLanguage) {
         super();
         this.language = language;
         this.parser = editorParser;
-        this.checker = new PiEditChecker(language);
+        this.checker = new FreEditChecker(language);
     }
 
-    protected merge(submodels: PiEditUnit[]): PiEditUnit {
+    protected merge(submodels: FreEditUnit[]): FreEditUnit {
         if (submodels.length > 0) {
-            const result: PiEditUnit = submodels[0];
+            const result: FreEditUnit = submodels[0];
 
             // we merge all edit files based on the name of the 'editor'
             // same name => all info is stored in the same group
             // therefore we build a map of projection groups by name
-            const projectionGroupsByName: Map<string, PiEditProjectionGroup> = new Map<string, PiEditProjectionGroup>();
+            const projectionGroupsByName: Map<string, FreEditProjectionGroup> = new Map<string, FreEditProjectionGroup>();
             // add the groups from the first submodel (should be a single group)
             result.projectiongroups.forEach(group => {
                 projectionGroupsByName.set(group.name, group);
@@ -91,11 +91,11 @@ export class PiEditParser extends PiParser<PiEditUnit> {
         }
     }
 
-    private mergeExtraInformation(result: PiEditUnit) {
+    private mergeExtraInformation(result: FreEditUnit) {
         // first make sure there is a default projection group
         let defaultGroup = result.getDefaultProjectiongroup();
         if (!defaultGroup) {
-            defaultGroup = new PiEditProjectionGroup();
+            defaultGroup = new FreEditProjectionGroup();
             defaultGroup.name = Names.defaultProjectionName;
             result.projectiongroups.push(defaultGroup);
         }

@@ -1,35 +1,35 @@
 import { FreBinaryExpressionConcept, FreClassifier, FreLanguage, FreLimitedConcept } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker, MetaLogger } from "../../utils";
-import { PiEditParser } from "../../editordef/parser/PiEditParser";
+import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import {
     ListJoinType,
-    PiEditClassifierProjection,
-    PiEditProjection, PiEditProjectionDirection,
-    PiEditPropertyProjection,
-    PiEditUnit
+    FreEditClassifierProjection,
+    FreEditProjection, FreEditProjectionDirection,
+    FreEditPropertyProjection,
+    FreEditUnit
 } from "../../editordef/metalanguage";
 import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
 
 describe("Checking PiEditUnit: ", () => {
     const testdir = "src/__tests__/editor-tests/correctDefFiles/";
-    let parser: PiEditParser;
+    let parser: FreEditParser;
     let language: FreLanguage;
-    let checker: Checker<PiEditUnit>;
+    let checker: Checker<FreEditUnit>;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();
 
-    function readFile(parseFile: string): PiEditUnit {
+    function readFile(parseFile: string): FreEditUnit {
         // read the language file (.ast)
         try {
             language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
-            parser = new PiEditParser(language);
+            parser = new FreEditParser(language);
             checker = parser.checker;
         } catch (e) {
             console.log("Language could not be read");
         }
         // read the .edit file
-        let editor: PiEditUnit;
+        let editor: FreEditUnit;
         try {
             editor = parser.parse(parseFile);
         } catch (e) {
@@ -51,12 +51,12 @@ describe("Checking PiEditUnit: ", () => {
         expect(editor.language).toEqual(language);
         expect(editor.getDefaultProjectiongroup()).not.toBeNull();
         language.concepts.filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept)).forEach(c => {
-            const projections: PiEditClassifierProjection[] = editor.findProjectionsForType(c);
+            const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(c);
             expect(projections).not.toBeNull();
             expect(projections[0]).not.toBeNull();
         });
         language.units.forEach(u => {
-            const projections: PiEditClassifierProjection[] = editor.findProjectionsForType(u);
+            const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(u);
             expect(projections).not.toBeNull();
             expect(projections[0]).not.toBeNull();
         });
@@ -70,16 +70,16 @@ describe("Checking PiEditUnit: ", () => {
         classifiersToTest.push(...language.units);
 
         classifiersToTest.forEach(c => {
-            const projections: PiEditClassifierProjection[] = editor.findProjectionsForType(c);
+            const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(c);
             expect(projections).not.toBe([]);
             projections.forEach(proj => {
-                if (proj instanceof PiEditProjection) {
+                if (proj instanceof FreEditProjection) {
                     proj.lines.forEach(line => {
                         line.items.forEach(item => {
-                            if (item instanceof PiEditPropertyProjection && item.property.referred.isList) {
+                            if (item instanceof FreEditPropertyProjection && item.property.referred.isList) {
                                 // the following tests the defaults added by DefaultEditorGenerator
                                 expect(item.listInfo).not.toBeNull();
-                                expect(item.listInfo.direction).toBe(PiEditProjectionDirection.Vertical);
+                                expect(item.listInfo.direction).toBe(FreEditProjectionDirection.Vertical);
                                 expect(item.listInfo.joinType).toBe(ListJoinType.Separator);
                                 expect(item.listInfo.joinText).toBe("");
                                 expect(item.listInfo.isTable).toBe(false);
@@ -101,14 +101,14 @@ describe("Checking PiEditUnit: ", () => {
         // do the test
         classifiersToTest.forEach(c => {
             // find all property items in all projections of c
-            const propItems: PiEditPropertyProjection[] = [];
-            const projections: PiEditClassifierProjection[] = editor.findProjectionsForType(c);
+            const propItems: FreEditPropertyProjection[] = [];
+            const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(c);
             expect(projections).not.toBe([]);
             projections.forEach(proj => {
-                if (proj instanceof PiEditProjection) {
+                if (proj instanceof FreEditProjection) {
                     proj.lines.forEach(line => {
                         line.items.forEach(item => {
-                            if (item instanceof PiEditPropertyProjection) {
+                            if (item instanceof FreEditPropertyProjection) {
                                 propItems.push(item);
                             }
                         })
@@ -117,7 +117,7 @@ describe("Checking PiEditUnit: ", () => {
             });
             // check the property items against the list properties of c
             c.allProperties().filter(prop => prop.isList).forEach(prop => {
-               const found: PiEditPropertyProjection[] = propItems.filter(item => item.property.referred === prop);
+               const found: FreEditPropertyProjection[] = propItems.filter(item => item.property.referred === prop);
                found.forEach(item => {
                    // there are projections of this property, see if they are lists
                    expect(item.listInfo).not.toBeNull();
@@ -125,7 +125,7 @@ describe("Checking PiEditUnit: ", () => {
             });
             // check the property items against the non-list properties of c
             c.allProperties().filter(prop => !prop.isList).forEach(prop => {
-                const found: PiEditPropertyProjection[] = propItems.filter(item => item.property.referred === prop);
+                const found: FreEditPropertyProjection[] = propItems.filter(item => item.property.referred === prop);
                 found.forEach(item => {
                     // there are projections of this property, see if they are not lists
                     expect(item.listInfo).toBeNull();
@@ -146,8 +146,8 @@ describe("Checking PiEditUnit: ", () => {
                 // property type should have a non-table projection
                 const propType = prop.type;
                 if (!prop.isPrimitive && prop.isPart && !(propType instanceof FreLimitedConcept)) {
-                    const projections: PiEditClassifierProjection[] = editor.findProjectionsForType(propType);
-                    const xx = projections.find(proj => proj instanceof PiEditProjection);
+                    const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(propType);
+                    const xx = projections.find(proj => proj instanceof FreEditProjection);
                     // if (!xx)
                     // console.log("for none for prop '" + prop.name);
                     expect(xx).not.toBeNull();
@@ -161,16 +161,16 @@ describe("Checking PiEditUnit: ", () => {
         const editor = readFile(testdir + "test2.edit");
 
         // test the first boolean prop, with just one keyword present
-        let projections: PiEditClassifierProjection[] = editor.getDefaultProjectiongroup().findProjectionsForType(language.findClassifier("AAAAAA"));
+        let projections: FreEditClassifierProjection[] = editor.getDefaultProjectiongroup().findProjectionsForType(language.findClassifier("AAAAAA"));
         expect(projections).not.toBeNull();
-        let first: PiEditClassifierProjection = projections[0];
+        let first: FreEditClassifierProjection = projections[0];
         expect(first).not.toBeNull();
-        if (first instanceof PiEditProjection ) {
+        if (first instanceof FreEditProjection ) {
             // find the projection of the boolean property
-            let myBoolProjection: PiEditPropertyProjection = null;
+            let myBoolProjection: FreEditPropertyProjection = null;
             first.lines.forEach(line => {
                 line.items.forEach(item => {
-                    if (item instanceof PiEditPropertyProjection && item.property.name === "AAprop5") {
+                    if (item instanceof FreEditPropertyProjection && item.property.name === "AAprop5") {
                         myBoolProjection = item;
                     }
                 });
@@ -186,12 +186,12 @@ describe("Checking PiEditUnit: ", () => {
         expect(projections).not.toBeNull();
         first = projections[0];
         expect(first).not.toBeNull();
-        if (first instanceof PiEditProjection ) {
+        if (first instanceof FreEditProjection ) {
             // find the projection of the boolean property
-            let myBoolProjection: PiEditPropertyProjection = null;
+            let myBoolProjection: FreEditPropertyProjection = null;
             first.lines.forEach(line => {
                 line.items.forEach(item => {
-                    if (item instanceof PiEditPropertyProjection && item.property.name === "BBprop5") {
+                    if (item instanceof FreEditPropertyProjection && item.property.name === "BBprop5") {
                         myBoolProjection = item;
                     }
                 });

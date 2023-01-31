@@ -4,14 +4,14 @@ import { Names, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
 export class FreonCustomTyperPartTemplate {
     generateCustomTyperPart(language: FreLanguage, relativePath: string): string {
         // const allLangConcepts: string = Names.allConcepts(language);
-        const typerInterfaceName: string = Names.FreonTyperPart;
+        const typerInterfaceName: string = Names.FreTyperPart;
         const generatedClassName: string = Names.customTyper(language);
 
         // TODO add comments to generated class
         // todo remove commented statements
         // Template starts here
         return `
-        import { ${Names.PiElement}, ${Names.FreType}, FreTyper } from "${PROJECTITCORE}";
+        import { ${Names.FreNode}, ${Names.FreType}, FreTyper } from "${PROJECTITCORE}";
         
         /**
          * Class '${generatedClassName}' is meant to be a convient place to add any
@@ -20,11 +20,11 @@ export class FreonCustomTyperPartTemplate {
         export class ${generatedClassName} implements ${typerInterfaceName} {
             mainTyper: FreTyper; // ${Names.typer(language)};
         
-            isType(modelelement: ${Names.PiElement}): boolean | null {
+            isType(modelelement: ${Names.FreNode}): boolean | null {
                 return null;
             }
         
-            inferType(modelelement: ${Names.PiElement}): ${Names.FreType} | null {
+            inferType(modelelement: ${Names.FreNode}): ${Names.FreType} | null {
                 return null;
             }
         

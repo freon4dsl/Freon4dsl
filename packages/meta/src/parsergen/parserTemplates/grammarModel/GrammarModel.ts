@@ -86,7 +86,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
         import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
         import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
-        import { ${Names.PiNamedElement}, ${Names.FreParseLocation}, ${Names.PiElementReference} } from "@projectit/core";
+        import { ${Names.FreNamedNode}, ${Names.FreParseLocation}, ${Names.FreNodeReference} } from "@projectit/core";
         import { ${this.parts.map(part => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from ".";
          
         /**
@@ -210,7 +210,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
              * Generic method to transform references
              * ...PiElemRef = identifier;
              */
-            public piElemRef\<T extends ${Names.PiNamedElement}\>(branch: SPPTBranch, typeName: string) : ${Names.PiElementReference}\<T\> {
+            public piElemRef\<T extends ${Names.FreNamedNode}\>(branch: SPPTBranch, typeName: string) : ${Names.FreNodeReference}\<T\> {
                 let referred: string | string[] | T = this.${internalTransformNode}(branch);
                 if (this.getChildren(branch)?.length > 1) {
                     // its a path name
@@ -223,7 +223,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                     // throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
                     return null;
                 } else {
-                    return ${Names.PiElementReference}.create<T>(referred, typeName);
+                    return ${Names.FreNodeReference}.create<T>(referred, typeName);
                 }
             }
         
@@ -253,18 +253,18 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             /**
              * Generic method to transform lists of references
              */            
-            public ${internalTransformRefList}\<T extends ${Names.PiNamedElement}\>(branch: SPPTBranch, typeName: string, separator?: string): ${Names.PiElementReference}\<T\>[] {
-                let result: ${Names.PiElementReference}\<T\>[] = [];
+            public ${internalTransformRefList}\<T extends ${Names.FreNamedNode}\>(branch: SPPTBranch, typeName: string, separator?: string): ${Names.FreNodeReference}\<T\>[] {
+                let result: ${Names.FreNodeReference}\<T\>[] = [];
                 const children = this.getChildren(branch);
                 if (!!children) {
                     for (const child of children) {
                         let refName: any = this.${internalTransformNode}(child);
                         if (refName !== null && refName !== undefined) {
                             if (separator === null || separator === undefined) {
-                                result.push(${Names.PiElementReference}.create<T>(refName, typeName));
+                                result.push(${Names.FreNodeReference}.create<T>(refName, typeName));
                             } else {
                                 if (refName !== separator) {
-                                    result.push(${Names.PiElementReference}.create<T>(refName, typeName));
+                                    result.push(${Names.FreNodeReference}.create<T>(refName, typeName));
                                 }
                             }
                         }
@@ -273,8 +273,8 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 return result;
             }
             
-            public location(branch: SPPTBranch): ${Names.PiParseLocation} {
-                const location = ${Names.PiParseLocation}.create({
+            public location(branch: SPPTBranch): ${Names.FreParseLocation} {
+                const location = ${Names.FreParseLocation}.create({
                     filename: this.sourceName,
                     line: branch.location.line,
                     column: branch.location.column

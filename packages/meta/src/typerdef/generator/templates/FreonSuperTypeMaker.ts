@@ -69,7 +69,7 @@ export class FreonSuperTypeMaker {
         let allRules: string[] = [];
         // combine the sub-entries into one
         allRules.push(`if (${typevarName}.$typename === "AstType") {
-                        const elem: ${Names.PiElement} = (type as AstType).astElement;
+                        const elem: ${Names.FreNode} = (type as AstType).astElement;
                         ${astSubRules.map(r => r).join(" else ")}${astSubRules.length > 0 ? `else {` : ``}
                             return [];
                         ${astSubRules.length > 0 ? `}` : ``}

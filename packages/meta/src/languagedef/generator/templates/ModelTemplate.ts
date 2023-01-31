@@ -24,7 +24,7 @@ export class ModelTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            export class ${myName} extends ${extendsClass} implements ${Names.PiModel} {     
+            export class ${myName} extends ${extendsClass} implements ${Names.FreModel} {     
             
                 ${ConceptUtils.makeStaticCreateMethod(modelDescription, myName)}
                                       

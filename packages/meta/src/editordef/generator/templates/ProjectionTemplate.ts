@@ -1,10 +1,10 @@
 import {
     BoolKeywords, ListInfo, ListJoinType,
-    PiEditClassifierProjection,
-    PiEditProjection, PiEditProjectionDirection,
-    PiEditProjectionItem,
-    PiEditProjectionLine, PiEditProjectionText, PiEditPropertyProjection, PiEditSuperProjection, PiEditTableProjection,
-    PiEditUnit, PiOptionalPropertyProjection
+    FreEditClassifierProjection,
+    FreEditProjection, FreEditProjectionDirection,
+    FreEditProjectionItem,
+    FreEditProjectionLine, FreEditProjectionText, FreEditPropertyProjection, FreEditSuperProjection, FreEditTableProjection,
+    FreEditUnit, FreOptionalPropertyProjection
 } from "../../metalanguage";
 import {
     FreBinaryExpressionConcept,
@@ -41,9 +41,9 @@ export class ProjectionTemplate {
     private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being usedknownBoxProjections
     private supersUsed: FreClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
     // To be able to add a projections for showing/hiding brakets to binary expression, this dummy projection is used.
-    private static dummyProjection: PiEditProjection = new PiEditProjection();
+    private static dummyProjection: FreEditProjection = new FreEditProjection();
 
-    setStandardBooleanKeywords(editorDef: PiEditUnit) {
+    setStandardBooleanKeywords(editorDef: FreEditUnit) {
         // get the standard labels for true and false
         const stdLabels: BoolKeywords = editorDef.getDefaultProjectiongroup().standardBooleanProjection;
         if (!!stdLabels) {
@@ -52,17 +52,17 @@ export class ProjectionTemplate {
         }
     }
 
-    generateBoxProvider(language: FreLanguage, concept: FreClassifier, editDef: PiEditUnit, extraClassifiers: FreClassifier[], relativePath: string): string {
+    generateBoxProvider(language: FreLanguage, concept: FreClassifier, editDef: FreEditUnit, extraClassifiers: FreClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        this.coreImports.push(...['Box', 'BoxUtil', 'BoxFactory', Names.PiElement, 'FreBoxProvider', 'FreProjectionHandler', Names.FreLanguage]);
+        this.coreImports.push(...['Box', 'BoxUtil', 'BoxFactory', Names.FreNode, 'FreBoxProvider', 'FreProjectionHandler', Names.FreLanguage]);
 
         // see which projections there are for this concept
         // myProjections: all non table projections
         // myTableProjections: all table projections
-        const myBoxProjections: PiEditClassifierProjection[] = editDef.findProjectionsForType(concept).filter(proj => !(proj instanceof PiEditTableProjection));
-        const myTableProjections: PiEditTableProjection[] = editDef.findTableProjectionsForType(concept);
-        const allProjections: PiEditClassifierProjection[] = [];
+        const myBoxProjections: FreEditClassifierProjection[] = editDef.findProjectionsForType(concept).filter(proj => !(proj instanceof FreEditTableProjection));
+        const myTableProjections: FreEditTableProjection[] = editDef.findTableProjectionsForType(concept);
+        const allProjections: FreEditClassifierProjection[] = [];
         ListUtil.addListIfNotPresent(allProjections, myBoxProjections);
         ListUtil.addListIfNotPresent(allProjections, myTableProjections);
 
@@ -72,7 +72,7 @@ export class ProjectionTemplate {
         if (concept instanceof FreBinaryExpressionConcept) {
             isBinExp = true;
             symbol = editDef.getDefaultProjectiongroup().findExtrasForType(concept).symbol;
-            this.coreImports.push(...['createDefaultBinaryBox', 'isFreBinaryExpression', Names.PiBinaryExpression]);
+            this.coreImports.push(...['createDefaultBinaryBox', 'isFreBinaryExpression', Names.FreBinaryExpression]);
             this.configImports.push(Names.environment(language));
             // add the projection to show/hide brackets
             ProjectionTemplate.dummyProjection.name = Names.brackets;
@@ -123,7 +123,7 @@ export class ProjectionTemplate {
                      */
                     private getDefault(): Box {
                         return createDefaultBinaryBox(
-                            this._element as ${Names.PiBinaryExpression}, 
+                            this._element as ${Names.FreBinaryExpression}, 
                             "${symbol}", 
                             ${Names.environment(language)}.getInstance().editor, 
                             this.mainHandler
@@ -183,7 +183,7 @@ export class ProjectionTemplate {
              * on the projections that are currently selected by the user.
              * The top of the tree of boxes is always a box of type ElementBox, which is 
              * a box that will never be rendered itself, only its content will. Thus, we 
-             * have a stable entry in the complete box tree for every ${Names.PiElement} node.
+             * have a stable entry in the complete box tree for every ${Names.FreNode} node.
              */       
             export class ${Names.boxProvider(concept)} extends FreBoxProvider {
                 ${coreText}
@@ -235,7 +235,7 @@ export class ProjectionTemplate {
                 }`;
     }
 
-    private generateTableProjection(language: FreLanguage, concept: FreClassifier, projection: PiEditTableProjection) {
+    private generateTableProjection(language: FreLanguage, concept: FreClassifier, projection: FreEditTableProjection) {
         // TODO Check whether 999 argument to generateItem()n should be different.
         if (!!projection) {
             let hasHeaders: boolean = false;
@@ -260,9 +260,9 @@ export class ProjectionTemplate {
         }
     }
 
-    private generateProjectionForClassifier(language: FreLanguage, concept: FreClassifier, projection: PiEditClassifierProjection): string {
+    private generateProjectionForClassifier(language: FreLanguage, concept: FreClassifier, projection: FreEditClassifierProjection): string {
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        if (projection instanceof PiEditProjection) {
+        if (projection instanceof FreEditProjection) {
             // const elementVarName = Roles.elementVarName(concept);
             const elementVarName = `(this._element as ${Names.classifier(concept)})`;
             let result = this.generateLines(projection.lines, elementVarName, concept.name, language, 1);
@@ -280,12 +280,12 @@ export class ProjectionTemplate {
                     return ${result};
                 }`;
             }
-            // } else if (projection instanceof PiEditTableProjection) => should not occur. Filtered out of 'allClassifiersWithProjection'
+            // } else if (projection instanceof FreEditTableProjection) => should not occur. Filtered out of 'allClassifiersWithProjection'
         }
         return '';
     }
 
-    private generateLines(lines: PiEditProjectionLine[], elementVarName: string, boxLabel: string, language: FreLanguage, topIndex: number) {
+    private generateLines(lines: FreEditProjectionLine[], elementVarName: string, boxLabel: string, language: FreLanguage, topIndex: number) {
         let result: string = "";
         // do all lines, separate them with a comma
         lines.forEach((line, index) => {
@@ -306,7 +306,7 @@ export class ProjectionTemplate {
         return result;
     }
 
-    private generateLine(line: PiEditProjectionLine, elementVarName: string, index: number, boxLabel: string, language: FreLanguage, topIndex: number): string {
+    private generateLine(line: FreEditProjectionLine, elementVarName: string, index: number, boxLabel: string, language: FreLanguage, topIndex: number): string {
         let result: string = "";
         if (line.isEmpty()) {
             ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
@@ -332,7 +332,7 @@ export class ProjectionTemplate {
         return result;
     }
 
-    private generateItem(item: PiEditProjectionItem,
+    private generateItem(item: FreEditProjectionItem,
                          elementVarName: string,
                          lineIndex: number,
                          itemIndex: number,
@@ -340,23 +340,23 @@ export class ProjectionTemplate {
                          language: FreLanguage,
                          topIndex: number): string {
         let result: string = "";
-        if (item instanceof PiEditProjectionText) {
+        if (item instanceof FreEditProjectionText) {
             ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
             result += ` BoxUtil.labelBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "top-${topIndex}-line-${lineIndex}-item-${itemIndex}") `;
-        } else if (item instanceof PiOptionalPropertyProjection) {
+        } else if (item instanceof FreOptionalPropertyProjection) {
             result += this.generateOptionalProjection(item, elementVarName, mainBoxLabel, language);
-        } else if (item instanceof PiEditPropertyProjection) {
-            // Note: this condition must come after PiOptionalPropertyProjection,
-            // because PiOptionalPropertyProjection is a subclass of PiEditPropertyProjection
+        } else if (item instanceof FreEditPropertyProjection) {
+            // Note: this condition must come after FreOptionalPropertyProjection,
+            // because FreOptionalPropertyProjection is a subclass of FreEditPropertyProjection
             result += this.generatePropertyProjection(item, elementVarName, mainBoxLabel, language);
-        } else if (item instanceof PiEditSuperProjection) {
+        } else if (item instanceof FreEditSuperProjection) {
             result += this.generateSuperProjection(item);
         }
         return result;
     }
 
-    private generateOptionalProjection(optional: PiOptionalPropertyProjection, elementVarName: string, mainBoxLabel: string, language: FreLanguage): string {
-        const propertyProjection: PiEditPropertyProjection = optional.findPropertyProjection();
+    private generateOptionalProjection(optional: FreOptionalPropertyProjection, elementVarName: string, mainBoxLabel: string, language: FreLanguage): string {
+        const propertyProjection: FreEditPropertyProjection = optional.findPropertyProjection();
         if (!!propertyProjection) {
             const optionalPropertyName = propertyProjection.property.name;
             const myLabel = `${mainBoxLabel}-optional-${optionalPropertyName}`;
@@ -386,7 +386,7 @@ export class ProjectionTemplate {
      * @param language
      * @private
      */
-    private generatePropertyProjection(item: PiEditPropertyProjection, elementVarName: string, mainLabel: string, language: FreLanguage) {
+    private generatePropertyProjection(item: FreEditPropertyProjection, elementVarName: string, mainLabel: string, language: FreLanguage) {
         let result: string = "";
         const property: FreProperty = item.property.referred;
         if (property instanceof FrePrimitiveProperty) {
@@ -429,11 +429,11 @@ export class ProjectionTemplate {
      * @param language          The language for which this projection is made
      * @private
      */
-    private generatePropertyAsTable(orientation: PiEditProjectionDirection, property: FreConceptProperty, elementVarName: string, language: FreLanguage): string {
+    private generatePropertyAsTable(orientation: FreEditProjectionDirection, property: FreConceptProperty, elementVarName: string, language: FreLanguage): string {
         ListUtil.addIfNotPresent(this.coreImports, "TableUtil");
         ListUtil.addIfNotPresent(this.configImports, Names.environment(language));
         // return the projection based on the orientation of the table
-        if (orientation === PiEditProjectionDirection.Vertical) {
+        if (orientation === FreEditProjectionDirection.Vertical) {
             return `TableUtil.tableBoxColumnOriented(
                 ${elementVarName},
                 ${elementVarName}.${property.name},
@@ -457,10 +457,10 @@ export class ProjectionTemplate {
      * @param language
      * @private
      */
-    private generatePartAsList(item: PiEditPropertyProjection, propertyConcept: FreConceptProperty, elementVarName: string, language: FreLanguage) {
+    private generatePartAsList(item: FreEditPropertyProjection, propertyConcept: FreConceptProperty, elementVarName: string, language: FreLanguage) {
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
         let joinEntry = this.getJoinEntry(item.listInfo);
-        if (item.listInfo.direction === PiEditProjectionDirection.Vertical) {
+        if (item.listInfo.direction === FreEditProjectionDirection.Vertical) {
             return `BoxUtil.verticalPartListBox(${elementVarName}, ${elementVarName}.${item.property.name}, "${propertyConcept.name}", ${joinEntry}, this.mainHandler)`;
         } // else
         return `BoxUtil.horizontalPartListBox(${elementVarName}, ${elementVarName}.${item.property.name}, "${propertyConcept.name}", ${joinEntry}, this.mainHandler)`;
@@ -470,13 +470,13 @@ export class ProjectionTemplate {
         const featureType = Names.classifier(appliedFeature.type);
         ListUtil.addIfNotPresent(this.modelImports, featureType);
         ListUtil.addIfNotPresent(this.configImports, Names.environment(language));
-        ListUtil.addIfNotPresent(this.coreImports, Names.PiElementReference);
+        ListUtil.addIfNotPresent(this.coreImports, Names.FreNodeReference);
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
         return `BoxUtil.referenceBox(
                                 ${element},
                                 "${appliedFeature.name}",
                                 (selected: string) => {
-                                    ${element}.${appliedFeature.name} = ${Names.PiElementReference}.create<${featureType}>(
+                                    ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
                                        ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
                                             ${element},
                                             selected,
@@ -491,7 +491,7 @@ export class ProjectionTemplate {
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
         ListUtil.addIfNotPresent(this.configImports, Names.environment(language));
         let joinEntry = this.getJoinEntry(listJoin);
-        if (listJoin.direction === PiEditProjectionDirection.Vertical) {
+        if (listJoin.direction === FreEditProjectionDirection.Vertical) {
             return `BoxUtil.verticalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
         } // else
         return `BoxUtil.horizontalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
@@ -538,7 +538,7 @@ export class ProjectionTemplate {
 
     private listPrimitivePropertyProjection(property: FrePrimitiveProperty, element: string, boolInfo?: BoolKeywords, listInfo?: ListInfo): string {
         let direction: string = "verticalList";
-        if (!!listInfo && listInfo.direction === PiEditProjectionDirection.Horizontal) {
+        if (!!listInfo && listInfo.direction === FreEditProjectionDirection.Horizontal) {
             direction = "horizontalList";
         }
         // TODO also adjust role '..-hlist' to '..-vlist'?
@@ -554,7 +554,7 @@ export class ProjectionTemplate {
                         )`;
     }
 
-    private generateSuperProjection(item: PiEditSuperProjection) {
+    private generateSuperProjection(item: FreEditSuperProjection) {
         const myClassifier: FreClassifier = item.superRef.referred; // to avoid the lookup by '.referred' to happen more than once
         // indicate that the super method must be added and remember that a box provider for the super concept/interface must be created
         this.useSuper = true;

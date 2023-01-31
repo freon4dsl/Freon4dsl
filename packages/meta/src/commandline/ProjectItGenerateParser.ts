@@ -1,4 +1,4 @@
-import { PiEditParser } from "../editordef/parser/PiEditParser";
+import { FreEditParser } from "../editordef/parser/FreEditParser";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
@@ -23,7 +23,7 @@ export class ProjectItGenerateParser extends ProjectItGeneratePartAction {
         this.parserGenerator.outputfolder = this.outputFolder;
         this.parserGenerator.language = this.language;
 
-        const editor = new PiEditParser(this.language).parseMulti(this.editFiles);
+        const editor = new FreEditParser(this.language).parseMulti(this.editFiles);
         // This command is being used to generate, specifically and only,
         // the reader/writer couple. Therefore we do not generate a default editor when
         // no editor definition is found.

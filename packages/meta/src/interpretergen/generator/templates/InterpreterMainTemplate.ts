@@ -15,17 +15,17 @@ export class InterpreterMainTemplate {
     public interpreterMain(language: FreLanguage, interpreterDef: PiInterpreterDef): string {
         return `// Generated my Freon, will be overwritten with every generation.
         import {
-            ConceptFunction, ${Names.FreonInterpreter},
+            ConceptFunction, ${Names.FreInterpreter},
             IMainInterpreter,
             InterpreterContext,
             InterpreterTracer,
-            MainInterpreter, OwningPropertyFunction, ${Names.PiElement}, RtObject, RtError
+            MainInterpreter, OwningPropertyFunction, ${Names.FreNode}, RtObject, RtError
         } from "@projectit/core";
         import {  ${Names.interpreterInitname(language)} } from "./gen/${Names.interpreterInitname(language)}";
         
         const getPropertyFunction: OwningPropertyFunction = (node: Object) => {
-            const index = (node as ${Names.PiElement}).freOwnerDescriptor().propertyIndex;
-            return (node as ${Names.PiElement}).freOwnerDescriptor().propertyName + (index !== undefined ? "[" + index + "]" : "");
+            const index = (node as ${Names.FreNode}).freOwnerDescriptor().propertyIndex;
+            return (node as ${Names.FreNode}).freOwnerDescriptor().propertyName + (index !== undefined ? "[" + index + "]" : "");
         };
 
         /**
@@ -36,7 +36,7 @@ export class InterpreterMainTemplate {
             if(node === undefined) {
                 return "";
             }
-            return (node as ${Names.PiElement}).freLanguageConcept();
+            return (node as ${Names.FreNode}).freLanguageConcept();
         }
 
         /**
@@ -44,7 +44,7 @@ export class InterpreterMainTemplate {
          * Sets the functions used to access the expression tree.
          * Ensures all internal interpreter state is cleaned when creating a new instance.
          */
-        export class ${Names.interpreterName(language)} implements ${Names.FreonInterpreter}{
+        export class ${Names.interpreterName(language)} implements ${Names.FreInterpreter}{
             private static  main: IMainInterpreter = null;
         
             constructor() {

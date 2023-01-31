@@ -4,7 +4,7 @@ import { Names, PROJECTITCORE, LangUtil, GenerationUtil } from "../../../utils";
 export class LanguageTemplate {
 
     generateLanguage(language: FreLanguage): string {
-        return `import { ${Names.FreLanguage}, Model, ModelUnit, Property, Concept, Interface, ${Names.PiElementReference} } from "${PROJECTITCORE}";
+        return `import { ${Names.FreLanguage}, Model, ModelUnit, Property, Concept, Interface, ${Names.FreNodeReference} } from "${PROJECTITCORE}";
         
             import { ${Names.classifier(language.modelConcept)}, ${language.units.map(unit =>
             `${Names.classifier(unit)}`).join(", ") }, ${language.concepts.map(concept =>
@@ -26,7 +26,7 @@ export class LanguageTemplate {
                     `${Names.FreLanguage}.getInstance().addInterface(describe${Names.interface(intface)}());`
                 ).join("\n")}
                 ${Names.FreLanguage}.getInstance().addReferenceCreator( (name: string, type: string) => {
-                    return (!!name ? ${Names.PiElementReference}.create(name, type) : null);
+                    return (!!name ? ${Names.FreNodeReference}.create(name, type) : null);
                 });
             }
 

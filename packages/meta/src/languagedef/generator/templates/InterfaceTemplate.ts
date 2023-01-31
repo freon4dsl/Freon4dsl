@@ -29,14 +29,14 @@ export class InterfaceTemplate {
 
         // Template starts here
         return `
-            import { ${Names.PiElement} ${hasReferences ? `, ${Names.PiElementReference}` : ""} } from "${PROJECTITCORE}";
+            import { ${Names.FreNode} ${hasReferences ? `, ${Names.FreNodeReference}` : ""} } from "${PROJECTITCORE}";
             import { ${imports.join(", ")} } from "./internal";
 
             /**
              * Interface ${myName} is the implementation of the interface with the same name in the language definition file.
              */              
             export ${abstract} interface ${myName} 
-                extends ${extendsInterfaces.length > 0 ? `${extendsInterfaces.map(int => `${int}`).join(", ")}` : `${Names.PiElement}`} 
+                extends ${extendsInterfaces.length > 0 ? `${extendsInterfaces.map(int => `${int}`).join(", ")}` : `${Names.FreNode}`} 
             {               
                 ${intf.primProperties.map(p => this.generatePrimitiveProperty(p)).join("\n")}
                 ${intf.parts().map(p => this.generatePartProperty(p)).join("\n")}
@@ -60,6 +60,6 @@ export class InterfaceTemplate {
     generateReferenceProperty(property: FreConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : ${Names.PiElementReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
+        return `${property.name} : ${Names.FreNodeReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
     }
 }

@@ -38,7 +38,7 @@ export class ConceptTemplate {
         const implementsPi = (isExpression ? "FreExpressionNode" : (hasName ? "FreNamedNode" : "FreNode"));
         const needsObservable = concept.implementedPrimProperties().length > 0;
         const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
-            .concat(implementsPi).concat(["FreUtils", "FreParseLocation", "matchElementList", "matchPrimitiveList", "matchReferenceList"]).concat(hasReferences ? (Names.PiElementReference) : "");
+            .concat(implementsPi).concat(["FreUtils", "FreParseLocation", "matchElementList", "matchPrimitiveList", "matchReferenceList"]).concat(hasReferences ? (Names.FreNodeReference) : "");
         const metaType = Names.metaType(language);
         const modelImports = this.findModelImports(concept, myName, hasReferences);
         const intfaces = Array.from(
@@ -108,7 +108,7 @@ export class ConceptTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            export ${abstract} class ${myName} extends ${extendsClass} implements ${Names.PiBinaryExpression}${intfaces.map(imp => `, ${imp}`).join("")} {            
+            export ${abstract} class ${myName} extends ${extendsClass} implements ${Names.FreBinaryExpression}${intfaces.map(imp => `, ${imp}`).join("")} {            
                 ${(!isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
                 : ""}
                             
@@ -171,7 +171,7 @@ export class ConceptTemplate {
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const abstract = (concept.isAbstract ? "abstract" : "");
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([Names.PiNamedElement, Names.FreUtils, Names.FreParseLocation, "matchElementList", "matchPrimitiveList"]);
+        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([Names.FreNamedNode, Names.FreUtils, Names.FreParseLocation, "matchElementList", "matchPrimitiveList"]);
         const metaType = Names.metaType(language);
         const imports = this.findModelImports(concept, myName, false);
         const intfaces = Array.from(
@@ -189,7 +189,7 @@ export class ConceptTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            export ${abstract} class ${myName} extends ${extendsClass} implements ${Names.PiNamedElement}${intfaces.map(imp => `, ${imp}`).join("")}
+            export ${abstract} class ${myName} extends ${extendsClass} implements ${Names.FreNamedNode}${intfaces.map(imp => `, ${imp}`).join("")}
             {           
                 ${(!concept.isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
                 : ""}

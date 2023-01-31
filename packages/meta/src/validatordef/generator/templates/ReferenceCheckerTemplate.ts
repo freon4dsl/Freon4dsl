@@ -7,11 +7,11 @@ export class ReferenceCheckerTemplate {
 
     generateChecker(language: FreLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
-        const errorClassName: string = Names.PiError;
-        const errorSeverityName: string = Names.PiErrorSeverity;
+        const errorClassName: string = Names.FreError;
+        const errorSeverityName: string = Names.FreErrorSeverity;
         const checkerClassName: string = Names.referenceChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
-        const writerInterfaceName: string = Names.PiWriter;
+        const writerInterfaceName: string = Names.FreWriter;
         const overallTypeName: string = Names.allConcepts(language);
 
         // because 'createChecksOnNonOptionalParts' determines which concepts to import
@@ -25,7 +25,7 @@ export class ReferenceCheckerTemplate {
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.PiElementReference}, ${Names.PiNamedElement}, ${Names.LanguageEnvironment} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.FreNodeReference}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${PROJECTITCORE}";
         import { ${overallTypeName}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
@@ -46,22 +46,22 @@ export class ReferenceCheckerTemplate {
 
             ${allMethods}           
             
-            private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.PiElementReference}<${Names.PiNamedElement}>, propertyName: string, locationDescription: string) {
+            private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>, propertyName: string, locationDescription: string) {
                 const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
                 const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
-                        new ${Names.PiError}(                                       
+                        new ${Names.FreError}(                                       
                             \`Reference '\${referredElem.pathnameToString(this.refSeparator)}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.freLanguageConcept()}\`).join(", ")}]\`,
                                 modelelement,
                                 \`\${propertyName} of \${locationDescription}\`,
                             \`\${propertyName}\`,
-                            ${Names.PiErrorSeverity}.Error
+                            ${Names.FreErrorSeverity}.Error
                         )
                     );
                 } else {
                     this.errorList.push(
-                        new ${Names.PiError}(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, \`\${propertyName}\`, ${Names.PiErrorSeverity}.Error)
+                        new ${Names.FreError}(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, \`\${propertyName}\`, ${Names.FreErrorSeverity}.Error)
                     );
                 }
             }

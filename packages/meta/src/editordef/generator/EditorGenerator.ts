@@ -10,9 +10,9 @@ import {
     Names,
     STYLES_FOLDER
 } from "../../utils";
-import { PiEditUnit } from "../metalanguage";
+import { FreEditUnit } from "../metalanguage";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
-import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
+import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate } from "./templates";
 import { EditorDefTemplate } from "./templates";
 import { LOG2USER } from "../../utils";
 
@@ -25,7 +25,7 @@ export class EditorGenerator {
     protected stylesFolder: string;
     language: FreLanguage;
 
-    generate(editDef: PiEditUnit): void {
+    generate(editDef: FreEditUnit): void {
         if (isNullOrUndefined(this.language)) {
             LOGGER.error("Cannot generate editor because language is not set.");
             return;

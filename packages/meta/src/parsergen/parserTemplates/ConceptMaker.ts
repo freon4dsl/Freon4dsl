@@ -1,11 +1,11 @@
 import {
     ListJoinType,
-    PiEditProjection, PiEditProjectionGroup,
-    PiEditProjectionItem,
-    PiEditProjectionLine,
-    PiEditProjectionText,
-    PiEditPropertyProjection, PiEditSuperProjection,
-    PiOptionalPropertyProjection
+    FreEditProjection, FreEditProjectionGroup,
+    FreEditProjectionItem,
+    FreEditProjectionLine,
+    FreEditProjectionText,
+    FreEditPropertyProjection, FreEditSuperProjection,
+    FreOptionalPropertyProjection
 } from "../../editordef/metalanguage";
 import { FreBinaryExpressionConcept, FreClassifier, FreLimitedConcept, FrePrimitiveProperty, FrePrimitiveType, FreProperty } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
@@ -50,17 +50,17 @@ import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWi
 
 export class ConceptMaker {
     imports: FreClassifier[] = [];
-    private currentProjectionGroup: PiEditProjectionGroup = null;
+    private currentProjectionGroup: FreEditProjectionGroup = null;
     // namedProjections is the list of projections with a different name than the current projection group
     // this list is filled during the build of the template and should alwyas be the last to added
-    private namedProjections: PiEditProjection[] = [];
+    private namedProjections: FreEditProjection[] = [];
 
-    generateClassifiers(projectionGroup: PiEditProjectionGroup, conceptsUsed: FreClassifier[]): GrammarRule[] {
+    generateClassifiers(projectionGroup: FreEditProjectionGroup, conceptsUsed: FreClassifier[]): GrammarRule[] {
         this.currentProjectionGroup = projectionGroup;
         let rules: GrammarRule[] = [];
         for (const piConcept of conceptsUsed) {
             // all methods in this class depend on the fact that only non-table projections are passes as parameter!!
-            let projection: PiEditProjection = ParserGenUtil.findNonTableProjection(projectionGroup, piConcept);
+            let projection: FreEditProjection = ParserGenUtil.findNonTableProjection(projectionGroup, piConcept);
             if (!!projection) {
                 // generate a grammar rule entry
                 rules.push(this.generateProjection(piConcept, projection, false));
@@ -73,7 +73,7 @@ export class ConceptMaker {
         return rules;
     }
 
-    private generateProjection(piConcept: FreClassifier, projection: PiEditProjection, addName: boolean) {
+    private generateProjection(piConcept: FreClassifier, projection: FreEditProjection, addName: boolean) {
         let rule: ConceptRule;
         if (addName) {
             rule = new ConceptRule(piConcept, projection.name);
@@ -88,7 +88,7 @@ export class ConceptMaker {
         return rule;
     }
 
-    private doLine(line: PiEditProjectionLine, inOptionalGroup: boolean, isSingleEntry: boolean): RightHandSideEntry[] {
+    private doLine(line: FreEditProjectionLine, inOptionalGroup: boolean, isSingleEntry: boolean): RightHandSideEntry[] {
         const subs = this.addItems(line.items, inOptionalGroup, isSingleEntry);
         if (!!subs && !!subs[subs.length - 1] ) {
             // to manage the layout of the grammar, we set 'addNewLineToGrammar' of the last entry in the line
@@ -97,14 +97,14 @@ export class ConceptMaker {
         return subs;
     }
 
-    private addItems(list: PiEditProjectionItem[], inOptionalGroup: boolean, isSingleEntry: boolean): RightHandSideEntry[] {
+    private addItems(list: FreEditProjectionItem[], inOptionalGroup: boolean, isSingleEntry: boolean): RightHandSideEntry[] {
         let parts: RightHandSideEntry[] = [];
         if (!!list && list.length !== 1) {
             isSingleEntry = false;
         }
         if (!!list && list.length > 0) {
             list.forEach((item) => {
-                if (item instanceof PiOptionalPropertyProjection) {
+                if (item instanceof FreOptionalPropertyProjection) {
                     let subs: RightHandSideEntry[] = [];
                     let propIndex: number = 0; // the index in the list of parts in the optional group
                     let foundIndex: boolean = false;
@@ -122,14 +122,14 @@ export class ConceptMaker {
                         }
                     })
                     parts.push(new RHSOptionalGroup(item.property.referred, subs, propIndex));
-                } else if (item instanceof PiEditPropertyProjection) {
+                } else if (item instanceof FreEditPropertyProjection) {
                     const propPart = this.makePropPart(item, inOptionalGroup, isSingleEntry);
                     if (!!propPart) {
                         parts.push(propPart);
                     }
-                } else if (item instanceof PiEditProjectionText) {
+                } else if (item instanceof FreEditProjectionText) {
                     parts.push(...this.makeTextPart(item));
-                } else if (item instanceof PiEditSuperProjection) {
+                } else if (item instanceof FreEditSuperProjection) {
                     parts.push(...this.makeSuperParts(item, inOptionalGroup))
                 }
             });
@@ -137,7 +137,7 @@ export class ConceptMaker {
         return parts;
     }
 
-    private makePropPart(item: PiEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
+    private makePropPart(item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
         const prop: FreProperty = item.property.referred;
         let result: RHSPropEntry = null;
         if (!!prop) {
@@ -146,7 +146,7 @@ export class ConceptMaker {
             // take care of named projections
             let myProjName: string = null;
             if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
-                ListUtil.addIfNotPresent<PiEditProjection>(this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName));
+                ListUtil.addIfNotPresent<FreEditProjection>(this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName));
                 myProjName = item.projectionName;
             }
             //
@@ -182,7 +182,7 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeListProperty(prop: FreProperty, item: PiEditPropertyProjection, isSingleEntry: boolean): RHSPropEntry {
+    private makeListProperty(prop: FreProperty, item: FreEditPropertyProjection, isSingleEntry: boolean): RHSPropEntry {
         let result: RHSPropEntry;
         if (prop.isPart) {
             // (list, part, optionality not relevant)
@@ -231,7 +231,7 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeTextPart(item: PiEditProjectionText): RHSText[] {
+    private makeTextPart(item: FreEditProjectionText): RHSText[] {
         let result: RHSText[] = [];
         const trimmed = item.text.trim();
         let splitted: string[];
@@ -252,7 +252,7 @@ export class ConceptMaker {
         return result;
     }
 
-    private makePrimitiveProperty(prop: FrePrimitiveProperty, propType: FreClassifier, item: PiEditPropertyProjection, inOptionalGroup: boolean): RHSPropEntry {
+    private makePrimitiveProperty(prop: FrePrimitiveProperty, propType: FreClassifier, item: FreEditPropertyProjection, inOptionalGroup: boolean): RHSPropEntry {
         if (propType === FrePrimitiveType.boolean && !!item.boolInfo) {
             // note that lists of booleans can never have a boolean keyword projection
             if (!item.boolInfo.falseKeyword) {
@@ -303,10 +303,10 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeSuperParts(item: PiEditSuperProjection, inOptionalGroup: boolean): RightHandSideEntry[] {
+    private makeSuperParts(item: FreEditSuperProjection, inOptionalGroup: boolean): RightHandSideEntry[] {
         let subs: RightHandSideEntry[] = [];
         // find the projection that we need
-        let myProjection: PiEditProjection = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
+        let myProjection: FreEditProjection = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
         const isSingleEntry: boolean = (myProjection.lines.length !== 1 ? false : true);
         myProjection.lines.forEach(line => {
             subs.push(...this.addItems(line.items, inOptionalGroup, isSingleEntry));
@@ -314,7 +314,7 @@ export class ConceptMaker {
         return subs;
     }
 
-    private makeLimitedProp(prop: FreProperty, item: PiEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
+    private makeLimitedProp(prop: FreProperty, item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
         if (!prop.isList) {
             if (!prop.isOptional || inOptionalGroup) {
                 return new RHSLimitedRefEntry(prop);

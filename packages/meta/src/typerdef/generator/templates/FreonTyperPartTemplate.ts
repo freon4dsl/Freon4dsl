@@ -23,12 +23,12 @@ export class FreonTyperPartTemplate {
 
     private generateDefault(language: FreLanguage): string {
         // const allLangConcepts: string = Names.allConcepts(language);
-        const typerInterfaceName: string = Names.FreonTyperPart;
+        const typerInterfaceName: string = Names.FreTyperPart;
         const generatedClassName: string = Names.typerPart(language);
 
         // Template starts here
         return `
-        import { ${Names.PiElement}, ${Names.FreType}, FreTyper, FreCompositeTyper} from "${PROJECTITCORE}";
+        import { ${Names.FreNode}, ${Names.FreType}, FreTyper, FreCompositeTyper} from "${PROJECTITCORE}";
         
         export class ${generatedClassName} implements ${typerInterfaceName} {
             mainTyper: FreCompositeTyper;
@@ -37,7 +37,7 @@ export class FreonTyperPartTemplate {
              * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
              * @param modelelement
              */
-            public isType(modelelement: ${Names.PiElement}): boolean | null {
+            public isType(modelelement: ${Names.FreNode}): boolean | null {
                 return false;
             }
         
@@ -45,7 +45,7 @@ export class FreonTyperPartTemplate {
              * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
              * @param modelelement
              */
-            public inferType(modelelement: ${Names.PiElement}): ${Names.FreType} | null {
+            public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} | null {
                 return null;
             }
         
@@ -103,7 +103,7 @@ export class FreonTyperPartTemplate {
         const allLangConcepts: string = Names.allConcepts(language);
         ListUtil.addIfNotPresent(this.imports, allLangConcepts);
         const generatedClassName: string = Names.typerPart(language);
-        const typerInterfaceName: string = Names.FreonTyperPart;
+        const typerInterfaceName: string = Names.FreTyperPart;
         const equalsMaker: FreonTypeEqualsMaker = new FreonTypeEqualsMaker();
         const inferMaker: FreonTypeInferMaker = new FreonTypeInferMaker();
         const superTypeMaker: FreonSuperTypeMaker = new FreonSuperTypeMaker();
@@ -124,7 +124,7 @@ export class FreonTyperPartTemplate {
              * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
              * @param modelelement
              */
-            public isType(modelelement: ${Names.PiElement}): boolean | null {
+            public isType(modelelement: ${Names.FreNode}): boolean | null {
                 ${this.makeIsType(typerdef.types)}
             }
                         
@@ -132,7 +132,7 @@ export class FreonTyperPartTemplate {
              * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
              * @param modelelement
              */
-            public inferType(modelelement: ${Names.PiElement}): ${Names.FreType} | null {
+            public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} | null {
                 if (!modelelement) return null;
                 let result: ${Names.FreType} = null;
                 ${inferMaker.makeInferType(typerdef, allLangConcepts, rootType, "modelelement", this.importedClassifiers)}
@@ -208,7 +208,7 @@ export class FreonTyperPartTemplate {
                         
             ${inferMaker.extraMethods.map(meth => meth).join("\n\n")}
                       
-            private typeOf(myArg: ${Names.PiElement} | ${Names.PiElement}[]): ${Names.FreType} {
+            private typeOf(myArg: ${Names.FreNode} | ${Names.FreNode}[]): ${Names.FreType} {
                 let result: ${Names.FreType};
                 if (Array.isArray(myArg)) {
                     result = this.mainTyper.commonSuperType(myArg);
@@ -218,9 +218,9 @@ export class FreonTyperPartTemplate {
                 return result;
             }
             
-            private getElemFromAstType(type: ${Names.FreType}, metatype: string): ${Names.PiElement} {
+            private getElemFromAstType(type: ${Names.FreType}, metatype: string): ${Names.FreNode} {
                 if (type.$typename === "AstType") {
-                    const astElement: ${Names.PiElement} = (type as AstType).astElement;
+                    const astElement: ${Names.FreNode} = (type as AstType).astElement;
                     if (${Names.FreLanguage}.getInstance().metaConformsToType(astElement, metatype)) {
                         return astElement;
                     }
@@ -241,7 +241,7 @@ export class FreonTyperPartTemplate {
 
         });
 
-        const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.PiElement}, ${Names.FreLanguage}, ${Names.PiElementReference}, FreCommonSuperTypeUtil } from "${PROJECTITCORE}";
+        const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.FreNode}, ${Names.FreLanguage}, ${Names.FreNodeReference}, FreCommonSuperTypeUtil } from "${PROJECTITCORE}";
         import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}`;
 

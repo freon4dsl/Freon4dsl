@@ -39,7 +39,7 @@ export class Roles {
         if( concept instanceof FreBinaryExpressionConcept) {
             if( !!(concept.base.referred) ){
                 if( !(concept.base.referred instanceof FreBinaryExpressionConcept)){
-                    return "PiBinaryExpression" + "-" + property.name;
+                    return "FreBinaryExpression" + "-" + property.name;
                 }
             }
         }

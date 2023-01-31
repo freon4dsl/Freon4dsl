@@ -17,9 +17,9 @@ export class EnvironmentTemplate {
 
     generateEnvironment(language: FreLanguage, relativePath: string): string {
         return `
-        import { ${Names.PiEditor}, ${Names.PiEnvironment}, ${Names.PiReader}, 
-                    ${Names.FreTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, ${Names.LanguageEnvironment}, ${Names.FreProjectionHandler}
+        import { ${Names.FreEditor}, ${Names.FreEnvironment}, ${Names.FreReader}, 
+                    ${Names.FreTyper}, ${Names.FreValidator}, ${Names.FreStdlib}, 
+                    ${Names.FreWriter}, ${Names.FreInterpreter}, ${Names.FreScoperComposite}, ${Names.LanguageEnvironment}, ${Names.FreProjectionHandler}
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoperDef(language)}";
@@ -38,13 +38,13 @@ export class EnvironmentTemplate {
          * to use.
          * This class uses the singleton pattern to ensure that only one instance of the class is present.
          */
-        export class ${Names.environment(language)} implements ${Names.PiEnvironment} {       
-            private static environment: ${Names.PiEnvironment}; // the only instance of this class
+        export class ${Names.environment(language)} implements ${Names.FreEnvironment} {       
+            private static environment: ${Names.FreEnvironment}; // the only instance of this class
         
             /**
              * This method implements the singleton pattern
              */
-            public static getInstance(): ${Names.PiEnvironment}  {
+            public static getInstance(): ${Names.FreEnvironment}  {
                 if (this.environment === undefined || this.environment === null) {
                     this.environment = new ${Names.environment(language)}();
                     ${Names.LanguageEnvironment}.setInstance(this.environment);
@@ -58,7 +58,7 @@ export class EnvironmentTemplate {
             private constructor() {
                 const actions = new ${Names.actions(language)}();
                 const myComposite = new FreProjectionHandler();
-                this.editor = new ${Names.PiEditor}(myComposite, this, actions);
+                this.editor = new ${Names.FreEditor}(myComposite, this, actions);
                 initializeLanguage();
                 initializeProjections(myComposite);
                 initializeEditorDef();
@@ -78,14 +78,14 @@ export class EnvironmentTemplate {
              }  
                             
             // the parts of the language environment              
-            editor: ${Names.PiEditor};
+            editor: ${Names.FreEditor};
             scoper: ${Names.FreScoperComposite} = new ${Names.FreScoperComposite}("main");
             typer: ${Names.FreTyper} = new ${Names.FreTyper}("main"); 
-            stdlib: ${Names.PiStdlib} = ${Names.stdlib(language)}.getInstance();
-            validator: ${Names.PiValidator} = new ${Names.validator(language)}();
-            writer: ${Names.PiWriter} = new ${Names.writer(language)}();
-            reader: ${Names.PiReader} = new ${Names.reader(language)}();
-            interpreter: ${Names.FreonInterpreter} = new ${Names.interpreterName(language)};
+            stdlib: ${Names.FreStdlib} = ${Names.stdlib(language)}.getInstance();
+            validator: ${Names.FreValidator} = new ${Names.validator(language)}();
+            writer: ${Names.FreWriter} = new ${Names.writer(language)}();
+            reader: ${Names.FreReader} = new ${Names.reader(language)}();
+            interpreter: ${Names.FreInterpreter} = new ${Names.interpreterName(language)};
             languageName: string = "${language.name}";
             fileExtensions: Map<string, string> = new Map([
                 ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}

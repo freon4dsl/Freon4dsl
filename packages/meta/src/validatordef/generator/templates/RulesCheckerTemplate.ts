@@ -30,10 +30,10 @@ export class RulesCheckerTemplate {
 
     generateRulesChecker(language: FreLanguage, validdef: PiValidatorDef, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
-        const errorClassName: string = Names.PiError;
+        const errorClassName: string = Names.FreError;
         const checkerClassName: string = Names.rulesChecker(language);
         const typerInterfaceName: string = Names.FreTyper;
-        const writerInterfaceName: string = Names.PiWriter;
+        const writerInterfaceName: string = Names.FreWriter;
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const commentBefore = `/**
                                 * Checks 'modelelement' before checking its children.
@@ -42,7 +42,7 @@ export class RulesCheckerTemplate {
                                 */`;
         // the template starts here
         return `
-        import { ${errorClassName}, ${Names.PiErrorSeverity}, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.PiNamedElement}, ${Names.LanguageEnvironment} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${Names.FreErrorSeverity}, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
@@ -139,7 +139,7 @@ export class RulesCheckerTemplate {
     private makeSeverity(r: ValidationRule): string {
         // this method makes sure that we do not depend on the name of the severity to be the same as its value
         // e.g. FreErrorSeverity.NONE = "none",
-        let result: string = `${Names.PiErrorSeverity}.`
+        let result: string = `${Names.FreErrorSeverity}.`
         switch (r.severity.severity) {
             case FreErrorSeverity.Error: {
                 result += `Error`;
@@ -170,7 +170,7 @@ export class RulesCheckerTemplate {
             message = `"'${r.toFreString()}' is false"`;
         }
         return `if (!(${GenerationUtil.langExpToTypeScript(r.exp1)} ${r.comparator} ${GenerationUtil.langExpToTypeScript(r.exp2)})) {
-                    this.errorList.push( new ${Names.PiError}( ${message}, modelelement, ${locationdescription}, ${severity} ));   
+                    this.errorList.push( new ${Names.FreError}( ${message}, modelelement, ${locationdescription}, ${severity} ));   
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
     }
@@ -180,7 +180,7 @@ export class RulesCheckerTemplate {
             message = `"'" + ${GenerationUtil.langExpToTypeScript(r.property)} + "' is not a valid identifier"`;
         }
         return `if (!this.isValidName(${GenerationUtil.langExpToTypeScript(r.property)})) {
-                    this.errorList.push( new ${Names.PiError}( ${message}, modelelement, ${locationdescription}, ${severity} ));                         
+                    this.errorList.push( new ${Names.FreError}( ${message}, modelelement, ${locationdescription}, ${severity} ));                         
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
     }
@@ -190,7 +190,7 @@ export class RulesCheckerTemplate {
             message = `"List '${r.property.toFreString()}' may not be empty"`;
         }
         return `if (${GenerationUtil.langExpToTypeScript(r.property)}.length == 0) {
-                    this.errorList.push(new ${Names.PiError}(${message}, modelelement, ${locationdescription}, "${r.property.toFreString()}", ${severity}));
+                    this.errorList.push(new ${Names.FreError}(${message}, modelelement, ${locationdescription}, "${r.property.toFreString()}", ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
     }
@@ -201,7 +201,7 @@ export class RulesCheckerTemplate {
                          "] does not conform to " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2)})`;
         }
         return `if (!this.typer.conformsType(${GenerationUtil.langExpToTypeScript(r.type1)}, ${GenerationUtil.langExpToTypeScript(r.type2)})) {
-                    this.errorList.push(new ${Names.PiError}(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
+                    this.errorList.push(new ${Names.FreError}(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                  }`;
     }
@@ -220,7 +220,7 @@ export class RulesCheckerTemplate {
         return `const leftType${index} = this.typer.inferType(${leftElement});
             const rightType${index} = this.typer.inferType(${rightElement});
             if (!this.typer.equals(leftType${index}, rightType${index})) {
-                this.errorList.push(new ${Names.PiError}(${message}, ${leftElement}, ${locationdescription}, ${severity}));
+                this.errorList.push(new ${Names.FreError}(${message}, ${leftElement}, ${locationdescription}, ${severity}));
                 ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
             }`;
     }
@@ -246,7 +246,7 @@ export class RulesCheckerTemplate {
         return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
         ${GenerationUtil.langExpToTypeScript(rule.list)}.forEach((elem, index) => {
             if ((elem === undefined) || (elem === null)) {
-                this.errorList.push(new ${Names.PiError}(\`Element[\$\{index\}] of property '${listName}' has no value\`,
+                this.errorList.push(new ${Names.FreError}(\`Element[\$\{index\}] of property '${listName}' has no value\`,
                  ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
                  ${locationdescription},
                  "${listpropertyName}",
@@ -256,7 +256,7 @@ export class RulesCheckerTemplate {
                 if (!${uniquelistName}.includes(elem.${listpropertyTypescript})){
                     ${uniquelistName}.push(elem.${listpropertyTypescript});
                 } else {
-                    this.errorList.push(new ${Names.PiError}(${message},
+                    this.errorList.push(new ${Names.FreError}(${message},
                      ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
                      ${locationdescription},
                      "${listpropertyName}",

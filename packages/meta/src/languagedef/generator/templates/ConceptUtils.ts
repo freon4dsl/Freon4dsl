@@ -24,7 +24,7 @@ export class ConceptUtils {
     public static makeBasicProperties(metaType: string, conceptName: string, hasSuper: boolean): string {
         return `readonly $typename: ${metaType} = "${conceptName}";    // holds the metatype in the form of a string
                 ${!hasSuper ? "$id: string;     // a unique identifier" : ""}    
-                parse_location: ${Names.PiParseLocation};    // if relevant, the location of this element within the source from which it is parsed`;
+                parse_location: ${Names.FreParseLocation};    // if relevant, the location of this element within the source from which it is parsed`;
     }
 
     public static makePrimitiveProperty(property: FrePrimitiveProperty): string {
@@ -76,7 +76,7 @@ export class ConceptUtils {
     public static makeReferenceProperty(property: FreConceptProperty): string {
         const comment = "// implementation of reference '" + property.name + "'";
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : ${Names.PiElementReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
+        return `${property.name} : ${Names.FreNodeReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
     }
 
     public static makeConvenienceMethods(list: FreConceptProperty[]): string {
@@ -88,7 +88,7 @@ export class ConceptUtils {
                     result += `
             /**
              * Convenience method for reference '${property.name}'.
-             * Instead of returning a '${Names.PiElementReference}<${propType}>' object,
+             * Instead of returning a '${Names.FreNodeReference}<${propType}>' object,
              * it returns the referred '${propType}' object, if it can be found.
              */
             get ${Names.refName(property)}(): ${propType} {
@@ -101,7 +101,7 @@ export class ConceptUtils {
                     result += `
             /**
              * Convenience method for reference '${property.name}'.
-             * Instead of returning a list of '${Names.PiElementReference}<${propType}>' objects, it 
+             * Instead of returning a list of '${Names.FreNodeReference}<${propType}>' objects, it 
              * returns a list of referred '${propType}' objects, if the references can be resolved.
              *
              * Note that when some references cannot be resolved, the length of this list is 
@@ -134,7 +134,7 @@ export class ConceptUtils {
                         if (!!id) { 
                             this.$id = id;
                         } else {
-                            this.$id = ${Names.PiUtils}.ID(); // uuid.v4();
+                            this.$id = ${Names.FreUtils}.ID(); // uuid.v4();
                         }`
             : "super(id);"
         }

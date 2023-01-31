@@ -8,7 +8,7 @@ export class CustomActionsTemplate {
             import {
                 ${Names.FreCreateBinaryExpressionAction},
                 ${Names.FreCustomAction},
-                ${Names.PiActions}
+                ${Names.FreActions}
             } from "${PROJECTITCORE}";
  
              /**
@@ -20,7 +20,7 @@ export class CustomActionsTemplate {
              * (2) if a creator/behavior based on the editor definition is present, this is used,
              * (3) if neither (1) nor (2) yields a result, the default is used.  
              */           
-            export class ${Names.customActions(language)} implements ${Names.PiActions} {
+            export class ${Names.customActions(language)} implements ${Names.FreActions} {
                 binaryExpressionActions: ${Names.FreCreateBinaryExpressionAction}[] = MANUAL_BINARY_EXPRESSION_ACTIONS;
                 customActions: ${Names.FreCustomAction}[] = MANUAL_CUSTOM_ACTIONS;
             }

@@ -1,5 +1,5 @@
 import { FreBinaryExpressionConcept, FreClassifier, FreExpressionConcept, FreLanguage } from "../../languagedef/metalanguage";
-import { PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
+import { FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { BinaryExpressionRule } from "./grammarModel/BinaryExpressionRule";
 import { GenerationUtil } from "../../utils";
@@ -12,7 +12,7 @@ export class BinaryExpMaker {
         return BinaryExpMaker.specialBinaryRuleName + expBase.name;
     }
 
-    public generateBinaryExpressions(language:FreLanguage, projectionGroup: PiEditProjectionGroup, binaryConceptsUsed: FreBinaryExpressionConcept[]): GrammarRule[] {
+    public generateBinaryExpressions(language:FreLanguage, projectionGroup: FreEditProjectionGroup, binaryConceptsUsed: FreBinaryExpressionConcept[]): GrammarRule[] {
         const result: GrammarRule[] = [];
 
         // in case there are multiple expression hierarchies, we need to group the binaries based on their expressionBase
@@ -40,7 +40,7 @@ export class BinaryExpMaker {
         return result;
     }
 
-    private findEditDefs(binaryConceptsUsed: FreBinaryExpressionConcept[], projectionGroup: PiEditProjectionGroup): Map<FreClassifier, string> {
+    private findEditDefs(binaryConceptsUsed: FreBinaryExpressionConcept[], projectionGroup: FreEditProjectionGroup): Map<FreClassifier, string> {
         let result: Map<FreClassifier, string> = new Map<FreClassifier, string>();
         for (const binCon of binaryConceptsUsed) {
             const mySymbol = projectionGroup.findExtrasForType(binCon).symbol;

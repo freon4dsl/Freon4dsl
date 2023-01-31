@@ -1,10 +1,10 @@
 import { Names } from "../../../utils";
 import { FreClassifier, FreLanguage, FreLimitedConcept } from "../../../languagedef/metalanguage";
-import { PiEditUnit } from "../../metalanguage";
+import { FreEditUnit } from "../../metalanguage";
 
 export class EditorIndexTemplate {
 
-    generateGenIndex(language: FreLanguage, editorDef: PiEditUnit, extraClassifiers: FreClassifier[]): string {
+    generateGenIndex(language: FreLanguage, editorDef: FreEditUnit, extraClassifiers: FreClassifier[]): string {
         let boxProviderConcepts: FreClassifier[] = [];
         language.concepts.forEach(concept => {
             if (!(concept instanceof FreLimitedConcept) && !concept.isAbstract) {
@@ -25,7 +25,7 @@ export class EditorIndexTemplate {
         `;
     }
 
-    generateIndex(language: FreLanguage, editorDef: PiEditUnit): string {
+    generateIndex(language: FreLanguage, editorDef: FreEditUnit): string {
         return `
         export * from "./gen";
         export * from "./${Names.customProjection(language)}";

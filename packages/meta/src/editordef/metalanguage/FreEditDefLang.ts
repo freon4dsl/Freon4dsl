@@ -1,21 +1,20 @@
-import { FreClassifier, FreInstance, FreLangExp, FreLanguage, FreProperty } from "../../languagedef/metalanguage";
-import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference";
+import { FreClassifier, FreLangExp, FreLanguage, FreProperty, MetaElementReference } from "../../languagedef/metalanguage";
 import { Names, FreDefinitionElement } from "../../utils";
 
 /**
  * Super type of all elements that may be part of a projection definition
  */
-export type PiEditProjectionItem =
-    PiEditParsedProjectionIndent    // removed after parsing, by PiEditParseUtil.normalize()
-    | PiEditParsedNewline           // removed after parsing, by PiEditParseUtil.normalize()
-    | PiEditProjectionText
-    | PiEditPropertyProjection
-    | PiEditSuperProjection ;
+export type FreEditProjectionItem =
+    FreEditParsedProjectionIndent    // removed after parsing, by FreEditParseUtil.normalize()
+    | FreEditParsedNewline           // removed after parsing, by FreEditParseUtil.normalize()
+    | FreEditProjectionText
+    | FreEditPropertyProjection
+    | FreEditSuperProjection ;
 
 /**
  * The direction of a property that is a list
  */
-export enum PiEditProjectionDirection {
+export enum FreEditProjectionDirection {
     NONE = "NONE",
     Horizontal = "Horizontal",
     Vertical = "Vertical"
@@ -34,12 +33,12 @@ export enum ListJoinType {
 /**
  * The root of the complete editor definition
  */
-export class PiEditUnit extends FreDefinitionElement {
+export class FreEditUnit extends FreDefinitionElement {
     language: FreLanguage;
-    projectiongroups: PiEditProjectionGroup[] = [];
-    classifiersUsedInSuperProjection: string[] = []; // holds the names of all classifiers that are refered in an PiEditSuperProjection
+    projectiongroups: FreEditProjectionGroup[] = [];
+    classifiersUsedInSuperProjection: string[] = []; // holds the names of all classifiers that are refered in an FreEditSuperProjection
 
-    getDefaultProjectiongroup(): PiEditProjectionGroup {
+    getDefaultProjectiongroup(): FreEditProjectionGroup {
         return this.projectiongroups.find(group => group.name == Names.defaultProjectionName);
     }
 
@@ -47,7 +46,7 @@ export class PiEditUnit extends FreDefinitionElement {
      * Returns a list of all projection groups except the default group, sorted by their precedence.
      * Lowest precedence first!
      */
-    getAllNonDefaultProjectiongroups(): PiEditProjectionGroup[] {
+    getAllNonDefaultProjectiongroups(): FreEditProjectionGroup[] {
         const result = this.projectiongroups.filter(group => group.name !== Names.defaultProjectionName);
         result.sort ( (a, b) => {
             return a.precedence - b.precedence;
@@ -58,10 +57,10 @@ export class PiEditUnit extends FreDefinitionElement {
         return result;
     }
 
-    findProjectionsForType(cls: FreClassifier): PiEditClassifierProjection[] {
-        const result: PiEditClassifierProjection[] = [];
+    findProjectionsForType(cls: FreClassifier): FreEditClassifierProjection[] {
+        const result: FreEditClassifierProjection[] = [];
         for (const group of this.projectiongroups) {
-            const found: PiEditClassifierProjection[] = group.findProjectionsForType(cls);
+            const found: FreEditClassifierProjection[] = group.findProjectionsForType(cls);
             if (found.length > 0) {
                 result.push(...found);
             }
@@ -69,16 +68,16 @@ export class PiEditUnit extends FreDefinitionElement {
         return result;
     }
 
-    allTableProjections(): PiEditTableProjection[] {
-        let result: PiEditTableProjection[] = [];
+    allTableProjections(): FreEditTableProjection[] {
+        let result: FreEditTableProjection[] = [];
         for (const group of this.projectiongroups) {
             result.push(...group.allTableProjections());
         }
         return result;
     }
 
-    findTableProjectionsForType(cls: FreClassifier): PiEditTableProjection[] {
-        const result: PiEditTableProjection[] = [];
+    findTableProjectionsForType(cls: FreClassifier): FreEditTableProjection[] {
+        const result: FreEditTableProjection[] = [];
         for (const group of this.projectiongroups) {
             const found = group.findTableProjectionForType(cls);
             if (!!found) {
@@ -109,24 +108,24 @@ export class BoolKeywords extends FreDefinitionElement {
 /**
  * A group of projection definitions that share the same name
  */
-export class PiEditProjectionGroup extends FreDefinitionElement {
+export class FreEditProjectionGroup extends FreDefinitionElement {
     name: string = null;
-    projections: PiEditClassifierProjection[] = [];
+    projections: FreEditClassifierProjection[] = [];
     standardBooleanProjection: BoolKeywords = null; // may only be present in default group
     standardReferenceSeparator: string = null;      // may only be present in default group
     extras: ExtraClassifierInfo[] = null;           // may only be present in default group
-    owningDefinition: PiEditUnit;
+    owningDefinition: FreEditUnit;
     precedence: number;
 
-    findProjectionsForType(cls: FreClassifier): PiEditClassifierProjection[] {
+    findProjectionsForType(cls: FreClassifier): FreEditClassifierProjection[] {
         return this.projections.filter(con => con.classifier.referred === cls);
     }
 
-    findTableProjectionForType(cls: FreClassifier): PiEditTableProjection {
+    findTableProjectionForType(cls: FreClassifier): FreEditTableProjection {
         return this.allTableProjections().find(con => con.classifier.referred === cls);
     }
 
-    findNonTableProjectionForType(cls: FreClassifier): PiEditProjection {
+    findNonTableProjectionForType(cls: FreClassifier): FreEditProjection {
         return this.allNonTableProjections().find(con => con.classifier.referred === cls);
     }
 
@@ -138,12 +137,12 @@ export class PiEditProjectionGroup extends FreDefinitionElement {
         }
     }
 
-    allTableProjections(): PiEditTableProjection[] {
-        return this.projections.filter(con => con instanceof PiEditTableProjection) as PiEditTableProjection[];
+    allTableProjections(): FreEditTableProjection[] {
+        return this.projections.filter(con => con instanceof FreEditTableProjection) as FreEditTableProjection[];
     }
 
-    allNonTableProjections(): PiEditProjection[] {
-        return this.projections.filter(con => con instanceof PiEditProjection) as PiEditProjection[];
+    allNonTableProjections(): FreEditProjection[] {
+        return this.projections.filter(con => con instanceof FreEditProjection) as FreEditProjection[];
     }
 
     toString(): string {
@@ -160,7 +159,7 @@ export class PiEditProjectionGroup extends FreDefinitionElement {
 /**
  * A single projection definition for a single concept or interface
  */
-export abstract class PiEditClassifierProjection extends FreDefinitionElement {
+export abstract class FreEditClassifierProjection extends FreDefinitionElement {
     name: string;
     classifier: MetaElementReference<FreClassifier>;
     toString(): string {
@@ -171,13 +170,13 @@ export abstract class PiEditClassifierProjection extends FreDefinitionElement {
 /**
  * A 'normal', i.e. not a table projection, for a concept or interface
  */
-export class PiEditProjection extends PiEditClassifierProjection {
-    lines: PiEditProjectionLine[] = [];
+export class FreEditProjection extends FreEditClassifierProjection {
+    lines: FreEditProjectionLine[] = [];
 
     firstProperty(): FreProperty {
         for (const line of this.lines) {
             for (const item of line.items) {
-                if (item instanceof PiEditPropertyProjection) {
+                if (item instanceof FreEditPropertyProjection) {
                     return item.property.referred;
                 }
             }
@@ -185,11 +184,11 @@ export class PiEditProjection extends PiEditClassifierProjection {
         return null;
     }
 
-    findAllPartProjections(): PiEditPropertyProjection[] {
-        const result: PiEditPropertyProjection[] = [];
+    findAllPartProjections(): FreEditPropertyProjection[] {
+        const result: FreEditPropertyProjection[] = [];
         this.lines.forEach(line => {
             line.items.forEach(item => {
-                if (item instanceof PiEditPropertyProjection) {
+                if (item instanceof FreEditPropertyProjection) {
                     result.push(item)
                 }
             })
@@ -208,14 +207,14 @@ export class PiEditProjection extends PiEditClassifierProjection {
 /**
  * A table projection for a concept or interface
  */
-export class PiEditTableProjection extends PiEditClassifierProjection {
+export class FreEditTableProjection extends FreEditClassifierProjection {
     headers: string[] = [];
-    cells: PiEditPropertyProjection[] = [];
+    cells: FreEditPropertyProjection[] = [];
 
     /**
      * Find all projections or parts.
      */
-    findAllPartProjections(): PiEditPropertyProjection[] {
+    findAllPartProjections(): FreEditPropertyProjection[] {
         return this.cells;
     }
 
@@ -254,16 +253,16 @@ export class ExtraClassifierInfo extends FreDefinitionElement {
 /**
  * One of the lines in a 'normal' projection definition
  */
-export class PiEditProjectionLine extends FreDefinitionElement {
-    items: PiEditProjectionItem[] = [];
-    indent: number = 0; // this number is calculated by PiEditParseUtil.normalize()
+export class FreEditProjectionLine extends FreDefinitionElement {
+    items: FreEditProjectionItem[] = [];
+    indent: number = 0; // this number is calculated by FreEditParseUtil.normalize()
 
     isEmpty(): boolean {
-        return (this.items.every(i => i instanceof PiEditParsedNewline || i instanceof PiEditParsedProjectionIndent)) || this.items.length === 0 ;
+        return (this.items.every(i => i instanceof FreEditParsedNewline || i instanceof FreEditParsedProjectionIndent)) || this.items.length === 0 ;
     }
 
     isOptional(): boolean {
-        return this.items.every(i => i instanceof PiOptionalPropertyProjection);
+        return this.items.every(i => i instanceof FreOptionalPropertyProjection);
     }
 
     toString(): string {
@@ -274,9 +273,9 @@ export class PiEditProjectionLine extends FreDefinitionElement {
 /**
  * An element of a line in a projection definition that holds a (simple) text.
  */
-export class PiEditProjectionText extends FreDefinitionElement {
-    public static create(text: string): PiEditProjectionText {
-        const result = new PiEditProjectionText();
+export class FreEditProjectionText extends FreDefinitionElement {
+    public static create(text: string): FreEditProjectionText {
+        const result = new FreEditProjectionText();
         result.text = text;
         return result;
     }
@@ -293,7 +292,7 @@ export class PiEditProjectionText extends FreDefinitionElement {
  * Note that properties that are lists, properties that have boolean type, and optional properties,
  * are represented by subclasses of this class.
  */
-export class PiEditPropertyProjection extends FreDefinitionElement {
+export class FreEditPropertyProjection extends FreDefinitionElement {
     property: MetaElementReference<FreProperty> = null;
     // expression used during parsing, should not be used after that phase
     expression: FreLangExp = null;
@@ -320,14 +319,14 @@ export class PiEditPropertyProjection extends FreDefinitionElement {
 /**
  * An element of a line in a projection definition that represents the projection of a property that is optional.
  */
-export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
-    lines: PiEditProjectionLine[] = [];
+export class FreOptionalPropertyProjection extends FreEditPropertyProjection {
+    lines: FreEditProjectionLine[] = [];
 
-    public findPropertyProjection(): PiEditPropertyProjection {
-        let result: PiEditPropertyProjection = null;
+    public findPropertyProjection(): FreEditPropertyProjection {
+        let result: FreEditPropertyProjection = null;
         this.lines.forEach(l => {
             if (!result) {
-                result = l.items.find(item => item instanceof PiEditPropertyProjection) as PiEditPropertyProjection;
+                result = l.items.find(item => item instanceof FreEditPropertyProjection) as FreEditPropertyProjection;
             }
         });
         return result;
@@ -340,7 +339,7 @@ export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
     public firstLiteral(): string {
         for (const line of this.lines) {
             for (const item of line.items) {
-                if (item instanceof PiEditProjectionText) {
+                if (item instanceof FreEditProjectionText) {
                     return item.text.trim();
                 }
             }
@@ -363,7 +362,7 @@ export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
  */
 export class ListInfo extends FreDefinitionElement {
     isTable: boolean = false;
-    direction: PiEditProjectionDirection = PiEditProjectionDirection.Vertical;
+    direction: FreEditProjectionDirection = FreEditProjectionDirection.Vertical;
     joinType: ListJoinType = ListJoinType.NONE; // indicates that user has not inserted join info
     joinText: string = "";
 
@@ -379,7 +378,7 @@ export class ListInfo extends FreDefinitionElement {
 /**
  * An element of a line in a projection definition that represents the projection of a superconcept or interface.
  */
-export class PiEditSuperProjection extends FreDefinitionElement {
+export class FreEditSuperProjection extends FreDefinitionElement {
     superRef: MetaElementReference<FreClassifier> = null;
     projectionName: string = "";
     toString(): string {
@@ -392,9 +391,9 @@ export class PiEditSuperProjection extends FreDefinitionElement {
 /**
  * This class is only used during parsing. It is removed from the model in the creation phase.
  */
-export class PiEditParsedClassifier extends PiEditClassifierProjection {
-    projection: PiEditProjection = null;
-    tableProjection: PiEditTableProjection = null;
+export class FreEditParsedClassifier extends FreEditClassifierProjection {
+    projection: FreEditProjection = null;
+    tableProjection: FreEditTableProjection = null;
     classifierInfo: ExtraClassifierInfo = null;
     toString(): string {
         return `ParsedClassifier ${this.classifier?.name}`
@@ -403,7 +402,7 @@ export class PiEditParsedClassifier extends PiEditClassifierProjection {
 /**
  * This class is only used by the parser and removed from the edit model after normalization.
  */
-export class PiEditParsedNewline {
+export class FreEditParsedNewline {
     toString(): string {
         return "\n";
     }
@@ -412,7 +411,7 @@ export class PiEditParsedNewline {
 /**
  * This class is only used by the parser and removed from the edit model after normalization.
  */
-export class PiEditParsedProjectionIndent extends FreDefinitionElement {
+export class FreEditParsedProjectionIndent extends FreDefinitionElement {
     indent: string = "";
     amount: number = 0;
 

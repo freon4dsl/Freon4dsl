@@ -7,14 +7,14 @@ export class FreReferenceTemplate {
         return `
         import { MobxModelElementImpl } from "${PROJECTITCORE}";
         import { computed, observable } from "mobx";
-        import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
+        import { ${Names.FreNamedNode} } from "${PROJECTITCORE}";
         import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         
         /**
-         * Class ${Names.PiElementReference} provides the implementation for a (named) reference in ProjectIt.
+         * Class ${Names.FreNodeReference} provides the implementation for a (named) reference in ProjectIt.
          * References can be set with either a referred object, or with a name.
          */
-        export class ${Names.PiElementReference}< T extends ${Names.PiNamedElement}> extends MobxModelElementImpl {
+        export class ${Names.FreNodeReference}< T extends ${Names.FreNamedNode}> extends MobxModelElementImpl {
               
             /**
              * Returns a new instance which refers to an element named 'name' of type T, or
@@ -23,8 +23,8 @@ export class FreReferenceTemplate {
              * @param name
              * @param typeName
              */
-            public static create< T extends ${Names.PiNamedElement}>(name: string | string[] | T, typeName: string): ${Names.PiElementReference}<T> {
-                const result = new ${Names.PiElementReference}(null, typeName);
+            public static create< T extends ${Names.FreNamedNode}>(name: string | string[] | T, typeName: string): ${Names.FreNodeReference}<T> {
+                const result = new ${Names.FreNodeReference}(null, typeName);
                 if (Array.isArray(name)) {
                     result.pathname = name;
                 } else if (typeof name === "string") {
@@ -52,7 +52,7 @@ export class FreReferenceTemplate {
                 super();
                 this.referred = referredElement;
                 this.typeName = typeName;
-                makeObservable<${Names.PiElementReference}<T>, "_FRE_pathname" | "_FRE_referred">(this, {
+                makeObservable<${Names.FreNodeReference}<T>, "_FRE_pathname" | "_FRE_referred">(this, {
                    _FRE_referred: observable,
                    _FRE_pathname: observable,
                     referred: computed,
@@ -123,7 +123,7 @@ export class FreReferenceTemplate {
              * Returns true if this reference has the same name as 'toBeMatched'.
              * @param toBeMatched
              */
-            match(toBeMatched: Partial<${Names.PiElementReference}<T>>): boolean {
+            match(toBeMatched: Partial<${Names.FreNodeReference}<T>>): boolean {
                 return toBeMatched.name === this.name;
             }
         }`;

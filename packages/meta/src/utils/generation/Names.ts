@@ -1,7 +1,7 @@
 import {
     FreClassifier, FreConcept, FreInstance, FreInterface, FreLanguage, FrePrimitiveProperty, FreProperty, FreModelDescription, FreUnitDescription
 } from "../../languagedef/metalanguage";
-import { PiEditClassifierProjection, PiEditProjectionGroup, PiEditTableProjection } from "../../editordef/metalanguage";
+import { FreEditClassifierProjection, FreEditProjectionGroup, FreEditTableProjection } from "../../editordef/metalanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -9,15 +9,15 @@ import { PiEditClassifierProjection, PiEditProjectionGroup, PiEditTableProjectio
  */
 export class Names {
     // tslint:disable-next-line:variable-name
-    public static PiNamedElement: string = "FreNamedNode";
+    public static FreNamedNode: string = "FreNamedNode";
     // tslint:disable-next-line:variable-name
-    public static PiElement: string = "FreNode";
+    public static FreNode: string = "FreNode";
     // tslint:disable-next-line:variable-name
-    public static PiExpression: string = "FreExpressionNode";
+    public static FreExpressionNode: string = "FreExpressionNode";
     // tslint:disable-next-line:variable-name
-    public static PiBinaryExpression: string = "FreBinaryExpression";
+    public static FreBinaryExpression: string = "FreBinaryExpression";
     // tslint:disable-next-line:variable-name
-    public static PiScoper: string = "FreScoper";
+    public static FreScoper: string = "FreScoper";
     // tslint:disable-next-line:variable-name
     public static FreScoperBase: string = "FreScoperBase";
     // tslint:disable-next-line:variable-name
@@ -25,45 +25,68 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static FrScoperPart: string = "FreScoper";
     // tslint:disable-next-line:variable-name
-    public static FreonTyperPart: string = "FreTyper";
+    public static FreTyperPart: string = "FreTyper"; // todo why not ..Part
     // tslint:disable-next-line:variable-name
-    public static FreTyper: string = "FreCompositeTyper";
+    public static FreTyper: string = "FreCompositeTyper"; // todo no longer generated, is it still in use?
     // tslint:disable-next-line:variable-name
-    public static PiValidator: string = "FreValidator";
+    public static FreValidator: string = "FreValidator";
     // tslint:disable-next-line:variable-name
-    public static PiStdlib: string = "FreStdlib";
+    public static FreStdlib: string = "FreStdlib";
     // tslint:disable-next-line:variable-name
-    public static PiWriter: string = "FreWriter";
+    public static FreWriter: string = "FreWriter";
     // tslint:disable-next-line:variable-name
-    public static PiReader: string = "FreReader";
+    public static FreReader: string = "FreReader";
     // tslint:disable-next-line:variable-name
-    public static PiError: string = "FreError";
+    public static FreError: string = "FreError";
     // tslint:disable-next-line:variable-name
-    public static FreonInterpreter: string = "FreInterpreter";
+    public static FreInterpreter: string = "FreInterpreter";
     // tslint:disable-next-line:variable-name
-    public static PiErrorSeverity: string = "FreErrorSeverity";
+    public static FreErrorSeverity: string = "FreErrorSeverity";
     // tslint:disable-next-line:variable-name
-    public static PiActions: string = "FreCombinedActions";
+    public static FreActions: string = "FreCombinedActions";
     // tslint:disable-next-line:variable-name
-    public static PiEditor: string = "FreEditor";
+    public static FreEditor: string = "FreEditor";
     // tslint:disable-next-line:variable-name
-    public static PiProjection: string = "FreProjection";
-    public static PiCompositeProjection: string = "FreCompositeProjection";
+    public static FreProjection: string = "FreProjection";
     // tslint:disable-next-line:variable-name
-    public static PiModelInitialization: string = "FreModelInitialization";
+    public static FreCompositeProjection: string = "FreCompositeProjection";
     // tslint:disable-next-line:variable-name
     public static Box: string = "Box";
     // tslint:disable-next-line:variable-name
-    public static PiElementReference: string = "FreNodeReference";
+    public static FreNodeReference: string = "FreNodeReference";
     // tslint:disable-next-line:variable-name
-    public static PiEnvironment: string = "FreEnvironment";
-    public static PiParseLocation: string = "FreParseLocation";
-    public static PiUtils: string = "FreUtils";
-    public static PiModel: string = "FreModel";
-    public static PiModelUnit: string = "FreModelUnit";
+    public static FreEnvironment: string = "FreEnvironment";
+    // tslint:disable-next-line:variable-name
+    public static FreParseLocation: string = "FreParseLocation";
+    // tslint:disable-next-line:variable-name
+    public static FreUtils: string = "FreUtils";
+    // tslint:disable-next-line:variable-name
+    public static FreModel: string = "FreModel";
+    // tslint:disable-next-line:variable-name
+    public static FreModelUnit: string = "FreModelUnit";
+    // tslint:disable-next-line:variable-name
     public static FreLanguage: string = "FreLanguage";
     // tslint:disable-next-line:variable-name
+    static FreType: string = "FreType";
+    // tslint:disable-next-line:variable-name
+    static FreTableDefinition: string = "FreTableDefinition";
+    // tslint:disable-next-line:variable-name
+    static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
+    // tslint:disable-next-line:variable-name
+    static FreCustomAction: string = "FreCustomAction";
+    // tslint:disable-next-line:variable-name
+    static FreTriggerType: string = "FreTriggerType";
+    // tslint:disable-next-line:variable-name
+    static LanguageEnvironment: string = "FreLanguageEnvironment";
+    // tslint:disable-next-line:variable-name
+    static FreLogger: string = "FreLogger";
+    // tslint:disable-next-line:variable-name
+    static FreNamespace: string = "FreNamespace";
+    // tslint:disable-next-line:variable-name
+    static FreProjectionHandler: string = "FreProjectionHandler";
+    // tslint:disable-next-line:variable-name
     public static ProjectionalEditor: string = "ProjectionalEditor";
+    // tslint:disable-next-line:variable-name
     public static mainProjectionalEditor: string = "MainProjectionalEditor";
     public static styles: string = "projectitStyles";
     public static nameForSelf: string = "self";
@@ -71,8 +94,8 @@ export class Names {
     public static defaultProjectionName: string = "default";
     // reserved role names for expressions, use with care.
     // Should remain identical to the definitions in @projectit/core !!
-    public static PI_BINARY_EXPRESSION_LEFT: string = "FreBinaryExpression-left";
-    public static PI_BINARY_EXPRESSION_RIGHT: string = "FreBinaryExpression-right";
+    public static FRE_BINARY_EXPRESSION_LEFT: string = "FreBinaryExpression-left";
+    public static FRE_BINARY_EXPRESSION_RIGHT: string = "FreBinaryExpression-right";
     public static BEFORE_BINARY_OPERATOR: string = "binary-pre";
     public static AFTER_BINARY_OPERATOR: string = "binary-post";
     public static LEFT_MOST: string = "exp-left";
@@ -86,19 +109,7 @@ export class Names {
     public static referenceSeparator: string = "/"; // TODO use value from editDef
     public static listUtil: string = "ListUtil";
     public static brackets: string = "Brackets";
-    static FreModel: string = "FreModel";
-    static FreModelUnit: string = "FreModelUnit";
-    static FreUtils: string = "FreUtils";
-    static FreParseLocation: string = "FreParseLocation";
-    static FreType: string = "FreType";
-    static FreTableDefinition: string = "FreTableDefinition";
-    static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
-    static FreCustomAction: string = "FreCustomAction";
-    static FreTriggerType: string = "FreTriggerType";
-    static LanguageEnvironment: string = "FreLanguageEnvironment";
-    static PiLogger: string = "FreLogger";
-    static FreNamespace: string = "FreNamespace";
-    static FreProjectionHandler: string = "FreProjectionHandler";
+
 
     public static configuration() {
         return "ProjectitConfiguration";
@@ -140,11 +151,7 @@ export class Names {
         return "Custom" + this.stdlib(language);
     }
 
-    // public static projectionDefault(language: PiLanguage): string {
-    //     return this.startWithUpperCase(language?.name) + "ProjectionDefault";
-    // }
-
-    public static projection(group: PiEditProjectionGroup): string {
+    public static projection(group: FreEditProjectionGroup): string {
         return this.startWithUpperCase(group.name);
     }
 
@@ -272,11 +279,11 @@ export class Names {
         return "";
     }
 
-    public static projectionMethod(proj: PiEditClassifierProjection): string {
+    public static projectionMethod(proj: FreEditClassifierProjection): string {
         return "get" + this.startWithUpperCase(proj.name);
     }
 
-    public static tableProjectionMethod(proj: PiEditClassifierProjection): string {
+    public static tableProjectionMethod(proj: FreEditClassifierProjection): string {
         return "get" + this.startWithUpperCase(proj.name);
     }
 
@@ -284,7 +291,7 @@ export class Names {
         return "getRowFor" + this.startWithUpperCase(projectionName);
     }
 
-    public static tableHeadersMethod(proj: PiEditTableProjection): string {
+    public static tableHeadersMethod(proj: FreEditTableProjection): string {
         return "getHeadersFor" + this.startWithUpperCase(proj.name);
     }
 

@@ -151,7 +151,7 @@ export class FreonTyperGenUtils {
             // ListUtil.addIfNotPresent(imports, Names.PiElementReference);
             const typeName: string = Names.classifier(propExp.property.type);
             ListUtil.addIfNotPresent(imports, propExp.property.type);
-            result = `${Names.PiElementReference}.create<${typeName}>(${result}, "${typeName}") /* PropValue */ `;
+            result = `${Names.FreNodeReference}.create<${typeName}>(${result}, "${typeName}") /* PropValue */ `;
         }
         return result;
     }
@@ -162,7 +162,7 @@ export class FreonTyperGenUtils {
         if (prop.isPart) {
             return `this.makeCopyOf${typeName}((${toBeCopiedName} as ${toBeCopiedTypeName}).${prop.name})`;
         } else {
-            return `${Names.PiElementReference}.create<${typeName}>((${toBeCopiedName} as ${toBeCopiedTypeName}).\$${prop.name}, "${typeName}")`;
+            return `${Names.FreNodeReference}.create<${typeName}>((${toBeCopiedName} as ${toBeCopiedTypeName}).\$${prop.name}, "${typeName}")`;
         }
         return '';
     }

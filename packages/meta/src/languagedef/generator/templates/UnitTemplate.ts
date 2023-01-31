@@ -19,7 +19,7 @@ export class UnitTemplate {
         const modelImports = this.findModelImports(unitDescription, myName);
         const coreImports = ClassifierUtil.findMobxImports(unitDescription)
             .concat([Names.FreModelUnit, Names.FreUtils, Names.FreParseLocation, "matchElementList", "matchPrimitiveList, matchReferenceList"])
-            .concat(hasReferences ? (Names.PiElementReference) : null);
+            .concat(hasReferences ? (Names.FreNodeReference) : null);
         const metaType = Names.metaType(language);
 
         // Template starts here
@@ -31,7 +31,7 @@ export class UnitTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            export class ${myName} extends ${extendsClass} implements ${Names.PiModelUnit} {
+            export class ${myName} extends ${extendsClass} implements ${Names.FreModelUnit} {
             
                 ${ConceptUtils.makeStaticCreateMethod(unitDescription, myName)}
                 

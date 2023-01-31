@@ -16,7 +16,7 @@ export class StdlibTemplate {
         this.makeTexts(language);
 
         return `
-        import { ${Names.PiNamedElement}, ${Names.PiStdlib}, ${Names.FreLanguage} } from "${PROJECTITCORE}";
+        import { ${Names.FreNamedNode}, ${Names.FreStdlib}, ${Names.FreLanguage} } from "${PROJECTITCORE}";
         import { ${Names.metaType(language)}, 
                     ${this.limitedConceptNames.map(name => `${name}`).join(", ") } 
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
@@ -29,20 +29,20 @@ export class StdlibTemplate {
          *
          * This class uses the singleton pattern to ensure that only one instance of the class is present.
          */        
-        export class ${Names.stdlib(language)} implements ${Names.PiStdlib} {
-            private static stdlib: ${Names.PiStdlib};           // the only instance of this class
+        export class ${Names.stdlib(language)} implements ${Names.FreStdlib} {
+            private static stdlib: ${Names.FreStdlib};           // the only instance of this class
 
             /**
              * This method implements the singleton pattern
              */        
-            public static getInstance(): ${Names.PiStdlib} {
+            public static getInstance(): ${Names.FreStdlib} {
                 if (this.stdlib === undefined || this.stdlib === null) {
                     this.stdlib = new ${Names.stdlib(language)}();
                 }
                 return this.stdlib;
             }
             
-            public elements: ${Names.PiNamedElement}[] = [];    // the predefined elements of language ${language.name}
+            public elements: ${Names.FreNamedNode}[] = [];    // the predefined elements of language ${language.name}
 
             /**
              * A private constructor, as demanded by the singleton pattern,
@@ -51,7 +51,7 @@ export class StdlibTemplate {
             private constructor() {
                 ${this.constructorText}
                 for (const lib of projectitConfiguration.customStdLibs) {
-                    ListUtil.addAllIfNotPresent<${Names.PiNamedElement}>(this.elements, lib.elements);
+                    ListUtil.addAllIfNotPresent<${Names.FreNamedNode}>(this.elements, lib.elements);
                 }
             }  
             
@@ -63,7 +63,7 @@ export class StdlibTemplate {
              * @param name
              * @param metatype
              */            
-            public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.PiNamedElement} {
+            public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.FreNamedNode} {
                 if (!!name) {
                     const possibles = this.elements.filter((elem) => elem.name === name);
                     if (possibles.length !== 0) {
@@ -85,11 +85,11 @@ export class StdlibTemplate {
 
     generateCustomStdlibClass(language: FreLanguage): string {
         return `
-        import { ${Names.PiNamedElement}, ${Names.PiStdlib} } from "@projectit/core";
+        import { ${Names.FreNamedNode}, ${Names.FreStdlib} } from "@projectit/core";
 
-        export class ${Names.customStdlib(language)} implements ${Names.PiStdlib} {
+        export class ${Names.customStdlib(language)} implements ${Names.FreStdlib} {
             // add all your extra predefined instances here
-            get elements(): ${Names.PiNamedElement}[] {
+            get elements(): ${Names.FreNamedNode}[] {
                 return [];
             }
         }`;

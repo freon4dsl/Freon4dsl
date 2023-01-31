@@ -19,7 +19,7 @@
     "cleanup": "bash ../../scripts/cleanup.sh",
     "lang-parser": "pegjs src/languagedef/parser/LanguageGrammar.pegjs",
     "scop-parser": "pegjs src/scoperdef/parser/ScoperGrammar.pegjs",
-    "edit-parser": "pegjs src/editordef/parser/PiEditGrammar.pegjs",
+    "edit-parser": "pegjs src/editordef/parser/FreEditGrammar.pegjs",
     "valid-parser": "pegjs src/validatordef/parser/ValidatorGrammar.pegjs",
     "lang-exp-parser": "pegjs src/languagedef/parser/ExpressionGrammar.pegjs",
     "start": "echo Starting meta",

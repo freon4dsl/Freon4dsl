@@ -14,11 +14,11 @@ import {
     Names,
     PROJECTITCORE
 } from "../../../utils";
-import { PiEditProjection, PiEditPropertyProjection, PiEditTableProjection, PiEditUnit } from "../../metalanguage";
+import { FreEditProjection, FreEditPropertyProjection, FreEditTableProjection, FreEditUnit } from "../../metalanguage";
 
 export class EditorDefTemplate {
 
-    generateEditorDef(language: FreLanguage, editorDef: PiEditUnit, relativePath: string): string {
+    generateEditorDef(language: FreLanguage, editorDef: FreEditUnit, relativePath: string): string {
         const defaultProjGroup = editorDef.getDefaultProjectiongroup();
 
         let conceptsWithTrigger: ConceptTriggerElement[] = [];
@@ -81,8 +81,8 @@ export class EditorDefTemplate {
         let conceptProjectionToPropertyProjection: Map<string, Map<string, Map<string, string>>> = new Map<string, Map<string, Map<string, string>>>();
         language.classifiers().forEach(concept => {
             editorDef.findProjectionsForType(concept).forEach(conceptProjection => {
-                if (conceptProjection instanceof PiEditProjection) {
-                    const partProjections: PiEditPropertyProjection[] = conceptProjection.findAllPartProjections();
+                if (conceptProjection instanceof FreEditProjection) {
+                    const partProjections: FreEditPropertyProjection[] = conceptProjection.findAllPartProjections();
                     partProjections.filter(pp => !isNullOrUndefined(pp.projectionName)).forEach(p => {
                         let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
                         if (conceptMap === undefined) {
@@ -113,8 +113,8 @@ export class EditorDefTemplate {
             });
             // TODO Might refactor this with almost the same code above.
             editorDef.findTableProjectionsForType(concept).forEach(conceptProjection => {
-                if (conceptProjection instanceof PiEditTableProjection) {
-                    const partProjections: PiEditPropertyProjection[] = conceptProjection.findAllPartProjections();
+                if (conceptProjection instanceof FreEditTableProjection) {
+                    const partProjections: FreEditPropertyProjection[] = conceptProjection.findAllPartProjections();
                     partProjections.filter(pp => !isNullOrUndefined(pp.projectionName)).forEach(p => {
                         let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
                         if (conceptMap === undefined) {
@@ -202,7 +202,7 @@ export class EditorDefTemplate {
             }`
     }
 
-    private generateHeaderInfo(projection: PiEditTableProjection, coreImports: string[]): string {
+    private generateHeaderInfo(projection: FreEditTableProjection, coreImports: string[]): string {
         if (!!projection && !!projection.headers && projection.headers.length > 0) {
             ListUtil.addIfNotPresent(coreImports, "BoxUtil");
             ListUtil.addIfNotPresent(coreImports, "FreTableHeaderInfo");

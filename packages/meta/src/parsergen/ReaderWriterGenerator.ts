@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { MetaLogger } from "../utils";
 import { FreLanguage } from "../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, Names, READER_FOLDER, READER_GEN_FOLDER, WRITER_FOLDER, WRITER_GEN_FOLDER } from "../utils";
-import { PiEditUnit } from "../editordef/metalanguage";
+import { FreEditUnit } from "../editordef/metalanguage";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates";
 import { net } from "net.akehurst.language-agl-processor";
 import Agl = net.akehurst.language.agl.processor.Agl;
@@ -26,7 +26,7 @@ export class ReaderWriterGenerator {
     private readerFolder: string;
     private readerGenFolder: string;
 
-    generate(editDef: PiEditUnit): void {
+    generate(editDef: FreEditUnit): void {
         if (this.language == null) {
             LOGGER.error("Cannot generate parser and unparser because language is not set.");
             return;

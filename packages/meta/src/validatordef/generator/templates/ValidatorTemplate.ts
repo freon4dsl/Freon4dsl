@@ -3,8 +3,8 @@ import { FreLanguage } from "../../../languagedef/metalanguage";
 import { PiValidatorDef } from "../../metalanguage";
 
 export class ValidatorTemplate {
-    errorClassName: string = Names.PiError;
-    validatorInterfaceName: string = Names.PiValidator;
+    errorClassName: string = Names.FreError;
+    validatorInterfaceName: string = Names.FreValidator;
     typerInterfaceName: string = Names.FreTyper;
 
     generateValidator(language: FreLanguage, validdef: PiValidatorDef, relativePath: string): string {
@@ -109,12 +109,12 @@ export class ValidatorTemplate {
         const interfaceName: string = Names.checkerInterface(language);
         const validatorName: string = Names.validator(language);
         return `
-        import { ${Names.PiError}, ${Names.PiErrorSeverity} } from "${PROJECTITCORE}";
+        import { ${Names.FreError}, ${Names.FreErrorSeverity} } from "${PROJECTITCORE}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${defaultWorkerName}"; 
         import { ${interfaceName} } from "./gen/${validatorName}";
                 
         export class ${className} extends ${defaultWorkerName} implements ${interfaceName} {
-            errorList: ${Names.PiError}[] = [];
+            errorList: ${Names.FreError}[] = [];
         }`;
     }
 

@@ -3,23 +3,23 @@ import {
     ExtraClassifierInfo,
     ListInfo,
     ListJoinType,
-    PiEditParsedClassifier,
-    PiEditParsedNewline,
-    PiEditParsedProjectionIndent,
-    PiEditProjection,
-    PiEditProjectionDirection,
-    PiEditProjectionGroup,
-    PiEditProjectionLine,
-    PiEditProjectionText,
-    PiEditPropertyProjection,
-    PiEditSuperProjection,
-    PiEditTableProjection,
-    PiEditUnit,
-    PiOptionalPropertyProjection
+    FreEditParsedClassifier,
+    FreEditParsedNewline,
+    FreEditParsedProjectionIndent,
+    FreEditProjection,
+    FreEditProjectionDirection,
+    FreEditProjectionGroup,
+    FreEditProjectionLine,
+    FreEditProjectionText,
+    FreEditPropertyProjection,
+    FreEditSuperProjection,
+    FreEditTableProjection,
+    FreEditUnit,
+    FreOptionalPropertyProjection
 } from "../metalanguage";
 import { ListUtil, MetaLogger } from "../../utils";
 import { FreClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
-import { PiEditParseUtil } from "./PiEditParseUtil";
+import { FreEditParseUtil } from "./FreEditParseUtil";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
@@ -29,7 +29,7 @@ import { MetaElementReference } from "../../languagedef/metalanguage";
 const LOGGER = new MetaLogger("EditorCreators").mute();
 
 let currentFileName: string = "SOME_FILENAME";
-let classifiersUsedInSuperProjection: string[] = []; // remember these to add this list to the overall PiEditUnit
+let classifiersUsedInSuperProjection: string[] = []; // remember these to add this list to the overall FreEditUnit
 export function setCurrentFileName(newName: string) {
     currentFileName = newName;
 }
@@ -37,8 +37,8 @@ export function setCurrentFileName(newName: string) {
 // Functions used to create instances of the language classes from the parsed data objects.
 // This is used as a bridge between JavaScript in the Pegjs parser and typescript
 
-export function createEditUnit(group: PiEditProjectionGroup): PiEditUnit {
-    let result: PiEditUnit = new PiEditUnit();
+export function createEditUnit(group: FreEditProjectionGroup): FreEditUnit {
+    let result: FreEditUnit = new FreEditUnit();
     if (!!group) {
         result.projectiongroups.push(group);
     }
@@ -46,11 +46,11 @@ export function createEditUnit(group: PiEditProjectionGroup): PiEditUnit {
     return result;
 }
 
-function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEditProjectionGroup) {
+function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEditProjectionGroup) {
     data.projections.forEach(proj => {
-        if (proj instanceof PiEditParsedClassifier) {
+        if (proj instanceof FreEditParsedClassifier) {
             if (!!proj.tableProjection) {
-                const myProj: PiEditTableProjection = new PiEditTableProjection();
+                const myProj: FreEditTableProjection = new FreEditTableProjection();
                 if (!!proj.classifier) {
                     myProj.classifier = MetaElementReference.create<FreClassifier>(proj.classifier.name, "FreClassifier");
                 }
@@ -69,7 +69,7 @@ function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEdit
                 result.projections.push(myProj);
             }
             if (!!proj.projection) {
-                const myProj: PiEditProjection = new PiEditProjection();
+                const myProj: FreEditProjection = new FreEditProjection();
                 if (!!proj.classifier) {
                     myProj.classifier = MetaElementReference.create<FreClassifier>(proj.classifier.name, "FreClassifier");
                 }
@@ -97,8 +97,8 @@ function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEdit
     });
 }
 
-export function createProjectionGroup(data: Partial<PiEditProjectionGroup>): PiEditProjectionGroup {
-    let result: PiEditProjectionGroup = new PiEditProjectionGroup();
+export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): FreEditProjectionGroup {
+    let result: FreEditProjectionGroup = new FreEditProjectionGroup();
     if (!!data.name) {
         result.name = data.name;
     }
@@ -112,7 +112,7 @@ export function createProjectionGroup(data: Partial<PiEditProjectionGroup>): PiE
         result.standardReferenceSeparator = data.standardReferenceSeparator;
     }
     if (!!data.projections) {
-        // data.projections is a list of PiEditParsedClassifier
+        // data.projections is a list of FreEditParsedClassifier
         // each list-element must be split into 1-3 components
         extractProjections(data, result);
     }
@@ -123,8 +123,8 @@ export function createProjectionGroup(data: Partial<PiEditProjectionGroup>): PiE
     return result;
 }
 
-export function createParsedClassifier(data: Partial<PiEditParsedClassifier>): PiEditParsedClassifier {
-    let result: PiEditParsedClassifier = new PiEditParsedClassifier();
+export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): FreEditParsedClassifier {
+    let result: FreEditParsedClassifier = new FreEditParsedClassifier();
     if (!!data.projection) {
         result.projection = data.projection;
     }
@@ -197,15 +197,15 @@ export function createClassifierInfo(data: Partial<ExtraClassifierInfo>): ExtraC
     }
 }
 
-export function createProjection(data: Partial<PiEditProjection>): PiEditProjection {
-    const result = new PiEditProjection();
+export function createProjection(data: Partial<FreEditProjection>): FreEditProjection {
+    const result = new FreEditProjection();
     if (!!data.classifier) {
         result.classifier = data.classifier;
     }
     if (!!data.lines) {
-        result.lines = PiEditParseUtil.normalizeLine( data.lines[0]  );
+        result.lines = FreEditParseUtil.normalizeLine( data.lines[0]  );
         // Now cleanup the parsed projection
-        // PiEditParseUtil.normalizeLine(result);
+        // FreEditParseUtil.normalizeLine(result);
     }
     if (!!data.location) {
         result.location = data.location;
@@ -215,8 +215,8 @@ export function createProjection(data: Partial<PiEditProjection>): PiEditProject
     return result;
 }
 
-export function createTableProjection(data: Partial<PiEditTableProjection>): PiEditTableProjection {
-    const result = new PiEditTableProjection();
+export function createTableProjection(data: Partial<FreEditTableProjection>): FreEditTableProjection {
+    const result = new FreEditTableProjection();
     if (!!data.name) {
         result.name = data.name;
     }
@@ -234,8 +234,8 @@ export function createTableProjection(data: Partial<PiEditTableProjection>): PiE
     return result;
 }
 
-export function createLine(data: Partial<PiEditProjectionLine>): PiEditProjectionLine {
-    const result = new PiEditProjectionLine();
+export function createLine(data: Partial<FreEditProjectionLine>): FreEditProjectionLine {
+    const result = new FreEditProjectionLine();
     if (!!data.items) {
         result.items = data.items;
     }
@@ -246,8 +246,8 @@ export function createLine(data: Partial<PiEditProjectionLine>): PiEditProjectio
     return result;
 }
 
-export function createOptionalProjection(data: Partial<PiOptionalPropertyProjection>): PiOptionalPropertyProjection {
-    const result = new PiOptionalPropertyProjection();
+export function createOptionalProjection(data: Partial<FreOptionalPropertyProjection>): FreOptionalPropertyProjection {
+    const result = new FreOptionalPropertyProjection();
     if (!!data.lines) {
         result.lines = data.lines;
     }
@@ -259,8 +259,8 @@ export function createOptionalProjection(data: Partial<PiOptionalPropertyProject
     return result;
 }
 
-export function createIndent(data: Partial<PiEditParsedProjectionIndent>): PiEditParsedProjectionIndent {
-    const result = new PiEditParsedProjectionIndent();
+export function createIndent(data: Partial<FreEditParsedProjectionIndent>): FreEditParsedProjectionIndent {
+    const result = new FreEditParsedProjectionIndent();
     if (!!data.indent) {
         result.indent = data.indent;
     }
@@ -271,16 +271,16 @@ export function createIndent(data: Partial<PiEditParsedProjectionIndent>): PiEdi
     return result;
 }
 
-export function createTextItem(data: string): PiEditProjectionText {
-    const result = new PiEditProjectionText();
+export function createTextItem(data: string): FreEditProjectionText {
+    const result = new FreEditProjectionText();
     if (!!data) {
         result.text = data;
     }
     return result;
 }
 
-export function createSuperProjection(data: Partial<PiEditSuperProjection>) : PiEditSuperProjection {
-    const result = new PiEditSuperProjection();
+export function createSuperProjection(data: Partial<FreEditSuperProjection>) : FreEditSuperProjection {
+    const result = new FreEditSuperProjection();
     if (!!data.superRef) {
         result.superRef = data.superRef;
         ListUtil.addIfNotPresent(classifiersUsedInSuperProjection, data.superRef.name);
@@ -295,8 +295,8 @@ export function createSuperProjection(data: Partial<PiEditSuperProjection>) : Pi
     return result;
 }
 
-export function createPropertyProjection(data: { expression, projectionName, location }): PiEditPropertyProjection {
-    let result: PiEditPropertyProjection = new PiEditPropertyProjection();
+export function createPropertyProjection(data: { expression, projectionName, location }): FreEditPropertyProjection {
+    let result: FreEditPropertyProjection = new FreEditPropertyProjection();
     if (!!data["expression"]) {
         result.expression = data["expression"];
     }
@@ -310,8 +310,8 @@ export function createPropertyProjection(data: { expression, projectionName, loc
     return result;
 }
 
-export function createListPropertyProjection(data: { expression, projectionName, listInfo, location }): PiEditPropertyProjection {
-    let result: PiEditPropertyProjection = new PiEditPropertyProjection();
+export function createListPropertyProjection(data: { expression, projectionName, listInfo, location }): FreEditPropertyProjection {
+    let result: FreEditPropertyProjection = new FreEditPropertyProjection();
     result.listInfo = data["listInfo"];
     if (!!data["expression"]) {
         result.expression = data["expression"];
@@ -326,8 +326,8 @@ export function createListPropertyProjection(data: { expression, projectionName,
     return result;
 }
 
-export function createTablePropertyProjection(data: { expression, projectionName, tableInfo, location }): PiEditPropertyProjection {
-    let result: PiEditPropertyProjection = new PiEditPropertyProjection();
+export function createTablePropertyProjection(data: { expression, projectionName, tableInfo, location }): FreEditPropertyProjection {
+    let result: FreEditPropertyProjection = new FreEditPropertyProjection();
     if (!!data["tableInfo"]) {
         result.listInfo = data["tableInfo"];
     }
@@ -345,8 +345,8 @@ export function createTablePropertyProjection(data: { expression, projectionName
     return result;
 }
 
-export function createBooleanPropertyProjection(data: { expression, projectionName, keyword, location }): PiEditPropertyProjection {
-    let result: PiEditPropertyProjection = new PiEditPropertyProjection();
+export function createBooleanPropertyProjection(data: { expression, projectionName, keyword, location }): FreEditPropertyProjection {
+    let result: FreEditPropertyProjection = new FreEditPropertyProjection();
     if (!!data["keyword"]) {
         result.boolInfo = data["keyword"];
     }
@@ -378,12 +378,12 @@ export function createBoolKeywords(data: Partial<BoolKeywords>): BoolKeywords {
     return result;
 }
 
-export function createListDirection(data: Object): PiEditProjectionDirection {
+export function createListDirection(data: Object): FreEditProjectionDirection {
     const dir = data["direction"];
     if ( dir === "horizontal" || dir === "rows" ) {
-        return PiEditProjectionDirection.Horizontal;
+        return FreEditProjectionDirection.Horizontal;
     }
-    return PiEditProjectionDirection.Vertical;
+    return FreEditProjectionDirection.Vertical;
 }
 
 export function createJoinType(data: Object): ListJoinType {
@@ -419,8 +419,8 @@ export function createListInfo(data: Partial<ListInfo>): ListInfo {
     return result;
 }
 
-export function createNewline(): PiEditParsedNewline {
-    return new PiEditParsedNewline();
+export function createNewline(): FreEditParsedNewline {
+    return new FreEditParsedNewline();
 }
 
 export function createSelfExp(data: string): FreLangSelfExp {

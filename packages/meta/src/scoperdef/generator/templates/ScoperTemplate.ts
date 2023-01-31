@@ -58,7 +58,7 @@ export class ScoperTemplate {
 
         // Template starts here - without imports, they are calculated while creating this text and added later
         const templateBody: string = `
-        const LOGGER = new ${Names.PiLogger}("${generatedClassName}");  
+        const LOGGER = new ${Names.FreLogger}("${generatedClassName}");  
         
         /**
          * Class ${generatedClassName} implements the scoper generated from, if present, the scoper definition,
@@ -70,7 +70,7 @@ export class ScoperTemplate {
              * Returns the namespace to be used as alternative scope for 'modelelement'.
              * @param modelelement
              */
-            getAlternativeScope(modelelement: ${Names.PiElement}): ${Names.FreNamespace} {
+            getAlternativeScope(modelelement: ${Names.FreNode}): ${Names.FreNamespace} {
                 ${this.getAlternativeScopeText}
                 return null;
             }
@@ -79,7 +79,7 @@ export class ScoperTemplate {
              * Returns true if there is an alternative scope defined for this 'modelelement'.
              * @param modelelement
              */
-            hasAlternativeScope(modelelement: ${Names.PiElement}): boolean {
+            hasAlternativeScope(modelelement: ${Names.FreNode}): boolean {
                 ${this.hasAlternativeScopeText}
                 return false;
             }
@@ -88,8 +88,8 @@ export class ScoperTemplate {
              * Returns all PiElements that are defined as additional namespaces for \`element'.
              * @param element
              */
-            public additionalNamespaces(element: ${Names.PiElement}): ${Names.PiElement}[] {
-                const result: ${Names.PiElement}[] = [];
+            public additionalNamespaces(element: ${Names.FreNode}): ${Names.FreNode}[] {
+                const result: ${Names.FreNode}[] = [];
                 ${this.getAdditionalNamespacetext}
                 return result;
 
@@ -98,7 +98,7 @@ export class ScoperTemplate {
 
         // now we have enough information to create the correct imports
         const templateImports: string = `
-        import { ${scoperBaseName}, ${Names.PiLogger}, ${Names.PiElement}, ${Names.PiElementReference}, ${Names.FreNamespace}, ${Names.FreTyper} } from "${PROJECTITCORE}"
+        import { ${scoperBaseName}, ${Names.FreLogger}, ${Names.FreNode}, ${Names.FreNodeReference}, ${Names.FreNamespace}, ${Names.FreTyper} } from "${PROJECTITCORE}"
         import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         `;
 
@@ -199,7 +199,7 @@ export class ScoperTemplate {
             result = result.concat(`
             // generated based on '${expression.toFreString()}'
             for (let ${loopVar} of element.${expression.appliedfeature.toFreString()}) {
-                if (loopVariable instanceof ${Names.PiElementReference}) {
+                if (loopVariable instanceof ${Names.FreNodeReference}) {
                     if (!this.currentRoleNames.includes('${expression.appliedfeature.toFreString()}')) {
                         if (!!loopVariable.referred) {
                             if (!this.additionalNamespacesVisited.includes(loopVariable.referred)){

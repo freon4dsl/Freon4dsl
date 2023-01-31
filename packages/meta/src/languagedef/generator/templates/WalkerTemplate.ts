@@ -18,9 +18,9 @@ export class WalkerTemplate {
         import { ${classifiersToDo.map(concept => `
                 ${Names.classifier(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
-        import { ${Names.PiLogger} } from "@projectit/core";
+        import { ${Names.FreLogger} } from "@projectit/core";
                 
-        const LOGGER = new ${Names.PiLogger}("${generatedClassName}");
+        const LOGGER = new ${Names.FreLogger}("${generatedClassName}");
 
         /**
          * Class ${generatedClassName} implements the extended visitor pattern of instances of language ${language.name}.

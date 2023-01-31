@@ -14,7 +14,7 @@ import { LangUtil } from "./LangUtil";
 export class GenerationUtil {
 
     /**
-     * This function sorts the list of PiConcepts in such a way that
+     * This function sorts the list of FreConcepts in such a way that
      * when a concept has a base concept, this base concept comes after the concept.
      * This is needed in cases where an if-statement is generated where the
      * condition is the type of the object, for instance in the unparser.
@@ -247,7 +247,7 @@ export class GenerationUtil {
     public static getTypeAsString(property: FreProperty): string {
         let type: string = this.getBaseTypeAsString(property);
         if (!property.isPart) {
-            type = `${Names.PiElementReference}<${type}>`;
+            type = `${Names.FreNodeReference}<${type}>`;
         }
         if (property.isList) {
             type = type + '[]';

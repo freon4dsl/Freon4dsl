@@ -6,33 +6,33 @@ import {
     FrePrimitiveType, FreProperty
 } from "../../languagedef/metalanguage";
 import { Checker, CheckRunner, LangUtil, Names, FreDefinitionElement, ParseLocationUtil} from "../../utils";
-import { PiEditParseUtil } from "../parser/PiEditParseUtil";
+import { FreEditParseUtil } from "../parser/FreEditParseUtil";
 import {
     ListInfo,
-    PiEditClassifierProjection,
-    PiEditProjection,
-    PiEditProjectionGroup,
-    PiEditPropertyProjection,
-    PiEditSuperProjection,
-    PiEditTableProjection,
-    PiEditUnit,
-    PiOptionalPropertyProjection,
+    FreEditClassifierProjection,
+    FreEditProjection,
+    FreEditProjectionGroup,
+    FreEditPropertyProjection,
+    FreEditSuperProjection,
+    FreEditTableProjection,
+    FreEditUnit,
+    FreOptionalPropertyProjection,
     ExtraClassifierInfo,
-    PiEditProjectionLine,
-    ListJoinType, PiEditProjectionText, PiEditProjectionItem
-} from "./PiEditDefLang";
+    FreEditProjectionLine,
+    ListJoinType, FreEditProjectionText, FreEditProjectionItem
+} from "./FreEditDefLang";
 import { EditorDefaults } from "./EditorDefaults";
 import { MetaLogger } from "../../utils";
 import { MetaElementReference } from "../../languagedef/metalanguage";
 import { FreLangExpressionChecker } from "../../languagedef/checking";
 
-const LOGGER = new MetaLogger("PiEditChecker").mute();
+const LOGGER = new MetaLogger("FreEditChecker").mute();
 
-export class PiEditChecker extends Checker<PiEditUnit> {
+export class FreEditChecker extends Checker<FreEditUnit> {
     runner: CheckRunner;
 
     private myExpressionChecker: FreLangExpressionChecker;
-    private propsWithTableProjection: PiEditPropertyProjection[] = [];
+    private propsWithTableProjection: FreEditPropertyProjection[] = [];
 
     constructor(language: FreLanguage) {
         super(language);
@@ -44,7 +44,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
      *
      * @param editUnit
      */
-    public check(editUnit: PiEditUnit): void {
+    public check(editUnit: FreEditUnit): void {
         LOGGER.log("checking editUnit");
         // create a check runner
         this.runner = new CheckRunner(this.errors, this.warnings);
@@ -86,7 +86,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         this.warnings = this.warnings.concat(this.myExpressionChecker.warnings);
     }
 
-    private checkUniqueNameOfProjectionGroup(names: string[], group: PiEditProjectionGroup) {
+    private checkUniqueNameOfProjectionGroup(names: string[], group: FreEditProjectionGroup) {
         // check unique names, disregarding upper/lower case of first character
         if (names.includes(group.name)) {
             this.runner.simpleCheck(false,
@@ -97,7 +97,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkUniquePrecendenceOfProjectionGroup(precendences: number[], group: PiEditProjectionGroup) {
+    private checkUniquePrecendenceOfProjectionGroup(precendences: number[], group: FreEditProjectionGroup) {
         // check unique precedence
         if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
             if (group.name !== Names.defaultProjectionName && precendences.includes(group.precedence)) {
@@ -117,11 +117,11 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkProjectionGroup(group: PiEditProjectionGroup, editor: PiEditUnit) {
+    private checkProjectionGroup(group: FreEditProjectionGroup, editor: FreEditUnit) {
         LOGGER.log("checking projectionGroup " + group?.name);
         this.runner.simpleCheck(!!group.name, `Editor should have a name, it is empty ${ParseLocationUtil.location(group)}.`);
         for (const projection of group.projections) {
-            if (projection instanceof PiEditTableProjection) {
+            if (projection instanceof FreEditTableProjection) {
                 projection.name = 'tableRowFor' + Names.startWithUpperCase(group.name);
             } else {
                 projection.name = group.name;
@@ -150,14 +150,14 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         // every classifier may have only one 'normal' projection in a group
         // every classifier may have only one 'table' projection in a group
         group.projections.forEach(proj => {
-            if (proj instanceof PiEditTableProjection) {
+            if (proj instanceof FreEditTableProjection) {
                 const myCls = proj.classifier.referred;
                 if (!!myCls) {
                     this.runner.simpleCheck(!classifiersWithTableProj.includes(myCls),
                         `There may be only one table projection for ${myCls.name} in a projection group ${ParseLocationUtil.location(proj)}.`);
                     classifiersWithTableProj.push(myCls);
                 } // else: error message produced elsewhere
-            } else if (proj instanceof PiEditProjection) {
+            } else if (proj instanceof FreEditProjection) {
                 const myCls = proj.classifier.referred;
                 if (!!myCls) {
                     this.runner.simpleCheck(!classifiersWithNormalProj.includes(myCls),
@@ -237,7 +237,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         return allExtras;
     }
 
-    private checkProjection(projection: PiEditClassifierProjection, editor: PiEditUnit) {
+    private checkProjection(projection: FreEditClassifierProjection, editor: FreEditUnit) {
         LOGGER.log("checking projection for " + projection.classifier?.name);
         const myClassifier: FreClassifier = projection.classifier.referred;
         this.runner.nestedCheck({
@@ -248,9 +248,9 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     this.runner.simpleCheck(false,
                         `A limited concept cannot have a projection, it can only be used as reference ${ParseLocationUtil.location(projection)}.`);
                 } else {
-                    if (projection instanceof PiEditProjection) {
+                    if (projection instanceof FreEditProjection) {
                         this.checkNormalProjection(projection, myClassifier, editor);
-                    } else if (projection instanceof PiEditTableProjection) {
+                    } else if (projection instanceof FreEditTableProjection) {
                         this.checkTableProjection(projection, myClassifier, editor);
                     }
                 }
@@ -258,7 +258,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         });
     }
 
-    private checkNormalProjection(projection: PiEditProjection, cls: FreClassifier, editor: PiEditUnit) {
+    private checkNormalProjection(projection: FreEditProjection, cls: FreClassifier, editor: FreEditUnit) {
         LOGGER.log("checking normal projection ");
         if (!!projection) {
             if (projection.lines.length > 1) {
@@ -294,29 +294,29 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     projection.lines.forEach(line => {
                         this.checkLine(line, cls, editor);
                     });
-                    const first: PiEditProjectionItem = projection.lines[0]?.items[0];
-                    if (first instanceof PiEditProjectionText) {
+                    const first: FreEditProjectionItem = projection.lines[0]?.items[0];
+                    if (first instanceof FreEditProjectionText) {
                         this.runner.simpleWarning(first.text.trimEnd() !== "?",
                             `The main projection may never be optional ${ParseLocationUtil.location(projection)}.`);
                     }
                 }
             });
-            PiEditParseUtil.normalize(projection);
+            FreEditParseUtil.normalize(projection);
         }
     }
 
-    private checkLine(line: PiEditProjectionLine, cls: FreClassifier, editor: PiEditUnit) {
+    private checkLine(line: FreEditProjectionLine, cls: FreClassifier, editor: FreEditUnit) {
         LOGGER.log("checking line ");
         line.items.forEach(item => {
-            if (item instanceof PiEditPropertyProjection) {
+            if (item instanceof FreEditPropertyProjection) {
                 this.checkPropProjection(item, cls, editor);
-            } else if (item instanceof PiEditSuperProjection) {
+            } else if (item instanceof FreEditSuperProjection) {
                 this.checkSuperProjection(editor, item, cls);
             }
         });
     }
 
-    private checkTableProjection(projection: PiEditTableProjection, cls: FreClassifier, editor: PiEditUnit) {
+    private checkTableProjection(projection: FreEditTableProjection, cls: FreClassifier, editor: FreEditUnit) {
         LOGGER.log("checking table projection for " + cls?.name);
         if (!!projection) {
             this.runner.nestedCheck({
@@ -334,7 +334,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkBooleanPropertyProjection(item: PiEditPropertyProjection, myProp: FreProperty) {
+    private checkBooleanPropertyProjection(item: FreEditPropertyProjection, myProp: FreProperty) {
         LOGGER.log("checking boolean property projection: " + myProp?.name);
         this.runner.nestedCheck({
             check: myProp instanceof FrePrimitiveProperty && myProp.type === FrePrimitiveType.boolean,
@@ -344,7 +344,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     error: `Property '${myProp.name}' may not have a keyword projection, because it is a list ${ParseLocationUtil.location(item)}.`,
                     whenOk: () => {
                         this.runner.simpleCheck(
-                            !PiEditChecker.includesWhitespace(item.boolInfo.trueKeyword),
+                            !FreEditChecker.includesWhitespace(item.boolInfo.trueKeyword),
                             `The text for a keyword projection should not include any whitespace ${ParseLocationUtil.location(item)}.`);
                     }
                 });
@@ -354,7 +354,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         });
     }
 
-    private checkListProperty(item: PiEditPropertyProjection, myProp: FreProperty) {
+    private checkListProperty(item: FreEditPropertyProjection, myProp: FreProperty) {
         LOGGER.log("checking list property projection: " + myProp?.name);
         if (!!item.listInfo) {
             if (item.listInfo.isTable) {
@@ -384,13 +384,13 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             item.listInfo = new ListInfo();
             // the following are set upon creation of ListInfo
             // item.listInfo.isTable = false;
-            // item.listInfo.direction = PiEditProjectionDirection.Vertical;
+            // item.listInfo.direction = FreEditProjectionDirection.Vertical;
             item.listInfo.joinType = EditorDefaults.listJoinType;
             item.listInfo.joinText = EditorDefaults.listJoinText;
         }
     }
 
-    private checkSuperProjection(editor: PiEditUnit, item: PiEditSuperProjection, cls: FreClassifier) {
+    private checkSuperProjection(editor: FreEditUnit, item: FreEditSuperProjection, cls: FreClassifier) {
         LOGGER.log("checking super projection: " + cls?.name);
         const myParent = item.superRef.referred;
         this.runner.nestedCheck({
@@ -414,10 +414,10 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         });
     }
 
-    private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: FreClassifier, editor: PiEditUnit) {
+    private checkOptionalProjection(item: FreOptionalPropertyProjection, cls: FreClassifier, editor: FreEditUnit) {
         LOGGER.log("checking optional projection for " + cls?.name);
 
-        const propProjections: PiEditPropertyProjection[] = [];
+        const propProjections: FreEditPropertyProjection[] = [];
         let nrOfItems = 0;
         this.runner.nestedCheck({ check: item.lines.length > 0,
             error: `No empty projections allowed ${ParseLocationUtil.location(item)}.`,
@@ -425,7 +425,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 item.lines.forEach(line => {
                     this.checkLine(line, cls, editor);
                     nrOfItems += line.items.length;
-                    propProjections.push(...line.items.filter(item => item instanceof PiEditPropertyProjection) as PiEditPropertyProjection[]);
+                    propProjections.push(...line.items.filter(item => item instanceof FreEditPropertyProjection) as FreEditPropertyProjection[]);
                 });
                 this.runner.nestedCheck({check: propProjections.length === 1,
                     error: `There should be (only) one property within an optional projection, found ${propProjections.length} ${ParseLocationUtil.location(item)}.`,
@@ -481,7 +481,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private resolveReferences(editorDef: PiEditUnit) {
+    private resolveReferences(editorDef: FreEditUnit) {
         LOGGER.log("resolving references ");
         for (const group of editorDef.projectiongroups) {
             for (const proj of group.projections) {
@@ -495,7 +495,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkPropsWithTableProjection(editor: PiEditUnit) {
+    private checkPropsWithTableProjection(editor: FreEditUnit) {
         LOGGER.log("checking properties that have a TableProjection");
         for (const projection of this.propsWithTableProjection) {
             const myprop = projection.property.referred;
@@ -505,9 +505,9 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkPropProjection(item: PiEditPropertyProjection, cls: FreClassifier, editor: PiEditUnit) {
+    private checkPropProjection(item: FreEditPropertyProjection, cls: FreClassifier, editor: FreEditUnit) {
         LOGGER.log("checking property projection for " + cls?.name);
-        if (item instanceof PiOptionalPropertyProjection) {
+        if (item instanceof FreOptionalPropertyProjection) {
             this.checkOptionalProjection(item, cls, editor);
         } else {
             if (!!item.expression) {
@@ -553,12 +553,12 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkProjectionName(projectionName: string, propType: FreClassifier, item: FreDefinitionElement, editor: PiEditUnit) {
+    private checkProjectionName(projectionName: string, propType: FreClassifier, item: FreDefinitionElement, editor: FreEditUnit) {
         if (projectionName === Names.defaultProjectionName) {
             return;
         }
         const myGroup = editor.projectiongroups.find(group => group.name === projectionName);
-        let found: PiEditClassifierProjection[] = myGroup?.findProjectionsForType(propType);
+        let found: FreEditClassifierProjection[] = myGroup?.findProjectionsForType(propType);
         this.runner.simpleCheck(
             !!myGroup && !!found && found.length > 0,
             `Cannot find a projection named '${projectionName}' for concept or interface '${propType.name}' ${ParseLocationUtil.location(item)}.`);
