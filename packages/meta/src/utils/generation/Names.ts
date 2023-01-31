@@ -152,7 +152,7 @@ export class Names {
     }
 
     public static projection(group: FreEditProjectionGroup): string {
-        return this.startWithUpperCase(group.name);
+        return group.name;
     }
 
     public static customProjection(language: FreLanguage): string {

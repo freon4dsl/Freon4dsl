@@ -56,10 +56,10 @@ export class FreHeaderProvider extends FreBoxProvider {
         const myBoxProvider: FreBoxProvider = this.mainHandler.getBoxProvider(this._element);
         let myProjection = myBoxProvider.projection();
         // TODO A hack, since the name may already be "table-ified" and the nontable-ified name is needed
-        if (myProjection.startsWith("tableRowFor")) {
-            myProjection = myProjection.replace("tableRowFor", "");
+        if (myProjection.startsWith("tableRowFor_")) {
+            myProjection = myProjection.replace("tableRowFor_", "");
             // TODO Only need first to lowercae
-            myProjection = myProjection.toLowerCase();
+            // myProjection = myProjection.toLowerCase();
         }
         // console.log("   My projection  is " + myProjection)
         const ownerRequired = this.mainHandler.getRequiredProjection(this._element.freLanguageConcept(), myProjection, this.propertyName);

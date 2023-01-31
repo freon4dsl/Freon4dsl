@@ -122,7 +122,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         this.runner.simpleCheck(!!group.name, `Editor should have a name, it is empty ${ParseLocationUtil.location(group)}.`);
         for (const projection of group.projections) {
             if (projection instanceof FreEditTableProjection) {
-                projection.name = 'tableRowFor' + Names.startWithUpperCase(group.name);
+                projection.name = 'tableRowFor_' + group.name;
             } else {
                 projection.name = group.name;
             }
