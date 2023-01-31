@@ -1,21 +1,21 @@
-import { PiLanguage } from "../metalanguage/";
+import { FreLanguage } from "../metalanguage/";
 import { PiParser, MetaLogger } from "../../utils";
 import * as pegjsParser from "./LanguageGrammar";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName } from "./LanguageCreators";
-import { PiLangChecker } from "../checking/PiLangChecker";
+import { FreLangChecker } from "../checking/FreLangChecker";
 
 const LOGGER = new MetaLogger("LanguageParser").mute();
 
-export class LanguageParser extends PiParser<PiLanguage> {
+export class LanguageParser extends PiParser<FreLanguage> {
     constructor() {
         super();
         this.parser = pegjsParser;
-        this.checker = new PiLangChecker(null);
+        this.checker = new FreLangChecker(null);
     }
 
-    protected merge(submodels: PiLanguage[]): PiLanguage {
+    protected merge(submodels: FreLanguage[]): FreLanguage {
         if (submodels.length > 0) {
-            const result: PiLanguage = new PiLanguage();
+            const result: FreLanguage = new FreLanguage();
             result.name = submodels[0].name;
             for (const sub of submodels) {
                 if (sub.name === result.name) { // all submodels should be of the same language

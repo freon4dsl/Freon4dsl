@@ -7,7 +7,7 @@ import {
     PiEditPropertyProjection, PiEditSuperProjection,
     PiOptionalPropertyProjection
 } from "../../editordef/metalanguage";
-import { PiBinaryExpressionConcept, PiClassifier, PiLimitedConcept, PiPrimitiveProperty, PiPrimitiveType, PiProperty } from "../../languagedef/metalanguage";
+import { FreBinaryExpressionConcept, FreClassifier, FreLimitedConcept, FrePrimitiveProperty, FrePrimitiveType, FreProperty } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
 import {
     GrammarRule,
@@ -49,13 +49,13 @@ import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWi
 
 
 export class ConceptMaker {
-    imports: PiClassifier[] = [];
+    imports: FreClassifier[] = [];
     private currentProjectionGroup: PiEditProjectionGroup = null;
     // namedProjections is the list of projections with a different name than the current projection group
     // this list is filled during the build of the template and should alwyas be the last to added
     private namedProjections: PiEditProjection[] = [];
 
-    generateClassifiers(projectionGroup: PiEditProjectionGroup, conceptsUsed: PiClassifier[]): GrammarRule[] {
+    generateClassifiers(projectionGroup: PiEditProjectionGroup, conceptsUsed: FreClassifier[]): GrammarRule[] {
         this.currentProjectionGroup = projectionGroup;
         let rules: GrammarRule[] = [];
         for (const piConcept of conceptsUsed) {
@@ -73,7 +73,7 @@ export class ConceptMaker {
         return rules;
     }
 
-    private generateProjection(piConcept: PiClassifier, projection: PiEditProjection, addName: boolean) {
+    private generateProjection(piConcept: FreClassifier, projection: PiEditProjection, addName: boolean) {
         let rule: ConceptRule;
         if (addName) {
             rule = new ConceptRule(piConcept, projection.name);
@@ -138,10 +138,10 @@ export class ConceptMaker {
     }
 
     private makePropPart(item: PiEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
-        const prop: PiProperty = item.property.referred;
+        const prop: FreProperty = item.property.referred;
         let result: RHSPropEntry = null;
         if (!!prop) {
-            const propType: PiClassifier = prop.type; // more efficient to determine referred only once
+            const propType: FreClassifier = prop.type; // more efficient to determine referred only once
             this.imports.push(propType);
             // take care of named projections
             let myProjName: string = null;
@@ -150,11 +150,11 @@ export class ConceptMaker {
                 myProjName = item.projectionName;
             }
             //
-            if (prop instanceof PiPrimitiveProperty) {
+            if (prop instanceof FrePrimitiveProperty) {
                 result = this.makePrimitiveProperty(prop, propType, item, inOptionalGroup);
-            } else if (propType instanceof PiLimitedConcept) {
+            } else if (propType instanceof FreLimitedConcept) {
                 result = this.makeLimitedProp(prop, item, inOptionalGroup, isSingleEntry);
-            } else if (propType instanceof PiBinaryExpressionConcept) {
+            } else if (propType instanceof FreBinaryExpressionConcept) {
                 if (!prop.isList) {
                     result = new RHSBinaryExp(prop, propType); // __pi_binary_propTypeName
                 } else {
@@ -182,7 +182,7 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeListProperty(prop: PiProperty, item: PiEditPropertyProjection, isSingleEntry: boolean): RHSPropEntry {
+    private makeListProperty(prop: FreProperty, item: PiEditPropertyProjection, isSingleEntry: boolean): RHSPropEntry {
         let result: RHSPropEntry;
         if (prop.isPart) {
             // (list, part, optionality not relevant)
@@ -217,7 +217,7 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeSingleProperty(prop: PiProperty, myProjName: string, inOptionalGroup: boolean): RHSPropEntry {
+    private makeSingleProperty(prop: FreProperty, myProjName: string, inOptionalGroup: boolean): RHSPropEntry {
         let result: RHSPropEntry;
         if (prop.isPart && (!prop.isOptional || inOptionalGroup)) {
             result = new RHSPartEntry(prop, myProjName); //`${propTypeName}`;
@@ -252,8 +252,8 @@ export class ConceptMaker {
         return result;
     }
 
-    private makePrimitiveProperty(prop: PiPrimitiveProperty, propType: PiClassifier, item: PiEditPropertyProjection, inOptionalGroup: boolean): RHSPropEntry {
-        if (propType === PiPrimitiveType.boolean && !!item.boolInfo) {
+    private makePrimitiveProperty(prop: FrePrimitiveProperty, propType: FreClassifier, item: PiEditPropertyProjection, inOptionalGroup: boolean): RHSPropEntry {
+        if (propType === FrePrimitiveType.boolean && !!item.boolInfo) {
             // note that lists of booleans can never have a boolean keyword projection
             if (!item.boolInfo.falseKeyword) {
                 return new RHSBooleanWithSingleKeyWord(prop, item.boolInfo.trueKeyword);
@@ -314,7 +314,7 @@ export class ConceptMaker {
         return subs;
     }
 
-    private makeLimitedProp(prop: PiProperty, item: PiEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
+    private makeLimitedProp(prop: FreProperty, item: PiEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
         if (!prop.isList) {
             if (!prop.isOptional || inOptionalGroup) {
                 return new RHSLimitedRefEntry(prop);
@@ -339,7 +339,7 @@ export class ConceptMaker {
     }
 
     private checkRule(rule: ConceptRule) {
-        let xx: PiProperty[] = [];
+        let xx: FreProperty[] = [];
         for (const part of rule.ruleParts) {
             if (part instanceof RHSPropEntry) {
                 if (!xx.includes(part.property)) {

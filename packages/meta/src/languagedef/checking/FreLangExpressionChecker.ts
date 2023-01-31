@@ -1,26 +1,26 @@
 import { Checker, MetaLogger, CheckRunner, ParseLocationUtil } from "../../utils";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../parser/LanguageExpressionTester";
-import { PiLanguage, PiClassifier, PiLimitedConcept, PiInstance, PiLangExp,
-    PiLangSelfExp,
-    PiLangAppliedFeatureExp,
-    PiLangConceptExp,
-    PiLangFunctionCallExp,
-    PiInstanceExp,
-    PiLangSimpleExp,
-    PiMetaEnvironment,
+import { FreLanguage, FreClassifier, FreLimitedConcept, FreInstance, FreLangExp,
+    FreLangSelfExp,
+    FreLangAppliedFeatureExp,
+    FreLangConceptExp,
+    FreLangFunctionCallExp,
+    FreInstanceExp,
+    FreLangSimpleExp,
+    FreMetaEnvironment,
     MetaElementReference
 } from "../metalanguage";
 import { CommonChecker } from "./CommonChecker";
 
-const LOGGER = new MetaLogger("PiLangExpressionChecker").mute();
+const LOGGER = new MetaLogger("FreLangExpressionChecker").mute();
 const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof", "commonSuperTypeOf", "ancestor"];
 const containerKeyword: string = "container";
 
-export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
+export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> {
     strictUseOfSelf: boolean = true; // if true, then a ThisExpression must have an appliedfeature
     runner = new CheckRunner(this.errors, this.warnings);
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         super(language);
     }
 
@@ -31,7 +31,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
                         `${ParseLocationUtil.location(definition)}.`);
         }
         // Note: this should be done first, otherwise the references will not be resolved
-        PiMetaEnvironment.metascoper.language = this.language;
+        FreMetaEnvironment.metascoper.language = this.language;
 
         this.runner.nestedCheck(
             {
@@ -63,32 +63,32 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     }
 
     // exp
-    public checkLangExp(langExp: PiLangExp, enclosingConcept: PiClassifier) {
+    public checkLangExp(langExp: FreLangExp, enclosingConcept: FreClassifier) {
         if (!enclosingConcept) {
             LOGGER.error("enclosingConcept is null in 'checkLangExp'.")
             return;
         }
         langExp.language = this.language;
-        LOGGER.log("checkLangExp " + langExp.toPiString() );
-        if (langExp instanceof PiInstanceExp) {
+        LOGGER.log("checkLangExp " + langExp.toFreString() );
+        if (langExp instanceof FreInstanceExp) {
             this.checkInstanceExpression(langExp);
         } else
-        if (langExp instanceof PiLangSelfExp) {
+        if (langExp instanceof FreLangSelfExp) {
             this.checkSelfExpression(langExp, enclosingConcept);
-        } else if (langExp instanceof PiLangConceptExp) {
+        } else if (langExp instanceof FreLangConceptExp) {
             this.checkConceptExpression(langExp, enclosingConcept);
-        } else if (langExp instanceof PiLangFunctionCallExp) {
+        } else if (langExp instanceof FreLangFunctionCallExp) {
             this.checkFunctionCallExpression(langExp, enclosingConcept);
-        } else if (langExp instanceof PiLangAppliedFeatureExp) {
+        } else if (langExp instanceof FreLangAppliedFeatureExp) {
             this.checkAppliedFeatureExp(langExp, enclosingConcept);
-        } else if (langExp instanceof PiLangSimpleExp) {
+        } else if (langExp instanceof FreLangSimpleExp) {
             // this.checkSimpleExp(langExp, enclosingConcept);
         }
     }
 
     // LimitedConcept:instanceName
-    public checkInstanceExpression(langExp: PiInstanceExp) {
-        LOGGER.log("checkInstanceExpression " + langExp?.toPiString());
+    public checkInstanceExpression(langExp: FreInstanceExp) {
+        LOGGER.log("checkInstanceExpression " + langExp?.toFreString());
         const myLimitedConcept = this.language.findConcept(langExp.sourceName);
 
         this.runner.nestedCheck( {
@@ -96,20 +96,20 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
             error: `Cannot find limited concept ${langExp.sourceName} ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
                 this.runner.nestedCheck( {
-                    check: myLimitedConcept instanceof PiLimitedConcept,
+                    check: myLimitedConcept instanceof FreLimitedConcept,
                     error: `Concept ${langExp.sourceName} does not defined any instances ${ParseLocationUtil.location(langExp)}.`,
                     whenOk: () => {
                         this.runner.nestedCheck( {
                             check: !!langExp.instanceName,
                             error: `A limited concept expression should have an instance name ${ParseLocationUtil.location(langExp)}.`,
                             whenOk: () => {
-                                const foundInstance = (myLimitedConcept as PiLimitedConcept).instances.find(l => l.name === langExp.instanceName);
+                                const foundInstance = (myLimitedConcept as FreLimitedConcept).instances.find(l => l.name === langExp.instanceName);
                                 this.runner.simpleCheck(!!foundInstance,
                                     `${langExp.instanceName} is not a predefined instance of ${myLimitedConcept.name} ` +
                                             `${ParseLocationUtil.location(langExp)}.`
                                 );
                                 if (!!foundInstance) {
-                                    langExp.__referredElement = MetaElementReference.create<PiInstance>(foundInstance, "PiInstance");
+                                    langExp.__referredElement = MetaElementReference.create<FreInstance>(foundInstance, "FreInstance");
                                 }
                             }
                         });
@@ -120,9 +120,9 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     }
 
     // self.XXX
-    private checkSelfExpression(langExp: PiLangSelfExp, enclosingConcept: PiClassifier) {
-        LOGGER.log("checkSelfExpression " + langExp?.toPiString());
-        langExp.__referredElement = MetaElementReference.create<PiClassifier>(enclosingConcept, "PiConcept");
+    private checkSelfExpression(langExp: FreLangSelfExp, enclosingConcept: FreClassifier) {
+        LOGGER.log("checkSelfExpression " + langExp?.toFreString());
+        langExp.__referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreConcept");
         langExp.__referredElement.owner = langExp;
         if (this.strictUseOfSelf) {
             this.runner.nestedCheck(
@@ -139,29 +139,29 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     }
 
     // something.XXX -- may not occur, except when the expression is 'owner'
-    private checkConceptExpression(langExp: PiLangConceptExp, enclosingConcept: PiClassifier) {
-        LOGGER.log("checkConceptExpression " + langExp?.toPiString());
+    private checkConceptExpression(langExp: FreLangConceptExp, enclosingConcept: FreClassifier) {
+        LOGGER.log("checkConceptExpression " + langExp?.toFreString());
         // check if the keyword 'owner' was used
         this.runner.nestedCheck( {
             check: langExp.sourceName === containerKeyword,
             error: `Expression should start with 'self' ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
-                langExp.__referredElement = MetaElementReference.create<PiClassifier>(enclosingConcept, "PiClassifier");
+                langExp.__referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreClassifier");
                 langExp.__referredElement.owner = langExp;
             }
         });
     }
 
     // someFunction( XXX, YYY )
-    private checkFunctionCallExpression(langExp: PiLangFunctionCallExp, enclosingConcept: PiClassifier) {
-        LOGGER.log("checkFunctionCallExpression " + langExp?.toPiString());
+    private checkFunctionCallExpression(langExp: FreLangFunctionCallExp, enclosingConcept: FreClassifier) {
+        LOGGER.log("checkFunctionCallExpression " + langExp?.toFreString());
         const functionName = validFunctionNames.find(name => name === langExp.sourceName);
         // TODO ??? set langExp.referredElement to one of the predefined functions
         this.runner.nestedCheck({
             check: !!functionName,
             error: `${langExp.sourceName} is not a valid function ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
-                let functionType: PiClassifier = null;
+                let functionType: FreClassifier = null;
                 if (langExp.sourceName === validFunctionNames[2]) { // "typeof"
                     this.runner.nestedCheck({
                         check: langExp.actualparams.length === 1,
@@ -187,7 +187,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
                                     error: `Cannot find reference to ${p.sourceName} ${ParseLocationUtil.location(langExp)}`,
                                     whenOk: () => {
                                         functionType = foundClassifier;
-                                        p.__referredElement = MetaElementReference.create<PiClassifier>(foundClassifier, "PiClassifier");
+                                        p.__referredElement = MetaElementReference.create<FreClassifier>(foundClassifier, "FreClassifier");
                                         p.__referredElement.owner = p;
                                     }
                                 });
@@ -217,8 +217,8 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     }
 
     // .XXX
-    private checkAppliedFeatureExp(feat: PiLangAppliedFeatureExp, enclosingConcept: PiClassifier) {
-        LOGGER.log("checkAppliedFeatureExp " + feat?.toPiString());
+    private checkAppliedFeatureExp(feat: FreLangAppliedFeatureExp, enclosingConcept: FreClassifier) {
+        LOGGER.log("checkAppliedFeatureExp " + feat?.toFreString());
         if (!enclosingConcept) {
             LOGGER.error("enclosingConcept is null in 'checkAppliedFeatureExp'.")
             return;
@@ -234,7 +234,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
             whenOk: () => {
                 if (!!feat.appliedfeature) {
                     this.runner.simpleCheck(!feat.referredElement.isList,
-                        `List property '${feat.referredElement.name}' should not have an applied expression (.${feat.appliedfeature.toPiString()})` +
+                        `List property '${feat.referredElement.name}' should not have an applied expression (.${feat.appliedfeature.toFreString()})` +
                         ` ${ParseLocationUtil.location(feat)}.`);
                     feat.appliedfeature.language = feat.language;
                     this.checkAppliedFeatureExp(feat.appliedfeature, feat.referredElement.type);

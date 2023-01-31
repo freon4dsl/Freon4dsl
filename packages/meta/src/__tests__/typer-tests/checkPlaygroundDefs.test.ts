@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
 import { PiTyperDef } from "../../typerdef/metalanguage";
@@ -8,7 +8,7 @@ describe("Checking new typer", () => {
     const testdir = "src/__tests__/typer-tests/";
     let parser: PiTyperMerger;
 
-    let language: PiLanguage;
+    let language: FreLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 

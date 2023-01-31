@@ -1,11 +1,11 @@
 import {
-    PiClassifier, PiConcept, PiInterface,
-    PiLanguage,
-    PiLimitedConcept,
-    PiPrimitiveProperty,
-    PiPrimitiveType, PiProperty
+    FreClassifier, FreConcept, FreInterface,
+    FreLanguage,
+    FreLimitedConcept,
+    FrePrimitiveProperty,
+    FrePrimitiveType, FreProperty
 } from "../../languagedef/metalanguage";
-import { Checker, CheckRunner, LangUtil, Names, PiDefinitionElement, ParseLocationUtil} from "../../utils";
+import { Checker, CheckRunner, LangUtil, Names, FreDefinitionElement, ParseLocationUtil} from "../../utils";
 import { PiEditParseUtil } from "../parser/PiEditParseUtil";
 import {
     ListInfo,
@@ -24,19 +24,19 @@ import {
 import { EditorDefaults } from "./EditorDefaults";
 import { MetaLogger } from "../../utils";
 import { MetaElementReference } from "../../languagedef/metalanguage";
-import { PiLangExpressionChecker } from "../../languagedef/checking";
+import { FreLangExpressionChecker } from "../../languagedef/checking";
 
 const LOGGER = new MetaLogger("PiEditChecker").mute();
 
 export class PiEditChecker extends Checker<PiEditUnit> {
     runner: CheckRunner;
 
-    private myExpressionChecker: PiLangExpressionChecker;
+    private myExpressionChecker: FreLangExpressionChecker;
     private propsWithTableProjection: PiEditPropertyProjection[] = [];
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         super(language);
-        this.myExpressionChecker = new PiLangExpressionChecker(this.language);
+        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
     }
 
     /**
@@ -145,8 +145,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 this.runner.simpleCheck(group.precedence === 0, `The 'default' projectionGroup must have precedence 0 ${ParseLocationUtil.location(group)}.`);
             }
         }
-        const classifiersWithNormalProj: PiClassifier[] = [];
-        const classifiersWithTableProj: PiClassifier[] = [];
+        const classifiersWithNormalProj: FreClassifier[] = [];
+        const classifiersWithTableProj: FreClassifier[] = [];
         // every classifier may have only one 'normal' projection in a group
         // every classifier may have only one 'table' projection in a group
         group.projections.forEach(proj => {
@@ -239,12 +239,12 @@ export class PiEditChecker extends Checker<PiEditUnit> {
 
     private checkProjection(projection: PiEditClassifierProjection, editor: PiEditUnit) {
         LOGGER.log("checking projection for " + projection.classifier?.name);
-        const myClassifier: PiClassifier = projection.classifier.referred;
+        const myClassifier: FreClassifier = projection.classifier.referred;
         this.runner.nestedCheck({
             check: !!myClassifier,
             error: `Classifier ${projection.classifier.name} is unknown ${ParseLocationUtil.location(projection)}`,
             whenOk: () => {
-                if (myClassifier instanceof PiLimitedConcept) {
+                if (myClassifier instanceof FreLimitedConcept) {
                     this.runner.simpleCheck(false,
                         `A limited concept cannot have a projection, it can only be used as reference ${ParseLocationUtil.location(projection)}.`);
                 } else {
@@ -258,7 +258,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         });
     }
 
-    private checkNormalProjection(projection: PiEditProjection, cls: PiClassifier, editor: PiEditUnit) {
+    private checkNormalProjection(projection: PiEditProjection, cls: FreClassifier, editor: PiEditUnit) {
         LOGGER.log("checking normal projection ");
         if (!!projection) {
             if (projection.lines.length > 1) {
@@ -305,7 +305,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkLine(line: PiEditProjectionLine, cls: PiClassifier, editor: PiEditUnit) {
+    private checkLine(line: PiEditProjectionLine, cls: FreClassifier, editor: PiEditUnit) {
         LOGGER.log("checking line ");
         line.items.forEach(item => {
             if (item instanceof PiEditPropertyProjection) {
@@ -316,7 +316,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         });
     }
 
-    private checkTableProjection(projection: PiEditTableProjection, cls: PiClassifier, editor: PiEditUnit) {
+    private checkTableProjection(projection: PiEditTableProjection, cls: FreClassifier, editor: PiEditUnit) {
         LOGGER.log("checking table projection for " + cls?.name);
         if (!!projection) {
             this.runner.nestedCheck({
@@ -334,10 +334,10 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkBooleanPropertyProjection(item: PiEditPropertyProjection, myProp: PiProperty) {
+    private checkBooleanPropertyProjection(item: PiEditPropertyProjection, myProp: FreProperty) {
         LOGGER.log("checking boolean property projection: " + myProp?.name);
         this.runner.nestedCheck({
-            check: myProp instanceof PiPrimitiveProperty && myProp.type === PiPrimitiveType.boolean,
+            check: myProp instanceof FrePrimitiveProperty && myProp.type === FrePrimitiveType.boolean,
             error: `Property '${myProp.name}' may not have a keyword projection, because it is not of boolean type ${ParseLocationUtil.location(item)}.`,
             whenOk: () => {
                 this.runner.nestedCheck({check: !myProp.isList,
@@ -354,7 +354,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         });
     }
 
-    private checkListProperty(item: PiEditPropertyProjection, myProp: PiProperty) {
+    private checkListProperty(item: PiEditPropertyProjection, myProp: FreProperty) {
         LOGGER.log("checking list property projection: " + myProp?.name);
         if (!!item.listInfo) {
             if (item.listInfo.isTable) {
@@ -390,7 +390,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkSuperProjection(editor: PiEditUnit, item: PiEditSuperProjection, cls: PiClassifier) {
+    private checkSuperProjection(editor: PiEditUnit, item: PiEditSuperProjection, cls: FreClassifier) {
         LOGGER.log("checking super projection: " + cls?.name);
         const myParent = item.superRef.referred;
         this.runner.nestedCheck({
@@ -398,11 +398,11 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             error: `Cannot find "${item.superRef.name}" ${ParseLocationUtil.location(item)}`,
             whenOk: () => {
                 // see if myParent is indeed one of the implemented interfaces or a super concept
-                if (myParent instanceof PiConcept) {
+                if (myParent instanceof FreConcept) {
                     const mySupers = LangUtil.superConcepts(cls);
                     this.runner.simpleCheck(!!mySupers.find(superCl => superCl === myParent),
                         `Concept ${myParent.name} is not a base concept of ${cls.name} ${ParseLocationUtil.location(item.superRef)}.`);
-                } else if (myParent instanceof PiInterface) {
+                } else if (myParent instanceof FreInterface) {
                     const mySupers = LangUtil.superInterfaces(cls);
                     this.runner.simpleCheck(!!mySupers.find(superCl => superCl === myParent),
                         `Interface ${myParent.name} is not implemented by ${cls.name} ${ParseLocationUtil.location(item.superRef)}.`);
@@ -414,7 +414,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         });
     }
 
-    private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: PiClassifier, editor: PiEditUnit) {
+    private checkOptionalProjection(item: PiOptionalPropertyProjection, cls: FreClassifier, editor: PiEditUnit) {
         LOGGER.log("checking optional projection for " + cls?.name);
 
         const propProjections: PiEditPropertyProjection[] = [];
@@ -435,7 +435,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                             const myprop = propProjections[0].property.referred;
                             this.runner.simpleCheck(myprop.isOptional || myprop.isList || myprop.isPrimitive,
                                 `Property '${myprop.name}' is not a list, nor optional or primitive, therefore it may not be within an optional projection ${ParseLocationUtil.location(propProjections[0])}.`);
-                            if (myprop.isPrimitive && myprop.type === PiPrimitiveType.boolean) {
+                            if (myprop.isPrimitive && myprop.type === FrePrimitiveType.boolean) {
                                 // when a primitive property is in an optional group, it will not be shown when it has the default value for that property
                                 // a property of boolean type with one keyword should not be within optional group
                                 if (!!propProjections[0].boolInfo) {
@@ -457,10 +457,10 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             // check the reference shortcut and change the expression into a reference to a property
             if (!!classifierInfo.referenceShortcutExp) {
                 this.myExpressionChecker.checkLangExp(classifierInfo.referenceShortcutExp, classifierInfo.classifier.referred);
-                const xx: PiProperty = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
+                const xx: FreProperty = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
                 // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat
                 if (!!xx) {
-                    classifierInfo.referenceShortCut = MetaElementReference.create<PiProperty>(xx as PiProperty, "PiProperty");
+                    classifierInfo.referenceShortCut = MetaElementReference.create<FreProperty>(xx as FreProperty, "FreProperty");
                     classifierInfo.referenceShortCut.owner = this.language;
                 }
             }
@@ -505,7 +505,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkPropProjection(item: PiEditPropertyProjection, cls: PiClassifier, editor: PiEditUnit) {
+    private checkPropProjection(item: PiEditPropertyProjection, cls: FreClassifier, editor: PiEditUnit) {
         LOGGER.log("checking property projection for " + cls?.name);
         if (item instanceof PiOptionalPropertyProjection) {
             this.checkOptionalProjection(item, cls, editor);
@@ -514,10 +514,10 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 const myProp = cls.allProperties().find(prop => prop.name === item.expression.appliedfeature?.sourceName);
                 this.runner.nestedCheck({
                     check: !!myProp,
-                    error: `Cannot find property "${item.expression.toPiString()}" ${ParseLocationUtil.location(item)}`,
+                    error: `Cannot find property "${item.expression.toFreString()}" ${ParseLocationUtil.location(item)}`,
                     whenOk: () => {
                         // set the 'property' attribute of the projection
-                        item.property = MetaElementReference.create<PiProperty>(myProp, "PiProperty");
+                        item.property = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
                         item.property.owner = this.language;
                         item.expression = null;
                         // check the rest
@@ -553,7 +553,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkProjectionName(projectionName: string, propType: PiClassifier, item: PiDefinitionElement, editor: PiEditUnit) {
+    private checkProjectionName(projectionName: string, propType: FreClassifier, item: FreDefinitionElement, editor: PiEditUnit) {
         if (projectionName === Names.defaultProjectionName) {
             return;
         }
@@ -568,8 +568,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         return keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r") || keyword.includes("\t");
     }
 
-    private copyReference(reference: MetaElementReference<PiProperty>): MetaElementReference<PiProperty> {
-        const result: MetaElementReference<PiProperty> = MetaElementReference.create<PiProperty>(reference.referred, "PiProperty");
+    private copyReference(reference: MetaElementReference<FreProperty>): MetaElementReference<FreProperty> {
+        const result: MetaElementReference<FreProperty> = MetaElementReference.create<FreProperty>(reference.referred, "FreProperty");
         result.owner = this.language;
         return result;
     }

@@ -13,7 +13,7 @@ import {
     STDLIB_FOLDER,
     STDLIB_GEN_FOLDER
 } from "../../utils";
-import { PiLanguage } from "../metalanguage";
+import { FreLanguage } from "../metalanguage";
 import {
     AllConceptsTemplate,
     ConceptTemplate,
@@ -21,7 +21,7 @@ import {
     IndexTemplate,
     LanguageTemplate,
     MetaTypeTemplate,
-    PiReferenceTemplate,
+    FreReferenceTemplate,
     WalkerTemplate,
     WorkerInterfaceTemplate,
     DefaultWorkerTemplate,
@@ -45,7 +45,7 @@ export class LanguageGenerator {
     private utilsFolder: string;
     private stdlibFolder: string;
 
-    generate(language: PiLanguage): void {
+    generate(language: FreLanguage): void {
         LOGGER.log("Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_GEN_FOLDER);
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
@@ -58,7 +58,7 @@ export class LanguageGenerator {
         const interfaceTemplate = new InterfaceTemplate();
         const languageIndexTemplate = new IndexTemplate();
         const allConceptsTemplate = new AllConceptsTemplate();
-        const piReferenceTemplate = new PiReferenceTemplate();
+        const piReferenceTemplate = new FreReferenceTemplate();
         const environmentTemplate = new EnvironmentTemplate();
         const stdlibTemplate = new StdlibTemplate();
         const walkerTemplate = new WalkerTemplate();

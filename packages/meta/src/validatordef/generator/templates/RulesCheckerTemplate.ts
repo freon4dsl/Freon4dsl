@@ -9,7 +9,7 @@ import {
     FreErrorSeverity,
     PROJECTITCORE
 } from "../../../utils";
-import { PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { FreLanguage, FrePrimitiveProperty } from "../../../languagedef/metalanguage";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -28,7 +28,7 @@ import { ValidationUtils } from "../ValidationUtils";
 
 export class RulesCheckerTemplate {
 
-    generateRulesChecker(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
+    generateRulesChecker(language: FreLanguage, validdef: PiValidatorDef, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName: string = Names.PiError;
         const checkerClassName: string = Names.rulesChecker(language);
@@ -93,7 +93,7 @@ export class RulesCheckerTemplate {
         `;
     }
 
-    private createImports(language: PiLanguage): string {
+    private createImports(language: FreLanguage): string {
         return `${language.concepts?.map(concept => `
                 ${Names.concept(concept)}`).concat(
                     language.interfaces?.map(intf => `
@@ -187,10 +187,10 @@ export class RulesCheckerTemplate {
 
     private makeNotEmptyRule(r: NotEmptyRule, locationdescription: string, severity: string, message: string) {
         if (message.length === 0) {
-            message = `"List '${r.property.toPiString()}' may not be empty"`;
+            message = `"List '${r.property.toFreString()}' may not be empty"`;
         }
         return `if (${GenerationUtil.langExpToTypeScript(r.property)}.length == 0) {
-                    this.errorList.push(new ${Names.PiError}(${message}, modelelement, ${locationdescription}, "${r.property.toPiString()}", ${severity}));
+                    this.errorList.push(new ${Names.PiError}(${message}, modelelement, ${locationdescription}, "${r.property.toFreString()}", ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;
     }
@@ -226,8 +226,8 @@ export class RulesCheckerTemplate {
     }
 
     private makeIsuniqueRule(rule: IsuniqueRule, locationdescription: string, severity: string, message: string): string {
-        const listpropertyName = rule.listproperty.appliedfeature.toPiString();
-        const listName = rule.list.appliedfeature.toPiString();
+        const listpropertyName = rule.listproperty.appliedfeature.toFreString();
+        const listName = rule.list.appliedfeature.toFreString();
         const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
         const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
         const listpropertyTypeName = GenerationUtil.getBaseTypeAsString(referredListproperty);
@@ -275,7 +275,7 @@ export class RulesCheckerTemplate {
                     // console.log("FOUND message text: '" + cont.value + "'");
                     result += `${cont.value}`;
                 } else if (cont instanceof ValidationMessageReference) {
-                    if (cont.expression.findRefOfLastAppliedFeature() instanceof PiPrimitiveProperty) {
+                    if (cont.expression.findRefOfLastAppliedFeature() instanceof FrePrimitiveProperty) {
                         result += `\${${GenerationUtil.langExpToTypeScript(cont.expression)}}`;
                     } else {
                         // console.log("FOUND message expression: '" + cont.expression.toFreString() + "'");

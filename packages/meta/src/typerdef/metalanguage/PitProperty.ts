@@ -1,7 +1,7 @@
-import { PiClassifier, PiConceptProperty, MetaElementReference, PiProperty } from "../../languagedef/metalanguage";
+import { FreClassifier, FreConceptProperty, MetaElementReference, FreProperty } from "../../languagedef/metalanguage";
 import { PitTypeConcept } from "./PitTypeConcept";
 
-export class PitProperty extends PiConceptProperty {
+export class PitProperty extends FreConceptProperty {
     owner: PitTypeConcept;
     /**
      * A convenience method that creates an instance of this class
@@ -52,7 +52,7 @@ export class PitProperty extends PiConceptProperty {
     }
     readonly $typename: string = "PitProperty"; // holds the metatype in the form of a string
 
-    toPiString(): string {
+    toFreString(): string {
         return this.name + ": " + this.typeReference.name;
     }
 }

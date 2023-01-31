@@ -1,4 +1,4 @@
-import { PiClassifier, PiLanguage } from "../../languagedef/metalanguage";
+import { FreClassifier, FreLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker, MetaLogger } from "../../utils";
 import { PiEditParser } from "../../editordef/parser/PiEditParser";
@@ -10,7 +10,7 @@ import {
     PiOptionalPropertyProjection
 } from "../../editordef/metalanguage";
 
-function getAndTestProjection(editDef: PiEditUnit, classifier: PiClassifier) {
+function getAndTestProjection(editDef: PiEditUnit, classifier: FreClassifier) {
     let myProj: PiEditProjection = editDef.getDefaultProjectiongroup().findNonTableProjectionForType(classifier);
     expect(myProj).not.toBeNull();
     expect(myProj).not.toBeUndefined();
@@ -20,7 +20,7 @@ function getAndTestProjection(editDef: PiEditUnit, classifier: PiClassifier) {
 describe("Checking indentation ", () => {
     const testdir = "src/__tests__/editor-tests/indentationFiles/";
     let parser: PiEditParser;
-    let language: PiLanguage;
+    let language: FreLanguage;
     let checker: Checker<PiEditUnit>;
     // MetaLogger.muteAllErrors();
     // MetaLogger.muteAllLogs();
@@ -44,7 +44,7 @@ describe("Checking indentation ", () => {
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
             expect(e.message).toBeNull;
         }
-        const myAAA: PiClassifier = language.units.find(c => c.name === "AAAAAA");
+        const myAAA: FreClassifier = language.units.find(c => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
         expect(myAAA).not.toBeUndefined();
         let myProj: PiEditProjection = getAndTestProjection(editDef, myAAA);
@@ -75,7 +75,7 @@ describe("Checking indentation ", () => {
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
             expect(e.message).toBeNull;
         }
-        const myAAA: PiClassifier = language.units.find(c => c.name === "AAAAAA");
+        const myAAA: FreClassifier = language.units.find(c => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
         expect(myAAA).not.toBeUndefined();
         // expect(false).toBe(true);
@@ -107,7 +107,7 @@ describe("Checking indentation ", () => {
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
             expect(e.message).toBeNull;
         }
-        const myAAA: PiClassifier = language.units.find(c => c.name === "AAAAAA");
+        const myAAA: FreClassifier = language.units.find(c => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
         expect(myAAA).not.toBeUndefined();
         // expect(false).toBe(true);

@@ -3,9 +3,9 @@ import { net } from "net.akehurst.language-agl-processor";
 import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
 import {
     MetaElementReference,
-    PiClassifier,
-    PiLimitedConcept,
-    PiInstance, PiProperty, PiConcept
+    FreClassifier,
+    FreLimitedConcept,
+    FreInstance, FreProperty, FreConcept
 } from "../../languagedef/metalanguage";
 import {
     PiTyperDef,
@@ -61,9 +61,9 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPiTyperDef(branch: SPPTBranch): PiTyperDef {
         // console.log('transformPiTyperDef called: ' + branch.name);
-        let __types: MetaElementReference<PiClassifier>[];
+        let __types: MetaElementReference<FreClassifier>[];
         let __typeConcepts: PitTypeConcept[];
-        let __conceptsWithType: MetaElementReference<PiClassifier>[];
+        let __conceptsWithType: MetaElementReference<FreClassifier>[];
         let __anyTypeSpec: PitAnyTypeSpec;
         let __classifierSpecs: PitClassifierSpec[];
         const children = this.mainAnalyser.getChildren(branch);
@@ -72,7 +72,7 @@ export class PiTyperDefSyntaxAnalyserPart {
             const _optGroup = this.mainAnalyser.getGroup(children[1]);
             const _propItem = this.mainAnalyser.getChildren(_optGroup);
 
-            __types = this.mainAnalyser.transformSharedPackedParseTreeRefList<PiClassifier>(_propItem[2], "PiClassifier", ","); // RHSRefListWithSeparator
+            __types = this.mainAnalyser.transformSharedPackedParseTreeRefList<FreClassifier>(_propItem[2], "FreClassifier", ","); // RHSRefListWithSeparator
         } // RHSPartListEntry
         if (children[2].name !== "PitTypeConcept") {
             __typeConcepts = this.mainAnalyser.transformSharedPackedParseTreeList<PitTypeConcept>(children[2]);
@@ -88,7 +88,7 @@ export class PiTyperDefSyntaxAnalyserPart {
             const _optGroup = this.mainAnalyser.getGroup(children[3]);
             const _propItem = this.mainAnalyser.getChildren(_optGroup);
 
-            __conceptsWithType = this.mainAnalyser.transformSharedPackedParseTreeRefList<PiClassifier>(_propItem[2], "PiClassifier", ","); // RHSRefListWithSeparator
+            __conceptsWithType = this.mainAnalyser.transformSharedPackedParseTreeRefList<FreClassifier>(_propItem[2], "FreClassifier", ","); // RHSRefListWithSeparator
         }
         if (!children[4].isEmptyMatch) {
             // RHSOptionalGroup
@@ -127,7 +127,7 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitTypeConcept(branch: SPPTBranch): PitTypeConcept {
         // console.log('transformPitTypeConcept called: ' + branch.name);
         let __name: string;
-        let __base: MetaElementReference<PiConcept>;
+        let __base: MetaElementReference<FreConcept>;
         let __properties: PitProperty[];
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPrimEntry
@@ -136,7 +136,7 @@ export class PiTyperDefSyntaxAnalyserPart {
             // RHSOptionalGroup
             const _optGroup = this.mainAnalyser.getGroup(children[2]);
             const _propItem = this.mainAnalyser.getChildren(_optGroup);
-            __base = this.mainAnalyser.piElemRef<PiConcept>(_propItem[1], "PiConcept"); // RHSRefEntry
+            __base = this.mainAnalyser.piElemRef<FreConcept>(_propItem[1], "FreConcept"); // RHSRefEntry
         } // RHSListGroup
         __properties = [];
         const _myList = this.mainAnalyser.getChildren(children[4]);
@@ -198,10 +198,10 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitPropertyCallExp(branch: SPPTBranch): PitPropertyCallExp {
         // console.log('transformPitPropertyCallExp called: ' + branch.name);
         let __source: PitExp;
-        let __property: MetaElementReference<PiProperty>;
+        let __property: MetaElementReference<FreProperty>;
         const children = this.mainAnalyser.getChildren(branch);
         __source = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
-        __property = this.mainAnalyser.piElemRef<PiProperty>(children[2], "PiProperty"); // RHSRefEntry
+        __property = this.mainAnalyser.piElemRef<FreProperty>(children[2], "FreProperty"); // RHSRefEntry
         return PitPropertyCallExp.create({ source: __source, __property: __property, agl_location: this.mainAnalyser.location(branch) });
     }
 
@@ -253,10 +253,10 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPitCreateExp(branch: SPPTBranch): PitCreateExp {
         // console.log('transformPitCreateExp called: ' + branch.name);
-        let __type: MetaElementReference<PiClassifier>;
+        let __type: MetaElementReference<FreClassifier>;
         let __propertyDefs: PitPropInstance[];
         const children = this.mainAnalyser.getChildren(branch);
-        __type = this.mainAnalyser.piElemRef<PiClassifier>(children[0], "PiClassifier"); // RHSRefEntry
+        __type = this.mainAnalyser.piElemRef<FreClassifier>(children[0], "FreClassifier"); // RHSRefEntry
         __propertyDefs = this.mainAnalyser.transformSharedPackedParseTreeList<PitPropInstance>(children[2], ","); // RHSPartListWithSeparator
         return PitCreateExp.create({ __type: __type, propertyDefs: __propertyDefs, agl_location: this.mainAnalyser.location(branch) });
     }
@@ -269,10 +269,10 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPitPropInstance(branch: SPPTBranch): PitPropInstance {
         // console.log('transformPitPropInstance called: ' + branch.name);
-        let __property: MetaElementReference<PiProperty>;
+        let __property: MetaElementReference<FreProperty>;
         let __value: PitExp;
         const children = this.mainAnalyser.getChildren(branch);
-        __property = this.mainAnalyser.piElemRef<PiProperty>(children[0], "PiProperty"); // RHSRefEntry
+        __property = this.mainAnalyser.piElemRef<FreProperty>(children[0], "FreProperty"); // RHSRefEntry
         __value = this.mainAnalyser.transformSharedPackedParseTreeNode(children[2]); // RHSPartEntry
         return PitPropInstance.create({ __property: __property, value: __value, agl_location: this.mainAnalyser.location(branch) });
     }
@@ -302,16 +302,16 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPitLimitedInstanceExp(branch: SPPTBranch): PitLimitedInstanceExp {
         // console.log('transformPitLimitedInstanceExp called: ' + branch.name);
-        let __myLimited: MetaElementReference<PiLimitedConcept>;
-        let __myInstance: MetaElementReference<PiInstance>;
+        let __myLimited: MetaElementReference<FreLimitedConcept>;
+        let __myInstance: MetaElementReference<FreInstance>;
         const children = this.mainAnalyser.getChildren(branch);
         if (!children[0].isEmptyMatch) {
             // RHSOptionalGroup
             const _optGroup = this.mainAnalyser.getGroup(children[0]);
             const _propItem = this.mainAnalyser.getChildren(_optGroup);
-            __myLimited = this.mainAnalyser.piElemRef<PiLimitedConcept>(_propItem[0], "PiLimitedConcept"); // RHSRefEntry
+            __myLimited = this.mainAnalyser.piElemRef<FreLimitedConcept>(_propItem[0], "FreLimitedConcept"); // RHSRefEntry
         }
-        __myInstance = this.mainAnalyser.piElemRef<PiInstance>(children[1], "PiInstance"); // RHSRefEntry
+        __myInstance = this.mainAnalyser.piElemRef<FreInstance>(children[1], "FreInstance"); // RHSRefEntry
         return PitLimitedInstanceExp.create({ __myLimited: __myLimited, __myInstance: __myInstance, agl_location: this.mainAnalyser.location(branch) });
     }
 
@@ -350,10 +350,10 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitVarDecl(branch: SPPTBranch): PitVarDecl {
         // console.log('transformPitVarDecl called: ' + branch.name);
         let __name: string;
-        let __type: MetaElementReference<PiClassifier>;
+        let __type: MetaElementReference<FreClassifier>;
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
-        __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "PiClassifier"); // RHSRefEntry
+        __type = this.mainAnalyser.piElemRef<FreClassifier>(children[2], "FreClassifier"); // RHSRefEntry
         return PitVarDecl.create({ name: __name, __type: __type, agl_location: this.mainAnalyser.location(branch) });
     }
 
@@ -409,10 +409,10 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPitClassifierSpec(branch: SPPTBranch): PitClassifierSpec {
         // console.log('transformPitClassifierSpec called: ' + branch.name);
-        let __myClassifier: MetaElementReference<PiClassifier>;
+        let __myClassifier: MetaElementReference<FreClassifier>;
         let __rules: PitTypeRule[];
         const children = this.mainAnalyser.getChildren(branch);
-        __myClassifier = this.mainAnalyser.piElemRef<PiClassifier>(children[0], "PiClassifier"); // RHSRefEntry
+        __myClassifier = this.mainAnalyser.piElemRef<FreClassifier>(children[0], "FreClassifier"); // RHSRefEntry
         // RHSPartListEntry
         if (children[2].name !== "PitTypeRule") {
             __rules = this.mainAnalyser.transformSharedPackedParseTreeList<PitTypeRule>(children[2]);
@@ -435,10 +435,10 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitProperty(branch: SPPTBranch): PitProperty {
         // console.log('transformPitProperty called: ' + branch.name);
         let __name: string;
-        let __type: MetaElementReference<PiClassifier>;
+        let __type: MetaElementReference<FreClassifier>;
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
-        __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "PiClassifier"); // RHSRefEntry
+        __type = this.mainAnalyser.piElemRef<FreClassifier>(children[2], "FreClassifier"); // RHSRefEntry
         return PitProperty.create({ name: __name, typeReference: __type, agl_location: this.mainAnalyser.location(branch) });
     }
 

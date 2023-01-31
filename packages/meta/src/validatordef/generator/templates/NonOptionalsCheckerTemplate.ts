@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiClassifier, PiPrimitiveType } from "../../../languagedef/metalanguage";
+import { FreLanguage, FreClassifier, FrePrimitiveType } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
 const commentBefore = `/**
@@ -12,16 +12,16 @@ const commentBefore = `/**
                         */`;
 
 export class NonOptionalsCheckerTemplate {
-    done: PiClassifier[] = [];
+    done: FreClassifier[] = [];
 
-    generateChecker(language: PiLanguage, relativePath: string): string {
+    generateChecker(language: FreLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName: string = Names.PiError;
         const errorSeverityName: string = Names.PiErrorSeverity;
         const checkerClassName: string = Names.nonOptionalsChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const writerInterfaceName: string = Names.PiWriter;
-        const classifiersToDo: PiClassifier[] = [];
+        const classifiersToDo: FreClassifier[] = [];
         classifiersToDo.push(language.modelConcept);
         classifiersToDo.push(...language.units);
         classifiersToDo.push(...language.concepts);
@@ -53,7 +53,7 @@ export class NonOptionalsCheckerTemplate {
         }`;
     }
 
-    private createImports(language: PiLanguage): string {
+    private createImports(language: FreLanguage): string {
         return language.units?.map(unit => `
                 ${Names.classifier(unit)}`).concat(
                     language.concepts?.map(concept => `
@@ -64,7 +64,7 @@ export class NonOptionalsCheckerTemplate {
         ).join(", ");
     }
 
-    private createChecksOnNonOptionalParts(concept: PiClassifier): string {
+    private createChecksOnNonOptionalParts(concept: FreClassifier): string {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
 
@@ -75,7 +75,7 @@ export class NonOptionalsCheckerTemplate {
                 // if the property is of type `string`
                 // then add a check on the length of the string
                 let additionalStringCheck: string = null;
-                if (prop.isPrimitive && (prop.type == PiPrimitiveType.string || prop.type == PiPrimitiveType.identifier)) {
+                if (prop.isPrimitive && (prop.type == FrePrimitiveType.string || prop.type == FrePrimitiveType.identifier)) {
                     additionalStringCheck = `|| modelelement.${prop.name}?.length == 0`;
                 }
 

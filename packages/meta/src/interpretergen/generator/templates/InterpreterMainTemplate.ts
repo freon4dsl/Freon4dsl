@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../../languagedef/metalanguage";
+import { FreLanguage } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils/index";
 import { PiInterpreterDef } from "../../metalanguage/PiInterpreterDef";
 
@@ -12,7 +12,7 @@ export class InterpreterMainTemplate {
      * @param language
      * @param interpreterDef
      */
-    public interpreterMain(language: PiLanguage, interpreterDef: PiInterpreterDef): string {
+    public interpreterMain(language: FreLanguage, interpreterDef: PiInterpreterDef): string {
         return `// Generated my Freon, will be overwritten with every generation.
         import {
             ConceptFunction, ${Names.FreonInterpreter},

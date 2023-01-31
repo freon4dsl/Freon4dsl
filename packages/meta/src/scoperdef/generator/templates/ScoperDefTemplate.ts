@@ -1,4 +1,4 @@
-import { PiClassifier, PiLanguage } from "../../../languagedef/metalanguage";
+import { FreClassifier, FreLanguage } from "../../../languagedef/metalanguage";
 import {
     Names,
     PROJECTITCORE,
@@ -9,9 +9,9 @@ import { PiScopeDef } from "../../metalanguage";
 
 export class ScoperDefTemplate {
 
-    generateScoperDef(language: PiLanguage, scoperDef: PiScopeDef, relativePath: string): string {
+    generateScoperDef(language: FreLanguage, scoperDef: PiScopeDef, relativePath: string): string {
         // const allLangConcepts: string = Names.allConcepts(language);
-        const concreteNamespaces: PiClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scoperDef.namespaces);
+        const concreteNamespaces: FreClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scoperDef.namespaces);
         // const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
 
         return `import { ${Names.FreLanguage}, ${Names.FreScoperComposite} } from "${PROJECTITCORE}";

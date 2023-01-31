@@ -1,15 +1,15 @@
 import { GrammarRule } from "./GrammarRule";
-import { PiLimitedConcept } from "../../../languagedef/metalanguage";
+import { FreLimitedConcept } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
 import { ParserGenUtil } from "../ParserGenUtil";
 
 export class LimitedRule extends GrammarRule {
-    concept: PiLimitedConcept = null;
+    concept: FreLimitedConcept = null;
     // the mapping of keywords to predef instances
     // first is the name of the instance, second is the keyword
     myMap: Map<string, string> = null;
 
-    constructor(limitedConcept: PiLimitedConcept, myMap: Map<string, string>) {
+    constructor(limitedConcept: FreLimitedConcept, myMap: Map<string, string>) {
         super();
         this.ruleName = Names.classifier(limitedConcept);
         this.concept = limitedConcept;

@@ -1,7 +1,7 @@
 import { ICommandLineActionOptions } from "@rushstack/ts-command-line";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
-import { PiLanguage } from "../languagedef/metalanguage/PiLanguage";
+import { FreLanguage } from "../languagedef/metalanguage/FreLanguage";
 
 /**
  * Generic generator action for generating part of the language, e.g. only the typer.
@@ -9,7 +9,7 @@ import { PiLanguage } from "../languagedef/metalanguage/PiLanguage";
  * Subclasses need to call super.generate().
  */
 export class ProjectItGeneratePartAction extends ProjectItGenerateAction {
-    protected language: PiLanguage;
+    protected language: FreLanguage;
 
     public constructor(options: ICommandLineActionOptions) {
         super(options);

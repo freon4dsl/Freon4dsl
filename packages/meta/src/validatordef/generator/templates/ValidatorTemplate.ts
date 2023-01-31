@@ -1,5 +1,5 @@
 import { CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names, PathProvider, PROJECTITCORE } from "../../../utils";
-import { PiLanguage } from "../../../languagedef/metalanguage";
+import { FreLanguage } from "../../../languagedef/metalanguage";
 import { PiValidatorDef } from "../../metalanguage";
 
 export class ValidatorTemplate {
@@ -7,7 +7,7 @@ export class ValidatorTemplate {
     validatorInterfaceName: string = Names.PiValidator;
     typerInterfaceName: string = Names.FreTyper;
 
-    generateValidator(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
+    generateValidator(language: FreLanguage, validdef: PiValidatorDef, relativePath: string): string {
         const doValidDef = validdef !== null && validdef !== undefined;
 
         const allLangConcepts: string = Names.allConcepts(language);
@@ -95,7 +95,7 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateGenIndex(language: PiLanguage, validdef: PiValidatorDef): string {
+    generateGenIndex(language: FreLanguage, validdef: PiValidatorDef): string {
         return `
         export * from "./${Names.nonOptionalsChecker(language)}";
         export * from "./${Names.validator(language)}";
@@ -103,7 +103,7 @@ export class ValidatorTemplate {
         `;
     }
 
-    generateCustomValidator(language: PiLanguage, relativePath: string): string {
+    generateCustomValidator(language: FreLanguage, relativePath: string): string {
         const className: string = Names.customValidator(language);
         const defaultWorkerName: string = Names.defaultWorker(language);
         const interfaceName: string = Names.checkerInterface(language);
@@ -118,7 +118,7 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateIndex(language: PiLanguage) {
+    generateIndex(language: FreLanguage) {
         return `
         export * from "./${Names.customValidator(language)}";
         `;

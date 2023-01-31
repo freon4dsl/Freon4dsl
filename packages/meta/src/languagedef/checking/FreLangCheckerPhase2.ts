@@ -1,28 +1,26 @@
-import { CheckerPhase, CheckRunner, isNullOrUndefined, LangUtil, Names, ParseLocationUtil } from "../../utils";
+import { CheckerPhase, CheckRunner, isNullOrUndefined, ParseLocationUtil } from "../../utils";
 import {
-    PiClassifier,
-    PiConcept,
-    PiInstance,
-    PiInterface,
-    PiLanguage,
-    PiLimitedConcept,
-    PiPrimitiveProperty,
-    PiPrimitiveType,
-    PiProperty,
-    PiInstanceProperty,
-    PiUnitDescription,
+    FreConcept,
+    FreInstance,
+    FreLanguage,
+    FreLimitedConcept,
+    FrePrimitiveProperty,
+    FrePrimitiveType,
+    FreProperty,
+    FreInstanceProperty,
+    FreUnitDescription,
     MetaElementReference
 } from "../metalanguage";
 import { CommonChecker } from "./CommonChecker";
 import { ClassifierChecker } from "./ClassifierChecker";
 
-export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
-    language: PiLanguage;
+export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
+    language: FreLanguage;
 
     // now everything has been resolved, check that all concepts and interfaces have
     // unique names, that there are no circular inheritance or interface relationships,
     // and that all their properties are consistent with regard to inheritance
-    public check(language: PiLanguage, runner: CheckRunner): void {
+    public check(language: FreLanguage, runner: CheckRunner): void {
         this.runner = runner;
         this.language = language;
         const names: string[] = [];
@@ -43,7 +41,7 @@ export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
                 // check that limited concepts have a name property
                 // and that they do not inherit any non-prim properties
                 // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
-                if (con instanceof PiLimitedConcept) {
+                if (con instanceof FreLimitedConcept) {
                     this.checkLimitedConceptAgain(con);
                 }
             }
@@ -71,7 +69,7 @@ export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
         }
     }
 
-    private checkUniqueFileExtension(extensions: string[], unit: PiUnitDescription) {
+    private checkUniqueFileExtension(extensions: string[], unit: FreUnitDescription) {
         // our parser accepts only variables for fileExtensions, therefore we do not need to check it further here.
         // set the file extension, if not present
         if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length == 0) {
@@ -112,13 +110,13 @@ export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
         }
     }
 
-    private checkLimitedConceptAgain(piLimitedConcept: PiLimitedConcept) {
-        let nameProperty: PiPrimitiveProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
+    private checkLimitedConceptAgain(piLimitedConcept: FreLimitedConcept) {
+        let nameProperty: FrePrimitiveProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
         // if 'name' property is not present, create it.
         if ( !nameProperty ) {
-            nameProperty = new PiPrimitiveProperty();
+            nameProperty = new FrePrimitiveProperty();
             nameProperty.name = "name";
-            nameProperty.type = PiPrimitiveType.identifier;
+            nameProperty.type = FrePrimitiveType.identifier;
             nameProperty.isPart = true;
             nameProperty.isList = false;
             nameProperty.isOptional = false;
@@ -127,7 +125,7 @@ export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
             nameProperty.owningClassifier = piLimitedConcept;
             piLimitedConcept.primProperties.push(nameProperty);
         } else {
-            this.runner.simpleCheck(nameProperty.type === PiPrimitiveType.identifier,
+            this.runner.simpleCheck(nameProperty.type === FrePrimitiveType.identifier,
                 `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${ParseLocationUtil.location(piLimitedConcept)}.`);
         }
         this.runner.simpleCheck(piLimitedConcept.allParts().length === 0,
@@ -140,7 +138,7 @@ export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
         const baseNames: string[] = [];
         if (!!piLimitedConcept.base) { // if there is a base limited concept add all names of instances
             const myBase = piLimitedConcept.base.referred;
-            if (myBase instanceof PiLimitedConcept) {
+            if (myBase instanceof FreLimitedConcept) {
                 baseNames.push(...myBase.allInstances().map(inst => inst.name));
             }
         }
@@ -160,7 +158,7 @@ export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
         });
     }
 
-    private checkInstance(piInstance: PiInstance) {
+    private checkInstance(piInstance: FreInstance) {
         CommonChecker.checkClassifierReference(piInstance.concept, this.runner);
         this.runner.nestedCheck({
             check: piInstance.concept.referred !== null,
@@ -173,7 +171,7 @@ export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
         });
     }
 
-    private checkInstanceProperty(piPropertyInstance: PiInstanceProperty, enclosingConcept: PiConcept) {
+    private checkInstanceProperty(piPropertyInstance: FreInstanceProperty, enclosingConcept: FreConcept) {
         const myInstance = piPropertyInstance.owningInstance.referred;
         this.runner.nestedCheck(
             {
@@ -187,11 +185,11 @@ export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
                         error: `Property '${piPropertyInstance.name}' does not exist on concept ${enclosingConcept.name} ${ParseLocationUtil.location(piPropertyInstance)}.`,
                         whenOk: () => {
                             this.runner.nestedCheck({
-                                check: myProp instanceof PiPrimitiveProperty,
+                                check: myProp instanceof FrePrimitiveProperty,
                                 error: `Predefined property '${piPropertyInstance.name}' should have a primitive type ${ParseLocationUtil.location(piPropertyInstance)}.`,
                                 whenOk: () => {
-                                    piPropertyInstance.property = MetaElementReference.create<PiProperty>(myProp, "PiProperty");
-                                    let myPropType: PiPrimitiveType = myProp.type as PiPrimitiveType;
+                                    piPropertyInstance.property = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
+                                    let myPropType: FrePrimitiveType = myProp.type as FrePrimitiveType;
                                     if (!myProp.isList) {
                                         this.runner.simpleCheck(CommonChecker.checkValueToType(piPropertyInstance.value, myPropType),
                                             `Type of '${piPropertyInstance.value}' (${typeof piPropertyInstance.value}) does not fit type (${myPropType.name}) of property '${piPropertyInstance.name}' ${ParseLocationUtil.location(piPropertyInstance)}.`);

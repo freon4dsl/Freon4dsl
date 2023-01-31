@@ -1,41 +1,41 @@
 import { MetaElementReference } from "./internal";
-import { PiDefinitionElement } from "../../utils/PiDefinitionElement";
+import { FreDefinitionElement } from "../../utils/FreDefinitionElement";
 
 // root of the inheritance structure of all elements in a language definition
-export abstract class PiLangElement extends PiDefinitionElement {
+export abstract class FreLangElement extends FreDefinitionElement {
     name: string;
 }
 
-export class PiLanguage extends PiLangElement {
-    concepts: PiConcept[] = [];
-    interfaces: PiInterface[] = [];
-    modelConcept: PiModelDescription;
-    units: PiUnitDescription[] = [];
+export class FreLanguage extends FreLangElement {
+    concepts: FreConcept[] = [];
+    interfaces: FreInterface[] = [];
+    modelConcept: FreModelDescription;
+    units: FreUnitDescription[] = [];
 
     constructor() {
         super();
     }
 
-    classifiers(): PiClassifier[] {
-        const result: PiClassifier[] = this.concepts;
+    classifiers(): FreClassifier[] {
+        const result: FreClassifier[] = this.concepts;
         return result.concat(this.interfaces).concat(this.units);
     }
 
-    conceptsAndInterfaces(): PiClassifier[] {
-        const result: PiClassifier[] = this.concepts;
+    conceptsAndInterfaces(): FreClassifier[] {
+        const result: FreClassifier[] = this.concepts;
         return result.concat(this.interfaces);
     }
 
-    findConcept(name: string): PiConcept {
+    findConcept(name: string): FreConcept {
         return this.concepts.find(con => con.name === name);
     }
 
-    findInterface(name: string): PiInterface {
+    findInterface(name: string): FreInterface {
         return this.interfaces.find(con => con.name === name);
     }
 
-    findClassifier(name: string): PiClassifier {
-        let result: PiClassifier;
+    findClassifier(name: string): FreClassifier {
+        let result: FreClassifier;
         result = this.findConcept(name);
         if (result === undefined) {
             result = this.findInterface(name);
@@ -49,95 +49,95 @@ export class PiLanguage extends PiLangElement {
         return result;
     }
 
-    findBasicType(name:string): PiClassifier {
-        return PiPrimitiveType.find(name);
+    findBasicType(name:string): FreClassifier {
+        return FrePrimitiveType.find(name);
     }
 
-    findUnitDescription(name: string): PiUnitDescription {
+    findUnitDescription(name: string): FreUnitDescription {
         return this.units.find(u => u.name === name);
     }
 }
 
-export abstract class PiClassifier extends PiLangElement {
-    private static __ANY: PiClassifier = null;
+export abstract class FreClassifier extends FreLangElement {
+    private static __ANY: FreClassifier = null;
 
-    static get ANY(): PiClassifier {
-        if (PiClassifier.__ANY === null || PiClassifier.__ANY === undefined) {
-            PiClassifier.__ANY = new PiConcept();
-            PiClassifier.__ANY.name = "ANY";
+    static get ANY(): FreClassifier {
+        if (FreClassifier.__ANY === null || FreClassifier.__ANY === undefined) {
+            FreClassifier.__ANY = new FreConcept();
+            FreClassifier.__ANY.name = "ANY";
         }
         return this.__ANY;
     }
 
-    language: PiLanguage;
+    language: FreLanguage;
     isPublic: boolean;
-    properties: PiProperty[] = [];
+    properties: FreProperty[] = [];
     // TODO remove this attribute and make it a function on 'properties'
-    primProperties: PiPrimitiveProperty[] = [];
-    // get primProperties(): PiPrimitiveProperty[] {
-    //     return this.properties.filter(prop => prop instanceof PiPrimitiveProperty) as PiPrimitiveProperty[];
+    primProperties: FrePrimitiveProperty[] = [];
+    // get primProperties(): FrePrimitiveProperty[] {
+    //     return this.properties.filter(prop => prop instanceof FrePrimitiveProperty) as FrePrimitiveProperty[];
     //     // of
-    //     return this.properties.filter(prop => prop.type instanceof PiPrimitiveType) as PiPrimitiveProperty[];
+    //     return this.properties.filter(prop => prop.type instanceof FrePrimitiveType) as FrePrimitiveProperty[];
     // }
 
-    parts(): PiConceptProperty[] {
-        return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart) as PiConceptProperty[];
+    parts(): FreConceptProperty[] {
+        return this.properties.filter(p => p instanceof FreConceptProperty && p.isPart) as FreConceptProperty[];
     }
 
-    references(): PiConceptProperty[] {
-        return this.properties.filter(p => p instanceof PiConceptProperty && !p.isPart) as PiConceptProperty[];
+    references(): FreConceptProperty[] {
+        return this.properties.filter(p => p instanceof FreConceptProperty && !p.isPart) as FreConceptProperty[];
     }
 
-    allPrimProperties(): PiPrimitiveProperty[] {
-        let result: PiPrimitiveProperty[] = [];
+    allPrimProperties(): FrePrimitiveProperty[] {
+        let result: FrePrimitiveProperty[] = [];
         result.push(...this.primProperties);
         return result;
     }
 
-    allParts(): PiConceptProperty[] {
+    allParts(): FreConceptProperty[] {
         return this.parts();
     }
 
-    allReferences(): PiConceptProperty[] {
+    allReferences(): FreConceptProperty[] {
         return this.references();
     }
 
-    allProperties(): PiProperty[] {
-        let result: PiProperty[] = [];
+    allProperties(): FreProperty[] {
+        let result: FreProperty[] = [];
         result.push(...this.allPrimProperties());
         result.push(...this.allParts());
         result.push(...this.allReferences());
         return result;
     }
 
-    nameProperty(): PiPrimitiveProperty {
-        return this.allPrimProperties().find(p => p.name === "name" && p.type === PiPrimitiveType.identifier);
+    nameProperty(): FrePrimitiveProperty {
+        return this.allPrimProperties().find(p => p.name === "name" && p.type === FrePrimitiveType.identifier);
     }
 }
 
-export class PiModelDescription extends PiClassifier {
+export class FreModelDescription extends FreClassifier {
     isPublic: boolean = true;
 
-    unitTypes(): PiUnitDescription[] {
-        let result: PiUnitDescription[] = [];
+    unitTypes(): FreUnitDescription[] {
+        let result: FreUnitDescription[] = [];
         // all parts of a model are units
         for (const intf of this.parts()) {
-            result = result.concat(intf.type as PiUnitDescription);
+            result = result.concat(intf.type as FreUnitDescription);
         }
         return result;
     }
 }
 
-export class PiUnitDescription extends PiClassifier {
+export class FreUnitDescription extends FreClassifier {
     fileExtension: string = "";
     isPublic: boolean = true;
 }
 
-export class PiInterface extends PiClassifier {
-    base: MetaElementReference<PiInterface>[] = [];
+export class FreInterface extends FreClassifier {
+    base: MetaElementReference<FreInterface>[] = [];
 
-    allPrimProperties(): PiPrimitiveProperty[] {
-        let result: PiPrimitiveProperty[] = []; // return a new array
+    allPrimProperties(): FrePrimitiveProperty[] {
+        let result: FrePrimitiveProperty[] = []; // return a new array
         result.push(...this.primProperties);
         for (const intf of this.base) {
             result = result.concat(intf.referred.allPrimProperties());
@@ -145,30 +145,30 @@ export class PiInterface extends PiClassifier {
         return result;
     }
 
-    allParts(): PiConceptProperty[] {
-        let result: PiConceptProperty[] = this.parts();
+    allParts(): FreConceptProperty[] {
+        let result: FreConceptProperty[] = this.parts();
         for (const intf of this.base) {
             result = result.concat(intf.referred.allParts());
         }
         return result;
     }
 
-    allReferences(): PiConceptProperty[] {
-        let result: PiConceptProperty[] = this.references();
+    allReferences(): FreConceptProperty[] {
+        let result: FreConceptProperty[] = this.references();
         for (const intf of this.base) {
             result = result.concat(intf.referred.allReferences());
         }
         return result;
     }
 
-    allProperties(): PiProperty[] {
-        let result: PiProperty[] = [];
+    allProperties(): FreProperty[] {
+        let result: FreProperty[] = [];
         result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
         return result;
     }
 
-    allBaseInterfaces(): PiInterface[] {
-        let result: PiInterface[] = [];
+    allBaseInterfaces(): FreInterface[] {
+        let result: FreInterface[] = [];
         for (const base of this.base) {
             const realbase = base.referred;
             if (!!realbase) {
@@ -182,14 +182,14 @@ export class PiInterface extends PiClassifier {
     /**
      * returns all subinterfaces, but not their subinterfaces
      */
-    allSubInterfacesDirect(): PiInterface[] {
+    allSubInterfacesDirect(): FreInterface[] {
         return this.language.interfaces.filter(c => c.base?.find(b => b.referred === this) !== undefined);
     }
 
     /**
      * returns all subinterfaces and subinterfaces of the subinterfaces
      */
-    allSubInterfacesRecursive(): PiInterface[] {
+    allSubInterfacesRecursive(): FreInterface[] {
         let result = this.allSubInterfacesDirect();
         const tmp = this.allSubInterfacesDirect();
         tmp.forEach(concept => result = result.concat(concept.allSubInterfacesRecursive()));
@@ -198,13 +198,13 @@ export class PiInterface extends PiClassifier {
 
 }
 
-export class PiConcept extends PiClassifier {
+export class FreConcept extends FreClassifier {
     isAbstract: boolean = false;
-    base: MetaElementReference<PiConcept>;
-    interfaces: MetaElementReference<PiInterface>[] = []; // the interfaces that this concept implements
+    base: MetaElementReference<FreConcept>;
+    interfaces: MetaElementReference<FreInterface>[] = []; // the interfaces that this concept implements
 
-    allPrimProperties(): PiPrimitiveProperty[] {
-        let result: PiPrimitiveProperty[] = this.implementedPrimProperties();
+    allPrimProperties(): FrePrimitiveProperty[] {
+        let result: FrePrimitiveProperty[] = this.implementedPrimProperties();
         if (!!this.base && !!this.base.referred) {
             this.base.referred.allPrimProperties().forEach(p => {
                 // hide overwritten property
@@ -216,8 +216,8 @@ export class PiConcept extends PiClassifier {
         return result;
     }
 
-    allParts(): PiConceptProperty[] {
-        let result: PiConceptProperty[] = this.implementedParts();
+    allParts(): FreConceptProperty[] {
+        let result: FreConceptProperty[] = this.implementedParts();
         if (!!this.base && !!this.base.referred) {
             this.base.referred.allParts().forEach(p => {
                 // hide overwritten property
@@ -229,8 +229,8 @@ export class PiConcept extends PiClassifier {
         return result;
     }
 
-    allReferences(): PiConceptProperty[] {
-        let result: PiConceptProperty[] = this.implementedReferences();
+    allReferences(): FreConceptProperty[] {
+        let result: FreConceptProperty[] = this.implementedReferences();
         if (!!this.base && !!this.base.referred) {
             this.base.referred.allReferences().forEach(p => {
                 // hide overwritten property
@@ -242,8 +242,8 @@ export class PiConcept extends PiClassifier {
         return result;
     }
 
-    allProperties(): PiProperty[] {
-        let result: PiProperty[] = [];
+    allProperties(): FreProperty[] {
+        let result: FreProperty[] = [];
         result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
         return result;
     }
@@ -253,8 +253,8 @@ export class PiConcept extends PiClassifier {
      * that is implemented by this concept. Excluded are properties that are defined in an interface but are already
      * included in one of the base concepts.
      */
-    implementedPrimProperties(): PiPrimitiveProperty[] {
-        let result: PiPrimitiveProperty[] = []; // return a new array!
+    implementedPrimProperties(): FrePrimitiveProperty[] {
+        let result: FrePrimitiveProperty[] = []; // return a new array!
         result.push(...this.primProperties);
         for (const intf of this.interfaces) {
             for (const intfProp of intf.referred.allPrimProperties()) {
@@ -277,8 +277,8 @@ export class PiConcept extends PiClassifier {
         return result;
     }
 
-    implementedParts(): PiConceptProperty[] {
-        let result: PiConceptProperty[] = this.parts();
+    implementedParts(): FreConceptProperty[] {
+        let result: FreConceptProperty[] = this.parts();
         for (const intf of this.interfaces) {
             for (const intfProp of intf.referred.allParts()) {
                 let allreadyIncluded = false;
@@ -300,8 +300,8 @@ export class PiConcept extends PiClassifier {
         return result;
     }
 
-    implementedReferences(): PiConceptProperty[] {
-        let result: PiConceptProperty[] = this.references();
+    implementedReferences(): FreConceptProperty[] {
+        let result: FreConceptProperty[] = this.references();
         for (const intf of this.interfaces) {
             for (const intfProp of intf.referred.allReferences()) {
                 let allreadyIncluded = false;
@@ -323,14 +323,14 @@ export class PiConcept extends PiClassifier {
         return result;
     }
 
-    implementedProperties(): PiProperty[] {
-        let result: PiProperty[] = [];
+    implementedProperties(): FreProperty[] {
+        let result: FreProperty[] = [];
         result = result.concat(this.implementedPrimProperties()).concat(this.implementedParts()).concat(this.implementedReferences());
         return result;
     }
 
-    allInterfaces(): PiInterface[] {
-        let result: PiInterface[] = [];
+    allInterfaces(): FreInterface[] {
+        let result: FreInterface[] = [];
         for (const intf of this.interfaces) {
             const realintf = intf.referred;
             if (!!realintf) {
@@ -344,14 +344,14 @@ export class PiConcept extends PiClassifier {
     /**
      * returns all subconcepts, but not their subconcepts
      */
-    allSubConceptsDirect(): PiConcept[] {
+    allSubConceptsDirect(): FreConcept[] {
         return this.language.concepts.filter(c => c.base?.referred === this);
     }
 
     /**
      * returns all subconcepts and subconcepts of the subconcepts
      */
-    allSubConceptsRecursive(): PiConcept[] {
+    allSubConceptsRecursive(): FreConcept[] {
         let result = this.allSubConceptsDirect();
         const tmp = this.allSubConceptsDirect();
         tmp.forEach(concept => result = result.concat(concept.allSubConceptsRecursive()));
@@ -360,13 +360,13 @@ export class PiConcept extends PiClassifier {
 
 }
 
-export class PiExpressionConcept extends PiConcept {
+export class FreExpressionConcept extends FreConcept {
     _isPlaceHolder: boolean;
 }
 
-export class PiBinaryExpressionConcept extends PiExpressionConcept {
-    // left: PiExpressionConcept;
-    // right: PiExpressionConcept;
+export class FreBinaryExpressionConcept extends FreExpressionConcept {
+    // left: FreExpressionConcept;
+    // right: FreExpressionConcept;
     priority: number;
 
     getPriority(): number {
@@ -375,94 +375,94 @@ export class PiBinaryExpressionConcept extends PiExpressionConcept {
     }
 }
 
-export class PiLimitedConcept extends PiConcept {
-    instances: PiInstance[] = [];
+export class FreLimitedConcept extends FreConcept {
+    instances: FreInstance[] = [];
 
-    findInstance(name: string): PiInstance {
+    findInstance(name: string): FreInstance {
         return this.instances.find(inst => inst.name === name);
     }
 
-    allInstances(): PiInstance[] {
-        const result: PiInstance[] = [];
+    allInstances(): FreInstance[] {
+        const result: FreInstance[] = [];
         result.push(...this.instances);
-        if (!!this.base && this.base.referred instanceof PiLimitedConcept) {
+        if (!!this.base && this.base.referred instanceof FreLimitedConcept) {
             result.push(...this.base.referred.allInstances());
         }
         return result;
     }
 }
 
-export class PiProperty extends PiLangElement {
+export class FreProperty extends FreLangElement {
     isPublic: boolean;
     isOptional: boolean;
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
     implementedInBase: boolean = false;
-    private __type: MetaElementReference<PiClassifier>;
-    owningClassifier: PiClassifier;
+    private __type: MetaElementReference<FreClassifier>;
+    owningClassifier: FreClassifier;
 
     get isPrimitive(): boolean {
-        if (this.type instanceof PiPrimitiveType) {
+        if (this.type instanceof FrePrimitiveType) {
             return true;
         }
         return false;
     };
-    get type(): PiClassifier {
+    get type(): FreClassifier {
         return this.__type?.referred;
     }
-    set type(t: PiClassifier) {
-        this.__type = MetaElementReference.create<PiClassifier>(t, "PiClassifier");
+    set type(t: FreClassifier) {
+        this.__type = MetaElementReference.create<FreClassifier>(t, "FreClassifier");
         this.__type.owner = this;
     }
-    get typeReference(): MetaElementReference<PiClassifier> { // only used by PiLanguageChecker and PiTyperChecker
+    get typeReference(): MetaElementReference<FreClassifier> { // only used by FreLanguageChecker and FreTyperChecker
         return this.__type;
     }
-    set typeReference(t : MetaElementReference<PiClassifier>) { // only used by PiLanguageChecker and PiTyperChecker
+    set typeReference(t : MetaElementReference<FreClassifier>) { // only used by FreLanguageChecker and FreTyperChecker
         this.__type = t;
         this.__type.owner = this;
     }
-    toPiString(): string {
+    toFreString(): string {
         return this.name + ": " + this.__type.name;
     }
 }
 
-export class PiConceptProperty extends PiProperty {
+export class FreConceptProperty extends FreProperty {
     hasLimitedType: boolean; // set in checker
 }
 
-export class PiPrimitiveProperty extends PiProperty {
+export class FrePrimitiveProperty extends FreProperty {
     isStatic: boolean;
-    initialValueList: PiPrimitiveValue[] = [];
+    initialValueList: FrePrimitiveValue[] = [];
 
     get isPrimitive(): boolean {
         return true;
     };
 
-    get initialValue(): PiPrimitiveValue {
+    get initialValue(): FrePrimitiveValue {
         return this.initialValueList[0];
     }
 
-    set initialValue(value: PiPrimitiveValue) {
+    set initialValue(value: FrePrimitiveValue) {
         this.initialValueList[0] = value;
     }
 }
 
-export class PiInstance extends PiLangElement {
-    concept: MetaElementReference<PiConcept>; // should be a limited concept
+export class FreInstance extends FreLangElement {
+    concept: MetaElementReference<FreConcept>; // should be a limited concept
     // Note that these properties may be undefined, when there is no definition in the .ast file
-    props: PiInstanceProperty[] = [];
+    props: FreInstanceProperty[] = [];
 
-    nameProperty(): PiInstanceProperty {
+    nameProperty(): FreInstanceProperty {
         return this.props.find(p => p.name === "name");
     }
 }
 
-export class PiInstanceProperty extends PiLangElement {
-    owningInstance: MetaElementReference<PiInstance>;
-    property: MetaElementReference<PiProperty>;
-    valueList: PiPrimitiveValue[] = [];
+export class FreInstanceProperty extends FreLangElement {
+    owningInstance: MetaElementReference<FreInstance>;
+    property: MetaElementReference<FreProperty>;
+    valueList: FrePrimitiveValue[] = [];
 
-    get value(): PiPrimitiveValue {
+    get value(): FrePrimitiveValue {
         return this.valueList[0];
     }
 
@@ -472,38 +472,38 @@ export class PiInstanceProperty extends PiLangElement {
 }
 
 // the following two classes are only used in the typer and validator definitions
-export class PiFunction extends PiLangElement {
-    language: PiLanguage;
-    formalparams: PiParameter[] = [];
-    returnType: MetaElementReference<PiConcept>;
+export class FreFunction extends FreLangElement {
+    language: FreLanguage;
+    formalparams: FreParameter[] = [];
+    returnType: MetaElementReference<FreConcept>;
 }
 
-export class PiParameter extends PiLangElement {
-    type: MetaElementReference<PiConcept>;
+export class FreParameter extends FreLangElement {
+    type: MetaElementReference<FreConcept>;
 }
 
-// the basic types in the pi-languages
-export type PiPrimitiveValue = string | boolean | number ;
+// the basic types in the Fre-languages
+export type FrePrimitiveValue = string | boolean | number ;
 
-export class PiPrimitiveType extends PiConcept {
+export class FrePrimitiveType extends FreConcept {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
      * @param data
      */
-    static create(data: Partial<PiPrimitiveType>): PiPrimitiveType {
-        const result = new PiPrimitiveType();
+    static create(data: Partial<FrePrimitiveType>): FrePrimitiveType {
+        const result = new FrePrimitiveType();
         if (!!data.name) {
             result.name = data.name;
         }
         return result;
     }
 
-    static string: PiPrimitiveType = PiPrimitiveType.create({name: "string"});
-    static number: PiPrimitiveType = PiPrimitiveType.create({name: "number"});
-    static boolean: PiPrimitiveType = PiPrimitiveType.create({name: "boolean"});
-    static identifier: PiPrimitiveType = PiPrimitiveType.create({name: "identifier"});
-    static $piANY: PiPrimitiveType; // default predefined instance
+    static string: FrePrimitiveType = FrePrimitiveType.create({name: "string"});
+    static number: FrePrimitiveType = FrePrimitiveType.create({name: "number"});
+    static boolean: FrePrimitiveType = FrePrimitiveType.create({name: "boolean"});
+    static identifier: FrePrimitiveType = FrePrimitiveType.create({name: "identifier"});
+    static $freAny: FrePrimitiveType; // default predefined instance
 
     static find(name: string) {
         switch (name) {
@@ -512,25 +512,25 @@ export class PiPrimitiveType extends PiConcept {
             case "identifier" : return this.identifier;
             case "number" : return this.number;
         }
-        return this.$piANY;
+        return this.$freAny;
     }
 
-    allSubConceptsRecursive(): PiConcept[] {
+    allSubConceptsRecursive(): FreConcept[] {
         return [];
     }
-    allSubConceptsDirect(): PiConcept[] {
+    allSubConceptsDirect(): FreConcept[] {
         return [];
     }
 }
 
-export function isBinaryExpression(elem: PiLangElement): elem is PiBinaryExpressionConcept {
-    return elem instanceof PiBinaryExpressionConcept;
+export function isBinaryExpression(elem: FreLangElement): elem is FreBinaryExpressionConcept {
+    return elem instanceof FreBinaryExpressionConcept;
 }
 
-export function isExpression(elem: PiLangElement): elem is PiExpressionConcept {
-    return elem instanceof PiExpressionConcept;
+export function isExpression(elem: FreLangElement): elem is FreExpressionConcept {
+    return elem instanceof FreExpressionConcept;
 }
 
-export function isLimited(elem: PiLangElement): elem is PiLimitedConcept {
-    return elem instanceof PiLimitedConcept;
+export function isLimited(elem: FreLangElement): elem is FreLimitedConcept {
+    return elem instanceof FreLimitedConcept;
 }

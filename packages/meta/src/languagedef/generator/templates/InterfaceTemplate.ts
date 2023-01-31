@@ -1,13 +1,13 @@
 import {
-    PiConceptProperty,
-    PiPrimitiveProperty,
-    PiInterface
+    FreConceptProperty,
+    FrePrimitiveProperty,
+    FreInterface
 } from "../../metalanguage";
 import { Names, PROJECTITCORE, GenerationUtil } from "../../../utils";
 
 export class InterfaceTemplate {
 
-    generateInterface(intf: PiInterface, relativePath: string): string {
+    generateInterface(intf: FreInterface, relativePath: string): string {
         // const language = intf.language;
         // const hasSuper = intf.base.length > 0;
         const extendsInterfaces: string[] = Array.from (
@@ -46,18 +46,18 @@ export class InterfaceTemplate {
             }`;
     }
 
-    generatePrimitiveProperty(property: PiPrimitiveProperty): string {
+    generatePrimitiveProperty(property: FrePrimitiveProperty): string {
         const comment = "// implementation of " + property.name ;
         return `${property.name}: ${GenerationUtil.getBaseTypeAsString(property)} ${property.isList ? "[]" : ""}; ${comment}`;
     }
 
-    generatePartProperty(property: PiConceptProperty): string {
+    generatePartProperty(property: FreConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
         return `${property.name} : ${Names.classifier(property.type)}${arrayType}; ${comment}`;
     }
 
-    generateReferenceProperty(property: PiConceptProperty): string {
+    generateReferenceProperty(property: FreConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
         return `${property.name} : ${Names.PiElementReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;

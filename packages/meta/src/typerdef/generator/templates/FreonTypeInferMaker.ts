@@ -1,6 +1,6 @@
 import { PitInferenceRule,PiTyperDef } from "../../metalanguage";
 import { Names, GenerationUtil } from "../../../utils";
-import { PiClassifier, PiLimitedConcept } from "../../../languagedef/metalanguage";
+import { FreClassifier, FreLimitedConcept } from "../../../languagedef/metalanguage";
 import { FreonTyperGenUtils } from "./FreonTyperGenUtils";
 import { PitEqualsRule } from "../../metalanguage/PitEqualsRule";
 
@@ -10,9 +10,9 @@ import { PitEqualsRule } from "../../metalanguage/PitEqualsRule";
 export class FreonTypeInferMaker {
     extraMethods: string[] = [];
     typerdef: PiTyperDef = null;
-    // private toBeCopied: PiClassifier[] = [];
+    // private toBeCopied: FreClassifier[] = [];
 
-    public makeInferType(typerDef: PiTyperDef, allLangConcepts: string, rootType: string, varName: string, imports: PiClassifier[]): string {
+    public makeInferType(typerDef: PiTyperDef, allLangConcepts: string, rootType: string, varName: string, imports: FreClassifier[]): string {
         FreonTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
         let result: string[] = [];
@@ -35,7 +35,7 @@ export class FreonTypeInferMaker {
         });
 
         // add an entry for all limited concepts
-        const allLimited = typerDef.language.concepts.filter(con => con instanceof PiLimitedConcept) as PiLimitedConcept[];
+        const allLimited = typerDef.language.concepts.filter(con => con instanceof FreLimitedConcept) as FreLimitedConcept[];
         allLimited.map(lim =>
             result.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(${varName}, "${Names.classifier(lim)}")) {
                 result = AstType.create({ astElement: modelelement });
@@ -53,10 +53,10 @@ export class FreonTypeInferMaker {
 
     // // for all elements in toBeCopied add a method to extraMethods
     // // first, make sure all parts can be copied as well
-    // const extraToBeCopied: PiClassifier[] = [];
+    // const extraToBeCopied: FreClassifier[] = [];
     // extraToBeCopied.push(...this.toBeCopied);
     // this.toBeCopied.forEach(cls =>{
-    //     const subs: PiClassifier[] = LangUtil.findAllImplementorsAndSubs(cls).filter(c => c instanceof PiConcept && !c.isAbstract);
+    //     const subs: FreClassifier[] = LangUtil.findAllImplementorsAndSubs(cls).filter(c => c instanceof PiConcept && !c.isAbstract);
     //     subs.forEach(sub => {
     //         sub.allParts().forEach(prop => {
     //             ListUtil.addIfNotPresent(extraToBeCopied, prop.type);
@@ -66,7 +66,7 @@ export class FreonTypeInferMaker {
     // // second, make the methods
     // extraToBeCopied.forEach(cls => {
     //     const typeName: string = Names.classifier(cls);
-    //     const subs: PiClassifier[] = LangUtil.findAllImplementorsAndSubs(cls).filter(c => c instanceof PiConcept && !c.isAbstract);
+    //     const subs: FreClassifier[] = LangUtil.findAllImplementorsAndSubs(cls).filter(c => c instanceof PiConcept && !c.isAbstract);
     //
     //     let method: string = `private makeCopyOf${cls.name}(toBeCopied: ${typeName}): ${typeName} {
     //         let result: ${typeName} = toBeCopied;

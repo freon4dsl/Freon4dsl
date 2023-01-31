@@ -18,7 +18,7 @@ import {
     PiOptionalPropertyProjection
 } from "../metalanguage";
 import { ListUtil, MetaLogger } from "../../utils";
-import { PiClassifier, PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
+import { FreClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
 import { PiEditParseUtil } from "./PiEditParseUtil";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -52,7 +52,7 @@ function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEdit
             if (!!proj.tableProjection) {
                 const myProj: PiEditTableProjection = new PiEditTableProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = MetaElementReference.create<PiClassifier>(proj.classifier.name, "PiClassifier");
+                    myProj.classifier = MetaElementReference.create<FreClassifier>(proj.classifier.name, "FreClassifier");
                 }
                 if (!!proj.tableProjection.cells) {
                     myProj.cells = proj.tableProjection.cells;
@@ -71,7 +71,7 @@ function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEdit
             if (!!proj.projection) {
                 const myProj: PiEditProjection = new PiEditProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = MetaElementReference.create<PiClassifier>(proj.classifier.name, "PiClassifier");
+                    myProj.classifier = MetaElementReference.create<FreClassifier>(proj.classifier.name, "FreClassifier");
                 }
                 if (!!proj.projection.lines) {
                     myProj.lines = proj.projection.lines;
@@ -159,10 +159,10 @@ export function createStdBool(data: Partial<BoolKeywords>) : BoolKeywords {
     return result;
 }
 
-export function createClassifierReference(data: Partial<MetaElementReference<PiClassifier>>): MetaElementReference<PiClassifier> {
-    let result: MetaElementReference<PiClassifier>;
+export function createClassifierReference(data: Partial<MetaElementReference<FreClassifier>>): MetaElementReference<FreClassifier> {
+    let result: MetaElementReference<FreClassifier>;
     if (!!data.name) {
-        result = MetaElementReference.create<PiClassifier>(data.name, "PiClassifier");
+        result = MetaElementReference.create<FreClassifier>(data.name, "FreClassifier");
     }
     if (!!data.location) {
         result.location = data.location;
@@ -423,10 +423,10 @@ export function createNewline(): PiEditParsedNewline {
     return new PiEditParsedNewline();
 }
 
-export function createSelfExp(data: string): PiLangSelfExp {
-    const result = new PiLangSelfExp();
+export function createSelfExp(data: string): FreLangSelfExp {
+    const result = new FreLangSelfExp();
     // we cannot set the sourceName of result, this should be done during checking
-    result.appliedfeature = new PiLangAppliedFeatureExp();
+    result.appliedfeature = new FreLangAppliedFeatureExp();
     result.appliedfeature.sourceName = data;
     result.appliedfeature.sourceExp = result;
     return result;

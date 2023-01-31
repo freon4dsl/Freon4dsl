@@ -1,10 +1,8 @@
 import fs from "fs";
 import { LOG2USER } from "../../utils/UserLogger";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { PiTyperDef } from "../metalanguage";
 import { PiTyperReader } from "./PiTyperReader";
-import { PiTyperCheckerPhase1 } from "./PiTyperCheckerPhase1";
-import { Checker } from "../../utils";
 import { PiTyperChecker } from "./PiTyperChecker";
 import { ParseLocationUtil } from "../../utils/parsingAndChecking/ParseLocationUtil";
 
@@ -13,11 +11,11 @@ import { ParseLocationUtil } from "../../utils/parsingAndChecking/ParseLocationU
  * checker by the PiTyperCheckerPhase1.
  */
 export class PiTyperMerger {
-    public language: PiLanguage;
+    public language: FreLanguage;
     public checker: PiTyperChecker;
     private reader: PiTyperReader;
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         this.language = language;
         this.checker = new PiTyperChecker(language);
         this.reader = new PiTyperReader();

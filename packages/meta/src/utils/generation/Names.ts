@@ -1,5 +1,5 @@
 import {
-    PiClassifier, PiConcept, PiInstance, PiInterface, PiLanguage, PiPrimitiveProperty, PiProperty, PiModelDescription, PiUnitDescription
+    FreClassifier, FreConcept, FreInstance, FreInterface, FreLanguage, FrePrimitiveProperty, FreProperty, FreModelDescription, FreUnitDescription
 } from "../../languagedef/metalanguage";
 import { PiEditClassifierProjection, PiEditProjectionGroup, PiEditTableProjection } from "../../editordef/metalanguage";
 
@@ -91,7 +91,6 @@ export class Names {
     static FreUtils: string = "FreUtils";
     static FreParseLocation: string = "FreParseLocation";
     static FreType: string = "FreType";
-    static PiType: string = "FreType";
     static FreTableDefinition: string = "FreTableDefinition";
     static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
     static FreCustomAction: string = "FreCustomAction";
@@ -105,39 +104,39 @@ export class Names {
         return "ProjectitConfiguration";
     }
 
-    public static environment(language: PiLanguage) {
+    public static environment(language: FreLanguage) {
         return this.startWithUpperCase(language?.name) + "Environment";
     }
 
-    public static context(language: PiLanguage): string {
+    public static context(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Context";
     }
 
-    public static actions(language: PiLanguage): string {
+    public static actions(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Actions";
     }
 
-    public static defaultActions(language: PiLanguage): string {
+    public static defaultActions(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "DefaultActions";
     }
 
-    public static customActions(language: PiLanguage): string {
+    public static customActions(language: FreLanguage): string {
         return "Custom" + this.actions(language);
     }
 
-    public static customScoper(language: PiLanguage): string {
+    public static customScoper(language: FreLanguage): string {
         return "Custom" + this.scoper(language);
     }
 
-    public static customTyper(language: PiLanguage): string {
+    public static customTyper(language: FreLanguage): string {
         return "Custom" + this.typerPart(language);
     }
 
-    public static customValidator(language: PiLanguage): string {
+    public static customValidator(language: FreLanguage): string {
         return "Custom" + this.validator(language);
     }
 
-    public static customStdlib(language: PiLanguage): string {
+    public static customStdlib(language: FreLanguage): string {
         return "Custom" + this.stdlib(language);
     }
 
@@ -149,120 +148,120 @@ export class Names {
         return this.startWithUpperCase(group.name);
     }
 
-    public static customProjection(language: PiLanguage): string {
+    public static customProjection(language: FreLanguage): string {
         return "Custom" + this.startWithUpperCase(language?.name) + "Projection";
     }
 
-    public static language(language: PiLanguage): string {
+    public static language(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Language";
     }
 
-    public static initialization(language: PiLanguage) {
+    public static initialization(language: FreLanguage) {
         return this.startWithUpperCase(language?.name) + "Initialization";
     }
 
-    public static concept(concept: PiConcept): string {
+    public static concept(concept: FreConcept): string {
         return this.startWithUpperCase(concept?.name);
     }
 
-    public static classifier(concept: PiClassifier): string {
+    public static classifier(concept: FreClassifier): string {
         return this.startWithUpperCase(concept?.name);
     }
 
-    public static primitivePropertyField(property: PiPrimitiveProperty): string {
+    public static primitivePropertyField(property: FrePrimitiveProperty): string {
         // return "$$" + property.name;
         return property.name;
     }
 
-    public static primitivePropertyGetter(property: PiPrimitiveProperty): string {
+    public static primitivePropertyGetter(property: FrePrimitiveProperty): string {
         return property.name;
     }
 
-    public static primitivePropertySetter(property: PiPrimitiveProperty): string {
+    public static primitivePropertySetter(property: FrePrimitiveProperty): string {
         return property.name;
     }
 
-    public static interface(interf: PiInterface): string {
+    public static interface(interf: FreInterface): string {
         return this.startWithUpperCase(interf?.name);
     }
 
-    public static metaType(language: PiLanguage): string {
+    public static metaType(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "MetaType";
     }
 
-    public static allConcepts(language: PiLanguage): string {
+    public static allConcepts(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "EveryConcept";
     }
 
-    public static modelunit(language: PiLanguage): string {
+    public static modelunit(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitType";
     }
 
-    public static namespace(language: PiLanguage): string {
+    public static namespace(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Namespace";
     }
 
-    public static scoper(language: PiLanguage): string {
+    public static scoper(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Scoper";
     }
 
-    public static scoperDef(language: PiLanguage): string {
+    public static scoperDef(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ScoperDef";
     }
 
-    public static typerDef(language: PiLanguage): string {
+    public static typerDef(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "TyperDef";
     }
 
-    public static scoperUtils(language: PiLanguage): string {
+    public static scoperUtils(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ScoperUtils";
     }
 
-    public static namesCollector(language: PiLanguage): string {
+    public static namesCollector(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "NamesCollector";
     }
 
-    public static validator(language: PiLanguage): string {
+    public static validator(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Validator";
     }
 
-    public static checkerInterface(language: PiLanguage): string {
+    public static checkerInterface(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "CheckerInterface";
     }
 
-    public static rulesChecker(language: PiLanguage): string {
+    public static rulesChecker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ValidationRulesChecker";
     }
 
-    public static nonOptionalsChecker(language: PiLanguage): string {
+    public static nonOptionalsChecker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "NonOptionalsChecker";
     }
 
-    public static referenceChecker(language: PiLanguage): string {
+    public static referenceChecker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ReferenceChecker";
     }
 
-    public static typerPart(language: PiLanguage): string {
+    public static typerPart(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "TyperPart";
     }
 
-    public static typer(language: PiLanguage): string {
+    public static typer(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Typer";
     }
 
-    public static stdlib(language: PiLanguage): string {
+    public static stdlib(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Stdlib";
     }
 
-    public static walker(language: PiLanguage): string {
+    public static walker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Walker";
     }
 
-    public static workerInterface(language: PiLanguage): string {
+    public static workerInterface(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Worker";
     }
 
-    public static defaultWorker(language: PiLanguage): string {
+    public static defaultWorker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "DefaultWorker";
     }
 
@@ -289,27 +288,27 @@ export class Names {
         return "getHeadersFor" + this.startWithUpperCase(proj.name);
     }
 
-    public static writer(language: PiLanguage): string {
+    public static writer(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
 
-    public static parser(language: PiLanguage): string {
+    public static parser(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Parser";
     }
 
-    public static grammar(language: PiLanguage): string {
+    public static grammar(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Grammar";
     }
 
-    public static grammarStr(language: PiLanguage): string {
+    public static grammarStr(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "GrammarStr";
     }
 
-    public static syntaxAnalyser(language: PiLanguage): string {
+    public static syntaxAnalyser(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "SyntaxAnalyser";
     }
 
-    public static unitAnalyser(language: PiLanguage, unit: PiUnitDescription | PiModelDescription): string {
+    public static unitAnalyser(language: FreLanguage, unit: FreUnitDescription | FreModelDescription): string {
         if (!!unit) {
             return this.startWithUpperCase(unit?.name) + "SyntaxAnalyserPart";
         } else {
@@ -317,15 +316,15 @@ export class Names {
         }
     }
 
-    public static semanticAnalyser(language: PiLanguage): string {
+    public static semanticAnalyser(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "SemanticAnalyser";
     }
 
-    public static semanticWalker(language: PiLanguage): string {
+    public static semanticWalker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "SemanticAnalysisWalker";
     }
 
-    public static reader(language: PiLanguage): string {
+    public static reader(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }
 
@@ -333,35 +332,35 @@ export class Names {
         return "_getBinaryExpressionBox";
     }
 
-    public static instance(instance: PiInstance): string {
+    public static instance(instance: FreInstance): string {
         return instance.name;
     }
 
-    public static refName(property: PiProperty): string {
+    public static refName(property: FreProperty): string {
         return "$" + property.name;
     }
 
-    public static interpreterClassname(language: PiLanguage): string {
+    public static interpreterClassname(language: FreLanguage): string {
         return Names.startWithUpperCase(language.name) + "Interpreter";
     }
 
-    public static interpreterBaseClassname(language: PiLanguage): string {
+    public static interpreterBaseClassname(language: FreLanguage): string {
         return Names.interpreterClassname(language) + "Base";
     }
 
-    public static interpreterInterfacename(language: PiLanguage): string {
+    public static interpreterInterfacename(language: FreLanguage): string {
         return "I" + Names.interpreterClassname(language);
     }
 
-    public static interpreterInitname(language: PiLanguage): string {
+    public static interpreterInitname(language: FreLanguage): string {
         return Names.interpreterClassname(language) + "Init";
     }
 
-    public static interpreterName(language: PiLanguage): string {
+    public static interpreterName(language: FreLanguage): string {
         return "Main" + Names.interpreterClassname(language);
     }
 
-    public static boxProvider(concept: PiClassifier): string {
+    public static boxProvider(concept: FreClassifier): string {
         return Names.startWithUpperCase(concept.name) + "BoxProvider";
     }
 

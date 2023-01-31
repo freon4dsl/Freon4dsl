@@ -1,6 +1,6 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
 import { RHSPropEntry } from "./RHSPropEntry";
-import { PiProperty } from "../../../../languagedef/metalanguage";
+import { FreProperty } from "../../../../languagedef/metalanguage";
 import { internalTransformNode, internalTransformPiElementRef, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
 import { GenerationUtil } from "../../../../utils";
@@ -10,7 +10,7 @@ export class RHSRefListWithTerminator extends RHSPropPartWithSeparator {
     private entry: RHSPropEntry;
     private isSingleEntry: boolean;
 
-    constructor(prop: PiProperty, entry: RHSPropEntry, separator: string, isSingleEntry: boolean) {
+    constructor(prop: FreProperty, entry: RHSPropEntry, separator: string, isSingleEntry: boolean) {
         super(prop, separator);
         this.entry = entry;
         this.isList = true;

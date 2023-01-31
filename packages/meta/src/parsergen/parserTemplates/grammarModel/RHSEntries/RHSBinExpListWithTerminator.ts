@@ -1,17 +1,17 @@
 import { RHSPropEntry } from "./RHSPropEntry";
-import { PiBinaryExpressionConcept, PiProperty } from "../../../../languagedef/metalanguage";
+import { FreBinaryExpressionConcept, FreProperty } from "../../../../languagedef/metalanguage";
 import { makeIndent } from "../GrammarUtils";
 import { BinaryExpMaker } from "../../BinaryExpMaker";
 import { GenerationUtil } from "../../../../utils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBinExpListWithTerminator extends RHSPropEntry {
-    type: PiBinaryExpressionConcept = null;
+    type: FreBinaryExpressionConcept = null;
     private entry: RHSPropEntry;
     private separatorText: string = "";
     private isSingleEntry: boolean;
 
-    constructor(prop: PiProperty, type: PiBinaryExpressionConcept, entry: RHSPropEntry, separatorText: string, isSingleEntry: boolean) {
+    constructor(prop: FreProperty, type: FreBinaryExpressionConcept, entry: RHSPropEntry, separatorText: string, isSingleEntry: boolean) {
         super(prop);
         this.type = type;
         this.entry = entry;

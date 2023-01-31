@@ -12,7 +12,7 @@ import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
 import { MetaLogger } from "../utils/MetaLogger";
 import { GenerationStatus, FileUtil } from "../utils";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
-import { PiLanguage } from "../languagedef/metalanguage";
+import { FreLanguage } from "../languagedef/metalanguage";
 
 const LOGGER = new MetaLogger("ProjectItCleanAction"); //.mute();
 
@@ -31,7 +31,7 @@ export class ProjectItCleanAction extends CommandLineAction {
     protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
     protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
-    private language: PiLanguage;
+    private language: FreLanguage;
 
     public constructor() {
         super({

@@ -1,4 +1,4 @@
-import { PiConcept, PiLanguage, PiPrimitiveType } from "../../../languagedef/metalanguage";
+import { FreConcept, FreLanguage, FrePrimitiveType } from "../../../languagedef/metalanguage";
 import { PitTypeConcept, PiTyperDef } from "../../metalanguage";
 import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils";
 import { LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
@@ -6,7 +6,7 @@ import { LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../ut
 export class FreonTypeConceptMaker {
     piTypeName: string = Names.FreType;
 
-    generateTypeConcept(language: PiLanguage, concept: PitTypeConcept, relativePath: string): string {
+    generateTypeConcept(language: FreLanguage, concept: PitTypeConcept, relativePath: string): string {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? `extends ${Names.classifier(concept.base.referred)}` : `implements ${this.piTypeName}`;
@@ -50,7 +50,7 @@ export class FreonTypeConceptMaker {
     private makeToPiString(myName: string, concept: PitTypeConcept): string {
         const props: string[] = [];
         concept.allProperties().forEach(prop => {
-            if (prop.type instanceof PiPrimitiveType) {
+            if (prop.type instanceof FrePrimitiveType) {
                 props.push(`${prop.name}: \${this.${prop.name}}`);
             } else if (prop.type instanceof PitTypeConcept) {
                 props.push(`${prop.name}: \${this.${prop.name}?.toFreString(writer)}`);
@@ -87,11 +87,11 @@ export class FreonTypeConceptMaker {
                 }`;
     }
 
-    private findModelImports(concept: PitTypeConcept, language: PiLanguage): string[] {
+    private findModelImports(concept: PitTypeConcept, language: FreLanguage): string[] {
         // return the names of all property types that are not PitTypeConcepts
         const result: string[] = [];
         concept.implementedParts().forEach(part => {
-            if (!(part.type instanceof PitTypeConcept) && part.type.name != this.piTypeName && !(part.type instanceof PiPrimitiveType)) {
+            if (!(part.type instanceof PitTypeConcept) && part.type.name != this.piTypeName && !(part.type instanceof FrePrimitiveType)) {
                 result.push(Names.classifier(part.type));
             }
         });
@@ -105,7 +105,7 @@ export class FreonTypeConceptMaker {
             result.push(Names.classifier(concept.base.referred));
         }
         concept.implementedParts().forEach(part => {
-            if (part.type instanceof PitTypeConcept && part.type.name != Names.PiType) {
+            if (part.type instanceof PitTypeConcept && part.type.name != Names.FreType) {
                 result.push(Names.classifier(part.type));
             }
         });
@@ -159,9 +159,9 @@ export class FreonTypeConceptMaker {
     }
 
     // TODO test this method and see if it is better than the one in GenerationHelpers
-    private sortConcepts(list: PiConcept[]): PiConcept[] {
-        const result: PiConcept[] = list.map(con => !con.base ? con : null).filter(el => el !== null);
-        const conceptsWithBase: PiConcept[] = list.map(con => con.base ? con : null).filter(el => el !== null);
+    private sortConcepts(list: FreConcept[]): FreConcept[] {
+        const result: FreConcept[] = list.map(con => !con.base ? con : null).filter(el => el !== null);
+        const conceptsWithBase: FreConcept[] = list.map(con => con.base ? con : null).filter(el => el !== null);
         if (conceptsWithBase.length > 0) {
             ListUtil.addListIfNotPresent(result, this.sortConcepts(conceptsWithBase.map(con => con.base.referred)));
         }

@@ -1,11 +1,11 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
+import { FreLanguage, FreClassifier } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
 export class ReferenceCheckerTemplate {
     imports: string[] = [];
 
-    generateChecker(language: PiLanguage, relativePath: string): string {
+    generateChecker(language: FreLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName: string = Names.PiError;
         const errorSeverityName: string = Names.PiErrorSeverity;
@@ -18,7 +18,7 @@ export class ReferenceCheckerTemplate {
         // and thus fills 'this.imports' list, it needs to be called before the rest of the template
         // is returned
         this.imports = [];
-        const allClassifiers: PiClassifier[] = [];
+        const allClassifiers: FreClassifier[] = [];
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
         const allMethods: string = `${allClassifiers.map(concept => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}`;
@@ -68,7 +68,7 @@ export class ReferenceCheckerTemplate {
         }`;
     }
 
-    private createChecksOnNonOptionalParts(concept: PiClassifier): string {
+    private createChecksOnNonOptionalParts(concept: FreClassifier): string {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
         concept.allProperties().forEach(prop => {

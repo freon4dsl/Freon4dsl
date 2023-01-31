@@ -1,15 +1,15 @@
 import {
-    PiBinaryExpressionConcept,
-    PiClassifier,
-    PiConcept,
-    PiConceptProperty,
-    PiProperty
+    FreBinaryExpressionConcept,
+    FreClassifier,
+    FreConcept,
+    FreConceptProperty,
+    FreProperty
 } from "../../languagedef/metalanguage";
 import { Names } from "./Names";
 
 export class Roles {
 
-    public static elementVarName(concept: PiClassifier): string {
+    public static elementVarName(concept: FreClassifier): string {
         return Names.classifier(concept).toLowerCase();
     }
 
@@ -26,19 +26,19 @@ export class Roles {
         return roleName;
     }
 
-    public static property(property: PiProperty): string {
+    public static property(property: FreProperty): string {
         return Names.classifier(property.owningClassifier) + "-" + property.name;
     }
 
-    public static newPart(property: PiProperty): string {
+    public static newPart(property: FreProperty): string {
         return Roles.newConceptPart(property.owningClassifier, property)
         // return Roles.property(property);
     }
 
-    public static newConceptPart(concept: PiClassifier, property: PiProperty): string {
-        if( concept instanceof PiBinaryExpressionConcept) {
+    public static newConceptPart(concept: FreClassifier, property: FreProperty): string {
+        if( concept instanceof FreBinaryExpressionConcept) {
             if( !!(concept.base.referred) ){
-                if( !(concept.base.referred instanceof PiBinaryExpressionConcept)){
+                if( !(concept.base.referred instanceof FreBinaryExpressionConcept)){
                     return "PiBinaryExpression" + "-" + property.name;
                 }
             }
@@ -46,7 +46,7 @@ export class Roles {
         return Names.classifier(concept) + "-" + property.name + "-new-list-item";
     }
 
-    public static newConceptReferencePart(reference: PiConceptProperty): string {
+    public static newConceptReferencePart(reference: FreConceptProperty): string {
         return reference.name;
     }
 

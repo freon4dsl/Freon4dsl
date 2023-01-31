@@ -1,24 +1,24 @@
-import { PiClassifier, MetaElementReference, PiLanguage } from "../../../languagedef/metalanguage";
+import { FreClassifier, MetaElementReference, FreLanguage } from "../../../languagedef/metalanguage";
 import { PiTyperElement } from "../PiTyperElement";
 
 export abstract class PitExp extends PiTyperElement {
-    language: PiLanguage;
-    __returnType: MetaElementReference<PiClassifier>;
+    language: FreLanguage;
+    __returnType: MetaElementReference<FreClassifier>;
     readonly $typename: string = "PitExp"; // holds the metatype in the form of a string
     owner: PiTyperElement;
 
     toPiString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PitExp'";
     }
-    get returnType(): PiClassifier {
+    get returnType(): FreClassifier {
         if (!!this.__returnType && !!this.__returnType.referred) {
             return this.__returnType.referred;
         }
         return null;
     }
-    set returnType(cls: PiClassifier) {
+    set returnType(cls: FreClassifier) {
         if (!!cls) {
-            this.__returnType = MetaElementReference.create<PiClassifier>(cls, "PiClassifier");
+            this.__returnType = MetaElementReference.create<FreClassifier>(cls, "FreClassifier");
             this.__returnType.owner = this.language;
         }
     }

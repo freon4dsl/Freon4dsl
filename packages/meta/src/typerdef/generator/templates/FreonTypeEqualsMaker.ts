@@ -6,7 +6,7 @@ import {
 import { Names, GenerationUtil } from "../../../utils";
 import { FreonTyperGenUtils } from "./FreonTyperGenUtils";
 import { PitEqualsRule } from "../../metalanguage/PitEqualsRule";
-import { PiClassifier } from "../../../languagedef/metalanguage";
+import { FreClassifier } from "../../../languagedef/metalanguage";
 
 /**
  * This class generates the code for the 'equalsto' entries in the .type file.
@@ -14,7 +14,7 @@ import { PiClassifier } from "../../../languagedef/metalanguage";
 export class FreonTypeEqualsMaker {
     typerdef: PiTyperDef = null;
 
-    public makeEqualsType(typerDef: PiTyperDef, leftVarName: string, rightVarName: string, imports: PiClassifier[]): string {
+    public makeEqualsType(typerDef: PiTyperDef, leftVarName: string, rightVarName: string, imports: FreClassifier[]): string {
         FreonTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
         let allRules: string[] = [];
@@ -58,7 +58,7 @@ export class FreonTypeEqualsMaker {
         return allRules.map(r => r).join(" else ");
     }
 
-    private makeEqualsForExp(exp: PitExp, leftVarName: string, rightVarName: string, varIsType: boolean, imports: PiClassifier[]): string {
+    private makeEqualsForExp(exp: PitExp, leftVarName: string, rightVarName: string, varIsType: boolean, imports: FreClassifier[]): string {
         if (exp instanceof PitWhereExp) {
             const allConditions: string[] = [];
             let returnStr: string = '';

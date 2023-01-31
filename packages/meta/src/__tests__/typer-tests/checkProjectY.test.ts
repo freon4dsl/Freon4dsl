@@ -1,5 +1,5 @@
 import { PiTyperMerger } from "../../typerdef/parser";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { PitClassifierSpec, PitInferenceRule, PiTyperDef } from "../../typerdef/metalanguage";
@@ -35,7 +35,7 @@ describe("Checking new typer", () => {
     const langParser = new LanguageParser();
 
     let parser: PiTyperMerger;
-    let language: PiLanguage;
+    let language: FreLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 

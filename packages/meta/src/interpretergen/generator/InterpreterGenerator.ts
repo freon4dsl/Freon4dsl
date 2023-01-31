@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import {
     GenerationStatus,
     FileUtil,
@@ -16,7 +16,7 @@ const LOGGER = new MetaLogger("InterpreterGenerator").mute();
  */
 export class InterpreterGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguage;
+    public language: FreLanguage;
     private interpreterFolder: string;
     private interpreterGenFolder: string;
     fileNames: string[] = [];

@@ -1,8 +1,8 @@
-import { PiConcept } from "../../languagedef/metalanguage/index";
-import { PiDefinitionElement } from "../../utils/index";
+import { FreConcept } from "../../languagedef/metalanguage/index";
+import { FreDefinitionElement } from "../../utils/index";
 
-export class PiInterpreterDef extends PiDefinitionElement{
+export class PiInterpreterDef extends FreDefinitionElement{
     readonly $typename: string = "PiInterpreterDef";
 
-    conceptsToEvaluate: PiConcept[] = [];
+    conceptsToEvaluate: FreConcept[] = [];
 }

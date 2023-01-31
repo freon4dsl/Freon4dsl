@@ -1,9 +1,9 @@
 import { Names, PROJECTITCORE } from "../../../utils";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { FreLanguage } from "../../../languagedef/metalanguage/FreLanguage";
 
 export class ActionsTemplate {
 
-    generate(language: PiLanguage): string {
+    generate(language: FreLanguage): string {
         return `
             import {
                 ${Names.PiActions},

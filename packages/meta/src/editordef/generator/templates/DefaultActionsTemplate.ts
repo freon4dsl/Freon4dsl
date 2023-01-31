@@ -1,8 +1,8 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import {
-    PiLanguage,
-    PiBinaryExpressionConcept,
-    PiClassifier, PiProperty, PiPrimitiveType
+    FreLanguage,
+    FreBinaryExpressionConcept,
+    FreClassifier, FreProperty, FrePrimitiveType
 } from "../../../languagedef/metalanguage";
 import { Roles } from "../../../utils";
 import {
@@ -13,7 +13,7 @@ import {
 
 export class DefaultActionsTemplate {
 
-    generate(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
+    generate(language: FreLanguage, editorDef: PiEditUnit, relativePath: string): string {
         const modelImports: string[] = language.conceptsAndInterfaces().map(c => `${Names.classifier(c)}`)
             .concat(language.units.map(u => `${Names.classifier(u)}`));
         return `
@@ -51,7 +51,7 @@ export class DefaultActionsTemplate {
              * (3) if neither (1) nor (2) yields a result, the default is used.  
              */  
             export const BINARY_EXPRESSION_CREATORS: ${Names.FreCreateBinaryExpressionAction}[] = [
-                ${language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
+                ${language.concepts.filter(c => (c instanceof FreBinaryExpressionConcept) && !c.isAbstract).map(c =>
             `${Names.FreCreateBinaryExpressionAction}.create({
                     trigger: "${editorDef.findExtrasForType(c).symbol}",
                     activeInBoxRoles: [
@@ -78,7 +78,7 @@ export class DefaultActionsTemplate {
             `;
         }
 
-    customActionsForOptional(language: PiLanguage, editorDef: PiEditUnit): string {
+    customActionsForOptional(language: FreLanguage, editorDef: PiEditUnit): string {
         let result: string = "";
         editorDef.getDefaultProjectiongroup().projections.forEach( projection => {
             if (!!projection && projection instanceof PiEditProjection) {
@@ -92,7 +92,7 @@ export class DefaultActionsTemplate {
                             // const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.property.name);
                             // console.log("Looking for [" + optionalPropertyName + "] in [" + myClassifier.name + "]")
                             // const prop: PiProperty = myClassifier.allProperties().find(prop => prop.name === optionalPropertyName);
-                            const prop: PiProperty = item.property.referred;
+                            const prop: FreProperty = item.property.referred;
                             const optionalPropertyName = prop.name;
                             // end change
                             let rolename: string = "unknown role";
@@ -100,11 +100,11 @@ export class DefaultActionsTemplate {
                                 // TODO Check for lists (everywhere)
                                 rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
                             } else if (prop.isPrimitive) {
-                                if( prop.type === PiPrimitiveType.number) {
+                                if( prop.type === FrePrimitiveType.number) {
                                     rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox")
-                                } else if( prop.type === PiPrimitiveType.string) {
+                                } else if( prop.type === FrePrimitiveType.string) {
                                     rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox")
-                                } else if( prop.type === PiPrimitiveType.boolean) {
+                                } else if( prop.type === FrePrimitiveType.boolean) {
                                     rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox")
                                 }
                             } else {
@@ -130,9 +130,9 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    customActionForReferences(language: PiLanguage, editorDef: PiEditUnit): string {
+    customActionForReferences(language: FreLanguage, editorDef: PiEditUnit): string {
         let result = "";
-        const allClassifiers: PiClassifier[] = [];
+        const allClassifiers: FreClassifier[] = [];
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
         allClassifiers.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
@@ -157,7 +157,7 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    customActionForParts(language: PiLanguage, editorDef: PiEditUnit): string {
+    customActionForParts(language: FreLanguage, editorDef: PiEditUnit): string {
         let result = "";
         // Nothing to do for the moment
         return result;

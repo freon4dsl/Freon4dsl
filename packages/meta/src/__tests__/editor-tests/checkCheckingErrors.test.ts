@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker, MetaLogger } from "../../utils";
 import { PiEditParser } from "../../editordef/parser/PiEditParser";
@@ -7,7 +7,7 @@ import { PiEditUnit } from "../../editordef/metalanguage";
 describe("Checking editor definition ", () => {
     const testdir = "src/__tests__/editor-tests/faultyDefFiles/checking-errors/";
     let parser: PiEditParser;
-    let language: PiLanguage;
+    let language: FreLanguage;
     let checker: Checker<PiEditUnit>;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();

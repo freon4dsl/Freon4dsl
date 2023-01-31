@@ -1,9 +1,9 @@
 import { Names, PROJECTITCORE, CONFIGURATION_GEN_FOLDER } from "../../../utils";
-import { PiLanguage } from "../../metalanguage";
+import { FreLanguage } from "../../metalanguage";
 
-export class PiReferenceTemplate {
+export class FreReferenceTemplate {
 
-    generatePiReference(language: PiLanguage, relativePath: string): string {
+    generatePiReference(language: FreLanguage, relativePath: string): string {
         return `
         import { MobxModelElementImpl } from "${PROJECTITCORE}";
         import { computed, observable } from "mobx";

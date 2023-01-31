@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { ListUtil, MetaLogger } from "../../utils";
-import { PiClassifier, PiConcept, PiLanguage, PiLimitedConcept } from "../../languagedef/metalanguage";
+import { FreClassifier, FreConcept, FreLanguage, FreLimitedConcept } from "../../languagedef/metalanguage";
 import {
     EDITOR_FOLDER,
     EDITOR_GEN_FOLDER,
@@ -23,7 +23,7 @@ export class EditorGenerator {
     protected editorGenFolder: string;
     protected editorFolder: string;
     protected stylesFolder: string;
-    language: PiLanguage;
+    language: FreLanguage;
 
     generate(editDef: PiEditUnit): void {
         if (isNullOrUndefined(this.language)) {
@@ -73,9 +73,9 @@ export class EditorGenerator {
 
         // During generation, we may conclude that extra box providers classes need to be generated.
         // We keep the classifiers for which this is necessary in the list 'extraClassifiers'.
-        let extraClassifiers: PiClassifier[] = [];
+        let extraClassifiers: FreClassifier[] = [];
         this.language.concepts.forEach(concept => {
-            if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
+            if (!(concept instanceof FreLimitedConcept) && !concept.isAbstract) {
                 const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language, concept, editDef, extraClassifiers, relativePath),
                     "Box provider " + concept.name, generationStatus);
                 fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
@@ -88,12 +88,12 @@ export class EditorGenerator {
             fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
         });
 
-        const allExtraClassifiers: PiClassifier[] = []; // remember these in order to add them to the index file
+        const allExtraClassifiers: FreClassifier[] = []; // remember these in order to add them to the index file
         ListUtil.addListIfNotPresent(allExtraClassifiers, extraClassifiers);
         while (extraClassifiers.length > 0) { // super projections may call other super projections, make sure every one has a BoxProvider
-            let newExtraClassifiers: PiClassifier[] = [];
+            let newExtraClassifiers: FreClassifier[] = [];
             extraClassifiers.forEach(cls => {
-                if (cls instanceof PiConcept && !cls.isAbstract) {
+                if (cls instanceof FreConcept && !cls.isAbstract) {
                     // do nothing, already generated
                 } else {
                     const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language, cls, editDef, newExtraClassifiers, relativePath),

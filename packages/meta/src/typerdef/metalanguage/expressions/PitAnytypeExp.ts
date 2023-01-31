@@ -1,8 +1,8 @@
 import { PitExp } from "./PitExp";
-import { PiClassifier, PiConcept } from "../../../languagedef/metalanguage";
+import { FreClassifier, FreConcept } from "../../../languagedef/metalanguage";
 
 export class PitAnytypeExp extends PitExp {
-    static anyType: PiClassifier = new PiConcept();
+    static anyType: FreClassifier = new FreConcept();
     readonly $typename: string = "PitAnytypeExp"; // holds the metatype in the form of a string
 
     /**
@@ -27,7 +27,7 @@ export class PitAnytypeExp extends PitExp {
         return `anytype`;
     }
 
-    get type(): PiClassifier {
+    get type(): FreClassifier {
         return PitAnytypeExp.anyType;
     }
 

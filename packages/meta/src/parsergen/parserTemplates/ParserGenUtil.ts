@@ -1,16 +1,16 @@
 import { PiEditProjection, PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
 import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
-import { PiBinaryExpressionConcept, PiClassifier, PiExpressionConcept } from "../../languagedef/metalanguage";
+import { FreBinaryExpressionConcept, FreClassifier, FreExpressionConcept } from "../../languagedef/metalanguage";
 import { GenerationUtil } from "../../utils";
 
 
 export class ParserGenUtil {
 
     // find all expression bases for all binaries
-    static findAllExpressionBases(list: PiBinaryExpressionConcept[]): PiExpressionConcept[] {
-        const bases: PiExpressionConcept[] = [];
+    static findAllExpressionBases(list: FreBinaryExpressionConcept[]): FreExpressionConcept[] {
+        const bases: FreExpressionConcept[] = [];
         list.forEach(impl => {
-            const expBase = GenerationUtil.findExpressionBase(impl as PiBinaryExpressionConcept);
+            const expBase = GenerationUtil.findExpressionBase(impl as FreBinaryExpressionConcept);
             if (bases.indexOf(expBase) === -1) {
                 // add if not present
                 bases.push(expBase);
@@ -33,7 +33,7 @@ export class ParserGenUtil {
         return projectionGroup;
     }
 
-    static findNonTableProjection(projectionGroup: PiEditProjectionGroup, classifier: PiClassifier, projectionName?: string): PiEditProjection {
+    static findNonTableProjection(projectionGroup: PiEditProjectionGroup, classifier: FreClassifier, projectionName?: string): PiEditProjection {
         let myGroup: PiEditProjectionGroup = projectionGroup;
         // take care of named projections: search the projection group with the right name
         if (!!projectionName && projectionName.length > 0) {

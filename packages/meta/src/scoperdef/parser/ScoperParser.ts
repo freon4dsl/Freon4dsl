@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { PiParser } from "../../utils";
 import { PiScopeDef, ScoperChecker } from "../metalanguage";
 import { setCurrentFileName } from "./ScoperCreators";
@@ -7,9 +7,9 @@ import { setCurrentFileName as expressionFileName } from "../../languagedef/pars
 const scoperParser = require("./ScoperGrammar");
 
 export class ScoperParser extends PiParser<PiScopeDef> {
-    public language: PiLanguage;
+    public language: FreLanguage;
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         super();
         this.parser = scoperParser;
         this.language = language;

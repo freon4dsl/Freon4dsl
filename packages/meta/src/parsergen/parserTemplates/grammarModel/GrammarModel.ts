@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../../languagedef/metalanguage";
+import { FreLanguage } from "../../../languagedef/metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 import {
     internalTransformBranch,
@@ -12,7 +12,7 @@ import { GrammarPart } from "./GrammarPart";
 
 export class GrammarModel {
     // these four properties are set by the GrammarGenerator
-    public language: PiLanguage = null;
+    public language: FreLanguage = null;
     public parts: GrammarPart[] = [];
     public trueValue: string = 'true';
     public falseValue: string = 'false';

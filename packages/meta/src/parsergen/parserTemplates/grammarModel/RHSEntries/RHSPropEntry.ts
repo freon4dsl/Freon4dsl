@@ -1,10 +1,10 @@
 import { RightHandSideEntry } from "./RightHandSideEntry";
-import { PiProperty } from "../../../../languagedef/metalanguage";
+import { FreProperty } from "../../../../languagedef/metalanguage";
 
 export abstract class RHSPropEntry extends RightHandSideEntry {
-    property: PiProperty;
+    property: FreProperty;
 
-    constructor(prop: PiProperty) {
+    constructor(prop: FreProperty) {
         super();
         this.property = prop;
     }

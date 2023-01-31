@@ -1,4 +1,4 @@
-import {  PiLanguage } from "../../languagedef/metalanguage";
+import {  FreLanguage } from "../../languagedef/metalanguage";
 import { PiEditUnit } from "../../editordef/metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../utils";
 
@@ -8,7 +8,7 @@ export class ReaderTemplate {
      * Returns a string representation of a generic parser for 'language'. This parser is able
      * to handle every modelunit in the language.
      */
-    public generateReader(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
+    public generateReader(language: FreLanguage, editDef: PiEditUnit, relativePath: string): string {
         const semanticAnalyser: string = Names.semanticAnalyser(language);
         const syntaxAnalyser: string = Names.syntaxAnalyser(language);
 

@@ -1,4 +1,4 @@
-import { PiLangElement, PiClassifier, PiConcept, PiConceptProperty, PiFunction, PiInstance, PiLanguage, PiProperty } from "./internal";
+import { FreLangElement, FreClassifier, FreConcept, FreConceptProperty, FreFunction, FreInstance, FreLanguage, FreProperty } from "./internal";
 import { Names, ParseLocation } from "../../utils";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -6,7 +6,7 @@ import { Names, ParseLocation } from "../../utils";
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { MetaElementReference } from ".";
 
-/** This module contains classes that implement Expressions over the PiLanguage structure.
+/** This module contains classes that implement Expressions over the FreLanguage structure.
  *  There are five types of Expressions:
  *  1. Simple expression: a simple value, currently only numbers
  *  2. Instance expression: an expression that refers to a predefined instance of a limited concept, e.g. DemoAttributeType:Integer
@@ -15,22 +15,22 @@ import { MetaElementReference } from ".";
  *  5. Self expression: an expression that refers to a property of a classifier, like 'self.age'
  */
 
-export abstract class PiLangExp extends PiLangElement {
+export abstract class FreLangExp extends FreLangElement {
     sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
-    appliedfeature: PiLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
-    __referredElement: MetaElementReference<PiLangElement>;  // refers to the element called 'sourceName'
-    language: PiLanguage;                           // the language for which this expression is defined
+    appliedfeature: FreLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
+    __referredElement: MetaElementReference<FreLangElement>;  // refers to the element called 'sourceName'
+    language: FreLanguage;                           // the language for which this expression is defined
 
     // returns the property to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
-    findRefOfLastAppliedFeature(): PiProperty {
+    findRefOfLastAppliedFeature(): FreProperty {
         if (!!this.language) {
             if (this.appliedfeature !== undefined) {
                 // console.log(" last of: " + this.appliedfeature.sourceName);
                 return this.appliedfeature.findRefOfLastAppliedFeature();
             } else {
-                const found: PiLangElement = this.__referredElement?.referred;
+                const found: FreLangElement = this.__referredElement?.referred;
                 // console.log("found reference: " + found?.name + " of type " + typeof found);
-                if (found instanceof PiProperty) {
+                if (found instanceof FreProperty) {
                     return found;
                 }
             }
@@ -40,98 +40,98 @@ export abstract class PiLangExp extends PiLangElement {
         return null;
     }
 
-    toPiString(): string {
-        return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PiLangExpressions.PiLangExp'";
+    toFreString(): string {
+        return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'FreLangExpressions.FreLangExp'";
     }
 }
 
-export class PiLangSimpleExp extends PiLangExp {
+export class FreLangSimpleExp extends FreLangExp {
     value: number;
 
-    findRefOfLastAppliedFeature(): PiProperty {
+    findRefOfLastAppliedFeature(): FreProperty {
         return null;
     }
 
-    toPiString(): string {
+    toFreString(): string {
         return this.value?.toString();
     }
 }
 
-export class PiLangSelfExp extends PiLangExp {
+export class FreLangSelfExp extends FreLangExp {
 
-    static create(referred: PiClassifier): PiLangSelfExp {
-        const result = new PiLangSelfExp();
-        result.__referredElement = MetaElementReference.create<PiClassifier>(referred, "PiClassifier");
+    static create(referred: FreClassifier): FreLangSelfExp {
+        const result = new FreLangSelfExp();
+        result.__referredElement = MetaElementReference.create<FreClassifier>(referred, "FreClassifier");
         result.__referredElement.owner = result;
         result.sourceName = Names.nameForSelf;
         return result;
     }
 
-    __referredElement: MetaElementReference<PiClassifier>; // is not needed, can be determined based on its parent
+    __referredElement: MetaElementReference<FreClassifier>; // is not needed, can be determined based on its parent
 
-    toPiString(): string {
+    toFreString(): string {
         if (!!this.sourceName) {
-            return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
+            return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toFreString()) : "");
         } else { // e.g. in isunique validation rules
-            return this.appliedfeature ? this.appliedfeature.toPiString() : "";
+            return this.appliedfeature ? this.appliedfeature.toFreString() : "";
         }
     }
 }
 
-export class PiInstanceExp extends PiLangExp {
+export class FreInstanceExp extends FreLangExp {
     // sourceName should be name of a limited concept
     instanceName: string;   // should be name of one of the predefined instances of 'sourceName'
-    __referredElement: MetaElementReference<PiInstance>;
+    __referredElement: MetaElementReference<FreInstance>;
 
-    toPiString(): string {
+    toFreString(): string {
         return this.sourceName + ":" + this.instanceName;
     }
 }
 
-export class PiLangConceptExp extends PiLangExp {
-    __referredElement: MetaElementReference<PiClassifier>;
+export class FreLangConceptExp extends FreLangExp {
+    __referredElement: MetaElementReference<FreClassifier>;
 
-    toPiString(): string {
-        return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
+    toFreString(): string {
+        return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toFreString()) : "");
     }
 }
 
-export class PiLangAppliedFeatureExp extends PiLangExp {
+export class FreLangAppliedFeatureExp extends FreLangExp {
 
-    static create(owner: PiLangExp, name: string, referred: PiProperty): PiLangAppliedFeatureExp {
-        const result = new PiLangAppliedFeatureExp();
+    static create(owner: FreLangExp, name: string, referred: FreProperty): FreLangAppliedFeatureExp {
+        const result = new FreLangAppliedFeatureExp();
         result.referredElement = referred;
         result.sourceName = name;
         result.sourceExp = owner;
         return result;
     }
 
-    sourceExp: PiLangExp;
-    __referredElement: MetaElementReference<PiProperty>;
+    sourceExp: FreLangExp;
+    __referredElement: MetaElementReference<FreProperty>;
 
-    get referredElement(): PiProperty {
+    get referredElement(): FreProperty {
         return this.__referredElement?.referred;
     }
 
-    set referredElement(p: PiProperty) {
-        this.__referredElement = MetaElementReference.create<PiProperty>(p, "PiProperty");
+    set referredElement(p: FreProperty) {
+        this.__referredElement = MetaElementReference.create<FreProperty>(p, "FreProperty");
         this.__referredElement.owner = this;
     }
 
-    get reference(): MetaElementReference<PiProperty> {
+    get reference(): MetaElementReference<FreProperty> {
         return this.__referredElement;
     }
 
-    set reference(p: MetaElementReference<PiProperty>) {
+    set reference(p: MetaElementReference<FreProperty>) {
         this.__referredElement = p;
         this.__referredElement.owner = this;
     }
 
-    toPiString(): string {
-        return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
+    toFreString(): string {
+        return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toFreString()) : "");
     }
 
-    findRefOfLastAppliedFeature(): PiProperty {
+    findRefOfLastAppliedFeature(): FreProperty {
         if (this.appliedfeature !== undefined) {
             // console.log(" last of: " + this.appliedfeature.sourceName);
             return this.appliedfeature.findRefOfLastAppliedFeature();
@@ -142,23 +142,23 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
     }
 }
 
-export class PiLangFunctionCallExp extends PiLangExp {
+export class FreLangFunctionCallExp extends FreLangExp {
     // sourceName: string; 			// only used in validator for 'conformsTo' and 'equalsType'
-    actualparams: PiLangExp[] = [];
+    actualparams: FreLangExp[] = [];
     returnValue: boolean;
-    __referredElement: MetaElementReference<PiFunction>;
+    __referredElement: MetaElementReference<FreFunction>;
 
-    toPiString(): string {
+    toFreString(): string {
         let actualPars: string = "( ";
         if (!!this.actualparams) {
             for (const actual of this.actualparams) {
-                actualPars = actualPars.concat(actual.toPiString());
+                actualPars = actualPars.concat(actual.toFreString());
                 if (this.actualparams.indexOf(actual) !== this.actualparams.length - 1) {
                     actualPars = actualPars.concat(", ");
                 }
             }
         }
         actualPars = actualPars.concat(` )`);
-        return this.sourceName + actualPars + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
+        return this.sourceName + actualPars + (this.appliedfeature ? ("." + this.appliedfeature.toFreString()) : "");
     }
 }

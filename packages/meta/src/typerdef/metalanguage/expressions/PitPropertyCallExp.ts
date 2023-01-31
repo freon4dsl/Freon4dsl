@@ -1,4 +1,4 @@
-import { PiClassifier, MetaElementReference, PiProperty } from "../../../languagedef/metalanguage";
+import { FreClassifier, MetaElementReference, FreProperty } from "../../../languagedef/metalanguage";
 import { PitExp } from "./PitExp";
 
 export class PitPropertyCallExp extends PitExp {
@@ -26,7 +26,7 @@ export class PitPropertyCallExp extends PitExp {
     readonly $typename: string = "PitPropertyCallExp"; // holds the metatype in the form of a string
 
     source: PitExp; // implementation of part 'source'
-    __property: MetaElementReference<PiProperty>;
+    __property: MetaElementReference<FreProperty>;
     toPiString(): string {
         let sourceStr: string = '';
         if (!!this.source) {
@@ -34,19 +34,19 @@ export class PitPropertyCallExp extends PitExp {
         }
         return `${sourceStr}${this.__property.name}`;
     }
-    get property(): PiProperty {
+    get property(): FreProperty {
         if (!!this.__property && !!this.__property.referred) {
             return this.__property.referred;
         }
         return null;
     }
-    set property(cls: PiProperty) {
+    set property(cls: FreProperty) {
         if (!!cls) {
-            this.__property = MetaElementReference.create<PiProperty>(cls, "PiProperty");
+            this.__property = MetaElementReference.create<FreProperty>(cls, "FreProperty");
             this.__property.owner = this.language;
         }
     }
-    get type(): PiClassifier {
+    get type(): FreClassifier {
         return this.property?.type;
     }
 

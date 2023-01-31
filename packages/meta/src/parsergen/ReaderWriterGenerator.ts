@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { MetaLogger } from "../utils";
-import { PiLanguage } from "../languagedef/metalanguage";
+import { FreLanguage } from "../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, Names, READER_FOLDER, READER_GEN_FOLDER, WRITER_FOLDER, WRITER_GEN_FOLDER } from "../utils";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates";
@@ -20,7 +20,7 @@ const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
  */
 export class ReaderWriterGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguage;
+    public language: FreLanguage;
     private writerFolder: string;
     private writerGenFolder: string;
     private readerFolder: string;

@@ -1,11 +1,11 @@
 import { Names, PROJECTITCORE } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
-import { PiModelDescription } from "../../metalanguage/PiLanguage";
+import { FreModelDescription } from "../../metalanguage/FreLanguage";
 import { ClassifierUtil } from "./ClassifierUtil";
 
 export class ModelTemplate {
     // Note: a model may not have other properties than units
-    public generateModel(modelDescription: PiModelDescription): string {
+    public generateModel(modelDescription: FreModelDescription): string {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
@@ -199,7 +199,7 @@ export class ModelTemplate {
                 }`;
     }
 
-    private findModelImports(modelDescription: PiModelDescription, myName: string): string[] {
+    private findModelImports(modelDescription: FreModelDescription, myName: string): string[] {
         return Array.from(
             new Set(
                 modelDescription.parts().map(part => Names.classifier(part.type))

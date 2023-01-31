@@ -1,5 +1,5 @@
 import { PitExp } from "./PitExp";
-import { PiClassifier } from "../../../languagedef/metalanguage";
+import { FreClassifier } from "../../../languagedef/metalanguage";
 import { PitVarDecl } from "../PitVarDecl";
 import { PitBinaryExp } from "./PitBinaryExp";
 import { PitPropertyCallExp } from "./PitPropertyCallExp";
@@ -36,7 +36,7 @@ export class PitWhereExp extends PitExp {
         ${this.conditions.map(cond => cond.toPiString()).join("\n\t\t")}
     }`;
     }
-    get type(): PiClassifier {
+    get type(): FreClassifier {
         return this.variable.type;
     }
 }

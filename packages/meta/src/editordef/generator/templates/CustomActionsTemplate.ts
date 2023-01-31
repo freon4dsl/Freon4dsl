@@ -1,9 +1,9 @@
 import { Names, PROJECTITCORE } from "../../../utils";
-import { PiLanguage } from "../../../languagedef/metalanguage";
+import { FreLanguage } from "../../../languagedef/metalanguage";
 
 export class CustomActionsTemplate {
 
-    generate(language: PiLanguage): string {
+    generate(language: FreLanguage): string {
         return `
             import {
                 ${Names.FreCreateBinaryExpressionAction},

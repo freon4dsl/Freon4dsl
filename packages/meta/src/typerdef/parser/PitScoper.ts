@@ -1,29 +1,29 @@
-import { PiMetaScoper } from "../../languagedef/metalanguage/PiLangScoper";
-import { PiClassifier, PiLangElement } from "../../languagedef/metalanguage";
+import { FreMetaScoper } from "../../languagedef/metalanguage/FreLangScoper";
+import { FreClassifier, FreLangElement } from "../../languagedef/metalanguage";
 import { PitCreateExp, PitPropertyCallExp, PitVarCallExp, PitWhereExp } from "../metalanguage/expressions";
 import { PitProperty, PitTypeConcept, PiTyperDef, PiTyperElement } from "../metalanguage";
-import { PiDefinitionElement } from "../../utils";
+import { FreDefinitionElement, Names } from "../../utils";
 
 /**
  * This class makes sure that references to parts of the typer definition can be found.
  * It is called by PiLangScoper, when it is added to its 'extraScopers'. The latter is
  * done by the typer checker.
  */
-export class PitScoper implements PiMetaScoper {
+export class PitScoper implements FreMetaScoper {
     definition: PiTyperDef;
 
     constructor(definition: PiTyperDef) {
         this.definition = definition;
     }
 
-    getFromVisibleElements(owner: PiDefinitionElement, name: string, typeName: string): PiLangElement {
-        let result: PiLangElement;
-        if (name === "base2" ) {
-            console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
-        }
-        if (owner instanceof PitProperty || owner instanceof PiTyperElement ) { // PitProperty does not inherited from PiTyperElement!!
-            if (typeName === "PiProperty") {
-                let nameSpace: PiClassifier;
+    getFromVisibleElements(owner: FreDefinitionElement, name: string, typeName: string): FreLangElement {
+        let result: FreLangElement;
+        // if (name === "base2" ) {
+        //     console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
+        // }
+        if (owner instanceof PitProperty || owner instanceof PiTyperElement ) { // PitProperty does not inherit from PiTyperElement!!
+            if (typeName === "FreProperty") {
+                let nameSpace: FreClassifier;
                 if (owner instanceof PitCreateExp) {
                     nameSpace = owner.type;
                 } else if (owner instanceof PitPropertyCallExp) {
@@ -38,10 +38,10 @@ export class PitScoper implements PiMetaScoper {
                         result = whereExp.variable;
                     }
                 }
-            } else if (typeName === "PitTypeConcept" || typeName === "PiClassifier") {
-                if (name === "PiType" || name === "FreonType") {
+            } else if (typeName === "PitTypeConcept" || typeName === "FreClassifier") {
+                if (name === Names.FreType || name === "FreonType") {
                     result = PiTyperDef.freonType;
-                } else { // search the typeConcepts only, 'normal' classifiers will have been found already by PiLangScoper
+                } else { // search the typeConcepts only, 'normal' classifiers will have been found already by FreLangScoper
                     result = this.definition.typeConcepts.find(con => con.name === name);
                 }
             }

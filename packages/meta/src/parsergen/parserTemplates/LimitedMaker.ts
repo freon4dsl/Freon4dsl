@@ -1,5 +1,5 @@
 import { PiEditUnit } from "../../editordef/metalanguage";
-import { PiClassifier, PiLimitedConcept } from "../../languagedef/metalanguage";
+import { FreClassifier, FreLimitedConcept } from "../../languagedef/metalanguage";
 import { Names } from "../../utils";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { LimitedRule } from "./grammarModel/LimitedRule";
@@ -13,9 +13,9 @@ import { LimitedRule } from "./grammarModel/LimitedRule";
 export class LimitedMaker {
     generatedParseRules: string[] = [];
     branchNames: string[] = [];
-    imports: PiClassifier[] = [];
+    imports: FreClassifier[] = [];
 
-    generateLimitedRules(limitedConcepts: PiLimitedConcept[]): GrammarRule[] {
+    generateLimitedRules(limitedConcepts: FreLimitedConcept[]): GrammarRule[] {
         let rules: GrammarRule[] = [];
         for (const piClassifier of limitedConcepts) {
             // find the mapping of keywords to predef instances

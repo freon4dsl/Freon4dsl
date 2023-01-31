@@ -1,22 +1,22 @@
 import { LanguageExpressionTester, TestExpressionsForConcept } from "./LanguageExpressionTester";
 import {
-    PiLangSelfExp,
-    PiLangAppliedFeatureExp,
-    PiLangExp,
-    PiLangFunctionCallExp,
-    PiInstanceExp,
-    PiLangConceptExp, PiLangSimpleExp
-} from "../../languagedef/metalanguage/PiLangExpressions";
+    FreLangSelfExp,
+    FreLangAppliedFeatureExp,
+    FreLangExp,
+    FreLangFunctionCallExp,
+    FreInstanceExp,
+    FreLangConceptExp, FreLangSimpleExp
+} from "../metalanguage/FreLangExpressions";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { Names } from "../../utils";
-import { PiClassifier } from "../metalanguage/PiLanguage";
+import { FreClassifier } from "../metalanguage/FreLanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { MetaElementReference } from "../metalanguage/MetaElementReference";
 
-const LOGGER = new MetaLogger("PiLanguageExpressionCreator").mute();
+const LOGGER = new MetaLogger("FreLanguageExpressionCreator").mute();
 
 let currentFileName: string = "SOME_FILENAME";
 export function setCurrentFileName(newName: string) {
@@ -57,9 +57,9 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     return result;
 }
 
-export function createClassifierReference(data: Partial<MetaElementReference<PiClassifier>>): MetaElementReference<PiClassifier> {
+export function createClassifierReference(data: Partial<MetaElementReference<FreClassifier>>): MetaElementReference<FreClassifier> {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = MetaElementReference.create<PiClassifier>(data.name, "PiClassifier");
+    const result = MetaElementReference.create<FreClassifier>(data.name, "FreClassifier");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
@@ -67,16 +67,16 @@ export function createClassifierReference(data: Partial<MetaElementReference<PiC
     return result;
 }
 
-export function createExpression(data: Partial<PiLangExp>): PiLangExp {
-    let result: PiLangExp;
+export function createExpression(data: Partial<FreLangExp>): FreLangExp {
+    let result: FreLangExp;
     if (!!data.sourceName) {
         if (data.sourceName === Names.nameForSelf) {
-            // cannot use PiLangSelfExp.create() because referredElement is not yet known
-            result = new PiLangSelfExp();
+            // cannot use FreLangSelfExp.create() because referredElement is not yet known
+            result = new FreLangSelfExp();
             LOGGER.log("createSelfExpression");
             result.sourceName = data.sourceName;
         } else {
-            result = new PiLangConceptExp();
+            result = new FreLangConceptExp();
             LOGGER.log("createConceptExpression");
             result.sourceName = data.sourceName;
         }
@@ -92,10 +92,10 @@ export function createExpression(data: Partial<PiLangExp>): PiLangExp {
     return result;
 }
 
-export function createAppliedFeatureExp(data: Partial<PiLangAppliedFeatureExp>): PiLangAppliedFeatureExp {
+export function createAppliedFeatureExp(data: Partial<FreLangAppliedFeatureExp>): FreLangAppliedFeatureExp {
     LOGGER.log("createAppliedFeatureExp");
-    // cannot use PiLangAppliedFeatureExp.create because the owner and referred element are not known here
-    const result = new PiLangAppliedFeatureExp();
+    // cannot use FreLangAppliedFeatureExp.create because the owner and referred element are not known here
+    const result = new FreLangAppliedFeatureExp();
 
     if (!!data.sourceName) {
         result.sourceName = data.sourceName;
@@ -111,9 +111,9 @@ export function createAppliedFeatureExp(data: Partial<PiLangAppliedFeatureExp>):
     return result;
 }
 
-export function createInstanceExp(data: Partial<PiInstanceExp>): PiInstanceExp {
+export function createInstanceExp(data: Partial<FreInstanceExp>): FreInstanceExp {
     LOGGER.log("createInstanceExp");
-    const result: PiInstanceExp = new PiInstanceExp();
+    const result: FreInstanceExp = new FreInstanceExp();
     if (!!data.sourceName) {
         result.sourceName = data.sourceName;
     }
@@ -127,9 +127,9 @@ export function createInstanceExp(data: Partial<PiInstanceExp>): PiInstanceExp {
     return result;
 }
 
-export function createFunctionCall(data: Partial<PiLangFunctionCallExp>): PiLangFunctionCallExp {
+export function createFunctionCall(data: Partial<FreLangFunctionCallExp>): FreLangFunctionCallExp {
     LOGGER.log("createFunctionCall");
-    const result: PiLangFunctionCallExp = new PiLangFunctionCallExp();
+    const result: FreLangFunctionCallExp = new FreLangFunctionCallExp();
     if (!!data.sourceName) {
         result.sourceName = data.sourceName;
     }
@@ -147,9 +147,9 @@ export function createFunctionCall(data: Partial<PiLangFunctionCallExp>): PiLang
     return result;
 }
 
-export function createSimpleExpression(data: Partial<PiLangSimpleExp>): PiLangSimpleExp {
+export function createSimpleExpression(data: Partial<FreLangSimpleExp>): FreLangSimpleExp {
     LOGGER.log("createSimpleExpression");
-    const result: PiLangSimpleExp = new PiLangSimpleExp();
+    const result: FreLangSimpleExp = new FreLangSimpleExp();
     // when the normal check is present, a value of 0 will not be passed to result
     // if (!!data.value) {
     result.value = data.value;

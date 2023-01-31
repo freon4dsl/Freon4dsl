@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { PiTyperDef } from "../metalanguage";
 import { GenerationStatus, FileUtil, Names, TYPER_FOLDER, TYPER_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../utils";
 import { FreonTyperTemplate } from "./templates/FreonTyperTemplate";
@@ -18,7 +18,7 @@ const LOGGER = new MetaLogger("FreonTyperGenerator").mute();
  */
 export class FreonTyperGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguage;
+    public language: FreLanguage;
     protected typerGenFolder: string;
     protected typerConceptsFolder: string;
     protected typerFolder: string;

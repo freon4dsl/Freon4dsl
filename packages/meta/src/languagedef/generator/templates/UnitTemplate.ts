@@ -1,6 +1,6 @@
 import { Names } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
-import { PiUnitDescription } from "../../metalanguage/PiLanguage";
+import { FreUnitDescription } from "../../metalanguage/FreLanguage";
 import { ClassifierUtil } from "./ClassifierUtil";
 
 export class UnitTemplate {
@@ -10,7 +10,7 @@ export class UnitTemplate {
     // a unit has no implemented interfaces
     // a unit is not an expression
     // a unit is not abstract
-    public generateUnit(unitDescription: PiUnitDescription) {
+    public generateUnit(unitDescription: FreUnitDescription) {
         const language = unitDescription.language;
         const myName = Names.classifier(unitDescription);
         const needsObservable = unitDescription.primProperties.length > 0;
@@ -49,7 +49,7 @@ export class UnitTemplate {
             `;
     }
 
-    private findModelImports(unitDescription: PiUnitDescription, myName: string): string[] {
+    private findModelImports(unitDescription: FreUnitDescription, myName: string): string[] {
         return Array.from(
             new Set(
                 unitDescription.parts().map(part => Names.classifier(part.type))

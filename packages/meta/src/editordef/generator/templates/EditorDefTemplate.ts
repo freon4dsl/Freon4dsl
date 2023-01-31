@@ -1,9 +1,9 @@
 import {
-    PiBinaryExpressionConcept,
-    PiConcept,
-    PiLanguage,
-    PiLimitedConcept,
-    PiProperty
+    FreBinaryExpressionConcept,
+    FreConcept,
+    FreLanguage,
+    FreLimitedConcept,
+    FreProperty
 } from "../../../languagedef/metalanguage";
 import {
     CONFIGURATION_FOLDER,
@@ -18,7 +18,7 @@ import { PiEditProjection, PiEditPropertyProjection, PiEditTableProjection, PiEd
 
 export class EditorDefTemplate {
 
-    generateEditorDef(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
+    generateEditorDef(language: FreLanguage, editorDef: PiEditUnit, relativePath: string): string {
         const defaultProjGroup = editorDef.getDefaultProjectiongroup();
 
         let conceptsWithTrigger: ConceptTriggerElement[] = [];
@@ -27,9 +27,9 @@ export class EditorDefTemplate {
         let editorImports: string[] = [];
         let coreImports: string[] = [`${Names.FreLanguage}`, 'FreProjectionHandler', 'FreBoxProvider'];
 
-        language.concepts.filter(c => !(c instanceof PiLimitedConcept || c.isAbstract)).forEach(concept => {
-            // TODO handle other sub types of PiClassifier
-            if (concept instanceof PiConcept) {
+        language.concepts.filter(c => !(c instanceof FreLimitedConcept || c.isAbstract)).forEach(concept => {
+            // TODO handle other sub types of FreClassifier
+            if (concept instanceof FreConcept) {
                 // find the triggers for all concepts
                 // every concept should have one - added by EditorDefaultsGenerator
                 // console.log("searching trigger for: " + concept.name);
@@ -52,7 +52,7 @@ export class EditorDefTemplate {
         // get all the constructors
         let constructors: string[] = [];
         language.concepts.forEach(concept => {
-            if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
+            if (!(concept instanceof FreLimitedConcept) && !concept.isAbstract) {
                 constructors.push(`["${Names.concept(concept)}", () => {
                         return new ${Names.boxProvider(concept)}(${handlerVarName})
                     }]`);
@@ -145,7 +145,7 @@ export class EditorDefTemplate {
             });
         })
 
-        const hasBinExps: boolean = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept)).length > 0;
+        const hasBinExps: boolean = language.concepts.filter(c => (c instanceof FreBinaryExpressionConcept)).length > 0;
         // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
 
         // template starts here
@@ -216,10 +216,10 @@ export class EditorDefTemplate {
 
 /** private class to store some info */
 class ConceptTriggerElement {
-    concept: PiConcept;
+    concept: FreConcept;
     trigger: string;
 
-    constructor(concept: PiConcept, trigger: string) {
+    constructor(concept: FreConcept, trigger: string) {
         this.concept = concept;
         this.trigger = trigger;
     }
@@ -227,10 +227,10 @@ class ConceptTriggerElement {
 
 /** private class to store some info */
 class ConceptShortCutElement {
-    concept: PiConcept;
-    property: PiProperty;
+    concept: FreConcept;
+    property: FreProperty;
 
-    constructor(concept: PiConcept, property: PiProperty) {
+    constructor(concept: FreConcept, property: FreProperty) {
         this.concept = concept;
         this.property = property;
     }

@@ -1,27 +1,27 @@
 import {
-    PiBinaryExpressionConcept,
-    PiClassifier,
-    PiConcept,
-    PiLanguage,
-    PiLimitedConcept
+    FreBinaryExpressionConcept,
+    FreClassifier,
+    FreConcept,
+    FreLanguage,
+    FreLimitedConcept
 } from "../../languagedef/metalanguage";
 import { UnitAnalyser } from "./UnitAnalyser";
-import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { FreUnitDescription } from "../../languagedef/metalanguage/FreLanguage";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 
 export interface PiAnalyser {
     // name of the unit
-    unit: PiUnitDescription;
+    unit: FreUnitDescription;
     // all concepts used in this unit
-    classifiersUsed: PiClassifier[];
+    classifiersUsed: FreClassifier[];
     // all binary concepts used in this unit
-    binaryConceptsUsed: PiBinaryExpressionConcept[];
+    binaryConceptsUsed: FreBinaryExpressionConcept[];
     // all interfaces and abstract concepts that are mentioned in this unit
-    interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]> ;
+    interfacesAndAbstractsUsed: Map<FreClassifier, FreClassifier[]> ;
     // all limited concepts that are referred to (as type of properties), from this unit
-    limitedsReferred: PiLimitedConcept[];
+    limitedsReferred: FreLimitedConcept[];
     // all concepts that are not abstract, but do have sub concepts, from this unit
-    conceptsWithSub: Map<PiConcept, PiClassifier[]>;
+    conceptsWithSub: Map<FreConcept, FreClassifier[]>;
 }
 
 export class LanguageAnalyser {
@@ -31,7 +31,7 @@ export class LanguageAnalyser {
     // it is not used to analyse anything!!
     commonAnalyser: UnitAnalyser = new UnitAnalyser();
 
-    analyseModel(language: PiLanguage) {
+    analyseModel(language: FreLanguage) {
         this.commonAnalyser.reset();
         
         language.units.forEach(unit => {
@@ -49,11 +49,11 @@ export class LanguageAnalyser {
         // });
     }
 
-    getRefCorrectorContent(language: PiLanguage,relativePath: string): string {
+    getRefCorrectorContent(language: FreLanguage, relativePath: string): string {
         return this.refCorrectorMaker.makeCorrector(language, relativePath);
     }
 
-    getRefCorrectorWalkerContent(language: PiLanguage, relativePath: string): string {
+    getRefCorrectorWalkerContent(language: FreLanguage, relativePath: string): string {
         return this.refCorrectorMaker.makeWalker(language, relativePath);
     }
 
@@ -176,31 +176,31 @@ export class LanguageAnalyser {
         return result;
     }
 
-    private addClassifierUsed(classifier: PiClassifier) {
+    private addClassifierUsed(classifier: FreClassifier) {
         if (!this.commonAnalyser.classifiersUsed.includes(classifier)) {
             this.commonAnalyser.classifiersUsed.push(classifier);
         }
     }
 
-    private addBinaryConceptsUsed(classifier: PiBinaryExpressionConcept) {
+    private addBinaryConceptsUsed(classifier: FreBinaryExpressionConcept) {
         if (!this.commonAnalyser.binaryConceptsUsed.includes(classifier)) {
             this.commonAnalyser.binaryConceptsUsed.push(classifier);
         }
     }
 
-    private addLimitedsReferred(classifier: PiLimitedConcept) {
+    private addLimitedsReferred(classifier: FreLimitedConcept) {
         if (!this.commonAnalyser.limitedsReferred.includes(classifier)) {
             this.commonAnalyser.limitedsReferred.push(classifier);
         }
     }
 
-    private addInterfacesAndAbstractsUsed(classifier: PiClassifier, used: PiClassifier[]) {
+    private addInterfacesAndAbstractsUsed(classifier: FreClassifier, used: FreClassifier[]) {
         if (!this.commonAnalyser.interfacesAndAbstractsUsed.has(classifier)) {
             this.commonAnalyser.interfacesAndAbstractsUsed.set(classifier, used);
         }
     }
 
-    private addConceptsWithSubs(classifier: PiConcept, used: PiClassifier[]) {
+    private addConceptsWithSubs(classifier: FreConcept, used: FreClassifier[]) {
         if (!this.commonAnalyser.conceptsWithSub.has(classifier)) {
             this.commonAnalyser.conceptsWithSub.set(classifier, used);
         }

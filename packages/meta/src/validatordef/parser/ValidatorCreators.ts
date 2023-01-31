@@ -6,8 +6,8 @@ import {
     PiValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText, ValidationRule, ValidationSeverity,
     ValidNameRule
 } from "../metalanguage";
-import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
-import { PiDefinitionElement } from "../../utils";
+import { FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
+import { FreDefinitionElement } from "../../utils";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang)
 // from the parsed data objects (from ValidatorGrammar.pegjs).
@@ -145,10 +145,10 @@ export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
         // the expression parser/creator returns a PiLangConceptExp
         // but we need a PiLangSelfExp where 'self' refers to an element of result.list
         // therefore we change the received 'listproperty'.
-        result.listproperty = new PiLangSelfExp();
+        result.listproperty = new FreLangSelfExp();
         // result.listproperty.sourceName = "list";
         result.listproperty.location = data.listproperty.location;
-        result.listproperty.appliedfeature = new PiLangAppliedFeatureExp();
+        result.listproperty.appliedfeature = new FreLangAppliedFeatureExp();
         result.listproperty.appliedfeature.sourceName = data.listproperty.sourceName;
         result.listproperty.appliedfeature.location = data.listproperty.location;
         result.listproperty.appliedfeature.appliedfeature = data.listproperty.appliedfeature;
@@ -204,7 +204,7 @@ export function createValidationMessageText(data: Partial<ValidationMessageText>
     return result;
 }
 
-function setLocationAndFileName(result: PiDefinitionElement, data: Partial<ValidationMessageText>) {
+function setLocationAndFileName(result: FreDefinitionElement, data: Partial<ValidationMessageText>) {
     result.location = data.location;
     result.location.filename = currentFileName;
 }

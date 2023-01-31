@@ -1,6 +1,6 @@
 import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator";
 import { PiInterpreterDef } from "../interpretergen/metalanguage/PiInterpreterDef";
-import { PiLanguage } from "../languagedef/metalanguage";
+import { FreLanguage } from "../languagedef/metalanguage";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { FileWatcher } from "../utils/generation/FileWatcher";
@@ -32,7 +32,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
     protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
     protected interpreterGenerator: InterpreterGenerator = new InterpreterGenerator();
-    protected language: PiLanguage;
+    protected language: FreLanguage;
     private diagramGenerator: DiagramGenerator = new DiagramGenerator();
 
     public constructor() {

@@ -11,11 +11,11 @@ import {
     READER_GEN_FOLDER,
     INTERPRETER_FOLDER
 } from "../../../utils/";
-import { PiLanguage } from "../../metalanguage";
+import { FreLanguage } from "../../metalanguage";
 
 export class EnvironmentTemplate {
 
-    generateEnvironment(language: PiLanguage, relativePath: string): string {
+    generateEnvironment(language: FreLanguage, relativePath: string): string {
         return `
         import { ${Names.PiEditor}, ${Names.PiEnvironment}, ${Names.PiReader}, 
                     ${Names.FreTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 

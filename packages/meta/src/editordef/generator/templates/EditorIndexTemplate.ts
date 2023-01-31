@@ -1,13 +1,13 @@
 import { Names } from "../../../utils";
-import { PiClassifier, PiLanguage, PiLimitedConcept } from "../../../languagedef/metalanguage";
+import { FreClassifier, FreLanguage, FreLimitedConcept } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 
 export class EditorIndexTemplate {
 
-    generateGenIndex(language: PiLanguage, editorDef: PiEditUnit, extraClassifiers: PiClassifier[]): string {
-        let boxProviderConcepts: PiClassifier[] = [];
+    generateGenIndex(language: FreLanguage, editorDef: PiEditUnit, extraClassifiers: FreClassifier[]): string {
+        let boxProviderConcepts: FreClassifier[] = [];
         language.concepts.forEach(concept => {
-            if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
+            if (!(concept instanceof FreLimitedConcept) && !concept.isAbstract) {
                 boxProviderConcepts.push(concept);
             }
         });
@@ -25,7 +25,7 @@ export class EditorIndexTemplate {
         `;
     }
 
-    generateIndex(language: PiLanguage, editorDef: PiEditUnit): string {
+    generateIndex(language: FreLanguage, editorDef: PiEditUnit): string {
         return `
         export * from "./gen";
         export * from "./${Names.customProjection(language)}";

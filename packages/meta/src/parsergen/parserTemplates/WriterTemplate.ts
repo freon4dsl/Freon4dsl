@@ -6,11 +6,11 @@ import {
     GenerationUtil
 } from "../../utils";
 import {
-    PiBinaryExpressionConcept, PiClassifier,
-    PiConcept, PiInterface,
-    PiLanguage, PiLimitedConcept,
-    PiPrimitiveProperty,
-    PiProperty
+    FreBinaryExpressionConcept, FreClassifier,
+    FreConcept, FreInterface,
+    FreLanguage, FreLimitedConcept,
+    FrePrimitiveProperty,
+    FreProperty
 } from "../../languagedef/metalanguage";
 import {
     PiEditUnit,
@@ -24,7 +24,7 @@ import {
     PiEditClassifierProjection,
     PiOptionalPropertyProjection, ExtraClassifierInfo, PiEditSuperProjection
 } from "../../editordef/metalanguage";
-import { PiPrimitiveType } from "../../languagedef/metalanguage";
+import { FrePrimitiveType } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
 import { PiEditProjectionGroup } from "../../editordef/metalanguage";
 
@@ -44,7 +44,7 @@ export class WriterTemplate {
      * Returns a string representation of the class that implements an unparser for modelunits of
      * 'language', based on the given editor definition.
      */
-    public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
+    public generateUnparser(language: FreLanguage, editDef: PiEditUnit, relativePath: string): string {
         // first initialize the class variables
         this.namedProjections = [];
         this.currentProjectionGroup = ParserGenUtil.findParsableProjectionGroup(editDef);
@@ -63,23 +63,23 @@ export class WriterTemplate {
         const allLangConceptsName: string = Names.allConcepts(language);
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
-        let limitedConcepts: PiLimitedConcept[] = language.concepts.filter(c => c instanceof PiLimitedConcept) as PiLimitedConcept[];
-        const conceptsToUnparse: PiClassifier[] = [];
+        let limitedConcepts: FreLimitedConcept[] = language.concepts.filter(c => c instanceof FreLimitedConcept) as FreLimitedConcept[];
+        const conceptsToUnparse: FreClassifier[] = [];
         conceptsToUnparse.push(...language.concepts);
         conceptsToUnparse.push(...language.units);
 
         // find all concepts that are not limited, and do not have a projection
         // this should be only abstract concepts
-        const conceptsWithoutProjection: PiClassifier[] = conceptsToUnparse
-            .filter(c => !(c instanceof PiLimitedConcept)) // handled in list 'limitedConcepts'
-            .filter(c => !(c instanceof PiBinaryExpressionConcept && !c.isAbstract)) // handled in list 'binaryExtras'
+        const conceptsWithoutProjection: FreClassifier[] = conceptsToUnparse
+            .filter(c => !(c instanceof FreLimitedConcept)) // handled in list 'limitedConcepts'
+            .filter(c => !(c instanceof FreBinaryExpressionConcept && !c.isAbstract)) // handled in list 'binaryExtras'
             .filter(c => {
                 const projection: PiEditClassifierProjection[] = editDef.findProjectionsForType(c);
                 return projection === undefined || projection === null || projection.length === 0;
             });
 
         // find all interfaces that do not have a projection
-        const interfacesWithoutProjection: PiInterface[] = language.interfaces.filter(c => {
+        const interfacesWithoutProjection: FreInterface[] = language.interfaces.filter(c => {
             const projection: PiEditClassifierProjection[] = editDef.findProjectionsForType(c);
             return projection === undefined || projection === null || projection.length === 0;
         });
@@ -87,8 +87,8 @@ export class WriterTemplate {
         const binaryExtras: ExtraClassifierInfo[] = [];
         if (!!this.currentProjectionGroup.extras) {
             for (const myExtra of this.currentProjectionGroup.extras) {
-                const myConcept: PiClassifier = myExtra.classifier.referred;
-                if (myConcept instanceof PiBinaryExpressionConcept && !myConcept.isAbstract) {
+                const myConcept: FreClassifier = myExtra.classifier.referred;
+                if (myConcept instanceof FreBinaryExpressionConcept && !myConcept.isAbstract) {
                     binaryExtras.push(myExtra);
                 }
             }
@@ -410,9 +410,9 @@ export class WriterTemplate {
      * @param projection
      */
     private makeConceptMethod (projection: PiEditClassifierProjection): string {
-        const myConcept: PiClassifier = projection.classifier.referred;
+        const myConcept: FreClassifier = projection.classifier.referred;
         if (projection instanceof PiEditProjection) {
-            if (myConcept instanceof PiBinaryExpressionConcept) {
+            if (myConcept instanceof FreBinaryExpressionConcept) {
                 // do nothing, binary expressions are treated differently
             } else {
                 return this.makeNormalMethod(projection, myConcept);
@@ -422,7 +422,7 @@ export class WriterTemplate {
         return "";
     }
 
-    private makeLimitedMethod(myConcept: PiLimitedConcept) {
+    private makeLimitedMethod(myConcept: FreLimitedConcept) {
         const name: string = Names.concept(myConcept);
         return `/**
                  * The limited concept '${myConcept.name}' is unparsed as its name.
@@ -434,7 +434,7 @@ export class WriterTemplate {
                  }`;
     }
 
-    private makeAbstractMethod(myConcept: PiConcept): string {
+    private makeAbstractMethod(myConcept: FreConcept): string {
         const name: string = Names.concept(myConcept);
         return `/**
                  * The abstract concept '${myConcept.name}' is not unparsed.
@@ -444,7 +444,7 @@ export class WriterTemplate {
                 }`;
     }
 
-    private makeNormalMethod(projection: PiEditProjection, myConcept: PiClassifier) {
+    private makeNormalMethod(projection: PiEditProjection, myConcept: FreClassifier) {
         const name: string = Names.classifier(myConcept);
         const lines: PiEditProjectionLine[] = projection.lines;
         const comment = `/**
@@ -485,7 +485,7 @@ export class WriterTemplate {
                 }
             }
         } else {
-            if (myConcept instanceof PiConcept && myConcept.isAbstract) {
+            if (myConcept instanceof FreConcept && myConcept.isAbstract) {
                 return `${comment}
                     private ${methodName}(modelelement: ${name}, short: boolean) {
                         this.output[this.currentLine] += \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
@@ -545,7 +545,7 @@ export class WriterTemplate {
             result += `if (!!${myTypeScript}) { ${subresult} }`;
         } else if (item instanceof PiEditPropertyProjection) {
             const myElem = item.property.referred;
-            if (myElem instanceof PiPrimitiveProperty) {
+            if (myElem instanceof FrePrimitiveProperty) {
                 result += this.makeItemWithPrimitiveType(myElem, item, inOptionalGroup);
             } else {
                 result += this.makeItemWithConceptType(myElem, item, indent, inOptionalGroup);
@@ -595,13 +595,13 @@ export class WriterTemplate {
      * @param item
      * @param inOptionalGroup
      */
-    private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, item: PiEditPropertyProjection, inOptionalGroup: boolean): string {
+    private makeItemWithPrimitiveType(myElem: FrePrimitiveProperty, item: PiEditPropertyProjection, inOptionalGroup: boolean): string {
         // the property is of primitive type
         let result: string = ``;
         const elemStr = GenerationUtil.propertyToTypeScript(item.property.referred);
         if (myElem.isList) {
             let isIdentifier: string = "false";
-            if (myElem.type === PiPrimitiveType.identifier) {
+            if (myElem.type === FrePrimitiveType.identifier) {
                 isIdentifier = "true";
             }
             const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
@@ -619,10 +619,10 @@ export class WriterTemplate {
             }
         } else {
             let myCall: string;
-            const myType: PiClassifier = myElem.type;
-            if (myType === PiPrimitiveType.string ) {
+            const myType: FreClassifier = myElem.type;
+            if (myType === FrePrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
-            } else if (myType === PiPrimitiveType.boolean) {
+            } else if (myType === FrePrimitiveType.boolean) {
                 // get the right manner to unparse the boolean values
                 // either from the standard boolean keywords in the default projection group
                 // or from 'item', and add escapes to the keywords
@@ -677,7 +677,7 @@ export class WriterTemplate {
      * @param indent
      * @param inOptionalGroup
      */
-    private makeItemWithConceptType(myElem: PiProperty, item: PiEditPropertyProjection, indent: number, inOptionalGroup: boolean) {
+    private makeItemWithConceptType(myElem: FreProperty, item: PiEditPropertyProjection, indent: number, inOptionalGroup: boolean) {
         // the property has a concept as type, thus we need to call its unparse method
         let result: string = "";
         const type = myElem.type;
@@ -756,8 +756,8 @@ export class WriterTemplate {
         return joinType;
     }
 
-    private findNamedClassifiers(language: PiLanguage): PiClassifier[] {
-        let result: PiClassifier[] = [];
+    private findNamedClassifiers(language: FreLanguage): FreClassifier[] {
+        let result: FreClassifier[] = [];
         for( const elem of language.units) {
             if (GenerationUtil.hasNameProperty(elem)) {
                 result.push(elem);
@@ -771,8 +771,8 @@ export class WriterTemplate {
         return result;
     }
 
-    private makeWriteOnly(language: PiLanguage): string {
-        const namedClassifiers: PiClassifier[] = this.findNamedClassifiers(language);
+    private makeWriteOnly(language: FreLanguage): string {
+        const namedClassifiers: FreClassifier[] = this.findNamedClassifiers(language);
         const shortUnparsing: string = `
         // make sure the global variables are reset
                     this.output = [];
@@ -810,7 +810,7 @@ export class WriterTemplate {
         return '';
     }
 
-    private makeInterfaceMethod(piInterface: PiInterface, classifierType: string): string {
+    private makeInterfaceMethod(piInterface: FreInterface, classifierType: string): string {
         const name: string = Names.interface(piInterface);
         return `/**
                  * The interface '${piInterface.name}' is not unparsed.
@@ -820,8 +820,8 @@ export class WriterTemplate {
                 }`;
     }
 
-    private makeAbstractConceptMethodWithout(concept: PiClassifier): string {
-        if (concept instanceof PiConcept && concept.isAbstract) {
+    private makeAbstractConceptMethodWithout(concept: FreClassifier): string {
+        if (concept instanceof FreConcept && concept.isAbstract) {
             return this.makeAbstractMethod(concept);
         } else {
             console.log("INTERNAL ERROR: concept without projection is not abstract or limited: " + concept.name);

@@ -1,9 +1,9 @@
-import { PiLanguage } from "../../metalanguage";
+import { FreLanguage } from "../../metalanguage";
 import { Names, PROJECTITCORE, LangUtil, GenerationUtil } from "../../../utils";
 
 export class LanguageTemplate {
 
-    generateLanguage(language: PiLanguage): string {
+    generateLanguage(language: FreLanguage): string {
         return `import { ${Names.FreLanguage}, Model, ModelUnit, Property, Concept, Interface, ${Names.PiElementReference} } from "${PROJECTITCORE}";
         
             import { ${Names.classifier(language.modelConcept)}, ${language.units.map(unit =>

@@ -1,13 +1,20 @@
 import {
-    PiPrimitiveProperty,
-    PiConceptProperty,
-    PiLanguage,
-    PiInterface,
-    PiInstanceProperty,
-    PiInstance,
-    PiExpressionConcept,
-    PiBinaryExpressionConcept,
-    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveType, PiModelDescription, PiUnitDescription, MetaElementReference
+    FreBinaryExpressionConcept,
+    FreClassifier,
+    FreConcept,
+    FreConceptProperty,
+    FreExpressionConcept,
+    FreInterface,
+    FreInstance,
+    FreInstanceProperty,
+    FreModelDescription,
+    FreLanguage,
+    FreLimitedConcept,
+    FrePrimitiveProperty,
+    FrePrimitiveType,
+    FreProperty,
+    FreUnitDescription,
+    MetaElementReference
 } from "../metalanguage";
 import { ParseLocationUtil } from "../../utils";
 
@@ -28,18 +35,18 @@ export function cleanNonFatalParseErrors() {
     nonFatalParseErrors = [];
 }
 
-export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
+export function createLanguage(data: Partial<FreLanguage>): FreLanguage {
     // console.log("createLanguage " + data.name);
-    const result = new PiLanguage();
+    const result = new FreLanguage();
     if (!!data.name) {
         result.name = data.name;
     }
     if (!!data.concepts) {
         let hasModel: boolean = false;
         for (const con of data.concepts) {
-            if (con instanceof PiInterface) {
+            if (con instanceof FreInterface) {
                 result.interfaces.push(con);
-            } else if (con instanceof PiModelDescription) {
+            } else if (con instanceof FreModelDescription) {
                 if (hasModel) {
                     let location: string = `[no location]`;
                     if (!!con.location) {
@@ -50,7 +57,7 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
                     hasModel = true;
                     result.modelConcept = con;
                 }
-            } else if (con instanceof PiUnitDescription) {
+            } else if (con instanceof FreUnitDescription) {
                 result.units.push(con);
             } else {
                 result.concepts.push(con);
@@ -66,9 +73,9 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
     return result;
 }
 
-function splitProperties(propList: PiProperty[], result: PiClassifier) {
+function splitProperties(propList: FreProperty[], result: FreClassifier) {
     for (const prop of propList) {
-        if (prop instanceof PiPrimitiveProperty) {
+        if (prop instanceof FrePrimitiveProperty) {
             result.primProperties.push(prop);
         } else {
             result.properties.push(prop);
@@ -77,9 +84,9 @@ function splitProperties(propList: PiProperty[], result: PiClassifier) {
     }
 }
 
-export function createModel(data: Partial<PiModelDescription>): PiModelDescription {
+export function createModel(data: Partial<FreModelDescription>): FreModelDescription {
     // console.log("createModel " + data.name);
-    const result = new PiModelDescription();
+    const result = new FreModelDescription();
     if (!!data.name) {
         result.name = data.name;
     }
@@ -93,15 +100,15 @@ export function createModel(data: Partial<PiModelDescription>): PiModelDescripti
     return result;
 }
 
-export function createUnit(data: Partial<PiUnitDescription>): PiUnitDescription {
+export function createUnit(data: Partial<FreUnitDescription>): FreUnitDescription {
     // console.log("createUnit " + data.name);
-    const result = new PiUnitDescription();
+    const result = new FreUnitDescription();
     if (!!data.name) {
         result.name = data.name;
     }
     if (!!data.properties) {
         for (const prop of data.properties) {
-            if (prop instanceof PiPrimitiveProperty) {
+            if (prop instanceof FrePrimitiveProperty) {
                 result.primProperties.push(prop);
             } else {
                 result.properties.push(prop);
@@ -119,22 +126,22 @@ export function createUnit(data: Partial<PiUnitDescription>): PiUnitDescription 
     return result;
 }
 
-export function createConcept(data: Partial<PiConcept>): PiConcept {
+export function createConcept(data: Partial<FreConcept>): FreConcept {
     // console.log("createConceptOrUnit " + data.name);
-    const result = new PiConcept();
+    const result = new FreConcept();
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
 }
 
-export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimitedConcept {
+export function createLimitedConcept(data: Partial<FreLimitedConcept>): FreLimitedConcept {
     // console.log("createLimitedConcept " + data.name);
-    const result = new PiLimitedConcept();
+    const result = new FreLimitedConcept();
     result.isAbstract = !!data.isAbstract;
     if (!!data.instances) {
         result.instances = data.instances;
         for (const inst of result.instances) {
-            inst.concept = MetaElementReference.create<PiLimitedConcept>(result, "PiLimitedConcept");
+            inst.concept = MetaElementReference.create<FreLimitedConcept>(result, "FreLimitedConcept");
             inst.concept.owner = inst;
         }
     }
@@ -142,9 +149,9 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
     return result;
 }
 
-export function createInterface(data: Partial<PiInterface>): PiInterface {
+export function createInterface(data: Partial<FreInterface>): FreInterface {
     // console.log("createInterface " + data.name);
-    const result = new PiInterface();
+    const result = new FreInterface();
     if (!!data.name) {
         result.name = data.name;
     }
@@ -164,7 +171,7 @@ export function createInterface(data: Partial<PiInterface>): PiInterface {
     return result;
 }
 
-function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: PiConcept) {
+function createCommonConceptProps(data: Partial<FreExpressionConcept>, result: FreConcept) {
     if (!!data.name) {
         result.name = data.name;
     }
@@ -180,7 +187,7 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
     }
     if (!!data.properties) {
         for (const prop of data.properties) {
-            if (prop instanceof PiPrimitiveProperty) {
+            if (prop instanceof FrePrimitiveProperty) {
                 result.primProperties.push(prop);
             } else {
                 result.properties.push(prop);
@@ -194,9 +201,9 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
     }
 }
 
-export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionConcept>): PiBinaryExpressionConcept {
+export function createBinaryExpressionConcept(data: Partial<FreBinaryExpressionConcept>): FreBinaryExpressionConcept {
     // console.log("createBinaryExpressionConcept " + data.name);
-    const result = new PiBinaryExpressionConcept();
+    const result = new FreBinaryExpressionConcept();
     result.isAbstract = !!data.isAbstract;
     if ( !!data.priority ) {
         result.priority = data.priority;
@@ -205,15 +212,15 @@ export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionCo
     return result;
 }
 
-export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiExpressionConcept {
+export function createExpressionConcept(data: Partial<FreExpressionConcept>): FreExpressionConcept {
     // console.log("createExpressionConcept " + data.name);
-    const result = new PiExpressionConcept();
+    const result = new FreExpressionConcept();
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
 }
 
-function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty) {
+function createCommonPropertyAttrs(data: Partial<FreProperty>, result: FreProperty) {
     if (!!data.name) {
         result.name = data.name;
     }
@@ -227,21 +234,21 @@ function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty
 }
 
 // we parse all props as primitive properties because they can have an extra attribute: 'initialValue'
-export function createPartOrPrimProperty(data: Partial<PiPrimitiveProperty>): PiProperty {
+export function createPartOrPrimProperty(data: Partial<FrePrimitiveProperty>): FreProperty {
     // console.log("createPartOrPrimProperty " + data.name + " "+ data.typeReference + " "+ data.typeName);
     // Note that we use 'data.typeReference', because at this stage we only have the name of the type, not the object itself.
-    let result: PiProperty;
+    let result: FreProperty;
     // In the following we ignore data.initialValue for Part Properties (i.e. props where the type is a Concept).
     // But we do add an error message to the list of non-fatal parse errors.
-    // This list of errors is added to the list of checking errors in the parse functions in PiParser.
+    // This list of errors is added to the list of checking errors in the parse functions in FreParser.
     if (!!data.typeReference) {
-        // NOTE that the following check can NOT be '.typeReference.referred === PiPrimitiveType.identifier' etc.
+        // NOTE that the following check can NOT be '.typeReference.referred === FrePrimitiveType.identifier' etc.
         // '.typeReference.referred' is determine by the scoper, which does not function when not all concepts are known AND
         // the language attribute of the concepts has been set. The latter is done in 'createLanguage', which is called
         // after this function is called!!
         const refName = data.typeReference.name; 
         if (refName === "string" || refName === "boolean" || refName === "number" || refName === "identifier") {
-            const primitiveProperty = new PiPrimitiveProperty();
+            const primitiveProperty = new FrePrimitiveProperty();
             // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
             // we are not interested in its value, only whether it is present
             if (data.initialValue !== null && data.initialValue !== undefined) {
@@ -253,7 +260,7 @@ export function createPartOrPrimProperty(data: Partial<PiPrimitiveProperty>): Pi
             }
             result = primitiveProperty;
         } else {
-            const conceptProperty = new PiConceptProperty();
+            const conceptProperty = new FreConceptProperty();
             // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
             // we are not interested in its value, only whether it is present
             if (data.initialValue !== null && data.initialValue !== undefined) {
@@ -268,9 +275,9 @@ export function createPartOrPrimProperty(data: Partial<PiPrimitiveProperty>): Pi
     return result;
 }
 
-export function createReferenceProperty(data: Partial<PiConceptProperty>): PiConceptProperty {
+export function createReferenceProperty(data: Partial<FreConceptProperty>): FreConceptProperty {
     // console.log("createReference " + data.name);
-    const result = new PiConceptProperty();
+    const result = new FreConceptProperty();
     result.isPart = false;
     createCommonPropertyAttrs(data, result);
     if (!!data.typeReference) {
@@ -279,21 +286,21 @@ export function createReferenceProperty(data: Partial<PiConceptProperty>): PiCon
     return result;
 }
 
-export function createClassifierReference(data: Partial<MetaElementReference<PiClassifier>>): MetaElementReference<PiClassifier> {
+export function createClassifierReference(data: Partial<MetaElementReference<FreClassifier>>): MetaElementReference<FreClassifier> {
     // console.log("createClassifierReference " + data.name);
-    let result: MetaElementReference<PiClassifier> = null;
+    let result: MetaElementReference<FreClassifier> = null;
     if (!!data.name) {
         const type: string = data.name;
         if (type === "string") {
-            result = MetaElementReference.create<PiPrimitiveType>(PiPrimitiveType.string, "PiPrimitiveType");
+            result = MetaElementReference.create<FrePrimitiveType>(FrePrimitiveType.string, "FrePrimitiveType");
         } else if (type === "boolean") {
-            result = MetaElementReference.create<PiPrimitiveType>(PiPrimitiveType.boolean, "PiPrimitiveType");
+            result = MetaElementReference.create<FrePrimitiveType>(FrePrimitiveType.boolean, "FrePrimitiveType");
         } else if (type === "number") {
-            result = MetaElementReference.create<PiPrimitiveType>(PiPrimitiveType.number, "PiPrimitiveType");
+            result = MetaElementReference.create<FrePrimitiveType>(FrePrimitiveType.number, "FrePrimitiveType");
         } else if (type === "identifier") {
-            result = MetaElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
+            result = MetaElementReference.create<FrePrimitiveType>(FrePrimitiveType.identifier, "FrePrimitiveType");
         } else {
-            result = MetaElementReference.create<PiClassifier>(data.name, "PiClassifier");
+            result = MetaElementReference.create<FreClassifier>(data.name, "FreClassifier");
         }
     }
     if (!!result && !!data.location) {
@@ -304,9 +311,9 @@ export function createClassifierReference(data: Partial<MetaElementReference<PiC
     return result;
 }
 
-export function createInterfaceReference(data: Partial<MetaElementReference<PiInterface>>): MetaElementReference<PiInterface> {
+export function createInterfaceReference(data: Partial<MetaElementReference<FreInterface>>): MetaElementReference<FreInterface> {
     // console.log("createInterfaceReference " + data.name);
-    const result = MetaElementReference.create<PiInterface>(data.name, "PiInterface");
+    const result = MetaElementReference.create<FreInterface>(data.name, "FreInterface");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
@@ -314,25 +321,25 @@ export function createInterfaceReference(data: Partial<MetaElementReference<PiIn
     return result;
 }
 
-export function createInstance(data: Partial<PiInstance>): PiInstance {
-    const result = new PiInstance();
+export function createInstance(data: Partial<FreInstance>): FreInstance {
+    const result = new FreInstance();
     if (!!data.name) {
         result.name = data.name;
     }
     if (!!data.props) {
         result.props.push(...data.props);
         for (const p of result.props) {
-            p.owningInstance = MetaElementReference.create<PiInstance>(result, "PiInstance");
+            p.owningInstance = MetaElementReference.create<FreInstance>(result, "FreInstance");
         }
     }
     // if the user has not provided a value for the 'name' property,
     // or the instance was defined using the shorthand that simulates enumeration
     // create a value for the 'name' property based on 'data.name'
     if (!(!!data.props) || !data.props.some(prop => prop.name === "name")) {
-        const prop = new PiInstanceProperty();
+        const prop = new FreInstanceProperty();
         prop.name = "name";
         prop.value = data.name;
-        prop.owningInstance = MetaElementReference.create<PiInstance>(result, "PiInstance");
+        prop.owningInstance = MetaElementReference.create<FreInstance>(result, "FreInstance");
         prop.location = data.location;
         result.props.push(prop);
     }
@@ -343,8 +350,8 @@ export function createInstance(data: Partial<PiInstance>): PiInstance {
     return result;
 }
 
-export function createPropDef(data: Partial<PiInstanceProperty>): PiInstanceProperty {
-    const result = new PiInstanceProperty();
+export function createPropDef(data: Partial<FreInstanceProperty>): FreInstanceProperty {
+    const result = new FreInstanceProperty();
     if (!!data.name) {
         result.name = data.name;
     }

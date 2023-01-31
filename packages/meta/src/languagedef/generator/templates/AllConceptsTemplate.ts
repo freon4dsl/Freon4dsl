@@ -1,9 +1,9 @@
 import { Names } from "../../../utils";
-import { PiLanguage } from "../../metalanguage";
+import { FreLanguage } from "../../metalanguage";
 
 export class AllConceptsTemplate {
 
-    generateAllConceptsClass(language: PiLanguage): string {
+    generateAllConceptsClass(language: FreLanguage): string {
         const unitNames = language.units.map(unit => Names.classifier(unit));
         // sort all names alphabetically
         let tmp: string[] = [];

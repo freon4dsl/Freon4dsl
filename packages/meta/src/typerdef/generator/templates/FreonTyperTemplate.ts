@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { PiLanguage } from "../../../languagedef/metalanguage";
+import { FreLanguage } from "../../../languagedef/metalanguage";
 import { PiTyperDef } from "../../metalanguage";
 
 /**
@@ -7,9 +7,9 @@ import { PiTyperDef } from "../../metalanguage";
  * typer(s). It also generates the indexes for the 'gen' folder and the folder with the custom typer.
  */
 export class FreonTyperTemplate {
-    language: PiLanguage;
+    language: FreLanguage;
 
-    generateTyper(language: PiLanguage, typerdef: PiTyperDef, relativePath: string): string {
+    generateTyper(language: FreLanguage, typerdef: PiTyperDef, relativePath: string): string {
         this.language = language;
         // const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typer(language);
@@ -22,7 +22,7 @@ export class FreonTyperTemplate {
 
         // Template starts here
         return `
-        import { ${Names.PiElement}, PiType, ${Names.FreLanguage}, ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${Names.PiElement}, ${Names.FreType}, ${Names.FreLanguage}, ${typerInterfaceName} } from "${PROJECTITCORE}";
 
         ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
@@ -62,10 +62,10 @@ export class FreonTyperTemplate {
              * Returns the type of 'modelelement' according to the type rules in the Typer Definition
              * @param modelelement
              */   
-            public inferType(modelelement: ${Names.PiElement}): PiType {
+            public inferType(modelelement: ${Names.PiElement}): ${Names.FreType} {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: PiType = typer.inferType(modelelement);
+                    let result: ${Names.FreType} = typer.inferType(modelelement);
                     if (result !== null) {
                         return result;
                     }
@@ -83,8 +83,8 @@ export class FreonTyperTemplate {
             public equalsType(elem1: ${Names.PiElement}, elem2: ${Names.PiElement}): boolean {
                 if (!elem1 || !elem2) return false;
 
-                const $type1: PiType = this.inferType(elem1);
-                const $type2: PiType = this.inferType(elem2);
+                const $type1: ${Names.FreType} = this.inferType(elem1);
+                const $type2: ${Names.FreType} = this.inferType(elem2);
                 if (!$type1 || !$type2) return false;
                 
                 return this.equals($type1, $type2);
@@ -96,7 +96,7 @@ export class FreonTyperTemplate {
              * @param type1
              * @param type2
              */
-            public equals(type1: PiType, type2: PiType): boolean {
+            public equals(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.equals(type1, type2);
@@ -117,8 +117,8 @@ export class FreonTyperTemplate {
             public conformsType(elem1: ${Names.PiElement}, elem2: ${Names.PiElement}): boolean {
                 if (!elem1 || !elem2) return false;
         
-                const $type1: PiType = this.inferType(elem1);
-                const $type2: PiType = this.inferType(elem2);
+                const $type1: ${Names.FreType} = this.inferType(elem1);
+                const $type2: ${Names.FreType} = this.inferType(elem2);
                 if (!$type1 || !$type2) return false;
         
                 return this.conforms($type1, $type2);
@@ -129,7 +129,7 @@ export class FreonTyperTemplate {
              * @param type1
              * @param type2
              */
-            public conforms(type1: PiType, type2: PiType): boolean {
+            public conforms(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.conforms(type1, type2);
@@ -151,8 +151,8 @@ export class FreonTyperTemplate {
                 if (!elemlist1 || !elemlist2) return false;
                 if (elemlist1.length !== elemlist2.length) return false;
         
-                const $typelist1: PiType[] = this.elementListToTypeList(elemlist1);
-                const $typelist2: PiType[] = this.elementListToTypeList(elemlist2);
+                const $typelist1: ${Names.FreType}[] = this.elementListToTypeList(elemlist1);
+                const $typelist2: ${Names.FreType}[] = this.elementListToTypeList(elemlist2);
                 if ($typelist1.length === 0 || $typelist2.length === 0) return false;
                 if ($typelist1.length !== $typelist2.length) return false;
         
@@ -164,7 +164,7 @@ export class FreonTyperTemplate {
              * @param typelist1
              * @param typelist2
              */
-            public conformsList(typelist1: PiType[], typelist2: PiType[]): boolean {
+            public conformsList(typelist1: ${Names.FreType}[], typelist2: ${Names.FreType}[]): boolean {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.conformsList(typelist1, typelist2);
@@ -180,11 +180,11 @@ export class FreonTyperTemplate {
              * Returns the common super type of all elements in elemlist
              * @param elemlist
              */            
-            public commonSuperType(elemlist: ${Names.PiElement}[]): PiType {
+            public commonSuperType(elemlist: ${Names.PiElement}[]): ${Names.FreType} {
                 if (!elemlist ) return null;
                 if (elemlist.length === 0 ) return null;
         
-                const $typelist: PiType[] = this.elementListToTypeList(elemlist);
+                const $typelist: ${Names.FreType}[] = this.elementListToTypeList(elemlist);
                 if ($typelist.length === 0) return null;
         
                 return this.commonSuper($typelist);
@@ -194,10 +194,10 @@ export class FreonTyperTemplate {
              * Returns the common super type of all types in typelist
              * @param typelist
              */
-            public commonSuper(typelist: PiType[]): PiType {
+            public commonSuper(typelist: ${Names.FreType}[]): ${Names.FreType} {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: PiType = typer.commonSuper(typelist);
+                    let result: ${Names.FreType} = typer.commonSuper(typelist);
                     if (!!result) {
                         return result;
                     }
@@ -210,10 +210,10 @@ export class FreonTyperTemplate {
              * Returns all super types as defined by the conformance rules in the typer definition.
              * @param type
              */
-            public getSuperTypes(type: PiType): PiType[] {
+            public getSuperTypes(type: ${Names.FreType}): ${Names.FreType}[] {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: PiType[] = typer.getSuperTypes(type);
+                    let result: ${Names.FreType}[] = typer.getSuperTypes(type);
                     if (!!result) {
                         return result;
                     }
@@ -228,10 +228,10 @@ export class FreonTyperTemplate {
              * @param inlist
              * @private
              */            
-            private elementListToTypeList(inlist: ${Names.PiElement}[]): PiType[] {
-                const typelist: PiType[] = [];
+            private elementListToTypeList(inlist: ${Names.PiElement}[]): ${Names.FreType}[] {
+                const typelist: ${Names.FreType}[] = [];
                 for (const elem of inlist) {
-                    ListUtil.addIfNotPresent<PiType>(typelist, this.inferType(elem));
+                    ListUtil.addIfNotPresent<${Names.FreType}>(typelist, this.inferType(elem));
                 }
                 return typelist;
             }
@@ -239,13 +239,13 @@ export class FreonTyperTemplate {
         }`;
     }
 
-    generateGenIndex(language: PiLanguage): string {
+    generateGenIndex(language: FreLanguage): string {
         return `
         export * from "./${Names.typerPart(language)}";
         `;
     }
 
-    generateIndex(language: PiLanguage): string {
+    generateIndex(language: FreLanguage): string {
         return `
         export * from "./${Names.customTyper(language)}";
         `;

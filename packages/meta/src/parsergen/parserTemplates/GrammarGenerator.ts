@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
 import { LimitedMaker } from "./LimitedMaker";
 import { BinaryExpMaker } from "./BinaryExpMaker";
@@ -12,7 +12,7 @@ import { ParserGenUtil } from "./ParserGenUtil";
 
 export class GrammarGenerator {
 
-    createGrammar(language: PiLanguage, analyser: LanguageAnalyser, editUnit: PiEditUnit): GrammarModel {
+    createGrammar(language: FreLanguage, analyser: LanguageAnalyser, editUnit: PiEditUnit): GrammarModel {
         // create an empty model of the grammar and syntax analysis
         const grammar = new GrammarModel();
         grammar.language = language;
@@ -40,7 +40,7 @@ export class GrammarGenerator {
         return grammar;
     }
 
-    private createGrammarRules(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: PiLanguage) {
+    private createGrammarRules(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: FreLanguage) {
         // generate the rules for each unit
         for (const unitAnalyser of myLanguageAnalyser.unitAnalysers) {
             this.createRulesPerAnalyser(grammar, projectionGroup, unitAnalyser, language);
@@ -49,7 +49,7 @@ export class GrammarGenerator {
         this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser.commonAnalyser, language);
     }
 
-    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, analyser: PiAnalyser, language: PiLanguage) {
+    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, analyser: PiAnalyser, language: FreLanguage) {
         const grammarPart = new GrammarPart();
         grammarPart.unit = analyser.unit;
         // create parse rules and syntax analysis methods for the concepts

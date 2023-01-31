@@ -1,4 +1,4 @@
-import { PiBinaryExpressionConcept, PiLanguage } from "../../languagedef/metalanguage";
+import { FreBinaryExpressionConcept, FreLanguage } from "../../languagedef/metalanguage";
 import { Checker, Names, ParseLocationUtil, PiParser } from "../../utils";
 import { setCurrentFileName as editFileName } from "./PiEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
@@ -8,9 +8,9 @@ import { PiEditChecker } from "../metalanguage/PiEditChecker";
 const editorParser = require("./PiEditGrammar");
 
 export class PiEditParser extends PiParser<PiEditUnit> {
-    language: PiLanguage;
+    language: FreLanguage;
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         super();
         this.language = language;
         this.parser = editorParser;

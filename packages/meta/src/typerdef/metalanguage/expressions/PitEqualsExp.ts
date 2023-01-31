@@ -1,4 +1,4 @@
-import { PiClassifier, PiPrimitiveType } from "../../../languagedef/metalanguage";
+import { FreClassifier, FrePrimitiveType } from "../../../languagedef/metalanguage";
 import { PitBinaryExp } from "./PitBinaryExp";
 
 export class PitEqualsExp extends PitBinaryExp {
@@ -25,7 +25,7 @@ export class PitEqualsExp extends PitBinaryExp {
     toPiString(): string {
         return `${this.left.toPiString()} equalsto ${this.right.toPiString()};`;
     }
-    get type(): PiClassifier {
-        return PiPrimitiveType.boolean;
+    get type(): FreClassifier {
+        return FrePrimitiveType.boolean;
     }
 }

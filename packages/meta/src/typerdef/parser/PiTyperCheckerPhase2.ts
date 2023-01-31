@@ -10,7 +10,7 @@ import {
     PiTyperDef
 } from "../metalanguage";
 import { ClassifierChecker } from "../../languagedef/checking/ClassifierChecker";
-import { PiProperty } from "../../languagedef/metalanguage";
+import { FreProperty } from "../../languagedef/metalanguage";
 
 // const LOGGER = new MetaLogger("PiTyperCheckerPhase2"); //.mute();
 
@@ -140,7 +140,7 @@ export class PiTyperCheckerPhase2 extends CheckerPhase<PiTyperDef> {
 
     private sortConditions(conditions: PitBinaryExp[], variable: PitVarDecl): PitBinaryExp[] {
         const result: PitBinaryExp[] = [];
-        const properties: PiProperty[] = [];
+        const properties: FreProperty[] = [];
         conditions.forEach(cond => {
             // find out which part of the condition refers to 'variable'
             let variablePart: PitExp;
@@ -167,7 +167,7 @@ export class PiTyperCheckerPhase2 extends CheckerPhase<PiTyperDef> {
         return result;
     }
 
-    private checkUniquenessOfProperty(variablePart: PitExp, properties: PiProperty[]) {
+    private checkUniquenessOfProperty(variablePart: PitExp, properties: FreProperty[]) {
         if (!!variablePart && variablePart instanceof PitPropertyCallExp) {
             if (properties.includes(variablePart.property)) {
                 this.runner.simpleCheck(false,

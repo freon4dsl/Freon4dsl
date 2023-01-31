@@ -6,7 +6,7 @@ import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
 import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
 import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
 import { PiTyperDefSyntaxAnalyserPart } from ".";
-import { MetaElementReference, PiLangElement } from "../../languagedef/metalanguage";
+import { MetaElementReference, FreLangElement } from "../../languagedef/metalanguage";
 import { FreParseLocation } from "../../utils";
 
 /**
@@ -175,7 +175,7 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
      * Generic method to transform references
      * ...PiElemRef = identifier;
      */
-    public piElemRef<T extends PiLangElement>(branch: SPPTBranch, typeName: string): MetaElementReference<T> {
+    public piElemRef<T extends FreLangElement>(branch: SPPTBranch, typeName: string): MetaElementReference<T> {
         let referred: string | T = this.transformSharedPackedParseTreeNode(branch);
         if (referred == null || referred == undefined) {
             throw new Error(`Syntax error in "${branch?.parent?.matchedText}": cannot create empty reference`);
@@ -186,7 +186,7 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
         }
     }
 
-    private makePiElementReferenceWithLocation<T extends PiLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
+    private makePiElementReferenceWithLocation<T extends FreLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
         const result = MetaElementReference.create<T>(referred, typeName);
         const location = FreParseLocation.create({ filename: this.filename, line: branch.location.line, column: branch.location.column });
         result.agl_location = location;
@@ -219,7 +219,7 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
     /**
      * Generic method to transform lists of references
      */
-    public transformSharedPackedParseTreeRefList<T extends PiLangElement>(
+    public transformSharedPackedParseTreeRefList<T extends FreLangElement>(
         branch: SPPTBranch,
         typeName: string,
         separator?: string

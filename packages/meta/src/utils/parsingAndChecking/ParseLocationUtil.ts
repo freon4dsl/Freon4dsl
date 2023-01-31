@@ -1,8 +1,8 @@
-import { PiDefinitionElement } from "../PiDefinitionElement";
+import { FreDefinitionElement } from "../FreDefinitionElement";
 import { ParseLocation } from "./PiParser";
 
 export class ParseLocationUtil {
-    static location(elem: PiDefinitionElement): string {
+    static location(elem: FreDefinitionElement): string {
         if (!!elem) {
             if (!!elem.location) {
                 const shortFileName: string = ParseLocationUtil.getShortFileName(elem.location.filename);

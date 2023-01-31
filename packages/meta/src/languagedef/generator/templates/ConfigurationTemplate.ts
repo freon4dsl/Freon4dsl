@@ -4,11 +4,11 @@ import {
     EDITOR_FOLDER,
     VALIDATOR_GEN_FOLDER, TYPER_FOLDER, VALIDATOR_FOLDER, STDLIB_FOLDER, SCOPER_FOLDER
 } from "../../../utils/";
-import { PiLanguage } from "../../metalanguage";
+import { FreLanguage } from "../../metalanguage";
 
 export class ConfigurationTemplate {
 
-    generate(language: PiLanguage, relativePath: string): string {
+    generate(language: FreLanguage, relativePath: string): string {
         const configurationName = Names.configuration();
         const workerName = Names.checkerInterface(language);
         return `

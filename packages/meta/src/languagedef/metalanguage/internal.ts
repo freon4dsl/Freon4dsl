@@ -4,9 +4,9 @@
  * in order to avoid problem with circular imports.
  */
 
-export * from "./PiLangEveryConcept"
+export * from "./FreLangEveryConcept"
 export * from "./MetaElementReference";
-export * from "./PiLanguage";
-export * from "./PiLangExpressions";
-export * from "./PiLangScoper";
-export * from "./PiMetaEnvironment";
+export * from "./FreLanguage";
+export * from "./FreLangExpressions";
+export * from "./FreLangScoper";
+export * from "./FreMetaEnvironment";

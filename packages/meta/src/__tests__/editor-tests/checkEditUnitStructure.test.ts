@@ -1,4 +1,4 @@
-import { PiBinaryExpressionConcept, PiClassifier, PiLanguage, PiLimitedConcept } from "../../languagedef/metalanguage";
+import { FreBinaryExpressionConcept, FreClassifier, FreLanguage, FreLimitedConcept } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker, MetaLogger } from "../../utils";
 import { PiEditParser } from "../../editordef/parser/PiEditParser";
@@ -14,7 +14,7 @@ import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEdit
 describe("Checking PiEditUnit: ", () => {
     const testdir = "src/__tests__/editor-tests/correctDefFiles/";
     let parser: PiEditParser;
-    let language: PiLanguage;
+    let language: FreLanguage;
     let checker: Checker<PiEditUnit>;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();
@@ -50,7 +50,7 @@ describe("Checking PiEditUnit: ", () => {
 
         expect(editor.language).toEqual(language);
         expect(editor.getDefaultProjectiongroup()).not.toBeNull();
-        language.concepts.filter(c => !(c instanceof PiLimitedConcept) && !(c instanceof PiBinaryExpressionConcept)).forEach(c => {
+        language.concepts.filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept)).forEach(c => {
             const projections: PiEditClassifierProjection[] = editor.findProjectionsForType(c);
             expect(projections).not.toBeNull();
             expect(projections[0]).not.toBeNull();
@@ -66,7 +66,7 @@ describe("Checking PiEditUnit: ", () => {
         const editor = readFile(testdir + "test1.edit");
 
         // the series of classifiers that we are testing here
-        const classifiersToTest: PiClassifier[] = language.concepts.filter(c => !(c instanceof PiLimitedConcept) && !(c instanceof PiBinaryExpressionConcept));
+        const classifiersToTest: FreClassifier[] = language.concepts.filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
         classifiersToTest.push(...language.units);
 
         classifiersToTest.forEach(c => {
@@ -95,7 +95,7 @@ describe("Checking PiEditUnit: ", () => {
         const editor = readFile(testdir + "test2.edit");
 
         // the series of classifiers that we are testing here
-        const classifiersToTest: PiClassifier[] = language.concepts.filter(c => !(c instanceof PiLimitedConcept) && !(c instanceof PiBinaryExpressionConcept));
+        const classifiersToTest: FreClassifier[] = language.concepts.filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
         classifiersToTest.push(...language.units);
 
         // do the test
@@ -138,14 +138,14 @@ describe("Checking PiEditUnit: ", () => {
         const editor = readFile(testdir + "test3.edit");
 
         // the series of classifiers of which we are interested in its properties
-        const classifiersToTest: PiClassifier[] = language.concepts.filter(c => !(c instanceof PiLimitedConcept) && !(c instanceof PiBinaryExpressionConcept));
+        const classifiersToTest: FreClassifier[] = language.concepts.filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
         classifiersToTest.push(...language.units);
 
         classifiersToTest.forEach(c => {
             c.allProperties().filter(prop => prop.isList).forEach(prop => {
                 // property type should have a non-table projection
                 const propType = prop.type;
-                if (!prop.isPrimitive && prop.isPart && !(propType instanceof PiLimitedConcept)) {
+                if (!prop.isPrimitive && prop.isPart && !(propType instanceof FreLimitedConcept)) {
                     const projections: PiEditClassifierProjection[] = editor.findProjectionsForType(propType);
                     const xx = projections.find(proj => proj instanceof PiEditProjection);
                     // if (!xx)

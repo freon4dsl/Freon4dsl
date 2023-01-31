@@ -1,34 +1,34 @@
 import {
-    PiBinaryExpressionConcept,
-    PiClassifier,
-    PiConcept,
-    PiInterface,
-    PiLimitedConcept
+    FreBinaryExpressionConcept,
+    FreClassifier,
+    FreConcept,
+    FreInterface,
+    FreLimitedConcept
 } from "../../languagedef/metalanguage";
 import { LangUtil } from "../../utils";
-import { PiPrimitiveType, PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { FrePrimitiveType, FreUnitDescription } from "../../languagedef/metalanguage/FreLanguage";
 import { PiAnalyser } from "./LanguageAnalyser";
 
 export class UnitAnalyser implements PiAnalyser {
-    unit: PiUnitDescription = null;
+    unit: FreUnitDescription = null;
     // all concepts used in this unit
-    classifiersUsed: PiClassifier[] = [];
+    classifiersUsed: FreClassifier[] = [];
     // all binary concepts used in this unit
-    binaryConceptsUsed: PiBinaryExpressionConcept[] = [];
+    binaryConceptsUsed: FreBinaryExpressionConcept[] = [];
     // all interfaces and abstract concepts that are mentioned in this unit
-    interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]> = new Map<PiClassifier, PiClassifier[]>();
+    interfacesAndAbstractsUsed: Map<FreClassifier, FreClassifier[]> = new Map<FreClassifier, FreClassifier[]>();
     // all limited concepts that are referred to (as type of properties)
-    limitedsReferred: PiLimitedConcept[] = [];
+    limitedsReferred: FreLimitedConcept[] = [];
     // all concepts that are not abstract, but do have sub concepts
-    conceptsWithSub: Map<PiConcept, PiClassifier[]> = new Map<PiConcept, PiClassifier[]>();
+    conceptsWithSub: Map<FreConcept, FreClassifier[]> = new Map<FreConcept, FreClassifier[]>();
 
-    public analyseUnit(unitDescription: PiUnitDescription) {
+    public analyseUnit(unitDescription: FreUnitDescription) {
         this.reset();
         this.unit = unitDescription;
         this.analyseUnitPriv(unitDescription, []);
     }
 
-    private analyseUnitPriv(piClassifier: PiClassifier, typesDone: PiClassifier[]) {
+    private analyseUnitPriv(piClassifier: FreClassifier, typesDone: FreClassifier[]) {
         // make sure this classifier is not visited twice
         if (typesDone.includes(piClassifier)) {
             return;
@@ -37,22 +37,22 @@ export class UnitAnalyser implements PiAnalyser {
         }
 
         // determine in which list the piClassifier belongs
-        if (piClassifier instanceof PiInterface) {
+        if (piClassifier instanceof FreInterface) {
             this.interfacesAndAbstractsUsed.set(piClassifier, this.findChoices(piClassifier));
             // for interfaces analyse all implementors
             LangUtil.findImplementorsRecursive(piClassifier).forEach(type => {
                 this.analyseUnitPriv(type, typesDone);
             });
-        } else if (piClassifier instanceof PiPrimitiveType) {
+        } else if (piClassifier instanceof FrePrimitiveType) {
             // do nothing
-        } else if (piClassifier instanceof PiUnitDescription) {
+        } else if (piClassifier instanceof FreUnitDescription) {
             this.classifiersUsed.push(piClassifier);
             this.analyseProperties(piClassifier, typesDone);
-        } else if (piClassifier instanceof PiConcept) {
-            if (piClassifier instanceof PiLimitedConcept) {
+        } else if (piClassifier instanceof FreConcept) {
+            if (piClassifier instanceof FreLimitedConcept) {
                 this.limitedsReferred.push(piClassifier);
                 this.checkForSubs(piClassifier);
-            } else if (piClassifier instanceof PiBinaryExpressionConcept) {
+            } else if (piClassifier instanceof FreBinaryExpressionConcept) {
                 if (!piClassifier.isAbstract) {
                     this.binaryConceptsUsed.push(piClassifier);
                     this.checkForSubs(piClassifier);
@@ -78,14 +78,14 @@ export class UnitAnalyser implements PiAnalyser {
         }
     }
 
-    private checkForSubs(piClassifier: PiConcept) {
+    private checkForSubs(piClassifier: FreConcept) {
         const subs = this.findChoices(piClassifier);
         if (subs.length > 0) {
             this.conceptsWithSub.set(piClassifier, subs);
         }
     }
 
-    private analyseProperties(piClassifier: PiClassifier, typesDone: PiClassifier[]) {
+    private analyseProperties(piClassifier: FreClassifier, typesDone: FreClassifier[]) {
         piClassifier.allParts().forEach(part => {
             const type = part.type;
             this.analyseUnitPriv(type, typesDone);
@@ -93,27 +93,27 @@ export class UnitAnalyser implements PiAnalyser {
         // and add all types of references to typesReferred
         piClassifier.allReferences().forEach(ref => {
             const type = ref.type;
-            if (type instanceof PiLimitedConcept && !this.limitedsReferred.includes(type)) {
+            if (type instanceof FreLimitedConcept && !this.limitedsReferred.includes(type)) {
                 this.limitedsReferred.push(type);
             }
         });
     }
 
     // find the choices for this rule: all concepts that implement or extend the concept
-    private findChoices(piClassifier: PiClassifier) : PiClassifier[] {
-        let implementors: PiClassifier[] = [];
-        if (piClassifier instanceof PiInterface) {
+    private findChoices(piClassifier: FreClassifier) : FreClassifier[] {
+        let implementors: FreClassifier[] = [];
+        if (piClassifier instanceof FreInterface) {
             // do not include sub-interfaces, because then we might have 'multiple inheritance' problems
             // instead find the direct implementors and add them
             for (const intf of piClassifier.allSubInterfacesDirect()) {
                 implementors.push(...LangUtil.findImplementorsDirect(intf));
             }
             implementors.push(...LangUtil.findImplementorsDirect(piClassifier));
-        } else if (piClassifier instanceof PiConcept) {
+        } else if (piClassifier instanceof FreConcept) {
             implementors = piClassifier.allSubConceptsDirect();
         }
         // limited concepts can only be referenced, so exclude them
-        implementors = implementors.filter(sub => !(sub instanceof PiLimitedConcept));
+        implementors = implementors.filter(sub => !(sub instanceof FreLimitedConcept));
         return implementors;
     }
 
@@ -124,10 +124,10 @@ export class UnitAnalyser implements PiAnalyser {
         // all binary concepts in this unit
         this.binaryConceptsUsed = [];
         // all interfaces and abstract concepts that are mentioned in this unit
-        this.interfacesAndAbstractsUsed = new Map<PiClassifier, PiClassifier[]>();
+        this.interfacesAndAbstractsUsed = new Map<FreClassifier, FreClassifier[]>();
         // all limted concepts that are referred to (as type of properties)
         this.limitedsReferred = [];
         // all concepts that are not abstract, but do have subconcepts
-        this.conceptsWithSub = new Map<PiConcept, PiClassifier[]>();
+        this.conceptsWithSub = new Map<FreConcept, FreClassifier[]>();
     }
 }

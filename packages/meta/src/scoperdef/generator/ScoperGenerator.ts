@@ -1,18 +1,18 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
 import { PiScopeDef } from "../metalanguage";
 import { CustomScoperTemplate } from "./templates/CustomScoperTemplate";
 import { ScoperDefTemplate } from "./templates/ScoperDefTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
 import { MetaElementReference } from "../../languagedef/metalanguage";
-import { PiModelDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { FreModelDescription } from "../../languagedef/metalanguage/FreLanguage";
 
 const LOGGER = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguage;
+    public language: FreLanguage;
     protected scoperGenFolder: string;
     protected scoperFolder: string;
 
@@ -26,7 +26,7 @@ export class ScoperGenerator {
             scopedef = new PiScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
-            scopedef.namespaces.push(MetaElementReference.create<PiModelDescription>(this.language.modelConcept, "PiModelDescription"));
+            scopedef.namespaces.push(MetaElementReference.create<FreModelDescription>(this.language.modelConcept, "FreModelDescription"));
         }
 
         const generationStatus = new GenerationStatus();

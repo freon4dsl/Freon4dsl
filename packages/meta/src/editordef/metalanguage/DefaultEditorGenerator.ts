@@ -1,10 +1,10 @@
-import { MetaElementReference, PiInterface, PiLanguage } from "../../languagedef/metalanguage";
+import { MetaElementReference, FreInterface, FreLanguage } from "../../languagedef/metalanguage";
 import {
-    PiBinaryExpressionConcept,
-    PiClassifier,
-    PiLimitedConcept,
-    PiPrimitiveProperty,
-    PiProperty
+    FreBinaryExpressionConcept,
+    FreClassifier,
+    FreLimitedConcept,
+    FrePrimitiveProperty,
+    FreProperty
 } from "../../languagedef/metalanguage";
 import {
     BoolKeywords,
@@ -22,9 +22,9 @@ import { Names } from "../../utils";
 import { EditorDefaults } from "./EditorDefaults";
 
 export class DefaultEditorGenerator {
-    private static interfacesUsed: PiInterface[] = []; // holds all interfaces that are used as type of a property
+    private static interfacesUsed: FreInterface[] = []; // holds all interfaces that are used as type of a property
 
-    public static createEmptyEditorDefinition(language: PiLanguage): PiEditUnit {
+    public static createEmptyEditorDefinition(language: FreLanguage): PiEditUnit {
         const editDef = new PiEditUnit();
         editDef.language = language;
         const defaultGroup = new PiEditProjectionGroup();
@@ -77,14 +77,14 @@ export class DefaultEditorGenerator {
         DefaultEditorGenerator.defaultsForSupers(editor.language, defaultGroup, editor.classifiersUsedInSuperProjection);
     }
 
-    private static defaultsForBinaryExpressions(language: PiLanguage, defaultGroup: PiEditProjectionGroup) {
-        for (const binConcept of language.concepts.filter(c => c instanceof PiBinaryExpressionConcept)) {
+    private static defaultsForBinaryExpressions(language: FreLanguage, defaultGroup: PiEditProjectionGroup) {
+        for (const binConcept of language.concepts.filter(c => c instanceof FreBinaryExpressionConcept)) {
             DefaultEditorGenerator.addExtraDefaults(defaultGroup, binConcept, language);
         }
     }
 
-    private static defaultsForOrdinaryClassifiers(language: PiLanguage, defaultGroup: PiEditProjectionGroup) {
-        const classifiersToDo: PiClassifier[] = language.concepts.filter(c => !(c instanceof PiLimitedConcept || c instanceof PiBinaryExpressionConcept || c.isAbstract));
+    private static defaultsForOrdinaryClassifiers(language: FreLanguage, defaultGroup: PiEditProjectionGroup) {
+        const classifiersToDo: FreClassifier[] = language.concepts.filter(c => !(c instanceof FreLimitedConcept || c instanceof FreBinaryExpressionConcept || c.isAbstract));
         // console.log("classifiersToDo: " + classifiersToDo.map(c => c.name).join(', '))
         for (const con of classifiersToDo) {
             // Find or create the projection, and its properties
@@ -100,14 +100,14 @@ export class DefaultEditorGenerator {
         }
     }
 
-    private static defaultsForInterfaces(language: PiLanguage, defaultGroup: PiEditProjectionGroup) {
+    private static defaultsForInterfaces(language: FreLanguage, defaultGroup: PiEditProjectionGroup) {
         for (const con of this.interfacesUsed) {
             this.createClassifierDefault(defaultGroup, con, language);
         }
         // console.log("defaultsForInterfaces done ");
     }
 
-    private static createClassifierDefault(defaultGroup: PiEditProjectionGroup, con: PiClassifier, language: PiLanguage) {
+    private static createClassifierDefault(defaultGroup: PiEditProjectionGroup, con: FreClassifier, language: FreLanguage) {
         // Find or create the projection, and its properties
         let foundProjection: PiEditClassifierProjection = defaultGroup.findNonTableProjectionForType(con);
 
@@ -121,18 +121,18 @@ export class DefaultEditorGenerator {
         DefaultEditorGenerator.addExtraDefaults(defaultGroup, con, language);
     }
 
-    private static defaultsForSupers(language: PiLanguage, defaultGroup: PiEditProjectionGroup, classifiersUsedInSuperProjection: string[]) {
+    private static defaultsForSupers(language: FreLanguage, defaultGroup: PiEditProjectionGroup, classifiersUsedInSuperProjection: string[]) {
         for (const clsName of classifiersUsedInSuperProjection) {
-            const con: PiClassifier = language.findClassifier(clsName);
+            const con: FreClassifier = language.findClassifier(clsName);
             this.createClassifierDefault(defaultGroup, con, language);
         }
         // console.log("defaultsForSupers done ");
     }
 
-    private static defaultClassifierProjection(con: PiClassifier, language: PiLanguage): PiEditProjection {
+    private static defaultClassifierProjection(con: FreClassifier, language: FreLanguage): PiEditProjection {
         const projection = new PiEditProjection();
         projection.name = Names.defaultProjectionName;
-        projection.classifier = MetaElementReference.create<PiClassifier>(con.name, "PiClassifier");
+        projection.classifier = MetaElementReference.create<FreClassifier>(con.name, "FreClassifier");
         projection.classifier.owner = language;
         // add first line with type name - object name - start bracket: "Dog Jack {"
         const startLine = new PiEditProjectionLine();
@@ -141,7 +141,7 @@ export class DefaultEditorGenerator {
         const nameProp = con.nameProperty();
         if (!!nameProp) {
             const sub = new PiEditPropertyProjection();
-            sub.property = MetaElementReference.create<PiPrimitiveProperty>(nameProp, "PiPrimitiveProperty");
+            sub.property = MetaElementReference.create<FrePrimitiveProperty>(nameProp, "FrePrimitiveProperty");
             sub.property.owner = con.language;
             startLine.items.push(sub);
         }
@@ -151,7 +151,7 @@ export class DefaultEditorGenerator {
         for (const prop of con.allProperties().filter((p => p !== nameProp))) {
             // add the type if it is an interface to the list to be generated later
             const propType = prop.type;
-            if (propType instanceof  PiInterface) {
+            if (propType instanceof  FreInterface) {
                 this.interfacesUsed.push(propType);
             }
             // do the property
@@ -172,28 +172,28 @@ export class DefaultEditorGenerator {
         return projection;
     }
 
-    private static defaultSingleProperty(concept: PiClassifier, prop: PiProperty, projection: PiEditProjection | PiOptionalPropertyProjection): void {
+    private static defaultSingleProperty(concept: FreClassifier, prop: FreProperty, projection: PiEditProjection | PiOptionalPropertyProjection): void {
         const line = new PiEditProjectionLine();
         line.indent = EditorDefaults.standardIndent;
         line.items.push(PiEditProjectionText.create(prop.name));
         const sub = new PiEditPropertyProjection();
-        sub.property = MetaElementReference.create<PiProperty>(prop, "PiProperty");
+        sub.property = MetaElementReference.create<FreProperty>(prop, "FreProperty");
         sub.property.owner = concept.language;
         line.items.push(sub);
         projection.lines.push(line);
     }
 
-    private static defaultOptionalSingleProperty(concept: PiClassifier, prop: PiProperty, projection: PiEditProjection): void {
+    private static defaultOptionalSingleProperty(concept: FreClassifier, prop: FreProperty, projection: PiEditProjection): void {
         const line = new PiEditProjectionLine();
         const optional = new PiOptionalPropertyProjection();
-        optional.property = MetaElementReference.create<PiProperty>(prop, "PiProperty");
+        optional.property = MetaElementReference.create<FreProperty>(prop, "FreProperty");
         optional.property.owner = concept.language;
         DefaultEditorGenerator.defaultSingleProperty(concept, prop, optional);
         line.items.push(optional);
         projection.lines.push(line);
     }
     
-    private static defaultListProperty(concept: PiClassifier, prop: PiProperty, projection: PiEditProjection | PiOptionalPropertyProjection): void {
+    private static defaultListProperty(concept: FreClassifier, prop: FreProperty, projection: PiEditProjection | PiOptionalPropertyProjection): void {
         // every list is projected as two lines
         // the first shows the property name
         const line1 = new PiEditProjectionLine();
@@ -204,7 +204,7 @@ export class DefaultEditorGenerator {
         const line2 = new PiEditProjectionLine();
         line2.indent = EditorDefaults.standardIndent * 2;
         const sub = new PiEditPropertyProjection();
-        sub.property = MetaElementReference.create<PiProperty>(prop, "PiProperty");
+        sub.property = MetaElementReference.create<FreProperty>(prop, "FreProperty");
         sub.property.owner = concept.language;
         sub.listInfo = new ListInfo();  // listInfo gets default values on initialization, but we change them here
         sub.listInfo.joinType = EditorDefaults.listJoinType;
@@ -215,22 +215,22 @@ export class DefaultEditorGenerator {
         projection.lines.push(line2);
     }
 
-    private static defaultOptionalListProperty(concept: PiClassifier, prop: PiProperty, projection: PiEditProjection): void {
+    private static defaultOptionalListProperty(concept: FreClassifier, prop: FreProperty, projection: PiEditProjection): void {
         const line = new PiEditProjectionLine();
         const optional = new PiOptionalPropertyProjection();
-        optional.property = MetaElementReference.create<PiProperty>(prop, "PiProperty");
+        optional.property = MetaElementReference.create<FreProperty>(prop, "FreProperty");
         optional.property.owner = concept.language;
         DefaultEditorGenerator.defaultListProperty(concept, prop, optional);
         line.items.push(optional);
         projection.lines.push(line);
     }
 
-    private static addExtraDefaults(defaultGroup: PiEditProjectionGroup, con: PiClassifier, language: PiLanguage) {
+    private static addExtraDefaults(defaultGroup: PiEditProjectionGroup, con: FreClassifier, language: FreLanguage) {
         let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
         if (!foundExtraInfo) {
             const extraInfo = new ExtraClassifierInfo();
             DefaultEditorGenerator.addExtras(extraInfo, con);
-            extraInfo.classifier = MetaElementReference.create<PiClassifier>(con, "PiClassifier");
+            extraInfo.classifier = MetaElementReference.create<FreClassifier>(con, "FreClassifier");
             extraInfo.classifier.owner = language;
             defaultGroup.extras.push(extraInfo);
         } else {
@@ -239,7 +239,7 @@ export class DefaultEditorGenerator {
         }
     }
 
-    private static addExtras(foundExtraInfo: ExtraClassifierInfo, con: PiClassifier) {
+    private static addExtras(foundExtraInfo: ExtraClassifierInfo, con: FreClassifier) {
         // default for referenceShortcut is not needed
         if (!foundExtraInfo.trigger) {
             if (!!foundExtraInfo.symbol) { // if there is a symbol defined then the trigger is equal to the symbol
@@ -249,12 +249,12 @@ export class DefaultEditorGenerator {
             }
         }
         // only binary expressions need a symbol
-        if (con instanceof PiBinaryExpressionConcept && !foundExtraInfo.symbol) {
+        if (con instanceof FreBinaryExpressionConcept && !foundExtraInfo.symbol) {
             foundExtraInfo.symbol = Names.classifier(con);
         }
     }
 
-    private static defaultsForUnit(language: PiLanguage, defaultGroup: PiEditProjectionGroup) {
+    private static defaultsForUnit(language: FreLanguage, defaultGroup: PiEditProjectionGroup) {
         // console.log("defaultsForUnit: " + language.units.map(c => c.name).join(', '))
         for (const con of language.units) {
             // Find or create the projection, and its properties

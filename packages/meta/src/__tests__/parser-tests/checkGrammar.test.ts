@@ -1,5 +1,5 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { FileUtil, MetaLogger } from "../../utils";
 import { ReaderWriterGenerator } from "../../parsergen/ReaderWriterGenerator";
 import { PiEditParser } from "../../editordef/parser/PiEditParser";
@@ -14,7 +14,7 @@ done in the test package.
 describe("Checking parser generation", () => {
     const testdir = "src/__tests__/parser-tests/correctDefFiles/";
     const outputDir = "src/__tests__/parser-tests/generated/"
-    let language: PiLanguage;
+    let language: FreLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 

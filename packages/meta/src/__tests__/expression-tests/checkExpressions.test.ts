@@ -1,11 +1,11 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { LanguageExpressionParser } from "../../languagedef/parser/LanguageExpressionParser";
-import { PiInstance, PiLangFunctionCallExp, PiLangSelfExp, PiLanguage, PiLimitedConcept } from "../../languagedef/metalanguage";
+import { FreInstance, FreLangFunctionCallExp, FreLangSelfExp, FreLanguage, FreLimitedConcept } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 
 describe("Checking expression on referredElement", () => {
     const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
-    let language: PiLanguage;
+    let language: FreLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 
@@ -79,14 +79,14 @@ describe("Checking expression on referredElement", () => {
             const zzConcept = language.findConcept("ZZ");
             expect(zzConcept).not.toBeNull();
             expect(zzConcept).not.toBeUndefined();
-            expect(zzConcept instanceof PiLimitedConcept);
+            expect(zzConcept instanceof FreLimitedConcept);
             // for each expression in the set, it should refer to an predefined instance of 'ZZ'
             CCconceptExps.exps.forEach(exp => {
                 expect(exp.__referredElement?.referred === zzConcept);
                 const piInstance = exp.__referredElement.referred;
                 expect(piInstance).not.toBeNull();
-                expect(piInstance instanceof PiInstance);
-                expect((zzConcept as PiLimitedConcept).instances.includes(piInstance as PiInstance));
+                expect(piInstance instanceof FreInstance);
+                expect((zzConcept as FreLimitedConcept).instances.includes(piInstance as FreInstance));
             });
         } else {
             console.log("Language not present");
@@ -104,11 +104,11 @@ describe("Checking expression on referredElement", () => {
             expect(DDconceptExps).not.toBeUndefined();
             // for each expression in the set, it should refer to a function
             DDconceptExps.exps.forEach(exp => {
-                expect(exp instanceof PiLangFunctionCallExp);
+                expect(exp instanceof FreLangFunctionCallExp);
                 expect(exp.__referredElement).toBeUndefined();
-                expect((exp as PiLangFunctionCallExp).actualparams.length > 0 );
+                expect((exp as FreLangFunctionCallExp).actualparams.length > 0 );
                 // every actual parameter should refer to a property, a predefined instance, or to 'owner'
-                (exp as PiLangFunctionCallExp).actualparams.forEach(param => {
+                (exp as FreLangFunctionCallExp).actualparams.forEach(param => {
                     if (param.sourceName !== "container") {
                         expect(param.__referredElement?.referred).not.toBeNull();
                         expect(param.__referredElement?.referred).not.toBeUndefined();
@@ -134,7 +134,7 @@ describe("Checking expression on referredElement", () => {
             // its reference should be set correctly
             const aaConcept = language.findConcept("AA");
             FFconceptExps.exps.forEach(exp => {
-                expect(exp instanceof PiLangSelfExp);
+                expect(exp instanceof FreLangSelfExp);
                 expect(exp.__referredElement.referred === ffConcept);
                 const elem = exp.findRefOfLastAppliedFeature();
                 expect(elem).not.toBeNull();

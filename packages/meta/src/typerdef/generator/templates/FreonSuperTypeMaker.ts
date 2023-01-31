@@ -6,7 +6,7 @@ import {
 } from "../../metalanguage";
 import { FreonTyperGenUtils } from "./FreonTyperGenUtils";
 import { ListUtil, Names, GenerationUtil } from "../../../utils";
-import { PiClassifier, PiLimitedConcept } from "../../../languagedef/metalanguage";
+import { FreClassifier, FreLimitedConcept } from "../../../languagedef/metalanguage";
 
 /**
  * This class generates the code for all 'conformsto' entries in the .type file.
@@ -14,7 +14,7 @@ import { PiClassifier, PiLimitedConcept } from "../../../languagedef/metalanguag
 export class FreonSuperTypeMaker {
     typerdef: PiTyperDef;
 
-    public makeSuperTypes(typerdef: PiTyperDef, typevarName: string, imports: PiClassifier[]): string {
+    public makeSuperTypes(typerdef: PiTyperDef, typevarName: string, imports: FreClassifier[]): string {
         FreonTyperGenUtils.types = typerdef.types;
         this.typerdef = typerdef;
         // Find all conformsto rules, which are (1) all PitConformanceRules,
@@ -25,7 +25,7 @@ export class FreonSuperTypeMaker {
             conformanceRules.push(...spec.rules.filter(r => r instanceof PitConformanceRule));
         });
         typerdef.classifierSpecs.forEach(spec => {
-            if (spec.myClassifier instanceof PiLimitedConcept) {
+            if (spec.myClassifier instanceof FreLimitedConcept) {
                 if (spec.rules.filter(r => r.exp instanceof PitConformsExp)) {
                     limitedSpecs.push(spec);
                 }
@@ -88,12 +88,12 @@ export class FreonSuperTypeMaker {
         return `if (!${typevarName}) {
             return [];
         }
-        let result: ${Names.PiType}[] = [];
+        let result: ${Names.FreType}[] = [];
         ${allRules.map(r => r).join(" else ")}
         return result;`;
     }
 
-    private makeSuperTypeForLimited(binaryExps: PitBinaryExp[], varName: string, varIsType: boolean, imports: PiClassifier[]): string {
+    private makeSuperTypeForLimited(binaryExps: PitBinaryExp[], varName: string, varIsType: boolean, imports: FreClassifier[]): string {
         let result: string = "";
 
         binaryExps.map(stat =>
@@ -104,7 +104,7 @@ export class FreonSuperTypeMaker {
         return result;
     }
 
-    private makeSuperForExp(exp: PitExp, typevarName: string, imports: PiClassifier[]): string {
+    private makeSuperForExp(exp: PitExp, typevarName: string, imports: FreClassifier[]): string {
         if (exp instanceof PitWhereExp) {
             return this.makeWhereExp(exp, typevarName, imports);
         } else {
@@ -112,18 +112,18 @@ export class FreonSuperTypeMaker {
         }
     }
 
-    public makeWhereExp(exp: PitWhereExp, varName: string, imports: PiClassifier[]): string {
+    public makeWhereExp(exp: PitWhereExp, varName: string, imports: FreClassifier[]): string {
         let result: string = '/* PitWhereExp */\n';
         const myConditions = exp.conditions;
         myConditions.forEach((cond, index) => {
             if (cond instanceof PitConformsExp) {
-                result += `const rhs${index}: ${Names.PiType}[] = this.getSuperTypes(${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)});\n`;
+                result += `const rhs${index}: ${Names.FreType}[] = this.getSuperTypes(${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)});\n`;
             } else if (cond instanceof PitEqualsExp) {
-                result += `const rhs${index}: ${Names.PiType}[] = [${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}];\n`;
+                result += `const rhs${index}: ${Names.FreType}[] = [${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}];\n`;
             }
         });
         if (myConditions.length > 1) {
-            const cls: PiClassifier = exp.variable.type;
+            const cls: FreClassifier = exp.variable.type;
             ListUtil.addIfNotPresent(imports, cls);
             result += `/* make cartesian product of all conditions */`;
             for (let i = 0; i < myConditions.length; i++) {
@@ -187,7 +187,7 @@ export class FreonSuperTypeMaker {
         return "unknown";
     }
 
-    private makeCondition(right: PitExp, partName: string, imports: PiClassifier[]): string {
+    private makeCondition(right: PitExp, partName: string, imports: FreClassifier[]): string {
         ListUtil.addIfNotPresent(imports, right.returnType);
         return `(${partName} as ${Names.classifier(right.returnType)})`;
     }

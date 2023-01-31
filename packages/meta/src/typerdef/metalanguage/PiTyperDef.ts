@@ -1,5 +1,5 @@
 import { PiTyperElement } from "./PiTyperElement";
-import { PiClassifier, PiConcept, MetaElementReference, PiLanguage, PiProperty } from "../../languagedef/metalanguage";
+import { FreClassifier, FreConcept, MetaElementReference, FreLanguage, FreProperty } from "../../languagedef/metalanguage";
 import { PitTypeConcept } from "./PitTypeConcept";
 import { PitClassifierSpec } from "./PitClassifierSpec";
 import { PitAnyTypeSpec } from "./PitAnyTypeSpec";
@@ -8,8 +8,8 @@ import { PitProperty } from "./PitProperty";
 import { Names } from "../../utils";
 
 export class PiTyperDef extends PiTyperElement {
-    language: PiLanguage;
-    static freonType: PiClassifier = this.makePiType();
+    language: FreLanguage;
+    static freonType: FreClassifier = this.makePiType();
 
     /**
      * A convenience method that creates an instance of this class
@@ -48,15 +48,15 @@ export class PiTyperDef extends PiTyperElement {
     typeConcepts: PitTypeConcept[] = []; // implementation of part 'typeConcepts'
     anyTypeSpec: PitAnyTypeSpec; // implementation of part 'anyTypeSpec'
     classifierSpecs: PitClassifierSpec[] = []; // implementation of part 'classifierSpecs'
-    __types: MetaElementReference<PiClassifier>[] = []; // implementation of reference 'types'
-    __conceptsWithType: MetaElementReference<PiClassifier>[] = []; // implementation of reference 'conceptsWithType'
+    __types: MetaElementReference<FreClassifier>[] = []; // implementation of reference 'types'
+    __conceptsWithType: MetaElementReference<FreClassifier>[] = []; // implementation of reference 'conceptsWithType'
     // properties: PitProperty[] = [];
-    private __typeRoot: PiClassifier;
+    private __typeRoot: FreClassifier;
     private typeRootHasBeenCalculated: boolean = false;
     readonly $typename: string = "PiTyperDef"; // holds the metatype in the form of a string
 
-    get types(): PiClassifier[] {
-        const result: PiClassifier[] = [];
+    get types(): FreClassifier[] {
+        const result: FreClassifier[] = [];
         for (const ref of this.__types) {
             if (!!ref.referred) {
                 result.push(ref.referred);
@@ -65,17 +65,17 @@ export class PiTyperDef extends PiTyperElement {
         return result;
     }
 
-    set types(newTypes: PiClassifier[]) {
+    set types(newTypes: FreClassifier[]) {
         this.__types = [];
         newTypes.forEach(t => {
-            const xx = MetaElementReference.create<PiClassifier>(t, "PiClassifier");
+            const xx = MetaElementReference.create<FreClassifier>(t, "FreClassifier");
             xx.owner = this.language;
             this.__types.push(xx);
         });
     }
 
-    get conceptsWithType(): PiClassifier[] {
-        const result: PiClassifier[] = [];
+    get conceptsWithType(): FreClassifier[] {
+        const result: FreClassifier[] = [];
         for (const ref of this.__conceptsWithType) {
             if (!!ref.referred) {
                 result.push(ref.referred);
@@ -84,15 +84,15 @@ export class PiTyperDef extends PiTyperElement {
         return result;
     }
 
-    set conceptsWithType(newTypes: PiClassifier[]) {
+    set conceptsWithType(newTypes: FreClassifier[]) {
         this.__conceptsWithType = [];
         newTypes.forEach(t => {
-            const xx = MetaElementReference.create<PiClassifier>(t, "PiClassifier");
+            const xx = MetaElementReference.create<FreClassifier>(t, "FreClassifier");
             xx.owner = this.language;
             this.__conceptsWithType.push(xx);
         });
     }
-    typeRoot(): PiClassifier {
+    typeRoot(): FreClassifier {
         if (!this.typeRootHasBeenCalculated) {
             // get the common super type of all types, if possible
             const list = CommonSuperTypeUtil.commonSuperType(this.types);
@@ -113,11 +113,11 @@ ${this.classifierSpecs.map(con => con.toPiString()).join("\n")}`;
 
     private static makePiType(): PitTypeConcept {
         const result: PitTypeConcept = new PitTypeConcept();
-        result.name = Names.PiType;
+        result.name = Names.FreType;
         // internal: PiElement
-        const prop: PiProperty = new PiProperty();
+        const prop: FreProperty = new FreProperty();
         prop.name = "internal";
-        prop.typeReference = MetaElementReference.create<PiClassifier>("PiElement", "PiClassifier");
+        prop.typeReference = MetaElementReference.create<FreClassifier>("FreNode", "FreClassifier");
         prop.typeReference.owner = prop;
         result.properties.push(prop);
         return result;

@@ -1,13 +1,13 @@
-import { PiLangElement, PiMetaEnvironment } from "./internal";
-import { ParseLocation, PiDefinitionElement, FreParseLocation } from "../../utils";
+import { FreLangElement, FreMetaEnvironment } from "./internal";
+import { ParseLocation, FreDefinitionElement, FreParseLocation } from "../../utils";
 
 /**
  * Implementation for a (named) reference in ProjectIt.
  * Reference can be set with either a referred object, or with a unitName.
  */
-export class MetaElementReference<T extends PiLangElement> {
+export class MetaElementReference<T extends FreLangElement> {
 
-    public static create<T extends PiLangElement>(name: string | T, typeName: string): MetaElementReference<T> {
+    public static create<T extends FreLangElement>(name: string | T, typeName: string): MetaElementReference<T> {
         const result = new MetaElementReference(null, typeName);
         if (typeof name === "string") {
             result.name = name;
@@ -18,16 +18,16 @@ export class MetaElementReference<T extends PiLangElement> {
         return result;
     }
 
-    private _PI_name: string = "";
-    private _PI_referred: T = null;
+    private _FRE_name: string = "";
+    private _FRE_referred: T = null;
 
-    public owner: PiDefinitionElement;
+    public owner: FreDefinitionElement;
     public location: ParseLocation;
     public agl_location: FreParseLocation;
 
     // Need for the scoper to work
     private typeName: string;
-    private scoper = PiMetaEnvironment.metascoper;
+    private scoper = FreMetaEnvironment.metascoper;
 
     private constructor(referredElement: T, typeName: string) {
         // super();
@@ -36,36 +36,36 @@ export class MetaElementReference<T extends PiLangElement> {
     }
 
     set name(value: string) {
-        this._PI_name = value;
-        this._PI_referred = null;
+        this._FRE_name = value;
+        this._FRE_referred = null;
     }
 
     get name(): string {
-        if (!!this._PI_referred) {
+        if (!!this._FRE_referred) {
             return this.referred.name;
         }
-        return this._PI_name;
+        return this._FRE_name;
     }
 
     get referred(): T {
-        if (!!this._PI_referred) {
-            return this._PI_referred;
+        if (!!this._FRE_referred) {
+            return this._FRE_referred;
         } else {
-            this._PI_referred = this.scoper.getFromVisibleElements(
+            this._FRE_referred = this.scoper.getFromVisibleElements(
                 this.owner,
-                this._PI_name,
+                this._FRE_name,
                 this.typeName
             ) as T;
         }
-        return this._PI_referred;
+        return this._FRE_referred;
     }
 
     set referred(referredElement) {
         if (!!referredElement) {
-            this._PI_name = referredElement.name;
+            this._FRE_name = referredElement.name;
         } else {
-            this._PI_name = "";
+            this._FRE_name = "";
         }
-        this._PI_referred = referredElement;
+        this._FRE_referred = referredElement;
     }
 }

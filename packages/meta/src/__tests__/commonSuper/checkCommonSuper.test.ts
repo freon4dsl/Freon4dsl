@@ -1,38 +1,38 @@
-import { PiClassifier, PiConcept, MetaElementReference, PiInterface } from "../../languagedef/metalanguage";
+import { FreClassifier, FreConcept, MetaElementReference, FreInterface } from "../../languagedef/metalanguage";
 import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
 
-function concept(name: string): PiConcept {
-    const result: PiConcept = new PiConcept();
+function concept(name: string): FreConcept {
+    const result: FreConcept = new FreConcept();
     result.name = name;
     return result;
 }
 
-function interf(name: string): PiInterface {
-    const result: PiInterface = new PiInterface();
+function interf(name: string): FreInterface {
+    const result: FreInterface = new FreInterface();
     result.name = name;
     return result;
 }
 
-function conceptWithBase(name: string, base: PiConcept): PiConcept {
+function conceptWithBase(name: string, base: FreConcept): FreConcept {
     const result = concept(name);
-    result.base = MetaElementReference.create<PiConcept>(base, "PiClassifier");
+    result.base = MetaElementReference.create<FreConcept>(base, "FreClassifier");
     result.base.owner = result;
     return result;
 }
 
-function interfWithBases(name: string, base: PiInterface[]): PiInterface {
+function interfWithBases(name: string, base: FreInterface[]): FreInterface {
     const result = interf(name);
     for (const elem of base) {
-        const newBase = MetaElementReference.create<PiInterface>(elem, "PiClassifier");
+        const newBase = MetaElementReference.create<FreInterface>(elem, "FreClassifier");
         newBase.owner = result;
         result.base.push(newBase);
     }
     return result;
 }
 
-function addInterfacesToConcept(con: PiConcept, intf: PiInterface[]) {
+function addInterfacesToConcept(con: FreConcept, intf: FreInterface[]) {
     for (const elem of intf) {
-        const newBase = MetaElementReference.create<PiInterface>(elem, "PiClassifier");
+        const newBase = MetaElementReference.create<FreInterface>(elem, "FreClassifier");
         newBase.owner = con;
         con.interfaces.push(newBase);
     }
@@ -41,21 +41,21 @@ function addInterfacesToConcept(con: PiConcept, intf: PiInterface[]) {
 describe("Checking common super types algorithm", () => {
 
     test("no supers", () => {
-        const myList: PiClassifier[] = [];
+        const myList: FreClassifier[] = [];
         myList.push(concept("AA"));
         myList.push(concept("BB"));
         myList.push(concept("CC"));
-        const result: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
+        const result: FreClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
         expect(result.length).toBe(0);
         // console.log(result.map(cls => cls.name).join(", "));
     });
 
     test("level 0 concepts", () => {
-        let myList: PiClassifier[] = [];
+        let myList: FreClassifier[] = [];
         myList.push(concept("AA"));
         myList.push(concept("AA"));
         myList.push(concept("AA"));
-        let result: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
+        let result: FreClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
         expect(result.length).toBe(1);
         expect(result[0]).toBe(myList[0]);
         // console.log(result.map(cls => cls.name).join(", "));
@@ -68,12 +68,12 @@ describe("Checking common super types algorithm", () => {
     });
 
     test("level 1 concepts", () => {
-        let myList: PiClassifier[] = [];
-        let myBase: PiConcept = concept("ZZ");
+        let myList: FreClassifier[] = [];
+        let myBase: FreConcept = concept("ZZ");
         myList.push(conceptWithBase("AA", myBase));
         myList.push(conceptWithBase("BB", myBase));
         myList.push(conceptWithBase("CC", myBase));
-        let result: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
+        let result: FreClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
         expect(result.length).toBe(1);
         expect(result[0]).toBe(myBase);
         // console.log(result.map(cls => cls.name).join(", "));
@@ -95,11 +95,11 @@ describe("Checking common super types algorithm", () => {
     });
 
     test("level 0 interfaces", () => {
-        let myList: PiClassifier[] = [];
+        let myList: FreClassifier[] = [];
         myList.push(interf("AA"));
         myList.push(interf("AA"));
         myList.push(interf("AA"));
-        let result: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
+        let result: FreClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
         expect(result.length).toBe(1);
         expect(result[0]).toBe(myList[0]);
         // console.log(result.map(cls => cls.name).join(", "));
@@ -111,13 +111,13 @@ describe("Checking common super types algorithm", () => {
     });
 
     test("level 1 interfaces", () => {
-        let myList: PiClassifier[] = [];
-        let myBase1: PiInterface = interf("ZZ");
-        let myBase2: PiInterface = interf("XX");
+        let myList: FreClassifier[] = [];
+        let myBase1: FreInterface = interf("ZZ");
+        let myBase2: FreInterface = interf("XX");
         myList.push(interfWithBases("AA", [myBase1, myBase2]));
         myList.push(interfWithBases("BB", [myBase1]));
         myList.push(interfWithBases("CC", [myBase1, myBase2]));
-        let result: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
+        let result: FreClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
         expect(result.length).toBe(1);
         expect(result[0]).toBe(myBase1);
         // console.log("COMMON SUPER: " + result.map(cls => cls.name).join(", "));
@@ -146,17 +146,17 @@ describe("Checking common super types algorithm", () => {
         });
 
     test("level 1 concepts and interfaces", () => {
-        let myList: PiConcept[] = [];
-        let baseConcept: PiConcept = concept("ZZ");
+        let myList: FreConcept[] = [];
+        let baseConcept: FreConcept = concept("ZZ");
         myList.push(conceptWithBase("AA", baseConcept));
         myList.push(conceptWithBase("BB", baseConcept));
         myList.push(conceptWithBase("CC", baseConcept));
-        let baseInterface1: PiInterface = interf("YY");
-        let baseInterface2: PiInterface = interf("XX");
+        let baseInterface1: FreInterface = interf("YY");
+        let baseInterface2: FreInterface = interf("XX");
         for (const con of myList) {
             addInterfacesToConcept(con, [baseInterface1, baseInterface2]);
         }
-        let result: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
+        let result: FreClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
         // console.log("COMMON SUPER: " + result.map(cls => cls.name).join(", "));
         expect(result.length).toBe(3);
         expect(result.includes(baseConcept)).toBeTruthy();
@@ -183,13 +183,13 @@ describe("Checking common super types algorithm", () => {
     });
 
     test("level 2 concepts", () => {
-        let myList: PiClassifier[] = [];
-        const myBase1: PiConcept = concept("ROOT");
-        const myBase2: PiConcept = conceptWithBase("AA", myBase1);
+        let myList: FreClassifier[] = [];
+        const myBase1: FreConcept = concept("ROOT");
+        const myBase2: FreConcept = conceptWithBase("AA", myBase1);
         myList.push(conceptWithBase("KK", myBase2));
         myList.push(conceptWithBase("LL", conceptWithBase("BB", myBase1)));
         myList.push(conceptWithBase("MM", conceptWithBase("CC", myBase1)));
-        let result: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
+        let result: FreClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
         // expect(result.length).toBe(1);
         // expect(result[0]).toBe(myBase1);
         // console.log("COMMON SUPER: " + result.map(cls => cls.name).join(", "));
@@ -205,12 +205,12 @@ describe("Checking common super types algorithm", () => {
     });
 
     test("level 2 concepts and interfaces", () => {
-        let myList: PiConcept[] = [];
-        const myBase1: PiConcept = concept("ROOT");
-        const myBase2: PiConcept = conceptWithBase("AA", myBase1);
-        const myBase3: PiConcept = concept("SS");
-        const baseInterface1: PiInterface = interf("YY");
-        const baseInterface2: PiInterface = interf("XX");
+        let myList: FreConcept[] = [];
+        const myBase1: FreConcept = concept("ROOT");
+        const myBase2: FreConcept = conceptWithBase("AA", myBase1);
+        const myBase3: FreConcept = concept("SS");
+        const baseInterface1: FreInterface = interf("YY");
+        const baseInterface2: FreInterface = interf("XX");
         addInterfacesToConcept(myBase1, [baseInterface1]);
         addInterfacesToConcept(myBase3, [baseInterface2]);
         addInterfacesToConcept(myBase2, [baseInterface2]);
@@ -219,7 +219,7 @@ describe("Checking common super types algorithm", () => {
         myList.push(conceptWithBase("KK", myBase2));
         myList.push(conceptWithBase("LL", conceptWithBase("BB", myBase1)));
         myList.push(conceptWithBase("MM", conceptWithBase("CC", myBase1)));
-        let result: PiClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
+        let result: FreClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
         // console.log("COMMON SUPER: " + result.map(cls => cls.name).join(", "));
         expect(result.length).toBe(2);
         expect(result.includes(myBase1)).toBeTruthy();

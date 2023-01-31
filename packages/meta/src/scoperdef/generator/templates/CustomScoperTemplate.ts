@@ -1,8 +1,8 @@
-import { PiLanguage } from "../../../languagedef/metalanguage";
+import { FreLanguage } from "../../../languagedef/metalanguage";
 import { Names, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
 
 export class CustomScoperTemplate {
-    generateCustomScoperPart(language: PiLanguage, relativePath: string): string {
+    generateCustomScoperPart(language: FreLanguage, relativePath: string): string {
         const scoperInterfaceName: string = Names.FrScoperPart;
         const generatedClassName: string = Names.customScoper(language);
 

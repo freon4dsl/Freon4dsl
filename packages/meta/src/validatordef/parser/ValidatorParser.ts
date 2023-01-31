@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../languagedef/metalanguage/index";
+import { FreLanguage } from "../../languagedef/metalanguage/index";
 import { PiParser } from "../../utils";
 import { ValidatorChecker } from "../../validatordef/metalanguage";
 import { PiValidatorDef } from "../metalanguage";
@@ -8,9 +8,9 @@ import { setCurrentFileName as expressionFileName } from "../../languagedef/pars
 const validatorParser = require("./ValidatorGrammar");
 
 export class ValidatorParser extends PiParser<PiValidatorDef> {
-    public language: PiLanguage;
+    public language: FreLanguage;
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         super();
         this.parser = validatorParser;
         this.language = language;

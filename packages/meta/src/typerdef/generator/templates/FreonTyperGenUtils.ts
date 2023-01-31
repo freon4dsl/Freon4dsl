@@ -8,7 +8,7 @@ import {
     PitWhereExp
 } from "../../metalanguage";
 import { ListUtil, Names } from "../../../utils";
-import { PiClassifier, PiProperty } from "../../../languagedef/metalanguage";
+import { FreClassifier, FreProperty } from "../../../languagedef/metalanguage";
 import { PitBinaryExp, PitCreateExp, PitVarCallExp } from "../../metalanguage/expressions";
 
 const inferFunctionName: string = "inferType";
@@ -18,10 +18,10 @@ const typeofName: string = 'typeof';
 const commonSuperName: string= 'commonSuperType';
 
 export class FreonTyperGenUtils {
-    static types: PiClassifier[] = [];
+    static types: FreClassifier[] = [];
 
-    public static isType(cls: PiClassifier): boolean {
-        if (cls.name === "PiType") {
+    public static isType(cls: FreClassifier): boolean {
+        if (cls.name === Names.FreType) {
             return true;
         } else if (cls instanceof PitTypeConcept) {
             return true;
@@ -29,7 +29,7 @@ export class FreonTyperGenUtils {
         return false;
     }
 
-    public static makeExpAsTypeOrElement(exp: PitExp, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
+    public static makeExpAsTypeOrElement(exp: PitExp, varName: string, varIsType: boolean, imports: FreClassifier[]): string {
         if (FreonTyperGenUtils.isType(exp.returnType)) {
             return FreonTyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
         } else {
@@ -37,7 +37,7 @@ export class FreonTyperGenUtils {
         }
     }
 
-    public static makeExpAsType(exp: PitExp, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
+    public static makeExpAsType(exp: PitExp, varName: string, varIsType: boolean, imports: FreClassifier[]): string {
         let result: string = "";
         if (exp instanceof PitAnytypeExp) {
             result = `AstType.ANY_TYPE`;
@@ -53,7 +53,7 @@ export class FreonTyperGenUtils {
             }) /* PitCreateExp A */`;
             if (this.types.includes(exp.type)) {
                 // the 'create' makes an object that is an AST concept, not a PitTypeConcept
-                // therefore we need to wrap it in a PiType object
+                // therefore we need to wrap it in a FreType object
                 result = `AstType.create({ astElement: ${result} }) /* PitCreateExp B */`;
             }
         } else if (exp instanceof PitFunctionCallExp) {
@@ -104,10 +104,10 @@ export class FreonTyperGenUtils {
         return result;
     }
 
-    public static makeExpAsElement(exp: PitExp, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
+    public static makeExpAsElement(exp: PitExp, varName: string, varIsType: boolean, imports: FreClassifier[]): string {
         let result: string = "";
         if (exp instanceof PitAnytypeExp) {
-            result = "PiType.ANY";
+            result = Names.FreType + ".ANY";
         } else if (exp instanceof PitBinaryExp) {
             result = "PitBinaryExp";
         } else if (exp instanceof PitCreateExp) {
@@ -144,7 +144,7 @@ export class FreonTyperGenUtils {
         return result;
     }
 
-    public static makePropValue(propExp: PitPropInstance, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
+    public static makePropValue(propExp: PitPropInstance, varName: string, varIsType: boolean, imports: FreClassifier[]): string {
         let result: string= FreonTyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, varIsType, imports);
         if (!propExp.property.isPart) { // it is a reference, wrap it in a FreElementReference
             // TODO find solution for this import, currently it is imported always
@@ -156,7 +156,7 @@ export class FreonTyperGenUtils {
         return result;
     }
 
-    public static makeCopyEntry(prop: PiProperty, toBeCopiedName: string, toBeCopiedTypeName: string): string {
+    public static makeCopyEntry(prop: FreProperty, toBeCopiedName: string, toBeCopiedTypeName: string): string {
         // TODO lists
         const typeName: string = Names.classifier(prop.type);
         if (prop.isPart) {

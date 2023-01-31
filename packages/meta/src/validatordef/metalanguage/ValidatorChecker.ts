@@ -1,13 +1,13 @@
 import { Checker, FreErrorSeverity, MetaLogger, ParseLocationUtil, CheckRunner } from "../../utils";
 import {
-    PiClassifier,
-    PiConcept,
-    PiLangAppliedFeatureExp,
-    PiLangSelfExp,
-    PiLangSimpleExp,
-    PiLanguage,
-    PiPrimitiveProperty,
-    PiProperty
+    FreClassifier,
+    FreConcept,
+    FreLangAppliedFeatureExp,
+    FreLangSelfExp,
+    FreLangSimpleExp,
+    FreLanguage,
+    FrePrimitiveProperty,
+    FreProperty
 } from "../../languagedef/metalanguage";
 import {
     CheckConformsRule,
@@ -23,8 +23,8 @@ import {
     ValidationSeverity,
     ValidNameRule
 } from "./ValidatorDefLang";
-import { PiPrimitiveType } from "../../languagedef/metalanguage";
-import { CommonChecker, PiLangExpressionChecker } from "../../languagedef/checking";
+import { FrePrimitiveType } from "../../languagedef/metalanguage";
+import { CommonChecker, FreLangExpressionChecker } from "../../languagedef/checking";
 
 const LOGGER = new MetaLogger("ValidatorChecker").mute();
 const equalsTypeName = "equalsType";
@@ -35,12 +35,12 @@ const conformsToName = "conformsTo";
 const severityLevels = ["error", "improvement", "todo", "info"];
 
 export class ValidatorChecker extends Checker<PiValidatorDef> {
-    myExpressionChecker: PiLangExpressionChecker;
+    myExpressionChecker: FreLangExpressionChecker;
     runner = new CheckRunner(this.errors, this.warnings);
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         super(language);
-        this.myExpressionChecker = new PiLangExpressionChecker(this.language);
+        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
     }
 
     public check(definition: PiValidatorDef): void {
@@ -76,7 +76,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         }
     }
 
-    checkRule(tr: ValidationRule, enclosingConcept: PiConcept) {
+    checkRule(tr: ValidationRule, enclosingConcept: FreConcept) {
         if ( tr instanceof CheckEqualsTypeRule) { this.checkEqualsTypeRule(tr, enclosingConcept); }
         if ( tr instanceof CheckConformsRule) { this.checkConformsTypeRule(tr, enclosingConcept); }
         if ( tr instanceof NotEmptyRule) { this.checkNotEmptyRule(tr, enclosingConcept); }
@@ -95,13 +95,13 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         }
     }
 
-    checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiConcept) {
+    checkValidNameRule(tr: ValidNameRule, enclosingConcept: FreConcept) {
         // check whether tr.property (if set) is a property of enclosingConcept
         // if not set, set tr.property to the 'self.unitName' property of the enclosingConcept
         if (!!tr.property) {
             this.myExpressionChecker.checkLangExp(tr.property, enclosingConcept);
         } else {
-            let myProp: PiProperty;
+            let myProp: FreProperty;
             for (const i of enclosingConcept.allProperties()) {
                 if (i.name === "name") {
                     myProp = i;
@@ -111,10 +111,10 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 check: !!myProp,
                 error: `Cannot find property 'name' in ${enclosingConcept.name} ${ParseLocationUtil.location(tr)}.`,
                 whenOk: () => {
-                    tr.property = PiLangSelfExp.create(enclosingConcept);
-                    tr.property.appliedfeature = PiLangAppliedFeatureExp.create(tr.property, "name", myProp);
+                    tr.property = FreLangSelfExp.create(enclosingConcept);
+                    tr.property.appliedfeature = FreLangAppliedFeatureExp.create(tr.property, "name", myProp);
                     // tr.property.appliedfeature.sourceName = "unitName";
-                    // tr.property.appliedfeature.referredElement = MetaElementReference.create<PiProperty>(myProp, "PiProperty");
+                    // tr.property.appliedfeature.referredElement = MetaElementReference.create<PiProperty>(myProp, "FreProperty");
                     tr.property.location = tr.location;
                     tr.property.language = this.language;
                   }
@@ -123,12 +123,12 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         // check if found property is of type 'identifier'
         if (!!tr.property) {
             const myProp = tr.property.findRefOfLastAppliedFeature();
-            this.runner.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.type === PiPrimitiveType.identifier,
-                `Validname rule expression '${tr.property.toPiString()}' should have type 'identifier' ${ParseLocationUtil.location(tr.property)}.`);
+            this.runner.simpleCheck((myProp instanceof FrePrimitiveProperty) && myProp.type === FrePrimitiveType.identifier,
+                `Validname rule expression '${tr.property.toFreString()}' should have type 'identifier' ${ParseLocationUtil.location(tr.property)}.`);
         }
     }
 
-    checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: PiConcept) {
+    checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: FreConcept) {
         // check references to types
         this.runner.nestedCheck(
             {
@@ -142,7 +142,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             });
     }
 
-    checkConformsTypeRule(tr: CheckConformsRule, enclosingConcept: PiConcept) {
+    checkConformsTypeRule(tr: CheckConformsRule, enclosingConcept: FreConcept) {
         // check references to types
         this.runner.nestedCheck(
             {
@@ -155,17 +155,17 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             });
     }
 
-    checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: PiConcept) {
+    checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: FreConcept) {
         // check whether nr.property is a property of enclosingConcept
         // and whether it is a list
         if (nr.property !== null) {
             this.myExpressionChecker.checkLangExp(nr.property, enclosingConcept);
             this.runner.simpleCheck(nr.property.findRefOfLastAppliedFeature().isList,
-                `NotEmpty rule '${nr.property.toPiString()}' should refer to a list ${ParseLocationUtil.location(nr)}.`);
+                `NotEmpty rule '${nr.property.toFreString()}' should refer to a list ${ParseLocationUtil.location(nr)}.`);
         }
     }
 
-    private checkExpressionRule(tr: ExpressionRule, enclosingConcept: PiConcept) {
+    private checkExpressionRule(tr: ExpressionRule, enclosingConcept: FreConcept) {
         this.runner.nestedCheck(
             {
                 check: tr.exp1 !== null && tr.exp2 !== null,
@@ -175,16 +175,16 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                     this.myExpressionChecker.checkLangExp(tr.exp1, enclosingConcept);
                     this.myExpressionChecker.checkLangExp(tr.exp2, enclosingConcept);
                     // types of exp1 and exp2 should be equal
-                    if (tr.exp1 instanceof PiLangSimpleExp) {
+                    if (tr.exp1 instanceof FreLangSimpleExp) {
                         // test if type2 is a number
-                    } else if (tr.exp2 instanceof PiLangSimpleExp) {
+                    } else if (tr.exp2 instanceof FreLangSimpleExp) {
                         // test if type1 is a number
                     } else {
                         // compare both types
                         const type1 = tr.exp1.findRefOfLastAppliedFeature()?.type;
-                        this.runner.simpleCheck(type1 !== null, `Cannot find the type of ${tr.exp1.toPiString()} ${ParseLocationUtil.location(tr)}.`);
+                        this.runner.simpleCheck(type1 !== null, `Cannot find the type of ${tr.exp1.toFreString()} ${ParseLocationUtil.location(tr)}.`);
                         const type2 = tr.exp2.findRefOfLastAppliedFeature()?.type;
-                        this.runner.simpleCheck(type2 !== null, `Cannot find the type of ${tr.exp2.toPiString()} ${ParseLocationUtil.location(tr)}.`);
+                        this.runner.simpleCheck(type2 !== null, `Cannot find the type of ${tr.exp2.toFreString()} ${ParseLocationUtil.location(tr)}.`);
                         if (type1 !== null && type2 !== null) {
                             this.runner.simpleCheck(type1 === type2, `Types of expression rule '${tr.toFreString()}' should be equal ${ParseLocationUtil.location(tr)}.`);
                         }
@@ -193,7 +193,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             });
     }
 
-    private checkIsuniqueRule(tr: IsuniqueRule, enclosingConcept: PiConcept) {
+    private checkIsuniqueRule(tr: IsuniqueRule, enclosingConcept: FreConcept) {
         this.runner.nestedCheck(
             {
                 check: tr.list !== null && tr.listproperty !== null,
@@ -261,7 +261,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         }
     }
 
-    private checkValidationMessage(message: ValidationMessage, enclosingConcept: PiClassifier) {
+    private checkValidationMessage(message: ValidationMessage, enclosingConcept: FreClassifier) {
         this.runner.nestedCheck({check: !!message.content && !!message.content[0],
             error: `User defined error message should have a value ${ParseLocationUtil.location(message)}.`,
             whenOk: () => {

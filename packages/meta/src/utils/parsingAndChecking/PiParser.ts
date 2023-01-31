@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { Checker } from "./Checker";
 import { Parser } from "pegjs";
 import { LOG2USER } from "../UserLogger";
-import { PiDefinitionElement } from "../PiDefinitionElement";
+import { FreDefinitionElement } from "../FreDefinitionElement";
 import { ParseLocationUtil } from "./ParseLocationUtil";
 
 // The following two types are used to store the location information from the PEGJS parser
@@ -161,7 +161,7 @@ export class PiParser<DEFINITION> {
         // throw Error("PiParser.cleanNonFatalParseErrors should be implemented by its subclasses.");
     }
 
-    protected location(elem: PiDefinitionElement): string {
+    protected location(elem: FreDefinitionElement): string {
         if (!!elem.location) {
             return `[file: ${elem.location.filename}:${elem.location.start.line}:${elem.location.start.column}]`;
         }

@@ -1,18 +1,18 @@
-import { PiLanguage } from "../metalanguage/PiLanguage";
-import { PiLangExpressionChecker } from "../checking/PiLangExpressionChecker";
+import { FreLanguage } from "../metalanguage/FreLanguage";
+import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker";
 import { PiParser } from "../../utils/parsingAndChecking/PiParser";
 import { LanguageExpressionTester } from "./LanguageExpressionTester";
 const pegjsParser = require("./ExpressionGrammar");
 import { setCurrentFileName } from "./ExpressionCreators";
 
 export class LanguageExpressionParser extends PiParser<LanguageExpressionTester> {
-    public language: PiLanguage;
+    public language: FreLanguage;
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         super();
         this.parser = pegjsParser;
         this.language = language;
-        this.checker = new PiLangExpressionChecker(this.language);
+        this.checker = new FreLangExpressionChecker(this.language);
     }
 
     protected merge(submodels: LanguageExpressionTester[]): LanguageExpressionTester {

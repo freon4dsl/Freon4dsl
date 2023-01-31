@@ -1,14 +1,14 @@
 import { GrammarRule } from "./GrammarRule";
-import { PiClassifier, PiExpressionConcept } from "../../../languagedef/metalanguage";
+import { FreClassifier, FreExpressionConcept } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
 import { internalTransformNode } from "../ParserGenUtil";
 import { getTypeCall } from "./GrammarUtils";
 
 export class BinaryExpressionRule extends GrammarRule {
-    expressionBase: PiExpressionConcept;
-    private symbolToConcept: Map<PiClassifier, string> = new Map<PiClassifier, string>();
+    expressionBase: FreExpressionConcept;
+    private symbolToConcept: Map<FreClassifier, string> = new Map<FreClassifier, string>();
 
-    constructor(ruleName: string, expressionBase: PiExpressionConcept, symbolToConcept: Map<PiClassifier, string>) {
+    constructor(ruleName: string, expressionBase: FreExpressionConcept, symbolToConcept: Map<FreClassifier, string>) {
         super();
         this.ruleName = ruleName;
         this.expressionBase = expressionBase;

@@ -1,4 +1,4 @@
-import { PiLanguage, PiLimitedConcept } from "../../metalanguage";
+import { FreLanguage, FreLimitedConcept } from "../../metalanguage";
 import {
     LANGUAGE_GEN_FOLDER,
     Names,
@@ -12,7 +12,7 @@ export class StdlibTemplate {
     limitedConceptNames: string[] = [];
     constructorText: string = "";
 
-    generateStdlibClass(language: PiLanguage, relativePath: string): string {
+    generateStdlibClass(language: FreLanguage, relativePath: string): string {
         this.makeTexts(language);
 
         return `
@@ -83,7 +83,7 @@ export class StdlibTemplate {
         }`;
     }
 
-    generateCustomStdlibClass(language: PiLanguage): string {
+    generateCustomStdlibClass(language: FreLanguage): string {
         return `
         import { ${Names.PiNamedElement}, ${Names.PiStdlib} } from "@projectit/core";
 
@@ -96,7 +96,7 @@ export class StdlibTemplate {
     }
 
     private makeTexts(language) {
-        language.concepts.filter(con => con instanceof PiLimitedConcept).map(limitedConcept => {
+        language.concepts.filter(con => con instanceof FreLimitedConcept).map(limitedConcept => {
             const myName = Names.concept(limitedConcept);
             this.limitedConceptNames.push(myName);
             this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x =>
@@ -104,7 +104,7 @@ export class StdlibTemplate {
         });
     }
 
-    generateIndex(language: PiLanguage) {
+    generateIndex(language: FreLanguage) {
         return `
         export * from "./${Names.customStdlib(language)}";
         `;

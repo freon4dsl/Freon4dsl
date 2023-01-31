@@ -1,11 +1,11 @@
 import { RHSPropEntry } from "./RHSPropEntry";
-import { PiProperty } from "../../../../languagedef/metalanguage";
+import { FreProperty } from "../../../../languagedef/metalanguage";
 import { getTypeCall, makeIndent } from "../GrammarUtils";
 import { GenerationUtil } from "../../../../utils";
 import { ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSLimitedRefOptionalEntry extends RHSPropEntry {
-    constructor(prop: PiProperty) {
+    constructor(prop: FreProperty) {
         super(prop);
         this.isList = false;
     }
