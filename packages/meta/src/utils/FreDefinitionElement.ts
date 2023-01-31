@@ -1,4 +1,4 @@
-import { ParseLocation, FreParseLocation } from "./parsingAndChecking/PiParser";
+import { ParseLocation, FreParseLocation } from "./parsingAndChecking/FreGenericParser";
 
 // root of the inheritance structure of all elements that can be present in any of the definitions
 export class FreDefinitionElement {

@@ -44,7 +44,7 @@ export class FreParseLocation {
 /**
  * Generic Parser, subclasses need to initialize the parser, checker and msg fields.
  */
-export class PiParser<DEFINITION> {
+export class FreGenericParser<DEFINITION> {
     parser: Parser;
     checker: Checker<DEFINITION>;
 

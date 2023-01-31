@@ -6,7 +6,7 @@ import {
     MetaLogger,
     INTERPRETER_FOLDER, INTERPRETER_GEN_FOLDER, Names
 } from "../../utils";
-import { PiInterpreterDef } from "../metalanguage/PiInterpreterDef";
+import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef";
 import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate";
 import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate";
 
@@ -21,7 +21,7 @@ export class InterpreterGenerator {
     private interpreterGenFolder: string;
     fileNames: string[] = [];
 
-    generate(interpreterDef: PiInterpreterDef): void {
+    generate(interpreterDef: FreInterpreterDef): void {
         if (this.language == null) {
             LOGGER.error("Cannot generate interpreter because language is not set.");
             return;

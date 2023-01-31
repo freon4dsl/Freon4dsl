@@ -1,12 +1,12 @@
 import { FreLanguage } from "../metalanguage/";
-import { PiParser, MetaLogger } from "../../utils";
+import { FreGenericParser, MetaLogger } from "../../utils";
 import * as pegjsParser from "./LanguageGrammar";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName } from "./LanguageCreators";
 import { FreLangChecker } from "../checking/FreLangChecker";
 
 const LOGGER = new MetaLogger("LanguageParser").mute();
 
-export class LanguageParser extends PiParser<FreLanguage> {
+export class LanguageParser extends FreGenericParser<FreLanguage> {
     constructor() {
         super();
         this.parser = pegjsParser;

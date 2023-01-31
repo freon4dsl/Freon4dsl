@@ -1,5 +1,5 @@
 import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator";
-import { PiInterpreterDef } from "../interpretergen/metalanguage/PiInterpreterDef";
+import { FreInterpreterDef } from "../interpretergen/metalanguage/FreInterpreterDef";
 import { FreLanguage } from "../languagedef/metalanguage";
 import { FreEditUnit } from "../editordef/metalanguage";
 import { FreEditParser } from "../editordef/parser/FreEditParser";
@@ -113,7 +113,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     private generateInterpreter = () => {
         LOG2USER.info("Generating interpreter");
-        let interpreterDef: PiInterpreterDef = new PiInterpreterDef();
+        let interpreterDef: FreInterpreterDef = new FreInterpreterDef();
         for (const concept of this.language.concepts) {
             interpreterDef.conceptsToEvaluate.push(concept);
         }

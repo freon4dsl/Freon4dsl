@@ -1,6 +1,6 @@
 import { FreLanguage } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils/index";
-import { PiInterpreterDef } from "../../metalanguage/PiInterpreterDef";
+import { FreInterpreterDef } from "../../metalanguage/FreInterpreterDef";
 
 export class InterpreterBaseTemplate {
 
@@ -12,7 +12,7 @@ export class InterpreterBaseTemplate {
      * @param language
      * @param interpreterDef
      */
-    public interpreterBase(language: FreLanguage, interpreterDef: PiInterpreterDef): string {
+    public interpreterBase(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
         return `// Generated my Freon, will be overwritten with every generation.
         import { InterpreterContext, RtObject, RtError } from "@projectit/core";
         import { ${interpreterDef.conceptsToEvaluate.map(c => Names.concept(c)).join(",")} } from "../../language/gen";
@@ -34,7 +34,7 @@ export class InterpreterBaseTemplate {
         `
     }
 
-    public interpreterClass(language: FreLanguage, interpreterDef: PiInterpreterDef): string {
+    public interpreterClass(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
         const baseName = Names.interpreterBaseClassname(language);
         return `// Generated my Freon once, will NEVER be overwritten.
         import { InterpreterContext, IMainInterpreter, RtObject } from "@projectit/core";
@@ -56,7 +56,7 @@ export class InterpreterBaseTemplate {
         `
     }
 
-    public interpreterInit(language: FreLanguage, interpreterDef: PiInterpreterDef): string {
+    public interpreterInit(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
         const interpreter = Names.interpreterClassname(language);
         return `import { IMainInterpreter } from "@projectit/core";
         import { ${interpreter} } from "../${interpreter}";

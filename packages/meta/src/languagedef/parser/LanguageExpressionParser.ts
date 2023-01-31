@@ -1,11 +1,11 @@
 import { FreLanguage } from "../metalanguage/FreLanguage";
 import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker";
-import { PiParser } from "../../utils/parsingAndChecking/PiParser";
+import { FreGenericParser } from "../../utils/parsingAndChecking/FreGenericParser";
 import { LanguageExpressionTester } from "./LanguageExpressionTester";
 const pegjsParser = require("./ExpressionGrammar");
 import { setCurrentFileName } from "./ExpressionCreators";
 
-export class LanguageExpressionParser extends PiParser<LanguageExpressionTester> {
+export class LanguageExpressionParser extends FreGenericParser<LanguageExpressionTester> {
     public language: FreLanguage;
 
     constructor(language: FreLanguage) {

@@ -6,7 +6,7 @@ import {
     FreProperty,
     FreClassifier
 } from "../../languagedef/metalanguage";
-import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
+import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./FreScopeDefLang";
 import { LangUtil, MetaLogger } from "../../utils";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.

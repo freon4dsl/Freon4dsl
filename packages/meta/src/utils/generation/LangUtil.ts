@@ -127,7 +127,7 @@ export class LangUtil {
     }
 
     /**
-     * Takes a PiInterface and returns a list of concepts that directly implement it,
+     * Takes a FreInterface and returns a list of concepts that directly implement it,
      * without taking into account subinterfaces.
      *
      * @param piInterface
@@ -138,7 +138,7 @@ export class LangUtil {
     }
 
     /**
-     * Takes a PiInterface and returns a list of concepts that implement it,
+     * Takes a FreInterface and returns a list of concepts that implement it,
      * including the concepts that implement subinterfaces.
      *
      * @param piInterface

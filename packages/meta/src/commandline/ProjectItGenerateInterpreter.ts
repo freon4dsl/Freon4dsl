@@ -1,5 +1,5 @@
 import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator";
-import { PiInterpreterDef } from "../interpretergen/metalanguage/PiInterpreterDef";
+import { FreInterpreterDef } from "../interpretergen/metalanguage/FreInterpreterDef";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 
@@ -21,7 +21,7 @@ export class ProjectItGenerateInterpreter extends ProjectItGeneratePartAction {
         super.generate();
 
         // read interpreter .eval file
-        const interpeterDef = new PiInterpreterDef();
+        const interpeterDef = new FreInterpreterDef();
         for (const c of this.language.concepts) {
             interpeterDef.conceptsToEvaluate.push(c);
         }

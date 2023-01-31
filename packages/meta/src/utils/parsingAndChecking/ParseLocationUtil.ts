@@ -1,5 +1,5 @@
 import { FreDefinitionElement } from "../FreDefinitionElement";
-import { ParseLocation } from "./PiParser";
+import { ParseLocation } from "./FreGenericParser";
 
 export class ParseLocationUtil {
     static location(elem: FreDefinitionElement): string {

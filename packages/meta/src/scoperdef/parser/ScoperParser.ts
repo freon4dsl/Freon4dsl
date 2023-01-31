@@ -1,12 +1,12 @@
 import { FreLanguage } from "../../languagedef/metalanguage";
-import { PiParser } from "../../utils";
+import { FreGenericParser } from "../../utils";
 import { PiScopeDef, ScoperChecker } from "../metalanguage";
 import { setCurrentFileName } from "./ScoperCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 
 const scoperParser = require("./ScoperGrammar");
 
-export class ScoperParser extends PiParser<PiScopeDef> {
+export class ScoperParser extends FreGenericParser<PiScopeDef> {
     public language: FreLanguage;
 
     constructor(language: FreLanguage) {
