@@ -6,7 +6,7 @@ import {
     FreProperty,
     FreClassifier
 } from "../../languagedef/metalanguage";
-import { PiAlternativeScope, PiNamespaceAddition, ScopeDef } from "./FreScopeDefLang";
+import { FreAlternativeScope, FreNamespaceAddition, ScopeDef } from "./FreScopeDefLang";
 import { LangUtil, MetaLogger } from "../../utils";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -62,7 +62,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
     }
 
-    private checkNamespaceAdditions(namespaceAddition: PiNamespaceAddition, enclosingConcept: FreConcept) {
+    private checkNamespaceAdditions(namespaceAddition: FreNamespaceAddition, enclosingConcept: FreConcept) {
         LOGGER.log("Checking namespace definition for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
@@ -86,7 +86,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         });
     }
 
-    private checkAlternativeScope(alternativeScope: PiAlternativeScope, enclosingConcept: FreConcept) {
+    private checkAlternativeScope(alternativeScope: FreAlternativeScope, enclosingConcept: FreConcept) {
         LOGGER.log("Checking alternative scope definition for " + enclosingConcept?.name);
         this.myExpressionChecker.checkLangExp(alternativeScope.expression, enclosingConcept);
     }

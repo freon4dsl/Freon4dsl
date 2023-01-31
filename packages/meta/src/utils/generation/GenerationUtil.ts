@@ -21,12 +21,12 @@ export class GenerationUtil {
      * An entry for a subconcept must precede an entry for its base concept,
      * otherwise the unparse${concept.name} for the base concept will be called.
      *
-     * @param piconcepts: the list of concepts to be sorted
+     * @param freConcepts: the list of concepts to be sorted
      */
-    public static sortConceptsOrRefs(piconcepts: FreConcept[] | MetaElementReference<FreConcept>[]): FreConcept[] {
+    public static sortConceptsOrRefs(freConcepts: FreConcept[] | MetaElementReference<FreConcept>[]): FreConcept[] {
         const newList: FreConcept[] = [];
         // change all references to 'real' concepts
-        piconcepts.forEach( p => {
+        freConcepts.forEach( p => {
             if (p instanceof FreConcept) {
                 newList.push(p);
             } else if (p instanceof MetaElementReference) {
@@ -198,13 +198,13 @@ export class GenerationUtil {
     }
 
     /**
-     * Returns true if 'piClasssifier' has a property that respresents it name, i.e. a property
+     * Returns true if 'freClasssifier' has a property that respresents it name, i.e. a property
      * that is called 'name' and has as type 'identifier'.
-     * @param piClassifier
+     * @param freClassifier
      */
-    public static hasNameProperty(piClassifier: FreClassifier): boolean {
-        if (!!piClassifier) {
-            if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.type === FrePrimitiveType.identifier)) {
+    public static hasNameProperty(freClassifier: FreClassifier): boolean {
+        if (!!freClassifier) {
+            if (freClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.type === FrePrimitiveType.identifier)) {
                 return true;
             }
         }

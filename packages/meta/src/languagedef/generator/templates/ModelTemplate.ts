@@ -74,7 +74,7 @@ export class ModelTemplate {
                     if ( oldUnit.freOwnerDescriptor().owner !== this) {
                         return false;
                     }
-                    // we must store the interface in the same place as the old unit, which info is held in PiContainer()
+                    // we must store the interface in the same place as the old unit, which info is held in FreContainer()
                     ${modelDescription.parts().map(part =>
             `if ( oldUnit.freLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.freOwnerDescriptor().propertyName === "${part.name}" ) {
                                 ${part.isList ?

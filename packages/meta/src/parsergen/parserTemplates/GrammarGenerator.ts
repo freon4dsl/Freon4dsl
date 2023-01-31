@@ -5,7 +5,7 @@ import { BinaryExpMaker } from "./BinaryExpMaker";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
 import { ConceptMaker } from "./ConceptMaker";
 import { GrammarModel } from "./grammarModel/GrammarModel";
-import { LanguageAnalyser, PiAnalyser } from "./LanguageAnalyser";
+import { LanguageAnalyser, FreAnalyser } from "./LanguageAnalyser";
 import { GrammarPart } from "./grammarModel/GrammarPart";
 import { Names } from "../../utils";
 import { ParserGenUtil } from "./ParserGenUtil";
@@ -49,7 +49,7 @@ export class GrammarGenerator {
         this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser.commonAnalyser, language);
     }
 
-    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, analyser: PiAnalyser, language: FreLanguage) {
+    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, analyser: FreAnalyser, language: FreLanguage) {
         const grammarPart = new GrammarPart();
         grammarPart.unit = analyser.unit;
         // create parse rules and syntax analysis methods for the concepts

@@ -142,8 +142,8 @@ export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
         result.list = data.list;
     }
     if (!!data.listproperty) {
-        // the expression parser/creator returns a PiLangConceptExp
-        // but we need a PiLangSelfExp where 'self' refers to an element of result.list
+        // the expression parser/creator returns a FreLangConceptExp
+        // but we need a FreLangSelfExp where 'self' refers to an element of result.list
         // therefore we change the received 'listproperty'.
         result.listproperty = new FreLangSelfExp();
         // result.listproperty.sourceName = "list";

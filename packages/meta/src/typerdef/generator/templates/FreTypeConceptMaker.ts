@@ -4,15 +4,15 @@ import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUt
 import { LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
 
 export class FreTypeConceptMaker {
-    piTypeName: string = Names.FreType;
+    freTypeName: string = Names.FreType;
 
     generateTypeConcept(language: FreLanguage, concept: FretTypeConcept, relativePath: string): string {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
-        const extendsClass = hasSuper ? `extends ${Names.classifier(concept.base.referred)}` : `implements ${this.piTypeName}`;
+        const extendsClass = hasSuper ? `extends ${Names.classifier(concept.base.referred)}` : `implements ${this.freTypeName}`;
         const coreImports: string[] = [Names.FreUtils, Names.FreWriter, Names.FreParseLocation ];
         if (!hasSuper) {
-            coreImports.push(this.piTypeName);
+            coreImports.push(this.freTypeName);
             coreImports.push(Names.FreNode);
         }
         const modelImports: string[] = this.findModelImports(concept, language);
@@ -91,7 +91,7 @@ export class FreTypeConceptMaker {
         // return the names of all property types that are not FretTypeConcepts
         const result: string[] = [];
         concept.implementedParts().forEach(part => {
-            if (!(part.type instanceof FretTypeConcept) && part.type.name != this.piTypeName && !(part.type instanceof FrePrimitiveType)) {
+            if (!(part.type instanceof FretTypeConcept) && part.type.name != this.freTypeName && !(part.type instanceof FrePrimitiveType)) {
                 result.push(Names.classifier(part.type));
             }
         });

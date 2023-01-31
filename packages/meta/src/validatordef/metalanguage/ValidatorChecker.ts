@@ -114,7 +114,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                     tr.property = FreLangSelfExp.create(enclosingConcept);
                     tr.property.appliedfeature = FreLangAppliedFeatureExp.create(tr.property, "name", myProp);
                     // tr.property.appliedfeature.sourceName = "unitName";
-                    // tr.property.appliedfeature.referredElement = MetaElementReference.create<PiProperty>(myProp, "FreProperty");
+                    // tr.property.appliedfeature.referredElement = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
                     tr.property.location = tr.location;
                     tr.property.language = this.language;
                   }

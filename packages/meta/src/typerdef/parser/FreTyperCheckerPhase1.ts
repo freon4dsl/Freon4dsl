@@ -7,7 +7,7 @@ import {
     Names,
     ParseLocationUtil,
     reservedWordsInTypescript,
-    piReservedWords
+    freReservedWords
 } from "../../utils";
 import {
     FreClassifier,
@@ -252,7 +252,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     }
 
     private checkLimitedRule(rule: FretLimitedRule, enclosingConcept: FreClassifier) {
-        // LOGGER.log("Checking limited rule '" + rule.toPiString() + "' for " + enclosingConcept.name );
+        // LOGGER.log("Checking limited rule '" + rule.toFreString() + "' for " + enclosingConcept.name );
         this.runner.simpleCheck(enclosingConcept instanceof FreLimitedConcept,
             `This type of rule may only be used for limited concepts ${ParseLocationUtil.location(rule)}.`);
         // remedy possible parse error, TODO find better solution
@@ -276,7 +276,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     }
 
     private checkFretExp(exp: FretExp, enclosingConcept: FreClassifier, surroundingExp?: FretWhereExp, surroundingAllowed?: boolean) {
-        // console.log("Checking FretExp '" + exp.toPiString() + "'");
+        // console.log("Checking FretExp '" + exp.toFreString() + "'");
         exp.language = this.language;
         if (exp instanceof FretAnytypeExp ) {
             // nothing to check
@@ -305,13 +305,13 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     }
 
     private checkBinaryExp(exp: FretBinaryExp, enclosingConcept: FreClassifier, surroundingExp?: FretWhereExp) {
-        // LOGGER.log("Checking FretBinaryExp '" + exp.toPiString() + "'");
+        // LOGGER.log("Checking FretBinaryExp '" + exp.toFreString() + "'");
         this.checkFretExp(exp.left, enclosingConcept, surroundingExp);
         this.checkFretExp(exp.right, enclosingConcept, surroundingExp);
     }
 
     private checkCreateExp(exp: FretCreateExp, classifier: FreClassifier, surroundingExp?: FretWhereExp) {
-        // LOGGER.log("Checking FretCreateExp '" + exp.toPiString() + "'");
+        // LOGGER.log("Checking FretCreateExp '" + exp.toFreString() + "'");
         this.checkTypeReference(exp.__type, false);
         // console.log("TYPE of Create: " + exp.__type.name + ", " + exp.__type.owner + ", " + exp.type?.name);
         // this.myExpressionthis.runner.checkClassifierReference(exp.__type);
@@ -346,7 +346,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     }
 
     private checkWhereExp(exp: FretWhereExp, classifier: FreClassifier) {
-        // LOGGER.log("Checking FretWhereExp '" + exp.toPiString() + "'");
+        // LOGGER.log("Checking FretWhereExp '" + exp.toFreString() + "'");
         this.runner.nestedCheck({
             check: !!exp.variable.type,
             error: `Cannot find type '${exp.variable.__type.name}' ${ParseLocationUtil.location(exp.variable.__type)}.`,
@@ -382,10 +382,10 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     }
 
     private checkPropertyCallExp(exp: FretPropertyCallExp, enclosingConcept: FreClassifier, surroundingExp?: FretWhereExp, surroundingAllowed?: boolean) {
-        // console.log("Checking FretPropertyCallExp '" + exp.toPiString() + "'");
+        // console.log("Checking FretPropertyCallExp '" + exp.toFreString() + "'");
         if (!!exp.source) {
             this.checkFretExp(exp.source, enclosingConcept, surroundingExp, surroundingAllowed);
-            // console.log("found source: " + exp.source.toPiString() + " of type " + exp.source.returnType.name);
+            // console.log("found source: " + exp.source.toFreString() + " of type " + exp.source.returnType.name);
             this.runner.nestedCheck({
                 check: !!exp.property,
                 error: `Cannot find property '${exp.__property.name}' in classifier '${exp.source.returnType?.name}' ${ParseLocationUtil.location(exp.__property)}.`,
@@ -397,7 +397,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     }
 
     private checkVarCallExp(exp: FretVarCallExp) {
-        // LOGGER.log("Checking checkVarCallExp '" + exp.toPiString() + "'");
+        // LOGGER.log("Checking checkVarCallExp '" + exp.toFreString() + "'");
         this.runner.nestedCheck({
             check: !!exp.variable,
             error: `Cannot find reference to ${exp.__variable.name} ${ParseLocationUtil.location(exp.__variable)}.`,
@@ -408,7 +408,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     }
 
     private checkFunctionCallExpression(exp: FretFunctionCallExp, enclosingConcept: FreClassifier, surroundingExp: FretWhereExp) {
-        // LOGGER.log("checkFunctionCallExpression " + exp?.toPiString());
+        // LOGGER.log("checkFunctionCallExpression " + exp?.toFreString());
         const functionName = validFunctionNames.find(name => name === exp.calledFunction);
         this.runner.nestedCheck({
             check: !!functionName,
@@ -457,52 +457,52 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
 
     private checkTypeConcepts(typeConcepts: FretTypeConcept[]) {
         const names: string[] = [];
-        for (const piConcept of typeConcepts) {
+        for (const typeConcept of typeConcepts) {
             // (1) name may not be equal to any of the classifiers in the AST
-            const foundASTconcept = this.language.conceptsAndInterfaces().find(c => c.name === piConcept.name);
+            const foundASTconcept = this.language.conceptsAndInterfaces().find(c => c.name === typeConcept.name);
             this.runner.simpleCheck(
                 !foundASTconcept,
-                `Name of type concept (${piConcept.name}) may not be equal to a concept or interface in the structure definition (.ast) ${ParseLocationUtil.location(piConcept)}.`
+                `Name of type concept (${typeConcept.name}) may not be equal to a concept or interface in the structure definition (.ast) ${ParseLocationUtil.location(typeConcept)}.`
             );
-            this.runner.simpleCheck(!(piReservedWords.includes(piConcept.name.toLowerCase())), `Concept may not have a name that is equal to a reserved word ('${piConcept.name}') ${ParseLocationUtil.location(piConcept)}.`);
-            this.runner.simpleCheck(!(reservedWordsInTypescript.includes(piConcept.name.toLowerCase())),
-                `Concept may not have a name that is equal to a reserved word in TypeScript ('${piConcept.name}') ${ParseLocationUtil.location(piConcept)}.`);
+            this.runner.simpleCheck(!(freReservedWords.includes(typeConcept.name.toLowerCase())), `Concept may not have a name that is equal to a reserved word ('${typeConcept.name}') ${ParseLocationUtil.location(typeConcept)}.`);
+            this.runner.simpleCheck(!(reservedWordsInTypescript.includes(typeConcept.name.toLowerCase())),
+                `Concept may not have a name that is equal to a reserved word in TypeScript ('${typeConcept.name}') ${ParseLocationUtil.location(typeConcept)}.`);
 
             // (2) name must be unique within the list 'typeConcepts'
-            if (names.includes(piConcept.name)) {
+            if (names.includes(typeConcept.name)) {
                 this.runner.simpleCheck(false,
-                    `Type concept with name '${piConcept.name}' already exists ${ParseLocationUtil.location(piConcept)}.`);
+                    `Type concept with name '${typeConcept.name}' already exists ${ParseLocationUtil.location(typeConcept)}.`);
             } else {
-                names.push(Names.startWithUpperCase(piConcept.name));
-                names.push(piConcept.name);
+                names.push(Names.startWithUpperCase(typeConcept.name));
+                names.push(typeConcept.name);
             }
             // (3) base concept, if present, must be known within 'typeConcepts'
-            if (!!piConcept.base) {
-                this.checkTypeReference(piConcept.base, true);
+            if (!!typeConcept.base) {
+                this.checkTypeReference(typeConcept.base, true);
             }
 
             // check the properties
-            piConcept.properties.forEach(part => this.checkTypeConceptProperty(part, piConcept));
+            typeConcept.properties.forEach(part => this.checkTypeConceptProperty(part, typeConcept));
         }
     }
 
-    private checkTypeConceptProperty(piProperty: FreProperty, piConcept: FretTypeConcept): void {
-        // LOGGER.log("Checking type concept property '" + piProperty.name + "'");
+    private checkTypeConceptProperty(freProperty: FreProperty, fretTypeConcept: FretTypeConcept): void {
+        // LOGGER.log("Checking type concept property '" + freProperty.name + "'");
         // set all unused properties of this class
-        piProperty.isOptional = false;
-        piProperty.isPart = true;
-        piProperty.isList = false;
-        piProperty.isPublic = false;
+        freProperty.isOptional = false;
+        freProperty.isPart = true;
+        freProperty.isList = false;
+        freProperty.isPublic = false;
         //
-        piProperty.owningClassifier = piConcept;
-        this.runner.simpleCheck(!(reservedWordsInTypescript.includes(piProperty.name.toLowerCase())),
-            `Property may not have a name that is equal to a reserved word in TypeScript ('${piProperty.name}') ${ParseLocationUtil.location(piProperty)}.`);
+        freProperty.owningClassifier = fretTypeConcept;
+        this.runner.simpleCheck(!(reservedWordsInTypescript.includes(freProperty.name.toLowerCase())),
+            `Property may not have a name that is equal to a reserved word in TypeScript ('${freProperty.name}') ${ParseLocationUtil.location(freProperty)}.`);
         // (4) the types of the properties must be known, either as classifiers in the AST,
         //      or as type concepts
-        if (piProperty instanceof FretProperty) {
-            this.checkTypeReference(piProperty.typeReference, false);
+        if (freProperty instanceof FretProperty) {
+            this.checkTypeReference(freProperty.typeReference, false);
         } else {
-            CommonChecker.checkClassifierReference(piProperty.typeReference, this.runner);
+            CommonChecker.checkClassifierReference(freProperty.typeReference, this.runner);
         }
         // the following checks are done in phase2
         // (5) property names must be unique within one concept

@@ -417,7 +417,7 @@ export class WriterTemplate {
             } else {
                 return this.makeNormalMethod(projection, myConcept);
             }
-        } // else if (conceptDef instanceof PiEditTableProjection) {
+        } // else if (conceptDef instanceof FreEditTableProjection) {
         // cannot unparse a table projection
         return "";
     }

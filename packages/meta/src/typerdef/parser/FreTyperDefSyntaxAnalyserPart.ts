@@ -51,9 +51,9 @@ export class FreTyperDefSyntaxAnalyserPart {
     /**
      * Method to transform branches that match the following rule:
      * TyperDef = 'typer'
-     *	 ( 'istype' '\{' [ __pi_reference / ',' ]* '}' )?
+     *	 ( 'istype' '\{' [ __fre_reference / ',' ]* '}' )?
      *	 FretTypeConcept*
-     *	 ( 'hastype' '\{' [ __pi_reference / ',' ]* '}' )?
+     *	 ( 'hastype' '\{' [ __fre_reference / ',' ]* '}' )?
      *	 FretAnyTypeSpec?
      *	 FretClassifierSpec* ;
      * @param branch
@@ -117,7 +117,7 @@ export class FreTyperDefSyntaxAnalyserPart {
 
     /**
      * Method to transform branches that match the following rule:
-     * FretTypeConcept = 'type' identifier ( 'base' __pi_reference )?
+     * FretTypeConcept = 'type' identifier ( 'base' __fre_reference )?
      *	 '\{'
      *	 ( FretProperty ';' )*
      *	 '}' ;
@@ -136,7 +136,7 @@ export class FreTyperDefSyntaxAnalyserPart {
             // RHSOptionalGroup
             const _optGroup = this.mainAnalyser.getGroup(children[2]);
             const _propItem = this.mainAnalyser.getChildren(_optGroup);
-            __base = this.mainAnalyser.piElemRef<FreConcept>(_propItem[1], "FreConcept"); // RHSRefEntry
+            __base = this.mainAnalyser.freNodeRef<FreConcept>(_propItem[1], "FreConcept"); // RHSRefEntry
         } // RHSListGroup
         __properties = [];
         const _myList = this.mainAnalyser.getChildren(children[4]);
@@ -191,7 +191,7 @@ export class FreTyperDefSyntaxAnalyserPart {
 
     /**
      * Method to transform branches that match the following rule:
-     * FretPropertyCallExp = FretExp '.' __pi_reference ;
+     * FretPropertyCallExp = FretExp '.' __fre_reference ;
      * @param branch
      * @private
      */
@@ -201,7 +201,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         let __property: MetaElementReference<FreProperty>;
         const children = this.mainAnalyser.getChildren(branch);
         __source = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
-        __property = this.mainAnalyser.piElemRef<FreProperty>(children[2], "FreProperty"); // RHSRefEntry
+        __property = this.mainAnalyser.freNodeRef<FreProperty>(children[2], "FreProperty"); // RHSRefEntry
         return FretPropertyCallExp.create({ source: __source, __property: __property, agl_location: this.mainAnalyser.location(branch) });
     }
 
@@ -233,7 +233,7 @@ export class FreTyperDefSyntaxAnalyserPart {
 
     /**
      * Method to transform branches that match the following rule:
-     * FretVarCallExp = __pi_reference ;
+     * FretVarCallExp = __fre_reference ;
      * @param branch
      * @private
      */
@@ -241,13 +241,13 @@ export class FreTyperDefSyntaxAnalyserPart {
         // console.log('transformFretVarCallExp called: ' + branch.name);
         let __variable: MetaElementReference<FretVarDecl>;
         const children = this.mainAnalyser.getChildren(branch);
-        __variable = this.mainAnalyser.piElemRef<FretVarDecl>(children[0], "FretVarDecl"); // RHSRefEntry
+        __variable = this.mainAnalyser.freNodeRef<FretVarDecl>(children[0], "FretVarDecl"); // RHSRefEntry
         return FretVarCallExp.create({ __variable: __variable, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
      * Method to transform branches that match the following rule:
-     * FretCreateExp = __pi_reference '\{' [ FretPropInstance / ',' ]* '}' ;
+     * FretCreateExp = __fre_reference '\{' [ FretPropInstance / ',' ]* '}' ;
      * @param branch
      * @private
      */
@@ -256,14 +256,14 @@ export class FreTyperDefSyntaxAnalyserPart {
         let __type: MetaElementReference<FreClassifier>;
         let __propertyDefs: FretPropInstance[];
         const children = this.mainAnalyser.getChildren(branch);
-        __type = this.mainAnalyser.piElemRef<FreClassifier>(children[0], "FreClassifier"); // RHSRefEntry
+        __type = this.mainAnalyser.freNodeRef<FreClassifier>(children[0], "FreClassifier"); // RHSRefEntry
         __propertyDefs = this.mainAnalyser.transformSharedPackedParseTreeList<FretPropInstance>(children[2], ","); // RHSPartListWithSeparator
         return FretCreateExp.create({ __type: __type, propertyDefs: __propertyDefs, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
      * Method to transform branches that match the following rule:
-     * FretPropInstance = __pi_reference ':' FretExp ;
+     * FretPropInstance = __fre_reference ':' FretExp ;
      * @param branch
      * @private
      */
@@ -272,7 +272,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         let __property: MetaElementReference<FreProperty>;
         let __value: FretExp;
         const children = this.mainAnalyser.getChildren(branch);
-        __property = this.mainAnalyser.piElemRef<FreProperty>(children[0], "FreProperty"); // RHSRefEntry
+        __property = this.mainAnalyser.freNodeRef<FreProperty>(children[0], "FreProperty"); // RHSRefEntry
         __value = this.mainAnalyser.transformSharedPackedParseTreeNode(children[2]); // RHSPartEntry
         return FretPropInstance.create({ __property: __property, value: __value, agl_location: this.mainAnalyser.location(branch) });
     }
@@ -295,8 +295,8 @@ export class FreTyperDefSyntaxAnalyserPart {
 
     /**
      * Method to transform branches that match the following rule:
-     * FretLimitedInstanceExp = ( __pi_reference ':' )?
-     *	 __pi_reference ;
+     * FretLimitedInstanceExp = ( __fre_reference ':' )?
+     *	 __fre_reference ;
      * @param branch
      * @private
      */
@@ -309,16 +309,16 @@ export class FreTyperDefSyntaxAnalyserPart {
             // RHSOptionalGroup
             const _optGroup = this.mainAnalyser.getGroup(children[0]);
             const _propItem = this.mainAnalyser.getChildren(_optGroup);
-            __myLimited = this.mainAnalyser.piElemRef<FreLimitedConcept>(_propItem[0], "FreLimitedConcept"); // RHSRefEntry
+            __myLimited = this.mainAnalyser.freNodeRef<FreLimitedConcept>(_propItem[0], "FreLimitedConcept"); // RHSRefEntry
         }
-        __myInstance = this.mainAnalyser.piElemRef<FreInstance>(children[1], "FreInstance"); // RHSRefEntry
+        __myInstance = this.mainAnalyser.freNodeRef<FreInstance>(children[1], "FreInstance"); // RHSRefEntry
         return FretLimitedInstanceExp.create({ __myLimited: __myLimited, __myInstance: __myInstance, agl_location: this.mainAnalyser.location(branch) });
     }
 
     /**
      * Method to transform branches that match the following rule:
      * FretWhereExp = FretVarDecl 'where' '\{'
-     *	 ( __pi_binary_FretExp ';' )*
+     *	 ( __fre_binary_FretExp ';' )*
      *	 '}' ;
      * @param branch
      * @private
@@ -343,7 +343,7 @@ export class FreTyperDefSyntaxAnalyserPart {
 
     /**
      * Method to transform branches that match the following rule:
-     * FretVarDecl = identifier ':' __pi_reference ;
+     * FretVarDecl = identifier ':' __fre_reference ;
      * @param branch
      * @private
      */
@@ -353,7 +353,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         let __type: MetaElementReference<FreClassifier>;
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
-        __type = this.mainAnalyser.piElemRef<FreClassifier>(children[2], "FreClassifier"); // RHSRefEntry
+        __type = this.mainAnalyser.freNodeRef<FreClassifier>(children[2], "FreClassifier"); // RHSRefEntry
         return FretVarDecl.create({ name: __name, __type: __type, agl_location: this.mainAnalyser.location(branch) });
     }
 
@@ -401,7 +401,7 @@ export class FreTyperDefSyntaxAnalyserPart {
 
     /**
      * Method to transform branches that match the following rule:
-     * FretClassifierSpec = __pi_reference '\{'
+     * FretClassifierSpec = __fre_reference '\{'
      *	 FretTypeRule*
      *	 '}' ;
      * @param branch
@@ -412,7 +412,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         let __myClassifier: MetaElementReference<FreClassifier>;
         let __rules: FretTypeRule[];
         const children = this.mainAnalyser.getChildren(branch);
-        __myClassifier = this.mainAnalyser.piElemRef<FreClassifier>(children[0], "FreClassifier"); // RHSRefEntry
+        __myClassifier = this.mainAnalyser.freNodeRef<FreClassifier>(children[0], "FreClassifier"); // RHSRefEntry
         // RHSPartListEntry
         if (children[2].name !== "FretTypeRule") {
             __rules = this.mainAnalyser.transformSharedPackedParseTreeList<FretTypeRule>(children[2]);
@@ -428,7 +428,7 @@ export class FreTyperDefSyntaxAnalyserPart {
 
     /**
      * Method to transform branches that match the following rule:
-     * FretProperty = identifier ':' __pi_reference ;
+     * FretProperty = identifier ':' __fre_reference ;
      * @param branch
      * @private
      */
@@ -438,7 +438,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         let __type: MetaElementReference<FreClassifier>;
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
-        __type = this.mainAnalyser.piElemRef<FreClassifier>(children[2], "FreClassifier"); // RHSRefEntry
+        __type = this.mainAnalyser.freNodeRef<FreClassifier>(children[2], "FreClassifier"); // RHSRefEntry
         return FretProperty.create({ name: __name, typeReference: __type, agl_location: this.mainAnalyser.location(branch) });
     }
 
@@ -466,7 +466,7 @@ export class FreTyperDefSyntaxAnalyserPart {
      *    | FretLimitedInstanceExp
      *    | FretWhereExp
      *    | FretFunctionCallExp
-     *    | __pi_binary_FretExp ;
+     *    | __fre_binary_FretExp ;
      * @param branch
      * @private
      */
@@ -478,16 +478,16 @@ export class FreTyperDefSyntaxAnalyserPart {
     /**
      * Generic method to transform binary expressions, which are parsed
      * according to these rules:
-     * __pi_binary_FretExp = [FretExp / __pi_binary_operator]2+ ;
-     * leaf __pi_binary_operator = 'conformsto' | 'equalsto' ;
+     * __fre_binary_FretExp = [FretExp / __fre_binary_operator]2+ ;
+     * leaf __fre_binary_operator = 'conformsto' | 'equalsto' ;
      *
      * In this method we build a crooked tree, which in a later phase needs to be balanced
      * according to the priorities of the operators.
      * @param branch
      * @private
      */
-    public transform__pi_binary_FretExp(branch: SPPTBranch): FretExp {
-        // console.log('transform__pi_binary_FretExp called: ' + branch.name);
+    public transform__fre_binary_FretExp(branch: SPPTBranch): FretExp {
+        // console.log('transform__fre_binary_FretExp called: ' + branch.name);
         const children = branch.nonSkipChildren.toArray();
         let index = 0;
         let first = this.mainAnalyser.transformSharedPackedParseTreeNode(children[index++]);

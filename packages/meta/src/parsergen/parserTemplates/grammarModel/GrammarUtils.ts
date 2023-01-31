@@ -33,7 +33,7 @@ export function getTypeCall(propType: FreClassifier, projectionName?: string): s
     }
 }
 
-export const refRuleName: string = "__pi_reference";
+export const refRuleName: string = "__fre_reference";
 
 export function makeIndent(depth: number) {
     let indent: string = "\n";

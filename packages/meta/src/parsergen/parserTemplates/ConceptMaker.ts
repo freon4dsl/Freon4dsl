@@ -58,12 +58,12 @@ export class ConceptMaker {
     generateClassifiers(projectionGroup: FreEditProjectionGroup, conceptsUsed: FreClassifier[]): GrammarRule[] {
         this.currentProjectionGroup = projectionGroup;
         let rules: GrammarRule[] = [];
-        for (const piConcept of conceptsUsed) {
+        for (const freConcept of conceptsUsed) {
             // all methods in this class depend on the fact that only non-table projections are passes as parameter!!
-            let projection: FreEditProjection = ParserGenUtil.findNonTableProjection(projectionGroup, piConcept);
+            let projection: FreEditProjection = ParserGenUtil.findNonTableProjection(projectionGroup, freConcept);
             if (!!projection) {
                 // generate a grammar rule entry
-                rules.push(this.generateProjection(piConcept, projection, false));
+                rules.push(this.generateProjection(freConcept, projection, false));
             }
         }
         for (const projection of this.namedProjections) {
@@ -73,12 +73,12 @@ export class ConceptMaker {
         return rules;
     }
 
-    private generateProjection(piConcept: FreClassifier, projection: FreEditProjection, addName: boolean) {
+    private generateProjection(freClassifier: FreClassifier, projection: FreEditProjection, addName: boolean) {
         let rule: ConceptRule;
         if (addName) {
-            rule = new ConceptRule(piConcept, projection.name);
+            rule = new ConceptRule(freClassifier, projection.name);
         } else {
-            rule = new ConceptRule(piConcept);
+            rule = new ConceptRule(freClassifier);
         }
         const isSingleEntry: boolean = (projection.lines.length !== 1 ? false : true);
         for (const l of projection.lines) {
@@ -156,19 +156,19 @@ export class ConceptMaker {
                 result = this.makeLimitedProp(prop, item, inOptionalGroup, isSingleEntry);
             } else if (propType instanceof FreBinaryExpressionConcept) {
                 if (!prop.isList) {
-                    result = new RHSBinaryExp(prop, propType); // __pi_binary_propTypeName
+                    result = new RHSBinaryExp(prop, propType); // __fre_binary_propTypeName
                 } else {
                     let joinText = this.makeListJoinText(item.listInfo?.joinText);
                     if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
-                        result = new RHSBinExpList(prop, propType); // __pi_binary_propTypeName*
+                        result = new RHSBinExpList(prop, propType); // __fre_binary_propTypeName*
                     } else if (item.listInfo?.joinType === ListJoinType.Separator) {
-                        result = new RHSBinExpListWithSeparator(prop, propType, joinText); // [ __pi_binary_propTypeName / "joinText" ]
+                        result = new RHSBinExpListWithSeparator(prop, propType, joinText); // [ __fre_binary_propTypeName / "joinText" ]
                     } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
                         const sub1 = new RHSPartEntry(prop, item.projectionName);
-                        result = new RHSBinExpListWithInitiator(prop, propType, sub1, joinText); // `("joinText" __pi_binary_propTypeName)*`
+                        result = new RHSBinExpListWithInitiator(prop, propType, sub1, joinText); // `("joinText" __fre_binary_propTypeName)*`
                     } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                         const sub1 = new RHSPartEntry(prop, item.projectionName);
-                        result = new RHSBinExpListWithTerminator(prop, propType, sub1, joinText, isSingleEntry); // `(__pi_binary_propTypeName 'joinText' )*`
+                        result = new RHSBinExpListWithTerminator(prop, propType, sub1, joinText, isSingleEntry); // `(__fre_binary_propTypeName 'joinText' )*`
                     }
                 }
             } else {

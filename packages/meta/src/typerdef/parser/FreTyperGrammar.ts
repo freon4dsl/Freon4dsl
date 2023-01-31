@@ -9,13 +9,13 @@ grammar MetaTyperGrammar {
                 
 // rules for "TyperDef"
 TyperDef = 'typer'
-	 ( 'istype' '\{' [ __pi_reference / ',' ]* '}' )?
+	 ( 'istype' '\{' [ __fre_reference / ',' ]* '}' )?
 	 FretTypeConcept*
-	 ( 'hastype' '\{' [ __pi_reference / ',' ]* '}' )?
+	 ( 'hastype' '\{' [ __fre_reference / ',' ]* '}' )?
 	 FretAnyTypeSpec?
 	 FretClassifierSpec* ;
 
-FretTypeConcept = 'type' identifier ( 'base' __pi_reference )?
+FretTypeConcept = 'type' identifier ( 'base' __fre_reference )?
 	 '\{'
 	 ( FretProperty ';' )*
 	 '}' ;
@@ -26,28 +26,28 @@ FretAnyTypeSpec = 'anytype' '\{'
 
 FretInferenceRule = 'infertype' FretExp ';' ;
 
-FretPropertyCallExp = FretExp '.' __pi_reference ;
+FretPropertyCallExp = FretExp '.' __fre_reference ;
 
 FretSelfExp = 'self' ;
 
 FretAnytypeExp = 'anytype' ;
 
-FretVarCallExp = __pi_reference ;
+FretVarCallExp = __fre_reference ;
 
-FretCreateExp = __pi_reference '\{' [ FretPropInstance / ',' ]* '}' ;
+FretCreateExp = __fre_reference '\{' [ FretPropInstance / ',' ]* '}' ;
 
-FretPropInstance = __pi_reference ':' FretExp ;
+FretPropInstance = __fre_reference ':' FretExp ;
 
 FretFunctionCallExp = identifier '(' [ FretExp / ',' ]* ')' ;
 
-FretLimitedInstanceExp = ( __pi_reference ':' )?
-	 __pi_reference ;
+FretLimitedInstanceExp = ( __fre_reference ':' )?
+	 __fre_reference ;
 
 FretWhereExp = FretVarDecl 'where' '\{'
-	 ( __pi_binary_FretExp ';' )*
+	 ( __fre_binary_FretExp ';' )*
 	 '}' ;
 
-FretVarDecl = identifier ':' __pi_reference ;
+FretVarDecl = identifier ':' __fre_reference ;
 
 FretConformanceRule = 'conformsto' FretExp ';' ;
 
@@ -55,7 +55,7 @@ FretEqualsRule = 'equalsto' FretExp ';' ;
 
 FretLimitedRule = FretExp ';' ;
 
-FretClassifierSpec = __pi_reference '\{'
+FretClassifierSpec = __fre_reference '\{'
 	 FretTypeRule*
 	 '}' ;
 
@@ -72,14 +72,14 @@ FretExp = FretPropertyCallExp
     | FretLimitedInstanceExp 
     | FretWhereExp 
     | FretFunctionCallExp 
-    | __pi_binary_FretExp ;
+    | __fre_binary_FretExp ;
 
-__pi_binary_FretExp = [FretExp / __pi_binary_operator]2+ ;
-leaf __pi_binary_operator = 'conformsto' | 'equalsto' ;
+__fre_binary_FretExp = [FretExp / __fre_binary_operator]2+ ;
+leaf __fre_binary_operator = 'conformsto' | 'equalsto' ;
 
-FretProperty = identifier ':' __pi_reference ;
+FretProperty = identifier ':' __fre_reference ;
 
-__pi_reference = [ identifier / '::' ]+ ;
+__fre_reference = [ identifier / '::' ]+ ;
         
 // white space and comments
 skip WHITE_SPACE = "\\s+" ;

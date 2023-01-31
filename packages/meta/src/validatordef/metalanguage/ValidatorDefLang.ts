@@ -80,7 +80,7 @@ export class CheckConformsRule extends ValidationRule {
 export class ExpressionRule extends ValidationRule {
     exp1: FreLangExp;
     exp2: FreLangExp;
-    comparator: PiComparator;
+    comparator: FreComparator;
 
     toFreString(): string {
         return `${this.exp1.toFreString()} ${this.comparator} ${this.exp2.toFreString()}`;
@@ -90,7 +90,7 @@ export class ExpressionRule extends ValidationRule {
 export class IsuniqueRule extends ValidationRule {
     list: FreLangExp;
     listproperty: FreLangExp;
-    comparator: PiComparator;
+    comparator: FreComparator;
 
     toFreString(): string {
         return `isunique ${this.listproperty.toFreString()} in ${this.list.toFreString()}`;
@@ -112,7 +112,7 @@ export class ValidNameRule extends ValidationRule {
     }
 }
 
-export enum PiComparator {
+export enum FreComparator {
     Equals = "=",
     LargerThen = ">",
     LargerIncluding = ">=",

@@ -63,7 +63,7 @@ export class BinaryExpressionRule extends GrammarRule {
     }
 
     private rule1(): string {
-        return `${(this.ruleName)} = [${getTypeCall(this.expressionBase)} / __pi_binary_operator]2+ ;`;
+        return `${(this.ruleName)} = [${getTypeCall(this.expressionBase)} / __fre_binary_operator]2+ ;`;
     }
 
     private rule2(): string {
@@ -75,7 +75,7 @@ export class BinaryExpressionRule extends GrammarRule {
         // The longer ones must be given precedence by putting them first in the parse rule.
         // E.g. "==>" needs to come before "==".
         cases = this.sortOnLength(cases);
-        return `leaf __pi_binary_operator = ${cases.map(c => `${c}`).join(" | ")} ;`;
+        return `leaf __fre_binary_operator = ${cases.map(c => `${c}`).join(" | ")} ;`;
     }
 
     private sortOnLength(cases: string[]) {

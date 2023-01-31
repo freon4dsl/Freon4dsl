@@ -5,7 +5,7 @@ import { BinaryExpressionRule } from "./grammarModel/BinaryExpressionRule";
 import { GenerationUtil } from "../../utils";
 
 export class BinaryExpMaker {
-    private static specialBinaryRuleName = `__pi_binary_`;
+    private static specialBinaryRuleName = `__fre_binary_`;
     imports: FreClassifier[] = [];
 
     public static getBinaryRuleName(expBase:FreExpressionConcept) {

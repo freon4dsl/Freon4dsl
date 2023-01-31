@@ -5,7 +5,7 @@ import { ChoiceRule } from "./grammarModel/ChoiceRule";
 import { SuperChoiceRule } from "./grammarModel/SuperChoiceRule";
 
 export class ChoiceRuleMaker {
-    static specialSuperName = `__pi_super_`;
+    static specialSuperName = `__fre_super_`;
     static superNames: Map<FreClassifier, string> = new Map<FreClassifier, string>();
     imports: FreClassifier[] = [];
 
@@ -26,18 +26,18 @@ export class ChoiceRuleMaker {
 
     generateSuperRules(conceptsWithSubs: Map<FreConcept, FreClassifier[]> ) : GrammarRule[] {
         let rules: GrammarRule[] = [];
-        for (const [piClassifier, subs] of conceptsWithSubs) {
-            // make a special rule that is a choice between all subs and 'piClassifier' itself
-            const branchName = ChoiceRuleMaker.specialSuperName + Names.classifier(piClassifier);
-            ChoiceRuleMaker.superNames.set(piClassifier, branchName);
+        for (const [freConcept, subs] of conceptsWithSubs) {
+            // make a special rule that is a choice between all subs and 'freClassifier' itself
+            const branchName = ChoiceRuleMaker.specialSuperName + Names.classifier(freConcept);
+            ChoiceRuleMaker.superNames.set(freConcept, branchName);
             let implementors: FreClassifier[] = [];
             // make sure the concrete class rule is the first of the implementors because
             // that rule gets the least priority in the parser
-            implementors.push(piClassifier);
+            implementors.push(freConcept);
             // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
             implementors.push(...this.sortImplementorsOnPrimitiveProps(subs));
-            this.imports.push(piClassifier);
-            rules.push(new SuperChoiceRule(branchName, piClassifier, implementors));
+            this.imports.push(freConcept);
+            rules.push(new SuperChoiceRule(branchName, freConcept, implementors));
         }
         return rules;
     }

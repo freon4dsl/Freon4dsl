@@ -7,9 +7,9 @@ import {
 } from "../../languagedef/metalanguage";
 import { LangUtil } from "../../utils";
 import { FrePrimitiveType, FreUnitDescription } from "../../languagedef/metalanguage/FreLanguage";
-import { PiAnalyser } from "./LanguageAnalyser";
+import { FreAnalyser } from "./LanguageAnalyser";
 
-export class UnitAnalyser implements PiAnalyser {
+export class UnitAnalyser implements FreAnalyser {
     unit: FreUnitDescription = null;
     // all concepts used in this unit
     classifiersUsed: FreClassifier[] = [];
@@ -28,70 +28,70 @@ export class UnitAnalyser implements PiAnalyser {
         this.analyseUnitPriv(unitDescription, []);
     }
 
-    private analyseUnitPriv(piClassifier: FreClassifier, typesDone: FreClassifier[]) {
+    private analyseUnitPriv(freClassifier: FreClassifier, typesDone: FreClassifier[]) {
         // make sure this classifier is not visited twice
-        if (typesDone.includes(piClassifier)) {
+        if (typesDone.includes(freClassifier)) {
             return;
         } else {
-            typesDone.push(piClassifier);
+            typesDone.push(freClassifier);
         }
 
         // determine in which list the piClassifier belongs
-        if (piClassifier instanceof FreInterface) {
-            this.interfacesAndAbstractsUsed.set(piClassifier, this.findChoices(piClassifier));
+        if (freClassifier instanceof FreInterface) {
+            this.interfacesAndAbstractsUsed.set(freClassifier, this.findChoices(freClassifier));
             // for interfaces analyse all implementors
-            LangUtil.findImplementorsRecursive(piClassifier).forEach(type => {
+            LangUtil.findImplementorsRecursive(freClassifier).forEach(type => {
                 this.analyseUnitPriv(type, typesDone);
             });
-        } else if (piClassifier instanceof FrePrimitiveType) {
+        } else if (freClassifier instanceof FrePrimitiveType) {
             // do nothing
-        } else if (piClassifier instanceof FreUnitDescription) {
-            this.classifiersUsed.push(piClassifier);
-            this.analyseProperties(piClassifier, typesDone);
-        } else if (piClassifier instanceof FreConcept) {
-            if (piClassifier instanceof FreLimitedConcept) {
-                this.limitedsReferred.push(piClassifier);
-                this.checkForSubs(piClassifier);
-            } else if (piClassifier instanceof FreBinaryExpressionConcept) {
-                if (!piClassifier.isAbstract) {
-                    this.binaryConceptsUsed.push(piClassifier);
-                    this.checkForSubs(piClassifier);
+        } else if (freClassifier instanceof FreUnitDescription) {
+            this.classifiersUsed.push(freClassifier);
+            this.analyseProperties(freClassifier, typesDone);
+        } else if (freClassifier instanceof FreConcept) {
+            if (freClassifier instanceof FreLimitedConcept) {
+                this.limitedsReferred.push(freClassifier);
+                this.checkForSubs(freClassifier);
+            } else if (freClassifier instanceof FreBinaryExpressionConcept) {
+                if (!freClassifier.isAbstract) {
+                    this.binaryConceptsUsed.push(freClassifier);
+                    this.checkForSubs(freClassifier);
                 }
             } else {
                 // A complete model can not be parsed, only its units can be parsed separately
-                if (piClassifier.isAbstract) {
-                    this.interfacesAndAbstractsUsed.set(piClassifier, this.findChoices(piClassifier));
+                if (freClassifier.isAbstract) {
+                    this.interfacesAndAbstractsUsed.set(freClassifier, this.findChoices(freClassifier));
                 } else {
-                    this.classifiersUsed.push(piClassifier);
-                    this.checkForSubs(piClassifier);
+                    this.classifiersUsed.push(freClassifier);
+                    this.checkForSubs(freClassifier);
                 }
             }
             // for any concept: add all direct subconcepts
-            piClassifier.allSubConceptsDirect().forEach(type => {
+            freClassifier.allSubConceptsDirect().forEach(type => {
                 this.analyseUnitPriv(type, typesDone);
             });
             // for any non-abstract concept: include all types of parts
             // and include all optional properties in 'this.optionalProps'
-            if (!piClassifier.isAbstract) {
-                this.analyseProperties(piClassifier, typesDone);
+            if (!freClassifier.isAbstract) {
+                this.analyseProperties(freClassifier, typesDone);
             }
         }
     }
 
-    private checkForSubs(piClassifier: FreConcept) {
-        const subs = this.findChoices(piClassifier);
+    private checkForSubs(freConcept: FreConcept) {
+        const subs = this.findChoices(freConcept);
         if (subs.length > 0) {
-            this.conceptsWithSub.set(piClassifier, subs);
+            this.conceptsWithSub.set(freConcept, subs);
         }
     }
 
-    private analyseProperties(piClassifier: FreClassifier, typesDone: FreClassifier[]) {
-        piClassifier.allParts().forEach(part => {
+    private analyseProperties(freClassifier: FreClassifier, typesDone: FreClassifier[]) {
+        freClassifier.allParts().forEach(part => {
             const type = part.type;
             this.analyseUnitPriv(type, typesDone);
         });
         // and add all types of references to typesReferred
-        piClassifier.allReferences().forEach(ref => {
+        freClassifier.allReferences().forEach(ref => {
             const type = ref.type;
             if (type instanceof FreLimitedConcept && !this.limitedsReferred.includes(type)) {
                 this.limitedsReferred.push(type);
@@ -100,17 +100,17 @@ export class UnitAnalyser implements PiAnalyser {
     }
 
     // find the choices for this rule: all concepts that implement or extend the concept
-    private findChoices(piClassifier: FreClassifier) : FreClassifier[] {
+    private findChoices(freClassifier: FreClassifier) : FreClassifier[] {
         let implementors: FreClassifier[] = [];
-        if (piClassifier instanceof FreInterface) {
+        if (freClassifier instanceof FreInterface) {
             // do not include sub-interfaces, because then we might have 'multiple inheritance' problems
             // instead find the direct implementors and add them
-            for (const intf of piClassifier.allSubInterfacesDirect()) {
+            for (const intf of freClassifier.allSubInterfacesDirect()) {
                 implementors.push(...LangUtil.findImplementorsDirect(intf));
             }
-            implementors.push(...LangUtil.findImplementorsDirect(piClassifier));
-        } else if (piClassifier instanceof FreConcept) {
-            implementors = piClassifier.allSubConceptsDirect();
+            implementors.push(...LangUtil.findImplementorsDirect(freClassifier));
+        } else if (freClassifier instanceof FreConcept) {
+            implementors = freClassifier.allSubConceptsDirect();
         }
         // limited concepts can only be referenced, so exclude them
         implementors = implementors.filter(sub => !(sub instanceof FreLimitedConcept));

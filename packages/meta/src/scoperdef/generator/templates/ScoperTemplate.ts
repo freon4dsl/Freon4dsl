@@ -85,7 +85,7 @@ export class ScoperTemplate {
             }
             
             /**
-             * Returns all PiElements that are defined as additional namespaces for \`element'.
+             * Returns all FreNodes that are defined as additional namespaces for \`element'.
              * @param element
              */
             public additionalNamespaces(element: ${Names.FreNode}): ${Names.FreNode}[] {
@@ -136,8 +136,8 @@ export class ScoperTemplate {
         }
     }
 
-    private makeAdditionalNamespaceTextsForConcept(piConcept: FreConcept, def: ScopeConceptDef, language: FreLanguage, comment: string) {
-        const typeName = Names.concept(piConcept);
+    private makeAdditionalNamespaceTextsForConcept(freConcept: FreConcept, def: ScopeConceptDef, language: FreLanguage, comment: string) {
+        const typeName = Names.concept(freConcept);
         // we are adding to three textstrings
         // first, to the import statements
         ListUtil.addIfNotPresent(this.languageImports, typeName);
@@ -217,7 +217,7 @@ export class ScoperTemplate {
                 }
             }`);
         } else {
-            // TODO check use of toPiString()
+            // TODO check use of toFreString()
             const namespaceExpression = `element.${expression.appliedfeature.toFreString()}`;
             result = result.concat(`
                // generated based on '${expression.toFreString()}' 

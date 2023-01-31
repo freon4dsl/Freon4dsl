@@ -1,4 +1,4 @@
-import { ScopeDef, ScopeConceptDef, PiNamespaceAddition, PiAlternativeScope } from "../metalanguage";
+import { ScopeDef, ScopeConceptDef, FreNamespaceAddition, FreAlternativeScope } from "../metalanguage";
 import { MetaLogger } from "../../utils/MetaLogger";
 
 const LOGGER = new MetaLogger("ScoperCreator").mute();
@@ -41,17 +41,17 @@ export function createScoperConceptDef(data: Partial<ScopeConceptDef>): ScopeCon
     return result;
 }
 
-export function createNamespaceDef(data: Partial<PiNamespaceAddition>): PiNamespaceAddition {
+export function createNamespaceDef(data: Partial<FreNamespaceAddition>): FreNamespaceAddition {
     LOGGER.log("createNamespaceDef");
-    const result = new PiNamespaceAddition();
+    const result = new FreNamespaceAddition();
     if (!!data.expressions) { result.expressions = data.expressions; }
     if (!!data.location) { result.location = data.location; }
     return result;
 }
 
-export function createAlternativeScope(data: Partial<PiAlternativeScope>): PiAlternativeScope {
+export function createAlternativeScope(data: Partial<FreAlternativeScope>): FreAlternativeScope {
     LOGGER.log("createAlternativeScope");
-    const result = new PiAlternativeScope();
+    const result = new FreAlternativeScope();
     if (!!data.expression) { result.expression = data.expression; }
     if (!!data.location) { result.location = data.location; }
     return result;

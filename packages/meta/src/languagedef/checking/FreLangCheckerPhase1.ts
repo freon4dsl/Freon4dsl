@@ -6,7 +6,7 @@ import {
     FreInterface, FreConcept, FreProperty, FreClassifier, FreLimitedConcept,
     MetaElementReference, FreMetaEnvironment, FrePrimitiveType, FreModelDescription, FreUnitDescription
 } from "../metalanguage";
-import { CheckRunner, CheckerPhase, MetaLogger, piReservedWords, reservedWordsInTypescript, ParseLocationUtil } from "../../utils";
+import { CheckRunner, CheckerPhase, MetaLogger, freReservedWords, reservedWordsInTypescript, ParseLocationUtil } from "../../utils";
 import { CommonChecker } from "./CommonChecker";
 
 const LOGGER = new MetaLogger("FreLanguageChecker").mute();
@@ -16,7 +16,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
     public check(language: FreLanguage, runner: CheckRunner): void {
         LOGGER.info("Checking language '" + language.name + "'");
         this.runner = runner;
-        this.runner.simpleCheck(!!language.name && !piReservedWords.includes(language.name.toLowerCase()) ,
+        this.runner.simpleCheck(!!language.name && !freReservedWords.includes(language.name.toLowerCase()) ,
             `Language should have a name ${ParseLocationUtil.location(language)}.`);
 
         this.language = language;
@@ -64,32 +64,32 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
         CommonChecker.checkOrCreateNameProperty(unit, this.runner);
     }
 
-    private checkConcept(piConcept: FreConcept): void {
-        LOGGER.log("Checking concept '" + piConcept.name + "' of type " + piConcept.constructor.name);
-        this.runner.simpleCheck(!!piConcept.name, `Concept should have a name ${ParseLocationUtil.location(piConcept)}.`);
-        this.runner.simpleCheck(!(piReservedWords.includes(piConcept.name)), `Concept may not have a name that is equal to a reserved word ('${piConcept.name}') ${ParseLocationUtil.location(piConcept)}.`);
-        this.runner.simpleCheck(!(reservedWordsInTypescript.includes(piConcept.name)),
-            `Concept may not have a name that is equal to a reserved word in TypeScript ('${piConcept.name}') ${ParseLocationUtil.location(piConcept)}.`);
+    private checkConcept(freConcept: FreConcept): void {
+        LOGGER.log("Checking concept '" + freConcept.name + "' of type " + freConcept.constructor.name);
+        this.runner.simpleCheck(!!freConcept.name, `Concept should have a name ${ParseLocationUtil.location(freConcept)}.`);
+        this.runner.simpleCheck(!(freReservedWords.includes(freConcept.name)), `Concept may not have a name that is equal to a reserved word ('${freConcept.name}') ${ParseLocationUtil.location(freConcept)}.`);
+        this.runner.simpleCheck(!(reservedWordsInTypescript.includes(freConcept.name)),
+            `Concept may not have a name that is equal to a reserved word in TypeScript ('${freConcept.name}') ${ParseLocationUtil.location(freConcept)}.`);
 
-        if (!!piConcept.base) {
-            CommonChecker.checkClassifierReference(piConcept.base, this.runner);
-            const myBase = piConcept.base.referred;
+        if (!!freConcept.base) {
+            CommonChecker.checkClassifierReference(freConcept.base, this.runner);
+            const myBase = freConcept.base.referred;
             if (!!myBase) { // error message taken care of by checkClassifierReference
                 this.runner.nestedCheck({
                     check: myBase instanceof FreConcept,
-                    error: `Base '${piConcept.base.name}' must be a concept ` +
-                        `${ParseLocationUtil.location(piConcept.base)}.`,
+                    error: `Base '${freConcept.base.name}' must be a concept ` +
+                        `${ParseLocationUtil.location(freConcept.base)}.`,
                     whenOk: () => {
-                        this.runner.simpleCheck(!(!(piConcept instanceof FreExpressionConcept) && myBase instanceof FreExpressionConcept),
-                            `A concept may not have an expression as base ${ParseLocationUtil.location(piConcept.base)}.`);
-                        if (piConcept instanceof FreLimitedConcept) {
+                        this.runner.simpleCheck(!(!(freConcept instanceof FreExpressionConcept) && myBase instanceof FreExpressionConcept),
+                            `A concept may not have an expression as base ${ParseLocationUtil.location(freConcept.base)}.`);
+                        if (freConcept instanceof FreLimitedConcept) {
                             this.runner.simpleWarning(myBase instanceof FreLimitedConcept,
-                                `Base '${piConcept.base.name}' of limited concept is not a limited concept. ` +
-                                        `Only properties that have primitive type are inherited ${ParseLocationUtil.location(piConcept.base)}.`
+                                `Base '${freConcept.base.name}' of limited concept is not a limited concept. ` +
+                                        `Only properties that have primitive type are inherited ${ParseLocationUtil.location(freConcept.base)}.`
                             );
                         } else {
                             this.runner.simpleCheck(!(myBase instanceof FreLimitedConcept),
-                                `Limited concept '${piConcept.base.name}' cannot be base of an unlimited concept ${ParseLocationUtil.location(piConcept.base)}.`
+                                `Limited concept '${freConcept.base.name}' cannot be base of an unlimited concept ${ParseLocationUtil.location(freConcept.base)}.`
                             );
                         }
                     }
@@ -99,7 +99,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
 
         // do the interfaces
         const newInterfaces: MetaElementReference<FreInterface>[] = [];
-        for (const intf of piConcept.interfaces) {
+        for (const intf of freConcept.interfaces) {
             CommonChecker.checkClassifierReference(intf, this.runner);
             if (!!intf.referred) { // error message taken care of by checkClassifierReference
                 this.runner.nestedCheck({
@@ -112,100 +112,100 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
                 });
             }
         }
-        piConcept.interfaces = newInterfaces;
+        freConcept.interfaces = newInterfaces;
 
         // do the properties
-        piConcept.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
-        if (!(piConcept instanceof FreLimitedConcept)) {
-            piConcept.properties.forEach(part => this.checkConceptProperty(part));
+        freConcept.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
+        if (!(freConcept instanceof FreLimitedConcept)) {
+            freConcept.properties.forEach(part => this.checkConceptProperty(part));
         }
 
-        if (piConcept instanceof FreBinaryExpressionConcept && !(piConcept.isAbstract)) {
-            // this.runner.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.name} should have a symbol`);
-            this.runner.simpleCheck(piConcept.getPriority() !== -1,
-                `Binary expression concept ${piConcept.name} should have a priority ${ParseLocationUtil.location(piConcept)}.`);
+        if (freConcept instanceof FreBinaryExpressionConcept && !(freConcept.isAbstract)) {
+            // this.runner.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${freConcept.name} should have a symbol`);
+            this.runner.simpleCheck(freConcept.getPriority() !== -1,
+                `Binary expression concept ${freConcept.name} should have a priority ${ParseLocationUtil.location(freConcept)}.`);
 
-            const left = piConcept.allParts().find(part => part.name === "left");
+            const left = freConcept.allParts().find(part => part.name === "left");
             this.runner.nestedCheck({
                 check: !!left,
-                error: `Binary expression concept ${piConcept.name} should have a left part ${ParseLocationUtil.location(piConcept)}.`,
+                error: `Binary expression concept ${freConcept.name} should have a left part ${ParseLocationUtil.location(freConcept)}.`,
                 whenOk: () => {
                     this.runner.simpleCheck(!!left && left.type instanceof FreExpressionConcept,
-                        `Concept ${piConcept.name}.left should be an expression concept ${ParseLocationUtil.location(piConcept)}.`);
+                        `Concept ${freConcept.name}.left should be an expression concept ${ParseLocationUtil.location(freConcept)}.`);
                 }
             });
-            const right = piConcept.allParts().find(part => part.name === "right");
+            const right = freConcept.allParts().find(part => part.name === "right");
             this.runner.nestedCheck({
                 check: !!right,
-                error: `Binary expression concept ${piConcept.name} should have a right part ${ParseLocationUtil.location(piConcept)}.`,
+                error: `Binary expression concept ${freConcept.name} should have a right part ${ParseLocationUtil.location(freConcept)}.`,
                 whenOk: () => {
                     this.runner.simpleCheck(!!right && right.type instanceof FreExpressionConcept,
-                        `Concept ${piConcept.name}.right should be an expression concept ${ParseLocationUtil.location(piConcept)}.`);
+                        `Concept ${freConcept.name}.right should be an expression concept ${ParseLocationUtil.location(freConcept)}.`);
                 }
             });
         }
 
-        if (piConcept instanceof FreLimitedConcept) {
-            this.checkLimitedConcept(piConcept);
+        if (freConcept instanceof FreLimitedConcept) {
+            this.checkLimitedConcept(freConcept);
         }
     }
 
-    checkLimitedConcept(piLimitedConcept: FreLimitedConcept) {
-        LOGGER.log(`Checking limited concept '${piLimitedConcept.name}' ${ParseLocationUtil.location(piLimitedConcept)}`);
+    checkLimitedConcept(freLimitedConcept: FreLimitedConcept) {
+        LOGGER.log(`Checking limited concept '${freLimitedConcept.name}' ${ParseLocationUtil.location(freLimitedConcept)}`);
         // the normal checking of concepts is done in this.checkConcept
 
         // limited concept may be used as reference only, thus it should have a property 'name: string'
         // this property is added in 'createLimitedConcept' in file 'LanguageCreators.ts'
 
         // checking for properties other than primitive ones
-        piLimitedConcept.properties.forEach(prop => {
+        freLimitedConcept.properties.forEach(prop => {
             this.runner.simpleCheck(false, `Property '${prop.name}' of limited concept should have primitive type ${ParseLocationUtil.location(prop)}.`);
         });
 
         // if this concept is abstract there may be no instances
         // if this concept is not abstract there must be instances
-        if (piLimitedConcept.isAbstract) {
-            this.runner.simpleCheck(piLimitedConcept.instances.length === 0,
-                `An abstract limited concept may not have any instances ${ParseLocationUtil.location(piLimitedConcept)}.`);
+        if (freLimitedConcept.isAbstract) {
+            this.runner.simpleCheck(freLimitedConcept.instances.length === 0,
+                `An abstract limited concept may not have any instances ${ParseLocationUtil.location(freLimitedConcept)}.`);
         } else {
-            this.runner.simpleCheck(piLimitedConcept.instances.length > 0,
-                `A non-abstract limited concept must have instances ${ParseLocationUtil.location(piLimitedConcept)}.`);
+            this.runner.simpleCheck(freLimitedConcept.instances.length > 0,
+                `A non-abstract limited concept must have instances ${ParseLocationUtil.location(freLimitedConcept)}.`);
         }
     }
 
-    checkConceptProperty(piProperty: FreProperty): void {
-        LOGGER.log("Checking concept property '" + piProperty.name + "'");
-        this.checkPropertyName(piProperty);
+    checkConceptProperty(freProperty: FreProperty): void {
+        LOGGER.log("Checking concept property '" + freProperty.name + "'");
+        this.checkPropertyName(freProperty);
         this.runner.nestedCheck(
             {
-                check: !!piProperty.type,
-                error: `Element '${piProperty.name}' should have a type ${ParseLocationUtil.location(piProperty)}.`,
+                check: !!freProperty.type,
+                error: `Element '${freProperty.name}' should have a type ${ParseLocationUtil.location(freProperty)}.`,
                 whenOk: () => {
-                    CommonChecker.checkClassifierReference(piProperty.typeReference, this.runner);
-                    const realType = piProperty.type;
+                    CommonChecker.checkClassifierReference(freProperty.typeReference, this.runner);
+                    const realType = freProperty.type;
                     if (!!realType) { // error message handled by checkClassifierReference
-                        const owningClassifier = piProperty.owningClassifier;
-                        this.checkPropertyType(piProperty, realType);
+                        const owningClassifier = freProperty.owningClassifier;
+                        this.checkPropertyType(freProperty, realType);
 
                         const isUnit = (realType instanceof FreUnitDescription);
 
                         // check use of unit types in non-model concepts: may be references only
-                        if (isUnit && piProperty.isPart) {
+                        if (isUnit && freProperty.isPart) {
                             this.runner.simpleCheck(
                                 owningClassifier instanceof FreModelDescription,
-                                `Modelunit '${realType.name}' may be used as reference only in a non-model concept ${ParseLocationUtil.location(piProperty.typeReference)}.`);
+                                `Modelunit '${realType.name}' may be used as reference only in a non-model concept ${ParseLocationUtil.location(freProperty.typeReference)}.`);
                         }
                         // check use of non-unit types in model concept
                         if (owningClassifier instanceof FreModelDescription) {
                             this.runner.simpleCheck(
                                 isUnit,
-                                `Type of property '${piProperty.name}' should be a modelunit ${ParseLocationUtil.location(piProperty.typeReference)}.`);
+                                `Type of property '${freProperty.name}' should be a modelunit ${ParseLocationUtil.location(freProperty.typeReference)}.`);
                         }
                         // TODO review the rules around 'public'
-                        // if (piProperty.isPart && piProperty.isPublic) {
+                        // if (freProperty.isPart && freeProperty.isPublic) {
                         //     this.runner.nestedCheck({
                         //         check: realType.isPublic,
-                        //         error: `Property '${piProperty.name} of type ${realType.name}' is public, the concept ${realType.name} should be public as well ${ParseLocationUtil.location(piProperty)}.`,
+                        //         error: `Property '${freProperty.name} of type ${realType.name}' is public, the concept ${realType.name} should be public as well ${ParseLocationUtil.location(freProperty)}.`,
                         //         whenOk: () => {
                         //             this.runner.simpleCheck(
                         //                 !!realType.nameProperty() && realType.nameProperty().isPublic,
@@ -216,32 +216,32 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
                         // }
                     }
                     // optionality for lists is ignored
-                    if (piProperty.isList && piProperty.isOptional) {
+                    if (freProperty.isList && freProperty.isOptional) {
                         this.runner.simpleWarning(false,
-                            `Property '${piProperty.name}' is a list and therefore always optional, optionality will be ignored ${ParseLocationUtil.location(piProperty)}.`);
-                        piProperty.isOptional = false;
+                            `Property '${freProperty.name}' is a list and therefore always optional, optionality will be ignored ${ParseLocationUtil.location(freProperty)}.`);
+                        freProperty.isOptional = false;
                     }
                 }
             });
     }
 
-    private checkPropertyType(piProperty: FreProperty, realType: FreClassifier) {
+    private checkPropertyType(freProperty: FreProperty, realType: FreClassifier) {
         if (!!realType) { // error message taken care of by checkClassifierReference
             if (realType instanceof FreLimitedConcept) {
                 // this situation is OK, but property with limited concept as type should always be a reference property.
                 // the property should refer to one of the predefined instances of the limited concept.
                 // in phase2 of the checker it is ensured that limited concepts always have a 'name' property of type 'identifier'.
-                piProperty.isPart = false;
+                freProperty.isPart = false;
             } else {
-                if (!piProperty.isPart) {
+                if (!freProperty.isPart) {
                     // it is a reference, so check whether the type has a name by which it can be referred
                     const nameProperty: FrePrimitiveProperty = realType.nameProperty();
                     this.runner.nestedCheck({
                         check: !!nameProperty,
-                        error: `Type '${realType.name}' cannot be used as a reference, because it has no property 'name: identifier' ${ParseLocationUtil.location(piProperty.typeReference)}.`,
+                        error: `Type '${realType.name}' cannot be used as a reference, because it has no property 'name: identifier' ${ParseLocationUtil.location(freProperty.typeReference)}.`,
                         whenOk: () => {
                             this.runner.simpleCheck(nameProperty.type === FrePrimitiveType.identifier,
-                                `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'identifier' ${ParseLocationUtil.location(piProperty.typeReference)}.`);
+                                `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'identifier' ${ParseLocationUtil.location(freProperty.typeReference)}.`);
                         }
                     });
                 }
@@ -296,7 +296,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
                     this.runner.simpleCheck(!(reservedWordsInTypescript.includes(element.name.toLowerCase())),
                         `Property may not have a name that is equal to a reserved word in TypeScript ('${element.name}') ${ParseLocationUtil.location(element)}.`);
                     // TODO determine whether the following check is important
-                    // this.runner.simpleCheck(!(piReservedWords.includes(element.name.toLowerCase())),
+                    // this.runner.simpleCheck(!(freReservedWords.includes(element.name.toLowerCase())),
                     //     `Property may not have a name that is equal to a reserved word ('${element.name}') ${ParseLocationUtil.location(element)}.`);
                 }
             });
@@ -310,13 +310,13 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
         );
     }
 
-    checkInterface(piInterface: FreInterface) {
-        this.runner.simpleCheck(!!piInterface.name, `Interface should have a name ${ParseLocationUtil.location(piInterface)}.`);
-        this.runner.simpleCheck(!(piReservedWords.includes(piInterface.name.toLowerCase())), `Interface may not have a name that is equal to a reserved word ('${piInterface.name}') ${ParseLocationUtil.location(piInterface)}.`);
-        this.runner.simpleCheck(!(reservedWordsInTypescript.includes(piInterface.name.toLowerCase())),
-            `Interface may not have a name that is equal to a reserved word in TypeScript ('${piInterface.name}') ${ParseLocationUtil.location(piInterface)}.`);
+    checkInterface(freInterface: FreInterface) {
+        this.runner.simpleCheck(!!freInterface.name, `Interface should have a name ${ParseLocationUtil.location(freInterface)}.`);
+        this.runner.simpleCheck(!(freReservedWords.includes(freInterface.name.toLowerCase())), `Interface may not have a name that is equal to a reserved word ('${freInterface.name}') ${ParseLocationUtil.location(freInterface)}.`);
+        this.runner.simpleCheck(!(reservedWordsInTypescript.includes(freInterface.name.toLowerCase())),
+            `Interface may not have a name that is equal to a reserved word in TypeScript ('${freInterface.name}') ${ParseLocationUtil.location(freInterface)}.`);
 
-        for (const intf of piInterface.base) {
+        for (const intf of freInterface.base) {
             CommonChecker.checkClassifierReference(intf, this.runner);
             if (!!intf.referred) { // error message taken care of by checkClassifierReference
                 this.runner.simpleCheck(intf.referred instanceof FreInterface,
@@ -325,7 +325,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
             }
         }
 
-        piInterface.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
-        piInterface.properties.forEach(part => this.checkConceptProperty(part));
+        freInterface.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
+        freInterface.properties.forEach(part => this.checkConceptProperty(part));
     }
 }

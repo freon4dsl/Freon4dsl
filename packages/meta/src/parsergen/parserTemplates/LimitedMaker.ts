@@ -17,12 +17,12 @@ export class LimitedMaker {
 
     generateLimitedRules(limitedConcepts: FreLimitedConcept[]): GrammarRule[] {
         let rules: GrammarRule[] = [];
-        for (const piClassifier of limitedConcepts) {
+        for (const limitedConcept of limitedConcepts) {
             // find the mapping of keywords to predef instances
             // first is the name of the instance, second is the keyword
             let myMap: Map<string, string> = new Map<string, string>();
-            piClassifier.instances.forEach(item => {
-                const myTypeScript: string = `${Names.classifier(piClassifier)}.${Names.instance(item)}`;
+            limitedConcept.instances.forEach(item => {
+                const myTypeScript: string = `${Names.classifier(limitedConcept)}.${Names.instance(item)}`;
                 // set the string to be used to the value of the name property, iff present
                 // else use the typescript name of the instance
                 let myKeyword: string = item.nameProperty().value.toString();
@@ -38,8 +38,8 @@ export class LimitedMaker {
                 }
                 myMap.set(myTypeScript, myKeyword);
             });
-            rules.push(new LimitedRule(piClassifier, myMap));
-            this.imports.push(piClassifier);
+            rules.push(new LimitedRule(limitedConcept, myMap));
+            this.imports.push(limitedConcept);
         }
         return rules;
     }

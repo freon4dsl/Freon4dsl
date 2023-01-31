@@ -7,7 +7,7 @@ import { FretClassifierSpec, FretInferenceRule, TyperDef } from "../../typerdef/
 function testTypeUnit(typeUnit: TyperDef) {
     expect(typeUnit).not.toBeNull();
     expect(typeUnit).not.toBeUndefined();
-    // console.log(typeUnit?.toPiString());
+    // console.log(typeUnit?.toFretString());
     expect(typeUnit.types.length).toBe(3);
     expect(typeUnit.conceptsWithType.length).toBe(13);
     // console.log(typeUnit.conceptsWithType.map(t => t.name).join(", "))
@@ -71,7 +71,7 @@ describe("Checking new typer", () => {
                 // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
             }
 
-           // console.log(typeUnit?.toPiString());
+           // console.log(typeUnit?.toFretString());
             testTypeUnit(typeUnit);
         }
     });

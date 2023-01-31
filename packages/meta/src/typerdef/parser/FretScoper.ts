@@ -21,7 +21,7 @@ export class FretScoper implements FreMetaScoper {
         // if (name === "base2" ) {
         //     console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
         // }
-        if (owner instanceof FretProperty || owner instanceof FreTyperElement ) { // FretProperty does not inherit from PiTyperElement!!
+        if (owner instanceof FretProperty || owner instanceof FreTyperElement ) { // FretProperty does not inherit from FretTyperElement!!
             if (typeName === "FreProperty") {
                 let nameSpace: FreClassifier;
                 if (owner instanceof FretCreateExp) {

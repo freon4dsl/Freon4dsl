@@ -112,10 +112,10 @@ ${this.makeUmlClasses(conceptsToInclude)}
         return `${interfaces.map(c => this.interfaceToUml(c)).join("\n")}`;
     }
 
-    private interfaceToUml(piInterface: FreInterface) {
-        return `    class ${piInterface.name}${this.withHtml ? ":::interface" : ""} {
+    private interfaceToUml(freInterface: FreInterface) {
+        return `    class ${freInterface.name}${this.withHtml ? ":::interface" : ""} {
         ${!this.withHtml ? "<<interface>>" : ""}
-        ${piInterface.primProperties.map(p => this.primPropToUml(p)).join("\n\t\t")}
+        ${freInterface.primProperties.map(p => this.primPropToUml(p)).join("\n\t\t")}
     }`;
     }
 

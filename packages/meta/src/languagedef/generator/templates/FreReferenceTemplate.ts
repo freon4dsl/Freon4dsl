@@ -3,7 +3,7 @@ import { FreLanguage } from "../../metalanguage";
 
 export class FreReferenceTemplate {
 
-    generatePiReference(language: FreLanguage, relativePath: string): string {
+    generateFreReference(language: FreLanguage, relativePath: string): string {
         return `
         import { MobxModelElementImpl } from "${PROJECTITCORE}";
         import { computed, observable } from "mobx";

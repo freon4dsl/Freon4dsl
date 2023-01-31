@@ -194,7 +194,7 @@ export class SemanticAnalysisTemplate {
         return result;
     }
 
-    private makeVistorMethod(piClassifier: FreConcept): string {
+    private makeVistorMethod(freConcept: FreConcept): string {
         // TODO add replacement of properties that are lists
         return `
             /**
@@ -202,9 +202,9 @@ export class SemanticAnalysisTemplate {
              * If not, find possible replacements.
              * @param modelelement
              */
-            public execBefore${Names.concept(piClassifier)}(modelelement: ${Names.concept(piClassifier)}): boolean {
+            public execBefore${Names.concept(freConcept)}(modelelement: ${Names.concept(freConcept)}): boolean {
                 let referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>;
-                ${piClassifier.allReferences().filter(prop => !prop.isList).map(prop =>
+                ${freConcept.allReferences().filter(prop => !prop.isList).map(prop =>
                 `referredElem = modelelement.${prop.name};
                 if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
                     this.findReplacement(modelelement, referredElem);

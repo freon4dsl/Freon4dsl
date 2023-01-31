@@ -18,7 +18,7 @@ describe("Checking expression on referredElement", () => {
     });
 
     test("referredElement of simple expressions on AA", () => {
-        const expressionFile = testdir + "test1.pitest";
+        const expressionFile = testdir + "test1.fretest";
         if (!!language) {
             const readTest = new LanguageExpressionParser(language).parse(expressionFile);
             // check expressions on AA
@@ -41,7 +41,7 @@ describe("Checking expression on referredElement", () => {
     });
 
     test("referredElement of simple expressions on BB", () => {
-        const expressionFile = testdir + "test1.pitest";
+        const expressionFile = testdir + "test1.fretest";
         if (!!language) {
             const readTest = new LanguageExpressionParser(language).parse(expressionFile);
             // check expressions on BB
@@ -67,7 +67,7 @@ describe("Checking expression on referredElement", () => {
     });
 
     test("referredElement of limited concept expressions in CC", () => {
-        const expressionFile = testdir + "test1.pitest";
+        const expressionFile = testdir + "test1.fretest";
         if (!!language) {
             const readTest = new LanguageExpressionParser(language).parse(expressionFile);
             // check expressions on CC
@@ -83,10 +83,10 @@ describe("Checking expression on referredElement", () => {
             // for each expression in the set, it should refer to an predefined instance of 'ZZ'
             CCconceptExps.exps.forEach(exp => {
                 expect(exp.__referredElement?.referred === zzConcept);
-                const piInstance = exp.__referredElement.referred;
-                expect(piInstance).not.toBeNull();
-                expect(piInstance instanceof FreInstance);
-                expect((zzConcept as FreLimitedConcept).instances.includes(piInstance as FreInstance));
+                const freInstance = exp.__referredElement.referred;
+                expect(freInstance).not.toBeNull();
+                expect(freInstance instanceof FreInstance);
+                expect((zzConcept as FreLimitedConcept).instances.includes(freInstance as FreInstance));
             });
         } else {
             console.log("Language not present");
@@ -94,7 +94,7 @@ describe("Checking expression on referredElement", () => {
     });
 
     test("referredElement of other kinds of expressions in DD", () => {
-        const expressionFile = testdir + "test1.pitest";
+        const expressionFile = testdir + "test1.fretest";
         if (!!language) {
             const readTest = new LanguageExpressionParser(language).parse(expressionFile);
             // check expressions on DD
@@ -121,7 +121,7 @@ describe("Checking expression on referredElement", () => {
     });
 
     test("applied feature in FF", () => {
-        const expressionFile = testdir + "test1.pitest";
+        const expressionFile = testdir + "test1.fretest";
         if (!!language) {
             const readTest = new LanguageExpressionParser(language).parse(expressionFile);
             // check expressions on FF

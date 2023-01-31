@@ -110,8 +110,8 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
         }
     }
 
-    private checkLimitedConceptAgain(piLimitedConcept: FreLimitedConcept) {
-        let nameProperty: FrePrimitiveProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
+    private checkLimitedConceptAgain(freLimitedConcept: FreLimitedConcept) {
+        let nameProperty: FrePrimitiveProperty = freLimitedConcept.allPrimProperties().find(p => p.name === "name");
         // if 'name' property is not present, create it.
         if ( !nameProperty ) {
             nameProperty = new FrePrimitiveProperty();
@@ -122,27 +122,27 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
             nameProperty.isOptional = false;
             nameProperty.isPublic = true;
             nameProperty.isStatic = false;
-            nameProperty.owningClassifier = piLimitedConcept;
-            piLimitedConcept.primProperties.push(nameProperty);
+            nameProperty.owningClassifier = freLimitedConcept;
+            freLimitedConcept.primProperties.push(nameProperty);
         } else {
             this.runner.simpleCheck(nameProperty.type === FrePrimitiveType.identifier,
-                `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${ParseLocationUtil.location(piLimitedConcept)}.`);
+                `A limited concept ('${freLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${ParseLocationUtil.location(freLimitedConcept)}.`);
         }
-        this.runner.simpleCheck(piLimitedConcept.allParts().length === 0,
-            `A limited concept may not inherit or implement non-primitive parts ${ParseLocationUtil.location(piLimitedConcept)}.`);
-        this.runner.simpleCheck(piLimitedConcept.allReferences().length === 0,
-            `A limited concept may not inherit or implement references ${ParseLocationUtil.location(piLimitedConcept)}.`);
+        this.runner.simpleCheck(freLimitedConcept.allParts().length === 0,
+            `A limited concept may not inherit or implement non-primitive parts ${ParseLocationUtil.location(freLimitedConcept)}.`);
+        this.runner.simpleCheck(freLimitedConcept.allReferences().length === 0,
+            `A limited concept may not inherit or implement references ${ParseLocationUtil.location(freLimitedConcept)}.`);
 
         // checking the predefined instances => here, because now we know that the definition of the limited concept is complete
         const names: string[] = [];
         const baseNames: string[] = [];
-        if (!!piLimitedConcept.base) { // if there is a base limited concept add all names of instances
-            const myBase = piLimitedConcept.base.referred;
+        if (!!freLimitedConcept.base) { // if there is a base limited concept add all names of instances
+            const myBase = freLimitedConcept.base.referred;
             if (myBase instanceof FreLimitedConcept) {
                 baseNames.push(...myBase.allInstances().map(inst => inst.name));
             }
         }
-        piLimitedConcept.instances.forEach(inst => {
+        freLimitedConcept.instances.forEach(inst => {
             if (names.includes(inst.name)) {
                 this.runner.simpleCheck(false,
                     `Instance with name '${inst.name}' already exists ${ParseLocationUtil.location(inst)}.`);
@@ -158,46 +158,46 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
         });
     }
 
-    private checkInstance(piInstance: FreInstance) {
-        CommonChecker.checkClassifierReference(piInstance.concept, this.runner);
+    private checkInstance(freInstance: FreInstance) {
+        CommonChecker.checkClassifierReference(freInstance.concept, this.runner);
         this.runner.nestedCheck({
-            check: piInstance.concept.referred !== null,
-            error: `Predefined instance '${piInstance.name}' should belong to a concept ${ParseLocationUtil.location(piInstance)}.`,
+            check: freInstance.concept.referred !== null,
+            error: `Predefined instance '${freInstance.name}' should belong to a concept ${ParseLocationUtil.location(freInstance)}.`,
             whenOk: () => {
-                piInstance.props.forEach(p => {
-                    this.checkInstanceProperty(p, piInstance.concept.referred);
+                freInstance.props.forEach(p => {
+                    this.checkInstanceProperty(p, freInstance.concept.referred);
                 });
             }
         });
     }
 
-    private checkInstanceProperty(piPropertyInstance: FreInstanceProperty, enclosingConcept: FreConcept) {
-        const myInstance = piPropertyInstance.owningInstance.referred;
+    private checkInstanceProperty(freInstanceProperty: FreInstanceProperty, enclosingConcept: FreConcept) {
+        const myInstance = freInstanceProperty.owningInstance.referred;
         this.runner.nestedCheck(
             {
                 check: !!myInstance,
-                error: `Property '${piPropertyInstance.name}' should belong to a predefined instance ${ParseLocationUtil.location(piPropertyInstance)}.`,
+                error: `Property '${freInstanceProperty.name}' should belong to a predefined instance ${ParseLocationUtil.location(freInstanceProperty)}.`,
                 whenOk: () => {
-                    // find the property to which this piPropertyInstance refers
-                    const myProp = myInstance.concept.referred.allPrimProperties().find(p => p.name === piPropertyInstance.name);
+                    // find the property to which this frePropertyInstance refers
+                    const myProp = myInstance.concept.referred.allPrimProperties().find(p => p.name === freInstanceProperty.name);
                     this.runner.nestedCheck({
                         check: !!myProp,
-                        error: `Property '${piPropertyInstance.name}' does not exist on concept ${enclosingConcept.name} ${ParseLocationUtil.location(piPropertyInstance)}.`,
+                        error: `Property '${freInstanceProperty.name}' does not exist on concept ${enclosingConcept.name} ${ParseLocationUtil.location(freInstanceProperty)}.`,
                         whenOk: () => {
                             this.runner.nestedCheck({
                                 check: myProp instanceof FrePrimitiveProperty,
-                                error: `Predefined property '${piPropertyInstance.name}' should have a primitive type ${ParseLocationUtil.location(piPropertyInstance)}.`,
+                                error: `Predefined property '${freInstanceProperty.name}' should have a primitive type ${ParseLocationUtil.location(freInstanceProperty)}.`,
                                 whenOk: () => {
-                                    piPropertyInstance.property = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
+                                    freInstanceProperty.property = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
                                     let myPropType: FrePrimitiveType = myProp.type as FrePrimitiveType;
                                     if (!myProp.isList) {
-                                        this.runner.simpleCheck(CommonChecker.checkValueToType(piPropertyInstance.value, myPropType),
-                                            `Type of '${piPropertyInstance.value}' (${typeof piPropertyInstance.value}) does not fit type (${myPropType.name}) of property '${piPropertyInstance.name}' ${ParseLocationUtil.location(piPropertyInstance)}.`);
+                                        this.runner.simpleCheck(CommonChecker.checkValueToType(freInstanceProperty.value, myPropType),
+                                            `Type of '${freInstanceProperty.value}' (${typeof freInstanceProperty.value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
                                     } else {
-                                        if (!!piPropertyInstance.valueList) {
-                                            piPropertyInstance.valueList.forEach(value => {
+                                        if (!!freInstanceProperty.valueList) {
+                                            freInstanceProperty.valueList.forEach(value => {
                                                 this.runner.simpleCheck(CommonChecker.checkValueToType(value, myPropType),
-                                                    `Type of '${value}' (${typeof value}) does not fit type (${myPropType.name}) of property '${piPropertyInstance.name}' ${ParseLocationUtil.location(piPropertyInstance)}.`);
+                                                    `Type of '${value}' (${typeof value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
                                             });
                                         }
                                     }

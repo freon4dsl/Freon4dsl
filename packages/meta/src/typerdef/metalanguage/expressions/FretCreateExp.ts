@@ -46,6 +46,6 @@ export class FretCreateExp extends FretExp  {
         return null;
     }
     toFreString(): string {
-        return this.__type.name + " {\n\t\t" + this.propertyDefs.map(p => p.toPiString()).join(",\n\t\t") + '\n\t} ';
+        return this.__type.name + " {\n\t\t" + this.propertyDefs.map(p => p.toFreString()).join(",\n\t\t") + '\n\t} ';
     }
 }

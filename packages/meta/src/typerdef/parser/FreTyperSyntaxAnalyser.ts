@@ -115,14 +115,14 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
             return this._unit_TyperDef_analyser.transformFretTypeRule(branch);
         } else if ("FretExp" == brName) {
             return this._unit_TyperDef_analyser.transformFretExp(branch);
-        } else if ("__pi_binary_FretExp" == brName) {
-            return this._unit_TyperDef_analyser.transform__pi_binary_FretExp(branch);
+        } else if ("__fre_binary_FretExp" == brName) {
+            return this._unit_TyperDef_analyser.transform__fre_binary_FretExp(branch);
         } else if ("FretProperty" == brName) {
             return this._unit_TyperDef_analyser.transformFretProperty(branch);
-        } else if ("__pi_reference" == brName) {
-            return this.transform__pi_reference(branch);
+        } else if ("__fre_reference" == brName) {
+            return this.transform__fre_reference(branch);
         } else {
-            throw new Error(`Error in PiTyperSyntaxAnalyser: ${brName} not handled for node '${branch?.matchedText}'`);
+            throw new Error(`Error in FreTyperSyntaxAnalyser: ${brName} not handled for node '${branch?.matchedText}'`);
         }
     }
 
@@ -163,7 +163,7 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
         return group;
     }
 
-    public transform__pi_reference(branch: SPPTBranch) {
+    public transform__fre_reference(branch: SPPTBranch) {
         if (branch.name.includes("multi") || branch.name.includes("List")) {
             return this.transformSharedPackedParseTreeList<string>(branch, "::::");
         } else {
@@ -173,20 +173,20 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
 
     /**
      * Generic method to transform references
-     * ...PiElemRef = identifier;
+     * ...FreNodeRef = identifier;
      */
-    public piElemRef<T extends FreLangElement>(branch: SPPTBranch, typeName: string): MetaElementReference<T> {
+    public freNodeRef<T extends FreLangElement>(branch: SPPTBranch, typeName: string): MetaElementReference<T> {
         let referred: string | T = this.transformSharedPackedParseTreeNode(branch);
         if (referred == null || referred == undefined) {
             throw new Error(`Syntax error in "${branch?.parent?.matchedText}": cannot create empty reference`);
         } else if (typeof referred === "string" && (referred as string).length == 0) {
             throw new Error(`Syntax error in "${branch?.parent?.matchedText}": cannot create empty reference`);
         } else {
-            return this.makePiElementReferenceWithLocation(referred, typeName, branch);
+            return this.makeFreElementReferenceWithLocation(referred, typeName, branch);
         }
     }
 
-    private makePiElementReferenceWithLocation<T extends FreLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
+    private makeFreElementReferenceWithLocation<T extends FreLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
         const result = MetaElementReference.create<T>(referred, typeName);
         const location = FreParseLocation.create({ filename: this.filename, line: branch.location.line, column: branch.location.column });
         result.agl_location = location;
@@ -231,10 +231,10 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
                 let refName: any = this.transformSharedPackedParseTreeNode(child);
                 if (refName !== null && refName !== undefined) {
                     if (separator === null || separator === undefined) {
-                        result.push(this.makePiElementReferenceWithLocation(refName, typeName, branch));
+                        result.push(this.makeFreElementReferenceWithLocation(refName, typeName, branch));
                     } else {
                         if (refName !== separator) {
-                            result.push(this.makePiElementReferenceWithLocation(refName, typeName, branch));
+                            result.push(this.makeFreElementReferenceWithLocation(refName, typeName, branch));
                         }
                     }
                 }

@@ -11,7 +11,7 @@ import {
 } from "../../editordef/metalanguage";
 import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
 
-describe("Checking PiEditUnit: ", () => {
+describe("Checking FretEditUnit: ", () => {
     const testdir = "src/__tests__/editor-tests/correctDefFiles/";
     let parser: FreEditParser;
     let language: FreLanguage;

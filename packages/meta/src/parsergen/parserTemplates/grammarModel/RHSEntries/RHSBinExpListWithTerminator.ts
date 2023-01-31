@@ -26,7 +26,7 @@ export class RHSBinExpListWithTerminator extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         // TODO this method is equal to the one in RHSPartListWithTerminator
-        // When this RHS is the only entry in the grammar rule, e.g. "Concept1 = ( PitExp ';' )* ;",
+        // When this RHS is the only entry in the grammar rule, e.g. "Concept1 = ( FretExp ';' )* ;",
         // the actual list that must be transformed cannot be found using 'getChildren'.
         // TODO ask David
         let myListStatement: string = `const _myList = this.${mainAnalyserName}.getChildren(${nodeName}[${index}]);`;

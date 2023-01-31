@@ -130,10 +130,10 @@ export class LangUtil {
      * Takes a FreInterface and returns a list of concepts that directly implement it,
      * without taking into account subinterfaces.
      *
-     * @param piInterface
+     * @param freInterface
      */
-    public static findImplementorsDirect(piInterface: FreInterface | MetaElementReference<FreInterface>): FreConcept[] {
-        const myInterface = (piInterface instanceof MetaElementReference ? piInterface.referred : piInterface);
+    public static findImplementorsDirect(freInterface: FreInterface | MetaElementReference<FreInterface>): FreConcept[] {
+        const myInterface = (freInterface instanceof MetaElementReference ? freInterface.referred : freInterface);
         return myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
     }
 
@@ -141,10 +141,10 @@ export class LangUtil {
      * Takes a FreInterface and returns a list of concepts that implement it,
      * including the concepts that implement subinterfaces.
      *
-     * @param piInterface
+     * @param freInterface
      */
-    public static findImplementorsRecursive(piInterface: FreInterface | MetaElementReference<FreInterface>): FreConcept[] {
-        const myInterface = (piInterface instanceof MetaElementReference ? piInterface.referred : piInterface);
+    public static findImplementorsRecursive(freInterface: FreInterface | MetaElementReference<FreInterface>): FreConcept[] {
+        const myInterface = (freInterface instanceof MetaElementReference ? freInterface.referred : freInterface);
         let implementors : FreConcept[] = this.findImplementorsDirect(myInterface);
 
         // add implementors of sub-interfaces
@@ -202,9 +202,9 @@ export class LangUtil {
     // TODO check whether this is a better implementation
     // private findAllImplementorsAndSubs(myClassifier: FreClassifier): FreClassifier[] {
     //     const result: FreClassifier[] = [];
-    //     if (myClassifier instanceof PiConcept) {
+    //     if (myClassifier instanceof FreConcept) {
     //         ListUtil.addListIfNotPresent<FreClassifier>(result, LangUtil.subConcepts(myClassifier));
-    //     } else if (myClassifier instanceof PiInterface) {
+    //     } else if (myClassifier instanceof FreInterface) {
     //         const implementors = LangUtil.findImplementorsRecursive(myClassifier);
     //         ListUtil.addListIfNotPresent<FreClassifier>(result, implementors);
     //         for (const implementor of implementors) {

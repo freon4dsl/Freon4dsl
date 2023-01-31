@@ -36,7 +36,7 @@ export const scoperInterface = PROJECTITCORE;
 export const typerInterface = PROJECTITCORE;
 export const validatorInterface = PROJECTITCORE;
 export const errorClass = PROJECTITCORE;
-export const piNamedElement = PROJECTITCORE;
+export const freNamedElement = PROJECTITCORE;
 export const EDITORSTYLES = STYLES_FOLDER + "/styles";
 /**
  * Defines all paths to files and folders that are used in the generation, to ensure they are identical

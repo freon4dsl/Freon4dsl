@@ -58,7 +58,6 @@ export class LanguageGenerator {
         const interfaceTemplate = new InterfaceTemplate();
         const languageIndexTemplate = new IndexTemplate();
         const allConceptsTemplate = new AllConceptsTemplate();
-        const piReferenceTemplate = new FreReferenceTemplate();
         const environmentTemplate = new EnvironmentTemplate();
         const stdlibTemplate = new StdlibTemplate();
         const walkerTemplate = new WalkerTemplate();
@@ -99,10 +98,10 @@ export class LanguageGenerator {
             fs.writeFileSync(`${this.languageGenFolder}/${Names.concept(concept)}.ts`, generated);
         });
 
-        language.interfaces.forEach(piInterface => {
-            LOGGER.log(`Generating interface: ${this.languageGenFolder}/${Names.interface(piInterface)}.ts`);
-            const generated = FileUtil.pretty(interfaceTemplate.generateInterface(piInterface, relativePath), "interface " + piInterface.name, generationStatus);
-            fs.writeFileSync(`${this.languageGenFolder}/${Names.interface(piInterface)}.ts`, generated);
+        language.interfaces.forEach(freInterface => {
+            LOGGER.log(`Generating interface: ${this.languageGenFolder}/${Names.interface(freInterface)}.ts`);
+            const generated = FileUtil.pretty(interfaceTemplate.generateInterface(freInterface, relativePath), "interface " + freInterface.name, generationStatus);
+            fs.writeFileSync(`${this.languageGenFolder}/${Names.interface(freInterface)}.ts`, generated);
         });
 
         // the following classes do not need the relative path for their imports
@@ -130,9 +129,9 @@ export class LanguageGenerator {
         // set relative path to an extra level to get the imports right
         relativePath = "../../";
 
-        // LOGGER.log(`Generating FreNodeReference: ${this.languageGenFolder}/${Names.PiElementReference}.ts`);
-        // const referenceFile = FileUtil.pretty(piReferenceTemplate.generatePiReference(language, relativePath), "FreElementReference", generationStatus);
-        // fs.writeFileSync(`${this.languageGenFolder}/${Names.PiElementReference}.ts`, referenceFile);
+        // LOGGER.log(`Generating FreNodeReference: ${this.languageGenFolder}/${Names.FreElementReference}.ts`);
+        // const referenceFile = FileUtil.pretty(freReferenceTemplate.generateFreReference(language, relativePath), "FreElementReference", generationStatus);
+        // fs.writeFileSync(`${this.languageGenFolder}/${Names.FreElementReference}.ts`, referenceFile);
 
         LOGGER.log(`Generating language structure information: ${this.languageGenFolder}/${Names.language(language)}.ts`);
         const structureFile = FileUtil.pretty(languageTemplate.generateLanguage(language), "Language Structure", generationStatus);

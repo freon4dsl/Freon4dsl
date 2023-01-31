@@ -15,14 +15,14 @@ export class ScopeDef extends FreDefinitionElement {
 
 export class ScopeConceptDef extends FreDefinitionElement {
     conceptRef: MetaElementReference<FreConcept>;
-    namespaceAdditions: PiNamespaceAddition;
-    alternativeScope: PiAlternativeScope;
+    namespaceAdditions: FreNamespaceAddition;
+    alternativeScope: FreAlternativeScope;
 }
 
-export class PiNamespaceAddition extends FreDefinitionElement {
+export class FreNamespaceAddition extends FreDefinitionElement {
     expressions: FreLangExp[];
 }
 
-export class PiAlternativeScope extends FreDefinitionElement {
+export class FreAlternativeScope extends FreDefinitionElement {
     expression: FreLangExp;
 }

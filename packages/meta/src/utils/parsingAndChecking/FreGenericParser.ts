@@ -144,21 +144,21 @@ export class FreGenericParser<DEFINITION> {
 
     protected merge(submodels: DEFINITION[]): DEFINITION {
         if (submodels.length > 0) {
-            throw Error("PiParser.merge should be implemented by its subclasses.");
+            throw Error("FreParser.merge should be implemented by its subclasses.");
         }
         return null;
     }
 
     protected setCurrentFileName(file: string) {
-        throw Error("PiParser.setCurrentFileName should be implemented by its subclasses.");
+        throw Error("FreParser.setCurrentFileName should be implemented by its subclasses.");
     }
 
     protected getNonFatalParseErrors(): string[] {
-        throw Error("PiParser.getNonFatalParseErrors should be implemented by its subclasses.");
+        throw Error("FreParser.getNonFatalParseErrors should be implemented by its subclasses.");
     }
 
     protected cleanNonFatalParseErrors() {
-        // throw Error("PiParser.cleanNonFatalParseErrors should be implemented by its subclasses.");
+        // throw Error("FreParser.cleanNonFatalParseErrors should be implemented by its subclasses.");
     }
 
     protected location(elem: FreDefinitionElement): string {

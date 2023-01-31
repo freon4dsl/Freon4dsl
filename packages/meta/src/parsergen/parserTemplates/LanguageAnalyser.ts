@@ -9,7 +9,7 @@ import { UnitAnalyser } from "./UnitAnalyser";
 import { FreUnitDescription } from "../../languagedef/metalanguage/FreLanguage";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 
-export interface PiAnalyser {
+export interface FreAnalyser {
     // name of the unit
     unit: FreUnitDescription;
     // all concepts used in this unit

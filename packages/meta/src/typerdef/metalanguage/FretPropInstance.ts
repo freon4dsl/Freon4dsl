@@ -50,7 +50,7 @@ export class FretPropInstance extends FreTyperElement {
         }
         return null;
     }
-    toPiString(): string {
+    toFreString(): string {
         return this.__property.name + " : " +this.value.toFreString();
     }
 }

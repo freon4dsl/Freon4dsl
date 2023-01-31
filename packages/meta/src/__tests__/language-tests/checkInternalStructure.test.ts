@@ -13,121 +13,121 @@ describe("Checking internal structure of language", () => {
     MetaLogger.muteAllErrors();
 
     function readAstFile(parseFile: string): FreLanguage {
-        let piLanguage: FreLanguage;
+        let freLanguage: FreLanguage;
         try {
-            piLanguage = parser.parse(parseFile);
+            freLanguage = parser.parse(parseFile);
         } catch (e) {
             // this would be a true error
             console.log(e.message + parser.checker.errors.map(err => err).join("\n") + e.stack );
         }
-        return piLanguage;
+        return freLanguage;
     }
 
-    // on PiLanguage
+    // on FretLanguage
     // ??? predefined (primitive types)
-    test("internal structure of PiLanguage", () => {
-        let piLanguage: FreLanguage = readAstFile(testdir + "test2.ast");
+    test("internal structure of FretLanguage", () => {
+        let freLanguage: FreLanguage = readAstFile(testdir + "test2.ast");
 
-        expect(piLanguage).not.toBeUndefined();
+        expect(freLanguage).not.toBeUndefined();
         // there is a root concept
-        expect(piLanguage.modelConcept).not.toBeNull();
+        expect(freLanguage.modelConcept).not.toBeNull();
         // there is a single expression base or none at all
-        const result = piLanguage.concepts.filter(c => {
+        const result = freLanguage.concepts.filter(c => {
             return c instanceof FreExpressionConcept && (!!c.base ? !(c.base.referred instanceof FreExpressionConcept) : true);
         });
         expect(result.length).toBeLessThan(2);
         // if there is a classifier, we can find it
-        piLanguage.concepts.forEach(classifier => {
-            expect(piLanguage.findClassifier(classifier.name)).not.toBeNull();
-            expect(piLanguage.findConcept(classifier.name)).not.toBeNull();
-            expect(piLanguage.findInterface(classifier.name)).toBeUndefined();
+        freLanguage.concepts.forEach(classifier => {
+            expect(freLanguage.findClassifier(classifier.name)).not.toBeNull();
+            expect(freLanguage.findConcept(classifier.name)).not.toBeNull();
+            expect(freLanguage.findInterface(classifier.name)).toBeUndefined();
         });
-        piLanguage.interfaces.forEach(classifier => {
-            expect(piLanguage.findClassifier(classifier.name)).not.toBeNull();
-            expect(piLanguage.findConcept(classifier.name)).toBeUndefined();
-            expect(piLanguage.findInterface(classifier.name)).not.toBeNull();
+        freLanguage.interfaces.forEach(classifier => {
+            expect(freLanguage.findClassifier(classifier.name)).not.toBeNull();
+            expect(freLanguage.findConcept(classifier.name)).toBeUndefined();
+            expect(freLanguage.findInterface(classifier.name)).not.toBeNull();
         });
     });
 
-    // on PiConcept and PiInterface
+    // on FretConcept and FretInterface
     // TODO if an implemented interface has a prop, we can find it
-    test("internal structure of PiConcept and PiInterface: properties", () => {
-        let piLanguage: FreLanguage = readAstFile(testdir + "test2.ast");
-        expect(piLanguage).not.toBeUndefined();
+    test("internal structure of FretConcept and FretInterface: properties", () => {
+        let freLanguage: FreLanguage = readAstFile(testdir + "test2.ast");
+        expect(freLanguage).not.toBeUndefined();
         // no references in the parts list, and vice versa
         // no primProps in reference list
-        const piConcept = piLanguage.findConcept("BB");
-        piConcept.parts().forEach(part => {
+        const freConcept = freLanguage.findConcept("BB");
+        freConcept.parts().forEach(part => {
             expect(part.isPart).toBe(true);
         });
-        piConcept.references().forEach(part => {
+        freConcept.references().forEach(part => {
             expect(part.isPart).toBe(false);
             expect(part).not.toBeInstanceOf(FrePrimitiveProperty);
         });
-        piConcept.primProperties.forEach(part => {
+        freConcept.primProperties.forEach(part => {
             expect(part.isPart).toBe(true);
         });
     });
 
-    test("internal structure of PiConcept and PiInterface: inheritance", () => {
-        let piLanguage: FreLanguage = readAstFile(testdir + "test3.ast");
-        expect(piLanguage).not.toBeUndefined();
+    test("internal structure of FretConcept and FretInterface: inheritance", () => {
+        let freLanguage: FreLanguage = readAstFile(testdir + "test3.ast");
+        expect(freLanguage).not.toBeUndefined();
 
         // no references in the parts list, and vice versa
         // no primProps in reference list
-        const piConcept = piLanguage.findConcept("BB");
-        expect(piConcept.allParts().length).toBeGreaterThan(0);
-        piConcept.allParts().forEach(part => {
+        const freConcept = freLanguage.findConcept("BB");
+        expect(freConcept.allParts().length).toBeGreaterThan(0);
+        freConcept.allParts().forEach(part => {
             expect(part.isPart).toBe(true);
         });
-        piConcept.allReferences().forEach(ref => {
+        freConcept.allReferences().forEach(ref => {
             expect(ref.isPart).toBe(false);
             expect(ref).not.toBeInstanceOf(FrePrimitiveProperty);
         });
-        piConcept.allPrimProperties().forEach(part => {
+        freConcept.allPrimProperties().forEach(part => {
             expect(part.isPart).toBe(true);
         });
 
         // if a 'base' has a prop, we can find it
-        const baseConcept = piConcept.base.referred.base.referred;     // should be "BaseBaseBB"
+        const baseConcept = freConcept.base.referred.base.referred;     // should be "BaseBaseBB"
         expect(baseConcept).not.toBeUndefined();
         baseConcept.allProperties().forEach(prop => {
-            expect(piConcept.allProperties()).toContain(prop);
+            expect(freConcept.allProperties()).toContain(prop);
         });
 
         // we can find all subconcepts, also recursive
         let list = LangUtil.subConcepts(baseConcept);
-        expect(list).toContain(piLanguage.findConcept("BaseBB"));
-        expect(list).toContain(piLanguage.findConcept("DD"));
-        expect(list).not.toContain(piLanguage.findConcept("Model"));
-        expect(list).not.toContain(piLanguage.findConcept("AA"));
-        expect(list).toContain(piLanguage.findConcept("BB"));
-        expect(list).toContain(piLanguage.findConcept("CC"));
-        expect(list).not.toContain(piLanguage.findConcept("BaseBaseBB"));
+        expect(list).toContain(freLanguage.findConcept("BaseBB"));
+        expect(list).toContain(freLanguage.findConcept("DD"));
+        expect(list).not.toContain(freLanguage.findConcept("Model"));
+        expect(list).not.toContain(freLanguage.findConcept("AA"));
+        expect(list).toContain(freLanguage.findConcept("BB"));
+        expect(list).toContain(freLanguage.findConcept("CC"));
+        expect(list).not.toContain(freLanguage.findConcept("BaseBaseBB"));
 
         // we can find all superconcepts, also recursive
-        list = LangUtil.superConcepts(piConcept);
-        expect(list).toContain(piLanguage.findConcept("BaseBB"));
-        expect(list).not.toContain(piLanguage.findConcept("DD"));
-        expect(list).not.toContain(piLanguage.findConcept("Model"));
-        expect(list).not.toContain(piLanguage.findConcept("AA"));
-        expect(list).not.toContain(piLanguage.findConcept("BB"));
-        expect(list).not.toContain(piLanguage.findConcept("CC"));
-        expect(list).toContain(piLanguage.findConcept("BaseBaseBB"));
+        list = LangUtil.superConcepts(freConcept);
+        expect(list).toContain(freLanguage.findConcept("BaseBB"));
+        expect(list).not.toContain(freLanguage.findConcept("DD"));
+        expect(list).not.toContain(freLanguage.findConcept("Model"));
+        expect(list).not.toContain(freLanguage.findConcept("AA"));
+        expect(list).not.toContain(freLanguage.findConcept("BB"));
+        expect(list).not.toContain(freLanguage.findConcept("CC"));
+        expect(list).toContain(freLanguage.findConcept("BaseBaseBB"));
         // TODO we can find all subinterfaces, also recursive
         // TODO we can find all superinterfaces, also recursive
     });
 
-    // on PiInstance
-    test("internal structure of PiInstance", () => {
-        let piLanguage: FreLanguage = readAstFile(testdir + "test4.ast");
-        expect(piLanguage).not.toBeUndefined();
-        const list = piLanguage.concepts.filter(con => con instanceof FreLimitedConcept);
-        // PiInstance.concept should be a limited property
-        // let myLimited = piLanguage.findConcept("BB");
+    // on FretInstance
+    test("internal structure of FretInstance", () => {
+        let freLanguage: FreLanguage = readAstFile(testdir + "test4.ast");
+        expect(freLanguage).not.toBeUndefined();
+        const list = freLanguage.concepts.filter(con => con instanceof FreLimitedConcept);
+        // FretInstance.concept should be a limited property
+        // let myLimited = freLanguage.findConcept("BB");
         list.forEach(myLimited => {
             expect(myLimited).toBeInstanceOf(FreLimitedConcept);
-            // test PiInstance against its concept
+            // test FretInstance against its concept
             (myLimited as FreLimitedConcept).instances.forEach(inst => {
                 expect(inst.concept.referred).toBe(myLimited);
                 inst.props.forEach(instProp => {
@@ -138,16 +138,16 @@ describe("Checking internal structure of language", () => {
     });
 
     // TODO implement the following tests:
-    // on PiProperty
+    // on FretProperty
     // test optional, list, part properties
     // test properties with limited concept as type
     // test isStatic prim properties
 
     // test initial value of properties
     test("initial values of primitive properties", () => {
-        let piLanguage: FreLanguage = readAstFile(testdir + "test5.ast");
-        expect(piLanguage).not.toBeUndefined();
-        const BB: FreConcept = piLanguage.concepts.find(con => con.name === "BB");
+        let freLanguage: FreLanguage = readAstFile(testdir + "test5.ast");
+        expect(freLanguage).not.toBeUndefined();
+        const BB: FreConcept = freLanguage.concepts.find(con => con.name === "BB");
         expect(BB).not.toBeNull();
         BB.allPrimProperties().forEach(prim => {
             switch (prim.name) {
@@ -192,9 +192,9 @@ describe("Checking internal structure of language", () => {
     });
 
     test("all kinds of limited concepts", () => {
-        let piLanguage: FreLanguage = readAstFile(testdir + "test6.ast");
-        expect(piLanguage).not.toBeUndefined();
-        const CC: FreConcept = piLanguage.concepts.find(con => con.name === "CC");
+        let freLanguage: FreLanguage = readAstFile(testdir + "test6.ast");
+        expect(freLanguage).not.toBeUndefined();
+        const CC: FreConcept = freLanguage.concepts.find(con => con.name === "CC");
         expect(CC instanceof FreLimitedConcept).toBe(true);
         (CC as FreLimitedConcept).instances.forEach(inst => {
             switch (inst.name) {
