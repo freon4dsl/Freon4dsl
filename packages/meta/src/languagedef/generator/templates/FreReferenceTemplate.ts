@@ -11,7 +11,7 @@ export class FreReferenceTemplate {
         import { ${Names.environment(language)} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${Names.environment(language)}";
         
         /**
-         * Class ${Names.FreNodeReference} provides the implementation for a (named) reference in ProjectIt.
+         * Class ${Names.FreNodeReference} provides the implementation for a (named) reference in Freon.
          * References can be set with either a referred object, or with a name.
          */
         export class ${Names.FreNodeReference}< T extends ${Names.FreNamedNode}> extends MobxModelElementImpl {

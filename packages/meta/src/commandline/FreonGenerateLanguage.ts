@@ -1,9 +1,9 @@
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
-import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new MetaLogger("ProjectItGenerateLanguage"); // .mute();
-export class ProjectItGenerateLanguage extends ProjectItGeneratePartAction {
+const LOGGER = new MetaLogger("FreonGenerateLanguage"); // .mute();
+export class FreonGenerateLanguage extends FreonGeneratePartAction {
     private languageGenerator: LanguageGenerator = new LanguageGenerator();
 
     public constructor() {
@@ -15,7 +15,7 @@ export class ProjectItGenerateLanguage extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt language generation ...");
+        LOGGER.log("Starting Freon language generation ...");
         super.generate();
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(this.language);

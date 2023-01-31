@@ -1,6 +1,6 @@
 import { FreNode } from "../ast";
 
-// Part of the ProjectIt Framework.
+// Part of the Freon Framework.
 export interface FreWriter {
 
     /**

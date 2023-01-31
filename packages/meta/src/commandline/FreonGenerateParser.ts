@@ -1,11 +1,11 @@
 import { FreEditParser } from "../editordef/parser/FreEditParser";
-import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 
-const LOGGER = new MetaLogger("ProjectItGenerateParser"); // .mute();
+const LOGGER = new MetaLogger("FreonGenerateParser"); // .mute();
 
-export class ProjectItGenerateParser extends ProjectItGeneratePartAction {
+export class FreonGenerateParser extends FreonGeneratePartAction {
     protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
 
     public constructor() {
@@ -17,7 +17,7 @@ export class ProjectItGenerateParser extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt reader and writer generation ...");
+        LOGGER.log("Starting Freon reader and writer generation ...");
         super.generate();
 
         this.parserGenerator.outputfolder = this.outputFolder;

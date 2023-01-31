@@ -1,13 +1,13 @@
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { FreEditParser } from "../editordef/parser/FreEditParser";
-import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
 import { FreEditUnit } from "../editordef/metalanguage";
 
-const LOGGER = new MetaLogger("ProjectItGenerateEditor"); // .mute();
+const LOGGER = new MetaLogger("FreonGenerateEditor"); // .mute();
 
-export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
+export class FreonGenerateEditor extends FreonGeneratePartAction {
     protected editorGenerator: EditorGenerator = new EditorGenerator();
 
     public constructor() {
@@ -19,7 +19,7 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt editor generation ...");
+        LOGGER.log("Starting Freon editor generation ...");
         super.generate();
 
         this.editorGenerator.outputfolder = this.outputFolder;

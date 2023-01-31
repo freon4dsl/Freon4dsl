@@ -1,6 +1,6 @@
 import { ICommandLineActionOptions } from "@rushstack/ts-command-line";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
-import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
+import { FreonGenerateAction } from "./FreonGenerateAction";
 import { FreLanguage } from "../languagedef/metalanguage/FreLanguage";
 
 /**
@@ -8,7 +8,7 @@ import { FreLanguage } from "../languagedef/metalanguage/FreLanguage";
  * The only option defined here is the -d flag for the folder where the definition files can be found.
  * Subclasses need to call super.generate().
  */
-export class ProjectItGeneratePartAction extends ProjectItGenerateAction {
+export class FreonGeneratePartAction extends FreonGenerateAction {
     protected language: FreLanguage;
 
     public constructor(options: ICommandLineActionOptions) {

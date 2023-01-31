@@ -6,7 +6,7 @@ import { FreEditParser } from "../editordef/parser/FreEditParser";
 import { FileWatcher } from "../utils/generation/FileWatcher";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
-import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
+import { FreonGenerateAction } from "./FreonGenerateAction";
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
 import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
@@ -22,7 +22,7 @@ import { FreTyperMerger } from "../typerdef/parser";
 import { LOG2USER } from "../utils/UserLogger";
 import { DiagramGenerator } from "../diagramgen/DiagramGenerator";
 
-export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
+export class FreonGenerateAllAction extends FreonGenerateAction {
     public watch: boolean = false;
 
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();

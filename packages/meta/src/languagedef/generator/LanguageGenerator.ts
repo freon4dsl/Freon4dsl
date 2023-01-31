@@ -122,7 +122,7 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.languageGenFolder}/internal.ts`, internalIndexFile);
 
         // Generate projectit configuration if it isn't there
-        LOGGER.log(`Generating ProjectIt Configuration: ${this.configurationFolder}/${Names.configuration()}.ts`);
+        LOGGER.log(`Generating Freon Configuration: ${this.configurationFolder}/${Names.configuration()}.ts`);
         const configurationFile = FileUtil.pretty(configurationTemplate.generate(language, relativePath), "Configuration", generationStatus);
         FileUtil.generateManualFile(`${this.configurationFolder}/${Names.configuration()}.ts`, configurationFile, "Configuration");
 

@@ -18,7 +18,7 @@ export type ReferenceShortcut = {
 };
 
 /**
- * Abstract superclass for all actions in ProjectIt
+ * Abstract superclass for all actions in Freon
  */
 export abstract class FreAction {
     /**

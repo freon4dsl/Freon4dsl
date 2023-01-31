@@ -1,10 +1,10 @@
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { ScoperParser } from "../scoperdef/parser/ScoperParser";
-import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new MetaLogger("ProjectItGenerateScoper"); // .mute();
-export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
+const LOGGER = new MetaLogger("FreonGenerateScoper"); // .mute();
+export class FreonGenerateScoper extends FreonGeneratePartAction {
     protected scoperGenerator: ScoperGenerator;
 
     public constructor() {
@@ -17,7 +17,7 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt scoper generation ...");
+        LOGGER.log("Starting Freon scoper generation ...");
         super.generate();
         this.scoperGenerator = new ScoperGenerator();
         this.scoperGenerator.language = this.language;

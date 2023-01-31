@@ -1,11 +1,11 @@
 import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator";
 import { FreInterpreterDef } from "../interpretergen/metalanguage/FreInterpreterDef";
-import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new MetaLogger("ProjectItGenerateInterpreter").mute();
+const LOGGER = new MetaLogger("FreonGenerateInterpreter").mute();
 
-export class ProjectItGenerateInterpreter extends ProjectItGeneratePartAction {
+export class FreonGenerateInterpreter extends FreonGeneratePartAction {
     protected interpreterGenerator: InterpreterGenerator  = new InterpreterGenerator();
 
     public constructor() {
@@ -17,7 +17,7 @@ export class ProjectItGenerateInterpreter extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt interpreter generation ...");
+        LOGGER.log("Starting Freon interpreter generation ...");
         super.generate();
 
         // read interpreter .eval file

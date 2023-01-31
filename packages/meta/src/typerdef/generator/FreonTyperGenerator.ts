@@ -110,7 +110,7 @@ export class FreonTyperGenerator {
     }
 
     clean(force: boolean) {
-        // TODO error " ProjectItCleanAction: ERROR: Stopping typer cleansing because of errors: EPERM: operation not permitted, unlink 'src\testNoParserAvailable\typer\gen\type-concepts' "
+        // TODO error " FreonCleanAction: ERROR: Stopping typer cleansing because of errors: EPERM: operation not permitted, unlink 'src\testNoParserAvailable\typer\gen\type-concepts' "
         this.getFolderNames();
         FileUtil.deleteDirAndContent(this.typerConceptsFolder);
         FileUtil.deleteDirAndContent(this.typerGenFolder);

@@ -1,10 +1,10 @@
-import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
 import { FreTyperMerger } from "../typerdef/parser/FreTyperMerger";
 
-const LOGGER = new MetaLogger("ProjectItGenerateTyper"); // .mute();
-export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
+const LOGGER = new MetaLogger("FreonGenerateTyper"); // .mute();
+export class FreonGenerateTyper extends FreonGeneratePartAction {
     protected typerGenerator: FreonTyperGenerator;
 
     public constructor() {
@@ -16,7 +16,7 @@ export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt typer generation ...");
+        LOGGER.log("Starting Freon typer generation ...");
 
         super.generate();
         this.typerGenerator = new FreonTyperGenerator();

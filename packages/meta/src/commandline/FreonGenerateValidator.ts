@@ -1,11 +1,11 @@
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
-import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new MetaLogger("ProjectItGenerateValidator"); // .mute();
+const LOGGER = new MetaLogger("FreonGenerateValidator"); // .mute();
 
-export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
+export class FreonGenerateValidator extends FreonGeneratePartAction {
     protected validatorGenerator: ValidatorGenerator;
 
     public constructor() {
@@ -18,7 +18,7 @@ export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt validator generation ...");
+        LOGGER.log("Starting Freon validator generation ...");
 
         super.generate();
         this.validatorGenerator = new ValidatorGenerator();

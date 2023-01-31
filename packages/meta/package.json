@@ -13,7 +13,7 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "bin": {
-    "projectit": "dist/bin/projectit-generate-editor.js"
+    "projectit": "dist/bin/freon-generator.js"
   },
   "scripts": {
     "cleanup": "bash ../../scripts/cleanup.sh",

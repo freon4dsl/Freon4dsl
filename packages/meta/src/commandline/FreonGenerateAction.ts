@@ -6,7 +6,7 @@ import { GenerationStatus, FileUtil } from "../utils";
  * Subclasses need to call super.onDefineParameters()!
  */
 // TODO subclasses do not call super.onDefineParameters(): is comment wrong or something else?
-export abstract class ProjectItGenerateAction extends CommandLineAction {
+export abstract class FreonGenerateAction extends CommandLineAction {
     private outputFolderArg: CommandLineStringParameter;
     protected outputFolder: string;
 

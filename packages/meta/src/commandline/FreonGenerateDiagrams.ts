@@ -1,11 +1,11 @@
-import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 import { DiagramGenerator } from "../diagramgen/DiagramGenerator";
 
 
-const LOGGER = new MetaLogger("ProjectItGenerateDiagrams"); // .mute();
+const LOGGER = new MetaLogger("FreonGenerateDiagrams"); // .mute();
 
-export class ProjectItGenerateDiagrams extends ProjectItGeneratePartAction {
+export class FreonGenerateDiagrams extends FreonGeneratePartAction {
     protected diagramGenerator: DiagramGenerator = new DiagramGenerator();
 
     public constructor() {
@@ -17,7 +17,7 @@ export class ProjectItGenerateDiagrams extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt diagram generation ...");
+        LOGGER.log("Starting Freon diagram generation ...");
         super.generate();
 
         this.diagramGenerator.outputfolder = this.outputFolder;

@@ -2,7 +2,7 @@ import { FreLangElement, FreMetaEnvironment } from "./internal";
 import { ParseLocation, FreDefinitionElement, FreParseLocation } from "../../utils";
 
 /**
- * Implementation for a (named) reference in ProjectIt.
+ * Implementation for a (named) reference in Freon.
  * Reference can be set with either a referred object, or with a unitName.
  */
 export class MetaElementReference<T extends FreLangElement> {

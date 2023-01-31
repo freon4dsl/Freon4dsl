@@ -10,7 +10,7 @@ import { FreLogger } from "../../logging";
 const LOGGER = new FreLogger("FreCommand"); //.mute();
 
 /**
- * Abstract supercass for all commands in ProjectIt.
+ * Abstract supercass for all commands in Freon.
  * FreCommand is the only place where actual changes (coming from the editor) to the model should be made.
  *
  * The `undo()` function is not always implemented yet.
