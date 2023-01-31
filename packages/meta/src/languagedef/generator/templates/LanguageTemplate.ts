@@ -4,7 +4,7 @@ import { Names, PROJECTITCORE, LangUtil, GenerationUtil } from "../../../utils";
 export class LanguageTemplate {
 
     generateLanguage(language: PiLanguage): string {
-        return `import { Language, Model, ModelUnit, Property, Concept, Interface, ${Names.PiElementReference} } from "${PROJECTITCORE}";
+        return `import { ${Names.FreLanguage}, Model, ModelUnit, Property, Concept, Interface, ${Names.PiElementReference} } from "${PROJECTITCORE}";
         
             import { ${Names.classifier(language.modelConcept)}, ${language.units.map(unit =>
             `${Names.classifier(unit)}`).join(", ") }, ${language.concepts.map(concept =>
@@ -14,19 +14,19 @@ export class LanguageTemplate {
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.
              */
              export function initializeLanguage() {
-                Language.getInstance().name = "${language.name}";
-                Language.getInstance().addModel(describe${Names.classifier(language.modelConcept)}());
+                ${Names.FreLanguage}.getInstance().name = "${language.name}";
+                ${Names.FreLanguage}.getInstance().addModel(describe${Names.classifier(language.modelConcept)}());
                 ${language.units.map(concept =>
-                    `Language.getInstance().addUnit(describe${Names.classifier(concept)}());`
+                    `${Names.FreLanguage}.getInstance().addUnit(describe${Names.classifier(concept)}());`
                 ).join("\n")}
                 ${language.concepts.map(concept =>
-                    `Language.getInstance().addConcept(describe${Names.concept(concept)}());`
+                    `${Names.FreLanguage}.getInstance().addConcept(describe${Names.concept(concept)}());`
                 ).join("\n")}
                 ${language.interfaces.map(intface =>
-                    `Language.getInstance().addInterface(describe${Names.interface(intface)}());`
+                    `${Names.FreLanguage}.getInstance().addInterface(describe${Names.interface(intface)}());`
                 ).join("\n")}
-                Language.getInstance().addReferenceCreator( (name: string, type: string) => {
-                    return (!!name ? PiElementReference.create(name, type) : null);
+                ${Names.FreLanguage}.getInstance().addReferenceCreator( (name: string, type: string) => {
+                    return (!!name ? ${Names.PiElementReference}.create(name, type) : null);
                 });
             }
 

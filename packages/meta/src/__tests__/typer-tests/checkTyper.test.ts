@@ -41,7 +41,7 @@ describe("Checking new typer", () => {
             expect(errors.includes("Cannot find instance 'Simp' of 'PredefinedType' [file: type-rules1.type:20:30].")).toBeTruthy();
             expect(errors.includes("Cannot find property 'inn' in classifier 'UnitLiteral' [file: type-rules1.type:38:37].")).toBeTruthy();
             expect(errors.includes("Cannot find property 'base' [file: type-rules1.type:38:19].")).toBeTruthy();
-            expect(errors.includes("Type of 'typeof( self.content )' (PiType) does not conform to TypeDeclaration [file: type-rules1.type:46:9].")).toBeTruthy();
+            expect(errors.includes("Type of 'typeof( self.content )' (${Names.FreType}) does not conform to TypeDeclaration [file: type-rules1.type:46:9].")).toBeTruthy();
             expect(errors.includes("Property may not be present twice [file: type-rules1.type:66:13].")).toBeTruthy();
             expect(errors.includes("Property may not be present twice [file: type-rules1.type:90:32].")).toBeTruthy();
         }
@@ -64,7 +64,7 @@ describe("Checking new typer", () => {
             expect(errors.includes("Concept or interface 'SimpleType' is not marked 'hastype', therefore it cannot have an infertype rule [file: type-rules2.type:20:5].")).toBeTruthy();
             expect(errors.includes("Cannot find property 'inn' in classifier 'UnitLiteral' [file: type-rules2.type:38:37].")).toBeTruthy();
             expect(errors.includes("Cannot find property 'base' [file: type-rules2.type:38:19].")).toBeTruthy();
-            expect(errors.includes("Type of 'typeof( self.content )' (PiType) does not conform to TypeDeclaration [file: type-rules2.type:46:9].")).toBeTruthy();
+            expect(errors.includes("Type of 'typeof( self.content )' (${Names.FreType}) does not conform to TypeDeclaration [file: type-rules2.type:46:9].")).toBeTruthy();
             expect(errors.includes("Concept or interface 'SimpleExp1' is not marked 'istype', therefore it cannot have an equals rule [file: type-rules2.type:53:5].")).toBeTruthy();
             expect(errors.includes("Cannot find property 'type' in classifier 'SimpleExp1' [file: type-rules2.type:53:19].")).toBeTruthy();
             expect(errors.includes("Cannot find property 'innerType' in classifier 'NamedType' [file: type-rules2.type:64:15].")).toBeTruthy();
@@ -89,8 +89,8 @@ describe("Checking new typer", () => {
             // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
             expect(e.message).toBe(`checking errors (3).`);
             expect(errors.includes("Cannot find property 'base' [file: type-rules4.type:38:19].")).toBeTruthy();
-            expect(errors.includes("Type of 'typeof( self.content )' (PiType) does not conform to TypeDeclaration [file: type-rules4.type:46:9].")).toBeTruthy();
-            expect(errors.includes("Cannot find property 'name' in classifier 'PiType' [file: type-rules4.type:70:49].")).toBeTruthy();
+            expect(errors.includes("Type of 'typeof( self.content )' (${Names.FreType}) does not conform to TypeDeclaration [file: type-rules4.type:46:9].")).toBeTruthy();
+            expect(errors.includes("Cannot find property 'name' in classifier '${Names.FreType}' [file: type-rules4.type:70:49].")).toBeTruthy();
         }
     });
 

@@ -1,4 +1,4 @@
-import { PiElementReference } from "./internal";
+import { MetaElementReference } from "./internal";
 import { PiDefinitionElement } from "../../utils/PiDefinitionElement";
 
 // root of the inheritance structure of all elements in a language definition
@@ -134,7 +134,7 @@ export class PiUnitDescription extends PiClassifier {
 }
 
 export class PiInterface extends PiClassifier {
-    base: PiElementReference<PiInterface>[] = [];
+    base: MetaElementReference<PiInterface>[] = [];
 
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = []; // return a new array
@@ -200,8 +200,8 @@ export class PiInterface extends PiClassifier {
 
 export class PiConcept extends PiClassifier {
     isAbstract: boolean = false;
-    base: PiElementReference<PiConcept>;
-    interfaces: PiElementReference<PiInterface>[] = []; // the interfaces that this concept implements
+    base: MetaElementReference<PiConcept>;
+    interfaces: MetaElementReference<PiInterface>[] = []; // the interfaces that this concept implements
 
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.implementedPrimProperties();
@@ -398,7 +398,7 @@ export class PiProperty extends PiLangElement {
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
     implementedInBase: boolean = false;
-    private __type: PiElementReference<PiClassifier>;
+    private __type: MetaElementReference<PiClassifier>;
     owningClassifier: PiClassifier;
 
     get isPrimitive(): boolean {
@@ -411,13 +411,13 @@ export class PiProperty extends PiLangElement {
         return this.__type?.referred;
     }
     set type(t: PiClassifier) {
-        this.__type = PiElementReference.create<PiClassifier>(t, "PiClassifier");
+        this.__type = MetaElementReference.create<PiClassifier>(t, "PiClassifier");
         this.__type.owner = this;
     }
-    get typeReference(): PiElementReference<PiClassifier> { // only used by PiLanguageChecker and PiTyperChecker
+    get typeReference(): MetaElementReference<PiClassifier> { // only used by PiLanguageChecker and PiTyperChecker
         return this.__type;
     }
-    set typeReference(t : PiElementReference<PiClassifier>) { // only used by PiLanguageChecker and PiTyperChecker
+    set typeReference(t : MetaElementReference<PiClassifier>) { // only used by PiLanguageChecker and PiTyperChecker
         this.__type = t;
         this.__type.owner = this;
     }
@@ -448,7 +448,7 @@ export class PiPrimitiveProperty extends PiProperty {
 }
 
 export class PiInstance extends PiLangElement {
-    concept: PiElementReference<PiConcept>; // should be a limited concept
+    concept: MetaElementReference<PiConcept>; // should be a limited concept
     // Note that these properties may be undefined, when there is no definition in the .ast file
     props: PiInstanceProperty[] = [];
 
@@ -458,8 +458,8 @@ export class PiInstance extends PiLangElement {
 }
 
 export class PiInstanceProperty extends PiLangElement {
-    owningInstance: PiElementReference<PiInstance>;
-    property: PiElementReference<PiProperty>;
+    owningInstance: MetaElementReference<PiInstance>;
+    property: MetaElementReference<PiProperty>;
     valueList: PiPrimitiveValue[] = [];
 
     get value(): PiPrimitiveValue {
@@ -475,11 +475,11 @@ export class PiInstanceProperty extends PiLangElement {
 export class PiFunction extends PiLangElement {
     language: PiLanguage;
     formalparams: PiParameter[] = [];
-    returnType: PiElementReference<PiConcept>;
+    returnType: MetaElementReference<PiConcept>;
 }
 
 export class PiParameter extends PiLangElement {
-    type: PiElementReference<PiConcept>;
+    type: MetaElementReference<PiConcept>;
 }
 
 // the basic types in the pi-languages

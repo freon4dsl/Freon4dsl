@@ -1,9 +1,9 @@
-import { GenericModelSerializer } from "@projectit/core";
+import { FreModelSerializer } from "@projectit/core";
 import { Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 export class DemoUnitCreator {
-    serializer: GenericModelSerializer = new GenericModelSerializer();
+    serializer: FreModelSerializer = new FreModelSerializer();
 
     modelToJsonToModel() : Demo {
         let result : Demo = Demo.create({name: "ReadFromJson"});

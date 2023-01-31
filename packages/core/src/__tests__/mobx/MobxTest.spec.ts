@@ -1,4 +1,4 @@
-import { PiElementReferenceTestScoper } from "./PiElementReferenceTestScoper";
+import { FreNodeReferenceTestScoper } from "./FreNodeReferenceTestScoper";
 import { TestScoper } from "./TestScoper";
 import { MobxTestElement, ModelContext, MobxTestRoot, MobxTestParts } from "./MobxModel";
 import { observe, reaction } from "mobx";
@@ -11,9 +11,9 @@ describe("Mobx Model", () => {
     let part1: MobxTestElement;
     let part2: MobxTestElement;
     let part3: MobxTestElement;
-    let ref1: PiElementReferenceTestScoper<MobxTestElement>;
-    let ref2: PiElementReferenceTestScoper<MobxTestElement>;
-    let ref3: PiElementReferenceTestScoper<MobxTestElement>;
+    let ref1: FreNodeReferenceTestScoper<MobxTestElement>;
+    let ref2: FreNodeReferenceTestScoper<MobxTestElement>;
+    let ref3: FreNodeReferenceTestScoper<MobxTestElement>;
     let reaktion: number = 0;
     let observedLeft: number = 0;
 
@@ -23,9 +23,9 @@ describe("Mobx Model", () => {
         part1 = new MobxTestElement("part1");
         part2 = new MobxTestElement("part2");
         part3 = new MobxTestElement("part3");
-        ref1 = PiElementReferenceTestScoper.create(part1, "tt");
-        ref2 = PiElementReferenceTestScoper.create(part2, "tt");
-        ref3 = PiElementReferenceTestScoper.create(part3, "tt");
+        ref1 = FreNodeReferenceTestScoper.create(part1, "tt");
+        ref2 = FreNodeReferenceTestScoper.create(part2, "tt");
+        ref3 = FreNodeReferenceTestScoper.create(part3, "tt");
 
         root.element = element;
         element.manyPart.push(part1);
@@ -108,10 +108,10 @@ describe("Mobx Model", () => {
         checkUnchanged();
 
         const singleRef = element.singleReference;
-        element.singleReference = PiElementReferenceTestScoper.create(part1, "tt");
+        element.singleReference = FreNodeReferenceTestScoper.create(part1, "tt");
         expect(element.singleReference.name).toBe("part1");
         expect(element.singleReference.referred).toBe(part1);
-        expect(singleRef.piOwnerDescriptor() === null);
+        expect(singleRef.freOwnerDescriptor() === null);
     });
 
     it("update element of list of references", () => {

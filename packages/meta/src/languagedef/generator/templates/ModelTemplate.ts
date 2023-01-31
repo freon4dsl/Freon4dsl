@@ -10,7 +10,7 @@ export class ModelTemplate {
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
         const coreImports = ClassifierUtil.findMobxImports(modelDescription)
-            .concat(["PiModel", "Language", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"]);
+            .concat([Names.FreModel, Names.FreLanguage, Names.FreUtils, Names.FreParseLocation, "matchElementList", "matchPrimitiveList, matchReferenceList"]);
         const modelImports = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType(language);
 
@@ -24,7 +24,7 @@ export class ModelTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            export class ${myName} extends ${extendsClass} implements PiModel {     
+            export class ${myName} extends ${extendsClass} implements ${Names.PiModel} {     
             
                 ${ConceptUtils.makeStaticCreateMethod(modelDescription, myName)}
                                       
@@ -52,7 +52,7 @@ export class ModelTemplate {
             }`
         ).join("\n")}
                     if (!!result && !!metatype) {
-                        if (Language.getInstance().metaConformsToType(result, metatype)) {
+                        if (${Names.FreLanguage}.getInstance().metaConformsToType(result, metatype)) {
                             return result;
                         }
                     } else {
@@ -68,15 +68,15 @@ export class ModelTemplate {
                  * @param newUnit
                  */
                 replaceUnit(oldUnit: ${Names.modelunit(language)}, newUnit: ${Names.modelunit(language)}): boolean {
-                    if ( oldUnit.piLanguageConcept() !== newUnit.piLanguageConcept()) {
+                    if ( oldUnit.freLanguageConcept() !== newUnit.freLanguageConcept()) {
                         return false;
                     }
-                    if ( oldUnit.piOwnerDescriptor().owner !== this) {
+                    if ( oldUnit.freOwnerDescriptor().owner !== this) {
                         return false;
                     }
                     // we must store the interface in the same place as the old unit, which info is held in PiContainer()
                     ${modelDescription.parts().map(part =>
-            `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.piOwnerDescriptor().propertyName === "${part.name}" ) {
+            `if ( oldUnit.freLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.freOwnerDescriptor().propertyName === "${part.name}" ) {
                                 ${part.isList ?
                 `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)});
                                 this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type)});`
@@ -97,7 +97,7 @@ export class ModelTemplate {
                      */
                     addUnit(newUnit: ${Names.modelunit(language)}): boolean {
                         if (!!newUnit) {
-                            const myMetatype = newUnit.piLanguageConcept();
+                            const myMetatype = newUnit.freLanguageConcept();
                             switch (myMetatype) {
                             ${language.modelConcept.allParts().map(part =>
             `case "${Names.classifier(part.type)}": {
@@ -120,7 +120,7 @@ export class ModelTemplate {
                      */
                     removeUnit(oldUnit: ${Names.modelunit(language)}): boolean {
                         if (!!oldUnit) {
-                            const myMetatype = oldUnit.piLanguageConcept();
+                            const myMetatype = oldUnit.freLanguageConcept();
                             switch (myMetatype) {
                             ${language.modelConcept.allParts().map(part =>
             `case "${Names.classifier(part.type)}": {

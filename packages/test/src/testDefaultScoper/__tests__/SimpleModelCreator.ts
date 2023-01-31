@@ -1,12 +1,12 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen";
-import { GenericModelSerializer, AstWalker, PiElement, PiElementReference } from "@projectit/core";
+import { FreModelSerializer, AstWalker, FreNode, FreNodeReference } from "@projectit/core";
 import { RefCreatorWorker } from "./RefCreatorWorker";
 
 export class SimpleModelCreator {
     private breadth = 1;
     private nameNumber: number = 0;
     public allNames: string[] = [];
-    private serial: GenericModelSerializer = new GenericModelSerializer();
+    private serial: FreModelSerializer = new FreModelSerializer();
     private numberOfRefs: number = 0;
 
     createName(parent: string, type: string): string {
@@ -37,7 +37,7 @@ export class SimpleModelCreator {
         // const worker = new RefCreatorWorker(modelUnits);
         // const myWalker = new AstWalker();
         // myWalker.myWorkers.push(worker);
-        // myWalker.walk(result, (e: PiElement) => true);
+        // myWalker.walk(result, (e: FreNode) => true);
         // return result;
 
         for (let i = 0; i < nrOfUnits; i++) {
@@ -126,7 +126,7 @@ export class SimpleModelCreator {
         for (let i = 0; i < this.breadth * 2; i++) {
             const index = this.makeReferenceIndex();
             if (!!this.allNames[index] && this.allNames[index].length > 0) {
-                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>([this.allNames[index]], "DSref");
+                const someReference: FreNodeReference<DSref> = FreNodeReference.create<DSref>([this.allNames[index]], "DSref");
                 dSunit.dsRefs.push(someReference);
             } else {
                 console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
@@ -140,7 +140,7 @@ export class SimpleModelCreator {
         for (let i = 0; i < this.breadth * 2; i++) {
             const index = this.makeReferenceIndex();
             if (!!this.allNames[index] && this.allNames[index].length > 0) {
-                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(this.allNames[index], "DSref");
+                const someReference: FreNodeReference<DSref> = FreNodeReference.create<DSref>(this.allNames[index], "DSref");
                 part.conceptRefs.push(someReference);
             } else {
                 console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");

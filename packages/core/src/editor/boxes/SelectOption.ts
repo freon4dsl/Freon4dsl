@@ -1,4 +1,4 @@
-import { PiAction } from "../actions/index";
+import { FreAction } from "../actions/index";
 
 /**
  * Describes an option in a dropdown
@@ -13,7 +13,7 @@ export interface SelectOption {
      */
     label: string;
 
-    action?: PiAction;
+    action?: FreAction;
     /**
      * A more verbose description, keep this to a single short line.
      */

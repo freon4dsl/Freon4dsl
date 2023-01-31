@@ -21,8 +21,8 @@
         isSelectBox,
         isTextBox,
         isSvgBox,
-        PiEditor,
-        PiLogger,
+        FreEditor,
+        FreLogger,
         Box, isElementBox
     } from "@projectit/core";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
@@ -41,10 +41,10 @@
     import { componentId, setBoxSizes } from "./svelte-utils";
     import ElementComponent from "./ElementComponent.svelte";
 
-    const LOGGER = new PiLogger("RenderComponent");
+    const LOGGER = new FreLogger("RenderComponent");
 
     export let box: Box = null;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
 
     let id: string;
     let className: string = '';
@@ -61,7 +61,7 @@
 
     afterUpdate(() => {
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
-        LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element?.piId() + '=' + b?.element?.piLanguageConcept() + '=' + b?.kind) + "]");
+        LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element?.freId() + '=' + b?.element?.freLanguageConcept() + '=' + b?.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
         className = (isSelected ? "selected" : "unSelected");
         if (!!element) {

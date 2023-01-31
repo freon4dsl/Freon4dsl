@@ -1,10 +1,10 @@
-import { PiUtils } from "../../util";
-import { PiCaret, PiCaretPosition } from "../util";
-import { PiElement } from "../../ast";
+import { FreUtils } from "../../util";
+import { FreCaret, FreCaretPosition } from "../util";
+import { FreNode } from "../../ast";
 import { Box } from "./internal";
-import { PiLogger } from "../../logging";
+import { FreLogger } from "../../logging";
 
-const LOGGER = new PiLogger("TextBox");
+const LOGGER = new FreLogger("TextBox");
 
 export enum CharAllowed {
     OK,
@@ -44,9 +44,9 @@ export class TextBox extends Box {
         return CharAllowed.OK;
     };
 
-    constructor(exp: PiElement, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>) {
+    constructor(exp: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>) {
         super(exp, role);
-        PiUtils.initializeObject(this, initializer);
+        FreUtils.initializeObject(this, initializer);
         this.getText = getText;
         this.$setText = setText;
     }
@@ -59,22 +59,22 @@ export class TextBox extends Box {
 
     /** @internal
      */
-    setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
+    setCaret: (caret: FreCaret) => void = (caret: FreCaret) => {
         LOGGER.log("setCaret: " + caret.position);
         /* To be overwritten by `TextComponent` */
         //TODO The followimng is needed to keep the cursor at the end when creating a nu8mberliteral in example
         //     Check in new components whether this is needed.
         switch (caret.position) {
-            case PiCaretPosition.RIGHT_MOST:
+            case FreCaretPosition.RIGHT_MOST:
                 this.caretPosition = this.getText().length;
                 break;
-            case PiCaretPosition.LEFT_MOST:
+            case FreCaretPosition.LEFT_MOST:
                 this.caretPosition = 0;
                 break;
-            case PiCaretPosition.INDEX:
+            case FreCaretPosition.INDEX:
                 this.caretPosition = caret.position;
                 break;
-            case PiCaretPosition.UNSPECIFIED:
+            case FreCaretPosition.UNSPECIFIED:
                 break;
             default:
                 break;

@@ -130,8 +130,8 @@ export class LanguageGenerator {
         // set relative path to an extra level to get the imports right
         relativePath = "../../";
 
-        // LOGGER.log(`Generating PiElementReference: ${this.languageGenFolder}/${Names.PiElementReference}.ts`);
-        // const referenceFile = FileUtil.pretty(piReferenceTemplate.generatePiReference(language, relativePath), "PiElementReference", generationStatus);
+        // LOGGER.log(`Generating FreNodeReference: ${this.languageGenFolder}/${Names.PiElementReference}.ts`);
+        // const referenceFile = FileUtil.pretty(piReferenceTemplate.generatePiReference(language, relativePath), "FreElementReference", generationStatus);
         // fs.writeFileSync(`${this.languageGenFolder}/${Names.PiElementReference}.ts`, referenceFile);
 
         LOGGER.log(`Generating language structure information: ${this.languageGenFolder}/${Names.language(language)}.ts`);

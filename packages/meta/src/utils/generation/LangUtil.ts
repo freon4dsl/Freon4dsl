@@ -1,4 +1,4 @@
-import { PiClassifier, PiConcept, PiElementReference, PiInterface, PiProperty } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, MetaElementReference, PiInterface, PiProperty } from "../../languagedef/metalanguage";
 import { GenerationUtil } from "./GenerationUtil";
 
 /**
@@ -132,8 +132,8 @@ export class LangUtil {
      *
      * @param piInterface
      */
-    public static findImplementorsDirect(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
-        const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
+    public static findImplementorsDirect(piInterface: PiInterface | MetaElementReference<PiInterface>): PiConcept[] {
+        const myInterface = (piInterface instanceof MetaElementReference ? piInterface.referred : piInterface);
         return myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
     }
 
@@ -143,8 +143,8 @@ export class LangUtil {
      *
      * @param piInterface
      */
-    public static findImplementorsRecursive(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
-        const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
+    public static findImplementorsRecursive(piInterface: PiInterface | MetaElementReference<PiInterface>): PiConcept[] {
+        const myInterface = (piInterface instanceof MetaElementReference ? piInterface.referred : piInterface);
         let implementors : PiConcept[] = this.findImplementorsDirect(myInterface);
 
         // add implementors of sub-interfaces
@@ -166,9 +166,9 @@ export class LangUtil {
      *
      * @param classifier
      */
-    public static findAllImplementorsAndSubs(classifier: PiElementReference<PiClassifier> | PiClassifier): PiClassifier[] {
+    public static findAllImplementorsAndSubs(classifier: MetaElementReference<PiClassifier> | PiClassifier): PiClassifier[] {
         let result: PiClassifier[] = [];
-        const myClassifier = (classifier instanceof PiElementReference ? classifier.referred : classifier);
+        const myClassifier = (classifier instanceof MetaElementReference ? classifier.referred : classifier);
         if (!!myClassifier) {
             result.push(myClassifier);
             if (myClassifier instanceof PiConcept) { // find all subclasses and mark them as namespace

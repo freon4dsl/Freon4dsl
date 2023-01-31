@@ -1,14 +1,14 @@
 // Note that the following import cannot be from "@projectit/core", because
 // this leads to a load error
-// import { PiErrorSeverity } from "@projectit/core";
-import { PiErrorSeverity } from "../../utils/generation/PiErrorSeverity";
+// import { FreErrorSeverity } from "@projectit/core"; // todo remove this bug
+import { FreErrorSeverity } from "../../utils/generation/FreErrorSeverity";
 import { PiDefinitionElement } from "../../utils";
 import { PiLangExp, PiConcept } from "../../languagedef/metalanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference";
 
 export class PiValidatorDef extends PiDefinitionElement {
     validatorName: string;
@@ -17,7 +17,7 @@ export class PiValidatorDef extends PiDefinitionElement {
 }
 
 export class ConceptRuleSet extends PiDefinitionElement {
-    conceptRef: PiElementReference<PiConcept>;
+    conceptRef: MetaElementReference<PiConcept>;
     rules: ValidationRule[];
 }
 
@@ -25,13 +25,13 @@ export class ValidationSeverity extends PiDefinitionElement {
     // 'value' is the string that the language engineer has provided in the .valid file
     // it will disregarded after checking, instead 'severity' will be used
     value: string;
-    severity: PiErrorSeverity; // is set by the checker
+    severity: FreErrorSeverity; // is set by the checker
 }
 
 export class ValidationMessage extends PiDefinitionElement {
     content: ValidationMessagePart[] = [];
-    toPiString(): string {
-        return this.content.map(p => p.toPiString()).join(" ");
+    toFreString(): string {
+        return this.content.map(p => p.toFreString()).join(" ");
     }
 }
 
@@ -39,14 +39,14 @@ export type ValidationMessagePart = ValidationMessageText | ValidationMessageRef
 
 export class ValidationMessageText extends PiDefinitionElement {
     value: string;
-    toPiString(): string {
+    toFreString(): string {
         return this.value;
     }
 }
 
 export class ValidationMessageReference extends PiDefinitionElement {
     expression: PiLangExp;
-    toPiString(): string {
+    toFreString(): string {
         return this.expression.toPiString();
     }
 }
@@ -54,7 +54,7 @@ export class ValidationMessageReference extends PiDefinitionElement {
 export abstract class ValidationRule extends PiDefinitionElement {
     severity: ValidationSeverity;
     message: ValidationMessage;
-    toPiString(): string {
+    toFreString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'ValidatorDefLang.Rule'";
     }
 }
@@ -63,7 +63,7 @@ export class CheckEqualsTypeRule extends ValidationRule {
     type1: PiLangExp;
     type2: PiLangExp;
 
-    toPiString(): string {
+    toFreString(): string {
         return `@typecheck equalsType( ${this.type1.toPiString()}, ${this.type2.toPiString()} )`;
     }
 }
@@ -72,7 +72,7 @@ export class CheckConformsRule extends ValidationRule {
     type1: PiLangExp;
     type2: PiLangExp;
 
-    toPiString(): string {
+    toFreString(): string {
         return `@typecheck conformsTo( ${this.type1.toPiString()}, ${this.type2.toPiString()} )`;
     }
 }
@@ -82,7 +82,7 @@ export class ExpressionRule extends ValidationRule {
     exp2: PiLangExp;
     comparator: PiComparator;
 
-    toPiString(): string {
+    toFreString(): string {
         return `${this.exp1.toPiString()} ${this.comparator} ${this.exp2.toPiString()}`;
     }
 }
@@ -92,7 +92,7 @@ export class IsuniqueRule extends ValidationRule {
     listproperty: PiLangExp;
     comparator: PiComparator;
 
-    toPiString(): string {
+    toFreString(): string {
         return `isunique ${this.listproperty.toPiString()} in ${this.list.toPiString()}`;
     }
 }
@@ -100,14 +100,14 @@ export class IsuniqueRule extends ValidationRule {
 export class NotEmptyRule extends ValidationRule {
     property: PiLangExp;
 
-    toPiString(): string {
+    toFreString(): string {
         return `@notEmpty ${this.property.toPiString()}`;
     }
 }
 export class ValidNameRule extends ValidationRule {
     property: PiLangExp;
 
-    toPiString(): string {
+    toFreString(): string {
         return `@validName ${this.property.toPiString()}`;
     }
 }

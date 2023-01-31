@@ -1,5 +1,5 @@
 import { PiClassifier, PiInstance, PiLangExp, PiLanguage, PiProperty } from "../../languagedef/metalanguage";
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference";
 import { Names, PiDefinitionElement } from "../../utils";
 
 /**
@@ -162,7 +162,7 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
  */
 export abstract class PiEditClassifierProjection extends PiDefinitionElement {
     name: string;
-    classifier: PiElementReference<PiClassifier>;
+    classifier: MetaElementReference<PiClassifier>;
     toString(): string {
         return `TO BE IMPLEMENTED BY SUBCLASSES`;
     }
@@ -232,11 +232,11 @@ export class PiEditTableProjection extends PiEditClassifierProjection {
  * Holds extra information, defined in the default editor, per classifier
  */
 export class ExtraClassifierInfo extends PiDefinitionElement {
-    classifier: PiElementReference<PiClassifier>;
+    classifier: MetaElementReference<PiClassifier>;
     // The string that triggers the creation of an object of this class in the editor.
     trigger: string = null;
     // The property to be used when an element of type 'classifier' is used within a reference.
-    referenceShortCut: PiElementReference<PiProperty> = null;
+    referenceShortCut: MetaElementReference<PiProperty> = null;
     // The parsed expression that refers to the referenceShortcut. Deleted during checking!
     referenceShortcutExp: PiLangExp = null;
     // Only for binary expressions: the operator between left and right parts.
@@ -294,7 +294,7 @@ export class PiEditProjectionText extends PiDefinitionElement {
  * are represented by subclasses of this class.
  */
 export class PiEditPropertyProjection extends PiDefinitionElement {
-    property: PiElementReference<PiProperty> = null;
+    property: MetaElementReference<PiProperty> = null;
     // expression used during parsing, should not be used after that phase
     expression: PiLangExp = null;
     // projection info if the referred property is a list
@@ -380,7 +380,7 @@ export class ListInfo extends PiDefinitionElement {
  * An element of a line in a projection definition that represents the projection of a superconcept or interface.
  */
 export class PiEditSuperProjection extends PiDefinitionElement {
-    superRef: PiElementReference<PiClassifier> = null;
+    superRef: MetaElementReference<PiClassifier> = null;
     projectionName: string = "";
     toString(): string {
         return `[=> ${this.superRef?.name} /* found ${this.superRef?.referred?.name} */ ${this.projectionName.length > 0 ? `:${this.projectionName}` : ``}]`;

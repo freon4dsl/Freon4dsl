@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { GridCellBox, type GridBox, type PiEditor, PiLogger } from "@projectit/core";
+    import { GridCellBox, type GridBox, type FreEditor, FreLogger } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import GridCellComponent from "./GridCellComponent.svelte";
     import { componentId } from "./svelte-utils";
 
-    const LOGGER = new PiLogger("GridComponent"); //.mute();
+    const LOGGER = new FreLogger("GridComponent"); //.mute();
 
     export let box: GridBox;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
 
     let id ;
     let cells: GridCellBox[];
@@ -19,7 +19,7 @@
     const refresh = (why?: string): void =>  {
         LOGGER.log("refresh " + why);
         if (!!box) {
-            // console.log("REFRESH GridComponent " + box?.element?.piLanguageConcept() + "-" + box?.element?.piId());
+            // console.log("REFRESH GridComponent " + box?.element?.freLanguageConcept() + "-" + box?.element?.freId());
             id = componentId(box);
             cells = [...box.cells];
             length = cells.length;
@@ -48,7 +48,7 @@
     });
 
     afterUpdate(() => {
-        LOGGER.log("GridComponent afterUpdate for girdBox " + box.element.piLanguageConcept())
+        LOGGER.log("GridComponent afterUpdate for girdBox " + box.element.freLanguageConcept())
         box.refreshComponent = refresh;
         box.setFocus = setFocus;
     });
@@ -68,7 +68,7 @@
         tabIndex={0}
         bind:this={htmlElement}
 >
-    {#each cells as cell (cell?.box?.element?.piId() + "-" + cell?.box?.id + cell?.role + "-grid")}
+    {#each cells as cell (cell?.box?.element?.freId() + "-" + cell?.box?.id + cell?.role + "-grid")}
         <GridCellComponent grid={box} cellBox={cell} editor={editor}/>
     {/each}
 </div>

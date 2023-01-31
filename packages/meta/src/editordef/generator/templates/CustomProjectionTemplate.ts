@@ -5,7 +5,7 @@ export class CustomProjectionTemplate {
 
     generate(language: PiLanguage): string {
         return `
-            import { ${Names.PiElement}, ${Names.Box}, ${Names.PiProjection}, PiTableDefinition } from "${PROJECTITCORE}";
+            import { ${Names.PiElement}, ${Names.Box}, ${Names.PiProjection}, ${Names.FreTableDefinition} } from "${PROJECTITCORE}";
             
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to
@@ -23,8 +23,8 @@ export class CustomProjectionTemplate {
                         // register your custom box methods here
                         // ['NAME_OF_CONCEPT', this.BOX_FOR_CONCEPT],            
                     ]);  
-                nodeTypeToTableDefinition: Map<string, () => PiTableDefinition> =
-                    new Map<string, () => PiTableDefinition>([
+                nodeTypeToTableDefinition: Map<string, () => ${Names.FreTableDefinition}> =
+                    new Map<string, () => ${Names.FreTableDefinition}>([
                         // register your custom table definition methods here                       
                         // ['NAME_OF_CONCEPT', this.TABLE_DEFINITION_FOR_CONCEPT],            
                     ]);                  
@@ -33,7 +33,7 @@ export class CustomProjectionTemplate {
                 
                 // BOX_FOR_CONCEPT(node: NAME_OF_CONCEPT) : ${Names.Box} { ... }   
                 
-                // TABLE_DEFINITION_FOR_CONCEPT() : PiTableDefinition { ... }
+                // TABLE_DEFINITION_FOR_CONCEPT() : ${Names.FreTableDefinition} { ... }
             }
         `;
     }

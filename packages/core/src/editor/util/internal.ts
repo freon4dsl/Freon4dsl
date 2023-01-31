@@ -12,9 +12,9 @@ export * from "./Keys";
 
 // dependent only upon editor
 export * from "./BehaviorUtils";
-export * from "./PiActionsUtil";
-export * from "./PiEditorUtil";
-export * from "./PiCaret";
+export * from "./ActionsUtil";
+export * from "./FreEditorUtil";
+export * from "./FreCaret";
 
 // the others
 export * from "./ListUtil";
@@ -22,4 +22,4 @@ export * from "./ListElementInfo";
 export * from "./MenuItem";
 
 // the following depends on BalanceTreeUtils and BehaviorUtils
-export * from "./PiExpressionHelpers";
+export * from "./FreExpressionUtil";

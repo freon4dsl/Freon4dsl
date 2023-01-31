@@ -38,27 +38,27 @@
   - language extension & aggregation
 - [ ] when two concepts with the same name are referrable, a duplicate key error occurrs.
 - [ ] check css varibles and selectors for correctness
-- [x] Get  Unit names from Language, remove from generator
+- [x] Get  Unit names from FreLanguage, remove from generator
 - [ ] Refactor search and copy etc into actions that can be bound to keys.
 - [ ] Collections as tabbed box (so the elements are stacked upon each other)
 - [ ] Non-textual Box/Component e.g. bodypart picture with click to point to pain areas.
 
-## IDE for Language Development
+## IDE for FreLanguage Development
 
 - [ ] IDE for definition languages
-  - Investigate Langium: Grammar + TypeScript + Web + Language Server.
+  - Investigate Langium: Grammar + TypeScript + Web + FreLanguage Server.
     see langium.org/docs/ast-types
   - Having TS makes it processable by our code.
   - LSP makes it supported by various IDE's.
   - Investigate editor options with david's grammar tool
 
-## PoC Language Ideas
+## PoC FreLanguage Ideas
 
 - [ ] Create dot-model as in KernelF and build specific editor support for this (as with binary expressions).
 - [ ] PoC for Gorilla
 - [ ] EU Corona app: JSONLogic / CertLogic (github)
 
-## Language Composition
+## FreLanguage Composition
 
 - [ ] Separate compilation of languages
   - Hard, because much is generated as 1 blob for full language.
@@ -78,9 +78,9 @@ ProjectitConfiguration => "Langauge"Configuration
 
 Make Scoper composite
 
-<Language>Environment should not create the editor, nor the composite projection.
+<FreLanguage>Environment should not create the editor, nor the composite projection.
 
-gen/EditorDef.ts ==> "Language"EditorDef.ts
+gen/EditorDef.ts ==> "FreLanguage"EditorDef.ts
 
 All imports should be language dependent
 
@@ -88,7 +88,7 @@ AllConceptsType should be removed (should be anyway)
 
 Composte Workers !!! Is this possible? Probably a special worker for the overall Project??
 
-- seems to work out of the box :-), workers are generic using Language
+- seems to work out of the box :-), workers are generic using FreLanguage
 
 Design how to compose composite things, or make composites over all used languages
 
@@ -99,7 +99,7 @@ Naming: different names for overall language and used languages. E.g.:
 | overall language   | sublanguage   |
 | composite language | language part |
 | DSL                | language      |
-| Language.          | .             |
+| FreLanguage.          | .             |
 
 ## Freon Name Change
 

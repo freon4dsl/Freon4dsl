@@ -1,5 +1,5 @@
 import type { Box } from "@projectit/core";
-import { PI_NULL_COMMAND, PiCommand, PiEditor, PiEditorUtil, PiPostAction, toPiKey } from "@projectit/core";
+import { PI_NULL_COMMAND, FreCommand, FreEditor, FreEditorUtil, FrePostAction, toFreKey } from "@projectit/core";
 import { runInAction } from "mobx";
 import { viewport } from "./EditorViewportStore";
 import { get } from "svelte/store";
@@ -24,16 +24,16 @@ export function focusAndScrollIntoView(element: HTMLElement) {
     }
 }
 
-export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: number, box: Box, editor: PiEditor) {
-    const cmd: PiCommand = PiEditorUtil.findKeyboardShortcutCommand(toPiKey(event), box, editor);
+export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: number, box: Box, editor: FreEditor) {
+    const cmd: FreCommand = FreEditorUtil.findKeyboardShortcutCommand(toFreKey(event), box, editor);
     if (cmd !== PI_NULL_COMMAND) {
-        let postAction: PiPostAction;
+        let postAction: FrePostAction;
         runInAction(() => {
             const action = event["action"];
             if (!!action) {
                 action();
             }
-            postAction = cmd.execute(box, toPiKey(event), editor, index);
+            postAction = cmd.execute(box, toFreKey(event), editor, index);
         });
         if (!!postAction) {
             postAction();
@@ -50,7 +50,7 @@ export function isEven(n: number): boolean {
     return (n & 1) === 0;
 }
 export function componentId(box: Box): string {
-    return `${box?.element?.piId()}-${box?.role}`;
+    return `${box?.element?.freId()}-${box?.role}`;
 }
 
 export function setBoxSizes(box: Box, rect: DOMRect) {

@@ -18,8 +18,8 @@ export class EnvironmentTemplate {
     generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
         import { ${Names.PiEditor}, ${Names.PiEnvironment}, ${Names.PiReader}, 
-                    ${Names.FreonTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, LanguageEnvironment, FreProjectionHandler
+                    ${Names.FreTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
+                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, ${Names.LanguageEnvironment}, ${Names.FreProjectionHandler}
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoperDef(language)}";
@@ -47,7 +47,7 @@ export class EnvironmentTemplate {
             public static getInstance(): ${Names.PiEnvironment}  {
                 if (this.environment === undefined || this.environment === null) {
                     this.environment = new ${Names.environment(language)}();
-                    LanguageEnvironment.setInstance(this.environment);
+                    ${Names.LanguageEnvironment}.setInstance(this.environment);
                 }
                 return this.environment;
             }
@@ -58,7 +58,7 @@ export class EnvironmentTemplate {
             private constructor() {
                 const actions = new ${Names.actions(language)}();
                 const myComposite = new FreProjectionHandler();
-                this.editor = new PiEditor(myComposite, this, actions);
+                this.editor = new ${Names.PiEditor}(myComposite, this, actions);
                 initializeLanguage();
                 initializeProjections(myComposite);
                 initializeEditorDef();
@@ -80,7 +80,7 @@ export class EnvironmentTemplate {
             // the parts of the language environment              
             editor: ${Names.PiEditor};
             scoper: ${Names.FreScoperComposite} = new ${Names.FreScoperComposite}("main");
-            typer: ${Names.FreonTyper} = new ${Names.FreonTyper}("main"); 
+            typer: ${Names.FreTyper} = new ${Names.FreTyper}("main"); 
             stdlib: ${Names.PiStdlib} = ${Names.stdlib(language)}.getInstance();
             validator: ${Names.PiValidator} = new ${Names.validator(language)}();
             writer: ${Names.PiWriter} = new ${Names.writer(language)}();

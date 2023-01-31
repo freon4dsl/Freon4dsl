@@ -58,7 +58,7 @@ export class ScoperTemplate {
 
         // Template starts here - without imports, they are calculated while creating this text and added later
         const templateBody: string = `
-        const LOGGER = new PiLogger("${generatedClassName}");  
+        const LOGGER = new ${Names.PiLogger}("${generatedClassName}");  
         
         /**
          * Class ${generatedClassName} implements the scoper generated from, if present, the scoper definition,
@@ -70,7 +70,7 @@ export class ScoperTemplate {
              * Returns the namespace to be used as alternative scope for 'modelelement'.
              * @param modelelement
              */
-            getAlternativeScope(modelelement: PiElement): FreonNamespace {
+            getAlternativeScope(modelelement: ${Names.PiElement}): ${Names.FreNamespace} {
                 ${this.getAlternativeScopeText}
                 return null;
             }
@@ -79,7 +79,7 @@ export class ScoperTemplate {
              * Returns true if there is an alternative scope defined for this 'modelelement'.
              * @param modelelement
              */
-            hasAlternativeScope(modelelement: PiElement): boolean {
+            hasAlternativeScope(modelelement: ${Names.PiElement}): boolean {
                 ${this.hasAlternativeScopeText}
                 return false;
             }
@@ -88,8 +88,8 @@ export class ScoperTemplate {
              * Returns all PiElements that are defined as additional namespaces for \`element'.
              * @param element
              */
-            public additionalNamespaces(element: PiElement): PiElement[] {
-                const result: PiElement[] = [];
+            public additionalNamespaces(element: ${Names.PiElement}): ${Names.PiElement}[] {
+                const result: ${Names.PiElement}[] = [];
                 ${this.getAdditionalNamespacetext}
                 return result;
 
@@ -98,7 +98,7 @@ export class ScoperTemplate {
 
         // now we have enough information to create the correct imports
         const templateImports: string = `
-        import { ${scoperBaseName}, PiLogger, PiElement, PiElementReference, FreonNamespace, ${Names.FreonTyper} } from "${PROJECTITCORE}"
+        import { ${scoperBaseName}, ${Names.PiLogger}, ${Names.PiElement}, ${Names.PiElementReference}, ${Names.FreNamespace}, ${Names.FreTyper} } from "${PROJECTITCORE}"
         import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         `;
 
@@ -199,7 +199,7 @@ export class ScoperTemplate {
             result = result.concat(`
             // generated based on '${expression.toPiString()}'
             for (let ${loopVar} of element.${expression.appliedfeature.toPiString()}) {
-                if (loopVariable instanceof PiElementReference) {
+                if (loopVariable instanceof ${Names.PiElementReference}) {
                     if (!this.currentRoleNames.includes('${expression.appliedfeature.toPiString()}')) {
                         if (!!loopVariable.referred) {
                             if (!this.additionalNamespacesVisited.includes(loopVariable.referred)){
@@ -244,7 +244,7 @@ export class ScoperTemplate {
             let actualParamToGenerate: string;
             // we know that typeof has exactly 1 actual parameter
             if ( expression.actualparams[0].sourceName === "container" ) {
-                actualParamToGenerate = `modelelement.piOwnerDescriptor().owner`;
+                actualParamToGenerate = `modelelement.freOwnerDescriptor().owner`;
             } else {
                 actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0]);
             }
@@ -253,7 +253,7 @@ export class ScoperTemplate {
                     let newScopeElement = this.myTyper.inferType(owner)?.toAstElement();
                     // 'newScopeElement' could be null, when the type found by the typer does not correspond to an AST element
                     if (!!newScopeElement) {
-                        return FreonNamespace.create(newScopeElement);
+                        return ${Names.FreNamespace}.create(newScopeElement);
                     }
                 }`;
         } else {

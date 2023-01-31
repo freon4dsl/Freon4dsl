@@ -7,7 +7,7 @@ import {
     PiPrimitiveProperty,
     PiProperty
 } from "../../languagedef/metalanguage";
-import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp, PiElementReference, PiPrimitiveType } from "../../languagedef/metalanguage";
+import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp, MetaElementReference, PiPrimitiveType } from "../../languagedef/metalanguage";
 import { Names } from "./Names";
 import { LangUtil } from "./LangUtil";
 
@@ -23,13 +23,13 @@ export class GenerationUtil {
      *
      * @param piconcepts: the list of concepts to be sorted
      */
-    public static sortConceptsOrRefs(piconcepts: PiConcept[] | PiElementReference<PiConcept>[]): PiConcept[] {
+    public static sortConceptsOrRefs(piconcepts: PiConcept[] | MetaElementReference<PiConcept>[]): PiConcept[] {
         const newList: PiConcept[] = [];
         // change all references to 'real' concepts
         piconcepts.forEach( p => {
             if (p instanceof PiConcept) {
                 newList.push(p);
-            } else if (p instanceof PiElementReference) {
+            } else if (p instanceof MetaElementReference) {
                 newList.push(p.referred);
             }
         })
@@ -76,14 +76,14 @@ export class GenerationUtil {
      * @param list
      * @param element
      */
-    public static refListIncludes(list: PiElementReference<PiLangElement>[],
-                                  element: PiElementReference<PiLangElement> | PiLangElement): boolean {
+    public static refListIncludes(list: MetaElementReference<PiLangElement>[],
+                                  element: MetaElementReference<PiLangElement> | PiLangElement): boolean {
         for (const xx of list) {
             if (element instanceof PiLangElement) {
                 if (xx.referred === element) {
                     return true;
                 }
-            } else if (element instanceof PiElementReference) {
+            } else if (element instanceof MetaElementReference) {
                 if (xx.referred === element.referred) {
                     return true;
                 }
@@ -98,10 +98,10 @@ export class GenerationUtil {
      *
      * @param classifiers
      */
-    public static replaceInterfacesWithImplementors(classifiers: PiClassifier[] | PiElementReference<PiClassifier>[]): PiClassifier[] {
+    public static replaceInterfacesWithImplementors(classifiers: PiClassifier[] | MetaElementReference<PiClassifier>[]): PiClassifier[] {
         const result: PiClassifier[] = [];
         for (const ref of classifiers) {
-            const myClassifier = (ref instanceof PiElementReference ? ref.referred : ref);
+            const myClassifier = (ref instanceof MetaElementReference ? ref.referred : ref);
             if (myClassifier instanceof PiInterface) {
                 const implementors = myClassifier.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myClassifier));
                 // check on duplicates

@@ -1,9 +1,9 @@
-import { Language, Property } from "../language";
-import { PiLogger } from "../logging";
+import { FreLanguage, Property } from "../language";
+import { FreLogger } from "../logging";
 import { AstWorker } from "./AstWorker";
-import { PiElement } from "../ast";
+import { FreNode } from "../ast";
 
-const LOGGER = new PiLogger("AstWalker");
+const LOGGER = new FreLogger("AstWalker");
 
 /**
  * Class AstWalker implements the extended visitor pattern of instances of a Language.
@@ -26,7 +26,7 @@ export class AstWalker {
      * @param modelelement the top node of the part of the tree to be visited
      * @param includeNode tests every child of 'modelelement', if true, it will also be visited
      */
-    public walk(modelelement: PiElement, includeNode?: (elem: PiElement) => boolean) {
+    public walk(modelelement: FreNode, includeNode?: (elem: FreNode) => boolean) {
         if (this.myWorkers.length > 0) {
             let stopWalkingThisNode: boolean = false;
             for (const worker of this.myWorkers) {
@@ -36,10 +36,10 @@ export class AstWalker {
             }
 
             // find part properties in the language meta definition
-            const partProperties: Property[] = Language.getInstance().getPropertiesOfKind(modelelement.piLanguageConcept(), "part");
+            const partProperties: Property[] = FreLanguage.getInstance().getPropertiesOfKind(modelelement.freLanguageConcept(), "part");
             // walk all parts
             for (const prop of partProperties) {
-                for (const child of Language.getInstance().getPropertyValue(modelelement, prop)) {
+                for (const child of FreLanguage.getInstance().getPropertyValue(modelelement, prop)) {
                     if (includeNode === undefined || includeNode(child)) {
                         this.walk(child, includeNode);
                     }

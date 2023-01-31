@@ -12,14 +12,14 @@
         dropListElement,
         isActionBox,
         isNullOrUndefined,
-        Language,
+        FreLanguage,
         ListBox,
         ListDirection,
         ListElementInfo,
         MenuOptionsType,
         moveListElement,
-        PiEditor,
-        PiLogger
+        FreEditor,
+        FreLogger
     } from "@projectit/core";
     import RenderComponent from "./RenderComponent.svelte";
     import {
@@ -35,10 +35,10 @@
 
     // Parameters
     export let box: ListBox ;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
 
     // Local state variables
-    let LOGGER: PiLogger = new PiLogger("ListComponent");
+    let LOGGER: FreLogger = new FreLogger("ListComponent");
     let id: string;                             // an id for the html element showing the list
     let htmlElement: HTMLSpanElement;
     let isHorizontal: boolean;                  // indicates whether the list should be shown horizontally or vertically
@@ -52,7 +52,7 @@
     const drop = (event: DragEvent, targetIndex) => {
         const data: ListElementInfo = $draggedElem;
 
-        LOGGER.log("DROPPING item [" + data.element.piId() + "] from [" + data.componentId + "] in list [" + id + "] on position [" + targetIndex + "]");
+        LOGGER.log("DROPPING item [" + data.element.freId() + "] from [" + data.componentId + "] in list [" + id + "] on position [" + targetIndex + "]");
         if (data.componentId === id) { // dropping in the same list
             // console.log('moving item within list');
             moveListElement(box.element, data.element, box.propertyName, targetIndex);
@@ -92,7 +92,7 @@
             return;
         }
         // only show this item as active when the type of the element to be dropped is the right one
-        if (Language.getInstance().metaConformsToType(data.element, myMetaType)) {
+        if (FreLanguage.getInstance().metaConformsToType(data.element, myMetaType)) {
             $activeElem = { row: index, column: -1 };
             $activeIn = id;
         }
@@ -167,7 +167,7 @@
     let previousBox = null;
 
     const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH ListComponent( " + why + ") " + box?.element?.piLanguageConcept());
+        LOGGER.log("REFRESH ListComponent( " + why + ") " + box?.element?.freLanguageConcept());
         shownElements = [...box.children];
         id = !!box ? componentId(box) : 'list-for-unknown-box';
         isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
@@ -217,12 +217,12 @@
 
 <style>
     .list-component {
-        --pi-list-grid-template-columns: "";
-        --pi-list-grid-template-rows: "";
+        --fre-list-grid-template-columns: "";
+        --fre-list-grid-template-rows: "";
     }
     .horizontalList {
-        /*grid-template-rows: var(--pi-list-grid-template-rows);*/
-        /*grid-template-columns: var(--pi-list-grid-template-columns);*/
+        /*grid-template-rows: var(--fre-list-grid-template-rows);*/
+        /*grid-template-columns: var(--fre-list-grid-template-columns);*/
         white-space: nowrap;
         display: inline-block;
         padding: var(--freon-horizontallist-component-padding, 1px);
@@ -235,8 +235,8 @@
     }
 
     .verticalList {
-        /*grid-template-rows: var(--pi-list-grid-template-rows);*/
-        /*grid-template-columns: var(--pi-list-grid-template-columns);*/
+        /*grid-template-rows: var(--fre-list-grid-template-rows);*/
+        /*grid-template-columns: var(--fre-list-grid-template-columns);*/
         /*display: grid;*/
         background-color: var(--freon-editor-component-background-color, white);
         padding: var(--freon-verticallist-component-padding, 1px);

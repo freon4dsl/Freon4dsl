@@ -7,9 +7,9 @@ export class ActionsTemplate {
         return `
             import {
                 ${Names.PiActions},
-                PiActionsUtil,
-                PiCreateBinaryExpressionAction,
-                PiCustomAction
+                ActionsUtil,
+                FreCreateBinaryExpressionAction,
+                FreCustomAction
             } from "${PROJECTITCORE}";
             
             import { BINARY_EXPRESSION_CREATORS, CUSTOM_ACTIONS } from "./${Names.defaultActions(language)}";
@@ -25,8 +25,8 @@ export class ActionsTemplate {
              */  
             export class ${Names.actions(language)} implements ${Names.PiActions} {
                 // Combine generated and manually written actions, where manual actions may override the generated ones
-                binaryExpressionActions: PiCreateBinaryExpressionAction[] = PiActionsUtil.join(BINARY_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_ACTIONS) as PiCreateBinaryExpressionAction[];
-                customActions: PiCustomAction[] = PiActionsUtil.join(CUSTOM_ACTIONS, MANUAL_CUSTOM_ACTIONS) as PiCustomAction[];
+                binaryExpressionActions: FreCreateBinaryExpressionAction[] = ActionsUtil.join(BINARY_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_ACTIONS) as FreCreateBinaryExpressionAction[];
+                customActions: FreCustomAction[] = ActionsUtil.join(CUSTOM_ACTIONS, MANUAL_CUSTOM_ACTIONS) as FreCustomAction[];
             }`;
     }
 }

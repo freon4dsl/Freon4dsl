@@ -7,7 +7,7 @@ import {
     PiInstance,
     PiExpressionConcept,
     PiBinaryExpressionConcept,
-    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveType, PiModelDescription, PiUnitDescription, PiElementReference
+    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveType, PiModelDescription, PiUnitDescription, MetaElementReference
 } from "../metalanguage";
 import { ParseLocationUtil } from "../../utils";
 
@@ -134,7 +134,7 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
     if (!!data.instances) {
         result.instances = data.instances;
         for (const inst of result.instances) {
-            inst.concept = PiElementReference.create<PiLimitedConcept>(result, "PiLimitedConcept");
+            inst.concept = MetaElementReference.create<PiLimitedConcept>(result, "PiLimitedConcept");
             inst.concept.owner = inst;
         }
     }
@@ -279,21 +279,21 @@ export function createReferenceProperty(data: Partial<PiConceptProperty>): PiCon
     return result;
 }
 
-export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
+export function createClassifierReference(data: Partial<MetaElementReference<PiClassifier>>): MetaElementReference<PiClassifier> {
     // console.log("createClassifierReference " + data.name);
-    let result: PiElementReference<PiClassifier> = null;
+    let result: MetaElementReference<PiClassifier> = null;
     if (!!data.name) {
         const type: string = data.name;
         if (type === "string") {
-            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.string, "PiPrimitiveType");
+            result = MetaElementReference.create<PiPrimitiveType>(PiPrimitiveType.string, "PiPrimitiveType");
         } else if (type === "boolean") {
-            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.boolean, "PiPrimitiveType");
+            result = MetaElementReference.create<PiPrimitiveType>(PiPrimitiveType.boolean, "PiPrimitiveType");
         } else if (type === "number") {
-            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.number, "PiPrimitiveType");
+            result = MetaElementReference.create<PiPrimitiveType>(PiPrimitiveType.number, "PiPrimitiveType");
         } else if (type === "identifier") {
-            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
+            result = MetaElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
         } else {
-            result = PiElementReference.create<PiClassifier>(data.name, "PiClassifier");
+            result = MetaElementReference.create<PiClassifier>(data.name, "PiClassifier");
         }
     }
     if (!!result && !!data.location) {
@@ -304,9 +304,9 @@ export function createClassifierReference(data: Partial<PiElementReference<PiCla
     return result;
 }
 
-export function createInterfaceReference(data: Partial<PiElementReference<PiInterface>>): PiElementReference<PiInterface> {
+export function createInterfaceReference(data: Partial<MetaElementReference<PiInterface>>): MetaElementReference<PiInterface> {
     // console.log("createInterfaceReference " + data.name);
-    const result = PiElementReference.create<PiInterface>(data.name, "PiInterface");
+    const result = MetaElementReference.create<PiInterface>(data.name, "PiInterface");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
@@ -322,7 +322,7 @@ export function createInstance(data: Partial<PiInstance>): PiInstance {
     if (!!data.props) {
         result.props.push(...data.props);
         for (const p of result.props) {
-            p.owningInstance = PiElementReference.create<PiInstance>(result, "PiInstance");
+            p.owningInstance = MetaElementReference.create<PiInstance>(result, "PiInstance");
         }
     }
     // if the user has not provided a value for the 'name' property,
@@ -332,7 +332,7 @@ export function createInstance(data: Partial<PiInstance>): PiInstance {
         const prop = new PiInstanceProperty();
         prop.name = "name";
         prop.value = data.name;
-        prop.owningInstance = PiElementReference.create<PiInstance>(result, "PiInstance");
+        prop.owningInstance = MetaElementReference.create<PiInstance>(result, "PiInstance");
         prop.location = data.location;
         result.props.push(prop);
     }

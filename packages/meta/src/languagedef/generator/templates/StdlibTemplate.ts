@@ -16,7 +16,7 @@ export class StdlibTemplate {
         this.makeTexts(language);
 
         return `
-        import { ${Names.PiNamedElement}, ${Names.PiStdlib}, Language } from "${PROJECTITCORE}";
+        import { ${Names.PiNamedElement}, ${Names.PiStdlib}, ${Names.FreLanguage} } from "${PROJECTITCORE}";
         import { ${Names.metaType(language)}, 
                     ${this.limitedConceptNames.map(name => `${name}`).join(", ") } 
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
@@ -51,7 +51,7 @@ export class StdlibTemplate {
             private constructor() {
                 ${this.constructorText}
                 for (const lib of projectitConfiguration.customStdLibs) {
-                    ListUtil.addAllIfNotPresent<PiNamedElement>(this.elements, lib.elements);
+                    ListUtil.addAllIfNotPresent<${Names.PiNamedElement}>(this.elements, lib.elements);
                 }
             }  
             
@@ -69,7 +69,7 @@ export class StdlibTemplate {
                     if (possibles.length !== 0) {
                         if (metatype) {
                             for (const elem of possibles) {
-                                if (Language.getInstance().metaConformsToType(elem, metatype)) {
+                                if (${Names.FreLanguage}.getInstance().metaConformsToType(elem, metatype)) {
                                     return elem;
                                 }
                             }
@@ -85,11 +85,11 @@ export class StdlibTemplate {
 
     generateCustomStdlibClass(language: PiLanguage): string {
         return `
-        import { PiNamedElement, PiStdlib } from "@projectit/core";
+        import { ${Names.PiNamedElement}, ${Names.PiStdlib} } from "@projectit/core";
 
-        export class ${Names.customStdlib(language)} implements PiStdlib {
+        export class ${Names.customStdlib(language)} implements ${Names.PiStdlib} {
             // add all your extra predefined instances here
-            get elements(): PiNamedElement[] {
+            get elements(): ${Names.PiNamedElement}[] {
                 return [];
             }
         }`;

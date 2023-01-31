@@ -1,4 +1,4 @@
-import { PiElement, PiNamedElement } from "../ast";
+import { FreNode, FreNamedNode } from "../ast";
 import { FreScoperComposite } from "./FreScoperComposite";
 
 // Part of the Freon Framework
@@ -17,7 +17,7 @@ export interface FreScoper {
      * @param pathname: the name or series of names of the element that we are searching for
      * @param metatype: the metatype of the element that we are searching for
      */
-    resolvePathName(modelelement: PiElement, doNotSearch: string, pathname: string[], metatype?: string): PiNamedElement;
+    resolvePathName(modelelement: FreNode, doNotSearch: string, pathname: string[], metatype?: string): FreNamedNode;
 
     /**
      *   Returns true if 'name' is known in the namespace containing 'modelelement' or one
@@ -35,7 +35,7 @@ export interface FreScoper {
      * @param metatype
      * @param excludeSurrounding
      */
-    isInScope(modelElement: PiElement, name: string, metatype?: string, excludeSurrounding?: boolean): boolean;
+    isInScope(modelElement: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): boolean;
 
     /**
      *   Returns all elements that are visible in the namespace containing 'modelelement' or one
@@ -52,7 +52,7 @@ export interface FreScoper {
      * @param metatype
      * @param excludeSurrounding
      */
-    getVisibleElements(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): PiNamedElement[];
+    getVisibleElements(modelelement: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[];
 
     /**
      *   Returns the element named 'name' which is visible in the namespace containing 'modelelement' or one
@@ -70,7 +70,7 @@ export interface FreScoper {
      * @param metatype
      * @param excludeSurrounding
      */
-    getFromVisibleElements(modelelement: PiElement, name: string, metatype?: string, excludeSurrounding?: boolean): PiNamedElement;
+    getFromVisibleElements(modelelement: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): FreNamedNode;
 
     /**
      *   Does the same as getVisibleElements, only it does not return the elements,
@@ -80,11 +80,11 @@ export interface FreScoper {
      * @param metatype
      * @param excludeSurrounding
      */
-    getVisibleNames(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): string[];
+    getVisibleNames(modelelement: FreNode, metatype?: string, excludeSurrounding?: boolean): string[];
 
     /**
-     * Returns all PiElements that are defined as additional namespaces for `element'.
+     * Returns all FreNodes that are defined as additional namespaces for `element'.
      * @param element
      */
-    additionalNamespaces(element: PiElement): PiElement[];
+    additionalNamespaces(element: FreNode): FreNode[];
 }

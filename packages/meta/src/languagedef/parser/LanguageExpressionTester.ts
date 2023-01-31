@@ -6,7 +6,7 @@ import { PiLangElement } from "../metalanguage/PiLanguage";
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference} from "../../languagedef/metalanguage/PiElementReference";
+import { MetaElementReference} from "../metalanguage/MetaElementReference";
 
 export class LanguageExpressionTester extends  PiLangElement {
     // location: ParseLocation;
@@ -17,7 +17,7 @@ export class LanguageExpressionTester extends  PiLangElement {
 
 export class TestExpressionsForConcept extends  PiLangElement {
     // location: ParseLocation;
-    conceptRef: PiElementReference<PiConcept>;
+    conceptRef: MetaElementReference<PiConcept>;
     language: PiLanguage;
     exps: PiLangExp[] = [];
 }

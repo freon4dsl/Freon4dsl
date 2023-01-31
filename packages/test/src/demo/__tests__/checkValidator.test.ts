@@ -1,4 +1,4 @@
-import { PiElementReference, PiError } from "@projectit/core";
+import { FreNodeReference, FreError } from "@projectit/core";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import {
     DemoModel,
@@ -26,7 +26,7 @@ describe("Testing Validator", () => {
     });
 
     test("multiplication 3 * 10", () => {
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
         mult.left = makeLiteralExp("3");
         mult.right = makeLiteralExp("10");
@@ -35,7 +35,7 @@ describe("Testing Validator", () => {
     });
 
     test("multiplication 3 * 'temp'", () => {
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
         mult.left = makeLiteralExp("3");
         mult.right = makeLiteralExp("temp");
@@ -48,7 +48,7 @@ describe("Testing Validator", () => {
     });
 
     test("multiplication (3/4) * 'temp'", () => {
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         let div: DemoDivideExpression = new DemoDivideExpression();
         div.left = makeLiteralExp("3");
         div.right = makeLiteralExp("4");
@@ -64,7 +64,7 @@ describe("Testing Validator", () => {
     });
 
     test("'self.entities' and 'self.functions' may not empty and model unitName should be valid", () => {
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         const model = new DemoModel();
         model.name = "$%";
         errors = validator.validate(model);
@@ -77,7 +77,7 @@ describe("Testing Validator", () => {
     });
 
     test("incorrect unitName of DemoModel: YY\\XX", () => {
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         let model = new DemoModel();
         model.name = "YY\\XX";
         errors = validator.validate(model);
@@ -85,12 +85,12 @@ describe("Testing Validator", () => {
     });
 
     test("(1 + 2) * 'Person' should give type error", () => {
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         const variableExpression = new DemoVariableRef();
         const variable = DemoVariable.create({ name: "XXX" });
         const personEnt = DemoEntity.create({ name: "Person" });
-        variable.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        variableExpression.variable = PiElementReference.create<DemoVariable>(variable, "DemoVariable");
+        variable.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
+        variableExpression.variable = FreNodeReference.create<DemoVariable>(variable, "DemoVariable");
 
         const plusExpression = MakePlusExp("1", "2");
         const multiplyExpression = MakeMultiplyExp(plusExpression, variableExpression);
@@ -104,7 +104,7 @@ describe("Testing Validator", () => {
     });
 
     test('"Hello Demo" + "Goodbye"\'\' should have 2 errors', () => {
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         let expression = MakePlusExp("Hello Demo", "Goodbye");
         // "Hello Demo" + "Goodbye"
 
@@ -117,13 +117,13 @@ describe("Testing Validator", () => {
     });
 
     test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 5 errors', () => {
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         const determine = DemoFunction.create({ name: "determine" });
         const AAP = DemoVariable.create({ name: "AAP" });
         determine.parameters.push(AAP);
         determine.expression = MakePlusExp("Hello Demo", "Goodbye");
         const personEnt = DemoEntity.create({ name: "Person" });
-        determine.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
+        determine.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
         // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
         errors = validator.validate(determine, true);
         // console.log(errors.map(e => e.message + " in " + e.locationdescription + " of severity " + e.severity).join( '\n'));
@@ -136,7 +136,7 @@ describe("Testing Validator", () => {
     });
 
     test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         const personEnt = DemoEntity.create({  name: "Person", x: "xxx", simpleprop: "simple" });
         const age = DemoAttribute.create({ name: "age" });
         const personName = DemoAttribute.create({ name: "name" });
@@ -153,10 +153,10 @@ describe("Testing Validator", () => {
         // age.declaredType = DemoAttributeType.Boolean;
         // first.declaredType = DemoAttributeType.Boolean;
         // Resultvar.declaredType = DemoAttributeType.Boolean;
-        personName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
-        age.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
-        first.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        Resultvar.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
+        personName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        age.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        first.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
+        Resultvar.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
 
         // Person { unitName, age, first(Resultvar) = 5 + 24 }
 
@@ -170,7 +170,7 @@ describe("Testing Validator", () => {
 
     test ("test isUnique rule for model entities", () => {
         let model1 = new DemoModelCreator().createModelWithIsUniqueError();
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         errors = validator.validate(model1, true);
         // errors.forEach(e =>
         //     console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity)
@@ -180,7 +180,7 @@ describe("Testing Validator", () => {
 
     test ("test correct model", () => {
         let correctModel = new DemoModelCreator().createCorrectModel();
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         errors = validator.validate(correctModel, true);
         // errors.forEach(e =>
         //     console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
@@ -190,7 +190,7 @@ describe("Testing Validator", () => {
     });
 
     test("complete example model", () => {
-        let errors: PiError[] = [];
+        let errors: FreError[] = [];
         // model.models.forEach(mm =>
         //     console.log(DemoEnvironment.getInstance().writer.writeToString(mm))
         // );

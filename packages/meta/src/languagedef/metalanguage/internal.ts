@@ -5,7 +5,7 @@
  */
 
 export * from "./PiLangEveryConcept"
-export * from "./PiElementReference";
+export * from "./MetaElementReference";
 export * from "./PiLanguage";
 export * from "./PiLangExpressions";
 export * from "./PiLangScoper";

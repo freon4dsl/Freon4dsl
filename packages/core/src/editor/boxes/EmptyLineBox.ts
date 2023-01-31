@@ -1,11 +1,11 @@
 import { Box } from "./Box";
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 
 
 export class EmptyLineBox extends Box {
     kind = "EmptyLineBox";
 
-    constructor(element: PiElement, role: string) {
+    constructor(element: FreNode, role: string) {
         super(element, role);
         this.selectable = false;
     }

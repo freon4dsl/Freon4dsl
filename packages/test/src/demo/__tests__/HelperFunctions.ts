@@ -1,5 +1,4 @@
 import {
-    DemoLiteralExpression,
     DemoNumberLiteralExpression,
     DemoBooleanLiteralExpression,
     DemoStringLiteralExpression,

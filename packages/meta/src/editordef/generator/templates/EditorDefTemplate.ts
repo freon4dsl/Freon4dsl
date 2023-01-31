@@ -25,7 +25,7 @@ export class EditorDefTemplate {
         let conceptsWithRefShortcut: ConceptShortCutElement[] = [];
         let languageImports: string[] = [];
         let editorImports: string[] = [];
-        let coreImports: string[] = ['Language', 'FreProjectionHandler', 'FreBoxProvider'];
+        let coreImports: string[] = [`${Names.FreLanguage}`, 'FreProjectionHandler', 'FreBoxProvider'];
 
         language.concepts.filter(c => !(c instanceof PiLimitedConcept || c.isAbstract)).forEach(concept => {
             // TODO handle other sub types of PiClassifier
@@ -187,10 +187,10 @@ export class EditorDefTemplate {
              */
              export function initializeEditorDef() {
                  ${conceptsWithTrigger.map( element =>
-                `Language.getInstance().concept("${Names.concept(element.concept)}").trigger = "${element.trigger}";`
+                `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").trigger = "${element.trigger}";`
             ).join("\n")}
                  ${conceptsWithRefShortcut.map( element =>
-                `Language.getInstance().concept("${Names.concept(element.concept)}").referenceShortcut = 
+                `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").referenceShortcut = 
                     {
                         propertyName: "${element.property.name}",
                         conceptName: "${element.property.type.name}"
@@ -204,7 +204,7 @@ export class EditorDefTemplate {
 
     private generateHeaderInfo(projection: PiEditTableProjection, coreImports: string[]): string {
         if (!!projection && !!projection.headers && projection.headers.length > 0) {
-            ListUtil.addIfNotPresent(coreImports, "BoxUtils");
+            ListUtil.addIfNotPresent(coreImports, "BoxUtil");
             ListUtil.addIfNotPresent(coreImports, "FreTableHeaderInfo");
             return `new FreTableHeaderInfo("${projection.classifier.name}", "${projection.name}", [${projection.headers.map(head =>
                 `"${head}"`

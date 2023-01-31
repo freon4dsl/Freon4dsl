@@ -79,7 +79,7 @@ export class SemanticAnalysisTemplate {
         return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
                 import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
                 import { ${refWalkerName} } from "./${refWalkerName}";
-                import { Concept, Language, PiElement, PiElementReference } from "@projectit/core";
+                import { Concept, ${Names.FreLanguage}, ${Names.PiElement}, ${Names.PiElementReference} } from "@projectit/core";
 
                 export class ${className} {
 
@@ -101,15 +101,15 @@ export class SemanticAnalysisTemplate {
 
                         // now change all ref errors
                         for (const [toBeReplaced, newObject] of changesToBeMade) {
-                            const myType: Concept = Language.getInstance().concept(toBeReplaced.piLanguageConcept());
+                            const myType: Concept = ${Names.FreLanguage}.getInstance().concept(toBeReplaced.freLanguageConcept());
                             myType.properties.forEach(prop => {
                                 if (prop.type !== "boolean" && !!toBeReplaced[prop.name]) {
                                     newObject[prop.name] = toBeReplaced[prop.name];
                                 }
                             });
-                            let parent: PiElement = toBeReplaced.piOwnerDescriptor().owner;
-                            const propName: string = toBeReplaced.piOwnerDescriptor().propertyName;
-                            const propIndex: number = toBeReplaced.piOwnerDescriptor().propertyIndex;
+                            let parent: ${Names.PiElement} = toBeReplaced.freOwnerDescriptor().owner;
+                            const propName: string = toBeReplaced.freOwnerDescriptor().propertyName;
+                            const propIndex: number = toBeReplaced.freOwnerDescriptor().propertyIndex;
                             if (propIndex !== undefined) {
                                 parent[propName].splice(propIndex, 1, newObject);
                             } else {
@@ -138,7 +138,7 @@ export class SemanticAnalysisTemplate {
               ${Names.allConcepts(language)}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
             } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
             import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
-            import { PiNamedElement, Language, LanguageEnvironment, PiElementReference } from "@projectit/core";
+            import { ${Names.PiNamedElement}, ${Names.FreLanguage}, ${Names.LanguageEnvironment}, ${Names.PiElementReference} } from "@projectit/core";
             
             export class ${className} extends ${Names.defaultWorker(language)} implements ${Names.workerInterface(language)} {
                 changesToBeMade: Map<${everyConceptName}, ${everyConceptName}> = null;
@@ -150,14 +150,14 @@ export class SemanticAnalysisTemplate {
                 
                 ${this.possibleProblems.map(poss => `${this.makeVistorMethod(poss)}`).join("\n")}
                 
-                private findReplacement(modelelement: ${Names.allConcepts(language)}, referredElem: PiElementReference<PiNamedElement>) {
-                    const scoper = LanguageEnvironment.getInstance().scoper;
+                private findReplacement(modelelement: ${Names.allConcepts(language)}, referredElem: ${Names.PiElementReference}<${Names.PiNamedElement}>) {
+                    const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
                     const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                     if (possibles.length > 0) {
                         // element probably refers to something with another type
                         let replacement: ${Names.allConcepts(language)} = null;
                         for (const elem of possibles) {
-                            const metatype = elem.piLanguageConcept();
+                            const metatype = elem.freLanguageConcept();
                             ${replacementIfStat}
                         }
                         this.changesToBeMade.set(modelelement, replacement);
@@ -182,8 +182,8 @@ export class SemanticAnalysisTemplate {
                     let metatype: string = Names.classifier(type);
                     this.addToImports(type);
                     let propName: string = ref.name;
-                    result += `if (Language.getInstance().metaConformsToType(elem, "${metatype}")) {
-                        replacement = ${toBeCreated}.create({ ${propName}: PiElementReference.create<${metatype}>(referredElem.name, metatype) });
+                    result += `if (${Names.FreLanguage}.getInstance().metaConformsToType(elem, "${metatype}")) {
+                        replacement = ${toBeCreated}.create({ ${propName}: ${Names.PiElementReference}.create<${metatype}>(referredElem.name, metatype) });
                     } else `;
                 }
             }
@@ -203,7 +203,7 @@ export class SemanticAnalysisTemplate {
              * @param modelelement
              */
             public execBefore${Names.concept(piClassifier)}(modelelement: ${Names.concept(piClassifier)}): boolean {
-                let referredElem: PiElementReference<PiNamedElement>;
+                let referredElem: ${Names.PiElementReference}<${Names.PiNamedElement}>;
                 ${piClassifier.allReferences().filter(prop => !prop.isList).map(prop =>
                 `referredElem = modelelement.${prop.name};
                 if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name

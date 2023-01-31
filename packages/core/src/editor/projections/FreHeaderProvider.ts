@@ -1,15 +1,15 @@
 import { isNullOrUndefined } from "../../util/index";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjectionHandler } from "./FreProjectionHandler";
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 import { Box, TableRowBox } from "../boxes";
-import { BoxUtils, TableUtil } from "../simplifiedBoxAPI";
+import { BoxUtil, TableUtil } from "../simplifiedBoxAPI";
 
 export class FreHeaderProvider extends FreBoxProvider {
     propertyName: string;
     _hasContent: boolean = false;
 
-    constructor(element: PiElement, propertyName: string, conceptName: string, mainHandler: FreProjectionHandler) {
+    constructor(element: FreNode, propertyName: string, conceptName: string, mainHandler: FreProjectionHandler) {
         super(mainHandler);
         this._element = element;
         this.propertyName = propertyName;
@@ -27,7 +27,7 @@ export class FreHeaderProvider extends FreBoxProvider {
             headers.forEach((head, index) => {
                 // console.log('pushing cell: ' + head);
                 // todo should the labelBox be wrapped in a TableCellBox?
-                cells.push(BoxUtils.labelBox(this._element, head, `table-header-${index+1}`));
+                cells.push(BoxUtil.labelBox(this._element, head, `table-header-${index+1}`));
             });
             this._hasContent = true;
         } else {
@@ -62,7 +62,7 @@ export class FreHeaderProvider extends FreBoxProvider {
             myProjection = myProjection.toLowerCase();
         }
         // console.log("   My projection  is " + myProjection)
-        const ownerRequired = this.mainHandler.getRequiredProjection(this._element.piLanguageConcept(), myProjection, this.propertyName);
+        const ownerRequired = this.mainHandler.getRequiredProjection(this._element.freLanguageConcept(), myProjection, this.propertyName);
         if (isNullOrUndefined(ownerRequired)) {
             // console.error("SHOULD NOT HAPPEN");
             // No requirement from owner projection: just find the first projection in the active list of projections
@@ -76,7 +76,7 @@ export class FreHeaderProvider extends FreBoxProvider {
                 this.usedProjection = ownerRequired
             }
         }
-        // console.log("Header Provider Projection for " + this._element.piLanguageConcept() + " is " + this.usedProjection);
+        // console.log("Header Provider Projection for " + this._element.freLanguageConcept() + " is " + this.usedProjection);
         return this.usedProjection;
     }
 

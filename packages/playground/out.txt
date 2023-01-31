@@ -6,8 +6,8 @@ $ bash ../../scripts/projectit-dev.sh -v all -d src/mps/defs -o src/mps
 [30m ReaderWriterGenerator: Generating parser and unparser in folder src/mps/writer/gen for language Study [30m
 [30m ReaderWriterGenerator: Generating language writer: src/mps/writer/gen/StudyModelUnitWriter.ts [30m
 [31m ERROR: Function: SSyntax error in generated code:
-        import { PiNamedElement, PiWriter } from "@projectit/core";
-        import { StudyEveryConcept, PiElementReference, 
+        import { PiNamedElement, FreWriter } from "@projectit/core";
+        import { StudyEveryConcept, MetaElementReference,
                 Accenture_study_core_Protocol_Unit, 
                 Accenture_study_core_ActivityTrackTable_Unit, 
                 Accenture_study_test_FormTest_Unit, 
@@ -812,7 +812,7 @@ $ bash ../../scripts/projectit-dev.sh -v all -d src/mps/defs -o src/mps
          * elements of language Study.
          * It is, amongst others, used to create error messages in the validator.
          */
-        export class StudyModelUnitWriter implements PiWriter {
+        export class StudyModelUnitWriter implements FreWriter {
             output: string[] = [];     // stores the result, one line per array element
             currentLine: number = 0;   // keeps track of the element in 'output' that we are working on
 
@@ -13387,7 +13387,7 @@ this.unparse(modelelement.content, short) ;
             /**
              *
             */
-            private unparseReference(modelelement: PiElementReference<PiNamedElement>, short: boolean) {
+            private unparseReference(modelelement: MetaElementReference<PiNamedElement>, short: boolean) {
                 const type: PiNamedElement = modelelement.referred;
                 if (!!type) {
                     if (type instanceof Accenture_study_core_ReplyKindEnum) {
@@ -13440,7 +13440,7 @@ this.unparse(modelelement.content, short) ;
              * @param indent
              * @param short
              */
-            private unparseReferenceList(list: PiElementReference<PiNamedElement>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
+            private unparseReferenceList(list: MetaElementReference<PiNamedElement>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
                     const isLastInList: boolean = index === list.length - 1;                   
                     this.unparseReference(listElem, short);                 

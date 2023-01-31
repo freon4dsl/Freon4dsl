@@ -52,9 +52,9 @@ export class PiReferenceTemplate {
                 super();
                 this.referred = referredElement;
                 this.typeName = typeName;
-                makeObservable<PiElementReference<T>, "_PI_pathname" | "_PI_referred">(this, {
-                   _PI_referred: observable,
-                   _PI_pathname: observable,
+                makeObservable<${Names.PiElementReference}<T>, "_FRE_pathname" | "_FRE_referred">(this, {
+                   _FRE_referred: observable,
+                   _FRE_pathname: observable,
                     referred: computed,
                     name: computed,
                     pathname: computed
@@ -104,8 +104,8 @@ export class PiReferenceTemplate {
                     return this._PI_referred;
                 } else {
                     return ${Names.environment(language)}.getInstance().scoper.resolvePathName(
-                        this.piOwnerDescriptor().owner, 
-                        this.piOwnerDescriptor().propertyName, 
+                        this.freOwnerDescriptor().owner, 
+                        this.freOwnerDescriptor().propertyName, 
                         this._PI_pathname, 
                         this.typeName
                     ) as T;
@@ -123,7 +123,7 @@ export class PiReferenceTemplate {
              * Returns true if this reference has the same name as 'toBeMatched'.
              * @param toBeMatched
              */
-            match(toBeMatched: Partial<PiElementReference<T>>): boolean {
+            match(toBeMatched: Partial<${Names.PiElementReference}<T>>): boolean {
                 return toBeMatched.name === this.name;
             }
         }`;

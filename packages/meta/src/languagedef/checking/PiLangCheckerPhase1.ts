@@ -4,7 +4,7 @@ import {
     PiExpressionConcept,
     PiPrimitiveProperty,
     PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept,
-    PiElementReference, PiMetaEnvironment, PiPrimitiveType, PiModelDescription, PiUnitDescription
+    MetaElementReference, PiMetaEnvironment, PiPrimitiveType, PiModelDescription, PiUnitDescription
 } from "../metalanguage";
 import { CheckRunner, CheckerPhase, MetaLogger, piReservedWords, reservedWordsInTypescript, ParseLocationUtil } from "../../utils";
 import { CommonChecker } from "./CommonChecker";
@@ -98,7 +98,7 @@ export class PiLangCheckerPhase1 extends CheckerPhase<PiLanguage> {
         }
 
         // do the interfaces
-        const newInterfaces: PiElementReference<PiInterface>[] = [];
+        const newInterfaces: MetaElementReference<PiInterface>[] = [];
         for (const intf of piConcept.interfaces) {
             CommonChecker.checkClassifierReference(intf, this.runner);
             if (!!intf.referred) { // error message taken care of by checkClassifierReference

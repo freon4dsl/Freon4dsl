@@ -24,7 +24,7 @@ import { PiEditParseUtil } from "./PiEditParseUtil";
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference } from "../../languagedef/metalanguage";
+import { MetaElementReference } from "../../languagedef/metalanguage";
 
 const LOGGER = new MetaLogger("EditorCreators").mute();
 
@@ -52,7 +52,7 @@ function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEdit
             if (!!proj.tableProjection) {
                 const myProj: PiEditTableProjection = new PiEditTableProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = PiElementReference.create<PiClassifier>(proj.classifier.name, "PiClassifier");
+                    myProj.classifier = MetaElementReference.create<PiClassifier>(proj.classifier.name, "PiClassifier");
                 }
                 if (!!proj.tableProjection.cells) {
                     myProj.cells = proj.tableProjection.cells;
@@ -71,7 +71,7 @@ function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEdit
             if (!!proj.projection) {
                 const myProj: PiEditProjection = new PiEditProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = PiElementReference.create<PiClassifier>(proj.classifier.name, "PiClassifier");
+                    myProj.classifier = MetaElementReference.create<PiClassifier>(proj.classifier.name, "PiClassifier");
                 }
                 if (!!proj.projection.lines) {
                     myProj.lines = proj.projection.lines;
@@ -159,10 +159,10 @@ export function createStdBool(data: Partial<BoolKeywords>) : BoolKeywords {
     return result;
 }
 
-export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
-    let result: PiElementReference<PiClassifier>;
+export function createClassifierReference(data: Partial<MetaElementReference<PiClassifier>>): MetaElementReference<PiClassifier> {
+    let result: MetaElementReference<PiClassifier>;
     if (!!data.name) {
-        result = PiElementReference.create<PiClassifier>(data.name, "PiClassifier");
+        result = MetaElementReference.create<PiClassifier>(data.name, "PiClassifier");
     }
     if (!!data.location) {
         result.location = data.location;

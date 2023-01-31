@@ -1,4 +1,4 @@
-import { Checker, PiErrorSeverity, MetaLogger, ParseLocationUtil, CheckRunner } from "../../utils";
+import { Checker, FreErrorSeverity, MetaLogger, ParseLocationUtil, CheckRunner } from "../../utils";
 import {
     PiClassifier,
     PiConcept,
@@ -30,7 +30,7 @@ const LOGGER = new MetaLogger("ValidatorChecker").mute();
 const equalsTypeName = "equalsType";
 const conformsToName = "conformsTo";
 
-// 'severityLevels' should mirror the levels in PiValidator/PiErrorSeverity, but
+// 'severityLevels' should mirror the levels in FreValidator/FreErrorSeverity, but
 // all names should be in lowercase
 const severityLevels = ["error", "improvement", "todo", "info"];
 
@@ -88,7 +88,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         else {
             // set default
             tr.severity = new ValidationSeverity();
-            tr.severity.severity = PiErrorSeverity.ToDo;
+            tr.severity.severity = FreErrorSeverity.ToDo;
         }
         if (!!tr.message) {
             this.checkValidationMessage(tr.message, enclosingConcept);
@@ -114,7 +114,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                     tr.property = PiLangSelfExp.create(enclosingConcept);
                     tr.property.appliedfeature = PiLangAppliedFeatureExp.create(tr.property, "name", myProp);
                     // tr.property.appliedfeature.sourceName = "unitName";
-                    // tr.property.appliedfeature.referredElement = PiElementReference.create<PiProperty>(myProp, "PiProperty");
+                    // tr.property.appliedfeature.referredElement = MetaElementReference.create<PiProperty>(myProp, "PiProperty");
                     tr.property.location = tr.location;
                     tr.property.language = this.language;
                   }
@@ -169,7 +169,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.runner.nestedCheck(
             {
                 check: tr.exp1 !== null && tr.exp2 !== null,
-                error: `Expression rule '${tr.toPiString()}' should have two types to compare ${ParseLocationUtil.location(tr)}.`,
+                error: `Expression rule '${tr.toFreString()}' should have two types to compare ${ParseLocationUtil.location(tr)}.`,
                 whenOk: () => {
                     // exp1 and exp2 should refer to valid properties or be simple expressions
                     this.myExpressionChecker.checkLangExp(tr.exp1, enclosingConcept);
@@ -186,7 +186,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                         const type2 = tr.exp2.findRefOfLastAppliedFeature()?.type;
                         this.runner.simpleCheck(type2 !== null, `Cannot find the type of ${tr.exp2.toPiString()} ${ParseLocationUtil.location(tr)}.`);
                         if (type1 !== null && type2 !== null) {
-                            this.runner.simpleCheck(type1 === type2, `Types of expression rule '${tr.toPiString()}' should be equal ${ParseLocationUtil.location(tr)}.`);
+                            this.runner.simpleCheck(type1 === type2, `Types of expression rule '${tr.toFreString()}' should be equal ${ParseLocationUtil.location(tr)}.`);
                         }
                     }
                 }
@@ -197,7 +197,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.runner.nestedCheck(
             {
                 check: tr.list !== null && tr.listproperty !== null,
-                error: `Isunique rule '${tr.toPiString()}' should have a list and a property of that list to compare the elements ${ParseLocationUtil.location(tr)}.`,
+                error: `Isunique rule '${tr.toFreString()}' should have a list and a property of that list to compare the elements ${ParseLocationUtil.location(tr)}.`,
                 whenOk: () => {
                     // list should refer to a valid property of enclosingConcept
                     this.myExpressionChecker.checkLangExp(tr.list, enclosingConcept);
@@ -235,29 +235,29 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 whenOk: () => {
                     switch (myValue) {
                         case "error": {
-                            severity.severity = PiErrorSeverity.Error;
+                            severity.severity = FreErrorSeverity.Error;
                             break;
                         }
                         case "info": {
-                            severity.severity = PiErrorSeverity.Info;
+                            severity.severity = FreErrorSeverity.Info;
                             break;
                         }
                         case "todo": {
-                            severity.severity = PiErrorSeverity.ToDo;
+                            severity.severity = FreErrorSeverity.ToDo;
                             break;
                         }
                         case "improvement": {
-                            severity.severity = PiErrorSeverity.Improvement;
+                            severity.severity = FreErrorSeverity.Improvement;
                             break;
                         }
                         default: {
-                            severity.severity = PiErrorSeverity.ToDo;
+                            severity.severity = FreErrorSeverity.ToDo;
                         }
                     }
                 }
         });
         if (!!!severity.severity) {
-            severity.severity = PiErrorSeverity.ToDo;
+            severity.severity = FreErrorSeverity.ToDo;
         }
     }
 
@@ -266,7 +266,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             error: `User defined error message should have a value ${ParseLocationUtil.location(message)}.`,
             whenOk: () => {
                 message.content.forEach(part => {
-                    // console.log("found " + part.toPiString());
+                    // console.log("found " + part.toFreString());
                     if (part instanceof ValidationMessageReference) {
                         this.myExpressionChecker.checkLangExp(part.expression, enclosingConcept);
                     }

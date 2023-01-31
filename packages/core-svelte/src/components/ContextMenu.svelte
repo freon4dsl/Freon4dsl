@@ -8,16 +8,16 @@
      */
     import { clickOutsideConditional } from "./svelte-utils";
     import { tick } from "svelte";
-    import { PiLogger, MenuItem, PiEditor } from "@projectit/core";
+    import { FreLogger, MenuItem, FreEditor } from "@projectit/core";
     import { contextMenuVisible } from "./svelte-utils/ContextMenuStore";
     import { viewport } from "./svelte-utils/EditorViewportStore";
 
     // items for the context menu
     export let items: MenuItem[];
-    export let editor: PiEditor;
+    export let editor: FreEditor;
 
     // local variables
-    const LOGGER = new PiLogger("ContextMenu"); //.mute();
+    const LOGGER = new FreLogger("ContextMenu"); //.mute();
     let submenuItems: MenuItem[];
     let elementIndex: number;                   // the index of the element in a list to which this menu is coupled
 

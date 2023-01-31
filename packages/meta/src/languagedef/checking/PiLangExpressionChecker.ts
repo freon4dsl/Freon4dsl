@@ -8,7 +8,7 @@ import { PiLanguage, PiClassifier, PiLimitedConcept, PiInstance, PiLangExp,
     PiInstanceExp,
     PiLangSimpleExp,
     PiMetaEnvironment,
-    PiElementReference
+    MetaElementReference
 } from "../metalanguage";
 import { CommonChecker } from "./CommonChecker";
 
@@ -109,7 +109,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
                                             `${ParseLocationUtil.location(langExp)}.`
                                 );
                                 if (!!foundInstance) {
-                                    langExp.__referredElement = PiElementReference.create<PiInstance>(foundInstance, "PiInstance");
+                                    langExp.__referredElement = MetaElementReference.create<PiInstance>(foundInstance, "PiInstance");
                                 }
                             }
                         });
@@ -122,7 +122,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     // self.XXX
     private checkSelfExpression(langExp: PiLangSelfExp, enclosingConcept: PiClassifier) {
         LOGGER.log("checkSelfExpression " + langExp?.toPiString());
-        langExp.__referredElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiConcept");
+        langExp.__referredElement = MetaElementReference.create<PiClassifier>(enclosingConcept, "PiConcept");
         langExp.__referredElement.owner = langExp;
         if (this.strictUseOfSelf) {
             this.runner.nestedCheck(
@@ -146,7 +146,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
             check: langExp.sourceName === containerKeyword,
             error: `Expression should start with 'self' ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
-                langExp.__referredElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiClassifier");
+                langExp.__referredElement = MetaElementReference.create<PiClassifier>(enclosingConcept, "PiClassifier");
                 langExp.__referredElement.owner = langExp;
             }
         });
@@ -187,7 +187,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
                                     error: `Cannot find reference to ${p.sourceName} ${ParseLocationUtil.location(langExp)}`,
                                     whenOk: () => {
                                         functionType = foundClassifier;
-                                        p.__referredElement = PiElementReference.create<PiClassifier>(foundClassifier, "PiClassifier");
+                                        p.__referredElement = MetaElementReference.create<PiClassifier>(foundClassifier, "PiClassifier");
                                         p.__referredElement.owner = p;
                                     }
                                 });

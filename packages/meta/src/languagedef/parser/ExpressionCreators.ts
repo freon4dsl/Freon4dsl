@@ -14,7 +14,7 @@ import { PiClassifier } from "../metalanguage/PiLanguage";
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference } from "../metalanguage/PiElementReference";
+import { MetaElementReference } from "../metalanguage/MetaElementReference";
 
 const LOGGER = new MetaLogger("PiLanguageExpressionCreator").mute();
 
@@ -57,9 +57,9 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     return result;
 }
 
-export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
+export function createClassifierReference(data: Partial<MetaElementReference<PiClassifier>>): MetaElementReference<PiClassifier> {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = PiElementReference.create<PiClassifier>(data.name, "PiClassifier");
+    const result = MetaElementReference.create<PiClassifier>(data.name, "PiClassifier");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;

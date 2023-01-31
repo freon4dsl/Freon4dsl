@@ -11,7 +11,7 @@ import {
     PiProperty,
     PiInstanceProperty,
     PiUnitDescription,
-    PiElementReference
+    MetaElementReference
 } from "../metalanguage";
 import { CommonChecker } from "./CommonChecker";
 import { ClassifierChecker } from "./ClassifierChecker";
@@ -190,7 +190,7 @@ export class PiLangCheckerPhase2  extends CheckerPhase<PiLanguage> {
                                 check: myProp instanceof PiPrimitiveProperty,
                                 error: `Predefined property '${piPropertyInstance.name}' should have a primitive type ${ParseLocationUtil.location(piPropertyInstance)}.`,
                                 whenOk: () => {
-                                    piPropertyInstance.property = PiElementReference.create<PiProperty>(myProp, "PiProperty");
+                                    piPropertyInstance.property = MetaElementReference.create<PiProperty>(myProp, "PiProperty");
                                     let myPropType: PiPrimitiveType = myProp.type as PiPrimitiveType;
                                     if (!myProp.isList) {
                                         this.runner.simpleCheck(CommonChecker.checkValueToType(piPropertyInstance.value, myPropType),

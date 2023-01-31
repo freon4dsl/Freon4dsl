@@ -3,9 +3,9 @@
         GridBox,
         isMetaKey,
         ENTER,
-        type PiEditor,
-        PiLogger,
-        toPiKey,
+        type FreEditor,
+        FreLogger,
+        toFreKey,
         GridCellBox,
         Box
     } from "@projectit/core";
@@ -18,12 +18,12 @@
     // properties
     export let grid: GridBox;
     export let cellBox: GridCellBox;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
 
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
     //local variables
-    const LOGGER = new PiLogger("GridCellComponent");
+    const LOGGER = new FreLogger("GridCellComponent");
     let boxStore: Writable<Box> = writable<Box>(cellBox.content); // todo see if we can do without this store
     let cssVariables: string;
     let id: string = !!cellBox? componentId(cellBox) : 'gridcell-for-unknown-box';
@@ -39,7 +39,7 @@
 
     function refresh(from? : string): void {
         if (!!cellBox) {
-            LOGGER.log("REFRESH GridCellComponent " + (!!from ? " from " + from + " " : "") + cellBox?.element?.piLanguageConcept() + "-" + cellBox?.element?.piId());
+            LOGGER.log("REFRESH GridCellComponent " + (!!from ? " from " + from + " " : "") + cellBox?.element?.freLanguageConcept() + "-" + cellBox?.element?.freId());
             $boxStore = cellBox.content;
             LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.content.role + "--- " + int++);
             row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
@@ -76,7 +76,7 @@
 
     const onKeydown = (event: KeyboardEvent) => {
         LOGGER.log("GridCellComponent onKeyDown");
-        const piKey = toPiKey(event);
+        const freKey = toFreKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
             // todo adjust the index, so that we know where to execute the command

@@ -6,7 +6,7 @@ import { PiScopeDef } from "../metalanguage";
 import { CustomScoperTemplate } from "./templates/CustomScoperTemplate";
 import { ScoperDefTemplate } from "./templates/ScoperDefTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
-import { PiElementReference } from "../../languagedef/metalanguage";
+import { MetaElementReference } from "../../languagedef/metalanguage";
 import { PiModelDescription } from "../../languagedef/metalanguage/PiLanguage";
 
 const LOGGER = new MetaLogger("ScoperGenerator").mute();
@@ -26,7 +26,7 @@ export class ScoperGenerator {
             scopedef = new PiScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
-            scopedef.namespaces.push(PiElementReference.create<PiModelDescription>(this.language.modelConcept, "PiModelDescription"));
+            scopedef.namespaces.push(MetaElementReference.create<PiModelDescription>(this.language.modelConcept, "PiModelDescription"));
         }
 
         const generationStatus = new GenerationStatus();

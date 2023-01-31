@@ -23,7 +23,7 @@ import {
 } from "./PiEditDefLang";
 import { EditorDefaults } from "./EditorDefaults";
 import { MetaLogger } from "../../utils";
-import { PiElementReference } from "../../languagedef/metalanguage";
+import { MetaElementReference } from "../../languagedef/metalanguage";
 import { PiLangExpressionChecker } from "../../languagedef/checking";
 
 const LOGGER = new MetaLogger("PiEditChecker").mute();
@@ -460,7 +460,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 const xx: PiProperty = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
                 // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat
                 if (!!xx) {
-                    classifierInfo.referenceShortCut = PiElementReference.create<PiProperty>(xx as PiProperty, "PiProperty");
+                    classifierInfo.referenceShortCut = MetaElementReference.create<PiProperty>(xx as PiProperty, "PiProperty");
                     classifierInfo.referenceShortCut.owner = this.language;
                 }
             }
@@ -517,7 +517,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     error: `Cannot find property "${item.expression.toPiString()}" ${ParseLocationUtil.location(item)}`,
                     whenOk: () => {
                         // set the 'property' attribute of the projection
-                        item.property = PiElementReference.create<PiProperty>(myProp, "PiProperty");
+                        item.property = MetaElementReference.create<PiProperty>(myProp, "PiProperty");
                         item.property.owner = this.language;
                         item.expression = null;
                         // check the rest
@@ -568,8 +568,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         return keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r") || keyword.includes("\t");
     }
 
-    private copyReference(reference: PiElementReference<PiProperty>): PiElementReference<PiProperty> {
-        const result: PiElementReference<PiProperty> = PiElementReference.create<PiProperty>(reference.referred, "PiProperty");
+    private copyReference(reference: MetaElementReference<PiProperty>): MetaElementReference<PiProperty> {
+        const result: MetaElementReference<PiProperty> = MetaElementReference.create<PiProperty>(reference.referred, "PiProperty");
         result.owner = this.language;
         return result;
     }

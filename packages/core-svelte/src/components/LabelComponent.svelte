@@ -4,13 +4,13 @@
      * This component shows to piece of non-editable text.
      */
     import { onMount, afterUpdate } from "svelte";
-    import { PiLogger, LabelBox } from "@projectit/core";
+    import { FreLogger, LabelBox } from "@projectit/core";
     import { componentId } from "./svelte-utils";
     import { setBoxSizes } from "./svelte-utils";
 
     export let box: LabelBox;
 
-    const LOGGER = new PiLogger("LabelComponent");
+    const LOGGER = new FreLogger("LabelComponent");
 
     let id: string = !!box ? componentId(box) : 'label-for-unknwon-box';
     let element: HTMLDivElement = null;

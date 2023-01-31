@@ -1,6 +1,6 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoEntity, DemoFunction, DemoModel } from "../language/gen";
-import { GenericModelSerializer } from "@projectit/core";
+import { FreModelSerializer } from "@projectit/core";
 import { JsonModelCreator } from "./JsonModelCreator";
 
 describe("Checking Serializer on Demo", () => {
@@ -13,7 +13,7 @@ describe("Checking Serializer on Demo", () => {
 
     test("model-to-json, followed by json-to-model should result in same model", () => {
         expect(initialModel.name).not.toBeNull();
-        const serial = new GenericModelSerializer();
+        const serial = new FreModelSerializer();
         const jsonOut = serial.convertToJSON(initialModel);
         // console.log(JSON.stringify(jsonOut));
 
@@ -38,7 +38,7 @@ describe("Checking Serializer on Demo", () => {
 
     test("storing public only, with only 'name', 'function', and 'main' properties in DemoModel declared public", () => {
         expect(initialModel.name).not.toBeNull();
-        const serial = new GenericModelSerializer();
+        const serial = new FreModelSerializer();
         const jsonOut = serial.convertToJSON(initialModel, true);
         // console.log(JSON.stringify(jsonOut));
 

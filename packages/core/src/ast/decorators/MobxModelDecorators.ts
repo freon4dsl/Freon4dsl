@@ -1,22 +1,22 @@
 import { IObservableValue, IArrayWillChange, IArrayWillSplice, observable, intercept, runInAction } from "mobx";
 import "reflect-metadata";
-import { PiElement } from "../PiElement";
+import { FreNode } from "../FreNode";
 
 import { allOwners, DecoratedModelElement } from "./DecoratedModelElement";
-import { PiChangeManager } from "../../change-manager";
+import { FreChangeManager } from "../../change-manager";
 import { PrimType } from "../../language";
-import { PiLogger } from "../../logging";
+import { FreLogger } from "../../logging";
 
-const LOGGER: PiLogger = new PiLogger("MobxDecorators").mute();
+const LOGGER: FreLogger = new FreLogger("MobxDecorators").mute();
 
 /**
  * The set of functions in this file all add extra functionality to the mobx observers.
  * They make sure that:
- *  1. all PiElements have information on the object that 'owns' them: the PiOwnerDescriptor information is set,
- *  2. all PiElements have just 1 owner: when an element is assigned to another property, its previous owner is
+ *  1. all FreElements have information on the object that 'owns' them: the FreOwnerDescriptor information is set,
+ *  2. all FreElements have just 1 owner: when an element is assigned to another property, its previous owner is
  *  set to null, or in case the previous property is a list, it is removed from this list,
  *  2. all observable lists do not contain null or undefined values,
- *  4. all changes in the model are reported to the PiChangeManager, which distributes this information to
+ *  4. all changes in the model are reported to the FreChangeManager, which distributes this information to
  *  any object that is subscribed to it.
  *
  *  Note that a difference is made only between properties with primitive value (i.e. string | number | boolean) and
@@ -24,14 +24,14 @@ const LOGGER: PiLogger = new PiLogger("MobxDecorators").mute();
  *  as properties with object values.
  */
 
-export const MODEL_PREFIX = "_PI_";
+export const MODEL_PREFIX = "_FRE_";
 export const MODEL_PREFIX_LENGTH = MODEL_PREFIX.length;
 export const MODEL_CONTAINER = MODEL_PREFIX + "Container";
 export const MODEL_NAME = MODEL_PREFIX + "Name";
 
 /**
  *
- * This property decorator can be used to decorate properties of type PiElement.
+ * This property decorator can be used to decorate properties of type FreNode.
  * The objects in such properties will automatically keep an owner reference.
  *
  * @param target        the owner of the property
@@ -54,14 +54,14 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
         let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         const storedValue = !!storedObserver ? storedObserver.get() : null;
         // console.log("newValue is " + JSON.stringify(newValue) );
-        // console.log("newValue is " + JSON.stringify(newValue, ["$typename", "$id"]) + " owners: " + JSON.stringify(allOwners(this as any as PiElement), ["$typename", "$id"]) );
-        if (allOwners(this as any as PiElement).includes(newValue as any as PiElement)) {
+        // console.log("newValue is " + JSON.stringify(newValue, ["$typename", "$id"]) + " owners: " + JSON.stringify(allOwners(this as any as FreNode), ["$typename", "$id"]) );
+        if (allOwners(this as any as FreNode).includes(newValue as any as FreNode)) {
             throw Error("CYCLE IN AST");
             // } else {
-            //     console.log("No cycle in Ast, owners: " + allOwners(newValue as any as PiElement).length);
+            //     console.log("No cycle in Ast, owners: " + allOwners(newValue as any as FreNode).length);
         }
 
-        PiChangeManager.getInstance().setPart(this, propertyKey, newValue, storedValue);
+        FreChangeManager.getInstance().setPart(this, propertyKey, newValue, storedValue);
         // Clean owner of current part
         if (!!storedValue) {
             storedValue.$$owner = null;
@@ -104,7 +104,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
 
 /**
  *
- * This property decorator can be used to decorate properties of type PiElement[].
+ * This property decorator can be used to decorate properties of type FreNode[].
  *
  * @param target        the owner of the property
  * @param propertyKey   the name of the property
@@ -133,7 +133,7 @@ export function observableprim(target: DecoratedModelElement, propertyKey: strin
     };
 
     const setter = function(this: any, newValue: string | number | boolean) {
-        PiChangeManager.getInstance().setPrimitive(this, propertyKey, newValue);
+        FreChangeManager.getInstance().setPrimitive(this, propertyKey, newValue);
 
         let storedObserver = this[privatePropertyKey] as IObservableValue<string | number | boolean>;
 
@@ -236,7 +236,7 @@ function cleanOwner(oldValue: DecoratedModelElement) {
  * that the old element is removed and its owner reference is cleared.
  * The new element will have its owner reference set correctly.
  * Also ensures that no null or undefined values are in the list.
- * Note: the function is used for lists of type PiElement[], for
+ * Note: the function is used for lists of type FreNode[], for
  * lists of primitives values 'primWillChange' is used.
  *
  * @param change        the change on the array
@@ -251,7 +251,7 @@ function objectWillChange(
             const newValue = change.newValue;
             if (newValue !== null && newValue !== undefined) {
                 const oldValue = change.object[change.index];
-                PiChangeManager.getInstance().updatePartListElement(newValue, oldValue, change.index);
+                FreChangeManager.getInstance().updatePartListElement(newValue, oldValue, change.index);
                 if (newValue !== oldValue) {
                     // cleanup old owner reference of new value
                     resetOwner(newValue, oldValue.$$owner, oldValue.$$propertyName, oldValue.$$propertyIndex);
@@ -307,7 +307,7 @@ function objectWillChange(
             }
             // make sure the change is propagated to listeners
             // note we use 'change.added' here because this list might be different from 'added'
-            PiChangeManager.getInstance().updatePartList(listOwner, propertyName, index, removed, change.added);
+            FreChangeManager.getInstance().updatePartList(listOwner, propertyName, index, removed, change.added);
             break;
     }
     return change;
@@ -330,7 +330,7 @@ function primWillChange(
             const oldValue: PrimType = change.object[change.index];
             if (newValue !== null && newValue !== undefined) {
                 // console.log("change.object: " + target["name"] + ", propertyName: " + propertyKey);
-                PiChangeManager.getInstance().updatePrimListElement(target, propertyKey, newValue, oldValue, change.index);
+                FreChangeManager.getInstance().updatePrimListElement(target, propertyKey, newValue, oldValue, change.index);
             } else {
                 // instead of assigning, remove this element --- do not add to change manager, this will be done by the splice command
                 change.object.splice(change.index, 1);
@@ -361,7 +361,7 @@ function primWillChange(
             });
             // make sure the change is propagated to listeners
             // note we use 'change.added' here because this list might be different from 'added'
-            PiChangeManager.getInstance().updatePrimList(listOwner, propertyName, index, removed, change.added);
+            FreChangeManager.getInstance().updatePrimList(listOwner, propertyName, index, removed, change.added);
             break;
     }
     return change;

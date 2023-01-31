@@ -1,4 +1,4 @@
-import { GenericModelSerializer, PiError } from "@projectit/core";
+import { FreModelSerializer, PiError } from "@projectit/core";
 import { ProjectYModelUnitType, XXunit, XX } from "../language/gen";
 import { ProjectYEnvironment } from "../config/gen/ProjectYEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
@@ -6,7 +6,7 @@ import { FileHandler } from "../../utils/FileHandler";
 const writer = ProjectYEnvironment.getInstance().writer;
 const reader = ProjectYEnvironment.getInstance().reader;
 const validator = ProjectYEnvironment.getInstance().validator;
-const serial: GenericModelSerializer = new GenericModelSerializer();
+const serial: FreModelSerializer = new FreModelSerializer();
 const handler = new FileHandler();
 const metatype: string = "XXunit";
 const testdir = "src/typer-test8/__inputs__/";

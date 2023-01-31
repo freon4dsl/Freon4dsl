@@ -1,16 +1,16 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
-import { LabelBox, PiEditor, PiElement } from "@projectit/core";
+import { LabelBox, FreEditor, FreNode } from "@projectit/core";
 import { SimpleElement } from "./models/SimpleElement";
 import LabelComponent from "../components/LabelComponent.svelte";
 import MockLabelSelectable from "./mock-components/MockLabelSelectable.svelte";
 
 describe.skip("Label component", () => {
-    const element: PiElement = new SimpleElement("WHATSINANAME");
+    const element: FreNode = new SimpleElement("WHATSINANAME");
     const myLabelBox = new LabelBox(element, "role", () => "LabelText");
-    const element2: PiElement = new SimpleElement("ANOTHERNAME");
+    const element2: FreNode = new SimpleElement("ANOTHERNAME");
     const secondLabelBox = new LabelBox(element2, "role2", () => "AnotherText");
-    const myEditor = new PiEditor(null, null);
+    const myEditor = new FreEditor(null, null);
 
     it("is rendered with label", () => {
         render(LabelComponent, { label: myLabelBox, editor: myEditor });

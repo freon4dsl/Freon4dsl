@@ -1,12 +1,12 @@
 import { makeObservable, observable } from "mobx";
-import { PiOwnerDescriptor, PiElement } from "..";
+import { FreOwnerDescriptor, FreNode } from "..";
 
 /**
  *  An element using the decorators should implement this interface.
  *  The decorators will set the values of these properties correctly at each change.
  */
 export interface DecoratedModelElement {
-    $$owner: PiElement | null;
+    $$owner: FreNode | null;
     $$propertyName: string;
     $$propertyIndex: number | undefined;
 }
@@ -17,7 +17,7 @@ export interface DecoratedModelElement {
  */
 // @model
 export class MobxModelElementImpl implements DecoratedModelElement {
-    $$owner: PiElement | null = null;
+    $$owner: FreNode | null = null;
     $$propertyName: string = "";
     $$propertyIndex: number | undefined = undefined;
 
@@ -29,12 +29,12 @@ export class MobxModelElementImpl implements DecoratedModelElement {
         })
     }
 
-    piOwner(): PiElement {
+    freOwner(): FreNode {
         return this.$$owner;
     }
 
-    piOwnerDescriptor(): PiOwnerDescriptor {
-        const owner = this.$$owner as PiElement;
+    freOwnerDescriptor(): FreOwnerDescriptor {
+        const owner = this.$$owner as FreNode;
         return this.$$owner
             ? {
                   owner: owner,
@@ -45,13 +45,13 @@ export class MobxModelElementImpl implements DecoratedModelElement {
     }
 }
 
-export function allOwners(dec: PiElement): PiElement[] {
+export function allOwners(dec: FreNode): FreNode[] {
     const result = [];
-    let owner = dec?.piOwner();
+    let owner = dec?.freOwner();
 
     while( !!owner) {
         result.push(owner);
-        owner = owner.piOwner();
+        owner = owner.freOwner();
     }
     return result;
 }

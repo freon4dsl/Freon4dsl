@@ -1,7 +1,7 @@
-import { isProKey, isString, PiTriggerType, isRegExp } from "../editor";
+import { isProKey, isString, FreTriggerType, isRegExp } from "../editor";
 
 export class MatchUtil {
-    public static fullMatch(text: string, trigger: PiTriggerType): boolean {
+    public static fullMatch(text: string, trigger: FreTriggerType): boolean {
         if (isRegExp(trigger)) {
             return trigger.test(text);
         } else if (isString(trigger)) {
@@ -12,7 +12,7 @@ export class MatchUtil {
         return false;
     }
 
-    public static partialMatch(text: string, trigger: PiTriggerType): boolean {
+    public static partialMatch(text: string, trigger: FreTriggerType): boolean {
         if (isRegExp(trigger)) {
             const r: RegExp = toPartialMatchRegex(trigger);
             const x = text.match(r);

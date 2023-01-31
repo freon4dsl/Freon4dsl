@@ -1,5 +1,5 @@
-import { PiElement } from "../../ast";
-import { PiUtils } from "../../util";
+import { FreNode } from "../../ast";
+import { FreUtils } from "../../util";
 import { Box } from "./Box";
 
 // TODO state in every box which element we assume to be getting as param, e.g. is the element in a GridCellBox the same as in the corresponding GridBox?
@@ -12,7 +12,7 @@ export class GridCellBox extends Box {
     columnSpan?: number;
     kind: string = "GridCellBox";
 
-    constructor(element: PiElement, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>) {
+    constructor(element: FreNode, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>) {
         super(element, role);
         this.row = row;
         this.column = column;
@@ -20,7 +20,7 @@ export class GridCellBox extends Box {
         if (!!box) {
             box.parent = this;
         }
-        PiUtils.initializeObject(this, initializer);
+        FreUtils.initializeObject(this, initializer);
         this.selectable = false;
     }
 

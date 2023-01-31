@@ -1,4 +1,4 @@
-import { PiElementReference, PiInterface, PiLanguage } from "../../languagedef/metalanguage";
+import { MetaElementReference, PiInterface, PiLanguage } from "../../languagedef/metalanguage";
 import {
     PiBinaryExpressionConcept,
     PiClassifier,
@@ -132,7 +132,7 @@ export class DefaultEditorGenerator {
     private static defaultClassifierProjection(con: PiClassifier, language: PiLanguage): PiEditProjection {
         const projection = new PiEditProjection();
         projection.name = Names.defaultProjectionName;
-        projection.classifier = PiElementReference.create<PiClassifier>(con.name, "PiClassifier");
+        projection.classifier = MetaElementReference.create<PiClassifier>(con.name, "PiClassifier");
         projection.classifier.owner = language;
         // add first line with type name - object name - start bracket: "Dog Jack {"
         const startLine = new PiEditProjectionLine();
@@ -141,7 +141,7 @@ export class DefaultEditorGenerator {
         const nameProp = con.nameProperty();
         if (!!nameProp) {
             const sub = new PiEditPropertyProjection();
-            sub.property = PiElementReference.create<PiPrimitiveProperty>(nameProp, "PiPrimitiveProperty");
+            sub.property = MetaElementReference.create<PiPrimitiveProperty>(nameProp, "PiPrimitiveProperty");
             sub.property.owner = con.language;
             startLine.items.push(sub);
         }
@@ -177,7 +177,7 @@ export class DefaultEditorGenerator {
         line.indent = EditorDefaults.standardIndent;
         line.items.push(PiEditProjectionText.create(prop.name));
         const sub = new PiEditPropertyProjection();
-        sub.property = PiElementReference.create<PiProperty>(prop, "PiProperty");
+        sub.property = MetaElementReference.create<PiProperty>(prop, "PiProperty");
         sub.property.owner = concept.language;
         line.items.push(sub);
         projection.lines.push(line);
@@ -186,7 +186,7 @@ export class DefaultEditorGenerator {
     private static defaultOptionalSingleProperty(concept: PiClassifier, prop: PiProperty, projection: PiEditProjection): void {
         const line = new PiEditProjectionLine();
         const optional = new PiOptionalPropertyProjection();
-        optional.property = PiElementReference.create<PiProperty>(prop, "PiProperty");
+        optional.property = MetaElementReference.create<PiProperty>(prop, "PiProperty");
         optional.property.owner = concept.language;
         DefaultEditorGenerator.defaultSingleProperty(concept, prop, optional);
         line.items.push(optional);
@@ -204,7 +204,7 @@ export class DefaultEditorGenerator {
         const line2 = new PiEditProjectionLine();
         line2.indent = EditorDefaults.standardIndent * 2;
         const sub = new PiEditPropertyProjection();
-        sub.property = PiElementReference.create<PiProperty>(prop, "PiProperty");
+        sub.property = MetaElementReference.create<PiProperty>(prop, "PiProperty");
         sub.property.owner = concept.language;
         sub.listInfo = new ListInfo();  // listInfo gets default values on initialization, but we change them here
         sub.listInfo.joinType = EditorDefaults.listJoinType;
@@ -218,7 +218,7 @@ export class DefaultEditorGenerator {
     private static defaultOptionalListProperty(concept: PiClassifier, prop: PiProperty, projection: PiEditProjection): void {
         const line = new PiEditProjectionLine();
         const optional = new PiOptionalPropertyProjection();
-        optional.property = PiElementReference.create<PiProperty>(prop, "PiProperty");
+        optional.property = MetaElementReference.create<PiProperty>(prop, "PiProperty");
         optional.property.owner = concept.language;
         DefaultEditorGenerator.defaultListProperty(concept, prop, optional);
         line.items.push(optional);
@@ -230,7 +230,7 @@ export class DefaultEditorGenerator {
         if (!foundExtraInfo) {
             const extraInfo = new ExtraClassifierInfo();
             DefaultEditorGenerator.addExtras(extraInfo, con);
-            extraInfo.classifier = PiElementReference.create<PiClassifier>(con, "PiClassifier");
+            extraInfo.classifier = MetaElementReference.create<PiClassifier>(con, "PiClassifier");
             extraInfo.classifier.owner = language;
             defaultGroup.extras.push(extraInfo);
         } else {

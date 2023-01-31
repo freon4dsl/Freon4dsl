@@ -12,7 +12,7 @@ import { LangUtil, MetaLogger } from "../../utils";
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference";
 import { PiLangExpressionChecker } from "../../languagedef/checking";
 import { CommonChecker } from "../../languagedef/checking/CommonChecker";
 
@@ -91,7 +91,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         this.myExpressionChecker.checkLangExp(alternativeScope.expression, enclosingConcept);
     }
 
-    private findAllNamespaces(namespaces: PiElementReference<PiClassifier>[]): PiClassifier[] {
+    private findAllNamespaces(namespaces: MetaElementReference<PiClassifier>[]): PiClassifier[] {
         let result: PiClassifier[] = [];
         namespaces.forEach(ref => {
             CommonChecker.checkClassifierReference(ref, this.runner);

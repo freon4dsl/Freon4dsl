@@ -1,7 +1,7 @@
 import {
     PiClassifier,
     PiConcept,
-    PiElementReference, PiInterface,
+    MetaElementReference, PiInterface,
     PiPrimitiveProperty,
     PiPrimitiveType,
     PiPrimitiveValue,
@@ -12,7 +12,7 @@ import { CheckRunner, LangUtil, Names, ParseLocationUtil } from "../../utils";
 export class CommonChecker {
 
     // TODO change console.logs to LOGGER.logs
-    public static checkClassifierReference(reference: PiElementReference<PiClassifier>, runner: CheckRunner) {
+    public static checkClassifierReference(reference: MetaElementReference<PiClassifier>, runner: CheckRunner) {
         if (!runner) {
             console.log("NO RUNNER in CommonChecker.checkClassifierReference");
             return;

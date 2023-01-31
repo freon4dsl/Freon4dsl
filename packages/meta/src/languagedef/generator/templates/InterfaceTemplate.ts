@@ -60,6 +60,6 @@ export class InterfaceTemplate {
     generateReferenceProperty(property: PiConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : PiElementReference<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
+        return `${property.name} : ${Names.PiElementReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
     }
 }

@@ -24,19 +24,18 @@ export class DefaultActionsTemplate {
                 Box,
                 MetaKey,
                 ${Names.PiActions},
-                PiCreateBinaryExpressionAction,
-                PiCaret,
-                PiCustomAction,
-                PiEditor,
-                PiElement,
-                PiBinaryExpression,
-                PiKey,
-                PiLogger,
-                PiTriggerType,
-                PiUtils,
+                ${Names.FreCreateBinaryExpressionAction},
+                FreCaret,
+                ${Names.FreCustomAction},
+                ${Names.PiEditor},
+                ${Names.PiElement},
+                ${Names.PiBinaryExpression},
+                FreKey,
+                FreLogger,
+                ${Names.FreTriggerType},
                 ActionBox,
                 OptionalBox,
-                PiElementReference,
+                ${Names.PiElementReference},
                 LEFT_MOST,
                 RIGHT_MOST
             } from "${PROJECTITCORE}";
@@ -51,9 +50,9 @@ export class DefaultActionsTemplate {
              * (2) if a creator/behavior based on the editor definition is present, this is used,
              * (3) if neither (1) nor (2) yields a result, the default is used.  
              */  
-            export const BINARY_EXPRESSION_CREATORS: PiCreateBinaryExpressionAction[] = [
+            export const BINARY_EXPRESSION_CREATORS: ${Names.FreCreateBinaryExpressionAction}[] = [
                 ${language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
-            `PiCreateBinaryExpressionAction.create({
+            `${Names.FreCreateBinaryExpressionAction}.create({
                     trigger: "${editorDef.findExtrasForType(c).symbol}",
                     activeInBoxRoles: [
                         LEFT_MOST,
@@ -61,7 +60,7 @@ export class DefaultActionsTemplate {
                         BEFORE_BINARY_OPERATOR,
                         AFTER_BINARY_OPERATOR
                     ],
-                    expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
+                    expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.PiEditor}) => {
                         const parent = box.element;
                         const newExpression = new ${Names.concept(c)}();
                         parent[(box as ActionBox).propertyName] = newExpression;
@@ -71,7 +70,7 @@ export class DefaultActionsTemplate {
         )}
             ];
             
-            export const CUSTOM_ACTIONS: PiCustomAction[] = [
+            export const CUSTOM_ACTIONS: ${Names.FreCustomAction}[] = [
                 ${this.customActionsForOptional(language, editorDef)}
                 ${this.customActionForParts(language, editorDef)}
                 ${this.customActionForReferences(language, editorDef)}
@@ -112,11 +111,11 @@ export class DefaultActionsTemplate {
                                 // reference
                                 rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "referencebox" );
                             }
-                            result += `PiCustomAction.create(
+                            result += `${Names.FreCustomAction}.create(
                                     {
                                         trigger: "${firstLiteral === "" ? optionalPropertyName : firstLiteral}",
                                         activeInBoxRoles: ["optional-${optionalPropertyName}"],
-                                        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                                        action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.PiEditor}): ${Names.PiElement} | null => {
                                             ((box.parent) as OptionalBox).mustShow = true;
                                             return box.element;
                                         },
@@ -140,13 +139,13 @@ export class DefaultActionsTemplate {
                 const referredConcept = reference.type;
                 const extras = editorDef.findExtrasForType(referredConcept);
                 const trigger = (!!extras && !!extras.trigger) ? extras.trigger : reference.name;
-                result += `PiCustomAction.create(
+                result += `${Names.FreCustomAction}.create(
                 {   // Action to insert new reference to a concept
                     activeInBoxRoles: ["${Roles.newConceptReferencePart(reference)}"],
                     trigger: "${trigger}",
-                    action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                    action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.PiEditor}): ${Names.PiElement} | null => {
                         const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                        const newBase: PiElementReference<${Names.classifier(referredConcept)}> = PiElementReference.create<${Names.classifier(referredConcept)}>("", null);
+                        const newBase: ${Names.PiElementReference}<${Names.classifier(referredConcept)}> = ${Names.PiElementReference}.create<${Names.classifier(referredConcept)}>("", null);
                         parent.${reference.name}.push(newBase);
                         return newBase.referred;
                     }

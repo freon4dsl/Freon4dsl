@@ -194,7 +194,7 @@ export class WriterTemplate {
         
             private unparse(modelelement: ${allLangConceptsName}, short: boolean) {
                 if (!modelelement) return;
-                switch (modelelement.piLanguageConcept()) {
+                switch (modelelement.freLanguageConcept()) {
                 ${conceptsToUnparse.map(concept =>
                 `case "${Names.classifier(concept)}": this.unparse${Names.classifier(concept)}(modelelement as ${Names.classifier(concept)}, short);
                 break;`
@@ -216,9 +216,9 @@ export class WriterTemplate {
             /**
              *
             */
-            private unparseReference(modelelement: PiElementReference<PiNamedElement>, short: boolean) {
+            private unparseReference(modelelement: ${Names.PiElementReference}<${Names.PiNamedElement}>, short: boolean) {
                 if (!!modelelement) {
-                    const type: PiNamedElement = modelelement?.referred;
+                    const type: ${Names.PiNamedElement} = modelelement?.referred;
                     if (!!type) {
                         ${limitedConcepts.length > 0 
                         ? 

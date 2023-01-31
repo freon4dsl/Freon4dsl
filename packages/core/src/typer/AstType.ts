@@ -1,18 +1,18 @@
-import { PiOwnerDescriptor, PiElement, PiNamedElement } from "../ast";
-import { PiWriter } from "../writer";
-import { PiType } from "./PiType";
-import { PiParseLocation } from "../reader";
+import { FreOwnerDescriptor, FreNode, FreNamedNode } from "../ast";
+import { FreWriter } from "../writer";
+import { FreType } from "./FreType";
+import { FreParseLocation } from "../reader";
 
-class NamedElement implements PiNamedElement {
+class NamedNode implements FreNamedNode {
     name: string = "ANY";
-    static environment: NamedElement;
+    static environment: NamedNode;
 
     /**
      * This method implements the singleton pattern
      */
-    public static getInstance(): PiNamedElement {
+    public static getInstance(): FreNamedNode {
         if (this.environment === undefined || this.environment === null) {
-            this.environment = new NamedElement();
+            this.environment = new NamedNode();
         }
         return this.environment;
     }
@@ -23,50 +23,50 @@ class NamedElement implements PiNamedElement {
     private constructor() {
     }
 
-    piOwner(): PiElement | undefined {
+    freOwner(): FreNode | undefined {
         return undefined;
     }
 
-    piOwnerDescriptor(): PiOwnerDescriptor {
+    freOwnerDescriptor(): FreOwnerDescriptor {
         return undefined;
     }
 
-    piId(): string {
+    freId(): string {
         return "";
     }
 
-    piIsBinaryExpression(): boolean {
+    freIsBinaryExpression(): boolean {
         return false;
     }
 
-    piIsExpression(): boolean {
+    freIsExpression(): boolean {
         return false;
     }
 
-    piIsModel(): boolean {
+    freIsModel(): boolean {
         return false;
     }
 
-    piIsUnit(): boolean {
+    freIsUnit(): boolean {
         return false;
     }
 
-    piLanguageConcept(): string {
+    freLanguageConcept(): string {
         return "NamedElement";
     }
 
-    copy(): NamedElement {
+    copy(): NamedNode {
         return this;
     }
-    match(toBeMatched: Partial<NamedElement>): boolean {
+    match(toBeMatched: Partial<NamedNode>): boolean {
         return toBeMatched.name === this.name;
     }
 
-    parse_location: PiParseLocation;
+    parse_location: FreParseLocation;
 }
 
-export class AstType implements PiType {
-    astElement: PiElement;
+export class AstType implements FreType {
+    astElement: FreNode;
 
     static create(data: Partial<AstType>): AstType {
         const result: AstType = new AstType;
@@ -76,12 +76,12 @@ export class AstType implements PiType {
         return result;
     }
 
-    static ANY: PiNamedElement = NamedElement.getInstance();
+    static ANY: FreNamedNode = NamedNode.getInstance();
     static ANY_TYPE: AstType = AstType.create({astElement: AstType.ANY});
 
     readonly $typename: string = "AstType";
 
-    toPiString(writer: PiWriter): string {
+    toFreString(writer: FreWriter): string {
         if (!!this.astElement ) {
             if (this.astElement === AstType.ANY) {
                 return "ANY";
@@ -92,7 +92,7 @@ export class AstType implements PiType {
         return "AstType[ unknown ]";
     }
 
-    toAstElement(): PiElement {
+    toAstElement(): FreNode {
         return this.astElement;
     }
 

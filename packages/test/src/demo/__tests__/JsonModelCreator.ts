@@ -1,4 +1,4 @@
-import { PiElementReference } from "@projectit/core";
+import { FreNodeReference } from "@projectit/core";
 import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, DemoFunction } from "../language/gen";
 
 export class JsonModelCreator {
@@ -13,11 +13,11 @@ export class JsonModelCreator {
 
         const personEnt = DemoEntity.create({name: "Person"});
         const age = DemoAttribute.create({name: "age"});
-        age.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
-        // age.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
+        age.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        // age.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
         const personName = DemoAttribute.create({name: "name"});
-        personName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
-        // personName.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
+        personName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        // personName.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
         personEnt.attributes.push(age);
         personEnt.attributes.push(personName);
 
@@ -30,7 +30,7 @@ export class JsonModelCreator {
         correctModel.entities.push(personEnt);
         correctModel.entities.push(companyEnt);
 
-        const aFunction = DemoFunction.create({name: "SomeFunction", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType")});
+        const aFunction = DemoFunction.create({name: "SomeFunction", declaredType: FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType")});
         correctModel.functions.push(aFunction);
 
         return correctModel;

@@ -1,4 +1,4 @@
-import { PiClassifier, PiConcept, PiElementReference, PiInterface } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, MetaElementReference, PiInterface } from "../../languagedef/metalanguage";
 import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
 
 function concept(name: string): PiConcept {
@@ -15,7 +15,7 @@ function interf(name: string): PiInterface {
 
 function conceptWithBase(name: string, base: PiConcept): PiConcept {
     const result = concept(name);
-    result.base = PiElementReference.create<PiConcept>(base, "PiClassifier");
+    result.base = MetaElementReference.create<PiConcept>(base, "PiClassifier");
     result.base.owner = result;
     return result;
 }
@@ -23,7 +23,7 @@ function conceptWithBase(name: string, base: PiConcept): PiConcept {
 function interfWithBases(name: string, base: PiInterface[]): PiInterface {
     const result = interf(name);
     for (const elem of base) {
-        const newBase = PiElementReference.create<PiInterface>(elem, "PiClassifier");
+        const newBase = MetaElementReference.create<PiInterface>(elem, "PiClassifier");
         newBase.owner = result;
         result.base.push(newBase);
     }
@@ -32,7 +32,7 @@ function interfWithBases(name: string, base: PiInterface[]): PiInterface {
 
 function addInterfacesToConcept(con: PiConcept, intf: PiInterface[]) {
     for (const elem of intf) {
-        const newBase = PiElementReference.create<PiInterface>(elem, "PiClassifier");
+        const newBase = MetaElementReference.create<PiInterface>(elem, "PiClassifier");
         newBase.owner = con;
         con.interfaces.push(newBase);
     }

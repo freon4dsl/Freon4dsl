@@ -1,6 +1,6 @@
 import { Box } from "./Box";
-import { PiElement } from "../../ast";
-import { PiUtils } from "../../util";
+import { FreNode } from "../../ast";
+import { FreUtils } from "../../util";
 import { TableCellBox } from "./TableCellBox";
 
 export class TableRowBox extends Box {
@@ -9,10 +9,10 @@ export class TableRowBox extends Box {
     _cells: TableCellBox[] = [];
     _isHeader: boolean = false;
 
-    constructor(element: PiElement, role: string, cells: TableCellBox[], rowIndex: number, initializer?: Partial<TableRowBox>) {
+    constructor(element: FreNode, role: string, cells: TableCellBox[], rowIndex: number, initializer?: Partial<TableRowBox>) {
         // todo add isHeader to the params
         super(element, role);
-        PiUtils.initializeObject(this, initializer);
+        FreUtils.initializeObject(this, initializer);
         this.cells = cells;
         this.rowIndex = rowIndex;
         this.selectable = false;

@@ -3,14 +3,14 @@
      * This component is a dropdown menu that is used with a TextDropdownComponent.
      */
     import { createEventDispatcher } from "svelte";
-    import { PiLogger, SelectOption } from "@projectit/core";
+    import { FreLogger, SelectOption } from "@projectit/core";
 
     export let selectedId: string = "";
     export let options: SelectOption[] = [];
     let id: string = "dropdown";
     const dispatcher = createEventDispatcher();
 
-    const LOGGER = new PiLogger("DropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
+    const LOGGER = new FreLogger("DropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
 
     $: isSelected = (option: SelectOption) => { // determines the style of the selected option
         if (options.length === 1) {
@@ -26,7 +26,7 @@
     const handleClick = (option: SelectOption) => {
         LOGGER.log("handleClick")
         selectedId = option.id;
-        dispatcher("piItemSelected", option);
+        dispatcher("freItemSelected", option);
     };
 </script>
 

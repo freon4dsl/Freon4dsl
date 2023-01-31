@@ -18,7 +18,7 @@ export class UnitTemplate {
         const hasReferences = unitDescription.references().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
         const coreImports = ClassifierUtil.findMobxImports(unitDescription)
-            .concat(["PiModelUnit", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"])
+            .concat([Names.FreModelUnit, Names.FreUtils, Names.FreParseLocation, "matchElementList", "matchPrimitiveList, matchReferenceList"])
             .concat(hasReferences ? (Names.PiElementReference) : null);
         const metaType = Names.metaType(language);
 
@@ -31,7 +31,7 @@ export class UnitTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            export class ${myName} extends ${extendsClass} implements PiModelUnit {
+            export class ${myName} extends ${extendsClass} implements ${Names.PiModelUnit} {
             
                 ${ConceptUtils.makeStaticCreateMethod(unitDescription, myName)}
                 

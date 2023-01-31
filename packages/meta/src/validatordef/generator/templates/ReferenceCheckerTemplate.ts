@@ -25,7 +25,7 @@ export class ReferenceCheckerTemplate {
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.PiElementReference}, ${Names.PiNamedElement}, LanguageEnvironment } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.PiElementReference}, ${Names.PiNamedElement}, ${Names.LanguageEnvironment} } from "${PROJECTITCORE}";
         import { ${overallTypeName}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
@@ -39,7 +39,7 @@ export class ReferenceCheckerTemplate {
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
-            myWriter: ${writerInterfaceName} = LanguageEnvironment.getInstance().writer;
+            myWriter: ${writerInterfaceName} = ${Names.LanguageEnvironment}.getInstance().writer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
             private refSeparator: string = '${Names.referenceSeparator}';
@@ -47,21 +47,21 @@ export class ReferenceCheckerTemplate {
             ${allMethods}           
             
             private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.PiElementReference}<${Names.PiNamedElement}>, propertyName: string, locationDescription: string) {
-                const scoper = LanguageEnvironment.getInstance().scoper;
+                const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
                 const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
-                        new PiError(                                       
-                            \`Reference '\${referredElem.pathnameToString(this.refSeparator)}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.piLanguageConcept()}\`).join(", ")}]\`,
+                        new ${Names.PiError}(                                       
+                            \`Reference '\${referredElem.pathnameToString(this.refSeparator)}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.freLanguageConcept()}\`).join(", ")}]\`,
                                 modelelement,
                                 \`\${propertyName} of \${locationDescription}\`,
                             \`\${propertyName}\`,
-                            PiErrorSeverity.Error
+                            ${Names.PiErrorSeverity}.Error
                         )
                     );
                 } else {
                     this.errorList.push(
-                        new PiError(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, \`\${propertyName}\`, PiErrorSeverity.Error)
+                        new ${Names.PiError}(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, \`\${propertyName}\`, ${Names.PiErrorSeverity}.Error)
                     );
                 }
             }

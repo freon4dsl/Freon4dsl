@@ -4,8 +4,8 @@
      * the associated editor.
      */
     import {
-        PiEditor,
-        PiLogger,
+        FreEditor,
+        FreLogger,
         Box,
         ARROW_UP,
         ARROW_DOWN,
@@ -21,8 +21,8 @@
     import { afterUpdate, onMount, tick } from "svelte";
     import { contextMenu, contextMenuVisible, selectedBoxes, viewport, componentId } from "./svelte-utils";
 
-    let LOGGER = new PiLogger("ProjectItComponent");//.mute();
-    export let editor: PiEditor;
+    let LOGGER = new FreLogger("ProjectItComponent");//.mute();
+    export let editor: FreEditor;
     let element: HTMLDivElement; // The current main element of this component.
     let rootBox: Box;
     let id: string;              // an id for the html element showing the rootBox

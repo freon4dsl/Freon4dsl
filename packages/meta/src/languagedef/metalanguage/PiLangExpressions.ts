@@ -4,7 +4,7 @@ import { Names, ParseLocation } from "../../utils";
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference } from ".";
+import { MetaElementReference } from ".";
 
 /** This module contains classes that implement Expressions over the PiLanguage structure.
  *  There are five types of Expressions:
@@ -18,7 +18,7 @@ import { PiElementReference } from ".";
 export abstract class PiLangExp extends PiLangElement {
     sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
     appliedfeature: PiLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
-    __referredElement: PiElementReference<PiLangElement>;  // refers to the element called 'sourceName'
+    __referredElement: MetaElementReference<PiLangElement>;  // refers to the element called 'sourceName'
     language: PiLanguage;                           // the language for which this expression is defined
 
     // returns the property to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
@@ -61,13 +61,13 @@ export class PiLangSelfExp extends PiLangExp {
 
     static create(referred: PiClassifier): PiLangSelfExp {
         const result = new PiLangSelfExp();
-        result.__referredElement = PiElementReference.create<PiClassifier>(referred, "PiClassifier");
+        result.__referredElement = MetaElementReference.create<PiClassifier>(referred, "PiClassifier");
         result.__referredElement.owner = result;
         result.sourceName = Names.nameForSelf;
         return result;
     }
 
-    __referredElement: PiElementReference<PiClassifier>; // is not needed, can be determined based on its parent
+    __referredElement: MetaElementReference<PiClassifier>; // is not needed, can be determined based on its parent
 
     toPiString(): string {
         if (!!this.sourceName) {
@@ -81,7 +81,7 @@ export class PiLangSelfExp extends PiLangExp {
 export class PiInstanceExp extends PiLangExp {
     // sourceName should be name of a limited concept
     instanceName: string;   // should be name of one of the predefined instances of 'sourceName'
-    __referredElement: PiElementReference<PiInstance>;
+    __referredElement: MetaElementReference<PiInstance>;
 
     toPiString(): string {
         return this.sourceName + ":" + this.instanceName;
@@ -89,7 +89,7 @@ export class PiInstanceExp extends PiLangExp {
 }
 
 export class PiLangConceptExp extends PiLangExp {
-    __referredElement: PiElementReference<PiClassifier>;
+    __referredElement: MetaElementReference<PiClassifier>;
 
     toPiString(): string {
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
@@ -107,22 +107,22 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
     }
 
     sourceExp: PiLangExp;
-    __referredElement: PiElementReference<PiProperty>;
+    __referredElement: MetaElementReference<PiProperty>;
 
     get referredElement(): PiProperty {
         return this.__referredElement?.referred;
     }
 
     set referredElement(p: PiProperty) {
-        this.__referredElement = PiElementReference.create<PiProperty>(p, "PiProperty");
+        this.__referredElement = MetaElementReference.create<PiProperty>(p, "PiProperty");
         this.__referredElement.owner = this;
     }
 
-    get reference(): PiElementReference<PiProperty> {
+    get reference(): MetaElementReference<PiProperty> {
         return this.__referredElement;
     }
 
-    set reference(p: PiElementReference<PiProperty>) {
+    set reference(p: MetaElementReference<PiProperty>) {
         this.__referredElement = p;
         this.__referredElement.owner = this;
     }
@@ -146,7 +146,7 @@ export class PiLangFunctionCallExp extends PiLangExp {
     // sourceName: string; 			// only used in validator for 'conformsTo' and 'equalsType'
     actualparams: PiLangExp[] = [];
     returnValue: boolean;
-    __referredElement: PiElementReference<PiFunction>;
+    __referredElement: MetaElementReference<PiFunction>;
 
     toPiString(): string {
         let actualPars: string = "( ";
