@@ -5,6 +5,7 @@ import { PitClassifierSpec } from "./PitClassifierSpec";
 import { PitAnyTypeSpec } from "./PitAnyTypeSpec";
 import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
 import { PitProperty } from "./PitProperty";
+import { Names } from "../../utils";
 
 export class PiTyperDef extends PiTyperElement {
     language: PiLanguage;
@@ -112,7 +113,7 @@ ${this.classifierSpecs.map(con => con.toPiString()).join("\n")}`;
 
     private static makePiType(): PitTypeConcept {
         const result: PitTypeConcept = new PitTypeConcept();
-        result.name = "PiType";
+        result.name = Names.PiType;
         // internal: PiElement
         const prop: PiProperty = new PiProperty();
         prop.name = "internal";

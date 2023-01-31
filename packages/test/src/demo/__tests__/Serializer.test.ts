@@ -21,7 +21,7 @@ describe("Checking Serializer on Demo", () => {
         // console.log("typescript  type: " + typescript["$typename"]);
 
         const inModel = typescript as DemoModel;
-        // console.log("inModel type: " + inModel.piLanguageConcept() + "  and name " + inModel.name + " id "+ inModel.$id);
+        // console.log("inModel type: " + inModel.freLanguageConcept() + "  and name " + inModel.name + " id "+ inModel.$id);
         expect(typescript instanceof DemoModel).toBeTruthy();
         expect(typescript instanceof DemoFunction).toBeFalsy();
         expect(inModel.name).toBe("DemoModel_1");
@@ -33,7 +33,7 @@ describe("Checking Serializer on Demo", () => {
         expect(e1.name).toBe("Person");
         expect(e1.functions.length).toBe(0);
         expect(inModel.functions.length).toBe(1);
-        expect(e1.piLanguageConcept()).toBe("DemoEntity");
+        expect(e1.freLanguageConcept()).toBe("DemoEntity");
     });
 
     test("storing public only, with only 'name', 'function', and 'main' properties in DemoModel declared public", () => {
@@ -47,7 +47,7 @@ describe("Checking Serializer on Demo", () => {
             // console.log("typescript  type: " + typescript["$typename"]);
 
             const inModel = typescript as DemoModel;
-            // console.log("inModel type: " + inModel.piLanguageConcept() + "  and name " + inModel.name + " id "+ inModel.$id);
+            // console.log("inModel type: " + inModel.freLanguageConcept() + "  and name " + inModel.name + " id "+ inModel.$id);
             expect(typescript instanceof DemoModel).toBeTruthy();
             expect(typescript instanceof DemoFunction).toBeFalsy();
             expect(inModel.name).toBe("DemoModel_1");
@@ -59,7 +59,7 @@ describe("Checking Serializer on Demo", () => {
             // expect(e1.name).toBe("Person");
             // // expect(e1.functions.length).toBe(1);
             expect(inModel.functions.length).toBe(1);
-            // expect(e1.piLanguageConcept()).toBe("DemoEntity");
+            // expect(e1.freLanguageConcept()).toBe("DemoEntity");
         }
     });
 });

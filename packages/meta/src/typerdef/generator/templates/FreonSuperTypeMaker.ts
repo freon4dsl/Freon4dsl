@@ -117,9 +117,9 @@ export class FreonSuperTypeMaker {
         const myConditions = exp.conditions;
         myConditions.forEach((cond, index) => {
             if (cond instanceof PitConformsExp) {
-                result += `const rhs${index}: PiType[] = this.getSuperTypes(${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)});\n`;
+                result += `const rhs${index}: ${Names.PiType}[] = this.getSuperTypes(${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)});\n`;
             } else if (cond instanceof PitEqualsExp) {
-                result += `const rhs${index}: PiType[] = [${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}];\n`;
+                result += `const rhs${index}: ${Names.PiType}[] = [${FreonTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}];\n`;
             }
         });
         if (myConditions.length > 1) {

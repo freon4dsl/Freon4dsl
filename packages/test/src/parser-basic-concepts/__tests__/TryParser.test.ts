@@ -1,4 +1,4 @@
-import { PiUtils } from "@projectit/core";
+import { FreUtils } from "@projectit/core";
 import { FileHandler } from "../../utils/FileHandler";
 import { ParserOnConceptsEnvironment } from "../config/gen/ParserOnConceptsEnvironment";
 import { ExpressionTest, TestConceptsModel } from "../language/gen";
@@ -10,7 +10,7 @@ describe("Parser concepts of type", () => {
 
     beforeEach(() => {
         // Ensure that ID's of created elements do not change.
-        PiUtils.resetId();
+        FreUtils.resetId();
     });
 
     test( " Expression ", () => {

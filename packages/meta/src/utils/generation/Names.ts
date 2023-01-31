@@ -91,13 +91,13 @@ export class Names {
     static FreUtils: string = "FreUtils";
     static FreParseLocation: string = "FreParseLocation";
     static FreType: string = "FreType";
+    static PiType: string = "FreType";
     static FreTableDefinition: string = "FreTableDefinition";
     static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
     static FreCustomAction: string = "FreCustomAction";
     static FreTriggerType: string = "FreTriggerType";
     static LanguageEnvironment: string = "FreLanguageEnvironment";
     static PiLogger: string = "FreLogger";
-    static PiType: string = "FreType";
     static FreNamespace: string = "FreNamespace";
     static FreProjectionHandler: string = "FreProjectionHandler";
 

@@ -232,7 +232,7 @@ export class FreonTyperPartTemplate {
         const typeConceptImports: string [] = [];
         this.importedClassifiers.forEach(cls => {
             if (FreonTyperGenUtils.isType(cls)) {
-                if (cls.name !== "${Names.PiType}") {
+                if (cls.name !== Names.PiType) {
                     ListUtil.addIfNotPresent(typeConceptImports, Names.classifier(cls));
                 }
             } else {
@@ -243,8 +243,7 @@ export class FreonTyperPartTemplate {
 
         const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.PiType}, AstType, ${Names.PiElement}, ${Names.FreLanguage}, ${Names.PiElementReference}, FreCommonSuperTypeUtil } from "${PROJECTITCORE}";
         import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}
-        // import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}";`;
+        ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}`;
 
         return imports + baseClass;
     }

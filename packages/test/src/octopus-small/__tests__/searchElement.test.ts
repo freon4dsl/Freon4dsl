@@ -1,4 +1,4 @@
-import { FreNode, FreFreSearcher, FreNodeReference } from "@projectit/core";
+import { FreNode, FreSearcher, FreNodeReference } from "@projectit/core";
 import { FileHandler } from "../../utils/FileHandler";
 import {
     AssociationClass,
@@ -13,7 +13,7 @@ import { OctopusEnvironment } from "../config/gen/OctopusEnvironment";
 const writer = OctopusEnvironment.getInstance().writer;
 const reader = OctopusEnvironment.getInstance().reader;
 const handler = new FileHandler();
-const searcher = new FreFreSearcher();
+const searcher = new FreSearcher();
 
 function readFile(filepath: string): OctopusModelUnitType {
     try {

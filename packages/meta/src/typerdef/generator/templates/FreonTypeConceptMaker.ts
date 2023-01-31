@@ -4,13 +4,13 @@ import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUt
 import { LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
 
 export class FreonTypeConceptMaker {
-    piTypeName: string = "PiType";
+    piTypeName: string = Names.FreType;
 
     generateTypeConcept(language: PiLanguage, concept: PitTypeConcept, relativePath: string): string {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? `extends ${Names.classifier(concept.base.referred)}` : `implements ${this.piTypeName}`;
-        const coreImports: string[] = ["PiUtils", "PiWriter", "PiParseLocation" ];
+        const coreImports: string[] = [Names.PiUtils, Names.PiWriter, Names.PiParseLocation ];
         if (!hasSuper) {
             coreImports.push(this.piTypeName);
             coreImports.push(Names.PiElement);
@@ -35,7 +35,7 @@ export class FreonTypeConceptMaker {
                 ${this.makeConstructor(hasSuper)} 
                 ${ConceptUtils.makeCopyMethod(concept, myName, false)}     
                 
-                toPiString(writer: PiWriter): string {
+                toFreString(writer: ${Names.PiWriter}): string {
                     // take into account indentation
                     return ${this.makeToPiString(myName, concept)};
                 }                  
@@ -53,7 +53,7 @@ export class FreonTypeConceptMaker {
             if (prop.type instanceof PiPrimitiveType) {
                 props.push(`${prop.name}: \${this.${prop.name}}`);
             } else if (prop.type instanceof PitTypeConcept) {
-                props.push(`${prop.name}: \${this.${prop.name}?.toPiString(writer)}`);
+                props.push(`${prop.name}: \${this.${prop.name}?.toFreString(writer)}`);
             } else {
                 props.push(`${prop.name}: \${writer.writeToString(this.${prop.name})}`);
             }
@@ -80,7 +80,7 @@ export class FreonTypeConceptMaker {
                         if (!!id) { 
                             this.$id = id;
                         } else {
-                            this.$id = PiUtils.ID(); // uuid.v4();
+                            this.$id = ${Names.PiUtils}.ID(); // uuid.v4();
                         }`
                         : "super(id);"
                     }                 
@@ -105,7 +105,7 @@ export class FreonTypeConceptMaker {
             result.push(Names.classifier(concept.base.referred));
         }
         concept.implementedParts().forEach(part => {
-            if (part.type instanceof PitTypeConcept && part.type.name != "PiType") {
+            if (part.type instanceof PitTypeConcept && part.type.name != Names.PiType) {
                 result.push(Names.classifier(part.type));
             }
         });

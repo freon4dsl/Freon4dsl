@@ -146,12 +146,12 @@ export class FreonTyperGenUtils {
 
     public static makePropValue(propExp: PitPropInstance, varName: string, varIsType: boolean, imports: PiClassifier[]): string {
         let result: string= FreonTyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, varIsType, imports);
-        if (!propExp.property.isPart) { // it is a reference, wrap it in a PiElementReference
+        if (!propExp.property.isPart) { // it is a reference, wrap it in a FreElementReference
             // TODO find solution for this import, currently it is imported always
-            // ListUtil.addIfNotPresent(imports, "PiElementReference");
+            // ListUtil.addIfNotPresent(imports, Names.PiElementReference);
             const typeName: string = Names.classifier(propExp.property.type);
             ListUtil.addIfNotPresent(imports, propExp.property.type);
-            result = `PiElementReference.create<${typeName}>(${result}, "${typeName}") /* PropValue */ `;
+            result = `${Names.PiElementReference}.create<${typeName}>(${result}, "${typeName}") /* PropValue */ `;
         }
         return result;
     }
@@ -162,7 +162,7 @@ export class FreonTyperGenUtils {
         if (prop.isPart) {
             return `this.makeCopyOf${typeName}((${toBeCopiedName} as ${toBeCopiedTypeName}).${prop.name})`;
         } else {
-            return `PiElementReference.create<${typeName}>((${toBeCopiedName} as ${toBeCopiedTypeName}).\$${prop.name}, "${typeName}")`;
+            return `${Names.PiElementReference}.create<${typeName}>((${toBeCopiedName} as ${toBeCopiedTypeName}).\$${prop.name}, "${typeName}")`;
         }
         return '';
     }
