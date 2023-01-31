@@ -73,11 +73,11 @@
 	import IconButton from '@smui/icon-button';
 	import LinearProgress from '@smui/linear-progress';
 	import { errorsLoaded, modelErrors } from "../stores/InfoPanelStore";
-	import type { PiError } from "@projectit/core";
+	import type { FreError } from "@projectit/core";
 	import { EditorState } from "../../language/EditorState";
 
 	// sorting of table
-	let sort: keyof PiError = 'message';
+	let sort: keyof FreError = 'message';
 	let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
 
 	function handleSort() {
@@ -108,7 +108,7 @@
 
 	const handleClick = (index: number) => {
 		if (!!$modelErrors && $modelErrors.length > 0) {
-			const item: PiError = $modelErrors[index];
+			const item: FreError = $modelErrors[index];
 			// TODO declaredType should be changed to property coming from error object.
 			if (Array.isArray(item.reportedOn)) {
 				EditorState.getInstance().selectElement(item.reportedOn[0], item.propertyName);

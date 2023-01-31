@@ -2,19 +2,19 @@ import { editorEnvironment } from "../config/WebappConfiguration";
 import {
     Box, FreProjectionHandler,
     isActionBox,
-    isActionTextBox, isListBox, Language,
-    PiError,
-    PiLogger,
-    PiUndoManager,
-    Searcher,
+    isActionTextBox, isListBox, FreLanguage,
+    FreError,
+    FreLogger,
+    FreUndoManager,
+    FreSearcher,
     SeverityType
 } from "@projectit/core";
-import type { PiElement } from "@projectit/core";
+import type { FreNode } from "@projectit/core";
 import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore";
 import { EditorState } from "./EditorState";
 import { setUserMessage } from "../components/stores/UserMessageStore";
 
-const LOGGER = new PiLogger("EditorRequestsHandler"); // .mute();
+const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
 export class EditorRequestsHandler {
     private static instance: EditorRequestsHandler = null;
@@ -57,27 +57,27 @@ export class EditorRequestsHandler {
 
     redo() {
         const unitInEditor = EditorState.getInstance().currentUnit;
-        console.log("redo called: " + PiUndoManager.getInstance().nextRedoAsText(unitInEditor));
+        console.log("redo called: " + FreUndoManager.getInstance().nextRedoAsText(unitInEditor));
         if (!!unitInEditor) {
-            PiUndoManager.getInstance().executeRedo(unitInEditor);
+            FreUndoManager.getInstance().executeRedo(unitInEditor);
         }
     }
 
     undo() {
         const unitInEditor = EditorState.getInstance().currentUnit;
-        LOGGER.log("undo called: " + PiUndoManager.getInstance().nextUndoAsText(unitInEditor));
+        LOGGER.log("undo called: " + FreUndoManager.getInstance().nextUndoAsText(unitInEditor));
         if (!!unitInEditor) {
-            PiUndoManager.getInstance().executeUndo(unitInEditor);
+            FreUndoManager.getInstance().executeUndo(unitInEditor);
         }
     }
 
     cut() {
         LOGGER.log("cut called");
-        const tobecut: PiElement = editorEnvironment.editor.selectedElement;
+        const tobecut: FreNode = editorEnvironment.editor.selectedElement;
         if (!!tobecut) {
             EditorState.getInstance().deleteElement(tobecut);
             editorEnvironment.editor.copiedElement = tobecut;
-            // console.log("element " + editorEnvironment.editor.copiedElement.piId() + " is stored ");
+            // console.log("element " + editorEnvironment.editor.copiedElement.freId() + " is stored ");
         } else {
             setUserMessage("Nothing selected", SeverityType.warning);
         }
@@ -85,10 +85,10 @@ export class EditorRequestsHandler {
 
     copy() {
         LOGGER.log("copy called");
-        const tobecopied: PiElement = editorEnvironment.editor.selectedElement;
+        const tobecopied: FreNode = editorEnvironment.editor.selectedElement;
         if (!!tobecopied) {
             editorEnvironment.editor.copiedElement = tobecopied.copy();
-            // console.log("element " + editorEnvironment.editor.copiedElement.piId() + " is stored ");
+            // console.log("element " + editorEnvironment.editor.copiedElement.freId() + " is stored ");
         } else {
             setUserMessage("Nothing selected", SeverityType.warning);
         }
@@ -99,29 +99,29 @@ export class EditorRequestsHandler {
         const tobepasted = editorEnvironment.editor.copiedElement;
         if (!!tobepasted) {
             const currentSelection: Box = editorEnvironment.editor.selectedBox;
-            const element: PiElement = currentSelection.element;
+            const element: FreNode = currentSelection.element;
             if (!!currentSelection) {
                 if (isActionTextBox(currentSelection)) {
                     if (isActionBox(currentSelection.parent)) {
-                        if (Language.getInstance().metaConformsToType(tobepasted, currentSelection.parent.conceptName)) { // allow subtypes
+                        if (FreLanguage.getInstance().metaConformsToType(tobepasted, currentSelection.parent.conceptName)) { // allow subtypes
                             // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
                             EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName )
                         } else {
-                            setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
+                            setUserMessage("Cannot paste an " + tobepasted.freLanguageConcept() + " here.", SeverityType.warning);
                         }
                     }
                 } else if (isListBox(currentSelection.parent)) {
-                    if (Language.getInstance().metaConformsToType(tobepasted, element.piLanguageConcept())) { // allow subtypes
+                    if (FreLanguage.getInstance().metaConformsToType(tobepasted, element.freLanguageConcept())) { // allow subtypes
                         // console.log('pasting in ' + currentSelection.role + ', prop: ' + currentSelection.parent.propertyName);
-                        EditorState.getInstance().pasteInElement(element.piOwnerDescriptor().owner, currentSelection.parent.propertyName, element.piOwnerDescriptor().propertyIndex + 1);
+                        EditorState.getInstance().pasteInElement(element.freOwnerDescriptor().owner, currentSelection.parent.propertyName, element.freOwnerDescriptor().propertyIndex + 1);
                     } else {
-                        setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
+                        setUserMessage("Cannot paste an " + tobepasted.freLanguageConcept() + " here.", SeverityType.warning);
                     }
                 } else {
                     // todo other pasting options ...
                 }
             } else {
-                setUserMessage("Cannot paste an " + tobepasted.piLanguageConcept() + " here.", SeverityType.warning);
+                setUserMessage("Cannot paste an " + tobepasted.freLanguageConcept() + " here.", SeverityType.warning);
             }
         } else {
             setUserMessage("Nothing to be pasted", SeverityType.warning);
@@ -142,17 +142,17 @@ export class EditorRequestsHandler {
         LOGGER.log("findText called");
         searchResultLoaded.set(false);
         activeTab.set(searchTab);
-        const searcher = new Searcher();
-        const results: PiElement[] = searcher.findString(stringToFind, EditorState.getInstance().currentUnit, editorEnvironment.writer);
+        const searcher = new FreSearcher();
+        const results: FreNode[] = searcher.findString(stringToFind, EditorState.getInstance().currentUnit, editorEnvironment.writer);
         this.showSearchResults(results, stringToFind);
     }
 
-    findStructure(elemToMatch: Partial<PiElement>) {
+    findStructure(elemToMatch: Partial<FreNode>) {
         LOGGER.log("findStructure called");
         searchResultLoaded.set(false);
         activeTab.set(searchTab);
-        const searcher = new Searcher();
-        const results: PiElement[] = searcher.findStructure(elemToMatch, EditorState.getInstance().currentUnit);
+        const searcher = new FreSearcher();
+        const results: FreNode[] = searcher.findStructure(elemToMatch, EditorState.getInstance().currentUnit);
         this.showSearchResults(results, "elemToMatch");
     }
 
@@ -160,20 +160,20 @@ export class EditorRequestsHandler {
         LOGGER.log("findNamedElement called");
         searchResultLoaded.set(false);
         activeTab.set(searchTab);
-        const searcher = new Searcher();
-        const results: PiElement[] = searcher.findNamedElement(nameToFind, EditorState.getInstance().currentUnit, metatypeSelected);
+        const searcher = new FreSearcher();
+        const results: FreNode[] = searcher.findNamedElement(nameToFind, EditorState.getInstance().currentUnit, metatypeSelected);
         this.showSearchResults(results, nameToFind);
     }
 
-    private showSearchResults(results: PiElement[], stringToFind: string) {
-        const itemsToShow: PiError[] = [];
+    private showSearchResults(results: FreNode[], stringToFind: string) {
+        const itemsToShow: FreError[] = [];
         if (!results || results.length === 0) {
-            itemsToShow.push(new PiError("No results for " + stringToFind, null, "", ""));
+            itemsToShow.push(new FreError("No results for " + stringToFind, null, "", ""));
         } else {
             for (const elem of results) {
-                // message: string, element: PiElement | PiElement[], locationdescription: string, severity?: PiErrorSeverity
+                // message: string, element: FreNode | FreNode[], locationdescription: string, severity?: FreErrorSeverity
                 // todo show some part of the text string instead of the element id
-                itemsToShow.push(new PiError(elem.piId(), elem, elem.piId(), ""));
+                itemsToShow.push(new FreError(elem.freId(), elem, elem.freId(), ""));
             }
         }
         searchResults.set(itemsToShow);

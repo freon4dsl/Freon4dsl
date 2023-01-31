@@ -1,4 +1,4 @@
-import type { PiEnvironment } from "@projectit/core";
+import type { FreEnvironment } from "@projectit/core";
 import { LanguageInitializer } from "../language/LanguageInitializer";
 import type { IServerCommunication } from "../server/IServerCommunication";
 import { ServerCommunication } from "../server/ServerCommunication";
@@ -7,7 +7,7 @@ import { ServerCommunication } from "../server/ServerCommunication";
  * The one and only reference to the actual language for which this editor runs
  */
 import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
-export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+export const editorEnvironment: FreEnvironment = ExampleEnvironment.getInstance();
 LanguageInitializer.initialize();
 
 /**

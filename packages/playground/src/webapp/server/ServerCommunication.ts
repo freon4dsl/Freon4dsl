@@ -1,10 +1,10 @@
-import { PiLogger } from "@projectit/core";
-import type { PiNamedElement } from "@projectit/core";
-import { GenericModelSerializer } from "@projectit/core";
+import { FreLogger } from "@projectit/core";
+import type { FreNamedNode } from "@projectit/core";
+import { FreModelSerializer } from "@projectit/core";
 import type { IServerCommunication } from "./IServerCommunication";
 import { setUserMessage } from "../components/stores/UserMessageStore";
 
-const LOGGER = new PiLogger("ServerCommunication"); // .mute();
+const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
 
 const node_port = process.env.NODE_PORT || 3001;
@@ -13,7 +13,7 @@ console.log("NODE_PORT:" + node_port+ "  env " + JSON.stringify(process.env));
 
 
 export class ServerCommunication implements IServerCommunication {
-    static serial: GenericModelSerializer = new GenericModelSerializer();
+    static serial: FreModelSerializer = new FreModelSerializer();
     static instance: ServerCommunication;
 
     static getInstance(): ServerCommunication {
@@ -38,7 +38,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param unitName
      * @param piUnit
      */
-    async putModelUnit(modelName: string, unitName: string, piUnit: PiNamedElement) {
+    async putModelUnit(modelName: string, unitName: string, piUnit: FreNamedNode) {
         LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitName}`);
         if (!!unitName && unitName.length > 0 && unitName.match(/^[a-z,A-Z][a-z,A-Z0-9_\-]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piUnit);
@@ -116,7 +116,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: PiNamedElement) => void) {
+    async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNamedNode) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
         if (!!unitName && unitName.length > 0) {
             const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}`);
@@ -140,7 +140,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    async loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnitInterface: PiNamedElement) => void) {
+    async loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnitInterface: FreNamedNode) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
         if (!!unitName && unitName.length > 0) {
             const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
@@ -208,7 +208,7 @@ export class ServerCommunication implements IServerCommunication {
         setUserMessage(errorMess);
     }
 
-    async renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: PiNamedElement) {
+    async renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: FreNamedNode) {
         LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         // put the unit and its interface under the new name
         this.putModelUnit(modelName, newName, piUnit);

@@ -1,16 +1,16 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
 import {
-    PiError,
-    PiErrorSeverity,
-    PiLogger,
-    PiOwnerDescriptor,
+    FreError,
+    FreErrorSeverity,
+    FreLogger,
+    FreOwnerDescriptor,
     SeverityType
 } from "@projectit/core";
 import type {
-    PiElement,
-    PiModel,
-    PiModelUnit,
-    PiNamedElement
+    FreNode,
+    FreModel,
+    FreModelUnit,
+    FreNamedNode
 } from "@projectit/core";
 import { get } from "svelte/store";
 import {
@@ -27,7 +27,7 @@ import { modelErrors } from "../components/stores/InfoPanelStore";
 import { ServerCommunication } from "../server/ServerCommunication";
 import { runInAction } from "mobx";
 
-const LOGGER = new PiLogger("EditorState"); // .mute();
+const LOGGER = new FreLogger("EditorState"); // .mute();
 
 export class EditorState {
     private static instance: EditorState = null;
@@ -39,8 +39,8 @@ export class EditorState {
         return EditorState.instance;
     }
 
-    currentUnit: PiModelUnit = null;
-    currentModel: PiModel = null;
+    currentUnit: FreModelUnit = null;
+    currentModel: FreModel = null;
     hasChanges: boolean = false; // TODO get the value from the editor
 
     /**
@@ -84,7 +84,7 @@ export class EditorState {
                 let first: boolean = true;
                 for (const unitName of localUnitNames) {
                     if (first) {
-                        serverCommunication.loadModelUnit(modelName, unitName, (unit: PiModelUnit) => {
+                        serverCommunication.loadModelUnit(modelName, unitName, (unit: FreModelUnit) => {
                             this.currentModel.addUnit(unit);
                             this.currentUnit = unit;
                             currentUnitName.set(this.currentUnit.name);
@@ -92,7 +92,7 @@ export class EditorState {
                         });
                         first = false;
                     } else {
-                        serverCommunication.loadModelUnitInterface(modelName, unitName, (unit: PiModelUnit) => {
+                        serverCommunication.loadModelUnitInterface(modelName, unitName, (unit: FreModelUnit) => {
                             this.currentModel.addUnit(unit);
                             this.setUnitLists();
                         });
@@ -136,7 +136,7 @@ export class EditorState {
             serverCommunication.loadModelUnitInterface(
                 get(currentModelName),
                 get(currentUnitName),
-                (oldUnitInterface: PiModelUnit) => {
+                (oldUnitInterface: FreModelUnit) => {
                     if (!!oldUnitInterface) {
                         // swap current unit with its interface in the in-memory model
                         EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
@@ -173,7 +173,7 @@ export class EditorState {
      */
     async saveCurrentUnit() {
         LOGGER.log("EditorState.saveCurrentUnit: " + get(currentUnitName));
-        const unit: PiNamedElement = editorEnvironment.editor.rootElement as PiNamedElement;
+        const unit: FreNamedNode = editorEnvironment.editor.rootElement as FreNamedNode;
         if (!!unit) {
             if (!!this.currentModel?.name && this.currentModel?.name.length) {
                 if (!!unit.name && unit.name.length > 0) {
@@ -192,7 +192,7 @@ export class EditorState {
         }
     }
 
-    async renameModelUnit(unit: PiModelUnit, newName: string) {
+    async renameModelUnit(unit: FreModelUnit, newName: string) {
         console.log("Units before: " + this.currentModel.getUnits().map(u => u.name));
         const oldName: string = unit.name;
         // if (unit === this.currentUnit) {
@@ -208,7 +208,7 @@ export class EditorState {
      * Deletes the unit 'unit', from the server and from the current in-memory model
      * @param unit
      */
-    async deleteModelUnit(unit: PiModelUnit) {
+    async deleteModelUnit(unit: FreModelUnit) {
         LOGGER.log("delete called for unit: " + unit.name);
 
         // get rid of the unit on the server
@@ -243,7 +243,7 @@ export class EditorState {
      * Reads the unit called 'newUnit' from the server and shows it in the editor
      * @param newUnit
      */
-    async openModelUnit(newUnit: PiModelUnit) {
+    async openModelUnit(newUnit: FreModelUnit) {
         LOGGER.log("openModelUnit called, unitName: " + newUnit.name);
         // TODO currentUnitName is not updated properly
         if (!!this.currentUnit && newUnit.name === this.currentUnit.name) {
@@ -255,7 +255,7 @@ export class EditorState {
         await this.saveCurrentUnit();
         // newUnit is stored in the in-memory model as an interface only
         // we must get the full unit from the server and make a swap
-        await serverCommunication.loadModelUnit(this.currentModel.name, newUnit.name, (newCompleteUnit: PiModelUnit) => {
+        await serverCommunication.loadModelUnit(this.currentModel.name, newUnit.name, (newCompleteUnit: FreModelUnit) => {
             this.swapInterfaceAndUnits(newCompleteUnit, newUnit);
         });
     }
@@ -269,14 +269,14 @@ export class EditorState {
      * @param newUnitInterface
      * @private
      */
-    private swapInterfaceAndUnits(newCompleteUnit: PiModelUnit, newUnitInterface: PiModelUnit) {
+    private swapInterfaceAndUnits(newCompleteUnit: FreModelUnit, newUnitInterface: FreModelUnit) {
         LOGGER.log("swapInterfaceAndUnits called");
         if (!!EditorState.getInstance().currentUnit) {
             // get the interface of the current unit from the server
             serverCommunication.loadModelUnitInterface(
                 EditorState.getInstance().currentModel.name,
                 EditorState.getInstance().currentUnit.name,
-                (oldUnitInterface: PiModelUnit) => {
+                (oldUnitInterface: FreModelUnit) => {
                     if (!!newCompleteUnit) { // the new unit which has been retrieved from the server
                         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
                             // swap old unit with its interface in the in-memory model
@@ -305,10 +305,10 @@ export class EditorState {
     unitFromFile(fileName: string, content: string, metaType: string, showIt: boolean) {
         // save the old current unit, if there is one
         this.saveCurrentUnit();
-        let unit: PiModelUnit = null;
+        let unit: FreModelUnit = null;
         try {
             // the following also adds the new unit to the model
-            unit = editorEnvironment.reader.readFromString(content, metaType, this.currentModel, fileName) as PiModelUnit;
+            unit = editorEnvironment.reader.readFromString(content, metaType, this.currentModel, fileName) as FreModelUnit;
             if (!!unit) {
                 // if the element does not yet have a name, try to use the file name
                 if (!unit.name || unit.name.length === 0) {
@@ -329,7 +329,7 @@ export class EditorState {
         // serverCommunication.loadModelUnitInterface(
         //     EditorState.getInstance().currentModel.name,
         //     EditorState.getInstance().currentUnit.name,
-        //     (oldUnitInterface: PiNamedElement) => {
+        //     (oldUnitInterface: FreNamedNode) => {
         //         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
         //             // swap old unit with its interface in the in-memory model
         //             EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
@@ -373,7 +373,7 @@ export class EditorState {
      * @param newUnit
      * @private
      */
-    private showUnitAndErrors(newUnit: PiModelUnit) {
+    private showUnitAndErrors(newUnit: FreModelUnit) {
         LOGGER.log("showUnitAndErrors called, unitName: " + newUnit.name);
         if (!!newUnit) {
             noUnitAvailable.set(false);
@@ -398,7 +398,7 @@ export class EditorState {
      * When an error in the errorlist is selected, or a search result is selected, the editor jumps to the faulty element.
      * @param item
      */
-    selectElement(item: PiElement, propertyName?: string) {
+    selectElement(item: FreNode, propertyName?: string) {
         LOGGER.log("Item selected");
         editorEnvironment.editor.selectElement(item, propertyName);
     }
@@ -414,16 +414,16 @@ export class EditorState {
                 modelErrors.set(list);
             } catch (e) { // catch any errors regarding erroneously stored model units
                 LOGGER.log(e.message);
-                modelErrors.set([new PiError("Problem reading model unit: '" + e.message + "'", this.currentUnit, this.currentUnit.name, PiErrorSeverity.Error)]);
+                modelErrors.set([new FreError("Problem reading model unit: '" + e.message + "'", this.currentUnit, this.currentUnit.name, FreErrorSeverity.Error)]);
             }
         }
     }
 
-    deleteElement(tobeDeleted: PiElement) {
+    deleteElement(tobeDeleted: FreNode) {
         if (!!tobeDeleted) {
             // find the owner of the element to be deleted and remove the element there
-            const owner: PiElement = tobeDeleted.piOwner();
-            const desc: PiOwnerDescriptor = tobeDeleted.piOwnerDescriptor();
+            const owner: FreNode = tobeDeleted.freOwner();
+            const desc: FreOwnerDescriptor = tobeDeleted.freOwnerDescriptor();
             if (!!desc) {
                 // console.log("deleting " + desc.propertyName + "[" + desc.propertyIndex + "]");
                 if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
@@ -439,16 +439,16 @@ export class EditorState {
                     );
                 }
             } else {
-                console.error("deleting of " + tobeDeleted.piId() + " not succeeded, because owner descriptor is empty.");
+                console.error("deleting of " + tobeDeleted.freId() + " not succeeded, because owner descriptor is empty.");
             }
         }
     }
 
-    pasteInElement(element: PiElement, propertyName: string, index?: number) {
+    pasteInElement(element: FreNode, propertyName: string, index?: number) {
         const property = element[propertyName];
         // todo make new copy to keep in 'editorEnvironment.editor.copiedElement'
         if (Array.isArray(property)) {
-            // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+            // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
             runInAction(() => {
                     if (index !== null && index !== undefined && index > 0) {
                         property.splice(index, 0, editorEnvironment.editor.copiedElement);
@@ -457,7 +457,7 @@ export class EditorState {
                     }
                 }
             );
-            // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+            // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
         } else {
             // console.log('property ' + propertyName + ' is no list');
             runInAction(() =>

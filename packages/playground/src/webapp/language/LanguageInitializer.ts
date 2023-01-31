@@ -6,7 +6,7 @@ import {
     unitTypes
 } from "../components/stores/LanguageStore";
 import { editorEnvironment } from "../config/WebappConfiguration";
-import { FreProjectionHandler, Language, PiUndoManager } from "@projectit/core";
+import { FreProjectionHandler, FreLanguage, FreUndoManager } from "@projectit/core";
 import { setUserMessage } from "../components/stores/UserMessageStore";
 
 export class LanguageInitializer {
@@ -20,7 +20,7 @@ export class LanguageInitializer {
         languageName.set(editorEnvironment.languageName);
 
         // the names of the unit types
-        unitTypes.set(Language.getInstance().getUnitNames());
+        unitTypes.set(FreLanguage.getInstance().getUnitNames());
 
         // the file extensions for all unit types
         // because 'editorEnvironment.fileExtensions.values()' is not an Array but an IterableIterator,
@@ -42,6 +42,6 @@ export class LanguageInitializer {
         editorEnvironment.editor.setUserMessage = setUserMessage;
 
         // start the undo manager
-        PiUndoManager.getInstance();
+        FreUndoManager.getInstance();
     }
 }

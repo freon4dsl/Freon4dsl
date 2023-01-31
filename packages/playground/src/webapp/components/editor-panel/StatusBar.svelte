@@ -52,7 +52,7 @@
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		elem: {currentBox?.element?.piId()} - {currentBox?.element?.piLanguageConcept()}
+		elem: {currentBox?.element?.freId()} - {currentBox?.element?.freLanguageConcept()}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon component={Svg} viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>

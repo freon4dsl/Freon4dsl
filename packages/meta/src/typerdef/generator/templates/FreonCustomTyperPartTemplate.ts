@@ -11,8 +11,7 @@ export class FreonCustomTyperPartTemplate {
         // todo remove commented statements
         // Template starts here
         return `
-        import { ${Names.PiElement}, PiType, FreTyper } from "${PROJECTITCORE}";
-        // import { ${Names.typer(language)} } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
+        import { ${Names.PiElement}, ${Names.PiType}, FreTyper } from "${PROJECTITCORE}";
         
         /**
          * Class '${generatedClassName}' is meant to be a convient place to add any
@@ -25,27 +24,27 @@ export class FreonCustomTyperPartTemplate {
                 return null;
             }
         
-            inferType(modelelement: ${Names.PiElement}): PiType | null {
+            inferType(modelelement: ${Names.PiElement}): ${Names.PiType} | null {
                 return null;
             }
         
-            equals(type1: PiType, type2: PiType): boolean | null {
+            equals(type1: ${Names.PiType}, type2: ${Names.PiType}): boolean | null {
                 return null;
             }
         
-            conforms(type1: PiType, type2: PiType): boolean | null {
+            conforms(type1: ${Names.PiType}, type2: ${Names.PiType}): boolean | null {
                 return null;
             }
                
-            conformsList(typelist1: PiType[], typelist2: PiType[]): boolean | null {
+            conformsList(typelist1: ${Names.PiType}[], typelist2: ${Names.PiType}[]): boolean | null {
                 return null;
             }
         
-            commonSuper(typelist: PiType[]): PiType | null {
+            commonSuper(typelist: ${Names.PiType}[]): ${Names.PiType} | null {
                 return null;
             }    
             
-            public getSuperTypes(type: PiType): PiType[] | null {
+            public getSuperTypes(type: ${Names.PiType}): ${Names.PiType}[] | null {
                 return null;
             } 
         }`;
