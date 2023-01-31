@@ -22,7 +22,7 @@ export class FreonTyperTemplate {
 
         // Template starts here
         return `
-        import { PiElement, PiType, Language, ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${Names.PiElement}, PiType, ${Names.FreLanguage}, ${typerInterfaceName} } from "${PROJECTITCORE}";
 
         ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
@@ -46,7 +46,7 @@ export class FreonTyperTemplate {
              * Returns true if 'modelelement' is marked as 'isType' in the Typer definition
              * @param modelelement
              */    
-            public isType(modelelement: PiElement): boolean { 
+            public isType(modelelement: ${Names.PiElement}): boolean { 
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.isType(modelelement);
@@ -62,7 +62,7 @@ export class FreonTyperTemplate {
              * Returns the type of 'modelelement' according to the type rules in the Typer Definition
              * @param modelelement
              */   
-            public inferType(modelelement: PiElement): PiType {
+            public inferType(modelelement: ${Names.PiElement}): PiType {
                 for (const typer of projectitConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: PiType = typer.inferType(modelelement);
@@ -80,7 +80,7 @@ export class FreonTyperTemplate {
              * @param elem1
              * @param elem2
              */
-            public equalsType(elem1: PiElement, elem2: PiElement): boolean {
+            public equalsType(elem1: ${Names.PiElement}, elem2: ${Names.PiElement}): boolean {
                 if (!elem1 || !elem2) return false;
 
                 const $type1: PiType = this.inferType(elem1);
@@ -114,7 +114,7 @@ export class FreonTyperTemplate {
              * @param elem1
              * @param elem2
              */
-            public conformsType(elem1: PiElement, elem2: PiElement): boolean {
+            public conformsType(elem1: ${Names.PiElement}, elem2: ${Names.PiElement}): boolean {
                 if (!elem1 || !elem2) return false;
         
                 const $type1: PiType = this.inferType(elem1);
@@ -147,7 +147,7 @@ export class FreonTyperTemplate {
              * @param elemlist1
              * @param elemlist2
              */
-            public conformsListType(elemlist1: PiElement[], elemlist2: PiElement[]): boolean {
+            public conformsListType(elemlist1: ${Names.PiElement}[], elemlist2: ${Names.PiElement}[]): boolean {
                 if (!elemlist1 || !elemlist2) return false;
                 if (elemlist1.length !== elemlist2.length) return false;
         
@@ -180,7 +180,7 @@ export class FreonTyperTemplate {
              * Returns the common super type of all elements in elemlist
              * @param elemlist
              */            
-            public commonSuperType(elemlist: PiElement[]): PiType {
+            public commonSuperType(elemlist: ${Names.PiElement}[]): PiType {
                 if (!elemlist ) return null;
                 if (elemlist.length === 0 ) return null;
         
@@ -228,7 +228,7 @@ export class FreonTyperTemplate {
              * @param inlist
              * @private
              */            
-            private elementListToTypeList(inlist: PiElement[]): PiType[] {
+            private elementListToTypeList(inlist: ${Names.PiElement}[]): PiType[] {
                 const typelist: PiType[] = [];
                 for (const elem of inlist) {
                     ListUtil.addIfNotPresent<PiType>(typelist, this.inferType(elem));

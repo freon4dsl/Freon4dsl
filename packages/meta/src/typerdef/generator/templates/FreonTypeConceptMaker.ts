@@ -13,7 +13,7 @@ export class FreonTypeConceptMaker {
         const coreImports: string[] = ["PiUtils", "PiWriter", "PiParseLocation" ];
         if (!hasSuper) {
             coreImports.push(this.piTypeName);
-            coreImports.push("PiElement");
+            coreImports.push(Names.PiElement);
         }
         const modelImports: string[] = this.findModelImports(concept, language);
         const typeImports: string[] = this.findTypeImports(concept, hasSuper);
@@ -40,7 +40,7 @@ export class FreonTypeConceptMaker {
                     return ${this.makeToPiString(myName, concept)};
                 }                  
                 
-                ${!hasSuper ? `toAstElement(): PiElement {
+                ${!hasSuper ? `toAstElement(): ${Names.PiElement} {
                     return null;
                 }` : ``}                    
             }
