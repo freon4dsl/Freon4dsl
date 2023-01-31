@@ -1,4 +1,4 @@
-import { PiClassifier, PiConceptProperty, PiElementReference, PiProperty } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConceptProperty, MetaElementReference, PiProperty } from "../../languagedef/metalanguage";
 import { PitTypeConcept } from "./PitTypeConcept";
 
 export class PitProperty extends PiConceptProperty {

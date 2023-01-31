@@ -1,5 +1,5 @@
 import { PiTyperElement } from "./PiTyperElement";
-import { PiClassifier, PiConcept, PiElementReference, PiLanguage, PiProperty } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, MetaElementReference, PiLanguage, PiProperty } from "../../languagedef/metalanguage";
 import { PitTypeConcept } from "./PitTypeConcept";
 import { PitClassifierSpec } from "./PitClassifierSpec";
 import { PitAnyTypeSpec } from "./PitAnyTypeSpec";
@@ -47,8 +47,8 @@ export class PiTyperDef extends PiTyperElement {
     typeConcepts: PitTypeConcept[] = []; // implementation of part 'typeConcepts'
     anyTypeSpec: PitAnyTypeSpec; // implementation of part 'anyTypeSpec'
     classifierSpecs: PitClassifierSpec[] = []; // implementation of part 'classifierSpecs'
-    __types: PiElementReference<PiClassifier>[] = []; // implementation of reference 'types'
-    __conceptsWithType: PiElementReference<PiClassifier>[] = []; // implementation of reference 'conceptsWithType'
+    __types: MetaElementReference<PiClassifier>[] = []; // implementation of reference 'types'
+    __conceptsWithType: MetaElementReference<PiClassifier>[] = []; // implementation of reference 'conceptsWithType'
     // properties: PitProperty[] = [];
     private __typeRoot: PiClassifier;
     private typeRootHasBeenCalculated: boolean = false;
@@ -67,7 +67,7 @@ export class PiTyperDef extends PiTyperElement {
     set types(newTypes: PiClassifier[]) {
         this.__types = [];
         newTypes.forEach(t => {
-            const xx = PiElementReference.create<PiClassifier>(t, "PiClassifier");
+            const xx = MetaElementReference.create<PiClassifier>(t, "PiClassifier");
             xx.owner = this.language;
             this.__types.push(xx);
         });
@@ -86,7 +86,7 @@ export class PiTyperDef extends PiTyperElement {
     set conceptsWithType(newTypes: PiClassifier[]) {
         this.__conceptsWithType = [];
         newTypes.forEach(t => {
-            const xx = PiElementReference.create<PiClassifier>(t, "PiClassifier");
+            const xx = MetaElementReference.create<PiClassifier>(t, "PiClassifier");
             xx.owner = this.language;
             this.__conceptsWithType.push(xx);
         });
@@ -116,7 +116,7 @@ ${this.classifierSpecs.map(con => con.toPiString()).join("\n")}`;
         // internal: PiElement
         const prop: PiProperty = new PiProperty();
         prop.name = "internal";
-        prop.typeReference = PiElementReference.create<PiClassifier>("PiElement", "PiClassifier");
+        prop.typeReference = MetaElementReference.create<PiClassifier>("PiElement", "PiClassifier");
         prop.typeReference.owner = prop;
         result.properties.push(prop);
         return result;

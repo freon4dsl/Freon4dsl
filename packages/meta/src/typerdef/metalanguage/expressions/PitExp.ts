@@ -1,9 +1,9 @@
-import { PiClassifier, PiElementReference, PiLanguage } from "../../../languagedef/metalanguage";
+import { PiClassifier, MetaElementReference, PiLanguage } from "../../../languagedef/metalanguage";
 import { PiTyperElement } from "../PiTyperElement";
 
 export abstract class PitExp extends PiTyperElement {
     language: PiLanguage;
-    __returnType: PiElementReference<PiClassifier>;
+    __returnType: MetaElementReference<PiClassifier>;
     readonly $typename: string = "PitExp"; // holds the metatype in the form of a string
     owner: PiTyperElement;
 
@@ -18,7 +18,7 @@ export abstract class PitExp extends PiTyperElement {
     }
     set returnType(cls: PiClassifier) {
         if (!!cls) {
-            this.__returnType = PiElementReference.create<PiClassifier>(cls, "PiClassifier");
+            this.__returnType = MetaElementReference.create<PiClassifier>(cls, "PiClassifier");
             this.__returnType.owner = this.language;
         }
     }

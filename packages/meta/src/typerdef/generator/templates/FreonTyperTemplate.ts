@@ -35,7 +35,7 @@ export class FreonTyperTemplate {
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
             private generatedTyper: ${defaultTyperName};
-            mainTyper: ${Names.FreonTyper}; // TODO remove tmp needed
+            mainTyper: ${Names.FreTyper}; // TODO remove tmp needed
             
             constructor() {
                 this.generatedTyper = new ${defaultTyperName}();

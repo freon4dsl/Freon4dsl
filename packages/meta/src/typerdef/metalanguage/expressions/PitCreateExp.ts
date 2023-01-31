@@ -2,7 +2,7 @@
 
 import { PitExp } from "./PitExp";
 import { PitPropInstance } from "../PitPropInstance";
-import { PiClassifier, PiElementReference } from "../../../languagedef/metalanguage";
+import { PiClassifier, MetaElementReference } from "../../../languagedef/metalanguage";
 
 /**
  * Class PitCreateExp is the implementation of the concept with the same name in the language definition file.
@@ -32,11 +32,11 @@ export class PitCreateExp extends PitExp  {
     readonly $typename: string = "PitCreateExp"; // holds the metatype in the form of a string
 
     propertyDefs: PitPropInstance[] = []; // implementation of part 'propertyDefs'
-    __type: PiElementReference<PiClassifier>; // implementation of reference 'type'
+    __type: MetaElementReference<PiClassifier>; // implementation of reference 'type'
 
      /**
      * Convenience method for reference 'type'.
-     * Instead of returning a 'PiElementReference<PiClassifier>' object,
+     * Instead of returning a 'MetaElementReference<PiClassifier>' object,
      * it returns the referred 'PiClassifier' object, if it can be found.
      */
     get type(): PiClassifier {

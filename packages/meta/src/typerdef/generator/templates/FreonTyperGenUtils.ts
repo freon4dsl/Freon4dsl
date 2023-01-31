@@ -1,14 +1,14 @@
 import {
-    PitAnytypeExp, PitClassifierSpec, PitConformanceRule, PitConformsExp, PitEqualsExp,
+    PitAnytypeExp,
     PitExp,
     PitFunctionCallExp,
     PitLimitedInstanceExp,
     PitPropertyCallExp, PitPropInstance,
     PitSelfExp, PitTypeConcept,
-    PitWhereExp, PiTyperDef
+    PitWhereExp
 } from "../../metalanguage";
-import { LangUtil, ListUtil, Names } from "../../../utils";
-import { PiClassifier, PiElementReference, PiLimitedConcept, PiProperty } from "../../../languagedef/metalanguage";
+import { ListUtil, Names } from "../../../utils";
+import { PiClassifier, PiProperty } from "../../../languagedef/metalanguage";
 import { PitBinaryExp, PitCreateExp, PitVarCallExp } from "../../metalanguage/expressions";
 
 const inferFunctionName: string = "inferType";

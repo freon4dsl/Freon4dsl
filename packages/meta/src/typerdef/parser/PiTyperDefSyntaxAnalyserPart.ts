@@ -2,7 +2,7 @@
 import { net } from "net.akehurst.language-agl-processor";
 import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
 import {
-    PiElementReference,
+    MetaElementReference,
     PiClassifier,
     PiLimitedConcept,
     PiInstance, PiProperty, PiConcept
@@ -24,7 +24,6 @@ import {
     PitConformsExp
 } from "../metalanguage";
 import { PiTyperSyntaxAnalyser } from "./PiTyperSyntaxAnalyser";
-import { PiParseLocation } from "../../utils";
 import { PitTypeConcept } from "../metalanguage/PitTypeConcept";
 import { PitClassifierSpec } from "../metalanguage/PitClassifierSpec";
 import { PitTypeRule } from "../metalanguage/PitTypeRule";
@@ -62,9 +61,9 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPiTyperDef(branch: SPPTBranch): PiTyperDef {
         // console.log('transformPiTyperDef called: ' + branch.name);
-        let __types: PiElementReference<PiClassifier>[];
+        let __types: MetaElementReference<PiClassifier>[];
         let __typeConcepts: PitTypeConcept[];
-        let __conceptsWithType: PiElementReference<PiClassifier>[];
+        let __conceptsWithType: MetaElementReference<PiClassifier>[];
         let __anyTypeSpec: PitAnyTypeSpec;
         let __classifierSpecs: PitClassifierSpec[];
         const children = this.mainAnalyser.getChildren(branch);
@@ -128,7 +127,7 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitTypeConcept(branch: SPPTBranch): PitTypeConcept {
         // console.log('transformPitTypeConcept called: ' + branch.name);
         let __name: string;
-        let __base: PiElementReference<PiConcept>;
+        let __base: MetaElementReference<PiConcept>;
         let __properties: PitProperty[];
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPrimEntry
@@ -199,7 +198,7 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitPropertyCallExp(branch: SPPTBranch): PitPropertyCallExp {
         // console.log('transformPitPropertyCallExp called: ' + branch.name);
         let __source: PitExp;
-        let __property: PiElementReference<PiProperty>;
+        let __property: MetaElementReference<PiProperty>;
         const children = this.mainAnalyser.getChildren(branch);
         __source = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
         __property = this.mainAnalyser.piElemRef<PiProperty>(children[2], "PiProperty"); // RHSRefEntry
@@ -240,7 +239,7 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPitVarCallExp(branch: SPPTBranch): PitVarCallExp {
         // console.log('transformPitVarCallExp called: ' + branch.name);
-        let __variable: PiElementReference<PitVarDecl>;
+        let __variable: MetaElementReference<PitVarDecl>;
         const children = this.mainAnalyser.getChildren(branch);
         __variable = this.mainAnalyser.piElemRef<PitVarDecl>(children[0], "PitVarDecl"); // RHSRefEntry
         return PitVarCallExp.create({ __variable: __variable, agl_location: this.mainAnalyser.location(branch) });
@@ -254,7 +253,7 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPitCreateExp(branch: SPPTBranch): PitCreateExp {
         // console.log('transformPitCreateExp called: ' + branch.name);
-        let __type: PiElementReference<PiClassifier>;
+        let __type: MetaElementReference<PiClassifier>;
         let __propertyDefs: PitPropInstance[];
         const children = this.mainAnalyser.getChildren(branch);
         __type = this.mainAnalyser.piElemRef<PiClassifier>(children[0], "PiClassifier"); // RHSRefEntry
@@ -270,7 +269,7 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPitPropInstance(branch: SPPTBranch): PitPropInstance {
         // console.log('transformPitPropInstance called: ' + branch.name);
-        let __property: PiElementReference<PiProperty>;
+        let __property: MetaElementReference<PiProperty>;
         let __value: PitExp;
         const children = this.mainAnalyser.getChildren(branch);
         __property = this.mainAnalyser.piElemRef<PiProperty>(children[0], "PiProperty"); // RHSRefEntry
@@ -303,8 +302,8 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPitLimitedInstanceExp(branch: SPPTBranch): PitLimitedInstanceExp {
         // console.log('transformPitLimitedInstanceExp called: ' + branch.name);
-        let __myLimited: PiElementReference<PiLimitedConcept>;
-        let __myInstance: PiElementReference<PiInstance>;
+        let __myLimited: MetaElementReference<PiLimitedConcept>;
+        let __myInstance: MetaElementReference<PiInstance>;
         const children = this.mainAnalyser.getChildren(branch);
         if (!children[0].isEmptyMatch) {
             // RHSOptionalGroup
@@ -351,7 +350,7 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitVarDecl(branch: SPPTBranch): PitVarDecl {
         // console.log('transformPitVarDecl called: ' + branch.name);
         let __name: string;
-        let __type: PiElementReference<PiClassifier>;
+        let __type: MetaElementReference<PiClassifier>;
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
         __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "PiClassifier"); // RHSRefEntry
@@ -410,7 +409,7 @@ export class PiTyperDefSyntaxAnalyserPart {
      */
     public transformPitClassifierSpec(branch: SPPTBranch): PitClassifierSpec {
         // console.log('transformPitClassifierSpec called: ' + branch.name);
-        let __myClassifier: PiElementReference<PiClassifier>;
+        let __myClassifier: MetaElementReference<PiClassifier>;
         let __rules: PitTypeRule[];
         const children = this.mainAnalyser.getChildren(branch);
         __myClassifier = this.mainAnalyser.piElemRef<PiClassifier>(children[0], "PiClassifier"); // RHSRefEntry
@@ -436,7 +435,7 @@ export class PiTyperDefSyntaxAnalyserPart {
     public transformPitProperty(branch: SPPTBranch): PitProperty {
         // console.log('transformPitProperty called: ' + branch.name);
         let __name: string;
-        let __type: PiElementReference<PiClassifier>;
+        let __type: MetaElementReference<PiClassifier>;
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
         __type = this.mainAnalyser.piElemRef<PiClassifier>(children[2], "PiClassifier"); // RHSRefEntry

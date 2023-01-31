@@ -9,7 +9,7 @@ import {
 import {
     PiLanguage,
     PiClassifier,
-    PiElementReference,
+    MetaElementReference,
     PiLimitedConcept, PiProperty, PiPrimitiveType, PiMetaEnvironment, PiInstance, PiConcept
 } from "../../languagedef/metalanguage";
 import {
@@ -141,7 +141,7 @@ export class PiTyperCheckerPhase1 extends CheckerPhase<PiTyperDef>{
         return result;
     }
 
-    private checkTypeReferences(types: PiElementReference<PiClassifier>[]) {
+    private checkTypeReferences(types: MetaElementReference<PiClassifier>[]) {
         // LOGGER.log("Checking types: '" + types.map(t => t.name).join(", ") + "'");
         if (!!types) {
             for (const t of types) {
@@ -252,7 +252,7 @@ export class PiTyperCheckerPhase1 extends CheckerPhase<PiTyperDef>{
     private changeVarCallIntoInstanceExp(myVarCall: PitVarCallExp): PitLimitedInstanceExp {
         const result: PitLimitedInstanceExp = new PitLimitedInstanceExp();
         result.owner = myVarCall.owner;
-        result.__myInstance = PiElementReference.create<PiInstance>(myVarCall.__variable.name, "PiInstance");
+        result.__myInstance = MetaElementReference.create<PiInstance>(myVarCall.__variable.name, "PiInstance");
         result.__myInstance.owner = result;
         result.agl_location = myVarCall.agl_location;
         return result;
@@ -492,7 +492,7 @@ export class PiTyperCheckerPhase1 extends CheckerPhase<PiTyperDef>{
         // (6) check inherited props on rules layed out in languagedef checker
     }
 
-    private checkTypeReference(refType: PiElementReference<PiClassifier>, typeConceptRequired: boolean) {
+    private checkTypeReference(refType: MetaElementReference<PiClassifier>, typeConceptRequired: boolean) {
         this.runner.nestedCheck({
             check: !!refType.referred,
             error: `Cannot find reference to ${refType.name} ${ParseLocationUtil.location(refType)}.`,

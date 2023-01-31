@@ -6,8 +6,8 @@ import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
 import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
 import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
 import { PiTyperDefSyntaxAnalyserPart } from ".";
-import { PiElementReference, PiLangElement } from "../../languagedef/metalanguage";
-import { PiParseLocation } from "../../utils";
+import { MetaElementReference, PiLangElement } from "../../languagedef/metalanguage";
+import { FreParseLocation } from "../../utils";
 
 /**
  *   Class MetaTyperSyntaxAnalyser is the main syntax analyser.
@@ -175,7 +175,7 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
      * Generic method to transform references
      * ...PiElemRef = identifier;
      */
-    public piElemRef<T extends PiLangElement>(branch: SPPTBranch, typeName: string): PiElementReference<T> {
+    public piElemRef<T extends PiLangElement>(branch: SPPTBranch, typeName: string): MetaElementReference<T> {
         let referred: string | T = this.transformSharedPackedParseTreeNode(branch);
         if (referred == null || referred == undefined) {
             throw new Error(`Syntax error in "${branch?.parent?.matchedText}": cannot create empty reference`);
@@ -187,8 +187,8 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
     }
 
     private makePiElementReferenceWithLocation<T extends PiLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
-        const result = PiElementReference.create<T>(referred, typeName);
-        const location = PiParseLocation.create({ filename: this.filename, line: branch.location.line, column: branch.location.column });
+        const result = MetaElementReference.create<T>(referred, typeName);
+        const location = FreParseLocation.create({ filename: this.filename, line: branch.location.line, column: branch.location.column });
         result.agl_location = location;
         return result;
     }
@@ -223,8 +223,8 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
         branch: SPPTBranch,
         typeName: string,
         separator?: string
-    ): PiElementReference<T>[] {
-        let result: PiElementReference<T>[] = [];
+    ): MetaElementReference<T>[] {
+        let result: MetaElementReference<T>[] = [];
         const children = this.getChildren(branch);
         if (!!children) {
             for (const child of children) {
@@ -244,7 +244,7 @@ export class PiTyperSyntaxAnalyser implements SyntaxAnalyser {
     }
 
     public location(branch: net.akehurst.language.api.sppt.SPPTBranch) {
-        const location = PiParseLocation.create({
+        const location = FreParseLocation.create({
             filename: this.filename,
             line: branch.location.line,
             column: branch.location.column

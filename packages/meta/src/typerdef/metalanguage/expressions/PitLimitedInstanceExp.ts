@@ -1,5 +1,5 @@
 import { PitExp } from "./PitExp";
-import { PiClassifier, PiElementReference, PiInstance, PiLimitedConcept } from "../../../languagedef/metalanguage";
+import { PiClassifier, MetaElementReference, PiInstance, PiLimitedConcept } from "../../../languagedef/metalanguage";
 
 export class PitLimitedInstanceExp extends PitExp {
     /**
@@ -28,8 +28,8 @@ export class PitLimitedInstanceExp extends PitExp {
     }
     readonly $typename: string = "PitLimitedInstanceExp"; // holds the metatype in the form of a string
 
-    __myLimited?: PiElementReference<PiLimitedConcept>;
-    __myInstance: PiElementReference<PiInstance>;
+    __myLimited?: MetaElementReference<PiLimitedConcept>;
+    __myInstance: MetaElementReference<PiInstance>;
     toPiString(): string {
         let prefix: string = "";
         if (!!this.__myLimited) {
@@ -47,7 +47,7 @@ export class PitLimitedInstanceExp extends PitExp {
 
     set myLimited(limitedConcept: PiLimitedConcept) {
         if (!!limitedConcept) {
-            this.__myLimited = PiElementReference.create<PiLimitedConcept>(limitedConcept, "PiLimitedConcept");
+            this.__myLimited = MetaElementReference.create<PiLimitedConcept>(limitedConcept, "PiLimitedConcept");
             this.__myLimited.owner = this.language;
         }
     }
@@ -60,7 +60,7 @@ export class PitLimitedInstanceExp extends PitExp {
     }
     set myInstance(cls: PiInstance) {
         if (!!cls) {
-            this.__myInstance = PiElementReference.create<PiInstance>(cls, "PiInstance");
+            this.__myInstance = MetaElementReference.create<PiInstance>(cls, "PiInstance");
             this.__myInstance.owner = this.language;
         }
     }
