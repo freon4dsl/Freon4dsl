@@ -202,8 +202,8 @@ export class ScoperTemplate {
                 if (loopVariable instanceof PiElementReference) {
                     if (!this.currentRoleNames.includes('${expression.appliedfeature.toPiString()}')) {
                         if (!!loopVariable.referred) {
-                            if (!this.additionalNamespacesVisited.includes(loopVariable.referred)){
-                                this.additionalNamespacesVisited.push(loopVariable.referred);
+                            if (!this.additionalNamespacesVisited.includes(loopVariable)){
+                                this.additionalNamespacesVisited.push(loopVariable);
                                 const referred = loopVariable.referred;
                                 if(!!referred) { 
                                     result.push(loopVariable.referred);
