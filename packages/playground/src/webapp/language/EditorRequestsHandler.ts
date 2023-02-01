@@ -37,7 +37,7 @@ export class EditorRequestsHandler {
             proj.enableProjections(names);
         }
         // Let the editor know that the projections have changed.
-        // TODO rootBoxChanged should NOT be called from outside PiEditor.
+        // TODO rootBoxChanged should NOT be called from outside FreEditor.
         // editorEnvironment.editor.rootBoxChanged();
         // TODO: Shoukd this become mobx enabled, or staay like this?
         editorEnvironment.editor.auto();

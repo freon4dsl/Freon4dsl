@@ -6,7 +6,7 @@ import { isFreBinaryExpression, isFreExpression } from "../ast-utils";
 import { FreLogger } from "../logging";
 
 // reserved role names for expressions, use with care.
-export const PI_BINARY_EXPRESSION_LEFT = "FreBinaryExpression-left";
+export const FRE_BINARY_EXPRESSION_LEFT = "FreBinaryExpression-left";
 export const PI_BINARY_EXPRESSION_RIGHT = "FreBinaryExpression-right";
 export const BEFORE_BINARY_OPERATOR = "binary-pre";
 export const AFTER_BINARY_OPERATOR = "binary-post";
@@ -112,7 +112,7 @@ class BTree {
         const exp = box.element as FreExpressionNode;
         switch (box.role) {
             case LEFT_MOST:
-                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
+                selectedElement = { element: newBinExp, boxRoleToSelect: FRE_BINARY_EXPRESSION_LEFT };
                 FreUtils.replaceExpression(exp, newBinExp, editor);
                 newBinExp.freSetRight(exp);
                 this.balanceTree(newBinExp, editor);
@@ -134,7 +134,7 @@ class BTree {
                 break;
             case AFTER_BINARY_OPERATOR:
                 FreUtils.CHECK(isFreBinaryExpression(exp), "Operator action only allowed in binary operator");
-                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
+                selectedElement = { element: newBinExp, boxRoleToSelect: FRE_BINARY_EXPRESSION_LEFT };
                 const right = (exp as FreBinaryExpression).freRight();
                 (exp as FreBinaryExpression).freSetRight(newBinExp);
                 // FreUtils.replaceExpression(right, newBinExp, editor);

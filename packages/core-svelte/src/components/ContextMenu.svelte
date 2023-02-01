@@ -4,7 +4,7 @@
     /**
      *  This component combines a menu with a submenu. The positions of both the menu and the submenu are determined
      *  such that the complete menu stays within the bounderies of the editor viewport. The state of the editor
-     *  viewport is stored in the EditorViewportStore (by ProjectItComponent).
+     *  viewport is stored in the EditorViewportStore (by FreonComponent).
      */
     import { clickOutsideConditional } from "./svelte-utils";
     import { tick } from "svelte";

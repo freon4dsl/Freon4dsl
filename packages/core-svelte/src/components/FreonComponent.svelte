@@ -21,7 +21,7 @@
     import { afterUpdate, onMount, tick } from "svelte";
     import { contextMenu, contextMenuVisible, selectedBoxes, viewport, componentId } from "./svelte-utils";
 
-    let LOGGER = new FreLogger("ProjectItComponent");//.mute();
+    let LOGGER = new FreLogger("FreonComponent");//.mute();
     export let editor: FreEditor;
     let element: HTMLDivElement; // The current main element of this component.
     let rootBox: Box;
@@ -35,7 +35,7 @@
 
     // todo tabbing etc. should take into account the projection. Currently, sometimes the selected element is not visible.
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log("ProjectItComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey + " shift: " + event.shiftKey);
+        LOGGER.log("FreonComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey + " shift: " + event.shiftKey);
         if (event.ctrlKey || event.altKey) {
             switch (event.key) {
                 case ARROW_UP:
@@ -119,7 +119,7 @@
             }, 400); // Might use another value for the delay, but this seems ok.
         });
 
-        // Observe the ProjectItComponent element.
+        // Observe the FreonComponent element.
         resizeObserver.observe(element);
         editor.refreshComponentSelection = refreshSelection
         editor.refreshComponentRootBox= refreshRootBox;
@@ -134,7 +134,7 @@
     } );
 
     const refreshSelection = async  (why?: string) => {
-        console.log("ProjectItComponent.refreshSelection: " + why + " editor selectedBox is " + editor?.selectedBox?.kind);
+        console.log("FreonComponent.refreshSelection: " + why + " editor selectedBox is " + editor?.selectedBox?.kind);
         if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             await tick();
             $selectedBoxes = getSelectableChildren(editor.selectedBox);
@@ -160,11 +160,11 @@
 
     const refreshRootBox = (why?: string) => {
         rootBox = editor.rootBox;
-        LOGGER.log("REFRESH " + why + " ==================> ProjectItComponent with rootbox " + rootBox?.id);
+        LOGGER.log("REFRESH " + why + " ==================> FreonComponent with rootbox " + rootBox?.id);
     };
 
-    refreshRootBox("Initialize ProjectItComponent");
-    refreshSelection("Initialize ProjectItComponent");
+    refreshRootBox("Initialize FreonComponent");
+    refreshSelection("Initialize FreonComponent");
 </script>
 
 <div class={"projectit"}

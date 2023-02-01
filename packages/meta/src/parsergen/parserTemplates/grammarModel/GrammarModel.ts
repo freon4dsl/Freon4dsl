@@ -210,7 +210,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
              * Generic method to transform references
              * ...FreNodeRef = identifier;
              */
-            public piElemRef\<T extends ${Names.FreNamedNode}\>(branch: SPPTBranch, typeName: string) : ${Names.FreNodeReference}\<T\> {
+            public freNodeRef\<T extends ${Names.FreNamedNode}\>(branch: SPPTBranch, typeName: string) : ${Names.FreNodeReference}\<T\> {
                 let referred: string | string[] | T = this.${internalTransformNode}(branch);
                 if (this.getChildren(branch)?.length > 1) {
                     // its a path name

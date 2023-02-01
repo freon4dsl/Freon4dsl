@@ -28,16 +28,14 @@
     "pegjs-concat-scoper": "cd src/scoperdef/parser && bash ./concat.sh",
     "pegjs-concat-validator": "cd src/validatordef/parser && bash ./concat.sh",
     "concat-pegjs": "yarn pegjs-concat-language && yarn pegjs-concat-editor && yarn pegjs-concat-scoper",
-    "build": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn lang-exp-parser && tsc && yarn copy-templates && yarn copy-validtemplates",
+    "build": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn lang-exp-parser && tsc && yarn copy-validtemplates",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "build2": "tsc && yarn copy-templates && yarn copy-validtemplates",
-    "copy-templates": "cp src/editordef/generator/templates/styles.ts.template ./dist/editordef/generator/templates/styles.ts.template",
     "copy-validtemplates": "cp src/utils/generation/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "test": "jest",
-    "build-release": "yarn build && yarn copy-templates && yarn copy-validtemplates"
+    "build-release": "yarn build && yarn copy-validtemplates"
   },
   "dependencies": {
     "@rushstack/ts-command-line": "4.7.8",

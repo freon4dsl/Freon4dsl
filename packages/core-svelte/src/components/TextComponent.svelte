@@ -262,7 +262,7 @@
 					LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
 					if (!partOfActionBox && isEditing) {
 						endEditing();
-						// do not switch selection, this will be done by ProjectItComponent
+						// do not switch selection, this will be done by FreonComponent
 					} // else, let TextDropDownComponent handle this
 					break;
 				}

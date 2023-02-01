@@ -21,7 +21,6 @@ import {
     IndexTemplate,
     LanguageTemplate,
     MetaTypeTemplate,
-    FreReferenceTemplate,
     WalkerTemplate,
     WorkerInterfaceTemplate,
     DefaultWorkerTemplate,

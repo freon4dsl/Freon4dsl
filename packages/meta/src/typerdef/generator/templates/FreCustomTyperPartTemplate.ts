@@ -18,7 +18,7 @@ export class FreCustomTyperPartTemplate {
          * custom code for type checking.
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
-            mainTyper: FreTyper; // ${Names.typer(language)};
+            mainTyper: FreTyper;
         
             isType(modelelement: ${Names.FreNode}): boolean | null {
                 return null;

@@ -78,7 +78,7 @@ describe.skip("List component", () => {
             }
         });
 
-        // TODO the following only works when the html element is embedded in a ProjectItComponent
+        // TODO the following only works when the html element is embedded in a FreonComponent
         // // use an arrow key to get to the first element
         // fireEvent.keyPress(document, {key: 'ArrowUp', code: 'ArrowUp',charCode: 38});
         // // the first element has focus

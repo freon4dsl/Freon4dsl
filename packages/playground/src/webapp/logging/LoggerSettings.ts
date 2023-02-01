@@ -14,7 +14,7 @@ export function muteLogs() {
     FreLogger.mute("LayoutComponent");
     FreLogger.mute("ListComponent");
     FreLogger.mute("OptionalComponent");
-    FreLogger.mute("ProjectItComponent");
+    FreLogger.mute("FreonComponent");
     FreLogger.mute("RenderComponent");
     FreLogger.mute("TableCellComponent");
     FreLogger.mute("TableComponent");
@@ -22,8 +22,8 @@ export function muteLogs() {
     FreLogger.mute("TextDropdownComponent");
 
     // from ~/core:
-    FreLogger.mute("PiEditor");
-    FreLogger.mute("PiUtils");
+    FreLogger.mute("FreEditor");
+    FreLogger.mute("FreUtils");
     FreLogger.mute("SelectOptionList");
     FreLogger.mute("BoxFactory");
     FreLogger.mute("FreLanguage");
@@ -33,7 +33,7 @@ export function muteLogs() {
     FreLogger.mute("SelectBox");
     FreLogger.mute("HorizontalListBox");
     FreLogger.mute("ActionBox");
-    FreLogger.mute("PiCommand");
+    FreLogger.mute("FreCommand");
     FreLogger.mute("BehaviorUtils");
     FreLogger.mute("Box");
     // FreLogger.mute("ListBox");

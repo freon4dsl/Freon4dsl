@@ -4,7 +4,6 @@ export * from "./DefaultWorkerTemplate";
 export * from "./EnvironmentTemplate";
 export * from "./IndexTemplate";
 export * from "./MetaTypeTemplate";
-export * from "./FreReferenceTemplate";
 export * from "./WalkerTemplate";
 export * from "./WorkerInterfaceTemplate";
 export * from "./LanguageTemplate";

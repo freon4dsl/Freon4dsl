@@ -6,11 +6,11 @@ The editor as defined in this folder is not used stand-alone, instead it is star
 the WebApp (in ~/playground), or another surrounding webbased environment. 
 
 The Webapp has two entries into ~/core and ~/core-svelte. It triggers the rendering of a 
-ProjectItComponent (from ~/core-svelte) that takes a FreEditor instance (from ~/core) as parameter.
+FreonComponent (from ~/core-svelte) that takes a FreEditor instance (from ~/core) as parameter.
 Next, the WebApp sets the rootElement of the FreEditor, this is the model element that will 
 be projected. The FreEditor knows the projection to be used (it is a 
 parameter to its constructor) and from the projection the box that corresponds with 
-the rootElement is found, called the rootBox. The ProjectItComponent then uses the RenderComponent 
+the rootElement is found, called the rootBox. The FreonComponent then uses the RenderComponent 
 to render this rootBox. Note that each autoRun renews this rootBox using the rootBox() function 
 in FreEditor.
 

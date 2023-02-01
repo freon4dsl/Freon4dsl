@@ -810,10 +810,10 @@ export class WriterTemplate {
         return '';
     }
 
-    private makeInterfaceMethod(piInterface: FreInterface, classifierType: string): string {
-        const name: string = Names.interface(piInterface);
+    private makeInterfaceMethod(freInterface: FreInterface, classifierType: string): string {
+        const name: string = Names.interface(freInterface);
         return `/**
-                 * The interface '${piInterface.name}' is not unparsed.
+                 * The interface '${freInterface.name}' is not unparsed.
                  */
                 private unparse${name}(modelelement: ${classifierType}, short: boolean) {
                     throw new Error('Method unparse${name} should be implemented by the classes that implement it.');

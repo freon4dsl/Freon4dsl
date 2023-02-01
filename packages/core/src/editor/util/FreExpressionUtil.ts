@@ -10,7 +10,7 @@ import {
 import { FreBinaryExpression, FreExpressionNode } from "../../ast";
 import { FreLanguage } from "../../language";
 import {
-    PI_BINARY_EXPRESSION_LEFT,
+    FRE_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
     AFTER_BINARY_OPERATOR,
     BEFORE_BINARY_OPERATOR,
@@ -77,7 +77,7 @@ export function createDefaultBinaryBox(exp: FreBinaryExpression, symbol: string,
     // console.log("RIGHT CONCEPT for "+ exp.freLanguageConcept()  + " is " + Language.getInstance().classifier(exp.freLanguageConcept()) );
     // console.log("            ===> " + Language.getInstance().classifier(exp.freLanguageConcept())?.properties.get("right") + " is " + rightConceptName);
     result.addChildren([
-        (!!exp.freLeft() ? boxProviderCache.getBoxProvider(exp.freLeft()).box : BoxFactory.action(exp, PI_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left", conceptName: leftConceptName  })),
+        (!!exp.freLeft() ? boxProviderCache.getBoxProvider(exp.freLeft()).box : BoxFactory.action(exp, FRE_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left", conceptName: leftConceptName  })),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
         BoxFactory.action(exp, BEFORE_BINARY_OPERATOR, NBSP),
         createOperatorBox(editor, exp, symbol),

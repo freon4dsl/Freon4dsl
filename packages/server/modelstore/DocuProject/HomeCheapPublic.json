@@ -1,0 +1,89 @@
+{
+   "$typename": "Product",
+   "name": "HomeCheap",
+   "product": {
+      "$typename": "InsuranceProduct",
+      "name": "HomeCheap",
+      "productName": "Save and Sound",
+      "advertisedPremium": {
+         "$typename": "EuroLiteral",
+         "euros": 100,
+         "cents": 0
+      },
+      "riskAdjustment": null,
+      "calculation": {
+         "$typename": "PlusExpression",
+         "left": {
+            "$typename": "FunctionCallExpression",
+            "args": [
+               {
+                  "$typename": "InsurancePartRef",
+                  "part": "fire"
+               }
+            ],
+            "funcDefinition": "partPremium"
+         },
+         "right": {
+            "$typename": "FunctionCallExpression",
+            "args": [
+               {
+                  "$typename": "InsurancePartRef",
+                  "part": "breakingAndEntering"
+               }
+            ],
+            "funcDefinition": "partPremium"
+         }
+      },
+      "helpers": [
+         {
+            "$typename": "CalcFunction",
+            "name": "partPremium",
+            "description": null,
+            "declaredType": {
+               "$typename": "TypeRef",
+               "type": "EUR"
+            },
+            "body": {
+               "$typename": "MultiplyExpression",
+               "left": {
+                  "$typename": "ParameterRef",
+                  "attribute": {
+                     "$typename": "RiskRef",
+                     "name": "statisticalRisk"
+                  },
+                  "parameter": "part"
+               },
+               "right": {
+                  "$typename": "ParameterRef",
+                  "attribute": {
+                     "$typename": "PayoutRef",
+                     "name": "maximumPayOut"
+                  },
+                  "parameter": "part"
+               }
+            },
+            "parameters": [
+               {
+                  "$typename": "Parameter",
+                  "name": "part",
+                  "declaredType": {
+                     "$typename": "TypeRef",
+                     "type": "InsurancePart"
+                  }
+               }
+            ]
+         }
+      ],
+      "themes": [
+         "HomeTheme"
+      ],
+      "nrPremiumDays": "Month",
+      "parts": [
+         "fire",
+         "breakingAndEntering"
+      ],
+      "basedOn": [
+         "home1"
+      ]
+   }
+}

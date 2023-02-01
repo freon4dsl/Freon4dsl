@@ -20,7 +20,7 @@ export class RHSLimitedRefOptionalEntry extends RHSPropEntry {
             if (!${nodeName}[${index}].isEmptyMatch) {
                 // take the first element of the group that represents the optional part  
                 const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]).nonSkipChildren.toArray()[0];
-                ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.piElemRef<${baseType}>(subNode, '${baseType}');
+                ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.freNodeRef<${baseType}>(subNode, '${baseType}');
             }`;
     }
 

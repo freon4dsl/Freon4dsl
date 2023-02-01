@@ -1,4 +1,4 @@
-// This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
+// This file contains all methods to connect the webapp to the Freon generated language editorEnvironment and to the server that stores the models
 import {
     FreError,
     FreErrorSeverity,
