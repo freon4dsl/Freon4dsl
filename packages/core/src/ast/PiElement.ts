@@ -10,7 +10,7 @@ export interface PiElement {
 
     piLanguageConcept(): string;
 
-    piOwner(): PiElement;
+    piOwner(): PiElement | undefined;
 
     piOwnerDescriptor(): PiOwnerDescriptor;
 
@@ -22,7 +22,9 @@ export interface PiElement {
 
     piIsBinaryExpression(): boolean;
 
+    copy(): PiElement;
+
     match(toBeMatched: Partial<PiElement>): boolean;
 
-    parse_location: PiParseLocation;    // if relevant, the location of this element within the source from which it is parsed`;
+    parse_location: PiParseLocation;    // if relevant, the location of this element within the source from which it is parsed
 }

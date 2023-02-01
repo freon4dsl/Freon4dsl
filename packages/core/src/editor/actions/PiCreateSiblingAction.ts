@@ -2,7 +2,8 @@ import { PiUtils } from "../../util";
 import { PiLogger } from "../../logging";
 import { Box } from "../boxes/index";
 import { PiAction } from "./PiAction";
-import { PiCommand, PiCreateSiblingCommand } from "./PiCommand";
+import { PiCommand } from "./PiCommand";
+import { PiCreateSiblingCommand } from "./PiCreateSiblingCommand";
 
 const LOGGER = new PiLogger("PiCreateSiblingAction");
 

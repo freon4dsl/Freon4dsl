@@ -1,5 +1,4 @@
 import {
-    conceptNames,
     fileExtensions,
     languageName,
     projectionNames,
@@ -7,19 +6,21 @@ import {
     unitTypes
 } from "../components/stores/LanguageStore";
 import { editorEnvironment } from "../config/WebappConfiguration";
-import { PiCompositeProjection } from "@projectit/core";
+import { FreProjectionHandler, Language, PiUndoManager } from "@projectit/core";
+import { setUserMessage } from "../components/stores/UserMessageStore";
 
 export class LanguageInitializer {
 
     /**
-     * fills the Webapp Stores with initial values that describe the language
+     * Fills the Webapp Stores with initial values that describe the language,
+     * and make sure that the editor is able to get user message to the webapp.
      */
     static initialize(): void {
         // the language name
         languageName.set(editorEnvironment.languageName);
 
         // the names of the unit types
-        unitTypes.set(editorEnvironment.unitNames);
+        unitTypes.set(Language.getInstance().getUnitNames());
 
         // the file extensions for all unit types
         // because 'editorEnvironment.fileExtensions.values()' is not an Array but an IterableIterator,
@@ -32,12 +33,15 @@ export class LanguageInitializer {
 
         // the names of the projections / views
         const proj = editorEnvironment.editor.projection;
-        let nameList: string[] = proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name];
+        let nameList: string[] = proj instanceof FreProjectionHandler ? proj.projectionNames() : ['default'];
         projectionNames.set(nameList);
         projectionsShown.set(nameList); // initialy, all projections are shown
 
-        // the concept names for which a search is possible
-        conceptNames.set(["Attr", "Mthod"]);
-        // TODO conceptNames.set(editorEnvironment.conceptNames);
+        // let the editor know how to set the user message,
+        // we do this by assigning our own method to the editor's method
+        editorEnvironment.editor.setUserMessage = setUserMessage;
+
+        // start the undo manager
+        PiUndoManager.getInstance();
     }
 }

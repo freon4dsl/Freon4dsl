@@ -4,7 +4,12 @@ import {
     TYPER_GEN_FOLDER,
     SCOPER_GEN_FOLDER,
     VALIDATOR_GEN_FOLDER,
-    EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER, WRITER_GEN_FOLDER, READER_GEN_FOLDER, STYLES_FOLDER
+    EDITOR_GEN_FOLDER,
+    LANGUAGE_GEN_FOLDER,
+    STDLIB_GEN_FOLDER,
+    WRITER_GEN_FOLDER,
+    READER_GEN_FOLDER,
+    INTERPRETER_FOLDER
 } from "../../../utils/";
 import { PiLanguage } from "../../metalanguage";
 
@@ -12,18 +17,18 @@ export class EnvironmentTemplate {
 
     generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
-        import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
-                    ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, LanguageEnvironment
+        import { ${Names.PiEditor}, ${Names.PiEnvironment}, ${Names.PiReader}, 
+                    ${Names.FreonTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
+                    ${Names.PiWriter}, ${Names.FreonInterpreter}, ${Names.FreScoperComposite}, LanguageEnvironment, FreProjectionHandler
                } from "${PROJECTITCORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
-        import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoperDef(language)}";
-        import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
+        import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typerDef(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
+        import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}";
         import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
         /**
@@ -52,16 +57,14 @@ export class EnvironmentTemplate {
              */  
             private constructor() {
                 const actions = new ${Names.actions(language)}();
-                const rootProjection = new ${Names.CompositeProjection}("root");
-                initializeProjections(rootProjection);
-                this.editor = new PiEditor(rootProjection, actions);
-                this.editor.rootElement = null;
-                this.editor.environment = this;
+                const myComposite = new FreProjectionHandler();
+                this.editor = new PiEditor(myComposite, this, actions);
                 initializeLanguage();
+                initializeProjections(myComposite);
                 initializeEditorDef();
-                initializeScoperDef();
+                initializeScoperDef(this.scoper);
+                initializeTypers(this.typer);
             }
-
             
             /**
              * Returns a new model with name 'modelName'.
@@ -76,14 +79,14 @@ export class EnvironmentTemplate {
                             
             // the parts of the language environment              
             editor: ${Names.PiEditor};
-            scoper: ${Names.PiScoper} = new ${Names.scoper(language)}();
-            typer: ${Names.PiTyper} = new ${Names.typer(language)}();
+            scoper: ${Names.FreScoperComposite} = new ${Names.FreScoperComposite}("main");
+            typer: ${Names.FreonTyper} = new ${Names.FreonTyper}("main"); 
             stdlib: ${Names.PiStdlib} = ${Names.stdlib(language)}.getInstance();
             validator: ${Names.PiValidator} = new ${Names.validator(language)}();
             writer: ${Names.PiWriter} = new ${Names.writer(language)}();
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
+            interpreter: ${Names.FreonInterpreter} = new ${Names.interpreterName(language)};
             languageName: string = "${language.name}";
-            unitNames: string[] = [${language.modelConcept.unitTypes().map(unit => `"${Names.classifier(unit)}"`)}];
             fileExtensions: Map<string, string> = new Map([
                 ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
             ]);

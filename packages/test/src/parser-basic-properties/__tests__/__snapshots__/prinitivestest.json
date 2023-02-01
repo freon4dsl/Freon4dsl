@@ -1,0 +1,145 @@
+{
+  "$id": "ID-14",
+  "$typename": "PrimitivesTest",
+  "_PI_prim":  {
+  "$id": "ID-8",
+  "$typename": "Prim",
+  "$$owner": [
+    Circular
+  ],
+  "primBoolean": true,
+  "primIdentifier": "EenNaam",
+  "primListBoolean": Array [
+  true,
+  false,
+  true,
+  false
+],
+"primListIdentifier": Array [
+"EenNaam",
+"NogEenNaam",
+"EnNogEen",
+],
+"primListNumber": Array [
+10,
+20,
+],
+"primListString": Array [
+"TEKST",
+"TEKST",
+],
+"primNumber": 19,
+"primString": "TEKST",
+"$$propertyIndex": undefined,
+"$$propertyName": "prim",
+},
+"_PI_primExtra": PrimsWithExtraText {
+"$id": "ID-9",
+"$typename": "PrimsWithExtraText",
+"$$owner": [Circular],
+"primBooleanWithExtra": false,
+"primIdentifierWithExtra": "EenNaam",
+"primListBooleanWithExtra": Array [
+false,
+true,
+false,
+],
+"primListIdentifierWithExtra": Array [
+"EenNaam",
+"NogEenNaam",
+"EnNogEen",
+],
+"primListNumberWithExtra": Array [
+67,
+98,
+],
+"primListStringWithExtra": Array [
+"TEKST",
+"TEXT",
+],
+"primNumberWithExtra": 45,
+"primStringWithExtra": "TEKST",
+"$$propertyIndex": undefined,
+"$$propertyName": "primExtra",
+},
+"_PI_separator": PrimsWithSeparator {
+"$id": "ID-10",
+"$typename": "PrimsWithSeparator",
+"$$owner": [Circular],
+"primListBooleanSeparator": Array [
+true,
+false,
+],
+"primListIdentifierSeparator": Array [
+"EenNaam",
+"NogEenNaam",
+"EnNogEen",
+],
+"primListNumberSeparator": Array [
+56,
+67,
+78,
+],
+"primListStringSeparator": Array [
+"iets",
+"wat",
+],
+"$$propertyIndex": undefined,
+"$$propertyName": "separator",
+},
+"_PI_separatorOpt": PrimsWithSeparator {
+"$id": "ID-12",
+"$typename": "PrimsWithSeparator",
+"$$owner": [Circular],
+"primListBooleanSeparator": Array [
+true,
+false,
+],
+"primListIdentifierSeparator": Array [],
+"primListNumberSeparator": Array [
+56,
+67,
+78,
+],
+"primListStringSeparator": Array [],
+"$$propertyIndex": undefined,
+"$$propertyName": "separatorOpt",
+},
+"_PI_terminator": PrimsWithTerminator {
+"$id": "ID-11",
+"$typename": "PrimsWithTerminator",
+"$$owner": [Circular],
+"primListBooleanTerminator": Array [
+true,
+],
+"primListIdentifierTerminator": Array [
+"EenNaam",
+],
+"primListNumberTerminator": Array [
+30,
+],
+"primListStringTerminator": Array [
+"iets",
+],
+"$$propertyIndex": undefined,
+"$$propertyName": "terminator",
+},
+"_PI_terminatorOpt": PrimsWithTerminator {
+"$id": "ID-13",
+"$typename": "PrimsWithTerminator",
+"$$owner": [Circular],
+"primListBooleanTerminator": Array [],
+"primListIdentifierTerminator": Array [
+"EenNaam",
+],
+"primListNumberTerminator": Array [],
+"primListStringTerminator": Array [
+"iets",
+],
+"$$propertyIndex": undefined,
+"$$propertyName": "terminatorOpt",
+},
+"name": "someName",
+"$$propertyIndex": undefined,
+"$$propertyName": "prim",
+}

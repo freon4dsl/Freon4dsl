@@ -1,8 +1,9 @@
 import { PiUtils } from "../../util";
 import { PiLogger } from "../../logging";
-import { Box } from "../boxes/index";
+import { Box } from "../boxes";
 import { PiAction } from "./PiAction";
-import { PiCommand, PiCreatePartCommand } from "./PiCommand";
+import { PiCommand } from "./PiCommand";
+import { PiCreatePartCommand } from "./PiCreatePartCommand";
 
 const LOGGER = new PiLogger("PiCreateElementAction");
 
@@ -23,6 +24,6 @@ export class PiCreatePartAction extends PiAction {
     }
 
     command(box: Box): PiCommand {
-        return new PiCreatePartCommand(this.propertyName, this.conceptName, Number.MAX_VALUE, this.referenceShortcut);
+        return new PiCreatePartCommand(this.propertyName, this.conceptName, this.referenceShortcut);
     }
 }

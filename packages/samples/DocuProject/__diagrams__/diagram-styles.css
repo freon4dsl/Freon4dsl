@@ -1,0 +1,14 @@
+:root {
+    font-family: Comic Sans;
+    font-size: 18px;
+    --nodeBorder: blue;
+    --nodeBkg: pink;
+    --mermaid-font-family: Comic Sans;
+}
+
+body {
+    background: white;
+}
+.nodeLabel {
+    color: darkblue !important;
+}

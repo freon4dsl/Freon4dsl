@@ -1,8 +1,9 @@
-import { BehaviorExecutionResult, MatchUtil } from "../../util";
-import { PiEditor, triggerToString } from "../internal";
+import { BehaviorExecutionResult } from "../util";
+import { PiEditor } from "../internal";
 import { AbstractChoiceBox, SelectOption, Box } from "./internal";
 import { PiElement } from "../../ast";
 
+// TODO can we rename this one? It is confusing to distinguish between the selectedBox in the editor and SelectBox instances.
 export class SelectBox extends AbstractChoiceBox {
     readonly kind = "SelectBox";
     // getOptions: () => SelectOption[];
@@ -34,9 +35,9 @@ export class SelectBox extends AbstractChoiceBox {
         this.selectOption = selectOption;
     }
 
-    getOptions(editor: PiEditor):  SelectOption[]  {
+    getOptions(editor: PiEditor): SelectOption[] {
         const matchingOptions: SelectOption[] = this.getAllOptions(editor);
-        // matchung text does noet work correct as you nmeed to know the cursor position.
+        // matching text does not work correct as you need to know the cursor position.
         // TODO filter in the component where the cursor position is known.
             // .filter(option => MatchUtil.partialMatch(this.textBox.getText(), option.label));
         return matchingOptions
@@ -48,5 +49,5 @@ export class SelectBox extends AbstractChoiceBox {
 }
 
 export function isSelectBox(b: Box): b is SelectBox {
-    return b.kind === "SelectBox"; // b instanceof SelectBox;
+    return b?.kind === "SelectBox"; // b instanceof SelectBox;
 }

@@ -1,0 +1,12 @@
+language Expressions
+
+interface IDot {
+    source: Expression;
+}
+
+expression UnaryExpression {
+    exp: Expression
+}
+expression DotExpression base UnaryExpression {
+    target: IDot
+}

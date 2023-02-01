@@ -42,7 +42,7 @@
 	import { openModelDialogVisible } from "./components/stores/DialogStore";
 	import { userMessageOpen } from "./components/stores/UserMessageStore";
 	import { languageName } from "./components/stores/LanguageStore";
-	import { currentModelName } from "./components/stores/ModelStore";
+	import {currentModelName, unsavedChanges} from "./components/stores/ModelStore";
 	import { helpDialogVisible } from "./components/stores/DialogStore";
 
 	import { serverCommunication } from "./config/WebappConfiguration";
@@ -54,9 +54,7 @@
 	// import this file to set which loggers will be active
 	import { muteLogs } from "./logging/LoggerSettings";
 	import FreonContent from "./FreonContent.svelte";
-	import StatusBar from "./components/editor-panel/StatusBar.svelte";
 	import RenameUnitDialog from "./components/dialogs/file-dialogs/RenameUnitDialog.svelte";
-	import HelpDialog from "./components/dialogs/HelpDialog.svelte";
 
 	muteLogs();
 
@@ -81,6 +79,18 @@
 		// editorEnvironment.editor.theme = lightTheme ? "light" : "dark";
 	}
 
+	/**
+	 * This function shows a dialog before the tab or browser window is closed, asking the user for confirmation
+	 * in the case that there are unsaved changes in the model.
+	 * @param event
+	 */
+	function onBeforeUnload(event) {
+		if ($unsavedChanges) {
+			event.preventDefault(); // shows the browser's confirmation dialog according to the specifications
+			event.returnValue = ''; // older browsers may not support this method and a legacy method is used in which the event handler must return a string
+		}
+	}
+
 	onMount(async () => {
 		// get list of models from server
 		await serverCommunication.loadModelList((names: string[]) => {
@@ -96,12 +106,13 @@
 	});
 </script>
 
+<svelte:window on:beforeunload={onBeforeUnload} />
 
 <TopAppBar bind:this={topAppBar} variant="standard" dense>
 	<Row>
 		<Section align="start" >
 			{#if $drawerOpen}
-				<!-- make some space for the menus, otherwise an open menu falls behind the drawer-->
+				<!-- make some space for the menus, otherwise an open menu falls behind the drawer -->
 				<div class="drawer-space-right"></div>
 			{/if}
 			<IconButton on:click={() => ($drawerOpen = !$drawerOpen)}>
@@ -147,7 +158,7 @@
 
 <AutoAdjust {topAppBar} >
 	<StatusBar />
-	<LinearProgress indeterminate closed="{!$editorProgressShown}" class="my-colored-bar"/>
+	<LinearProgress indeterminate closed={!$editorProgressShown} />
 	<div class='main-frame'>
 		<Drawer variant='dismissible' bind:open={$drawerOpen}>
 			<Header>
@@ -176,13 +187,13 @@
 <HelpDialog />
 
 <style>
-	/*.main-frame {*/
-	/*	margin: 10px;*/
-	/*}*/
-	.space-right {
+	.space-right { /* used to put some space between the menu buttons */
 		margin-right: 6px;
 	}
-	.drawer-space-right {
+	.drawer-space-right { /* used to make some space for the menus, otherwise an open menu falls behind the drawer */
 		margin-right: 220px;
+	}
+	.main-frame {
+		overflow: hidden;
 	}
 </style>

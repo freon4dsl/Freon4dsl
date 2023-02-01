@@ -2,16 +2,15 @@ import { PiElement, PiNamedElement } from "../ast";
 
 // Part of the ProjectIt Framework
 
-// tag::scoper-interface[]
 export interface PiScoper {
 
     /**
-     * Returns the element to which the 'pathname' refers. If the elment cannot be found, or if the element is
+     * Returns the element to which the 'pathname' refers. If the element cannot be found, or if the element is
      * not visible (private) from the location of 'modelelement', then null is returned.
      * If present, then the search is limited to elements which type is 'metatype'.
      *
      * @param modelelement: the containing element, where 'pathname' should be visible
-     * @param doNotSearch: the role or property name of the element that we are searching for
+     * @param doNotSearch: the property name of the element that we are searching for
      * @param pathname: the name or series of names of the element that we are searching for
      * @param metatype: the metatype of the element that we are searching for
      */
@@ -85,4 +84,3 @@ export interface PiScoper {
      */
     additionalNamespaces(element: PiElement): PiElement[];
 }
-// end::scoper-interface[]

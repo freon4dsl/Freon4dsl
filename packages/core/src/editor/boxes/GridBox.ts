@@ -1,4 +1,3 @@
-import { observable, makeObservable } from "mobx";
 import { GridCellBox } from "./GridCellBox";
 
 import { Box } from "./internal";
@@ -8,9 +7,8 @@ import { PiUtils } from "../../util";
 export type GridOrientation = "neutral" | "row" | "column";
 
 export class GridBox extends Box {
-    readonly kind = "GridBox";
+    kind = "GridBox";
     cells: GridCellBox[] = [];
-    private $children: Box[] = [];
     orientation: GridOrientation = "neutral";
 
     constructor(exp: PiElement, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
@@ -24,26 +22,22 @@ export class GridBox extends Box {
             if (!c.rowSpan) {
                 c.rowSpan = 1;
             }
+            c.parent = this;
         });
+        this.selectable = false;
         this.sortCellsAndAddChildren();
-        makeObservable<GridBox, "$children">(this, {
-            $children: observable,
-            cells: observable
-        });
     }
 
     get children(): ReadonlyArray<Box> {
-        return this.$children;
+        return this.cells;
     }
 
     // Sorting is done to make it easier to read the final HTML.
     // It also fills the `$children` property.
     private sortCellsAndAddChildren() {
         this.cells = this.cells.sort(compare);
-        this.cells.forEach(cell => {
-            this.addChild(cell);
-        });
     }
+
     numberOfColumns(): number {
         let max = 0;
         this.cells.forEach(c => (max = Math.max(max, c.column + c.columnSpan)));
@@ -54,13 +48,6 @@ export class GridBox extends Box {
         let max = 0;
         this.cells.forEach(cell => (max = Math.max(max, cell.row + cell.rowSpan)));
         return max;
-    }
-
-    private addChild(child: GridCellBox) {
-        if (!!child) {
-            this.$children.push(child);
-            child.parent = this;
-        }
     }
 }
 
@@ -75,5 +62,5 @@ function compare(a: GridCellBox, b: GridCellBox): number {
 }
 
 export function isGridBox(box: Box): box is GridBox {
-    return box.kind === "GridBox"; //  box instanceof GridBox;
+    return box?.kind === "GridBox"; //  box instanceof GridBox;
 }

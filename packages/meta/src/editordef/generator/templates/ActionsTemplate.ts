@@ -6,7 +6,7 @@ export class ActionsTemplate {
     generate(language: PiLanguage): string {
         return `
             import {
-                PiActions,
+                ${Names.PiActions},
                 PiActionsUtil,
                 PiCreateBinaryExpressionAction,
                 PiCustomAction

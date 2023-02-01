@@ -1,0 +1,81 @@
+{
+   "$typename": "Part",
+   "name": "Health",
+   "part": {
+      "$typename": "BaseProduct",
+      "name": "health1",
+      "parts": [
+         {
+            "$typename": "InsurancePart",
+            "name": "hospitalization",
+            "isApproved": true,
+            "statisticalRisk": {
+               "$typename": "PercentageLiteral",
+               "value": 70
+            },
+            "maximumPayOut": {
+               "$typename": "EuroLiteral",
+               "euros": 1500000,
+               "cents": 0
+            }
+         },
+         {
+            "$typename": "InsurancePart",
+            "name": "medicines",
+            "isApproved": true,
+            "statisticalRisk": {
+               "$typename": "PercentageLiteral",
+               "value": 70
+            },
+            "maximumPayOut": {
+               "$typename": "EuroLiteral",
+               "euros": 250000,
+               "cents": 0
+            }
+         },
+         {
+            "$typename": "InsurancePart",
+            "name": "dentist",
+            "isApproved": true,
+            "statisticalRisk": {
+               "$typename": "PercentageLiteral",
+               "value": 70
+            },
+            "maximumPayOut": {
+               "$typename": "EuroLiteral",
+               "euros": 350000,
+               "cents": 0
+            }
+         },
+         {
+            "$typename": "InsurancePart",
+            "name": "eyecare",
+            "isApproved": true,
+            "statisticalRisk": {
+               "$typename": "PercentageLiteral",
+               "value": 70
+            },
+            "maximumPayOut": {
+               "$typename": "EuroLiteral",
+               "euros": 150000,
+               "cents": 0
+            }
+         },
+         {
+            "$typename": "InsurancePart",
+            "name": "generalPractitioner",
+            "isApproved": true,
+            "statisticalRisk": {
+               "$typename": "PercentageLiteral",
+               "value": 70
+            },
+            "maximumPayOut": {
+               "$typename": "EuroLiteral",
+               "euros": 200000,
+               "cents": 0
+            }
+         }
+      ],
+      "theme": "HealthTheme"
+   }
+}

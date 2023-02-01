@@ -1,0 +1,34 @@
+@startuml
+note bottom of AbstractPointInTime
+Hello there
+end note
+skinparam fixLabelOverlapping true
+skinparam class {
+BackgroundColor #E5EEFF
+ArrowColor DarkBlue
+BorderColor DarkBlue
+BorderColor<<deprecated>> Red
+BorderColor<<deprecatedproperty>> Orange
+}
+skinparam note {
+BackgroundColor LavenderBlush
+ArrowColor DarkBlue
+BorderColor DarkViolet
+}
+'hide members
+class foo {
+Some [[{This is a tip on the field} field]] of the class
+}
+abstract class  "TimeSelector"  <<aap>> #lightgreen
+class  "BeforeNow" #lightgreen
+class  "BetweenTimeSelector"   #lightgreen
+abstract class  "AbstractPointInTime"   #lightgreen
+class  "AfterTimeSelector"   #lightgreen
+class  "BeforeTimeSelector"   #lightgreen
+ "TimeSelector"  <|--  "BetweenTimeSelector"
+ "TimeSelector"  <|--  "AfterTimeSelector"
+ "TimeSelector"  <|--  "BeforeTimeSelector"
+ "TimeSelector"  <|--  "BeforeNow"
+ "BetweenTimeSelector"  *--  "begin"  "AbstractPointInTime"
+ "BetweenTimeSelector"  *--  "end"  "AbstractPointInTime"
+@enduml

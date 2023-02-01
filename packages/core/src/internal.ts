@@ -33,4 +33,9 @@ export * from "./writer";
 // environment depends on most of the other parts
 export * from "./environment";
 
+// change manager
+export * from "./change-manager";
+
+export * from "./interpreter";
+
 

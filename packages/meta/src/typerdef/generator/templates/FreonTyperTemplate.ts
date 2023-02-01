@@ -14,7 +14,7 @@ export class FreonTyperTemplate {
         // const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
-        const typerInterfaceName: string = Names.PiTyper;
+        const typerInterfaceName: string = Names.FreonTyperPart;
         let rootType: string;
         if (!!typerdef) {
             rootType = Names.classifier(typerdef.typeRoot());
@@ -35,7 +35,8 @@ export class FreonTyperTemplate {
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
             private generatedTyper: ${defaultTyperName};
-        
+            mainTyper: ${Names.FreonTyper}; // TODO remove tmp needed
+            
             constructor() {
                 this.generatedTyper = new ${defaultTyperName}();
                 this.generatedTyper.mainTyper = this;
@@ -240,7 +241,6 @@ export class FreonTyperTemplate {
 
     generateGenIndex(language: PiLanguage): string {
         return `
-        export * from "./${Names.typer(language)}";
         export * from "./${Names.typerPart(language)}";
         `;
     }

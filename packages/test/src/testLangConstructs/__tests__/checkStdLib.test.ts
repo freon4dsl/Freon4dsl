@@ -30,7 +30,7 @@ describe("Checking stdlib for Lang Constructs", () => {
         expect(stdlib.find("tweedeB")).toBe(LimitedWithBase.tweedeB);
         expect(stdlib.find("derdeB")).toBe(LimitedWithBase.derdeB);
         expect(stdlib.find("TREE1")).toBe(LimitedWithInheritanceTree.TREE1);
-        expect(stdlib.find("TREE2")).toBe(LimitedWithInheritanceTree.TREE2);
+        expect(stdlib.find("TREE2")).toBe(LimitedWithInheritanceTree.TREE2); 
         expect(stdlib.find("THIRD")).toBe(LimitedWithInheritanceTree.THIRD);
         expect(stdlib.find("limIntf1")).toBe(LimitedWithInterface.limIntf1);
         expect(stdlib.find("limIntf2")).toBe(LimitedWithInterface.limIntf2);

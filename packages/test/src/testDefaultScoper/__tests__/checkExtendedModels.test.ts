@@ -1,9 +1,7 @@
 import { PiElementReference } from "@projectit/core";
 import { DSmodel, DSref } from "../language/gen";
-import { initializeScoperDef } from "../scoper/gen/index";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";
-import * as fs from "fs";
 import { ExtendedModelCreator } from "./ExtendedModelCreator";
 
 function print(prefix: string, visibleNames: string[]) {
@@ -31,6 +29,11 @@ describe("Testing Default Scoper", () => {
     const creator = new ExtendedModelCreator();
     const scoper = environment.scoper;
     const unparser = environment.writer;
+
+    beforeEach(done => {
+        ScoperTestEnvironment.getInstance();
+        done();
+    });
 
     test("validator messages in model with 1 unit of depth 3", () => {
         const model: DSmodel = creator.createModel(1, 3 );
@@ -77,6 +80,7 @@ describe("Testing Default Scoper", () => {
 
         // add them to the other unit
         let otherUnit = model.findUnit("unit16_OF_model");
+        console.log("otherUnit: " + otherUnit.$$propertyIndex)
         otherUnit.dsRefs.push(ref1);
         otherUnit.dsRefs.push(ref2);
         otherUnit.dsRefs.push(ref3);
@@ -94,6 +98,8 @@ describe("Testing Default Scoper", () => {
         sameUnit.dsRefs.push(ref2);
         sameUnit.dsRefs.push(ref3);
         sameUnit.dsRefs.push(ref4);
+        // the ref objects should be removed from their previous owner
+        expect(otherUnit.dsRefs.length).toBe(0);
         // try to resolve them
         expect(ref1.referred?.name).toBe("private9_OF_unit1_OF_model");
         expect(ref2.referred?.name).toBe("public2_OF_unit1_OF_model");

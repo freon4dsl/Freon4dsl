@@ -44,7 +44,17 @@
                },
                {
                   "$typename": "SetValue",
-                  "value": null,
+                  "value": {
+                     "$typename": "Plus",
+                     "left": {
+                        "$typename": "NumberLiteral",
+                        "value": "12"
+                     },
+                     "right": {
+                        "$typename": "NumberLiteral",
+                        "value": "23"
+                     }
+                  },
                   "attribute": null
                }
             ],
@@ -66,6 +76,16 @@
                   "attribute": null
                }
             ]
+         }
+      },
+      {
+         "$typename": "CheckingRule",
+         "name": "",
+         "description": "",
+         "check": {
+            "$typename": "Or",
+            "left": null,
+            "right": null
          }
       }
    ],

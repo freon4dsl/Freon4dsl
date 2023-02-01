@@ -16,13 +16,18 @@ export * from "./GridBox";
 export * from "./IndentBox";
 export * from "./LabelBox";
 export * from "./ListBox";
-export * from "./AliasBox"; // inherits from AbstractChoiceBox, is needed in OptionalBox
+export * from "./LayoutBox";
+export * from "./ActionBox";
 export * from "./OptionalBox";
 export * from "./SvgBox";
 export * from "./TextBox";
 export * from "./SelectBox";
 export * from "./BoxFactory";
 export * from "./GridCellBox";
+export * from "./ElementBox";
+export * from "./TableBox";
+export * from "./TableCellBox";
+export * from "./TableRowBox";
 
 // the following files contain export that do not depend on any other file
 export * from "./SelectOption";

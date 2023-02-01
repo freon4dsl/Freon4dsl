@@ -12,5 +12,5 @@ export class EmptyLineBox extends Box {
 }
 
 export function isEmptyLineBox(b: Box): b is EmptyLineBox {
-    return b.kind === "EmptyLineBox"; // b instanceof EmptyLineBox;
+    return b?.kind === "EmptyLineBox"; // b instanceof EmptyLineBox;
 }

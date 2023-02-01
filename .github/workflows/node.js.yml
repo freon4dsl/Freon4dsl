@@ -26,7 +26,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         # cache: 'npm'
-    - run: npm install --global yarn@1.22.4
+    - run: npm install --global yarn@1.22.19
+    - run: yarn cache clean --all
     - run: yarn install
     - run: yarn build
     - run: yarn test

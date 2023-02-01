@@ -46,7 +46,7 @@ export class CollectNamesWorker implements AstWorker {
 
     private addIfOk(elements: PiElement[]): void {
         for(const elem of elements) {
-            if(Language.getInstance().classifier(elem.piLanguageConcept()).isNamedElement && this.hasLookedForType(elem)) {
+            if(Language.getInstance().classifier(elem.piLanguageConcept())?.isNamedElement && this.hasLookedForType(elem)) {
                 this.namesList.push(elem as PiNamedElement);
             }
         }

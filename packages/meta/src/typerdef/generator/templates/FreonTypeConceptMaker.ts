@@ -32,7 +32,8 @@ export class FreonTypeConceptMaker {
                 ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
                 ${concept.implementedParts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
                               
-                ${this.makeConstructor(hasSuper)}      
+                ${this.makeConstructor(hasSuper)} 
+                ${ConceptUtils.makeCopyMethod(concept, myName, false)}     
                 
                 toPiString(writer: PiWriter): string {
                     // take into account indentation

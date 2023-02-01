@@ -5,7 +5,7 @@ export class CustomProjectionTemplate {
 
     generate(language: PiLanguage): string {
         return `
-            import { ${Names.PiProjection}, ${Names.PiCompositeProjection}, ${Names.PiElement}, ${Names.Box}, PiTableDefinition } from "${PROJECTITCORE}";
+            import { ${Names.PiElement}, ${Names.Box}, ${Names.PiProjection}, PiTableDefinition } from "${PROJECTITCORE}";
             
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to
@@ -17,25 +17,23 @@ export class CustomProjectionTemplate {
              * (3) if neither (1) nor (2) yields a result, the default is used.
              */           
             export class ${Names.customProjection(language)} implements ${Names.PiProjection} {
-                rootProjection: ${Names.PiCompositeProjection};
-                name: string = "manual";
-                isEnabled: boolean = true;
+                name: string = "Manual";
+                nodeTypeToBoxMethod: Map<string, (node: ${Names.PiElement}) => ${Names.Box}> = 
+                    new Map<string, (node: ${Names.PiElement}) => ${Names.Box}>([
+                        // register your custom box methods here
+                        // ['NAME_OF_CONCEPT', this.BOX_FOR_CONCEPT],            
+                    ]);  
+                nodeTypeToTableDefinition: Map<string, () => PiTableDefinition> =
+                    new Map<string, () => PiTableDefinition>([
+                        // register your custom table definition methods here                       
+                        // ['NAME_OF_CONCEPT', this.TABLE_DEFINITION_FOR_CONCEPT],            
+                    ]);                  
                 
-                constructor(name?: string) {
-                    if (!!name) {
-                        this.name = name;
-                    }
-                }
+                // add your custom methods here
                 
-                getBox(element: ${Names.PiElement}) : Box {
-                    // Add any handmade projections of your own before next statement 
-                    return null;
-                }            
+                // BOX_FOR_CONCEPT(node: NAME_OF_CONCEPT) : ${Names.Box} { ... }   
                 
-                getTableDefinition(conceptName: string): PiTableDefinition {
-                    // Add any handmade table cells of your own before next statement 
-                    return null;
-                }              
+                // TABLE_DEFINITION_FOR_CONCEPT() : PiTableDefinition { ... }
             }
         `;
     }

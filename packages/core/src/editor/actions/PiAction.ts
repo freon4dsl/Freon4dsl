@@ -1,13 +1,13 @@
 import { PiElement } from "../../ast";
-import { PiCaret, PiKey } from "../../util/index";
-import { Box } from "../boxes/index";
-import { isProKey, isRegExp, isString } from "../PiAction";
+import { PiCaret } from "../util/";
+import { Box } from "../boxes/";
 import { PiEditor } from "../PiEditor";
 import { PiCommand } from "./PiCommand";
+import { PiTriggerUse, PiTriggerType } from "./PiTriggers";
 
-export type PiActionTriggerType = string | RegExp | PiKey;
-export type PiActionTrigger = string | PiKey;
-export type CustomAction = (box: Box, trigger: PiActionTrigger, editor: PiEditor) => PiElement | null;
+export type CustomAction = (box: Box,
+                            trigger: PiTriggerUse,
+                            editor: PiEditor) => PiElement | null;
 export type PiPostAction = () => void;
 
 export const EMPTY_POST_ACTION = function() {};
@@ -15,31 +15,7 @@ export const EMPTY_POST_ACTION = function() {};
 export type ReferenceShortcut = {
     propertyName: string;
     conceptName: string;
-}
-
-export function triggerToString2(trigger: PiActionTrigger): string {
-    if (isString(trigger)){
-        return trigger;
-    } else if (isProKey(trigger)) {
-        return "";
-    } else {
-        console.error("triggerToString() argument is not of PiTriggerType: " + typeof(trigger));
-        return "";
-    }
-}
-
-export function triggerTypeToString(trigger: PiActionTriggerType): string {
-    if (isString(trigger)){
-        return trigger;
-    } else if (isProKey(trigger)) {
-        return "'" + trigger.keyCode + "'";
-    } else if (isRegExp(trigger)) {
-        return "/" + trigger.source + "/";
-    } else {
-        console.error("triggerToString() argument is not of PiTriggerType: " + typeof(trigger));
-        return "";
-    }
-}
+};
 
 /**
  * Abstract superclass for all actions in ProjectIt
@@ -48,7 +24,7 @@ export abstract class PiAction {
     /**
      * The trigger to activate this behavior
      */
-    trigger: PiActionTriggerType;
+    trigger: PiTriggerType;
 
     /**
      * The box roles in which this trigger is active

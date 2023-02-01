@@ -13,5 +13,3 @@ export let projectionNames:  Writable<string[]> = writable<string[]>(['default']
 // the projections that are curretnly chosen to be shown
 export let projectionsShown:  Writable<string[]> = writable<string[]>(['default']);
 
-// the concepts that can be searched for
-export let conceptNames: Writable<string[]> = writable<string[]>([]);

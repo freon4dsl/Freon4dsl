@@ -40,7 +40,7 @@ export class AstWalker {
             // walk all parts
             for (const prop of partProperties) {
                 for (const child of Language.getInstance().getPropertyValue(modelelement, prop)) {
-                    if (includeNode(child)) {
+                    if (includeNode === undefined || includeNode(child)) {
                         this.walk(child, includeNode);
                     }
                 }
@@ -52,7 +52,7 @@ export class AstWalker {
                 }
             }
         } else {
-            LOGGER.error(this, "No worker found.");
+            LOGGER.error("No worker found.");
         }
     }
 }

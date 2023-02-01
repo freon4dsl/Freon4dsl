@@ -35,12 +35,18 @@ function compareReadAndWrittenFiles(path: string) {
 describe ("Testing Typer on", () => {
     // TODO make an input file in which a number of NamedTypes are created and used
 
+    beforeEach(done => {
+        ProjectYEnvironment.getInstance();
+        done();
+    });
+
     test ("literal expressions", () => {
         const model = new XX();
         const unit1 = reader.readFromString(handler.stringFromFile(testdir + "literals.expr"), "XXunit", model) as XXunit;
         expect(unit1).not.toBeNull();
         if (!!unit1) {
             const errors: PiError[] = validator.validate(unit1);
+            console.log("ERRORS: " + errors.map(e => e.message + "\n"));
             expect(errors.length).toBe(6);
             expect(errors.find(e => e.message === "Type 'NUMBER' of [456] is not equal to STRING")).toBeTruthy();
             expect(errors.find(e => e.message === "Type 'NUMBER' of [456] is not equal to BOOLEAN")).toBeTruthy();

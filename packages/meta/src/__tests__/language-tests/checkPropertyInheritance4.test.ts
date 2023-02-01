@@ -20,9 +20,9 @@ describe("Checking property inheritance on lists", () => {
             // console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
             expect(e.message).toBe(`checking errors (3).`);
-            expect(checker.errors.includes("Property 'name1' already exists in XXX [file: prop_test1.ast, line: 14, column: 5] and [file: prop_test1.ast, line: 13, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name2' already exists in XXX [file: prop_test1.ast, line: 16, column: 5] and [file: prop_test1.ast, line: 15, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name3' already exists in XXX [file: prop_test1.ast, line: 18, column: 5] and [file: prop_test1.ast, line: 17, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'name1' already exists in XXX [file: prop_test1.ast:14:5] and [file: prop_test1.ast:13:5].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'name2' already exists in XXX [file: prop_test1.ast:16:5] and [file: prop_test1.ast:15:5].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'name3' already exists in XXX [file: prop_test1.ast:18:5] and [file: prop_test1.ast:17:5].")).toBeTruthy();
         }
     });
 
@@ -37,9 +37,9 @@ describe("Checking property inheritance on lists", () => {
             // console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
             expect(e.message).toBe(`checking errors (3).`);
-            expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast, line: 24, column: 5] and [file: prop_test2.ast, line: 18, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast, line: 25, column: 5] and [file: prop_test2.ast, line: 19, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast, line: 26, column: 5] and [file: prop_test2.ast, line: 20, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:24:5] and [file: prop_test2.ast:18:5].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:25:5] and [file: prop_test2.ast:19:5].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:26:5] and [file: prop_test2.ast:20:5].")).toBeTruthy();
         }
     });
 
@@ -51,10 +51,10 @@ describe("Checking property inheritance on lists", () => {
             // console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
             expect(e.message).toBe(`checking errors (4).`);
-            expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast, line: 34, column: 5] and [file: prop_test4.ast, line: 27, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast, line: 35, column: 5] and [file: prop_test4.ast, line: 28, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast, line: 36, column: 5] and [file: prop_test4.ast, line: 29, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast, line: 33, column: 5] and [file: prop_test4.ast, line: 26, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:34:5] and [file: prop_test4.ast:27:5].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:35:5] and [file: prop_test4.ast:28:5].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:36:5] and [file: prop_test4.ast:29:5].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:33:5] and [file: prop_test4.ast:26:5].")).toBeTruthy();
         }
     });
 });

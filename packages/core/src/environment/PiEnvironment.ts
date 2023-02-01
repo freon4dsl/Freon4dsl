@@ -1,13 +1,13 @@
 import { PiEditor } from "../editor";
+import { FreonInterpreter } from "../interpreter/index";
 import { PiValidator } from "../validator";
-import { PiScoper } from "../scoper";
-import { PiTyper } from "../typer";
+import { FreScoperComposite } from "../scoper";
+import { FreCompositeTyper } from "../typer";
 import { PiStdlib } from "../stdlib";
 import { PiWriter } from "../writer";
 import { PiReader } from "../reader";
 import { PiModel } from "../ast";
 
-// tag::environment-interface[]
 export interface PiEnvironment {
     /**
      * Creates a new model, an implementation of the language defined in the .ast file
@@ -15,17 +15,16 @@ export interface PiEnvironment {
      */
     newModel(modelName: string): PiModel;
 
-    scoper: PiScoper;
-    typer: PiTyper;
+    scoper: FreScoperComposite;
+    typer: FreCompositeTyper;
     validator: PiValidator;
     editor: PiEditor;
     stdlib: PiStdlib;
     writer: PiWriter;
     reader: PiReader;
+    interpreter: FreonInterpreter;
 
-    // projectionalEditorComponent: ProjectionalEditor;
     languageName: string;
-    unitNames: string[];
     fileExtensions: Map<string, string>;
 }
-// end::environment-interface[]
+

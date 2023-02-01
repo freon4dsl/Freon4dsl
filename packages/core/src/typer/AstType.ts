@@ -3,7 +3,6 @@ import { PiWriter } from "../writer";
 import { PiType } from "./PiType";
 import { PiParseLocation } from "../reader";
 
-
 class NamedElement implements PiNamedElement {
     name: string = "ANY";
     static environment: NamedElement;
@@ -24,7 +23,7 @@ class NamedElement implements PiNamedElement {
     private constructor() {
     }
 
-    piOwner(): PiElement {
+    piOwner(): PiElement | undefined {
         return undefined;
     }
 
@@ -56,6 +55,9 @@ class NamedElement implements PiNamedElement {
         return "NamedElement";
     }
 
+    copy(): NamedElement {
+        return this;
+    }
     match(toBeMatched: Partial<NamedElement>): boolean {
         return toBeMatched.name === this.name;
     }
@@ -92,5 +94,13 @@ export class AstType implements PiType {
 
     toAstElement(): PiElement {
         return this.astElement;
+    }
+
+    copy(): AstType {
+        const result: AstType = new AstType;
+        if (this.astElement) {
+            result.astElement = this.astElement;
+        }
+        return result;
     }
 }

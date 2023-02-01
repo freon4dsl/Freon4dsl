@@ -1,0 +1,29 @@
+{
+   "$typename": "Product",
+   "name": "products",
+   "product": {
+      "$typename": "InsuranceProduct",
+      "name": "Aansprakelijkheid",
+      "productName": "BLABLA",
+      "advertisedPremium": {
+         "$typename": "EuroLiteral",
+         "euros": 10,
+         "cents": 0
+      },
+      "riskAdjustment": null,
+      "calculation": null,
+      "helpers": [],
+      "themes": [
+         "HomeTheme",
+         ""
+      ],
+      "nrPremiumDays": "Month",
+      "parts": [
+         ""
+      ],
+      "basedOn": [
+         "",
+         ""
+      ]
+   }
+}

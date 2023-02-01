@@ -37,32 +37,32 @@ Parameter {
 }
 
 OrExpression {
-    typecheck equalsType( self.left, AttributeType:Boolean );
-    typecheck equalsType( self.right, AttributeType:Boolean );
+    typecheck equalsType( self.left, PrimitiveType:Boolean );
+    typecheck equalsType( self.right, PrimitiveType:Boolean );
 }
 AbsExpression {
-    typecheck equalsType( self.expr, AttributeType:Integer );
+    typecheck equalsType( self.expr, PrimitiveType:Integer );
 }
 
 MultiplyExpression {
-    typecheck equalsType( self.left, AttributeType:Integer );
-    typecheck equalsType( self.right, AttributeType:Integer );
+    typecheck equalsType( self.left, PrimitiveType:Integer );
+    typecheck equalsType( self.right, PrimitiveType:Integer );
 }
 
 PlusExpression {
-    typecheck equalsType( self.left, AttributeType:Integer );
-    typecheck equalsType( self.right, AttributeType:Integer );
+    typecheck equalsType( self.left, PrimitiveType:Integer );
+    typecheck equalsType( self.right, PrimitiveType:Integer );
     typecheck conformsTo( self.left, self.right );
 }
 
 DivideExpression {
-    typecheck equalsType( self.left, AttributeType:Integer );
-    typecheck equalsType( self.right, AttributeType:Integer );
+    typecheck equalsType( self.left, PrimitiveType:Integer );
+    typecheck equalsType( self.right, PrimitiveType:Integer );
 }
 
 AndExpression {
-    typecheck equalsType( self.left, AttributeType:Boolean );
-    typecheck equalsType( self.right, AttributeType:Boolean );
+    typecheck equalsType( self.left, PrimitiveType:Boolean );
+    typecheck equalsType( self.right, PrimitiveType:Boolean );
 }
 
 ComparisonExpression {
@@ -70,7 +70,7 @@ ComparisonExpression {
 }
 
 IfExpression {
-    typecheck equalsType( self.condition, AttributeType:Boolean );
+    typecheck equalsType( self.condition, PrimitiveType:Boolean );
     typecheck conformsTo( self.whenTrue, self.whenFalse );
 }
 

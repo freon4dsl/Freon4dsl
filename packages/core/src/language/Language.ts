@@ -1,10 +1,12 @@
 import { ReferenceShortcut } from "../editor";
-import { PiElement, PiModel, PiModelUnit } from "../ast";
+import { PiElement, PiModel, PiModelUnit, PiNamedElement } from "../ast";
 import { isNullOrUndefined } from "../util";
 import { PiLogger } from "../logging";
 const LOGGER = new PiLogger("Language");
 
 export type PropertyKind = "primitive" | "part" | "reference";
+
+export type PrimType = string | boolean | number;
 
 export type Property = {
     name: string;
@@ -58,10 +60,10 @@ export type Interface = {
 export type Classifier = Model | ModelUnit | Concept | Interface;
 
 export class Language {
-    private static theInstance: Language = null;
+    private static theInstance: Language;
 
     static getInstance() {
-        if (Language.theInstance === null) {
+        if (Language.theInstance === undefined) {
             Language.theInstance = new Language();
         }
         return Language.theInstance;
@@ -88,20 +90,20 @@ export class Language {
         }
     }
 
-    unit(typeName: string): ModelUnit {
+    unit(typeName: string): ModelUnit | undefined {
         return this.units.get(typeName);
     }
 
-    concept(typeName: string): Concept {
+    concept(typeName: string): Concept | undefined {
         // console.log("Language find concept " + typeName);
         return this.concepts.get(typeName);
     }
 
-    interface(typeName: string): Interface {
+    interface(typeName: string): Interface | undefined {
         return this.interfaces.get(typeName);
     }
 
-    classifier(typeName: string): Classifier {
+    classifier(typeName: string): Classifier | undefined {
         let concept1 = this.concepts.get(typeName);
         if (!!concept1) {
             return concept1;
@@ -121,24 +123,24 @@ export class Language {
                 }
             }
         }
-        console.log("RETURNING NULL FOR " + typeName)
-        return null;
+        // console.log("RETURNING NULL FOR " + typeName)
+        return undefined;
     }
 
-    conceptProperty(typeName: string, propertyName: string): Property {
+    conceptProperty(typeName: string, propertyName: string): Property | undefined {
         // LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
-        return this.concepts.get(typeName).properties.get(propertyName);
+        return this.concepts.get(typeName)?.properties.get(propertyName);
     }
 
-    unitProperty(typeName: string, propertyName: string): Property {
-        return this.units.get(typeName).properties.get(propertyName);
+    unitProperty(typeName: string, propertyName: string): Property | undefined {
+        return this.units.get(typeName)?.properties.get(propertyName);
     }
 
-    interfaceProperty(typeName: string, propertyName: string): Property {
-        return this.interfaces.get(typeName).properties.get(propertyName);
+    interfaceProperty(typeName: string, propertyName: string): Property | undefined {
+        return this.interfaces.get(typeName)?.properties.get(propertyName);
     }
 
-    classifierProperty(typeName: string, propertyName: string): Property {
+    classifierProperty(typeName: string, propertyName: string): Property | undefined {
         // LOGGER.log("CLASSIFIERPROPERTY " + typeName + "." + propertyName);
         let concept1 = this.concepts.get(typeName);
         if (!!concept1) {
@@ -159,12 +161,12 @@ export class Language {
                 }
             }
         }
-        return null;
+        return undefined;
     }
 
-    allConceptProperties(typeName: string): IterableIterator<Property> {
+    allConceptProperties(typeName: string): IterableIterator<Property> | undefined {
         // console.log("Looking up properties for "+ typeName);
-        let myType: Concept | ModelUnit = this.concept(typeName);
+        let myType: Concept | ModelUnit | undefined = this.concept(typeName);
         if (isNullOrUndefined(myType)) {
             myType = this.unit(typeName);
         }
@@ -177,7 +179,7 @@ export class Language {
      * @param ptype
      */
     public getPropertiesOfKind(typename: string, ptype: PropertyKind): Property[]  {
-        let classifier: Classifier = Language.getInstance().classifier(typename);
+        let classifier: Classifier | undefined = Language.getInstance().classifier(typename);
         const foundProperties: Property[] = [];
         if (!!classifier) {
             for (const prop of classifier.properties.values()) {
@@ -207,20 +209,49 @@ export class Language {
             }
         }
     }
+
+    /**
+     * Return all named concept in the language.
+     */
+    public getNamedConcepts(): string[] {
+        return Array.from(this.concepts.values()).filter( concept => concept.isNamedElement).map(concept => concept.typeName);
+    }
+
+    /**
+     * Return all named interfaces in the language.
+     */
+    public getNamedInterfaces(): string[] {
+        return Array.from(this.interfaces.values()).filter( intfc => intfc.isNamedElement).map(intfc => intfc.typeName);
+    }
+
+    /**
+     * Return all named concepts and interfaces in the language.
+     */
+    public getNamedElements(): string[] {
+        return this.getNamedConcepts().concat(this.getNamedInterfaces());
+    }
+
+    /**
+     * Return the names of all model unit types.
+     */
+    public getUnitNames(): string[] {
+        return Array.from(this.units.values()).map(unit => unit.typeName);
+    }
+
     createModel(): PiModel {
         return this.pmodel?.constructor();
     }
 
-    createUnit(typeName: string): PiModelUnit {
-        return this.units.get(typeName).constructor();
+    createUnit(typeName: string): PiModelUnit | undefined {
+        return this.units.get(typeName)?.constructor();
     }
 
     /**
      * Create a new instance of the class `typeName`.
      * @param typeName
      */
-    createConceptOrUnit(typeName: string): PiElement {
-        let myType: Concept | ModelUnit = this.concept(typeName);
+    createConceptOrUnit(typeName: string): PiElement | undefined {
+        let myType: Concept | ModelUnit | undefined = this.concept(typeName);
         if (isNullOrUndefined(myType)) {
             myType = this.unit(typeName);
         }
@@ -295,4 +326,30 @@ export class Language {
         }
         return false;
     }
+
+    // TODO moved from PiCompositeProjection to Language.ts. Still needed???
+    // private checkSuper(nameOfSuper: string, elementName: string ): boolean {
+    //     // find the names of the subclasses of 'nameOfSuper'
+    //     const myConcept = Language.getInstance().concept(nameOfSuper);
+    //     let names: string[] | undefined ;
+    //     if (!!myConcept) {
+    //         names = myConcept.subConceptNames;
+    //     } else {
+    //         names = Language.getInstance().interface(nameOfSuper)?.subConceptNames;
+    //     }
+    //     // now search the names for 'elementName'
+    //     let result: boolean = false;
+    //     if (!!names && names.length > 0) {
+    //         result = names.includes(elementName);
+    //         // NB Below not needed, as subconcepts includes _all_ subconcepts already.
+    //         // if (!result) { // do recursive
+    //         //     myConcept.subConceptNames.forEach(n => {
+    //         //         if (this.checkSuper(n, elementName)) { // to avoid overwriting 'result' with next element
+    //         //             result = true;
+    //         //         }
+    //         //     });
+    //         // }
+    //     }
+    //     return result;
+    // }
 }

@@ -18,4 +18,6 @@ export interface PiType {
      * @param writer The writer to use for the rendering of AST elements
      */
     toPiString(writer: PiWriter): string;
+
+    copy(): PiType;
 }

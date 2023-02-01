@@ -1,0 +1,85 @@
+typer
+
+// for now: first is considered to be the root of the type hierarchy
+istype {  BaseType }
+
+hastype { Expression }
+
+anytype {
+    conformsto PrimitiveType:ANY;
+    equalsto PrimitiveType:ANY;
+}
+
+StringLiteralExpression {
+    infertype PrimitiveType:String;
+}
+
+NumberLiteralExpression {
+    infertype PrimitiveType:Integer;
+}
+BooleanLiteralExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+AbsExpression {
+    infertype self.expr;
+}
+
+OrExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+AndExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+MultiplyExpression {
+    infertype self.left;
+}
+
+PlusExpression {
+    infertype self.left;
+//    infertype self.left == PrimitiveType:Number && self.right == PrimitiveType:Number then self.left == PrimitiveType:Number ;
+//    infertype self.left == PrimitiveType:String && self.right == PrimitiveType:String then self.left == PrimitiveType:String ;
+}
+
+DivideExpression {
+    infertype self.left;
+}
+
+ComparisonExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+IfExpression    {
+    infertype self.whenTrue;
+}
+
+SumExpression {
+    infertype PrimitiveType:Integer;
+}
+
+GroupedExpression {
+    infertype self.inner;
+}
+
+LoopVariableRef {
+    // TODO this rule should be different
+    infertype PrimitiveType:Integer;
+}
+
+LessThenExpression {
+    infertype PrimitiveType:Boolean;
+}
+GreaterThenExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+EqualsExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+// TODO add LoopVariableRef
+/*
+
+*/

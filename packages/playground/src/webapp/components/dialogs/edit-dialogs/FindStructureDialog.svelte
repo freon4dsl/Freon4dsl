@@ -7,7 +7,7 @@
 	<Title id="event-title">Search for a structure</Title>
 	<Content id="event-content">
 		<div>
-			{#each $conceptNames as name}
+			{#each Language.getInstance().getNamedElements() as name}
 				<FormField>
 					<Radio
 							bind:group={metatypeSelected}
@@ -36,14 +36,13 @@
 </Dialog>
 
 <script lang="ts">
+	import { Language } from "@projectit/core";
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import Radio from '@smui/radio';
 	import Card from '@smui/card';
 	import FormField from '@smui/form-field';
 	import Button, { Label } from '@smui/button';
 	import { findStructureDialogVisible } from "../../stores/DialogStore";
-
-	import { conceptNames } from "../../stores/LanguageStore";
 
 	const initialMessage: string = "Please select an element type.";
 	let metatypeSelected: string = "";

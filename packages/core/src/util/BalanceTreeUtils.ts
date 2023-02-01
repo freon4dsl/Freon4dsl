@@ -1,9 +1,9 @@
 import { action, makeObservable } from "mobx";
 import { PiUtils } from "./internal";
-import { PiLogger } from "../logging";
 import { Box, PiEditor } from "../editor";
 import { PiBinaryExpression, PiElement, PiExpression } from "../ast";
 import { isPiBinaryExpression, isPiExpression } from "../ast-utils";
+import { PiLogger } from "../logging";
 
 // reserved role names for expressions, use with care.
 export const PI_BINARY_EXPRESSION_LEFT = "PiBinaryExpression-left";
@@ -124,7 +124,7 @@ class BTree {
                 this.balanceTree(newBinExp, editor);
                 break;
             case BEFORE_BINARY_OPERATOR:
-                PiUtils.CHECK(isPiBinaryExpression(exp), "Operator alias only allowed in binary operator");
+                PiUtils.CHECK(isPiBinaryExpression(exp), "Operator action only allowed in binary operator");
                 selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_RIGHT };
                 const left = (exp as PiBinaryExpression).piLeft();
                 (exp as PiBinaryExpression).piSetLeft(newBinExp);
@@ -133,7 +133,7 @@ class BTree {
                 this.balanceTree(newBinExp, editor);
                 break;
             case AFTER_BINARY_OPERATOR:
-                PiUtils.CHECK(isPiBinaryExpression(exp), "Operator alias only allowed in binary operator");
+                PiUtils.CHECK(isPiBinaryExpression(exp), "Operator action only allowed in binary operator");
                 selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
                 const right = (exp as PiBinaryExpression).piRight();
                 (exp as PiBinaryExpression).piSetRight(newBinExp);
@@ -158,9 +158,9 @@ class BTree {
             LOGGER.log("Rule 1: prio parent <= prio left");
             if (binaryExp.piPriority() > left.piPriority()) {
                 const leftRight = left.piRight();
+                PiUtils.setContainer(left, ownerDescriptor, editor);
                 left.piSetRight(binaryExp);
                 binaryExp.piSetLeft(leftRight);
-                PiUtils.setContainer(left, ownerDescriptor, editor);
                 this.balanceTree(binaryExp, editor);
                 return;
             }
@@ -170,9 +170,9 @@ class BTree {
             LOGGER.log("Rule 2: prio parent < prio right");
             if (binaryExp.piPriority() >= right.piPriority()) {
                 const rightLeft = right.piLeft();
+                PiUtils.setContainer(right, ownerDescriptor, editor);
                 right.piSetLeft(binaryExp);
                 binaryExp.piSetRight(rightLeft);
-                PiUtils.setContainer(right, ownerDescriptor, editor);
                 this.balanceTree(binaryExp, editor);
                 return;
             }
@@ -184,9 +184,9 @@ class BTree {
                 if (binaryExp.piPriority() < parent.piPriority()) {
                     const parentProContainer = parent.piOwnerDescriptor();
                     const expRight = binaryExp.piRight();
+                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
                     binaryExp.piSetRight(parent);
                     parent.piSetLeft(expRight);
-                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
                     this.balanceTree(binaryExp, editor);
                     return;
                 }
@@ -196,9 +196,9 @@ class BTree {
                 if (binaryExp.piPriority() <= parent.piPriority()) {
                     const parentProContainer = parent.piOwnerDescriptor();
                     const expLeft = binaryExp.piLeft();
+                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
                     binaryExp.piSetLeft(parent);
                     parent.piSetRight(expLeft);
-                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
                     this.balanceTree(binaryExp, editor);
                     return;
                 }

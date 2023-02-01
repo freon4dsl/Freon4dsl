@@ -16,6 +16,11 @@ export class PiLanguage extends PiLangElement {
         super();
     }
 
+    classifiers(): PiClassifier[] {
+        const result: PiClassifier[] = this.concepts;
+        return result.concat(this.interfaces).concat(this.units);
+    }
+
     conceptsAndInterfaces(): PiClassifier[] {
         const result: PiClassifier[] = this.concepts;
         return result.concat(this.interfaces);

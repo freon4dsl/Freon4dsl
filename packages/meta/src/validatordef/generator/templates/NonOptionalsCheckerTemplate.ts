@@ -81,7 +81,7 @@ export class NonOptionalsCheckerTemplate {
 
                 result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ${additionalStringCheck? additionalStringCheck : ""}) {
                     hasFatalError = true;
-                    this.errorList.push(new PiError("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, PiErrorSeverity.Error));
+                    this.errorList.push(new PiError("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, '${prop.name}', PiErrorSeverity.Error));
                 }
                 `;
             }

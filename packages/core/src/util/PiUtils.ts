@@ -1,16 +1,14 @@
 import { runInAction } from "mobx";
 import { PiLogger } from "../logging";
-// the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
-// import { PiKey } from "./Keys";
-import { Box, isProKey, PI_NULL_COMMAND, PiActionTrigger, PiCommand, PiEditor } from "../editor";
+import { Box, PiEditor } from "../editor";
 import { PiOwnerDescriptor, PiElement, PiExpression } from "../ast";
 import { isPiExpression } from "../ast-utils";
 
-export type BooleanCallback = () => boolean;
-export type DynamicBoolean = BooleanCallback | boolean;
+// export type BooleanCallback = () => boolean;
+// export type DynamicBoolean = BooleanCallback | boolean;
 
-export const wait = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-export const NBSP: string = "".concat("\u00A0");
+// export const wait = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// export const NBSP: string = "".concat("\u00A0");
 
 let LATEST_ID = 0;
 
@@ -72,42 +70,15 @@ export class PiUtils {
             PiUtils.setContainer(newExpression, oldExpression.piOwnerDescriptor(), editor);
         });
     }
-
-    // TODO refactor this into an InternalBehavior class, like other behaviors.
-    /**
-     * Check whether `piKey` is a defined keyboard-shortcut for `box`.
-     * If so execute the corresponding keyboard-shortcut action and return true.
-     * Else return false.
-     * @param piKey
-     * @param box
-     * @param editor
-     */
-    static findKeyboardShortcutCommand(piKey: PiActionTrigger, box: Box, editor: PiEditor): PiCommand {
-        LOGGER.log("Enyter findKeyboardShortcutCommand for box " + box.role + " kind " + box.kind + " for key " + JSON.stringify(piKey));
-        for (const act of editor.new_pi_actions) {
-            if (isProKey(act.trigger) && isProKey(piKey)) {
-                LOGGER.log("findKeyboardShortcutCommand for box " + box.role + " kind " + box.kind + " with activeroles: " + act.activeInBoxRoles);
-                if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
-                    if (act.activeInBoxRoles.includes(box.role)) {
-                        LOGGER.log("findKeyboardShortcutCommand: executing keyboard action");
-                        return act.command(box);
-                    } else {
-                        LOGGER.log("findKeyboardShortcutCommand: Keyboard action does not include role " + box.role);
-                    }
-                }
-            }
-        }
-        return PI_NULL_COMMAND;
-    }
 }
 
 export function isNullOrUndefined(obj: Object | null | undefined): obj is null | undefined {
     return obj === undefined || obj === null;
 }
 
-export function getRoot(box: Box): Box {
-    if (!!box.parent) {
-        return getRoot(box.parent);
+export function startWithUpperCase(word: string): string {
+    if (!!word) {
+        return word[0].toUpperCase() + word.substring(1);
     }
-    return box;
+    return "";
 }

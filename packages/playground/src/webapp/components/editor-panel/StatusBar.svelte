@@ -2,7 +2,7 @@
 
 <script lang="ts">
     import { Box, isTextBox } from "@projectit/core";
-    import { autorun } from "mobx";
+	import { selectedBoxes } from "@projectit/core-svelte";
     import { editorEnvironment } from "../../config/WebappConfiguration";
     import { currentModelName, currentUnitName } from "../stores/ModelStore";
     import { modelErrors } from "../stores/InfoPanelStore";
@@ -12,10 +12,7 @@
     import IconButton from "@smui/button";
 
     let currentBox: Box = null;
-
-    autorun(() => {
-        currentBox = editorEnvironment.editor.selectedBox;
-    });
+	$: currentBox = $selectedBoxes[0];
 </script>
 
 <span class="status-bar">
@@ -49,13 +46,13 @@
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		kind: {currentBox?.kind} 
+		kind: {currentBox?.kind}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon component={Svg} viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		elem: {currentBox?.element?.piId()} - {currentBox?.element?.piLanguageConcept()} 
+		elem: {currentBox?.element?.piId()} - {currentBox?.element?.piLanguageConcept()}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon component={Svg} viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>

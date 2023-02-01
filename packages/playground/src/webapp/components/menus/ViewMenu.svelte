@@ -86,11 +86,9 @@
         allProjections.forEach(proj => {
             if (proj.selected) {
                 selection.push(proj.name);
-                EditorRequestsHandler.getInstance().enableProjection(proj.name);
-            } else {
-                EditorRequestsHandler.getInstance().disableProjection(proj.name);
             }
         });
+        EditorRequestsHandler.getInstance().enableProjections(selection);
         $projectionsShown = selection;
     }
 </script>

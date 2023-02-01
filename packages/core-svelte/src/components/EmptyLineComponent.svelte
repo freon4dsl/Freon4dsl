@@ -1,10 +1,15 @@
 <script lang="ts">
-    import { EmptyLineBox, type PiEditor } from "@projectit/core";
+    /**
+     * This component shows an empty line in the projection.
+     */
+    import type { EmptyLineBox } from "@projectit/core";
+    import { componentId } from "./svelte-utils";
 
     export let box: EmptyLineBox;
-    export let editor: PiEditor;
+    let id: string = !!box ? componentId(box) : 'emptyline-for-unknown-box';
 </script>
 
-<span>
+<span id="{id}" >
     <br>
 </span>
+

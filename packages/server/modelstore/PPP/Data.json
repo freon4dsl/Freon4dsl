@@ -1,0 +1,13 @@
+{
+   "$typename": "Data",
+   "name": "Data",
+   "entities": [],
+   "functions": [
+      {
+         "$typename": "RFunction",
+         "name": "max",
+         "parameters": [],
+         "body": null
+      }
+   ]
+}

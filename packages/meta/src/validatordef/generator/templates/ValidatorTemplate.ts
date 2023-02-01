@@ -5,7 +5,7 @@ import { PiValidatorDef } from "../../metalanguage";
 export class ValidatorTemplate {
     errorClassName: string = Names.PiError;
     validatorInterfaceName: string = Names.PiValidator;
-    typerInterfaceName: string = Names.PiTyper;
+    typerInterfaceName: string = Names.FreonTyper;
 
     generateValidator(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
         const doValidDef = validdef !== null && validdef !== undefined;

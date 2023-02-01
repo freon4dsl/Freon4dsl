@@ -98,8 +98,8 @@
         resetVariables();
     }
 
-    const handleKeydown = (event) => {
-        switch (event.keyCode) {
+    const handleKeydown = (event: KeyboardEvent) => {
+        switch (event.key) {
             case Keys.ENTER: { // on Enter key try to submit
                 event.stopPropagation();
                 event.preventDefault();

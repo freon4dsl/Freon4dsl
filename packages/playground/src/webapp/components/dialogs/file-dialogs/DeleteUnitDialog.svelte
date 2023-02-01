@@ -25,7 +25,8 @@
 	import { deleteUnitDialogVisible } from "../../stores/DialogStore";
 	import { toBeDeleted } from "../../stores/ModelStore";
 	import { EditorState } from "../../../language/EditorState";
-	import { setUserMessage, SeverityType } from "../../stores/UserMessageStore";
+	import { setUserMessage } from "../../stores/UserMessageStore";
+	import { SeverityType } from "@projectit/core";
 
 	const cancelStr: string = "cancel";
 	const submitStr: string = "submit";

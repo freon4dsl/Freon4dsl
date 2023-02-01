@@ -15,7 +15,7 @@ describe("Checking language parser on syntax errors", () => {
             // console.log(e.message);
             expect(e.message).toBe(`syntax error: SyntaxError: Expected variable but "{" found.`
                 + " \n                "
-                +`[file: test1.ast, line: 2, column: 8]`);
+                +`[file: test1.ast:2:8]`);
         }
     });
 
@@ -26,7 +26,7 @@ describe("Checking language parser on syntax errors", () => {
         } catch (e) {
             expect(e.message).toBe(`syntax error: SyntaxError: Expected required whitespace but "." found.`
                 + " \n                "
-                +`[file: test2.ast, line: 1, column: 14]`);
+                +`[file: test2.ast:1:14]`);
         }
     });
 
@@ -37,7 +37,7 @@ describe("Checking language parser on syntax errors", () => {
         } catch (e) {
             expect(e.message).toBe(`syntax error: SyntaxError: Expected ":" or "?" but "[" found.`
                 + " \n                "
-                +`[file: test3.ast, line: 10, column: 22]`);
+                +`[file: test3.ast:10:22]`);
         }
     });
 
@@ -48,7 +48,7 @@ describe("Checking language parser on syntax errors", () => {
         } catch (e) {
             expect(e.message).toBe(`syntax error: SyntaxError: Expected "private", "reference", "}", or variable but "=" found.`
                 + " \n                "
-                +`[file: test5.ast, line: 12, column: 5]`);
+                +`[file: test5.ast:12:5]`);
         }
     });
 
@@ -59,7 +59,7 @@ describe("Checking language parser on syntax errors", () => {
         } catch (e) {
             expect(e.message).toBe(`syntax error: SyntaxError: Expected ";", "=", or "[]" but "p" found.`
                 + " \n                "
-                +`[file: test6.ast, line: 11, column: 5]`);
+                +`[file: test6.ast:11:5]`);
         }
     });
 
@@ -70,7 +70,7 @@ describe("Checking language parser on syntax errors", () => {
         } catch (e) {
             expect(e.message).toBe(`syntax error: SyntaxError: Expected ":" but "?" found.`
                 + " \n                "
-                +`[file: test7.ast, line: 10, column: 10]`);
+                +`[file: test7.ast:10:10]`);
         }
     });
 
@@ -81,7 +81,7 @@ describe("Checking language parser on syntax errors", () => {
         } catch (e) {
             expect(e.message).toBe(`syntax error: SyntaxError: Expected "implements" or "{" but "," found.`
                 + " \n                "
-                +`[file: test8.ast, line: 9, column: 23]`);
+                +`[file: test8.ast:9:23]`);
         }
     });
 
@@ -92,7 +92,7 @@ describe("Checking language parser on syntax errors", () => {
         } catch (e) {
             expect(e.message).toBe(`syntax error: SyntaxError: Expected "base" or "{" but "i" found.`
                 + " \n                "
-                +`[file: test9.ast, line: 9, column: 16]`);
+                +`[file: test9.ast:9:16]`);
         }
     });
 
@@ -103,7 +103,7 @@ describe("Checking language parser on syntax errors", () => {
         } catch (e) {
             expect(e.message).toBe(`syntax error: SyntaxError: Expected "\\"" or variable but "}" found.`
                 + " \n                "
-                +`[file: test10.ast, line: 11, column: 21]`);
+                +`[file: test10.ast:11:21]`);
         }
     });
 

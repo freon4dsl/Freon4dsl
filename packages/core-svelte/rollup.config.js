@@ -37,6 +37,7 @@ export default {
 				'mobx': 'mobx',
 				'svelte/internal': 'svelte/internal',
 				'svelte/store': 'svelte/store',
+				'svelte/animate': 'svelte/animate',
 				'svelte': 'svelte'
 			}
 		},
@@ -50,6 +51,7 @@ export default {
 				'mobx': 'mobx',
 				'svelte/internal': 'svelte/internal',
 				'svelte/store': 'svelte/store',
+				'svelte/animate': 'svelte/animate',
 				'svelte': 'svelte',
 				"tslib": "tslib"
 			}

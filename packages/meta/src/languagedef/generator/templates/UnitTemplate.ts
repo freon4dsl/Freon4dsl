@@ -1,6 +1,7 @@
 import { Names } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
 import { PiUnitDescription } from "../../metalanguage/PiLanguage";
+import { ClassifierUtil } from "./ClassifierUtil";
 
 export class UnitTemplate {
     // the following template is based on assumptions about a 'unit'
@@ -16,7 +17,7 @@ export class UnitTemplate {
         const extendsClass = "MobxModelElementImpl";
         const hasReferences = unitDescription.references().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
-        const coreImports = this.findMobxImports(unitDescription)
+        const coreImports = ClassifierUtil.findMobxImports(unitDescription)
             .concat(["PiModelUnit", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"])
             .concat(hasReferences ? (Names.PiElementReference) : null);
         const metaType = Names.metaType(language);
@@ -42,6 +43,7 @@ export class UnitTemplate {
             
                 ${ConceptUtils.makeConstructor(false, unitDescription.allProperties())}
                 ${ConceptUtils.makeBasicMethods(false, metaType,false, true,false, false)} 
+                ${ConceptUtils.makeCopyMethod(unitDescription, myName, false)}
                 ${ConceptUtils.makeMatchMethod(false, unitDescription, myName)}               
             }
             `;
@@ -59,15 +61,5 @@ export class UnitTemplate {
         );
     }
 
-    private findMobxImports(unitDescription: PiUnitDescription): string[] {
-        const mobxImports: string[] = [];
-        mobxImports.push("MobxModelElementImpl");
-        if (unitDescription.properties.some(part => part.isList && !part.isPrimitive)) {
-            mobxImports.push("observablelistpart");
-        }
-        if (unitDescription.properties.some(part => !part.isList && !part.isPrimitive)) {
-            mobxImports.push("observablepart");
-        }
-        return mobxImports;
-    }
+
 }

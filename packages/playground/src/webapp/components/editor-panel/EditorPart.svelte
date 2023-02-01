@@ -14,13 +14,13 @@
     import { ProjectItComponent } from "@projectit/core-svelte";
     import { editorEnvironment } from "../../config/WebappConfiguration";
     import { noUnitAvailable } from "../stores/ModelStore";
-    // TODO check the height of all elements so that scrollbars are shown correctly
 </script>
 
 <style>
     .editor-part {
         height: 100%;
-        margin-top: 10px;
+        box-sizing: border-box;
+        padding:  0px 4px 4px 4px; /* top padding is 0 because the progress indicator uses 4px height */
     }
     .message {
         margin: 30px;
