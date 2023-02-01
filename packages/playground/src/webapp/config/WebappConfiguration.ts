@@ -6,8 +6,8 @@ import { ServerCommunication } from "../server/ServerCommunication";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { RulesLanguageEnvironment } from "../../RulesLanguage/config/gen/RulesLanguageEnvironment";
-export const editorEnvironment: FreEnvironment = RulesLanguageEnvironment.getInstance();
+import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
+export const editorEnvironment: FreEnvironment = ExampleEnvironment.getInstance();
 LanguageInitializer.initialize();
 
 /**

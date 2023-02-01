@@ -151,7 +151,7 @@ export class EditorDefTemplate {
         // template starts here
         return `import { ${coreImports.join(", ")} } from "${PROJECTITCORE}";
         
-            import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
+            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
             import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";         
             import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";  
     
@@ -168,7 +168,7 @@ export class EditorDefTemplate {
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group =>
                     `${handlerVarName}.addProjection("${Names.projection(group)}")`
                 ).join(";\n")}
-                for (const p of projectitConfiguration.customProjection) {
+                for (const p of freonConfiguration.customProjection) {
                     ${handlerVarName}.addCustomProjection(p);
                 }
                 handler.initConceptToPropertyProjection(map);

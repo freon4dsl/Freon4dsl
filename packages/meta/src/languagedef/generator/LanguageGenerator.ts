@@ -120,10 +120,10 @@ export class LanguageGenerator {
         const internalIndexFile = FileUtil.pretty(languageIndexTemplate.generateInternal(language), "Language Index", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/internal.ts`, internalIndexFile);
 
-        // Generate projectit configuration if it isn't there
-        LOGGER.log(`Generating Freon Configuration: ${this.configurationFolder}/${Names.configuration()}.ts`);
+        // Generate Freon configuration if it isn't there
+        LOGGER.log(`Generating Freon Configuration: ${this.configurationFolder}/${Names.configuration}.ts`);
         const configurationFile = FileUtil.pretty(configurationTemplate.generate(language, relativePath), "Configuration", generationStatus);
-        FileUtil.generateManualFile(`${this.configurationFolder}/${Names.configuration()}.ts`, configurationFile, "Configuration");
+        FileUtil.generateManualFile(`${this.configurationFolder}/${Names.configuration}.ts`, configurationFile, "Configuration");
 
         // set relative path to an extra level to get the imports right
         relativePath = "../../";
@@ -201,11 +201,11 @@ export class LanguageGenerator {
         FileUtil.deleteDirIfEmpty(this.utilsFolder);
         FileUtil.deleteDirIfEmpty(this.stdlibFolder);
         if (force) {
-            FileUtil.deleteFile(`${this.configurationFolder}/${Names.configuration()}.ts`);
+            FileUtil.deleteFile(`${this.configurationFolder}/${Names.configuration}.ts`);
             FileUtil.deleteDirIfEmpty(this.configurationFolder);
         } else {
             // do not delete the following files, because these may contain user edits
-            LOG2USER.info(`Not removed: ${this.configurationFolder}/${Names.configuration()}.ts`);
+            LOG2USER.info(`Not removed: ${this.configurationFolder}/${Names.configuration}.ts`);
         }
     }
 }

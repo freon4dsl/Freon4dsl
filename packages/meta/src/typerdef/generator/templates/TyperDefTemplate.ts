@@ -8,14 +8,14 @@ export class TyperDefTemplate {
         return `import { FreCompositeTyper } from "${PROJECTITCORE}";
         
             import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}";     
-            import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
+            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
     
             /**
              * Adds all known type- providers the root typer.
              * @param rootTyper
              */
             export function initializeTypers(rootTyper: FreCompositeTyper) {
-                for (const p of projectitConfiguration.customTypers) {
+                for (const p of freonConfiguration.customTypers) {
                     rootTyper.appendTyper(p);
                 }
                 rootTyper.appendTyper(new ${Names.typerPart(language)}());

@@ -20,7 +20,7 @@ export class StdlibTemplate {
         import { ${Names.metaType(language)}, 
                     ${this.limitedConceptNames.map(name => `${name}`).join(", ") } 
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
+        import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
         import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";
 
         /**
@@ -50,7 +50,7 @@ export class StdlibTemplate {
              */          
             private constructor() {
                 ${this.constructorText}
-                for (const lib of projectitConfiguration.customStdLibs) {
+                for (const lib of freonConfiguration.customStdLibs) {
                     ListUtil.addAllIfNotPresent<${Names.FreNamedNode}>(this.elements, lib.elements);
                 }
             }  

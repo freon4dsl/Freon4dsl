@@ -9,7 +9,7 @@ import { FreLanguage } from "../../metalanguage";
 export class ConfigurationTemplate {
 
     generate(language: FreLanguage, relativePath: string): string {
-        const configurationName = Names.configuration();
+        const configurationName = Names.configuration;
         const workerName = Names.checkerInterface(language);
         return `
             import { ${Names.FreProjection}, ${Names.FreActions}, ${Names.FreTyperPart}, ${Names.FreStdlib}, ${Names.FrScoperPart} } from "${PROJECTITCORE}";
@@ -22,7 +22,7 @@ export class ConfigurationTemplate {
             
             /**
              * Class ${configurationName} is the place where you can add all your customisations.
-             * These will be used through the 'projectitConfiguration' constant by any generated
+             * These will be used through the 'freonConfiguration' constant by any generated
              * part of your language environment.
              */
             class ${configurationName} {
@@ -40,7 +40,7 @@ export class ConfigurationTemplate {
                 customStdLibs: ${Names.FreStdlib}[] = [new ${Names.customStdlib(language)}()];
             }
             
-            export const projectitConfiguration = new ${configurationName}();
+            export const freonConfiguration = new ${configurationName}();
         `;
     }
 }

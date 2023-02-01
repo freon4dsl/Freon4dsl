@@ -15,7 +15,7 @@ export class ScoperDefTemplate {
         // const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
 
         return `import { ${Names.FreLanguage}, ${Names.FreScoperComposite} } from "${PROJECTITCORE}";
-            import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
+            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
             import { ${Names.scoper(language)} } from "./${Names.scoper(language)}";     
 
             /**
@@ -23,7 +23,7 @@ export class ScoperDefTemplate {
              * @param rootScoper
              */
             export function initializeScopers(rootScoper: ${Names.FreScoperComposite}) {
-                for (const p of projectitConfiguration.customScopers) {
+                for (const p of freonConfiguration.customScopers) {
                     rootScoper.appendScoper(p);
                 }
                 rootScoper.appendScoper(new ${Names.scoper(language)}());

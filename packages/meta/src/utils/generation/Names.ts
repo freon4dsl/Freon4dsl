@@ -88,6 +88,7 @@ export class Names {
     public static ProjectionalEditor: string = "ProjectionalEditor";
     // tslint:disable-next-line:variable-name
     public static mainProjectionalEditor: string = "MainProjectionalEditor";
+    public static configuration: string = "FreonConfiguration";
     public static styles: string = "projectitStyles";
     public static nameForSelf: string = "self";
     public static initializeLanguage: string = "initializeLanguage";
@@ -109,11 +110,6 @@ export class Names {
     public static referenceSeparator: string = "/"; // TODO use value from editDef
     public static listUtil: string = "ListUtil";
     public static brackets: string = "Brackets";
-
-
-    public static configuration() {
-        return "ProjectitConfiguration";
-    }
 
     public static environment(language: FreLanguage) {
         return this.startWithUpperCase(language?.name) + "Environment";

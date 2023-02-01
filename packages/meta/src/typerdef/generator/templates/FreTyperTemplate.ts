@@ -25,7 +25,7 @@ export class FreTyperTemplate {
         import { ${Names.FreNode}, ${Names.FreType}, ${Names.FreLanguage}, ${typerInterfaceName} } from "${PROJECTITCORE}";
 
         ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}
-        import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
+        import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
         import { ${defaultTyperName} } from "./${defaultTyperName}";
         import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";
                 
@@ -47,7 +47,7 @@ export class FreTyperTemplate {
              * @param modelelement
              */    
             public isType(modelelement: ${Names.FreNode}): boolean { 
-                for (const typer of projectitConfiguration.customTypers) {
+                for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.isType(modelelement);
                     if (result) {
@@ -63,7 +63,7 @@ export class FreTyperTemplate {
              * @param modelelement
              */   
             public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} {
-                for (const typer of projectitConfiguration.customTypers) {
+                for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: ${Names.FreType} = typer.inferType(modelelement);
                     if (result !== null) {
@@ -97,7 +97,7 @@ export class FreTyperTemplate {
              * @param type2
              */
             public equals(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean {
-                for (const typer of projectitConfiguration.customTypers) {
+                for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.equals(type1, type2);
                     if (result !== null && result !== undefined) {
@@ -130,7 +130,7 @@ export class FreTyperTemplate {
              * @param type2
              */
             public conforms(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean {
-                for (const typer of projectitConfiguration.customTypers) {
+                for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.conforms(type1, type2);
                     if (result !== null) {
@@ -165,7 +165,7 @@ export class FreTyperTemplate {
              * @param typelist2
              */
             public conformsList(typelist1: ${Names.FreType}[], typelist2: ${Names.FreType}[]): boolean {
-                for (const typer of projectitConfiguration.customTypers) {
+                for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.conformsList(typelist1, typelist2);
                     if (result !== null) {
@@ -195,7 +195,7 @@ export class FreTyperTemplate {
              * @param typelist
              */
             public commonSuper(typelist: ${Names.FreType}[]): ${Names.FreType} {
-                for (const typer of projectitConfiguration.customTypers) {
+                for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: ${Names.FreType} = typer.commonSuper(typelist);
                     if (!!result) {
@@ -211,7 +211,7 @@ export class FreTyperTemplate {
              * @param type
              */
             public getSuperTypes(type: ${Names.FreType}): ${Names.FreType}[] {
-                for (const typer of projectitConfiguration.customTypers) {
+                for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: ${Names.FreType}[] = typer.getSuperTypes(type);
                     if (!!result) {
