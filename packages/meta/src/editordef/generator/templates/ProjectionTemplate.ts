@@ -255,7 +255,7 @@ export class ProjectionTemplate {
                         return TableUtil.rowBox(this._element, this._element.freOwnerDescriptor().propertyName, "${Names.classifier(concept)}", cells, this._element.freOwnerDescriptor().propertyIndex, ${hasHeaders});
                     }`;
         } else {
-            console.log("INTERNAL PROJECTIT ERROR in generateTableCellFunction");
+            console.log("INTERNAL FREON ERROR in generateTableCellFunction");
             return "";
         }
     }

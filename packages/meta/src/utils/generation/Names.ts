@@ -89,7 +89,6 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static mainProjectionalEditor: string = "MainProjectionalEditor";
     public static configuration: string = "FreonConfiguration";
-    public static styles: string = "projectitStyles";
     public static nameForSelf: string = "self";
     public static initializeLanguage: string = "initializeLanguage";
     public static defaultProjectionName: string = "default";

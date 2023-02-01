@@ -136,7 +136,7 @@
         display: flex;
     }
     .error {
-        /* todo use projectit variable */
+        /* todo use freon variable */
         color: red;
     }
     .unSelected {
