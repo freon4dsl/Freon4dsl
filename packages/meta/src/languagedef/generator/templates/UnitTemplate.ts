@@ -1,6 +1,6 @@
 import { Names } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
-import { PiUnitDescription } from "../../metalanguage/PiLanguage";
+import { FreUnitDescription } from "../../metalanguage/FreLanguage";
 import { ClassifierUtil } from "./ClassifierUtil";
 
 export class UnitTemplate {
@@ -10,7 +10,7 @@ export class UnitTemplate {
     // a unit has no implemented interfaces
     // a unit is not an expression
     // a unit is not abstract
-    public generateUnit(unitDescription: PiUnitDescription) {
+    public generateUnit(unitDescription: FreUnitDescription) {
         const language = unitDescription.language;
         const myName = Names.classifier(unitDescription);
         const needsObservable = unitDescription.primProperties.length > 0;
@@ -18,8 +18,8 @@ export class UnitTemplate {
         const hasReferences = unitDescription.references().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
         const coreImports = ClassifierUtil.findMobxImports(unitDescription)
-            .concat(["PiModelUnit", "PiUtils", "PiParseLocation", "matchElementList", "matchPrimitiveList, matchReferenceList"])
-            .concat(hasReferences ? (Names.PiElementReference) : null);
+            .concat([Names.FreModelUnit, Names.FreUtils, Names.FreParseLocation, "matchElementList", "matchPrimitiveList, matchReferenceList"])
+            .concat(hasReferences ? (Names.FreNodeReference) : null);
         const metaType = Names.metaType(language);
 
         // Template starts here
@@ -31,7 +31,7 @@ export class UnitTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
-            export class ${myName} extends ${extendsClass} implements PiModelUnit {
+            export class ${myName} extends ${extendsClass} implements ${Names.FreModelUnit} {
             
                 ${ConceptUtils.makeStaticCreateMethod(unitDescription, myName)}
                 
@@ -49,7 +49,7 @@ export class UnitTemplate {
             `;
     }
 
-    private findModelImports(unitDescription: PiUnitDescription, myName: string): string[] {
+    private findModelImports(unitDescription: FreUnitDescription, myName: string): string[] {
         return Array.from(
             new Set(
                 unitDescription.parts().map(part => Names.classifier(part.type))

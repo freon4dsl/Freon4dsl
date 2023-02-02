@@ -1,12 +1,12 @@
 import { Names, PROJECTITCORE, GenerationUtil } from "../../../utils";
 import {
-    PiClassifier,
-    PiConcept,
-    PiConceptProperty,
-    PiPrimitiveProperty,
-    PiProperty,
-    PiPrimitiveType,
-    PiInterface, PiUnitDescription
+    FreClassifier,
+    FreConcept,
+    FreConceptProperty,
+    FrePrimitiveProperty,
+    FreProperty,
+    FrePrimitiveType,
+    FreInterface, FreUnitDescription
 } from "../../metalanguage";
 import * as console from "console";
 import { property } from "lodash";
@@ -24,40 +24,40 @@ export class ConceptUtils {
     public static makeBasicProperties(metaType: string, conceptName: string, hasSuper: boolean): string {
         return `readonly $typename: ${metaType} = "${conceptName}";    // holds the metatype in the form of a string
                 ${!hasSuper ? "$id: string;     // a unique identifier" : ""}    
-                parse_location: PiParseLocation;    // if relevant, the location of this element within the source from which it is parsed`;
+                parse_location: ${Names.FreParseLocation};    // if relevant, the location of this element within the source from which it is parsed`;
     }
 
-    public static makePrimitiveProperty(property: PiPrimitiveProperty): string {
+    public static makePrimitiveProperty(property: FrePrimitiveProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
         return `${property.name} : ${GenerationUtil.getBaseTypeAsString(property)}${arrayType}; \t${comment}`;
     }
 
-    private static initializer(property: PiPrimitiveProperty): string {
+    private static initializer(property: FrePrimitiveProperty): string {
         let initializer = "";
-        const myType: PiClassifier = property.type;
+        const myType: FreClassifier = property.type;
         if (!property.isList) {
             switch (myType) {
-                case PiPrimitiveType.identifier: {
+                case FrePrimitiveType.identifier: {
                     initializer = `this.${property.name} = \"${property.initialValue ? property.initialValue : ``}\"`;
                     break;
                 }
-                case PiPrimitiveType.string: {
+                case FrePrimitiveType.string: {
                     initializer = `this.${property.name} = \"${property.initialValue ? property.initialValue : ``}\"`;
                     break;
                 }
-                case PiPrimitiveType.number: {
+                case FrePrimitiveType.number: {
                     initializer = `this.${property.name} = ${property.initialValue ? property.initialValue : `0`}`;
                     break;
                 }
-                case PiPrimitiveType.boolean: {
+                case FrePrimitiveType.boolean: {
                     initializer = `this.${property.name} = ${property.initialValue ? property.initialValue : `false`}`;
                     break;
                 }
             }
         } else {
             if (!!property.initialValueList) {
-                if (myType === PiPrimitiveType.string || myType === PiPrimitiveType.identifier) {
+                if (myType === FrePrimitiveType.string || myType === FrePrimitiveType.identifier) {
                     initializer = `${property.initialValueList.map(elem => `this.${property.name}.push(\"${elem}\")`).join("\n ")}`;
                 } else {
                     initializer = `${property.initialValueList.map(elem => `this.${property.name}.push(${elem})`).join("\n ")}`;
@@ -67,19 +67,19 @@ export class ConceptUtils {
         return initializer;
     }
 
-    public static makePartProperty(property: PiConceptProperty): string {
+    public static makePartProperty(property: FreConceptProperty): string {
         const comment = "// implementation of part '" + property.name + "'";
         const arrayType = property.isList ? "[]" : "";
         return `${property.name} : ${Names.classifier(property.type)}${arrayType}; ${comment}`;
     }
 
-    public static makeReferenceProperty(property: PiConceptProperty): string {
+    public static makeReferenceProperty(property: FreConceptProperty): string {
         const comment = "// implementation of reference '" + property.name + "'";
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : PiElementReference<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
+        return `${property.name} : ${Names.FreNodeReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
     }
 
-    public static makeConvenienceMethods(list: PiConceptProperty[]): string {
+    public static makeConvenienceMethods(list: FreConceptProperty[]): string {
         let result: string = '';
         for (const property of list) {
             if (!property.isPart) {
@@ -88,7 +88,7 @@ export class ConceptUtils {
                     result += `
             /**
              * Convenience method for reference '${property.name}'.
-             * Instead of returning a 'PiElementReference<${propType}>' object,
+             * Instead of returning a '${Names.FreNodeReference}<${propType}>' object,
              * it returns the referred '${propType}' object, if it can be found.
              */
             get ${Names.refName(property)}(): ${propType} {
@@ -101,7 +101,7 @@ export class ConceptUtils {
                     result += `
             /**
              * Convenience method for reference '${property.name}'.
-             * Instead of returning a list of 'PiElementReference<${propType}>' objects, it 
+             * Instead of returning a list of '${Names.FreNodeReference}<${propType}>' objects, it 
              * returns a list of referred '${propType}' objects, if the references can be resolved.
              *
              * Note that when some references cannot be resolved, the length of this list is 
@@ -122,11 +122,11 @@ export class ConceptUtils {
         return result;
     }
 
-    public static makeConstructor(hasSuper: boolean, allProps: PiProperty[]): string {
+    public static makeConstructor(hasSuper: boolean, allProps: FreProperty[]): string {
         // console.log("found overriding props: " + allProps.filter(p => p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name} [${p.location?.filename}]`).join("\n\t"))
         // console.log("found NON overriding props: " + allProps.filter(p => !p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
-        const allButPrimitiveProps: PiConceptProperty[] = allProps.filter(p => !p.isPrimitive && !p.implementedInBase) as PiConceptProperty[];
-        const allPrimitiveProps: PiPrimitiveProperty[] = allProps.filter(p => p.isPrimitive && !p.implementedInBase) as PiPrimitiveProperty[];
+        const allButPrimitiveProps: FreConceptProperty[] = allProps.filter(p => !p.isPrimitive && !p.implementedInBase) as FreConceptProperty[];
+        const allPrimitiveProps: FrePrimitiveProperty[] = allProps.filter(p => p.isPrimitive && !p.implementedInBase) as FrePrimitiveProperty[];
 
         return `constructor(id?: string) {
         ${!hasSuper ? `
@@ -134,7 +134,7 @@ export class ConceptUtils {
                         if (!!id) { 
                             this.$id = id;
                         } else {
-                            this.$id = PiUtils.ID(); // uuid.v4();
+                            this.$id = ${Names.FreUtils}.ID(); // uuid.v4();
                         }`
             : "super(id);"
         }
@@ -173,7 +173,7 @@ export class ConceptUtils {
                 /**
                  * Returns the metatype of this instance in the form of a string.
                  */               
-                piLanguageConcept(): ${metaType} {
+                freLanguageConcept(): ${metaType} {
                     return this.$typename;
                 }
 
@@ -181,7 +181,7 @@ export class ConceptUtils {
                 /**
                  * Returns the unique identifier of this instance.
                  */                
-                 piId(): string {
+                 freId(): string {
                     return this.$id;
                 }`
             : ""}
@@ -189,33 +189,33 @@ export class ConceptUtils {
                 /**
                  * Returns true if this instance is a model concept.
                  */                 
-                piIsModel(): boolean {
+                freIsModel(): boolean {
                     return ${isModel};
                 }
                 
                 /**
                  * Returns true if this instance is a model unit.
                  */                 
-                piIsUnit(): boolean {
+                freIsUnit(): boolean {
                     return ${isUnit};
                 }
                                 
                 /**
                  * Returns true if this instance is an expression concept.
                  */                 
-                piIsExpression(): boolean {
+                freIsExpression(): boolean {
                     return ${isExpression};
                 }
 
                 /**
                  * Returns true if this instance is a binary expression concept.
                  */                 
-                piIsBinaryExpression(): boolean {
+                freIsBinaryExpression(): boolean {
                     return ${isBinaryExpression};
                 }`;
     }
 
-    public static makeStaticCreateMethod(concept: PiClassifier, myName: string): string {
+    public static makeStaticCreateMethod(concept: FreClassifier, myName: string): string {
         return `/**
                  * A convenience method that creates an instance of this class
                  * based on the properties defined in 'data'.
@@ -242,7 +242,7 @@ export class ConceptUtils {
                 }`;
     }
 
-    public static makeCopyMethod(concept: PiClassifier, myName: string, isAbstract: boolean): string {
+    public static makeCopyMethod(concept: FreClassifier, myName: string, isAbstract: boolean): string {
         const comment = `/**
                  * A convenience method that copies this instance into a new object.
                  */`;
@@ -290,12 +290,12 @@ export class ConceptUtils {
         return result;
     }
 
-    public static makeMatchMethod(hasSuper: boolean, concept: PiClassifier, myName: string): string {
-        let propsToDo: PiProperty[] = [];
-        if (hasSuper && concept instanceof PiConcept) {
-            propsToDo = (concept as PiConcept).implementedProperties();
-        } else if (hasSuper && concept instanceof PiInterface) {
-            propsToDo = (concept as PiInterface).properties;
+    public static makeMatchMethod(hasSuper: boolean, concept: FreClassifier, myName: string): string {
+        let propsToDo: FreProperty[] = [];
+        if (hasSuper && concept instanceof FreConcept) {
+            propsToDo = (concept as FreConcept).implementedProperties();
+        } else if (hasSuper && concept instanceof FreInterface) {
+            propsToDo = (concept as FreInterface).properties;
         } else {
             propsToDo = concept.allProperties();
         }
@@ -313,7 +313,7 @@ export class ConceptUtils {
                 }`;
     }
 
-    private static makeMatchEntry(property: PiProperty): string {
+    private static makeMatchEntry(property: FreProperty): string {
         let result: string = '';
         if (property.isPrimitive) {
             if (property.isList) {
@@ -322,7 +322,7 @@ export class ConceptUtils {
                                 result = result && matchPrimitiveList(this.${property.name}, toBeMatched.${property.name});
                           }`
             } else {
-                if (property.type === PiPrimitiveType.string || property.type === PiPrimitiveType.identifier) {
+                if (property.type === FrePrimitiveType.string || property.type === FrePrimitiveType.identifier) {
                     result = `if (result && toBeMatched.${property.name} !== null && toBeMatched.${property.name} !== undefined && toBeMatched.${property.name}.length > 0) { 
                                 result = result && this.${property.name} === toBeMatched.${property.name};
                           }`;

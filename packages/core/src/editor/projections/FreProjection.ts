@@ -1,6 +1,6 @@
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 import { Box, TableRowBox } from "../boxes";
-import { PiTableDefinition } from "../PiTables";
+import { FreTableDefinition } from "../FreTableDefinition";
 
 /**
  * Interface for a custom projection.
@@ -11,11 +11,11 @@ export interface FreProjection {
     // Name of the custom projection
     name: string;
 
-    // A map from the name of the concept (or the piLanguageConcept() of the PiElement node) to
+    // A map from the name of the concept (or the freLanguageConcept() of the FreElement node) to
     // the function that may return the custom box for a node of that type.
-    nodeTypeToBoxMethod: Map<string, (node: PiElement) => Box>;
+    nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box>;
 
-    // A map from the name of the concept (or the piLanguageConcept() of the PiElement node) to
+    // A map from the name of the concept (or the freLanguageConcept() of the FreElement node) to
     // the function that may return the custom box for a node of that type.
-    nodeTypeToTableDefinition: Map<string, () => PiTableDefinition>; // todo change name and remove Tabledefintion type
+    nodeTypeToTableDefinition: Map<string, () => FreTableDefinition>; // todo change name and remove Tabledefinition type
 }

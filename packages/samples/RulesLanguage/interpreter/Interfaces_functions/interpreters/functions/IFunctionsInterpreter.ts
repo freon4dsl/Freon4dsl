@@ -1,4 +1,4 @@
-import { InterpreterContext } from "@projectit/core";
+import { InterpreterContext } from "@freon4dsl/core";
 import { FunctionCall, RFunction } from "../../../../language/gen/index";
 
 export interface IFunctionsInterpreter {

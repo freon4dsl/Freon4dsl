@@ -10,8 +10,8 @@
 // dependent only upon editor
 export * from "./MatchUtil";
 
-// the rest of this package depends on PiUtils
-export * from "./PiUtils";
+// the rest of this package depends on FreUtils
+export * from "./FreUtils";
 
 // the others
 export * from "./BalanceTreeUtils";

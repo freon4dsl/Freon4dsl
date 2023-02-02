@@ -1,31 +1,31 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
+import { FreLanguage, FreClassifier } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
 export class ReferenceCheckerTemplate {
     imports: string[] = [];
 
-    generateChecker(language: PiLanguage, relativePath: string): string {
+    generateChecker(language: FreLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
-        const errorClassName: string = Names.PiError;
-        const errorSeverityName: string = Names.PiErrorSeverity;
+        const errorClassName: string = Names.FreError;
+        const errorSeverityName: string = Names.FreErrorSeverity;
         const checkerClassName: string = Names.referenceChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
-        const writerInterfaceName: string = Names.PiWriter;
+        const writerInterfaceName: string = Names.FreWriter;
         const overallTypeName: string = Names.allConcepts(language);
 
         // because 'createChecksOnNonOptionalParts' determines which concepts to import
         // and thus fills 'this.imports' list, it needs to be called before the rest of the template
         // is returned
         this.imports = [];
-        const allClassifiers: PiClassifier[] = [];
+        const allClassifiers: FreClassifier[] = [];
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
         const allMethods: string = `${allClassifiers.map(concept => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}`;
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.PiElementReference}, ${Names.PiNamedElement}, LanguageEnvironment } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.FreNodeReference}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${PROJECTITCORE}";
         import { ${overallTypeName}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
@@ -39,36 +39,36 @@ export class ReferenceCheckerTemplate {
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
-            myWriter: ${writerInterfaceName} = LanguageEnvironment.getInstance().writer;
+            myWriter: ${writerInterfaceName} = ${Names.LanguageEnvironment}.getInstance().writer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
             private refSeparator: string = '${Names.referenceSeparator}';
 
             ${allMethods}           
             
-            private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.PiElementReference}<${Names.PiNamedElement}>, propertyName: string, locationDescription: string) {
-                const scoper = LanguageEnvironment.getInstance().scoper;
+            private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>, propertyName: string, locationDescription: string) {
+                const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
                 const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
-                        new PiError(                                       
-                            \`Reference '\${referredElem.pathnameToString(this.refSeparator)}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.piLanguageConcept()}\`).join(", ")}]\`,
+                        new ${Names.FreError}(                                       
+                            \`Reference '\${referredElem.pathnameToString(this.refSeparator)}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.freLanguageConcept()}\`).join(", ")}]\`,
                                 modelelement,
                                 \`\${propertyName} of \${locationDescription}\`,
                             \`\${propertyName}\`,
-                            PiErrorSeverity.Error
+                            ${Names.FreErrorSeverity}.Error
                         )
                     );
                 } else {
                     this.errorList.push(
-                        new PiError(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, \`\${propertyName}\`, PiErrorSeverity.Error)
+                        new ${Names.FreError}(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, \`\${propertyName}\`, ${Names.FreErrorSeverity}.Error)
                     );
                 }
             }
         }`;
     }
 
-    private createChecksOnNonOptionalParts(concept: PiClassifier): string {
+    private createChecksOnNonOptionalParts(concept: FreClassifier): string {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
         concept.allProperties().forEach(prop => {

@@ -1,8 +1,8 @@
 <!-- The StatusBar presents info about the unit in the editor: name, whether there are errors, etc. -->
 
 <script lang="ts">
-    import { Box, isTextBox } from "@projectit/core";
-	import { selectedBoxes } from "@projectit/core-svelte";
+    import { Box, isTextBox } from "@freon4dsl/core";
+	import { selectedBoxes } from "@freon4dsl/core-svelte";
     import { editorEnvironment } from "../../config/WebappConfiguration";
     import { currentModelName, currentUnitName } from "../stores/ModelStore";
     import { modelErrors } from "../stores/InfoPanelStore";
@@ -52,7 +52,7 @@
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		elem: {currentBox?.element?.piId()} - {currentBox?.element?.piLanguageConcept()}
+		elem: {currentBox?.element?.freId()} - {currentBox?.element?.freLanguageConcept()}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon component={Svg} viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>

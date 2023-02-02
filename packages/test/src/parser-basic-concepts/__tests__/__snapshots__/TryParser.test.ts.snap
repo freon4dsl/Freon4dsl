@@ -8,44 +8,44 @@ ExpressionTest {
     "$$propertyName": "",
     "$id": "ID-1",
     "$typename": "TestConceptsModel",
-    "_PI_expr": [Circular],
+    "_FRE_expr": [Circular],
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "expr",
   "$id": "ID-10",
   "$typename": "ExpressionTest",
-  "_PI_binEx": Array [
+  "_FRE_binEx": Array [
     PlusEx {
       "$$owner": [Circular],
       "$$propertyIndex": 0,
       "$$propertyName": "binEx",
       "$id": "ID-4",
       "$typename": "PlusEx",
-      "_PI_left": StringLiteralEx {
+      "_FRE_left": StringLiteralEx {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "left",
         "$id": "ID-2",
         "$typename": "StringLiteralEx",
-        "_PI_value": "literal1",
-        "parse_location": PiParseLocation {
+        "_FRE_value": "literal1",
+        "parse_location": FreParseLocation {
           "column": 2,
           "line": 4,
         },
       },
-      "_PI_right": StringLiteralEx {
+      "_FRE_right": StringLiteralEx {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "right",
         "$id": "ID-3",
         "$typename": "StringLiteralEx",
-        "_PI_value": "literal2",
-        "parse_location": PiParseLocation {
+        "_FRE_value": "literal2",
+        "parse_location": FreParseLocation {
           "column": 39,
           "line": 4,
         },
       },
-      "parse_location": PiParseLocation {
+      "parse_location": FreParseLocation {
         "column": 2,
         "line": 4,
       },
@@ -56,62 +56,62 @@ ExpressionTest {
       "$$propertyName": "binEx",
       "$id": "ID-9",
       "$typename": "MultiplyEx",
-      "_PI_left": DivideEx {
+      "_FRE_left": DivideEx {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "left",
         "$id": "ID-7",
         "$typename": "DivideEx",
-        "_PI_left": NumberLiteralEx {
+        "_FRE_left": NumberLiteralEx {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "left",
           "$id": "ID-5",
           "$typename": "NumberLiteralEx",
-          "_PI_value": 109,
-          "parse_location": PiParseLocation {
+          "_FRE_value": 109,
+          "parse_location": FreParseLocation {
             "column": 2,
             "line": 5,
           },
         },
-        "_PI_right": StringLiteralEx {
+        "_FRE_right": StringLiteralEx {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "right",
           "$id": "ID-6",
           "$typename": "StringLiteralEx",
-          "_PI_value": "literal3",
-          "parse_location": PiParseLocation {
+          "_FRE_value": "literal3",
+          "parse_location": FreParseLocation {
             "column": 32,
             "line": 5,
           },
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 2,
           "line": 5,
         },
       },
-      "_PI_right": BooleanLiteralEx {
+      "_FRE_right": BooleanLiteralEx {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "right",
         "$id": "ID-8",
         "$typename": "BooleanLiteralEx",
-        "_PI_value": true,
-        "parse_location": PiParseLocation {
+        "_FRE_value": true,
+        "parse_location": FreParseLocation {
           "column": 69,
           "line": 5,
         },
       },
-      "parse_location": PiParseLocation {
+      "parse_location": FreParseLocation {
         "column": 2,
         "line": 5,
       },
     },
   ],
-  "_PI_name": "simpleExpressions",
-  "_PI_normalEx": Array [],
-  "parse_location": PiParseLocation {
+  "_FRE_name": "simpleExpressions",
+  "_FRE_normalEx": Array [],
+  "parse_location": FreParseLocation {
     "column": 1,
     "line": 1,
   },

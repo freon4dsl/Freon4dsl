@@ -1,9 +1,9 @@
 import { Names } from "../../../utils";
-import { PiLanguage } from "../../metalanguage";
+import { FreLanguage } from "../../metalanguage";
 
 export class AllConceptsTemplate {
 
-    generateAllConceptsClass(language: PiLanguage): string {
+    generateAllConceptsClass(language: FreLanguage): string {
         const unitNames = language.units.map(unit => Names.classifier(unit));
         // sort all names alphabetically
         let tmp: string[] = [];
@@ -26,7 +26,7 @@ export class AllConceptsTemplate {
 
         /**
          * Type ${Names.allConcepts(language)} is a union of all concepts and interfaces that are defined for language ${language.name}.
-         * This type is used instead of the more general PiElement interface or the MobxModelElementImpl class,
+         * This type is used instead of the more general FreNode interface or the MobxModelElementImpl class,
          * or even the type Object, to ensure that parts of the language environment work on the same set 
          * of instances. 
          */

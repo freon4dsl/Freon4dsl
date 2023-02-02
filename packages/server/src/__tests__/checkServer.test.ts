@@ -32,13 +32,13 @@ const contentHgIntf = {
 };
 const emptyJson = {};
 
-describe("ProjectIt Model Server", () => {
+describe("Freon Model Server", () => {
     const serv = request(app.callback());
 
     test(" is responding", async () => {
         const response = await serv.get("/");
         expect(response.status).toBe(200);
-        expect(response.text).toBe("ProjectIt Model Server");
+        expect(response.text).toBe("Freon Model Server");
     });
 
     test(" serves all models", async () => {

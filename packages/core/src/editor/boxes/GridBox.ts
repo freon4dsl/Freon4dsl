@@ -1,8 +1,8 @@
 import { GridCellBox } from "./GridCellBox";
 
 import { Box } from "./internal";
-import { PiElement } from "../../ast";
-import { PiUtils } from "../../util";
+import { FreNode } from "../../ast";
+import { FreUtils } from "../../util";
 
 export type GridOrientation = "neutral" | "row" | "column";
 
@@ -11,9 +11,9 @@ export class GridBox extends Box {
     cells: GridCellBox[] = [];
     orientation: GridOrientation = "neutral";
 
-    constructor(exp: PiElement, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
+    constructor(exp: FreNode, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
         super(exp, role);
-        PiUtils.initializeObject(this, initializer);
+        FreUtils.initializeObject(this, initializer);
         this.cells = cells;
         this.cells.forEach(c => {
             if (!c.columnSpan) {

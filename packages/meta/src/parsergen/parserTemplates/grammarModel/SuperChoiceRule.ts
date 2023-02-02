@@ -1,5 +1,5 @@
 import { GrammarRule } from "./GrammarRule";
-import { PiBinaryExpressionConcept, PiClassifier } from "../../../languagedef/metalanguage";
+import { FreBinaryExpressionConcept, FreClassifier } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
 import { BinaryExpMaker } from "../BinaryExpMaker";
 import { internalTransformNode, ParserGenUtil } from "../ParserGenUtil";
@@ -7,10 +7,10 @@ import { getTypeCall } from "./GrammarUtils";
 
 export class SuperChoiceRule extends GrammarRule {
     // the same as ChoiceRule, except that the call to the implementors is never to '__pi_super_...'
-    implementors: PiClassifier[];
-    myConcept: PiClassifier;
+    implementors: FreClassifier[];
+    myConcept: FreClassifier;
 
-    constructor(ruleName: string, myConcept: PiClassifier, implementors: PiClassifier[]) {
+    constructor(ruleName: string, myConcept: FreClassifier, implementors: FreClassifier[]) {
         super();
         this.ruleName = ruleName;
         this.implementors = implementors;
@@ -22,13 +22,13 @@ export class SuperChoiceRule extends GrammarRule {
         let rule: string = "";
         if (this.implementors.length > 0) {
             // test to see if there is a binary expression concept here
-            let implementorsNoBinaries = this.implementors.filter(sub => !(sub instanceof PiBinaryExpressionConcept));
+            let implementorsNoBinaries = this.implementors.filter(sub => !(sub instanceof FreBinaryExpressionConcept));
             if (this.implementors.length != implementorsNoBinaries.length) { // there are binaries
                 // exclude binary expression concepts
                 rule = `${(this.ruleName)} = ${implementorsNoBinaries.map(implementor =>
                     `${this.getTypeCallExcludeSelf(implementor)} `).join("\n    | ")}`;
                 // add the special binary concept rule(s) as choice
-                const expBases = ParserGenUtil.findAllExpressionBases(this.implementors.filter(sub => sub instanceof PiBinaryExpressionConcept) as PiBinaryExpressionConcept[]);
+                const expBases = ParserGenUtil.findAllExpressionBases(this.implementors.filter(sub => sub instanceof FreBinaryExpressionConcept) as FreBinaryExpressionConcept[]);
                 if (implementorsNoBinaries.length > 0) { // there are already choices present in the rule, so add a '|' as separator
                     rule += '\n    | ';
                 }
@@ -56,7 +56,7 @@ export class SuperChoiceRule extends GrammarRule {
             }`;
     }
 
-    getTypeCallExcludeSelf(propType: PiClassifier) : string {
+    getTypeCallExcludeSelf(propType: FreClassifier) : string {
         if (propType === this.myConcept) {
             return Names.classifier(propType);
         } else {

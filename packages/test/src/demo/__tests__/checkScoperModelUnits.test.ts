@@ -1,11 +1,9 @@
-import { projectitConfiguration } from "../config/ProjectitConfiguration";
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoModel, Demo } from "../language/gen";
 import { initializeScoperDef } from "../scoper/gen/index";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 import { DemoUnitCreator } from "./DemoUnitCreator";
-import { initializeLanguage } from "../language/gen/DemoLanguage";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 
 describe("testing Scoper on model units", () => {

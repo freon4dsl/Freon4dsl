@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { PiLanguage } from "../languagedef/metalanguage";
+import { FreLanguage } from "../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, DIAGRAM_FOLDER, MetaLogger, DIAGRAM_GEN_FOLDER } from "../utils";
 import { HtmlTemplate } from "./diagramTemplates/HtmlTemplate";
 import { MarkDownTemplate } from "./diagramTemplates/MarkDownTemplate";
@@ -11,7 +11,7 @@ const LOGGER = new MetaLogger("DiagramGenerator").mute();
  */
 export class DiagramGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguage;
+    public language: FreLanguage;
     private diagramFolder: string;
     private diagramGenFolder: string;
     fileNames: string[] = [];

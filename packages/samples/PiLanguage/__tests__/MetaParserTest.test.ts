@@ -1,6 +1,6 @@
 import { FileHandler } from "./FileHandler";
 import { PiStructureDef, PiValidatorDef, PiScoperDef, PiTyperDef, PiLanguage } from "../language/gen";
-import { PiError } from "@projectit/core";
+import { PiError } from "@freon4dsl/core";
 import { PiLanguageEnvironment } from "../config/gen/PiLanguageEnvironment";
 
 describe("Pi Language Parser", () => {

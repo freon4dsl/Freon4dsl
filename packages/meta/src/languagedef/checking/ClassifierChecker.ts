@@ -1,4 +1,4 @@
-import { PiClassifier, PiConcept, PiInterface, PiProperty } from "../metalanguage";
+import { FreClassifier, FreConcept, FreInterface, FreProperty } from "../metalanguage";
 import { CheckRunner, LangUtil, ParseLocationUtil } from "../../utils";
 import { CommonChecker } from "./CommonChecker";
 
@@ -17,7 +17,7 @@ export class ClassifierChecker {
      * @param classifier: the classifier to check
      * @param runner
      */
-    public checkClassifier(names: string[], classifier: PiClassifier, runner: CheckRunner): boolean {
+    public checkClassifier(names: string[], classifier: FreClassifier, runner: CheckRunner): boolean {
         this.runner = runner;
         CommonChecker.checkUniqueNameOfClassifier(names, classifier, false, runner);
         // check circularity
@@ -35,7 +35,7 @@ export class ClassifierChecker {
     // check if there are no infinite loops in the model, i.e.
     // A has part b: B and B has part a: A and both are mandatory
     // Note: this can be done only after checking for circular inheritance, because we need to look at allParts.
-    public checkInfiniteLoops(classifier: PiClassifier, runner: CheckRunner) {
+    public checkInfiniteLoops(classifier: FreClassifier, runner: CheckRunner) {
         classifier.allParts().forEach(aPart => {
             if (!aPart.isPrimitive && !aPart.isOptional && !aPart.isList) {
                 const aPartType = aPart.type;
@@ -52,14 +52,14 @@ export class ClassifierChecker {
         });
     }
 
-    private checkPropertyInheritance(classifier: PiClassifier) {
+    private checkPropertyInheritance(classifier: FreClassifier) {
         // Note that in this check method we cannot use the classifier methods 'implementedProperties', 'allProperties', etc.
         // Those methods depend on the fact that everything is correct - which should be checked here.
         // Five aspects to be tested, each numbered.
-        const propsToCheck: PiProperty[] = [];
+        const propsToCheck: FreProperty[] = [];
         propsToCheck.push(...classifier.primProperties);
         propsToCheck.push(...classifier.properties);
-        const propsDone: PiProperty[] = [];
+        const propsDone: FreProperty[] = [];
         propsToCheck.forEach(prop => {
             // 1. all props defined in this classifier against themselves:
             // no prop with same name allowed, not even if they have the same type
@@ -72,9 +72,9 @@ export class ClassifierChecker {
             // 2. all props defined in this classifier should be different from the props of its super concepts/interfaces
             //      except when their types conform, then props of the sub should be marked 'implementedInBase' - but only if
             //      base is a concept
-            if (classifier instanceof PiConcept && !!classifier.base) {
+            if (classifier instanceof FreConcept && !!classifier.base) {
                 this.checkPropsOfBase(classifier.base.referred, prop);
-            } else if (classifier instanceof PiInterface) {
+            } else if (classifier instanceof FreInterface) {
                 classifier.base.forEach(intfRef => {
                     const inSuper = this.searchLocalProps(intfRef.referred, prop);
                     if (!!inSuper) {
@@ -84,7 +84,7 @@ export class ClassifierChecker {
                 });
             }
             // 3. all props defined in this concept against props from implemented interfaces: name and type should conform
-            if (classifier instanceof PiConcept) {
+            if (classifier instanceof FreConcept) {
                 classifier.allInterfaces().forEach(intf => {
                     this.checkPropAgainstInterface(intf, prop);
                 });
@@ -92,8 +92,8 @@ export class ClassifierChecker {
         });
         // 4. all props defined in implemented interfaces, that do not have a counterpart in the concept or its supers,
         //      should not have a name equal to any other, except when their types conform.
-        if (classifier instanceof PiConcept) {
-            const propsDone: PiProperty[] = [];
+        if (classifier instanceof FreConcept) {
+            const propsDone: FreProperty[] = [];
             classifier.allInterfaces().forEach(intf => {
                 intf.allProperties().forEach(toBeImplemented => {
                     const implementedProp = this.findImplementedProperty(toBeImplemented, classifier, false);
@@ -102,7 +102,7 @@ export class ClassifierChecker {
                         if (!!inAnotherInterface) { // there is a prop with the same name in another implemented interface
                             // we must check type conformance both ways!
                             // when types conform: add a new prop with the most specific type to classifier
-                            let virtualProp: PiProperty = null;
+                            let virtualProp: FreProperty = null;
                             if (LangUtil.compareTypes(toBeImplemented, inAnotherInterface)) {
                                 virtualProp = CommonChecker.makeCopyOfProp(toBeImplemented, classifier);
                             } else if (LangUtil.compareTypes(inAnotherInterface, toBeImplemented)) {
@@ -118,10 +118,10 @@ export class ClassifierChecker {
             });
         }
         // 5. all properties of super concepts, that are not overwritten in this concept, must conform. Idem props of all interfaces.
-        if (classifier instanceof PiConcept) {
+        if (classifier instanceof FreConcept) {
             const myBase = classifier.base?.referred;
             if (!!myBase) {
-                const basePropsToCheck: PiProperty[] = [];
+                const basePropsToCheck: FreProperty[] = [];
                 basePropsToCheck.push(...myBase.primProperties);
                 basePropsToCheck.push(...myBase.properties);
                 classifier.interfaces.forEach(intf => {
@@ -135,7 +135,7 @@ export class ClassifierChecker {
         }
     }
 
-    private checkPropsOfBase(myBase: PiConcept, prop: PiProperty) {
+    private checkPropsOfBase(myBase: FreConcept, prop: FreProperty) {
         if (!!myBase && !!prop) {
             const inSuper = this.searchLocalProps(myBase, prop);
             if (!!inSuper) {
@@ -150,15 +150,15 @@ export class ClassifierChecker {
                 });
             } else if (!!myBase.base) {
                 // check base of base
-                if (myBase.base.referred instanceof PiConcept) { // if error is made, base could be an interface
+                if (myBase.base.referred instanceof FreConcept) { // if error is made, base could be an interface
                     this.checkPropsOfBase(myBase.base.referred, prop);
                 }
             }
         }
     }
 
-    private checkPropAgainstInterface(intf: PiInterface, prop: PiProperty) {
-        let inIntf: PiProperty = intf.primProperties.find(prevProp => prevProp.name === prop.name);
+    private checkPropAgainstInterface(intf: FreInterface, prop: FreProperty) {
+        let inIntf: FreProperty = intf.primProperties.find(prevProp => prevProp.name === prop.name);
         if (!inIntf) {
             inIntf = intf.properties.find(prevProp => prevProp.name === prop.name);
         }
@@ -168,8 +168,8 @@ export class ClassifierChecker {
         }
     }
 
-    private findImplementedProperty(prop: PiProperty, concept: PiConcept, includeInterfaces: boolean) {
-        const propsToCheck: PiProperty[] = [];
+    private findImplementedProperty(prop: FreProperty, concept: FreConcept, includeInterfaces: boolean) {
+        const propsToCheck: FreProperty[] = [];
         propsToCheck.push(...concept.primProperties);
         propsToCheck.push(...concept.properties);
         if (includeInterfaces && concept.interfaces.length > 0) {
@@ -187,7 +187,7 @@ export class ClassifierChecker {
         return implementedProp;
     }
 
-    private checkCircularInheritance(circularNames: string[], con: PiClassifier): boolean {
+    private checkCircularInheritance(circularNames: string[], con: FreClassifier): boolean {
         if (circularNames.includes(con.name)) {
             // error, already seen this name
             const text: string = circularNames.map(name => name ).join(", ");
@@ -197,7 +197,7 @@ export class ClassifierChecker {
         } else {
             // not (yet) found a circularity, check 'base'
             circularNames.push(con.name);
-            if (con instanceof PiConcept) {
+            if (con instanceof FreConcept) {
                 const base = con.base?.referred;
                 if (!!base) {
                     return this.checkCircularInheritance(circularNames, base);
@@ -205,7 +205,7 @@ export class ClassifierChecker {
                     // no problem because there is no 'base'
                     return false;
                 }
-            } else if (con instanceof PiInterface) {
+            } else if (con instanceof FreInterface) {
                 let result = false;
                 for ( const base of con.base ) {
                     const realBase = base.referred;
@@ -215,7 +215,7 @@ export class ClassifierChecker {
                 }
                 return result;
             } else {
-                // Does not occur: PiConcept, PiInterface, PiModelUnit, and PiModel are the only subclasses of PiClassifier,
+                // Does not occur: FreConcept, FreInterface, FreModelUnit, and FreModel are the only subclasses of FreClassifier,
                 // and the last two do not have supers.
                 console.log("INTERNAL ERROR: UNIT NOT HANDLED");
                 return false;
@@ -223,8 +223,8 @@ export class ClassifierChecker {
         }
     }
 
-    private searchLocalProps(myBase: PiClassifier, prop: PiProperty) {
-        let inSuper: PiProperty = myBase.primProperties.find(prevProp => prevProp.name === prop.name);
+    private searchLocalProps(myBase: FreClassifier, prop: FreProperty) {
+        let inSuper: FreProperty = myBase.primProperties.find(prevProp => prevProp.name === prop.name);
         if (!inSuper) {
             inSuper = myBase.properties.find(prevProp => prevProp.name === prop.name);
         }

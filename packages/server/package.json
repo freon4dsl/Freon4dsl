@@ -1,6 +1,6 @@
 {
   "private": false,
-  "name": "@projectit/server",
+  "name": "@freon4dsl/server",
   "version": "0.5.0",
   "publishConfig": {
     "access": "public"
@@ -8,7 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/joswarmer/ProjectIt.git"
+    "url": "https://github.com/freon4dsl/Freon4dsl"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

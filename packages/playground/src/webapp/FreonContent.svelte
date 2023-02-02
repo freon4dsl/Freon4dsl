@@ -10,7 +10,7 @@
     import SplitPane from "./components/SplitPane.svelte";
     import EditorPart from "./components/editor-panel/EditorPart.svelte";
     import InfoPanel from "./components/info-panel/InfoPanel.svelte";
-    import { SeverityType } from "@projectit/core";
+    import { SeverityType } from "@freon4dsl/core";
     import Button from "@smui/button";
 
     // <Icon slot='icon' class="less-padding" component={Svg} viewBox='0 0 48 48'>

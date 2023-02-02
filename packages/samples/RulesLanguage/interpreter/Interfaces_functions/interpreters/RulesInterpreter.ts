@@ -4,7 +4,7 @@ import {
     InterpreterContext,
     InterpreterTracer,
     MainInterpreter, OwningPropertyFunction, PiElement
-} from "@projectit/core";
+} from "@freon4dsl/core";
 import { initMainInterpreter } from "./InitMainInterpreter";
 
 const getPropertyFunction: OwningPropertyFunction = (node: Object) => {

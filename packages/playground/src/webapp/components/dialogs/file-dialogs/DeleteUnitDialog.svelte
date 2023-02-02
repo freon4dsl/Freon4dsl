@@ -26,7 +26,7 @@
 	import { toBeDeleted } from "../../stores/ModelStore";
 	import { EditorState } from "../../../language/EditorState";
 	import { setUserMessage } from "../../stores/UserMessageStore";
-	import { SeverityType } from "@projectit/core";
+	import { SeverityType } from "@freon4dsl/core";
 
 	const cancelStr: string = "cancel";
 	const submitStr: string = "submit";

@@ -1,7 +1,7 @@
-import { PiElement } from "../../ast";
-import { PiUtils } from "../../util";
-import { BehaviorExecutionResult, PiCaret, PiKey } from "../util";
-import { BoxFactory, PiEditor } from "../internal";
+import { FreNode } from "../../ast";
+import { FreUtils } from "../../util";
+import { BehaviorExecutionResult, FreCaret, FreKey } from "../util";
+import { BoxFactory, FreEditor } from "../internal";
 import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
 
 export abstract class AbstractChoiceBox extends Box {
@@ -11,11 +11,11 @@ export abstract class AbstractChoiceBox extends Box {
     _textBox: TextBox;
     textHelper: ChoiceTextHelper;
 
-    constructor(exp: PiElement, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
+    constructor(exp: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
         super(exp, role);
         this.placeholder = placeHolder;
         this.textHelper = new ChoiceTextHelper();
-        PiUtils.initializeObject(this, initializer);
+        FreUtils.initializeObject(this, initializer);
         this._textBox = BoxFactory.text(
             exp,
             "action-" + role + "-textbox",
@@ -47,16 +47,16 @@ export abstract class AbstractChoiceBox extends Box {
         return null;
     }
 
-    getOptions(editor: PiEditor): SelectOption[] {
+    getOptions(editor: FreEditor): SelectOption[] {
         return [];
     }
 
-    selectOption(editor: PiEditor, option: SelectOption): BehaviorExecutionResult {
+    selectOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
         console.error("AbstractChoiceBox.selectOption");
         return BehaviorExecutionResult.NULL;
     };
 
-    setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
+    setCaret: (caret: FreCaret) => void = (caret: FreCaret) => {
         if (!!this.textBox) {
             this.textBox.setCaret(caret);
         }
@@ -80,7 +80,7 @@ export abstract class AbstractChoiceBox extends Box {
     /** @internal
      * Simulate a KeyBoard event
      */
-    triggerKeyDownEvent: (key: PiKey) => void = () => {
+    triggerKeyDownEvent: (key: FreKey) => void = () => {
         /* To be overwritten by `AbstractChoiceComponent` */
     };
 

@@ -18,7 +18,7 @@ Deze worden altijd in de bovenste component afgehandeld:
 1. als box focus verliest dan wordt tekst opgeslagen, als tekst veranderd is alleen.
 2. box verliest focus door:
    1. click outside
-   2. zie boven (alles vanuit keyboard kan alleen getest worden via ProjectItComponent)
+   2. zie boven (alles vanuit keyboard kan alleen getest worden via FreonComponent)
 3. placeholder moet aanwezig zijn
 4. keyPressAction zoasl gegeven in TextBox moet worden uigevoerd
 5. de events in 2.2 tot 2.7 moeten worden doorgegeven aan de parent van de text box.
@@ -75,7 +75,7 @@ meestal is dat het toevoegen van een row of een column
 1. on click: focus gezet wordt doorgegeven aan editor en style veranderd
 2. zet after update de x en y waardes van zijn kind box
 
-# ProjectItComponent
+# FreonComponent
 
 1. Zie alle componenten voor keyboard acties
 2. Scroll zet de juiste waardes voor nul punt

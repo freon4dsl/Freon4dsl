@@ -1,5 +1,5 @@
 export * from "./Checker";
-export * from "./PiParser";
+export * from "./FreGenericParser";
 export * from "./CheckRunner";
 export * from "./CheckerPhase";
 export * from "./ParseLocationUtil";

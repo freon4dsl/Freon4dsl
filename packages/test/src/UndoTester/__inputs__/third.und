@@ -1,0 +1,17 @@
+UndoUnit myName {
+	 prim "myText"
+	 numlist 100 200 300
+	 part UndoPart part1 {
+          	 }
+     partlist
+        UndoPart part2 {
+        }
+        UndoPart part3 {
+        }
+        UndoPart part4 {
+        }
+        UndoPart part5 {
+        }
+        UndoPart part6 {
+        }
+}

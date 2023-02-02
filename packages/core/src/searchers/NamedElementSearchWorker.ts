@@ -1,11 +1,11 @@
-import { PiElement } from "../ast";
-import { SearchWorker } from "./SearchWorker";
+import { FreNode } from "../ast";
+import { FreSearchWorker } from "./FreSearchWorker";
 
-export class NamedElementSearchWorker implements SearchWorker {
+export class NamedElementSearchWorker implements FreSearchWorker {
     private readonly nameToFind: string;
     private readonly metatype: string | undefined ;
     private readonly caseSensitive: boolean;
-    private __result: PiElement[] = [];
+    private __result: FreNode[] = [];
 
     constructor(nameToFind: string, caseSensitive: boolean, metatype?: string) {
         this.nameToFind = nameToFind;
@@ -13,18 +13,18 @@ export class NamedElementSearchWorker implements SearchWorker {
         this.metatype = metatype;
     }
 
-    get result(): PiElement[] {
+    get result(): FreNode[] {
         return this.__result;
     }
 
-    execAfter(modelelement: PiElement): boolean {
+    execAfter(modelelement: FreNode): boolean {
         // unused
         return false;
     }
 
-    execBefore(modelelement: PiElement): boolean {
+    execBefore(modelelement: FreNode): boolean {
         if (!!this.metatype) {
-            if (this.metatype === modelelement.piLanguageConcept() || this.metatype === "PiElementReference") {
+            if (this.metatype === modelelement.freLanguageConcept() || this.metatype === "FreNodeReference") {
                 this.checkElement(modelelement);
             }
         } else {
@@ -33,7 +33,7 @@ export class NamedElementSearchWorker implements SearchWorker {
         return true; // is irrelevant, there are no other workers in this search
     }
 
-    private checkElement(modelelement: PiElement) {
+    private checkElement(modelelement: FreNode) {
         let valueOfNameProp = modelelement["name"];
         if (valueOfNameProp !== null && valueOfNameProp !== undefined && typeof valueOfNameProp === "string" && valueOfNameProp.length > 0) {
             if (!this.caseSensitive) {

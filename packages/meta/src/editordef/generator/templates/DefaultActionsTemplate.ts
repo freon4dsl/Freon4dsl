@@ -1,19 +1,19 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import {
-    PiLanguage,
-    PiBinaryExpressionConcept,
-    PiClassifier, PiProperty, PiPrimitiveType
+    FreLanguage,
+    FreBinaryExpressionConcept,
+    FreClassifier, FreProperty, FrePrimitiveType
 } from "../../../languagedef/metalanguage";
 import { Roles } from "../../../utils";
 import {
-    PiEditProjection,
-    PiEditUnit,
-    PiOptionalPropertyProjection
+    FreEditProjection,
+    FreEditUnit,
+    FreOptionalPropertyProjection
 } from "../../metalanguage";
 
 export class DefaultActionsTemplate {
 
-    generate(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
+    generate(language: FreLanguage, editorDef: FreEditUnit, relativePath: string): string {
         const modelImports: string[] = language.conceptsAndInterfaces().map(c => `${Names.classifier(c)}`)
             .concat(language.units.map(u => `${Names.classifier(u)}`));
         return `
@@ -23,20 +23,19 @@ export class DefaultActionsTemplate {
                 BEFORE_BINARY_OPERATOR,
                 Box,
                 MetaKey,
-                ${Names.PiActions},
-                PiCreateBinaryExpressionAction,
-                PiCaret,
-                PiCustomAction,
-                PiEditor,
-                PiElement,
-                PiBinaryExpression,
-                PiKey,
-                PiLogger,
-                PiTriggerType,
-                PiUtils,
+                ${Names.FreActions},
+                ${Names.FreCreateBinaryExpressionAction},
+                FreCaret,
+                ${Names.FreCustomAction},
+                ${Names.FreEditor},
+                ${Names.FreNode},
+                ${Names.FreBinaryExpression},
+                FreKey,
+                FreLogger,
+                ${Names.FreTriggerType},
                 ActionBox,
                 OptionalBox,
-                PiElementReference,
+                ${Names.FreNodeReference},
                 LEFT_MOST,
                 RIGHT_MOST
             } from "${PROJECTITCORE}";
@@ -51,9 +50,9 @@ export class DefaultActionsTemplate {
              * (2) if a creator/behavior based on the editor definition is present, this is used,
              * (3) if neither (1) nor (2) yields a result, the default is used.  
              */  
-            export const BINARY_EXPRESSION_CREATORS: PiCreateBinaryExpressionAction[] = [
-                ${language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
-            `PiCreateBinaryExpressionAction.create({
+            export const BINARY_EXPRESSION_CREATORS: ${Names.FreCreateBinaryExpressionAction}[] = [
+                ${language.concepts.filter(c => (c instanceof FreBinaryExpressionConcept) && !c.isAbstract).map(c =>
+            `${Names.FreCreateBinaryExpressionAction}.create({
                     trigger: "${editorDef.findExtrasForType(c).symbol}",
                     activeInBoxRoles: [
                         LEFT_MOST,
@@ -61,7 +60,7 @@ export class DefaultActionsTemplate {
                         BEFORE_BINARY_OPERATOR,
                         AFTER_BINARY_OPERATOR
                     ],
-                    expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
+                    expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
                         const parent = box.element;
                         const newExpression = new ${Names.concept(c)}();
                         parent[(box as ActionBox).propertyName] = newExpression;
@@ -71,7 +70,7 @@ export class DefaultActionsTemplate {
         )}
             ];
             
-            export const CUSTOM_ACTIONS: PiCustomAction[] = [
+            export const CUSTOM_ACTIONS: ${Names.FreCustomAction}[] = [
                 ${this.customActionsForOptional(language, editorDef)}
                 ${this.customActionForParts(language, editorDef)}
                 ${this.customActionForReferences(language, editorDef)}
@@ -79,21 +78,21 @@ export class DefaultActionsTemplate {
             `;
         }
 
-    customActionsForOptional(language: PiLanguage, editorDef: PiEditUnit): string {
+    customActionsForOptional(language: FreLanguage, editorDef: FreEditUnit): string {
         let result: string = "";
         editorDef.getDefaultProjectiongroup().projections.forEach( projection => {
-            if (!!projection && projection instanceof PiEditProjection) {
+            if (!!projection && projection instanceof FreEditProjection) {
                 projection.lines.forEach(line => {
                     line.items.forEach(item => {
-                        if (item instanceof PiOptionalPropertyProjection) {
+                        if (item instanceof FreOptionalPropertyProjection) {
                             const firstLiteral: string = item.firstLiteral();
                             const myClassifier = projection.classifier.referred;
                             // TODO check this change
-                            // const propertyProjection: PiEditPropertyProjection = item.findPropertyProjection();
+                            // const propertyProjection: FreEditPropertyProjection = item.findPropertyProjection();
                             // const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.property.name);
                             // console.log("Looking for [" + optionalPropertyName + "] in [" + myClassifier.name + "]")
-                            // const prop: PiProperty = myClassifier.allProperties().find(prop => prop.name === optionalPropertyName);
-                            const prop: PiProperty = item.property.referred;
+                            // const prop: FreProperty = myClassifier.allProperties().find(prop => prop.name === optionalPropertyName);
+                            const prop: FreProperty = item.property.referred;
                             const optionalPropertyName = prop.name;
                             // end change
                             let rolename: string = "unknown role";
@@ -101,22 +100,22 @@ export class DefaultActionsTemplate {
                                 // TODO Check for lists (everywhere)
                                 rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
                             } else if (prop.isPrimitive) {
-                                if( prop.type === PiPrimitiveType.number) {
+                                if( prop.type === FrePrimitiveType.number) {
                                     rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox")
-                                } else if( prop.type === PiPrimitiveType.string) {
+                                } else if( prop.type === FrePrimitiveType.string) {
                                     rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox")
-                                } else if( prop.type === PiPrimitiveType.boolean) {
+                                } else if( prop.type === FrePrimitiveType.boolean) {
                                     rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox")
                                 }
                             } else {
                                 // reference
                                 rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "referencebox" );
                             }
-                            result += `PiCustomAction.create(
+                            result += `${Names.FreCustomAction}.create(
                                     {
                                         trigger: "${firstLiteral === "" ? optionalPropertyName : firstLiteral}",
                                         activeInBoxRoles: ["optional-${optionalPropertyName}"],
-                                        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                                        action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
                                             ((box.parent) as OptionalBox).mustShow = true;
                                             return box.element;
                                         },
@@ -131,22 +130,22 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    customActionForReferences(language: PiLanguage, editorDef: PiEditUnit): string {
+    customActionForReferences(language: FreLanguage, editorDef: FreEditUnit): string {
         let result = "";
-        const allClassifiers: PiClassifier[] = [];
+        const allClassifiers: FreClassifier[] = [];
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
         allClassifiers.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
                 const referredConcept = reference.type;
                 const extras = editorDef.findExtrasForType(referredConcept);
                 const trigger = (!!extras && !!extras.trigger) ? extras.trigger : reference.name;
-                result += `PiCustomAction.create(
+                result += `${Names.FreCustomAction}.create(
                 {   // Action to insert new reference to a concept
                     activeInBoxRoles: ["${Roles.newConceptReferencePart(reference)}"],
                     trigger: "${trigger}",
-                    action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                    action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
                         const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                        const newBase: PiElementReference<${Names.classifier(referredConcept)}> = PiElementReference.create<${Names.classifier(referredConcept)}>("", null);
+                        const newBase: ${Names.FreNodeReference}<${Names.classifier(referredConcept)}> = ${Names.FreNodeReference}.create<${Names.classifier(referredConcept)}>("", null);
                         parent.${reference.name}.push(newBase);
                         return newBase.referred;
                     }
@@ -158,7 +157,7 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    customActionForParts(language: PiLanguage, editorDef: PiEditUnit): string {
+    customActionForParts(language: FreLanguage, editorDef: FreEditUnit): string {
         let result = "";
         // Nothing to do for the moment
         return result;

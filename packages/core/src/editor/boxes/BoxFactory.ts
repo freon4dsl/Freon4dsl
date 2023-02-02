@@ -1,9 +1,9 @@
 import { runInAction } from "mobx";
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 import { BehaviorExecutionResult } from "../util/BehaviorUtils";
-import { PiLogger } from "../../logging";
-import { isNullOrUndefined, PiUtils } from "../../util/PiUtils";
-import { PiEditor } from "../PiEditor";
+import { FreLogger } from "../../logging";
+import { isNullOrUndefined, FreUtils } from "../../util/FreUtils";
+import { FreEditor } from "../FreEditor";
 import {
     Box,
     ActionBox,
@@ -25,7 +25,7 @@ type BoxCache<T extends Box> = {
     [id: string]: RoleCache<T>;
 }
 
-const LOGGER: PiLogger = new PiLogger("BoxFactory").mute();
+const LOGGER: FreLogger = new FreLogger("BoxFactory").mute();
 
 // The box caches
 let actionCache: BoxCache<ActionBox> = {};
@@ -109,9 +109,9 @@ export class BoxFactory {
      * @param creator The function with which the box can be createed , if not there
      * @param cache   The cache to use
      */
-    private static find<T extends Box>(element: PiElement, role: string, creator: () => T, cache: BoxCache<T>): T {
+    private static find<T extends Box>(element: FreNode, role: string, creator: () => T, cache: BoxCache<T>): T {
         // 1. Create the alias box, or find the one that already exists for this element and role
-        const elementId = element.piId();
+        const elementId = element.freId();
         if (!!cache[elementId]) {
             const box = cache[elementId][role];
             if (!!box) {
@@ -132,7 +132,7 @@ export class BoxFactory {
         }
     }
 
-    static action(element: PiElement, role: string, placeHolder: string, initializer?: Partial<ActionBox>): ActionBox {
+    static action(element: FreNode, role: string, placeHolder: string, initializer?: Partial<ActionBox>): ActionBox {
         if (cacheActionOff) {
             return new ActionBox(element, role, placeHolder, initializer);
         }
@@ -144,12 +144,12 @@ export class BoxFactory {
             // 2. Apply the other arguments in case they have changed
             result.placeholder = placeHolder;
             result.textHelper.setText("");
-            PiUtils.initializeObject(result, initializer);
+            FreUtils.initializeObject(result, initializer);
         });
         return result;
     }
 
-    static label(element: PiElement, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>): LabelBox {
+    static label(element: FreNode, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>): LabelBox {
         if (cacheLabelOff) {
             return new LabelBox(element, role, getLabel, initializer);
         }
@@ -160,13 +160,13 @@ export class BoxFactory {
         runInAction(() => {
             // 2. Apply the other arguments in case they have changed
             result.setLabel(getLabel);
-            PiUtils.initializeObject(result, initializer);
+            FreUtils.initializeObject(result, initializer);
         });
 
         return result;
     }
 
-    static text(element: PiElement, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>): TextBox {
+    static text(element: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>): TextBox {
         if (cacheTextOff) {
             return new TextBox(element, role, getText, setText, initializer);
         }
@@ -178,13 +178,13 @@ export class BoxFactory {
             // 2. Apply the other arguments in case they have changed
             result.getText = getText;
             result.setText = setText;
-            PiUtils.initializeObject(result, initializer);
+            FreUtils.initializeObject(result, initializer);
         });
 
         return result;
     }
 
-    static indent(element: PiElement, role: string, indent: number, childBox: Box): IndentBox {
+    static indent(element: FreNode, role: string, indent: number, childBox: Box): IndentBox {
         return new IndentBox(element, role, indent, childBox);
         // 1. Create the  box, or find the one that already exists for this element and role
         // const creator = () => new IndentBox(element, role, indent, childBox);
@@ -203,7 +203,7 @@ export class BoxFactory {
         return oneOk && twoOk;
     }
 
-    static horizontalLayout(element: PiElement, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
+    static horizontalLayout(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
         if (cacheHorizontalLayoutOff) {
             return new HorizontalLayoutBox(element, role, children, initializer);
         }
@@ -214,13 +214,13 @@ export class BoxFactory {
             if (!equals(result.children, children)) {
                 result.replaceChildren(children);
             }
-            PiUtils.initializeObject(result, initializer);
+            FreUtils.initializeObject(result, initializer);
         });
 
         return result;
     }
 
-    static verticalLayout(element: PiElement, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
+    static verticalLayout(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
         if (cacheVerticalLayoutOff) {
             return new VerticalLayoutBox(element, role, children, initializer);
         }
@@ -231,12 +231,12 @@ export class BoxFactory {
             if (!equals(result.children, children)) {
                 result.replaceChildren(children);
             }
-            PiUtils.initializeObject(result, initializer);
+            FreUtils.initializeObject(result, initializer);
         });
         return result;
     }
 
-    static horizontalList(element: PiElement, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
+    static horizontalList(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
         if (cacheHorizontalListOff) {
             return new HorizontalListBox(element, role, propertyName, children, initializer);
         }
@@ -247,13 +247,13 @@ export class BoxFactory {
             if (!equals(result.children, children)) {
                 result.replaceChildren(children);
             }
-            PiUtils.initializeObject(result, initializer);
+            FreUtils.initializeObject(result, initializer);
         });
 
         return result;
     }
 
-    static verticalList(element: PiElement, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
+    static verticalList(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
         if (cacheVerticalListOff) {
             return new VerticalListBox(element, role, propertyName, children, initializer);
         }
@@ -264,17 +264,17 @@ export class BoxFactory {
             if (!equals(result.children, children)) {
                 result.replaceChildren(children);
             }
-            PiUtils.initializeObject(result, initializer);
+            FreUtils.initializeObject(result, initializer);
         });
         return result;
     }
 
-    static select(element: PiElement,
+    static select(element: FreNode,
                   role: string,
                   placeHolder: string,
-                  getOptions: (editor: PiEditor) => SelectOption[],
+                  getOptions: (editor: FreEditor) => SelectOption[],
                   getSelectedOption: () => SelectOption | null,
-                  selectOption: (editor: PiEditor, option: SelectOption) => BehaviorExecutionResult,
+                  selectOption: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult,
                   initializer?: Partial<SelectBox>): SelectBox {
         if (cacheSelectOff) {
             return new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
@@ -289,13 +289,13 @@ export class BoxFactory {
             result.getOptions = getOptions;
             result.getSelectedOption = getSelectedOption;
             result.selectOption = selectOption;
-            PiUtils.initializeObject(result, initializer);
+            FreUtils.initializeObject(result, initializer);
         });
 
         return result;
     }
 
-    static optional(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string): OptionalBox {
+    static optional(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string): OptionalBox {
         if (cacheOptionalOff) {
             return new OptionalBox(element, role, condition, box, mustShow, actionText);
         }
@@ -304,13 +304,13 @@ export class BoxFactory {
         const result: OptionalBox = this.find<OptionalBox>(element, role, creator, optionalCache);
 
         // 2. Apply the other arguments in case they have changed
-        // PiUtils.initializeObject(result, initializer);
+        // FreUtils.initializeObject(result, initializer);
 
         return result;
 
     }
 
-    static gridcell(element: PiElement, propertyName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>): GridCellBox {
+    static gridcell(element: FreNode, propertyName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>): GridCellBox {
         if (cacheGridcellOff) {
             return new GridCellBox(element, role, row, column, box, initializer);
         }
@@ -320,14 +320,14 @@ export class BoxFactory {
 
         runInAction(() => {
             // 2. Apply the other arguments in case they have changed
-            PiUtils.initializeObject(result, initializer);
+            FreUtils.initializeObject(result, initializer);
         });
 
         return result;
     }
 
     // todo this method is currently unused, maybe change TableUtil?
-    static tablecell(element: PiElement, propertyName: string, propertyIndex: number, conceptName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>): TableCellBox {
+    static tablecell(element: FreNode, propertyName: string, propertyIndex: number, conceptName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>): TableCellBox {
         if (cacheTablecellOff) {
             return new TableCellBox(element, propertyName, propertyIndex, conceptName, role, row, column, box, initializer);
         }
@@ -337,7 +337,7 @@ export class BoxFactory {
 
         runInAction(() => {
             // 2. Apply the other arguments in case they have changed
-            PiUtils.initializeObject(result, initializer);
+            FreUtils.initializeObject(result, initializer);
         });
 
         return result;

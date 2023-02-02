@@ -1,18 +1,18 @@
-import { PiLanguage } from "../../languagedef/metalanguage";
-import { PiEditProjectionGroup, PiEditUnit } from "../../editordef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
 import { LimitedMaker } from "./LimitedMaker";
 import { BinaryExpMaker } from "./BinaryExpMaker";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
 import { ConceptMaker } from "./ConceptMaker";
 import { GrammarModel } from "./grammarModel/GrammarModel";
-import { LanguageAnalyser, PiAnalyser } from "./LanguageAnalyser";
+import { LanguageAnalyser, FreAnalyser } from "./LanguageAnalyser";
 import { GrammarPart } from "./grammarModel/GrammarPart";
 import { Names } from "../../utils";
 import { ParserGenUtil } from "./ParserGenUtil";
 
 export class GrammarGenerator {
 
-    createGrammar(language: PiLanguage, analyser: LanguageAnalyser, editUnit: PiEditUnit): GrammarModel {
+    createGrammar(language: FreLanguage, analyser: LanguageAnalyser, editUnit: FreEditUnit): GrammarModel {
         // create an empty model of the grammar and syntax analysis
         const grammar = new GrammarModel();
         grammar.language = language;
@@ -40,7 +40,7 @@ export class GrammarGenerator {
         return grammar;
     }
 
-    private createGrammarRules(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: PiLanguage) {
+    private createGrammarRules(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: FreLanguage) {
         // generate the rules for each unit
         for (const unitAnalyser of myLanguageAnalyser.unitAnalysers) {
             this.createRulesPerAnalyser(grammar, projectionGroup, unitAnalyser, language);
@@ -49,7 +49,7 @@ export class GrammarGenerator {
         this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser.commonAnalyser, language);
     }
 
-    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: PiEditProjectionGroup, analyser: PiAnalyser, language: PiLanguage) {
+    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, analyser: FreAnalyser, language: FreLanguage) {
         const grammarPart = new GrammarPart();
         grammarPart.unit = analyser.unit;
         // create parse rules and syntax analysis methods for the concepts
@@ -66,7 +66,7 @@ export class GrammarGenerator {
         // create parse rules and syntax analysis methods for the binary expressions
         const binaryExpMaker: BinaryExpMaker = new BinaryExpMaker();
         // always use the default projection group for binary expressions
-        let groupForBinaries: PiEditProjectionGroup = projectionGroup;
+        let groupForBinaries: FreEditProjectionGroup = projectionGroup;
         if (projectionGroup.name !== Names.defaultProjectionName) {
             groupForBinaries = projectionGroup.owningDefinition.getDefaultProjectiongroup();
         }

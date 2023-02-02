@@ -1,14 +1,14 @@
 import { GrammarRule } from "./GrammarRule";
-import { PiClassifier, PiProperty } from "../../../languagedef/metalanguage";
+import { FreClassifier, FreProperty } from "../../../languagedef/metalanguage";
 import { GenerationUtil, Names } from "../../../utils";
 import { ParserGenUtil } from "../ParserGenUtil";
 import { RightHandSideEntry, RHSPropEntry } from "./RHSEntries/";
 
 export class ConceptRule extends GrammarRule {
-    concept: PiClassifier = null;
+    concept: FreClassifier = null;
     ruleParts: RightHandSideEntry[] = [];
 
-    constructor(concept: PiClassifier, projectionName?: string) {
+    constructor(concept: FreClassifier, projectionName?: string) {
         super();
         this.concept = concept;
         this.ruleName = Names.classifier(this.concept);
@@ -17,8 +17,8 @@ export class ConceptRule extends GrammarRule {
         }
     }
 
-    private propsToSet(): PiProperty[] {
-        let xx: PiProperty[] = [];
+    private propsToSet(): FreProperty[] {
+        let xx: FreProperty[] = [];
         for (const part of this.ruleParts) {
             if (part instanceof RHSPropEntry) {
                 if (!xx.includes(part.property)) {

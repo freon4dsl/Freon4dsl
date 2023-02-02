@@ -1,5 +1,5 @@
 import { OrderedList } from "./OrderedList";
-import { PiClassifier, PiConcept, PiInterface } from "../../metalanguage";
+import { FreClassifier, FreConcept, FreInterface } from "../../metalanguage";
 
 // algorithm from https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla
 // 1. Breath First Search of each class hierarchy going "upwards" - result into OrderedList (preserve order + no duplicates).
@@ -9,10 +9,10 @@ import { PiClassifier, PiConcept, PiInterface } from "../../metalanguage";
 
 export class CommonSuperTypeUtil {
 
-    public static commonSuperType(inList: PiClassifier[]): PiClassifier[] {
+    public static commonSuperType(inList: FreClassifier[]): FreClassifier[] {
         if (!!inList && inList.length > 0) {
             // start with the supers from the first element
-            const rollingIntersect: OrderedList<PiClassifier> = this.getSupers(inList[0]);
+            const rollingIntersect: OrderedList<FreClassifier> = this.getSupers(inList[0]);
             // intersect with the next
             for (let i = 1; i < inList.length; i++) {
                 // this.printOrderedList("rollingIntersect at " + i.toString(), rollingIntersect);
@@ -23,10 +23,10 @@ export class CommonSuperTypeUtil {
         return [];
     }
 
-    private static printOrderedList(comment: string, list: OrderedList<PiClassifier>) {
+    private static printOrderedList(comment: string, list: OrderedList<FreClassifier>) {
         let result: string = comment;
-        for (const piClassifier of list) {
-            result += "\t" + piClassifier.name;
+        for (const FreClassifier of list) {
+            result += "\t" + FreClassifier.name;
         }
         console.log(result);
     }
@@ -36,29 +36,29 @@ export class CommonSuperTypeUtil {
      * @param inCls
      * @private
      */
-    private static getSupers(inCls: PiClassifier): OrderedList<PiClassifier>  {
-        const classes: OrderedList<PiClassifier> = new OrderedList<PiClassifier>();
+    private static getSupers(inCls: FreClassifier): OrderedList<FreClassifier>  {
+        const classes: OrderedList<FreClassifier> = new OrderedList<FreClassifier>();
         if (!!inCls) {
-            let nextLevel: OrderedList<PiClassifier> = new OrderedList<PiClassifier>();
+            let nextLevel: OrderedList<FreClassifier> = new OrderedList<FreClassifier>();
             nextLevel.add(inCls.name, inCls);
             // console.log(nextLevel.getByName(inCls.name)?.name);
             // this.printOrderedList("nextLevel: ", nextLevel );
             while (nextLevel.length() > 0) {
                 classes.addAll(nextLevel);
-                const thisLevel: OrderedList<PiClassifier> = new OrderedList<PiClassifier>();
+                const thisLevel: OrderedList<FreClassifier> = new OrderedList<FreClassifier>();
                 thisLevel.addAll(nextLevel);
-                nextLevel = new OrderedList<PiClassifier>();
+                nextLevel = new OrderedList<FreClassifier>();
                 for (const elem of thisLevel) {
-                    if (elem instanceof PiConcept) {
+                    if (elem instanceof FreConcept) {
                         if (!!elem.base) {
-                            const superClass: PiClassifier = elem.base.referred;
+                            const superClass: FreClassifier = elem.base.referred;
                             nextLevel.add(superClass.name, superClass);
                         }
                         for (const yy of elem.interfaces) {
                             nextLevel.add(yy.name, yy.referred);
                         }
                     }
-                    if (elem instanceof PiInterface) {
+                    if (elem instanceof FreInterface) {
                         elem.base.forEach(b => {
                             nextLevel.add(b.name, b.referred);
                         });

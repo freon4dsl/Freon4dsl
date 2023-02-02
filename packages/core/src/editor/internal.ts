@@ -7,17 +7,17 @@
  * concepts that are using them.
  */
 
-export * from "./PiTables";
+export * from "./FreTableDefinition";
 export * from "./boxes";
 export * from "./actions";
 export * from "./util";
 export * from "./simplifiedBoxAPI";
-export * from "./PiCombinedActions";
-export * from "./PiStyle";
+export * from "./FreCombinedActions";
+export * from "./FreStyle";
 
 export * from "./projections";
 
-// load PiEditor last, as it needs one or more of the above definitions
-export * from "./PiEditor";
+// load FreEditor last, as it needs one or more of the above definitions
+export * from "./FreEditor";
 
 

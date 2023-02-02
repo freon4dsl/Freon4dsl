@@ -1,15 +1,15 @@
 import { GrammarRule } from "./GrammarRule";
-import { PiBinaryExpressionConcept, PiClassifier, PiExpressionConcept } from "../../../languagedef/metalanguage";
+import { FreBinaryExpressionConcept, FreClassifier, FreExpressionConcept } from "../../../languagedef/metalanguage";
 import { getTypeCall } from "./GrammarUtils";
 import { BinaryExpMaker } from "../BinaryExpMaker";
 import { internalTransformNode, ParserGenUtil } from "../ParserGenUtil";
 import { Names } from "../../../utils";
 
 export class ChoiceRule extends GrammarRule {
-    implementors: PiClassifier[];
-    myConcept: PiClassifier;
+    implementors: FreClassifier[];
+    myConcept: FreClassifier;
 
-    constructor(ruleName: string, myConcept: PiClassifier, implementors: PiClassifier[]) {
+    constructor(ruleName: string, myConcept: FreClassifier, implementors: FreClassifier[]) {
         super();
         this.ruleName = ruleName;
         this.implementors = implementors;
@@ -21,13 +21,13 @@ export class ChoiceRule extends GrammarRule {
         let rule: string = "";
         if (this.implementors.length > 0) {
             // test to see if there is a binary expression concept here
-            let implementorsNoBinaries = this.implementors.filter(sub => !(sub instanceof PiBinaryExpressionConcept));
+            let implementorsNoBinaries = this.implementors.filter(sub => !(sub instanceof FreBinaryExpressionConcept));
             if (this.implementors.length != implementorsNoBinaries.length) { // there are binaries
                 // exclude binary expression concepts
                 rule = `${(this.ruleName)} = ${implementorsNoBinaries.map(implementor =>
                     `${getTypeCall(implementor)} `).join("\n    | ")}`;
                 // add the special binary concept rule(s) as choice
-                const expBases = ParserGenUtil.findAllExpressionBases(this.implementors.filter(sub => sub instanceof PiBinaryExpressionConcept) as PiBinaryExpressionConcept[]);
+                const expBases = ParserGenUtil.findAllExpressionBases(this.implementors.filter(sub => sub instanceof FreBinaryExpressionConcept) as FreBinaryExpressionConcept[]);
                 if (implementorsNoBinaries.length > 0) { // there are already choices present in the rule, so add a '|' as separator
                     rule += '\n    | ';
                 }

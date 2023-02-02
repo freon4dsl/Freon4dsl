@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { SvgBox } from "@projectit/core";
+    import type { SvgBox } from "@freon4dsl/core";
     import { afterUpdate, onMount } from "svelte";
     import { componentId } from "./svelte-utils";
 

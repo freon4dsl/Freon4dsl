@@ -1,9 +1,9 @@
-import { PiLanguage } from "../../metalanguage";
+import { FreLanguage } from "../../metalanguage";
 import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils";
 
 export class WorkerInterfaceTemplate {
 
-    generateWorkerInterface(language: PiLanguage, relativePath: string): string {
+    generateWorkerInterface(language: FreLanguage, relativePath: string): string {
 
         // the template starts here
         return `

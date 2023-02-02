@@ -1,4 +1,4 @@
-import { IMainInterpreter } from "@projectit/core";
+import { IMainInterpreter } from "@freon4dsl/core";
 import { Multiply, Plus } from "../../../../language/gen/index";
 import { MathInterpreter } from "./MathInterpreter";
 

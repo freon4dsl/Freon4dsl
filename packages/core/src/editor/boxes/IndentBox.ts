@@ -1,4 +1,4 @@
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 import { Box } from "./internal";
 
 /**
@@ -21,7 +21,7 @@ export class IndentBox extends Box {
 
     indent: number = 4;
 
-    constructor(exp: PiElement, role: string, indent: number, child: Box) {
+    constructor(exp: FreNode, role: string, indent: number, child: Box) {
         super(exp, role);
         this.indent = indent;
         this.child = child;

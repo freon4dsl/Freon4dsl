@@ -1,25 +1,25 @@
-import { Language } from "../language";
-import { PiBinaryExpression, PiElement, PiExpression, PiModel, PiModelUnit } from "../ast";
+import { FreLanguage } from "../language";
+import { FreBinaryExpression, FreNode, FreExpressionNode, FreModel, FreModelUnit } from "../ast";
 
-export function isPiModel(element: PiElement): element is PiModel {
-    return !!element && element.piIsModel && element.piIsModel();
+export function isFreModel(element: FreNode): element is FreModel {
+    return !!element && element.freIsModel && element.freIsModel();
 }
 
-export function isPiExpression(element: PiElement): element is PiExpression {
-    return !!element && element.piIsExpression && element.piIsExpression();
+export function isFreExpression(element: FreNode): element is FreExpressionNode {
+    return !!element && element.freIsExpression && element.freIsExpression();
 }
 
-export function isPiBinaryExpression(element: PiElement): element is PiBinaryExpression {
-    return !!element && element.piIsExpression && element.piIsExpression() && element.piIsBinaryExpression && element.piIsBinaryExpression();
+export function isFreBinaryExpression(element: FreNode): element is FreBinaryExpression {
+    return !!element && element.freIsExpression && element.freIsExpression() && element.freIsBinaryExpression && element.freIsBinaryExpression();
 }
 
-export function ownerOfType(element: PiElement, typename: string, exact?: boolean): PiElement | null {
-    let parent = element.piOwnerDescriptor()?.owner;
+export function ownerOfType(element: FreNode, typename: string, exact?: boolean): FreNode | null {
+    let parent = element.freOwnerDescriptor()?.owner;
     while (!!parent) {
         if (exact ? instanceOfExact(parent, typename) : instanceOfSub(parent, typename)) {
             return parent;
         } else {
-            parent = parent.piOwnerDescriptor()?.owner;
+            parent = parent.freOwnerDescriptor()?.owner;
         }
     }
     return null;
@@ -29,25 +29,25 @@ export function ownerOfType(element: PiElement, typename: string, exact?: boolea
  * Returns the modelunit that owns this `element'
  * @param element
  */
-export function modelUnit(element: PiElement): PiModelUnit | null {
+export function modelUnit(element: FreNode): FreModelUnit | null {
     let current = element;
     while (!!current) {
-        if (current.piIsUnit()) {
-            return current as PiModelUnit;
+        if (current.freIsUnit()) {
+            return current as FreModelUnit;
         } else {
-            current = current.piOwnerDescriptor()?.owner;
+            current = current.freOwnerDescriptor()?.owner;
         }
     }
     // No modelunit found, element is standalone
     return null;
 }
 
-export function instanceOfExact(src: PiElement, target: string): boolean {
-    return src.piLanguageConcept() === target;
+export function instanceOfExact(src: FreNode, target: string): boolean {
+    return src.freLanguageConcept() === target;
 }
 
-export function instanceOfSub(src: PiElement, target: string): boolean {
-    return isSubConcept(src.piLanguageConcept(), target);
+export function instanceOfSub(src: FreNode, target: string): boolean {
+    return isSubConcept(src.freLanguageConcept(), target);
 }
 
 export function isExactConcept(src, target: string): boolean {
@@ -55,7 +55,7 @@ export function isExactConcept(src, target: string): boolean {
 }
 
 export function isSubConcept(src, target: string): boolean {
-    return src === target || Language.getInstance().classifier(target).subConceptNames.includes(src);
+    return src === target || FreLanguage.getInstance().classifier(target).subConceptNames.includes(src);
 }
 
 /**
@@ -63,7 +63,7 @@ export function isSubConcept(src, target: string): boolean {
  * @param list
  * @param toBeMatched
  */
-export function matchElementList(list: PiElement[], toBeMatched: Partial<PiElement>[]): boolean {
+export function matchElementList(list: FreNode[], toBeMatched: Partial<FreNode>[]): boolean {
     let foundMatch: boolean = true;
     for (const theirs of toBeMatched) {
         let xx: boolean = false;

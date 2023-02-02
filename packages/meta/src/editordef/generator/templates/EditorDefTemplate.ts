@@ -1,9 +1,9 @@
 import {
-    PiBinaryExpressionConcept,
-    PiConcept,
-    PiLanguage,
-    PiLimitedConcept,
-    PiProperty
+    FreBinaryExpressionConcept,
+    FreConcept,
+    FreLanguage,
+    FreLimitedConcept,
+    FreProperty
 } from "../../../languagedef/metalanguage";
 import {
     CONFIGURATION_FOLDER,
@@ -14,22 +14,22 @@ import {
     Names,
     PROJECTITCORE
 } from "../../../utils";
-import { PiEditProjection, PiEditPropertyProjection, PiEditTableProjection, PiEditUnit } from "../../metalanguage";
+import { FreEditProjection, FreEditPropertyProjection, FreEditTableProjection, FreEditUnit } from "../../metalanguage";
 
 export class EditorDefTemplate {
 
-    generateEditorDef(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
+    generateEditorDef(language: FreLanguage, editorDef: FreEditUnit, relativePath: string): string {
         const defaultProjGroup = editorDef.getDefaultProjectiongroup();
 
         let conceptsWithTrigger: ConceptTriggerElement[] = [];
         let conceptsWithRefShortcut: ConceptShortCutElement[] = [];
         let languageImports: string[] = [];
         let editorImports: string[] = [];
-        let coreImports: string[] = ['Language', 'FreProjectionHandler', 'FreBoxProvider'];
+        let coreImports: string[] = [`${Names.FreLanguage}`, 'FreProjectionHandler', 'FreBoxProvider'];
 
-        language.concepts.filter(c => !(c instanceof PiLimitedConcept || c.isAbstract)).forEach(concept => {
-            // TODO handle other sub types of PiClassifier
-            if (concept instanceof PiConcept) {
+        language.concepts.filter(c => !(c instanceof FreLimitedConcept || c.isAbstract)).forEach(concept => {
+            // TODO handle other sub types of FreClassifier
+            if (concept instanceof FreConcept) {
                 // find the triggers for all concepts
                 // every concept should have one - added by EditorDefaultsGenerator
                 // console.log("searching trigger for: " + concept.name);
@@ -52,7 +52,7 @@ export class EditorDefTemplate {
         // get all the constructors
         let constructors: string[] = [];
         language.concepts.forEach(concept => {
-            if (!(concept instanceof PiLimitedConcept) && !concept.isAbstract) {
+            if (!(concept instanceof FreLimitedConcept) && !concept.isAbstract) {
                 constructors.push(`["${Names.concept(concept)}", () => {
                         return new ${Names.boxProvider(concept)}(${handlerVarName})
                     }]`);
@@ -81,8 +81,8 @@ export class EditorDefTemplate {
         let conceptProjectionToPropertyProjection: Map<string, Map<string, Map<string, string>>> = new Map<string, Map<string, Map<string, string>>>();
         language.classifiers().forEach(concept => {
             editorDef.findProjectionsForType(concept).forEach(conceptProjection => {
-                if (conceptProjection instanceof PiEditProjection) {
-                    const partProjections: PiEditPropertyProjection[] = conceptProjection.findAllPartProjections();
+                if (conceptProjection instanceof FreEditProjection) {
+                    const partProjections: FreEditPropertyProjection[] = conceptProjection.findAllPartProjections();
                     partProjections.filter(pp => !isNullOrUndefined(pp.projectionName)).forEach(p => {
                         let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
                         if (conceptMap === undefined) {
@@ -113,8 +113,8 @@ export class EditorDefTemplate {
             });
             // TODO Might refactor this with almost the same code above.
             editorDef.findTableProjectionsForType(concept).forEach(conceptProjection => {
-                if (conceptProjection instanceof PiEditTableProjection) {
-                    const partProjections: PiEditPropertyProjection[] = conceptProjection.findAllPartProjections();
+                if (conceptProjection instanceof FreEditTableProjection) {
+                    const partProjections: FreEditPropertyProjection[] = conceptProjection.findAllPartProjections();
                     partProjections.filter(pp => !isNullOrUndefined(pp.projectionName)).forEach(p => {
                         let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
                         if (conceptMap === undefined) {
@@ -145,13 +145,13 @@ export class EditorDefTemplate {
             });
         })
 
-        const hasBinExps: boolean = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept)).length > 0;
+        const hasBinExps: boolean = language.concepts.filter(c => (c instanceof FreBinaryExpressionConcept)).length > 0;
         // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
 
         // template starts here
         return `import { ${coreImports.join(", ")} } from "${PROJECTITCORE}";
         
-            import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/ProjectitConfiguration";
+            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
             import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";         
             import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";  
     
@@ -168,7 +168,7 @@ export class EditorDefTemplate {
                 ${editorDef.getAllNonDefaultProjectiongroups().map(group =>
                     `${handlerVarName}.addProjection("${Names.projection(group)}")`
                 ).join(";\n")}
-                for (const p of projectitConfiguration.customProjection) {
+                for (const p of freonConfiguration.customProjection) {
                     ${handlerVarName}.addCustomProjection(p);
                 }
                 handler.initConceptToPropertyProjection(map);
@@ -187,10 +187,10 @@ export class EditorDefTemplate {
              */
              export function initializeEditorDef() {
                  ${conceptsWithTrigger.map( element =>
-                `Language.getInstance().concept("${Names.concept(element.concept)}").trigger = "${element.trigger}";`
+                `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").trigger = "${element.trigger}";`
             ).join("\n")}
                  ${conceptsWithRefShortcut.map( element =>
-                `Language.getInstance().concept("${Names.concept(element.concept)}").referenceShortcut = 
+                `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").referenceShortcut = 
                     {
                         propertyName: "${element.property.name}",
                         conceptName: "${element.property.type.name}"
@@ -202,9 +202,9 @@ export class EditorDefTemplate {
             }`
     }
 
-    private generateHeaderInfo(projection: PiEditTableProjection, coreImports: string[]): string {
+    private generateHeaderInfo(projection: FreEditTableProjection, coreImports: string[]): string {
         if (!!projection && !!projection.headers && projection.headers.length > 0) {
-            ListUtil.addIfNotPresent(coreImports, "BoxUtils");
+            ListUtil.addIfNotPresent(coreImports, "BoxUtil");
             ListUtil.addIfNotPresent(coreImports, "FreTableHeaderInfo");
             return `new FreTableHeaderInfo("${projection.classifier.name}", "${projection.name}", [${projection.headers.map(head =>
                 `"${head}"`
@@ -216,10 +216,10 @@ export class EditorDefTemplate {
 
 /** private class to store some info */
 class ConceptTriggerElement {
-    concept: PiConcept;
+    concept: FreConcept;
     trigger: string;
 
-    constructor(concept: PiConcept, trigger: string) {
+    constructor(concept: FreConcept, trigger: string) {
         this.concept = concept;
         this.trigger = trigger;
     }
@@ -227,10 +227,10 @@ class ConceptTriggerElement {
 
 /** private class to store some info */
 class ConceptShortCutElement {
-    concept: PiConcept;
-    property: PiProperty;
+    concept: FreConcept;
+    property: FreProperty;
 
-    constructor(concept: PiConcept, property: PiProperty) {
+    constructor(concept: FreConcept, property: FreProperty) {
         this.concept = concept;
         this.property = property;
     }

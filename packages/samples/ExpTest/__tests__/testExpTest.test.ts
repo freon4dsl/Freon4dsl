@@ -1,4 +1,4 @@
-import { GenericModelSerializer } from "@projectit/core";
+import { GenericModelSerializer } from "@freon4dsl/core";
 import { FileHandler } from "../../utils/FileHandler";
 import { ExpTestEnvironment } from "../environment/gen/ExpTestEnvironment";
 import { ExpTestModelUnitType, Test, Unit1 } from "../language/gen";

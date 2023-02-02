@@ -1,0 +1,86 @@
+{
+   "$typename": "Product",
+   "name": "LegalAll",
+   "product": {
+      "$typename": "InsuranceProduct",
+      "name": "LegalAll",
+      "productName": "Careless",
+      "advertisedPremium": {
+         "$typename": "EuroLiteral",
+         "euros": 2000,
+         "cents": 0
+      },
+      "riskAdjustment": null,
+      "calculation": {
+         "$typename": "PlusExpression",
+         "left": {
+            "$typename": "FunctionCallExpression",
+            "args": [
+               {
+                  "$typename": "InsurancePartRef",
+                  "part": "damageToOtherPersonsProperty"
+               }
+            ],
+            "funcDefinition": "calc"
+         },
+         "right": {
+            "$typename": "FunctionCallExpression",
+            "args": [
+               {
+                  "$typename": "InsurancePartRef",
+                  "part": "damageToOtherPersonsHealth"
+               }
+            ],
+            "funcDefinition": "calc"
+         }
+      },
+      "helpers": [
+         {
+            "$typename": "CalcFunction",
+            "name": "calc",
+            "description": null,
+            "declaredType": {
+               "$typename": "TypeRef",
+               "type": "EUR"
+            },
+            "body": {
+               "$typename": "MultiplyExpression",
+               "left": {
+                  "$typename": "ParameterRef",
+                  "attribute": {
+                     "$typename": "PayoutRef",
+                     "name": "maximumPayOut"
+                  },
+                  "parameter": "part"
+               },
+               "right": {
+                  "$typename": "PercentageLiteral",
+                  "value": 10
+               }
+            },
+            "parameters": [
+               {
+                  "$typename": "Parameter",
+                  "name": "part",
+                  "declaredType": {
+                     "$typename": "TypeRef",
+                     "type": "InsurancePart"
+                  }
+               }
+            ]
+         }
+      ],
+      "themes": [
+         "LegalTheme"
+      ],
+      "nrPremiumDays": "Month",
+      "parts": [
+         "damageToOtherPersonsProperty",
+         "damageToOtherPersonsHealth",
+         "hospitalization"
+      ],
+      "basedOn": [
+         "legal1"
+      ]
+   }
+}

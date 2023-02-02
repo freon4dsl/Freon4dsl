@@ -8,396 +8,396 @@ LimitedTest {
     "$$propertyName": "",
     "$id": "ID-1",
     "$typename": "TestParserModel",
-    "_PI_lim": [Circular],
-    "_PI_parts": null,
-    "_PI_prim": null,
-    "_PI_primWith": null,
-    "_PI_ref": null,
+    "_FRE_lim": [Circular],
+    "_FRE_parts": null,
+    "_FRE_prim": null,
+    "_FRE_primWith": null,
+    "_FRE_ref": null,
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "lim",
   "$id": "ID-5",
   "$typename": "LimitedTest",
-  "_PI_limitedNonOpt": LimitedNonOptional {
+  "_FRE_limitedNonOpt": LimitedNonOptional {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "limitedNonOpt",
     "$id": "ID-2",
     "$typename": "LimitedNonOptional",
-    "_PI_other": PiElementReference {
+    "_FRE_other": FreNodeReference {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "other",
-      "_PI_pathname": Array [
+      "_FRE_pathname": Array [
         "FIRST",
       ],
-      "_PI_referred": OtherLimited {
+      "_FRE_referred": OtherLimited {
         "$$owner": null,
         "$$propertyIndex": undefined,
         "$$propertyName": "",
         "$id": "ID-4",
         "$typename": "OtherLimited",
-        "_PI_name": "FIRST",
+        "_FRE_name": "FIRST",
       },
       "typeName": "OtherLimited",
     },
-    "_PI_otherMulti": Array [
-      PiElementReference {
+    "_FRE_otherMulti": Array [
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "otherMulti",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "SECOND",
         ],
-        "_PI_referred": OtherLimited {
+        "_FRE_referred": OtherLimited {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-5",
           "$typename": "OtherLimited",
-          "_PI_name": "SECOND",
+          "_FRE_name": "SECOND",
         },
         "typeName": "OtherLimited",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 1,
         "$$propertyName": "otherMulti",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "FIRST",
         ],
-        "_PI_referred": OtherLimited {
+        "_FRE_referred": OtherLimited {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-4",
           "$typename": "OtherLimited",
-          "_PI_name": "FIRST",
+          "_FRE_name": "FIRST",
         },
         "typeName": "OtherLimited",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 2,
         "$$propertyName": "otherMulti",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "FIRST",
         ],
-        "_PI_referred": OtherLimited {
+        "_FRE_referred": OtherLimited {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-4",
           "$typename": "OtherLimited",
-          "_PI_name": "FIRST",
+          "_FRE_name": "FIRST",
         },
         "typeName": "OtherLimited",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 3,
         "$$propertyName": "otherMulti",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "SECOND",
         ],
-        "_PI_referred": OtherLimited {
+        "_FRE_referred": OtherLimited {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-5",
           "$typename": "OtherLimited",
-          "_PI_name": "SECOND",
+          "_FRE_name": "SECOND",
         },
         "typeName": "OtherLimited",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 4,
         "$$propertyName": "otherMulti",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "SECOND",
         ],
-        "_PI_referred": OtherLimited {
+        "_FRE_referred": OtherLimited {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-5",
           "$typename": "OtherLimited",
-          "_PI_name": "SECOND",
+          "_FRE_name": "SECOND",
         },
         "typeName": "OtherLimited",
       },
     ],
-    "_PI_visMulti": Array [
-      PiElementReference {
+    "_FRE_visMulti": Array [
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "visMulti",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "+",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-1",
           "$typename": "VisibilityKind",
-          "_PI_name": "+",
+          "_FRE_name": "+",
         },
         "typeName": "VisibilityKind",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 1,
         "$$propertyName": "visMulti",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "+",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-1",
           "$typename": "VisibilityKind",
-          "_PI_name": "+",
+          "_FRE_name": "+",
         },
         "typeName": "VisibilityKind",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 2,
         "$$propertyName": "visMulti",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "+",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-1",
           "$typename": "VisibilityKind",
-          "_PI_name": "+",
+          "_FRE_name": "+",
         },
         "typeName": "VisibilityKind",
       },
     ],
-    "_PI_visMultiWithExtra": Array [
-      PiElementReference {
+    "_FRE_visMultiWithExtra": Array [
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "visMultiWithExtra",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "-",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-2",
           "$typename": "VisibilityKind",
-          "_PI_name": "-",
+          "_FRE_name": "-",
         },
         "typeName": "VisibilityKind",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 1,
         "$$propertyName": "visMultiWithExtra",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "+",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-1",
           "$typename": "VisibilityKind",
-          "_PI_name": "+",
+          "_FRE_name": "+",
         },
         "typeName": "VisibilityKind",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 2,
         "$$propertyName": "visMultiWithExtra",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "-",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-2",
           "$typename": "VisibilityKind",
-          "_PI_name": "-",
+          "_FRE_name": "-",
         },
         "typeName": "VisibilityKind",
       },
     ],
-    "_PI_visWithExtra": PiElementReference {
+    "_FRE_visWithExtra": FreNodeReference {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "visWithExtra",
-      "_PI_pathname": Array [
+      "_FRE_pathname": Array [
         "-",
       ],
-      "_PI_referred": VisibilityKind {
+      "_FRE_referred": VisibilityKind {
         "$$owner": null,
         "$$propertyIndex": undefined,
         "$$propertyName": "",
         "$id": "ID-2",
         "$typename": "VisibilityKind",
-        "_PI_name": "-",
+        "_FRE_name": "-",
       },
       "typeName": "VisibilityKind",
     },
-    "_PI_visibility": PiElementReference {
+    "_FRE_visibility": FreNodeReference {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "visibility",
-      "_PI_pathname": Array [
+      "_FRE_pathname": Array [
         "+",
       ],
-      "_PI_referred": VisibilityKind {
+      "_FRE_referred": VisibilityKind {
         "$$owner": null,
         "$$propertyIndex": undefined,
         "$$propertyName": "",
         "$id": "ID-1",
         "$typename": "VisibilityKind",
-        "_PI_name": "+",
+        "_FRE_name": "+",
       },
       "typeName": "VisibilityKind",
     },
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 19,
       "line": 2,
     },
   },
-  "_PI_limitedOpt": LimitedOptional {
+  "_FRE_limitedOpt": LimitedOptional {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "limitedOpt",
     "$id": "ID-3",
     "$typename": "LimitedOptional",
-    "_PI_visMulti": Array [
-      PiElementReference {
+    "_FRE_visMulti": Array [
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "visMulti",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "#",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "VisibilityKind",
       },
     ],
-    "_PI_visMultiWithExtra": Array [
-      PiElementReference {
+    "_FRE_visMultiWithExtra": Array [
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "visMultiWithExtra",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "-",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-2",
           "$typename": "VisibilityKind",
-          "_PI_name": "-",
+          "_FRE_name": "-",
         },
         "typeName": "VisibilityKind",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 1,
         "$$propertyName": "visMultiWithExtra",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "-",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-2",
           "$typename": "VisibilityKind",
-          "_PI_name": "-",
+          "_FRE_name": "-",
         },
         "typeName": "VisibilityKind",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 2,
         "$$propertyName": "visMultiWithExtra",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "-",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-2",
           "$typename": "VisibilityKind",
-          "_PI_name": "-",
+          "_FRE_name": "-",
         },
         "typeName": "VisibilityKind",
       },
     ],
-    "_PI_visWithExtra": PiElementReference {
+    "_FRE_visWithExtra": FreNodeReference {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "visWithExtra",
-      "_PI_pathname": Array [
+      "_FRE_pathname": Array [
         "-",
       ],
-      "_PI_referred": VisibilityKind {
+      "_FRE_referred": VisibilityKind {
         "$$owner": null,
         "$$propertyIndex": undefined,
         "$$propertyName": "",
         "$id": "ID-2",
         "$typename": "VisibilityKind",
-        "_PI_name": "-",
+        "_FRE_name": "-",
       },
       "typeName": "VisibilityKind",
     },
-    "_PI_visibility": PiElementReference {
+    "_FRE_visibility": FreNodeReference {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "visibility",
-      "_PI_pathname": Array [
+      "_FRE_pathname": Array [
         "+",
       ],
-      "_PI_referred": VisibilityKind {
+      "_FRE_referred": VisibilityKind {
         "$$owner": null,
         "$$propertyIndex": undefined,
         "$$propertyName": "",
         "$id": "ID-1",
         "$typename": "VisibilityKind",
-        "_PI_name": "+",
+        "_FRE_name": "+",
       },
       "typeName": "VisibilityKind",
     },
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 16,
       "line": 12,
     },
   },
-  "_PI_limitedOpt2": LimitedOptional {
+  "_FRE_limitedOpt2": LimitedOptional {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "limitedOpt2",
     "$id": "ID-4",
     "$typename": "LimitedOptional",
-    "_PI_visMulti": Array [],
-    "_PI_visMultiWithExtra": Array [],
-    "parse_location": PiParseLocation {
+    "_FRE_visMulti": Array [],
+    "_FRE_visMultiWithExtra": Array [],
+    "parse_location": FreParseLocation {
       "column": 17,
       "line": 18,
     },
   },
-  "_PI_name": "anyNameWillDo",
-  "parse_location": PiParseLocation {
+  "_FRE_name": "anyNameWillDo",
+  "parse_location": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -412,81 +412,81 @@ PartsTest {
     "$$propertyName": "",
     "$id": "ID-1",
     "$typename": "TestParserModel",
-    "_PI_lim": null,
-    "_PI_parts": [Circular],
-    "_PI_prim": null,
-    "_PI_primWith": null,
-    "_PI_ref": null,
+    "_FRE_lim": null,
+    "_FRE_parts": [Circular],
+    "_FRE_prim": null,
+    "_FRE_primWith": null,
+    "_FRE_ref": null,
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "parts",
   "$id": "ID-7",
   "$typename": "PartsTest",
-  "_PI_directParts": WithDirectParts {
+  "_FRE_directParts": WithDirectParts {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "directParts",
     "$id": "ID-6",
     "$typename": "WithDirectParts",
-    "_PI_optList": Array [],
-    "_PI_optPart": null,
-    "_PI_part": PartConcept {
+    "_FRE_optList": Array [],
+    "_FRE_optPart": null,
+    "_FRE_part": PartConcept {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "part",
       "$id": "ID-2",
       "$typename": "PartConcept",
-      "_PI_content": "stringLiteral",
-      "_PI_optContent": 10,
-      "_PI_visibility": PiElementReference {
+      "_FRE_content": "stringLiteral",
+      "_FRE_optContent": 10,
+      "_FRE_visibility": FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "visibility",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "+",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-1",
           "$typename": "VisibilityKind",
-          "_PI_name": "+",
+          "_FRE_name": "+",
         },
         "typeName": "VisibilityKind",
       },
-      "parse_location": PiParseLocation {
+      "parse_location": FreParseLocation {
         "column": 25,
         "line": 3,
       },
     },
-    "_PI_partList": Array [
+    "_FRE_partList": Array [
       PartConcept {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "partList",
         "$id": "ID-3",
         "$typename": "PartConcept",
-        "_PI_content": "otherString",
-        "_PI_optContent": 0,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "otherString",
+        "_FRE_optContent": 0,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "#",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-3",
             "$typename": "VisibilityKind",
-            "_PI_name": "#",
+            "_FRE_name": "#",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 9,
         },
@@ -497,26 +497,26 @@ PartsTest {
         "$$propertyName": "partList",
         "$id": "ID-4",
         "$typename": "PartConcept",
-        "_PI_content": "stringLiteralXXX",
-        "_PI_optContent": 123,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "stringLiteralXXX",
+        "_FRE_optContent": 123,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "-",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-2",
             "$typename": "VisibilityKind",
-            "_PI_name": "-",
+            "_FRE_name": "-",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 13,
         },
@@ -527,39 +527,39 @@ PartsTest {
         "$$propertyName": "partList",
         "$id": "ID-5",
         "$typename": "PartConcept",
-        "_PI_content": "stringLiteralYYY",
-        "_PI_optContent": 0,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "stringLiteralYYY",
+        "_FRE_optContent": 0,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "+",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-1",
             "$typename": "VisibilityKind",
-            "_PI_name": "+",
+            "_FRE_name": "+",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 17,
         },
       },
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 14,
       "line": 2,
     },
   },
-  "_PI_name": "myName",
-  "_PI_partsOfParts": null,
-  "parse_location": PiParseLocation {
+  "_FRE_name": "myName",
+  "_FRE_partsOfParts": null,
+  "parse_location": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -574,81 +574,81 @@ PartsTest {
     "$$propertyName": "",
     "$id": "ID-1",
     "$typename": "TestParserModel",
-    "_PI_lim": null,
-    "_PI_parts": [Circular],
-    "_PI_prim": null,
-    "_PI_primWith": null,
-    "_PI_ref": null,
+    "_FRE_lim": null,
+    "_FRE_parts": [Circular],
+    "_FRE_prim": null,
+    "_FRE_primWith": null,
+    "_FRE_ref": null,
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "parts",
   "$id": "ID-39",
   "$typename": "PartsTest",
-  "_PI_directParts": WithDirectParts {
+  "_FRE_directParts": WithDirectParts {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "directParts",
     "$id": "ID-6",
     "$typename": "WithDirectParts",
-    "_PI_optList": Array [],
-    "_PI_optPart": null,
-    "_PI_part": PartConcept {
+    "_FRE_optList": Array [],
+    "_FRE_optPart": null,
+    "_FRE_part": PartConcept {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "part",
       "$id": "ID-2",
       "$typename": "PartConcept",
-      "_PI_content": "stringLiteral",
-      "_PI_optContent": 10,
-      "_PI_visibility": PiElementReference {
+      "_FRE_content": "stringLiteral",
+      "_FRE_optContent": 10,
+      "_FRE_visibility": FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "visibility",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "+",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-1",
           "$typename": "VisibilityKind",
-          "_PI_name": "+",
+          "_FRE_name": "+",
         },
         "typeName": "VisibilityKind",
       },
-      "parse_location": PiParseLocation {
+      "parse_location": FreParseLocation {
         "column": 25,
         "line": 3,
       },
     },
-    "_PI_partList": Array [
+    "_FRE_partList": Array [
       PartConcept {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "partList",
         "$id": "ID-3",
         "$typename": "PartConcept",
-        "_PI_content": "otherString",
-        "_PI_optContent": 0,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "otherString",
+        "_FRE_optContent": 0,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "#",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-3",
             "$typename": "VisibilityKind",
-            "_PI_name": "#",
+            "_FRE_name": "#",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 9,
         },
@@ -659,26 +659,26 @@ PartsTest {
         "$$propertyName": "partList",
         "$id": "ID-4",
         "$typename": "PartConcept",
-        "_PI_content": "stringLiteralXXX",
-        "_PI_optContent": 123,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "stringLiteralXXX",
+        "_FRE_optContent": 123,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "-",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-2",
             "$typename": "VisibilityKind",
-            "_PI_name": "-",
+            "_FRE_name": "-",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 13,
         },
@@ -689,123 +689,123 @@ PartsTest {
         "$$propertyName": "partList",
         "$id": "ID-5",
         "$typename": "PartConcept",
-        "_PI_content": "stringLiteralYYY",
-        "_PI_optContent": 0,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "stringLiteralYYY",
+        "_FRE_optContent": 0,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "+",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-1",
             "$typename": "VisibilityKind",
-            "_PI_name": "+",
+            "_FRE_name": "+",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 17,
         },
       },
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 14,
       "line": 2,
     },
   },
-  "_PI_name": "myName",
-  "_PI_partsOfParts": WithSubSubParts {
+  "_FRE_name": "myName",
+  "_FRE_partsOfParts": WithSubSubParts {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "partsOfParts",
     "$id": "ID-38",
     "$typename": "WithSubSubParts",
-    "_PI_optList": Array [],
-    "_PI_optPart": null,
-    "_PI_part": SubConcept {
+    "_FRE_optList": Array [],
+    "_FRE_optPart": null,
+    "_FRE_part": SubConcept {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "part",
       "$id": "ID-15",
       "$typename": "SubConcept",
-      "_PI_listSub": Array [
+      "_FRE_listSub": Array [
         WithDirectParts {
           "$$owner": [Circular],
           "$$propertyIndex": 0,
           "$$propertyName": "listSub",
           "$id": "ID-11",
           "$typename": "WithDirectParts",
-          "_PI_optList": Array [],
-          "_PI_optPart": null,
-          "_PI_part": PartConcept {
+          "_FRE_optList": Array [],
+          "_FRE_optPart": null,
+          "_FRE_part": PartConcept {
             "$$owner": [Circular],
             "$$propertyIndex": undefined,
             "$$propertyName": "part",
             "$id": "ID-9",
             "$typename": "PartConcept",
-            "_PI_content": "stringLiteralFGT",
-            "_PI_optContent": 10,
-            "_PI_visibility": PiElementReference {
+            "_FRE_content": "stringLiteralFGT",
+            "_FRE_optContent": 10,
+            "_FRE_visibility": FreNodeReference {
               "$$owner": [Circular],
               "$$propertyIndex": undefined,
               "$$propertyName": "visibility",
-              "_PI_pathname": Array [
+              "_FRE_pathname": Array [
                 "+",
               ],
-              "_PI_referred": VisibilityKind {
+              "_FRE_referred": VisibilityKind {
                 "$$owner": null,
                 "$$propertyIndex": undefined,
                 "$$propertyName": "",
                 "$id": "ID-1",
                 "$typename": "VisibilityKind",
-                "_PI_name": "+",
+                "_FRE_name": "+",
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": PiParseLocation {
+            "parse_location": FreParseLocation {
               "column": 38,
               "line": 36,
             },
           },
-          "_PI_partList": Array [
+          "_FRE_partList": Array [
             PartConcept {
               "$$owner": [Circular],
               "$$propertyIndex": 0,
               "$$propertyName": "partList",
               "$id": "ID-10",
               "$typename": "PartConcept",
-              "_PI_content": "otherStringZZZ",
-              "_PI_optContent": 0,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "otherStringZZZ",
+              "_FRE_optContent": 0,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "#",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-3",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "#",
+                  "_FRE_name": "#",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 37,
                 "line": 42,
               },
             },
           ],
-          "parse_location": PiParseLocation {
+          "parse_location": FreParseLocation {
             "column": 29,
             "line": 35,
           },
@@ -816,245 +816,245 @@ PartsTest {
           "$$propertyName": "listSub",
           "$id": "ID-14",
           "$typename": "WithDirectParts",
-          "_PI_optList": Array [],
-          "_PI_optPart": null,
-          "_PI_part": PartConcept {
+          "_FRE_optList": Array [],
+          "_FRE_optPart": null,
+          "_FRE_part": PartConcept {
             "$$owner": [Circular],
             "$$propertyIndex": undefined,
             "$$propertyName": "part",
             "$id": "ID-12",
             "$typename": "PartConcept",
-            "_PI_content": "stringLiteralZZZ",
-            "_PI_optContent": 1045,
-            "_PI_visibility": PiElementReference {
+            "_FRE_content": "stringLiteralZZZ",
+            "_FRE_optContent": 1045,
+            "_FRE_visibility": FreNodeReference {
               "$$owner": [Circular],
               "$$propertyIndex": undefined,
               "$$propertyName": "visibility",
-              "_PI_pathname": Array [
+              "_FRE_pathname": Array [
                 "-",
               ],
-              "_PI_referred": VisibilityKind {
+              "_FRE_referred": VisibilityKind {
                 "$$owner": null,
                 "$$propertyIndex": undefined,
                 "$$propertyName": "",
                 "$id": "ID-2",
                 "$typename": "VisibilityKind",
-                "_PI_name": "-",
+                "_FRE_name": "-",
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": PiParseLocation {
+            "parse_location": FreParseLocation {
               "column": 38,
               "line": 48,
             },
           },
-          "_PI_partList": Array [
+          "_FRE_partList": Array [
             PartConcept {
               "$$owner": [Circular],
               "$$propertyIndex": 0,
               "$$propertyName": "partList",
               "$id": "ID-13",
               "$typename": "PartConcept",
-              "_PI_content": "otherString",
-              "_PI_optContent": 0,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "otherString",
+              "_FRE_optContent": 0,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "#",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-3",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "#",
+                  "_FRE_name": "#",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 37,
                 "line": 54,
               },
             },
           ],
-          "parse_location": PiParseLocation {
+          "parse_location": FreParseLocation {
             "column": 29,
             "line": 47,
           },
         },
       ],
-      "_PI_normalSub": WithDirectParts {
+      "_FRE_normalSub": WithDirectParts {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "normalSub",
         "$id": "ID-8",
         "$typename": "WithDirectParts",
-        "_PI_optList": Array [],
-        "_PI_optPart": null,
-        "_PI_part": PartConcept {
+        "_FRE_optList": Array [],
+        "_FRE_optPart": null,
+        "_FRE_part": PartConcept {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "part",
           "$id": "ID-7",
           "$typename": "PartConcept",
-          "_PI_content": "stringLiteral",
-          "_PI_optContent": 10,
-          "_PI_visibility": PiElementReference {
+          "_FRE_content": "stringLiteral",
+          "_FRE_optContent": 10,
+          "_FRE_visibility": FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": undefined,
             "$$propertyName": "visibility",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "+",
             ],
-            "_PI_referred": VisibilityKind {
+            "_FRE_referred": VisibilityKind {
               "$$owner": null,
               "$$propertyIndex": undefined,
               "$$propertyName": "",
               "$id": "ID-1",
               "$typename": "VisibilityKind",
-              "_PI_name": "+",
+              "_FRE_name": "+",
             },
             "typeName": "VisibilityKind",
           },
-          "parse_location": PiParseLocation {
+          "parse_location": FreParseLocation {
             "column": 46,
             "line": 26,
           },
         },
-        "_PI_partList": Array [],
-        "parse_location": PiParseLocation {
+        "_FRE_partList": Array [],
+        "parse_location": FreParseLocation {
           "column": 32,
           "line": 25,
         },
       },
-      "_PI_optListSub": Array [],
-      "_PI_optionalSub": null,
-      "parse_location": PiParseLocation {
+      "_FRE_optListSub": Array [],
+      "_FRE_optionalSub": null,
+      "parse_location": FreParseLocation {
         "column": 15,
         "line": 24,
       },
     },
-    "_PI_partList": Array [
+    "_FRE_partList": Array [
       SubConcept {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "partList",
         "$id": "ID-28",
         "$typename": "SubConcept",
-        "_PI_listSub": Array [
+        "_FRE_listSub": Array [
           WithDirectParts {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "listSub",
             "$id": "ID-27",
             "$typename": "WithDirectParts",
-            "_PI_optList": Array [],
-            "_PI_optPart": null,
-            "_PI_part": PartConcept {
+            "_FRE_optList": Array [],
+            "_FRE_optPart": null,
+            "_FRE_part": PartConcept {
               "$$owner": [Circular],
               "$$propertyIndex": undefined,
               "$$propertyName": "part",
               "$id": "ID-26",
               "$typename": "PartConcept",
-              "_PI_content": "stringLiteral",
-              "_PI_optContent": 10,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "stringLiteral",
+              "_FRE_optContent": 10,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "+",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "+",
+                  "_FRE_name": "+",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 30,
                 "line": 113,
               },
             },
-            "_PI_partList": Array [],
-            "parse_location": PiParseLocation {
+            "_FRE_partList": Array [],
+            "parse_location": FreParseLocation {
               "column": 21,
               "line": 112,
             },
           },
         ],
-        "_PI_normalSub": WithDirectParts {
+        "_FRE_normalSub": WithDirectParts {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "normalSub",
           "$id": "ID-20",
           "$typename": "WithDirectParts",
-          "_PI_optList": Array [],
-          "_PI_optPart": null,
-          "_PI_part": PartConcept {
+          "_FRE_optList": Array [],
+          "_FRE_optPart": null,
+          "_FRE_part": PartConcept {
             "$$owner": [Circular],
             "$$propertyIndex": undefined,
             "$$propertyName": "part",
             "$id": "ID-16",
             "$typename": "PartConcept",
-            "_PI_content": "stringLiteral",
-            "_PI_optContent": 10,
-            "_PI_visibility": PiElementReference {
+            "_FRE_content": "stringLiteral",
+            "_FRE_optContent": 10,
+            "_FRE_visibility": FreNodeReference {
               "$$owner": [Circular],
               "$$propertyIndex": undefined,
               "$$propertyName": "visibility",
-              "_PI_pathname": Array [
+              "_FRE_pathname": Array [
                 "+",
               ],
-              "_PI_referred": VisibilityKind {
+              "_FRE_referred": VisibilityKind {
                 "$$owner": null,
                 "$$propertyIndex": undefined,
                 "$$propertyName": "",
                 "$id": "ID-1",
                 "$typename": "VisibilityKind",
-                "_PI_name": "+",
+                "_FRE_name": "+",
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": PiParseLocation {
+            "parse_location": FreParseLocation {
               "column": 42,
               "line": 66,
             },
           },
-          "_PI_partList": Array [
+          "_FRE_partList": Array [
             PartConcept {
               "$$owner": [Circular],
               "$$propertyIndex": 0,
               "$$propertyName": "partList",
               "$id": "ID-17",
               "$typename": "PartConcept",
-              "_PI_content": "otherString",
-              "_PI_optContent": 0,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "otherString",
+              "_FRE_optContent": 0,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "#",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-3",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "#",
+                  "_FRE_name": "#",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 41,
                 "line": 72,
               },
@@ -1065,26 +1065,26 @@ PartsTest {
               "$$propertyName": "partList",
               "$id": "ID-18",
               "$typename": "PartConcept",
-              "_PI_content": "stringLiteralXXX",
-              "_PI_optContent": 123,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "stringLiteralXXX",
+              "_FRE_optContent": 123,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "-",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-2",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "-",
+                  "_FRE_name": "-",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 41,
                 "line": 77,
               },
@@ -1095,102 +1095,102 @@ PartsTest {
               "$$propertyName": "partList",
               "$id": "ID-19",
               "$typename": "PartConcept",
-              "_PI_content": "stringLiteralYYY",
-              "_PI_optContent": 0,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "stringLiteralYYY",
+              "_FRE_optContent": 0,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "+",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "+",
+                  "_FRE_name": "+",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 41,
                 "line": 82,
               },
             },
           ],
-          "parse_location": PiParseLocation {
+          "parse_location": FreParseLocation {
             "column": 31,
             "line": 65,
           },
         },
-        "_PI_optListSub": Array [],
-        "_PI_optionalSub": WithDirectParts {
+        "_FRE_optListSub": Array [],
+        "_FRE_optionalSub": WithDirectParts {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "optionalSub",
           "$id": "ID-25",
           "$typename": "WithDirectParts",
-          "_PI_optList": Array [],
-          "_PI_optPart": null,
-          "_PI_part": PartConcept {
+          "_FRE_optList": Array [],
+          "_FRE_optPart": null,
+          "_FRE_part": PartConcept {
             "$$owner": [Circular],
             "$$propertyIndex": undefined,
             "$$propertyName": "part",
             "$id": "ID-21",
             "$typename": "PartConcept",
-            "_PI_content": "stringLiteral",
-            "_PI_optContent": 10,
-            "_PI_visibility": PiElementReference {
+            "_FRE_content": "stringLiteral",
+            "_FRE_optContent": 10,
+            "_FRE_visibility": FreNodeReference {
               "$$owner": [Circular],
               "$$propertyIndex": undefined,
               "$$propertyName": "visibility",
-              "_PI_pathname": Array [
+              "_FRE_pathname": Array [
                 "+",
               ],
-              "_PI_referred": VisibilityKind {
+              "_FRE_referred": VisibilityKind {
                 "$$owner": null,
                 "$$propertyIndex": undefined,
                 "$$propertyName": "",
                 "$id": "ID-1",
                 "$typename": "VisibilityKind",
-                "_PI_name": "+",
+                "_FRE_name": "+",
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": PiParseLocation {
+            "parse_location": FreParseLocation {
               "column": 42,
               "line": 89,
             },
           },
-          "_PI_partList": Array [
+          "_FRE_partList": Array [
             PartConcept {
               "$$owner": [Circular],
               "$$propertyIndex": 0,
               "$$propertyName": "partList",
               "$id": "ID-22",
               "$typename": "PartConcept",
-              "_PI_content": "otherString",
-              "_PI_optContent": 0,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "otherString",
+              "_FRE_optContent": 0,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "#",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-3",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "#",
+                  "_FRE_name": "#",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 41,
                 "line": 95,
               },
@@ -1201,26 +1201,26 @@ PartsTest {
               "$$propertyName": "partList",
               "$id": "ID-23",
               "$typename": "PartConcept",
-              "_PI_content": "stringLiteralXXX",
-              "_PI_optContent": 123,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "stringLiteralXXX",
+              "_FRE_optContent": 123,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "-",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-2",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "-",
+                  "_FRE_name": "-",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 41,
                 "line": 100,
               },
@@ -1231,37 +1231,37 @@ PartsTest {
               "$$propertyName": "partList",
               "$id": "ID-24",
               "$typename": "PartConcept",
-              "_PI_content": "stringLiteralYYY",
-              "_PI_optContent": 0,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "stringLiteralYYY",
+              "_FRE_optContent": 0,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "+",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "+",
+                  "_FRE_name": "+",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 41,
                 "line": 105,
               },
             },
           ],
-          "parse_location": PiParseLocation {
+          "parse_location": FreParseLocation {
             "column": 33,
             "line": 88,
           },
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 17,
           "line": 64,
         },
@@ -1272,198 +1272,198 @@ PartsTest {
         "$$propertyName": "partList",
         "$id": "ID-37",
         "$typename": "SubConcept",
-        "_PI_listSub": Array [
+        "_FRE_listSub": Array [
           WithDirectParts {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "listSub",
             "$id": "ID-34",
             "$typename": "WithDirectParts",
-            "_PI_optList": Array [],
-            "_PI_optPart": null,
-            "_PI_part": PartConcept {
+            "_FRE_optList": Array [],
+            "_FRE_optPart": null,
+            "_FRE_part": PartConcept {
               "$$owner": [Circular],
               "$$propertyIndex": undefined,
               "$$propertyName": "part",
               "$id": "ID-33",
               "$typename": "PartConcept",
-              "_PI_content": "stringLiteral",
-              "_PI_optContent": 10,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "stringLiteral",
+              "_FRE_optContent": 10,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "+",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "+",
+                  "_FRE_name": "+",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 34,
                 "line": 141,
               },
             },
-            "_PI_partList": Array [],
-            "parse_location": PiParseLocation {
+            "_FRE_partList": Array [],
+            "parse_location": FreParseLocation {
               "column": 25,
               "line": 140,
             },
           },
         ],
-        "_PI_normalSub": WithDirectParts {
+        "_FRE_normalSub": WithDirectParts {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "normalSub",
           "$id": "ID-30",
           "$typename": "WithDirectParts",
-          "_PI_optList": Array [],
-          "_PI_optPart": null,
-          "_PI_part": PartConcept {
+          "_FRE_optList": Array [],
+          "_FRE_optPart": null,
+          "_FRE_part": PartConcept {
             "$$owner": [Circular],
             "$$propertyIndex": undefined,
             "$$propertyName": "part",
             "$id": "ID-29",
             "$typename": "PartConcept",
-            "_PI_content": "stringLiteral",
-            "_PI_optContent": 10,
-            "_PI_visibility": PiElementReference {
+            "_FRE_content": "stringLiteral",
+            "_FRE_optContent": 10,
+            "_FRE_visibility": FreNodeReference {
               "$$owner": [Circular],
               "$$propertyIndex": undefined,
               "$$propertyName": "visibility",
-              "_PI_pathname": Array [
+              "_FRE_pathname": Array [
                 "+",
               ],
-              "_PI_referred": VisibilityKind {
+              "_FRE_referred": VisibilityKind {
                 "$$owner": null,
                 "$$propertyIndex": undefined,
                 "$$propertyName": "",
                 "$id": "ID-1",
                 "$typename": "VisibilityKind",
-                "_PI_name": "+",
+                "_FRE_name": "+",
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": PiParseLocation {
+            "parse_location": FreParseLocation {
               "column": 30,
               "line": 124,
             },
           },
-          "_PI_partList": Array [],
-          "parse_location": PiParseLocation {
+          "_FRE_partList": Array [],
+          "parse_location": FreParseLocation {
             "column": 31,
             "line": 123,
           },
         },
-        "_PI_optListSub": Array [
+        "_FRE_optListSub": Array [
           WithDirectParts {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "optListSub",
             "$id": "ID-36",
             "$typename": "WithDirectParts",
-            "_PI_optList": Array [],
-            "_PI_optPart": null,
-            "_PI_part": PartConcept {
+            "_FRE_optList": Array [],
+            "_FRE_optPart": null,
+            "_FRE_part": PartConcept {
               "$$owner": [Circular],
               "$$propertyIndex": undefined,
               "$$propertyName": "part",
               "$id": "ID-35",
               "$typename": "PartConcept",
-              "_PI_content": "stringLit",
-              "_PI_optContent": 1440,
-              "_PI_visibility": PiElementReference {
+              "_FRE_content": "stringLit",
+              "_FRE_optContent": 1440,
+              "_FRE_visibility": FreNodeReference {
                 "$$owner": [Circular],
                 "$$propertyIndex": undefined,
                 "$$propertyName": "visibility",
-                "_PI_pathname": Array [
+                "_FRE_pathname": Array [
                   "+",
                 ],
-                "_PI_referred": VisibilityKind {
+                "_FRE_referred": VisibilityKind {
                   "$$owner": null,
                   "$$propertyIndex": undefined,
                   "$$propertyName": "",
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
-                  "_PI_name": "+",
+                  "_FRE_name": "+",
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": PiParseLocation {
+              "parse_location": FreParseLocation {
                 "column": 34,
                 "line": 150,
               },
             },
-            "_PI_partList": Array [],
-            "parse_location": PiParseLocation {
+            "_FRE_partList": Array [],
+            "parse_location": FreParseLocation {
               "column": 25,
               "line": 149,
             },
           },
         ],
-        "_PI_optionalSub": WithDirectParts {
+        "_FRE_optionalSub": WithDirectParts {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "optionalSub",
           "$id": "ID-32",
           "$typename": "WithDirectParts",
-          "_PI_optList": Array [],
-          "_PI_optPart": null,
-          "_PI_part": PartConcept {
+          "_FRE_optList": Array [],
+          "_FRE_optPart": null,
+          "_FRE_part": PartConcept {
             "$$owner": [Circular],
             "$$propertyIndex": undefined,
             "$$propertyName": "part",
             "$id": "ID-31",
             "$typename": "PartConcept",
-            "_PI_content": "stringLiteral",
-            "_PI_optContent": 10,
-            "_PI_visibility": PiElementReference {
+            "_FRE_content": "stringLiteral",
+            "_FRE_optContent": 10,
+            "_FRE_visibility": FreNodeReference {
               "$$owner": [Circular],
               "$$propertyIndex": undefined,
               "$$propertyName": "visibility",
-              "_PI_pathname": Array [
+              "_FRE_pathname": Array [
                 "#",
               ],
-              "_PI_referred": VisibilityKind {
+              "_FRE_referred": VisibilityKind {
                 "$$owner": null,
                 "$$propertyIndex": undefined,
                 "$$propertyName": "",
                 "$id": "ID-3",
                 "$typename": "VisibilityKind",
-                "_PI_name": "#",
+                "_FRE_name": "#",
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": PiParseLocation {
+            "parse_location": FreParseLocation {
               "column": 30,
               "line": 132,
             },
           },
-          "_PI_partList": Array [],
-          "parse_location": PiParseLocation {
+          "_FRE_partList": Array [],
+          "parse_location": FreParseLocation {
             "column": 33,
             "line": 131,
           },
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 17,
           "line": 122,
         },
       },
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 9,
       "line": 23,
     },
   },
-  "parse_location": PiParseLocation {
+  "parse_location": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -1478,49 +1478,49 @@ PartsTest {
     "$$propertyName": "",
     "$id": "ID-1",
     "$typename": "TestParserModel",
-    "_PI_lim": null,
-    "_PI_parts": [Circular],
-    "_PI_prim": null,
-    "_PI_primWith": null,
-    "_PI_ref": null,
+    "_FRE_lim": null,
+    "_FRE_parts": [Circular],
+    "_FRE_prim": null,
+    "_FRE_primWith": null,
+    "_FRE_ref": null,
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "parts",
   "$id": "ID-10",
   "$typename": "PartsTest",
-  "_PI_directParts": WithDirectParts {
+  "_FRE_directParts": WithDirectParts {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "directParts",
     "$id": "ID-9",
     "$typename": "WithDirectParts",
-    "_PI_optList": Array [
+    "_FRE_optList": Array [
       PartConcept {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "optList",
         "$id": "ID-7",
         "$typename": "PartConcept",
-        "_PI_content": "stringLiteral",
-        "_PI_optContent": 10,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "stringLiteral",
+        "_FRE_optContent": 10,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "+",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-1",
             "$typename": "VisibilityKind",
-            "_PI_name": "+",
+            "_FRE_name": "+",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 24,
           "line": 28,
         },
@@ -1531,118 +1531,118 @@ PartsTest {
         "$$propertyName": "optList",
         "$id": "ID-8",
         "$typename": "PartConcept",
-        "_PI_content": "stringLiteralYYY",
-        "_PI_optContent": 0,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "stringLiteralYYY",
+        "_FRE_optContent": 0,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "+",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-1",
             "$typename": "VisibilityKind",
-            "_PI_name": "+",
+            "_FRE_name": "+",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 32,
         },
       },
     ],
-    "_PI_optPart": PartConcept {
+    "_FRE_optPart": PartConcept {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "optPart",
       "$id": "ID-3",
       "$typename": "PartConcept",
-      "_PI_content": "stringLiteral",
-      "_PI_optContent": 10,
-      "_PI_visibility": PiElementReference {
+      "_FRE_content": "stringLiteral",
+      "_FRE_optContent": 10,
+      "_FRE_visibility": FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "visibility",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "+",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-1",
           "$typename": "VisibilityKind",
-          "_PI_name": "+",
+          "_FRE_name": "+",
         },
         "typeName": "VisibilityKind",
       },
-      "parse_location": PiParseLocation {
+      "parse_location": FreParseLocation {
         "column": 24,
         "line": 9,
       },
     },
-    "_PI_part": PartConcept {
+    "_FRE_part": PartConcept {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "part",
       "$id": "ID-2",
       "$typename": "PartConcept",
-      "_PI_content": "stringLiteral",
-      "_PI_optContent": 10,
-      "_PI_visibility": PiElementReference {
+      "_FRE_content": "stringLiteral",
+      "_FRE_optContent": 10,
+      "_FRE_visibility": FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "visibility",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "+",
         ],
-        "_PI_referred": VisibilityKind {
+        "_FRE_referred": VisibilityKind {
           "$$owner": null,
           "$$propertyIndex": undefined,
           "$$propertyName": "",
           "$id": "ID-1",
           "$typename": "VisibilityKind",
-          "_PI_name": "+",
+          "_FRE_name": "+",
         },
         "typeName": "VisibilityKind",
       },
-      "parse_location": PiParseLocation {
+      "parse_location": FreParseLocation {
         "column": 25,
         "line": 3,
       },
     },
-    "_PI_partList": Array [
+    "_FRE_partList": Array [
       PartConcept {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "partList",
         "$id": "ID-4",
         "$typename": "PartConcept",
-        "_PI_content": "otherString",
-        "_PI_optContent": 0,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "otherString",
+        "_FRE_optContent": 0,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "#",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-3",
             "$typename": "VisibilityKind",
-            "_PI_name": "#",
+            "_FRE_name": "#",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 15,
         },
@@ -1653,26 +1653,26 @@ PartsTest {
         "$$propertyName": "partList",
         "$id": "ID-5",
         "$typename": "PartConcept",
-        "_PI_content": "stringLiteralXXX",
-        "_PI_optContent": 123,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "stringLiteralXXX",
+        "_FRE_optContent": 123,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "-",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-2",
             "$typename": "VisibilityKind",
-            "_PI_name": "-",
+            "_FRE_name": "-",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 19,
         },
@@ -1683,39 +1683,39 @@ PartsTest {
         "$$propertyName": "partList",
         "$id": "ID-6",
         "$typename": "PartConcept",
-        "_PI_content": "stringLiteralYYY",
-        "_PI_optContent": 0,
-        "_PI_visibility": PiElementReference {
+        "_FRE_content": "stringLiteralYYY",
+        "_FRE_optContent": 0,
+        "_FRE_visibility": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "visibility",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "+",
           ],
-          "_PI_referred": VisibilityKind {
+          "_FRE_referred": VisibilityKind {
             "$$owner": null,
             "$$propertyIndex": undefined,
             "$$propertyName": "",
             "$id": "ID-1",
             "$typename": "VisibilityKind",
-            "_PI_name": "+",
+            "_FRE_name": "+",
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 23,
         },
       },
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 14,
       "line": 2,
     },
   },
-  "_PI_name": "myName",
-  "_PI_partsOfParts": null,
-  "parse_location": PiParseLocation {
+  "_FRE_name": "myName",
+  "_FRE_partsOfParts": null,
+  "parse_location": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -1730,178 +1730,178 @@ PrimitivesTest {
     "$$propertyName": "",
     "$id": "ID-1",
     "$typename": "TestParserModel",
-    "_PI_lim": null,
-    "_PI_parts": null,
-    "_PI_prim": [Circular],
-    "_PI_primWith": null,
-    "_PI_ref": null,
+    "_FRE_lim": null,
+    "_FRE_parts": null,
+    "_FRE_prim": [Circular],
+    "_FRE_primWith": null,
+    "_FRE_ref": null,
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "prim",
   "$id": "ID-8",
   "$typename": "PrimitivesTest",
-  "_PI_name": "someName",
-  "_PI_prim": Prim {
+  "_FRE_name": "someName",
+  "_FRE_prim": Prim {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "prim",
     "$id": "ID-2",
     "$typename": "Prim",
-    "_PI_primBoolean": true,
-    "_PI_primIdentifier": "EenNaam",
-    "_PI_primListBoolean": Array [
+    "_FRE_primBoolean": true,
+    "_FRE_primIdentifier": "EenNaam",
+    "_FRE_primListBoolean": Array [
       true,
       false,
       true,
       false,
     ],
-    "_PI_primListIdentifier": Array [
+    "_FRE_primListIdentifier": Array [
       "EenNaam",
       "NogEenNaam",
       "EnNogEen",
     ],
-    "_PI_primListNumber": Array [
+    "_FRE_primListNumber": Array [
       10,
       20,
     ],
-    "_PI_primListString": Array [
+    "_FRE_primListString": Array [
       "TEKST",
       "TEKST",
     ],
-    "_PI_primNumber": 19,
-    "_PI_primString": "TEKST",
-    "parse_location": PiParseLocation {
+    "_FRE_primNumber": 19,
+    "_FRE_primString": "TEKST",
+    "parse_location": FreParseLocation {
       "column": 5,
       "line": 3,
     },
   },
-  "_PI_primExtra": PrimsWithExtraText {
+  "_FRE_primExtra": PrimsWithExtraText {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "primExtra",
     "$id": "ID-3",
     "$typename": "PrimsWithExtraText",
-    "_PI_primBooleanWithExtra": false,
-    "_PI_primIdentifierWithExtra": "EenNaam",
-    "_PI_primListBooleanWithExtra": Array [
+    "_FRE_primBooleanWithExtra": false,
+    "_FRE_primIdentifierWithExtra": "EenNaam",
+    "_FRE_primListBooleanWithExtra": Array [
       false,
       true,
       false,
     ],
-    "_PI_primListIdentifierWithExtra": Array [
+    "_FRE_primListIdentifierWithExtra": Array [
       "EenNaam",
       "NogEenNaam",
       "EnNogEen",
     ],
-    "_PI_primListNumberWithExtra": Array [
+    "_FRE_primListNumberWithExtra": Array [
       67,
       98,
     ],
-    "_PI_primListStringWithExtra": Array [
+    "_FRE_primListStringWithExtra": Array [
       "TEKST",
       "TEXT",
     ],
-    "_PI_primNumberWithExtra": 45,
-    "_PI_primStringWithExtra": "TEKST",
-    "parse_location": PiParseLocation {
+    "_FRE_primNumberWithExtra": 45,
+    "_FRE_primStringWithExtra": "TEKST",
+    "parse_location": FreParseLocation {
       "column": 5,
       "line": 14,
     },
   },
-  "_PI_separator": PrimsWithSeparator {
+  "_FRE_separator": PrimsWithSeparator {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "separator",
     "$id": "ID-4",
     "$typename": "PrimsWithSeparator",
-    "_PI_primListBooleanSeparator": Array [
+    "_FRE_primListBooleanSeparator": Array [
       true,
       false,
     ],
-    "_PI_primListIdentifierSeparator": Array [
+    "_FRE_primListIdentifierSeparator": Array [
       "EenNaam",
       "NogEenNaam",
       "EnNogEen",
     ],
-    "_PI_primListNumberSeparator": Array [
+    "_FRE_primListNumberSeparator": Array [
       56,
       67,
       78,
     ],
-    "_PI_primListStringSeparator": Array [
+    "_FRE_primListStringSeparator": Array [
       "iets",
       "wat",
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 11,
       "line": 22,
     },
   },
-  "_PI_separatorOpt": PrimsWithSeparator {
+  "_FRE_separatorOpt": PrimsWithSeparator {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "separatorOpt",
     "$id": "ID-6",
     "$typename": "PrimsWithSeparator",
-    "_PI_primListBooleanSeparator": Array [
+    "_FRE_primListBooleanSeparator": Array [
       true,
       false,
     ],
-    "_PI_primListIdentifierSeparator": Array [],
-    "_PI_primListNumberSeparator": Array [
+    "_FRE_primListIdentifierSeparator": Array [],
+    "_FRE_primListNumberSeparator": Array [
       56,
       67,
       78,
     ],
-    "_PI_primListStringSeparator": Array [],
-    "parse_location": PiParseLocation {
+    "_FRE_primListStringSeparator": Array [],
+    "parse_location": FreParseLocation {
       "column": 14,
       "line": 32,
     },
   },
-  "_PI_terminator": PrimsWithTerminator {
+  "_FRE_terminator": PrimsWithTerminator {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "terminator",
     "$id": "ID-5",
     "$typename": "PrimsWithTerminator",
-    "_PI_primListBooleanTerminator": Array [
+    "_FRE_primListBooleanTerminator": Array [
       true,
     ],
-    "_PI_primListIdentifierTerminator": Array [
+    "_FRE_primListIdentifierTerminator": Array [
       "EenNaam",
     ],
-    "_PI_primListNumberTerminator": Array [
+    "_FRE_primListNumberTerminator": Array [
       30,
     ],
-    "_PI_primListStringTerminator": Array [
+    "_FRE_primListStringTerminator": Array [
       "iets",
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 12,
       "line": 27,
     },
   },
-  "_PI_terminatorOpt": PrimsWithTerminator {
+  "_FRE_terminatorOpt": PrimsWithTerminator {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "terminatorOpt",
     "$id": "ID-7",
     "$typename": "PrimsWithTerminator",
-    "_PI_primListBooleanTerminator": Array [],
-    "_PI_primListIdentifierTerminator": Array [
+    "_FRE_primListBooleanTerminator": Array [],
+    "_FRE_primListIdentifierTerminator": Array [
       "EenNaam",
     ],
-    "_PI_primListNumberTerminator": Array [],
-    "_PI_primListStringTerminator": Array [
+    "_FRE_primListNumberTerminator": Array [],
+    "_FRE_primListStringTerminator": Array [
       "iets",
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 15,
       "line": 37,
     },
   },
-  "parse_location": PiParseLocation {
+  "parse_location": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -1916,26 +1916,26 @@ PrimsWithKeywordTest {
     "$$propertyName": "",
     "$id": "ID-1",
     "$typename": "TestParserModel",
-    "_PI_lim": null,
-    "_PI_parts": null,
-    "_PI_prim": null,
-    "_PI_primWith": [Circular],
-    "_PI_ref": null,
+    "_FRE_lim": null,
+    "_FRE_parts": null,
+    "_FRE_prim": null,
+    "_FRE_primWith": [Circular],
+    "_FRE_ref": null,
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "primWith",
   "$id": "ID-10",
   "$typename": "PrimsWithKeywordTest",
-  "_PI_name": "myName",
-  "_PI_primWith": Array [
+  "_FRE_name": "myName",
+  "_FRE_primWith": Array [
     PrimKeyword {
       "$$owner": [Circular],
       "$$propertyIndex": 0,
       "$$propertyName": "primWith",
       "$id": "ID-2",
       "$typename": "PrimKeyword",
-      "_PI_primBoolean": true,
-      "parse_location": PiParseLocation {
+      "_FRE_primBoolean": true,
+      "parse_location": FreParseLocation {
         "column": 6,
         "line": 3,
       },
@@ -1946,8 +1946,8 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-3",
       "$typename": "PrimKeyword",
-      "_PI_primBoolean": false,
-      "parse_location": PiParseLocation {
+      "_FRE_primBoolean": false,
+      "parse_location": FreParseLocation {
         "column": 9,
         "line": 4,
       },
@@ -1958,8 +1958,8 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-4",
       "$typename": "PrimKeyword",
-      "_PI_primBoolean": true,
-      "parse_location": PiParseLocation {
+      "_FRE_primBoolean": true,
+      "parse_location": FreParseLocation {
         "column": 6,
         "line": 5,
       },
@@ -1970,8 +1970,8 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-5",
       "$typename": "PrimKeyword",
-      "_PI_primBoolean": false,
-      "parse_location": PiParseLocation {
+      "_FRE_primBoolean": false,
+      "parse_location": FreParseLocation {
         "column": 9,
         "line": 6,
       },
@@ -1982,8 +1982,8 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-6",
       "$typename": "PrimKeyword",
-      "_PI_primBoolean": true,
-      "parse_location": PiParseLocation {
+      "_FRE_primBoolean": true,
+      "parse_location": FreParseLocation {
         "column": 6,
         "line": 7,
       },
@@ -1994,8 +1994,8 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-7",
       "$typename": "PrimKeyword",
-      "_PI_primBoolean": false,
-      "parse_location": PiParseLocation {
+      "_FRE_primBoolean": false,
+      "parse_location": FreParseLocation {
         "column": 9,
         "line": 8,
       },
@@ -2006,8 +2006,8 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-8",
       "$typename": "PrimKeyword",
-      "_PI_primBoolean": false,
-      "parse_location": PiParseLocation {
+      "_FRE_primBoolean": false,
+      "parse_location": FreParseLocation {
         "column": 6,
         "line": 9,
       },
@@ -2018,14 +2018,14 @@ PrimsWithKeywordTest {
       "$$propertyName": "primWith",
       "$id": "ID-9",
       "$typename": "PrimKeyword",
-      "_PI_primBoolean": true,
-      "parse_location": PiParseLocation {
+      "_FRE_primBoolean": true,
+      "parse_location": FreParseLocation {
         "column": 9,
         "line": 10,
       },
     },
   ],
-  "parse_location": PiParseLocation {
+  "parse_location": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -2040,135 +2040,135 @@ RefsTest {
     "$$propertyName": "",
     "$id": "ID-1",
     "$typename": "TestParserModel",
-    "_PI_lim": null,
-    "_PI_parts": null,
-    "_PI_prim": null,
-    "_PI_primWith": null,
-    "_PI_ref": [Circular],
+    "_FRE_lim": null,
+    "_FRE_parts": null,
+    "_FRE_prim": null,
+    "_FRE_primWith": null,
+    "_FRE_ref": [Circular],
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "ref",
   "$id": "ID-9",
   "$typename": "RefsTest",
-  "_PI_directRefs": WithDirectRefs {
+  "_FRE_directRefs": WithDirectRefs {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "directRefs",
     "$id": "ID-2",
     "$typename": "WithDirectRefs",
-    "_PI_optRefList": Array [],
-    "_PI_ref": PiElementReference {
+    "_FRE_optRefList": Array [],
+    "_FRE_ref": FreNodeReference {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "ref",
-      "_PI_pathname": Array [
+      "_FRE_pathname": Array [
         "someName",
         "otherName",
         "xxx",
         "yyy",
       ],
-      "_PI_referred": null,
+      "_FRE_referred": null,
       "typeName": "RefConcept",
     },
-    "_PI_refList": Array [
-      PiElementReference {
+    "_FRE_refList": Array [
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "refList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "name1.ff.gg.yuio",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 1,
         "$$propertyName": "refList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "name2",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 2,
         "$$propertyName": "refList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "name3",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 3,
         "$$propertyName": "refList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "name4",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 13,
       "line": 2,
     },
   },
-  "_PI_indirectRefs": null,
-  "_PI_name": "myName",
-  "_PI_withSeparator": RefsWithSeparator {
+  "_FRE_indirectRefs": null,
+  "_FRE_name": "myName",
+  "_FRE_withSeparator": RefsWithSeparator {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "withSeparator",
     "$id": "ID-8",
     "$typename": "RefsWithSeparator",
-    "_PI_optList": Array [
+    "_FRE_optList": Array [
       WithDirectRefs {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "optList",
         "$id": "ID-5",
         "$typename": "WithDirectRefs",
-        "_PI_optRefList": Array [],
-        "_PI_ref": PiElementReference {
+        "_FRE_optRefList": Array [],
+        "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "someName",
             "otherName",
             "xxx",
             "yyy",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_refList": Array [
-          PiElementReference {
+        "_FRE_refList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name1.ff.gg.yuio",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name2",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 21,
           "line": 31,
         },
@@ -2179,43 +2179,43 @@ RefsTest {
         "$$propertyName": "optList",
         "$id": "ID-6",
         "$typename": "WithDirectRefs",
-        "_PI_optRefList": Array [],
-        "_PI_ref": PiElementReference {
+        "_FRE_optRefList": Array [],
+        "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "someName",
             "otherName",
             "xxx",
             "yyy",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_refList": Array [
-          PiElementReference {
+        "_FRE_refList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name1.ff.gg.yuio",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name2",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 21,
           "line": 39,
         },
@@ -2226,112 +2226,112 @@ RefsTest {
         "$$propertyName": "optList",
         "$id": "ID-7",
         "$typename": "WithDirectRefs",
-        "_PI_optRefList": Array [],
-        "_PI_ref": PiElementReference {
+        "_FRE_optRefList": Array [],
+        "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "someName",
             "otherName",
             "xxx",
             "yyy",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_refList": Array [
-          PiElementReference {
+        "_FRE_refList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name1.ff.gg.yuio",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name2",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 21,
           "line": 47,
         },
       },
     ],
-    "_PI_partList": Array [
+    "_FRE_partList": Array [
       WithDirectRefs {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "partList",
         "$id": "ID-3",
         "$typename": "WithDirectRefs",
-        "_PI_optRefList": Array [],
-        "_PI_ref": PiElementReference {
+        "_FRE_optRefList": Array [],
+        "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "someName",
             "otherName",
             "xxx",
             "yyy",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_refList": Array [
-          PiElementReference {
+        "_FRE_refList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name1.ff.gg.yuio",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name2",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name3",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 3,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name4",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 19,
           "line": 13,
         },
@@ -2342,54 +2342,54 @@ RefsTest {
         "$$propertyName": "partList",
         "$id": "ID-4",
         "$typename": "WithDirectRefs",
-        "_PI_optRefList": Array [],
-        "_PI_ref": PiElementReference {
+        "_FRE_optRefList": Array [],
+        "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "someName",
             "otherName",
             "xxx",
             "yyy",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_refList": Array [
-          PiElementReference {
+        "_FRE_refList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name1.ff.gg.yuio",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name2",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 21,
           "line": 23,
         },
       },
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 19,
       "line": 13,
     },
   },
-  "parse_location": PiParseLocation {
+  "parse_location": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -2404,547 +2404,547 @@ RefsTest {
     "$$propertyName": "",
     "$id": "ID-1",
     "$typename": "TestParserModel",
-    "_PI_lim": null,
-    "_PI_parts": null,
-    "_PI_prim": null,
-    "_PI_primWith": null,
-    "_PI_ref": [Circular],
+    "_FRE_lim": null,
+    "_FRE_parts": null,
+    "_FRE_prim": null,
+    "_FRE_primWith": null,
+    "_FRE_ref": [Circular],
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "ref",
   "$id": "ID-12",
   "$typename": "RefsTest",
-  "_PI_directRefs": WithDirectRefs {
+  "_FRE_directRefs": WithDirectRefs {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "directRefs",
     "$id": "ID-2",
     "$typename": "WithDirectRefs",
-    "_PI_optRef": PiElementReference {
+    "_FRE_optRef": FreNodeReference {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "optRef",
-      "_PI_pathname": Array [
+      "_FRE_pathname": Array [
         "nameA",
       ],
-      "_PI_referred": null,
+      "_FRE_referred": null,
       "typeName": "RefConcept",
     },
-    "_PI_optRefList": Array [
-      PiElementReference {
+    "_FRE_optRefList": Array [
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "optRefList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "nameZ",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 1,
         "$$propertyName": "optRefList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "nameY.sdfsgargh.HERA",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 2,
         "$$propertyName": "optRefList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "nameX",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
     ],
-    "_PI_ref": PiElementReference {
+    "_FRE_ref": FreNodeReference {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "ref",
-      "_PI_pathname": Array [
+      "_FRE_pathname": Array [
         "someName",
         "x34565",
       ],
-      "_PI_referred": null,
+      "_FRE_referred": null,
       "typeName": "RefConcept",
     },
-    "_PI_refList": Array [
-      PiElementReference {
+    "_FRE_refList": Array [
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "refList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "name1.d45fgh",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 1,
         "$$propertyName": "refList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "name2",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 2,
         "$$propertyName": "refList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "name3",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      PiElementReference {
+      FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": 3,
         "$$propertyName": "refList",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "name4",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 13,
       "line": 2,
     },
   },
-  "_PI_indirectRefs": WithSubSubRefs {
+  "_FRE_indirectRefs": WithSubSubRefs {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "indirectRefs",
     "$id": "ID-8",
     "$typename": "WithSubSubRefs",
-    "_PI_optList": Array [
+    "_FRE_optList": Array [
       WithDirectRefs {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "optList",
         "$id": "ID-7",
         "$typename": "WithDirectRefs",
-        "_PI_optRef": PiElementReference {
+        "_FRE_optRef": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "optRef",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameA",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_optRefList": Array [
-          PiElementReference {
+        "_FRE_optRefList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameZ",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameY",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameX",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "_PI_ref": PiElementReference {
+        "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "someName",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_refList": Array [
-          PiElementReference {
+        "_FRE_refList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name1",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name2",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name3",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 3,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name4",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 66,
         },
       },
     ],
-    "_PI_optPart": WithDirectRefs {
+    "_FRE_optPart": WithDirectRefs {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "optPart",
       "$id": "ID-4",
       "$typename": "WithDirectRefs",
-      "_PI_optRef": PiElementReference {
+      "_FRE_optRef": FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "optRef",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "nameA",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      "_PI_optRefList": Array [
-        PiElementReference {
+      "_FRE_optRefList": Array [
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 0,
           "$$propertyName": "optRefList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameZ",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        PiElementReference {
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 1,
           "$$propertyName": "optRefList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameY",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        PiElementReference {
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 2,
           "$$propertyName": "optRefList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameX",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
       ],
-      "_PI_ref": PiElementReference {
+      "_FRE_ref": FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "ref",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "someName",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      "_PI_refList": Array [
-        PiElementReference {
+      "_FRE_refList": Array [
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 0,
           "$$propertyName": "refList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "name1",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        PiElementReference {
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 1,
           "$$propertyName": "refList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "name2",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        PiElementReference {
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 2,
           "$$propertyName": "refList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "name3",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        PiElementReference {
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 3,
           "$$propertyName": "refList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "name4",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
       ],
-      "parse_location": PiParseLocation {
+      "parse_location": FreParseLocation {
         "column": 27,
         "line": 28,
       },
     },
-    "_PI_part": WithDirectRefs {
+    "_FRE_part": WithDirectRefs {
       "$$owner": [Circular],
       "$$propertyIndex": undefined,
       "$$propertyName": "part",
       "$id": "ID-3",
       "$typename": "WithDirectRefs",
-      "_PI_optRef": PiElementReference {
+      "_FRE_optRef": FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "optRef",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "nameA",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      "_PI_optRefList": Array [
-        PiElementReference {
+      "_FRE_optRefList": Array [
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 0,
           "$$propertyName": "optRefList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameZ",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        PiElementReference {
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 1,
           "$$propertyName": "optRefList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameY.h56",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        PiElementReference {
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 2,
           "$$propertyName": "optRefList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameX",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
       ],
-      "_PI_ref": PiElementReference {
+      "_FRE_ref": FreNodeReference {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "ref",
-        "_PI_pathname": Array [
+        "_FRE_pathname": Array [
           "someName",
         ],
-        "_PI_referred": null,
+        "_FRE_referred": null,
         "typeName": "RefConcept",
       },
-      "_PI_refList": Array [
-        PiElementReference {
+      "_FRE_refList": Array [
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 0,
           "$$propertyName": "refList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "name1.WREQWR.gag",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        PiElementReference {
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 1,
           "$$propertyName": "refList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "name2",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        PiElementReference {
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 2,
           "$$propertyName": "refList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "name3.fghy",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        PiElementReference {
+        FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": 3,
           "$$propertyName": "refList",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "name4",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
       ],
-      "parse_location": PiParseLocation {
+      "parse_location": FreParseLocation {
         "column": 24,
         "line": 15,
       },
     },
-    "_PI_partList": Array [
+    "_FRE_partList": Array [
       WithDirectRefs {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "partList",
         "$id": "ID-5",
         "$typename": "WithDirectRefs",
-        "_PI_optRef": PiElementReference {
+        "_FRE_optRef": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "optRef",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameA",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_optRefList": Array [
-          PiElementReference {
+        "_FRE_optRefList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameZ",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameY",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameX",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "_PI_ref": PiElementReference {
+        "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "someName",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_refList": Array [
-          PiElementReference {
+        "_FRE_refList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name1",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name2",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name3",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 3,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name4",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 41,
         },
@@ -2955,220 +2955,220 @@ RefsTest {
         "$$propertyName": "partList",
         "$id": "ID-6",
         "$typename": "WithDirectRefs",
-        "_PI_optRef": PiElementReference {
+        "_FRE_optRef": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "optRef",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameA",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_optRefList": Array [
-          PiElementReference {
+        "_FRE_optRefList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameZ",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameY",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameX",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "_PI_ref": PiElementReference {
+        "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "someName",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_refList": Array [
-          PiElementReference {
+        "_FRE_refList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name1",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name2",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name3",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 3,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name4",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 53,
         },
       },
     ],
-    "parse_location": PiParseLocation {
+    "parse_location": FreParseLocation {
       "column": 18,
       "line": 14,
     },
   },
-  "_PI_name": "myName",
-  "_PI_withSeparator": RefsWithSeparator {
+  "_FRE_name": "myName",
+  "_FRE_withSeparator": RefsWithSeparator {
     "$$owner": [Circular],
     "$$propertyIndex": undefined,
     "$$propertyName": "withSeparator",
     "$id": "ID-11",
     "$typename": "RefsWithSeparator",
-    "_PI_optList": Array [
+    "_FRE_optList": Array [
       WithDirectRefs {
         "$$owner": [Circular],
         "$$propertyIndex": 0,
         "$$propertyName": "optList",
         "$id": "ID-9",
         "$typename": "WithDirectRefs",
-        "_PI_optRef": PiElementReference {
+        "_FRE_optRef": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "optRef",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameA",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_optRefList": Array [
-          PiElementReference {
+        "_FRE_optRefList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameZ",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameY",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameX",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "_PI_ref": PiElementReference {
+        "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "someName",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_refList": Array [
-          PiElementReference {
+        "_FRE_refList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name1",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name2",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name3",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 3,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name4",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 80,
         },
@@ -3179,113 +3179,113 @@ RefsTest {
         "$$propertyName": "optList",
         "$id": "ID-10",
         "$typename": "WithDirectRefs",
-        "_PI_optRef": PiElementReference {
+        "_FRE_optRef": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "optRef",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "nameA",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_optRefList": Array [
-          PiElementReference {
+        "_FRE_optRefList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameZ",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameY",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "optRefList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "nameX",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "_PI_ref": PiElementReference {
+        "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
-          "_PI_pathname": Array [
+          "_FRE_pathname": Array [
             "someName",
           ],
-          "_PI_referred": null,
+          "_FRE_referred": null,
           "typeName": "RefConcept",
         },
-        "_PI_refList": Array [
-          PiElementReference {
+        "_FRE_refList": Array [
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name1",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 1,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name2",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 2,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name3",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
-          PiElementReference {
+          FreNodeReference {
             "$$owner": [Circular],
             "$$propertyIndex": 3,
             "$$propertyName": "refList",
-            "_PI_pathname": Array [
+            "_FRE_pathname": Array [
               "name4",
             ],
-            "_PI_referred": null,
+            "_FRE_referred": null,
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": PiParseLocation {
+        "parse_location": FreParseLocation {
           "column": 25,
           "line": 92,
         },
       },
     ],
-    "_PI_partList": Array [],
-    "parse_location": PiParseLocation {
+    "_FRE_partList": Array [],
+    "parse_location": FreParseLocation {
       "column": 25,
       "line": 80,
     },
   },
-  "parse_location": PiParseLocation {
+  "parse_location": FreParseLocation {
     "column": 1,
     "line": 1,
   },

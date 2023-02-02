@@ -1,16 +1,16 @@
 import { Box } from "./internal";
-import { PiUtils } from "../../util";
-import { PiElement } from "../../ast";
+import { FreUtils } from "../../util";
+import { FreNode } from "../../ast";
 
 export class LabelBox extends Box {
     readonly kind = "LabelBox";
 
     private $label: string = "";
 
-    constructor(element: PiElement, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>) {
+    constructor(element: FreNode, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>) {
         super(element, role);
         this.selectable = false; // default
-        PiUtils.initializeObject(this, initializer);
+        FreUtils.initializeObject(this, initializer);
         this.setLabel(getLabel);
     }
 

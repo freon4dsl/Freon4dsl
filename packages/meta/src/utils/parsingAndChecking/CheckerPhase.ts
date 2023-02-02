@@ -1,11 +1,11 @@
 import { CheckRunner } from "./CheckRunner";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 
 export abstract class CheckerPhase<DEFINITION> {
-    language: PiLanguage; // should be set in every checker phase, except the checker for the language definition language (.ast)
+    language: FreLanguage; // should be set in every checker phase, except the checker for the language definition language (.ast)
     runner: CheckRunner;
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         this.language = language;
     }
 

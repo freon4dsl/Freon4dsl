@@ -4,13 +4,13 @@ typer
 istype { TopType }
 
 type TT_GenericType {
-    base: PiType;
+    base: FreType;
     kind: GenericKind;
 //    extra: boolean;
 }
 
 type TT_MeasurementType {
-    base: PiType;
+    base: FreType;
     unit: UnitKind;
 }
 

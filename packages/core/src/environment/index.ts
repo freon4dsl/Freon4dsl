@@ -1,2 +1,2 @@
-export { PiEnvironment } from "./PiEnvironment";
-export { LanguageEnvironment } from "./LanguageEnvironment";
+export { FreEnvironment } from "./FreEnvironment";
+export { FreLanguageEnvironment } from "./FreLanguageEnvironment";

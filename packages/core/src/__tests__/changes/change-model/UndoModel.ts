@@ -1,7 +1,7 @@
 
-import { observablepart, PiElementBaseImpl, PiModel } from "../../../ast";
-import { PiUtils } from "../../../util";
-import { Language } from "../../../language";
+import { observablepart, FreNodeBaseImpl, FreModel } from "../../../ast";
+import { FreUtils } from "../../../util";
+import { FreLanguage } from "../../../language";
 import { UndoUnit } from "./UndoUnit";
 
 /**
@@ -9,7 +9,7 @@ import { UndoUnit } from "./UndoUnit";
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
  * to changes in the state of its properties.
  */
-export class UndoModel extends PiElementBaseImpl implements PiModel {
+export class UndoModel extends FreNodeBaseImpl implements FreModel {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -39,7 +39,7 @@ export class UndoModel extends PiElementBaseImpl implements PiModel {
         if (!!id) {
             this.$id = id;
         } else {
-            this.$id = PiUtils.ID(); // uuid.v4();
+            this.$id = FreUtils.ID(); // uuid.v4();
         }
 
         // Both 'observablepart' and 'observablepartlist' change the get and set of the attribute
@@ -51,42 +51,42 @@ export class UndoModel extends PiElementBaseImpl implements PiModel {
     /**
      * Returns the metatype of this instance in the form of a string.
      */
-    piLanguageConcept(): string {
+    freLanguageConcept(): string {
         return this.$typename;
     }
 
     /**
      * Returns the unique identifier of this instance.
      */
-    piId(): string {
+    freId(): string {
         return this.$id;
     }
 
     /**
      * Returns true if this instance is a model concept.
      */
-    piIsModel(): boolean {
+    freIsModel(): boolean {
         return true;
     }
 
     /**
      * Returns true if this instance is a model unit.
      */
-    piIsUnit(): boolean {
+    freIsUnit(): boolean {
         return false;
     }
 
     /**
      * Returns true if this instance is an expression concept.
      */
-    piIsExpression(): boolean {
+    freIsExpression(): boolean {
         return false;
     }
 
     /**
      * Returns true if this instance is a binary expression concept.
      */
-    piIsBinaryExpression(): boolean {
+    freIsBinaryExpression(): boolean {
         return false;
     }
     /**
@@ -127,7 +127,7 @@ export class UndoModel extends PiElementBaseImpl implements PiModel {
         let result: UndoUnit = null;
         if (this.unit.name === name) result = this.unit;
         if (!!result && !!metatype) {
-            if (Language.getInstance().metaConformsToType(result, metatype)) {
+            if (FreLanguage.getInstance().metaConformsToType(result, metatype)) {
                 return result;
             }
         } else {
@@ -143,14 +143,14 @@ export class UndoModel extends PiElementBaseImpl implements PiModel {
      * @param newUnit
      */
     replaceUnit(oldUnit: UndoUnit, newUnit: UndoUnit): boolean {
-        if (oldUnit.piLanguageConcept() !== newUnit.piLanguageConcept()) {
+        if (oldUnit.freLanguageConcept() !== newUnit.freLanguageConcept()) {
             return false;
         }
-        if (oldUnit.piOwnerDescriptor().owner !== this) {
+        if (oldUnit.freOwnerDescriptor().owner !== this) {
             return false;
         }
-        // we must store the interface in the same place as the old unit, which info is held in PiContainer()
-        if (oldUnit.piLanguageConcept() === "UndoUnit" && oldUnit.piOwnerDescriptor().propertyName === "unit") {
+        // we must store the interface in the same place as the old unit, which info is held in FreContainer()
+        if (oldUnit.freLanguageConcept() === "UndoUnit" && oldUnit.freOwnerDescriptor().propertyName === "unit") {
             this.unit = newUnit as UndoUnit;
         } else {
             return false;
@@ -165,7 +165,7 @@ export class UndoModel extends PiElementBaseImpl implements PiModel {
      */
     addUnit(newUnit: UndoUnit): boolean {
         if (!!newUnit) {
-            const myMetatype = newUnit.piLanguageConcept();
+            const myMetatype = newUnit.freLanguageConcept();
             switch (myMetatype) {
                 case "UndoUnit": {
                     this.unit = newUnit as UndoUnit;
@@ -183,7 +183,7 @@ export class UndoModel extends PiElementBaseImpl implements PiModel {
      */
     removeUnit(oldUnit: UndoUnit): boolean {
         if (!!oldUnit) {
-            const myMetatype = oldUnit.piLanguageConcept();
+            const myMetatype = oldUnit.freLanguageConcept();
             switch (myMetatype) {
                 case "UndoUnit": {
                     this.unit = null;

@@ -8,19 +8,19 @@ import {
     TableRowBox
 } from "../boxes";
 import {
-    Box, BoxUtils,
+    Box, BoxUtil,
     FreBoxProvider,
     FreProjectionHandler,
     GridOrientation
 } from "../index";
-import { PiElement } from "../../ast";
-import { isNullOrUndefined, PiUtils } from "../../util";
-import { Language } from "../../language";
+import { FreNode } from "../../ast";
+import { isNullOrUndefined, FreUtils } from "../../util";
+import { FreLanguage } from "../../language";
 import { RoleProvider } from "./RoleProvider";
-import { PiLogger } from "../../logging";
+import { FreLogger } from "../../logging";
 import { FreHeaderProvider } from "../projections/FreHeaderProvider";
 
-const LOGGER = new PiLogger("NewTableUtil");
+const LOGGER = new FreLogger("NewTableUtil");
 
 export class TableUtil {
     // Note that both tableBoxRowOriented and tableBoxColumnOriented look very similar.
@@ -36,7 +36,7 @@ export class TableUtil {
      * @param propertyName  The name of the list property to be shown.
      * @param boxProviderCache
      */
-    public static tableBoxRowOriented(element: PiElement, list: PiElement[], propertyName: string, boxProviderCache: FreProjectionHandler): Box {
+    public static tableBoxRowOriented(element: FreNode, list: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler): Box {
         return this.tableBox("row", element, list, propertyName, boxProviderCache);
     }
 
@@ -50,13 +50,13 @@ export class TableUtil {
      * @param propertyName  The name of the list property to be shown.
      * @param boxProviderCache
      */
-    public static tableBoxColumnOriented(element: PiElement, list: PiElement[], propertyName: string, boxProviderCache: FreProjectionHandler): Box {
+    public static tableBoxColumnOriented(element: FreNode, list: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler): Box {
         return this.tableBox("column", element, list, propertyName, boxProviderCache);
     }
 
-    public static rowBox(element: PiElement, propertyName: string, conceptName: string, cells: Box[], rowIndex: number, hasHeaders: boolean): TableRowBox {
+    public static rowBox(element: FreNode, propertyName: string, conceptName: string, cells: Box[], rowIndex: number, hasHeaders: boolean): TableRowBox {
         if (isNullOrUndefined(rowIndex)) {
-            console.log('NO rowIndex for TableRowBox! ' + element.piLanguageConcept() + element.piId());
+            console.log('NO rowIndex for TableRowBox! ' + element.freLanguageConcept() + element.freId());
         }
         // Note that css grid counts from 1, not 0, which is common in lists.
         let gridIndex: number;
@@ -66,21 +66,21 @@ export class TableUtil {
             gridIndex = rowIndex + 1;
         }
         const myContent = cells.map((cell, index) => {
-            const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, gridIndex, index + 1);
+            const cellRoleName: string = RoleProvider.cell(element.freLanguageConcept(), propertyName, gridIndex, index + 1);
             return new TableCellBox(element, propertyName, rowIndex, conceptName, cellRoleName, gridIndex, index + 1, cell);
         });
-        const role: string = RoleProvider.row(element.piLanguageConcept(), propertyName, gridIndex);
+        const role: string = RoleProvider.row(element.freLanguageConcept(), propertyName, gridIndex);
         let result = new TableRowBox(element, role, myContent, gridIndex);
         result.propertyName = propertyName;
         result.propertyIndex = rowIndex;
         return result;
     }
 
-    private static tableBox(orientation: GridOrientation, element: PiElement, list: PiElement[], propertyName: string, boxProviderCache: FreProjectionHandler): TableBox {
+    private static tableBox(orientation: GridOrientation, element: FreNode, list: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler): TableBox {
         // console.log('calling tableBox')
         // Find the information on the property to be shown and check it.
-        const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
-        PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
+        const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
+        FreUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.freLanguageConcept()}.${propertyName}' because it is not a list.`);
         // Create the TableRowBoxes.
         let children: Box[] = [];
         let hasHeaders: boolean = false;
@@ -107,7 +107,7 @@ export class TableUtil {
         }
 
         // return the actual table box
-        const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
+        const roleName: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "tablebox");
         if (orientation === "column") {
             return new TableBoxColumnOriented(element, propertyName, propInfo.type, roleName, hasHeaders, children);
         } else {
@@ -115,7 +115,7 @@ export class TableUtil {
         }
     }
 
-    private static createPlaceHolder(element: PiElement, propertyName: string, conceptName: string, orientation: GridOrientation): TableRowBox {
+    private static createPlaceHolder(element: FreNode, propertyName: string, conceptName: string, orientation: GridOrientation): TableRowBox {
         const content = BoxFactory.action(element, "alias-add-row-or-column", `<add new ${orientation}>`,
             { propertyName: propertyName, conceptName: conceptName });
         // Note that a placeholder is only added when there are no other elements in the table, therefore its index is always 0.

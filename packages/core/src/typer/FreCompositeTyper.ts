@@ -1,7 +1,7 @@
-import { PiElement } from "../ast";
+import { FreNode } from "../ast";
 import { ListUtil } from "../util/ListUtil";
 import { FreTyper } from "./FreTyper";
-import { PiType } from "./PiType";
+import { FreType } from "./FreType";
 
 export class FreCompositeTyper implements FreTyper {
     mainTyper: FreTyper;
@@ -23,7 +23,7 @@ export class FreCompositeTyper implements FreTyper {
         t.mainTyper = this;
     }
     
-    inferType(node: PiElement): PiType | null {
+    inferType(node: FreNode): FreType | null {
         for (const typer of this.typers) {
             const result = typer.inferType(node);
             if (!!result) {
@@ -33,7 +33,7 @@ export class FreCompositeTyper implements FreTyper {
         return null;
     }
 
-    isType(node: PiElement): boolean {
+    isType(node: FreNode): boolean {
         for (const typer of this.typers) {
             const result = typer.isType(node);
             if (!!result) {
@@ -43,7 +43,7 @@ export class FreCompositeTyper implements FreTyper {
         return false;
     }
 
-    commonSuper(typelist: PiType[]): PiType | null {
+    commonSuper(typelist: FreType[]): FreType | null {
         for (const typer of this.typers) {
             let result = typer.commonSuper(typelist);
             if (!!result) {
@@ -54,7 +54,7 @@ export class FreCompositeTyper implements FreTyper {
         return null;
     }
 
-    conforms(type1: PiType, type2: PiType): boolean | null {
+    conforms(type1: FreType, type2: FreType): boolean | null {
         for (const typer of this.typers) {
             let result = typer.conforms(type1, type2);
             if (result !== null) {
@@ -64,7 +64,7 @@ export class FreCompositeTyper implements FreTyper {
         return false;
     }
 
-    conformsList(typelist1: PiType[], typelist2: PiType[]): boolean | null {
+    conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | null {
         for (const typer of this.typers) {
             let result = typer.conformsList(typelist1, typelist2);
             if (result !== null) {
@@ -75,7 +75,7 @@ export class FreCompositeTyper implements FreTyper {
         return true;
     }
 
-    equals(type1: PiType, type2: PiType): boolean | null {
+    equals(type1: FreType, type2: FreType): boolean | null {
         for (const typer of this.typers) {
             let result = typer.equals(type1, type2);
             if (result !== null && result !== undefined) {
@@ -85,7 +85,7 @@ export class FreCompositeTyper implements FreTyper {
         return false;
     }
 
-    getSuperTypes(type: PiType): PiType[] | null {
+    getSuperTypes(type: FreType): FreType[] | null {
         for (const typer of this.typers) {
             let result = typer.getSuperTypes(type);
             if (!!result) {
@@ -96,43 +96,43 @@ export class FreCompositeTyper implements FreTyper {
         return [];
     }
 
-    commonSuperType(elemlist: PiElement[]): PiType {
+    commonSuperType(elemlist: FreNode[]): FreType {
         if (!elemlist) return null;
         if (elemlist.length === 0) return null;
 
-        const $typelist: PiType[] = this.elementListToTypeList(elemlist);
+        const $typelist: FreType[] = this.elementListToTypeList(elemlist);
         if ($typelist.length === 0) return null;
 
         return this.commonSuper($typelist);
     }
 
-    conformsListType(elemlist1: PiElement[], elemlist2: PiElement[]): boolean {
+    conformsListType(elemlist1: FreNode[], elemlist2: FreNode[]): boolean {
         if (!elemlist1 || !elemlist2) return false;
         if (elemlist1.length !== elemlist2.length) return false;
 
-        const $typelist1: PiType[] = this.elementListToTypeList(elemlist1);
-        const $typelist2: PiType[] = this.elementListToTypeList(elemlist2);
+        const $typelist1: FreType[] = this.elementListToTypeList(elemlist1);
+        const $typelist2: FreType[] = this.elementListToTypeList(elemlist2);
         if ($typelist1.length === 0 || $typelist2.length === 0) return false;
         if ($typelist1.length !== $typelist2.length) return false;
 
         return this.conformsList($typelist1, $typelist2);
     }
 
-    conformsType(elem1: PiElement, elem2: PiElement): boolean {
+    conformsType(elem1: FreNode, elem2: FreNode): boolean {
         if (!elem1 || !elem2) return false;
 
-        const $type1: PiType = this.inferType(elem1);
-        const $type2: PiType = this.inferType(elem2);
+        const $type1: FreType = this.inferType(elem1);
+        const $type2: FreType = this.inferType(elem2);
         if (!$type1 || !$type2) return false;
 
         return this.conforms($type1, $type2);
     }
 
-    equalsType(elem1: PiElement, elem2: PiElement): boolean {
+    equalsType(elem1: FreNode, elem2: FreNode): boolean {
         if (!elem1 || !elem2) return false;
 
-        const $type1: PiType = this.inferType(elem1);
-        const $type2: PiType = this.inferType(elem2);
+        const $type1: FreType = this.inferType(elem1);
+        const $type2: FreType = this.inferType(elem2);
         if (!$type1 || !$type2) return false;
 
         return this.equals($type1, $type2);
@@ -144,10 +144,10 @@ export class FreCompositeTyper implements FreTyper {
      * @param inlist
      * @private
      */
-    private elementListToTypeList(inlist: PiElement[]): PiType[] {
-        const typelist: PiType[] = [];
+    private elementListToTypeList(inlist: FreNode[]): FreType[] {
+        const typelist: FreType[] = [];
         for (const elem of inlist) {
-            ListUtil.addIfNotPresent<PiType>(typelist, this.inferType(elem));
+            ListUtil.addIfNotPresent<FreType>(typelist, this.inferType(elem));
         }
         return typelist;
     }    

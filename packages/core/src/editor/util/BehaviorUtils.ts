@@ -1,8 +1,8 @@
 import { runInAction } from "mobx";
-import { isRegExp, isString, Box, PiEditor, PiPostAction, PiAction } from "../index";
-import { PiLogger } from "../../logging";
+import { isRegExp, isString, Box, FreEditor, FrePostAction, FreAction } from "../index";
+import { FreLogger } from "../../logging";
 
-const LOGGER = new PiLogger("BehaviorUtils");
+const LOGGER = new FreLogger("BehaviorUtils");
 
 export enum BehaviorExecutionResult {
     NULL,
@@ -16,15 +16,15 @@ export enum BehaviorExecutionResult {
  * Matching on full text only.
  * @param {Box} box
  * @param {string} text
- * @param {PiEditor} editor
+ * @param {FreEditor} editor
  * @returns {boolean}
  */
-export function executeBehavior(box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
+export function executeBehavior(box: Box, text: string, label: string, editor: FreEditor): BehaviorExecutionResult {
     LOGGER.log("Enter executeBehavior text [" + text + "] label [" + label + "] box role [" + box.role + "]");
     let partialMatch: boolean = false;
     let index = -1; // todo get the correct index
 
-    for (const action of editor.newPiActions) {
+    for (const action of editor.newFreActions) {
         const trigger = action.trigger;
         LOGGER.log("  executeBehavior trigger " + trigger + "  roles " + action.activeInBoxRoles);
         if (action.activeInBoxRoles.includes(box.role)) {
@@ -32,7 +32,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                 const matchArray = label.match(trigger);
                 LOGGER.log("executeBehavior: MATCH " + label + " against " + trigger +
                     "  results in " + (!!matchArray ? matchArray.length : "null"));
-                let execresult: PiPostAction;
+                let execresult: FrePostAction;
                 if (matchArray !== null && label === matchArray[0]) {
                     runInAction(() => {
                         const command = action.command(box);
@@ -46,7 +46,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
             } else if (isString(trigger)) {
                 if (trigger === text) {
                     LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + action.referenceShortcut + "]");
-                    let postAction: PiPostAction;
+                    let postAction: FrePostAction;
                     runInAction(() => {
                         const command = action.command(box);
                         postAction = command.execute(box, label, editor, index);
@@ -76,9 +76,9 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
  * @param label
  * @param editor
  */
-export function executeSingleBehavior(action: PiAction, box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
+export function executeSingleBehavior(action: FreAction, box: Box, text: string, label: string, editor: FreEditor): BehaviorExecutionResult {
     LOGGER.log("Enter executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
-    let execresult: PiPostAction;
+    let execresult: FrePostAction;
 
     let index = -1; // todo get the correct index
     runInAction(() => {
@@ -90,7 +90,7 @@ export function executeSingleBehavior(action: PiAction, box: Box, text: string, 
 
         // TODO The following ensured that the cursor gwets the correct focus after the change.  probably still needed.
         // if (!!action.boxRoleToSelect) {
-        //     editor.selectBoxByRoleAndElementId(execresult.piId(),action.boxRoleToSelect,action.caretPosition);
+        //     editor.selectBoxByRoleAndElementId(execresult.freId(),action.boxRoleToSelect,action.caretPosition);
         // }else {
         //     editor.selectFirstLeafChildBox();
         //     if (editor.selectedBox.role.includes(LEFT_MOST)){

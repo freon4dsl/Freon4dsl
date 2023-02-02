@@ -1,4 +1,4 @@
-import { ListJoinType, PiEditProjectionGroup } from "./PiEditDefLang";
+import { ListJoinType, FreEditProjectionGroup } from "./FreEditDefLang";
 
 export class EditorDefaults {
     static standardReferenceSeparator = ".";
@@ -10,7 +10,7 @@ export class EditorDefaults {
     // Other defaults for listInfo are set in class ListInfo.
     // Their values are:
     //  isTable: boolean = false;
-    //  direction: PiEditProjectionDirection = PiEditProjectionDirection.Vertical;
+    //  direction: FreEditProjectionDirection = FreEditProjectionDirection.Vertical;
     // Defaults for trigger and symbol are set in EditorDefaultsGenerator.
     // Both values are determined by Names.classifier(classifier).
 

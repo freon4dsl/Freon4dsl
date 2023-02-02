@@ -1,11 +1,11 @@
 import { UndoModel } from "./change-model/UndoModel";
 import { UndoUnit } from "./change-model/UndoUnit";
 import { UndoPart } from "./change-model/UndoPart";
-import { PiDelta, PiTransactionDelta, PiUndoManager } from "../../change-manager";
-import { PiModelUnit } from "../../ast";
+import { FreDelta, FreTransactionDelta, FreUndoManager } from "../../change-manager";
+import { FreModelUnit } from "../../ast";
 
 // expose the private parts of the undo manager for testing purposes only
-function getUndoStackPerUnit(manager: PiUndoManager, unit?: PiModelUnit): PiDelta[] {
+function getUndoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreDelta[] {
     if (!!unit) {
         return manager["undoManagerPerUnit"].get(unit.name)["undoStack"];
     } else {
@@ -13,7 +13,7 @@ function getUndoStackPerUnit(manager: PiUndoManager, unit?: PiModelUnit): PiDelt
     }
 }
 
-function getRedoStackPerUnit(manager: PiUndoManager, unit?: PiModelUnit): PiDelta[] {
+function getRedoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreDelta[] {
     if (!!unit) {
         return manager["undoManagerPerUnit"].get(unit.name)["redoStack"];
     } else {
@@ -30,7 +30,7 @@ describe("Change and Undo Manager", () => {
     let part6: UndoPart = null;
     let unit: UndoUnit = null;
     let model: UndoModel = null;
-    const manager = PiUndoManager.getInstance();
+    const manager = FreUndoManager.getInstance();
 
     beforeEach(done => {
         manager.cleanAllStacks();
@@ -55,7 +55,7 @@ describe("Change and Undo Manager", () => {
     it("create model", () => {
         expect(unit).not.toBeNull();
         // console.log(writer.writeToString(unit));
-        const myStack: PiDelta[] = getUndoStackPerUnit(manager);
+        const myStack: FreDelta[] = getUndoStackPerUnit(manager);
         // console.log("length of undo stack: " + myStack.length + " => [[\n\t" + myStack.map(d => d.toString() + "\n\t").join("") + "]]");
         expect (myStack.length).toBe(1);
     });
@@ -65,7 +65,7 @@ describe("Change and Undo Manager", () => {
         unit.prim = "nieuwe_waarde";
 
         // get the stack after the change, before the result will be null/undefined!!
-        const undoStack: PiDelta[] = getUndoStackPerUnit(manager, unit);
+        const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect (undoStack).not.toBeNull();
         expect (undoStack).not.toBeUndefined();
         expect (undoStack.length).toBe(1);
@@ -74,7 +74,7 @@ describe("Change and Undo Manager", () => {
 
         // undo the change
         manager.executeUndo(unit);
-        const redoStack: PiDelta[] = getRedoStackPerUnit(manager, unit);
+        const redoStack: FreDelta[] = getRedoStackPerUnit(manager, unit);
         expect (redoStack.length).toBe(1);
         expect (undoStack.length).toBe(0);
         expect (unit.prim).toBe("myPrimText");
@@ -87,11 +87,11 @@ describe("Change and Undo Manager", () => {
 
     it("change, undo, redo, undo on part", () => {
         // change the value of 'part'
-        const oldPartId = unit.part.piId(); // remember the id of the old value
+        const oldPartId = unit.part.freId(); // remember the id of the old value
         const newPart = UndoPart.create({name: "part42"});
         unit.part = newPart;
 
-        const undoStack: PiDelta[] = getUndoStackPerUnit(manager, unit);
+        const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect (undoStack).not.toBeNull();
         expect (undoStack).not.toBeUndefined();
         // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString()).join(", ") + "]]");
@@ -101,9 +101,9 @@ describe("Change and Undo Manager", () => {
         // undo the change
         manager.executeUndo(unit);
         expect (undoStack.length).toBe(0);
-        const redoStack: PiDelta[] = getRedoStackPerUnit(manager, unit);
+        const redoStack: FreDelta[] = getRedoStackPerUnit(manager, unit);
         expect (redoStack.length).toBe(1);
-        expect (unit.part.piId()).toBe(oldPartId);
+        expect (unit.part.freId()).toBe(oldPartId);
 
         // redo the change
         manager.executeRedo(unit);
@@ -116,14 +116,14 @@ describe("Change and Undo Manager", () => {
         // change one of the values in 'numlist'
         const oldValue = unit.numlist[0];
         unit.numlist[0] = 24;
-        const undoStack: PiDelta[] = getUndoStackPerUnit(manager, unit);
+        const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect (undoStack.length).toBe(1);
         expect (unit.numlist[0]).toBe(24);
 
         // undo the change
         manager.executeUndo(unit);
         expect (undoStack.length).toBe(0);
-        const redoStack: PiDelta[] = getRedoStackPerUnit(manager, unit);
+        const redoStack: FreDelta[] = getRedoStackPerUnit(manager, unit);
         expect (redoStack.length).toBe(1);
         expect (unit.numlist[0]).toBe(oldValue);
 
@@ -139,14 +139,14 @@ describe("Change and Undo Manager", () => {
         const oldValue2 = unit.numlist[1];
         const oldValue3 = unit.numlist[2];
         unit.numlist.splice(1, 2);
-        const undoStack: PiDelta[] = getUndoStackPerUnit(manager, unit);
+        const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect (undoStack.length).toBe(1);
         expect (unit.numlist.length).toBe(1);
 
         // undo the change
         manager.executeUndo(unit);
         expect (undoStack.length).toBe(0);
-        const redoStack: PiDelta[] = getRedoStackPerUnit(manager, unit);
+        const redoStack: FreDelta[] = getRedoStackPerUnit(manager, unit);
         expect (redoStack.length).toBe(1);
         expect (unit.numlist.length).toBe(3);
         expect (unit.numlist[0]).toBe(oldValue1);
@@ -166,14 +166,14 @@ describe("Change and Undo Manager", () => {
         const oldValue = unit.partlist[2];
         const newValue = new UndoPart("part90");
         unit.partlist[2] = newValue;
-        const undoStack: PiDelta[] = getUndoStackPerUnit(manager, unit);
+        const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect (undoStack.length).toBe(1);
         expect (unit.partlist[2]).toBe(newValue);
 
         // undo the change
         manager.executeUndo(unit);
         expect (undoStack.length).toBe(0);
-        const redoStack: PiDelta[] = getRedoStackPerUnit(manager, unit);
+        const redoStack: FreDelta[] = getRedoStackPerUnit(manager, unit);
         expect (redoStack.length).toBe(1);
         expect (unit.partlist[2]).toBe(oldValue);
 
@@ -186,13 +186,13 @@ describe("Change and Undo Manager", () => {
         // change the value of 'partlist'
         // console.log(unit.partlist.map(p => p.name));
         expect (unit.partlist.length).toBe(5);
-        expect (unit.piOwner()).not.toBeNull();
-        expect (unit.piOwner()).not.toBeUndefined();
+        expect (unit.freOwner()).not.toBeNull();
+        expect (unit.freOwner()).not.toBeUndefined();
         const oldValue1 = unit.partlist[0];
         const oldValue2 = unit.partlist[1];
         const oldValue3 = unit.partlist[2];
         unit.partlist.splice(1, 2);
-        const undoStack: PiDelta[] = getUndoStackPerUnit(manager, unit);
+        const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect (undoStack.length).toBe(1);
         expect (unit.partlist.length).toBe(3);
 
@@ -200,7 +200,7 @@ describe("Change and Undo Manager", () => {
         // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString()).join(", ") + "]]");
         manager.executeUndo(unit);
         expect (undoStack.length).toBe(0);
-        const redoStack: PiDelta[] = getRedoStackPerUnit(manager, unit);
+        const redoStack: FreDelta[] = getRedoStackPerUnit(manager, unit);
         expect (redoStack.length).toBe(1);
         expect (unit.partlist.length).toBe(5);
         expect (unit.partlist[0]).toBe(oldValue1);
@@ -221,14 +221,14 @@ describe("Change and Undo Manager", () => {
         unit.prim = "nieuwe_waarde";
 
         // change the value of 'part'
-        const oldPartId = unit.part.piId(); // remember the id of the old value
+        const oldPartId = unit.part.freId(); // remember the id of the old value
         const newPart = UndoPart.create({name: "part42"});
         unit.part = newPart;
 
         // change the value of 'partlist'
         expect (unit.partlist.length).toBe(5);
-        expect (unit.piOwner()).not.toBeNull();
-        expect (unit.piOwner()).not.toBeUndefined();
+        expect (unit.freOwner()).not.toBeNull();
+        expect (unit.freOwner()).not.toBeUndefined();
         const oldValue1 = unit.partlist[0];
         const oldValue2 = unit.partlist[1];
         const oldValue3 = unit.partlist[2];
@@ -239,11 +239,11 @@ describe("Change and Undo Manager", () => {
         manager.endTransaction(unit);
 
         // check the stack
-        const undoStack: PiDelta[] = getUndoStackPerUnit(manager, unit);
+        const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect (undoStack.length).toBe(1);
         const delta = undoStack[0];
-        expect (delta instanceof PiTransactionDelta).toBe(true);
-        if (delta instanceof PiTransactionDelta) {
+        expect (delta instanceof FreTransactionDelta).toBe(true);
+        if (delta instanceof FreTransactionDelta) {
             // console.log("length of internal stack: " + delta.internalDeltas.length + " => [[" + delta.internalDeltas.map(d => d.toString() + "\n\t").join("") + "]]");
             expect (delta.internalDeltas.length).toBe(3);
         }
@@ -252,7 +252,7 @@ describe("Change and Undo Manager", () => {
         // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString()).join(", ") + "]]");
         manager.executeUndo(unit);
         expect (undoStack.length).toBe(0);
-        const redoStack: PiDelta[] = getRedoStackPerUnit(manager, unit);
+        const redoStack: FreDelta[] = getRedoStackPerUnit(manager, unit);
         expect (redoStack.length).toBe(1);
         expect (unit.partlist.length).toBe(5);
         expect (unit.partlist[0]).toBe(oldValue1);

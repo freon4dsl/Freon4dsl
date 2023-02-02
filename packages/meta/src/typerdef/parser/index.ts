@@ -6,11 +6,11 @@
 
 export {
     MetaTyperGrammarStr,
-    PiTyperSyntaxAnalyser,
-    PiTyperDefSyntaxAnalyserPart,
-    PiTyperReader,
-    PiTyperCheckerPhase1,
-    PiTyperCheckerPhase2,
-    PiTyperMerger,
+    FreTyperSyntaxAnalyser,
+    FreTyperDefSyntaxAnalyserPart,
+    FreTyperReader,
+    FreTyperCheckerPhase1,
+    FreTyperCheckerPhase2,
+    FreTyperMerger,
 } from "./internal";
 

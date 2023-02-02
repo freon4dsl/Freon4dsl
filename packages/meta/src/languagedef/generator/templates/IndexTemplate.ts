@@ -1,9 +1,9 @@
-import { PiLanguage } from "../../metalanguage";
+import { FreLanguage } from "../../metalanguage";
 import { Names, GenerationUtil } from "../../../utils";
 
 export class IndexTemplate {
 
-    generateIndex(language: PiLanguage): string {
+    generateIndex(language: FreLanguage): string {
 
         const tmp: string[] = [];
         tmp.push(Names.classifier(language.modelConcept));
@@ -37,7 +37,7 @@ export class IndexTemplate {
         } from "./internal"`;
     }
 
-    generateInternal(language: PiLanguage): string {
+    generateInternal(language: FreLanguage): string {
 
 
         const tmp: string[] = [];
@@ -75,7 +75,7 @@ export class IndexTemplate {
         `;
     }
 
-    generateUtilsIndex(language: PiLanguage): string {
+    generateUtilsIndex(language: FreLanguage): string {
         return `export * from "./${Names.workerInterface(language)}";
                 export * from "./${Names.walker(language)}";
                 export * from "./${Names.defaultWorker(language)}";`;

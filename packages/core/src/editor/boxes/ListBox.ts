@@ -1,24 +1,24 @@
 import { Box } from "./Box";
-import { PiElement } from "../../ast";
-import { Language } from "../../language";
-import { PiLogger } from "../../logging";
+import { FreNode } from "../../ast";
+import { FreLanguage } from "../../language";
+import { FreLogger } from "../../logging";
 import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
 import { LayoutBox, ListDirection } from "./LayoutBox";
 
-const LOGGER = new PiLogger("ListBox");
+const LOGGER = new FreLogger("ListBox");
 
 /**
- * This Box represents a list in the PiElement model, i.e. one that is defined in the .ast file
+ * This Box represents a list in the FreElement model, i.e. one that is defined in the .ast file
  * as 'propName: conceptName[]' or 'reference propName: conceptName[]'.
  */
 export abstract class ListBox extends LayoutBox {
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    protected constructor(element: PiElement, propertyName: string, role: string, children?: Box[], initializer?: Partial<ListBox>) {
+    protected constructor(element: FreNode, propertyName: string, role: string, children?: Box[], initializer?: Partial<ListBox>) {
         super(element, role, children, initializer);
         this.kind = "ListBox";
         this.propertyName = propertyName;
-        this.conceptName = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
+        this.conceptName = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName)?.type;
     }
 
     options(type: MenuOptionsType): MenuItem[] {
@@ -29,7 +29,7 @@ export abstract class ListBox extends LayoutBox {
 export class HorizontalListBox extends ListBox {
     kind = "HorizontalListBox";
 
-    constructor(element: PiElement, propertyName: string, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>) {
+    constructor(element: FreNode, propertyName: string, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>) {
         super(element, role, propertyName, children, initializer);
         this.direction = ListDirection.HORIZONTAL;
     }
@@ -38,7 +38,7 @@ export class HorizontalListBox extends ListBox {
 export class VerticalListBox extends ListBox {
     kind = "VerticalListBox";
 
-    constructor(element: PiElement, propertyName: string, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
+    constructor(element: FreNode, propertyName: string, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role, propertyName, children, initializer);
         this.direction = ListDirection.VERTICAL;
     }

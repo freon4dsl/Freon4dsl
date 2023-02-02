@@ -2,7 +2,7 @@
     /**
      * This component shows an empty line in the projection.
      */
-    import type { EmptyLineBox } from "@projectit/core";
+    import type { EmptyLineBox } from "@freon4dsl/core";
     import { componentId } from "./svelte-utils";
 
     export let box: EmptyLineBox;

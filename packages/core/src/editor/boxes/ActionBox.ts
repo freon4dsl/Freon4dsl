@@ -1,13 +1,13 @@
-import { Concept, Language } from "../../language";
+import { Concept, FreLanguage } from "../../language";
 import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../util";
-import { PiCreatePartAction } from "../actions";
-import { triggerTypeToString, PiEditor, TextBox, isProKey } from "../internal";
+import { FreCreatePartAction } from "../actions";
+import { triggerTypeToString, FreEditor, TextBox, isProKey } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 import { runInAction } from "mobx";
-import { PiLogger } from "../../logging";
+import { FreLogger } from "../../logging";
 
-const LOGGER = new PiLogger("ActionBox");
+const LOGGER = new FreLogger("ActionBox");
 
 export class ActionBox extends AbstractChoiceBox {
     readonly kind = "ActionBox";
@@ -24,11 +24,11 @@ export class ActionBox extends AbstractChoiceBox {
      * @param placeHolder
      * @param initializer
      */
-    constructor(element: PiElement, role: string, placeHolder: string, initializer?: Partial<ActionBox>) {
+    constructor(element: FreNode, role: string, placeHolder: string, initializer?: Partial<ActionBox>) {
         super(element, role, placeHolder, initializer);
     }
 
-    selectOption(editor: PiEditor, option: SelectOption): BehaviorExecutionResult {
+    selectOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
         LOGGER.log("ActionBox selectOption " + JSON.stringify(option));
         if (!!option.action) {
             return executeSingleBehavior(option.action, this, option.id, option.label, editor);
@@ -55,14 +55,14 @@ export class ActionBox extends AbstractChoiceBox {
      * Returns the options (for a dropdown component) that fit this ActionBox.
      * @param editor
      */
-    getOptions(editor: PiEditor): SelectOption[] {
+    getOptions(editor: FreEditor): SelectOption[] {
         const result: SelectOption[] = [];
         if( !!this.propertyName && !!this.conceptName) {
             // If the action box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
-            const clsOtIntf = Language.getInstance().concept(this.conceptName) ?? Language.getInstance().interface(this.conceptName);
+            const clsOtIntf = FreLanguage.getInstance().concept(this.conceptName) ?? FreLanguage.getInstance().interface(this.conceptName);
             clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (creatableConceptname: string) => {
-                const creatableConcept = Language.getInstance().concept(creatableConceptname);
+                const creatableConcept = FreLanguage.getInstance().concept(creatableConceptname);
                 if (!!creatableConcept && !creatableConcept.isAbstract) {
                     if (!!(creatableConcept.referenceShortcut)) {
                         this.addReferenceShortcuts(creatableConcept, result, editor);
@@ -75,7 +75,7 @@ export class ActionBox extends AbstractChoiceBox {
         }
         // Using the new actions:
         // Now look in all actions defined in the editor whether they fit this action, except for the keyboard shortcuts
-        editor.newPiActions
+        editor.newFreActions
             .filter(action => !isProKey(action.trigger) && action.activeInBoxRoles.includes(this.role))
             .forEach(action => {
                 const options: SelectOption[] = [];
@@ -96,7 +96,7 @@ export class ActionBox extends AbstractChoiceBox {
         return {
             id: conceptName,
             label: concept.trigger,
-            action: new PiCreatePartAction({
+            action: new FreCreatePartAction({
                 propertyName: propertyName,
                 conceptName: conceptName,
             }),
@@ -111,7 +111,7 @@ export class ActionBox extends AbstractChoiceBox {
      * @param editor  The editor context
      * @private
      */
-    private addReferenceShortcuts(concept: Concept, result: SelectOption[], editor: PiEditor) {
+    private addReferenceShortcuts(concept: Concept, result: SelectOption[], editor: FreEditor) {
         // Create the new element for this behavior inside a dummy and then point the owner to the
         // current element.  This way the new element is not part of the model and will not trigger mobx
         // reactions. But the scoper can be used to find available references, because the scoper only
@@ -128,7 +128,7 @@ export class ActionBox extends AbstractChoiceBox {
                         id: concept.trigger + "-" + name,
                         label: name,
                         description: "create " + concept.referenceShortcut.conceptName,
-                        action: new PiCreatePartAction({
+                        action: new FreCreatePartAction({
                             referenceShortcut: {
                                 propertyName: concept.referenceShortcut.propertyName,
                                 conceptName: concept.referenceShortcut.conceptName

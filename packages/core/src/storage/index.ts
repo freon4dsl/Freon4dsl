@@ -1,1 +1,1 @@
-export * from "./GenericModelSerializer";
+export * from "./FreModelSerializer";

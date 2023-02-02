@@ -1,4 +1,3 @@
-import { PiLogger } from "@projectit/core";
 import { DSmodel } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";

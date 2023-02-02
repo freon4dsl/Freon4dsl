@@ -1,4 +1,4 @@
-import { PiConcept, PiInterface, PiLanguage, PiLimitedConcept, PiProperty } from "../../languagedef/metalanguage";
+import { FreConcept, FreInterface, FreLanguage, FreLimitedConcept, FreProperty } from "../../languagedef/metalanguage";
 import { ListUtil } from "../../utils";
 
 export class DiagramTemplate {
@@ -8,7 +8,7 @@ export class DiagramTemplate {
         this.withHtml = html;
     }
 
-    public makeOverview(language: PiLanguage): string {
+    public makeOverview(language: FreLanguage): string {
         return `%%{init: {'theme': 'forest'} }%%
     classDiagram
     direction TD
@@ -18,14 +18,14 @@ ${this.makeUmlInterfaces(language.interfaces)}
     ${this.makeUmlRelationships(language.concepts)}`;
     }
 
-    public makeOverviewPerFile(language: PiLanguage, filename: string): string {
-        const conceptsToInclude: PiConcept[] = [];
+    public makeOverviewPerFile(language: FreLanguage, filename: string): string {
+        const conceptsToInclude: FreConcept[] = [];
         language.concepts.forEach(c => {
             if (c.location?.filename === filename || c.agl_location?.filename === filename) {
                 ListUtil.addIfNotPresent(conceptsToInclude, c);
             }
         });
-        const interfacesToInclude: PiInterface[] = [];
+        const interfacesToInclude: FreInterface[] = [];
         language.interfaces.forEach(c => {
             if (c.location?.filename === filename || c.agl_location?.filename === filename) {
                 ListUtil.addIfNotPresent(interfacesToInclude, c);
@@ -42,8 +42,8 @@ ${this.makeUmlInterfaces(interfacesToInclude)}
     ${this.makeUmlRelationships(conceptsToInclude)}`;
     }
 
-    public makeInheritanceTrees(language: PiLanguage): string {
-        const conceptsToInclude: PiConcept[] = [];
+    public makeInheritanceTrees(language: FreLanguage): string {
+        const conceptsToInclude: FreConcept[] = [];
         language.concepts.forEach(c => {
             if (!!c.base) {
                 ListUtil.addIfNotPresent(conceptsToInclude, c);
@@ -60,12 +60,12 @@ ${this.makeUmlClasses(conceptsToInclude)}
     ${conceptsToInclude.map(c => this.supersToUml(c)).join("")}`;
     }
 
-    private makeUmlClasses(conceptsToInclude: PiConcept[]): string {
+    private makeUmlClasses(conceptsToInclude: FreConcept[]): string {
         return `${conceptsToInclude.map(c => this.conceptToUml(c)).join("\n")}`;
     }
 
-    private conceptToUml(concept: PiConcept): string {
-        if (concept instanceof PiLimitedConcept) {
+    private conceptToUml(concept: FreConcept): string {
+        if (concept instanceof FreLimitedConcept) {
             return `    class ${concept.name}${this.withHtml ? ":::enumeration" : ""} {
         ${!this.withHtml ? "<<enumeration>>" : ""}
         ${concept.allInstances().map(p => p.name).join("\n\t\t")}
@@ -79,47 +79,47 @@ ${this.makeUmlClasses(conceptsToInclude)}
         }
     }
 
-    private primPropToUml(prop: PiProperty): string {
+    private primPropToUml(prop: FreProperty): string {
         if (prop.isPrimitive) {
             return `${prop.isPublic ? "+" : "-"} ${prop.type.name} ${prop.name}`;
         }
         return "";
     }
 
-    private makeUmlRelationships(concepts: PiConcept[]): string {
+    private makeUmlRelationships(concepts: FreConcept[]): string {
         return `${concepts.map(c => this.supersToUml(c)).join("")}
         ${concepts.map(c => this.partsToUml(c)).join("")}
         ${concepts.map(c => this.referencesToUml(c)).join("")}
         ${concepts.map(c => this.implementsToUml(c)).join("")}`;
     }
 
-    private supersToUml(concept: PiConcept): string {
+    private supersToUml(concept: FreConcept): string {
         if (!!concept.base) {
             return `${concept.base.name} <|-- ${concept.name}\n`;
         }
         return "";
     }
 
-    private partsToUml(concept: PiConcept): string {
+    private partsToUml(concept: FreConcept): string {
         return `${concept.parts().map(p => `${concept.name} *-- ${p.isList ? "\"0..*\"" : "\"1\""} ${p.type.name} : ${p.name}\n`).join("\n\t\t")}`;
     }
 
-    private referencesToUml(concept: PiConcept): string {
+    private referencesToUml(concept: FreConcept): string {
         return `${concept.references().map(p => `${concept.name} --> ${p.isList ? "\"0..*\"" : "\"1\""} ${p.type.name} : ${p.name}\n`).join("\n\t\t")}`;
     }
 
-    private makeUmlInterfaces(interfaces: PiInterface[]) {
+    private makeUmlInterfaces(interfaces: FreInterface[]) {
         return `${interfaces.map(c => this.interfaceToUml(c)).join("\n")}`;
     }
 
-    private interfaceToUml(piInterface: PiInterface) {
-        return `    class ${piInterface.name}${this.withHtml ? ":::interface" : ""} {
+    private interfaceToUml(freInterface: FreInterface) {
+        return `    class ${freInterface.name}${this.withHtml ? ":::interface" : ""} {
         ${!this.withHtml ? "<<interface>>" : ""}
-        ${piInterface.primProperties.map(p => this.primPropToUml(p)).join("\n\t\t")}
+        ${freInterface.primProperties.map(p => this.primPropToUml(p)).join("\n\t\t")}
     }`;
     }
 
-    private implementsToUml(concept: PiConcept) {
+    private implementsToUml(concept: FreConcept) {
         return `${concept.interfaces.map(p => `${concept.name} ..|> ${p.name}\n`).join("\n\t\t")}`;
     }
 }

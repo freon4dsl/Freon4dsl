@@ -1,10 +1,10 @@
 import "reflect-metadata";
-import { PiElementBaseImpl, observablepartlist, observablepart, observableprimlist, observableprim } from "../../ast";
+import { FreNodeBaseImpl, observablepartlist, observablepart, observableprimlist, observableprim } from "../../ast";
 import { makeObservable, observable } from "mobx";
-import { PiElementReferenceTestScoper } from "./PiElementReferenceTestScoper";
+import { FreNodeReferenceTestScoper } from "./FreNodeReferenceTestScoper";
 
 /**
- * These classes are used only to test the mobx decorators. They extend PiElementBaseImpl directly.
+ * These classes are used only to test the mobx decorators. They extend FreNodeBaseImpl directly.
  */
 
 export class ModelContext {
@@ -18,7 +18,7 @@ export class ModelContext {
     }
 }
 
-export class MobxTestElement extends PiElementBaseImpl {
+export class MobxTestElement extends FreNodeBaseImpl {
     public name: string;
 
     constructor(name: string) {
@@ -37,7 +37,7 @@ export class MobxTestElement extends PiElementBaseImpl {
         return this.name;
     }
 
-    piLanguageConcept(): string {
+    freLanguageConcept(): string {
         return "MobxTestElement";
     }
 }
@@ -50,11 +50,11 @@ export class MobxTestRoot extends MobxTestElement {
         observablepart(this, "element");
     }
 
-    piIsUnit(): boolean {
+    freIsUnit(): boolean {
         return true;
     }
 
-    piIsModel(): boolean {
+    freIsModel(): boolean {
         return true;
     }
 }
@@ -66,8 +66,8 @@ export class MobxTestParts extends MobxTestElement {
     manyPart: MobxTestElement[];
     singlePart: MobxTestElement;
 
-    manyReference: PiElementReferenceTestScoper<MobxTestElement>[];
-    singleReference: PiElementReferenceTestScoper<MobxTestElement>;
+    manyReference: FreNodeReferenceTestScoper<MobxTestElement>[];
+    singleReference: FreNodeReferenceTestScoper<MobxTestElement>;
 
     constructor(name: string) {
         super(name);
@@ -79,18 +79,18 @@ export class MobxTestParts extends MobxTestElement {
         observablepartlist(this, "manyPart");
     }
 
-    piLanguageConcept(): string {
+    freLanguageConcept(): string {
         return "MobxTestParts";
     }
     toString(): string {
         return "FunctionCallExpression";
     }
 
-    piIsUnit(): boolean {
+    freIsUnit(): boolean {
         return false;
     }
 
-    piIsModel(): boolean {
+    freIsModel(): boolean {
         return false;
     }
 }

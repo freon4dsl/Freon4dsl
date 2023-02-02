@@ -2,4 +2,4 @@
 
 LANGDEV=../../languagedef/parser
 
-cat  PiEditGrammar.part.pegjs $LANGDEV/ExpressionGrammar.part.pegjs $LANGDEV/BasicGrammar.part.pegjs > PiEditGrammar.pegjs
+cat  FreEditGrammar.part.pegjs $LANGDEV/ExpressionGrammar.part.pegjs $LANGDEV/BasicGrammar.part.pegjs > FreEditGrammar.pegjs

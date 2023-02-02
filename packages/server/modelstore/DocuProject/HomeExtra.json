@@ -1,0 +1,44 @@
+{
+   "$typename": "Product",
+   "name": "HomeExtra",
+   "product": {
+      "$typename": "InsuranceProduct",
+      "name": "HomeExtra",
+      "productName": "Sound as a Rock",
+      "advertisedPremium": {
+         "$typename": "EuroLiteral",
+         "euros": 400,
+         "cents": 0
+      },
+      "riskAdjustment": null,
+      "calculation": {
+         "$typename": "PlusExpression",
+         "left": {
+            "$typename": "NumberLiteral",
+            "value": 100
+         },
+         "right": {
+            "$typename": "NumberLiteral",
+            "value": 25
+         }
+      },
+      "helpers": [],
+      "themes": [
+         "HomeTheme",
+         "LegalTheme"
+      ],
+      "nrPremiumDays": "Month",
+      "parts": [
+         "fire",
+         "breakingAndEntering",
+         "flooding",
+         "stormAndLightning",
+         "damageToOtherPersonsProperty",
+         "damageToOtherPersonsHealth"
+      ],
+      "basedOn": [
+         "home1",
+         "legal1"
+      ]
+   }
+}

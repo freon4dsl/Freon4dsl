@@ -1,5 +1,5 @@
 import { Concept, Interface, ModelUnit } from "../../language";
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 
 export class RoleProvider {
 ß
@@ -25,12 +25,12 @@ export class RoleProvider {
         return "";
     }
 
-    public static label(element: PiElement, uid: string): string {
-        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-label-" + uid;
+    public static label(element: FreNode, uid: string): string {
+        return RoleProvider.startWithUpperCase(element.freLanguageConcept()) + element.freId() + "-label-" + uid;
     }
 
-    static indent(element: PiElement, uid: string) {
-        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-indent-" + uid;
+    static indent(element: FreNode, uid: string) {
+        return RoleProvider.startWithUpperCase(element.freLanguageConcept()) + element.freId() + "-indent-" + uid;
     }
 
     static cell(owningConceptName: string, propertyName: string, rowIndex: number, columnIndex: number) {

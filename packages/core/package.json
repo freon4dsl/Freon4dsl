@@ -1,6 +1,6 @@
 {
   "private": false,
-  "name": "@projectit/core",
+  "name": "@freon4dsl/core",
   "version": "0.5.0",
   "publishConfig": {
     "access": "public"
@@ -11,7 +11,7 @@
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/joswarmer/ProjectIt.git"
+    "url": "https://github.com/freon4dsl/Freon4dsl"
   },
   "scripts": {
     "build": "rollup -c",

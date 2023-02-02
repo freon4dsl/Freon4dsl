@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiClassifier, PiPrimitiveType } from "../../../languagedef/metalanguage";
+import { FreLanguage, FreClassifier, FrePrimitiveType } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
 const commentBefore = `/**
@@ -12,16 +12,16 @@ const commentBefore = `/**
                         */`;
 
 export class NonOptionalsCheckerTemplate {
-    done: PiClassifier[] = [];
+    done: FreClassifier[] = [];
 
-    generateChecker(language: PiLanguage, relativePath: string): string {
+    generateChecker(language: FreLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
-        const errorClassName: string = Names.PiError;
-        const errorSeverityName: string = Names.PiErrorSeverity;
+        const errorClassName: string = Names.FreError;
+        const errorSeverityName: string = Names.FreErrorSeverity;
         const checkerClassName: string = Names.nonOptionalsChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
-        const writerInterfaceName: string = Names.PiWriter;
-        const classifiersToDo: PiClassifier[] = [];
+        const writerInterfaceName: string = Names.FreWriter;
+        const classifiersToDo: FreClassifier[] = [];
         classifiersToDo.push(language.modelConcept);
         classifiersToDo.push(...language.units);
         classifiersToDo.push(...language.concepts);
@@ -29,7 +29,7 @@ export class NonOptionalsCheckerTemplate {
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, LanguageEnvironment } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.LanguageEnvironment} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
@@ -43,7 +43,7 @@ export class NonOptionalsCheckerTemplate {
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
-            myWriter: ${writerInterfaceName} = LanguageEnvironment.getInstance().writer;
+            myWriter: ${writerInterfaceName} = ${Names.LanguageEnvironment}.getInstance().writer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
@@ -53,7 +53,7 @@ export class NonOptionalsCheckerTemplate {
         }`;
     }
 
-    private createImports(language: PiLanguage): string {
+    private createImports(language: FreLanguage): string {
         return language.units?.map(unit => `
                 ${Names.classifier(unit)}`).concat(
                     language.concepts?.map(concept => `
@@ -64,7 +64,7 @@ export class NonOptionalsCheckerTemplate {
         ).join(", ");
     }
 
-    private createChecksOnNonOptionalParts(concept: PiClassifier): string {
+    private createChecksOnNonOptionalParts(concept: FreClassifier): string {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
 
@@ -75,13 +75,13 @@ export class NonOptionalsCheckerTemplate {
                 // if the property is of type `string`
                 // then add a check on the length of the string
                 let additionalStringCheck: string = null;
-                if (prop.isPrimitive && (prop.type == PiPrimitiveType.string || prop.type == PiPrimitiveType.identifier)) {
+                if (prop.isPrimitive && (prop.type == FrePrimitiveType.string || prop.type == FrePrimitiveType.identifier)) {
                     additionalStringCheck = `|| modelelement.${prop.name}?.length == 0`;
                 }
 
                 result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ${additionalStringCheck? additionalStringCheck : ""}) {
                     hasFatalError = true;
-                    this.errorList.push(new PiError("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, '${prop.name}', PiErrorSeverity.Error));
+                    this.errorList.push(new ${Names.FreError}("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, '${prop.name}', ${Names.FreErrorSeverity}.Error));
                 }
                 `;
             }

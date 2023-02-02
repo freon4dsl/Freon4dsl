@@ -1,5 +1,5 @@
 {
-  "name": "projectIt",
+  "name": "freon4dsl",
   "private": true,
   "scripts": {
     "alive": "echo I am alive",

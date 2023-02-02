@@ -1,4 +1,4 @@
-import { GenericModelSerializer } from "@projectit/core";
+import { GenericModelSerializer } from "@freon4dsl/core";
 import { FileHandler } from "./FileHandler";
 import { ExpressionLibraryEnvironment } from "../environment/gen/ExpressionLibraryEnvironment";
 import { ExpressionLibraryModelUnitType, LIB_USAGE, ModelUnitMetaType } from "../language/gen";

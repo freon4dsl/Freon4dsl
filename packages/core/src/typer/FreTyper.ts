@@ -1,5 +1,5 @@
-import { PiElement } from "../ast";
-import { PiType } from "./PiType";
+import { FreNode } from "../ast";
+import { FreType } from "./FreType";
 
 export interface FreTyper {
     // name: string;
@@ -9,13 +9,13 @@ export interface FreTyper {
      * Returns true if 'elem' is marked as 'isType' in the Typer definition
      * @param elem
      */
-    isType(elem: PiElement): boolean;
+    isType(elem: FreNode): boolean;
 
     /**
      * Returns the type of 'modelelement' according to the type rules in the Typer Definition
      * @param modelelement
      */
-    inferType(modelelement: PiElement): PiType | null;
+    inferType(modelelement: FreNode): FreType | null;
 
     /**
      * Returns true if type1 equals type2.
@@ -23,32 +23,32 @@ export interface FreTyper {
      * @param type1
      * @param type2
      */
-    equals(type1: PiType, type2: PiType): boolean | null;
+    equals(type1: FreType, type2: FreType): boolean | null;
 
     /**
      * Returns true if type1 conforms to type2. The direction is type1 conforms to type2.
      * @param type1
      * @param type2
      */
-    conforms(type1: PiType, type2: PiType): boolean | null;
+    conforms(type1: FreType, type2: FreType): boolean | null;
 
     /**
      * Returns true if all types in typelist1 conform to the types in typelist2, in the given order.
      * @param typelist1
      * @param typelist2
      */
-    conformsList(typelist1: PiType[], typelist2: PiType[]): boolean | null;
+    conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | null;
 
     /**
      * Returns the common super type of all types in typelist
      * @param typelist
      */
-    commonSuper(typelist: PiType[]): PiType | null;
+    commonSuper(typelist: FreType[]): FreType | null;
 
     /**
      * Returns all super types as defined in the typer definition.
      * @param type
      */
-    getSuperTypes(type: PiType): PiType[] | null;
+    getSuperTypes(type: FreType): FreType[] | null;
 
 }

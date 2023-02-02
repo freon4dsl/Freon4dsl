@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../metalanguage";
+import { FreLanguage } from "../../metalanguage";
 import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
 
 export class ListUtilTemplate {

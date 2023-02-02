@@ -1,6 +1,6 @@
 import { RHSPropEntry } from "./RHSPropEntry";
 import { RightHandSideEntry } from "./RightHandSideEntry";
-import { PiProperty } from "../../../../languagedef/metalanguage";
+import { FreProperty } from "../../../../languagedef/metalanguage";
 import { makeIndent } from "../GrammarUtils";
 import { RHSBooleanWithSingleKeyWord } from "./RHSBooleanWithSingleKeyWord";
 
@@ -8,7 +8,7 @@ export class RHSOptionalGroup extends RHSPropEntry {
     private subs: RightHandSideEntry[] = [];
     private propIndex: number = 0; // the index of the property in this optional group
 
-    constructor(prop: PiProperty, subs: RightHandSideEntry[], propIndex: number) {
+    constructor(prop: FreProperty, subs: RightHandSideEntry[], propIndex: number) {
         super(prop);
         this.subs = subs;
         this.propIndex = propIndex;

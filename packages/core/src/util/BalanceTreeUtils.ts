@@ -1,13 +1,13 @@
 import { action, makeObservable } from "mobx";
-import { PiUtils } from "./internal";
-import { Box, PiEditor } from "../editor";
-import { PiBinaryExpression, PiElement, PiExpression } from "../ast";
-import { isPiBinaryExpression, isPiExpression } from "../ast-utils";
-import { PiLogger } from "../logging";
+import { FreUtils } from "./internal";
+import { Box, FreEditor } from "../editor";
+import { FreBinaryExpression, FreNode, FreExpressionNode } from "../ast";
+import { isFreBinaryExpression, isFreExpression } from "../ast-utils";
+import { FreLogger } from "../logging";
 
 // reserved role names for expressions, use with care.
-export const PI_BINARY_EXPRESSION_LEFT = "PiBinaryExpression-left";
-export const PI_BINARY_EXPRESSION_RIGHT = "PiBinaryExpression-right";
+export const FRE_BINARY_EXPRESSION_LEFT = "FreBinaryExpression-left";
+export const PI_BINARY_EXPRESSION_RIGHT = "FreBinaryExpression-right";
 export const BEFORE_BINARY_OPERATOR = "binary-pre";
 export const AFTER_BINARY_OPERATOR = "binary-post";
 export const LEFT_MOST = "exp-left";
@@ -16,13 +16,13 @@ export const BINARY_EXPRESSION = "binary-expression";
 export const EXPRESSION = "expression";
 export const EXPRESSION_SYMBOL = "symbol";
 
-const LOGGER = new PiLogger("BalanceTree");
+const LOGGER = new FreLogger("BalanceTree");
 
 /**
  * Type to export the element that needs top be selected after an expression has been inserted.
  */
 export type Selected = {
-    element: PiElement;
+    element: FreNode;
     boxRoleToSelect: string;
 };
 
@@ -43,14 +43,14 @@ class BTree {
      * Is `exp` the rightmost child in an expression tree?
      * @param exp
      */
-    isRightMostChild(exp: PiExpression): boolean {
-        PiUtils.CHECK(!exp.piIsBinaryExpression(), "isRightMostChild expects a non-binary expression");
+    isRightMostChild(exp: FreExpressionNode): boolean {
+        FreUtils.CHECK(!exp.freIsBinaryExpression(), "isRightMostChild expects a non-binary expression");
         let currentExp = exp;
-        let ownerDescriptor = currentExp.piOwnerDescriptor();
-        while (ownerDescriptor && isPiBinaryExpression(ownerDescriptor.owner)) {
-            if (ownerDescriptor.owner.piRight() === currentExp) {
+        let ownerDescriptor = currentExp.freOwnerDescriptor();
+        while (ownerDescriptor && isFreBinaryExpression(ownerDescriptor.owner)) {
+            if (ownerDescriptor.owner.freRight() === currentExp) {
                 currentExp = ownerDescriptor.owner;
-                ownerDescriptor = ownerDescriptor.owner.piOwnerDescriptor();
+                ownerDescriptor = ownerDescriptor.owner.freOwnerDescriptor();
             } else {
                 return false;
             }
@@ -62,14 +62,14 @@ class BTree {
      * Is `exp` the leftmost child in an expression tree?
      * @param exp
      */
-    isLeftMostChild(exp: PiExpression): boolean {
-        PiUtils.CHECK(!exp.piIsBinaryExpression(), "isLeftMostChild expects a non-binary expression");
+    isLeftMostChild(exp: FreExpressionNode): boolean {
+        FreUtils.CHECK(!exp.freIsBinaryExpression(), "isLeftMostChild expects a non-binary expression");
         let currentExp = exp;
-        let ownerDescriptor = currentExp.piOwnerDescriptor();
-        while (ownerDescriptor && isPiBinaryExpression(ownerDescriptor.owner)) {
-            if (ownerDescriptor.owner.piLeft() === currentExp) {
+        let ownerDescriptor = currentExp.freOwnerDescriptor();
+        while (ownerDescriptor && isFreBinaryExpression(ownerDescriptor.owner)) {
+            if (ownerDescriptor.owner.freLeft() === currentExp) {
                 currentExp = ownerDescriptor.owner;
-                ownerDescriptor = ownerDescriptor.owner.piOwnerDescriptor();
+                ownerDescriptor = ownerDescriptor.owner.freOwnerDescriptor();
             } else {
                 return false;
             }
@@ -84,10 +84,10 @@ class BTree {
      * @param newExp
      * @param editor
      */
-    setRightExpression(binaryExp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
-        const right = binaryExp.piRight();
-        binaryExp.piSetRight(newExp);
-        newExp.piSetRight(right);
+    setRightExpression(binaryExp: FreBinaryExpression, newExp: FreBinaryExpression, editor: FreEditor) {
+        const right = binaryExp.freRight();
+        binaryExp.freSetRight(newExp);
+        newExp.freSetRight(right);
         this.balanceTree(newExp, editor);
     }
 
@@ -98,47 +98,47 @@ class BTree {
      * @param newExp
      * @param editor
      */
-    setLeftExpression(binaryExp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
-        const left = binaryExp.piLeft();
-        binaryExp.piSetLeft(newExp);
-        newExp.piSetLeft(left);
+    setLeftExpression(binaryExp: FreBinaryExpression, newExp: FreBinaryExpression, editor: FreEditor) {
+        const left = binaryExp.freLeft();
+        binaryExp.freSetLeft(newExp);
+        newExp.freSetLeft(left);
         this.balanceTree(newExp, editor);
     }
 
-    insertBinaryExpression(newBinExp: PiBinaryExpression, box: Box, editor: PiEditor): Selected | null {
+    insertBinaryExpression(newBinExp: FreBinaryExpression, box: Box, editor: FreEditor): Selected | null {
         LOGGER.log("insertBinaryExpression for " + box.element);
         let selectedElement: Selected | null = null;
-        PiUtils.CHECK(isPiExpression(box.element), "insertBinaryExpression: current element should be a PiExpression, but it isn't");
-        const exp = box.element as PiExpression;
+        FreUtils.CHECK(isFreExpression(box.element), "insertBinaryExpression: current element should be a FreExpressionNode, but it isn't");
+        const exp = box.element as FreExpressionNode;
         switch (box.role) {
             case LEFT_MOST:
-                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
-                PiUtils.replaceExpression(exp, newBinExp, editor);
-                newBinExp.piSetRight(exp);
+                selectedElement = { element: newBinExp, boxRoleToSelect: FRE_BINARY_EXPRESSION_LEFT };
+                FreUtils.replaceExpression(exp, newBinExp, editor);
+                newBinExp.freSetRight(exp);
                 this.balanceTree(newBinExp, editor);
                 break;
             case RIGHT_MOST:
                 selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_RIGHT };
-                PiUtils.replaceExpression(exp, newBinExp, editor);
-                newBinExp.piSetLeft(exp);
+                FreUtils.replaceExpression(exp, newBinExp, editor);
+                newBinExp.freSetLeft(exp);
                 this.balanceTree(newBinExp, editor);
                 break;
             case BEFORE_BINARY_OPERATOR:
-                PiUtils.CHECK(isPiBinaryExpression(exp), "Operator action only allowed in binary operator");
+                FreUtils.CHECK(isFreBinaryExpression(exp), "Operator action only allowed in binary operator");
                 selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_RIGHT };
-                const left = (exp as PiBinaryExpression).piLeft();
-                (exp as PiBinaryExpression).piSetLeft(newBinExp);
-                // PiUtils.replaceExpression(left as PiExpression, newBinExp, editor);
-                newBinExp.piSetLeft(left);
+                const left = (exp as FreBinaryExpression).freLeft();
+                (exp as FreBinaryExpression).freSetLeft(newBinExp);
+                // FreUtils.replaceExpression(left as FreExpressionNode, newBinExp, editor);
+                newBinExp.freSetLeft(left);
                 this.balanceTree(newBinExp, editor);
                 break;
             case AFTER_BINARY_OPERATOR:
-                PiUtils.CHECK(isPiBinaryExpression(exp), "Operator action only allowed in binary operator");
-                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
-                const right = (exp as PiBinaryExpression).piRight();
-                (exp as PiBinaryExpression).piSetRight(newBinExp);
-                // PiUtils.replaceExpression(right, newBinExp, editor);
-                newBinExp.piSetRight(right);
+                FreUtils.CHECK(isFreBinaryExpression(exp), "Operator action only allowed in binary operator");
+                selectedElement = { element: newBinExp, boxRoleToSelect: FRE_BINARY_EXPRESSION_LEFT };
+                const right = (exp as FreBinaryExpression).freRight();
+                (exp as FreBinaryExpression).freSetRight(newBinExp);
+                // FreUtils.replaceExpression(right, newBinExp, editor);
+                newBinExp.freSetRight(right);
                 this.balanceTree(newBinExp, editor);
                 break;
             default:
@@ -151,54 +151,54 @@ class BTree {
      * Balances the tree according to operator precedence.
      * Works when `exp` has just been added to the tree.
      */
-    balanceTree(binaryExp: PiBinaryExpression, editor: PiEditor) {
-        const ownerDescriptor = binaryExp.piOwnerDescriptor();
-        const left = binaryExp.piLeft();
-        if (isPiBinaryExpression(left)) {
+    balanceTree(binaryExp: FreBinaryExpression, editor: FreEditor) {
+        const ownerDescriptor = binaryExp.freOwnerDescriptor();
+        const left = binaryExp.freLeft();
+        if (isFreBinaryExpression(left)) {
             LOGGER.log("Rule 1: prio parent <= prio left");
-            if (binaryExp.piPriority() > left.piPriority()) {
-                const leftRight = left.piRight();
-                PiUtils.setContainer(left, ownerDescriptor, editor);
-                left.piSetRight(binaryExp);
-                binaryExp.piSetLeft(leftRight);
+            if (binaryExp.frePriority() > left.frePriority()) {
+                const leftRight = left.freRight();
+                FreUtils.setContainer(left, ownerDescriptor, editor);
+                left.freSetRight(binaryExp);
+                binaryExp.freSetLeft(leftRight);
                 this.balanceTree(binaryExp, editor);
                 return;
             }
         }
-        const right = binaryExp.piRight();
-        if (isPiBinaryExpression(right)) {
+        const right = binaryExp.freRight();
+        if (isFreBinaryExpression(right)) {
             LOGGER.log("Rule 2: prio parent < prio right");
-            if (binaryExp.piPriority() >= right.piPriority()) {
-                const rightLeft = right.piLeft();
-                PiUtils.setContainer(right, ownerDescriptor, editor);
-                right.piSetLeft(binaryExp);
-                binaryExp.piSetRight(rightLeft);
+            if (binaryExp.frePriority() >= right.frePriority()) {
+                const rightLeft = right.freLeft();
+                FreUtils.setContainer(right, ownerDescriptor, editor);
+                right.freSetLeft(binaryExp);
+                binaryExp.freSetRight(rightLeft);
                 this.balanceTree(binaryExp, editor);
                 return;
             }
         }
-        if (ownerDescriptor && isPiBinaryExpression(ownerDescriptor.owner)) {
+        if (ownerDescriptor && isFreBinaryExpression(ownerDescriptor.owner)) {
             const parent = ownerDescriptor.owner;
-            if (parent.piLeft() === binaryExp) {
+            if (parent.freLeft() === binaryExp) {
                 LOGGER.log("Rule 3: exp is a left child");
-                if (binaryExp.piPriority() < parent.piPriority()) {
-                    const parentProContainer = parent.piOwnerDescriptor();
-                    const expRight = binaryExp.piRight();
-                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
-                    binaryExp.piSetRight(parent);
-                    parent.piSetLeft(expRight);
+                if (binaryExp.frePriority() < parent.frePriority()) {
+                    const parentProContainer = parent.freOwnerDescriptor();
+                    const expRight = binaryExp.freRight();
+                    FreUtils.setContainer(binaryExp, parentProContainer, editor);
+                    binaryExp.freSetRight(parent);
+                    parent.freSetLeft(expRight);
                     this.balanceTree(binaryExp, editor);
                     return;
                 }
             } else {
-                PiUtils.CHECK(parent.piRight() === binaryExp, "should be the right child");
+                FreUtils.CHECK(parent.freRight() === binaryExp, "should be the right child");
                 LOGGER.log("Rule 4: exp is a right child, parent is " + parent);
-                if (binaryExp.piPriority() <= parent.piPriority()) {
-                    const parentProContainer = parent.piOwnerDescriptor();
-                    const expLeft = binaryExp.piLeft();
-                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
-                    binaryExp.piSetLeft(parent);
-                    parent.piSetRight(expLeft);
+                if (binaryExp.frePriority() <= parent.frePriority()) {
+                    const parentProContainer = parent.freOwnerDescriptor();
+                    const expLeft = binaryExp.freLeft();
+                    FreUtils.setContainer(binaryExp, parentProContainer, editor);
+                    binaryExp.freSetLeft(parent);
+                    parent.freSetRight(expLeft);
                     this.balanceTree(binaryExp, editor);
                     return;
                 }

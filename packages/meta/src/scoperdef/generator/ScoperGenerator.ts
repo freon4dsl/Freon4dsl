@@ -1,32 +1,32 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
-import { PiScopeDef } from "../metalanguage";
+import { ScopeDef } from "../metalanguage";
 import { CustomScoperTemplate } from "./templates/CustomScoperTemplate";
 import { ScoperDefTemplate } from "./templates/ScoperDefTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
-import { PiElementReference } from "../../languagedef/metalanguage";
-import { PiModelDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { MetaElementReference } from "../../languagedef/metalanguage";
+import { FreModelDescription } from "../../languagedef/metalanguage/FreLanguage";
 
 const LOGGER = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguage;
+    public language: FreLanguage;
     protected scoperGenFolder: string;
     protected scoperFolder: string;
 
-    generate(scopedef: PiScopeDef): void {
+    generate(scopedef: ScopeDef): void {
         if (this.language == null) {
             LOGGER.error("Cannot generate scoper because language is not set.");
             return;
         }
         // generate default, if the scoper definition is not present, i.e. was not read from file
         if (isNullOrUndefined(scopedef)) {
-            scopedef = new PiScopeDef();
+            scopedef = new ScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
-            scopedef.namespaces.push(PiElementReference.create<PiModelDescription>(this.language.modelConcept, "PiModelDescription"));
+            scopedef.namespaces.push(MetaElementReference.create<FreModelDescription>(this.language.modelConcept, "FreModelDescription"));
         }
 
         const generationStatus = new GenerationStatus();

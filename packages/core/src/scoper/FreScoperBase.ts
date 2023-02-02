@@ -1,29 +1,29 @@
 import { modelUnit } from "../ast-utils/index";
-import { PiElement, PiElementReference, PiModelUnit, PiNamedElement } from "../ast/index";
-import { LanguageEnvironment } from "../environment/index";
-import { Language } from "../language/index";
-import { PiLogger } from "../logging/index";
+import { FreNode, FreNodeReference, FreModelUnit, FreNamedNode } from "../ast/index";
+import { FreLanguageEnvironment } from "../environment/index";
+import { FreLanguage } from "../language/index";
+import { FreLogger } from "../logging/index";
 import { FreCompositeTyper } from "../typer/index";
 import { FreScoperComposite } from "./FreScoperComposite";
-import { FreonNamespace } from "./FreonNamespace";
+import { FreNamespace } from "./FreNamespace";
 import { FreScoper } from "./FreScoper";
 
-const LOGGER = new PiLogger("FreScoperBase");
+const LOGGER = new FreLogger("FreScoperBase");
 
 export abstract class FreScoperBase implements FreScoper {
     mainScoper: FreScoperComposite;
     myTyper: FreCompositeTyper;
     // Added to avoid loop when searching for additional namespaces
-    additionalNamespacesVisited: PiElementReference<PiNamedElement>[] = [];
+    additionalNamespacesVisited: FreNodeReference<FreNamedNode>[] = [];
     protected currentRoleNames: string[] = [];
 
-    public resolvePathName(basePosition: PiElement, doNotSearch: string, pathname: string[], metatype?: string): PiNamedElement {
+    public resolvePathName(basePosition: FreNode, doNotSearch: string, pathname: string[], metatype?: string): FreNamedNode {
         this.currentRoleNames.push(doNotSearch);
         // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
-        let elementsFromBasePosition: PiNamedElement[] = this.getVisibleElements(basePosition);
+        let elementsFromBasePosition: FreNamedNode[] = this.getVisibleElements(basePosition);
         // start the loop over the set of names in the pathname
-        let previousFound: PiElement = basePosition;
-        let found: PiNamedElement = null;
+        let previousFound: FreNode = basePosition;
+        let found: FreNamedNode = null;
         for (let index = 0; index < pathname.length; index++) {
             if (index === pathname.length - 1) {
                 // it is the last name in the path, use 'metatype'
@@ -32,7 +32,7 @@ export abstract class FreScoperBase implements FreScoper {
                 // search the next name of pathname in the namespace of 'previousFound'
                 // but do not use the metatype information, because only the element with the last of the pathname will have the correct type
                 found = this.getFromVisibleElements(previousFound, pathname[index]);
-                if (found === null || found === undefined || !Language.getInstance().classifier(found.piLanguageConcept()).isNamespace) {
+                if (found === null || found === undefined || !FreLanguage.getInstance().classifier(found.freLanguageConcept()).isNamespace) {
                     this.currentRoleNames.splice(this.currentRoleNames.indexOf(doNotSearch), 1);
                     return null;
                 }
@@ -48,7 +48,7 @@ export abstract class FreScoperBase implements FreScoper {
         return found;
     }
 
-    private isPublic(found: PiNamedElement): boolean {
+    private isPublic(found: FreNamedNode): boolean {
         // find the information about whether this element is public or private within its parent from the its owner:
         // 1. check the language description to find the concept description of the parent
         // 2. from the parent find the property description with the right name
@@ -56,45 +56,45 @@ export abstract class FreScoperBase implements FreScoper {
         if (found === null || found === undefined) {
             return false;
         }
-        const ownerDescriptor = found.piOwnerDescriptor();
+        const ownerDescriptor = found.freOwnerDescriptor();
         if (ownerDescriptor === null || ownerDescriptor === undefined) {
             return false;
         }
-        const metaType: string = ownerDescriptor.owner.piLanguageConcept();
-        if (!!Language.getInstance().modelOfType(metaType)) {
+        const metaType: string = ownerDescriptor.owner.freLanguageConcept();
+        if (!!FreLanguage.getInstance().modelOfType(metaType)) {
             return true; // model only has units as properties, all units are public
-        } else if (!!Language.getInstance().unit(metaType)) {
+        } else if (!!FreLanguage.getInstance().unit(metaType)) {
             // It's a unit so lookup the unit properties
-            return Language.getInstance().unit(metaType).properties.get(ownerDescriptor.propertyName).isPublic;
+            return FreLanguage.getInstance().unit(metaType).properties.get(ownerDescriptor.propertyName).isPublic;
         } else {
             // Must be a conccept
-            const x = Language.getInstance().concept(metaType);
-            return Language.getInstance().concept(metaType).properties.get(ownerDescriptor.propertyName).isPublic;
+            const x = FreLanguage.getInstance().concept(metaType);
+            return FreLanguage.getInstance().concept(metaType).properties.get(ownerDescriptor.propertyName).isPublic;
         }
     }
 
     /**
      * See FreScoper.
      */
-    public getVisibleElements(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): PiNamedElement[] {
-        this.myTyper = LanguageEnvironment.getInstance().typer;
-        const visitedNamespaces: FreonNamespace[] = [];
-        const result: PiNamedElement[] = [].concat(this.getElementsFromStdlib(metatype));
+    public getVisibleElements(modelelement: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
+        this.myTyper = FreLanguageEnvironment.getInstance().typer;
+        const visitedNamespaces: FreNamespace[] = [];
+        const result: FreNamedNode[] = [].concat(this.getElementsFromStdlib(metatype));
         this.getVisibleElementsIntern(modelelement, result, visitedNamespaces, metatype, excludeSurrounding);
         return result;
     }
 
     private getVisibleElementsIntern(
-        modelelement: PiElement,
-        result: PiNamedElement[],
-        visitedNamespaces: FreonNamespace[],
+        modelelement: FreNode,
+        result: FreNamedNode[],
+        visitedNamespaces: FreNamespace[],
         metatype?: string,
         excludeSurrounding?: boolean
     ): void {
         if (!!modelelement) {
-            const origin: PiModelUnit = modelUnit(modelelement);
+            const origin: FreModelUnit = modelUnit(modelelement);
             let doSurrouding: boolean = excludeSurrounding === null || excludeSurrounding === undefined ? true : !excludeSurrounding;
-            let nearestNamespace: FreonNamespace;
+            let nearestNamespace: FreNamespace;
             // first, see if we need to use an alternative scope/namespace
             if (this.hasAlternativeScope(modelelement)) {
                 nearestNamespace = this.getAlternativeScope(modelelement);
@@ -107,13 +107,13 @@ export abstract class FreScoperBase implements FreScoper {
             while (!!nearestNamespace) {
                 // Second, get the elements from the found namespace
                 if (!visitedNamespaces.includes(nearestNamespace)) {
-                    FreonNamespace.joinResultsWithShadowing(nearestNamespace.getVisibleElements(origin, metatype), result);
+                    FreNamespace.joinResultsWithShadowing(nearestNamespace.getVisibleElements(origin, metatype), result);
                     visitedNamespaces.push(nearestNamespace);
                     for (const additionalNamespace of this.additionalNamespaces(nearestNamespace._myElem)) {
                         this.getVisibleElementsIntern(additionalNamespace, result, visitedNamespaces, metatype, true);
                     }
                 }
-                modelelement = modelelement.piOwner();
+                modelelement = modelelement.freOwner();
                 nearestNamespace = doSurrouding ? this.findNearestNamespace(modelelement) : null;
             }
         } else {
@@ -124,7 +124,7 @@ export abstract class FreScoperBase implements FreScoper {
     /**
      * See FreScoper.
      */
-    public getFromVisibleElements(modelelement: PiElement, name: string, metatype?: string, excludeSurrounding?: boolean): PiNamedElement {
+    public getFromVisibleElements(modelelement: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): FreNamedNode {
         const visibleElements = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
         if (visibleElements !== null) {
             for (const element of visibleElements) {
@@ -140,7 +140,7 @@ export abstract class FreScoperBase implements FreScoper {
     /**
      * See FreScoper.
      */
-    public getVisibleNames(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): string[] {
+    public getVisibleNames(modelelement: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
         const result: string[] = [];
         const visibleElements = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
         for (const element of visibleElements) {
@@ -153,7 +153,7 @@ export abstract class FreScoperBase implements FreScoper {
     /**
      * See FreScoper.
      */
-    public isInScope(modelElement: PiElement, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
+    public isInScope(modelElement: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
         return this.getFromVisibleElements(modelElement, name, metatype, excludeSurrounding) !== null;
     }
 
@@ -161,14 +161,14 @@ export abstract class FreScoperBase implements FreScoper {
      * Returns the enclosing namespace for 'modelelement'.
      * @param modelelement
      */
-    private findNearestNamespace(modelelement: PiElement): FreonNamespace {
+    private findNearestNamespace(modelelement: FreNode): FreNamespace {
         if (modelelement === null) {
             return null;
         }
-        if (Language.getInstance().classifier(modelelement.piLanguageConcept()).isNamespace) {
-            return FreonNamespace.create(modelelement);
+        if (FreLanguage.getInstance().classifier(modelelement.freLanguageConcept()).isNamespace) {
+            return FreNamespace.create(modelelement);
         } else {
-            return this.findNearestNamespace(modelelement.piOwner());
+            return this.findNearestNamespace(modelelement.freOwner());
         }
     }
 
@@ -176,19 +176,19 @@ export abstract class FreScoperBase implements FreScoper {
      * Returns all elements that are in the standard library, which types equal 'metatype'.
      * @param metatype
      */
-    private getElementsFromStdlib(metatype?: string): PiNamedElement[] {
+    private getElementsFromStdlib(metatype?: string): FreNamedNode[] {
         if (!!metatype) {
-            return LanguageEnvironment.getInstance().stdlib.elements.filter(elem =>
-                Language.getInstance().metaConformsToType(elem, metatype)
+            return FreLanguageEnvironment.getInstance().stdlib.elements.filter(elem =>
+                FreLanguage.getInstance().metaConformsToType(elem, metatype)
             );
         } else {
-            return LanguageEnvironment.getInstance().stdlib.elements;
+            return FreLanguageEnvironment.getInstance().stdlib.elements;
         }
     }
 
-    abstract hasAlternativeScope(modelelement: PiElement): boolean;
+    abstract hasAlternativeScope(modelelement: FreNode): boolean;
 
-    abstract getAlternativeScope(modelelement: PiElement): FreonNamespace;
+    abstract getAlternativeScope(modelelement: FreNode): FreNamespace;
     
-    abstract additionalNamespaces(element: PiElement): PiElement[];
+    abstract additionalNamespaces(element: FreNode): FreNode[];
 }

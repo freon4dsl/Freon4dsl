@@ -3,10 +3,10 @@
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
  * to changes in the state of its properties.
  */
-import { observableprim, PiElementBaseImpl, PiNamedElement } from "../../../ast";
-import { PiUtils } from "../../../util";
+import { observableprim, FreNodeBaseImpl, FreNamedNode } from "../../../ast";
+import { FreUtils } from "../../../util";
 
-export class UndoPart extends PiElementBaseImpl implements PiNamedElement {
+export class UndoPart extends FreNodeBaseImpl implements FreNamedNode {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -32,7 +32,7 @@ export class UndoPart extends PiElementBaseImpl implements PiNamedElement {
         if (!!id) {
             this.$id = id;
         } else {
-            this.$id = PiUtils.ID(); // uuid.v4();
+            this.$id = FreUtils.ID(); // uuid.v4();
         }
         // Both 'observableprim' and 'observableprimlist' change the get and set of the attribute
         // such that the part is observable. In lists no 'null' or 'undefined' values are allowed.
@@ -43,42 +43,42 @@ export class UndoPart extends PiElementBaseImpl implements PiNamedElement {
     /**
      * Returns the metatype of this instance in the form of a string.
      */
-    piLanguageConcept(): string {
+    freLanguageConcept(): string {
         return this.$typename;
     }
 
     /**
      * Returns the unique identifier of this instance.
      */
-    piId(): string {
+    freId(): string {
         return this.$id;
     }
 
     /**
      * Returns true if this instance is a model concept.
      */
-    piIsModel(): boolean {
+    freIsModel(): boolean {
         return false;
     }
 
     /**
      * Returns true if this instance is a model unit.
      */
-    piIsUnit(): boolean {
+    freIsUnit(): boolean {
         return false;
     }
 
     /**
      * Returns true if this instance is an expression concept.
      */
-    piIsExpression(): boolean {
+    freIsExpression(): boolean {
         return false;
     }
 
     /**
      * Returns true if this instance is a binary expression concept.
      */
-    piIsBinaryExpression(): boolean {
+    freIsBinaryExpression(): boolean {
         return false;
     }
     /**

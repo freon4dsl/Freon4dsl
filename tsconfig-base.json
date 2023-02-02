@@ -2,19 +2,19 @@
   "compilerOptions": {
     "baseUrl": ".", // This must be specified if "paths" is.
     "paths": {
-      "@projectit/core/*": [
+      "@freon4dsl/core/*": [
         "packages/core/src/*"
       ],
-      "@projectit/core-svelte/*": [
+      "@freon4dsl/core-svelte/*": [
         "packages/core-svelte/src/*"
       ],
-      "@projectit/meta/*": [
+      "@freon4dsl/meta/*": [
         "packages/meta/src/*"
       ],
-      "@projectit/playground/*": [
+      "@freon4dsl/playground/*": [
         "packages/playground/src/*"
       ],
-      "@projectit/server/*": [
+      "@freon4dsl/server/*": [
         "packages/server/src/*"
       ]
     }

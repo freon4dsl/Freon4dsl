@@ -1,0 +1,200 @@
+{
+   "$typename": "Product",
+   "name": "HomeAndHealth",
+   "product": {
+      "$typename": "InsuranceProduct",
+      "name": "HomeAndHealth",
+      "productName": "Healthy at Home",
+      "advertisedPremium": {
+         "$typename": "EuroLiteral",
+         "euros": 800,
+         "cents": 0
+      },
+      "riskAdjustment": null,
+      "calculation": {
+         "$typename": "PlusExpression",
+         "left": {
+            "$typename": "PlusExpression",
+            "left": {
+               "$typename": "PlusExpression",
+               "left": {
+                  "$typename": "PlusExpression",
+                  "left": {
+                     "$typename": "FunctionCallExpression",
+                     "args": [
+                        {
+                           "$typename": "InsurancePartRef",
+                           "part": "hospitalization"
+                        },
+                        {
+                           "$typename": "RiskAdjustmentRef",
+                           "name": "riskAdjustment"
+                        }
+                     ],
+                     "funcDefinition": "adjust"
+                  },
+                  "right": {
+                     "$typename": "FunctionCallExpression",
+                     "args": [
+                        {
+                           "$typename": "InsurancePartRef",
+                           "part": "medicines"
+                        },
+                        {
+                           "$typename": "PlusExpression",
+                           "left": {
+                              "$typename": "RiskAdjustmentRef",
+                              "name": "riskAdjustment"
+                           },
+                           "right": {
+                              "$typename": "PercentageLiteral",
+                              "value": 1
+                           }
+                        }
+                     ],
+                     "funcDefinition": "adjust"
+                  }
+               },
+               "right": {
+                  "$typename": "FunctionCallExpression",
+                  "args": [
+                     {
+                        "$typename": "InsurancePartRef",
+                        "part": "dentist"
+                     },
+                     {
+                        "$typename": "MinusExpression",
+                        "left": {
+                           "$typename": "RiskAdjustmentRef",
+                           "name": "riskAdjustment"
+                        },
+                        "right": {
+                           "$typename": "PercentageLiteral",
+                           "value": 2
+                        }
+                     }
+                  ],
+                  "funcDefinition": "adjust"
+               }
+            },
+            "right": {
+               "$typename": "FunctionCallExpression",
+               "args": [
+                  {
+                     "$typename": "InsurancePartRef",
+                     "part": "eyecare"
+                  },
+                  {
+                     "$typename": "MultiplyExpression",
+                     "left": {
+                        "$typename": "RiskAdjustmentRef",
+                        "name": "riskAdjustment"
+                     },
+                     "right": {
+                        "$typename": "NumberLiteral",
+                        "value": 4
+                     }
+                  }
+               ],
+               "funcDefinition": "adjust"
+            }
+         },
+         "right": {
+            "$typename": "FunctionCallExpression",
+            "args": [
+               {
+                  "$typename": "InsurancePartRef",
+                  "part": "generalPractitioner"
+               },
+               {
+                  "$typename": "DivideExpression",
+                  "left": {
+                     "$typename": "RiskAdjustmentRef",
+                     "name": "riskAdjustment"
+                  },
+                  "right": {
+                     "$typename": "NumberLiteral",
+                     "value": 2
+                  }
+               }
+            ],
+            "funcDefinition": "adjust"
+         }
+      },
+      "helpers": [
+         {
+            "$typename": "CalcFunction",
+            "name": "adjust",
+            "description": null,
+            "declaredType": {
+               "$typename": "TypeRef",
+               "type": "EUR"
+            },
+            "body": {
+               "$typename": "MultiplyExpression",
+               "left": {
+                  "$typename": "MultiplyExpression",
+                  "left": {
+                     "$typename": "ParameterRef",
+                     "attribute": {
+                        "$typename": "RiskRef",
+                        "name": "statisticalRisk"
+                     },
+                     "parameter": "part"
+                  },
+                  "right": {
+                     "$typename": "ParameterRef",
+                     "attribute": {
+                        "$typename": "PayoutRef",
+                        "name": "maximumPayOut"
+                     },
+                     "parameter": "part"
+                  }
+               },
+               "right": {
+                  "$typename": "ParameterRef",
+                  "attribute": null,
+                  "parameter": "adjustment"
+               }
+            },
+            "parameters": [
+               {
+                  "$typename": "Parameter",
+                  "name": "part",
+                  "declaredType": {
+                     "$typename": "TypeRef",
+                     "type": "InsurancePart"
+                  }
+               },
+               {
+                  "$typename": "Parameter",
+                  "name": "adjustment",
+                  "declaredType": {
+                     "$typename": "TypeRef",
+                     "type": "Percentage"
+                  }
+               }
+            ]
+         }
+      ],
+      "themes": [
+         "HomeTheme",
+         "HealthTheme"
+      ],
+      "nrPremiumDays": "Month",
+      "parts": [
+         "fire",
+         "breakingAndEntering",
+         "stormAndLightning",
+         "hospitalization",
+         "medicines",
+         "dentist",
+         "eyecare",
+         "generalPractitioner"
+      ],
+      "basedOn": [
+         "health1",
+         "home1"
+      ]
+   }
+}

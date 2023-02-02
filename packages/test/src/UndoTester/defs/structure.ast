@@ -1,0 +1,17 @@
+language UndoTester
+
+model UndoModel {
+    unit: UndoUnit;
+}
+
+modelunit UndoUnit {
+    prim: string;
+    part?: UndoPart;
+    numlist: number[];
+    partlist: UndoPart[];
+    file-extension = "und";
+}
+
+concept UndoPart {
+    name: identifier;
+}

@@ -1,6 +1,6 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
 import { RHSPropEntry } from "./RHSPropEntry";
-import { PiProperty } from "../../../../languagedef/metalanguage";
+import { FreProperty } from "../../../../languagedef/metalanguage";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
 
@@ -9,7 +9,7 @@ export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
     private entry: RHSPropEntry;
     private isSingleEntry: boolean;
 
-    constructor(prop: PiProperty, entry: RHSPropEntry, separator: string, isSingleEntry: boolean) {
+    constructor(prop: FreProperty, entry: RHSPropEntry, separator: string, isSingleEntry: boolean) {
         super(prop, separator);
         this.entry = entry;
         this.isList = true;
@@ -21,7 +21,7 @@ export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        // When this RHS is the only entry in the grammar rule, e.g. "Concept1 = ( PitExp ';' )* ;",
+        // When this RHS is the only entry in the grammar rule, e.g. "Concept1 = ( FretExp ';' )* ;",
         // the actual list that must be transformed cannot be found using 'getChildren'.
         // TODO ask David
         let myListStatement: string = `const _myList = this.${mainAnalyserName}.getChildren(${nodeName}[${index}]);`;

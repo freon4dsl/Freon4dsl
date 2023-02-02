@@ -1,11 +1,11 @@
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 
 export abstract class Checker<DEFINITION> {
-    language: PiLanguage; // should be set in every checker, except the checker for the language definition language (.ast)
+    language: FreLanguage; // should be set in every checker, except the checker for the language definition language (.ast)
     errors = [];
     warnings = [];
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         this.language = language;
 
     }

@@ -10,13 +10,13 @@ export enum MetaKey {
     CtrlAltShift
 }
 
-export type PiKey = {
+export type FreKey = {
     meta: MetaKey;
     key: string;
     code: string;
 };
 
-export function toPiKey(e: KeyboardEvent): PiKey {
+export function toFreKey(e: KeyboardEvent): FreKey {
     return {
         meta: meta(e),
         key: e.key,

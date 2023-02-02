@@ -5,16 +5,16 @@
  */
 
 export {
-    PitAnytypeExp,
-    PitConformsExp,
-    PitEqualsExp,
-    PitExp,
-    PitFunctionCallExp,
-    PitLimitedInstanceExp,
-    PitPropertyCallExp,
-    PitSelfExp,
-    PitWhereExp,
-    PitVarCallExp,
-    PitCreateExp,
-    PitBinaryExp,
+    FretAnytypeExp,
+    FretConformsExp,
+    FretEqualsExp,
+    FretExp,
+    FretFunctionCallExp,
+    FretLimitedInstanceExp,
+    FretPropertyCallExp,
+    FretSelfExp,
+    FretWhereExp,
+    FretVarCallExp,
+    FretCreateExp,
+    FretBinaryExp,
 } from "./internal";

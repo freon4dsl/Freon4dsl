@@ -1,4 +1,4 @@
-import { IMainInterpreter } from "@projectit/core";
+import { IMainInterpreter } from "@freon4dsl/core";
 import { FunctionsInterpreter } from "./FunctionsInterpreter";
 
 export function initFunctionsInterpreter(main: IMainInterpreter){

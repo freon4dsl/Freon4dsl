@@ -1,4 +1,4 @@
-import { PiElement } from "../../ast/index";
+import { FreNode } from "../../ast/index";
 import { Box } from "./Box";
 
 export class ElementBox extends Box {
@@ -11,7 +11,7 @@ export class ElementBox extends Box {
         }
     };
 
-    constructor(element: PiElement, role: string) {
+    constructor(element: FreNode, role: string) {
         super(element, role);
     }
 

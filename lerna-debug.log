@@ -8,15 +8,15 @@
 1 notice cli v3.20.2
 2 verbose rootPath /Users/jos/projects/projectit/ProjectIt
 3 info Executing command in 5 packages: "yarn run test"
-4 silly npmRunScript.stream [ 'test', [], '@projectit/core' ]
+4 silly npmRunScript.stream [ 'test', [], '@freon4dsl/core' ]
 5 silly getExecOpts /Users/jos/projects/projectit/ProjectIt/packages/core undefined
-6 silly npmRunScript.stream [ 'test', [], '@projectit/meta' ]
+6 silly npmRunScript.stream [ 'test', [], '@freon4dsl/meta' ]
 7 silly getExecOpts /Users/jos/projects/projectit/ProjectIt/packages/meta undefined
-8 silly npmRunScript.stream [ 'test', [], '@projectit/server' ]
+8 silly npmRunScript.stream [ 'test', [], '@freon4dsl/server' ]
 9 silly getExecOpts /Users/jos/projects/projectit/ProjectIt/packages/server undefined
-10 silly npmRunScript.stream [ 'test', [], '@projectit/core-svelte' ]
+10 silly npmRunScript.stream [ 'test', [], '@freon4dsl/core-svelte' ]
 11 silly getExecOpts /Users/jos/projects/projectit/ProjectIt/packages/core-svelte undefined
-12 silly npmRunScript.stream [ 'test', [], '@projectit/test' ]
+12 silly npmRunScript.stream [ 'test', [], '@freon4dsl/test' ]
 13 silly getExecOpts /Users/jos/projects/projectit/ProjectIt/packages/test undefined
 14 error MaxBufferError: stderr maxBuffer exceeded
 14 error     at PassThrough.<anonymous> (/Users/jos/projects/projectit/ProjectIt/node_modules/get-stream/index.js:41:19)

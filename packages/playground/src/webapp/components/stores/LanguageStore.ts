@@ -3,7 +3,7 @@ import {writable} from 'svelte/store';
 import type { Writable } from 'svelte/store';
 
 // name of the language
-export let languageName: Writable<string> = writable<string>("Language ...");
+export let languageName: Writable<string> = writable<string>("FreLanguage ...");
 // all possible unit types
 export let unitTypes: Writable<string[]> = writable<string[]>([]);
 // all file extentiomns associated with the model units
