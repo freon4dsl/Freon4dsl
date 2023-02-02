@@ -1,7 +1,7 @@
 
 // TODO rethink these interfaces
-import type { PiElement } from "@projectit/core";
-import { PiNamedElement } from "@projectit/core";
+import type { FreNode } from "@projectit/core";
+import { FreNamedNode } from "@projectit/core";
 // import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
 // export interface IModelUnitData {
@@ -23,7 +23,7 @@ export interface IServerCommunication {
      * @param unitName
      * @param piUnit
      */
-    putModelUnit(modelName: string, unitName: string, piUnit: PiElement);
+    putModelUnit(modelName: string, unitName: string, piUnit: FreNode);
 
     /**
      * Deletes the unit according to the data in 'modelInfo' from the server
@@ -39,7 +39,7 @@ export interface IServerCommunication {
      * @param newName
      * @param piUnit
      */
-    renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: PiNamedElement) ;
+    renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: FreNamedNode) ;
 
     /**
      * Deletes the complete model with name 'modelName', including all its modelunits
@@ -67,7 +67,7 @@ export interface IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
+    loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNode) => void);
 
     /**
      * Reads the public interface of the model unit according to the data in 'modelInfo' from the server and
@@ -76,7 +76,7 @@ export interface IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
+    loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnit: FreNode) => void);
 
     /**
      * Reads all interfaces for all available units of model 'modelName' and calls loadCallback for each.
@@ -84,5 +84,5 @@ export interface IServerCommunication {
      * @param modelName
      * @param loadCallback
      */
-    // getInterfacesForModel(languageName: string, modelName: string, loadCallback: (piModel: PiElement) => void);
+    // getInterfacesForModel(languageName: string, modelName: string, loadCallback: (piModel: FreNode) => void);
 }

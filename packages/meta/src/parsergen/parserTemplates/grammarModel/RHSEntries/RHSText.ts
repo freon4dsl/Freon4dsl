@@ -4,8 +4,8 @@
 //         super();
 //         this.subs = subs;
 //     }
-//     public propsToSet(): PiProperty[] {
-//         let xx: PiProperty[] = [];
+//     public propsToSet(): FreProperty[] {
+//         let xx: FreProperty[] = [];
 //         for (const part of this.subs) {
 //             if (part instanceof RHSPropEntry) {
 //                 xx.push(part.property);

@@ -1,4 +1,4 @@
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 import { Box, ActionBox, BoxFactory } from "./internal";
 
 export type BoolFunctie = () => boolean;
@@ -6,10 +6,10 @@ export type BoolFunctie = () => boolean;
 /**
  * OptionalBox holds the content from a projection that is optional. This content is always present in the
  * attribute 'content'. Next to the context there is a 'placeholder' box, which is shown when the content is not
- * present in the PiElement model.
+ * present in the FreElement model.
  * The attributes 'mustShow' and 'condition' determine which of the pair [content, placeholder] is shown. If the 'condition'
  * results in true, then the content box is shown. If 'mustShow' is true, then the content box is also shown, even though
- * there may not be actual content within the PiElement model. The latter is set by the custom action, that is coupled
+ * there may not be actual content within the FreElement model. The latter is set by the custom action, that is coupled
  * to this OptionalBox, which is triggered by the user.
  */
 export class OptionalBox extends Box {
@@ -28,7 +28,7 @@ export class OptionalBox extends Box {
         this.isDirty();
     }
 
-    constructor(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string) {
+    constructor(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string) {
         super(element, role);
         this.content = box;
         box.parent = this;

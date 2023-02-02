@@ -1,9 +1,9 @@
-import { PiLanguage } from "../../metalanguage";
+import { FreLanguage } from "../../metalanguage";
 import { Names } from "../../../utils";
 
 export class MetaTypeTemplate {
 
-    generateMetaType(language: PiLanguage): string {
+    generateMetaType(language: FreLanguage): string {
         const unitNames = language.units.map(unit => Names.classifier(unit));
         // sort all names alphabetically
         let tmp: string[] = [];

@@ -1,13 +1,13 @@
-import { PiTyperMerger } from "../../typerdef/parser";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreTyperMerger } from "../../typerdef/parser";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { PitClassifierSpec, PitInferenceRule, PiTyperDef } from "../../typerdef/metalanguage";
+import { FretClassifierSpec, FretInferenceRule, TyperDef } from "../../typerdef/metalanguage";
 
-function testTypeUnit(typeUnit: PiTyperDef) {
+function testTypeUnit(typeUnit: TyperDef) {
     expect(typeUnit).not.toBeNull();
     expect(typeUnit).not.toBeUndefined();
-    // console.log(typeUnit?.toPiString());
+    // console.log(typeUnit?.toFretString());
     expect(typeUnit.types.length).toBe(3);
     expect(typeUnit.conceptsWithType.length).toBe(13);
     // console.log(typeUnit.conceptsWithType.map(t => t.name).join(", "))
@@ -15,16 +15,16 @@ function testTypeUnit(typeUnit: PiTyperDef) {
 
     const stringLitRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "StringLiteral");
     expect(stringLitRule).not.toBeNull();
-    expect(stringLitRule instanceof PitClassifierSpec).toBeTruthy();
-    const inferOfStringLit = (stringLitRule as PitClassifierSpec).rules.find(r => r instanceof PitInferenceRule);
+    expect(stringLitRule instanceof FretClassifierSpec).toBeTruthy();
+    const inferOfStringLit = (stringLitRule as FretClassifierSpec).rules.find(r => r instanceof FretInferenceRule);
     expect(inferOfStringLit).not.toBeNull();
     // expect(inferOfStringLit.returnType).not.toBeNull();
     // expect(inferOfStringLit.returnType.name).toBe(predefType.name);
 
     const plusExpRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "PlusExp");
     expect(plusExpRule).not.toBeNull();
-    expect(plusExpRule instanceof PitClassifierSpec).toBeTruthy();
-    const inferOfPlusExp = (plusExpRule as PitClassifierSpec).rules.find(r => r instanceof PitInferenceRule);
+    expect(plusExpRule instanceof FretClassifierSpec).toBeTruthy();
+    const inferOfPlusExp = (plusExpRule as FretClassifierSpec).rules.find(r => r instanceof FretInferenceRule);
     expect(inferOfPlusExp).not.toBeNull();
     // expect(inferOfPlusExp.returnType).not.toBeNull();
     // expect(inferOfPlusExp.returnType.name).toBe(predefType.name);
@@ -34,15 +34,15 @@ describe("Checking new typer", () => {
     const testdir = "src/__tests__/typer-tests/correctDefFiles/";
     const langParser = new LanguageParser();
 
-    let parser: PiTyperMerger;
-    let language: PiLanguage;
+    let parser: FreTyperMerger;
+    let language: FreLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 
     beforeEach(() => {
         try {
             language = langParser.parse(testdir + "projectY.ast");
-            parser = new PiTyperMerger(language);
+            parser = new FreTyperMerger(language);
         } catch (e) {
             console.log("Language could not be read: " + e.stack);
             // console.log("found errors in .ast: " + langParser.checker.errors.map(e => e).join("\n"));
@@ -59,7 +59,7 @@ describe("Checking new typer", () => {
             expect(namedType).not.toBeNull();
             expect(namedType).not.toBeUndefined();
 
-            let typeUnit: PiTyperDef;
+            let typeUnit: TyperDef;
             try {
                 if (!!parser) {
                     typeUnit = parser.parse(testdir + "projectY.type");
@@ -71,7 +71,7 @@ describe("Checking new typer", () => {
                 // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
             }
 
-           // console.log(typeUnit?.toPiString());
+           // console.log(typeUnit?.toFretString());
             testTypeUnit(typeUnit);
         }
     });
@@ -86,7 +86,7 @@ describe("Checking new typer", () => {
             expect(namedType).not.toBeNull();
             expect(namedType).not.toBeUndefined();
 
-            let typeUnit: PiTyperDef;
+            let typeUnit: TyperDef;
             try {
                 if (!!parser) {
                     typeUnit = parser.parseMulti(

@@ -6,12 +6,12 @@
         </div>
             </div>
     {:else}
-        <ProjectItComponent editor={editorEnvironment.editor}/>
+        <FreonComponent editor={editorEnvironment.editor}/>
     {/if}
 </div>
 
 <script lang="ts">
-    import { ProjectItComponent } from "@projectit/core-svelte";
+    import { FreonComponent } from "@projectit/core-svelte";
     import { editorEnvironment } from "../../config/WebappConfiguration";
     import { noUnitAvailable } from "../stores/ModelStore";
 </script>

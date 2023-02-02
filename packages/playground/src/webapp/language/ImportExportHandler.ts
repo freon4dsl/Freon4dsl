@@ -1,7 +1,7 @@
 import { EditorState } from "./EditorState";
 import { setUserMessage } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
-import type { PiModelUnit } from "@projectit/core";
+import type { FreModelUnit } from "@projectit/core";
 import { editorProgressShown } from "../components/stores/ModelStore";
 
 // TODO rethink this class using Workers, see https://developer.mozilla.org/en-US/docs/Web/API/Worker
@@ -45,9 +45,9 @@ export class ImportExportHandler {
         }
     }
 
-    async exportUnit(unit: PiModelUnit) {
+    async exportUnit(unit: FreModelUnit) {
         // get the complete unit from the server
-        // await serverCommunication.loadModelUnit(EditorState.getInstance().currentModel.name, unit.name, (completeUnit: PiModelUnit) => {
+        // await serverCommunication.loadModelUnit(EditorState.getInstance().currentModel.name, unit.name, (completeUnit: FreModelUnit) => {
         //     this._exportUnit(completeUnit);
         // });
         // TODO: now only export current unit, could be extended to export other units as well.
@@ -55,7 +55,7 @@ export class ImportExportHandler {
         this._exportUnit(unit);
     }
 
-    private _exportUnit(unit: PiModelUnit) {
+    private _exportUnit(unit: FreModelUnit) {
         // do not try to export a unit with errors, parsing and unparsing will not proceed correctly
         const list = editorEnvironment.validator.validate(unit);
         // TODO Only allow export of current unit for now.
@@ -68,7 +68,7 @@ export class ImportExportHandler {
         let text: string = editorEnvironment.writer.writeToString(unit);
 
         // get the default file name from the unit
-        const fileExtension: string = editorEnvironment.fileExtensions.get(unit.piLanguageConcept());
+        const fileExtension: string = editorEnvironment.fileExtensions.get(unit.freLanguageConcept());
         let defaultFileName: string = unit.name + "." + fileExtension;
 
         // create a HTML element that contains the text string

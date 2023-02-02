@@ -1,37 +1,37 @@
-import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { FreUnitDescription } from "../../languagedef/metalanguage/FreLanguage";
 import { CheckRunner, Checker } from "../../utils";
 import {
-    PiConcept,
-    PiLanguage,
-    PiProperty,
-    PiClassifier
+    FreConcept,
+    FreLanguage,
+    FreProperty,
+    FreClassifier
 } from "../../languagedef/metalanguage";
-import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
+import { FreAlternativeScope, FreNamespaceAddition, ScopeDef } from "./FreScopeDefLang";
 import { LangUtil, MetaLogger } from "../../utils";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
-import { PiLangExpressionChecker } from "../../languagedef/checking";
+import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference";
+import { FreLangExpressionChecker } from "../../languagedef/checking";
 import { CommonChecker } from "../../languagedef/checking/CommonChecker";
 
 const LOGGER = new MetaLogger("ScoperChecker").mute();
 
 // TODO use ParseLocatonUtil
-export class ScoperChecker extends Checker<PiScopeDef> {
+export class ScoperChecker extends Checker<ScopeDef> {
     runner = new CheckRunner(this.errors, this.warnings);
-    myExpressionChecker: PiLangExpressionChecker;
-    myNamespaces: PiClassifier[] = [];
+    myExpressionChecker: FreLangExpressionChecker;
+    myNamespaces: FreClassifier[] = [];
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         super(language);
-        this.myExpressionChecker = new PiLangExpressionChecker(this.language);
+        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
         // in a scope definition an expression may be simply 'self'
         // this.myExpressionChecker.strictUseOfThis = false;
     }
 
-    public check(definition: PiScopeDef): void {
+    public check(definition: ScopeDef): void {
         LOGGER.log("Checking scope definition " + definition.scoperName);
         if ( this.language === null || this.language === undefined ) {
             throw new Error(`Scoper definition checker does not known the language.`);
@@ -62,7 +62,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
     }
 
-    private checkNamespaceAdditions(namespaceAddition: PiNamespaceAddition, enclosingConcept: PiConcept) {
+    private checkNamespaceAdditions(namespaceAddition: FreNamespaceAddition, enclosingConcept: FreConcept) {
         LOGGER.log("Checking namespace definition for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
@@ -70,10 +70,10 @@ export class ScoperChecker extends Checker<PiScopeDef> {
             whenOk: () => {
                 namespaceAddition.expressions.forEach(exp => {
                     this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
-                    const xx: PiProperty = exp.findRefOfLastAppliedFeature();
+                    const xx: FreProperty = exp.findRefOfLastAppliedFeature();
                     if (!!xx) {
                         this.runner.nestedCheck({
-                            check: (!!xx.type && (xx.type instanceof PiConcept || xx.type instanceof PiUnitDescription)),
+                            check: (!!xx.type && (xx.type instanceof FreConcept || xx.type instanceof FreUnitDescription)),
                             error: `A namespace addition should refer to a concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`,
                             whenOk: () => {
                                 this.runner.simpleCheck(this.myNamespaces.includes(xx.type),
@@ -86,13 +86,13 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         });
     }
 
-    private checkAlternativeScope(alternativeScope: PiAlternativeScope, enclosingConcept: PiConcept) {
+    private checkAlternativeScope(alternativeScope: FreAlternativeScope, enclosingConcept: FreConcept) {
         LOGGER.log("Checking alternative scope definition for " + enclosingConcept?.name);
         this.myExpressionChecker.checkLangExp(alternativeScope.expression, enclosingConcept);
     }
 
-    private findAllNamespaces(namespaces: PiElementReference<PiClassifier>[]): PiClassifier[] {
-        let result: PiClassifier[] = [];
+    private findAllNamespaces(namespaces: MetaElementReference<FreClassifier>[]): FreClassifier[] {
+        let result: FreClassifier[] = [];
         namespaces.forEach(ref => {
             CommonChecker.checkClassifierReference(ref, this.runner);
             const myClassifier = ref.referred;

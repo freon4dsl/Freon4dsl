@@ -1,25 +1,25 @@
-import { PiLanguage } from "../../languagedef/metalanguage/index";
-import { PiParser } from "../../utils";
+import { FreLanguage } from "../../languagedef/metalanguage/index";
+import { FreGenericParser } from "../../utils";
 import { ValidatorChecker } from "../../validatordef/metalanguage";
-import { PiValidatorDef } from "../metalanguage";
+import { ValidatorDef } from "../metalanguage";
 import { setCurrentFileName } from "./ValidatorCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 
 const validatorParser = require("./ValidatorGrammar");
 
-export class ValidatorParser extends PiParser<PiValidatorDef> {
-    public language: PiLanguage;
+export class ValidatorParser extends FreGenericParser<ValidatorDef> {
+    public language: FreLanguage;
 
-    constructor(language: PiLanguage) {
+    constructor(language: FreLanguage) {
         super();
         this.parser = validatorParser;
         this.language = language;
         this.checker = new ValidatorChecker(language);
     }
 
-    protected merge(submodels: PiValidatorDef[]): PiValidatorDef {
+    protected merge(submodels: ValidatorDef[]): ValidatorDef {
         if (submodels.length > 0) {
-            let result: PiValidatorDef = submodels[0];
+            let result: ValidatorDef = submodels[0];
             let validatorName: string = submodels[0].validatorName;
             submodels.forEach((sub, index) => {
                 if (index > 0) {

@@ -8,8 +8,8 @@
      */
     import {
         type TableBox,
-        type PiEditor,
-        PiLogger,
+        type FreEditor,
+        FreLogger,
         ListElementInfo,
         TableDirection,
         GridCellBox,
@@ -22,10 +22,10 @@
     import { dropListElement, moveListElement } from "@projectit/core";
     import TableCellComponent from "./TableCellComponent.svelte";
 
-    const LOGGER = new PiLogger("TableComponent");
+    const LOGGER = new FreLogger("TableComponent");
 
     export let box: TableBox;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
 
     let id = !!box ? componentId(box) : 'table-for-unknown-box';
     let cells: GridCellBox[];
@@ -114,7 +114,7 @@
             targetIndex = event.detail.column - 1;
         }
 
-        // console.log("DROPPING item [" + data.element.piId() + "] from [" + data.componentId + "] in grid [" + id + "] on position [" + targetIndex + "]");
+        // console.log("DROPPING item [" + data.element.freId() + "] from [" + data.componentId + "] in grid [" + id + "] on position [" + targetIndex + "]");
         if (box.hasHeaders) { // take headers into account for the target index
             targetIndex = targetIndex - 1;
             // console.log("grid has headers, targetIndex: " + targetIndex);

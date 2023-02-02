@@ -1,35 +1,35 @@
 import { GrammarRule } from "./GrammarRule";
-import { PiClassifier, PiLanguage, PiPrimitiveType } from "../../../languagedef/metalanguage";
+import { FreClassifier, FreLanguage, FrePrimitiveType } from "../../../languagedef/metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, READER_GEN_FOLDER } from "../../../utils";
-import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
+import { FreUnitDescription } from "../../../languagedef/metalanguage/FreLanguage";
 
 export class GrammarPart {
-    unit: PiUnitDescription;
+    unit: FreUnitDescription;
     rules: GrammarRule[] = [];
-    private imports: PiClassifier[] = [];
+    private imports: FreClassifier[] = [];
 
-    public addToImports(extra: PiClassifier | PiClassifier[]) {
+    public addToImports(extra: FreClassifier | FreClassifier[]) {
         if (!!extra) {
             if (Array.isArray(extra)) {
                 for (const ext of extra) {
-                    if (!this.imports.includes(ext) && !(ext instanceof PiPrimitiveType)) {
+                    if (!this.imports.includes(ext) && !(ext instanceof FrePrimitiveType)) {
                         this.imports.push(ext);
                     }
                 }
-            } else if (!this.imports.includes(extra) && !(extra instanceof PiPrimitiveType)) {
+            } else if (!this.imports.includes(extra) && !(extra instanceof FrePrimitiveType)) {
                 this.imports.push(extra);
             }
         }
     }
 
-    toMethod(language: PiLanguage, relativePath: string): string {
+    toMethod(language: FreLanguage, relativePath: string): string {
         const className: string = Names.unitAnalyser(language, this.unit);
 
         return `import {net} from "net.akehurst.language-agl-processor";
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
         import { ${this.imports.map(imp => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
-        import { PiElementReference } from "@projectit/core";
+        import { ${Names.FreNodeReference} } from "@projectit/core";
         
         export class ${className} {
             mainAnalyser: ${Names.syntaxAnalyser(language)};

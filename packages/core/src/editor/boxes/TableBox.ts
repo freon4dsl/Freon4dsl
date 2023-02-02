@@ -1,6 +1,6 @@
 import { Box } from "./Box";
-import { PiElement } from "../../ast";
-import { PiUtils } from "../../util";
+import { FreNode } from "../../ast";
+import { FreUtils } from "../../util";
 // todo factor out the methods common with GridBox and ListBox
 
 export enum TableDirection {
@@ -9,7 +9,7 @@ export enum TableDirection {
 }
 
 /**
- * A TableBox shows a list in the PiElement model as table. Therefore, we know
+ * A TableBox shows a list in the FreElement model as table. Therefore, we know
  * that every row or column, depending on the orientation, represents a single element in the
  * list.
  */
@@ -19,9 +19,9 @@ export abstract class TableBox extends Box {
     public hasHeaders: boolean = false;
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    protected constructor(element: PiElement, propertyName: string, conceptName: string, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
+    protected constructor(element: FreNode, propertyName: string, conceptName: string, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
         super(element, role);
-        PiUtils.initializeObject(this, initializer);
+        FreUtils.initializeObject(this, initializer);
         if (!!children) {
             children.forEach(b => this.addChild(b));
         }
@@ -132,7 +132,7 @@ export abstract class TableBox extends Box {
 export class TableBoxRowOriented extends TableBox {
     kind = "TableBoxRowOriented";
 
-    constructor(element: PiElement, propertyName: string, conceptName: string, role: string, hasHeaders: boolean, children?: (Box | null)[], initializer?: Partial<TableBoxRowOriented>) {
+    constructor(element: FreNode, propertyName: string, conceptName: string, role: string, hasHeaders: boolean, children?: (Box | null)[], initializer?: Partial<TableBoxRowOriented>) {
         super(element, propertyName, conceptName, role, hasHeaders, children, initializer);
         this._direction = TableDirection.HORIZONTAL;
     }
@@ -141,7 +141,7 @@ export class TableBoxRowOriented extends TableBox {
 export class TableBoxColumnOriented extends TableBox {
     kind = "TableBoxColumnOriented";
 
-    constructor(element: PiElement, propertyName: string, conceptName: string, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
+    constructor(element: FreNode, propertyName: string, conceptName: string, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
         super(element, propertyName, conceptName, role, hasHeaders, children, initializer);
         this._direction = TableDirection.VERTICAL;
     }

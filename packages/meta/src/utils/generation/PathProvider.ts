@@ -1,4 +1,4 @@
-import { PiLanguage, PiConcept } from "../../languagedef/metalanguage/PiLanguage";
+import { FreLanguage, FreConcept } from "../../languagedef/metalanguage/FreLanguage";
 import { Names } from "./Names";
 
 // files need to be generated into folders ...
@@ -36,7 +36,7 @@ export const scoperInterface = PROJECTITCORE;
 export const typerInterface = PROJECTITCORE;
 export const validatorInterface = PROJECTITCORE;
 export const errorClass = PROJECTITCORE;
-export const piNamedElement = PROJECTITCORE;
+export const freNamedElement = PROJECTITCORE;
 export const EDITORSTYLES = STYLES_FOLDER + "/styles";
 /**
  * Defines all paths to files and folders that are used in the generation, to ensure they are identical
@@ -70,40 +70,36 @@ export class PathProvider {
     }
 
     // the generated classes that implement the language can be found in ...
-    public static concept(concept: PiConcept): string {
+    public static concept(concept: FreConcept): string {
         return LANGUAGE_GEN_FOLDER;
     }
 
-    public static languageConceptType(language: PiLanguage): string {
+    public static languageConceptType(language: FreLanguage): string {
         return LANGUAGE_GEN_FOLDER;
     }
 
-    public static allConcepts(language: PiLanguage): string {
+    public static allConcepts(language: FreLanguage): string {
         return LANGUAGE_GEN_FOLDER;
     }
 
     // the generated classes that implement the editor can be found in ...
-    public static context(language: PiLanguage): string {
+    public static context(language: FreLanguage): string {
         return EDITOR_GEN_FOLDER + "/" + Names.context(language);
     }
 
-    public static actions(language: PiLanguage): string {
+    public static actions(language: FreLanguage): string {
         return EDITOR_GEN_FOLDER + "/" + Names.actions(language);
     }
 
-    public static defaultActions(language: PiLanguage): string {
+    public static defaultActions(language: FreLanguage): string {
         return EDITOR_GEN_FOLDER + "/" + Names.defaultActions(language);
     }
 
-    public static customActions(language: PiLanguage): string {
+    public static customActions(language: FreLanguage): string {
         return EDITOR_FOLDER + "/" + Names.customActions(language);
     }
 
-    // public static projectionDefault(language: PiLanguage): string {
-    //     return EDITOR_GEN_FOLDER + "/" + Names.projectionDefault(language);
-    // }
-
-    public static projection(language: PiLanguage): string {
+    public static projection(language: FreLanguage): string {
         return EDITOR_GEN_FOLDER + "/" + Names.customProjection(language);
     }
 
@@ -112,43 +108,43 @@ export class PathProvider {
     }
 
     // the generated classes that implement the scoper can be found in ...
-    public static namespace(language: PiLanguage): string {
+    public static namespace(language: FreLanguage): string {
         return SCOPER_GEN_FOLDER + "/" + Names.namespace(language);
     }
 
-    public static scoper(language: PiLanguage): string {
+    public static scoper(language: FreLanguage): string {
         return SCOPER_GEN_FOLDER + "/" + Names.scoper(language);
     }
 
     // the generated classes that implement the typer can be found in ...
-    public static typer(language: PiLanguage): string {
+    public static typer(language: FreLanguage): string {
         return TYPER_GEN_FOLDER + "/" + Names.typer(language);
     }
 
     // the generated classes that implement the validator can be found in ...
-    public static validator(language: PiLanguage): string {
+    public static validator(language: FreLanguage): string {
         return VALIDATOR_GEN_FOLDER + "/" + Names.validator(language);
     }
 
-    public static checker(language: PiLanguage): string {
+    public static checker(language: FreLanguage): string {
         return VALIDATOR_GEN_FOLDER + "/" + Names.rulesChecker(language);
     }
 
     // the generated classes that implement the unparser can be found in ...
-    public static unparser(language: PiLanguage): string {
+    public static unparser(language: FreLanguage): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.writer(language);
     }
 
     // the generated classes that implement the visitor pattern can be found in ...
-    public static walker(language: PiLanguage): string {
+    public static walker(language: FreLanguage): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.walker(language);
     }
 
-    public static workerInterface(language: PiLanguage): string {
+    public static workerInterface(language: FreLanguage): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.workerInterface(language);
     }
 
-    public static defaultWorker(language: PiLanguage): string {
+    public static defaultWorker(language: FreLanguage): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.defaultWorker(language);
     }
 }

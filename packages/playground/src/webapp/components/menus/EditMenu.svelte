@@ -26,7 +26,7 @@
 </div>
 
 <script lang="ts">
-	import { isRtError, PiElement } from "@projectit/core";
+	import { isRtError, FreNode } from "@projectit/core";
 	import type { MenuComponentDev } from '@smui/menu';
 	import Menu from '@smui/menu';
 	import { Anchor } from '@smui/menu-surface';
@@ -73,7 +73,7 @@
 	const runInterpreter = () => {
 		const intp = editorEnvironment.interpreter;
 		intp.setTracing(true);
-		const node: PiElement = editorEnvironment.editor.selectedElement;
+		const node: FreNode = editorEnvironment.editor.selectedElement;
 
 		const value = intp.evaluate(node);
 		if(isRtError(value)){

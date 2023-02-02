@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
-import { HorizontalListBox, LabelBox, PiEditor } from "@projectit/core";
+import { HorizontalListBox, LabelBox, FreEditor } from "@projectit/core";
 import { ModelMaker } from "./models/ModelMaker";
 import ListComponent from "../components/ListComponent.svelte"; // Note that this form of import is neccessary for jest to function!
 
 describe.skip("List component", () => {
     let horizontalBox: HorizontalListBox;
-    const myEditor = new PiEditor(null, null);
+    const myEditor = new FreEditor(null, null);
 
     beforeEach(() => {
         // create a model and the boxes for the model
@@ -78,7 +78,7 @@ describe.skip("List component", () => {
             }
         });
 
-        // TODO the following only works when the html element is embedded in a ProjectItComponent
+        // TODO the following only works when the html element is embedded in a FreonComponent
         // // use an arrow key to get to the first element
         // fireEvent.keyPress(document, {key: 'ArrowUp', code: 'ArrowUp',charCode: 38});
         // // the first element has focus

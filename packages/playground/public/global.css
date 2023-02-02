@@ -40,14 +40,14 @@
 	/* Selectable */
 	--theme-colors-bg_selected: rgba(211, 227, 253, 255);
 	--theme-colors-border_selected: darkblue;
-	/* ProjectIt sizes */
+	/* Freon sizes */
 	--pi-header-height: 36px;
 	--pi-footer-height: 16px;
 	--pi-menu-height: 24px;
 	--pi-statusbar-height: 24px;
 	--pi-dialog-width: 450px;
 
-	/* ProjectIt font sizes */
+	/* Freon font sizes */
 	--pi-header-font-size: 16px;
 	--pi-button-font-size: 12px;
 	--pi-error-font-size: 14px;

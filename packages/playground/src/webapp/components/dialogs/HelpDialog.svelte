@@ -12,7 +12,7 @@
         aria-labelledby="event-title"
         aria-describedby="event-content"
 >
-    <Title id="event-title">Help for ProjectIt</Title>
+    <Title id="event-title">Help for Freon</Title>
     <Content id="event-content">
         <div class="mdc-typography--body2">
             Currently there is no in-build help functionality, other than the following. For more, we refer you to our

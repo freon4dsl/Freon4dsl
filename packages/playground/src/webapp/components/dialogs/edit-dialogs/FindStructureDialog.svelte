@@ -7,7 +7,7 @@
 	<Title id="event-title">Search for a structure</Title>
 	<Content id="event-content">
 		<div>
-			{#each Language.getInstance().getNamedElements() as name}
+			{#each FreLanguage.getInstance().getNamedElements() as name}
 				<FormField>
 					<Radio
 							bind:group={metatypeSelected}
@@ -36,7 +36,7 @@
 </Dialog>
 
 <script lang="ts">
-	import { Language } from "@projectit/core";
+	import { FreLanguage } from "@projectit/core";
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import Radio from '@smui/radio';
 	import Card from '@smui/card';

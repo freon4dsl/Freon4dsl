@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
-import { FreProjectionHandler, LabelBox, OptionalBox, PiEditor } from "@projectit/core";
+import { FreProjectionHandler, LabelBox, OptionalBox, FreEditor } from "@projectit/core";
 import { MockVariables } from "./mock-components/MockVariables";
 import { ModelMaker } from "./models/ModelMaker";
 import OptionalComponent from "../components/OptionalComponent.svelte"; // Note that this form of import is neccessary for jest to function!
@@ -14,7 +14,7 @@ describe.skip("Optional component", () => {
     let model: ElementWithOptional;
     let ownerBox: OptionalBox;
     let childBox: LabelBox;
-    const myEditor = new PiEditor(new FreProjectionHandler(), null);
+    const myEditor = new FreEditor(new FreProjectionHandler(), null);
 
     beforeEach(() => {
         // create a model and the boxes for the model

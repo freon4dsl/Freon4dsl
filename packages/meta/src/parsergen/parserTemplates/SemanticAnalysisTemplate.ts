@@ -1,6 +1,6 @@
-import { PiClassifier, PiConcept, PiLanguage, PiPrimitiveProperty } from "../../languagedef/metalanguage";
+import { FreClassifier, FreConcept, FreLanguage, FrePrimitiveProperty } from "../../languagedef/metalanguage";
 import { CONFIGURATION_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../utils";
-import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
+import { FrePrimitiveType } from "../../languagedef/metalanguage/FreLanguage";
 import { UnitAnalyser } from "./UnitAnalyser";
 
 // first call 'analyse' then the other methods as they depend on the global variables to be set
@@ -8,20 +8,20 @@ import { UnitAnalyser } from "./UnitAnalyser";
 // TODO rethink semantic analysis => should be done on whole model
 // why is common unit not included???
 export class SemanticAnalysisTemplate {
-    imports: PiClassifier[] = [];
-    possibleProblems: PiConcept[] = [];
-    supersOfProblems: PiClassifier[] = [];
-    private exprWithBooleanProp: Map<PiClassifier, PiPrimitiveProperty> = new Map<PiClassifier, PiPrimitiveProperty>();
+    imports: FreClassifier[] = [];
+    possibleProblems: FreConcept[] = [];
+    supersOfProblems: FreClassifier[] = [];
+    private exprWithBooleanProp: Map<FreClassifier, FrePrimitiveProperty> = new Map<FreClassifier, FrePrimitiveProperty>();
 
     analyse(analyser: UnitAnalyser) {
         // this.reset();
         // find which classifiers have possible problems
         for (const [classifier, subs] of analyser.interfacesAndAbstractsUsed) {
-            if (!((classifier as PiConcept).base)) {
+            if (!((classifier as FreConcept).base)) {
                 let hasProblems: boolean = false;
-                let subsWithSingleReference: PiConcept[] = [];
+                let subsWithSingleReference: FreConcept[] = [];
                 for (const sub of subs) {
-                    if (sub instanceof PiConcept) {
+                    if (sub instanceof FreConcept) {
                         for (const ref of sub.allReferences()) {
                             if (analyser.classifiersUsed.includes(ref.type)){
                                 this.addProblem(sub);
@@ -37,7 +37,7 @@ export class SemanticAnalysisTemplate {
                         }
                     }
                     for (const prim of sub.allPrimProperties()) {
-                        if (prim.type == PiPrimitiveType.boolean) {
+                        if (prim.type == FrePrimitiveType.boolean) {
                             this.exprWithBooleanProp.set(sub, prim);
                         }
                     }
@@ -56,19 +56,19 @@ export class SemanticAnalysisTemplate {
         }
     }
 
-    private addSuper(classifier: PiClassifier) {
+    private addSuper(classifier: FreClassifier) {
         if( !this.supersOfProblems.includes(classifier)) {
             this.supersOfProblems.push(classifier);
         }
     }
 
-    private addProblem(sub: PiConcept) {
+    private addProblem(sub: FreConcept) {
         if( !this.possibleProblems.includes(sub)) {
             this.possibleProblems.push(sub);
         }
     }
 
-    makeCorrector(language: PiLanguage, relativePath: string): string {
+    makeCorrector(language: FreLanguage, relativePath: string): string {
         this.imports = [];
         const everyConceptName: string = Names.allConcepts(language);
         const className: string = Names.semanticAnalyser(language);
@@ -79,7 +79,7 @@ export class SemanticAnalysisTemplate {
         return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
                 import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
                 import { ${refWalkerName} } from "./${refWalkerName}";
-                import { Concept, Language, PiElement, PiElementReference } from "@projectit/core";
+                import { Concept, ${Names.FreLanguage}, ${Names.FreNode}, ${Names.FreNodeReference} } from "@projectit/core";
 
                 export class ${className} {
 
@@ -101,15 +101,15 @@ export class SemanticAnalysisTemplate {
 
                         // now change all ref errors
                         for (const [toBeReplaced, newObject] of changesToBeMade) {
-                            const myType: Concept = Language.getInstance().concept(toBeReplaced.piLanguageConcept());
+                            const myType: Concept = ${Names.FreLanguage}.getInstance().concept(toBeReplaced.freLanguageConcept());
                             myType.properties.forEach(prop => {
                                 if (prop.type !== "boolean" && !!toBeReplaced[prop.name]) {
                                     newObject[prop.name] = toBeReplaced[prop.name];
                                 }
                             });
-                            let parent: PiElement = toBeReplaced.piOwnerDescriptor().owner;
-                            const propName: string = toBeReplaced.piOwnerDescriptor().propertyName;
-                            const propIndex: number = toBeReplaced.piOwnerDescriptor().propertyIndex;
+                            let parent: ${Names.FreNode} = toBeReplaced.freOwnerDescriptor().owner;
+                            const propName: string = toBeReplaced.freOwnerDescriptor().propertyName;
+                            const propIndex: number = toBeReplaced.freOwnerDescriptor().propertyIndex;
                             if (propIndex !== undefined) {
                                 parent[propName].splice(propIndex, 1, newObject);
                             } else {
@@ -121,7 +121,7 @@ export class SemanticAnalysisTemplate {
 `; // end Template
     }
 
-    makeWalker(language: PiLanguage, relativePath: string): string {
+    makeWalker(language: FreLanguage, relativePath: string): string {
         this.imports = [];
         const className: string = Names.semanticWalker(language);
         const everyConceptName: string = Names.allConcepts(language);
@@ -138,7 +138,7 @@ export class SemanticAnalysisTemplate {
               ${Names.allConcepts(language)}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
             } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
             import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
-            import { PiNamedElement, Language, LanguageEnvironment, PiElementReference } from "@projectit/core";
+            import { ${Names.FreNamedNode}, ${Names.FreLanguage}, ${Names.LanguageEnvironment}, ${Names.FreNodeReference} } from "@projectit/core";
             
             export class ${className} extends ${Names.defaultWorker(language)} implements ${Names.workerInterface(language)} {
                 changesToBeMade: Map<${everyConceptName}, ${everyConceptName}> = null;
@@ -150,14 +150,14 @@ export class SemanticAnalysisTemplate {
                 
                 ${this.possibleProblems.map(poss => `${this.makeVistorMethod(poss)}`).join("\n")}
                 
-                private findReplacement(modelelement: ${Names.allConcepts(language)}, referredElem: PiElementReference<PiNamedElement>) {
-                    const scoper = LanguageEnvironment.getInstance().scoper;
+                private findReplacement(modelelement: ${Names.allConcepts(language)}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
+                    const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
                     const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                     if (possibles.length > 0) {
                         // element probably refers to something with another type
                         let replacement: ${Names.allConcepts(language)} = null;
                         for (const elem of possibles) {
-                            const metatype = elem.piLanguageConcept();
+                            const metatype = elem.freLanguageConcept();
                             ${replacementIfStat}
                         }
                         this.changesToBeMade.set(modelelement, replacement);
@@ -178,12 +178,12 @@ export class SemanticAnalysisTemplate {
             if (!poss.isAbstract) {
                 let toBeCreated: string = Names.classifier(poss);
                 for (const ref of poss.allReferences().filter(prop => !prop.isList)) {
-                    let type: PiClassifier = ref.type;
+                    let type: FreClassifier = ref.type;
                     let metatype: string = Names.classifier(type);
                     this.addToImports(type);
                     let propName: string = ref.name;
-                    result += `if (Language.getInstance().metaConformsToType(elem, "${metatype}")) {
-                        replacement = ${toBeCreated}.create({ ${propName}: PiElementReference.create<${metatype}>(referredElem.name, metatype) });
+                    result += `if (${Names.FreLanguage}.getInstance().metaConformsToType(elem, "${metatype}")) {
+                        replacement = ${toBeCreated}.create({ ${propName}: ${Names.FreNodeReference}.create<${metatype}>(referredElem.name, metatype) });
                     } else `;
                 }
             }
@@ -194,7 +194,7 @@ export class SemanticAnalysisTemplate {
         return result;
     }
 
-    private makeVistorMethod(piClassifier: PiConcept): string {
+    private makeVistorMethod(freConcept: FreConcept): string {
         // TODO add replacement of properties that are lists
         return `
             /**
@@ -202,9 +202,9 @@ export class SemanticAnalysisTemplate {
              * If not, find possible replacements.
              * @param modelelement
              */
-            public execBefore${Names.concept(piClassifier)}(modelelement: ${Names.concept(piClassifier)}): boolean {
-                let referredElem: PiElementReference<PiNamedElement>;
-                ${piClassifier.allReferences().filter(prop => !prop.isList).map(prop =>
+            public execBefore${Names.concept(freConcept)}(modelelement: ${Names.concept(freConcept)}): boolean {
+                let referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>;
+                ${freConcept.allReferences().filter(prop => !prop.isList).map(prop =>
                 `referredElem = modelelement.${prop.name};
                 if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
                     this.findReplacement(modelelement, referredElem);
@@ -213,7 +213,7 @@ export class SemanticAnalysisTemplate {
             }`;
     }
 
-    private addToImports(extra: PiClassifier | PiClassifier[]) {
+    private addToImports(extra: FreClassifier | FreClassifier[]) {
         if (!!extra) {
             if (Array.isArray(extra)) {
                 for (const ext of extra) {
@@ -231,13 +231,13 @@ export class SemanticAnalysisTemplate {
         this.supersOfProblems = [];
         this.possibleProblems = [];
         this.imports = [];
-        this.exprWithBooleanProp = new Map<PiClassifier, PiPrimitiveProperty>();
+        this.exprWithBooleanProp = new Map<FreClassifier, FrePrimitiveProperty>();
     }
 
     private makeBooleanStat(): string {
         let result: string = '';
         for (const [concept, primProp] of this.exprWithBooleanProp) {
-            if (concept instanceof PiConcept && !concept.isAbstract) {
+            if (concept instanceof FreConcept && !concept.isAbstract) {
                 result += `if (referredElem.name === "true") {
                     this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: true }));
                 } else if (referredElem.name === "false") {

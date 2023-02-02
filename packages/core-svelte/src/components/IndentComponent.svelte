@@ -4,17 +4,17 @@
      * This component indents the child of its (Indent)Box.
      * Every indent is 8px wide.
      */
-    import { Box, PiLogger } from "@projectit/core";
+    import { Box, FreLogger } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
-    import type {IndentBox, PiEditor} from "@projectit/core";
+    import type {IndentBox, FreEditor} from "@projectit/core";
     import { componentId } from "./svelte-utils";
 
     // Parameters
     export let box: IndentBox;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
 
-    const LOGGER = new PiLogger("IndentComponent");
+    const LOGGER = new FreLogger("IndentComponent");
 
     const indentWidth: number = 8;
     let style: string = `margin-left: ${box?.indent * indentWidth}px;`;

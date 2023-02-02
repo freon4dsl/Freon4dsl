@@ -6,7 +6,7 @@
             <List class="demo-list" dense>
                 {#if !!myUnits}
                     {#each myUnits as unit, index}
-                        {#if unit.piLanguageConcept() === name}
+                        {#if unit.freLanguageConcept() === name}
                             <div
                                     class={Object.keys(anchorClasses).join(index + ' ')}
                                     use:Anchor={{addClass: addClass, removeClass: removeClass}}

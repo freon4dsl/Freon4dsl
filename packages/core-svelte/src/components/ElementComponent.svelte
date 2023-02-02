@@ -2,18 +2,18 @@
 <script lang="ts">
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
-    import { PiLogger, type PiEditor, ElementBox } from "@projectit/core";
+    import { FreLogger, type FreEditor, ElementBox } from "@projectit/core";
     import { componentId } from "./svelte-utils";
 
     export let box: ElementBox;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
 
-    const LOGGER = new PiLogger("ElementComponent");
+    const LOGGER = new FreLogger("ElementComponent");
     let id: string;
     let childBox ;
 
     const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH ElementComponent (" + why +")" + box?.element?.piLanguageConcept());
+        LOGGER.log("REFRESH ElementComponent (" + why +")" + box?.element?.freLanguageConcept());
         if (!!box) {
             id = componentId(box);
             childBox = box.content;

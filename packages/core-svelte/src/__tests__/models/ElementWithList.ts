@@ -1,8 +1,8 @@
-import { matchElementList, observablepart, observablepartlist, PiElementBaseImpl, PiNamedElement, PiUtils } from "@projectit/core";
+import { matchElementList, observablepartlist, FreNodeBaseImpl, FreNamedNode, FreUtils } from "@projectit/core";
 import { SimpleElement } from "./SimpleElement";
 import { makeObservable, observable } from "mobx";
 
-export class ElementWithList extends PiElementBaseImpl implements PiNamedElement  {
+export class ElementWithList extends FreNodeBaseImpl implements FreNamedNode  {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -21,7 +21,7 @@ export class ElementWithList extends PiElementBaseImpl implements PiNamedElement
 
     readonly $typename: string = "ElementWithList"; // holds the metatype in the form of a string
     $id: string; // a unique identifier
-    // parse_location: PiParseLocation; // if relevant, the location of this element within the source from which it is parsed
+    // parse_location: FreParseLocation; // if relevant, the location of this element within the source from which it is parsed
     name: string = ""; // implementation of name
     myList: SimpleElement[]; // the list!!!
 
@@ -30,7 +30,7 @@ export class ElementWithList extends PiElementBaseImpl implements PiNamedElement
         if (!!id) {
             this.$id = id;
         } else {
-            this.$id = PiUtils.ID(); // uuid.v4();
+            this.$id = FreUtils.ID(); // uuid.v4();
         }
         makeObservable(this, { name: observable });
 
@@ -43,42 +43,42 @@ export class ElementWithList extends PiElementBaseImpl implements PiNamedElement
     /**
      * Returns the metatype of this instance in the form of a string.
      */
-    piLanguageConcept(): string {
+    freLanguageConcept(): string {
         return this.$typename;
     }
 
     /**
      * Returns the unique identifier of this instance.
      */
-    piId(): string {
+    freId(): string {
         return this.$id;
     }
 
     /**
      * Returns true if this instance is a model concept.
      */
-    piIsModel(): boolean {
+    freIsModel(): boolean {
         return false;
     }
 
     /**
      * Returns true if this instance is a model unit.
      */
-    piIsUnit(): boolean {
+    freIsUnit(): boolean {
         return false;
     }
 
     /**
      * Returns true if this instance is an expression concept.
      */
-    piIsExpression(): boolean {
+    freIsExpression(): boolean {
         return false;
     }
 
     /**
      * Returns true if this instance is a binary expression concept.
      */
-    piIsBinaryExpression(): boolean {
+    freIsBinaryExpression(): boolean {
         return false;
     }
     /**

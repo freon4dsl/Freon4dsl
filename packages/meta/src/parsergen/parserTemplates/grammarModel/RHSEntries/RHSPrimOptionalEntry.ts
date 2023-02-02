@@ -1,10 +1,10 @@
 import { RHSPropEntry } from "./RHSPropEntry";
-import { PiPrimitiveProperty } from "../../../../languagedef/metalanguage";
+import { FrePrimitiveProperty } from "../../../../languagedef/metalanguage";
 import { getPrimCall, makeIndent } from "../GrammarUtils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPrimOptionalEntry extends RHSPropEntry {
-    constructor(prop: PiPrimitiveProperty) {
+    constructor(prop: FrePrimitiveProperty) {
         super(prop);
         this.isList = false;
     }

@@ -14,8 +14,8 @@
         ENTER,
         ESCAPE,
         isSelectBox,
-        PiEditor,
-        PiLogger,
+        FreEditor,
+        FreLogger,
         SelectOption,
         TextBox
     } from "@projectit/core";
@@ -23,10 +23,10 @@
     import { runInAction } from "mobx";
     import { afterUpdate, onMount } from "svelte";
 
-    const LOGGER = new PiLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
+    const LOGGER = new FreLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
 
     export let box: AbstractChoiceBox;	        // the accompanying ActionBox or SelectBox
-    export let editor: PiEditor;			    // the editor
+    export let editor: FreEditor;			    // the editor
     let textBox: TextBox;                       // the textbox that is to be coupled to the TextComponent part
     $: textBox = box?.textBox;                  // keeps the textBox variable in state with the box!
 
@@ -364,7 +364,7 @@
         <DropdownComponent
                 bind:selectedId={selectedId}
                 bind:options={filteredOptions}
-                on:piItemSelected={itemSelected}/>
+                on:freItemSelected={itemSelected}/>
     {/if}
 </span>
 

@@ -1,12 +1,12 @@
 import * as fs from "fs";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import {
     GenerationStatus,
     FileUtil,
     MetaLogger,
     INTERPRETER_FOLDER, INTERPRETER_GEN_FOLDER, Names
 } from "../../utils";
-import { PiInterpreterDef } from "../metalanguage/PiInterpreterDef";
+import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef";
 import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate";
 import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate";
 
@@ -16,12 +16,12 @@ const LOGGER = new MetaLogger("InterpreterGenerator").mute();
  */
 export class InterpreterGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguage;
+    public language: FreLanguage;
     private interpreterFolder: string;
     private interpreterGenFolder: string;
     fileNames: string[] = [];
 
-    generate(interpreterDef: PiInterpreterDef): void {
+    generate(interpreterDef: FreInterpreterDef): void {
         if (this.language == null) {
             LOGGER.error("Cannot generate interpreter because language is not set.");
             return;

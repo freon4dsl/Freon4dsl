@@ -1,5 +1,5 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen";
-import { GenericModelSerializer, PiElementReference } from "@projectit/core";
+import { FreModelSerializer, FreNodeReference } from "@projectit/core";
 
 // This class creates a model like SimpleModelCreator,
 // but adds more extensive references
@@ -8,9 +8,9 @@ export class ExtendedModelCreator {
     private breadth = 1;
     private nameNumber: number = 0;
     public allNames: string[] = [];
-    private serial: GenericModelSerializer = new GenericModelSerializer();
+    private serial: FreModelSerializer = new FreModelSerializer();
     private numberOfRefs: number = 0;
-    private allReferences: PiElementReference<DSref>[] = [];
+    private allReferences: FreNodeReference<DSref>[] = [];
 
     createName(parent: string, type: string): string {
         this.nameNumber += 1;
@@ -122,7 +122,7 @@ export class ExtendedModelCreator {
     private addReferencesToUnit(dSunit: DSunit) {
         for (const ref of this.allReferences) {
             // copy ref
-            const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(ref.pathname, "DSref");
+            const someReference: FreNodeReference<DSref> = FreNodeReference.create<DSref>(ref.pathname, "DSref");
             dSunit.dsRefs.push(someReference);
         }
         dSunit.dsPrivates.forEach(part => this.addReferences(part));
@@ -132,7 +132,7 @@ export class ExtendedModelCreator {
     private addReferences(part: DSprivate) {
         for (const ref of this.allReferences) {
             // copy ref
-            const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(ref.pathname, "DSref");
+            const someReference: FreNodeReference<DSref> = FreNodeReference.create<DSref>(ref.pathname, "DSref");
             part.conceptRefs.push(someReference);
         }
     }

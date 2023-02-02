@@ -98,7 +98,7 @@ describe("testing Alternative Scopes", () => {
             // for (let name of scoper.getVisibleElements(appliedFeature)) {
             //     names = names.concat(name.name + ", ");
             // }
-            // console.log("In Scope: " + names + " type: " + (type as PiNamedElement).name);
+            // console.log("In Scope: " + names + " type: " + (type as FreNamedElement).name);
             expect(scoper.isInScope(appliedFeature, "name")).toBe(true);
         });
 

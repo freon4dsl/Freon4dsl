@@ -1,0 +1,19 @@
+editor default
+
+UndoUnit {[
+UndoUnit ${name} {
+	 prim ${prim}
+	 numlist ${numlist}
+	 [? part ${part} ]
+	 [? partlist ${partlist} ]
+	 }
+]}
+
+//UndoUnit = 'UndoUnit' identifier '{'
+//	 'prim' stringLiteral
+//	 'numlist'
+//	 numberLiteral*
+//	 ( 'part' UndoPart )?
+//	 'partlist'
+//	 UndoPart*
+//	 '}' ;

@@ -1,52 +1,52 @@
-import { PiLogger } from "@projectit/core";
+import { FreLogger } from "@projectit/core";
 
 // Mute or unmute logs here (in addition to elsewhere).
 export function muteLogs() {
     // from ~/core-svelte:
-    PiLogger.mute("ContextMenu");
-    PiLogger.mute("DropdownComponent");
-    PiLogger.mute("EmptyLineComponent");     // currently, there is no LOGGER for EmptyLineComponent
-    PiLogger.mute("ElementComponent");
-    PiLogger.mute("GridCellComponent");
-    PiLogger.mute("GridComponent");
-    PiLogger.mute("IndentComponent");        // currently, there is no LOGGER for IndentComponent
-    PiLogger.mute("LabelComponent");
-    PiLogger.mute("LayoutComponent");
-    PiLogger.mute("ListComponent");
-    PiLogger.mute("OptionalComponent");
-    PiLogger.mute("ProjectItComponent");
-    PiLogger.mute("RenderComponent");
-    PiLogger.mute("TableCellComponent");
-    PiLogger.mute("TableComponent");
-    PiLogger.mute("TextComponent");
-    PiLogger.mute("TextDropdownComponent");
+    FreLogger.mute("ContextMenu");
+    FreLogger.mute("DropdownComponent");
+    FreLogger.mute("EmptyLineComponent");     // currently, there is no LOGGER for EmptyLineComponent
+    FreLogger.mute("ElementComponent");
+    FreLogger.mute("GridCellComponent");
+    FreLogger.mute("GridComponent");
+    FreLogger.mute("IndentComponent");        // currently, there is no LOGGER for IndentComponent
+    FreLogger.mute("LabelComponent");
+    FreLogger.mute("LayoutComponent");
+    FreLogger.mute("ListComponent");
+    FreLogger.mute("OptionalComponent");
+    FreLogger.mute("FreonComponent");
+    FreLogger.mute("RenderComponent");
+    FreLogger.mute("TableCellComponent");
+    FreLogger.mute("TableComponent");
+    FreLogger.mute("TextComponent");
+    FreLogger.mute("TextDropdownComponent");
 
     // from ~/core:
-    PiLogger.mute("PiEditor");
-    PiLogger.mute("PiUtils");
-    PiLogger.mute("SelectOptionList");
-    PiLogger.mute("BoxFactory");
-    PiLogger.mute("Language");
-    PiLogger.mute("TableUtil");
-    PiLogger.mute("TableBox");
-    PiLogger.mute("TextBox");
-    PiLogger.mute("SelectBox");
-    PiLogger.mute("HorizontalListBox");
-    PiLogger.mute("ActionBox");
-    PiLogger.mute("PiCommand");
-    PiLogger.mute("BehaviorUtils");
-    PiLogger.mute("Box");
-    // PiLogger.mute("ListBox");
-    PiLogger.mute("LayoutBox");
+    FreLogger.mute("FreEditor");
+    FreLogger.mute("FreUtils");
+    FreLogger.mute("SelectOptionList");
+    FreLogger.mute("BoxFactory");
+    FreLogger.mute("FreLanguage");
+    FreLogger.mute("TableUtil");
+    FreLogger.mute("TableBox");
+    FreLogger.mute("TextBox");
+    FreLogger.mute("SelectBox");
+    FreLogger.mute("HorizontalListBox");
+    FreLogger.mute("ActionBox");
+    FreLogger.mute("FreCommand");
+    FreLogger.mute("BehaviorUtils");
+    FreLogger.mute("Box");
+    // FreLogger.mute("ListBox");
+    FreLogger.mute("LayoutBox");
 
     // from ~/webapp:
-    PiLogger.mute("EditorCommunication");
-    PiLogger.mute("ServerCommunication");
-    PiLogger.mute("EditorState");
-    PiLogger.mute("EditorRequestsHandler");
+    FreLogger.mute("EditorCommunication");
+    FreLogger.mute("ServerCommunication");
+    FreLogger.mute("EditorState");
+    FreLogger.mute("EditorRequestsHandler");
 
     // from current project:
-    PiLogger.mute("ExampleScoper");
+    FreLogger.mute("ExampleScoper");
 
-    // PiLogger.muteAllLogs();
+    // FreLogger.muteAllLogs();
 }

@@ -1,7 +1,7 @@
 import { FreTyper } from "./FreTyper";
-import { PiType } from "./PiType";
+import { FreType } from "./FreType";
 
-export class FreTypeOrderedList<T extends PiType> implements Iterable<T> {
+export class FreTypeOrderedList<T extends FreType> implements Iterable<T> {
     protected elements: T[] = [];
 
     toArray(): T[] {
@@ -62,7 +62,7 @@ export class FreTypeOrderedList<T extends PiType> implements Iterable<T> {
 
 }
 
-export class FrOrderedListIterator<T extends PiType> implements Iterator<T> {
+export class FrOrderedListIterator<T extends FreType> implements Iterator<T> {
     private index = 0;
     private list: FreTypeOrderedList<T>;
 

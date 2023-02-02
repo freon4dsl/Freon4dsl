@@ -1,11 +1,11 @@
 <script lang="ts">
     import MockSurroundingComponent from "./MockSurroundingComponent.svelte";
     import OptionalComponent from "../../components/OptionalComponent.svelte";
-    import { OptionalBox, PiEditor } from "@projectit/core";
+    import { OptionalBox, FreEditor } from "@projectit/core";
 
     // Parameters
     export let box: OptionalBox;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
     export let id = "mock-environment";
 
     const onKeyDown = (event: KeyboardEvent) => {

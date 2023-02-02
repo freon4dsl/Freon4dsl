@@ -1,4 +1,4 @@
-import { PiElement, Searcher } from "@projectit/core";
+import { FreNode, FreSearcher } from "@projectit/core";
 import {
     AssociationEnd,
     Attribute,
@@ -13,7 +13,7 @@ import { FileHandler } from "../../utils/FileHandler";
 const writer = OctopusEnvironment.getInstance().writer;
 const reader = OctopusEnvironment.getInstance().reader;
 const handler = new FileHandler();
-const searcher = new Searcher();
+const searcher = new FreSearcher();
 
 function readFile(filepath: string): OctopusModelUnitType {
     try {
@@ -32,7 +32,7 @@ describe("Testing Search String", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         try {
             if (!!myUnit) {
-                const found: PiElement[] = searcher.findString("<-> + Ch", myUnit, writer, "Association");
+                const found: FreNode[] = searcher.findString("<-> + Ch", myUnit, writer, "Association");
                 expect(found.length).toBe(2);
                 // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
             } else {
@@ -46,7 +46,7 @@ describe("Testing Search String", () => {
     test("search '<-> + Ch' in Book", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
-            const found: PiElement[] = searcher.findString("<-> + Ch", myUnit, writer);
+            const found: FreNode[] = searcher.findString("<-> + Ch", myUnit, writer);
             expect (found.length).toBe(3);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -57,7 +57,7 @@ describe("Testing Search String", () => {
     test("search 'Chapt' in Book", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
-            const found: PiElement[] = searcher.findString("Chapt", myUnit, writer);
+            const found: FreNode[] = searcher.findString("Chapt", myUnit, writer);
             expect (found.length).toBe(8);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -69,7 +69,7 @@ describe("Testing Search String", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // search for it
-            const found: PiElement[] = searcher.findString("prevChap", myUnit, writer, "AssociationEnd");
+            const found: FreNode[] = searcher.findString("prevChap", myUnit, writer, "AssociationEnd");
             expect (found.length).toBe(2);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -81,7 +81,7 @@ describe("Testing Search String", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // search for it
-            const found: PiElement[] = searcher.findString('Chapter', myUnit, writer, "AssociationEnd");
+            const found: FreNode[] = searcher.findString('Chapter', myUnit, writer, "AssociationEnd");
             expect (found.length).toBe(6);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -93,7 +93,7 @@ describe("Testing Search String", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // search for it
-            const found: PiElement[] = searcher.findString("same", myUnit, writer, "Attribute");
+            const found: FreNode[] = searcher.findString("same", myUnit, writer, "Attribute");
             expect (found.length).toBe(2);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {

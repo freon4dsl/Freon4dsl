@@ -1,7 +1,7 @@
 import { BehaviorExecutionResult } from "../util";
-import { PiEditor } from "../internal";
+import { FreEditor } from "../internal";
 import { AbstractChoiceBox, SelectOption, Box } from "./internal";
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 
 // TODO can we rename this one? It is confusing to distinguish between the selectedBox in the editor and SelectBox instances.
 export class SelectBox extends AbstractChoiceBox {
@@ -15,18 +15,18 @@ export class SelectBox extends AbstractChoiceBox {
      */
     deleteWhenEmpty: boolean = false;
 
-    private getAllOptions(editor: PiEditor): SelectOption[] {
+    private getAllOptions(editor: FreEditor): SelectOption[] {
         return [];
     };
 
 
     constructor(
-        exp: PiElement,
+        exp: FreNode,
         role: string,
         placeHolder: string,
-        getOptions: (editor: PiEditor) => SelectOption[],
+        getOptions: (editor: FreEditor) => SelectOption[],
         getSelectedOption: () => SelectOption | null,
-        selectOption: (editor: PiEditor, option: SelectOption) => BehaviorExecutionResult,
+        selectOption: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult,
         initializer?: Partial<SelectBox>
     ) {
         super(exp, role, placeHolder, initializer);
@@ -35,7 +35,7 @@ export class SelectBox extends AbstractChoiceBox {
         this.selectOption = selectOption;
     }
 
-    getOptions(editor: PiEditor): SelectOption[] {
+    getOptions(editor: FreEditor): SelectOption[] {
         const matchingOptions: SelectOption[] = this.getAllOptions(editor);
         // matching text does not work correct as you need to know the cursor position.
         // TODO filter in the component where the cursor position is known.

@@ -1,7 +1,7 @@
 import {
-    PiClassifier, PiConcept, PiInstance, PiInterface, PiLanguage, PiPrimitiveProperty, PiProperty, PiModelDescription, PiUnitDescription
+    FreClassifier, FreConcept, FreInstance, FreInterface, FreLanguage, FrePrimitiveProperty, FreProperty, FreModelDescription, FreUnitDescription
 } from "../../languagedef/metalanguage";
-import { PiEditClassifierProjection, PiEditProjectionGroup, PiEditTableProjection } from "../../editordef/metalanguage";
+import { FreEditClassifierProjection, FreEditProjectionGroup, FreEditTableProjection } from "../../editordef/metalanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -9,15 +9,15 @@ import { PiEditClassifierProjection, PiEditProjectionGroup, PiEditTableProjectio
  */
 export class Names {
     // tslint:disable-next-line:variable-name
-    public static PiNamedElement: string = "PiNamedElement";
+    public static FreNamedNode: string = "FreNamedNode";
     // tslint:disable-next-line:variable-name
-    public static PiElement: string = "PiElement";
+    public static FreNode: string = "FreNode";
     // tslint:disable-next-line:variable-name
-    public static PiExpression: string = "PiExpression";
+    public static FreExpressionNode: string = "FreExpressionNode";
     // tslint:disable-next-line:variable-name
-    public static PiBinaryExpression: string = "PiBinaryExpression";
+    public static FreBinaryExpression: string = "FreBinaryExpression";
     // tslint:disable-next-line:variable-name
-    public static PiScoper: string = "FreScoper";
+    public static FreScoper: string = "FreScoper";
     // tslint:disable-next-line:variable-name
     public static FreScoperBase: string = "FreScoperBase";
     // tslint:disable-next-line:variable-name
@@ -25,49 +25,77 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static FrScoperPart: string = "FreScoper";
     // tslint:disable-next-line:variable-name
-    public static FreonTyperPart: string = "FreTyper";
+    public static FreTyperPart: string = "FreTyper"; // todo why not ..Part
     // tslint:disable-next-line:variable-name
-    public static FreonTyper: string = "FreCompositeTyper";
+    public static FreTyper: string = "FreCompositeTyper"; // todo no longer generated, is it still in use?
     // tslint:disable-next-line:variable-name
-    public static PiValidator: string = "PiValidator";
+    public static FreValidator: string = "FreValidator";
     // tslint:disable-next-line:variable-name
-    public static PiStdlib: string = "PiStdlib";
+    public static FreStdlib: string = "FreStdlib";
     // tslint:disable-next-line:variable-name
-    public static PiWriter: string = "PiWriter";
+    public static FreWriter: string = "FreWriter";
     // tslint:disable-next-line:variable-name
-    public static PiReader: string = "PiReader";
+    public static FreReader: string = "FreReader";
     // tslint:disable-next-line:variable-name
-    public static PiError: string = "PiError";
+    public static FreError: string = "FreError";
     // tslint:disable-next-line:variable-name
-    public static FreonInterpreter: string = "FreonInterpreter";
+    public static FreInterpreter: string = "FreInterpreter";
     // tslint:disable-next-line:variable-name
-    public static PiErrorSeverity: string = "PiErrorSeverity";
+    public static FreErrorSeverity: string = "FreErrorSeverity";
     // tslint:disable-next-line:variable-name
-    public static PiActions: string = "PiCombinedActions";
+    public static FreActions: string = "FreCombinedActions";
     // tslint:disable-next-line:variable-name
-    public static PiEditor: string = "PiEditor";
+    public static FreEditor: string = "FreEditor";
     // tslint:disable-next-line:variable-name
-    public static PiProjection: string = "FreProjection";
-    public static PiCompositeProjection: string = "PiCompositeProjection";
+    public static FreProjection: string = "FreProjection";
     // tslint:disable-next-line:variable-name
-    public static PiModelInitialization: string = "PiModelInitialization";
+    public static FreCompositeProjection: string = "FreCompositeProjection";
     // tslint:disable-next-line:variable-name
     public static Box: string = "Box";
     // tslint:disable-next-line:variable-name
-    public static PiElementReference: string = "PiElementReference";
+    public static FreNodeReference: string = "FreNodeReference";
     // tslint:disable-next-line:variable-name
-    public static PiEnvironment: string = "PiEnvironment";
+    public static FreEnvironment: string = "FreEnvironment";
+    // tslint:disable-next-line:variable-name
+    public static FreParseLocation: string = "FreParseLocation";
+    // tslint:disable-next-line:variable-name
+    public static FreUtils: string = "FreUtils";
+    // tslint:disable-next-line:variable-name
+    public static FreModel: string = "FreModel";
+    // tslint:disable-next-line:variable-name
+    public static FreModelUnit: string = "FreModelUnit";
+    // tslint:disable-next-line:variable-name
+    public static FreLanguage: string = "FreLanguage";
+    // tslint:disable-next-line:variable-name
+    static FreType: string = "FreType";
+    // tslint:disable-next-line:variable-name
+    static FreTableDefinition: string = "FreTableDefinition";
+    // tslint:disable-next-line:variable-name
+    static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
+    // tslint:disable-next-line:variable-name
+    static FreCustomAction: string = "FreCustomAction";
+    // tslint:disable-next-line:variable-name
+    static FreTriggerType: string = "FreTriggerType";
+    // tslint:disable-next-line:variable-name
+    static LanguageEnvironment: string = "FreLanguageEnvironment";
+    // tslint:disable-next-line:variable-name
+    static FreLogger: string = "FreLogger";
+    // tslint:disable-next-line:variable-name
+    static FreNamespace: string = "FreNamespace";
+    // tslint:disable-next-line:variable-name
+    static FreProjectionHandler: string = "FreProjectionHandler";
     // tslint:disable-next-line:variable-name
     public static ProjectionalEditor: string = "ProjectionalEditor";
+    // tslint:disable-next-line:variable-name
     public static mainProjectionalEditor: string = "MainProjectionalEditor";
-    public static styles: string = "projectitStyles";
+    public static configuration: string = "FreonConfiguration";
     public static nameForSelf: string = "self";
     public static initializeLanguage: string = "initializeLanguage";
     public static defaultProjectionName: string = "default";
     // reserved role names for expressions, use with care.
     // Should remain identical to the definitions in @projectit/core !!
-    public static PI_BINARY_EXPRESSION_LEFT: string = "PiBinaryExpression-left";
-    public static PI_BINARY_EXPRESSION_RIGHT: string = "PiBinaryExpression-right";
+    public static FRE_BINARY_EXPRESSION_LEFT: string = "FreBinaryExpression-left";
+    public static FRE_BINARY_EXPRESSION_RIGHT: string = "FreBinaryExpression-right";
     public static BEFORE_BINARY_OPERATOR: string = "binary-pre";
     public static AFTER_BINARY_OPERATOR: string = "binary-post";
     public static LEFT_MOST: string = "exp-left";
@@ -82,168 +110,160 @@ export class Names {
     public static listUtil: string = "ListUtil";
     public static brackets: string = "Brackets";
 
-    public static configuration() {
-        return "ProjectitConfiguration";
-    }
-
-    public static environment(language: PiLanguage) {
+    public static environment(language: FreLanguage) {
         return this.startWithUpperCase(language?.name) + "Environment";
     }
 
-    public static context(language: PiLanguage): string {
+    public static context(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Context";
     }
 
-    public static actions(language: PiLanguage): string {
+    public static actions(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Actions";
     }
 
-    public static defaultActions(language: PiLanguage): string {
+    public static defaultActions(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "DefaultActions";
     }
 
-    public static customActions(language: PiLanguage): string {
+    public static customActions(language: FreLanguage): string {
         return "Custom" + this.actions(language);
     }
 
-    public static customScoper(language: PiLanguage): string {
+    public static customScoper(language: FreLanguage): string {
         return "Custom" + this.scoper(language);
     }
 
-    public static customTyper(language: PiLanguage): string {
+    public static customTyper(language: FreLanguage): string {
         return "Custom" + this.typerPart(language);
     }
 
-    public static customValidator(language: PiLanguage): string {
+    public static customValidator(language: FreLanguage): string {
         return "Custom" + this.validator(language);
     }
 
-    public static customStdlib(language: PiLanguage): string {
+    public static customStdlib(language: FreLanguage): string {
         return "Custom" + this.stdlib(language);
     }
 
-    // public static projectionDefault(language: PiLanguage): string {
-    //     return this.startWithUpperCase(language?.name) + "ProjectionDefault";
-    // }
-
-    public static projection(group: PiEditProjectionGroup): string {
+    public static projection(group: FreEditProjectionGroup): string {
         return group.name;
     }
 
-    public static customProjection(language: PiLanguage): string {
+    public static customProjection(language: FreLanguage): string {
         return "Custom" + this.startWithUpperCase(language?.name) + "Projection";
     }
 
-    public static language(language: PiLanguage): string {
+    public static language(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Language";
     }
 
-    public static initialization(language: PiLanguage) {
+    public static initialization(language: FreLanguage) {
         return this.startWithUpperCase(language?.name) + "Initialization";
     }
 
-    public static concept(concept: PiConcept): string {
+    public static concept(concept: FreConcept): string {
         return this.startWithUpperCase(concept?.name);
     }
 
-    public static classifier(concept: PiClassifier): string {
+    public static classifier(concept: FreClassifier): string {
         return this.startWithUpperCase(concept?.name);
     }
 
-    public static primitivePropertyField(property: PiPrimitiveProperty): string {
+    public static primitivePropertyField(property: FrePrimitiveProperty): string {
         // return "$$" + property.name;
         return property.name;
     }
 
-    public static primitivePropertyGetter(property: PiPrimitiveProperty): string {
+    public static primitivePropertyGetter(property: FrePrimitiveProperty): string {
         return property.name;
     }
 
-    public static primitivePropertySetter(property: PiPrimitiveProperty): string {
+    public static primitivePropertySetter(property: FrePrimitiveProperty): string {
         return property.name;
     }
 
-    public static interface(interf: PiInterface): string {
+    public static interface(interf: FreInterface): string {
         return this.startWithUpperCase(interf?.name);
     }
 
-    public static metaType(language: PiLanguage): string {
+    public static metaType(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "MetaType";
     }
 
-    public static allConcepts(language: PiLanguage): string {
+    public static allConcepts(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "EveryConcept";
     }
 
-    public static modelunit(language: PiLanguage): string {
+    public static modelunit(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitType";
     }
 
-    public static namespace(language: PiLanguage): string {
+    public static namespace(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Namespace";
     }
 
-    public static scoper(language: PiLanguage): string {
+    public static scoper(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Scoper";
     }
 
-    public static scoperDef(language: PiLanguage): string {
+    public static scoperDef(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ScoperDef";
     }
 
-    public static typerDef(language: PiLanguage): string {
+    public static typerDef(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "TyperDef";
     }
 
-    public static scoperUtils(language: PiLanguage): string {
+    public static scoperUtils(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ScoperUtils";
     }
 
-    public static namesCollector(language: PiLanguage): string {
+    public static namesCollector(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "NamesCollector";
     }
 
-    public static validator(language: PiLanguage): string {
+    public static validator(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Validator";
     }
 
-    public static checkerInterface(language: PiLanguage): string {
+    public static checkerInterface(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "CheckerInterface";
     }
 
-    public static rulesChecker(language: PiLanguage): string {
+    public static rulesChecker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ValidationRulesChecker";
     }
 
-    public static nonOptionalsChecker(language: PiLanguage): string {
+    public static nonOptionalsChecker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "NonOptionalsChecker";
     }
 
-    public static referenceChecker(language: PiLanguage): string {
+    public static referenceChecker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ReferenceChecker";
     }
 
-    public static typerPart(language: PiLanguage): string {
+    public static typerPart(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "TyperPart";
     }
 
-    public static typer(language: PiLanguage): string {
+    public static typer(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Typer";
     }
 
-    public static stdlib(language: PiLanguage): string {
+    public static stdlib(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Stdlib";
     }
 
-    public static walker(language: PiLanguage): string {
+    public static walker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Walker";
     }
 
-    public static workerInterface(language: PiLanguage): string {
+    public static workerInterface(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Worker";
     }
 
-    public static defaultWorker(language: PiLanguage): string {
+    public static defaultWorker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "DefaultWorker";
     }
 
@@ -254,11 +274,11 @@ export class Names {
         return "";
     }
 
-    public static projectionMethod(proj: PiEditClassifierProjection): string {
+    public static projectionMethod(proj: FreEditClassifierProjection): string {
         return "get" + this.startWithUpperCase(proj.name);
     }
 
-    public static tableProjectionMethod(proj: PiEditClassifierProjection): string {
+    public static tableProjectionMethod(proj: FreEditClassifierProjection): string {
         return "get" + this.startWithUpperCase(proj.name);
     }
 
@@ -266,31 +286,31 @@ export class Names {
         return "getRowFor" + this.startWithUpperCase(projectionName);
     }
 
-    public static tableHeadersMethod(proj: PiEditTableProjection): string {
+    public static tableHeadersMethod(proj: FreEditTableProjection): string {
         return "getHeadersFor" + this.startWithUpperCase(proj.name);
     }
 
-    public static writer(language: PiLanguage): string {
+    public static writer(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
 
-    public static parser(language: PiLanguage): string {
+    public static parser(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Parser";
     }
 
-    public static grammar(language: PiLanguage): string {
+    public static grammar(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "Grammar";
     }
 
-    public static grammarStr(language: PiLanguage): string {
+    public static grammarStr(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "GrammarStr";
     }
 
-    public static syntaxAnalyser(language: PiLanguage): string {
+    public static syntaxAnalyser(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "SyntaxAnalyser";
     }
 
-    public static unitAnalyser(language: PiLanguage, unit: PiUnitDescription | PiModelDescription): string {
+    public static unitAnalyser(language: FreLanguage, unit: FreUnitDescription | FreModelDescription): string {
         if (!!unit) {
             return this.startWithUpperCase(unit?.name) + "SyntaxAnalyserPart";
         } else {
@@ -298,15 +318,15 @@ export class Names {
         }
     }
 
-    public static semanticAnalyser(language: PiLanguage): string {
+    public static semanticAnalyser(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "SemanticAnalyser";
     }
 
-    public static semanticWalker(language: PiLanguage): string {
+    public static semanticWalker(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "SemanticAnalysisWalker";
     }
 
-    public static reader(language: PiLanguage): string {
+    public static reader(language: FreLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }
 
@@ -314,35 +334,35 @@ export class Names {
         return "_getBinaryExpressionBox";
     }
 
-    public static instance(instance: PiInstance): string {
+    public static instance(instance: FreInstance): string {
         return instance.name;
     }
 
-    public static refName(property: PiProperty): string {
+    public static refName(property: FreProperty): string {
         return "$" + property.name;
     }
 
-    public static interpreterClassname(language: PiLanguage): string {
+    public static interpreterClassname(language: FreLanguage): string {
         return Names.startWithUpperCase(language.name) + "Interpreter";
     }
 
-    public static interpreterBaseClassname(language: PiLanguage): string {
+    public static interpreterBaseClassname(language: FreLanguage): string {
         return Names.interpreterClassname(language) + "Base";
     }
 
-    public static interpreterInterfacename(language: PiLanguage): string {
+    public static interpreterInterfacename(language: FreLanguage): string {
         return "I" + Names.interpreterClassname(language);
     }
 
-    public static interpreterInitname(language: PiLanguage): string {
+    public static interpreterInitname(language: FreLanguage): string {
         return Names.interpreterClassname(language) + "Init";
     }
 
-    public static interpreterName(language: PiLanguage): string {
+    public static interpreterName(language: FreLanguage): string {
         return "Main" + Names.interpreterClassname(language);
     }
 
-    public static boxProvider(concept: PiClassifier): string {
+    public static boxProvider(concept: FreClassifier): string {
         return Names.startWithUpperCase(concept.name) + "BoxProvider";
     }
 

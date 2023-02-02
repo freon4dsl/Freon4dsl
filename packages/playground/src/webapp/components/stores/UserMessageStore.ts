@@ -1,8 +1,8 @@
-import { get, writable } from "svelte/store";
+import { writable } from "svelte/store";
 import type { Writable } from 'svelte/store';
 import { SeverityType } from "@projectit/core";
 
-// info about ProjectIt
+// info about Freon
 export const versionNumber = "0.5.0";
 
 export let severity: Writable<number> = writable<number>(SeverityType.error);
@@ -17,6 +17,6 @@ export function setUserMessage(message: string, sever?: SeverityType) {
 	} else {
 		severity.set(SeverityType.error);
 	}
-	// console.log("ProjectIt User Message: " + message + ", " + get(severity));
+	// console.log("Freon User Message: " + message + ", " + get(severity));
 	userMessageOpen.set(true);
 }

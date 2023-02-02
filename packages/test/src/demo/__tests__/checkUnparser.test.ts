@@ -1,4 +1,4 @@
-import { PiElementReference } from "@projectit/core";
+import { FreNodeReference } from "@projectit/core";
 import {
     DemoModel,
     DemoMultiplyExpression,
@@ -71,7 +71,7 @@ describe("Testing Unparser", () => {
             const variable = new DemoVariable();
             variable.name = "Person";
             // variable.declaredType = DemoAttributeType.String;
-            variableExpression.variable = PiElementReference.create<DemoVariable>(variable.name, "DemoVariable");
+            variableExpression.variable = FreNodeReference.create<DemoVariable>(variable.name, "DemoVariable");
 
             const divideExpression = MakePlusExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
@@ -85,9 +85,9 @@ describe("Testing Unparser", () => {
             const determine = DemoFunction.create({ name: "determine" });
             const AAP = DemoVariable.create({ name: "AAP" });
             determine.parameters.push(AAP);
-            AAP.declaredType = PiElementReference.create<DemoEntity>(DemoEntity.create({name: "TEST1"}), "DemoEntity");
+            AAP.declaredType = FreNodeReference.create<DemoEntity>(DemoEntity.create({name: "TEST1"}), "DemoEntity");
             determine.expression = MakePlusExp("Hello Demo", "Goodbye");
-            determine.declaredType = PiElementReference.create<DemoEntity>(DemoEntity.create({name: "TEST2"}), "DemoEntity");
+            determine.declaredType = FreNodeReference.create<DemoEntity>(DemoEntity.create({name: "TEST2"}), "DemoEntity");
             // determine(AAP: TEST1) : TEST2 = "Hello Demo" + "Goodbye" has been created
             // unparse using a short notation
             result = unparser.writeToString(determine, 0, true);
@@ -99,17 +99,17 @@ describe("Testing Unparser", () => {
 
         test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 }", () => {
             let result: string = "";
-            let myType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+            let myType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
             const personEnt = DemoEntity.create({ name: "Person" });
             const age = DemoAttribute.create({ name: "age", declaredType: myType });
 
-            myType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+            myType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
             const personName = DemoAttribute.create({ name: "name", declaredType: myType });
             personEnt.attributes.push(age);
             personEnt.attributes.push(personName);
-            myType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+            myType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
             const first = DemoFunction.create({ name: "first", declaredType: myType });
-            const myEntType = PiElementReference.create<DemoEntity>("someOtherEntity", "DemoEntity");
+            const myEntType = FreNodeReference.create<DemoEntity>("someOtherEntity", "DemoEntity");
             const resultvar = DemoVariable.create({ name: "Resultvar", declaredType: myEntType });
             first.parameters.push(resultvar);
             first.expression = MakePlusExp("5", "24");

@@ -1,28 +1,28 @@
-import { PiElement } from "../ast";
-import { SearchWorker } from "./SearchWorker";
+import { FreNode } from "../ast";
+import { FreSearchWorker } from "./FreSearchWorker";
 
-export class StructureSearchWorker implements SearchWorker {
-    private readonly toFind: Partial<PiElement>;
+export class StructureSearchWorker implements FreSearchWorker {
+    private readonly toFind: Partial<FreNode>;
     private readonly metatype: string;
-    private __result: PiElement[] = [];
+    private __result: FreNode[] = [];
 
-    constructor(toFind: Partial<PiElement>, metatype: string) {
+    constructor(toFind: Partial<FreNode>, metatype: string) {
         this.toFind = toFind;
         this.metatype = metatype;
     }
 
-    get result(): PiElement[] {
+    get result(): FreNode[] {
         return this.__result;
     }
 
-    execAfter(modelelement: PiElement): boolean {
+    execAfter(modelelement: FreNode): boolean {
         // unused
         return false;
     }
 
-    execBefore(modelelement: PiElement): boolean {
+    execBefore(modelelement: FreNode): boolean {
         if (!!this.metatype) {
-            if (this.metatype === modelelement.piLanguageConcept() || this.metatype === "PiElementReference") {
+            if (this.metatype === modelelement.freLanguageConcept() || this.metatype === "FreNodeReference") {
                 if (modelelement.match(this.toFind)) {
                     this.__result.push(modelelement);
                 }

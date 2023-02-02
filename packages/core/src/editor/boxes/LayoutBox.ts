@@ -1,13 +1,13 @@
-import { PiUtils } from "../../util";
+import { FreUtils } from "../../util";
 import { Box} from "./Box";
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 import { SelectOption } from "./SelectOption";
-import { Concept, Language } from "../../language";
-import { PiCreatePartAction } from "../actions";
-import { PiLogger } from "../../logging";
+import { Concept, FreLanguage } from "../../language";
+import { FreCreatePartAction } from "../actions";
+import { FreLogger } from "../../logging";
 import { MenuItem } from "../util";
 
-const LOGGER = new PiLogger("LayoutBox");
+const LOGGER = new FreLogger("LayoutBox");
 export enum ListDirection {
     HORIZONTAL = "Horizontal",
     VERTICAL = "Vertical"
@@ -18,9 +18,9 @@ export abstract class LayoutBox extends Box {
     protected direction: ListDirection = ListDirection.HORIZONTAL;
     protected _children: Box[] = [];
 
-    protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<LayoutBox>) {
+    protected constructor(element: FreNode, role: string, children?: Box[], initializer?: Partial<LayoutBox>) {
         super(element, role);
-        PiUtils.initializeObject(this, initializer);
+        FreUtils.initializeObject(this, initializer);
         if (!!children) {
             children.forEach(b => this.addChildNoDirty(b));
         }
@@ -134,7 +134,7 @@ export abstract class LayoutBox extends Box {
 export class HorizontalLayoutBox extends LayoutBox {
     kind = "HorizontalLayoutBox";
 
-    constructor(element: PiElement, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>) {
+    constructor(element: FreNode, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>) {
         super(element, role, children, initializer);
         this.direction = ListDirection.HORIZONTAL;
     }
@@ -143,7 +143,7 @@ export class HorizontalLayoutBox extends LayoutBox {
 export class VerticalLayoutBox extends LayoutBox {
     kind = "VerticalLayoutBox";
 
-    constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalLayoutBox>) {
+    constructor(element: FreNode, role: string, children?: Box[], initializer?: Partial<HorizontalLayoutBox>) {
         super(element, role, children, initializer);
         this.direction = ListDirection.VERTICAL;
     }

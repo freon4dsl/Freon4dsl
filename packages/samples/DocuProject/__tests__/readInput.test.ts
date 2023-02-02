@@ -1,11 +1,11 @@
 import { FileHandler } from "../../utils/FileHandler";
 import { DocuProjectEnvironment } from "../config/gen/DocuProjectEnvironment";
 import { BaseProduct, InsuranceModel, InsurancePart, Part, Product } from "../language/gen";
-import { Language, PiElement, PiElementReference } from "@projectit/core";
+import { FreNodeReference } from "@projectit/core";
 
-const writer = DocuProjectEnvironment.getInstance().writer;
+// const writer = DocuProjectEnvironment.getInstance().writer;
 const reader = DocuProjectEnvironment.getInstance().reader;
-const scoper = DocuProjectEnvironment.getInstance().scoper;
+// const scoper = DocuProjectEnvironment.getInstance().scoper;
 const validator = DocuProjectEnvironment.getInstance().validator;
 const handler = new FileHandler();
 
@@ -93,13 +93,12 @@ describe("Testing DocuProject", () => {
         const usingRef: Product = model.getUnits().find(u => u.name === 'HealthAll') as Product;
         expect(usingRef).not.toBeNull();
         // expect(usingRef).not.toBeUndefined();
-        const parts: PiElementReference<InsurancePart>[] = usingRef?.product.parts;
+        const parts: FreNodeReference<InsurancePart>[] = usingRef?.product.parts;
         // console.log( parts.map(ref => ref.pathnameToString('&&')).join('\n'))
         // const names: string[] = scoper.getVisibleNames(usingRef?.product);
         // expect (names).toContain('Health');
         // expect (names).toContain('health1');
         // expect (names).not.toContain('hospitalization');
-        //
 
         const errors = validator.validate(model);
         console.log("Errors found (" + errors.length + ")\n" + errors.map(e => e.message + ' in ['

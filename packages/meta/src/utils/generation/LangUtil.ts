@@ -1,23 +1,23 @@
-import { PiClassifier, PiConcept, PiElementReference, PiInterface, PiProperty } from "../../languagedef/metalanguage";
+import { FreClassifier, FreConcept, MetaElementReference, FreInterface, FreProperty } from "../../languagedef/metalanguage";
 import { GenerationUtil } from "./GenerationUtil";
 
 /**
  * This class contains a series of helper functions over the language.
- * Note that a number of similar functions can be found in PiLanguage.ts.
+ * Note that a number of similar functions can be found in FreLanguage.ts.
  */
 export class LangUtil {
     /**
      * Returns the set of all concepts that are the base of 'self' recursively.
      * @param self
      */
-    public static superConcepts(self: PiClassifier): PiConcept[] {
-        const result: PiConcept[] = [];
+    public static superConcepts(self: FreClassifier): FreConcept[] {
+        const result: FreConcept[] = [];
         LangUtil.superConceptsRecursive(self, result);
         return result;
     }
 
-    private static superConceptsRecursive(self: PiClassifier, result: PiConcept[]): void {
-        if (self instanceof PiConcept) {
+    private static superConceptsRecursive(self: FreClassifier, result: FreConcept[]): void {
+        if (self instanceof FreConcept) {
             if (!!self.base) {
                 result.push(self.base.referred);
                 LangUtil.superConceptsRecursive(self.base.referred, result);
@@ -30,14 +30,14 @@ export class LangUtil {
      * Returns all interfaces that 'self' inherits from, recursive
      * @param self
      */
-    public static superInterfaces(self: PiClassifier): PiInterface[] {
-        const result: PiInterface[] = [];
+    public static superInterfaces(self: FreClassifier): FreInterface[] {
+        const result: FreInterface[] = [];
         LangUtil.superInterfacesRecursive(self, result);
         return result;
     }
 
-    private static superInterfacesRecursive(self: PiClassifier, result: PiInterface[]): void {
-        if (self instanceof PiConcept) {
+    private static superInterfacesRecursive(self: FreClassifier, result: FreInterface[]): void {
+        if (self instanceof FreConcept) {
             if (!!self.base) {
                 LangUtil.superInterfacesRecursive(self.base.referred, result);
             }
@@ -46,7 +46,7 @@ export class LangUtil {
                 LangUtil.superInterfacesRecursive(i.referred, result);
             }
         }
-        if (self instanceof PiInterface) {
+        if (self instanceof FreInterface) {
             for (const i of self.base) {
                 result.push(i.referred);
                 LangUtil.superInterfacesRecursive(i.referred, result);
@@ -59,14 +59,14 @@ export class LangUtil {
      * implements of inherits from, recursive.
      * @param self
      */
-    public static superClassifiers(self: PiClassifier): PiClassifier[] {
-        const result: PiClassifier[] = [];
+    public static superClassifiers(self: FreClassifier): FreClassifier[] {
+        const result: FreClassifier[] = [];
         LangUtil.superClassifiersRecursive(self, result);
         return result;
     }
 
-    private static superClassifiersRecursive(self: PiClassifier, result: PiClassifier[]) {
-        if (self instanceof PiConcept) {
+    private static superClassifiersRecursive(self: FreClassifier, result: FreClassifier[]) {
+        if (self instanceof FreConcept) {
             if (!!self.base) {
                 result.push(self.base.referred);
                 LangUtil.superClassifiersRecursive(self.base.referred, result);
@@ -76,7 +76,7 @@ export class LangUtil {
                 LangUtil.superClassifiersRecursive(i.referred, result);
             }
         }
-        if (self instanceof PiInterface) {
+        if (self instanceof FreInterface) {
             for (const i of self.base) {
                 result.push(i.referred);
                 LangUtil.superClassifiersRecursive(i.referred, result);
@@ -88,8 +88,8 @@ export class LangUtil {
      * Returns all concepts that 'self' is a super interface of, recursive. Param 'self' is NOT included in the result.
      * @param self
      */
-    public static subInterfaces(self: PiInterface): PiInterface[] {
-        const result: PiInterface[] = [];
+    public static subInterfaces(self: FreInterface): FreInterface[] {
+        const result: FreInterface[] = [];
         for (const cls of self.language.interfaces) {
             if (LangUtil.superInterfaces(cls).includes(self)) {
                 result.push(cls);
@@ -103,8 +103,8 @@ export class LangUtil {
      * Param 'self' is NOT included in the result.
      * @param self
      */
-    public static subConcepts(self: PiClassifier): PiConcept[] {
-        const result: PiConcept[] = [];
+    public static subConcepts(self: FreClassifier): FreConcept[] {
+        const result: FreConcept[] = [];
         for (const cls of self.language.concepts) {
             if (LangUtil.superClassifiers(cls).includes(self)) {
                 result.push(cls);
@@ -118,34 +118,34 @@ export class LangUtil {
      * Param 'self' IS included in the result.
      * @param self
      */
-    public static subConceptsIncludingSelf(self: PiClassifier): PiConcept[] {
+    public static subConceptsIncludingSelf(self: FreClassifier): FreConcept[] {
         const result = LangUtil.subConcepts(self);
-        if (self instanceof PiConcept) {
+        if (self instanceof FreConcept) {
             result.push(self);
         }
         return result;
     }
 
     /**
-     * Takes a PiInterface and returns a list of concepts that directly implement it,
+     * Takes a FreInterface and returns a list of concepts that directly implement it,
      * without taking into account subinterfaces.
      *
-     * @param piInterface
+     * @param freInterface
      */
-    public static findImplementorsDirect(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
-        const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
+    public static findImplementorsDirect(freInterface: FreInterface | MetaElementReference<FreInterface>): FreConcept[] {
+        const myInterface = (freInterface instanceof MetaElementReference ? freInterface.referred : freInterface);
         return myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
     }
 
     /**
-     * Takes a PiInterface and returns a list of concepts that implement it,
+     * Takes a FreInterface and returns a list of concepts that implement it,
      * including the concepts that implement subinterfaces.
      *
-     * @param piInterface
+     * @param freInterface
      */
-    public static findImplementorsRecursive(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
-        const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
-        let implementors : PiConcept[] = this.findImplementorsDirect(myInterface);
+    public static findImplementorsRecursive(freInterface: FreInterface | MetaElementReference<FreInterface>): FreConcept[] {
+        const myInterface = (freInterface instanceof MetaElementReference ? freInterface.referred : freInterface);
+        let implementors : FreConcept[] = this.findImplementorsDirect(myInterface);
 
         // add implementors of sub-interfaces
         for (const sub of myInterface.allSubInterfacesRecursive()) {
@@ -166,14 +166,14 @@ export class LangUtil {
      *
      * @param classifier
      */
-    public static findAllImplementorsAndSubs(classifier: PiElementReference<PiClassifier> | PiClassifier): PiClassifier[] {
-        let result: PiClassifier[] = [];
-        const myClassifier = (classifier instanceof PiElementReference ? classifier.referred : classifier);
+    public static findAllImplementorsAndSubs(classifier: MetaElementReference<FreClassifier> | FreClassifier): FreClassifier[] {
+        let result: FreClassifier[] = [];
+        const myClassifier = (classifier instanceof MetaElementReference ? classifier.referred : classifier);
         if (!!myClassifier) {
             result.push(myClassifier);
-            if (myClassifier instanceof PiConcept) { // find all subclasses and mark them as namespace
+            if (myClassifier instanceof FreConcept) { // find all subclasses and mark them as namespace
                 result = result.concat(myClassifier.allSubConceptsRecursive());
-            } else if (myClassifier instanceof PiInterface) { // find all implementors and their subclasses
+            } else if (myClassifier instanceof FreInterface) { // find all implementors and their subclasses
                 // we do not use findImplementorsRecursive(), because we not only add the implementing concepts,
                 // but the subinterfaces as well
                 for (const implementor of this.findImplementorsDirect(myClassifier)) {
@@ -200,21 +200,21 @@ export class LangUtil {
     }
 
     // TODO check whether this is a better implementation
-    // private findAllImplementorsAndSubs(myClassifier: PiClassifier): PiClassifier[] {
-    //     const result: PiClassifier[] = [];
-    //     if (myClassifier instanceof PiConcept) {
-    //         ListUtil.addListIfNotPresent<PiClassifier>(result, LangUtil.subConcepts(myClassifier));
-    //     } else if (myClassifier instanceof PiInterface) {
+    // private findAllImplementorsAndSubs(myClassifier: FreClassifier): FreClassifier[] {
+    //     const result: FreClassifier[] = [];
+    //     if (myClassifier instanceof FreConcept) {
+    //         ListUtil.addListIfNotPresent<FreClassifier>(result, LangUtil.subConcepts(myClassifier));
+    //     } else if (myClassifier instanceof FreInterface) {
     //         const implementors = LangUtil.findImplementorsRecursive(myClassifier);
-    //         ListUtil.addListIfNotPresent<PiClassifier>(result, implementors);
+    //         ListUtil.addListIfNotPresent<FreClassifier>(result, implementors);
     //         for (const implementor of implementors) {
-    //             ListUtil.addListIfNotPresent<PiClassifier>(result, this.findAllSubs(implementor));
+    //             ListUtil.addListIfNotPresent<FreClassifier>(result, this.findAllSubs(implementor));
     //         }
     //
     //         const subInterfaces = LangUtil.subInterfaces(myClassifier);
-    //         ListUtil.addListIfNotPresent<PiClassifier>(result, subInterfaces);
+    //         ListUtil.addListIfNotPresent<FreClassifier>(result, subInterfaces);
     //         for (const subInterface of subInterfaces) {
-    //             ListUtil.addListIfNotPresent<PiClassifier>(result, this.findAllSubs(subInterface));
+    //             ListUtil.addListIfNotPresent<FreClassifier>(result, this.findAllSubs(subInterface));
     //         }
     //     }
     //     return result;
@@ -225,14 +225,14 @@ export class LangUtil {
      * @param firstProp
      * @param secondProp
      */
-    public static compareTypes(firstProp: PiProperty, secondProp: PiProperty): boolean {
+    public static compareTypes(firstProp: FreProperty, secondProp: FreProperty): boolean {
         if (firstProp.isList !== secondProp.isList) {
             // return false when a list is compared with a non-list
             return false;
         }
 
-        let type1: PiClassifier = firstProp.type;
-        let type2: PiClassifier = secondProp.type;
+        let type1: FreClassifier = firstProp.type;
+        let type2: FreClassifier = secondProp.type;
         if (!type1 || !type2 ) {
             console.log("INTERNAL ERROR: property types are not set: " + firstProp.name + ", " + secondProp.name);
             return false;
@@ -242,22 +242,22 @@ export class LangUtil {
         return LangUtil.conforms(type1, type2);
     }
 
-    public static conforms(type1: PiClassifier, type2: PiClassifier) {
+    public static conforms(type1: FreClassifier, type2: FreClassifier) {
         if (type1 === type2) {
             // return true when types are equal
             // console.log("\t ==> types are equal")
             return true;
         }
-        if (type1 instanceof PiConcept) {
-            if (type2 instanceof PiConcept && type2.allSubConceptsRecursive().includes(type1)) {
+        if (type1 instanceof FreConcept) {
+            if (type2 instanceof FreConcept && type2.allSubConceptsRecursive().includes(type1)) {
                 // return true when type1 is subconcept of type2
                 // console.log("\t ==> " + type1.name + " is a sub concept of " + type2.name)
                 return true;
-            } else if (type2 instanceof PiInterface) {
+            } else if (type2 instanceof FreInterface) {
                 return this.doesImplement(type1, type2);
             }
-        } else if (type1 instanceof PiInterface) {
-            if (type2 instanceof PiInterface && type2.allSubInterfacesRecursive().includes(type1)) {
+        } else if (type1 instanceof FreInterface) {
+            if (type2 instanceof FreInterface && type2.allSubInterfacesRecursive().includes(type1)) {
                 // return true when type1 is subinterface of type2
                 // console.log("\t ==> " + type1.name + " is a sub interface of " + type2.name)
                 return true;
@@ -266,7 +266,7 @@ export class LangUtil {
         return false;
     }
 
-    private static doesImplement(concept: PiConcept, interf: PiInterface): boolean {
+    private static doesImplement(concept: FreConcept, interf: FreInterface): boolean {
         let result: boolean = false;
         if (GenerationUtil.refListIncludes(concept.interfaces, interf)) {
             // return true when type1 implements type2

@@ -1,19 +1,19 @@
-import { PiClassifier, PiPrimitiveType } from "../../../languagedef/metalanguage";
+import { FreClassifier, FrePrimitiveType } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
 import { ChoiceRuleMaker } from "../ChoiceRuleMaker";
 
-export function getPrimCall(propType: PiClassifier): string {
+export function getPrimCall(propType: FreClassifier): string {
     switch (propType) {
-        case PiPrimitiveType.string: {
+        case FrePrimitiveType.string: {
             return "stringLiteral";
         }
-        case PiPrimitiveType.identifier: {
+        case FrePrimitiveType.identifier: {
             return "identifier";
         }
-        case PiPrimitiveType.number: {
+        case FrePrimitiveType.number: {
             return "numberLiteral";
         }
-        case PiPrimitiveType.boolean: {
+        case FrePrimitiveType.boolean: {
             return "booleanLiteral";
         }
         default:
@@ -21,7 +21,7 @@ export function getPrimCall(propType: PiClassifier): string {
     }
 }
 
-export function getTypeCall(propType: PiClassifier, projectionName?: string): string {
+export function getTypeCall(propType: FreClassifier, projectionName?: string): string {
     const result = ChoiceRuleMaker.superNames.get(propType);
     if (!!result && result.length > 0) {
         return result;
@@ -33,7 +33,7 @@ export function getTypeCall(propType: PiClassifier, projectionName?: string): st
     }
 }
 
-export const refRuleName: string = "__pi_reference";
+export const refRuleName: string = "__fre_reference";
 
 export function makeIndent(depth: number) {
     let indent: string = "\n";

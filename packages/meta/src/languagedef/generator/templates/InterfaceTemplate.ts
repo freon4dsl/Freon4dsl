@@ -1,13 +1,13 @@
 import {
-    PiConceptProperty,
-    PiPrimitiveProperty,
-    PiInterface
+    FreConceptProperty,
+    FrePrimitiveProperty,
+    FreInterface
 } from "../../metalanguage";
 import { Names, PROJECTITCORE, GenerationUtil } from "../../../utils";
 
 export class InterfaceTemplate {
 
-    generateInterface(intf: PiInterface, relativePath: string): string {
+    generateInterface(intf: FreInterface, relativePath: string): string {
         // const language = intf.language;
         // const hasSuper = intf.base.length > 0;
         const extendsInterfaces: string[] = Array.from (
@@ -29,14 +29,14 @@ export class InterfaceTemplate {
 
         // Template starts here
         return `
-            import { ${Names.PiElement} ${hasReferences ? `, ${Names.PiElementReference}` : ""} } from "${PROJECTITCORE}";
+            import { ${Names.FreNode} ${hasReferences ? `, ${Names.FreNodeReference}` : ""} } from "${PROJECTITCORE}";
             import { ${imports.join(", ")} } from "./internal";
 
             /**
              * Interface ${myName} is the implementation of the interface with the same name in the language definition file.
              */              
             export ${abstract} interface ${myName} 
-                extends ${extendsInterfaces.length > 0 ? `${extendsInterfaces.map(int => `${int}`).join(", ")}` : `${Names.PiElement}`} 
+                extends ${extendsInterfaces.length > 0 ? `${extendsInterfaces.map(int => `${int}`).join(", ")}` : `${Names.FreNode}`} 
             {               
                 ${intf.primProperties.map(p => this.generatePrimitiveProperty(p)).join("\n")}
                 ${intf.parts().map(p => this.generatePartProperty(p)).join("\n")}
@@ -46,20 +46,20 @@ export class InterfaceTemplate {
             }`;
     }
 
-    generatePrimitiveProperty(property: PiPrimitiveProperty): string {
+    generatePrimitiveProperty(property: FrePrimitiveProperty): string {
         const comment = "// implementation of " + property.name ;
         return `${property.name}: ${GenerationUtil.getBaseTypeAsString(property)} ${property.isList ? "[]" : ""}; ${comment}`;
     }
 
-    generatePartProperty(property: PiConceptProperty): string {
+    generatePartProperty(property: FreConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
         return `${property.name} : ${Names.classifier(property.type)}${arrayType}; ${comment}`;
     }
 
-    generateReferenceProperty(property: PiConceptProperty): string {
+    generateReferenceProperty(property: FreConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : PiElementReference<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
+        return `${property.name} : ${Names.FreNodeReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
     }
 }

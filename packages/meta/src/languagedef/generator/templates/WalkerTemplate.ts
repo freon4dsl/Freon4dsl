@@ -1,12 +1,12 @@
-import { PiClassifier, PiLanguage } from "../../metalanguage";
+import { FreClassifier, FreLanguage } from "../../metalanguage";
 import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils";
 
 export class WalkerTemplate {
 
-    generateWalker(language: PiLanguage, relativePath: string): string {
+    generateWalker(language: FreLanguage, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: String = Names.walker(language);
-        const classifiersToDo: PiClassifier[] = [];
+        const classifiersToDo: FreClassifier[] = [];
         // take care of the order, it is important
         classifiersToDo.push(...GenerationUtil.sortConceptsOrRefs(language.concepts));
         classifiersToDo.push(...language.units);
@@ -18,9 +18,9 @@ export class WalkerTemplate {
         import { ${classifiersToDo.map(concept => `
                 ${Names.classifier(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
-        import { PiLogger } from "@projectit/core";
+        import { ${Names.FreLogger} } from "@projectit/core";
                 
-        const LOGGER = new PiLogger("${generatedClassName}");
+        const LOGGER = new ${Names.FreLogger}("${generatedClassName}");
 
         /**
          * Class ${generatedClassName} implements the extended visitor pattern of instances of language ${language.name}.

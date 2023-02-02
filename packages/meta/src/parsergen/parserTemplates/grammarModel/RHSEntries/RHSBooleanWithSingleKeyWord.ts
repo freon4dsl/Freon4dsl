@@ -1,12 +1,12 @@
 import { RHSPropEntry } from "./RHSPropEntry";
-import { PiPrimitiveProperty } from "../../../../languagedef/metalanguage";
+import { FrePrimitiveProperty } from "../../../../languagedef/metalanguage";
 import { makeIndent } from "../GrammarUtils";
 import { ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBooleanWithSingleKeyWord extends RHSPropEntry {
     private keyword: string = "";
 
-    constructor(prop: PiPrimitiveProperty, keyword: string) {
+    constructor(prop: FrePrimitiveProperty, keyword: string) {
         super(prop);
         this.keyword = keyword;
         this.isList = false;

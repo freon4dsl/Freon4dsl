@@ -1,21 +1,21 @@
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker, MetaLogger } from "../../utils";
-import { PiEditParser } from "../../editordef/parser/PiEditParser";
-import { PiEditUnit } from "../../editordef/metalanguage";
+import { FreEditParser } from "../../editordef/parser/FreEditParser";
+import { FreEditUnit } from "../../editordef/metalanguage";
 
 describe("Checking editor definition ", () => {
     const testdir = "src/__tests__/editor-tests/faultyDefFiles/checking-errors/";
-    let parser: PiEditParser;
-    let language: PiLanguage;
-    let checker: Checker<PiEditUnit>;
+    let parser: FreEditParser;
+    let language: FreLanguage;
+    let checker: Checker<FreEditUnit>;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();
 
     beforeEach(() => {
         try {
             language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
-            parser = new PiEditParser(language);
+            parser = new FreEditParser(language);
             checker = parser.checker;
         } catch (e) {
             console.log("Language could not be read");

@@ -1,4 +1,4 @@
-import { PiElementReference } from "@projectit/core";
+import { FreNodeReference } from "@projectit/core";
 import { DSmodel, DSref } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";
@@ -66,13 +66,13 @@ describe("Testing Default Scoper", () => {
         const model: DSmodel = creator.createModel(2, 2);
 
         // create extra references
-        const ref1 = PiElementReference.create<DSref>(["unit1_OF_model", "private9_OF_unit1_OF_model"], "DSprivate");
-        const ref2 = PiElementReference.create<DSref>(["unit1_OF_model", "public2_OF_unit1_OF_model"], "DSpublic");
-        const ref3 = PiElementReference.create<DSref>([
+        const ref1 = FreNodeReference.create<DSref>(["unit1_OF_model", "private9_OF_unit1_OF_model"], "DSprivate");
+        const ref2 = FreNodeReference.create<DSref>(["unit1_OF_model", "public2_OF_unit1_OF_model"], "DSpublic");
+        const ref3 = FreNodeReference.create<DSref>([
             "unit1_OF_model",
             "public2_OF_unit1_OF_model",
             "private6_OF_public2_OF_unit1_OF_model" ], "DSpublic");
-        const ref4 = PiElementReference.create<DSref>([
+        const ref4 = FreNodeReference.create<DSref>([
             "unit1_OF_model",
             "public2_OF_unit1_OF_model",
             "private6_OF_public2_OF_unit1_OF_model",

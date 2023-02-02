@@ -1,6 +1,6 @@
 import { Box, BoxFactory, ElementBox } from "../boxes";
 import { isNullOrUndefined } from "../../util";
-import { PiElement } from "../../ast";
+import { FreNode } from "../../ast";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjection } from "./FreProjection";
 import { action, makeObservable, observable } from "mobx";
@@ -15,7 +15,7 @@ import { FreHeaderProvider } from "./FreHeaderProvider";
  *
  * Based on these registrations it is determined which of these should create the box,
  * or tableDefinition for a certain element. Note that, because box providers have a
- * one-to-one relationship with nodes (of type PiElement), it is always the box provider
+ * one-to-one relationship with nodes (of type FreNode), it is always the box provider
  * that ultimately returns the requested box/tableDefinition.
  */
 export class FreProjectionHandler {
@@ -24,11 +24,11 @@ export class FreProjectionHandler {
     public initConceptToPropertyProjection(map: Map<string, Map<string, Map<string, string>>>) {
         this.conceptToPropertyProjection = map;
     }
-    // 'elementToProvider' stores the boxprovider that is servicing a certain node (of type PiElement).
+    // 'elementToProvider' stores the boxprovider that is servicing a certain node (of type FreNode).
     private elementToProvider: Map<string, FreBoxProvider> =
         new Map<string, FreBoxProvider>();
     // 'conceptNameToProviderConstructor' holds a list of box provider constructors,
-    // such that the right box provider can be instantiated for a certain (type of) PiElement node.
+    // such that the right box provider can be instantiated for a certain (type of) FreNode node.
     private conceptNameToProviderConstructor: Map<string, (h: FreProjectionHandler) => FreBoxProvider> =
         new Map<string, (h: FreProjectionHandler) => FreBoxProvider>([]);
     // 'headerProviders' holds all boxproviders that are responsible for the headers in a table.
@@ -65,7 +65,7 @@ export class FreProjectionHandler {
      * Internally, one of the box providers in 'elementToProvider' is used.
      * @param element
      */
-    getBox(element: PiElement): ElementBox {
+    getBox(element: FreNode): ElementBox {
         try {
             if (isNullOrUndefined(element)) {
                 throw Error('FreProjectionHandler.getBox: element is null/undefined');
@@ -98,17 +98,17 @@ export class FreProjectionHandler {
      * 'this.elementToProvider'.
      * @param element
      */
-    getBoxProvider(element: PiElement): FreBoxProvider {
+    getBoxProvider(element: FreNode): FreBoxProvider {
         if (isNullOrUndefined(element)) {
             console.error("FreProjectionHandler.getBoxProvider: element is null/undefined");
             return null;
         }
 
         // return if present, else create a new provider based on the language concept
-        let boxProvider = this.elementToProvider.get(element.piId());
+        let boxProvider = this.elementToProvider.get(element.freId());
         if (isNullOrUndefined(boxProvider)) {
-            boxProvider = this.conceptNameToProviderConstructor.get(element.piLanguageConcept())(this);
-            this.elementToProvider.set(element.piId(), boxProvider);
+            boxProvider = this.conceptNameToProviderConstructor.get(element.freLanguageConcept())(this);
+            this.elementToProvider.set(element.freId(), boxProvider);
             boxProvider.element = element;
         }
         return boxProvider;
@@ -196,13 +196,13 @@ export class FreProjectionHandler {
      * @param element
      * @param projectionName
      */
-    executeCustomProjection(element: PiElement, projectionName: string): Box {
+    executeCustomProjection(element: FreNode, projectionName: string): Box {
         let BOX: Box = null;
-        let customFuction: (node: PiElement) => Box = null;
+        let customFuction: (node: FreNode) => Box = null;
         const customToUse = this.customProjections.find(cp => cp.name === projectionName);
         if (!!customToUse) {
             // bind(customToUse) binds the projection 'customToUse' to the 'this' variable, for use within the custom function
-            customFuction = customToUse.nodeTypeToBoxMethod.get(element.piLanguageConcept())?.bind(customToUse);
+            customFuction = customToUse.nodeTypeToBoxMethod.get(element.freLanguageConcept())?.bind(customToUse);
         }
 
         if (!!customFuction) {
@@ -217,17 +217,17 @@ export class FreProjectionHandler {
         this.tableHeaderInfo = list;
     }
 
-    getHeaderProvider(element: PiElement, propertyName: string, conceptName: string): FreHeaderProvider {
+    getHeaderProvider(element: FreNode, propertyName: string, conceptName: string): FreHeaderProvider {
         if (isNullOrUndefined(element)) {
             console.error("FreProjectionHandler.getHeaderProvider: element is null/undefined");
             return null;
         }
 
         // return if present, else create a new provider
-        let headerProvider = this.headerProviders.get([element.piId(), propertyName]);
+        let headerProvider = this.headerProviders.get([element.freId(), propertyName]);
         if (isNullOrUndefined(headerProvider)) {
             headerProvider = new FreHeaderProvider(element, propertyName, conceptName, this);
-            this.headerProviders.set([element.piId(), propertyName], headerProvider);
+            this.headerProviders.set([element.freId(), propertyName], headerProvider);
             // headerProvider.initUsedProjection();
         }
         return headerProvider;

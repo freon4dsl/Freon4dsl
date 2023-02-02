@@ -1,8 +1,8 @@
-import { PiElement } from "../../ast";
-import { isNullOrUndefined, PiUtils } from "../../util";
-import { PiLogger } from "../../logging";
+import { FreNode } from "../../ast";
+import { isNullOrUndefined, FreUtils } from "../../util";
+import { FreLogger } from "../../logging";
 
-const LOGGER = new PiLogger("Box");
+const LOGGER = new FreLogger("Box");
 
 /**
  * The root of the Box class hierarchy, contains all generic properties and a number of navigation/search functions.
@@ -11,7 +11,7 @@ export abstract class Box {
     $id: string;
     kind: string = "";
     role: string = "";
-    element: PiElement = null;  // the model element to which this box is coupled
+    element: FreNode = null;  // the model element to which this box is coupled
     propertyName: string;       // the name of the property, if any, in 'element' which this box projects
     propertyIndex: number;      // the index within the property, if appropriate
     // todo make sure propertyName and index are correctly set
@@ -43,16 +43,16 @@ export abstract class Box {
     actualWidth: number = -1;
     actualHeight: number = -1;
 
-    constructor(element: PiElement, role: string) {
-        PiUtils.CHECK(!!element, "Element cannot be empty in Box constructor");
+    constructor(element: FreNode, role: string) {
+        FreUtils.CHECK(!!element, "Element cannot be empty in Box constructor");
         this.element = element;
         this.role = role;
-        this.$id = PiUtils.ID(); //uuid.v4();
+        this.$id = FreUtils.ID(); //uuid.v4();
     }
 
     get id(): string {
         if (!!this.element) {
-            return this.element.piId() + (this.role === null ? "" : "-" + this.role);
+            return this.element.freId() + (this.role === null ? "" : "-" + this.role);
         } else {
             return "unknown-element-" + this.role;
         }
@@ -174,12 +174,12 @@ export abstract class Box {
     }
 
     /**
-     * Find first box for element with `piId()` equals elementId and with `role` inside `this`
+     * Find first box for element with `freId()` equals elementId and with `role` inside `this`
      * and all of its children recursively.
      * @param propertyName
      */
     // findBox(elementId: string, propertyName?: string, propertyIndex?: number): Box {
-    //     if (!isNullOrUndefined(this.element) && this.element.piId() === elementId) {
+    //     if (!isNullOrUndefined(this.element) && this.element.freId() === elementId) {
     //         if (!isNullOrUndefined(propertyName)) {
     //             if (!isNullOrUndefined(propertyIndex)) {
     //                 if (this.propertyName === propertyName && this.propertyIndex === propertyIndex) {

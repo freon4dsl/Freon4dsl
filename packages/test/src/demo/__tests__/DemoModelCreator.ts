@@ -1,4 +1,4 @@
-import { PiElementReference } from "@projectit/core";
+import { FreNodeReference } from "@projectit/core";
 import {
     DemoEntity,
     DemoAttribute,
@@ -41,17 +41,17 @@ export class DemoModelCreator {
         let unit: DemoModel = result.models.find(m => m.name === "CorrectUnit");
 
         const companyEnt = DemoEntity.create({name: "Company", x: "xxx", simpleprop: "simple"}); // another one with the same unitName
-        const VAT_Number = DemoAttribute.create({name: "VAT_Number", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")});
-        const VAT_Number2 = DemoAttribute.create({name: "VAT_Number", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")});
+        const VAT_Number = DemoAttribute.create({name: "VAT_Number", declaredType: FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")});
+        const VAT_Number2 = DemoAttribute.create({name: "VAT_Number", declaredType: FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")});
         companyEnt.attributes.push(VAT_Number2);
         companyEnt.attributes.push(VAT_Number);
         unit.entities.push(companyEnt);
         const ifFunction = this.makeIfFunction2();
         companyEnt.functions.push(ifFunction);
 
-        const double = DemoFunction.create({name: "compare", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")}); // another one with the same name
-        const extra = DemoVariable.create({name: "Extra", declaredType: PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity")});
-        const extra2 = DemoVariable.create({name: "Extra", declaredType: PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity")}); // another one with the same name
+        const double = DemoFunction.create({name: "compare", declaredType: FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")}); // another one with the same name
+        const extra = DemoVariable.create({name: "Extra", declaredType: FreNodeReference.create<DemoEntity>(companyEnt, "DemoEntity")});
+        const extra2 = DemoVariable.create({name: "Extra", declaredType: FreNodeReference.create<DemoEntity>(companyEnt, "DemoEntity")}); // another one with the same name
         double.parameters.push(extra);
         double.parameters.push(extra2);
         double.expression = MakePlusExp("24", "2020");
@@ -64,9 +64,9 @@ export class DemoModelCreator {
     private makeIfFunction(name: string) {
         const ifFunction = DemoFunction.create({
             name: name,
-            declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")
+            declaredType: FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")
         });
-        ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        ifFunction.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         const ifExpression = new DemoIfExpression();
         ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
         ifExpression.whenTrue = makeLiteralExp("87");
@@ -80,9 +80,9 @@ export class DemoModelCreator {
     private makeIfFunction2() {
         const ifFunction = DemoFunction.create({
             name: "compare",
-            declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")
+            declaredType: FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")
         });
-        ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        ifFunction.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         const ifExpression = new DemoIfExpression();
         ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
         ifExpression.whenTrue = makeLiteralExp("87");
@@ -99,14 +99,14 @@ export class DemoModelCreator {
         let personent = unit.entities[0]; // Person
         let personattr = new DemoAttributeWithEntityType();
         personattr.name = "attrFromPerson";
-        personattr.declaredType = PiElementReference.create<DemoEntity>(unit.entities[1], "DemoEntity"); // Company
+        personattr.declaredType = FreNodeReference.create<DemoEntity>(unit.entities[1], "DemoEntity"); // Company
         personent.entAttributes.push(personattr);
 
         // add new attribute to Company entity
         let companyent = unit.entities[1]; // Company
         let compattr = new DemoAttributeWithEntityType();
         compattr.name = "attrFromCompany";
-        compattr.declaredType = PiElementReference.create<DemoEntity>(unit.entities[0], "DemoEntity"); // Person
+        compattr.declaredType = FreNodeReference.create<DemoEntity>(unit.entities[0], "DemoEntity"); // Person
         companyent.entAttributes.push(compattr);
 
         // find the function to be changed
@@ -114,14 +114,14 @@ export class DemoModelCreator {
 
         // create an expression that includes applied features
         let expression: DemoVariableRef = new DemoVariableRef();
-        expression.variable = PiElementReference.create<DemoVariable>(length.parameters[0], "DemoVariable"); // Variable1: Person
+        expression.variable = FreNodeReference.create<DemoVariable>(length.parameters[0], "DemoVariable"); // Variable1: Person
         // add an applied feature to the variable reference
         let firstFeature: DemoAttributeRef = new DemoAttributeRef();
-        firstFeature.attribute = PiElementReference.create<DemoAttributeWithEntityType>(personattr, "DemoAttributeWithEntityType"); // Person.attrFromPerson: Company
+        firstFeature.attribute = FreNodeReference.create<DemoAttributeWithEntityType>(personattr, "DemoAttributeWithEntityType"); // Person.attrFromPerson: Company
         expression.appliedfeature = firstFeature;
         // add a second applied feature to the attribute reference
         let secondFeature: DemoAttributeRef = new DemoAttributeRef();
-        secondFeature.attribute = PiElementReference.create<DemoAttributeWithEntityType>(compattr, "DemoAttributeWithEntityType"); // Company.attrFromCompany: Person
+        secondFeature.attribute = FreNodeReference.create<DemoAttributeWithEntityType>(compattr, "DemoAttributeWithEntityType"); // Company.attrFromCompany: Person
         firstFeature.appliedfeature = secondFeature;
 
         // change the expression of function model.length to the newly created expression
@@ -141,32 +141,32 @@ export class DemoModelCreator {
         let inheritanceModel: DemoModel = DemoModel.create({ name: "DemoModel_with_inheritance" });
 
         const vehicleEnt = DemoEntity.create({ name: "Vehicle", x: "xxx", simpleprop: "simple" });
-        const brand = DemoAttribute.create({ name: "brand", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
-        const vehicleName = DemoAttribute.create({ name: "type", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
+        const brand = DemoAttribute.create({ name: "brand", declaredType: FreNodeReference.create<DemoAttributeType>("String", "DemoAttributeType") });
+        const vehicleName = DemoAttribute.create({ name: "type", declaredType: FreNodeReference.create<DemoAttributeType>("String", "DemoAttributeType") });
         vehicleEnt.attributes.push(brand);
         vehicleEnt.attributes.push(vehicleName);
 
         const carEnt = DemoEntity.create({ name: "Car", x: "xxx", simpleprop: "simple" });
-        const numberplate = DemoAttribute.create({ name: "numberplate", declaredType: PiElementReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
-        const carType = DemoAttribute.create({ name: "make", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
-        // carEnt.baseEntity.push(PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
-        carEnt.baseEntity = PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity");
+        const numberplate = DemoAttribute.create({ name: "numberplate", declaredType: FreNodeReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
+        const carType = DemoAttribute.create({ name: "make", declaredType: FreNodeReference.create<DemoAttributeType>("String", "DemoAttributeType") });
+        // carEnt.baseEntity.push(FreNodeReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
+        carEnt.baseEntity = FreNodeReference.create<DemoEntity>(vehicleEnt, "DemoEntity");
         carEnt.attributes.push(numberplate);
         carEnt.attributes.push(carType);
 
         const bikeEnt = DemoEntity.create({ name: "Bike", x: "xxx", simpleprop: "simple" });
-        const backseat = DemoAttribute.create({ name: "backseat", declaredType: PiElementReference.create<DemoAttributeType>("Boolean", "DemoAttributeType") });
-        const gears = DemoAttribute.create({ name: "gears", declaredType: PiElementReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
-        // bikeEnt.baseEntity.push(PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
-        bikeEnt.baseEntity = PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity");
+        const backseat = DemoAttribute.create({ name: "backseat", declaredType: FreNodeReference.create<DemoAttributeType>("Boolean", "DemoAttributeType") });
+        const gears = DemoAttribute.create({ name: "gears", declaredType: FreNodeReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
+        // bikeEnt.baseEntity.push(FreNodeReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
+        bikeEnt.baseEntity = FreNodeReference.create<DemoEntity>(vehicleEnt, "DemoEntity");
         bikeEnt.attributes.push(backseat);
         bikeEnt.attributes.push(gears);
 
         const racebikeEnt = DemoEntity.create({ name: "RaceBike", x: "xxx", simpleprop: "simple" });
-        const color = DemoAttribute.create({ name: "color", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
-        const wheelsize = DemoAttribute.create({ name: "wheelsize", declaredType: PiElementReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
-        // racebikeEnt.baseEntity.push(PiElementReference.create<DemoEntity>(bikeEnt, "DemoEntity"));
-        racebikeEnt.baseEntity = PiElementReference.create<DemoEntity>(bikeEnt, "DemoEntity");
+        const color = DemoAttribute.create({ name: "color", declaredType: FreNodeReference.create<DemoAttributeType>("String", "DemoAttributeType") });
+        const wheelsize = DemoAttribute.create({ name: "wheelsize", declaredType: FreNodeReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
+        // racebikeEnt.baseEntity.push(FreNodeReference.create<DemoEntity>(bikeEnt, "DemoEntity"));
+        racebikeEnt.baseEntity = FreNodeReference.create<DemoEntity>(bikeEnt, "DemoEntity");
         racebikeEnt.attributes.push(color);
         racebikeEnt.attributes.push(wheelsize);
 
@@ -188,7 +188,7 @@ export class DemoModelCreator {
         let model = this.createInheritanceModel();
         let unit = model.models.find(m => m.name === "DemoModel_with_inheritance");
         // let Vehicle inherit from RaceBike
-        unit.entities[0].baseEntity = PiElementReference.create<DemoEntity>(unit.entities[3], "DemoEntity");
+        unit.entities[0].baseEntity = FreNodeReference.create<DemoEntity>(unit.entities[3], "DemoEntity");
         return model;
     }
 
@@ -202,17 +202,17 @@ export class DemoModelCreator {
 
         const funcWithManyParams = DemoFunction.create({name: "manyParams"});
         for (let i = 0; i < 10; i++) {
-            let type: PiElementReference<DemoEntity>;
+            let type: FreNodeReference<DemoEntity>;
             if ( i % 2 === 0) {
-                type = PiElementReference.create<DemoEntity>(company, "DemoEntity");
+                type = FreNodeReference.create<DemoEntity>(company, "DemoEntity");
             } else {
-                type = PiElementReference.create<DemoEntity>(school, "DemoEntity");
+                type = FreNodeReference.create<DemoEntity>(school, "DemoEntity");
             }
             const param = DemoVariable.create({ name: `Var${i}`, declaredType: type });
             funcWithManyParams.parameters.push(param);
         }
         funcWithManyParams.expression = this.addComplexExpression1();
-        funcWithManyParams.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");;
+        funcWithManyParams.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");;
 
         const length = DemoFunction.create({name: "length"});
         const Variable1 = DemoVariable.create({name: "Variable1"});
@@ -220,19 +220,19 @@ export class DemoModelCreator {
         length.parameters.push(Variable1);
         length.parameters.push(VariableNumber2);
         length.expression = this.addComplexExpression1();
-        length.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");;
+        length.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");;
         // length(Variable1, VariableNumber2): (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
 
         const determine = DemoFunction.create({name: "determine"});
         const AAP = DemoVariable.create({name: "AAP"});
         determine.parameters.push(AAP);
         determine.expression = MakePlusExp("Hello Demo", "Goodbye");
-        determine.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        determine.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         // determine(AAP) = "Hello Demo" + "Goodbye"
 
         const last = DemoFunction.create({name: "last"});
         last.expression = MakePlusExp("5", "woord");
-        last.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        last.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         // last() = 5 + "woord"
 
         unit.functions.push(length);
@@ -303,7 +303,7 @@ export class DemoModelCreator {
     private createCorrectUnit() {
         let unit: DemoModel = DemoModel.create({ name: "CorrectUnit" });
         const ifFunction = DemoFunction.create({ name: "compare" });
-        ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        ifFunction.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         const ifExpression = new DemoIfExpression();
         ifExpression.condition = MakeLessThenExp("2", "5"); //("<")
         ifExpression.whenTrue = makeLiteralExp("1");
@@ -313,7 +313,7 @@ export class DemoModelCreator {
         // compare(Variable1, Variable2): IF (2 < 5) THEN 1 ELSE 5 ENDIF
 
         const helloFunction = DemoFunction.create({ name: "helloString" });
-        helloFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        helloFunction.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         helloFunction.expression = makeLiteralExp("Hello Demo");
         // helloString() = "Hello Demo"
 
@@ -322,16 +322,16 @@ export class DemoModelCreator {
 
         const companyEnt = DemoEntity.create({ name: "Company", x: "xxx", simpleprop: "simple" });
         const companyName = DemoAttribute.create({ name: "name" });
-        companyName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        companyName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         const VAT_Number = DemoAttribute.create({ name: "VAT_Number" });
-        VAT_Number.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        VAT_Number.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         companyEnt.attributes.push(companyName);
         companyEnt.attributes.push(VAT_Number);
         const work = DemoFunction.create({ name: "doClean" });
         const param = DemoVariable.create({ name: "at" });
         work.parameters.push(param);
         work.expression = MakePlusExp("5", "24");
-        work.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        work.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
 
         companyEnt.functions.push(work);
         // Company { VAT_Number: Integer, unitName: String, doClean(at: School) = 5 + 24 }
@@ -339,21 +339,21 @@ export class DemoModelCreator {
         const schoolEntity = DemoEntity.create({ name: "School", x: "xxx", simpleprop: "simple" });
 
         const founded = DemoAttribute.create({ name: "foundedIn" });
-        founded.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        founded.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         const schoolName = DemoAttribute.create({ name: "name" });
-        schoolName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        schoolName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         schoolEntity.attributes.push(founded);
         schoolEntity.attributes.push(schoolName);
         const clean = DemoFunction.create({ name: "requestClean" });
         const variable = DemoVariable.create({ name: "cleaningCompany" });
-        variable.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
+        variable.declaredType = FreNodeReference.create<DemoEntity>(companyEnt, "DemoEntity");
         clean.parameters.push(variable);
         clean.expression = MakePlusExp("5", "24");
-        clean.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        clean.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         schoolEntity.functions.push(clean);
         // School { foundedIn: Integer, unitName: String, requestClean(cleaningCompany: Company) = 5 + 24 }
 
-        param.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
+        param.declaredType = FreNodeReference.create<DemoEntity>(companyEnt, "DemoEntity");
 
         unit.entities.push(schoolEntity);
         unit.entities.push(companyEnt);
@@ -364,17 +364,17 @@ export class DemoModelCreator {
         const schoolEntity = DemoEntity.create({ name: "School", x: "xxx", simpleprop: "simple" });
 
         const founded = DemoAttribute.create({ name: "foundedIn" });
-        founded.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        founded.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         const schoolName = DemoAttribute.create({ name: "name" });
-        schoolName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        schoolName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         schoolEntity.attributes.push(founded);
         schoolEntity.attributes.push(schoolName);
         const clean = DemoFunction.create({ name: "requestClean" });
         const variable = DemoVariable.create({ name: "cleaningCompany" });
-        variable.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
+        variable.declaredType = FreNodeReference.create<DemoEntity>(companyEnt, "DemoEntity");
         clean.parameters.push(variable);
         clean.expression = MakePlusExp("5", "24");
-        clean.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        clean.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         schoolEntity.functions.push(clean);
         // School { foundedIn: Integer, unitName: String, requestClean(cleaningCompany: Company) = 5 + 24 }
         return schoolEntity;
@@ -383,17 +383,17 @@ export class DemoModelCreator {
     private makeCompanyEntity() {
         const companyEnt = DemoEntity.create({ name: "Company", x: "xxx", simpleprop: "simple" });
         const companyName = DemoAttribute.create({ name: "name" });
-        companyName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        companyName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         const VAT_Number = DemoAttribute.create({ name: "VAT_Number" });
-        VAT_Number.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        VAT_Number.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         companyEnt.attributes.push(companyName);
         companyEnt.attributes.push(VAT_Number);
         const work = DemoFunction.create({ name: "doClean" });
         const param = DemoVariable.create({ name: "at" });
-        param.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
+        param.declaredType = FreNodeReference.create<DemoEntity>(companyEnt, "DemoEntity");
         work.parameters.push(param);
         work.expression = MakePlusExp("5", "24");
-        work.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        work.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
 
         companyEnt.functions.push(work);
         // Company { VAT_Number: Integer, unitName: String, doClean(at: School) = 5 + 24 }
@@ -416,20 +416,20 @@ export class DemoModelCreator {
         AAP: DemoVariable,
         NOOT: DemoVariable
     ) {
-        // personName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
-        // companyName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
-        // age.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
-        // VAT_Number.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
-        // length.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
-        // first.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
-        // last.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
-        // determine.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
-        // another.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
-        // Variable1.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
-        // VariableNumber2.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
-        // Resultvar.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
-        // AAP.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
-        // NOOT.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+        // personName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        // companyName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        // age.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        // VAT_Number.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        // length.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        // first.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+        // last.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+        // determine.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+        // another.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+        // Variable1.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+        // VariableNumber2.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+        // Resultvar.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+        // AAP.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
+        // NOOT.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
     }
 
     private addEntityTypes(
@@ -450,20 +450,20 @@ export class DemoModelCreator {
         AAP: DemoVariable,
         NOOT: DemoVariable
     ) {
-        personName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
-        companyName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
-        age.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
-        VAT_Number.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
-        length.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
-        first.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        last.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        determine.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        another.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        Variable1.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        VariableNumber2.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        Resultvar.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        AAP.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        NOOT.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
+        personName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        companyName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        age.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        VAT_Number.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        length.declaredType = FreNodeReference.create<DemoEntity>(companyEnt, "DemoEntity");
+        first.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
+        last.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
+        determine.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
+        another.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
+        Variable1.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
+        VariableNumber2.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
+        Resultvar.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
+        AAP.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
+        NOOT.declaredType = FreNodeReference.create<DemoEntity>(companyEnt, "DemoEntity");
     }
 
     private addComplexExpression1(): DemoExpression {
@@ -485,7 +485,7 @@ export class DemoModelCreator {
 
         const varRef = new DemoVariableRef();
         // varRef.referredName = "Variable1";
-        varRef.variable = PiElementReference.create<DemoVariable>(attr, "DemoAttribute");
+        varRef.variable = FreNodeReference.create<DemoVariable>(attr, "DemoAttribute");
 
         const equals: DemoBinaryExpression = MakeEqualsExp("No", varRef); // ("=");
         // equals : "No" = Variable1

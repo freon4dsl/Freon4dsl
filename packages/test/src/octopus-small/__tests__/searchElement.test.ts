@@ -1,4 +1,4 @@
-import { PiElement, Searcher, PiElementReference } from "@projectit/core";
+import { FreNode, FreSearcher, FreNodeReference } from "@projectit/core";
 import { FileHandler } from "../../utils/FileHandler";
 import {
     AssociationClass,
@@ -13,7 +13,7 @@ import { OctopusEnvironment } from "../config/gen/OctopusEnvironment";
 const writer = OctopusEnvironment.getInstance().writer;
 const reader = OctopusEnvironment.getInstance().reader;
 const handler = new FileHandler();
-const searcher = new Searcher();
+const searcher = new FreSearcher();
 
 function readFile(filepath: string): OctopusModelUnitType {
     try {
@@ -31,7 +31,7 @@ describe("Testing Search Structure", () => {
     test("search all associations in Book", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
-            const found: PiElement[] = searcher.findStructure({}, myUnit, "Association");
+            const found: FreNode[] = searcher.findStructure({}, myUnit, "Association");
             expect (found.length).toBe(5);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -43,9 +43,9 @@ describe("Testing Search Structure", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // make the partial to be found
-            const toBeFound: PiElement = AssociationEnd.create({ name: "prevChap", multiplicity: MultiplicityKind.create({ lowerBound: 1})});
+            const toBeFound: FreNode = AssociationEnd.create({ name: "prevChap", multiplicity: MultiplicityKind.create({ lowerBound: 1})});
             // search for it
-            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "AssociationEnd");
+            const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "AssociationEnd");
             expect (found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -57,9 +57,9 @@ describe("Testing Search Structure", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // make the partial to be found
-            const toBeFound: PiElement = AssociationClass.create({ name: 'ChapterDependency' });
+            const toBeFound: FreNode = AssociationClass.create({ name: 'ChapterDependency' });
             // search for it
-            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
+            const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
             expect (found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -72,9 +72,9 @@ describe("Testing Search Structure", () => {
         if (!!myUnit) {
             // make the partial to be found
             const attrToBeFound: Attribute = Attribute.create({ name: "sameAuthor" });
-            const toBeFound: PiElement = AssociationClass.create({ attributes: [attrToBeFound] });
+            const toBeFound: FreNode = AssociationClass.create({ attributes: [attrToBeFound] });
             // search for it
-            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
+            const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
             expect (found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -86,11 +86,11 @@ describe("Testing Search Structure", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // make the partial to be found
-            const refToBeFound: PiElementReference<IClassifier> = PiElementReference.create<IClassifier>("Chapter", "IClassifier");
+            const refToBeFound: FreNodeReference<IClassifier> = FreNodeReference.create<IClassifier>("Chapter", "IClassifier");
             const endToBeFound: AssociationEnd = AssociationEnd.create({ baseType: refToBeFound });
-            const toBeFound: PiElement = AssociationClass.create({ end1: endToBeFound });
+            const toBeFound: FreNode = AssociationClass.create({ end1: endToBeFound });
             // search for it
-            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
+            const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
             expect (found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -102,9 +102,9 @@ describe("Testing Search Structure", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // make the partial to be found
-            const toBeFound: PiElement = UmlClass.create({ name: "Chapter" });
+            const toBeFound: FreNode = UmlClass.create({ name: "Chapter" });
             // search for it
-            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "UmlClass");
+            const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "UmlClass");
             expect (found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -117,9 +117,9 @@ describe("Testing Search Structure", () => {
         if (!!myUnit) {
             // make the partial to be found
             const attrToBeFound: Attribute = Attribute.create({ name: "autor" }); // typo in name!!!
-            const toBeFound: PiElement = UmlClass.create({ name: "Chapter", attributes: [attrToBeFound] });
+            const toBeFound: FreNode = UmlClass.create({ name: "Chapter", attributes: [attrToBeFound] });
             // search for it
-            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "UmlClass");
+            const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "UmlClass");
             expect (found.length).toBe(0);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
@@ -131,10 +131,10 @@ describe("Testing Search Structure", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // make the partial to be found
-            const refToBeFound: PiElementReference<IClassifier> = PiElementReference.create<IClassifier>("Boolean", "IClassifier");
+            const refToBeFound: FreNodeReference<IClassifier> = FreNodeReference.create<IClassifier>("Boolean", "IClassifier");
             const toBeFound: Attribute = Attribute.create({ type: refToBeFound });
             // search for it
-            const found: PiElement[] = searcher.findStructure(toBeFound, myUnit, "Attribute");
+            const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "Attribute");
             expect (found.length).toBe(3);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {

@@ -1,8 +1,8 @@
-import { PiElement, PiNamedElement } from "../ast";
-import { PiLogger } from "../logging";
+import { FreNode, FreNamedNode } from "../ast";
+import { FreLogger } from "../logging";
 import { FreScoper } from "./FreScoper";
 
-const LOGGER = new PiLogger("FreScoperComposite").mute();
+const LOGGER = new FreLogger("FreScoperComposite").mute();
 
 export class FreScoperComposite implements FreScoper {
     // TOD: What of this?
@@ -24,7 +24,7 @@ export class FreScoperComposite implements FreScoper {
         t.mainScoper = this;
     }
 
-    additionalNamespaces(node: PiElement): PiElement[] {
+    additionalNamespaces(node: FreNode): FreNode[] {
         for (const scoper of this.scopers) {
             const result = scoper.additionalNamespaces(node);
             if (result !== undefined && result !== null) {
@@ -34,7 +34,7 @@ export class FreScoperComposite implements FreScoper {
         return [];
     }
 
-    getFromVisibleElements(node: PiElement, name: string, metatype?: string, excludeSurrounding?: boolean): PiNamedElement {
+    getFromVisibleElements(node: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): FreNamedNode {
         for (const scoper of this.scopers) {
             const result = scoper.getFromVisibleElements(node, name, metatype, excludeSurrounding);
             if (result !== undefined) {
@@ -44,7 +44,7 @@ export class FreScoperComposite implements FreScoper {
         return null;
     }
 
-    getVisibleElements(node: PiElement, metatype?: string, excludeSurrounding?: boolean): PiNamedElement[] {
+    getVisibleElements(node: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
         for (const scoper of this.scopers) {
             const result = scoper.getVisibleElements(node, metatype, excludeSurrounding);
             if (result !== undefined && result !== null) {
@@ -54,8 +54,8 @@ export class FreScoperComposite implements FreScoper {
         return [];
     }
 
-    getVisibleNames(node: PiElement, metatype?: string, excludeSurrounding?: boolean): string[] {
-        LOGGER.log("getVisibleNames for " + node.piLanguageConcept() + " of type " + metatype);
+    getVisibleNames(node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
+        LOGGER.log("getVisibleNames for " + node.freLanguageConcept() + " of type " + metatype);
         for (const scoper of this.scopers) {
             const result = scoper.getVisibleNames(node, metatype, excludeSurrounding);
             if (result !== undefined && result !== null) {
@@ -65,7 +65,7 @@ export class FreScoperComposite implements FreScoper {
         return [];
     }
 
-    isInScope(node: PiElement, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
+    isInScope(node: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
         for (const scoper of this.scopers) {
             const result = scoper.isInScope(node, name, metatype, excludeSurrounding);
             if (result !== undefined) {
@@ -75,7 +75,7 @@ export class FreScoperComposite implements FreScoper {
         return false; // TODO or undefined?
     }
 
-    resolvePathName(node: PiElement, doNotSearch: string, pathname: string[], metatype?: string): PiNamedElement {
+    resolvePathName(node: FreNode, doNotSearch: string, pathname: string[], metatype?: string): FreNamedNode {
         for (const scoper of this.scopers) {
             const result = scoper.resolvePathName(node, doNotSearch, pathname, metatype);
             if (result !== undefined) {

@@ -1,4 +1,4 @@
-import { PiUtils } from "@projectit/core";
+import { FreUtils } from "@projectit/core";
 import { TestParserEnvironment } from "../config/gen/TestParserEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, PrimsWithKeywordTest, TestParserModel } from "../language/gen";
@@ -10,7 +10,7 @@ describe("Parser properties of type", () => {
 
     beforeEach(() => {
         // Ensure that ID's of created elements do not change.
-        PiUtils.resetId();
+        FreUtils.resetId();
     });
 
     test( " Primitive ", () => {

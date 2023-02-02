@@ -1,5 +1,5 @@
-import { PiUtils } from "../../util";
-import { PiElement } from "../../ast";
+import { FreUtils } from "../../util";
+import { FreNode } from "../../ast";
 import { Box } from "./internal";
 
 export class SvgBox extends Box {
@@ -9,9 +9,9 @@ export class SvgBox extends Box {
     width: number = 20;
     height: number = 20;
 
-    constructor(element: PiElement, role: string, svgPath: string, initializer?: Partial<SvgBox>) {
+    constructor(element: FreNode, role: string, svgPath: string, initializer?: Partial<SvgBox>) {
         super(element, role);
-        PiUtils.initializeObject(this, initializer);
+        FreUtils.initializeObject(this, initializer);
         this.svgPath = svgPath;
         this.selectable = false;
     }

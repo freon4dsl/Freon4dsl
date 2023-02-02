@@ -1,18 +1,18 @@
 import {
-    PiClassifier,
-    PiConcept,
-    PiElementReference, PiInterface,
-    PiPrimitiveProperty,
-    PiPrimitiveType,
-    PiPrimitiveValue,
-    PiProperty
+    FreClassifier,
+    FreConcept,
+    MetaElementReference, FreInterface,
+    FrePrimitiveProperty,
+    FrePrimitiveType,
+    FrePrimitiveValue,
+    FreProperty
 } from "../metalanguage";
 import { CheckRunner, LangUtil, Names, ParseLocationUtil } from "../../utils";
 
 export class CommonChecker {
 
     // TODO change console.logs to LOGGER.logs
-    public static checkClassifierReference(reference: PiElementReference<PiClassifier>, runner: CheckRunner) {
+    public static checkClassifierReference(reference: MetaElementReference<FreClassifier>, runner: CheckRunner) {
         if (!runner) {
             console.log("NO RUNNER in CommonChecker.checkClassifierReference");
             return;
@@ -31,7 +31,7 @@ export class CommonChecker {
             });
     }
 
-    public static checkOrCreateNameProperty(classifier: PiClassifier, runner: CheckRunner) {
+    public static checkOrCreateNameProperty(classifier: FreClassifier, runner: CheckRunner) {
         if (!runner) {
             console.log("NO RUNNER in CommonChecker.checkOrCreateNameProperty");
             return;
@@ -39,9 +39,9 @@ export class CommonChecker {
         let nameProperty = classifier.allPrimProperties().find(p => p.name === "name");
         // if 'name' property is not present, create it.
         if (!nameProperty) {
-            nameProperty = new PiPrimitiveProperty();
+            nameProperty = new FrePrimitiveProperty();
             nameProperty.name = "name";
-            nameProperty.type = PiPrimitiveType.identifier;
+            nameProperty.type = FrePrimitiveType.identifier;
             nameProperty.isPart = true;
             nameProperty.isList = false;
             nameProperty.isOptional = false;
@@ -50,12 +50,12 @@ export class CommonChecker {
             nameProperty.owningClassifier = classifier;
             classifier.primProperties.push(nameProperty);
         } else {
-            runner.simpleCheck(nameProperty.type === PiPrimitiveType.identifier,
+            runner.simpleCheck(nameProperty.type === FrePrimitiveType.identifier,
                 `The 'name' property of '${classifier.name}' should be of type 'identifier' ${ParseLocationUtil.location(classifier)}.`);
         }
     }
 
-    public static checkUniqueNameOfClassifier(names: string[], classifier: PiClassifier, isUnit: boolean, runner: CheckRunner) {
+    public static checkUniqueNameOfClassifier(names: string[], classifier: FreClassifier, isUnit: boolean, runner: CheckRunner) {
         // check unique names, disregarding upper/lower case of first character
         if (names.includes(classifier.name)) {
             runner.simpleCheck(false,
@@ -71,24 +71,24 @@ export class CommonChecker {
      * @param value
      * @param type
      */
-    public static checkValueToType(value: PiPrimitiveValue, type: PiPrimitiveType): boolean {
+    public static checkValueToType(value: FrePrimitiveValue, type: FrePrimitiveType): boolean {
         // LOGGER.log("checkValueToType: " + value + ", " + type + ", typeof " + typeof value);
-        if (type === PiPrimitiveType.identifier && typeof value === "string") {
+        if (type === FrePrimitiveType.identifier && typeof value === "string") {
             return true;
-        } else if (type === PiPrimitiveType.string && typeof value === "string") {
+        } else if (type === FrePrimitiveType.string && typeof value === "string") {
             return true;
-        } else if (type === PiPrimitiveType.number  && typeof value === "number") {
+        } else if (type === FrePrimitiveType.number  && typeof value === "number") {
             return true;
-        } else if (type === PiPrimitiveType.boolean  && typeof value === "boolean") {
+        } else if (type === FrePrimitiveType.boolean  && typeof value === "boolean") {
             return true;
         }
         return false;
     }
 
-    public static makeCopyOfProp(property: PiProperty, classifier: PiConcept): PiProperty {
-        let copy: PiProperty = new PiProperty();
-        if (property instanceof PiPrimitiveProperty) {
-            copy = new PiPrimitiveProperty();
+    public static makeCopyOfProp(property: FreProperty, classifier: FreConcept): FreProperty {
+        let copy: FreProperty = new FreProperty();
+        if (property instanceof FrePrimitiveProperty) {
+            copy = new FrePrimitiveProperty();
         }
         copy.name = property.name;
         copy.isPublic = property.isPublic;
@@ -98,8 +98,8 @@ export class CommonChecker {
         copy.implementedInBase = false; // false because the original property comes from an interface
         copy.type = property.type;
         copy.owningClassifier = classifier;
-        if (property instanceof PiPrimitiveProperty) {
-            classifier.primProperties.push(copy as PiPrimitiveProperty);
+        if (property instanceof FrePrimitiveProperty) {
+            classifier.primProperties.push(copy as FrePrimitiveProperty);
         } else {
             classifier.properties.push(copy);
         }

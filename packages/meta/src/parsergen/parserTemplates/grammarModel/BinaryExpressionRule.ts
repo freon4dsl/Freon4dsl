@@ -1,14 +1,14 @@
 import { GrammarRule } from "./GrammarRule";
-import { PiClassifier, PiExpressionConcept } from "../../../languagedef/metalanguage";
+import { FreClassifier, FreExpressionConcept } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
 import { internalTransformNode } from "../ParserGenUtil";
 import { getTypeCall } from "./GrammarUtils";
 
 export class BinaryExpressionRule extends GrammarRule {
-    expressionBase: PiExpressionConcept;
-    private symbolToConcept: Map<PiClassifier, string> = new Map<PiClassifier, string>();
+    expressionBase: FreExpressionConcept;
+    private symbolToConcept: Map<FreClassifier, string> = new Map<FreClassifier, string>();
 
-    constructor(ruleName: string, expressionBase: PiExpressionConcept, symbolToConcept: Map<PiClassifier, string>) {
+    constructor(ruleName: string, expressionBase: FreExpressionConcept, symbolToConcept: Map<FreClassifier, string>) {
         super();
         this.ruleName = ruleName;
         this.expressionBase = expressionBase;
@@ -63,7 +63,7 @@ export class BinaryExpressionRule extends GrammarRule {
     }
 
     private rule1(): string {
-        return `${(this.ruleName)} = [${getTypeCall(this.expressionBase)} / __pi_binary_operator]2+ ;`;
+        return `${(this.ruleName)} = [${getTypeCall(this.expressionBase)} / __fre_binary_operator]2+ ;`;
     }
 
     private rule2(): string {
@@ -75,7 +75,7 @@ export class BinaryExpressionRule extends GrammarRule {
         // The longer ones must be given precedence by putting them first in the parse rule.
         // E.g. "==>" needs to come before "==".
         cases = this.sortOnLength(cases);
-        return `leaf __pi_binary_operator = ${cases.map(c => `${c}`).join(" | ")} ;`;
+        return `leaf __fre_binary_operator = ${cases.map(c => `${c}`).join(" | ")} ;`;
     }
 
     private sortOnLength(cases: string[]) {

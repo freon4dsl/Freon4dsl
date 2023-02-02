@@ -1,2 +1,2 @@
-export * from "./PiEditChecker";
-export * from "./PiEditDefLang";
+export * from "./FreEditChecker";
+export * from "./FreEditDefLang";

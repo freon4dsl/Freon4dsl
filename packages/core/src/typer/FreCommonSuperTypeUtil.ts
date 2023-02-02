@@ -1,6 +1,6 @@
 import { FreTypeOrderedList } from "./FreTypeOrderedList";
 import { FreTyper } from "./FreTyper";
-import { PiType } from "./PiType";
+import { FreType } from "./FreType";
 
 
 // algorithm from https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla
@@ -11,10 +11,10 @@ import { PiType } from "./PiType";
 
 export class FreCommonSuperTypeUtil {
 
-    public static commonSuperType(inList: PiType[], typer: FreTyper): PiType[] {
+    public static commonSuperType(inList: FreType[], typer: FreTyper): FreType[] {
         if (!!inList && inList.length > 0) {
             // start with the supers from the first element
-            const rollingIntersect: FreTypeOrderedList<PiType> = this.getSupers(inList[0], typer);
+            const rollingIntersect: FreTypeOrderedList<FreType> = this.getSupers(inList[0], typer);
             // intersect with the next
             for (let i = 1; i < inList.length; i++) {
                 // this.printOrderedList("rollingIntersect at " + i.toString(), rollingIntersect);
@@ -25,14 +25,14 @@ export class FreCommonSuperTypeUtil {
         return [];
     }
 
-    // private static printOrderedList(comment: string, rollingIntersect: TypeOrderedList<PiType>) {
+    // private static printOrderedList(comment: string, rollingIntersect: FreTypeOrderedList<FreType>) {
     //     let result: string = '';
     //     result += comment;
-    //     for (const piClassifier of rollingIntersect) {
-    //         // if (piClassifier.internal instanceof PiType) {
-    //         //     result += "\t" + piClassifier.internal.toPiString()
+    //     for (const freType of rollingIntersect) {
+    //         // if (freType.internal instanceof FreType) {
+    //         //     result += "\t" + freType.internal.toFreString()
     //         // } else {
-    //             result += "\t" + piClassifier.constructor.name;
+    //             result += "\t" + freType.constructor.name;
     //         // }
     //     }
     //     console.log(result);
@@ -43,20 +43,20 @@ export class FreCommonSuperTypeUtil {
      * @param inCls
      * @private
      */
-    private static getSupers(inCls: PiType, typer: FreTyper): FreTypeOrderedList<PiType>  {
-        const classes: FreTypeOrderedList<PiType> = new FreTypeOrderedList<PiType>();
+    private static getSupers(inCls: FreType, typer: FreTyper): FreTypeOrderedList<FreType>  {
+        const classes: FreTypeOrderedList<FreType> = new FreTypeOrderedList<FreType>();
         if (!!inCls) {
-            let nextLevel: FreTypeOrderedList<PiType> = new FreTypeOrderedList<PiType>();
+            let nextLevel: FreTypeOrderedList<FreType> = new FreTypeOrderedList<FreType>();
             nextLevel.add(inCls, typer);
             // this.printOrderedList("nextLevel: ", nextLevel );
             while (nextLevel.length() > 0) {
                 classes.addAll(nextLevel, typer);
-                const thisLevel: FreTypeOrderedList<PiType> = new FreTypeOrderedList<PiType>();
+                const thisLevel: FreTypeOrderedList<FreType> = new FreTypeOrderedList<FreType>();
                 thisLevel.addAll(nextLevel, typer);
-                nextLevel = new FreTypeOrderedList<PiType>();
+                nextLevel = new FreTypeOrderedList<FreType>();
                 for (const elem of thisLevel) {
-                    const supers: PiType[] = typer.getSuperTypes(elem);
-                    // console.log(`found supers for ${writer.writeToString(elem.internal)} [${elem.internal.piLanguageConcept()}] : ${supers.map(sup => `${writer.writeToString(sup.internal)} [${sup.internal.piLanguageConcept()}]`).join(", ")}`)
+                    const supers: FreType[] = typer.getSuperTypes(elem);
+                    // console.log(`found supers for ${writer.writeToString(elem.internal)} [${elem.internal.freLanguageConcept()}] : ${supers.map(sup => `${writer.writeToString(sup.internal)} [${sup.internal.freLanguageConcept()}]`).join(", ")}`)
                     for (const super1 of supers) {
                         nextLevel.add(super1, typer);
                     }

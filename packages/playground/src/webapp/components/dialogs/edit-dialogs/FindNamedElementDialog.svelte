@@ -12,7 +12,7 @@
             </Textfield>
         </div>
         <div>
-            {#each Language.getInstance().getNamedElements() as name}
+            {#each FreLanguage.getInstance().getNamedElements() as name}
                 <FormField>
                     <Radio
                             bind:group={typeSelected}
@@ -35,7 +35,7 @@
 </Dialog>
 
 <script lang="ts">
-    import { Language } from "@projectit/core";
+    import { FreLanguage } from "@projectit/core";
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Textfield from "@smui/textfield";
     import HelperText from "@smui/textfield/helper-text";

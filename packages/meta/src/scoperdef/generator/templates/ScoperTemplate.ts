@@ -1,9 +1,9 @@
 import {
-    PiConcept, PiConceptProperty,
-    PiInterface,
-    PiLangExp,
-    PiLangFunctionCallExp,
-    PiLanguage
+    FreConcept, FreConceptProperty,
+    FreInterface,
+    FreLangExp,
+    FreLangFunctionCallExp,
+    FreLanguage
 } from "../../../languagedef/metalanguage";
 import {
     Names,
@@ -13,7 +13,7 @@ import {
     CONFIGURATION_GEN_FOLDER,
     GenerationUtil, LangUtil, ListUtil
 } from "../../../utils";
-import { PiScopeDef, ScopeConceptDef } from "../../metalanguage";
+import { ScopeDef, ScopeConceptDef } from "../../metalanguage";
 
 export class ScoperTemplate {
     languageImports: string[] = []; // holds the names of all classifiers that need to be imported from the generated language structure
@@ -21,20 +21,20 @@ export class ScoperTemplate {
     getAlternativeScopeText: string = "";
     getAdditionalNamespacetext = "";
 
-    generateGenIndex(language: PiLanguage): string {
+    generateGenIndex(language: FreLanguage): string {
         return `
         export * from "./${Names.scoper(language)}";
         export * from "./${Names.scoperDef(language)}";
         `;
     }
 
-    generateIndex(language: PiLanguage): string {
+    generateIndex(language: FreLanguage): string {
         return `
         export * from "./${Names.customScoper(language)}";
         `;
     }
 
-    generateScoper(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
+    generateScoper(language: FreLanguage, scopedef: ScopeDef, relativePath: string): string {
         this.hasAlternativeScopeText = "";
         this.getAlternativeScopeText = "";
 
@@ -58,7 +58,7 @@ export class ScoperTemplate {
 
         // Template starts here - without imports, they are calculated while creating this text and added later
         const templateBody: string = `
-        const LOGGER = new PiLogger("${generatedClassName}");  
+        const LOGGER = new ${Names.FreLogger}("${generatedClassName}");  
         
         /**
          * Class ${generatedClassName} implements the scoper generated from, if present, the scoper definition,
@@ -70,7 +70,7 @@ export class ScoperTemplate {
              * Returns the namespace to be used as alternative scope for 'modelelement'.
              * @param modelelement
              */
-            getAlternativeScope(modelelement: PiElement): FreonNamespace {
+            getAlternativeScope(modelelement: ${Names.FreNode}): ${Names.FreNamespace} {
                 ${this.getAlternativeScopeText}
                 return null;
             }
@@ -79,17 +79,17 @@ export class ScoperTemplate {
              * Returns true if there is an alternative scope defined for this 'modelelement'.
              * @param modelelement
              */
-            hasAlternativeScope(modelelement: PiElement): boolean {
+            hasAlternativeScope(modelelement: ${Names.FreNode}): boolean {
                 ${this.hasAlternativeScopeText}
                 return false;
             }
             
             /**
-             * Returns all PiElements that are defined as additional namespaces for \`element'.
+             * Returns all FreNodes that are defined as additional namespaces for \`element'.
              * @param element
              */
-            public additionalNamespaces(element: PiElement): PiElement[] {
-                const result: PiElement[] = [];
+            public additionalNamespaces(element: ${Names.FreNode}): ${Names.FreNode}[] {
+                const result: ${Names.FreNode}[] = [];
                 ${this.getAdditionalNamespacetext}
                 return result;
 
@@ -98,22 +98,22 @@ export class ScoperTemplate {
 
         // now we have enough information to create the correct imports
         const templateImports: string = `
-        import { ${scoperBaseName}, PiLogger, PiElement, PiElementReference, FreonNamespace, ${Names.FreonTyper} } from "${PROJECTITCORE}"
+        import { ${scoperBaseName}, ${Names.FreLogger}, ${Names.FreNode}, ${Names.FreNodeReference}, ${Names.FreNamespace}, ${Names.FreTyper} } from "${PROJECTITCORE}"
         import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         `;
 
         return templateImports + templateBody;
     }
 
-    private makeAdditionalNamespaceTexts(scopedef: PiScopeDef, language: PiLanguage) {
-        const generatedConcepts: PiConcept[] = [];
+    private makeAdditionalNamespaceTexts(scopedef: ScopeDef, language: FreLanguage) {
+        const generatedConcepts: FreConcept[] = [];
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceAdditions) {
                 const myClassifier = def.conceptRef.referred;
                 // let isDone: boolean = false;
                 const comment = "// based on namespace addition for " + myClassifier.name + "\n";
                 ListUtil.addIfNotPresent(this.languageImports, myClassifier.name); // TODO
-                if (myClassifier instanceof PiInterface) {
+                if (myClassifier instanceof FreInterface) {
                     for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
                         // if ( !generatedConcepts.includes(implementor)) {
                         //     isDone = true;
@@ -136,8 +136,8 @@ export class ScoperTemplate {
         }
     }
 
-    private makeAdditionalNamespaceTextsForConcept(piConcept: PiConcept, def: ScopeConceptDef, language: PiLanguage, comment: string) {
-        const typeName = Names.concept(piConcept);
+    private makeAdditionalNamespaceTextsForConcept(freConcept: FreConcept, def: ScopeConceptDef, language: FreLanguage, comment: string) {
+        const typeName = Names.concept(freConcept);
         // we are adding to three textstrings
         // first, to the import statements
         ListUtil.addIfNotPresent(this.languageImports, typeName);
@@ -156,7 +156,7 @@ export class ScoperTemplate {
             `}\n`);
     }
 
-    private makeAlternativeScopeTexts(scopedef: PiScopeDef, language: PiLanguage) {
+    private makeAlternativeScopeTexts(scopedef: ScopeDef, language: FreLanguage) {
         const allLangConcepts: string = Names.allConcepts(language);
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.alternativeScope) {
@@ -175,14 +175,14 @@ export class ScoperTemplate {
                 // third, to the 'getAlternativeScope' method
                 this.getAlternativeScopeText = this.getAlternativeScopeText.concat(
                     `if (!!modelelement && modelelement instanceof ${conceptName}) {
-                        // use alternative scope '${def.alternativeScope.expression.toPiString()}'
+                        // use alternative scope '${def.alternativeScope.expression.toFreString()}'
                         ${this.altScopeExpToTypeScript(def.alternativeScope.expression, allLangConcepts)}
                     }`);
             }
         }
     }
 
-    private addNamespaceExpression(expression: PiLangExp, language: PiLanguage): string {
+    private addNamespaceExpression(expression: FreLangExp, language: FreLanguage): string {
         let result: string = "";
         const generatedClassName: string = Names.namespace(language);
         const myRef = expression.findRefOfLastAppliedFeature();
@@ -190,17 +190,17 @@ export class ScoperTemplate {
         const loopVar: string = "loopVariable";
         let loopVarExtended = loopVar;
         if (myRef.isList) {
-            if (myRef instanceof PiConceptProperty) {
+            if (myRef instanceof FreConceptProperty) {
                 if (!myRef.isPart) {
                     loopVarExtended = loopVarExtended.concat(".referred");
                 }
             }
-            const namespaceExpression = `element.${expression.appliedfeature.toPiString()}`;
+            const namespaceExpression = `element.${expression.appliedfeature.toFreString()}`;
             result = result.concat(`
-            // generated based on '${expression.toPiString()}'
-            for (let ${loopVar} of element.${expression.appliedfeature.toPiString()}) {
-                if (loopVariable instanceof PiElementReference) {
-                    if (!this.currentRoleNames.includes('${expression.appliedfeature.toPiString()}')) {
+            // generated based on '${expression.toFreString()}'
+            for (let ${loopVar} of element.${expression.appliedfeature.toFreString()}) {
+                if (loopVariable instanceof ${Names.FreNodeReference}) {
+                    if (!this.currentRoleNames.includes('${expression.appliedfeature.toFreString()}')) {
                         if (!!loopVariable.referred) {
                             if (!this.additionalNamespacesVisited.includes(loopVariable)){
                                 this.additionalNamespacesVisited.push(loopVariable);
@@ -217,11 +217,11 @@ export class ScoperTemplate {
                 }
             }`);
         } else {
-            // TODO check use of toPiString()
-            const namespaceExpression = `element.${expression.appliedfeature.toPiString()}`;
+            // TODO check use of toFreString()
+            const namespaceExpression = `element.${expression.appliedfeature.toFreString()}`;
             result = result.concat(`
-               // generated based on '${expression.toPiString()}' 
-               if (!this.currentRoleNames.includes('${expression.appliedfeature.toPiString()}')) {
+               // generated based on '${expression.toFreString()}' 
+               if (!this.currentRoleNames.includes('${expression.appliedfeature.toFreString()}')) {
                    if (!!${namespaceExpression}) {
                       if (!this.additionalNamespacesVisited.includes(${namespaceExpression})){
                          this.additionalNamespacesVisited.push(${namespaceExpression});
@@ -237,14 +237,14 @@ export class ScoperTemplate {
         return result;
     }
 
-    private altScopeExpToTypeScript(expression: PiLangExp, allLangConcepts: string): string {
+    private altScopeExpToTypeScript(expression: FreLangExp, allLangConcepts: string): string {
         let result;
         // special case: the expression refers to 'typeof'
-        if (expression instanceof PiLangFunctionCallExp && expression.sourceName === "typeof") {
+        if (expression instanceof FreLangFunctionCallExp && expression.sourceName === "typeof") {
             let actualParamToGenerate: string;
             // we know that typeof has exactly 1 actual parameter
             if ( expression.actualparams[0].sourceName === "container" ) {
-                actualParamToGenerate = `modelelement.piOwnerDescriptor().owner`;
+                actualParamToGenerate = `modelelement.freOwnerDescriptor().owner`;
             } else {
                 actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0]);
             }
@@ -253,7 +253,7 @@ export class ScoperTemplate {
                     let newScopeElement = this.myTyper.inferType(owner)?.toAstElement();
                     // 'newScopeElement' could be null, when the type found by the typer does not correspond to an AST element
                     if (!!newScopeElement) {
-                        return FreonNamespace.create(newScopeElement);
+                        return ${Names.FreNamespace}.create(newScopeElement);
                     }
                 }`;
         } else {

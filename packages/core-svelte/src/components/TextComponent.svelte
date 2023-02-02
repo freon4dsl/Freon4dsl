@@ -21,10 +21,10 @@
 		isActionBox,
 		isActionTextBox,
 		isSelectBox,
-		PiCaret,
-		PiCaretPosition,
-		PiEditor,
-		PiLogger,
+		FreCaret,
+		FreCaretPosition,
+		FreEditor,
+		FreLogger,
 		SelectBox,
 		SeverityType,
 		SHIFT,
@@ -36,13 +36,13 @@
 	import { replaceHTML } from "./svelte-utils";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
-    const LOGGER = new PiLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
+    const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
     const dispatcher = createEventDispatcher();
     type BoxType = "action" | "select" | "text";
 
     // Parameters
     export let box: TextBox;				// the accompanying textbox
-    export let editor: PiEditor;			// the editor
+    export let editor: FreEditor;			// the editor
 	export let isEditing: boolean = false; 	// indication whether this component is currently being edited by the user, needs to be exported for binding in TextDropdownComponent
 	export let partOfActionBox: boolean = false; // indication whether this text component is part of an TextDropdownComponent
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
@@ -98,20 +98,20 @@
     /**
      * This function sets the caret position of the <input> element programmatically.
      * It is called from setFocus, so indirectly by the editor.
-     * @param piCaret
+     * @param freCaret
      */
-    const setCaret = (piCaret: PiCaret) => {
-		LOGGER.log(`TextComponent.setCaret ${piCaret.position} [${piCaret.from}, ${piCaret.to}]` );
-        switch (piCaret.position) {
-            case PiCaretPosition.RIGHT_MOST:  // type nr 2
+    const setCaret = (freCaret: FreCaret) => {
+		LOGGER.log(`TextComponent.setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]` );
+        switch (freCaret.position) {
+            case FreCaretPosition.RIGHT_MOST:  // type nr 2
                 from = to = text.length;
                 break;
-            case PiCaretPosition.LEFT_MOST:   // type nr 1
-            case PiCaretPosition.UNSPECIFIED: // type nr 0
+            case FreCaretPosition.LEFT_MOST:   // type nr 1
+            case FreCaretPosition.UNSPECIFIED: // type nr 0
                 from = to = 0;
                 break;
-            case PiCaretPosition.INDEX:       // type nr 3
-				setFromAndTo(piCaret.from, piCaret.to);
+            case FreCaretPosition.INDEX:       // type nr 3
+				setFromAndTo(freCaret.from, freCaret.to);
 				break;
             default:
 				from = to = 0;
@@ -262,7 +262,7 @@
 					LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
 					if (!partOfActionBox && isEditing) {
 						endEditing();
-						// do not switch selection, this will be done by ProjectItComponent
+						// do not switch selection, this will be done by FreonComponent
 					} // else, let TextDropDownComponent handle this
 					break;
 				}
@@ -394,7 +394,7 @@
     }
 
 	const refresh = () => {
-		LOGGER.log("REFRESH TextComponent " + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ")")
+		LOGGER.log("REFRESH TextComponent " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
 		if (!isEditing) {
@@ -459,7 +459,7 @@
      * are set.
      */
     onMount(() => {
-        LOGGER.log("onMount" + " for element "  + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ")");
+        LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")");
         originalText = text = box.getText();
 		placeholder = box.placeHolder;
 		setInputWidth();
@@ -486,9 +486,9 @@
 			widthSpan.innerHTML = replaceHTML(value);
 			const width = widthSpan.offsetWidth + "px";
 			inputElement.style.width = width;
-			// LOGGER.log("setInputWidth mirror [" + value + "] input [" + inputElement.value + "] placeholder [" + placeholder + "] w: " + width + " " + widthSpan.clientWidth + " for element "  + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ")")
+			// LOGGER.log("setInputWidth mirror [" + value + "] input [" + inputElement.value + "] placeholder [" + placeholder + "] w: " + width + " " + widthSpan.clientWidth + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
 		} else {
-			// LOGGER.log("SetInputWidth do nothing for element " + box?.element?.piId() + " (" + box?.element?.piLanguageConcept() + ") " + widthSpan + "::" + inputElement + "::" + spanElement);
+			// LOGGER.log("SetInputWidth do nothing for element " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ") " + widthSpan + "::" + inputElement + "::" + spanElement);
 		}
 	}
 

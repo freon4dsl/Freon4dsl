@@ -1,11 +1,11 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
-import { PiProperty } from "../../../../languagedef/metalanguage";
+import { FreProperty } from "../../../../languagedef/metalanguage";
 import { getPrimCall, makeIndent } from "../GrammarUtils";
 import { GenerationUtil } from "../../../../utils";
 import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
-    constructor(prop: PiProperty, separatorText: string) {
+    constructor(prop: FreProperty, separatorText: string) {
         super(prop, separatorText);
         this.isList = true;
     }

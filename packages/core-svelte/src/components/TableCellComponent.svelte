@@ -10,17 +10,17 @@
     import {
         isMetaKey,
         ENTER,
-        type PiEditor,
-        PiLogger,
-        toPiKey,
+        type FreEditor,
+        FreLogger,
+        toFreKey,
         TableCellBox,
-        Language,
+        FreLanguage,
         TableDirection,
         Box,
         isActionBox,
         ListElementInfo,
         MenuOptionsType,
-        PiUtils,
+        FreUtils,
         isTableRowBox,
         TableRowBox
     } from "@projectit/core";
@@ -38,17 +38,16 @@
 
     // properties
     export let box: TableCellBox;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
     export let parentComponentId: string;
     export let parentOrientation: string;
-    export let parentHasHeader: boolean;
     // the type of the elements in the cell, this speeds up the check whether an element may be dropped here
     export let myMetaType: string;
 
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
     // local variables
-    const LOGGER = new PiLogger("TableCellComponent"); //.mute();
+    const LOGGER = new FreLogger("TableCellComponent"); //.mute();
     const dispatcher = createEventDispatcher();
     let cssVariables: string;
     let id: string = !!box ? `cell-${componentId(box)}` : 'table-cell-for-unknown-box';
@@ -108,7 +107,7 @@
 
     const onKeydown = (event: KeyboardEvent) => {
         LOGGER.log("GridCellComponent onKeyDown");
-        const piKey = toPiKey(event);
+        const freKey = toFreKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
             let index: number = parentOrientation === TableDirection.HORIZONTAL ? row : column;
@@ -152,7 +151,7 @@
 
     const dragenter = (event: DragEvent): boolean => {
         // only show this item as active when the type of the element to be dropped is the right one
-        if (Language.getInstance().metaConformsToType($draggedElem.element, myMetaType)) {
+        if (FreLanguage.getInstance().metaConformsToType($draggedElem.element, myMetaType)) {
             $activeElem = { row: row, column: column };
             $activeIn = parentComponentId;
         }
@@ -169,7 +168,7 @@
         // determine the contents of the menu based on box
         // if the selected box is the placeholder or a title/header => show different menu items
         let index: number;
-        PiUtils.CHECK(isTableRowBox(box.parent));
+        FreUtils.CHECK(isTableRowBox(box.parent));
         let parent: TableRowBox = box.parent as TableRowBox;
         if (isActionBox(box.content)) {
             $contextMenu.items = box.options(MenuOptionsType.placeholder);

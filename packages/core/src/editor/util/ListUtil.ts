@@ -6,14 +6,14 @@
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import * as Keys from "./Keys";
 import { MetaKey } from "./Keys";
-import { PiLogger } from "../../logging";
-import { ListElementInfo, MenuItem, PiCreatePartAction, PiEditor } from "../index";
-import { Language, PropertyKind } from "../../language";
-import { PiElement } from "../../ast";
+import { FreLogger } from "../../logging";
+import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index";
+import { FreLanguage, PropertyKind } from "../../language";
+import { FreNode } from "../../ast";
 import { runInAction } from "mobx";
 import { SeverityType } from "../../validator";
 
-const LOGGER = new PiLogger("ListBoxUtil");
+const LOGGER = new FreLogger("ListBoxUtil");
 
 export enum MenuOptionsType { normal, placeholder, header }
 
@@ -24,9 +24,9 @@ export enum MenuOptionsType { normal, placeholder, header }
  * @param conceptName
  * @param roleToSelect
  */
-export function createKeyboardShortcutForList2(role: string, propertyName: string, conceptName: string, roleToSelect: string): PiCreatePartAction {
+export function createKeyboardShortcutForList2(role: string, propertyName: string, conceptName: string, roleToSelect: string): FreCreatePartAction {
     LOGGER.log("LIST role [" + role + "]");
-    return new PiCreatePartAction({
+    return new FreCreatePartAction({
         trigger: { meta: MetaKey.None, key: Keys.ENTER, code: Keys.ENTER },
         activeInBoxRoles: [role, "action-" + role + "-textbox"],
         conceptName: conceptName,
@@ -42,13 +42,13 @@ export function createKeyboardShortcutForList2(role: string, propertyName: strin
  * @param targetPropertyName
  * @param targetIndex
  */
-export function moveListElement(parentElement: PiElement, movedElement: PiElement, targetPropertyName: string, targetIndex: number) {
+export function moveListElement(parentElement: FreNode, movedElement: FreNode, targetPropertyName: string, targetIndex: number) {
     runInAction(() => {
         // get info about the property that needs to be changed
         const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
-        // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
-        let oldIndex: number = movedElement.piOwnerDescriptor().propertyIndex;
-        // console.log(`moveListElement=> element: ${parentElement.piLanguageConcept()}, property: ${targetPropertyName}, oldIndex: ${oldIndex}, targetIndex: ${targetIndex}`);
+        // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
+        let oldIndex: number = movedElement.freOwnerDescriptor().propertyIndex;
+        // console.log(`moveListElement=> element: ${parentElement.freLanguageConcept()}, property: ${targetPropertyName}, oldIndex: ${oldIndex}, targetIndex: ${targetIndex}`);
         // Note that because of the placeholder that is shown as last element of a list, the targetIndex may be equal to the property.length.
         // The splice(), however, still functions when the targetIndex > property.length.
         if (isList && oldIndex < property.length && targetIndex <= property.length) {
@@ -62,7 +62,7 @@ export function moveListElement(parentElement: PiElement, movedElement: PiElemen
             }
             property.splice(targetIndex, 0, tmpProp);
         }
-        // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+        // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
     });
 }
 
@@ -73,17 +73,17 @@ export function moveListElement(parentElement: PiElement, movedElement: PiElemen
  * @param targetPropertyName
  * @param targetIndex
  */
-export function dropListElement(editor: PiEditor, dropped: ListElementInfo, targetMetaType: string, targetElem: PiElement, targetPropertyName: string, targetIndex: number) {
-    if (!Language.getInstance().metaConformsToType(dropped.element, targetMetaType)) { // check if item may be dropped here
-        editor.setUserMessage("Drop is not allowed here, because the types do not match (" + dropped.element.piLanguageConcept() + " does not conform to " + targetMetaType + ").", SeverityType.error);
+export function dropListElement(editor: FreEditor, dropped: ListElementInfo, targetMetaType: string, targetElem: FreNode, targetPropertyName: string, targetIndex: number) {
+    if (!FreLanguage.getInstance().metaConformsToType(dropped.element, targetMetaType)) { // check if item may be dropped here
+        editor.setUserMessage("Drop is not allowed here, because the types do not match (" + dropped.element.freLanguageConcept() + " does not conform to " + targetMetaType + ").", SeverityType.error);
         return;
     }
     runInAction(() => {
-        // console.log(`dropListElement=> element: ${dropped.element.piLanguageConcept()}, property: ${dropped.propertyName},
+        // console.log(`dropListElement=> element: ${dropped.element.freLanguageConcept()}, property: ${dropped.propertyName},
         // oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
         // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
         const { property, isList } = getPropertyInfo(targetElem, targetPropertyName);
-        // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+        // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
         if (!!dropped.element) {
             // Add the found element to 'targetElem[targetPropertyName]' at position 'targetIndex'.
             // Note that we need not explicitly remove the item from its old position, the mobx decorators do that.
@@ -92,7 +92,7 @@ export function dropListElement(editor: PiEditor, dropped: ListElementInfo, targ
                 property.splice(targetIndex, 0, dropped.element);
             }
         }
-        // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+        // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
     });
 }
 
@@ -103,15 +103,15 @@ export function dropListElement(editor: PiEditor, dropped: ListElementInfo, targ
  * @param propertyName      the name of the property in which the list is stored
  * @param optionsType       in case the options are created for a placeholder or header, we add lesser items (e.g. no DELETE)
  */
-export function getContextMenuOptions(conceptName: string, listParent: PiElement, propertyName: string, optionsType: MenuOptionsType): MenuItem[] {
+export function getContextMenuOptions(conceptName: string, listParent: FreNode, propertyName: string, optionsType: MenuOptionsType): MenuItem[] {
     // console.log(`getContextMenuOptions
     // conceptname: ${conceptName}
-    // listparent: ${listParent.piId()}=${listParent.piLanguageConcept()}
+    // listparent: ${listParent.freId()}=${listParent.freLanguageConcept()}
     // propertyName: ${propertyName}
     // optionsType ${optionsType}`);
     // do some checks
-    const clsOtIntf = Language.getInstance().concept(conceptName) ?? Language.getInstance().interface(conceptName);
-    let errorItem: MenuItem = new MenuItem("No options available", "", (element: PiElement, index: number, editor: PiEditor) => {
+    const clsOtIntf = FreLanguage.getInstance().concept(conceptName) ?? FreLanguage.getInstance().interface(conceptName);
+    let errorItem: MenuItem = new MenuItem("No options available", "", (element: FreNode, index: number, editor: FreEditor) => {
     });
     if (!clsOtIntf) {
         return [errorItem];
@@ -125,19 +125,19 @@ export function getContextMenuOptions(conceptName: string, listParent: PiElement
         let submenuItemsBefore: MenuItem[] = [];
         let submenuItemsAfter: MenuItem[] = [];
         clsOtIntf.subConceptNames.forEach((creatableConceptname: string) => {
-            submenuItemsBefore.push(new MenuItem(creatableConceptname, "", (element: PiElement, index: number, editor: PiEditor) => addListElement(listParent, propertyName, index, creatableConceptname, true)));
-            submenuItemsAfter.push(new MenuItem(creatableConceptname, "", (element: PiElement, index: number, editor: PiEditor) => addListElement(listParent, propertyName, index, creatableConceptname, false)));
+            submenuItemsBefore.push(new MenuItem(creatableConceptname, "", (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, creatableConceptname, true)));
+            submenuItemsAfter.push(new MenuItem(creatableConceptname, "", (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, creatableConceptname, false)));
         });
-        addBefore = new MenuItem("Add before", "Ctrl+A", (element: PiElement, index: number, editor: PiEditor) => {
+        addBefore = new MenuItem("Add before", "Ctrl+A", (element: FreNode, index: number, editor: FreEditor) => {
         }, submenuItemsBefore);
-        addAfter = new MenuItem("Add after", "Ctrl+I", (element: PiElement, index: number, editor: PiEditor) => {
+        addAfter = new MenuItem("Add after", "Ctrl+I", (element: FreNode, index: number, editor: FreEditor) => {
         }, submenuItemsAfter);
     } else {
-        addBefore = new MenuItem("Add before", "Ctrl+A", (element: PiElement, index: number, editor: PiEditor) => addListElement(listParent, propertyName, index, conceptName, true));
-        addAfter = new MenuItem("Add after", "Ctrl+I", (element: PiElement, index: number, editor: PiEditor) => addListElement(listParent, propertyName, index, conceptName, false));
+        addBefore = new MenuItem("Add before", "Ctrl+A", (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, conceptName, true));
+        addAfter = new MenuItem("Add after", "Ctrl+I", (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, conceptName, false));
     }
-    let pasteBefore = new MenuItem("Paste before", "", (element: PiElement, index: number, editor: PiEditor) => pasteListElement(listParent, propertyName, index, editor, true));
-    let pasteAfter = new MenuItem("Paste after", "", (element: PiElement, index: number, editor: PiEditor) => pasteListElement(listParent, propertyName, index, editor, false));
+    let pasteBefore = new MenuItem("Paste before", "", (element: FreNode, index: number, editor: FreEditor) => pasteListElement(listParent, propertyName, index, editor, true));
+    let pasteAfter = new MenuItem("Paste after", "", (element: FreNode, index: number, editor: FreEditor) => pasteListElement(listParent, propertyName, index, editor, false));
 
     // now create the whole item list
     if (optionsType === MenuOptionsType.placeholder) { // add lesser items for a placeholder
@@ -145,7 +145,7 @@ export function getContextMenuOptions(conceptName: string, listParent: PiElement
     } else if (optionsType === MenuOptionsType.header) { // add lesser items for a header
         items = [addAfter, pasteAfter];
     } else {
-        items = [addBefore, addAfter, new MenuItem("Delete", "", (element: PiElement, index: number, editor: PiEditor) => deleteListElement(listParent, propertyName, element)), new MenuItem("---", "", (element: PiElement, index: number, editor: PiEditor) => console.log("this is not an option")), new MenuItem("Cut", "", (element: PiElement, index: number, editor: PiEditor) => cutListElement(listParent, propertyName, element, editor)), new MenuItem("Copy", "", (element: PiElement, index: number, editor: PiEditor) => copyListElement(element, editor)), pasteBefore, pasteAfter];
+        items = [addBefore, addAfter, new MenuItem("Delete", "", (element: FreNode, index: number, editor: FreEditor) => deleteListElement(listParent, propertyName, element)), new MenuItem("---", "", (element: FreNode, index: number, editor: FreEditor) => console.log("this is not an option")), new MenuItem("Cut", "", (element: FreNode, index: number, editor: FreEditor) => cutListElement(listParent, propertyName, element, editor)), new MenuItem("Copy", "", (element: FreNode, index: number, editor: FreEditor) => copyListElement(element, editor)), pasteBefore, pasteAfter];
     }
     return items;
 }
@@ -159,27 +159,27 @@ export function getContextMenuOptions(conceptName: string, listParent: PiElement
  * @param typeOfAdded
  * @param before
  */
-function addListElement(listParent: PiElement, propertyName: string, index: number, typeOfAdded: string, before: boolean) {
+function addListElement(listParent: FreNode, propertyName: string, index: number, typeOfAdded: string, before: boolean) {
     console.log(`addListElement index: ${index}`)
     // get info about the property that needs to be changed
     const { property, isList, type } = getPropertyInfo(listParent, propertyName);
     if (!before) {
         index++;
     }
-    // console.log(`addListElement=> listParent: ${listParent.piLanguageConcept()}, isList: ${isList},
+    // console.log(`addListElement=> listParent: ${listParent.freLanguageConcept()}, isList: ${isList},
     // targetPropertyName ${propertyName}, index: ${index}`);
 
     // make the change, if the property is a list and the type of the new element conforms to the type of elements in the list
-    const newElement: PiElement = Language.getInstance().concept(typeOfAdded)?.constructor();
+    const newElement: FreNode = FreLanguage.getInstance().concept(typeOfAdded)?.constructor();
     if (newElement === undefined || newElement === null) {
         console.error("New element undefined"); // TODO Find out why this happens sometimes
         return;
-    } else if (isList && Language.getInstance().metaConformsToType(newElement, type)) { // allow subtyping
-        // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+    } else if (isList && FreLanguage.getInstance().metaConformsToType(newElement, type)) { // allow subtyping
+        // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
         runInAction(() => {
             property.splice(index, 0, newElement);
         });
-        // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+        // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
     }
 }
 
@@ -189,24 +189,24 @@ function addListElement(listParent: PiElement, propertyName: string, index: numb
  * @param propertyName
  * @param element
  */
-function deleteListElement(listParent: PiElement, propertyName: string, element: PiElement) {
+function deleteListElement(listParent: FreNode, propertyName: string, element: FreNode) {
     // get info about the property that needs to be changed
-    // const parentElement: PiElement = element.piOwnerDescriptor().owner;
-    // const targetPropertyName: string = element.piOwnerDescriptor().propertyName;
-    const targetIndex: number = element.piOwnerDescriptor().propertyIndex;
-    // console.log(`deleteListElement=> listParent: ${listParent.piLanguageConcept()},
+    // const parentElement: FreNode = element.freOwnerDescriptor().owner;
+    // const targetPropertyName: string = element.freOwnerDescriptor().propertyName;
+    const targetIndex: number = element.freOwnerDescriptor().propertyIndex;
+    // console.log(`deleteListElement=> listParent: ${listParent.freLanguageConcept()},
     // propertyName ${propertyName}, index: ${targetIndex}`);
 
     const { property, isList } = getPropertyInfo(listParent, propertyName);
     // make the change
     if (isList) {
-        // console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+        // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
         runInAction(() => {
             if (targetIndex < property.length) {
                 property.splice(targetIndex, 1);
             }
         });
-        // console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+        // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
     }
 }
 
@@ -218,7 +218,7 @@ function deleteListElement(listParent: PiElement, propertyName: string, element:
  * @param element
  * @param editor
  */
-function cutListElement(listParent: PiElement, propertyName: string, element: PiElement, editor: PiEditor) {
+function cutListElement(listParent: FreNode, propertyName: string, element: FreNode, editor: FreEditor) {
     deleteListElement(listParent, propertyName, element);
     editor.copiedElement = element;
 }
@@ -228,7 +228,7 @@ function cutListElement(listParent: PiElement, propertyName: string, element: Pi
  * @param element
  * @param editor
  */
-function copyListElement(element: PiElement, editor: PiEditor) {
+function copyListElement(element: FreNode, editor: FreEditor) {
     editor.copiedElement = element.copy();
 }
 
@@ -241,7 +241,7 @@ function copyListElement(element: PiElement, editor: PiEditor) {
  * @param editor
  * @param before
  */
-function pasteListElement(listParent: PiElement, propertyName: string, index: number, editor: PiEditor, before: boolean) {
+function pasteListElement(listParent: FreNode, propertyName: string, index: number, editor: FreEditor, before: boolean) {
     console.log(`pasteListElement index: ${index}`)
 
     // first, do some checks
@@ -258,28 +258,28 @@ function pasteListElement(listParent: PiElement, propertyName: string, index: nu
     }
 
     // check whether the pasted element has the correct type
-    if (!Language.getInstance().metaConformsToType(editor.copiedElement, type)) {
+    if (!FreLanguage.getInstance().metaConformsToType(editor.copiedElement, type)) {
         editor.setUserMessage(
-            "Types do not conform (" + editor.copiedElement.piLanguageConcept() + " does not conform to " + type + ").",
+            "Types do not conform (" + editor.copiedElement.freLanguageConcept() + " does not conform to " + type + ").",
             SeverityType.error);
         return;
     }
 
     // make the change
     if (isList) {
-        console.log('List before: [' + property.map(x => x.piId()).join(', ') + ']');
+        console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
         runInAction(() => {
             // make a copy before the element is added as part of the model,
             // because mobx decorators change the element's owner info:
             // it is removed from 'editor.copiedElement'!
-            const tmp: PiElement = editor.copiedElement.copy();
+            const tmp: FreNode = editor.copiedElement.copy();
             if (targetIndex <= property.length) {
                 property.splice(targetIndex, 0, editor.copiedElement);
             }
             // make sure the element can be pasted elsewhere
             editor.copiedElement = tmp;
         });
-        console.log('List after: [' + property.map(x => x.piId()).join(', ') + ']');
+        console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
     }
 }
 
@@ -289,10 +289,10 @@ function pasteListElement(listParent: PiElement, propertyName: string, index: nu
  * @param element
  * @param propertyName
  */
-function getPropertyInfo(element: PiElement, propertyName: string) {
-    // console.log(`element: ${element.piId()}, element type: ${element.piLanguageConcept()}, propertyName: ${propertyName}`)
+function getPropertyInfo(element: FreNode, propertyName: string) {
+    // console.log(`element: ${element.freId()}, element type: ${element.freLanguageConcept()}, propertyName: ${propertyName}`)
     const property = element[propertyName];
-    const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
+    const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
     const isList: boolean = propInfo.isList;
     const isPart: PropertyKind = propInfo.propertyKind;
     const type: string = propInfo.type;

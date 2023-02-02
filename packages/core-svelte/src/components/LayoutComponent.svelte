@@ -11,8 +11,8 @@
     import {
         Box,
         isEmptyLineBox,
-        PiEditor,
-        PiLogger,
+        FreEditor,
+        FreLogger,
         ListDirection,
         LayoutBox
     } from "@projectit/core";
@@ -20,9 +20,9 @@
 
     // Parameters
     export let box: LayoutBox;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
 
-    let LOGGER: PiLogger = new PiLogger("LayoutComponent");
+    let LOGGER: FreLogger = new FreLogger("LayoutComponent");
     let id: string ;
     let element: HTMLSpanElement;
     let children: Box[];
@@ -45,7 +45,7 @@
     });
 
     const refresh = (why?: string): void => {
-        LOGGER.log("REFRESH LayoutComponent (" + why +")" + box?.element?.piLanguageConcept());
+        LOGGER.log("REFRESH LayoutComponent (" + why +")" + box?.element?.freLanguageConcept());
         id = !!box ? componentId(box) : 'layout-for-unknown-box';
         children = [...box.children];
         isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;

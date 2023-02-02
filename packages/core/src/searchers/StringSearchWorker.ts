@@ -1,13 +1,13 @@
-import { PiElement } from "../ast";
-import { PiWriter } from "../writer";
-import { SearchWorker } from "./SearchWorker";
+import { FreNode } from "../ast";
+import { FreWriter } from "../writer";
+import { FreSearchWorker } from "./FreSearchWorker";
 
-export class StringSearchWorker implements SearchWorker {
+export class StringSearchWorker implements FreSearchWorker {
     private readonly toFind: string;
-    private readonly writer: PiWriter;
+    private readonly writer: FreWriter;
     private readonly metatype: string;
-    private __result: PiElement[] = [];
-    private elementMap: Map<PiElement, number> = new Map<PiElement, number>();
+    private __result: FreNode[] = [];
+    private elementMap: Map<FreNode, number> = new Map<FreNode, number>();
 
     /**
      * Returns the number of non-overlapping occurences of substring in text.
@@ -25,13 +25,13 @@ export class StringSearchWorker implements SearchWorker {
         return count;
     }
 
-    constructor(toFind: string, writer: PiWriter, metatype?: string) {
+    constructor(toFind: string, writer: FreWriter, metatype?: string) {
         this.toFind = toFind;
         this.writer = writer;
         this.metatype = metatype;
     }
 
-    get result(): PiElement[] {
+    get result(): FreNode[] {
         if (!this.metatype || this.metatype.length <= 0) {
             this.elementMap.forEach((value, key) => {
                 if (value > 0) {
@@ -42,15 +42,15 @@ export class StringSearchWorker implements SearchWorker {
         return this.__result;
     }
 
-    execAfter(modelelement: PiElement): boolean {
+    execAfter(modelelement: FreNode): boolean {
         // unused
         return false;
     }
 
-    execBefore(modelelement: PiElement): boolean {
+    execBefore(modelelement: FreNode): boolean {
         if (!!this.writer) {
             if (!!this.metatype && this.metatype.length > 0) {
-                if (this.metatype === modelelement.piLanguageConcept() || this.metatype === "PiElementReference") {
+                if (this.metatype === modelelement.freLanguageConcept() || this.metatype === "FreNodeReference") {
                     if (this.writer.writeToString(modelelement).includes(this.toFind)) {
                         this.__result.push(modelelement);
                     }
@@ -59,7 +59,7 @@ export class StringSearchWorker implements SearchWorker {
                 const stringRepresentation: string = this.writer.writeToString(modelelement);
                 let count: number = StringSearchWorker.countSubsInText(stringRepresentation, this.toFind);
                 this.elementMap.set(modelelement, count);
-                const owner: PiElement = modelelement.piOwner();
+                const owner: FreNode = modelelement.freOwner();
                 if (this.elementMap.has(owner)) {
                     this.elementMap.set(owner, this.elementMap.get(owner) - count);
                 }
@@ -68,9 +68,9 @@ export class StringSearchWorker implements SearchWorker {
         return true; // is irrelevant, there are no other workers in this search
     }
 
-    includeNode(modelelement: PiElement): boolean {
+    includeNode(modelelement: FreNode): boolean {
         if (!this.metatype || this.metatype.length <= 0) {
-            const owner: PiElement = modelelement.piOwner();
+            const owner: FreNode = modelelement.freOwner();
             if (this.elementMap.has(owner) && this.elementMap.get(owner) <= 0) {
                 return false;
             } else {

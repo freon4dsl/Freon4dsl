@@ -6,13 +6,13 @@
      */
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
-    import { OptionalBox, PiLogger, type PiEditor } from "@projectit/core";
+    import { OptionalBox, FreLogger, type FreEditor } from "@projectit/core";
     import { componentId } from "./svelte-utils";
 
     export let box: OptionalBox;
-    export let editor: PiEditor;
+    export let editor: FreEditor;
 
-    const LOGGER = new PiLogger("OptionalComponent");
+    const LOGGER = new FreLogger("OptionalComponent");
     let id: string;                             // an id for the html element showing the optional
     id = !!box ? componentId(box) : 'optional-for-unknown-box';
     let childBox ;
