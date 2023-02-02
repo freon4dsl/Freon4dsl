@@ -1,6 +1,6 @@
 [![Build Status](https://app.travis-ci.com/projectit-org/ProjectIt.svg?branch=development)](https://app.travis-ci.com/github/projectit-org/ProjectIt)
 
-# Freon, previously know as ProjectIt
+# Freon, previously know as ProjectIt XXX
 Projectional Editor for the Web. The current release (version 0.5.0) can be found on npm.
 
 ## What is Freon
