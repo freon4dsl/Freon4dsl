@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import type { Writable } from 'svelte/store';
-import { SeverityType } from "@projectit/core";
+import { SeverityType } from "@freon4dsl/core";
 
 // info about Freon
 export const versionNumber = "0.5.0";

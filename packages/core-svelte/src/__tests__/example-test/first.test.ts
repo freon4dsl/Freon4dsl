@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/svelte';
 import { TextComponent } from "../../components";
-import { FreEditor, TextBox } from "@projectit/core";
+import { FreEditor, TextBox } from "@freon4dsl/core";
 
 // see https://testing-library.com/docs/ for testing options
 

@@ -1,4 +1,4 @@
-import { FreNodeReference } from "@projectit/core";
+import { FreNodeReference } from "@freon4dsl/core";
 import { DSmodel, DSref } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";

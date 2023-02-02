@@ -8,8 +8,8 @@ import {
     SvgBox,
     TextBox,
     VerticalListBox
-} from "@projectit/core";
-import { PiClassifier, PiConceptProperty, PiParameter } from "@projectit/meta/dist/languagedef/metalanguage/index";
+} from "@freon4dsl/core";
+import { PiClassifier, PiConceptProperty, PiParameter } from "@freon4dsl/meta/dist/languagedef/metalanguage/index";
 
 function one(o: Object) {
     // if( o instanceof TextBox) { console.log("TEXTBOX 2");return; }

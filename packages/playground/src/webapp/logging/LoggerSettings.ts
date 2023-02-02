@@ -1,4 +1,4 @@
-import { FreLogger } from "@projectit/core";
+import { FreLogger } from "@freon4dsl/core";
 
 // Mute or unmute logs here (in addition to elsewhere).
 export function muteLogs() {

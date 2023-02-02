@@ -4,10 +4,10 @@
      * This component indents the child of its (Indent)Box.
      * Every indent is 8px wide.
      */
-    import { Box, FreLogger } from "@projectit/core";
+    import { Box, FreLogger } from "@freon4dsl/core";
     import { afterUpdate, onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
-    import type {IndentBox, FreEditor} from "@projectit/core";
+    import type {IndentBox, FreEditor} from "@freon4dsl/core";
     import { componentId } from "./svelte-utils";
 
     // Parameters

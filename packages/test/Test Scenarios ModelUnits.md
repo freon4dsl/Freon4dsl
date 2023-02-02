@@ -5,7 +5,7 @@
 These scenarios should be executed in order. The expectations depend upon execution of earlier scenarios.
 
 ###Scenario 1: start-up and save unit
-* Start ProjectIt
+* Start Freon
 * **Expect**: editor opened with <unnamed> unit  
 * **Type**: name of model unit *Unit64* in the editor
 * **Select**: Save Model Unit

@@ -18,7 +18,7 @@ export class WalkerTemplate {
         import { ${classifiersToDo.map(concept => `
                 ${Names.classifier(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
-        import { ${Names.FreLogger} } from "@projectit/core";
+        import { ${Names.FreLogger} } from "@freon4dsl/core";
                 
         const LOGGER = new ${Names.FreLogger}("${generatedClassName}");
 

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
-import { LabelBox, FreEditor, FreNode } from "@projectit/core";
+import { LabelBox, FreEditor, FreNode } from "@freon4dsl/core";
 import { SimpleElement } from "./models/SimpleElement";
 import LabelComponent from "../components/LabelComponent.svelte";
 import MockLabelSelectable from "./mock-components/MockLabelSelectable.svelte";

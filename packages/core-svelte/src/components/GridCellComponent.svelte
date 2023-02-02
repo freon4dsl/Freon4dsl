@@ -8,7 +8,7 @@
         toFreKey,
         GridCellBox,
         Box
-    } from "@projectit/core";
+    } from "@freon4dsl/core";
     import { afterUpdate, onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
     import RenderComponent from "./RenderComponent.svelte";

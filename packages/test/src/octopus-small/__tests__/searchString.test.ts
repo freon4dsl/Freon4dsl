@@ -1,4 +1,4 @@
-import { FreNode, FreSearcher } from "@projectit/core";
+import { FreNode, FreSearcher } from "@freon4dsl/core";
 import {
     AssociationEnd,
     Attribute,

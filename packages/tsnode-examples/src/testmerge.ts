@@ -8,8 +8,8 @@ import {
     SvgBox,
     TextBox,
     VerticalListBox
-} from "@projectit/core";
-import { FreClassifier, FreConceptProperty, FreParameter } from "@projectit/meta/dist/languagedef/metalanguage/index";
+} from "@freon4dsl/core";
+import { FreClassifier, FreConceptProperty, FreParameter } from "@freon4dsl/meta/dist/languagedef/metalanguage/index";
 
 function one(o: Object) {
     // if( o instanceof TextBox) { console.log("TEXTBOX 2");return; }

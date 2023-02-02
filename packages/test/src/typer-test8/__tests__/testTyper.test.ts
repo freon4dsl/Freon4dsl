@@ -1,4 +1,4 @@
-import { FreModelSerializer, FreError } from "@projectit/core";
+import { FreModelSerializer, FreError } from "@freon4dsl/core";
 import { ProjectYModelUnitType, XXunit, XX } from "../language/gen";
 import { ProjectYEnvironment } from "../config/gen/ProjectYEnvironment";
 import { FileHandler } from "../../utils/FileHandler";

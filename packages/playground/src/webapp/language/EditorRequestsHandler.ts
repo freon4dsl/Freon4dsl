@@ -8,8 +8,8 @@ import {
     FreUndoManager,
     FreSearcher,
     SeverityType
-} from "@projectit/core";
-import type { FreNode } from "@projectit/core";
+} from "@freon4dsl/core";
+import type { FreNode } from "@freon4dsl/core";
 import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore";
 import { EditorState } from "./EditorState";
 import { setUserMessage } from "../components/stores/UserMessageStore";

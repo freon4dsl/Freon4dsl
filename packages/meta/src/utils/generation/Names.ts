@@ -93,7 +93,7 @@ export class Names {
     public static initializeLanguage: string = "initializeLanguage";
     public static defaultProjectionName: string = "default";
     // reserved role names for expressions, use with care.
-    // Should remain identical to the definitions in @projectit/core !!
+    // Should remain identical to the definitions in @freon4dsl/core !!
     public static FRE_BINARY_EXPRESSION_LEFT: string = "FreBinaryExpression-left";
     public static FRE_BINARY_EXPRESSION_RIGHT: string = "FreBinaryExpression-right";
     public static BEFORE_BINARY_OPERATOR: string = "binary-pre";

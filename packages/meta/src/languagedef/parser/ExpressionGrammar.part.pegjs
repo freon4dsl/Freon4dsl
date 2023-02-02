@@ -1,7 +1,7 @@
 // These are the parsing rules for the expressions over the language structure,
 // as defined in meta/src/languagedef/metalanguage/FreLangExpressions.ts
 // They are not meant to be used separately, they should be used in the parser for 
-// projectIt parts that use the language expressions.
+// freon parts that use the language expressions.
 // Because they are common they are developed and tested separately, together with the
 // creator functions in LanguageExpressionCreators.ts.
 

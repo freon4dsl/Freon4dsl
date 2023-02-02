@@ -93,14 +93,3 @@ packages/test/src/*/stdlib/gen/*
 /packages/server/modelstore-example/NEXT/
 /packages/server/modelstore-example/QWER/
 /packages/server/modelstore-example/www/
-/packages/test/src/parser-test/editor/
-/packages/test/src/parser-test/environment/
-/packages/test/src/parser-test/language/
-/packages/test/src/parser-test/projectit/
-/packages/test/src/parser-test/reader/
-/packages/test/src/parser-test/scoper/
-/packages/test/src/parser-test/stdlib/
-/packages/test/src/parser-test/typer/
-/packages/test/src/parser-test/utils/
-/packages/test/src/parser-test/validator/
-/packages/test/src/parser-test/writer/

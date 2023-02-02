@@ -1,6 +1,6 @@
-// Note that the following import cannot be from "@projectit/core", because
+// Note that the following import cannot be from "@freon4dsl/core", because
 // this leads to a load error
-// import { FreErrorSeverity } from "@projectit/core"; // todo remove this bug
+// import { FreErrorSeverity } from "@freon4dsl/core"; // todo remove this bug
 import { FreErrorSeverity } from "../../utils/generation/FreErrorSeverity";
 import { FreDefinitionElement } from "../../utils";
 import { FreLangExp, FreConcept } from "../../languagedef/metalanguage";

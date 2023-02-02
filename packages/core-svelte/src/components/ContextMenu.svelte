@@ -8,7 +8,7 @@
      */
     import { clickOutsideConditional } from "./svelte-utils";
     import { tick } from "svelte";
-    import { FreLogger, MenuItem, FreEditor } from "@projectit/core";
+    import { FreLogger, MenuItem, FreEditor } from "@freon4dsl/core";
     import { contextMenuVisible } from "./svelte-utils/ContextMenuStore";
     import { viewport } from "./svelte-utils/EditorViewportStore";
 

@@ -1,4 +1,4 @@
-import { PiElementReference, RtNumber, RtObject } from "@projectit/core";
+import { PiElementReference, RtNumber, RtObject } from "@freon4dsl/core";
 import { RulesLanguageEnvironment } from "../../config/gen/RulesLanguageEnvironment";
 import {
     CheckingRule,

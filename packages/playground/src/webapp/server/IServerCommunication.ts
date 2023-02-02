@@ -1,7 +1,7 @@
 
 // TODO rethink these interfaces
-import type { FreNode } from "@projectit/core";
-import { FreNamedNode } from "@projectit/core";
+import type { FreNode } from "@freon4dsl/core";
+import { FreNamedNode } from "@freon4dsl/core";
 // import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
 // export interface IModelUnitData {

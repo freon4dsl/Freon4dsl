@@ -1,6 +1,6 @@
 [![Build Status](https://app.travis-ci.com/projectit-org/ProjectIt.svg?branch=development)](https://app.travis-ci.com/github/projectit-org/ProjectIt)
 
-# Freon, previously know as ProjectIt XXX
+# Freon, previously know as ProjectIt
 Projectional Editor for the Web. The current release (version 0.5.0) can be found on npm.
 
 ## What is Freon
@@ -8,7 +8,7 @@ Projectional Editor for the Web. The current release (version 0.5.0) can be foun
 Freon is a TypeScript/JavaScript framework to create and implement projectional editors for Domain-Specific Languages (DSLs). 
 Additional to the core framework, there are generators for many parts of the work environment for your DSL.
 
-For more information see the <a href="https://www.projectit.org">Freon/ProjectIt</a> website.
+For more information see the <a href="https://www.freon4dsl.dev">Freon</a> website.
 
 ## Developing Freon
 
@@ -18,7 +18,7 @@ You could also try and use NPM instead of yarn.
 
 Clone or fork this github project, check out the `development` branch, and install lerna:
 ```bash
-  git clone git@github.com:projectit-org/ProjectIt.git
+  git clone https://github.com/freon4dsl/Freon4dsl.git
   yarn global add lerna
 ```
 Setup the lerna structure:

@@ -1,5 +1,5 @@
 // Generated my Freon once, will NEVER be overwritten.
-import { InterpreterContext, IMainInterpreter, RtObject, RtBoolean, RtNumber } from "@projectit/core";
+import { InterpreterContext, IMainInterpreter, RtObject, RtBoolean, RtNumber } from "@freon4dsl/core";
 import {
     BooleanLiteralExpression,
     EqualsExpression,

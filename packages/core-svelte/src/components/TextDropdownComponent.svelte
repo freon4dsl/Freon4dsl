@@ -18,7 +18,7 @@
         FreLogger,
         SelectOption,
         TextBox
-    } from "@projectit/core";
+    } from "@freon4dsl/core";
 
     import { runInAction } from "mobx";
     import { afterUpdate, onMount } from "svelte";

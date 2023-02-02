@@ -12,7 +12,7 @@ import {
     PI_BINARY_EXPRESSION_LEFT,
     PI_BINARY_EXPRESSION_RIGHT,
     HorizontalListBox, FreProjection, FreTableDefinition, TableRowBox, HorizontalLayoutBox
-} from "@projectit/core";
+} from "@freon4dsl/core";
 import { OrExpression, SumExpression } from "../language/gen/";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment";
 

@@ -15,7 +15,7 @@
         DELETE,
         ENTER,
         ARROW_RIGHT, isNullOrUndefined, isTableRowBox, isElementBox,
-    } from "@projectit/core";
+    } from "@freon4dsl/core";
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
     import { afterUpdate, onMount, tick } from "svelte";
@@ -26,7 +26,7 @@
     let element: HTMLDivElement; // The current main element of this component.
     let rootBox: Box;
     let id: string;              // an id for the html element showing the rootBox
-    id = !!rootBox ? componentId(rootBox) : "projectit-component-with-unknown-box";
+    id = !!rootBox ? componentId(rootBox) : "freon-component-with-unknown-box";
 
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();
@@ -167,7 +167,7 @@
     refreshSelection("Initialize FreonComponent");
 </script>
 
-<div class={"projectit"}
+<div class={"freon"}
      on:keydown={onKeyDown}
      on:scroll={onScroll}
      bind:this={element}
@@ -182,7 +182,7 @@
 <ContextMenu bind:this={$contextMenu} items={[]} editor={editor}/>
 
 <style>
-    .projectit {
+    .freon {
         height: 100%;
         width: 100%;
         overflow-x: auto;

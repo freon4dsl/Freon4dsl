@@ -1,7 +1,7 @@
 import { FileHandler } from "../../utils/FileHandler";
 import { DocuProjectEnvironment } from "../config/gen/DocuProjectEnvironment";
 import { BaseProduct, InsuranceModel, InsurancePart, Part, Product } from "../language/gen";
-import { FreNodeReference } from "@projectit/core";
+import { FreNodeReference } from "@freon4dsl/core";
 
 // const writer = DocuProjectEnvironment.getInstance().writer;
 const reader = DocuProjectEnvironment.getInstance().reader;

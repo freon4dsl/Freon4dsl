@@ -2,7 +2,7 @@ export class WebAppConfigTemplate {
 
     generate(languageName: string): string {
         const name = this.toFirstUpper(languageName);
-        return `import type { FreEnvironment } from "@projectit/core";
+        return `import type { FreEnvironment } from "@freon4dsl/core";
 import { LanguageInitializer } from "../language/LanguageInitializer";
 import type { IServerCommunication } from "../server/IServerCommunication";
 import { ServerCommunication } from "../server/ServerCommunication";

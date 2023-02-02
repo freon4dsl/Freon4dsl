@@ -1,4 +1,4 @@
-import { FreNodeReference } from "@projectit/core";
+import { FreNodeReference } from "@freon4dsl/core";
 import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, DemoFunction } from "../language/gen";
 
 export class JsonModelCreator {

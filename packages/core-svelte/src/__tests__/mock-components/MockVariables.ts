@@ -1,4 +1,4 @@
-import { FreKey, toFreKey } from "@projectit/core";
+import { FreKey, toFreKey } from "@freon4dsl/core";
 
 /**
  * Class to keep track of keystrokes for MockSurroundingComponent

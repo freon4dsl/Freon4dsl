@@ -1,5 +1,5 @@
-import { ProjectItGenerateAllAction } from "@projectit/meta/dist/commandline/ProjectItGenerateAllAction";
-import { ProjectItGenerateLanguage } from "@projectit/meta/dist/commandline/ProjectItGenerateLanguage";
+import { ProjectItGenerateAllAction } from "@freon4dsl/meta/dist/commandline/ProjectItGenerateAllAction";
+import { ProjectItGenerateLanguage } from "@freon4dsl/meta/dist/commandline/ProjectItGenerateLanguage";
 
 
 import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";

@@ -1,4 +1,4 @@
-import { IMainInterpreter, InterpreterContext } from "@projectit/core";
+import { IMainInterpreter, InterpreterContext } from "@freon4dsl/core";
 import { NumberLiteral } from "../../../../language/gen/index";
 import { IBaseInterpreter } from "./IBaseInterpreter";
 

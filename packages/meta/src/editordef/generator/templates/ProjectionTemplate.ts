@@ -34,7 +34,7 @@ export class ProjectionTemplate {
     // The classes, functions, etc. to import are collected during the creation of the content for the generated file,
     // to avoid unused imports. All imports are stored in the following three variables.
     private modelImports: string[] = [];    // imports from ../language/gen
-    private coreImports: string[] = [];     // imports from @projectit/core
+    private coreImports: string[] = [];     // imports from @freon4dsl/core
     private configImports: string[] = [];   // imports from ../config/gen
     // Information about the use of projections from superconcepts or interfaces is also collected during the content
     // creation. This avoids the generation of unused classes and methods.

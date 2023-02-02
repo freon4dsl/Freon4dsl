@@ -14,7 +14,7 @@ export class InterpreterBaseTemplate {
      */
     public interpreterBase(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
         return `// Generated my Freon, will be overwritten with every generation.
-        import { InterpreterContext, RtObject, RtError } from "@projectit/core";
+        import { InterpreterContext, RtObject, RtError } from "@freon4dsl/core";
         import { ${interpreterDef.conceptsToEvaluate.map(c => Names.concept(c)).join(",")} } from "../../language/gen";
         
         /**
@@ -37,7 +37,7 @@ export class InterpreterBaseTemplate {
     public interpreterClass(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
         const baseName = Names.interpreterBaseClassname(language);
         return `// Generated my Freon once, will NEVER be overwritten.
-        import { InterpreterContext, IMainInterpreter, RtObject } from "@projectit/core";
+        import { InterpreterContext, IMainInterpreter, RtObject } from "@freon4dsl/core";
         import { ${baseName} } from "./gen/${baseName}";
         
         let main: IMainInterpreter;
@@ -58,7 +58,7 @@ export class InterpreterBaseTemplate {
 
     public interpreterInit(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
         const interpreter = Names.interpreterClassname(language);
-        return `import { IMainInterpreter } from "@projectit/core";
+        return `import { IMainInterpreter } from "@freon4dsl/core";
         import { ${interpreter} } from "../${interpreter}";
         
         /**

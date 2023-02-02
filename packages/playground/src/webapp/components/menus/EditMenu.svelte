@@ -26,7 +26,7 @@
 </div>
 
 <script lang="ts">
-	import { isRtError, FreNode } from "@projectit/core";
+	import { isRtError, FreNode } from "@freon4dsl/core";
 	import type { MenuComponentDev } from '@smui/menu';
 	import Menu from '@smui/menu';
 	import { Anchor } from '@smui/menu-surface';

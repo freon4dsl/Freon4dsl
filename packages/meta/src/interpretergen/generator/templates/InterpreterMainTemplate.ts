@@ -20,7 +20,7 @@ export class InterpreterMainTemplate {
             InterpreterContext,
             InterpreterTracer,
             MainInterpreter, OwningPropertyFunction, ${Names.FreNode}, RtObject, RtError
-        } from "@projectit/core";
+        } from "@freon4dsl/core";
         import {  ${Names.interpreterInitname(language)} } from "./gen/${Names.interpreterInitname(language)}";
         
         const getPropertyFunction: OwningPropertyFunction = (node: Object) => {

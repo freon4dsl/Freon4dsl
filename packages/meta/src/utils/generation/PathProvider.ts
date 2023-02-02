@@ -31,7 +31,7 @@ export const RESERVED_WORDS_ORIGIN = "../meta/src/validatordef/generator/templat
 export const STYLES_ORIGIN = "../meta/src/editordef/generator/templates/styles";     // the folder in which the to-be-copied files can be found
 export const STYLES_FOLDER = EDITOR_FOLDER + "/styles";     // the folder to which the style files should be copied
 // the predefined interfaces and classes can be found in ...
-export const PROJECTITCORE = "@projectit/core";
+export const PROJECTITCORE = "@freon4dsl/core";
 export const scoperInterface = PROJECTITCORE;
 export const typerInterface = PROJECTITCORE;
 export const validatorInterface = PROJECTITCORE;

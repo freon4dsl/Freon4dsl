@@ -4,7 +4,7 @@
      * This component shows to piece of non-editable text.
      */
     import { onMount, afterUpdate } from "svelte";
-    import { FreLogger, LabelBox } from "@projectit/core";
+    import { FreLogger, LabelBox } from "@freon4dsl/core";
     import { componentId } from "./svelte-utils";
     import { setBoxSizes } from "./svelte-utils";
 

@@ -1,6 +1,6 @@
-// Note that the following import cannot be from "@projectit/core", because
+// Note that the following import cannot be from "@freon4dsl/core", because
 // this leads to a load error
-// import { FreErrorSeverity } from "@projectit/core";
+// import { FreErrorSeverity } from "@freon4dsl/core";
 import {
     GenerationUtil,
     LANGUAGE_GEN_FOLDER,

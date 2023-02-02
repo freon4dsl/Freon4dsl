@@ -1,4 +1,4 @@
-import { matchElementList, observablepartlist, FreNodeBaseImpl, FreNamedNode, FreUtils } from "@projectit/core";
+import { matchElementList, observablepartlist, FreNodeBaseImpl, FreNamedNode, FreUtils } from "@freon4dsl/core";
 import { SimpleElement } from "./SimpleElement";
 import { makeObservable, observable } from "mobx";
 

@@ -8,7 +8,7 @@ import {
     PiCreateBinaryExpressionAction,
     PiCustomAction, PiEditor, PiElement, RoleProvider,
     SPACEBAR
-} from "@projectit/core";
+} from "@freon4dsl/core";
 import { NumberLiteral } from "../language/gen/index";
 
 /**

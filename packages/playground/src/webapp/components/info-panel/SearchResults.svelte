@@ -62,7 +62,7 @@
     import LinearProgress from "@smui/linear-progress";
     import IconButton from "@smui/icon-button";
     import { searchResultLoaded, searchResults } from "../stores/InfoPanelStore";
-    import type { FreError } from "@projectit/core";
+    import type { FreError } from "@freon4dsl/core";
     import { EditorState } from "../../language/EditorState";
 
     // sorting of table

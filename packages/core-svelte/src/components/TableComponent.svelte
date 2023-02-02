@@ -16,10 +16,10 @@
         isTableRowBox,
         isElementBox,
         TableCellBox
-    } from "@projectit/core";
+    } from "@freon4dsl/core";
     import { afterUpdate, onMount } from "svelte";
     import { activeElem, activeIn, componentId, draggedElem, draggedFrom } from "./svelte-utils";
-    import { dropListElement, moveListElement } from "@projectit/core";
+    import { dropListElement, moveListElement } from "@freon4dsl/core";
     import TableCellComponent from "./TableCellComponent.svelte";
 
     const LOGGER = new FreLogger("TableComponent");

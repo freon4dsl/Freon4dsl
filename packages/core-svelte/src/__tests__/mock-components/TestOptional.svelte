@@ -1,7 +1,7 @@
 <script lang="ts">
     import MockSurroundingComponent from "./MockSurroundingComponent.svelte";
     import OptionalComponent from "../../components/OptionalComponent.svelte";
-    import { OptionalBox, FreEditor } from "@projectit/core";
+    import { OptionalBox, FreEditor } from "@freon4dsl/core";
 
     // Parameters
     export let box: OptionalBox;

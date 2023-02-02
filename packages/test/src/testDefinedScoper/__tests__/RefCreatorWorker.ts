@@ -1,4 +1,4 @@
-import { AstWorker, FreNode, FreNodeReference } from "@projectit/core";
+import { AstWorker, FreNode, FreNodeReference } from "@freon4dsl/core";
 import { DSprivate, DSpublic, DSref, DSunit } from "../language/gen/index";
 
 export class RefCreatorWorker implements AstWorker {

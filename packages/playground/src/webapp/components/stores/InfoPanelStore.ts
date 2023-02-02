@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import type { Writable } from "svelte/store";
-import type { FreError } from "@projectit/core";
+import type { FreError } from "@freon4dsl/core";
 
 export let errorsLoaded: Writable<boolean> = writable<boolean>(true);
 export let searchResultLoaded: Writable<boolean> = writable<boolean>(true);

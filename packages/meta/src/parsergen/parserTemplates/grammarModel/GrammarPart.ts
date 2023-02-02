@@ -29,7 +29,7 @@ export class GrammarPart {
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
         import { ${this.imports.map(imp => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
-        import { ${Names.FreNodeReference} } from "@projectit/core";
+        import { ${Names.FreNodeReference} } from "@freon4dsl/core";
         
         export class ${className} {
             mainAnalyser: ${Names.syntaxAnalyser(language)};

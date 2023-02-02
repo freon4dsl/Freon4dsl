@@ -24,7 +24,7 @@
         FreEditor,
         FreLogger,
         Box, isElementBox
-    } from "@projectit/core";
+    } from "@freon4dsl/core";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
     import GridComponent from "./GridComponent.svelte";
     import IndentComponent from "./IndentComponent.svelte";

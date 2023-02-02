@@ -11,7 +11,7 @@ export class InstallLanguage extends CommandLineParser {
     public constructor() {
         super({
             toolFilename: "InstallLanguage",
-            toolDescription: "ProjectIt toolset for installing languages in playground."
+            toolDescription: "Freon toolset for installing languages in playground."
         });
         this.languageAction = new CopyLanguage();
         this.saveAction = new SaveLanguage();

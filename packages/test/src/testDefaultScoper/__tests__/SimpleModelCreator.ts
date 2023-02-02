@@ -1,5 +1,5 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen";
-import { FreModelSerializer, AstWalker, FreNode, FreNodeReference } from "@projectit/core";
+import { FreModelSerializer, AstWalker, FreNode, FreNodeReference } from "@freon4dsl/core";
 import { RefCreatorWorker } from "./RefCreatorWorker";
 
 export class SimpleModelCreator {

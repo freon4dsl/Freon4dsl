@@ -30,7 +30,7 @@ export class Freon extends CommandLineParser {
 
     public constructor() {
         super({
-            toolFilename: "projectit",
+            toolFilename: "freon",
             toolDescription: "Freon toolset for generating languages, scopers, editors, etc."
         });
 
@@ -89,5 +89,5 @@ export class Freon extends CommandLineParser {
 }
 
 // Run this as the main program.
-const projectit: Freon = new Freon();
-projectit.execute();
+const freon: Freon = new Freon();
+freon.execute();

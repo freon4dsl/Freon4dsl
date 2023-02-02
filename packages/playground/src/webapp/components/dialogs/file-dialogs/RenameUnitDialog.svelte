@@ -32,7 +32,7 @@
     import { toBeRenamed, unitNames } from "../../stores/ModelStore";
     import { renameUnitDialogVisible } from "../../stores/DialogStore";
     import { EditorState } from "../../../language/EditorState";
-    import * as Keys from "@projectit/core";
+    import * as Keys from "@freon4dsl/core";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";

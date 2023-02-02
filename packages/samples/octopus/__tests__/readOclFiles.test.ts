@@ -1,6 +1,6 @@
 import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
-import { GenericModelSerializer } from "@projectit/core";
+import { GenericModelSerializer } from "@freon4dsl/core";
 import { ModelUnitMetaType, OctopusModel, OctopusModelUnitType } from "../language/gen";
 
 const writer = OctopusEnvironment.getInstance().writer;

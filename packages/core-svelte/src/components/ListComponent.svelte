@@ -20,7 +20,7 @@
         moveListElement,
         FreEditor,
         FreLogger
-    } from "@projectit/core";
+    } from "@freon4dsl/core";
     import RenderComponent from "./RenderComponent.svelte";
     import {
         activeElem,

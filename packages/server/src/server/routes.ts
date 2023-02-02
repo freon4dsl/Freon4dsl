@@ -5,7 +5,7 @@ import { ModelRequests } from "./ModelRequests";
 const router = new Router();
 
 router.get("/", async (ctx: Router.IRouterContext) => {
-    ctx.body = "ProjectIt Model Server";
+    ctx.body = "Freon Model Server";
 });
 
 router.get("/getModelUnit", async (ctx: Router.IRouterContext) => {

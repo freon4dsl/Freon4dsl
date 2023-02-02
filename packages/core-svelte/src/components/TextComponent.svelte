@@ -30,7 +30,7 @@
 		SHIFT,
 		TAB,
 		TextBox
-	} from "@projectit/core";
+	} from "@freon4dsl/core";
 
 	import { runInAction } from "mobx";
 	import { replaceHTML } from "./svelte-utils";

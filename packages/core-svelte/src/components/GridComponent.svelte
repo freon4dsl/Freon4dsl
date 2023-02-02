@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { GridCellBox, type GridBox, type FreEditor, FreLogger } from "@projectit/core";
+    import { GridCellBox, type GridBox, type FreEditor, FreLogger } from "@freon4dsl/core";
     import { afterUpdate, onMount } from "svelte";
     import GridCellComponent from "./GridCellComponent.svelte";
     import { componentId } from "./svelte-utils";

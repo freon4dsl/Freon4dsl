@@ -7,7 +7,7 @@ import {
     RtEmpty,
     isRtNumber,
     isRtString, RtError, isRtEmpty
-} from "@projectit/core";
+} from "@freon4dsl/core";
 import {
     FunctionCall,
     Multiply,

@@ -1,4 +1,4 @@
-import { FreNode, FreNodeReference } from "@projectit/core";
+import { FreNode, FreNodeReference } from "@freon4dsl/core";
 
 export function printModel1(element: FreNode): string {
     return JSON.stringify(element, skipReferences, "  " )

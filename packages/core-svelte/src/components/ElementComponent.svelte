@@ -2,7 +2,7 @@
 <script lang="ts">
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
-    import { FreLogger, type FreEditor, ElementBox } from "@projectit/core";
+    import { FreLogger, type FreEditor, ElementBox } from "@freon4dsl/core";
     import { componentId } from "./svelte-utils";
 
     export let box: ElementBox;

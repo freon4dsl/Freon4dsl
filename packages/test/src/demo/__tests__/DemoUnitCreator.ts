@@ -1,4 +1,4 @@
-import { FreModelSerializer } from "@projectit/core";
+import { FreModelSerializer } from "@freon4dsl/core";
 import { Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 

@@ -1,6 +1,6 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoEntity, DemoFunction, DemoModel } from "../language/gen";
-import { FreModelSerializer } from "@projectit/core";
+import { FreModelSerializer } from "@freon4dsl/core";
 import { JsonModelCreator } from "./JsonModelCreator";
 
 describe("Checking Serializer on Demo", () => {

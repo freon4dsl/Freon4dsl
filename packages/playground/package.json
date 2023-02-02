@@ -1,5 +1,5 @@
 {
-  "name": "@projectit/playground",
+  "name": "@freon4dsl/playground",
   "version": "0.5.0",
   "license": "MIT",
   "type": "module",
@@ -65,7 +65,7 @@
     "install-simple":       "ts-node ../tools/src/InstallLanguage.ts install -d ../samples/SimpleProject -t ./src",
     "clean-libraries": "bash ../../scripts/freon-dev.sh clean-it -f -d src/libraries-test/defs -o src/libraries-test",
     "clean-all-examples": "yarn clean-calculator && yarn clean-example && yarn clean-graphviz && yarn clean-heating && yarn clean-json && yarn clean-libraries && yarn clean-expressions && yarn clean-octopus && yarn clean-openhab && yarn clean-pi-languages && yarn clean-rules && yarn clean-taxrules",
-    "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
+    "clean-config": "rm */*/config/FreonConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean":        "yarn clean-config && yarn clean-custom"
   },
@@ -112,9 +112,9 @@
     "typescript": "4.5.5"
   },
   "dependencies": {
-    "@projectit/core": "0.5.0",
-    "@projectit/core-svelte": "0.5.0",
-    "@projectit/server": "0.5.0",
+    "@freon4dsl/core": "0.5.0",
+    "@freon4dsl/core-svelte": "0.5.0",
+    "@freon4dsl/server": "0.5.0",
     "@types/node": "^14.14.31",
     "mobx": "6.3.3",
     "mobx-utils": "6.0.4",

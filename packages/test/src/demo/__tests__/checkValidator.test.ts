@@ -1,4 +1,4 @@
-import { FreNodeReference, FreError } from "@projectit/core";
+import { FreNodeReference, FreError } from "@freon4dsl/core";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import {
     DemoModel,

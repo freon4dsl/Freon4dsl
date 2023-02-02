@@ -1,6 +1,6 @@
-import { FreLogger } from "@projectit/core";
-import type { FreNamedNode } from "@projectit/core";
-import { FreModelSerializer } from "@projectit/core";
+import { FreLogger } from "@freon4dsl/core";
+import type { FreNamedNode } from "@freon4dsl/core";
+import { FreModelSerializer } from "@freon4dsl/core";
 import type { IServerCommunication } from "./IServerCommunication";
 import { setUserMessage } from "../components/stores/UserMessageStore";
 

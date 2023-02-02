@@ -23,7 +23,7 @@
         FreUtils,
         isTableRowBox,
         TableRowBox
-    } from "@projectit/core";
+    } from "@freon4dsl/core";
     import { onMount, createEventDispatcher, afterUpdate } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
     import { componentId, executeCustomKeyboardShortCut } from "./svelte-utils";
@@ -63,7 +63,7 @@
 
     // the drag ghost image, preload  it, otherwise it will not be shown on the first drag
     const img = new Image();
-    img.src = "img/projectit-logo.png";
+    img.src = "img/projectitlogo.png";
     // img.src = "img/open_with.svg"; // todo svg image is not shown as drag ghost
 
     const refresh = (why?: string) => {

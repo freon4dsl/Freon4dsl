@@ -1,4 +1,4 @@
-import { FreUtils } from "@projectit/core";
+import { FreUtils } from "@freon4dsl/core";
 import { FileHandler } from "../../utils/FileHandler";
 import { ParserOnConceptsEnvironment } from "../config/gen/ParserOnConceptsEnvironment";
 import { ExpressionTest, TestConceptsModel } from "../language/gen";

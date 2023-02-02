@@ -1,4 +1,4 @@
-import { FreNode, FreSearcher, FreNodeReference } from "@projectit/core";
+import { FreNode, FreSearcher, FreNodeReference } from "@freon4dsl/core";
 import { FileHandler } from "../../utils/FileHandler";
 import {
     AssociationClass,

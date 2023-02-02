@@ -5,7 +5,7 @@ set -e
 # If it is already running it will fail to start, that is ok
 verdaccio &
 
-# publish projectit
+# publish freon
 lerna run build-release
 lerna run unpublish-local
 lerna run publish-local
@@ -13,10 +13,10 @@ lerna run publish-local
 # checkout and build example project
 mkdir -p ../tmp
 cd ../tmp
-rm -rf ProjectIt-example
-git clone https://github.com/projectit-org/ProjectIt-example.git
-cd ProjectIt-example
-git checkout release-0.4.4-preparation
+rm -rf Freon-example
+git clone https://github.com/freon4dsl/Freon-example.git
+cd Freon-example
+git checkout release-0.5.0-preparation
 yarn install-local
 yarn generate
 # yarn build

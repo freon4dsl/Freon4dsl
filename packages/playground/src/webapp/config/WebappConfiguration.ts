@@ -1,4 +1,4 @@
-import type { FreEnvironment } from "@projectit/core";
+import type { FreEnvironment } from "@freon4dsl/core";
 import { LanguageInitializer } from "../language/LanguageInitializer";
 import type { IServerCommunication } from "../server/IServerCommunication";
 import { ServerCommunication } from "../server/ServerCommunication";

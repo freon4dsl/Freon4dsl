@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import type { Box, ListElementInfo } from "@projectit/core";
+import type { Box, ListElementInfo } from "@freon4dsl/core";
 
 /**
  * Note that because of the table component we need to be able to select multiple boxes.

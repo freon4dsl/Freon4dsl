@@ -24,7 +24,7 @@ export default {
 		'svelte/motion',
 		'svelte/store',
 		'svelte/transition',
-		'@projectit/core'
+		'@freon4dsl/core'
 	],
 	input: 'src/index.ts',
 	output: [
@@ -33,7 +33,7 @@ export default {
 			format: 'es',
 			sourcemap: !production,
 			globals: {
-				'@projectit/core': '@projectit/core',
+				'@freon4dsl/core': '@freon4dsl/core',
 				'mobx': 'mobx',
 				'svelte/internal': 'svelte/internal',
 				'svelte/store': 'svelte/store',
@@ -47,7 +47,7 @@ export default {
 			name,
 			sourcemap: !production,
 			globals: {
-				'@projectit/core': '@projectit/core',
+				'@freon4dsl/core': '@freon4dsl/core',
 				'mobx': 'mobx',
 				'svelte/internal': 'svelte/internal',
 				'svelte/store': 'svelte/store',
@@ -79,7 +79,7 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte', 'svelte/store', '@projectit/core']
+			dedupe: ['svelte', 'svelte/store', '@freon4dsl/core']
 		}),
 		autoExternal(), /* plugin to automatically exclude package.json dependencies and peerDependencies from your bundle. */
 		commonjs(),

@@ -1,4 +1,4 @@
-import { FreNodeReference } from "@projectit/core";
+import { FreNodeReference } from "@freon4dsl/core";
 import {
     DemoEntity,
     DemoAttribute,

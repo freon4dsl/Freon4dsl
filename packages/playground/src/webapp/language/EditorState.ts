@@ -5,13 +5,13 @@ import {
     FreLogger,
     FreOwnerDescriptor,
     SeverityType
-} from "@projectit/core";
+} from "@freon4dsl/core";
 import type {
     FreNode,
     FreModel,
     FreModelUnit,
     FreNamedNode
-} from "@projectit/core";
+} from "@freon4dsl/core";
 import { get } from "svelte/store";
 import {
     currentModelName,

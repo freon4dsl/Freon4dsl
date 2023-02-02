@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen } from "@testing-library/svelte";
-import { IndentBox, LabelBox, FreEditor, FreNode } from "@projectit/core";
+import { IndentBox, LabelBox, FreEditor, FreNode } from "@freon4dsl/core";
 import { SimpleElement } from "./models/SimpleElement";
 import IndentComponent from "../components/IndentComponent.svelte";
 import { configure } from '@testing-library/dom'

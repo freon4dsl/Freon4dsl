@@ -10,8 +10,8 @@ import {
     OptionalBox,
     FreCreateBinaryExpressionAction,
     FreTriggerUse, isString, ActionBox
-} from "@projectit/core";
-import { RoleProvider } from "@projectit/core";
+} from "@freon4dsl/core";
+import { RoleProvider } from "@freon4dsl/core";
 import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
 
 /**

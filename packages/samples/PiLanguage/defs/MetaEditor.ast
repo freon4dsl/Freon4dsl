@@ -1,4 +1,4 @@
-language PiLanguage  // from: projectit/meta/.../editordef
+language PiLanguage  // from: freon/meta/.../editordef
 
 // begin editor definition
 modelunit PiEditorDef {

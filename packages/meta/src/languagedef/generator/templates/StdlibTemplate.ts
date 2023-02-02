@@ -85,7 +85,7 @@ export class StdlibTemplate {
 
     generateCustomStdlibClass(language: FreLanguage): string {
         return `
-        import { ${Names.FreNamedNode}, ${Names.FreStdlib} } from "@projectit/core";
+        import { ${Names.FreNamedNode}, ${Names.FreStdlib} } from "@freon4dsl/core";
 
         export class ${Names.customStdlib(language)} implements ${Names.FreStdlib} {
             // add all your extra predefined instances here

@@ -86,7 +86,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
         import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
         import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
-        import { ${Names.FreNamedNode}, ${Names.FreParseLocation}, ${Names.FreNodeReference} } from "@projectit/core";
+        import { ${Names.FreNamedNode}, ${Names.FreParseLocation}, ${Names.FreNodeReference} } from "@freon4dsl/core";
         import { ${this.parts.map(part => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from ".";
          
         /**

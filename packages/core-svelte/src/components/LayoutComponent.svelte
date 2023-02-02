@@ -15,7 +15,7 @@
         FreLogger,
         ListDirection,
         LayoutBox
-    } from "@projectit/core";
+    } from "@freon4dsl/core";
     import { componentId } from "./svelte-utils";
 
     // Parameters

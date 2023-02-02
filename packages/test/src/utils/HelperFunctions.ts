@@ -1,4 +1,4 @@
-import { FreModelSerializer, FreModel, FreModelUnit, FreReader, FreWriter } from "@projectit/core";
+import { FreModelSerializer, FreModel, FreModelUnit, FreReader, FreWriter } from "@freon4dsl/core";
 import { FileHandler } from "./FileHandler";
 
 const serial: FreModelSerializer = new FreModelSerializer();

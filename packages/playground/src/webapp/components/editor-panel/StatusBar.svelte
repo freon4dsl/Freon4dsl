@@ -1,8 +1,8 @@
 <!-- The StatusBar presents info about the unit in the editor: name, whether there are errors, etc. -->
 
 <script lang="ts">
-    import { Box, isTextBox } from "@projectit/core";
-	import { selectedBoxes } from "@projectit/core-svelte";
+    import { Box, isTextBox } from "@freon4dsl/core";
+	import { selectedBoxes } from "@freon4dsl/core-svelte";
     import { editorEnvironment } from "../../config/WebappConfiguration";
     import { currentModelName, currentUnitName } from "../stores/ModelStore";
     import { modelErrors } from "../stores/InfoPanelStore";

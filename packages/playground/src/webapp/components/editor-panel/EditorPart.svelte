@@ -11,7 +11,7 @@
 </div>
 
 <script lang="ts">
-    import { FreonComponent } from "@projectit/core-svelte";
+    import { FreonComponent } from "@freon4dsl/core-svelte";
     import { editorEnvironment } from "../../config/WebappConfiguration";
     import { noUnitAvailable } from "../stores/ModelStore";
 </script>

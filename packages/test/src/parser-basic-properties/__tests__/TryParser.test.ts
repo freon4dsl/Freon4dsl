@@ -1,4 +1,4 @@
-import { FreUtils } from "@projectit/core";
+import { FreUtils } from "@freon4dsl/core";
 import { TestParserEnvironment } from "../config/gen/TestParserEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, PrimsWithKeywordTest, TestParserModel } from "../language/gen";

@@ -17,8 +17,8 @@
         <div class="mdc-typography--body2">
             Currently there is no in-build help functionality, other than the following. For more, we refer you to our
             website:
-            <a href="http://www.projectit.org/" target="_blank">
-                www.projectit.org
+            <a href="http://www.freon4dsl.dev/" target="_blank">
+                www.freon4dsl.dev
             </a>
         </div>
 
@@ -72,8 +72,8 @@
                 <div class="mdc-typography--body2">
                     <b>Freon</b> is an open source project which can be found at:
                     <br>
-                    <a href="https://github.com/projectit-org" target="_blank">
-                        https://github.com/projectit-org.
+                    <a href="https://github.com/freon4dsl" target="_blank">
+                        https://github.com/freon4dsl.
                     </a>
                     <br>
                     Current version: <b>{versionNumber}</b>.

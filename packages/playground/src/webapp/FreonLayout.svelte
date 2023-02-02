@@ -132,12 +132,12 @@
 			<div class="mdc-typography--headline6">Freon Environment for {$languageName}</div>
 		</Section>
 		<Section align="end" toolbar>
-			<IconButton aria-label="GitHub" target="_blank" href="https://github.com/projectit-org/ProjectIt">
+			<IconButton aria-label="GitHub" target="_blank" href="https://github.com/freon4dsl/Freon4dsl.git">
 				<Icon component={Svg} viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiGithub} />
 				</Icon>
 			</IconButton>
-			<IconButton aria-label="Documentation Site" target="_blank" href="https://www.projectit.org/">
+			<IconButton aria-label="Documentation Site" target="_blank" href="https://www.freon4dsl.dev/">
 				<Icon component={Svg} viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiWeb} />
 				</Icon>

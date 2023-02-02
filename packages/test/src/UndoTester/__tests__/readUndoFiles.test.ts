@@ -1,7 +1,7 @@
 import { UndoModel, UndoPart, UndoUnit } from "../language/gen";
 import { UndoTesterEnvironment } from "../config/gen/UndoTesterEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
-import { FreUndoManager } from "@projectit/core";
+import { FreUndoManager } from "@freon4dsl/core";
 
 const handler = new FileHandler();
 const reader = UndoTesterEnvironment.getInstance().reader;
