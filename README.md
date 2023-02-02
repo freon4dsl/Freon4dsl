@@ -8,7 +8,7 @@ Projectional Editor for the Web. The current release (version 0.5.0) can be foun
 Freon is a TypeScript/JavaScript framework to create and implement projectional editors for Domain-Specific Languages (DSLs). 
 Additional to the core framework, there are generators for many parts of the work environment for your DSL.
 
-For more information see the <a href="https://www.freon4dsl.dev">Freon</a> website.
+For more information see the <a href="https://www.freon4dsl.dev" target="_blank">Freon</a> website.
 
 ## Developing Freon
 
