@@ -1,4 +1,4 @@
-[![Build Status](https://app.travis-ci.com/projectit-org/ProjectIt.svg?branch=development)](https://app.travis-ci.com/github/projectit-org/ProjectIt)
+[![Build Status](https://github.com/freon4dsl/freon4dsl/actions/workflows/node.js.yml/badge.svg)]
 
 # Freon, previously know as ProjectIt
 Projectional Editor for the Web. The current release (version 0.5.0) can be found on npm.
