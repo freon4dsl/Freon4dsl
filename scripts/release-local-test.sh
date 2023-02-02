@@ -16,7 +16,7 @@ cd ../tmp
 rm -rf Freon-example
 git clone https://github.com/freon4dsl/Freon-example.git
 cd Freon-example
-git checkout release-0.5.0-preparation
+git checkout master
 yarn install-local
 yarn generate
 # yarn build
