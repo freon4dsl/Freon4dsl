@@ -36,7 +36,6 @@
     let elementType: string;
 
     const refresh = (why?: string): void => {
-        // todo refresh is not yet working correctly when an element is pasted or added by contextmenu into a table
         LOGGER.log("Refresh TableBox, box: " + why);
         if (!!box) {
             cells = getCells();
