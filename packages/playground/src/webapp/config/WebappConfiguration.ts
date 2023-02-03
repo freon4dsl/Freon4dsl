@@ -6,8 +6,8 @@ import { ServerCommunication } from "../server/ServerCommunication";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { DocuProjectEnvironment } from "../../DocuProject/config/gen/DocuProjectEnvironment";
-export const editorEnvironment: FreEnvironment = DocuProjectEnvironment.getInstance();
+import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
+export const editorEnvironment: FreEnvironment = ExampleEnvironment.getInstance();
 LanguageInitializer.initialize();
 
 /**
