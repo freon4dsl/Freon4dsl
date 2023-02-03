@@ -134,8 +134,7 @@
         display: flex;
     }
     .error {
-        /* todo use freon variable */
-        color: red;
+        color: var(--freon-dropdownitem-component-error-bg-color, red);
     }
     .unSelected {
         background: transparent;

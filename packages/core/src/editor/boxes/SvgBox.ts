@@ -6,8 +6,10 @@ export class SvgBox extends Box {
     readonly kind = "SvgBox";
 
     svgPath: string = "";
-    width: number = 20;
-    height: number = 20;
+    viewPortWidth: number = 20;
+    viewPortHeight: number = 20;
+    viewBoxWidth: number = 20;
+    viewBoxHeight: number = 20;
 
     constructor(element: FreNode, role: string, svgPath: string, initializer?: Partial<SvgBox>) {
         super(element, role);

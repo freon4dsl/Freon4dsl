@@ -63,7 +63,7 @@
 
     // the drag ghost image, preload  it, otherwise it will not be shown on the first drag
     const img = new Image();
-    img.src = "img/projectitlogo.png";
+    img.src = "img/freonlogo.png";
     // img.src = "img/open_with.svg"; // todo svg image is not shown as drag ghost
 
     const refresh = (why?: string) => {

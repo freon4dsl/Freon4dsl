@@ -65,8 +65,10 @@ export class CustomExampleProjection implements FreProjection {
                 }),
             new GridCellBox(sum, "sum-icon-cell",2, 1,
                 new SvgBox(sum, "sum-icon", sumIcon, {
-                    width: 50,
-                    height: 50,
+                    viewPortWidth: 50,
+                    viewPortHeight: 50,
+                    viewBoxWidth: 500,
+                    viewBoxHeight: 500,
                     selectable: false
                 }),
                 { cssClass: "mycell" }
