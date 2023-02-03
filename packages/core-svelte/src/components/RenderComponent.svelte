@@ -65,8 +65,6 @@
         let isSelected: boolean = $selectedBoxes.includes(box);
         className = (isSelected ? "selected" : "unSelected");
         if (!!element) { // upon initialization the element might by null
-            // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?
-            console.log('RENDER COMPONENT SETTING BOX SIZES')
             setBoxSizes(box, element.getBoundingClientRect());
         } else {
             LOGGER.log('No element for ' + box?.id + ' ' + box?.kind);
