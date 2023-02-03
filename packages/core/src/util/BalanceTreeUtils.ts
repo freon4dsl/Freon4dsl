@@ -7,7 +7,7 @@ import { FreLogger } from "../logging";
 
 // reserved role names for expressions, use with care.
 export const FRE_BINARY_EXPRESSION_LEFT = "FreBinaryExpression-left";
-export const PI_BINARY_EXPRESSION_RIGHT = "FreBinaryExpression-right";
+export const FRE_BINARY_EXPRESSION_RIGHT = "FreBinaryExpression-right";
 export const BEFORE_BINARY_OPERATOR = "binary-pre";
 export const AFTER_BINARY_OPERATOR = "binary-post";
 export const LEFT_MOST = "exp-left";
@@ -118,14 +118,14 @@ class BTree {
                 this.balanceTree(newBinExp, editor);
                 break;
             case RIGHT_MOST:
-                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_RIGHT };
+                selectedElement = { element: newBinExp, boxRoleToSelect: FRE_BINARY_EXPRESSION_RIGHT };
                 FreUtils.replaceExpression(exp, newBinExp, editor);
                 newBinExp.freSetLeft(exp);
                 this.balanceTree(newBinExp, editor);
                 break;
             case BEFORE_BINARY_OPERATOR:
                 FreUtils.CHECK(isFreBinaryExpression(exp), "Operator action only allowed in binary operator");
-                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_RIGHT };
+                selectedElement = { element: newBinExp, boxRoleToSelect: FRE_BINARY_EXPRESSION_RIGHT };
                 const left = (exp as FreBinaryExpression).freLeft();
                 (exp as FreBinaryExpression).freSetLeft(newBinExp);
                 // FreUtils.replaceExpression(left as FreExpressionNode, newBinExp, editor);

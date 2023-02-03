@@ -9,8 +9,8 @@ import {
     createDefaultExpressionBox,
     ActionBox,
     FreLanguage,
-    PI_BINARY_EXPRESSION_LEFT,
-    PI_BINARY_EXPRESSION_RIGHT,
+    FRE_BINARY_EXPRESSION_LEFT,
+    FRE_BINARY_EXPRESSION_RIGHT,
     HorizontalListBox, FreProjection, FreTableDefinition, TableRowBox, HorizontalLayoutBox
 } from "@freon4dsl/core";
 import { OrExpression, SumExpression } from "../language/gen/";
@@ -99,15 +99,15 @@ export class CustomExampleProjection implements FreProjection {
                     { cssClass: "gridCellOr", rowSpan: 3 }
                 ),
                 new GridCellBox(exp, "orBox3-cell", 1, OPERAND_COLUMN,
-                    this.optionalPartBox(exp.left, PI_BINARY_EXPRESSION_LEFT, "left"),
+                    this.optionalPartBox(exp.left, FRE_BINARY_EXPRESSION_LEFT, "left"),
                     { cssClass: "or_gridcellFirst" }
                 ),
                 new GridCellBox(exp, "or-Box4-cell", 2, OPERAND_COLUMN,
-                    this.optionalPartBox(exp.left, PI_BINARY_EXPRESSION_RIGHT, "right"),
+                    this.optionalPartBox(exp.left, FRE_BINARY_EXPRESSION_RIGHT, "right"),
                     { cssClass: "gridcell" }
                 ),
                 new GridCellBox(exp, "or-Box5-cell", 3, OPERAND_COLUMN,
-                    this.optionalPartBox(exp, PI_BINARY_EXPRESSION_RIGHT, "right"),
+                    this.optionalPartBox(exp, FRE_BINARY_EXPRESSION_RIGHT, "right"),
                     { cssClass: "gridcellLast" }
                 )
             );
@@ -118,11 +118,11 @@ export class CustomExampleProjection implements FreProjection {
                     { cssClass: "gridCellOr", rowSpan: 2 }
                 ),
                 new GridCellBox(exp, "or-Box7-cell", 1, OPERAND_COLUMN,
-                    this.optionalPartBox(exp, PI_BINARY_EXPRESSION_LEFT, "left"),
+                    this.optionalPartBox(exp, FRE_BINARY_EXPRESSION_LEFT, "left"),
                     { cssClass: "or_gridcellFirst" }
                 ),
                 new GridCellBox(exp, "or-Box8-cell", 2, OPERAND_COLUMN,
-                    this.optionalPartBox(exp, PI_BINARY_EXPRESSION_RIGHT, "right"),
+                    this.optionalPartBox(exp, FRE_BINARY_EXPRESSION_RIGHT, "right"),
                     { cssClass: "gridcellLast" }
                 )
             );
