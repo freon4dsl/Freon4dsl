@@ -64,9 +64,9 @@
         LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element?.freId() + '=' + b?.element?.freLanguageConcept() + '=' + b?.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
         className = (isSelected ? "selected" : "unSelected");
-        if (!!element) {
+        if (!!element) { // upon initialization the element might by null
             // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?
-            // todo why is 'element' sometimes null?
+            console.log('RENDER COMPONENT SETTING BOX SIZES')
             setBoxSizes(box, element.getBoundingClientRect());
         } else {
             LOGGER.log('No element for ' + box?.id + ' ' + box?.kind);
