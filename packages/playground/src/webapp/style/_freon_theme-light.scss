@@ -167,6 +167,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-dropdownitem-component-color: #{theme.$blue-900};
   --freon-dropdownitem-component-background-color: inherit;
   --freon-dropdownitem-component-border-color: #{theme.$blue-900};
+  --freon-dropdownitem-component-error-bg-color: #{theme.$red-600};
   --freon-dropdownitem-component-selected-color: inherit;
   --freon-dropdownitem-component-selected-background-color: inherit;
   --freon-dropdownitem-component-hover-color: inherit;

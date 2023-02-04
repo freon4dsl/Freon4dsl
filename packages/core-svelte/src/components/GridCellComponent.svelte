@@ -24,7 +24,7 @@
 
     //local variables
     const LOGGER = new FreLogger("GridCellComponent");
-    let boxStore: Writable<Box> = writable<Box>(cellBox.content); // todo see if we can do without this store
+    let contentBox: Box;
     let cssVariables: string;
     let id: string = !!cellBox? componentId(cellBox) : 'gridcell-for-unknown-box';
 
@@ -40,17 +40,16 @@
     function refresh(from? : string): void {
         if (!!cellBox) {
             LOGGER.log("REFRESH GridCellComponent " + (!!from ? " from " + from + " " : "") + cellBox?.element?.freLanguageConcept() + "-" + cellBox?.element?.freId());
-            $boxStore = cellBox.content;
             LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.content.role + "--- " + int++);
+            contentBox = cellBox.content;
             row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");
             column = cellBox.column + (cellBox.columnSpan ? " / span " + cellBox.columnSpan : "");
             orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cellBox.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cellBox.column) ? "gridcellOdd" : "gridcellEven")));
             if (cellBox.isHeader) {
                 isHeader = "gridcell-header";
             }
-            cssStyle = $boxStore.cssStyle;
+            cssStyle = contentBox.cssStyle;
             cssClass = cellBox.cssClass;
-            $boxStore = cellBox.content;
         }
     }
 
@@ -75,20 +74,15 @@
     });
 
     const onKeydown = (event: KeyboardEvent) => {
+        // todo this does not work anymore because the key down is handled by the box inside the table cell, remove it?
         LOGGER.log("GridCellComponent onKeyDown");
         const freKey = toFreKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
-            // todo adjust the index, so that we know where to execute the command
-            const index = 0;
+            const index = cellBox.propertyIndex;
             executeCustomKeyboardShortCut(event, index, cellBox, editor);
         }
     };
-
-    const onCellClick = (() => {
-        // todo remove this or implement...
-        LOGGER.log("GridCellComponent.onCellClick " + cellBox.row + ", " + cellBox.column);
-    });
 
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(cellBox?.id);
@@ -100,13 +94,12 @@
         style:grid-row="{row}"
         style:grid-column="{column}"
         style="{cssStyle}"
-        onClick={onCellClick}
         on:keydown={onKeydown}
         id="{id}"
         tabIndex={0}
         bind:this={htmlElement}
 >
-    <RenderComponent box={$boxStore} editor={editor}/>
+    <RenderComponent box={contentBox} editor={editor}/>
 </div>
 
 <style>

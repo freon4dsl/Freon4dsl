@@ -17,7 +17,7 @@
         <div class="mdc-typography--body2">
             Currently there is no in-build help functionality, other than the following. For more, we refer you to our
             website:
-            <a href="http://www.freon4dsl.dev/" target="_blank">
+            <a href="http://www.freon4dsl.dev/" target="_blank" rel="noreferrer">
                 www.freon4dsl.dev
             </a>
         </div>
@@ -72,13 +72,13 @@
                 <div class="mdc-typography--body2">
                     <b>Freon</b> is an open source project which can be found at:
                     <br>
-                    <a href="https://github.com/freon4dsl" target="_blank">
+                    <a href="https://github.com/freon4dsl" target="_blank" rel="noreferrer">
                         https://github.com/freon4dsl.
                     </a>
                     <br>
                     Current version: <b>{versionNumber}</b>.
                     <br>
-                    Created by: <a href="http://www.openmodeling.nl/" target="_blank">www.openmodeling.nl</a>.
+                    Created by: <a href="http://www.openmodeling.nl/" target="_blank" rel="noreferrer">www.openmodeling.nl</a>.
                 </div>
             </div>
         </Card>

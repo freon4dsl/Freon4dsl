@@ -434,10 +434,6 @@
 			inputElement.focus();
             editStart = false;
         }
-        if (!isEditing && !!spanElement) {
-            // TODO test this
-            setBoxSizes(box, spanElement.getBoundingClientRect()); // see todo in RenderComponent
-        }
         if (isEditing && partOfActionBox) {
 			if (text !== originalText) {
 				// send event to parent

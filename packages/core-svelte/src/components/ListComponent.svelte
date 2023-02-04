@@ -147,7 +147,6 @@
         box.refreshComponent = refresh;
     });
 
-    // TODO Empty vertical box gives empty line, try to add entities in the example.
     const onFocusHandler = (e: FocusEvent) => {
         LOGGER.log("ListComponent.onFocus for box " + box.role);
         // e.preventDefault();

@@ -64,9 +64,7 @@
         LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element?.freId() + '=' + b?.element?.freLanguageConcept() + '=' + b?.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
         className = (isSelected ? "selected" : "unSelected");
-        if (!!element) {
-            // todo check whether setBoxSizes is used correctly => maybe only here, not in other components?
-            // todo why is 'element' sometimes null?
+        if (!!element) { // upon initialization the element might by null
             setBoxSizes(box, element.getBoundingClientRect());
         } else {
             LOGGER.log('No element for ' + box?.id + ' ' + box?.kind);
@@ -136,8 +134,7 @@
         display: flex;
     }
     .error {
-        /* todo use freon variable */
-        color: red;
+        color: var(--freon-dropdownitem-component-error-bg-color, red);
     }
     .unSelected {
         background: transparent;

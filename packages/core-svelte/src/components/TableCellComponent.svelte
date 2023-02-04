@@ -63,8 +63,7 @@
 
     // the drag ghost image, preload  it, otherwise it will not be shown on the first drag
     const img = new Image();
-    img.src = "img/projectitlogo.png";
-    // img.src = "img/open_with.svg"; // todo svg image is not shown as drag ghost
+    img.src = "img/freonlogo.png"; // todo provide better drag image
 
     const refresh = (why?: string) => {
         LOGGER.log("TableCellComponent refresh, why: " + why);
@@ -91,7 +90,6 @@
         htmlElement.focus();
     }
 
-    // todo see which function we need to set the row and column: onMount, refresh, afterUpdate???
     onMount(() => {
         box.refreshComponent = refresh;
         row = box.row;

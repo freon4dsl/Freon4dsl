@@ -86,8 +86,7 @@
 
     .dropdownerror {
         color: var(--freon-dropdownitem-component-color, darkblue);
-        /* todo add new color to freon color set */
-        background-color: var(--freon-dropdownitem-component-background-color, red);
+        background-color: var(--freon-dropdownitem-component-error-bg-color, red);
         display: block;
         white-space: nowrap;
         border: none;
