@@ -33,7 +33,6 @@
         event.stopPropagation();
     }
 
-    // todo tabbing etc. should take into account the projection. Currently, sometimes the selected element is not visible.
     const onKeyDown = (event: KeyboardEvent) => {
         LOGGER.log("FreonComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey + " shift: " + event.shiftKey);
         if (event.ctrlKey || event.altKey) {
@@ -94,9 +93,11 @@
     function onScroll() {
         // Hide any contextmenu upon scrolling, because its position will not be correct.
         $contextMenuVisible = false;
-        // todo shouldn't we use a timeOut here, like below in the ResizeObserver?
-        editor.scrollX = element.scrollLeft;
-        editor.scrollY = element.scrollTop;
+        // we use a timeOut here, like below in the ResizeObserver, to improve performance
+        setTimeout(() => {
+            editor.scrollX = element.scrollLeft;
+            editor.scrollY = element.scrollTop;
+        }, 400); // Might use another value for the delay, but this seems ok.
     }
 
     onMount(() => {

@@ -7,8 +7,10 @@
 
     let id: string;
     let svgPath: string;
-    let width: number;
-    let height: number;
+    let portWidth: number;
+    let portHeight: number;
+    let viewBoxWidth: number;
+    let viewBoxHeight: number;
 
     onMount( () => {
         box.refreshComponent = refresh;
@@ -19,15 +21,19 @@
     const refresh = (why?: string) => {
         id = !!box? componentId(box) : 'SVG-for-unknown-box';
         svgPath = box.svgPath;
-        width = box.width;
-        height = box.height;
+        portWidth = box.viewPortWidth;
+        portHeight = box.viewPortHeight;
+        viewBoxWidth = box.viewBoxWidth;
+        viewBoxHeight = box.viewBoxHeight;
     }
 
     refresh();
 </script>
 
-<!--TODO 500, 500 in viewbox is dependent on the SVG image !!-->
-<svg width={width} height={height} viewBox={"0 0 500 500"} id="{id}">
+<!-- Note that width and height in the svg tag set the size of the viewport, -->
+<!-- whereas, the width and height in the viewBox set the size of the svg itself, -->
+<!-- which means that it might, or might not fit in the viewport. -->
+<svg width={portWidth} height={portHeight} viewBox="0 0 {viewBoxWidth} {viewBoxHeight}" id="{id}">
         <path d={svgPath}/>
 </svg>
 

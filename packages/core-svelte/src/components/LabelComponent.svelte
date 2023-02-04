@@ -6,40 +6,26 @@
     import { onMount, afterUpdate } from "svelte";
     import { FreLogger, LabelBox } from "@freon4dsl/core";
     import { componentId } from "./svelte-utils";
-    import { setBoxSizes } from "./svelte-utils";
 
     export let box: LabelBox;
 
     const LOGGER = new FreLogger("LabelComponent");
 
-    let id: string = !!box ? componentId(box) : 'label-for-unknwon-box';
+    let id: string = !!box ? componentId(box) : 'label-for-unknown-box';
     let element: HTMLDivElement = null;
     let style: string;
     let cssClass: string;
     let text: string;
 
-    // todo do we need a setFocus here?
-    // const setFocus = async (): Promise<void> => {
-    //     LOGGER.log("LabelComponent.setFocus for box " + box?.role);
-    //     if (!!element) {
-    //         element.focus();
-    //     }
-    // };
-
     onMount( () => {
         if (!!box) {
-            // box.setFocus = setFocus;
             box.refreshComponent = refresh;
         }
     });
 
     afterUpdate( () => {
         if (!!box) {
-            // box.setFocus = setFocus;
             box.refreshComponent = refresh;
-            if(!!element) {
-                setBoxSizes(box, element.getBoundingClientRect()); // see todo in RenderComponent
-            }
         }
     });
 

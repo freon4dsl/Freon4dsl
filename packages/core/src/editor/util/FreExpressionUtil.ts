@@ -11,7 +11,7 @@ import { FreBinaryExpression, FreExpressionNode } from "../../ast";
 import { FreLanguage } from "../../language";
 import {
     FRE_BINARY_EXPRESSION_LEFT,
-    PI_BINARY_EXPRESSION_RIGHT,
+    FRE_BINARY_EXPRESSION_RIGHT,
     AFTER_BINARY_OPERATOR,
     BEFORE_BINARY_OPERATOR,
     BINARY_EXPRESSION,
@@ -83,7 +83,7 @@ export function createDefaultBinaryBox(exp: FreBinaryExpression, symbol: string,
         createOperatorBox(editor, exp, symbol),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
         BoxFactory.action(exp, AFTER_BINARY_OPERATOR, NBSP),
-        (!!exp.freRight() ? boxProviderCache.getBoxProvider(exp.freRight()).box : BoxFactory.action(exp, PI_BINARY_EXPRESSION_RIGHT, "[add-right]", { propertyName: "right", conceptName: rightConceptName }))
+        (!!exp.freRight() ? boxProviderCache.getBoxProvider(exp.freRight()).box : BoxFactory.action(exp, FRE_BINARY_EXPRESSION_RIGHT, "[add-right]", { propertyName: "right", conceptName: rightConceptName }))
     ]);
     return result;
 }
