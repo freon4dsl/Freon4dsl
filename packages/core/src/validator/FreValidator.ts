@@ -39,7 +39,6 @@ export class FreError {
     }
 }
 
-// TODO combine these two Severities
 export enum FreErrorSeverity {
     Error = "Error",
     Warning = "Warning",
