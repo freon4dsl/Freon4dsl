@@ -71,8 +71,7 @@ export class FreCompositeTyper implements FreTyper {
                 return result;
             }
         }
-        // TODO Copied from old typer,. but shouldn't this be false?
-        return true;
+        return false;
     }
 
     equals(type1: FreType, type2: FreType): boolean | null {

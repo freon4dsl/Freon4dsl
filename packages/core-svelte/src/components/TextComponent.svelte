@@ -26,7 +26,7 @@
 		FreEditor,
 		FreLogger,
 		SelectBox,
-		SeverityType,
+		FreErrorSeverity,
 		SHIFT,
 		TAB,
 		TextBox
@@ -230,7 +230,7 @@
 				event.stopPropagation();
 				navigator.clipboard.writeText(text) // TODO get only the selected text from document.getSelection
 						.then(() => {
-							editor.setUserMessage('Text copied to clipboard', SeverityType.info);
+							editor.setUserMessage('Text copied to clipboard', FreErrorSeverity.Info);
 						})
 						.catch(err => {
 							editor.setUserMessage('Error in copying text: ' + err.message);

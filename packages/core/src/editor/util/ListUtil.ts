@@ -11,7 +11,7 @@ import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../in
 import { FreLanguage, PropertyKind } from "../../language";
 import { FreNode } from "../../ast";
 import { runInAction } from "mobx";
-import { SeverityType } from "../../validator";
+import { FreErrorSeverity } from "../../validator";
 
 const LOGGER = new FreLogger("ListBoxUtil");
 
@@ -75,7 +75,7 @@ export function moveListElement(parentElement: FreNode, movedElement: FreNode, t
  */
 export function dropListElement(editor: FreEditor, dropped: ListElementInfo, targetMetaType: string, targetElem: FreNode, targetPropertyName: string, targetIndex: number) {
     if (!FreLanguage.getInstance().metaConformsToType(dropped.element, targetMetaType)) { // check if item may be dropped here
-        editor.setUserMessage("Drop is not allowed here, because the types do not match (" + dropped.element.freLanguageConcept() + " does not conform to " + targetMetaType + ").", SeverityType.error);
+        editor.setUserMessage("Drop is not allowed here, because the types do not match (" + dropped.element.freLanguageConcept() + " does not conform to " + targetMetaType + ").", FreErrorSeverity.Error);
         return;
     }
     runInAction(() => {
@@ -246,7 +246,7 @@ function pasteListElement(listParent: FreNode, propertyName: string, index: numb
 
     // first, do some checks
     if (editor.copiedElement === null || editor.copiedElement === undefined) {
-        editor.setUserMessage("Nothing to paste", SeverityType.warning);
+        editor.setUserMessage("Nothing to paste", FreErrorSeverity.Warning);
         return;
     }
 
@@ -261,7 +261,7 @@ function pasteListElement(listParent: FreNode, propertyName: string, index: numb
     if (!FreLanguage.getInstance().metaConformsToType(editor.copiedElement, type)) {
         editor.setUserMessage(
             "Types do not conform (" + editor.copiedElement.freLanguageConcept() + " does not conform to " + type + ").",
-            SeverityType.error);
+            FreErrorSeverity.Error);
         return;
     }
 

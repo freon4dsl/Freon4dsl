@@ -26,7 +26,7 @@
 	import { toBeDeleted } from "../../stores/ModelStore";
 	import { EditorState } from "../../../language/EditorState";
 	import { setUserMessage } from "../../stores/UserMessageStore";
-	import { SeverityType } from "@freon4dsl/core";
+	import { FreErrorSeverity } from "@freon4dsl/core";
 
 	const cancelStr: string = "cancel";
 	const submitStr: string = "submit";
@@ -35,7 +35,7 @@
 		switch (e.detail.action) {
 			case submitStr:
 				EditorState.getInstance().deleteModelUnit($toBeDeleted);
-				setUserMessage("Deleted unit '" + $toBeDeleted.name + "'.", SeverityType.info);
+				setUserMessage("Deleted unit '" + $toBeDeleted.name + "'.", FreErrorSeverity.Info);
 				$toBeDeleted = null;
 				break;
 			case cancelStr:

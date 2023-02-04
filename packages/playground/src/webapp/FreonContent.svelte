@@ -10,17 +10,17 @@
     import SplitPane from "./components/SplitPane.svelte";
     import EditorPart from "./components/editor-panel/EditorPart.svelte";
     import InfoPanel from "./components/info-panel/InfoPanel.svelte";
-    import { SeverityType } from "@freon4dsl/core";
     import Button from "@smui/button";
+    import { FreErrorSeverity } from "@freon4dsl/core";
 
     // <Icon slot='icon' class="less-padding" component={Svg} viewBox='0 0 48 48'>
-    //     {#if $severity === SeverityType.info}
+    //     {#if $severity === FreErrorSeverity.Info}
     //     <path d={mdiInformation}/>
-    // {:else if $severity === SeverityType.hint}
+    // {:else if $severity === FreErrorSeverity.Hint}
     // <path d={mdiLightbulb}/>
-    // {:else if $severity === SeverityType.warning}
+    // {:else if $severity === FreErrorSeverity.Warning}
     // <path d={mdiAlertCircle}/>
-    // {:else if $severity === SeverityType.error}
+    // {:else if $severity === FreErrorSeverity.Error}
     // <path d={mdiCheckCircle}/>
     // {/if}
     // </Icon>
@@ -31,13 +31,13 @@
     // todo use freon variables here
     let severityClass: string;
     $: severityClass =
-        $severity === SeverityType.info ?
+        $severity === FreErrorSeverity.Info ?
             "blue"
-        : ($severity === SeverityType.hint ?
+        : ($severity === FreErrorSeverity.Hint ?
                 "green"
-           : ($severity === SeverityType.warning ?
+           : ($severity === FreErrorSeverity.Warning ?
                 "plum"
-             : ($severity === SeverityType.error ?
+             : ($severity === FreErrorSeverity.Error ?
                 "red"
                 : "none")));
 </script>
