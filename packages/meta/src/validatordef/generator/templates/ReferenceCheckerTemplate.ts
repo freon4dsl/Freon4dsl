@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
+import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
 import { FreLanguage, FreClassifier } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
@@ -25,7 +25,7 @@ export class ReferenceCheckerTemplate {
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.FreNodeReference}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.FreNodeReference}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
         import { ${overallTypeName}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";

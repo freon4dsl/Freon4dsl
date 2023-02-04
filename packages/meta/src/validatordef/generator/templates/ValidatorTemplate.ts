@@ -1,4 +1,4 @@
-import { CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names, PathProvider, PROJECTITCORE } from "../../../utils";
+import { CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names, PathProvider, FREON_CORE } from "../../../utils";
 import { FreLanguage } from "../../../languagedef/metalanguage";
 import { ValidatorDef } from "../../metalanguage";
 
@@ -20,7 +20,7 @@ export class ValidatorTemplate {
 
         // Template starts here
         return `
-        import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName} } from "${FREON_CORE}";
         import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
         import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";    
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
@@ -109,7 +109,7 @@ export class ValidatorTemplate {
         const interfaceName: string = Names.checkerInterface(language);
         const validatorName: string = Names.validator(language);
         return `
-        import { ${Names.FreError}, ${Names.FreErrorSeverity} } from "${PROJECTITCORE}";
+        import { ${Names.FreError}, ${Names.FreErrorSeverity} } from "${FREON_CORE}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${defaultWorkerName}"; 
         import { ${interfaceName} } from "./gen/${validatorName}";
                 

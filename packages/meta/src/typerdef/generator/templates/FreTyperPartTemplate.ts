@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../../utils";
+import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../../utils";
 import { FreConcept, FreLanguage, FreClassifier } from "../../../languagedef/metalanguage";
 import { TyperDef } from "../../metalanguage";
 import { ListUtil } from "../../../utils";
@@ -28,7 +28,7 @@ export class FreTyperPartTemplate {
 
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreType}, FreTyper, FreCompositeTyper} from "${PROJECTITCORE}";
+        import { ${Names.FreNode}, ${Names.FreType}, FreTyper, FreCompositeTyper} from "${FREON_CORE}";
         
         export class ${generatedClassName} implements ${typerInterfaceName} {
             mainTyper: FreCompositeTyper;
@@ -241,7 +241,7 @@ export class FreTyperPartTemplate {
 
         });
 
-        const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.FreNode}, ${Names.FreLanguage}, ${Names.FreNodeReference}, FreCommonSuperTypeUtil } from "${PROJECTITCORE}";
+        const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.FreNode}, ${Names.FreLanguage}, ${Names.FreNodeReference}, FreCommonSuperTypeUtil } from "${FREON_CORE}";
         import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}`;
 

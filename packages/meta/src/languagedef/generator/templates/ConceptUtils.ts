@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, GenerationUtil } from "../../../utils";
+import { Names, FREON_CORE, GenerationUtil } from "../../../utils";
 import {
     FreClassifier,
     FreConcept,
@@ -16,7 +16,7 @@ export class ConceptUtils {
     public static makeImportStatements(needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
         return `
             ${needsObservable ? `import { observable } from "mobx";` : ""}            
-            import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
+            import { ${importsFromCore.join(",")} } from "${FREON_CORE}";
             import { ${modelImports.join(", ")} } from "./internal";
             `;
     }

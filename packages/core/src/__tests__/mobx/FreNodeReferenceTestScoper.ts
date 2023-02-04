@@ -6,7 +6,7 @@ import { MobxModelElementImpl } from "../../ast";
 
 const LOGGER = new FreLogger("FreNodeReference").mute();
 /**
- * Class FreNodeReference provides the implementation for a (named) reference in ProjectIt.
+ * Class FreNodeReference provides the implementation for a (named) reference in Freon.
  * References can be set with either a referred object, or with a name.
  * This class is a copy of FreNodeReference - because it needs to use a different scoper.
  * The only difference with the original is (should be) the call to the scoper in 'get referred()'.

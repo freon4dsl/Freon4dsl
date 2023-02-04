@@ -2,7 +2,7 @@ import { FreLanguage, FreLimitedConcept } from "../../metalanguage";
 import {
     LANGUAGE_GEN_FOLDER,
     Names,
-    PROJECTITCORE,
+    FREON_CORE,
     CONFIGURATION_FOLDER,
     LANGUAGE_UTILS_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER
@@ -16,7 +16,7 @@ export class StdlibTemplate {
         this.makeTexts(language);
 
         return `
-        import { ${Names.FreNamedNode}, ${Names.FreStdlib}, ${Names.FreLanguage} } from "${PROJECTITCORE}";
+        import { ${Names.FreNamedNode}, ${Names.FreStdlib}, ${Names.FreLanguage} } from "${FREON_CORE}";
         import { ${Names.metaType(language)}, 
                     ${this.limitedConceptNames.map(name => `${name}`).join(", ") } 
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";

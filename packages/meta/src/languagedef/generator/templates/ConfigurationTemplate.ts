@@ -1,6 +1,6 @@
 import {
     Names,
-    PROJECTITCORE,
+    FREON_CORE,
     EDITOR_FOLDER,
     VALIDATOR_GEN_FOLDER, TYPER_FOLDER, VALIDATOR_FOLDER, STDLIB_FOLDER, SCOPER_FOLDER
 } from "../../../utils/";
@@ -12,7 +12,7 @@ export class ConfigurationTemplate {
         const configurationName = Names.configuration;
         const workerName = Names.checkerInterface(language);
         return `
-            import { ${Names.FreProjection}, ${Names.FreActions}, ${Names.FreTyperPart}, ${Names.FreStdlib}, ${Names.FrScoperPart} } from "${PROJECTITCORE}";
+            import { ${Names.FreProjection}, ${Names.FreActions}, ${Names.FreTyperPart}, ${Names.FreStdlib}, ${Names.FrScoperPart} } from "${FREON_CORE}";
             import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}";
             import { ${Names.customScoper(language)} } from "${relativePath}${SCOPER_FOLDER}";
             import { ${Names.customTyper(language)} } from "${relativePath}${TYPER_FOLDER}";

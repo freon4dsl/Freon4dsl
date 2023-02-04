@@ -1,7 +1,7 @@
 import { FreConcept, FreLanguage, FrePrimitiveType } from "../../../languagedef/metalanguage";
 import { FretTypeConcept, TyperDef } from "../../metalanguage";
 import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils";
-import { LANGUAGE_GEN_FOLDER, ListUtil, Names, PROJECTITCORE } from "../../../utils";
+import { LANGUAGE_GEN_FOLDER, ListUtil, Names, FREON_CORE } from "../../../utils";
 
 export class FreTypeConceptMaker {
     freTypeName: string = Names.FreType;
@@ -68,7 +68,7 @@ export class FreTypeConceptMaker {
 
     private makeImportStatements(relativePath: string, importsFromCore: string[], modelImports: string[], typeImports: string[]): string {
         return `      
-            ${importsFromCore.length > 0 ? `import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";` : ``}
+            ${importsFromCore.length > 0 ? `import { ${importsFromCore.join(",")} } from "${FREON_CORE}";` : ``}
             ${modelImports.length > 0 ? `import { ${modelImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}
             ${typeImports.length > 0 ? `import { ${typeImports.join(", ")} } from "./internal";`: `` }
             `;

@@ -1,6 +1,6 @@
 import {
     Names,
-    PROJECTITCORE,
+    FREON_CORE,
     TYPER_GEN_FOLDER,
     SCOPER_GEN_FOLDER,
     VALIDATOR_GEN_FOLDER,
@@ -20,7 +20,7 @@ export class EnvironmentTemplate {
         import { ${Names.FreEditor}, ${Names.FreEnvironment}, ${Names.FreReader}, 
                     ${Names.FreTyper}, ${Names.FreValidator}, ${Names.FreStdlib}, 
                     ${Names.FreWriter}, ${Names.FreInterpreter}, ${Names.FreScoperComposite}, ${Names.LanguageEnvironment}, ${Names.FreProjectionHandler}
-               } from "${PROJECTITCORE}";
+               } from "${FREON_CORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoperDef(language)}";
         import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typerDef(language)}";

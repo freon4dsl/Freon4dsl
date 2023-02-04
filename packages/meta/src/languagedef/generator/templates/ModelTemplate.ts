@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE } from "../../../utils";
+import { Names, FREON_CORE } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
 import { FreModelDescription } from "../../metalanguage/FreLanguage";
 import { ClassifierUtil } from "./ClassifierUtil";
@@ -16,7 +16,7 @@ export class ModelTemplate {
 
         // Template starts here
         return `
-            import { ${coreImports.join(",")} } from "${PROJECTITCORE}";
+            import { ${coreImports.join(",")} } from "${FREON_CORE}";
             import { ${Names.modelunit(language)}, ${modelImports.join(", ")} } from "./internal";
             
             /**

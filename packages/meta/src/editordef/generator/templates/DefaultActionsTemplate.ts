@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import {
     FreLanguage,
     FreBinaryExpressionConcept,
@@ -17,7 +17,7 @@ export class DefaultActionsTemplate {
         const modelImports: string[] = language.conceptsAndInterfaces().map(c => `${Names.classifier(c)}`)
             .concat(language.units.map(u => `${Names.classifier(u)}`));
         return `
-            import * as Keys from "${PROJECTITCORE}";
+            import * as Keys from "${FREON_CORE}";
             import {
                 AFTER_BINARY_OPERATOR,
                 BEFORE_BINARY_OPERATOR,
@@ -38,7 +38,7 @@ export class DefaultActionsTemplate {
                 ${Names.FreNodeReference},
                 LEFT_MOST,
                 RIGHT_MOST
-            } from "${PROJECTITCORE}";
+            } from "${FREON_CORE}";
             
             import { ${modelImports.join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 

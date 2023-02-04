@@ -1,7 +1,7 @@
 import { FreClassifier, FreLanguage } from "../../../languagedef/metalanguage";
 import {
     Names,
-    PROJECTITCORE,
+    FREON_CORE,
     GenerationUtil, CONFIGURATION_FOLDER
 } from "../../../utils";
 import { ScopeDef } from "../../metalanguage";
@@ -14,7 +14,7 @@ export class ScoperDefTemplate {
         const concreteNamespaces: FreClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scoperDef.namespaces);
         // const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
 
-        return `import { ${Names.FreLanguage}, ${Names.FreScoperComposite} } from "${PROJECTITCORE}";
+        return `import { ${Names.FreLanguage}, ${Names.FreScoperComposite} } from "${FREON_CORE}";
             import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
             import { ${Names.scoper(language)} } from "./${Names.scoper(language)}";     
 

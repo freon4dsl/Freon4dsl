@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE } from "../../../utils";
+import { Names, FREON_CORE } from "../../../utils";
 import { FreLanguage } from "../../../languagedef/metalanguage/FreLanguage";
 
 export class ActionsTemplate {
@@ -10,7 +10,7 @@ export class ActionsTemplate {
                 ActionsUtil,
                 FreCreateBinaryExpressionAction,
                 FreCustomAction
-            } from "${PROJECTITCORE}";
+            } from "${FREON_CORE}";
             
             import { BINARY_EXPRESSION_CREATORS, CUSTOM_ACTIONS } from "./${Names.defaultActions(language)}";
             import { MANUAL_BINARY_EXPRESSION_ACTIONS, MANUAL_CUSTOM_ACTIONS } from "../${Names.customActions(language)}";
