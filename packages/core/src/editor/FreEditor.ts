@@ -12,7 +12,7 @@ import {
     wait,
     isTextBox
 } from "./index";
-import { SeverityType } from "../validator";
+import { FreErrorSeverity } from "../validator";
 import { isNullOrUndefined } from "../util";
 
 const LOGGER = new FreLogger("FreEditor");
@@ -301,7 +301,7 @@ export class FreEditor {
      * @param message       The message.
      * @param severityType  The severity of the message (information, hint, warning, or error).
      */
-    setUserMessage(message: string, severityType?: SeverityType) {
+    setUserMessage(message: string, severityType?: FreErrorSeverity) {
         console.log('This message should be shown elsewhere: "' + message + '", please override this method appropriately.', severityType)
     }
 

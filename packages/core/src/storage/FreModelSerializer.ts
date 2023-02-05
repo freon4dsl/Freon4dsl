@@ -33,11 +33,11 @@ export class FreModelSerializer {
      */
     private toTypeScriptInstanceInternal(jsonObject: Object): any {
         if (jsonObject === null) {
-            throw new Error("jsonObject is null, cannot convert to TypeScript");
+            throw new Error("Cannot read json: jsonObject is null.");
         }
         const type: string = jsonObject["$typename"];
         if (isNullOrUndefined(type)) {
-            throw new Error(`Cannot read json: not a Freon structure, typename missing: ${JSON.stringify(jsonObject)}`);
+            throw new Error(`Cannot read json: not a Freon structure, typename missing: ${JSON.stringify(jsonObject)}.`);
         }
         const result: FreNode = this.language.createConceptOrUnit(type);
         if (isNullOrUndefined(result)) {
@@ -107,7 +107,6 @@ export class FreModelSerializer {
     }
 
     private checkValueToType(value: any, shouldBeType: string, property: Property) {
-        // TODO improve message to user
         if (typeof value !== shouldBeType) {
             throw new Error(`Value of property '${property.name}' is not of type '${shouldBeType}'.`);
         }

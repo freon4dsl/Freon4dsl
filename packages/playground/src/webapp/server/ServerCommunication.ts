@@ -1,6 +1,5 @@
-import { FreLogger } from "@freon4dsl/core";
 import type { FreNamedNode } from "@freon4dsl/core";
-import { FreModelSerializer } from "@freon4dsl/core";
+import { FreErrorSeverity, FreLogger, FreModelSerializer } from "@freon4dsl/core";
 import type { IServerCommunication } from "./IServerCommunication";
 import { setUserMessage } from "../components/stores/UserMessageStore";
 
@@ -51,6 +50,7 @@ export class ServerCommunication implements IServerCommunication {
             );
         } else {
             LOGGER.error( "Name of Unit '" + unitName + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
+            setUserMessage("Name of Unit '" + unitName + "' may contain only characters, numbers, '_', or '-', and must start with a character.", FreErrorSeverity.Error)
         }
     }
 

@@ -33,23 +33,23 @@ export class CollectNamesWorker implements AstWorker {
 
     execBefore(modelelement: FreNode): boolean {
         // find child properties
-        // TODO filter only properties that have a name
         const partProperties: Property[] = FreLanguage.getInstance().getPropertiesOfKind(modelelement.freLanguageConcept(), "part");
         // walk children
-        for(const prop of partProperties){
-            if (this.isVisible(modelelement, prop)) {
-                this.addIfOk(FreLanguage.getInstance().getPropertyValue(modelelement, prop));
+        for (const childProp of partProperties) {
+            // get the concept of the child and see if that one has a 'name' property
+            if (FreLanguage.getInstance().classifier(childProp.type)?.isNamedElement) {
+                // check whether the child is visible
+                if (this.isVisible(modelelement, childProp)) {
+                    // get the value of the childProp in the modelelement and add it, iff its type is ok
+                    for (const elem of FreLanguage.getInstance().getPropertyValue(modelelement, childProp)) {
+                        if (this.hasLookedForType(elem)) {
+                            this.namesList.push(elem as FreNamedNode);
+                        }
+                    }
+                }
             }
         }
         return false;
-    }
-
-    private addIfOk(elements: FreNode[]): void {
-        for(const elem of elements) {
-            if(FreLanguage.getInstance().classifier(elem.freLanguageConcept())?.isNamedElement && this.hasLookedForType(elem)) {
-                this.namesList.push(elem as FreNamedNode);
-            }
-        }
     }
 
     execAfter(modelelement: FreNode): boolean {
@@ -61,11 +61,9 @@ export class CollectNamesWorker implements AstWorker {
      *
      * @param namedElement
      */
-
     private hasLookedForType(element: FreNode) {
         if (!!this.metatype) {
-            const concept = element.freLanguageConcept();
-            return (concept === this.metatype || FreLanguage.getInstance().subConcepts(this.metatype).includes(concept));
+            return FreLanguage.getInstance().metaConformsToType(element, this.metatype);
         } else {
             return true;
         }
