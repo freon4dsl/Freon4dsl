@@ -11,24 +11,33 @@ import { isFreExpression } from "../ast-utils";
 // export const NBSP: string = "".concat("\u00A0");
 
 let LATEST_ID = 0;
+let LATEST_BOX_ID = 0;
 
 // const LOGGER = new FreLogger("FreUtils");
 
 export class FreUtils {
 
     /**
-     * Resets the ID, so the same ID can now appear twice.
-     * Use only in tests to ensure the ID's there always start at 0
+     * Resets the IDs, so the same ID can now appear twice.
+     * Use only in tests to ensure the IDs there always start at 0.
      */
     static resetId(): void {
         LATEST_ID = 0;
+        LATEST_BOX_ID = 0;
     }
     /**
-     *
+     * Returns a new unique ID for a FreNode.
      */
     static ID() {
         LATEST_ID++;
         return "ID-" + LATEST_ID;
+    }
+    /**
+     * Returns a new unique ID for a Box.
+     */
+    static BOX_ID() {
+        LATEST_BOX_ID++;
+        return "BOX-" + LATEST_BOX_ID;
     }
     /** Initialize an object with a JSON object
      */
