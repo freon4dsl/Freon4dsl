@@ -3,6 +3,8 @@ import { runInAction } from "mobx";
 import { FreEditor } from "../editor";
 import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast";
 import { isFreExpression } from "../ast-utils";
+import { IdProvider } from "./IdProvider";
+import { SimpleIdProvider } from "./SimpleIdProvider";
 
 // export type BooleanCallback = () => boolean;
 // export type DynamicBoolean = BooleanCallback | boolean;
@@ -10,34 +12,32 @@ import { isFreExpression } from "../ast-utils";
 // export const wait = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // export const NBSP: string = "".concat("\u00A0");
 
-let LATEST_ID = 0;
-let LATEST_BOX_ID = 0;
-
 // const LOGGER = new FreLogger("FreUtils");
 
 export class FreUtils {
+    // Default generators initialized below the class declaration
+    static nodeIdProvider: IdProvider;
+    static boxIdProvider: IdProvider;
 
     /**
-     * Resets the IDs, so the same ID can now appear twice.
+     * Resets the ID providers to the built-in ones. The same ID can now appear twice.
      * Use only in tests to ensure the IDs there always start at 0.
      */
     static resetId(): void {
-        LATEST_ID = 0;
-        LATEST_BOX_ID = 0;
+        this.nodeIdProvider = new SimpleIdProvider("ID-");
+        this.boxIdProvider = new SimpleIdProvider("BOX-");
     }
     /**
-     * Returns a new unique ID for a FreNode.
+     * Returns a new unique ID for a {@link FreNode} by delegating to {@link nodeIdProvider}.
      */
-    static ID() {
-        LATEST_ID++;
-        return "ID-" + LATEST_ID;
+    static ID(): string {
+        return this.nodeIdProvider.newId();
     }
     /**
-     * Returns a new unique ID for a Box.
+     * Returns a new unique ID for a {@link Box} by delegating to {@link boxIdProvider}
      */
-    static BOX_ID() {
-        LATEST_BOX_ID++;
-        return "BOX-" + LATEST_BOX_ID;
+    static BOX_ID(): string {
+        return this.boxIdProvider.newId();
     }
     /** Initialize an object with a JSON object
      */
@@ -80,6 +80,9 @@ export class FreUtils {
         });
     }
 }
+
+// Initialize the default ID providers
+FreUtils.resetId();
 
 export function isNullOrUndefined(obj: Object | null | undefined): obj is null | undefined {
     return obj === undefined || obj === null;

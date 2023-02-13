@@ -15,3 +15,6 @@ export * from "./FreUtils";
 
 // the others
 export * from "./BalanceTreeUtils";
+
+export * from "./IdProvider";
+export * from "./SimpleIdProvider";
