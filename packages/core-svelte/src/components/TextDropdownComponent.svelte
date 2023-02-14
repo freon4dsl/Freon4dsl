@@ -306,9 +306,6 @@
      */
     const endEditing = () => {
         LOGGER.log('TextDropdownComponent: endEditing');
-        if (!isEditing) {
-            return;
-        }
         isEditing = false;
         if (dropdownShown) {
             // check whether the current text is a valid option
@@ -326,7 +323,7 @@
     };
 
     const onFocusOut = () => {
-        LOGGER.log("TextDropdownComponent.onFocusOut");
+        LOGGER.log("onFocusOut");
         // todo test wether we need focusOut or blur
         // todo maybe this should be done with custom event???
         // Text component has lost focus, check where focus has moved to.

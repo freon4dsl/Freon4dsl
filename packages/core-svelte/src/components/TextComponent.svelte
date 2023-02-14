@@ -261,7 +261,7 @@
 					// this would avoid a second call to endEditing when the selection is changed.
 					LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
 					if (!partOfActionBox && isEditing) {
-						endEditing();
+						// endEditing();
 						// do not switch selection, this will be done by FreonComponent
 					} // else, let TextDropDownComponent handle this
 					break;
@@ -275,7 +275,7 @@
 						LOGGER.log('dispatching from arrow-left')
 						dispatcher('textUpdate', {content: text, caret: from - 1});
 					} else { // the key will cause this element to lose focus, its content should be saved
-						endEditing();
+						// endEditing();
 						// let the parent take care of handling the event
 					}
 					break;
@@ -289,7 +289,7 @@
 						LOGGER.log('dispatching from arrow-right')
 						dispatcher('textUpdate', {content: text, caret: from + 1});
 					} else { // the key will cause this element to lose focus, its content should be saved
-						endEditing();
+						// endEditing();
 						// let the parent take care of handling the event
 					}
 					break;
@@ -315,7 +315,7 @@
 							editor.selectPreviousLeaf();
 						} else {
 							// the key will cause this element to lose focus, its content should be saved
-							endEditing();
+							// endEditing();
 							editor.selectPreviousLeaf();
 						}
 					}
@@ -337,7 +337,7 @@
 								return;
 							} else { // TODO is this correct?
 								// the key will cause this element to lose focus, its content should be saved
-								endEditing();
+								// endEditing();
 								editor.selectNextLeaf();
 							}
 						}
@@ -386,12 +386,12 @@
     /**
      * When this component loses focus, do everything that is needed to end the editing state.
      */
-    const onFocusOut = (e) => {
-        LOGGER.log("TextComponent onFocusOut " + id)
-        if (!partOfActionBox && isEditing) {
-            endEditing();
-        } // else let TextDropdownComponent handle it
-    }
+	const onFocusOut = (e) => {
+		LOGGER.log("TextComponent onFocusOut " + id + " partof:" + partOfActionBox + " isEditing:" + isEditing)
+		if (isEditing) {
+			endEditing();
+		} // else // let TextDropdownComponent handle it
+	}
 
 	const refresh = () => {
 		LOGGER.log("REFRESH TextComponent " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
