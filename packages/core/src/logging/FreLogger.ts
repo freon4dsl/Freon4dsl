@@ -1,7 +1,8 @@
+import { forIn } from "lodash";
+
 /**
  * Logging helpers to enable quick filtering of certain log categories.
  */
-
 type MessageFunction = () => string;
 type LogMessage = string | MessageFunction;
 
@@ -62,9 +63,23 @@ export class FreLogger {
         }
     }
 
-    log(msg: LogMessage) {
+    // log(msg: LogMessage) {
+    //     if ((!FreLogger.muteAll) && this.active) {
+    //         this.logToConsole(FreLogger.FG_BLACK, this.category + ": " + this.message(msg));
+    //     }
+    // }
+
+    log(msg: LogMessage, tagOrTags?: string | string[]) {
         if ((!FreLogger.muteAll) && this.active) {
             this.logToConsole(FreLogger.FG_BLACK, this.category + ": " + this.message(msg));
+        } else if (tagOrTags !== undefined && tagOrTags !== null) {
+            const tags: string[] = (typeof tagOrTags === "string") ? [tagOrTags] : tagOrTags as Array<string>;
+            for (const tag of tags) {
+                if (!FreLogger.mutedLogs.includes(tag)) {
+                    this.logToConsole(FreLogger.FG_BLACK, this.category + "." + tag + ": " + this.message(msg));
+                    return;
+                }
+            }
         }
     }
 
