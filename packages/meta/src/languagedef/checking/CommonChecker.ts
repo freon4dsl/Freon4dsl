@@ -7,14 +7,15 @@ import {
     FrePrimitiveValue,
     FreProperty
 } from "../metalanguage";
-import { CheckRunner, LangUtil, Names, ParseLocationUtil } from "../../utils";
+import { CheckRunner, LangUtil, MetaLogger, Names, ParseLocationUtil } from "../../utils";
+
+const LOGGER = new MetaLogger("CommonChecker").mute();
 
 export class CommonChecker {
 
-    // TODO change console.logs to LOGGER.logs
     public static checkClassifierReference(reference: MetaElementReference<FreClassifier>, runner: CheckRunner) {
         if (!runner) {
-            console.log("NO RUNNER in CommonChecker.checkClassifierReference");
+            LOGGER.log("NO RUNNER in CommonChecker.checkClassifierReference");
             return;
         }
 
@@ -33,7 +34,7 @@ export class CommonChecker {
 
     public static checkOrCreateNameProperty(classifier: FreClassifier, runner: CheckRunner) {
         if (!runner) {
-            console.log("NO RUNNER in CommonChecker.checkOrCreateNameProperty");
+            LOGGER.log("NO RUNNER in CommonChecker.checkOrCreateNameProperty");
             return;
         }
         let nameProperty = classifier.allPrimProperties().find(p => p.name === "name");
