@@ -306,7 +306,9 @@
      */
     const endEditing = () => {
         LOGGER.log("endEditing " +id + " dropdownShow:" + dropdownShown);
-        isEditing = false;
+        if (! isEditing) {
+            isEditing = false;
+        }
         if (dropdownShown) {
             // check whether the current text is a valid option
             if (allOptions === undefined || allOptions === null) {
@@ -324,17 +326,9 @@
 
     const onBlur = () => {
         LOGGER.log("onBlur " + id);
-        // todo test wether we need focusOut or blur
-        // todo maybe this should be done with custom event???
-        // Text component has lost focus, check where focus has moved to.
-        // Focus may have moved outside the document tab/window or to another box.
         if (!document.hasFocus() || !$selectedBoxes.includes(box)) {
             endEditing();
         }
-    };
-
-    const onFocusOut = () => {
-        LOGGER.log("onFocusOut " + id, "focus");
     };
 
     const onFocusOutText = () => {
@@ -342,10 +336,6 @@
         if (isEditing) {
             isEditing = false;
         }
-    };
-
-    const onClick = () => {
-        LOGGER.log("onClick", "focus");
     };
 
     const onClickOutside = () => {
@@ -363,8 +353,6 @@
       use:clickOutsideConditional={{enabled: dropdownShown}}
       on:click_outside={onClickOutside}
       on:blur={onBlur}
-      on:focusout={onFocusOut}
-      on:click={onClick}
       on:contextmenu={(event) => endEditing()}
       class="dropdown"
 >
