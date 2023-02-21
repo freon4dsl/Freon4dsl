@@ -6,7 +6,7 @@ import { FretVarDecl } from "../FretVarDecl";
 /**
  * Class FretVarCallExp is the implementation of the concept with the same name in the language definition file.
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
- * to changes in the state of its properties.
+ * to any changes in the state of its properties.
  */
 export class FretVarCallExp extends FretExp {
     /**

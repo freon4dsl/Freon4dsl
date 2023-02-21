@@ -17,8 +17,8 @@ export class UndoPart extends FreNodeBaseImpl implements FreNamedNode {
         if (!!data.name) {
             result.name = data.name;
         }
-        if (!!data.parse_location) {
-            result.parse_location = data.parse_location;
+        if (!!data.parseLocation) {
+            result.parseLocation = data.parseLocation;
         }
         return result;
     }

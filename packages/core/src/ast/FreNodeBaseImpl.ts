@@ -6,7 +6,7 @@ import { MobxModelElementImpl } from "./decorators/DecoratedModelElement";
  * An abstract implementation of a decorated FreNode.
  */
 export abstract class FreNodeBaseImpl extends MobxModelElementImpl implements FreNode {
-    parse_location: FreParseLocation;
+    parseLocation: FreParseLocation;
 
     copy(): FreNode {
         throw new Error("Method should be implemented by subclasses of FreElementBaseImpl.");

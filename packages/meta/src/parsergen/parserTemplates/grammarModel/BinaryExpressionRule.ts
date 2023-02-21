@@ -25,7 +25,7 @@ export class BinaryExpressionRule extends GrammarRule {
             // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
             cases.push(`
                 case '${value}': {
-                    combined = ${Names.classifier(key)}.create({left: first, right: second, parse_location: this.${mainAnalyserName}.location(branch)});
+                    combined = ${Names.classifier(key)}.create({left: first, right: second, parseLocation: this.${mainAnalyserName}.location(branch)});
                     break;
                 }`);
         }

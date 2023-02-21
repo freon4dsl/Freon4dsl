@@ -268,7 +268,7 @@ LimitedTest {
       },
       "typeName": "VisibilityKind",
     },
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 19,
       "line": 2,
     },
@@ -378,7 +378,7 @@ LimitedTest {
       },
       "typeName": "VisibilityKind",
     },
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 16,
       "line": 12,
     },
@@ -391,13 +391,13 @@ LimitedTest {
     "$typename": "LimitedOptional",
     "_FRE_visMulti": Array [],
     "_FRE_visMultiWithExtra": Array [],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 17,
       "line": 18,
     },
   },
   "_FRE_name": "anyNameWillDo",
-  "parse_location": FreParseLocation {
+  "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -455,7 +455,7 @@ PartsTest {
         },
         "typeName": "VisibilityKind",
       },
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 25,
         "line": 3,
       },
@@ -486,7 +486,7 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 9,
         },
@@ -516,7 +516,7 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 13,
         },
@@ -546,20 +546,20 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 17,
         },
       },
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 14,
       "line": 2,
     },
   },
   "_FRE_name": "myName",
   "_FRE_partsOfParts": null,
-  "parse_location": FreParseLocation {
+  "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -617,7 +617,7 @@ PartsTest {
         },
         "typeName": "VisibilityKind",
       },
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 25,
         "line": 3,
       },
@@ -648,7 +648,7 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 9,
         },
@@ -678,7 +678,7 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 13,
         },
@@ -708,13 +708,13 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 17,
         },
       },
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 14,
       "line": 2,
     },
@@ -768,7 +768,7 @@ PartsTest {
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": FreParseLocation {
+            "parseLocation": FreParseLocation {
               "column": 38,
               "line": 36,
             },
@@ -799,13 +799,13 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 37,
                 "line": 42,
               },
             },
           ],
-          "parse_location": FreParseLocation {
+          "parseLocation": FreParseLocation {
             "column": 29,
             "line": 35,
           },
@@ -843,7 +843,7 @@ PartsTest {
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": FreParseLocation {
+            "parseLocation": FreParseLocation {
               "column": 38,
               "line": 48,
             },
@@ -874,13 +874,13 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 37,
                 "line": 54,
               },
             },
           ],
-          "parse_location": FreParseLocation {
+          "parseLocation": FreParseLocation {
             "column": 29,
             "line": 47,
           },
@@ -919,20 +919,20 @@ PartsTest {
             },
             "typeName": "VisibilityKind",
           },
-          "parse_location": FreParseLocation {
+          "parseLocation": FreParseLocation {
             "column": 46,
             "line": 26,
           },
         },
         "_FRE_partList": Array [],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 32,
           "line": 25,
         },
       },
       "_FRE_optListSub": Array [],
       "_FRE_optionalSub": null,
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 15,
         "line": 24,
       },
@@ -978,13 +978,13 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 30,
                 "line": 113,
               },
             },
             "_FRE_partList": Array [],
-            "parse_location": FreParseLocation {
+            "parseLocation": FreParseLocation {
               "column": 21,
               "line": 112,
             },
@@ -1023,7 +1023,7 @@ PartsTest {
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": FreParseLocation {
+            "parseLocation": FreParseLocation {
               "column": 42,
               "line": 66,
             },
@@ -1054,7 +1054,7 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 41,
                 "line": 72,
               },
@@ -1084,7 +1084,7 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 41,
                 "line": 77,
               },
@@ -1114,13 +1114,13 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 41,
                 "line": 82,
               },
             },
           ],
-          "parse_location": FreParseLocation {
+          "parseLocation": FreParseLocation {
             "column": 31,
             "line": 65,
           },
@@ -1159,7 +1159,7 @@ PartsTest {
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": FreParseLocation {
+            "parseLocation": FreParseLocation {
               "column": 42,
               "line": 89,
             },
@@ -1190,7 +1190,7 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 41,
                 "line": 95,
               },
@@ -1220,7 +1220,7 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 41,
                 "line": 100,
               },
@@ -1250,18 +1250,18 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 41,
                 "line": 105,
               },
             },
           ],
-          "parse_location": FreParseLocation {
+          "parseLocation": FreParseLocation {
             "column": 33,
             "line": 88,
           },
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 17,
           "line": 64,
         },
@@ -1306,13 +1306,13 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 34,
                 "line": 141,
               },
             },
             "_FRE_partList": Array [],
-            "parse_location": FreParseLocation {
+            "parseLocation": FreParseLocation {
               "column": 25,
               "line": 140,
             },
@@ -1351,13 +1351,13 @@ PartsTest {
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": FreParseLocation {
+            "parseLocation": FreParseLocation {
               "column": 30,
               "line": 124,
             },
           },
           "_FRE_partList": Array [],
-          "parse_location": FreParseLocation {
+          "parseLocation": FreParseLocation {
             "column": 31,
             "line": 123,
           },
@@ -1396,13 +1396,13 @@ PartsTest {
                 },
                 "typeName": "VisibilityKind",
               },
-              "parse_location": FreParseLocation {
+              "parseLocation": FreParseLocation {
                 "column": 34,
                 "line": 150,
               },
             },
             "_FRE_partList": Array [],
-            "parse_location": FreParseLocation {
+            "parseLocation": FreParseLocation {
               "column": 25,
               "line": 149,
             },
@@ -1441,29 +1441,29 @@ PartsTest {
               },
               "typeName": "VisibilityKind",
             },
-            "parse_location": FreParseLocation {
+            "parseLocation": FreParseLocation {
               "column": 30,
               "line": 132,
             },
           },
           "_FRE_partList": Array [],
-          "parse_location": FreParseLocation {
+          "parseLocation": FreParseLocation {
             "column": 33,
             "line": 131,
           },
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 17,
           "line": 122,
         },
       },
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 9,
       "line": 23,
     },
   },
-  "parse_location": FreParseLocation {
+  "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -1520,7 +1520,7 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 24,
           "line": 28,
         },
@@ -1550,7 +1550,7 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 32,
         },
@@ -1581,7 +1581,7 @@ PartsTest {
         },
         "typeName": "VisibilityKind",
       },
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 24,
         "line": 9,
       },
@@ -1611,7 +1611,7 @@ PartsTest {
         },
         "typeName": "VisibilityKind",
       },
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 25,
         "line": 3,
       },
@@ -1642,7 +1642,7 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 15,
         },
@@ -1672,7 +1672,7 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 19,
         },
@@ -1702,20 +1702,20 @@ PartsTest {
           },
           "typeName": "VisibilityKind",
         },
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 23,
         },
       },
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 14,
       "line": 2,
     },
   },
   "_FRE_name": "myName",
   "_FRE_partsOfParts": null,
-  "parse_location": FreParseLocation {
+  "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -1770,7 +1770,7 @@ PrimitivesTest {
     ],
     "_FRE_primNumber": 19,
     "_FRE_primString": "TEKST",
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 5,
       "line": 3,
     },
@@ -1803,7 +1803,7 @@ PrimitivesTest {
     ],
     "_FRE_primNumberWithExtra": 45,
     "_FRE_primStringWithExtra": "TEKST",
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 5,
       "line": 14,
     },
@@ -1832,7 +1832,7 @@ PrimitivesTest {
       "iets",
       "wat",
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 11,
       "line": 22,
     },
@@ -1854,7 +1854,7 @@ PrimitivesTest {
       78,
     ],
     "_FRE_primListStringSeparator": Array [],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 14,
       "line": 32,
     },
@@ -1877,7 +1877,7 @@ PrimitivesTest {
     "_FRE_primListStringTerminator": Array [
       "iets",
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 12,
       "line": 27,
     },
@@ -1896,12 +1896,12 @@ PrimitivesTest {
     "_FRE_primListStringTerminator": Array [
       "iets",
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 15,
       "line": 37,
     },
   },
-  "parse_location": FreParseLocation {
+  "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -1935,7 +1935,7 @@ PrimsWithKeywordTest {
       "$id": "ID-2",
       "$typename": "PrimKeyword",
       "_FRE_primBoolean": true,
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 6,
         "line": 3,
       },
@@ -1947,7 +1947,7 @@ PrimsWithKeywordTest {
       "$id": "ID-3",
       "$typename": "PrimKeyword",
       "_FRE_primBoolean": false,
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 9,
         "line": 4,
       },
@@ -1959,7 +1959,7 @@ PrimsWithKeywordTest {
       "$id": "ID-4",
       "$typename": "PrimKeyword",
       "_FRE_primBoolean": true,
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 6,
         "line": 5,
       },
@@ -1971,7 +1971,7 @@ PrimsWithKeywordTest {
       "$id": "ID-5",
       "$typename": "PrimKeyword",
       "_FRE_primBoolean": false,
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 9,
         "line": 6,
       },
@@ -1983,7 +1983,7 @@ PrimsWithKeywordTest {
       "$id": "ID-6",
       "$typename": "PrimKeyword",
       "_FRE_primBoolean": true,
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 6,
         "line": 7,
       },
@@ -1995,7 +1995,7 @@ PrimsWithKeywordTest {
       "$id": "ID-7",
       "$typename": "PrimKeyword",
       "_FRE_primBoolean": false,
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 9,
         "line": 8,
       },
@@ -2007,7 +2007,7 @@ PrimsWithKeywordTest {
       "$id": "ID-8",
       "$typename": "PrimKeyword",
       "_FRE_primBoolean": false,
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 6,
         "line": 9,
       },
@@ -2019,13 +2019,13 @@ PrimsWithKeywordTest {
       "$id": "ID-9",
       "$typename": "PrimKeyword",
       "_FRE_primBoolean": true,
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 9,
         "line": 10,
       },
     },
   ],
-  "parse_location": FreParseLocation {
+  "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -2112,7 +2112,7 @@ RefsTest {
         "typeName": "RefConcept",
       },
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 13,
       "line": 2,
     },
@@ -2168,7 +2168,7 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 21,
           "line": 31,
         },
@@ -2215,7 +2215,7 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 21,
           "line": 39,
         },
@@ -2262,7 +2262,7 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 21,
           "line": 47,
         },
@@ -2331,7 +2331,7 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 19,
           "line": 13,
         },
@@ -2378,18 +2378,18 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 21,
           "line": 23,
         },
       },
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 19,
       "line": 13,
     },
   },
-  "parse_location": FreParseLocation {
+  "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
   },
@@ -2515,7 +2515,7 @@ RefsTest {
         "typeName": "RefConcept",
       },
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 13,
       "line": 2,
     },
@@ -2627,7 +2627,7 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 66,
         },
@@ -2733,7 +2733,7 @@ RefsTest {
           "typeName": "RefConcept",
         },
       ],
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 27,
         "line": 28,
       },
@@ -2838,7 +2838,7 @@ RefsTest {
           "typeName": "RefConcept",
         },
       ],
-      "parse_location": FreParseLocation {
+      "parseLocation": FreParseLocation {
         "column": 24,
         "line": 15,
       },
@@ -2944,7 +2944,7 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 41,
         },
@@ -3049,13 +3049,13 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 53,
         },
       },
     ],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 18,
       "line": 14,
     },
@@ -3168,7 +3168,7 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 80,
         },
@@ -3273,19 +3273,19 @@ RefsTest {
             "typeName": "RefConcept",
           },
         ],
-        "parse_location": FreParseLocation {
+        "parseLocation": FreParseLocation {
           "column": 25,
           "line": 92,
         },
       },
     ],
     "_FRE_partList": Array [],
-    "parse_location": FreParseLocation {
+    "parseLocation": FreParseLocation {
       "column": 25,
       "line": 80,
     },
   },
-  "parse_location": FreParseLocation {
+  "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
   },

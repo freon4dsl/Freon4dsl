@@ -10,19 +10,16 @@ export class ModelTemplate {
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
         const coreImports = ClassifierUtil.findMobxImports(modelDescription)
-            .concat([Names.FreModel, Names.FreLanguage, Names.FreUtils, Names.FreParseLocation, "matchElementList", "matchPrimitiveList, matchReferenceList"]);
+            .concat([Names.FreModel, Names.FreLanguage, Names.FreUtils, Names.FreParseLocation]);
         const modelImports = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType(language);
 
-        // Template starts here
-        return `
-            import { ${coreImports.join(",")} } from "${FREON_CORE}";
-            import { ${Names.modelunit(language)}, ${modelImports.join(", ")} } from "./internal";
-            
+        // Template starts here. Note that the imports are gathered during the generation, and added later.
+        let result: string = `           
             /**
              * Class ${myName} is the implementation of the model with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
-             * to changes in the state of its properties.
+             * to any changes in the state of its properties.
              */            
             export class ${myName} extends ${extendsClass} implements ${Names.FreModel} {     
             
@@ -35,7 +32,7 @@ export class ModelTemplate {
                 ${ConceptUtils.makeConstructor(false, modelDescription.properties)}            
                 ${ConceptUtils.makeBasicMethods(false, metaType,true, false,false, false)}
                 ${ConceptUtils.makeCopyMethod(modelDescription, myName, false)}
-                ${ConceptUtils.makeMatchMethod(false, modelDescription, myName)}
+                ${ConceptUtils.makeMatchMethod(false, modelDescription, myName, coreImports)}
                 
                 /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.
@@ -197,6 +194,12 @@ export class ModelTemplate {
                         return [];
                     }
                 }`;
+
+        return `
+            import { ${coreImports.join(",")} } from "${FREON_CORE}";
+            import { ${Names.modelunit(language)}, ${modelImports.join(", ")} } from "./internal";
+            
+            ${result}`;
     }
 
     private findModelImports(modelDescription: FreModelDescription, myName: string): string[] {

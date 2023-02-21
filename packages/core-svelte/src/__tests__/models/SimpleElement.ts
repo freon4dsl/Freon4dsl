@@ -12,15 +12,15 @@ export class SimpleElement extends FreNodeBaseImpl implements FreNamedNode {
         if (!!data.name) {
             result.name = data.name;
         }
-        if (!!data.parse_location) {
-            result.parse_location = data.parse_location;
+        if (!!data.parseLocation) {
+            result.parseLocation = data.parseLocation;
         }
         return result;
     }
 
     readonly $typename: string = "SimpleElement"; // holds the metatype in the form of a string
     $id: string; // a unique identifier
-    // parse_location: FreParseLocation; // if relevant, the location of this element within the source from which it is parsed
+    // parseLocation: FreParseLocation; // if relevant, the location of this element within the source from which it is parsed
     name: string; // implementation of name
 
     constructor(id?: string) {

@@ -1,4 +1,4 @@
-import { Names, FREON_CORE, GenerationUtil } from "../../../utils";
+import { Names, FREON_CORE, GenerationUtil, ListUtil } from "../../../utils";
 import {
     FreClassifier,
     FreConcept,
@@ -6,110 +6,113 @@ import {
     FrePrimitiveProperty,
     FreProperty,
     FrePrimitiveType,
-    FreInterface, FreUnitDescription
+    FreInterface
 } from "../../metalanguage";
-import * as console from "console";
-import { property } from "lodash";
 
 export class ConceptUtils {
 
     public static makeImportStatements(needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
+        // remove all empty strings and duplicates from the arrays
+        const checkedCoreImports: string[] = [];
+        ListUtil.addListIfNotPresent(checkedCoreImports, importsFromCore);
+        const checkedModelImports: string[] = [];
+        ListUtil.addListIfNotPresent(checkedModelImports, modelImports);
         return `
-            ${needsObservable ? `import { observable } from "mobx";` : ""}            
-            import { ${importsFromCore.join(",")} } from "${FREON_CORE}";
-            import { ${modelImports.join(", ")} } from "./internal";
+            ${needsObservable ? `import { observable } from "mobx";` : ""}
+            import { ${checkedCoreImports.join(", ")} } from "${FREON_CORE}";
+            import { ${checkedModelImports.join(", ")} } from "./internal";
             `;
     }
 
     public static makeBasicProperties(metaType: string, conceptName: string, hasSuper: boolean): string {
         return `readonly $typename: ${metaType} = "${conceptName}";    // holds the metatype in the form of a string
-                ${!hasSuper ? "$id: string;     // a unique identifier" : ""}    
-                parse_location: ${Names.FreParseLocation};    // if relevant, the location of this element within the source from which it is parsed`;
+                ${!hasSuper ? "$id: string;     // a unique identifier" : ""}
+                parseLocation: ${Names.FreParseLocation};    // if relevant, the location of this element within the source from which it is parsed`;
     }
 
-    public static makePrimitiveProperty(property: FrePrimitiveProperty): string {
-        const comment = "// implementation of " + property.name;
-        const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : ${GenerationUtil.getBaseTypeAsString(property)}${arrayType}; \t${comment}`;
+    public static makePrimitiveProperty(freProp: FrePrimitiveProperty): string {
+        const comment = "// implementation of " + freProp.name;
+        const arrayType = freProp.isList ? "[]" : "";
+        return `${freProp.name} : ${GenerationUtil.getBaseTypeAsString(freProp)}${arrayType}; \t${comment}`;
     }
 
-    private static initializer(property: FrePrimitiveProperty): string {
+    private static initializer(freProp: FrePrimitiveProperty): string {
         let initializer = "";
-        const myType: FreClassifier = property.type;
-        if (!property.isList) {
+        const myType: FreClassifier = freProp.type;
+        if (!freProp.isList) {
             switch (myType) {
                 case FrePrimitiveType.identifier: {
-                    initializer = `this.${property.name} = \"${property.initialValue ? property.initialValue : ``}\"`;
+                    initializer = `this.${freProp.name} = \"${freProp.initialValue ? freProp.initialValue : ``}\"`;
                     break;
                 }
                 case FrePrimitiveType.string: {
-                    initializer = `this.${property.name} = \"${property.initialValue ? property.initialValue : ``}\"`;
+                    initializer = `this.${freProp.name} = \"${freProp.initialValue ? freProp.initialValue : ``}\"`;
                     break;
                 }
                 case FrePrimitiveType.number: {
-                    initializer = `this.${property.name} = ${property.initialValue ? property.initialValue : `0`}`;
+                    initializer = `this.${freProp.name} = ${freProp.initialValue ? freProp.initialValue : `0`}`;
                     break;
                 }
                 case FrePrimitiveType.boolean: {
-                    initializer = `this.${property.name} = ${property.initialValue ? property.initialValue : `false`}`;
+                    initializer = `this.${freProp.name} = ${freProp.initialValue ? freProp.initialValue : `false`}`;
                     break;
                 }
             }
         } else {
-            if (!!property.initialValueList) {
+            if (!!freProp.initialValueList) {
                 if (myType === FrePrimitiveType.string || myType === FrePrimitiveType.identifier) {
-                    initializer = `${property.initialValueList.map(elem => `this.${property.name}.push(\"${elem}\")`).join("\n ")}`;
+                    initializer = `${freProp.initialValueList.map(elem => `this.${freProp.name}.push(\"${elem}\")`).join("\n ")}`;
                 } else {
-                    initializer = `${property.initialValueList.map(elem => `this.${property.name}.push(${elem})`).join("\n ")}`;
+                    initializer = `${freProp.initialValueList.map(elem => `this.${freProp.name}.push(${elem})`).join("\n ")}`;
                 }
             }
         }
         return initializer;
     }
 
-    public static makePartProperty(property: FreConceptProperty): string {
-        const comment = "// implementation of part '" + property.name + "'";
-        const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : ${Names.classifier(property.type)}${arrayType}; ${comment}`;
+    public static makePartProperty(freProp: FreConceptProperty): string {
+        const comment = "// implementation of part '" + freProp.name + "'";
+        const arrayType = freProp.isList ? "[]" : "";
+        return `${freProp.name} : ${Names.classifier(freProp.type)}${arrayType}; ${comment}`;
     }
 
-    public static makeReferenceProperty(property: FreConceptProperty): string {
-        const comment = "// implementation of reference '" + property.name + "'";
-        const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : ${Names.FreNodeReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
+    public static makeReferenceProperty(freProp: FreConceptProperty): string {
+        const comment = "// implementation of reference '" + freProp.name + "'";
+        const arrayType = freProp.isList ? "[]" : "";
+        return `${freProp.name} : ${Names.FreNodeReference}<${Names.classifier(freProp.type)}>${arrayType}; ${comment}`;
     }
 
     public static makeConvenienceMethods(list: FreConceptProperty[]): string {
-        let result: string = '';
-        for (const property of list) {
-            if (!property.isPart) {
-                const propType: string = Names.classifier(property.type);
-                if (!property.isList) {
+        let result: string = "";
+        for (const prop of list) {
+            if (!prop.isPart) {
+                const propType: string = Names.classifier(prop.type);
+                if (!prop.isList) {
                     result += `
             /**
-             * Convenience method for reference '${property.name}'.
+             * Convenience method for reference '${prop.name}'.
              * Instead of returning a '${Names.FreNodeReference}<${propType}>' object,
              * it returns the referred '${propType}' object, if it can be found.
              */
-            get ${Names.refName(property)}(): ${propType} {
-                if (!!this.${property.name}) {
-                    return this.${property.name}.referred;
+            get ${Names.refName(prop)}(): ${propType} {
+                if (!!this.${prop.name}) {
+                    return this.${prop.name}.referred;
                 }
                 return null;
             }`;
                 } else {
                     result += `
             /**
-             * Convenience method for reference '${property.name}'.
-             * Instead of returning a list of '${Names.FreNodeReference}<${propType}>' objects, it 
+             * Convenience method for reference '${prop.name}'.
+             * Instead of returning a list of '${Names.FreNodeReference}<${propType}>' objects, it
              * returns a list of referred '${propType}' objects, if the references can be resolved.
              *
-             * Note that when some references cannot be resolved, the length of this list is 
-             * different to the length of '${property.name}'.
+             * Note that when some references cannot be resolved, the length of this list is
+             * different to the length of '${prop.name}'.
              */
-            get ${Names.refName(property)}(): readonly ${propType}[] {
+            get ${Names.refName(prop)}(): readonly ${propType}[] {
                 const result: ${propType}[] = [];
-                for (const $part of this.${property.name}) {
+                for (const $part of this.${prop.name}) {
                     if (!!$part.referred) {
                         result.push($part.referred);
                     }
@@ -123,7 +126,8 @@ export class ConceptUtils {
     }
 
     public static makeConstructor(hasSuper: boolean, allProps: FreProperty[]): string {
-        // console.log("found overriding props: " + allProps.filter(p => p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name} [${p.location?.filename}]`).join("\n\t"))
+        // console.log("found overriding props: " + allProps.filter(p => p.isOverriding)
+        // .map(p => `${p.name} of ${p.owningClassifier.name} [${p.location?.filename}]`).join("\n\t"))
         // console.log("found NON overriding props: " + allProps.filter(p => !p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
         const allButPrimitiveProps: FreConceptProperty[] = allProps.filter(p => !p.isPrimitive && !p.implementedInBase) as FreConceptProperty[];
         const allPrimitiveProps: FrePrimitiveProperty[] = allProps.filter(p => p.isPrimitive && !p.implementedInBase) as FrePrimitiveProperty[];
@@ -131,7 +135,7 @@ export class ConceptUtils {
         return `constructor(id?: string) {
         ${!hasSuper ? `
                         super();
-                        if (!!id) { 
+                        if (!!id) {
                             this.$id = id;
                         } else {
                             this.$id = ${Names.FreUtils}.ID(); // uuid.v4();
@@ -139,7 +143,7 @@ export class ConceptUtils {
             : "super(id);"
         }
         ${allPrimitiveProps.length !== 0 ?
-            `// Both 'observableprim' and 'observableprimlist' change the get and set of the attribute 
+            `// Both 'observableprim' and 'observableprimlist' change the get and set of the attribute
              // such that the part is observable. In lists no 'null' or 'undefined' values are allowed.
             ${allPrimitiveProps.map(p =>
                 (p.isList ?
@@ -147,14 +151,14 @@ export class ConceptUtils {
                      ${this.initializer(p)};`
                     : `observableprim(this, "${p.name}");
                        ${this.initializer(p)};`
-                )                
+                )
             ).join("\n")}
                         `
             : ``
         }
         ${allButPrimitiveProps.length !== 0 ?
-            `// Both 'observablepart' and 'observablepartlist' change the get and set of the attribute 
-             // such that the parent-part relationship is consistently maintained, 
+            `// Both 'observablepart' and 'observablepartlist' change the get and set of the attribute
+             // such that the parent-part relationship is consistently maintained,
              // and make sure the part is observable. In lists no 'null' or 'undefined' values are allowed.
                         ${allButPrimitiveProps.map(p =>
                 (p.isList ?
@@ -164,15 +168,15 @@ export class ConceptUtils {
                 )
             ).join("\n")}`
             : ``
-        }                    
+        }
             }`;
     }
 
     public static makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression): string {
-        return `                                
+        return `
                 /**
                  * Returns the metatype of this instance in the form of a string.
-                 */               
+                 */
                 freLanguageConcept(): ${metaType} {
                     return this.$typename;
                 }
@@ -180,36 +184,36 @@ export class ConceptUtils {
                 ${!hasSuper ? `
                 /**
                  * Returns the unique identifier of this instance.
-                 */                
+                 */
                  freId(): string {
                     return this.$id;
                 }`
             : ""}
-                
+
                 /**
                  * Returns true if this instance is a model concept.
-                 */                 
+                 */
                 freIsModel(): boolean {
                     return ${isModel};
                 }
-                
+
                 /**
                  * Returns true if this instance is a model unit.
-                 */                 
+                 */
                 freIsUnit(): boolean {
                     return ${isUnit};
                 }
-                                
+
                 /**
                  * Returns true if this instance is an expression concept.
-                 */                 
+                 */
                 freIsExpression(): boolean {
                     return ${isExpression};
                 }
 
                 /**
                  * Returns true if this instance is a binary expression concept.
-                 */                 
+                 */
                 freIsBinaryExpression(): boolean {
                     return ${isBinaryExpression};
                 }`;
@@ -223,20 +227,20 @@ export class ConceptUtils {
                  */
                 static create(data: Partial<${myName}>): ${myName} {
                     const result = new ${myName}();
-                    ${concept.allProperties().map(property =>
-                        `${(property.isList) ?
-                            `if (!!data.${property.name}) {
-                                            data.${property.name}.forEach(x =>
-                                                result.${property.name}.push(x)
+                    ${concept.allProperties().map(freProp =>
+                        `${(freProp.isList) ?
+                            `if (!!data.${freProp.name}) {
+                                            data.${freProp.name}.forEach(x =>
+                                                result.${freProp.name}.push(x)
                                             );
                                         }`
-                            : `if (!!data.${property.name}) { 
-                                            result.${property.name} = data.${property.name};
+                            : `if (!!data.${freProp.name}) {
+                                            result.${freProp.name} = data.${freProp.name};
                                         }`
                         }`).join("\n")
                     }
-                    if (!!data.parse_location) {
-                        result.parse_location = data.parse_location;
+                    if (!!data.parseLocation) {
+                        result.parseLocation = data.parseLocation;
                     }
                     return result;
                 }`;
@@ -249,8 +253,8 @@ export class ConceptUtils {
         if (isAbstract) {
             return `${comment}
                 copy(): ${myName} {
-                    console.log("${myName}: copy method should be implemented by concrete subclass"); 
-                    return null;  
+                    console.log("${myName}: copy method should be implemented by concrete subclass");
+                    return null;
                 }`;
         } else {
             return `/**
@@ -258,40 +262,40 @@ export class ConceptUtils {
                  */
                 copy(): ${myName} {
                     const result = new ${myName}();
-                    ${concept.allProperties().map(property =>
-                        `if (!!this.${property.name}) {
-                            ${this.makeCopyProperty(property)}
+                    ${concept.allProperties().map(freProperty =>
+                        `if (!!this.${freProperty.name}) {
+                            ${this.makeCopyProperty(freProperty)}
                         }`).join("\n")
                     }
-                    return result;  
+                    return result;
                 }`;
         }
     }
 
-    private static makeCopyProperty(property): string {
-        let result: string = "";
-        if (property.isList) {
-            if (property.isPrimitive) {
-                result = `this.${property.name}.forEach(x =>
-                        result.${property.name}.push(x)
+    private static makeCopyProperty(freProperty): string {
+        let result: string;
+        if (freProperty.isList) {
+            if (freProperty.isPrimitive) {
+                result = `this.${freProperty.name}.forEach(x =>
+                        result.${freProperty.name}.push(x)
                     );`;
             } else {
-                result = `this.${property.name}.forEach(x =>
-                        result.${property.name}.push(x.copy())
+                result = `this.${freProperty.name}.forEach(x =>
+                        result.${freProperty.name}.push(x.copy())
                     );`;
             }
         } else {
-            if (property.isPrimitive) {
-                result = `result.${property.name} = this.${property.name};`;
+            if (freProperty.isPrimitive) {
+                result = `result.${freProperty.name} = this.${freProperty.name};`;
             } else {
-                result = `result.${property.name} = this.${property.name}.copy();`;
+                result = `result.${freProperty.name} = this.${freProperty.name}.copy();`;
             }
         }
         return result;
     }
 
-    public static makeMatchMethod(hasSuper: boolean, concept: FreClassifier, myName: string): string {
-        let propsToDo: FreProperty[] = [];
+    public static makeMatchMethod(hasSuper: boolean, concept: FreClassifier, myName: string, importsFromCore: string[]): string {
+        let propsToDo: FreProperty[];
         if (hasSuper && concept instanceof FreConcept) {
             propsToDo = (concept as FreConcept).implementedProperties();
         } else if (hasSuper && concept instanceof FreInterface) {
@@ -306,55 +310,53 @@ export class ConceptUtils {
                  */
                 public match(toBeMatched: Partial<${myName}>): boolean {
                     ${hasSuper ? `let result: boolean = super.match(toBeMatched);` : `let result: boolean = true;`}
-                    ${propsToDo.map(property => 
-                        `${this.makeMatchEntry(property)}`
+                    ${propsToDo.map(freProp =>
+                        `${this.makeMatchEntry(freProp, importsFromCore)}`
                     ).join("\n")}
                     return result;
                 }`;
     }
 
-    private static makeMatchEntry(property: FreProperty): string {
-        let result: string = '';
-        if (property.isPrimitive) {
-            if (property.isList) {
-                // TODO here we known that matchPrimitiveList needs to be imported => add to imports
-                result = `if (result && !!toBeMatched.${property.name}) {
-                                result = result && matchPrimitiveList(this.${property.name}, toBeMatched.${property.name});
-                          }`
+    private static makeMatchEntry(freProperty: FreProperty, importsFromCore: string[]): string {
+        let result: string;
+        if (freProperty.isPrimitive) {
+            if (freProperty.isList) {
+                // here we know that matchPrimitiveList needs to be imported => add to imports
+                ListUtil.addIfNotPresent(importsFromCore, "matchPrimitiveList");
+                result = `if (result && !!toBeMatched.${freProperty.name}) {
+                                result = result && matchPrimitiveList(this.${freProperty.name}, toBeMatched.${freProperty.name});
+                          }`;
             } else {
-                if (property.type === FrePrimitiveType.string || property.type === FrePrimitiveType.identifier) {
-                    result = `if (result && toBeMatched.${property.name} !== null && toBeMatched.${property.name} !== undefined && toBeMatched.${property.name}.length > 0) { 
-                                result = result && this.${property.name} === toBeMatched.${property.name};
+                if (freProperty.type === FrePrimitiveType.string || freProperty.type === FrePrimitiveType.identifier) {
+                    result = `if (result && toBeMatched.${freProperty.name} !== null && toBeMatched.${freProperty.name} !== undefined && toBeMatched.${freProperty.name}.length > 0) {
+                                result = result && this.${freProperty.name} === toBeMatched.${freProperty.name};
                           }`;
                 } else {
-                    result = `if (result && toBeMatched.${property.name} !== null && toBeMatched.${property.name} !== undefined) { 
-                                result = result && this.${property.name} === toBeMatched.${property.name};
+                    result = `if (result && toBeMatched.${freProperty.name} !== null && toBeMatched.${freProperty.name} !== undefined) {
+                                result = result && this.${freProperty.name} === toBeMatched.${freProperty.name};
                           }`;
                 }
             }
-        } else if (property.isList) {
-            if (property.isPart) {
-                // TODO here we known that matchElementList needs to be imported => add to imports
-                result = `if (result && !!toBeMatched.${property.name}) {
-                              result = result && matchElementList(this.${property.name}, toBeMatched.${property.name});
-                          }`
+        } else if (freProperty.isList) {
+            if (freProperty.isPart) {
+                // here we know that matchElementList needs to be imported => add to imports
+                ListUtil.addIfNotPresent(importsFromCore, "matchElementList");
+                result = `if (result && !!toBeMatched.${freProperty.name}) {
+                              result = result && matchElementList(this.${freProperty.name}, toBeMatched.${freProperty.name});
+                          }`;
             } else {
-                // TODO here we known that matchReferenceList needs to be imported => add to imports
-                // TODO here we known that Names.classifier(property.type) needs to be imported => add to imports
-                // result = `if (!!toBeMatched.${property.name}) {
-                //               matchReferenceList<${Names.classifier(property.type)}>(this.${property.name}, toBeMatched.${property.name});
-                //           }`
-                result = `if (result && !!toBeMatched.${property.name}) {
-                              result = result && matchReferenceList(this.${property.name}, toBeMatched.${property.name});
-                          }`
+                // here we know that matchReferenceList needs to be imported => add to imports
+                ListUtil.addIfNotPresent(importsFromCore, "matchReferenceList");
+                result = `if (result && !!toBeMatched.${freProperty.name}) {
+                              result = result && matchReferenceList(this.${freProperty.name}, toBeMatched.${freProperty.name});
+                          }`;
             }
         } else {
             // same for both parts and references
-            result = `if (result && !!toBeMatched.${property.name}) { 
-                                result = result && this.${property.name}.match(toBeMatched.${property.name});
+            result = `if (result && !!toBeMatched.${freProperty.name}) {
+                                result = result && this.${freProperty.name}.match(toBeMatched.${freProperty.name});
                             }`;
         }
         return result;
     }
 }
-

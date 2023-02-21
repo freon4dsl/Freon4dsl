@@ -1,4 +1,4 @@
-import { GenerationUtil, Names } from "../../../utils";
+import { GenerationUtil, ListUtil, Names } from "../../../utils";
 import {
     FrePrimitiveProperty,
     FreBinaryExpressionConcept,
@@ -14,7 +14,6 @@ import { ConceptUtils } from "./ConceptUtils";
 import { ClassifierUtil } from "./ClassifierUtil";
 
 export class ConceptTemplate {
-    // TODO clean up imports in every generate method
     generateConcept(concept: FreConcept): string {
         if (concept instanceof FreLimitedConcept) {
             return this.generateLimited(concept);
@@ -35,10 +34,10 @@ export class ConceptTemplate {
         const isExpression = (concept instanceof FreBinaryExpressionConcept) || (concept instanceof FreExpressionConcept);
         const abstract = (concept.isAbstract ? "abstract" : "");
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
-        const implementsFre = (isExpression ? "FreExpressionNode" : (hasName ? "FreNamedNode" : "FreNode"));
+        const implementsFre = (isExpression ? Names.FreExpressionNode : (hasName ? Names.FreNamedNode : Names.FreNode));
         const needsObservable = concept.implementedPrimProperties().length > 0;
         const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
-            .concat(implementsFre).concat(["FreUtils", "FreParseLocation", "matchElementList", "matchPrimitiveList", "matchReferenceList"]).concat(hasReferences ? (Names.FreNodeReference) : "");
+            .concat(implementsFre).concat([Names.FreUtils, Names.FreParseLocation]).concat(hasReferences ? (Names.FreNodeReference) : "");
         const metaType = Names.metaType(language);
         const modelImports = this.findModelImports(concept, myName, hasReferences);
         const intfaces = Array.from(
@@ -47,14 +46,13 @@ export class ConceptTemplate {
             )
         );
 
-        // Template starts here
-        return `
-            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
 
+        // Template starts here. Note that the imports are gathered during the generation, and added later.
+        let result: string = `
             /**
              * Class ${myName} is the implementation of the concept with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
-             * to changes in the state of its properties.
+             * to the changes in the state of its properties.
              */
             export ${abstract} class ${myName} extends ${extendsClass} implements ${implementsFre}${intfaces.map(imp => `, ${imp}`).join("")}
             {
@@ -69,14 +67,17 @@ export class ConceptTemplate {
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties())}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)} 
                 ${ConceptUtils.makeCopyMethod(concept, myName, concept.isAbstract)}
-                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName)}    
+                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName, coreImports)}    
                 ${ConceptUtils.makeConvenienceMethods(concept.references())}                               
             }
         `;
+
+        return `
+            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
+            
+            ${result}`;
     }
 
-    // assumptions:
-    // an expression is not a model
     private generateBinaryExpression(concept: FreBinaryExpressionConcept) {
         const language = concept.language;
         const myName = Names.concept(concept);
@@ -87,7 +88,7 @@ export class ConceptTemplate {
         const baseExpressionName = Names.concept(GenerationUtil.findExpressionBase(concept));
         const abstract = concept.isAbstract ? "abstract" : "";
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat(["FreBinaryExpression", "FreParseLocation", "FreUtils"]);
+        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([Names.FreBinaryExpression, Names.FreParseLocation, Names.FreUtils]);
         const metaType = Names.metaType(language);
         let modelImports = this.findModelImports(concept, myName, hasReferences);
         if (!modelImports.includes(baseExpressionName)) {
@@ -99,14 +100,12 @@ export class ConceptTemplate {
             )
         );
 
-        // Template starts here
-        return `
-            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
-
+        // Template starts here. Note that the imports are gathered during the generation, and added later.
+        let result: string = `
             /**
              * Class ${myName} is the implementation of the binary expression concept with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
-             * to changes in the state of its properties.
+             * to any changes in the state of its properties.
              */            
             export ${abstract} class ${myName} extends ${extendsClass} implements ${Names.FreBinaryExpression}${intfaces.map(imp => `, ${imp}`).join("")} {            
                 ${(!isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
@@ -158,6 +157,11 @@ export class ConceptTemplate {
                 }
             }
         `;
+
+        return `
+            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
+            
+            ${result}`;
     }
 
 
@@ -171,7 +175,7 @@ export class ConceptTemplate {
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const abstract = (concept.isAbstract ? "abstract" : "");
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([Names.FreNamedNode, Names.FreUtils, Names.FreParseLocation, "matchElementList", "matchPrimitiveList"]);
+        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([Names.FreNamedNode, Names.FreUtils, Names.FreParseLocation]);
         const metaType = Names.metaType(language);
         const imports = this.findModelImports(concept, myName, false);
         const intfaces = Array.from(
@@ -180,14 +184,12 @@ export class ConceptTemplate {
             )
         );
 
-        // Template starts here
-        return `
-            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, imports)}
-
+        // Template starts here. Note that the imports are gathered during the generation, and added later.
+        let result: string = `
             /**
              * Class ${myName} is the implementation of the limited concept with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
-             * to changes in the state of its properties.
+             * to any changes in the state of its properties.
              */            
             export ${abstract} class ${myName} extends ${extendsClass} implements ${Names.FreNamedNode}${intfaces.map(imp => `, ${imp}`).join("")}
             {           
@@ -204,7 +206,7 @@ export class ConceptTemplate {
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties())}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType,false, false,false, false)}   
                 ${ConceptUtils.makeCopyMethod(concept, myName, concept.isAbstract)}
-                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName)}             
+                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName, coreImports)}             
             }
                        
             // Because of mobx we need to generate the initialisations outside of the class,
@@ -213,6 +215,11 @@ export class ConceptTemplate {
                 `${myName}.${predef.name} = ${myName}.create({
                         ${predef.props.map(prop => `${prop.name}: ${this.createInstancePropValue(prop)}`).join(", ")}
                     });` ). join(" ")}`;
+
+        return `
+            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, imports)}
+            
+            ${result}`;
     }
 
     private findModelImports(concept: FreConcept, myName: string, hasReferences: boolean): string[] {
