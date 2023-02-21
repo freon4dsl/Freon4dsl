@@ -9,7 +9,7 @@ import { FreClassifier, MetaElementReference } from "../../../languagedef/metala
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
  * to any changes in the state of its properties.
  */
-export class FretCreateExp extends FretExp  {
+export class FretCreateExp extends FretExp {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -20,11 +20,11 @@ export class FretCreateExp extends FretExp  {
         if (!!data.propertyDefs) {
             data.propertyDefs.forEach(x => result.propertyDefs.push(x));
         }
-        if (!!data.__type) {
-            result.__type = data.__type;
+        if (!!data.$type) {
+            result.$type = data.$type;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }
@@ -32,20 +32,20 @@ export class FretCreateExp extends FretExp  {
     readonly $typename: string = "FretCreateExp"; // holds the metatype in the form of a string
 
     propertyDefs: FretPropInstance[] = []; // implementation of part 'propertyDefs'
-    __type: MetaElementReference<FreClassifier>; // implementation of reference 'type'
+    $type: MetaElementReference<FreClassifier>; // implementation of reference 'type'
 
      /**
-     * Convenience method for reference 'type'.
-     * Instead of returning a 'MetaElementReference<FreClassifier>' object,
-     * it returns the referred 'FreClassifier' object, if it can be found.
-     */
+      * Convenience method for reference 'type'.
+      * Instead of returning a 'MetaElementReference<FreClassifier>' object,
+      * it returns the referred 'FreClassifier' object, if it can be found.
+      */
     get type(): FreClassifier {
-        if (!!this.__type) {
-            return this.__type.referred;
+        if (!!this.$type) {
+            return this.$type.referred;
         }
         return null;
     }
     toFreString(): string {
-        return this.__type.name + " {\n\t\t" + this.propertyDefs.map(p => p.toFreString()).join(",\n\t\t") + '\n\t} ';
+        return this.$type.name + " {\n\t\t" + this.propertyDefs.map(p => p.toFreString()).join(",\n\t\t") + "\n\t} ";
     }
 }

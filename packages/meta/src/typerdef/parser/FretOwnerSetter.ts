@@ -41,7 +41,7 @@ export class FretOwnerSetter {
             this.setOwner(exp.left, exp);
             this.setOwner(exp.right, exp);
         } else if (exp instanceof FretCreateExp) {
-            exp.__type.owner = exp;
+            exp.$type.owner = exp;
             exp.propertyDefs.forEach(propDef => {
                 this.setOwner(propDef.value, propDef);
                 propDef.__property.owner = exp;

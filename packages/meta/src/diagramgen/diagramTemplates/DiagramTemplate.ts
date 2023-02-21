@@ -21,13 +21,13 @@ ${this.makeUmlInterfaces(language.interfaces)}
     public makeOverviewPerFile(language: FreLanguage, filename: string): string {
         const conceptsToInclude: FreConcept[] = [];
         language.concepts.forEach(c => {
-            if (c.location?.filename === filename || c.agl_location?.filename === filename) {
+            if (c.location?.filename === filename || c.aglParseLocation?.filename === filename) {
                 ListUtil.addIfNotPresent(conceptsToInclude, c);
             }
         });
         const interfacesToInclude: FreInterface[] = [];
         language.interfaces.forEach(c => {
-            if (c.location?.filename === filename || c.agl_location?.filename === filename) {
+            if (c.location?.filename === filename || c.aglParseLocation?.filename === filename) {
                 ListUtil.addIfNotPresent(interfacesToInclude, c);
             }
         });

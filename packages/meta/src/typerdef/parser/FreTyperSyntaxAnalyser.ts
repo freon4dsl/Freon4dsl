@@ -189,7 +189,7 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
     private makeFreElementReferenceWithLocation<T extends FreLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
         const result = MetaElementReference.create<T>(referred, typeName);
         const location = FreParseLocation.create({ filename: this.filename, line: branch.location.line, column: branch.location.column });
-        result.agl_location = location;
+        result.aglParseLocation = location;
         return result;
     }
 

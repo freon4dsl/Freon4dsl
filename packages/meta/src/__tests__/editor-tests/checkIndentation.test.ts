@@ -11,7 +11,7 @@ import {
 } from "../../editordef/metalanguage";
 
 function getAndTestProjection(editDef: FreEditUnit, classifier: FreClassifier) {
-    let myProj: FreEditProjection = editDef.getDefaultProjectiongroup().findNonTableProjectionForType(classifier);
+    const myProj: FreEditProjection = editDef.getDefaultProjectiongroup().findNonTableProjectionForType(classifier);
     expect(myProj).not.toBeNull();
     expect(myProj).not.toBeUndefined();
     return myProj;
@@ -42,6 +42,7 @@ describe("Checking indentation ", () => {
         } catch (e) {
             console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // tslint:disable-next-line:no-unused-expression
             expect(e.message).toBeNull;
         }
         const myAAA: FreClassifier = language.units.find(c => c.name === "AAAAAA");
@@ -73,6 +74,7 @@ describe("Checking indentation ", () => {
         } catch (e) {
             console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // tslint:disable-next-line:no-unused-expression
             expect(e.message).toBeNull;
         }
         const myAAA: FreClassifier = language.units.find(c => c.name === "AAAAAA");
@@ -105,6 +107,7 @@ describe("Checking indentation ", () => {
         } catch (e) {
             console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // tslint:disable-next-line:no-unused-expression
             expect(e.message).toBeNull;
         }
         const myAAA: FreClassifier = language.units.find(c => c.name === "AAAAAA");
@@ -137,6 +140,7 @@ describe("Checking indentation ", () => {
         } catch (e) {
             console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // tslint:disable-next-line:no-unused-expression
             expect(e.message).toBeNull;
         }
         const myCC = language.concepts.find(c => c.name === "CC");
@@ -155,6 +159,7 @@ describe("Checking indentation ", () => {
         } catch (e) {
             console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // tslint:disable-next-line:no-unused-expression
             expect(e.message).toBeNull;
         }
         const myCC = language.concepts.find(c => c.name === "CC");
@@ -178,6 +183,7 @@ describe("Checking indentation ", () => {
         } catch (e) {
             console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // tslint:disable-next-line:no-unused-expression
             expect(e.message).toBeNull;
         }
         const myCC = language.concepts.find(c => c.name === "CC");

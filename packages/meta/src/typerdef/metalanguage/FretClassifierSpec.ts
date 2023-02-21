@@ -23,8 +23,8 @@ export class FretClassifierSpec extends FreTyperElement {
         if (!!data.__myClassifier) {
             result.__myClassifier = data.__myClassifier;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }

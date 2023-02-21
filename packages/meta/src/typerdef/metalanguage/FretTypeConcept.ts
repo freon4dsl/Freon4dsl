@@ -39,8 +39,8 @@ export class FretTypeConcept extends FreConcept {
         if (!!data.location) {
             result.location = data.location;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }

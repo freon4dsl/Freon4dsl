@@ -20,8 +20,8 @@ export class FretFunctionCallExp extends FretExp {
         if (!!data.returnType) {
             result.returnType = data.returnType;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }

@@ -15,8 +15,8 @@ export class FretEqualsExp extends FretBinaryExp {
         if (!!data.right) {
             result.right = data.right;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }

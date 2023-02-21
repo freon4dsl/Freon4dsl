@@ -39,17 +39,17 @@ export class DefaultActionsTemplate {
                 LEFT_MOST,
                 RIGHT_MOST
             } from "${FREON_CORE}";
-            
+
             import { ${modelImports.join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
              /**
              * This module implements the actions available to the user in the editor.
-             * These are the default actions. They are merged with the default and 
-             * custom editor parts in a three-way manner. For each modelelement, 
+             * These are the default actions. They are merged with the default and
+             * custom editor parts in a three-way manner. For each modelelement,
              * (1) if a custom build creator/behavior is present, this is used,
              * (2) if a creator/behavior based on the editor definition is present, this is used,
-             * (3) if neither (1) nor (2) yields a result, the default is used.  
-             */  
+             * (3) if neither (1) nor (2) yields a result, the default is used.
+             */
             export const BINARY_EXPRESSION_CREATORS: ${Names.FreCreateBinaryExpressionAction}[] = [
                 ${language.concepts.filter(c => (c instanceof FreBinaryExpressionConcept) && !c.isAbstract).map(c =>
             `${Names.FreCreateBinaryExpressionAction}.create({
@@ -69,7 +69,7 @@ export class DefaultActionsTemplate {
             })`
         )}
             ];
-            
+
             export const CUSTOM_ACTIONS: ${Names.FreCustomAction}[] = [
                 ${this.customActionsForOptional(language, editorDef)}
                 ${this.customActionForParts(language, editorDef)}
@@ -96,16 +96,16 @@ export class DefaultActionsTemplate {
                             const optionalPropertyName = prop.name;
                             // end change
                             let rolename: string = "unknown role";
-                            if(prop.isPart) {
+                            if (prop.isPart) {
                                 // TODO Check for lists (everywhere)
                                 rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
                             } else if (prop.isPrimitive) {
-                                if( prop.type === FrePrimitiveType.number) {
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox")
-                                } else if( prop.type === FrePrimitiveType.string) {
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox")
-                                } else if( prop.type === FrePrimitiveType.boolean) {
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox")
+                                if ( prop.type === FrePrimitiveType.number) {
+                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox");
+                                } else if ( prop.type === FrePrimitiveType.string) {
+                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox");
+                                } else if ( prop.type === FrePrimitiveType.boolean) {
+                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox");
                                 }
                             } else {
                                 // reference
@@ -121,7 +121,7 @@ export class DefaultActionsTemplate {
                                         },
                                         boxRoleToSelect: "${rolename}"
                                     })`;
-                            result += ","
+                            result += ",";
                         }
                     });
                 });
@@ -158,7 +158,7 @@ export class DefaultActionsTemplate {
     }
 
     customActionForParts(language: FreLanguage, editorDef: FreEditUnit): string {
-        let result = "";
+        const result = "";
         // Nothing to do for the moment
         return result;
     }

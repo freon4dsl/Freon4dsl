@@ -20,7 +20,7 @@ export class BinaryExpressionRule extends GrammarRule {
     }
 
     toMethod(mainAnalyserName: string): string {
-        let cases: string[] = [];
+        const cases: string[] = [];
         for (const [key, value] of this.symbolToConcept) {
             // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
             cases.push(`
@@ -31,7 +31,7 @@ export class BinaryExpressionRule extends GrammarRule {
         }
         return `
         /**
-         * Generic method to transform binary expressions, which are parsed 
+         * Generic method to transform binary expressions, which are parsed
          * according to these rules:
          * ${this.rule1()}
          * ${this.rule2()}

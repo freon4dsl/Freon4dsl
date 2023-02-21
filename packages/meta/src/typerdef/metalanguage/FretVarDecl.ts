@@ -24,8 +24,8 @@ export class FretVarDecl extends FreTyperElement {
         if (!!data.__type) {
             result.__type = data.__type;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }

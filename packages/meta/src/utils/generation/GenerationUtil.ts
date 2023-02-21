@@ -180,7 +180,7 @@ export class GenerationUtil {
      */
     private static isReferenceProperty(exp: FreLangAppliedFeatureExp) {
         let isRef: boolean = false;
-        const ref = exp.__referredElement?.referred;
+        const ref = exp.$referredElement?.referred;
         if (!!ref) { // should be present, otherwise it is an incorrect model
             // now see whether it is marked in the .ast file as 'reference'
             isRef = (ref instanceof FreConceptProperty) && !ref.isPart && !ref.isList;

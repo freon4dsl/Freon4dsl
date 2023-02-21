@@ -30,8 +30,8 @@ describe("Checking expression on referredElement", () => {
             expect(aaConcept).not.toBeNull();
             // for each expression in the set, it should refer to a property of 'AA'
             AAconceptExps.exps.forEach(exp => {
-                expect(exp.__referredElement.referred === aaConcept);
-                const prop = exp.appliedfeature?.__referredElement?.referred;
+                expect(exp.$referredElement.referred === aaConcept);
+                const prop = exp.appliedfeature?.$referredElement?.referred;
                 expect(prop).not.toBeNull();
                 expect(aaConcept.allProperties().includes(prop));
             });
@@ -55,8 +55,8 @@ describe("Checking expression on referredElement", () => {
             expect(bbConcept).not.toBeUndefined();
             // for each expression in the set, it should refer to a property of 'BB'
             BBconceptExps.exps.forEach(exp => {
-                expect(exp.__referredElement.referred === bbConcept);
-                const prop = exp.appliedfeature?.__referredElement?.referred;
+                expect(exp.$referredElement.referred === bbConcept);
+                const prop = exp.appliedfeature?.$referredElement?.referred;
                 expect(prop).not.toBeNull();
                 expect(prop).not.toBeUndefined();
                 expect(bbConcept.allProperties().includes(prop));
@@ -82,8 +82,8 @@ describe("Checking expression on referredElement", () => {
             expect(zzConcept instanceof FreLimitedConcept);
             // for each expression in the set, it should refer to an predefined instance of 'ZZ'
             CCconceptExps.exps.forEach(exp => {
-                expect(exp.__referredElement?.referred === zzConcept);
-                const freInstance = exp.__referredElement.referred;
+                expect(exp.$referredElement?.referred === zzConcept);
+                const freInstance = exp.$referredElement.referred;
                 expect(freInstance).not.toBeNull();
                 expect(freInstance instanceof FreInstance);
                 expect((zzConcept as FreLimitedConcept).instances.includes(freInstance as FreInstance));
@@ -105,13 +105,13 @@ describe("Checking expression on referredElement", () => {
             // for each expression in the set, it should refer to a function
             DDconceptExps.exps.forEach(exp => {
                 expect(exp instanceof FreLangFunctionCallExp);
-                expect(exp.__referredElement).toBeUndefined();
+                expect(exp.$referredElement).toBeUndefined();
                 expect((exp as FreLangFunctionCallExp).actualparams.length > 0 );
                 // every actual parameter should refer to a property, a predefined instance, or to 'owner'
                 (exp as FreLangFunctionCallExp).actualparams.forEach(param => {
                     if (param.sourceName !== "container") {
-                        expect(param.__referredElement?.referred).not.toBeNull();
-                        expect(param.__referredElement?.referred).not.toBeUndefined();
+                        expect(param.$referredElement?.referred).not.toBeNull();
+                        expect(param.$referredElement?.referred).not.toBeUndefined();
                     }
                 });
             });
@@ -135,7 +135,7 @@ describe("Checking expression on referredElement", () => {
             const aaConcept = language.findConcept("AA");
             FFconceptExps.exps.forEach(exp => {
                 expect(exp instanceof FreLangSelfExp);
-                expect(exp.__referredElement.referred === ffConcept);
+                expect(exp.$referredElement.referred === ffConcept);
                 const elem = exp.findRefOfLastAppliedFeature();
                 expect(elem).not.toBeNull();
                 expect(elem).not.toBeUndefined();

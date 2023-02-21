@@ -42,8 +42,8 @@ export class FretProperty extends FreConceptProperty {
         if (!!data.type) {
             result.type = data.type;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         // if (!!data.owningClassifier) {
         //     result.owningClassifier = data.owningClassifier;

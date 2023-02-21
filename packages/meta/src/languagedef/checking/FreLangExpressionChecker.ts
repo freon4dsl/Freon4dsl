@@ -109,7 +109,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                                             `${ParseLocationUtil.location(langExp)}.`
                                 );
                                 if (!!foundInstance) {
-                                    langExp.__referredElement = MetaElementReference.create<FreInstance>(foundInstance, "FreInstance");
+                                    langExp.$referredElement = MetaElementReference.create<FreInstance>(foundInstance, "FreInstance");
                                 }
                             }
                         });
@@ -122,8 +122,8 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     // self.XXX
     private checkSelfExpression(langExp: FreLangSelfExp, enclosingConcept: FreClassifier) {
         LOGGER.log("checkSelfExpression " + langExp?.toFreString());
-        langExp.__referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreConcept");
-        langExp.__referredElement.owner = langExp;
+        langExp.$referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreConcept");
+        langExp.$referredElement.owner = langExp;
         if (this.strictUseOfSelf) {
             this.runner.nestedCheck(
                 {
@@ -146,8 +146,8 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
             check: langExp.sourceName === containerKeyword,
             error: `Expression should start with 'self' ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
-                langExp.__referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreClassifier");
-                langExp.__referredElement.owner = langExp;
+                langExp.$referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreClassifier");
+                langExp.$referredElement.owner = langExp;
             }
         });
     }
@@ -187,8 +187,8 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                                     error: `Cannot find reference to ${p.sourceName} ${ParseLocationUtil.location(langExp)}`,
                                     whenOk: () => {
                                         functionType = foundClassifier;
-                                        p.__referredElement = MetaElementReference.create<FreClassifier>(foundClassifier, "FreClassifier");
-                                        p.__referredElement.owner = p;
+                                        p.$referredElement = MetaElementReference.create<FreClassifier>(foundClassifier, "FreClassifier");
+                                        p.$referredElement.owner = p;
                                     }
                                 });
                             }

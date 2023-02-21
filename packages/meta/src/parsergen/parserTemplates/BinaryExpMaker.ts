@@ -1,18 +1,20 @@
 import { FreBinaryExpressionConcept, FreClassifier, FreExpressionConcept, FreLanguage } from "../../languagedef/metalanguage";
-import { FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
-import { GrammarRule } from "./grammarModel/GrammarRule";
-import { BinaryExpressionRule } from "./grammarModel/BinaryExpressionRule";
+import { FreEditProjectionGroup } from "../../editordef/metalanguage";
+import { GrammarRule, BinaryExpressionRule } from "./grammarModel";
 import { GenerationUtil } from "../../utils";
 
 export class BinaryExpMaker {
     private static specialBinaryRuleName = `__fre_binary_`;
-    imports: FreClassifier[] = [];
-
-    public static getBinaryRuleName(expBase:FreExpressionConcept) {
+    public static getBinaryRuleName(expBase: FreExpressionConcept) {
         return BinaryExpMaker.specialBinaryRuleName + expBase.name;
     }
 
-    public generateBinaryExpressions(language:FreLanguage, projectionGroup: FreEditProjectionGroup, binaryConceptsUsed: FreBinaryExpressionConcept[]): GrammarRule[] {
+    imports: FreClassifier[] = [];
+
+    public generateBinaryExpressions(language: FreLanguage,
+                                     projectionGroup: FreEditProjectionGroup,
+                                     binaryConceptsUsed: FreBinaryExpressionConcept[]
+                                    ): GrammarRule[] {
         const result: GrammarRule[] = [];
 
         // in case there are multiple expression hierarchies, we need to group the binaries based on their expressionBase
@@ -35,13 +37,13 @@ export class BinaryExpMaker {
             this.imports.push(...binaries);
 
             result.push( new BinaryExpressionRule(branchName, expBase, editDefs));
-        })
+        });
 
         return result;
     }
 
     private findEditDefs(binaryConceptsUsed: FreBinaryExpressionConcept[], projectionGroup: FreEditProjectionGroup): Map<FreClassifier, string> {
-        let result: Map<FreClassifier, string> = new Map<FreClassifier, string>();
+        const result: Map<FreClassifier, string> = new Map<FreClassifier, string>();
         for (const binCon of binaryConceptsUsed) {
             const mySymbol = projectionGroup.findExtrasForType(binCon).symbol;
             result.set(binCon, mySymbol);

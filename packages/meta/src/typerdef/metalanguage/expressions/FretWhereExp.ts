@@ -21,8 +21,8 @@ export class FretWhereExp extends FretExp {
         if (!!data.conditions) {
             data.conditions.forEach(x => result.conditions.push(x));
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }

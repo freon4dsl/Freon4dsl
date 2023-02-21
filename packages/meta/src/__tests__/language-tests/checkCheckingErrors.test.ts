@@ -26,11 +26,15 @@ describe("Checking language parser on checking errors", () => {
             // checker.errors.forEach(err => console.log(err));
             expect(e.message).toBe(`checking errors (12).`);
             expect(checker.errors.includes("The model should have at least one part [file: test2.ast:3:1].")).toBeTruthy();
-            expect(checker.errors.includes("Type 'number' cannot be used as a reference, because it has no property 'name: identifier' [file: test2.ast:10:19].")).toBeTruthy();
+            expect(checker.errors
+                .includes("Type 'number' cannot be used as a reference, because it has no property 'name: identifier' [file: test2.ast:10:19].")).toBeTruthy();
             expect(checker.errors.includes("A non-abstract limited concept must have instances [file: test2.ast:14:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('string') [file: test2.ast:19:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('number') [file: test2.ast:21:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('boolean') [file: test2.ast:23:1].")).toBeTruthy();
+            expect(checker.errors
+                .includes("Concept may not have a name that is equal to a reserved word in TypeScript ('string') [file: test2.ast:19:1].")).toBeTruthy();
+            expect(checker.errors
+                .includes("Concept may not have a name that is equal to a reserved word in TypeScript ('number') [file: test2.ast:21:1].")).toBeTruthy();
+            expect(checker.errors
+                .includes("Concept may not have a name that is equal to a reserved word in TypeScript ('boolean') [file: test2.ast:23:1].")).toBeTruthy();
             expect(checker.errors.includes("Property 'simple' already exists in ZZZ [file: test2.ast:9:5] and [file: test2.ast:8:5].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface with name 'LowerCase' already exists [file: test2.ast:27:1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface with name 'AAA' already exists [file: test2.ast:16:1].")).toBeTruthy();
@@ -70,12 +74,14 @@ describe("Checking language parser on checking errors", () => {
             // checker.errors.forEach(err => console.log(err));
             expect(e.message).toBe(`checking errors (9).`);
             expect(checker.errors.includes("The model should have at least one part [file: test4.ast:7:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [file: test4.ast:3:1].")).toBeTruthy();
+            expect(checker.errors
+                .includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [file: test4.ast:3:1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circular inheritance tree (DDD, EEE, FFF, CCC) [file: test4.ast:10:1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circular inheritance tree (EEE, FFF, CCC, DDD) [file: test4.ast:13:1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circular inheritance tree (FFF, CCC, DDD, EEE) [file: test4.ast:16:1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circular inheritance tree (CCC, DDD, EEE, FFF) [file: test4.ast:19:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circular inheritance tree (BBB, AAA) [file: test4.ast:22:1].")).toBeTruthy();
+            expect(checker.errors
+                .includes("Concept or interface 'BBB' is part of a forbidden circular inheritance tree (BBB, AAA) [file: test4.ast:22:1].")).toBeTruthy();
             expect(checker.errors.includes("Property 'prop1' already exists in yyy [file: test4.ast:34:5] and [file: test4.ast:33:5].")).toBeTruthy();
             expect(checker.errors.includes("Property 'prop1' with non conforming type already exists in base concept 'yyy' [file: test4.ast:28:5] and [file: test4.ast:33:5].")).toBeTruthy();
         }
@@ -88,12 +94,14 @@ describe("Checking language parser on checking errors", () => {
             // checker.errors.forEach(err => console.log(err));
             expect(e.message).toBe(`checking errors (7).`);
             expect(checker.errors.includes("The model should have at least one part [file: test5.ast:3:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [file: test5.ast:5:1].")).toBeTruthy();
+            expect(checker.errors
+                .includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [file: test5.ast:5:1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circular inheritance tree (CCC, DDD, EEE, FFF) [file: test5.ast:8:1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circular inheritance tree (DDD, EEE, FFF, CCC) [file: test5.ast:11:1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circular inheritance tree (EEE, FFF, CCC, DDD) [file: test5.ast:14:1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circular inheritance tree (FFF, CCC, DDD, EEE) [file: test5.ast:18:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circular inheritance tree (BBB, AAA) [file: test5.ast:21:1].")).toBeTruthy();
+            expect(checker.errors
+                .includes("Concept or interface 'BBB' is part of a forbidden circular inheritance tree (BBB, AAA) [file: test5.ast:21:1].")).toBeTruthy();
         }
     });
 
@@ -116,7 +124,8 @@ describe("Checking language parser on checking errors", () => {
         } catch (e) {
             // console.log(checker.errors.map(err => err));
             expect(e.message).toBe(`checking errors (15).`);
-            expect(checker.errors.includes("Type 'NoName' cannot be used as a reference, because it has no property 'name: identifier' [file: test7.ast:4:24].")).toBeTruthy();
+            expect(checker.errors
+                .includes("Type 'NoName' cannot be used as a reference, because it has no property 'name: identifier' [file: test7.ast:4:24].")).toBeTruthy();
             expect(checker.errors.includes("Type of property 'refProp' should be a modelunit [file: test7.ast:4:24].")).toBeTruthy();
             expect(checker.errors.includes("Type 'NameNotStringType' cannot be used as a reference, because it has no property 'name: identifier' [file: test7.ast:5:25].")).toBeTruthy();
             expect(checker.errors.includes("Type of property 'refProp2' should be a modelunit [file: test7.ast:5:25].")).toBeTruthy();
@@ -146,7 +155,7 @@ describe("Checking language parser on checking errors", () => {
         }
     });
 
-            test("checking limited concepts extended", () => {
+    test("checking limited concepts extended", () => {
         try {
             parser.parse(testdir + "test8.ast");
         } catch (e) {

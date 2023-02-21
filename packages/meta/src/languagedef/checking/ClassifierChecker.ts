@@ -79,7 +79,7 @@ export class ClassifierChecker {
                     const inSuper = this.searchLocalProps(intfRef.referred, prop);
                     if (!!inSuper) {
                         this.runner.simpleCheck(LangUtil.compareTypes(prop, inSuper),
-                            `Property '${prop.name}' with non conforming type already exists in base interface '${intfRef.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSuper)}.`,);
+                            `Property '${prop.name}' with non conforming type already exists in base interface '${intfRef.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSuper)}.`);
                     }
                 });
             }
@@ -93,12 +93,12 @@ export class ClassifierChecker {
         // 4. all props defined in implemented interfaces, that do not have a counterpart in the concept or its supers,
         //      should not have a name equal to any other, except when their types conform.
         if (classifier instanceof FreConcept) {
-            const propsDone: FreProperty[] = [];
+            const innerPropsDone: FreProperty[] = [];
             classifier.allInterfaces().forEach(intf => {
                 intf.allProperties().forEach(toBeImplemented => {
                     const implementedProp = this.findImplementedProperty(toBeImplemented, classifier, false);
                     if (!implementedProp) { // there is NO counter part in either this concept or its base
-                        const inAnotherInterface = propsDone.find(prevProp => prevProp.name === toBeImplemented.name);
+                        const inAnotherInterface = innerPropsDone.find(prevProp => prevProp.name === toBeImplemented.name);
                         if (!!inAnotherInterface) { // there is a prop with the same name in another implemented interface
                             // we must check type conformance both ways!
                             // when types conform: add a new prop with the most specific type to classifier
@@ -113,7 +113,7 @@ export class ClassifierChecker {
                                 `Concept '${classifier.name}': property '${toBeImplemented.name}' in '${intf.name}' does not conform to property '${toBeImplemented.name}' in '${inAnotherInterface.owningClassifier.name}' ${ParseLocationUtil.location(classifier)}.`);
                         }
                     }
-                    propsDone.push(toBeImplemented);
+                    innerPropsDone.push(toBeImplemented);
                 });
             });
         }

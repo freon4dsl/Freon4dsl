@@ -13,7 +13,7 @@ done in the test package.
 
 describe("Checking parser generation", () => {
     const testdir = "src/__tests__/parser-tests/correctDefFiles/";
-    const outputDir = "src/__tests__/parser-tests/generated/"
+    const outputDir = "src/__tests__/parser-tests/generated/";
     let language: FreLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();

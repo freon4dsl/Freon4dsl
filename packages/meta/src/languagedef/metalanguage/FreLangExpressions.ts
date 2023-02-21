@@ -18,7 +18,7 @@ import { MetaElementReference } from ".";
 export abstract class FreLangExp extends FreLangElement {
     sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
     appliedfeature: FreLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
-    __referredElement: MetaElementReference<FreLangElement>;  // refers to the element called 'sourceName'
+    $referredElement: MetaElementReference<FreLangElement>;  // refers to the element called 'sourceName'
     language: FreLanguage;                           // the language for which this expression is defined
 
     // returns the property to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
@@ -28,14 +28,14 @@ export abstract class FreLangExp extends FreLangElement {
                 // console.log(" last of: " + this.appliedfeature.sourceName);
                 return this.appliedfeature.findRefOfLastAppliedFeature();
             } else {
-                const found: FreLangElement = this.__referredElement?.referred;
+                const found: FreLangElement = this.$referredElement?.referred;
                 // console.log("found reference: " + found?.name + " of type " + typeof found);
                 if (found instanceof FreProperty) {
                     return found;
                 }
             }
         } else {
-            throw Error("Applied feature cannot be found because language is not set.")
+            throw Error("Applied feature cannot be found because language is not set.");
         }
         return null;
     }
@@ -61,13 +61,13 @@ export class FreLangSelfExp extends FreLangExp {
 
     static create(referred: FreClassifier): FreLangSelfExp {
         const result = new FreLangSelfExp();
-        result.__referredElement = MetaElementReference.create<FreClassifier>(referred, "FreClassifier");
-        result.__referredElement.owner = result;
+        result.$referredElement = MetaElementReference.create<FreClassifier>(referred, "FreClassifier");
+        result.$referredElement.owner = result;
         result.sourceName = Names.nameForSelf;
         return result;
     }
 
-    __referredElement: MetaElementReference<FreClassifier>; // is not needed, can be determined based on its parent
+    $referredElement: MetaElementReference<FreClassifier>; // is not needed, can be determined based on its parent
 
     toFreString(): string {
         if (!!this.sourceName) {
@@ -81,7 +81,7 @@ export class FreLangSelfExp extends FreLangExp {
 export class FreInstanceExp extends FreLangExp {
     // sourceName should be name of a limited concept
     instanceName: string;   // should be name of one of the predefined instances of 'sourceName'
-    __referredElement: MetaElementReference<FreInstance>;
+    $referredElement: MetaElementReference<FreInstance>;
 
     toFreString(): string {
         return this.sourceName + ":" + this.instanceName;
@@ -89,7 +89,7 @@ export class FreInstanceExp extends FreLangExp {
 }
 
 export class FreLangConceptExp extends FreLangExp {
-    __referredElement: MetaElementReference<FreClassifier>;
+    $referredElement: MetaElementReference<FreClassifier>;
 
     toFreString(): string {
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toFreString()) : "");
@@ -107,24 +107,24 @@ export class FreLangAppliedFeatureExp extends FreLangExp {
     }
 
     sourceExp: FreLangExp;
-    __referredElement: MetaElementReference<FreProperty>;
+    $referredElement: MetaElementReference<FreProperty>;
 
     get referredElement(): FreProperty {
-        return this.__referredElement?.referred;
+        return this.$referredElement?.referred;
     }
 
     set referredElement(p: FreProperty) {
-        this.__referredElement = MetaElementReference.create<FreProperty>(p, "FreProperty");
-        this.__referredElement.owner = this;
+        this.$referredElement = MetaElementReference.create<FreProperty>(p, "FreProperty");
+        this.$referredElement.owner = this;
     }
 
     get reference(): MetaElementReference<FreProperty> {
-        return this.__referredElement;
+        return this.$referredElement;
     }
 
     set reference(p: MetaElementReference<FreProperty>) {
-        this.__referredElement = p;
-        this.__referredElement.owner = this;
+        this.$referredElement = p;
+        this.$referredElement.owner = this;
     }
 
     toFreString(): string {
@@ -137,7 +137,7 @@ export class FreLangAppliedFeatureExp extends FreLangExp {
             return this.appliedfeature.findRefOfLastAppliedFeature();
         } else {
             // console.log("found reference: " + this.referredElement?.referred?.name);
-            return this.__referredElement?.referred;
+            return this.$referredElement?.referred;
         }
     }
 }
@@ -146,7 +146,7 @@ export class FreLangFunctionCallExp extends FreLangExp {
     // sourceName: string; 			// only used in validator for 'conformsTo' and 'equalsType'
     actualparams: FreLangExp[] = [];
     returnValue: boolean;
-    __referredElement: MetaElementReference<FreFunction>;
+    $referredElement: MetaElementReference<FreFunction>;
 
     toFreString(): string {
         let actualPars: string = "( ";

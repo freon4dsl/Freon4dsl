@@ -271,7 +271,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
         result.owner = myVarCall.owner;
         result.__myInstance = MetaElementReference.create<FreInstance>(myVarCall.__variable.name, "FreInstance");
         result.__myInstance.owner = result;
-        result.agl_location = myVarCall.agl_location;
+        result.aglParseLocation = myVarCall.aglParseLocation;
         return result;
     }
 
@@ -312,7 +312,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
 
     private checkCreateExp(exp: FretCreateExp, classifier: FreClassifier, surroundingExp?: FretWhereExp) {
         // LOGGER.log("Checking FretCreateExp '" + exp.toFreString() + "'");
-        this.checkTypeReference(exp.__type, false);
+        this.checkTypeReference(exp.$type, false);
         // console.log("TYPE of Create: " + exp.__type.name + ", " + exp.__type.owner + ", " + exp.type?.name);
         // this.myExpressionthis.runner.checkClassifierReference(exp.__type);
         // console.log("TYPE: " + exp.type?.name + " with props: " + exp.type?.allProperties().map(p => p.name).join(", "))
