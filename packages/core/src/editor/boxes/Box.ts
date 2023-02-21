@@ -47,7 +47,7 @@ export abstract class Box {
         FreUtils.CHECK(!!element, "Element cannot be empty in Box constructor");
         this.element = element;
         this.role = role;
-        this.$id = FreUtils.ID(); //uuid.v4();
+        this.$id = FreUtils.BOX_ID(); //uuid.v4();
     }
 
     get id(): string {

@@ -1,10 +1,10 @@
 import { FreLanguage } from "../../metalanguage";
-import { Names, PROJECTITCORE, LangUtil, GenerationUtil } from "../../../utils";
+import { Names, FREON_CORE, LangUtil, GenerationUtil } from "../../../utils";
 
 export class LanguageTemplate {
 
     generateLanguage(language: FreLanguage): string {
-        return `import { ${Names.FreLanguage}, Model, ModelUnit, Property, Concept, Interface, ${Names.FreNodeReference} } from "${PROJECTITCORE}";
+        return `import { ${Names.FreLanguage}, Model, ModelUnit, Property, Concept, Interface, ${Names.FreNodeReference} } from "${FREON_CORE}";
         
             import { ${Names.classifier(language.modelConcept)}, ${language.units.map(unit =>
             `${Names.classifier(unit)}`).join(", ") }, ${language.concepts.map(concept =>

@@ -6,7 +6,7 @@ import { MobxModelElementImpl } from "./decorators";
 
 const LOGGER = new FreLogger("FreElementReference").mute();
 /**
- * Class FreElementReference provides the implementation for a (named) reference in ProjectIt.
+ * Class FreElementReference provides the implementation for a (named) reference in Freon.
  * References can be set with either a referred object, or with a name.
  */
 export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementImpl {

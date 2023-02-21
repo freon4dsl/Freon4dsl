@@ -1,5 +1,5 @@
 import { FreLanguage } from "../../../languagedef/metalanguage";
-import { Names, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
+import { Names, FREON_CORE, TYPER_GEN_FOLDER } from "../../../utils";
 
 export class FreCustomTyperPartTemplate {
     generateCustomTyperPart(language: FreLanguage, relativePath: string): string {
@@ -11,7 +11,7 @@ export class FreCustomTyperPartTemplate {
         // todo remove commented statements
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreType}, FreTyper } from "${PROJECTITCORE}";
+        import { ${Names.FreNode}, ${Names.FreType}, FreTyper } from "${FREON_CORE}";
         
         /**
          * Class '${generatedClassName}' is meant to be a convient place to add any

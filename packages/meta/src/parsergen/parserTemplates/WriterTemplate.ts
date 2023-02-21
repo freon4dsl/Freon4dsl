@@ -1,7 +1,7 @@
 import {
     LANGUAGE_GEN_FOLDER,
     Names,
-    PROJECTITCORE,
+    FREON_CORE,
     ListUtil,
     GenerationUtil
 } from "../../utils";
@@ -96,7 +96,7 @@ export class WriterTemplate {
 
         // Template starts here
         return `
-        import { ${Names.FreNamedNode}, ${Names.FreNodeReference}, ${writerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${Names.FreNamedNode}, ${Names.FreNodeReference}, ${writerInterfaceName} } from "${FREON_CORE}";
         import { ${allLangConceptsName}, 
             ${language.interfaces.length > 0
             ? language.interfaces.map(concept => `

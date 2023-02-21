@@ -22,7 +22,7 @@ import {
     ListUtil,
     LOG2USER,
     Names,
-    PROJECTITCORE,
+    FREON_CORE,
     Roles
 } from "../../../utils";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
@@ -159,7 +159,7 @@ export class ProjectionTemplate {
         // add the collected imports
         let importsText: string = `
             ${this.coreImports.length > 0
-            ? `import { ${this.coreImports.map(c => `${c}`).join(", ")} } from "${PROJECTITCORE}";`
+            ? `import { ${this.coreImports.map(c => `${c}`).join(", ")} } from "${FREON_CORE}";`
             : ``}         
 
             ${this.modelImports.length > 0

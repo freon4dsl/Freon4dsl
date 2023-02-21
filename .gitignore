@@ -36,13 +36,15 @@ yarn-error.log
 docs/*
 
 # generated files
-**/gen/*
+gen/
 packages/docs/.jekyll-cache/*
 packages/docs/*/_site/*
 packages/docs/src/tutorial-language/*/gen/*
 packages/meta/src/languagedef/parser/LanguageGrammar.js
 packages/meta/src/scoperdef/parser/ScoperGrammar.js
 packages/meta/src/editordef/parser/EditorGrammar.js
+packages/meta/src/editordef/parser/FreEditGrammar.js
+packages/meta/src/editordef/parser/FreEditGrammar.pegjs
 packages/meta/src/validatordef/parser/ValidatorGrammar.js
 packages/meta/src/typerdef/parser/PiTyperGrammar.js
 packages/meta/src/languagedef/parser/ExpressionGrammar.js
@@ -69,14 +71,15 @@ packages/playground/exampleLangDefs/Entity/EntityDefinition.valid
 
 packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/output/*
 
-packages/test/src/*/editor/gen/*
-packages/test/src/*/environment/gen/*
-packages/test/src/*/language/gen/*
-packages/test/src/*/scoper/gen/*
-packages/test/src/*/typer/gen/*
-packages/test/src/*/utils/gen/*
-packages/test/src/*/validator/gen/*
-packages/test/src/*/stdlib/gen/*
+/packages/test/src/*/config/
+/packages/test/src/*/editor/
+/packages/test/src/*/interpreter/
+/packages/test/src/*/scoper/
+/packages/test/src/*/stdlib/
+/packages/test/src/*/typer/
+/packages/test/src/*/utils/
+/packages/test/src/*/validator/
+
 /packages/test/src/testDefinedScoper/defs/Language.ast
 /packages/test/src/testDefinedScoper/__tests__/ModelCreator.ts
 /docs/

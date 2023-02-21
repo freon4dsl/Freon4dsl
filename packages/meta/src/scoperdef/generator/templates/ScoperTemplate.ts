@@ -8,7 +8,7 @@ import {
 import {
     Names,
     LANGUAGE_GEN_FOLDER,
-    PROJECTITCORE,
+    FREON_CORE,
     TYPER_GEN_FOLDER,
     CONFIGURATION_GEN_FOLDER,
     GenerationUtil, LangUtil, ListUtil
@@ -98,7 +98,7 @@ export class ScoperTemplate {
 
         // now we have enough information to create the correct imports
         const templateImports: string = `
-        import { ${scoperBaseName}, ${Names.FreLogger}, ${Names.FreNode}, ${Names.FreNodeReference}, ${Names.FreNamespace}, ${Names.FreTyper} } from "${PROJECTITCORE}"
+        import { ${scoperBaseName}, ${Names.FreLogger}, ${Names.FreNode}, ${Names.FreNodeReference}, ${Names.FreNamespace}, ${Names.FreTyper} } from "${FREON_CORE}"
         import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         `;
 

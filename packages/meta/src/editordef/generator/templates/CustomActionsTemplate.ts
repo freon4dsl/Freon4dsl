@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE } from "../../../utils";
+import { Names, FREON_CORE } from "../../../utils";
 import { FreLanguage } from "../../../languagedef/metalanguage";
 
 export class CustomActionsTemplate {
@@ -9,7 +9,7 @@ export class CustomActionsTemplate {
                 ${Names.FreCreateBinaryExpressionAction},
                 ${Names.FreCustomAction},
                 ${Names.FreActions}
-            } from "${PROJECTITCORE}";
+            } from "${FREON_CORE}";
  
              /**
              * Class ${Names.customActions(language)} provides an entry point for the language engineer to

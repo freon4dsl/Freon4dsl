@@ -1,5 +1,5 @@
-import { ProjectItGenerateAllAction } from "@freon4dsl/meta/dist/commandline/ProjectItGenerateAllAction";
-import { ProjectItGenerateLanguage } from "@freon4dsl/meta/dist/commandline/ProjectItGenerateLanguage";
+import { FreonGenerateAllAction } from "@freon4dsl/meta/dist/commandline/FreonGenerateAllAction";
+import { FreonGenerateLanguage } from "@freon4dsl/meta/dist/commandline/FreonGenerateLanguage";
 
 
 import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
@@ -13,7 +13,7 @@ export class InstallLanguage extends CommandLineParser {
     public constructor() {
         super({
             toolFilename: "InstallLanguage",
-            toolDescription: "ProjectIt toolset for installing languages in playground."
+            toolDescription: "Freon toolset for installing languages in playground."
         });
         this.languageAction = new CopyLanguage();
         this.addAction(this.languageAction);

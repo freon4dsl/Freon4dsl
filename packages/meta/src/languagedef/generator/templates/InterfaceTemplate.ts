@@ -3,7 +3,7 @@ import {
     FrePrimitiveProperty,
     FreInterface
 } from "../../metalanguage";
-import { Names, PROJECTITCORE, GenerationUtil } from "../../../utils";
+import { Names, FREON_CORE, GenerationUtil } from "../../../utils";
 
 export class InterfaceTemplate {
 
@@ -29,7 +29,7 @@ export class InterfaceTemplate {
 
         // Template starts here
         return `
-            import { ${Names.FreNode} ${hasReferences ? `, ${Names.FreNodeReference}` : ""} } from "${PROJECTITCORE}";
+            import { ${Names.FreNode} ${hasReferences ? `, ${Names.FreNodeReference}` : ""} } from "${FREON_CORE}";
             import { ${imports.join(", ")} } from "./internal";
 
             /**

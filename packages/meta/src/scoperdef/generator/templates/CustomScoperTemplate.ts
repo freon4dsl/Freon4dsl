@@ -1,5 +1,5 @@
 import { FreLanguage } from "../../../languagedef/metalanguage";
-import { Names, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
+import { Names, FREON_CORE, TYPER_GEN_FOLDER } from "../../../utils";
 
 export class CustomScoperTemplate {
     generateCustomScoperPart(language: FreLanguage, relativePath: string): string {
@@ -9,7 +9,7 @@ export class CustomScoperTemplate {
         // TODO add comments to generated class
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreNamedNode}, ${Names.FrScoperPart}, ${Names.FreScoperComposite}  } from "${PROJECTITCORE}";
+        import { ${Names.FreNode}, ${Names.FreNamedNode}, ${Names.FrScoperPart}, ${Names.FreScoperComposite}  } from "${FREON_CORE}";
         
         /**
          * Class '${generatedClassName}' is meant to be a convient place to add any

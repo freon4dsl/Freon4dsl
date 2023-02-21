@@ -12,7 +12,7 @@ import {
     LANGUAGE_GEN_FOLDER,
     ListUtil,
     Names,
-    PROJECTITCORE
+    FREON_CORE
 } from "../../../utils";
 import { FreEditProjection, FreEditPropertyProjection, FreEditTableProjection, FreEditUnit } from "../../metalanguage";
 
@@ -149,7 +149,7 @@ export class EditorDefTemplate {
         // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
 
         // template starts here
-        return `import { ${coreImports.join(", ")} } from "${PROJECTITCORE}";
+        return `import { ${coreImports.join(", ")} } from "${FREON_CORE}";
         
             import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
             import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";         

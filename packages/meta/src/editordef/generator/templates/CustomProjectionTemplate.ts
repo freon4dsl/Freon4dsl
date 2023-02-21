@@ -1,11 +1,11 @@
-import { Names, PROJECTITCORE } from "../../../utils";
+import { Names, FREON_CORE } from "../../../utils";
 import { FreLanguage } from "../../../languagedef/metalanguage";
 
 export class CustomProjectionTemplate {
 
     generate(language: FreLanguage): string {
         return `
-            import { ${Names.FreNode}, ${Names.Box}, ${Names.FreProjection}, ${Names.FreTableDefinition} } from "${PROJECTITCORE}";
+            import { ${Names.FreNode}, ${Names.Box}, ${Names.FreProjection}, ${Names.FreTableDefinition} } from "${FREON_CORE}";
             
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to

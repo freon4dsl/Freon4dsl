@@ -1,6 +1,6 @@
 import {  FreLanguage } from "../../languagedef/metalanguage";
 import { FreEditUnit } from "../../editordef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../utils";
+import { LANGUAGE_GEN_FOLDER, Names, FREON_CORE } from "../../utils";
 
 export class ReaderTemplate {
 
@@ -14,7 +14,7 @@ export class ReaderTemplate {
 
         // Template starts here
         return `
-        import { ${Names.FreReader} } from "${PROJECTITCORE}";
+        import { ${Names.FreReader} } from "${FREON_CORE}";
         import { net } from "net.akehurst.language-agl-processor";
         import LanguageProcessor = net.akehurst.language.api.processor.LanguageProcessor;
         import Agl = net.akehurst.language.agl.processor.Agl;
