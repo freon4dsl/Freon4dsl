@@ -51,7 +51,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
                 });
                 this.runner.simpleCheck(myModel.parts().length > 0,
                     `The model should have at least one part ${ParseLocationUtil.location(myModel)}.`);
-                this.runner.simpleCheck(myModel.references().length == 0,
+                this.runner.simpleCheck(myModel.references().length === 0,
                     `All properties of a model must be parts, not references ${ParseLocationUtil.location(myModel)}.`);
             }
         });
@@ -104,8 +104,8 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
             if (!!intf.referred) { // error message taken care of by checkClassifierReference
                 this.runner.nestedCheck({
                     check: intf.referred instanceof FreInterface,
-                    error:`Concept '${intf.name}' is not an interface ${ParseLocationUtil.location(intf)}.`,
-                    whenOk: () =>{
+                    error: `Concept '${intf.name}' is not an interface ${ParseLocationUtil.location(intf)}.`,
+                    whenOk: () => {
                         // add to the list
                         newInterfaces.push(intf);
                     }
@@ -205,6 +205,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
                         // if (freProperty.isPart && freeProperty.isPublic) {
                         //     this.runner.nestedCheck({
                         //         check: realType.isPublic,
+                        // tslint:disable-next-line:max-line-length
                         //         error: `Property '${freProperty.name} of type ${realType.name}' is public, the concept ${realType.name} should be public as well ${ParseLocationUtil.location(freProperty)}.`,
                         //         whenOk: () => {
                         //             this.runner.simpleCheck(
@@ -257,7 +258,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
                 check: !!element.typeReference,
                 error: `Property '${element.name}' should have a type ${ParseLocationUtil.location(element)}.`,
                 whenOk: () => {
-                    let myType = element.type; // there is a type reference, now check whether this reference resolves to a primitive type
+                    const myType = element.type; // there is a type reference, now check whether this reference resolves to a primitive type
                     this.checkPrimitiveType(myType, element);
                     if (element.isOptional) {
                         this.runner.simpleWarning(false,
@@ -302,10 +303,10 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
             });
     }
 
-
     private checkPrimitiveType(type: FreClassifier, element: FrePrimitiveProperty) {
         LOGGER.log("Checking primitive type '" + type.name + "'");
-        this.runner.simpleCheck((type === FrePrimitiveType.identifier || type === FrePrimitiveType.string || type === FrePrimitiveType.number || type === FrePrimitiveType.boolean),
+        this.runner.simpleCheck(
+            (type === FrePrimitiveType.identifier || type === FrePrimitiveType.string || type === FrePrimitiveType.number || type === FrePrimitiveType.boolean),
             `Primitive property '${element.name}' should have a primitive type (string, identifier, boolean, or number) ${ParseLocationUtil.location(element)}.`
         );
     }
@@ -314,6 +315,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreLanguage> {
         this.runner.simpleCheck(!!freInterface.name, `Interface should have a name ${ParseLocationUtil.location(freInterface)}.`);
         this.runner.simpleCheck(!(freReservedWords.includes(freInterface.name.toLowerCase())), `Interface may not have a name that is equal to a reserved word ('${freInterface.name}') ${ParseLocationUtil.location(freInterface)}.`);
         this.runner.simpleCheck(!(reservedWordsInTypescript.includes(freInterface.name.toLowerCase())),
+            // tslint:disable-next-line:max-line-length
             `Interface may not have a name that is equal to a reserved word in TypeScript ('${freInterface.name}') ${ParseLocationUtil.location(freInterface)}.`);
 
         for (const intf of freInterface.base) {

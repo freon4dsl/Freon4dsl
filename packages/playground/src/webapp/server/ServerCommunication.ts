@@ -6,10 +6,9 @@ import { setUserMessage } from "../components/stores/UserMessageStore";
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
 
-const node_port = process.env.NODE_PORT || 3001;
-const SERVER_URL = `http://127.0.0.1:${node_port}/`;
-console.log("NODE_PORT:" + node_port+ "  env " + JSON.stringify(process.env));
-
+const nodePort = process.env.NODE_PORT || 3001;
+const SERVER_URL = `http://127.0.0.1:${nodePort}/`;
+console.log("NODE_PORT:" + nodePort + "  env " + JSON.stringify(process.env));
 
 export class ServerCommunication implements IServerCommunication {
     static serial: FreModelSerializer = new FreModelSerializer();
@@ -50,7 +49,8 @@ export class ServerCommunication implements IServerCommunication {
             );
         } else {
             LOGGER.error( "Name of Unit '" + unitName + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
-            setUserMessage("Name of Unit '" + unitName + "' may contain only characters, numbers, '_', or '-', and must start with a character.", FreErrorSeverity.Error)
+            setUserMessage("Name of Unit '" + unitName
+                + "' may contain only characters, numbers, '_', or '-', and must start with a character.", FreErrorSeverity.Error);
         }
     }
 

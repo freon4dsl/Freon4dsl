@@ -189,7 +189,7 @@ export class RulesCheckerTemplate {
         if (message.length === 0) {
             message = `"List '${r.property.toFreString()}' may not be empty"`;
         }
-        return `if (${GenerationUtil.langExpToTypeScript(r.property)}.length == 0) {
+        return `if (${GenerationUtil.langExpToTypeScript(r.property)}.length === 0) {
                     this.errorList.push(new ${Names.FreError}(${message}, modelelement, ${locationdescription}, "${r.property.toFreString()}", ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}                      
                 }`;

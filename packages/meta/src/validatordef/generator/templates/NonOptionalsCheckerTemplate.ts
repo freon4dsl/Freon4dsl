@@ -76,7 +76,7 @@ export class NonOptionalsCheckerTemplate {
                 // then add a check on the length of the string
                 let additionalStringCheck: string = null;
                 if (prop.isPrimitive && (prop.type == FrePrimitiveType.string || prop.type == FrePrimitiveType.identifier)) {
-                    additionalStringCheck = `|| modelelement.${prop.name}?.length == 0`;
+                    additionalStringCheck = `|| modelelement.${prop.name}?.length === 0`;
                 }
 
                 result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ${additionalStringCheck? additionalStringCheck : ""}) {

@@ -19,8 +19,8 @@ export class ConceptUtils {
         ListUtil.addListIfNotPresent(checkedModelImports, modelImports);
         return `
             ${needsObservable ? `import { observable } from "mobx";` : ""}
-            import { ${checkedCoreImports.join(", ")} } from "${FREON_CORE}";
-            import { ${checkedModelImports.join(", ")} } from "./internal";
+            ${ checkedCoreImports.length > 0 ? `import { ${checkedCoreImports.join(", ")} } from "${FREON_CORE}";` : ""}
+            ${ checkedModelImports.length > 0 ? `import { ${checkedModelImports.join(", ")} } from "./internal";` : ""}
             `;
     }
 
@@ -125,13 +125,17 @@ export class ConceptUtils {
         return result;
     }
 
-    public static makeConstructor(hasSuper: boolean, allProps: FreProperty[]): string {
+    public static makeConstructor(hasSuper: boolean, allProps: FreProperty[], importsFromCore: string[]): string {
         // console.log("found overriding props: " + allProps.filter(p => p.isOverriding)
         // .map(p => `${p.name} of ${p.owningClassifier.name} [${p.location?.filename}]`).join("\n\t"))
         // console.log("found NON overriding props: " + allProps.filter(p => !p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
         const allButPrimitiveProps: FreConceptProperty[] = allProps.filter(p => !p.isPrimitive && !p.implementedInBase) as FreConceptProperty[];
         const allPrimitiveProps: FrePrimitiveProperty[] = allProps.filter(p => p.isPrimitive && !p.implementedInBase) as FrePrimitiveProperty[];
 
+        // here we know that FreUtils needs to be imported => add to imports
+        if (!hasSuper) {
+            ListUtil.addIfNotPresent(importsFromCore, Names.FreUtils);
+        }
         return `constructor(id?: string) {
         ${!hasSuper ? `
                         super();

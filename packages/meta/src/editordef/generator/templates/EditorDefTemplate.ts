@@ -21,11 +21,11 @@ export class EditorDefTemplate {
     generateEditorDef(language: FreLanguage, editorDef: FreEditUnit, relativePath: string): string {
         const defaultProjGroup = editorDef.getDefaultProjectiongroup();
 
-        let conceptsWithTrigger: ConceptTriggerElement[] = [];
-        let conceptsWithRefShortcut: ConceptShortCutElement[] = [];
-        let languageImports: string[] = [];
-        let editorImports: string[] = [];
-        let coreImports: string[] = [`${Names.FreLanguage}`, 'FreProjectionHandler', 'FreBoxProvider'];
+        const conceptsWithTrigger: ConceptTriggerElement[] = [];
+        const conceptsWithRefShortcut: ConceptShortCutElement[] = [];
+        const languageImports: string[] = [];
+        const editorImports: string[] = [];
+        const coreImports: string[] = [`${Names.FreLanguage}`, "FreProjectionHandler", "FreBoxProvider"];
 
         language.concepts.filter(c => !(c instanceof FreLimitedConcept || c.isAbstract)).forEach(concept => {
             // TODO handle other sub types of FreClassifier
@@ -48,9 +48,9 @@ export class EditorDefTemplate {
             }
         });
 
-        const handlerVarName: string = 'handler';
+        const handlerVarName: string = "handler";
         // get all the constructors
-        let constructors: string[] = [];
+        const constructors: string[] = [];
         language.concepts.forEach(concept => {
             if (!(concept instanceof FreLimitedConcept) && !concept.isAbstract) {
                 constructors.push(`["${Names.concept(concept)}", () => {
@@ -67,7 +67,7 @@ export class EditorDefTemplate {
         });
 
         // get all the table header info
-        let tableHeaderInfo: string[] = [];
+        const tableHeaderInfo: string[] = [];
         language.concepts.forEach(concept => {
             editorDef.findTableProjectionsForType(concept).map(proj => {
                 const entry = this.generateHeaderInfo(proj, coreImports);
@@ -78,7 +78,7 @@ export class EditorDefTemplate {
         });
 
         // Get all special child projections for a concept: tables or named
-        let conceptProjectionToPropertyProjection: Map<string, Map<string, Map<string, string>>> = new Map<string, Map<string, Map<string, string>>>();
+        const conceptProjectionToPropertyProjection: Map<string, Map<string, Map<string, string>>> = new Map<string, Map<string, Map<string, string>>>();
         language.classifiers().forEach(concept => {
             editorDef.findProjectionsForType(concept).forEach(conceptProjection => {
                 if (conceptProjection instanceof FreEditProjection) {
@@ -143,18 +143,17 @@ export class EditorDefTemplate {
                     });
                 }
             });
-        })
+        });
 
         const hasBinExps: boolean = language.concepts.filter(c => (c instanceof FreBinaryExpressionConcept)).length > 0;
         // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
 
         // template starts here
         return `import { ${coreImports.join(", ")} } from "${FREON_CORE}";
-        
             import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
-            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";         
-            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";  
-    
+            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";
+
             const map = ${conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyProjection)};
 
             /**
@@ -190,7 +189,7 @@ export class EditorDefTemplate {
                 `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").trigger = "${element.trigger}";`
             ).join("\n")}
                  ${conceptsWithRefShortcut.map( element =>
-                `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").referenceShortcut = 
+                `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").referenceShortcut =
                     {
                         propertyName: "${element.property.name}",
                         conceptName: "${element.property.type.name}"
@@ -199,7 +198,7 @@ export class EditorDefTemplate {
             ).join("\n")}
 
             const conceptProjectionToPropertyProjection = new Map();
-            }`
+            }`;
     }
 
     private generateHeaderInfo(projection: FreEditTableProjection, coreImports: string[]): string {
@@ -210,7 +209,7 @@ export class EditorDefTemplate {
                 `"${head}"`
             ).join(",\n")}])`;
         }
-        return '';
+        return "";
     }
 }
 
@@ -245,21 +244,21 @@ function conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyPr
         return "new Map<string, Map<string, Map<string, string>>>();";
     }
     let result: string = "new Map([                                        // the main map \n";
-    for(const conceptName of conceptProjectionToPropertyProjection.keys()) {
-        result += '    [                           // Concept has special projection for (one of) its parts\n';
+    for (const conceptName of conceptProjectionToPropertyProjection.keys()) {
+        result += "    [                           // Concept has special projection for (one of) its parts\n";
         result += '        "' + conceptName + '", new Map( [                          // Projection has special projection for (one of) the parts\n';
         const conceptMap = conceptProjectionToPropertyProjection.get(conceptName);
         for (const projection of conceptMap.keys()) {
-            result += '            [' + "                                       // Projection has special projection for some part \n";
-            result += '                "' + projection + '", new Map ([\n'
+            result += "            [" + "                                       // Projection has special projection for some part \n";
+            result += '                "' + projection + '", new Map ([\n';
             const projectionMap = conceptMap.get(projection);
             for (const propertyProjection of projectionMap) {
-                result += '            [ "' + propertyProjection[0] + '", "' + propertyProjection[1] + '" ],             // special projection\n'
+                result += '            [ "' + propertyProjection[0] + '", "' + propertyProjection[1] + '" ],             // special projection\n';
             }
-            result += "         ])],"
+            result += "         ])],";
         }
-        result += "     ])],"
+        result += "     ])],";
     }
-    result += '])'
+    result += "])";
     return result;
 }

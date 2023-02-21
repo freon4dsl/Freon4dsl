@@ -83,7 +83,7 @@ export class FreLanguage {
     }
 
     modelOfType(typeName: string) {
-        if(!!this.pmodel && (this.pmodel.typeName === typeName)) {
+        if (!!this.pmodel && (this.pmodel.typeName === typeName)) {
             return this.pmodel;
         } else {
             return null;
@@ -104,20 +104,20 @@ export class FreLanguage {
     }
 
     classifier(typeName: string): Classifier | undefined {
-        let concept1 = this.concepts.get(typeName);
+        const concept1 = this.concepts.get(typeName);
         if (!!concept1) {
             return concept1;
         } else {
-            let intf = this.interfaces.get(typeName);
+            const intf = this.interfaces.get(typeName);
             if (!!intf) {
                 return intf;
             } else {
-                let unit1 = this.units.get(typeName);
+                const unit1 = this.units.get(typeName);
                 if (!!unit1) {
                     return unit1;
                 } else {
-                    let model = this.modelOfType(typeName);
-                    if(!! model){
+                    const model = this.modelOfType(typeName);
+                    if (!! model) {
                         return model;
                     }
                 }
@@ -142,20 +142,20 @@ export class FreLanguage {
 
     classifierProperty(typeName: string, propertyName: string): Property | undefined {
         // LOGGER.log("CLASSIFIERPROPERTY " + typeName + "." + propertyName);
-        let concept1 = this.concepts.get(typeName);
+        const concept1 = this.concepts.get(typeName);
         if (!!concept1) {
             return concept1.properties.get(propertyName);
         } else {
-            let intf = this.interfaces.get(typeName);
+            const intf = this.interfaces.get(typeName);
             if (!!intf) {
                 return intf.properties.get(propertyName);
             } else {
-                let unit1 = this.units.get(typeName);
+                const unit1 = this.units.get(typeName);
                 if (!!unit1) {
                     return unit1.properties.get(propertyName);
-                }  else {
-                    let model = this.modelOfType(typeName);
-                    if( !!model){
+                } else {
+                    const model = this.modelOfType(typeName);
+                    if (!!model) {
                         return model.properties.get(propertyName);
                     }
                 }
@@ -178,8 +178,8 @@ export class FreLanguage {
      * @param typename
      * @param ptype
      */
-    public getPropertiesOfKind(typename: string, ptype: PropertyKind): Property[]  {
-        let classifier: Classifier | undefined = FreLanguage.getInstance().classifier(typename);
+    public getPropertiesOfKind(typename: string, ptype: PropertyKind): Property[] {
+        const classifier: Classifier | undefined = FreLanguage.getInstance().classifier(typename);
         const foundProperties: Property[] = [];
         if (!!classifier) {
             for (const prop of classifier.properties.values()) {
@@ -198,11 +198,11 @@ export class FreLanguage {
      * @param prop
      */
     public getPropertyValue(element: FreNode, prop: Property): FreNode[] {
-        if( prop.isList){
+        if (prop.isList) {
             return element[prop.name];
         } else {
             const value = element[prop.name];
-            if( !!value) {
+            if (!!value) {
                 return [value];
             } else {
                 return [];
@@ -258,9 +258,8 @@ export class FreLanguage {
         return myType?.constructor();
     }
 
-
     addModel(model: Model) {
-        if(!!this.pmodel) {
+        if (!!this.pmodel) {
             console.error("Language: adding model of type " + model?.typeName + " while there is already a model of type " + this.pmodel.typeName);
         }
         this.pmodel = model;

@@ -10,30 +10,30 @@ export class ModelTemplate {
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
         const coreImports = ClassifierUtil.findMobxImports(modelDescription)
-            .concat([Names.FreModel, Names.FreLanguage, Names.FreUtils, Names.FreParseLocation]);
+            .concat([Names.FreModel, Names.FreLanguage, Names.FreParseLocation]);
         const modelImports = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType(language);
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
-        let result: string = `           
+        const result: string = `
             /**
              * Class ${myName} is the implementation of the model with the same name in the language definition file.
-             * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
+             * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
              * to any changes in the state of its properties.
-             */            
-            export class ${myName} extends ${extendsClass} implements ${Names.FreModel} {     
-            
+             */
+            export class ${myName} extends ${extendsClass} implements ${Names.FreModel} {
+
                 ${ConceptUtils.makeStaticCreateMethod(modelDescription, myName)}
-                                      
+
                 ${ConceptUtils.makeBasicProperties(metaType, myName, false)}
                 ${modelDescription.primProperties.map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
                 ${modelDescription.parts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
 
-                ${ConceptUtils.makeConstructor(false, modelDescription.properties)}            
-                ${ConceptUtils.makeBasicMethods(false, metaType,true, false,false, false)}
+                ${ConceptUtils.makeConstructor(false, modelDescription.properties, coreImports)}
+                ${ConceptUtils.makeBasicMethods(false, metaType, true, false, false, false)}
                 ${ConceptUtils.makeCopyMethod(modelDescription, myName, false)}
                 ${ConceptUtils.makeMatchMethod(false, modelDescription, myName, coreImports)}
-                
+
                 /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.
                  * @param name
@@ -54,10 +54,10 @@ export class ModelTemplate {
                         }
                     } else {
                         return result;
-                    }                    
+                    }
                     return null;
-                }               
-                    
+                }
+
                 /**
                  * Replaces a model unit by a new one. Used for swapping between complete units and unit public interfaces.
                  * Returns false if the replacement could not be done, e.g. because 'oldUnit' is not a child of this object.
@@ -80,13 +80,13 @@ export class ModelTemplate {
                 :
                 `this.${part.name} = newUnit as ${Names.classifier(part.type)};`}
                             } else`
-        ).join(" ")}                    
+        ).join(" ")}
                     {
                         return false;
-                    }        
+                    }
                     return  true;
                 }
-                
+
                     /**
                      * Adds a model unit. Returns false if anything goes wrong.
                      *
@@ -107,9 +107,9 @@ export class ModelTemplate {
                                 }`).join("\n")}
                             }
                         }
-                        return false;                 
+                        return false;
                     }
-                    
+
                     /**
                      * Removes a model unit. Returns false if anything goes wrong.
                      *
@@ -129,13 +129,13 @@ export class ModelTemplate {
                                     return true;
                                 }`).join("\n")}
                             }
-                        } 
+                        }
                         return false;
                     }
-                    
-                /** 
-                 * Returns an empty model unit of type 'unitTypeName' within 'model'. 
-                 * 
+
+                /**
+                 * Returns an empty model unit of type 'unitTypeName' within 'model'.
+                 *
                  * @param model
                  * @param unitTypeName
                  */
@@ -155,8 +155,8 @@ export class ModelTemplate {
         }
                     }
                     return null;
-                } 
-                                    
+                }
+
                     /**
                      * Returns a list of model units.
                      */
@@ -172,7 +172,7 @@ export class ModelTemplate {
             }`).join("\n")}
                         return result;
                     }
-                    
+
                     /**
                      * Returns a list of model units of type 'type'.
                      */
@@ -198,7 +198,7 @@ export class ModelTemplate {
         return `
             import { ${coreImports.join(",")} } from "${FREON_CORE}";
             import { ${Names.modelunit(language)}, ${modelImports.join(", ")} } from "./internal";
-            
+
             ${result}`;
     }
 

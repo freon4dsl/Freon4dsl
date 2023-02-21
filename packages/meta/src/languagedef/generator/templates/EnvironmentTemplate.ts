@@ -17,8 +17,8 @@ export class EnvironmentTemplate {
 
     generateEnvironment(language: FreLanguage, relativePath: string): string {
         return `
-        import { ${Names.FreEditor}, ${Names.FreEnvironment}, ${Names.FreReader}, 
-                    ${Names.FreTyper}, ${Names.FreValidator}, ${Names.FreStdlib}, 
+        import { ${Names.FreEditor}, ${Names.FreEnvironment}, ${Names.FreReader},
+                    ${Names.FreTyper}, ${Names.FreValidator}, ${Names.FreStdlib},
                     ${Names.FreWriter}, ${Names.FreInterpreter}, ${Names.FreScoperComposite}, ${Names.LanguageEnvironment}, ${Names.FreProjectionHandler}
                } from "${FREON_CORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
@@ -38,9 +38,9 @@ export class EnvironmentTemplate {
          * to use.
          * This class uses the singleton pattern to ensure that only one instance of the class is present.
          */
-        export class ${Names.environment(language)} implements ${Names.FreEnvironment} {       
+        export class ${Names.environment(language)} implements ${Names.FreEnvironment} {
             private static environment: ${Names.FreEnvironment}; // the only instance of this class
-        
+
             /**
              * This method implements the singleton pattern
              */
@@ -51,10 +51,10 @@ export class EnvironmentTemplate {
                 }
                 return this.environment;
             }
-             
+
             /**
              * A private constructor, as demanded by the singleton pattern.
-             */  
+             */
             private constructor() {
                 const actions = new ${Names.actions(language)}();
                 const myComposite = new FreProjectionHandler();
@@ -65,22 +65,22 @@ export class EnvironmentTemplate {
                 initializeScoperDef(this.scoper);
                 initializeTypers(this.typer);
             }
-            
+
             /**
              * Returns a new model with name 'modelName'.
-             * 
+             *
              * @param modelName
              */
-             newModel(modelName: string) : ${Names.classifier(language.modelConcept)} {        
+             newModel(modelName: string) : ${Names.classifier(language.modelConcept)} {
                 const model = new ${Names.classifier(language.modelConcept)}();
                 model.name = modelName;
                 return model;
-             }  
-                            
-            // the parts of the language environment              
+             }
+
+            // the parts of the language environment
             editor: ${Names.FreEditor};
             scoper: ${Names.FreScoperComposite} = new ${Names.FreScoperComposite}("main");
-            typer: ${Names.FreTyper} = new ${Names.FreTyper}("main"); 
+            typer: ${Names.FreTyper} = new ${Names.FreTyper}("main");
             stdlib: ${Names.FreStdlib} = ${Names.stdlib(language)}.getInstance();
             validator: ${Names.FreValidator} = new ${Names.validator(language)}();
             writer: ${Names.FreWriter} = new ${Names.writer(language)}();

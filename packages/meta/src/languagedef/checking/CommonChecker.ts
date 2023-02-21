@@ -78,9 +78,9 @@ export class CommonChecker {
             return true;
         } else if (type === FrePrimitiveType.string && typeof value === "string") {
             return true;
-        } else if (type === FrePrimitiveType.number  && typeof value === "number") {
+        } else if (type === FrePrimitiveType.number && typeof value === "number") {
             return true;
-        } else if (type === FrePrimitiveType.boolean  && typeof value === "boolean") {
+        } else if (type === FrePrimitiveType.boolean && typeof value === "boolean") {
             return true;
         }
         return false;
