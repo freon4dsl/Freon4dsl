@@ -23,7 +23,7 @@ export class FreTyperReader {
      */
     readFromString(sentence: string, sourceFileName: string): Object {
         this.analyser.filename = sourceFileName;
-        let startRule: string = "TyperDef";
+        const startRule: string = "TyperDef";
 
         // parse the input
         let unit: Object = null;
@@ -37,7 +37,7 @@ export class FreTyperReader {
             } catch (e) {
                 // strip the error message, otherwise it's too long for the webapp
                 // console.log(e.message);
-                let mess = e.message?.replace("Could not match goal,", "Parse error");
+                const mess = e.message?.replace("Could not match goal,", "Parse error");
                 if (!!mess && mess.length > 0) {
                     throw new Error(mess);
                 } else {

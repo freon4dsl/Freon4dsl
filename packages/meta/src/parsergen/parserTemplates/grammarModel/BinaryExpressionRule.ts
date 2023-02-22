@@ -6,7 +6,7 @@ import { getTypeCall } from "./GrammarUtils";
 
 export class BinaryExpressionRule extends GrammarRule {
     expressionBase: FreExpressionConcept;
-    private symbolToConcept: Map<FreClassifier, string> = new Map<FreClassifier, string>();
+    private readonly symbolToConcept: Map<FreClassifier, string> = new Map<FreClassifier, string>();
 
     constructor(ruleName: string, expressionBase: FreExpressionConcept, symbolToConcept: Map<FreClassifier, string>) {
         super();
@@ -20,18 +20,18 @@ export class BinaryExpressionRule extends GrammarRule {
     }
 
     toMethod(mainAnalyserName: string): string {
-        let cases: string[] = [];
+        const cases: string[] = [];
         for (const [key, value] of this.symbolToConcept) {
             // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
             cases.push(`
                 case '${value}': {
-                    combined = ${Names.classifier(key)}.create({left: first, right: second, parse_location: this.${mainAnalyserName}.location(branch)});
+                    combined = ${Names.classifier(key)}.create({left: first, right: second, parseLocation: this.${mainAnalyserName}.location(branch)});
                     break;
                 }`);
         }
         return `
         /**
-         * Generic method to transform binary expressions, which are parsed 
+         * Generic method to transform binary expressions, which are parsed
          * according to these rules:
          * ${this.rule1()}
          * ${this.rule2()}
@@ -79,7 +79,7 @@ export class BinaryExpressionRule extends GrammarRule {
     }
 
     private sortOnLength(cases: string[]) {
-        let result: string[] = [];
+        let result: string[];
         result = cases.sort((a, b): number => {
             return a.length > b.length ? -1 : (a.length === b.length ? 0 : 1);
         });

@@ -145,7 +145,7 @@ export class LangUtil {
      */
     public static findImplementorsRecursive(freInterface: FreInterface | MetaElementReference<FreInterface>): FreConcept[] {
         const myInterface = (freInterface instanceof MetaElementReference ? freInterface.referred : freInterface);
-        let implementors : FreConcept[] = this.findImplementorsDirect(myInterface);
+        const implementors: FreConcept[] = this.findImplementorsDirect(myInterface);
 
         // add implementors of sub-interfaces
         for (const sub of myInterface.allSubInterfacesRecursive()) {
@@ -231,8 +231,8 @@ export class LangUtil {
             return false;
         }
 
-        let type1: FreClassifier = firstProp.type;
-        let type2: FreClassifier = secondProp.type;
+        const type1: FreClassifier = firstProp.type;
+        const type2: FreClassifier = secondProp.type;
         if (!type1 || !type2 ) {
             console.log("INTERNAL ERROR: property types are not set: " + firstProp.name + ", " + secondProp.name);
             return false;

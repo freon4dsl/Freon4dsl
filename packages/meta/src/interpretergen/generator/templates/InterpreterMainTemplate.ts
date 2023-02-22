@@ -4,9 +4,6 @@ import { FreInterpreterDef } from "../../metalanguage/FreInterpreterDef";
 
 export class InterpreterMainTemplate {
 
-    constructor() {
-    }
-
     /**
      * The base class containing all interpreter functions that should be defined.
      * @param language
@@ -22,7 +19,7 @@ export class InterpreterMainTemplate {
             MainInterpreter, OwningPropertyFunction, ${Names.FreNode}, RtObject, RtError
         } from "@freon4dsl/core";
         import {  ${Names.interpreterInitname(language)} } from "./gen/${Names.interpreterInitname(language)}";
-        
+
         const getPropertyFunction: OwningPropertyFunction = (node: Object) => {
             const index = (node as ${Names.FreNode}).freOwnerDescriptor().propertyIndex;
             return (node as ${Names.FreNode}).freOwnerDescriptor().propertyName + (index !== undefined ? "[" + index + "]" : "");
@@ -46,21 +43,21 @@ export class InterpreterMainTemplate {
          */
         export class ${Names.interpreterName(language)} implements ${Names.FreInterpreter}{
             private static  main: IMainInterpreter = null;
-        
+
             constructor() {
                 if(${Names.interpreterName(language)}.main === null) {
                     ${Names.interpreterName(language)}.main = MainInterpreter.instance(${Names.interpreterInitname(language)}, getConceptFunction, getPropertyFunction);
                 }
             }
-        
+
             setTracing(value: boolean) {
                 ${Names.interpreterName(language)}.main.setTracing(value);
             }
-        
+
             getTrace(): InterpreterTracer {
                 return ${Names.interpreterName(language)}.main.getTrace()
             }
-        
+
             evaluate(node: Object): RtObject {
                 ${Names.interpreterName(language)}.main.reset();
                 try {
@@ -70,7 +67,7 @@ export class InterpreterMainTemplate {
                 }
             }
         }
-        `
+        `;
     }
 
 }

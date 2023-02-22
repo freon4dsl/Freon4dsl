@@ -17,7 +17,7 @@ export class ScoperGenerator {
     protected scoperFolder: string;
 
     generate(scopedef: ScopeDef): void {
-        if (this.language == null) {
+        if (this.language === null) {
             LOGGER.error("Cannot generate scoper because language is not set.");
             return;
         }
@@ -48,11 +48,15 @@ export class ScoperGenerator {
 
         //  Generate it
         LOGGER.log(`Generating scoper: ${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`);
-        let scoperFile = FileUtil.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class" , generationStatus);
+        const scoperFile = FileUtil.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class" , generationStatus);
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`, scoperFile);
 
         LOGGER.log(`Generating scope language definition: ${this.scoperGenFolder}/${Names.scoperDef(this.language)}.ts`);
-        const scoperDefFile = FileUtil.pretty(scoperDefTemplate.generateScoperDef(this.language, scopedef, relativePath), "Scoper Definition", generationStatus);
+        const scoperDefFile = FileUtil.pretty(
+            scoperDefTemplate.generateScoperDef(this.language, scopedef, relativePath),
+            "Scoper Definition",
+            generationStatus
+        );
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoperDef(this.language)}.ts`, scoperDefFile);
 
         LOGGER.log(`Generating custom scoper: ${this.scoperGenFolder}/${Names.customScoper(this.language)}.ts`);

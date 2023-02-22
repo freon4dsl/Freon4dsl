@@ -11,8 +11,8 @@ export class FretLimitedRule extends FretTypeRule {
         if (!!data.exp) {
             result.exp = data.exp;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }

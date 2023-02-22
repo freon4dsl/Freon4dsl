@@ -6,16 +6,16 @@ import { FreLangElement } from "../metalanguage/FreLanguage";
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference} from "../metalanguage/MetaElementReference";
+import { MetaElementReference } from "../metalanguage/MetaElementReference";
 
-export class LanguageExpressionTester extends  FreLangElement {
+export class LanguageExpressionTester extends FreLangElement {
     // location: ParseLocation;
     languageName: string;
     language: FreLanguage;
     conceptExps: TestExpressionsForConcept[] = [];
 }
 
-export class TestExpressionsForConcept extends  FreLangElement {
+export class TestExpressionsForConcept extends FreLangElement {
     // location: ParseLocation;
     conceptRef: MetaElementReference<FreConcept>;
     language: FreLanguage;

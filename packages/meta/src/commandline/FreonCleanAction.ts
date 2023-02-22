@@ -14,7 +14,7 @@ import { GenerationStatus, FileUtil } from "../utils";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { FreLanguage } from "../languagedef/metalanguage";
 
-const LOGGER = new MetaLogger("FreonCleanAction"); //.mute();
+const LOGGER = new MetaLogger("FreonCleanAction"); // .mute();
 
 export class FreonCleanAction extends CommandLineAction {
     private outputFolderArg: CommandLineStringParameter;
@@ -83,7 +83,7 @@ export class FreonCleanAction extends CommandLineAction {
         // when the force flag is present we need to parse the definition ast files
         // because some generators must remove files with names based on the language
         if (this.force) {
-            LOGGER.info("Force flag is present therefore we need to parse the definition ast files, because some generators must remove files with names based on the language.")
+            LOGGER.info("Force flag is present therefore we need to parse the definition ast files, because some generators must remove files with names based on the language.");
             this.findLanguage();
         }
         // clean the workspace
@@ -162,7 +162,7 @@ export class FreonCleanAction extends CommandLineAction {
             throw new Error("No definitions folder, exiting.");
         }
         const generationStatus = new GenerationStatus();
-        let languageFiles: string[] = [];
+        const languageFiles: string[] = [];
         const myFileSet: string[] = FileUtil.findFiles(this.defFolder, generationStatus);
         if (myFileSet.length > 0) {
             for (const filename of myFileSet) {

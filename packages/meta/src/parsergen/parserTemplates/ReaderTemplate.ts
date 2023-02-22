@@ -1,4 +1,4 @@
-import {  FreLanguage } from "../../languagedef/metalanguage";
+import { FreLanguage } from "../../languagedef/metalanguage";
 import { FreEditUnit } from "../../editordef/metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, FREON_CORE } from "../../utils";
 
@@ -23,10 +23,10 @@ export class ReaderTemplate {
         import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
         import { ${semanticAnalyser} } from "./${semanticAnalyser}";
-        
+
         /**
         *   Class ${Names.reader(language)} is a wrapper for the various parsers of
-        *   modelunits. 
+        *   modelunits.
         */
         export class ${Names.reader(language)} implements ${Names.FreReader} {
             analyser: ${syntaxAnalyser} = new ${syntaxAnalyser}();
@@ -34,7 +34,7 @@ export class ReaderTemplate {
 
             /**
              * Parses and performs a syntax analysis on 'sentence', using the parser and analyser
-             * for 'metatype', if available. If 'sentence' is correct, a model unit will be created, 
+             * for 'metatype', if available. If 'sentence' is correct, a model unit will be created,
              * otherwise an error wil be thrown containing the parse or analysis error.
              * @param sentence      the input string which will be parsed
              * @param metatype      the type of the unit to be created
@@ -44,12 +44,12 @@ export class ReaderTemplate {
             readFromString(sentence: string, metatype: ModelUnitMetaType, model: ${Names.classifier(language.modelConcept)}, sourceName?: string): ${Names.modelunit(language)} {
                 this.analyser.sourceName = sourceName;
                 let startRule: string = "";
-                // choose the correct parser                
+                // choose the correct parser
                 ${language.units.map(unit =>
                     `if (metatype === "${Names.classifier(unit)}") {
                         startRule  = "${Names.classifier(unit)}";
                     }`).join(" else ")}
-                    
+
                 // parse the input
                 let unit: ${Names.modelunit(language)} = null;
                 if (this.parser) {
@@ -85,11 +85,11 @@ export class ReaderTemplate {
                             console.log(e.message);
                             throw e;
                         }
-                    }              
+                    }
                 } else {
                     throw new Error(\`No parser for \${metatype} available: grammar incorrect.\`);
                 }
-                return unit;        
+                return unit;
             }
         }
         `;

@@ -18,6 +18,22 @@ import { isNullOrUndefined } from "../util";
 const LOGGER = new FreLogger("FreEditor");
 
 export class FreEditor {
+
+    private static isOnPreviousLine(ref: Box, other: Box): boolean {
+        const margin = 5;
+        return other.actualY + margin < ref.actualY;
+    }
+
+    /**
+     * Returns true when 'other' is on the line below 'ref'.
+     * @param ref
+     * @param other
+     * @private
+     */
+    private static isOnNextLine(ref: Box, other: Box): boolean {
+        return this.isOnPreviousLine(other, ref);
+    }
+
     readonly actions?: FreCombinedActions;      // All actions with which this editor is created.
     readonly projection: FreProjectionHandler;  // The root projection with which this editor is created.
     newFreActions: FreAction[] = [];            // List of FreActions composed of all the actions in 'actions'
@@ -30,7 +46,7 @@ export class FreEditor {
     private _rootElement: FreNode = null;       // The model element to be shown in this editor.
     private _rootBox: Box | null = null;        // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
     private _selectedElement: FreNode = null;   // The model element, or the parent element of the property, that is currently selected in the editor.
-    private _selectedProperty: string = '';     // The property that is currectly selected in the editor, if applicable.
+    private _selectedProperty: string = "";     // The property that is currectly selected in the editor, if applicable.
     private _selectedIndex: number = -1;        // The index within the property that is currectly selected in the editor, if applicable.
     private _selectedBox: Box | null = null;    // The box defined for _selectedElement. Note that it is a 'slave' to _selectedElement.
     private _selectedPosition: FreCaret = FreCaret.UNSPECIFIED;   // The caret position within the _selectedBox.
@@ -115,7 +131,10 @@ export class FreEditor {
     }
 
     get selectedItem(): FreOwnerDescriptor {
-        return { owner: this._selectedElement, propertyName: this._selectedProperty, propertyIndex: this._selectedIndex};
+        return { owner: this._selectedElement,
+            propertyName: this._selectedProperty,
+            propertyIndex: this._selectedIndex
+        };
     }
 
     get selectedCaretPosition(): FreCaret {
@@ -131,17 +150,17 @@ export class FreEditor {
      * @param caretPosition
      */
     selectElement(element: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
-        console.log("selectElement " + element?.freLanguageConcept() + " with id " + element?.freId() + ", property: ["  + propertyName + ", " + propertyIndex + "]");
+        console.log("selectElement " + element?.freLanguageConcept() + " with id " + element?.freId() + ", property: [" + propertyName + ", " + propertyIndex + "]");
         if (this.checkParam(element)) {
-            let box = this.projection.getBox(element);
-            let propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
+            const box = this.projection.getBox(element);
+            const propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
             if (!isNullOrUndefined(propBox)) {
                 this._selectedBox = propBox;
                 this._selectedProperty = propertyName;
                 this._selectedIndex = propertyIndex;
             } else {
                 this._selectedBox = box;
-                this._selectedProperty = '';
+                this._selectedProperty = "";
                 this._selectedIndex = -1;
             }
             if (!isNullOrUndefined(caretPosition)) {
@@ -172,7 +191,7 @@ export class FreEditor {
         }
     }
 
-    private checkParam(element: FreNode): boolean  {
+    private checkParam(element: FreNode): boolean {
         if (this.NOSELECT) {
             return false;
         }
@@ -200,7 +219,7 @@ export class FreEditor {
             }
             this._selectedIndex = this._selectedBox.propertyIndex;
             this._selectedProperty = this._selectedBox.propertyName;
-            this._selectedPosition = !!caret? caret : FreCaret.UNSPECIFIED;
+            this._selectedPosition = !!caret ? caret : FreCaret.UNSPECIFIED;
             // TODO Only needed when something actually changed
             this.selectionChanged();
         }
@@ -215,8 +234,8 @@ export class FreEditor {
     }
 
     private selectParentForBox(box: Box) { // private method needed because of recursion
-        console.log("==> selectParent of " + box?.role + ' of kind ' + box?.kind);
-        let parent = box?.parent;
+        console.log("==> selectParent of " + box?.role + " of kind " + box?.kind);
+        const parent = box?.parent;
         if (!!parent) {
             // todo too much recursion when called from a Dropdown!!!
             if (parent.selectable) {
@@ -240,9 +259,9 @@ export class FreEditor {
             const propertyIndex = ownerDescriptor.propertyIndex;
             const parentElement = ownerDescriptor.owner;
             if (propertyIndex !== undefined) {
-                let arrayProperty = (ownerDescriptor.owner as any)[ownerDescriptor.propertyName] as any;
+                const arrayProperty = (ownerDescriptor.owner as any)[ownerDescriptor.propertyName] as any;
                 arrayProperty.splice(propertyIndex, 1);
-                let length = arrayProperty.length;
+                const length = arrayProperty.length;
                 if (length === 0) {
                     // TODO Maybe we should select the element (or leaf) just before the list.
                     this.selectElement(parentElement, `${ownerDescriptor.owner.freLanguageConcept()}-${ownerDescriptor.propertyName}`);
@@ -302,7 +321,7 @@ export class FreEditor {
      * @param severityType  The severity of the message (information, hint, warning, or error).
      */
     setUserMessage(message: string, severityType?: FreErrorSeverity) {
-        console.log('This message should be shown elsewhere: "' + message + '", please override this method appropriately.', severityType)
+        console.log('This message should be shown elsewhere: "' + message + '", please override this method appropriately.', severityType);
     }
 
     /**
@@ -423,20 +442,4 @@ export class FreEditor {
      * @param other
      * @private
      */
-
-    private static isOnPreviousLine(ref: Box, other: Box): boolean {
-        const margin = 5;
-        return other.actualY + margin < ref.actualY;
-    }
-
-    /**
-     * Returns true when 'other' is on the line below 'ref'.
-     * @param ref
-     * @param other
-     * @private
-     */
-    private static isOnNextLine(ref: Box, other: Box): boolean {
-        return this.isOnPreviousLine(other, ref);
-    }
-
 }

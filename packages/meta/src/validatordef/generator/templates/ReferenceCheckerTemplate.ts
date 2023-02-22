@@ -1,4 +1,4 @@
-import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
+import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
 import { FreLanguage, FreClassifier } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
@@ -26,15 +26,15 @@ export class ReferenceCheckerTemplate {
         // the template starts here
         return `
         import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.FreNodeReference}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${overallTypeName}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
+        import { ${overallTypeName}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
 
         /**
-         * Class ${checkerClassName} is part of the implementation of the default validator. 
+         * Class ${checkerClassName} is part of the implementation of the default validator.
          * It checks whether references can be found within the model.
          *
-         * Class ${Names.walker(language)} implements the traversal of the model tree. This class implements 
+         * Class ${Names.walker(language)} implements the traversal of the model tree. This class implements
          * the actual checking of each node in the tree.
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
@@ -44,14 +44,14 @@ export class ReferenceCheckerTemplate {
             errorList: ${errorClassName}[] = [];
             private refSeparator: string = '${Names.referenceSeparator}';
 
-            ${allMethods}           
-            
+            ${allMethods}
+
             private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>, propertyName: string, locationDescription: string) {
                 const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
                 const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
-                        new ${Names.FreError}(                                       
+                        new ${Names.FreError}(
                             \`Reference '\${referredElem.pathnameToString(this.refSeparator)}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.freLanguageConcept()}\`).join(", ")}]\`,
                                 modelelement,
                                 \`\${propertyName} of \${locationDescription}\`,
@@ -95,7 +95,7 @@ export class ReferenceCheckerTemplate {
             /**
              * Checks 'modelelement' before checking its children.
              * Found errors are pushed onto 'errorlist'.
-             * If an error is found, it is considered 'fatal', which means that no other checks on 
+             * If an error is found, it is considered 'fatal', which means that no other checks on
              * 'modelelement' are performed.
              *
              * @param modelelement

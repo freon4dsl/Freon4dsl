@@ -112,8 +112,8 @@ describe("Checking common super types algorithm", () => {
 
     test("level 1 interfaces", () => {
         let myList: FreClassifier[] = [];
-        let myBase1: FreInterface = interf("ZZ");
-        let myBase2: FreInterface = interf("XX");
+        const myBase1: FreInterface = interf("ZZ");
+        const myBase2: FreInterface = interf("XX");
         myList.push(interfWithBases("AA", [myBase1, myBase2]));
         myList.push(interfWithBases("BB", [myBase1]));
         myList.push(interfWithBases("CC", [myBase1, myBase2]));
@@ -147,12 +147,12 @@ describe("Checking common super types algorithm", () => {
 
     test("level 1 concepts and interfaces", () => {
         let myList: FreConcept[] = [];
-        let baseConcept: FreConcept = concept("ZZ");
+        const baseConcept: FreConcept = concept("ZZ");
         myList.push(conceptWithBase("AA", baseConcept));
         myList.push(conceptWithBase("BB", baseConcept));
         myList.push(conceptWithBase("CC", baseConcept));
-        let baseInterface1: FreInterface = interf("YY");
-        let baseInterface2: FreInterface = interf("XX");
+        const baseInterface1: FreInterface = interf("YY");
+        const baseInterface2: FreInterface = interf("XX");
         for (const con of myList) {
             addInterfacesToConcept(con, [baseInterface1, baseInterface2]);
         }
@@ -189,7 +189,7 @@ describe("Checking common super types algorithm", () => {
         myList.push(conceptWithBase("KK", myBase2));
         myList.push(conceptWithBase("LL", conceptWithBase("BB", myBase1)));
         myList.push(conceptWithBase("MM", conceptWithBase("CC", myBase1)));
-        let result: FreClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
+        let result: FreClassifier[];
         // expect(result.length).toBe(1);
         // expect(result[0]).toBe(myBase1);
         // console.log("COMMON SUPER: " + result.map(cls => cls.name).join(", "));

@@ -36,8 +36,8 @@ export class WriterTemplate {
     // this list is filled during the build of the template and should alwyas be the last
     // to added to the template
     private namedProjections: FreEditClassifierProjection[] = [];
-    private trueValue: string = 'true';
-    private falseValue: string = 'false';
+    private trueValue: string = "true";
+    private falseValue: string = "false";
     private refSeparator: string = ".";
 
     /**
@@ -63,7 +63,7 @@ export class WriterTemplate {
         const allLangConceptsName: string = Names.allConcepts(language);
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.FreWriter;
-        let limitedConcepts: FreLimitedConcept[] = language.concepts.filter(c => c instanceof FreLimitedConcept) as FreLimitedConcept[];
+        const limitedConcepts: FreLimitedConcept[] = language.concepts.filter(c => c instanceof FreLimitedConcept) as FreLimitedConcept[];
         const conceptsToUnparse: FreClassifier[] = [];
         conceptsToUnparse.push(...language.concepts);
         conceptsToUnparse.push(...language.units);
@@ -97,7 +97,7 @@ export class WriterTemplate {
         // Template starts here
         return `
         import { ${Names.FreNamedNode}, ${Names.FreNodeReference}, ${writerInterfaceName} } from "${FREON_CORE}";
-        import { ${allLangConceptsName}, 
+        import { ${allLangConceptsName},
             ${language.interfaces.length > 0
             ? language.interfaces.map(concept => `
                 ${Names.classifier(concept)}, `).join("")
@@ -105,9 +105,9 @@ export class WriterTemplate {
             ${language.units.map(concept => `
                 ${Names.classifier(concept)}`).join(", ")},
             ${language.concepts.map(concept => `
-                    ${Names.concept(concept)}`).join(", ")}                               
-        } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
-        
+                    ${Names.concept(concept)}`).join(", ")}
+        } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+
         /**
          * SeparatorType is used to unparse lists.
          * NONE means only space(s) between the elements.
@@ -135,7 +135,7 @@ export class WriterTemplate {
              * If 'short' is present and true, then a single-line result will be given.
              * Otherwise, the result is always a multi-line string.
              * Note that the single-line-string cannot be parsed into a correct model.
-             * 
+             *
              * @param modelelement
              * @param startIndent
              * @param short
@@ -144,7 +144,7 @@ export class WriterTemplate {
                 this.writeToLines(modelelement, startIndent, short);
                 return \`\$\{this.output.map(line => \`\$\{line.trimEnd()\}\`).join("\\n").trimEnd()}\`;
             }
- 
+
             /**
              * Returns a string representation of 'modelelement', divided into an array of strings,
              * each of which contain a single line (without newline).
@@ -163,23 +163,23 @@ export class WriterTemplate {
                 if (short === undefined) {
                     short = false;
                 }
-        
+
                 // make sure the global variables are reset
                 this.output = [];
                 this.currentLine = 0;
-        
+
                 // begin the unparsing with an indent if asked for
                 let indentString: string = "";
                 for (let _i = 0; _i < startIndent; _i++) {
                     indentString += " ";
                 }
                 this.output[this.currentLine] = indentString;
-        
+
                 // do the actual work
                 this.unparse(modelelement, short);
                 return this.output;
             }
-            
+
             /**
              * Returns the name of 'modelelement' if it has one, else returns
              * a short unparsing of 'modelelement'.
@@ -188,12 +188,12 @@ export class WriterTemplate {
              * @param modelelement
              */
             public writeNameOnly(modelelement: ${allLangConceptsName}): string {
-                if (!modelelement) return '';
+                if (!modelelement) { return ""; }
                 ${this.makeWriteOnly(language)}
             }
-        
+
             private unparse(modelelement: ${allLangConceptsName}, short: boolean) {
-                if (!modelelement) return;
+                if (!modelelement) { return; }
                 switch (modelelement.freLanguageConcept()) {
                 ${conceptsToUnparse.map(concept =>
                 `case "${Names.classifier(concept)}": this.unparse${Names.classifier(concept)}(modelelement as ${Names.classifier(concept)}, short);
@@ -212,7 +212,7 @@ export class WriterTemplate {
             ${conceptsWithoutProjection.map(concept => `${this.makeAbstractConceptMethodWithout(concept)}`).join("\n")}
             ${interfacesWithoutProjection.map(intf => `${this.makeInterfaceMethod(intf, Names.allConcepts(language))}`).join("\n") }
             ${this.namedProjections.map(projection => `${this.makeConceptMethod(projection)}`).join("\n")}
-             
+
             /**
              *
             */
@@ -220,10 +220,10 @@ export class WriterTemplate {
                 if (!!modelelement) {
                     const type: ${Names.FreNamedNode} = modelelement?.referred;
                     if (!!type) {
-                        ${limitedConcepts.length > 0 
-                        ? 
+                        ${limitedConcepts.length > 0
+                        ?
                             `${limitedConcepts.map((lim, index) =>
-                            `${index == 0 ? `` : `} else `}if (type instanceof ${Names.concept(lim)}) {
+                            `${index === 0 ? `` : `} else `}if (type instanceof ${Names.concept(lim)}) {
                                 this.unparse${Names.concept(lim)}(type, short);`).join("")}
                             } else {
                                 this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";
@@ -236,7 +236,7 @@ export class WriterTemplate {
                     }
                 }
             }
-       
+
             /**
              * Adds a string representation of 'list' to the 'output', using 'sepText' , and 'sepType' to include either a separator string
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
@@ -247,7 +247,7 @@ export class WriterTemplate {
              * @param vertical
              * @param indent
              * @param short
-             */         
+             */
             private unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean,
         method: (modelelement: ${allLangConceptsName}, short: boolean) => void) {
                 list.forEach((listElem, index) => {
@@ -271,13 +271,13 @@ export class WriterTemplate {
              */
             private unparseReferenceList(list: ${Names.FreNodeReference}<${Names.FreNamedNode}>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index === list.length - 1;     
-                    this.doInitiator(sepText, sepType);              
-                    this.unparseReference(listElem, short);                 
+                    const isLastInList: boolean = index === list.length - 1;
+                    this.doInitiator(sepText, sepType);
+                    this.unparseReference(listElem, short);
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
             }
-            
+
             /**
              * Adds a string representation of 'list' to the 'output', using 'sepText' , and 'sepType' to include either a separator string
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
@@ -289,7 +289,7 @@ export class WriterTemplate {
              * @param vertical
              * @param indent
              * @param short
-             */   
+             */
             private unparseListOfPrimitiveValues(
                 list: (string | number | boolean)[],
                 isIdentifier: boolean,
@@ -311,9 +311,9 @@ export class WriterTemplate {
                     });
                 }
             }
-            
+
             /**
-             * Adds a separator, terminator, or initiator text (followed or preceded by a newline and the right amount of indentation) 
+             * Adds a separator, terminator, or initiator text (followed or preceded by a newline and the right amount of indentation)
              * to the output, depending on the parameters.
              * @param sepType
              * @param isLastInList
@@ -326,13 +326,13 @@ export class WriterTemplate {
             private doSeparatorOrTerminatorAndNewline(sepType: SeparatorType, isLastInList: boolean, sepText: string, vertical: boolean, short: boolean, indent: number) {
                 // first eliminate any whitespace at the end of the line
                 this.output[this.currentLine] = this.output[this.currentLine].trimEnd();
-                
+
                 if (!vertical && (!sepText || sepText.length == 0)) {
                     // at least separate the items by a space to avoid things
                     // like "IntegerFunction", which should be "Integer Function"
                     sepText = " ";
                 }
-                
+
                 // then add the right separator or terminator
                 switch (sepType) {
                     case SeparatorType.Separator: {
@@ -357,7 +357,7 @@ export class WriterTemplate {
                         break;
                     }
                 }
-                
+
                 // then add newline and indentation
                 if (vertical && !isLastInList) {
                     if (!short) {
@@ -374,7 +374,7 @@ export class WriterTemplate {
                     }
                 }
             }
-        
+
             /**
              * Makes a new entry in the 'output' array
              * and adds the indentation of 'number' spaces
@@ -389,18 +389,18 @@ export class WriterTemplate {
                 }
                 this.output[this.currentLine] = indentation;
             }
- 
+
              /**
-             * Adds the 'initiator' text  
+             * Adds the 'initiator' text
              * @param sepText
              * @param sepType
              * @private
-             */           
+             */
             private doInitiator(sepText: string, sepType: SeparatorType) {
                 if (sepType === SeparatorType.Initiator) {
                     this.output[this.currentLine] += sepText;
                 }
-            }           
+            }
         } `;
     }
 
@@ -452,7 +452,7 @@ export class WriterTemplate {
                           */`;
         // take care of named projections, the unparse method gets a different name
         let methodName: string = `unparse${name}`;
-        if (projection.name != this.currentProjectionGroup.name) {
+        if (projection.name !== this.currentProjectionGroup.name) {
             methodName += "_" + projection.name;
         }
         if (!!lines) {
@@ -504,7 +504,7 @@ export class WriterTemplate {
     private makeLine(line: FreEditProjectionLine, inOptionalGroup: boolean): string {
         let result: string = ``;
         if (line.isEmpty()) {
-            result = `this.output[this.currentLine] += "\"\n\"";`
+            result = `this.output[this.currentLine] += "\"\n\"";`;
         } else {
             line.items.forEach(item => {
                 result += this.makeItem(item, line.indent, inOptionalGroup, line.isOptional());
@@ -519,14 +519,14 @@ export class WriterTemplate {
             // add escapes to item.text
             const myText = ParserGenUtil.escapeRelevantChars(item.text).trimEnd();
             result += `this.output[this.currentLine] += \`${myText} \`;\n`;
-        } else if (item instanceof FreOptionalPropertyProjection){
+        } else if (item instanceof FreOptionalPropertyProjection) {
             const myElem = item.property.referred;
             let myTypeScript: string = GenerationUtil.propertyToTypeScript(myElem);
             if (!myElem.isPart) {
                 myTypeScript = GenerationUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
             }
             if (myElem.isList) {
-                myTypeScript += " && " + myTypeScript + '.length > 0';
+                myTypeScript += " && " + myTypeScript + ".length > 0";
             }
             let subresult: string = "";
             item.lines.forEach((line, index) => {
@@ -537,9 +537,10 @@ export class WriterTemplate {
                         subresult += `this.newlineAndIndentation(blockIndent + ${indent} + ${line.indent});`;
                     }
                     subresult += this.makeLine(line, true);
-                } else
+                } else {
                     subresult += `this.newlineAndIndentation(blockIndent + ${indent} + ${line.indent});
                            ${this.makeLine(line, true)}`;
+                }
             });
             // surround whole sub-projection with an if-statement
             result += `if (!!${myTypeScript}) { ${subresult} }`;
@@ -554,7 +555,9 @@ export class WriterTemplate {
             // take care of named projection
             if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
                 // find the projection that we need and add it to the extra list
-                ListUtil.addIfNotPresent<FreEditClassifierProjection>(this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName));
+                ListUtil.addIfNotPresent<FreEditClassifierProjection>(
+                    this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName)
+                );
                 result += `this.unparse${Names.classifier(item.superRef.referred)}_${item.projectionName}(modelelement, short);`;
             } else { // use the normal unparse method
                 result += `this.unparse${Names.classifier(item.superRef.referred)}(modelelement, short);`;
@@ -610,7 +613,7 @@ export class WriterTemplate {
                 // add escapes to joinText
                 let myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
                 // Add a space to the join text. This is needed in a text string, not in a projectional editor.
-                myJoinText = (!!myJoinText && myJoinText.length > 0) ? myJoinText + ' ' : '';
+                myJoinText = (!!myJoinText && myJoinText.length > 0) ? myJoinText + " " : "";
                 result += `this.unparseListOfPrimitiveValues(
                     ${elemStr}, ${isIdentifier},"${myJoinText}", ${joinType}, ${vertical},
                     this.output[this.currentLine].length,
@@ -636,18 +639,18 @@ export class WriterTemplate {
                         myFalseKeyword = null;
                     }
                 }
-                if (myTrueKeyword === 'true' && myFalseKeyword === 'false') {
+                if (myTrueKeyword === "true" && myFalseKeyword === "false") {
                     // possibility 1: the keywords are simply 'true' and 'false'
                     myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
                 } else if (myFalseKeyword === null) {
                     // possibility 2: there is no false keyword, which means that
                     // the boolean value should be shown only when it is true
-                    myCall = `if (${elemStr}) { 
+                    myCall = `if (${elemStr}) {
                               this.output[this.currentLine] += \`${myTrueKeyword} \`
                           }`;
                 } else {
                     // possibility 3: both true and false keywords have been altered in the editor definition
-                    myCall = `if (${elemStr}) { 
+                    myCall = `if (${elemStr}) {
                               this.output[this.currentLine] += \`${myTrueKeyword} \`
                           } else {
                             this.output[this.currentLine] += \`${myFalseKeyword} \`
@@ -682,7 +685,7 @@ export class WriterTemplate {
         let result: string = "";
         const type = myElem.type;
         let nameOfUnparseMethod: string = "unparse";
-        let typeCast: string = '';
+        let typeCast: string = "";
         if (!!type) {
             // In case of a named projection, another unparse method needs to be called,
             // and the parameter to that call needs a type cast.
@@ -705,13 +708,13 @@ export class WriterTemplate {
                     const joinType: string = this.getJoinType(item);
                     if (joinType.length > 0) {
                         // Add a space to the join text. This is needed in a text string, not in a projectional editor.
-                        const myJoinText: string = (!!item.listInfo.joinText && item.listInfo.joinText.length > 0) ? item.listInfo.joinText + ' ' : '';
+                        const myJoinText: string = (!!item.listInfo.joinText && item.listInfo.joinText.length > 0) ? item.listInfo.joinText + " " : "";
                         if (myElem.isPart) {
-                            let myTypeScript: string = GenerationUtil.propertyToTypeScript(item.property.referred);
+                            const myTypeScript: string = GenerationUtil.propertyToTypeScript(item.property.referred);
                             result += `this.unparseList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short,
                             (modelelement, short) => this.${nameOfUnparseMethod}(modelelement${typeCast}, short) )`;
                         } else {
-                            let myTypeScript: string = GenerationUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
+                            const myTypeScript: string = GenerationUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
                             result += `this.unparseReferenceList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
                         }
                     }
@@ -757,13 +760,13 @@ export class WriterTemplate {
     }
 
     private findNamedClassifiers(language: FreLanguage): FreClassifier[] {
-        let result: FreClassifier[] = [];
-        for( const elem of language.units) {
+        const result: FreClassifier[] = [];
+        for ( const elem of language.units) {
             if (GenerationUtil.hasNameProperty(elem)) {
                 result.push(elem);
             }
         }
-        for( const elem of language.concepts) {
+        for ( const elem of language.concepts) {
             if (GenerationUtil.hasNameProperty(elem)) {
                 result.push(elem);
             }
@@ -784,7 +787,7 @@ export class WriterTemplate {
                     return this.output[0].trimEnd();`;
         if (namedClassifiers.length > 0) {
             return `${namedClassifiers.map((concept, index) => `
-                ${index == 0 ? `` : `} else `}if (modelelement instanceof ${Names.classifier(concept)}) {
+                ${index === 0 ? `` : `} else `}if (modelelement instanceof ${Names.classifier(concept)}) {
                     return modelelement.name;`).join("")}
                 } else {
                     ${shortUnparsing}
@@ -807,7 +810,7 @@ export class WriterTemplate {
                 this.unparse(modelelement.right, short);
         }`;
         }
-        return '';
+        return "";
     }
 
     private makeInterfaceMethod(freInterface: FreInterface, classifierType: string): string {
@@ -826,6 +829,6 @@ export class WriterTemplate {
         } else {
             console.log("INTERNAL ERROR: concept without projection is not abstract or limited: " + concept.name);
         }
-        return '';
+        return "";
     }
 }

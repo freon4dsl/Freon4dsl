@@ -19,13 +19,13 @@ export class ValidatorParser extends FreGenericParser<ValidatorDef> {
 
     protected merge(submodels: ValidatorDef[]): ValidatorDef {
         if (submodels.length > 0) {
-            let result: ValidatorDef = submodels[0];
-            let validatorName: string = submodels[0].validatorName;
+            const result: ValidatorDef = submodels[0];
+            const validatorName: string = submodels[0].validatorName;
             submodels.forEach((sub, index) => {
                 if (index > 0) {
                      result.conceptRules.push(...sub.conceptRules);
                     // check whether all validatornames are equal
-                    if (sub.validatorName !== validatorName) {
+                     if (sub.validatorName !== validatorName) {
                          this.checker.errors.push(`The name of the validator defined in '${sub.location.filename}' is different from other .valid files.`);
                      }
                 }

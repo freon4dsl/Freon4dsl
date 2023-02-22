@@ -1,5 +1,5 @@
 import { FreClassifier, FreLanguage } from "../../metalanguage";
-import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils";
+import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil, FREON_CORE } from "../../../utils";
 
 export class WalkerTemplate {
 
@@ -16,16 +16,16 @@ export class WalkerTemplate {
         return `
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${classifiersToDo.map(concept => `
-                ${Names.classifier(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
+                ${Names.classifier(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
-        import { ${Names.FreLogger} } from "@freon4dsl/core";
-                
+        import { ${Names.FreLogger} } from "${FREON_CORE}";
+
         const LOGGER = new ${Names.FreLogger}("${generatedClassName}");
 
         /**
          * Class ${generatedClassName} implements the extended visitor pattern of instances of language ${language.name}.
-         * This class implements the traversal of the model tree, classes that implement ${Names.workerInterface(language)} 
-         * are responsible for the actual work being done on the nodes of the tree.        
+         * This class implements the traversal of the model tree, classes that implement ${Names.workerInterface(language)}
+         * are responsible for the actual work being done on the nodes of the tree.
          * Every node is visited twice, once before the visit of its children, and once after this visit.
          *
          * With the use of the parameter 'includeChildren', which takes a function, a very fine-grained control can be taken
@@ -56,7 +56,7 @@ export class WalkerTemplate {
 
             ${classifiersToDo.map(concept => `
                 private walk${Names.classifier(concept)}(
-                            modelelement: ${Names.classifier(concept)}, 
+                            modelelement: ${Names.classifier(concept)},
                             includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                     let stopWalkingThisNode: boolean = false;
                     for (const worker of this.myWorkers ) {
@@ -65,11 +65,11 @@ export class WalkerTemplate {
                         }
                     }
                     ${((concept.allParts().length > 0) ?
-                    `// work on children in the model tree                     
+                    `// work on children in the model tree
                     ${concept.allParts().map( part =>
                         (part.isList ?
                             `modelelement.${part.name}.forEach(p => {
-                                if(!(includeChildren === undefined) && includeChildren(p)) {                                    
+                                if(!(includeChildren === undefined) && includeChildren(p)) {
                                     this.walk(p, includeChildren );
                                 }
                             });`
@@ -82,7 +82,7 @@ export class WalkerTemplate {
                     `
                     : ``
                     )}
-                    for (let worker of this.myWorkers ) {                    
+                    for (let worker of this.myWorkers ) {
                         if (!stopWalkingThisNode ) {
                             stopWalkingThisNode = worker.execAfter${Names.classifier(concept)}(modelelement);
                         }

@@ -16,7 +16,7 @@ export function isNullOrUndefined(obj: Object | null | undefined): obj is null |
 
 export class FileUtil {
 
-    public static separator() : string {
+    public static separator(): string {
         return path.sep;
     }
 
@@ -79,7 +79,7 @@ export class FileUtil {
         const folder = "./" + dir;
         if (fs.existsSync(folder)) {
             fs.readdirSync(folder).forEach(file => {
-                const completePath = path.join(folder, file)
+                const completePath = path.join(folder, file);
                 if (!fs.lstatSync(completePath).isDirectory()) {
                     fs.unlink(completePath, err => {
                         LOGGER.log("deleting file: [" + completePath + "]");
@@ -115,9 +115,9 @@ export class FileUtil {
         LOGGER.log("Deleting folder only when it is empty: [" + dir + "]");
         const folder = "./" + dir;
         if (fs.existsSync(folder)) {
-            if (fs.readdirSync(folder).length == 0) {
+            if (fs.readdirSync(folder).length === 0) {
                 fs.rmdirSync(folder);
-            } else  {
+            } else {
                 LOGGER.info("Folder has content: [" + folder + "]");
             }
         // } else {
@@ -125,10 +125,10 @@ export class FileUtil {
         }
     }
 
-    public static deleteFile(path: string) {
-        LOGGER.log("deleting file: [" + path + "]");
-        if (fs.existsSync(path)) {
-            fs.unlinkSync(path);
+    public static deleteFile (filePath: string) {
+        LOGGER.log("deleting file: [" + filePath + "]");
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
         }
     }
     /**

@@ -66,7 +66,7 @@ export class FreTyperCheckerPhase2 extends CheckerPhase<TyperDef> {
                     this.checkFretExp(rule.exp);
                 });
             });
-        }        
+        }
     }
 
     private checkFretExp(exp: FretExp) {
@@ -117,7 +117,7 @@ export class FreTyperCheckerPhase2 extends CheckerPhase<TyperDef> {
         // LOGGER.log("Checking checkVarCallExp '" + exp.toFreString() + "'");
         this.runner.nestedCheck({
             check: !!exp.variable,
-            error: `Cannot find reference to ${exp.__variable.name} ${ParseLocationUtil.location(exp.__variable)}.`,
+            error: `Cannot find reference to ${exp.$variable.name} ${ParseLocationUtil.location(exp.$variable)}.`,
             whenOk: () => {
                 exp.returnType = exp.variable.type;
             }
@@ -131,7 +131,7 @@ export class FreTyperCheckerPhase2 extends CheckerPhase<TyperDef> {
             }
         );
     }
-    
+
     private checkWhereExp(exp: FretWhereExp) {
         // sort the conditions such that the part that refers to the extra variable is always the left,
         // and check the uniqueness of the properties of the variable in the conditions
@@ -159,9 +159,9 @@ export class FreTyperCheckerPhase2 extends CheckerPhase<TyperDef> {
             this.checkUniquenessOfProperty(variablePart, properties);
             // return a new condition with the knownTypePart always as the right
             if (cond instanceof FretEqualsExp) {
-                result.push(FretEqualsExp.create({left: variablePart, right: knownTypePart}));
+                result.push(FretEqualsExp.create({ left: variablePart, right: knownTypePart }));
             } else if (cond instanceof FretConformsExp) {
-                result.push(FretConformsExp.create({left: variablePart, right: knownTypePart}));
+                result.push(FretConformsExp.create({ left: variablePart, right: knownTypePart }));
             }
         });
         return result;

@@ -34,15 +34,15 @@ export class InterfaceTemplate {
 
             /**
              * Interface ${myName} is the implementation of the interface with the same name in the language definition file.
-             */              
-            export ${abstract} interface ${myName} 
-                extends ${extendsInterfaces.length > 0 ? `${extendsInterfaces.map(int => `${int}`).join(", ")}` : `${Names.FreNode}`} 
-            {               
+             */
+            export ${abstract} interface ${myName}
+                extends ${extendsInterfaces.length > 0 ? `${extendsInterfaces.map(int => `${int}`).join(", ")}` : `${Names.FreNode}`}
+            {
                 ${intf.primProperties.map(p => this.generatePrimitiveProperty(p)).join("\n")}
                 ${intf.parts().map(p => this.generatePartProperty(p)).join("\n")}
-                ${intf.references().map(p => this.generateReferenceProperty(p)).join("\n")}         
-                
-                copy(): ${myName};                
+                ${intf.references().map(p => this.generateReferenceProperty(p)).join("\n")}
+
+                copy(): ${myName};
             }`;
     }
 

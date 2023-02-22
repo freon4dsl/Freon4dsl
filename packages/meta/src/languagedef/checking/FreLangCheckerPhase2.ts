@@ -72,28 +72,28 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
     private checkUniqueFileExtension(extensions: string[], unit: FreUnitDescription) {
         // our parser accepts only variables for fileExtensions, therefore we do not need to check it further here.
         // set the file extension, if not present
-        if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length == 0) {
+        if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length === 0) {
             // try to get a unique file extension that is as short as possible starting with a length of 3 chars
             if (unit.name.length < 3) {
                 // for small names extend the name with a number
                 for (let i = 0; i < 9; i++) {
-                    let potional: string = unit.name.toLowerCase() + i;
-                    if (!extensions.includes(potional)) {
-                        unit.fileExtension = potional;
+                    const potential: string = unit.name.toLowerCase() + i;
+                    if (!extensions.includes(potential)) {
+                        unit.fileExtension = potential;
                         break;
                     }
                 }
             } else {
                 // for larger names use a substring that makes the extension unqiue
                 for (let i = 3; i <= unit.name.length; i++) {
-                    let potional: string = unit.name.substring(0, i).toLowerCase();
-                    if (!extensions.includes(potional)) {
-                        unit.fileExtension = potional;
+                    const potential: string = unit.name.substring(0, i).toLowerCase();
+                    if (!extensions.includes(potential)) {
+                        unit.fileExtension = potential;
                         break;
                     }
                 }
             }
-            if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length == 0) { // could not set default
+            if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length === 0) { // could not set default
                 this.runner.simpleCheck(false,
                     `Could not create a file-extension for '${unit.name}', please provide one ${ParseLocationUtil.location(unit)}.`);
             } else {
@@ -189,7 +189,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
                                 error: `Predefined property '${freInstanceProperty.name}' should have a primitive type ${ParseLocationUtil.location(freInstanceProperty)}.`,
                                 whenOk: () => {
                                     freInstanceProperty.property = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
-                                    let myPropType: FrePrimitiveType = myProp.type as FrePrimitiveType;
+                                    const myPropType: FrePrimitiveType = myProp.type as FrePrimitiveType;
                                     if (!myProp.isList) {
                                         this.runner.simpleCheck(CommonChecker.checkValueToType(freInstanceProperty.value, myPropType),
                                             `Type of '${freInstanceProperty.value}' (${typeof freInstanceProperty.value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);

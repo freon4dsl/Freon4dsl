@@ -30,8 +30,8 @@ export class UndoUnit extends FreNodeBaseImpl implements FreModelUnit {
         if (!!data.partlist) {
             data.partlist.forEach(x => result.partlist.push(x));
         }
-        if (!!data.parse_location) {
-            result.parse_location = data.parse_location;
+        if (!!data.parseLocation) {
+            result.parseLocation = data.parseLocation;
         }
         return result;
     }

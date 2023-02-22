@@ -29,7 +29,7 @@ import { MetaElementReference } from "../../languagedef/metalanguage";
 const LOGGER = new MetaLogger("EditorCreators").mute();
 
 let currentFileName: string = "SOME_FILENAME";
-let classifiersUsedInSuperProjection: string[] = []; // remember these to add this list to the overall FreEditUnit
+const classifiersUsedInSuperProjection: string[] = []; // remember these to add this list to the overall FreEditUnit
 export function setCurrentFileName(newName: string) {
     currentFileName = newName;
 }
@@ -38,7 +38,7 @@ export function setCurrentFileName(newName: string) {
 // This is used as a bridge between JavaScript in the Pegjs parser and typescript
 
 export function createEditUnit(group: FreEditProjectionGroup): FreEditUnit {
-    let result: FreEditUnit = new FreEditUnit();
+    const result: FreEditUnit = new FreEditUnit();
     if (!!group) {
         result.projectiongroups.push(group);
     }
@@ -98,11 +98,11 @@ function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEd
 }
 
 export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): FreEditProjectionGroup {
-    let result: FreEditProjectionGroup = new FreEditProjectionGroup();
+    const result: FreEditProjectionGroup = new FreEditProjectionGroup();
     if (!!data.name) {
         result.name = data.name;
     }
-    if (data.precedence != null && data.precedence !== undefined) { // precedence may be 0, "!!data.precedence" would return false
+    if (data.precedence !== null && data.precedence !== undefined) { // precedence may be 0, "!!data.precedence" would return false
         result.precedence = data.precedence;
     }
     if (!!data.standardBooleanProjection) {
@@ -124,7 +124,7 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
 }
 
 export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): FreEditParsedClassifier {
-    let result: FreEditParsedClassifier = new FreEditParsedClassifier();
+    const result: FreEditParsedClassifier = new FreEditParsedClassifier();
     if (!!data.projection) {
         result.projection = data.projection;
     }
@@ -144,8 +144,8 @@ export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): 
     return result;
 }
 
-export function createStdBool(data: Partial<BoolKeywords>) : BoolKeywords {
-    let result: BoolKeywords = new BoolKeywords();
+export function createStdBool(data: Partial<BoolKeywords>): BoolKeywords {
+    const result: BoolKeywords = new BoolKeywords();
     if (!!data.trueKeyword) {
         result.trueKeyword = data.trueKeyword;
     }
@@ -203,7 +203,7 @@ export function createProjection(data: Partial<FreEditProjection>): FreEditProje
         result.classifier = data.classifier;
     }
     if (!!data.lines) {
-        result.lines = FreEditParseUtil.normalizeLine( data.lines[0]  );
+        result.lines = FreEditParseUtil.normalizeLine( data.lines[0] );
         // Now cleanup the parsed projection
         // FreEditParseUtil.normalizeLine(result);
     }
@@ -279,7 +279,7 @@ export function createTextItem(data: string): FreEditProjectionText {
     return result;
 }
 
-export function createSuperProjection(data: Partial<FreEditSuperProjection>) : FreEditSuperProjection {
+export function createSuperProjection(data: Partial<FreEditSuperProjection>): FreEditSuperProjection {
     const result = new FreEditSuperProjection();
     if (!!data.superRef) {
         result.superRef = data.superRef;
@@ -295,8 +295,9 @@ export function createSuperProjection(data: Partial<FreEditSuperProjection>) : F
     return result;
 }
 
+// tslint:disable-next-line:typedef
 export function createPropertyProjection(data: { expression, projectionName, location }): FreEditPropertyProjection {
-    let result: FreEditPropertyProjection = new FreEditPropertyProjection();
+    const result: FreEditPropertyProjection = new FreEditPropertyProjection();
     if (!!data["expression"]) {
         result.expression = data["expression"];
     }
@@ -310,8 +311,9 @@ export function createPropertyProjection(data: { expression, projectionName, loc
     return result;
 }
 
+// tslint:disable-next-line:typedef
 export function createListPropertyProjection(data: { expression, projectionName, listInfo, location }): FreEditPropertyProjection {
-    let result: FreEditPropertyProjection = new FreEditPropertyProjection();
+    const result: FreEditPropertyProjection = new FreEditPropertyProjection();
     result.listInfo = data["listInfo"];
     if (!!data["expression"]) {
         result.expression = data["expression"];
@@ -326,8 +328,9 @@ export function createListPropertyProjection(data: { expression, projectionName,
     return result;
 }
 
+// tslint:disable-next-line:typedef
 export function createTablePropertyProjection(data: { expression, projectionName, tableInfo, location }): FreEditPropertyProjection {
-    let result: FreEditPropertyProjection = new FreEditPropertyProjection();
+    const result: FreEditPropertyProjection = new FreEditPropertyProjection();
     if (!!data["tableInfo"]) {
         result.listInfo = data["tableInfo"];
     }
@@ -345,8 +348,9 @@ export function createTablePropertyProjection(data: { expression, projectionName
     return result;
 }
 
+// tslint:disable-next-line:typedef
 export function createBooleanPropertyProjection(data: { expression, projectionName, keyword, location }): FreEditPropertyProjection {
-    let result: FreEditPropertyProjection = new FreEditPropertyProjection();
+    const result: FreEditPropertyProjection = new FreEditPropertyProjection();
     if (!!data["keyword"]) {
         result.boolInfo = data["keyword"];
     }

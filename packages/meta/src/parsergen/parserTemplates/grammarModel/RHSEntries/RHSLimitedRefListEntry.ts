@@ -21,7 +21,7 @@ export class RHSLimitedRefListEntry extends RHSPropEntry {
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSLimitedRefListEntry: " + this.property.name;
     }
 }

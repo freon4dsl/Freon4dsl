@@ -5,8 +5,8 @@ import { FreType } from "./FreType";
 
 export class FreCompositeTyper implements FreTyper {
     mainTyper: FreTyper;
-    
-    private typers: FreTyper[] =[];
+
+    private typers: FreTyper[] = [];
     name: string = "";
 
     constructor(name: string) {
@@ -22,7 +22,7 @@ export class FreCompositeTyper implements FreTyper {
         this.typers.splice(0, 0, t);
         t.mainTyper = this;
     }
-    
+
     inferType(node: FreNode): FreType | null {
         for (const typer of this.typers) {
             const result = typer.inferType(node);
@@ -45,7 +45,7 @@ export class FreCompositeTyper implements FreTyper {
 
     commonSuper(typelist: FreType[]): FreType | null {
         for (const typer of this.typers) {
-            let result = typer.commonSuper(typelist);
+            const result = typer.commonSuper(typelist);
             if (!!result) {
                 return result;
             }
@@ -56,7 +56,7 @@ export class FreCompositeTyper implements FreTyper {
 
     conforms(type1: FreType, type2: FreType): boolean | null {
         for (const typer of this.typers) {
-            let result = typer.conforms(type1, type2);
+            const result = typer.conforms(type1, type2);
             if (result !== null) {
                 return result;
             }
@@ -66,7 +66,7 @@ export class FreCompositeTyper implements FreTyper {
 
     conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | null {
         for (const typer of this.typers) {
-            let result = typer.conformsList(typelist1, typelist2);
+            const result = typer.conformsList(typelist1, typelist2);
             if (result !== null) {
                 return result;
             }
@@ -76,7 +76,7 @@ export class FreCompositeTyper implements FreTyper {
 
     equals(type1: FreType, type2: FreType): boolean | null {
         for (const typer of this.typers) {
-            let result = typer.equals(type1, type2);
+            const result = typer.equals(type1, type2);
             if (result !== null && result !== undefined) {
                 return result;
             }
@@ -86,7 +86,7 @@ export class FreCompositeTyper implements FreTyper {
 
     getSuperTypes(type: FreType): FreType[] | null {
         for (const typer of this.typers) {
-            let result = typer.getSuperTypes(type);
+            const result = typer.getSuperTypes(type);
             if (!!result) {
                 return result;
             }
@@ -96,43 +96,43 @@ export class FreCompositeTyper implements FreTyper {
     }
 
     commonSuperType(elemlist: FreNode[]): FreType {
-        if (!elemlist) return null;
-        if (elemlist.length === 0) return null;
+        if (!elemlist) { return null; }
+        if (elemlist.length === 0) { return null; }
 
         const $typelist: FreType[] = this.elementListToTypeList(elemlist);
-        if ($typelist.length === 0) return null;
+        if ($typelist.length === 0) { return null; }
 
         return this.commonSuper($typelist);
     }
 
     conformsListType(elemlist1: FreNode[], elemlist2: FreNode[]): boolean {
-        if (!elemlist1 || !elemlist2) return false;
-        if (elemlist1.length !== elemlist2.length) return false;
+        if (!elemlist1 || !elemlist2) { return false; }
+        if (elemlist1.length !== elemlist2.length) { return false; }
 
         const $typelist1: FreType[] = this.elementListToTypeList(elemlist1);
         const $typelist2: FreType[] = this.elementListToTypeList(elemlist2);
-        if ($typelist1.length === 0 || $typelist2.length === 0) return false;
-        if ($typelist1.length !== $typelist2.length) return false;
+        if ($typelist1.length === 0 || $typelist2.length === 0) { return false; }
+        if ($typelist1.length !== $typelist2.length) { return false; }
 
         return this.conformsList($typelist1, $typelist2);
     }
 
     conformsType(elem1: FreNode, elem2: FreNode): boolean {
-        if (!elem1 || !elem2) return false;
+        if (!elem1 || !elem2) { return false; }
 
         const $type1: FreType = this.inferType(elem1);
         const $type2: FreType = this.inferType(elem2);
-        if (!$type1 || !$type2) return false;
+        if (!$type1 || !$type2) { return false; }
 
         return this.conforms($type1, $type2);
     }
 
     equalsType(elem1: FreNode, elem2: FreNode): boolean {
-        if (!elem1 || !elem2) return false;
+        if (!elem1 || !elem2) { return false; }
 
         const $type1: FreType = this.inferType(elem1);
         const $type2: FreType = this.inferType(elem2);
-        if (!$type1 || !$type2) return false;
+        if (!$type1 || !$type2) { return false; }
 
         return this.equals($type1, $type2);
     }
@@ -149,7 +149,7 @@ export class FreCompositeTyper implements FreTyper {
             ListUtil.addIfNotPresent<FreType>(typelist, this.inferType(elem));
         }
         return typelist;
-    }    
+    }
 }
 
 // export class Composite<PART> {

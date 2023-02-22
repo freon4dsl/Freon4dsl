@@ -5,7 +5,7 @@ import {
     FrePrimitiveProperty,
     FrePrimitiveType, FreProperty
 } from "../../languagedef/metalanguage";
-import { Checker, CheckRunner, LangUtil, Names, FreDefinitionElement, ParseLocationUtil} from "../../utils";
+import { Checker, CheckRunner, LangUtil, Names, FreDefinitionElement, ParseLocationUtil } from "../../utils";
 import { FreEditParseUtil } from "../parser/FreEditParseUtil";
 import {
     ListInfo,
@@ -29,8 +29,12 @@ import { FreLangExpressionChecker } from "../../languagedef/checking";
 const LOGGER = new MetaLogger("FreEditChecker").mute();
 
 export class FreEditChecker extends Checker<FreEditUnit> {
-    runner: CheckRunner;
 
+    private static includesWhitespace(keyword: string) {
+        return keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r") || keyword.includes("\t");
+    }
+
+    runner: CheckRunner;
     private myExpressionChecker: FreLangExpressionChecker;
     private propsWithTableProjection: FreEditPropertyProjection[] = [];
 
@@ -68,8 +72,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
         // check uniqueness of names and precedence
         LOGGER.log("checking uniqueness of names and precedence");
-        let names: string[] = [];
-        let precedences: number[] = [0]; // 0 is the number for the default group, which is always present
+        const names: string[] = [];
+        const precedences: number[] = [0]; // 0 is the number for the default group, which is always present
         editUnit.projectiongroups.forEach(group => {
             this.checkUniqueNameOfProjectionGroup(names, group);
             this.checkUniquePrecendenceOfProjectionGroup(precedences, group);
@@ -122,7 +126,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         this.runner.simpleCheck(!!group.name, `Editor should have a name, it is empty ${ParseLocationUtil.location(group)}.`);
         for (const projection of group.projections) {
             if (projection instanceof FreEditTableProjection) {
-                projection.name = 'tableRowFor_' + group.name;
+                projection.name = "tableRowFor_" + group.name;
             } else {
                 projection.name = group.name;
             }
@@ -132,13 +136,14 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             group.extras = this.checkAndMergeExtras(group.extras);
         }
         // special requirements for the 'default' projectionGroup
-        if (group.name !== Names.defaultProjectionName){
+        if (group.name !== Names.defaultProjectionName) {
             this.runner.simpleCheck(!group.standardBooleanProjection,
                 `Only the 'default' projectionGroup may define a standard Boolean projection ${ParseLocationUtil.location(group.standardBooleanProjection)}.`);
             this.runner.simpleCheck(!group.standardReferenceSeparator,
                 `Only the 'default' projectionGroup may define a standard reference separator ${ParseLocationUtil.location(group)}.`);
             if (group.precedence !== null && group.precedence !== undefined) {
-                this.runner.simpleCheck(group.precedence !== 0, `Only the 'default' projectionGroup may have precedence 0 ${ParseLocationUtil.location(group)}.`);
+                this.runner.simpleCheck(group.precedence !== 0,
+                    `Only the 'default' projectionGroup may have precedence 0 ${ParseLocationUtil.location(group)}.`);
             }
         } else {
             if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
@@ -226,7 +231,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 const matchingSymbols = allExtras.filter(xx => xx !== ext && !xx.trigger && xx.symbol === ext.symbol);
                 this.runner.nestedCheck({
                     check: matchingTriggers.length === 0 && matchingSymbols.length === 0,
-                    error: `Symbol ${ext.symbol} (and therefore trigger) of ${ext.classifier.name} is equal to ${matchingTriggers.length 
+                    error: `Symbol ${ext.symbol} (and therefore trigger) of ${ext.classifier.name} is equal to ${matchingTriggers.length
                     + matchingSymbols.length} other trigger(s) ${ParseLocationUtil.location(ext)}.`,
                     whenOk: () => {
                         // allSymbols.push(ext.symbol);
@@ -272,10 +277,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     }
                 });
                 this.runner.nestedCheck({
-                    check: projection.lines[projection.lines.length -1].isEmpty(),
-                    error: `In a multi-line projection the last line should be empty (white space only) to enable indenting ${ParseLocationUtil.location(projection.lines[projection.lines.length -1])}.`,
+                    check: projection.lines[projection.lines.length - 1].isEmpty(),
+                    error: `In a multi-line projection the last line should be empty (white space only) to enable indenting ${ParseLocationUtil.location(projection.lines[projection.lines.length - 1])}.`,
                     whenOk: () => {
-                        projection.lines.splice(projection.lines.length -1, 1);
+                        projection.lines.splice(projection.lines.length - 1, 1);
                     }
                 });
             }
@@ -348,8 +353,6 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                             `The text for a keyword projection should not include any whitespace ${ParseLocationUtil.location(item)}.`);
                     }
                 });
-
-
             }
         });
     }
@@ -367,7 +370,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     item.listInfo.isTable = false;
                 }
             } else if (item.listInfo.joinType !== ListJoinType.NONE) { // the user has entered something
-                let joinTypeName: string = '';
+                let joinTypeName: string = "";
                 switch (item.listInfo.joinType) {
                     case ListJoinType.Separator: joinTypeName = `Separator`; break;
                     case ListJoinType.Terminator: joinTypeName = `Terminator`; break;
@@ -380,7 +383,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 item.listInfo.joinText = EditorDefaults.listJoinText;
             }
         } else {
-            //create default
+            // create default
             item.listInfo = new ListInfo();
             // the following are set upon creation of ListInfo
             // item.listInfo.isTable = false;
@@ -425,7 +428,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 item.lines.forEach(line => {
                     this.checkLine(line, cls, editor);
                     nrOfItems += line.items.length;
-                    propProjections.push(...line.items.filter(item => item instanceof FreEditPropertyProjection) as FreEditPropertyProjection[]);
+                    propProjections.push(...line.items.filter(innerItem => innerItem instanceof FreEditPropertyProjection) as FreEditPropertyProjection[]);
                 });
                 this.runner.nestedCheck({check: propProjections.length === 1,
                     error: `There should be (only) one property within an optional projection, found ${propProjections.length} ${ParseLocationUtil.location(item)}.`,
@@ -440,7 +443,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                                 // a property of boolean type with one keyword should not be within optional group
                                 if (!!propProjections[0].boolInfo) {
                                     this.runner.simpleCheck(!!propProjections[0].boolInfo.falseKeyword,
-                                        `An optional boolean property is not allowed within an optional projection ${ParseLocationUtil.location(propProjections[0])}.`)
+                                        `An optional boolean property is not allowed within an optional projection ${ParseLocationUtil.location(propProjections[0])}.`);
                                 }
                             }
                             item.property = this.copyReference(propProjections[0].property);
@@ -501,7 +504,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             const myprop = projection.property.referred;
             const propEditor = editor.findTableProjectionsForType(myprop.type);
             this.runner.simpleWarning(propEditor !== null && propEditor !== undefined,
-                `No table projection defined for '${myprop.name}', it will be shown as a table with a single column ${ParseLocationUtil.location(projection)}.`);
+            `No table projection defined for '${myprop.name}', it will be shown as a table with a single column ${ParseLocationUtil.location(projection)}.`);
         }
     }
 
@@ -558,14 +561,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             return;
         }
         const myGroup = editor.projectiongroups.find(group => group.name === projectionName);
-        let found: FreEditClassifierProjection[] = myGroup?.findProjectionsForType(propType);
+        const found: FreEditClassifierProjection[] = myGroup?.findProjectionsForType(propType);
         this.runner.simpleCheck(
             !!myGroup && !!found && found.length > 0,
             `Cannot find a projection named '${projectionName}' for concept or interface '${propType.name}' ${ParseLocationUtil.location(item)}.`);
-    }
-
-    private static includesWhitespace(keyword: string) {
-        return keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r") || keyword.includes("\t");
     }
 
     private copyReference(reference: MetaElementReference<FreProperty>): MetaElementReference<FreProperty> {

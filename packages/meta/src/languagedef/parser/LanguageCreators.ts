@@ -52,7 +52,7 @@ export function createLanguage(data: Partial<FreLanguage>): FreLanguage {
                     if (!!con.location) {
                         location = ParseLocationUtil.locationPlus(currentFileName, con.location);
                     }
-                    nonFatalParseErrors.push(`There may be only one model in the language definition ${location}.`)
+                    nonFatalParseErrors.push(`There may be only one model in the language definition ${location}.`);
                 } else {
                     hasModel = true;
                     result.modelConcept = con;
@@ -162,7 +162,7 @@ export function createInterface(data: Partial<FreInterface>): FreInterface {
         }
     }
     if (!!data.properties) {
-        splitProperties(data.properties, result)
+        splitProperties(data.properties, result);
     }
     if (!!data.location) {
         result.location = data.location;
@@ -246,7 +246,7 @@ export function createPartOrPrimProperty(data: Partial<FrePrimitiveProperty>): F
         // '.typeReference.referred' is determine by the scoper, which does not function when not all concepts are known AND
         // the language attribute of the concepts has been set. The latter is done in 'createLanguage', which is called
         // after this function is called!!
-        const refName = data.typeReference.name; 
+        const refName = data.typeReference.name;
         if (refName === "string" || refName === "boolean" || refName === "number" || refName === "identifier") {
             const primitiveProperty = new FrePrimitiveProperty();
             // in the following statement we cannot use "!!data.initialValue" because it could be a boolean

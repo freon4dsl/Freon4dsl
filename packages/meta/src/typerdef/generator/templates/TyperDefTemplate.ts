@@ -6,12 +6,12 @@ export class TyperDefTemplate {
 
     generateTyperDef(language: FreLanguage, typerDef: TyperDef, relativePath: string): string {
         return `import { FreCompositeTyper } from "${FREON_CORE}";
-        
-            import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}";     
+
+            import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}";
             import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
-    
+
             /**
-             * Adds all known type- providers the root typer.
+             * Adds all known type-providers the root typer.
              * @param rootTyper
              */
             export function initializeTypers(rootTyper: FreCompositeTyper) {
@@ -19,7 +19,6 @@ export class TyperDefTemplate {
                     rootTyper.appendTyper(p);
                 }
                 rootTyper.appendTyper(new ${Names.typerPart(language)}());
-            }`
+            }`;
     }
 }
-

@@ -1,5 +1,4 @@
-import { FreLanguage } from "../../metalanguage";
-import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names } from "../../../utils";
 
 export class ListUtilTemplate {
 
@@ -24,7 +23,7 @@ export class ListUtilTemplate {
                     list.push(addition);
                 }
             }
-        
+
             /**
              * Adds all elements of 'listOfAdditions' to 'list', but only if the element
              * is not yet present and not equal to null or undefined.

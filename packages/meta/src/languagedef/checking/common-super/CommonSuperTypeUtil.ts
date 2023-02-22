@@ -25,8 +25,8 @@ export class CommonSuperTypeUtil {
 
     private static printOrderedList(comment: string, list: OrderedList<FreClassifier>) {
         let result: string = comment;
-        for (const FreClassifier of list) {
-            result += "\t" + FreClassifier.name;
+        for (const freClassifier of list) {
+            result += "\t" + freClassifier.name;
         }
         console.log(result);
     }
@@ -36,7 +36,7 @@ export class CommonSuperTypeUtil {
      * @param inCls
      * @private
      */
-    private static getSupers(inCls: FreClassifier): OrderedList<FreClassifier>  {
+    private static getSupers(inCls: FreClassifier): OrderedList<FreClassifier> {
         const classes: OrderedList<FreClassifier> = new OrderedList<FreClassifier>();
         if (!!inCls) {
             let nextLevel: OrderedList<FreClassifier> = new OrderedList<FreClassifier>();

@@ -3,7 +3,6 @@ import { FreClassifier, FreConcept } from "../../../languagedef/metalanguage";
 
 export class FretAnytypeExp extends FretExp {
     static anyType: FreClassifier = new FreConcept();
-    readonly $typename: string = "FretAnytypeExp"; // holds the metatype in the form of a string
 
     /**
      * A convenience method that creates an instance of this class
@@ -12,11 +11,12 @@ export class FretAnytypeExp extends FretExp {
      */
     static create(data: Partial<FretAnytypeExp>): FretAnytypeExp {
         const result: FretAnytypeExp = new FretAnytypeExp();
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }
+    readonly $typename: string = "FretAnytypeExp"; // holds the metatype in the form of a string
 
     constructor() {
         super();

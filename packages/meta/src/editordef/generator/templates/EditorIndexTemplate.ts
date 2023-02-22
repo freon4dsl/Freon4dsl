@@ -5,7 +5,7 @@ import { FreEditUnit } from "../../metalanguage";
 export class EditorIndexTemplate {
 
     generateGenIndex(language: FreLanguage, editorDef: FreEditUnit, extraClassifiers: FreClassifier[]): string {
-        let boxProviderConcepts: FreClassifier[] = [];
+        const boxProviderConcepts: FreClassifier[] = [];
         language.concepts.forEach(concept => {
             if (!(concept instanceof FreLimitedConcept) && !concept.isAbstract) {
                 boxProviderConcepts.push(concept);
@@ -18,7 +18,7 @@ export class EditorIndexTemplate {
         return `
         export * from "./${Names.actions(language)}";
         export * from "./${Names.defaultActions(language)}";
-        ${boxProviderConcepts.map(cls => 
+        ${boxProviderConcepts.map(cls =>
             `export * from "./${Names.boxProvider(cls)}";`
         ).join("")}
         export * from "./EditorDef";

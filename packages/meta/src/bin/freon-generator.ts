@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../commandline/freon');
+require("../commandline/freon");

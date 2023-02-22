@@ -20,7 +20,7 @@ import {
     units,
     unitNames
 } from "../components/stores/ModelStore";
-import { setUserMessage  } from "../components/stores/UserMessageStore";
+import { setUserMessage } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
 import { modelErrors } from "../components/stores/InfoPanelStore";
 import { ServerCommunication } from "../server/ServerCommunication";
@@ -177,7 +177,7 @@ export class EditorState {
             if (!!this.currentModel?.name && this.currentModel?.name.length) {
                 if (!!unit.name && unit.name.length > 0) {
                     await serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit);
-                    currentUnitName.set(unit.name); //just in case the user has changed the name in the editor
+                    currentUnitName.set(unit.name); // just in case the user has changed the name in the editor
                     EditorState.getInstance().setUnitLists();
                     this.hasChanges = false;
                 } else {
@@ -352,7 +352,7 @@ export class EditorState {
                 // find the characters in each of the existing names that come after the file name
                 const trailingParts: string[] = unitsWithSimiliarName.map(existing => existing.name.slice(fileName.length));
                 trailingParts.forEach(trailing => {
-                    const nextNumber: number = Number.parseInt(trailing);
+                    const nextNumber: number = Number.parseInt(trailing, 10);
                     if (!isNaN(nextNumber) && nextNumber >= biggestNr) {
                         biggestNr = nextNumber + 1;
                     }
@@ -413,7 +413,11 @@ export class EditorState {
                 modelErrors.set(list);
             } catch (e) { // catch any errors regarding erroneously stored model units
                 LOGGER.log(e.message);
-                modelErrors.set([new FreError("Problem reading model unit: '" + e.message + "'", this.currentUnit, this.currentUnit.name, FreErrorSeverity.Error)]);
+                modelErrors.set([new FreError("Problem reading model unit: '" + e.message + "'",
+                    this.currentUnit,
+                    this.currentUnit.name,
+                    FreErrorSeverity.Error)
+                ]);
             }
         }
     }
