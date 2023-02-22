@@ -6,8 +6,8 @@ import { ServerCommunication } from "../server/ServerCommunication";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
-export const editorEnvironment: FreEnvironment = ExampleEnvironment.getInstance();
+import { LionwebM3Environment } from "../../lionwebM3/config/gen/LionwebM3Environment";
+export const editorEnvironment: FreEnvironment = LionwebM3Environment.getInstance();
 LanguageInitializer.initialize();
 
 /**
