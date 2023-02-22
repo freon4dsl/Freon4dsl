@@ -18,12 +18,14 @@ export class MetaElementReference<T extends FreLangElement> {
         return result;
     }
 
+    // tslint:disable-next-line:variable-name
     private _FRE_name: string = "";
+    // tslint:disable-next-line:variable-name
     private _FRE_referred: T = null;
 
     public owner: FreDefinitionElement;
     public location: ParseLocation;
-    public agl_location: FreParseLocation;
+    public aglParseLocation: FreParseLocation;
 
     // Need for the scoper to work
     private typeName: string;

@@ -22,9 +22,6 @@ export type Location = {
  * This class is used to store the location information from the AGL parser.
  */
 export class FreParseLocation {
-    filename: string;
-    line: number;
-    column: number;
 
     static create(data: Partial<FreParseLocation>): FreParseLocation {
         const result = new FreParseLocation();
@@ -39,6 +36,9 @@ export class FreParseLocation {
         }
         return result;
     }
+    filename: string;
+    line: number;
+    column: number;
 }
 
 /**
@@ -65,7 +65,7 @@ export class FreGenericParser<DEFINITION> {
             model = this.parser.parse(langSpec);
         } catch (e) {
             // syntax error
-            const errorstr = `${e} 
+            const errorstr = `${e}
                 ${e.location && e.location.start ?
                     ParseLocationUtil.locationPlus(definitionFile, e.location)
                 :
@@ -83,7 +83,7 @@ export class FreGenericParser<DEFINITION> {
 
     parseMulti(filePaths: string[]): DEFINITION {
         let model: DEFINITION;
-        let submodels: DEFINITION[] = [];
+        const submodels: DEFINITION[] = [];
 
         // clean the error list from the creator functions used by this.parser
         this.cleanNonFatalParseErrors();
@@ -128,7 +128,7 @@ export class FreGenericParser<DEFINITION> {
             this.checker.warnings = [];
             this.checker.check(model);
             // this.checker.check makes errorlist empty, thus we must
-            // add the non fatal parse errors after the call
+            // add the non-fatal parse errors after the call
             this.checker.errors.push(...this.getNonFatalParseErrors());
             if (this.checker.hasErrors()) {
                 this.checker.errors.forEach(error => LOG2USER.error(`${error}`));

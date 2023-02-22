@@ -40,8 +40,8 @@ export class CustomExampleProjection implements FreProjection {
     }
 
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
-        ['SumExpression', this.createSumBox],
-        ['OrExpression', this.createOrBoxGrid],
+        ["SumExpression", this.createSumBox],
+        ["OrExpression", this.createOrBoxGrid]
     ]);
 
     nodeTypeToTableDefinition: Map<string, () => FreTableDefinition> = new Map<string, () => FreTableDefinition>([]);
@@ -54,7 +54,7 @@ export class CustomExampleProjection implements FreProjection {
 
     createSumBox (sum: SumExpression): Box {
         const cells: GridCellBox[] = [
-            new GridCellBox(sum, "Sum-from-cell",  3, 1,
+            new GridCellBox(sum, "Sum-from-cell", 3, 1,
                 new HorizontalLayoutBox(sum, "Sum-from-part", [
                     this.optionalPartBox(sum, "SumExpression-variable", "variable"),
                     new LabelBox(sum, "sum-from-equals", "="),
@@ -63,7 +63,7 @@ export class CustomExampleProjection implements FreProjection {
                 { columnSpan: 2,
                     cssClass: "mycell"
                 }),
-            new GridCellBox(sum, "sum-icon-cell",2, 1,
+            new GridCellBox(sum, "sum-icon-cell", 2, 1,
                 new SvgBox(sum, "sum-icon", sumIcon, {
                     viewPortWidth: 50,
                     viewPortHeight: 50,
@@ -78,7 +78,7 @@ export class CustomExampleProjection implements FreProjection {
                 { columnSpan: 2, cssClass: "mycell" }
             ),
             new GridCellBox(sum, "sum-body-cell", 2, 2,
-                new HorizontalListBox(sum, '', "sum-body", [
+                new HorizontalListBox(sum, "", "sum-body", [
                     new LabelBox(sum, "sum-body-open", "["),
                     this.optionalPartBox(sum, "SumExpression-body", "body"),
                     new LabelBox(sum, "sum-body-close", "]")
@@ -139,6 +139,9 @@ export class CustomExampleProjection implements FreProjection {
         // todo reimplement or rethink this
         return !!element[property]
             ? ExampleEnvironment.getInstance().editor.projection.getBox(element[property])
-            : new ActionBox(element, roleName, "[" + property + "]", { propertyName: property, conceptName: FreLanguage.getInstance().classifier(element.freLanguageConcept()).properties.get(property).type });
+            : new ActionBox(element,
+                roleName,
+                "[" + property + "]",
+                { propertyName: property, conceptName: FreLanguage.getInstance().classifier(element.freLanguageConcept()).properties.get(property).type });
     }
 }

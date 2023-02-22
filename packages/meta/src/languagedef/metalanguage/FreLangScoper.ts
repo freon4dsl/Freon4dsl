@@ -37,7 +37,7 @@ export class FreLangScoper {
             result = this.language.findClassifier(name);
         } else if (typeName === "FreProperty" || typeName === "FrePrimitiveProperty" || typeName === "FreConceptProperty") {
             if (owner instanceof FreLangAppliedFeatureExp) {
-                const xx = owner.sourceExp.__referredElement?.referred;
+                const xx = owner.sourceExp.$referredElement?.referred;
                 if (!(!!xx)) {
                     LOGGER.error(`Incorrect use of applied feature, source expression has unknown reference: '${owner.sourceExp.sourceName}'.`);
                 }

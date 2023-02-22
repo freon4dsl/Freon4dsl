@@ -20,7 +20,7 @@ export class ValidatorGenerator {
     protected validatorFolder: string;
 
     generate(validdef: ValidatorDef): void {
-        if (this.language == null) {
+        if (this.language === null) {
             LOGGER.error("Cannot generate validator because language is not set.");
             return;
         }
@@ -109,7 +109,7 @@ export class ValidatorGenerator {
         FileUtil.deleteDirAndContent(this.validatorGenFolder);
         if (force) {
             FileUtil.deleteFile(`${this.validatorFolder}/index.ts`);
-            if (this.language == null) {
+            if (this.language === null) {
                 LOG2USER.error("Cannot remove all because language is not set.");
             } else {
                 FileUtil.deleteFile(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts`);
@@ -118,7 +118,7 @@ export class ValidatorGenerator {
         } else {
             // do not delete the following files, because these may contain user edits
             LOG2USER.info(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts` +
-                '\n\t' + `${this.validatorFolder}/index.ts`);
+                "\n\t" + `${this.validatorFolder}/index.ts`);
         }
     }
 }

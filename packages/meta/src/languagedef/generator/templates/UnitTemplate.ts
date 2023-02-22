@@ -18,35 +18,38 @@ export class UnitTemplate {
         const hasReferences = unitDescription.references().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
         const coreImports = ClassifierUtil.findMobxImports(unitDescription)
-            .concat([Names.FreModelUnit, Names.FreUtils, Names.FreParseLocation, "matchElementList", "matchPrimitiveList, matchReferenceList"])
+            .concat([Names.FreModelUnit, Names.FreParseLocation])
             .concat(hasReferences ? (Names.FreNodeReference) : null);
         const metaType = Names.metaType(language);
 
-        // Template starts here
-        return `
-            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
-            
+        // Template starts here. Note that the imports are gathered during the generation, and added later.
+        const result: string = `
             /**
              * Class ${myName} is the implementation of the model unit with the same name in the language definition file.
-             * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
-             * to changes in the state of its properties.
-             */            
+             * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
+             * to any changes in the state of its properties.
+             */
             export class ${myName} extends ${extendsClass} implements ${Names.FreModelUnit} {
-            
+
                 ${ConceptUtils.makeStaticCreateMethod(unitDescription, myName)}
-                
-                fileExtension: string;                        
+
+                fileExtension: string;
                 ${ConceptUtils.makeBasicProperties(metaType, myName, false)}
                 ${unitDescription.primProperties.map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
                 ${unitDescription.parts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
-                ${unitDescription.references().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}     
-            
-                ${ConceptUtils.makeConstructor(false, unitDescription.allProperties())}
-                ${ConceptUtils.makeBasicMethods(false, metaType,false, true,false, false)} 
+                ${unitDescription.references().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}
+
+                ${ConceptUtils.makeConstructor(false, unitDescription.allProperties(), coreImports)}
+                ${ConceptUtils.makeBasicMethods(false, metaType, false, true, false, false)}
                 ${ConceptUtils.makeCopyMethod(unitDescription, myName, false)}
-                ${ConceptUtils.makeMatchMethod(false, unitDescription, myName)}               
+                ${ConceptUtils.makeMatchMethod(false, unitDescription, myName, coreImports)}
             }
             `;
+
+        return `
+            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
+
+            ${result}`;
     }
 
     private findModelImports(unitDescription: FreUnitDescription, myName: string): string[] {
@@ -60,6 +63,5 @@ export class UnitTemplate {
             )
         );
     }
-
 
 }

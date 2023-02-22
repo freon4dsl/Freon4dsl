@@ -40,7 +40,7 @@ export class OrderedList<T extends FreLangElement> implements Iterable<T> {
         // console.log("Before removing: " + this.elements.map(elem => elem.name).join(", "));
         // In order to avoid errors because of the splice() method doing a re-indexing,
         // we loop over the list of indexes backwards
-        for (let i = toBeRemoved.length-1; i >= 0 ; i--) {
+        for (let i = toBeRemoved.length - 1; i >= 0 ; i--) {
             this.elements.splice(toBeRemoved[i], 1);
             // console.log("After removing nr[" + toBeRemoved[i-1] + "] : " + this.elements.map(elem => elem.name).join(", "));
         }

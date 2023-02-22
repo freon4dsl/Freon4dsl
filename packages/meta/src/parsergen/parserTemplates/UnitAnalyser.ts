@@ -100,7 +100,7 @@ export class UnitAnalyser implements FreAnalyser {
     }
 
     // find the choices for this rule: all concepts that implement or extend the concept
-    private findChoices(freClassifier: FreClassifier) : FreClassifier[] {
+    private findChoices(freClassifier: FreClassifier): FreClassifier[] {
         let implementors: FreClassifier[] = [];
         if (freClassifier instanceof FreInterface) {
             // do not include sub-interfaces, because then we might have 'multiple inheritance' problems

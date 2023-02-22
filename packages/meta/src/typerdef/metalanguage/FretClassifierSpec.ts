@@ -9,7 +9,6 @@ import { FreTyperElement } from "./FreTyperElement";
  * Class FretClassifierSpec is the implementation of the concept with the same name in the language definition file.
  */
 export class FretClassifierSpec extends FreTyperElement {
-    owner: TyperDef;
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -20,20 +19,21 @@ export class FretClassifierSpec extends FreTyperElement {
         if (!!data.rules) {
             data.rules.forEach(x => result.rules.push(x));
         }
-        if (!!data.__myClassifier) {
-            result.__myClassifier = data.__myClassifier;
+        if (!!data.$myClassifier) {
+            result.$myClassifier = data.$myClassifier;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }
+    owner: TyperDef;
 
     readonly $typename: string = "FretClassifierSpec"; // holds the metatype in the form of a string
     $id: string; // a unique identifier
 
     rules: FretTypeRule[] = []; // implementation of part 'rules'
-    __myClassifier: MetaElementReference<FreClassifier>; // implementation of reference 'myClassifier'
+    $myClassifier: MetaElementReference<FreClassifier>; // implementation of reference 'myClassifier'
 
     /**
      * Convenience method for reference 'myClassifier'.
@@ -41,12 +41,12 @@ export class FretClassifierSpec extends FreTyperElement {
      * it returns the referred 'FreClassifier' object, if it can be found.
      */
     get myClassifier(): FreClassifier {
-        if (!!this.__myClassifier) {
-            return this.__myClassifier.referred;
+        if (!!this.$myClassifier) {
+            return this.$myClassifier.referred;
         }
         return null;
     }
     toFreString(): string {
-        return this.__myClassifier.name + " {\n\t" + this.rules.map(r => r.toFreString()).join("\n\t") + "\n} ";
+        return this.$myClassifier.name + " {\n\t" + this.rules.map(r => r.toFreString()).join("\n\t") + "\n} ";
     }
 }

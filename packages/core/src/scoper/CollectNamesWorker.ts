@@ -21,12 +21,12 @@ export class CollectNamesWorker implements AstWorker {
         this.origin = origin;
     }
 
-    private isVisible(element: FreNode, property: Property): boolean {
+    private isVisible(freNode: FreNode, property: Property): boolean {
         // return true;
-        const owningUnit = modelUnit(element);
+        const owningUnit = modelUnit(freNode);
         const result = (owningUnit === null) || (this.origin === owningUnit) || property.isPublic;
-        if(!result){
-            LOGGER.log("isVisible fale for " + element.freLanguageConcept() + "." + element["name"] + " property " + property.name);
+        if (!result) {
+            LOGGER.log("isVisible fale for " + freNode.freLanguageConcept() + "." + freNode["name"] + " property " + property.name);
         }
         return result;
     }
@@ -61,13 +61,11 @@ export class CollectNamesWorker implements AstWorker {
      *
      * @param namedElement
      */
-    private hasLookedForType(element: FreNode) {
+    private hasLookedForType(freNode: FreNode) {
         if (!!this.metatype) {
-            return FreLanguage.getInstance().metaConformsToType(element, this.metatype);
+            return FreLanguage.getInstance().metaConformsToType(freNode, this.metatype);
         } else {
             return true;
         }
     }
 }
-
-

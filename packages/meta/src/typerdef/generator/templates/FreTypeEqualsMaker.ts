@@ -17,7 +17,7 @@ export class FreTypeEqualsMaker {
     public makeEqualsType(typerDef: TyperDef, leftVarName: string, rightVarName: string, imports: FreClassifier[]): string {
         FreTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
-        let allRules: string[] = [];
+        const allRules: string[] = [];
         // find all equals rules
         const equalsRules: FretEqualsRule[] = [];
         typerDef.classifierSpecs.forEach(spec => {
@@ -26,7 +26,7 @@ export class FreTypeEqualsMaker {
         // sort the types such that any type comes before its super type
         const sortedTypes = GenerationUtil.sortClassifiers(typerDef.types);
         // make sub-entries for each rule defined for an ast-element
-        let astSubRules: string[] = [];
+        const astSubRules: string[] = [];
         sortedTypes.forEach( type => {
             // find the equalsRule, if present
             const foundRule: FretEqualsRule = equalsRules.find(conRule => conRule.owner.myClassifier === type);
@@ -46,7 +46,7 @@ export class FreTypeEqualsMaker {
                         ${astSubRules.map(r => r).join(" else ")} ${astSubRules.length > 0 ? `else {` : ``}
                             return (${leftVarName} as AstType).astElement === (${rightVarName} as AstType).astElement;
                         ${astSubRules.length > 0 ? `}` : ``}
-                } `)
+                } `);
         // make an entry for each rule that is not defined for an ast-element
         equalsRules.map(conRule => {
             if (FreTyperGenUtils.isType(conRule.owner.myClassifier)) {
@@ -61,25 +61,25 @@ export class FreTypeEqualsMaker {
     private makeEqualsForExp(exp: FretExp, leftVarName: string, rightVarName: string, varIsType: boolean, imports: FreClassifier[]): string {
         if (exp instanceof FretWhereExp) {
             const allConditions: string[] = [];
-            let returnStr: string = '';
+            let returnStr: string = "";
             exp.conditions.forEach((cond, index) => {
                 const leftStr: string = FreTyperGenUtils.makeExpAsElement(cond.left, leftVarName, varIsType, imports);
                 const rightStr: string = FreTyperGenUtils.makeExpAsElement(cond.right, rightVarName, varIsType, imports);
                 if (FreTyperGenUtils.isType(cond.left.returnType)) {
-                    allConditions.push(`const condition${index+1}: boolean = this.mainTyper.equals(${leftStr}, ${rightStr});`)
+                    allConditions.push(`const condition${index + 1}: boolean = this.mainTyper.equals(${leftStr}, ${rightStr});`);
                 } else {
-                    allConditions.push(`const condition${index+1}: boolean = ${leftStr} === ${rightStr};`);
+                    allConditions.push(`const condition${index + 1}: boolean = ${leftStr} === ${rightStr};`);
                 }
                 if (index > 0) {
-                    returnStr += ` && condition${index+1}`;
+                    returnStr += ` && condition${index + 1}`;
                 } else {
-                    returnStr = `condition${index+1}`
+                    returnStr = `condition${index + 1}`;
                 }
             });
             return `
                     ${allConditions.map(cond => cond).join("\n\t")}
                     return ${returnStr};`;
         }
-        return '';
+        return "";
     }
 }

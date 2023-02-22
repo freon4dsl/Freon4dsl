@@ -59,8 +59,10 @@ describe("Checking new typer", () => {
             const errors: string[] = parser.checker.errors;
             expect(errors.length).toBe(2);
             // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
-            expect(errors.includes("A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:41:5].")).toBeTruthy();
-            expect(errors.includes("A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:49:5].")).toBeTruthy();
+            expect(errors.includes("A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:41:5]."))
+                .toBeTruthy();
+            expect(errors.includes("A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:49:5]."))
+                .toBeTruthy();
         }
     });
 });

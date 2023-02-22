@@ -22,32 +22,32 @@ export class ValidatorTemplate {
         return `
         import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName} } from "${FREON_CORE}";
         import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
-        import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";    
+        import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}";
-        import { ${walkerClassName}, ${workerInterfaceName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}"; 
+        import { ${walkerClassName}, ${workerInterfaceName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
- 
+
         /**
          * Interface '${Names.checkerInterface(language)}' represents any object that traverses the model tree and checks
          * its nodes, where any errors are deposited in 'errorList'.
          * Every checker that is used by the validator '${generatedClassName}' should implement this interface.
-         */     
+         */
         export interface ${Names.checkerInterface(language)} extends ${workerInterfaceName} {
             errorList: ${this.errorClassName}[];
         }
-        
+
         /**
          * Class ${generatedClassName} implements the validator generated from, if present, the validator definition,
          * otherwise this class implements the default validator.
-         * The implementation uses the visitor pattern to traverse the tree. Class ${walkerClassName} implements 
+         * The implementation uses the visitor pattern to traverse the tree. Class ${walkerClassName} implements
          * the actual checking of each node in the tree.
          */
         export class ${generatedClassName} implements ${this.validatorInterfaceName} {
 
             /**
              * Returns the list of errors found in 'modelelement'.
-             * This method uses the visitor pattern to traverse the tree with 'modelelement' as top node, 
+             * This method uses the visitor pattern to traverse the tree with 'modelelement' as top node,
              * where classes ${nonOptionalsChecker}, ${referenceChecker},  implements the actual checking of each node in the tree.
              *
              * @param modelelement
@@ -55,42 +55,42 @@ export class ValidatorTemplate {
              * The default for 'includeChildren' is true.
              */
             public validate(modelelement: ${allLangConcepts}, includeChildren: boolean = true) : ${this.errorClassName}[]{
-                // initialize the errorlist        
+                // initialize the errorlist
                 const errorlist : ${this.errorClassName}[] = [];
-                
+
                 // create the walker over the model tree
                 const myWalker = new ${walkerClassName}();
-                
+
                 // create the checker on non-optional parts
                 let myChecker = new ${nonOptionalsChecker}();
-                myChecker.errorList = errorlist;      
+                myChecker.errorList = errorlist;
                 // and add the checker to the walker
                 myWalker.myWorkers.push( myChecker );
-                          
+
                 // create the checker on references
                 myChecker = new ${referenceChecker}();
                 myChecker.errorList = errorlist;
                 // and add the checker to the walker
-                myWalker.myWorkers.push( myChecker );     
-                ${doValidDef ? `               
+                myWalker.myWorkers.push( myChecker );
+                ${doValidDef ? `
                     // create the checker based on the rules in the validation definition (.valid file)
                     myChecker = new ${rulesChecker}();
                     myChecker.errorList = errorlist;
                     // and add the checker to the walker
                     myWalker.myWorkers.push( myChecker );`
                 : `` }
-                
+
                 // add any custom validations
                 for (let checker of freonConfiguration.customValidations) {
                     checker.errorList = errorlist;
                     myWalker.myWorkers.push(checker);
                 }
-                                
+
                 // do the work
                 myWalker.walk(modelelement, ()=> { return includeChildren; } );
 
                 // return any errors
-                return errorlist;                               
+                return errorlist;
             }
         }`;
     }
@@ -110,9 +110,9 @@ export class ValidatorTemplate {
         const validatorName: string = Names.validator(language);
         return `
         import { ${Names.FreError}, ${Names.FreErrorSeverity} } from "${FREON_CORE}";
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${defaultWorkerName}"; 
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${defaultWorkerName}";
         import { ${interfaceName} } from "./gen/${validatorName}";
-                
+
         export class ${className} extends ${defaultWorkerName} implements ${interfaceName} {
             errorList: ${Names.FreError}[] = [];
         }`;

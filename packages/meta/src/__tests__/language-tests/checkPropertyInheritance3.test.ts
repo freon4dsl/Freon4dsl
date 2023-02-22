@@ -8,7 +8,7 @@ function parseCorrectModel(parser: LanguageParser, parseFile: string) {
         model = parser.parse(parseFile);
     } catch (e) {
         // console.log(e.message + e.stack);
-        // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+        // console.log(parser.checker.errors.map(err => `"${err}"`).join("\n") );
         expect(e.message).toBeNull();
     }
     return model;
@@ -18,7 +18,6 @@ function parseCorrectModel(parser: LanguageParser, parseFile: string) {
 describe("Checking generation of virtual props", () => {
     const testdir = "src/__tests__/language-tests/faultyDefFiles/property-inheritance3/";
     const parser = new LanguageParser();
-    const checker = parser.checker;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();
 
@@ -28,7 +27,7 @@ describe("Checking generation of virtual props", () => {
     // when types conform: add a new prop with the most specific type to classifier
     test("no counter parts", () => {
         const parseFile = testdir + "prop_test7.ast";
-        let model = parseCorrectModel(parser, parseFile);
+        const model = parseCorrectModel(parser, parseFile);
         // check the one primitive property
         const rightOne = model?.concepts.find(concept => concept.name === "Right");
         const found = rightOne.primProperties.find(prop => prop.name === "name1");
@@ -36,10 +35,10 @@ describe("Checking generation of virtual props", () => {
         expect(found.type.name).toBe("boolean");
 
         // check all other properties
-        for (let index= 2; index<5; index++) {
-            const found = rightOne.properties.find(prop => prop.name === "name" + index);
+        for (let index = 2; index < 5; index++) {
+            const found2 = rightOne.properties.find(prop => prop.name === "name" + index);
             // console.log("found" + index + ": " + found?.name + ": " + found?.type.name);
-            expect(!!found).toEqual(true);
+            expect(!!found2).toEqual(true);
         }
         rightOne.properties.forEach(prop => {
             switch (prop.name) {
@@ -61,7 +60,7 @@ describe("Checking generation of virtual props", () => {
 
     test("with counterparts in concept", () => {
         const parseFile = testdir + "prop_test7a.ast";
-        let model = parseCorrectModel(parser, parseFile);
+        const model = parseCorrectModel(parser, parseFile);
         // check the one primitive property
         const rightOne = model?.concepts.find(concept => concept.name === "Right");
         const found = rightOne.primProperties.find(prop => prop.name === "name1");
@@ -69,10 +68,10 @@ describe("Checking generation of virtual props", () => {
         expect(found.type.name).toBe("boolean");
 
         // check all other properties
-        for (let index= 2; index<5; index++) {
-            const found = rightOne.properties.find(prop => prop.name === "name" + index);
+        for (let index = 2; index < 5; index++) {
+            const found2 = rightOne.properties.find(prop => prop.name === "name" + index);
             // console.log("found" + index + ": " + found?.name + ": " + found?.type.name);
-            expect(!!found).toEqual(true);
+            expect(!!found2).toEqual(true);
         }
         rightOne.properties.forEach(prop => {
             switch (prop.name) {
@@ -94,7 +93,7 @@ describe("Checking generation of virtual props", () => {
 
     test("with counterparts in BASE concept", () => {
         const parseFile = testdir + "prop_test7b.ast";
-        let model = parseCorrectModel(parser, parseFile);
+        const model = parseCorrectModel(parser, parseFile);
         // check the one primitive property
         const rightOne = model?.concepts.find(concept => concept.name === "Right");
         let found = rightOne.primProperties.find(prop => prop.name === "name1");
@@ -107,11 +106,11 @@ describe("Checking generation of virtual props", () => {
         // check all other properties
         const otherProps: FreProperty[] = [];
         for (let index = 2; index < 5; index++) {
-            let found = rightOne.properties.find(prop => prop.name === "name" + index);
-            expect(!!found).toEqual(false);
-            found = rightOne.base.referred.properties.find(prop => prop.name === "name" + index);
-            expect(!!found).toEqual(true);
-            otherProps.push(found);
+            let found2 = rightOne.properties.find(prop => prop.name === "name" + index);
+            expect(!!found2).toEqual(false);
+            found2 = rightOne.base.referred.properties.find(prop => prop.name === "name" + index);
+            expect(!!found2).toEqual(true);
+            otherProps.push(found2);
         }
         otherProps.forEach(prop => {
             switch (prop.name) {

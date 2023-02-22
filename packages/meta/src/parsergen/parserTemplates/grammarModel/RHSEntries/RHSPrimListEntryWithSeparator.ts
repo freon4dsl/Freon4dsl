@@ -20,7 +20,7 @@ export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSPrimListEntryWithSeparator: " + this.property.name;
     }
 }

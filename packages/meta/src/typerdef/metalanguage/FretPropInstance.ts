@@ -8,7 +8,6 @@ import { FreTyperElement } from "./FreTyperElement";
  * Class FretPropInstance is the implementation of the concept with the same name in the language definition file.
  */
 export class FretPropInstance extends FreTyperElement {
-    owner: FretCreateExp;
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -25,19 +24,20 @@ export class FretPropInstance extends FreTyperElement {
         if (!!data.location) {
             result.location = data.location;
         }
-        if (!!data.__property) {
-            result.__property = data.__property;
+        if (!!data.$property) {
+            result.$property = data.$property;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }
+    owner: FretCreateExp;
 
     readonly $typename: string = "FretPropInstance"; // holds the metatype in the form of a string
     name: string = ""; // implementation of name
     value: FretExp; // implementation of part 'value'
-    __property: MetaElementReference<FreProperty>; // implementation of reference 'property'
+    $property: MetaElementReference<FreProperty>; // implementation of reference 'property'
 
     /**
      * Convenience method for reference 'property'.
@@ -45,12 +45,12 @@ export class FretPropInstance extends FreTyperElement {
      * it returns the referred 'FreProperty' object, if it can be found.
      */
     get property(): FreProperty {
-        if (!!this.__property) {
-            return this.__property.referred;
+        if (!!this.$property) {
+            return this.$property.referred;
         }
         return null;
     }
     toFreString(): string {
-        return this.__property.name + " : " +this.value.toFreString();
+        return this.$property.name + " : " + this.value.toFreString();
     }
 }

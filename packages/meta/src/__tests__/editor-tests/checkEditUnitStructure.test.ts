@@ -39,7 +39,7 @@ describe("Checking FretEditUnit: ", () => {
         if (editor !== null && editor !== undefined) {
             DefaultEditorGenerator.addDefaults(editor);
         } else {
-            throw new Error("No editor!!")
+            throw new Error("No editor!!");
             // console.log("No editor!!")
         }
         return editor;
@@ -66,7 +66,8 @@ describe("Checking FretEditUnit: ", () => {
         const editor = readFile(testdir + "test1.edit");
 
         // the series of classifiers that we are testing here
-        const classifiersToTest: FreClassifier[] = language.concepts.filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
+        const classifiersToTest: FreClassifier[] = language.concepts
+            .filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
         classifiersToTest.push(...language.units);
 
         classifiersToTest.forEach(c => {
@@ -95,7 +96,8 @@ describe("Checking FretEditUnit: ", () => {
         const editor = readFile(testdir + "test2.edit");
 
         // the series of classifiers that we are testing here
-        const classifiersToTest: FreClassifier[] = language.concepts.filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
+        const classifiersToTest: FreClassifier[] = language.concepts
+            .filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
         classifiersToTest.push(...language.units);
 
         // do the test
@@ -111,8 +113,8 @@ describe("Checking FretEditUnit: ", () => {
                             if (item instanceof FreEditPropertyProjection) {
                                 propItems.push(item);
                             }
-                        })
-                    })
+                        });
+                    });
                 }
             });
             // check the property items against the list properties of c
@@ -121,7 +123,7 @@ describe("Checking FretEditUnit: ", () => {
                found.forEach(item => {
                    // there are projections of this property, see if they are lists
                    expect(item.listInfo).not.toBeNull();
-               })
+               });
             });
             // check the property items against the non-list properties of c
             c.allProperties().filter(prop => !prop.isList).forEach(prop => {
@@ -129,7 +131,7 @@ describe("Checking FretEditUnit: ", () => {
                 found.forEach(item => {
                     // there are projections of this property, see if they are not lists
                     expect(item.listInfo).toBeNull();
-                })
+                });
             });
         });
     });
@@ -138,7 +140,8 @@ describe("Checking FretEditUnit: ", () => {
         const editor = readFile(testdir + "test3.edit");
 
         // the series of classifiers of which we are interested in its properties
-        const classifiersToTest: FreClassifier[] = language.concepts.filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
+        const classifiersToTest: FreClassifier[] = language.concepts
+            .filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
         classifiersToTest.push(...language.units);
 
         classifiersToTest.forEach(c => {

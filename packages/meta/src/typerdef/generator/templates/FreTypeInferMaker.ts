@@ -1,4 +1,4 @@
-import { FretInferenceRule,TyperDef } from "../../metalanguage";
+import { FretInferenceRule, TyperDef } from "../../metalanguage";
 import { Names, GenerationUtil } from "../../../utils";
 import { FreClassifier, FreLimitedConcept } from "../../../languagedef/metalanguage";
 import { FreTyperGenUtils } from "./FreTyperGenUtils";
@@ -15,11 +15,11 @@ export class FreTypeInferMaker {
     public makeInferType(typerDef: TyperDef, allLangConcepts: string, rootType: string, varName: string, imports: FreClassifier[]): string {
         FreTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
-        let result: string[] = [];
+        const result: string[] = [];
         // find all infertype rules
         const inferRules: FretInferenceRule[] = [];
         typerDef.classifierSpecs.forEach(spec => {
-            inferRules.push(...(spec.rules.filter(r => r instanceof FretInferenceRule)))
+            inferRules.push(...(spec.rules.filter(r => r instanceof FretInferenceRule)));
         });
         // sort the types such that any type comes before its super type
         const sortedTypes = GenerationUtil.sortClassifiers(typerDef.conceptsWithType);
@@ -30,7 +30,7 @@ export class FreTypeInferMaker {
             if (!!foundRule) {
                 result.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(${varName}, "${Names.classifier(foundRule.owner.myClassifier)}")) {
                 result = ${FreTyperGenUtils.makeExpAsType(foundRule.exp, varName, false, imports)};
-             }`)
+             }`);
             }
         });
 
@@ -82,7 +82,4 @@ export class FreTypeInferMaker {
     //     this.extraMethods.push(method);
     //     ListUtil.addIfNotPresent(imports, typeName);
     // });
-
 }
-
-

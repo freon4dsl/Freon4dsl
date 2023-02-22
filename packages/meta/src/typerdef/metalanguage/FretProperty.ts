@@ -1,8 +1,7 @@
-import { FreClassifier, FreConceptProperty, MetaElementReference, FreProperty } from "../../languagedef/metalanguage";
+import { FreConceptProperty } from "../../languagedef/metalanguage";
 import { FretTypeConcept } from "./FretTypeConcept";
 
 export class FretProperty extends FreConceptProperty {
-    owner: FretTypeConcept;
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -42,14 +41,15 @@ export class FretProperty extends FreConceptProperty {
         if (!!data.type) {
             result.type = data.type;
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         // if (!!data.owningClassifier) {
         //     result.owningClassifier = data.owningClassifier;
         // }
         return result;
     }
+    owner: FretTypeConcept;
     readonly $typename: string = "FretProperty"; // holds the metatype in the form of a string
 
     toFreString(): string {

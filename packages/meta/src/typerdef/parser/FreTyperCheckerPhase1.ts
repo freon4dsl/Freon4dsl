@@ -46,14 +46,14 @@ import { FretScoper } from "./FretScoper";
 import { FretOwnerSetter } from "./FretOwnerSetter";
 import { CommonChecker, CommonSuperTypeUtil } from "../../languagedef/checking";
 
-const LOGGER = new MetaLogger("NewFreTyperChecker"); //.mute();
+const LOGGER = new MetaLogger("NewFreTyperChecker"); // .mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];
 
 /**
  * This class is the main checker for the typer definition. It can be augmented by a phase 2 checker,
  * if needed.
  */
-export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
+export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
     language: FreLanguage;
     definition: TyperDef;
     typeConcepts: FreClassifier[] = [];         // all concepts marked as 'isType'
@@ -78,8 +78,8 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
         this.runner = runner;
 
         // now we can start checking
-        this.checkTypeReferences(definition.__types);
-        this.checkTypeReferences(definition.__conceptsWithType);
+        this.checkTypeReferences(definition.$types);
+        this.checkTypeReferences(definition.$conceptsWithType);
         // from now on we can use the getters 'types' and 'conceptsWithType'!
         // all references that cannot be found are filtered out!
 
@@ -148,7 +148,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     }
 
     private findSpecsForConcept(con: FreConcept): FretClassifierSpec[] {
-        let result: FretClassifierSpec[] = [];
+        const result: FretClassifierSpec[] = [];
         ListUtil.addIfNotPresent(result, this.definition.classifierSpecs.find(spec => spec.myClassifier === con));
         // try finding specs for a superclassifier
         const supers: FreClassifier[] = LangUtil.superClassifiers(con);
@@ -197,7 +197,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     }
 
     private checkClassifierSpec(spec: FretClassifierSpec) {
-        CommonChecker.checkClassifierReference(spec.__myClassifier, this.runner);
+        CommonChecker.checkClassifierReference(spec.$myClassifier, this.runner);
         if (!!spec.myClassifier) {
             spec.rules.forEach(rule => {
                 // check the rule, using the overall model as enclosing concept
@@ -269,9 +269,9 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     private changeVarCallIntoInstanceExp(myVarCall: FretVarCallExp): FretLimitedInstanceExp {
         const result: FretLimitedInstanceExp = new FretLimitedInstanceExp();
         result.owner = myVarCall.owner;
-        result.__myInstance = MetaElementReference.create<FreInstance>(myVarCall.__variable.name, "FreInstance");
-        result.__myInstance.owner = result;
-        result.agl_location = myVarCall.agl_location;
+        result.$myInstance = MetaElementReference.create<FreInstance>(myVarCall.$variable.name, "FreInstance");
+        result.$myInstance.owner = result;
+        result.aglParseLocation = myVarCall.aglParseLocation;
         return result;
     }
 
@@ -312,15 +312,15 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
 
     private checkCreateExp(exp: FretCreateExp, classifier: FreClassifier, surroundingExp?: FretWhereExp) {
         // LOGGER.log("Checking FretCreateExp '" + exp.toFreString() + "'");
-        this.checkTypeReference(exp.__type, false);
+        this.checkTypeReference(exp.$type, false);
         // console.log("TYPE of Create: " + exp.__type.name + ", " + exp.__type.owner + ", " + exp.type?.name);
         // this.myExpressionthis.runner.checkClassifierReference(exp.__type);
         // console.log("TYPE: " + exp.type?.name + " with props: " + exp.type?.allProperties().map(p => p.name).join(", "))
         exp.propertyDefs.forEach(propDef => {
             this.checkFretExp(propDef.value, classifier, surroundingExp);
             this.runner.nestedCheck({
-                check:!!propDef.property,
-                error:`Cannot find property '${propDef.__property.name}' ${ParseLocationUtil.location(propDef.__property)}.`,
+                check: !!propDef.property,
+                error: `Cannot find property '${propDef.$property.name}' ${ParseLocationUtil.location(propDef.$property)}.`,
                 whenOk: () => {
                     const propType: FreClassifier = propDef.property.type;
                     const valueType: FreClassifier = propDef.value.returnType;
@@ -349,7 +349,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
         // LOGGER.log("Checking FretWhereExp '" + exp.toFreString() + "'");
         this.runner.nestedCheck({
             check: !!exp.variable.type,
-            error: `Cannot find type '${exp.variable.__type.name}' ${ParseLocationUtil.location(exp.variable.__type)}.`,
+            error: `Cannot find type '${exp.variable.$type.name}' ${ParseLocationUtil.location(exp.variable.$type)}.`,
             whenOk: () => {
                 // check all conditions of the where expression
                 exp.conditions.forEach(cond => {
@@ -361,10 +361,10 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
     }
 
     private checkInstanceExp(exp: FretLimitedInstanceExp, classifier: FreClassifier) {
-        if (!!exp.__myLimited) {
+        if (!!exp.$myLimited) {
             this.runner.simpleCheck(
                 !!exp.myLimited,
-                `Cannot find limited concept '${exp.__myLimited.name}' ${ParseLocationUtil.location(exp.__myLimited)}.XX`);
+                `Cannot find limited concept '${exp.$myLimited.name}' ${ParseLocationUtil.location(exp.$myLimited)}.XX`);
         } else {
             // use the enclosing classifier as limited concept
             if (classifier instanceof FreLimitedConcept) {
@@ -373,10 +373,10 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
         }
         this.runner.nestedCheck({
             check: !!exp.myInstance,
-            error: `Cannot find instance '${exp.__myInstance.name}' of '${exp.__myLimited?.name}' ${ParseLocationUtil.location(exp.__myInstance)}.`,
+            error: `Cannot find instance '${exp.$myInstance.name}' of '${exp.$myLimited?.name}' ${ParseLocationUtil.location(exp.$myInstance)}.`,
             whenOk: () => {
-                this.runner.simpleCheck(!!exp.myLimited.findInstance(exp.__myInstance.name),
-                    `Instance '${exp.__myInstance.name}' is not of type '${exp.__myLimited.name}' ${ParseLocationUtil.location(exp.__myInstance)}.`);
+                this.runner.simpleCheck(!!exp.myLimited.findInstance(exp.$myInstance.name),
+                    `Instance '${exp.$myInstance.name}' is not of type '${exp.$myLimited.name}' ${ParseLocationUtil.location(exp.$myInstance)}.`);
             }
         });
     }
@@ -388,7 +388,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
             // console.log("found source: " + exp.source.toFreString() + " of type " + exp.source.returnType.name);
             this.runner.nestedCheck({
                 check: !!exp.property,
-                error: `Cannot find property '${exp.__property.name}' in classifier '${exp.source.returnType?.name}' ${ParseLocationUtil.location(exp.__property)}.`,
+                error: `Cannot find property '${exp.$property.name}' in classifier '${exp.source.returnType?.name}' ${ParseLocationUtil.location(exp.$property)}.`,
                 whenOk: () => {
                     exp.returnType = exp.property.type;
                 }
@@ -400,7 +400,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
         // LOGGER.log("Checking checkVarCallExp '" + exp.toFreString() + "'");
         this.runner.nestedCheck({
             check: !!exp.variable,
-            error: `Cannot find reference to ${exp.__variable.name} ${ParseLocationUtil.location(exp.__variable)}.`,
+            error: `Cannot find reference to ${exp.$variable.name} ${ParseLocationUtil.location(exp.$variable)}.`,
             whenOk: () => {
                 exp.returnType = exp.variable.type;
             }
@@ -466,6 +466,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef>{
             );
             this.runner.simpleCheck(!(freReservedWords.includes(typeConcept.name.toLowerCase())), `Concept may not have a name that is equal to a reserved word ('${typeConcept.name}') ${ParseLocationUtil.location(typeConcept)}.`);
             this.runner.simpleCheck(!(reservedWordsInTypescript.includes(typeConcept.name.toLowerCase())),
+                // tslint:disable-next-line:max-line-length
                 `Concept may not have a name that is equal to a reserved word in TypeScript ('${typeConcept.name}') ${ParseLocationUtil.location(typeConcept)}.`);
 
             // (2) name must be unique within the list 'typeConcepts'

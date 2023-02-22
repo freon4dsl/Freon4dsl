@@ -4,7 +4,7 @@ import { FretExp } from "./FretExp";
 /**
  * Class FretBinaryExp is the implementation of the binary expression concept with the same name in the language definition file.
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
- * to changes in the state of its properties.
+ * to any changes in the state of its properties.
  */
 export abstract class FretBinaryExp extends FretExp {
     readonly $typename: string = "FretBinaryExp"; // holds the metatype in the form of a string

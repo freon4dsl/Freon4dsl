@@ -3,7 +3,6 @@ import { FreEditParser } from "../editordef/parser/FreEditParser";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
-import { FreEditUnit } from "../editordef/metalanguage";
 
 const LOGGER = new MetaLogger("FreonGenerateEditor"); // .mute();
 

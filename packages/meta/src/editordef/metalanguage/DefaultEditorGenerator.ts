@@ -84,11 +84,12 @@ export class DefaultEditorGenerator {
     }
 
     private static defaultsForOrdinaryClassifiers(language: FreLanguage, defaultGroup: FreEditProjectionGroup) {
-        const classifiersToDo: FreClassifier[] = language.concepts.filter(c => !(c instanceof FreLimitedConcept || c instanceof FreBinaryExpressionConcept || c.isAbstract));
+        const classifiersToDo: FreClassifier[] = language.concepts
+            .filter(c => !(c instanceof FreLimitedConcept || c instanceof FreBinaryExpressionConcept || c.isAbstract));
         // console.log("classifiersToDo: " + classifiersToDo.map(c => c.name).join(', '))
         for (const con of classifiersToDo) {
             // Find or create the projection, and its properties
-            let foundProjection: FreEditClassifierProjection = defaultGroup.findNonTableProjectionForType(con);
+            const foundProjection: FreEditClassifierProjection = defaultGroup.findNonTableProjectionForType(con);
             if (!foundProjection) {
                 // create a new projection
                 // console.log("Adding default projection for " + con.name);
@@ -109,7 +110,7 @@ export class DefaultEditorGenerator {
 
     private static createClassifierDefault(defaultGroup: FreEditProjectionGroup, con: FreClassifier, language: FreLanguage) {
         // Find or create the projection, and its properties
-        let foundProjection: FreEditClassifierProjection = defaultGroup.findNonTableProjectionForType(con);
+        const foundProjection: FreEditClassifierProjection = defaultGroup.findNonTableProjectionForType(con);
 
         if (!foundProjection) {
             // create a new projection
@@ -151,7 +152,7 @@ export class DefaultEditorGenerator {
         for (const prop of con.allProperties().filter((p => p !== nameProp))) {
             // add the type if it is an interface to the list to be generated later
             const propType = prop.type;
-            if (propType instanceof  FreInterface) {
+            if (propType instanceof FreInterface) {
                 this.interfacesUsed.push(propType);
             }
             // do the property
@@ -192,7 +193,7 @@ export class DefaultEditorGenerator {
         line.items.push(optional);
         projection.lines.push(line);
     }
-    
+
     private static defaultListProperty(concept: FreClassifier, prop: FreProperty, projection: FreEditProjection | FreOptionalPropertyProjection): void {
         // every list is projected as two lines
         // the first shows the property name
@@ -226,7 +227,7 @@ export class DefaultEditorGenerator {
     }
 
     private static addExtraDefaults(defaultGroup: FreEditProjectionGroup, con: FreClassifier, language: FreLanguage) {
-        let foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
+        const foundExtraInfo: ExtraClassifierInfo = defaultGroup.findExtrasForType(con);
         if (!foundExtraInfo) {
             const extraInfo = new ExtraClassifierInfo();
             DefaultEditorGenerator.addExtras(extraInfo, con);
@@ -258,7 +259,7 @@ export class DefaultEditorGenerator {
         // console.log("defaultsForUnit: " + language.units.map(c => c.name).join(', '))
         for (const con of language.units) {
             // Find or create the projection, and its properties
-            let foundProjection: FreEditClassifierProjection = defaultGroup.findProjectionsForType(con)[0];
+            const foundProjection: FreEditClassifierProjection = defaultGroup.findProjectionsForType(con)[0];
             if (!foundProjection) {
                 // create a new projection
                 // console.log("Adding default projection for " + con.name);

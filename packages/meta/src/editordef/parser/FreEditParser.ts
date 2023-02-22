@@ -28,7 +28,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
             // add the groups from the first submodel (should be a single group)
             result.projectiongroups.forEach(group => {
                 projectionGroupsByName.set(group.name, group);
-            })
+            });
 
             // now merge the other submodels
             submodels.forEach((sub, index) => {
@@ -48,7 +48,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                             if (group.standardReferenceSeparator) {
                                 if (found.standardReferenceSeparator) {
                                     if (group.standardReferenceSeparator !== found.standardReferenceSeparator) {
-                                        this.checker.errors.push(`Reference separator in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`)
+                                        this.checker.errors.push(`Reference separator in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
                                     }
                                 } else {
                                     found.standardReferenceSeparator = group.standardReferenceSeparator;
@@ -57,7 +57,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                             if (group.standardBooleanProjection) {
                                 if (found.standardBooleanProjection) {
                                     if (group.standardBooleanProjection !== found.standardBooleanProjection) {
-                                        this.checker.errors.push(`Boolean projection in ${ParseLocationUtil.location(group.standardBooleanProjection)} is not equal to the one found in ${ParseLocationUtil.location(found.standardBooleanProjection)}.`)
+                                        this.checker.errors.push(`Boolean projection in ${ParseLocationUtil.location(group.standardBooleanProjection)} is not equal to the one found in ${ParseLocationUtil.location(found.standardBooleanProjection)}.`);
                                     }
                                 } else {
                                     found.standardBooleanProjection = group.standardBooleanProjection;
@@ -66,7 +66,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                             if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
                                 if (found.precedence !== null && found.precedence !== undefined) {
                                     if (group.precedence !== found.precedence) {
-                                        this.checker.errors.push(`Precendence of ${group.name} in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`)
+                                        this.checker.errors.push(`Precendence of ${group.name} in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
                                     }
                                 } else {
                                     found.precedence = group.precedence;

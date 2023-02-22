@@ -18,7 +18,7 @@ describe("Demo Model", () => {
     });
     describe("Checking Interpreter", () => {
         RulesLanguageEnvironment.getInstance();
-        let model: RulesModel = RulesModel.create({
+        const model: RulesModel = RulesModel.create({
             name: "rules 1",
             parse_location: null,
             entity: [Data.create({
@@ -56,18 +56,18 @@ describe("Demo Model", () => {
                             name: "aaa",
                             check: Plus.create({
                                 left: Multiply.create({
-                                    left: NumberLiteral.create({value: "10"}),
+                                    left: NumberLiteral.create({ value: "10" }),
                                     right: FunctionCall.create({
                                         func: PiElementReference.create<RFunction>("func", "RFunction"),
                                         arguments: [
-                                            NumberLiteral.create({value: "5"}),
-                                            NumberLiteral.create({value: "7"})
-                                        ],
+                                            NumberLiteral.create({ value: "5" }),
+                                            NumberLiteral.create({ value: "7" })
+                                        ]
                                     })
                                 }),
                                 right: Multiply.create({
-                                    left: NumberLiteral.create({value: "30"}),
-                                    right: NumberLiteral.create({value: "3"})
+                                    left: NumberLiteral.create({ value: "30" }),
+                                    right: NumberLiteral.create({ value: "3" })
                                 })
                             })
                         })
@@ -88,7 +88,7 @@ describe("Demo Model", () => {
             let result: RtObject = null;
             try {
                 result =  intp.evaluate(rexp);
-            }catch (e) {
+            } catch (e) {
                 // console.log("E: " + e.toString())
                 result = e;
             }
@@ -99,4 +99,4 @@ describe("Demo Model", () => {
 
     });
 });
-
+

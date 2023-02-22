@@ -6,7 +6,6 @@ import {
 } from "../../../utils";
 import { ScopeDef } from "../../metalanguage";
 
-
 export class ScoperDefTemplate {
 
     generateScoperDef(language: FreLanguage, scoperDef: ScopeDef, relativePath: string): string {
@@ -16,7 +15,7 @@ export class ScoperDefTemplate {
 
         return `import { ${Names.FreLanguage}, ${Names.FreScoperComposite} } from "${FREON_CORE}";
             import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
-            import { ${Names.scoper(language)} } from "./${Names.scoper(language)}";     
+            import { ${Names.scoper(language)} } from "./${Names.scoper(language)}";
 
             /**
              * Adds all known scopers to the main scoper.
@@ -37,6 +36,6 @@ export class ScoperDefTemplate {
                     `${Names.FreLanguage}.getInstance().classifier("${Names.classifier(element)}").isNamespace = true;`
                 ).join("\n")}
                 initializeScopers(rootScoper);
-            }`
+            }`;
     }
 }

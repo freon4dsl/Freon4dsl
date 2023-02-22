@@ -3,7 +3,6 @@ import { FreInterpreterDef } from "../interpretergen/metalanguage/FreInterpreter
 import { FreLanguage } from "../languagedef/metalanguage";
 import { FreEditUnit } from "../editordef/metalanguage";
 import { FreEditParser } from "../editordef/parser/FreEditParser";
-import { FileWatcher } from "../utils/generation/FileWatcher";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { FreonGenerateAction } from "./FreonGenerateAction";
@@ -19,7 +18,7 @@ import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
 import { TyperDef } from "../typerdef/metalanguage";
 import { FreTyperMerger } from "../typerdef/parser";
-import { LOG2USER } from "../utils/UserLogger";
+import { FileWatcher, LOG2USER } from "../utils";
 import { DiagramGenerator } from "../diagramgen/DiagramGenerator";
 
 export class FreonGenerateAllAction extends FreonGenerateAction {
@@ -78,18 +77,23 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     private addWatchers() {
         if (this.watch) {
             for (const file of this.languageFiles) {
+                // tslint:disable-next-line:no-unused-expression
                 new FileWatcher(file, this.generateLanguage);
             }
             for (const file of this.editFiles) {
+                // tslint:disable-next-line:no-unused-expression
                 new FileWatcher(file, this.generateEditorAndParser);
             }
             for (const file of this.validFiles) {
+                // tslint:disable-next-line:no-unused-expression
                 new FileWatcher(file, this.generateValidator);
             }
             for (const file of this.typerFiles) {
+                // tslint:disable-next-line:no-unused-expression
                 new FileWatcher(file, this.generateTyper);
             }
             for (const file of this.scopeFiles) {
+                // tslint:disable-next-line:no-unused-expression
                 new FileWatcher(file, this.generateScoper);
             }
         }
@@ -113,7 +117,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
 
     private generateInterpreter = () => {
         LOG2USER.info("Generating interpreter");
-        let interpreterDef: FreInterpreterDef = new FreInterpreterDef();
+        const interpreterDef: FreInterpreterDef = new FreInterpreterDef();
         for (const concept of this.language.concepts) {
             interpreterDef.conceptsToEvaluate.push(concept);
         }
@@ -138,8 +142,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e) {
-            // LOG2USER.error("Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
-            LOG2USER.error("Stopping scoper generation because of errors: " + e.message);
+            LOG2USER.error("Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
+            // LOG2USER.error("Stopping scoper generation because of errors: " + e.message);
         }
     };
 

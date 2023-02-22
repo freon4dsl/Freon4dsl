@@ -33,7 +33,7 @@ export class LanguageAnalyser {
 
     analyseModel(language: FreLanguage) {
         this.commonAnalyser.reset();
-        
+
         language.units.forEach(unit => {
             const unitAnalyser = new UnitAnalyser();
             this.unitAnalysers.push(unitAnalyser);
@@ -167,12 +167,12 @@ export class LanguageAnalyser {
     }
 
     private getOtherAnalysers(currentAnalyser: UnitAnalyser): UnitAnalyser[] {
-        let result: UnitAnalyser[] = [];
+        const result: UnitAnalyser[] = [];
         this.unitAnalysers.forEach(analyser => {
             if (analyser !== currentAnalyser) {
                 result.push(analyser);
             }
-        })
+        });
         return result;
     }
 

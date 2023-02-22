@@ -42,7 +42,8 @@ describe("Checking editor definition ", () => {
             // console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
             expect(e.message).toBe(`checking errors (2).`);
-            expect(checker.errors.includes("There may be only one 'normal' (non-table) projection for AAAAAA in a projection group [file: test2.edit:15:10].")).toBeTruthy();
+            expect(checker.errors
+                .includes("There may be only one 'normal' (non-table) projection for AAAAAA in a projection group [file: test2.edit:15:10].")).toBeTruthy();
             expect(checker.errors.includes("There may be only one table projection for AAAAAA in a projection group [file: test2.edit:39:1].")).toBeTruthy();
         }
     });
@@ -69,10 +70,14 @@ describe("Checking editor definition ", () => {
             // console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
             expect(e.message).toBe(`checking errors (4).`);
-            expect(checker.errors.includes("trigger for classifier AAAAAA is already defined: [file: test4a.edit:21:4] and [file: test4a.edit:11:4].")).toBeTruthy();
-            expect(checker.errors.includes("trigger for classifier AAAAAA is already defined: [file: test4b.edit:11:4] and [file: test4a.edit:11:4].")).toBeTruthy();
-            expect(checker.errors.includes("symbol for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].")).toBeTruthy();
-            expect(checker.errors.includes("trigger for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].")).toBeTruthy();
+            expect(checker.errors
+                .includes("trigger for classifier AAAAAA is already defined: [file: test4a.edit:21:4] and [file: test4a.edit:11:4].")).toBeTruthy();
+            expect(checker.errors
+                .includes("trigger for classifier AAAAAA is already defined: [file: test4b.edit:11:4] and [file: test4a.edit:11:4].")).toBeTruthy();
+            expect(checker.errors
+                .includes("symbol for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].")).toBeTruthy();
+            expect(checker.errors
+                .includes("trigger for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].")).toBeTruthy();
 
         }
     });
@@ -109,7 +114,8 @@ describe("Checking editor definition ", () => {
             // console.log(e.message + e.stack);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
             expect(e.message).toBe(`checking errors (2).`);
-            expect(checker.errors.includes("A limited concept cannot have a projection, it can only be used as reference [file: test7.edit:3:5].")).toBeTruthy();
+            expect(checker.errors
+                .includes("A limited concept cannot have a projection, it can only be used as reference [file: test7.edit:3:5].")).toBeTruthy();
             expect(checker.errors.includes("An optional boolean property is not allowed within an optional projection [file: test7.edit:12:8].")).toBeTruthy();
         }
     });
@@ -125,8 +131,10 @@ describe("Checking editor definition ", () => {
             expect(checker.errors.includes("Only properties that are lists can be displayed as list or table [file: test8.edit:7:3].")).toBeTruthy();
             expect(checker.errors.includes("Only properties that are lists can be displayed as list or table [file: test8.edit:10:5].")).toBeTruthy();
             expect(checker.errors.includes("Only properties that are lists can be displayed as list or table [file: test8.edit:12:5].")).toBeTruthy();
-            expect(checker.warnings.includes("References cannot be shown as table, property 'AAprop10' will be shown as list instead [file: test8.edit:8:5].")).toBeTruthy();
-            expect(checker.warnings.includes("References cannot be shown as table, property 'AAprop14' will be shown as list instead [file: test8.edit:13:5].")).toBeTruthy();
+            expect(checker.warnings
+                .includes("References cannot be shown as table, property 'AAprop10' will be shown as list instead [file: test8.edit:8:5].")).toBeTruthy();
+            expect(checker.warnings
+                .includes("References cannot be shown as table, property 'AAprop14' will be shown as list instead [file: test8.edit:13:5].")).toBeTruthy();
         }
     });
     test("keywords are only allowed for non-list boolean properties", () => {

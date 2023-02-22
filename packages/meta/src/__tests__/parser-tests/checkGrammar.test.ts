@@ -13,7 +13,7 @@ done in the test package.
 
 describe("Checking parser generation", () => {
     const testdir = "src/__tests__/parser-tests/correctDefFiles/";
-    const outputDir = "src/__tests__/parser-tests/generated/"
+    const outputDir = "src/__tests__/parser-tests/generated/";
     let language: FreLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
@@ -45,7 +45,7 @@ describe("Checking parser generation", () => {
             const isPresent: boolean = fs.existsSync(grammarFile);
             expect(isPresent).toBe(true);
             if (isPresent) {
-                const result = fs.readFileSync(grammarFile);
+                const result = fs.readFileSync(grammarFile, "utf8");
                 expect(result).toMatchSnapshot();
             }
         }
@@ -78,7 +78,7 @@ describe("Checking parser generation", () => {
                 const isPresent: boolean = fs.existsSync(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
-                    const result = fs.readFileSync(grammarFile);
+                    const result = fs.readFileSync(grammarFile, "utf8");
                     expect(result).toMatchSnapshot();
                 }
             }
@@ -108,11 +108,11 @@ describe("Checking parser generation", () => {
                 generator.language = language;
                 generator.outputfolder = outputDir;
                 generator.generate(editor);
-                const grammarFile = outputDir + "reader/gen/Test2Grammar.ts";
+                const grammarFile = outputDir + "reader/gen/Test3Grammar.ts";
                 const isPresent: boolean = fs.existsSync(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
-                    const result = fs.readFileSync(grammarFile);
+                    const result = fs.readFileSync(grammarFile, "utf8");
                     expect(result).toMatchSnapshot();
                 }
             }
@@ -146,7 +146,7 @@ describe("Checking parser generation", () => {
                 const isPresent: boolean = fs.existsSync(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
-                    const result = fs.readFileSync(grammarFile);
+                    const result = fs.readFileSync(grammarFile, "utf8");
                     expect(result).toMatchSnapshot();
                 }
             }

@@ -62,7 +62,7 @@ class NamedNode implements FreNamedNode {
         return toBeMatched.name === this.name;
     }
 
-    parse_location: FreParseLocation;
+    parseLocation: FreParseLocation;
 }
 
 export class AstType implements FreType {

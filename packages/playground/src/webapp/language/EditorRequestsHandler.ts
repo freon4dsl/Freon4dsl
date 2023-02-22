@@ -105,7 +105,7 @@ export class EditorRequestsHandler {
                     if (isActionBox(currentSelection.parent)) {
                         if (FreLanguage.getInstance().metaConformsToType(tobepasted, currentSelection.parent.conceptName)) { // allow subtypes
                             // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
-                            EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName )
+                            EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName );
                         } else {
                             setUserMessage("Cannot paste an " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning);
                         }
@@ -113,7 +113,10 @@ export class EditorRequestsHandler {
                 } else if (isListBox(currentSelection.parent)) {
                     if (FreLanguage.getInstance().metaConformsToType(tobepasted, element.freLanguageConcept())) { // allow subtypes
                         // console.log('pasting in ' + currentSelection.role + ', prop: ' + currentSelection.parent.propertyName);
-                        EditorState.getInstance().pasteInElement(element.freOwnerDescriptor().owner, currentSelection.parent.propertyName, element.freOwnerDescriptor().propertyIndex + 1);
+                        EditorState.getInstance().pasteInElement(element.freOwnerDescriptor().owner,
+                            currentSelection.parent.propertyName,
+                            element.freOwnerDescriptor().propertyIndex + 1
+                        );
                     } else {
                         setUserMessage("Cannot paste an " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning);
                     }

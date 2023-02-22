@@ -38,7 +38,7 @@ export class RHSPartListWithInitiator extends RHSPropPartWithSeparator {
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth + 1);
+        const indent = makeIndent(depth + 1);
         return indent + "RHSListGroup: " + indent + this.separatorText + " " + this.entry.toString(depth + 1);
     }
 }

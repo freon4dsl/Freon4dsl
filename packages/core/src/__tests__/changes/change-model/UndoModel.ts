@@ -23,8 +23,8 @@ export class UndoModel extends FreNodeBaseImpl implements FreModel {
         if (!!data.unit) {
             result.unit = data.unit;
         }
-        if (!!data.parse_location) {
-            result.parse_location = data.parse_location;
+        if (!!data.parseLocation) {
+            result.parseLocation = data.parseLocation;
         }
         return result;
     }

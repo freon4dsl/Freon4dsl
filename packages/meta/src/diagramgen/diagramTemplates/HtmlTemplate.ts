@@ -28,7 +28,7 @@ export class HtmlTemplate {
     }
     .interface .classTitle {
         font-style: italic;
-        font-weight: bold;    
+        font-weight: bold;
     }
 </style>
 `;

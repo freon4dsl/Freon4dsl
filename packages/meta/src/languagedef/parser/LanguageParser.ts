@@ -26,7 +26,7 @@ export class LanguageParser extends FreGenericParser<FreLanguage> {
                     result.concepts.push(...sub.concepts);
                     result.interfaces.push(...sub.interfaces);
                 } else {
-                    LOGGER.error("All sublanguages should be of the same language, found sublanguage: '" + sub.name + "' in '" + result.name + "'.")
+                    LOGGER.error("All sublanguages should be of the same language, found sublanguage: '" + sub.name + "' in '" + result.name + "'.");
                 }
             }
             result.conceptsAndInterfaces().forEach(classifier => {
@@ -42,7 +42,7 @@ export class LanguageParser extends FreGenericParser<FreLanguage> {
         setCurrentFileName(file);
     }
 
-    protected getNonFatalParseErrors() : string[] {
+    protected getNonFatalParseErrors(): string[] {
         return getNonFatalParseErrors();
     }
 

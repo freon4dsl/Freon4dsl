@@ -1,14 +1,14 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
 import { RHSPropEntry } from "./RHSPropEntry";
 import { FreProperty } from "../../../../languagedef/metalanguage";
-import { internalTransformNode, internalTransformFreNodeRef, ParserGenUtil } from "../../ParserGenUtil";
+import { internalTransformFreNodeRef, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
 import { GenerationUtil } from "../../../../utils";
 
 export class RHSRefListWithTerminator extends RHSPropPartWithSeparator {
     // (propTypeName 'joinText' )*
     private entry: RHSPropEntry;
-    private isSingleEntry: boolean;
+    private readonly isSingleEntry: boolean;
 
     constructor(prop: FreProperty, entry: RHSPropEntry, separator: string, isSingleEntry: boolean) {
         super(prop, separator);
@@ -30,19 +30,19 @@ export class RHSRefListWithTerminator extends RHSPropPartWithSeparator {
             myListStatement = `const _myList = ${nodeName};`;
         }
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `// RHSRefListWithTerminator  
+        return `// RHSRefListWithTerminator
             ${ParserGenUtil.internalName(this.property.name)} = [];
             ${myListStatement}
-            _myList.forEach(subNode => {  
+            _myList.forEach(subNode => {
                 const _transformed = this.${mainAnalyserName}.${internalTransformFreNodeRef}<${baseType}>(subNode.nonSkipChildren?.toArray()[0], '${baseType}');
-                if (!!_transformed) {      
+                if (!!_transformed) {
                     ${ParserGenUtil.internalName(this.property.name)}.push(_transformed);
                 }
             });`;
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth + 1);
+        const indent = makeIndent(depth + 1);
         return indent + "RHSListGroup: " + indent + this.entry.toString(depth + 1) + " " + this.separatorText;
     }
 }

@@ -25,7 +25,12 @@ export class FreError {
     locationdescription: string;        // human-readable indication of 'reportedOn'
     severity: FreErrorSeverity;         // indication of how serious the error is, default is 'To Do'
 
-    constructor(message: string, element: FreNode | FreNode[], locationdescription: string, propertyName: string, severity?: FreErrorSeverity, propertyIndex?: number) {
+    constructor(message: string,
+                element: FreNode | FreNode[],
+                locationdescription: string,
+                propertyName: string,
+                severity?: FreErrorSeverity,
+                propertyIndex?: number) {
         this.message = message;
         this.reportedOn = element;
         this.locationdescription = locationdescription;

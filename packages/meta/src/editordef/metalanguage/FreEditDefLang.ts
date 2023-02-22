@@ -39,7 +39,7 @@ export class FreEditUnit extends FreDefinitionElement {
     classifiersUsedInSuperProjection: string[] = []; // holds the names of all classifiers that are refered in an FreEditSuperProjection
 
     getDefaultProjectiongroup(): FreEditProjectionGroup {
-        return this.projectiongroups.find(group => group.name == Names.defaultProjectionName);
+        return this.projectiongroups.find(group => group.name === Names.defaultProjectionName);
     }
 
     /**
@@ -66,7 +66,7 @@ export class FreEditUnit extends FreDefinitionElement {
     }
 
     allTableProjections(): FreEditTableProjection[] {
-        let result: FreEditTableProjection[] = [];
+        const result: FreEditTableProjection[] = [];
         for (const group of this.projectiongroups) {
             result.push(...group.allTableProjections());
         }
@@ -146,7 +146,7 @@ export class FreEditProjectionGroup extends FreDefinitionElement {
         return `editor ${this.name}
         ${this.standardBooleanProjection ? `boolean ${this.standardBooleanProjection}` : ``}
         ${this.standardReferenceSeparator ? `referenceSeparator [ ${this.standardReferenceSeparator} ]` : ``}
-        
+
         ${this.projections?.map(gr => gr.toString()).join("\n")}
 
         ${this.extras?.map(gr => gr.toString()).join("\n")}`;
@@ -186,10 +186,10 @@ export class FreEditProjection extends FreEditClassifierProjection {
         this.lines.forEach(line => {
             line.items.forEach(item => {
                 if (item instanceof FreEditPropertyProjection) {
-                    result.push(item)
+                    result.push(item);
                 }
-            })
-        })
+            });
+        });
         return result;
     }
 
@@ -217,7 +217,7 @@ export class FreEditTableProjection extends FreEditClassifierProjection {
 
     toString() {
         return `${this.classifier?.name} {
-        table [ 
+        table [
         ${this.headers.map(head => `"${head}"`).join(" | ")}
         ${this.cells.map(it => it.toString()). join(" | ")}
         ]}`;
@@ -309,7 +309,7 @@ export class FreEditPropertyProjection extends FreDefinitionElement {
         if (!!this.boolInfo) {
             extraText = `\n/* boolean */ ${this.boolInfo}`;
         }
-        return `\${ ${this.expression? this.expression.toFreString() : ``} }${extraText}`;
+        return `\${ ${this.expression ? this.expression.toFreString() : ``} }${extraText}`;
     }
 }
 
@@ -345,7 +345,7 @@ export class FreOptionalPropertyProjection extends FreEditPropertyProjection {
     }
 
     toString(): string {
-        return `[?  
+        return `[?
         // #lines ${this.lines.length}
             ${this.lines.map(line => line.toString()).join("\n")}\`;
         ]`;
@@ -365,7 +365,7 @@ export class ListInfo extends FreDefinitionElement {
 
     toString(): string {
         if (this.isTable) {
-            return `table ${this.direction}`
+            return `table ${this.direction}`;
         } else {
             return `direction: ${this.direction} joinType: ${this.joinType} [${this.joinText}]`;
         }
@@ -393,7 +393,7 @@ export class FreEditParsedClassifier extends FreEditClassifierProjection {
     tableProjection: FreEditTableProjection = null;
     classifierInfo: ExtraClassifierInfo = null;
     toString(): string {
-        return `ParsedClassifier ${this.classifier?.name}`
+        return `ParsedClassifier ${this.classifier?.name}`;
     }
 }
 /**

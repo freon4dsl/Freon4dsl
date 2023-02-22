@@ -24,7 +24,7 @@ export class RHSBinaryExp extends RHSPropEntry {
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSBinaryExp: " + this.property.name + ": " + this.type.name;
     }
 }

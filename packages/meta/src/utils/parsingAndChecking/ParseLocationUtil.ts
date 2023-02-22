@@ -4,12 +4,12 @@ import { ParseLocation } from "./FreGenericParser";
 export class ParseLocationUtil {
     static location(elem: FreDefinitionElement): string {
         if (!!elem) {
-            if (!!elem.location) {
+            if (!!elem.location && !!elem.location.filename) {
                 const shortFileName: string = ParseLocationUtil.getShortFileName(elem.location.filename);
                 return `[file: ${shortFileName}:${elem.location.start.line}:${elem.location.start.column}]`;
-            } else if (!!elem.agl_location) {
-                const shortFileName: string = ParseLocationUtil.getShortFileName(elem.agl_location.filename);
-                return `[file: ${shortFileName}:${elem.agl_location.line}:${elem.agl_location.column}]`;
+            } else if (!!elem.aglParseLocation && !!elem.aglParseLocation.filename) {
+                const shortFileName: string = ParseLocationUtil.getShortFileName(elem.aglParseLocation.filename);
+                return `[file: ${shortFileName}:${elem.aglParseLocation.line}:${elem.aglParseLocation.column}]`;
             }
         }
         return `[no location]`;

@@ -8,12 +8,12 @@ type LogMessage = string | MessageFunction;
 export class MetaLogger {
     private static muteAll: boolean = false;
     private static muteErrors: boolean = false;
-    private static FgRed = "\x1b[31m";
-    private static FgBlack = "\x1b[30m";
-    private static FgBlue = "\x1b[34m";
-    private static FgCyan = "\x1b[36m";
-    private static FgMagenta = "\x1b[35m";
-    private static FgYellow = "\x1b[33m";
+    private static fgRed = "\x1b[31m";
+    private static fgBlack = "\x1b[30m";
+    private static fgBlue = "\x1b[34m";
+    private static fgCyan = "\x1b[36m";
+    private static fgMagenta = "\x1b[35m";
+    private static fgYellow = "\x1b[33m";
 
     static muteAllLogs() {
         MetaLogger.muteAll = true;
@@ -42,25 +42,25 @@ export class MetaLogger {
 
     info(msg: LogMessage) {
         if (this.active) {
-            this.logToConsole(MetaLogger.FgBlue, this.message(msg));
+            this.logToConsole(MetaLogger.fgBlue, this.message(msg));
         }
     }
 
     warning(msg: LogMessage) {
         if (this.active && !MetaLogger.muteAll) {
-            this.logToConsole(MetaLogger.FgYellow, this.message(msg));
+            this.logToConsole(MetaLogger.fgYellow, this.message(msg));
         }
     }
 
     log(msg: LogMessage) {
         if (this.active && !MetaLogger.muteAll) {
-            this.logToConsole(MetaLogger.FgBlack, this.message(msg));
+            this.logToConsole(MetaLogger.fgBlack, this.message(msg));
         }
     }
 
     error(msg: LogMessage) {
         if (!MetaLogger.muteErrors) {
-            this.logToConsole(MetaLogger.FgRed, "ERROR: " + this.message(msg));
+            this.logToConsole(MetaLogger.fgRed, "ERROR: " + this.message(msg));
         }
     }
 
@@ -81,16 +81,16 @@ export class MetaLogger {
     protected logToConsole(color: string, message: string): void {
         if (MetaLogger.filter === null) {
             if (this.category.length > 0) {
-                console.log(color, this.category + ": " + message, MetaLogger.FgBlack, "");
+                console.log(color, this.category + ": " + message, MetaLogger.fgBlack, "");
             } else {
-                console.log(color, message, MetaLogger.FgBlack, "");
+                console.log(color, message, MetaLogger.fgBlack, "");
             }
         } else {
             if (message.includes(MetaLogger.filter)) {
                 if (this.category.length > 0) {
-                    console.log(color, this.category + ": " + message, MetaLogger.FgBlack, "");
+                    console.log(color, this.category + ": " + message, MetaLogger.fgBlack, "");
                 } else {
-                    console.log(color, message, MetaLogger.FgBlack, "");
+                    console.log(color, message, MetaLogger.fgBlack, "");
                 }
             }
         }

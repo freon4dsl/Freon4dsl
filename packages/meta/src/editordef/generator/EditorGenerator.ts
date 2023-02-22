@@ -91,7 +91,7 @@ export class EditorGenerator {
         const allExtraClassifiers: FreClassifier[] = []; // remember these in order to add them to the index file
         ListUtil.addListIfNotPresent(allExtraClassifiers, extraClassifiers);
         while (extraClassifiers.length > 0) { // super projections may call other super projections, make sure every one has a BoxProvider
-            let newExtraClassifiers: FreClassifier[] = [];
+            const newExtraClassifiers: FreClassifier[] = [];
             extraClassifiers.forEach(cls => {
                 if (cls instanceof FreConcept && !cls.isAbstract) {
                     // do nothing, already generated
@@ -132,7 +132,8 @@ export class EditorGenerator {
         // FileUtil.generateManualFile(`${this.stylesFolder}/CustomStyles.ts`, editorStylesConst, "Editor Styles Constant");
 
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
-        const editorIndexGenFile = FileUtil.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef, allExtraClassifiers), "Editor Gen Index", generationStatus);
+        const editorIndexGenFile = FileUtil.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef, allExtraClassifiers),
+            "Editor Gen Index", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/index.ts`, editorIndexGenFile);
 
         LOGGER.log(`Generating editor index: ${this.editorFolder}/index.ts`);
@@ -159,7 +160,7 @@ export class EditorGenerator {
             FileUtil.deleteFile(`${this.stylesFolder}/styles.ts`);
             FileUtil.deleteFile(`${this.editorFolder}/index.ts`);
             FileUtil.deleteDirIfEmpty(this.stylesFolder);
-            if (this.language == null) {
+            if (this.language === null) {
                 LOG2USER.error("Cannot remove all files because language is not set.");
             } else {
                 FileUtil.deleteFile(`${this.editorFolder}/${Names.customActions(this.language)}.ts`);
@@ -169,9 +170,9 @@ export class EditorGenerator {
         } else {
             // do not delete the following files, because these may contain user edits
             LOG2USER.info(`Not removed: ${this.editorFolder}/${Names.customActions(this.language)}.ts` +
-                '\n\t' + `${this.editorFolder}/${Names.customProjection(this.language)}.ts` +
-                '\n\t' + `${this.editorFolder}/index.ts` +
-                '\n\t' + `${this.stylesFolder}/styles.ts`
+                "\n\t" + `${this.editorFolder}/${Names.customProjection(this.language)}.ts` +
+                "\n\t" + `${this.editorFolder}/index.ts` +
+                "\n\t" + `${this.stylesFolder}/styles.ts`
             );
         }
     }

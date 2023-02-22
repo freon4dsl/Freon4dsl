@@ -12,8 +12,8 @@ export class FretAnyTypeSpec extends FreTyperElement {
         if (!!data.rules) {
             data.rules.forEach(x => result.rules.push(x));
         }
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }

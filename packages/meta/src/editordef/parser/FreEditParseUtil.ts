@@ -39,17 +39,18 @@ export class FreEditParseUtil {
             // console.log("calculated ignored indent on line " + index + " to be " + ignoredIndent + ", in \n\t" + line.toString())
             line.items.forEach(item => {
                 if (item instanceof FreOptionalPropertyProjection) {
-                    if (item.lines.length > 1) { // its a multi-line optional, so regard its lines as well, but skip the first which holds '[?'
+                    if (item.lines.length > 1) { // it's a multi-line optional, so regard its lines as well, but skip the first which holds '[?'
                         item.lines.forEach((subLine, subIndex) => {
                             if (subIndex !== 0) {
-                                const firstItem = subLine.items[0];
-                                if (firstItem instanceof FreEditParsedProjectionIndent) {
-                                    ignoredIndent = Math.min(ignoredIndent, firstItem.amount);
+                                const firstInnerItem = subLine.items[0];
+                                if (firstInnerItem instanceof FreEditParsedProjectionIndent) {
+                                    ignoredIndent = Math.min(ignoredIndent, firstInnerItem.amount);
                                 } else { // no parsed indent found, thus first item is in column 0
                                     ignoredIndent = 0;
                                 }
                             }
-                            // console.log("OPTIONAL: calculated ignored indent on line " + index + " to be " + ignoredIndent + ", subIndex: " + subIndex + ", " + subLine.toString());
+                            // console.log("OPTIONAL: calculated ignored indent on line "
+                            // + index + " to be " + ignoredIndent + ", subIndex: " + subIndex + ", " + subLine.toString());
                         });
                     }
                 }
@@ -87,7 +88,7 @@ export class FreEditParseUtil {
                 if (item instanceof FreOptionalPropertyProjection) {
                     FreEditParseUtil.determineIndents(item.lines, ignoredIndent);
                 }
-            })
+            });
         });
     }
 

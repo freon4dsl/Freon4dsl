@@ -3,7 +3,6 @@ import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
 import { FreBinaryExpressionConcept, FreClassifier, FreExpressionConcept } from "../../languagedef/metalanguage";
 import { GenerationUtil } from "../../utils";
 
-
 export class ParserGenUtil {
 
     // find all expression bases for all binaries
@@ -64,10 +63,10 @@ export class ParserGenUtil {
      * Creates a comment from the grammar rule 'rule'.
      * @param rule
      */
-    static makeComment (rule: string) : string {
-        rule = rule.replace(new RegExp("\n","gm") , "\n\t*");
-        rule = rule.replace(new RegExp("/\\*","gm") , "--");
-        rule = rule.replace(new RegExp("\\*/","gm") , "--");
+    static makeComment (rule: string): string {
+        rule = rule.replace(new RegExp("\n", "gm") , "\n\t*");
+        rule = rule.replace(new RegExp("/\\*", "gm") , "--");
+        rule = rule.replace(new RegExp("\\*/", "gm") , "--");
         return `/**
              * Method to transform branches that match the following rule:
              * ${rule}
@@ -80,7 +79,7 @@ export class ParserGenUtil {
         // See also BasicGrammar.part.pegjs
         // Note that the order of these chars is relevant! Always put "\\" first.
         const regexSpecialCharacters = [
-            "\"", "\'", "/", "{",
+            "\"", "\'", "/", "{"
             // "\\", ".", "+", "*", "?",
             // "[", "]", "$", "(", "^",
             // ")",  "}", "=", "!",
@@ -88,7 +87,7 @@ export class ParserGenUtil {
         ];
 
         regexSpecialCharacters.forEach(rgxSpecChar =>
-            input = input.replace(new RegExp("\\" + rgxSpecChar,"gm"), "\\" + rgxSpecChar));
+            input = input.replace(new RegExp("\\" + rgxSpecChar, "gm"), "\\" + rgxSpecChar));
         return input;
     }
 }
@@ -99,4 +98,3 @@ export const internalTransformRefList = "transformSharedPackedParseTreeRefList";
 export const internalTransformLeaf = "transformSharedPackedParseTreeLeaf";
 export const internalTransformBranch = "transformSharedPackedParseTreeBranch";
 export const internalTransformFreNodeRef = "freNodeRef";
-
