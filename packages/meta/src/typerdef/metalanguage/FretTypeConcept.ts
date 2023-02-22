@@ -19,7 +19,7 @@ export class FretTypeConcept extends FreConcept {
         if (!!data.properties) {
             data.properties.forEach(x => {
                 if (x instanceof FretProperty) {
-                    if (x.typeReference.name === 'boolean' || x.typeReference.name === 'number' || x.typeReference.name === 'string') {
+                    if (x.typeReference.name === "boolean" || x.typeReference.name === "number" || x.typeReference.name === "string") {
                         const newProp: FrePrimitiveProperty = new FrePrimitiveProperty();
                         newProp.name = x.name;
                         newProp.typeReference = x.typeReference;
@@ -48,8 +48,8 @@ export class FretTypeConcept extends FreConcept {
     readonly $typename: string = "FretTypeConcept"; // holds the metatype in the form of a string
 
     toFreString(): string {
-        return 'type ' + this.name + (!!this.base ? 'base ' + this.base.name : '') + " {\n\t" +
-            this.properties.map(p => p.toFreString()).join(";\n\t") + "\n} "
+        return "type " + this.name + (!!this.base ? "base " + this.base.name : "") + " {\n\t" +
+            this.properties.map(p => p.toFreString()).join(";\n\t") + "\n} ";
     }
 
     parts(): FreConceptProperty[] {

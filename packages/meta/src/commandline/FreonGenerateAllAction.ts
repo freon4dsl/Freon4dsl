@@ -142,8 +142,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e) {
-            // LOG2USER.error("Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
-            LOG2USER.error("Stopping scoper generation because of errors: " + e.message);
+            LOG2USER.error("Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
+            // LOG2USER.error("Stopping scoper generation because of errors: " + e.message);
         }
     };
 

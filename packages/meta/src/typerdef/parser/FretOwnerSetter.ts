@@ -30,21 +30,22 @@ export class FretOwnerSetter {
                 rule.owner = spec;
             });
             spec.owner = typeDef;
-            spec.__myClassifier.owner = spec;
+            spec.$myClassifier.owner = spec;
         });
     }
 
     private static setOwner(exp: FretExp, owner: FreTyperElement) {
         exp.owner = owner;
-        if (exp instanceof FretAnytypeExp ) {
-        } else if (exp instanceof FretBinaryExp) {
+        // if ((exp instanceof FretAnytypeExp )) {
+        // } else
+        if (exp instanceof FretBinaryExp) {
             this.setOwner(exp.left, exp);
             this.setOwner(exp.right, exp);
         } else if (exp instanceof FretCreateExp) {
             exp.$type.owner = exp;
             exp.propertyDefs.forEach(propDef => {
                 this.setOwner(propDef.value, propDef);
-                propDef.__property.owner = exp;
+                propDef.$property.owner = exp;
                 propDef.owner = exp;
             });
         } else if (exp instanceof FretFunctionCallExp) {
@@ -52,20 +53,20 @@ export class FretOwnerSetter {
                this.setOwner(par, exp);
             });
         } else if (exp instanceof FretLimitedInstanceExp) {
-            exp.__myInstance.owner = exp;
-            exp.__myLimited.owner = exp;
+            exp.$myInstance.owner = exp;
+            exp.$myLimited.owner = exp;
         } else if (exp instanceof FretPropertyCallExp ) {
             this.setOwner(exp.source, exp);
-            exp.__property.owner = exp;
-        } else if (exp instanceof FretSelfExp) {
+            exp.$property.owner = exp;
+        // } else if (exp instanceof FretSelfExp) {
         } else if (exp instanceof FretVarCallExp) {
-            exp.__variable.owner = exp;
+            exp.$variable.owner = exp;
         } else if (exp instanceof FretWhereExp) {
             exp.variable.owner = exp;
-            exp.variable.__type.owner = exp.variable;
+            exp.variable.$type.owner = exp.variable;
             exp.conditions.forEach(cond => {
                 this.setOwner(cond, exp);
-            })
+            });
         }
     }
 }

@@ -6,7 +6,7 @@
 export const MetaTyperGrammarStr = `
 namespace MetaTyperLanguage
 grammar MetaTyperGrammar {
-                
+
 // rules for "TyperDef"
 TyperDef = 'typer'
 	 ( 'istype' '\{' [ __fre_reference / ',' ]* '}' )?
@@ -59,19 +59,19 @@ FretClassifierSpec = __fre_reference '\{'
 	 FretTypeRule*
 	 '}' ;
 
-FretTypeRule = FretInferenceRule 
-    | FretConformanceRule 
-    | FretEqualsRule 
+FretTypeRule = FretInferenceRule
+    | FretConformanceRule
+    | FretEqualsRule
     | FretLimitedRule  ;
 
-FretExp = FretPropertyCallExp 
-    | FretSelfExp 
-    | FretAnytypeExp 
-    | FretVarCallExp 
-    | FretCreateExp 
-    | FretLimitedInstanceExp 
-    | FretWhereExp 
-    | FretFunctionCallExp 
+FretExp = FretPropertyCallExp
+    | FretSelfExp
+    | FretAnytypeExp
+    | FretVarCallExp
+    | FretCreateExp
+    | FretLimitedInstanceExp
+    | FretWhereExp
+    | FretFunctionCallExp
     | __fre_binary_FretExp ;
 
 __fre_binary_FretExp = [FretExp / __fre_binary_operator]2+ ;
@@ -80,17 +80,17 @@ leaf __fre_binary_operator = 'conformsto' | 'equalsto' ;
 FretProperty = identifier ':' __fre_reference ;
 
 __fre_reference = [ identifier / '::' ]+ ;
-        
+
 // white space and comments
 skip WHITE_SPACE = "\\s+" ;
 skip SINGLE_LINE_COMMENT = "//[^\\r\\n]*" ;
 skip MULTI_LINE_COMMENT = "/\\*[^*]*\\*+(?:[^*/][^*]*\\*+)*/" ;
-        
-// the predefined basic types   
+
+// the predefined basic types
 leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf stringLiteral       = '"' "[^\\"\\\\]*(\\\\.[^\\"\\\\]*)*" '"' ;
 leaf numberLiteral       = "[0-9]+";
 leaf booleanLiteral      = 'false' | 'true';
-            
+
 }`; // end of grammar

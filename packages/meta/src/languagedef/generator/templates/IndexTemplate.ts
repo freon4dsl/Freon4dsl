@@ -29,7 +29,7 @@ export class IndexTemplate {
          * (https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de)
          * in order to avoid problem with circular imports.
          */
-         
+
         export {
         ${tmp.map(c =>
             `${c}`
@@ -38,7 +38,6 @@ export class IndexTemplate {
     }
 
     generateInternal(language: FreLanguage): string {
-
 
         const tmp: string[] = [];
         tmp.push(Names.classifier(language.modelConcept));
@@ -67,8 +66,8 @@ export class IndexTemplate {
          *
          * The exports are sorted such that base concepts are exported before the
          * concepts that are extending them.
-         */           
-            
+         */
+
         ${tmp.map(c =>
             `export * from "./${c}";`
         ).join("\n")}

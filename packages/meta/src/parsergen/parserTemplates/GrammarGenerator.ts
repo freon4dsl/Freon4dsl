@@ -27,9 +27,9 @@ export class GrammarGenerator {
         if (!!refSeparator) {
             grammar.refSeparator = refSeparator;
         }
-        
+
         // find the projection group that can be used for the parser and unparser
-        let projectionGroup = ParserGenUtil.findParsableProjectionGroup(editUnit);
+        const projectionGroup = ParserGenUtil.findParsableProjectionGroup(editUnit);
         // if no projection group found, return
         if (!projectionGroup) {
             return null;

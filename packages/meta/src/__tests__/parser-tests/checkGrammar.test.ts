@@ -45,7 +45,7 @@ describe("Checking parser generation", () => {
             const isPresent: boolean = fs.existsSync(grammarFile);
             expect(isPresent).toBe(true);
             if (isPresent) {
-                const result = fs.readFileSync(grammarFile);
+                const result = fs.readFileSync(grammarFile, "utf8");
                 expect(result).toMatchSnapshot();
             }
         }
@@ -78,7 +78,7 @@ describe("Checking parser generation", () => {
                 const isPresent: boolean = fs.existsSync(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
-                    const result = fs.readFileSync(grammarFile);
+                    const result = fs.readFileSync(grammarFile, "utf8");
                     expect(result).toMatchSnapshot();
                 }
             }
@@ -112,7 +112,7 @@ describe("Checking parser generation", () => {
                 const isPresent: boolean = fs.existsSync(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
-                    const result = fs.readFileSync(grammarFile);
+                    const result = fs.readFileSync(grammarFile, "utf8");
                     expect(result).toMatchSnapshot();
                 }
             }
@@ -146,7 +146,7 @@ describe("Checking parser generation", () => {
                 const isPresent: boolean = fs.existsSync(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
-                    const result = fs.readFileSync(grammarFile);
+                    const result = fs.readFileSync(grammarFile, "utf8");
                     expect(result).toMatchSnapshot();
                 }
             }

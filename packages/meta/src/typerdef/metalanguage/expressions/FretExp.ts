@@ -3,7 +3,7 @@ import { FreTyperElement } from "../FreTyperElement";
 
 export abstract class FretExp extends FreTyperElement {
     language: FreLanguage;
-    __returnType: MetaElementReference<FreClassifier>;
+    $returnType: MetaElementReference<FreClassifier>;
     readonly $typename: string = "FretExp"; // holds the metatype in the form of a string
     owner: FreTyperElement;
 
@@ -11,15 +11,15 @@ export abstract class FretExp extends FreTyperElement {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'FretExp'";
     }
     get returnType(): FreClassifier {
-        if (!!this.__returnType && !!this.__returnType.referred) {
-            return this.__returnType.referred;
+        if (!!this.$returnType && !!this.$returnType.referred) {
+            return this.$returnType.referred;
         }
         return null;
     }
     set returnType(cls: FreClassifier) {
         if (!!cls) {
-            this.__returnType = MetaElementReference.create<FreClassifier>(cls, "FreClassifier");
-            this.__returnType.owner = this.language;
+            this.$returnType = MetaElementReference.create<FreClassifier>(cls, "FreClassifier");
+            this.$returnType.owner = this.language;
         }
     }
 

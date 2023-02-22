@@ -65,7 +65,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     // exp
     public checkLangExp(langExp: FreLangExp, enclosingConcept: FreClassifier) {
         if (!enclosingConcept) {
-            LOGGER.error("enclosingConcept is null in 'checkLangExp'.")
+            LOGGER.error("enclosingConcept is null in 'checkLangExp'.");
             return;
         }
         langExp.language = this.language;
@@ -220,7 +220,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     private checkAppliedFeatureExp(feat: FreLangAppliedFeatureExp, enclosingConcept: FreClassifier) {
         LOGGER.log("checkAppliedFeatureExp " + feat?.toFreString());
         if (!enclosingConcept) {
-            LOGGER.error("enclosingConcept is null in 'checkAppliedFeatureExp'.")
+            LOGGER.error("enclosingConcept is null in 'checkAppliedFeatureExp'.");
             return;
         }
         for (const e of enclosingConcept.allProperties()) {

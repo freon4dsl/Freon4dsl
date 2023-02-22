@@ -12,14 +12,14 @@ export class FretLimitedInstanceExp extends FretExp {
         if (!!data.myLimited) {
             result.myLimited = data.myLimited;
         }
-        if (!!data.__myLimited) {
-            result.__myLimited = data.__myLimited;
+        if (!!data.$myLimited) {
+            result.$myLimited = data.$myLimited;
         }
         if (!!data.myInstance) {
             result.myInstance = data.myInstance;
         }
-        if (!!data.__myInstance) {
-            result.__myInstance = data.__myInstance;
+        if (!!data.$myInstance) {
+            result.$myInstance = data.$myInstance;
         }
         if (data.aglParseLocation) {
             result.aglParseLocation = data.aglParseLocation;
@@ -28,41 +28,41 @@ export class FretLimitedInstanceExp extends FretExp {
     }
     readonly $typename: string = "FretLimitedInstanceExp"; // holds the metatype in the form of a string
 
-    __myLimited?: MetaElementReference<FreLimitedConcept>;
-    __myInstance: MetaElementReference<FreInstance>;
+    $myLimited?: MetaElementReference<FreLimitedConcept>;
+    $myInstance: MetaElementReference<FreInstance>;
     toFreString(): string {
         let prefix: string = "";
-        if (!!this.__myLimited) {
-            prefix = this.__myLimited.name + ":"
+        if (!!this.$myLimited) {
+            prefix = this.$myLimited.name + ":";
         }
-        return `${prefix}${this.__myInstance.name}`;
+        return `${prefix}${this.$myInstance.name}`;
     }
 
     get myLimited(): FreLimitedConcept {
-        if (!!this.__myLimited && !!this.__myLimited.referred) {
-            return this.__myLimited.referred;
+        if (!!this.$myLimited && !!this.$myLimited.referred) {
+            return this.$myLimited.referred;
         }
         return null;
     }
 
     set myLimited(limitedConcept: FreLimitedConcept) {
         if (!!limitedConcept) {
-            this.__myLimited = MetaElementReference.create<FreLimitedConcept>(limitedConcept, "FreLimitedConcept");
-            this.__myLimited.owner = this.language;
+            this.$myLimited = MetaElementReference.create<FreLimitedConcept>(limitedConcept, "FreLimitedConcept");
+            this.$myLimited.owner = this.language;
         }
     }
 
     get myInstance(): FreInstance {
-        if (!!this.__myInstance && !!this.__myInstance.referred) {
-            return this.__myInstance.referred;
+        if (!!this.$myInstance && !!this.$myInstance.referred) {
+            return this.$myInstance.referred;
         }
         return null;
     }
 
     set myInstance(cls: FreInstance) {
         if (!!cls) {
-            this.__myInstance = MetaElementReference.create<FreInstance>(cls, "FreInstance");
-            this.__myInstance.owner = this.language;
+            this.$myInstance = MetaElementReference.create<FreInstance>(cls, "FreInstance");
+            this.$myInstance.owner = this.language;
         }
     }
 

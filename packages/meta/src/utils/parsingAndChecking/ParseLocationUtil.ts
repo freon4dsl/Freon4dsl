@@ -1,13 +1,14 @@
 import { FreDefinitionElement } from "../FreDefinitionElement";
 import { ParseLocation } from "./FreGenericParser";
+import { LOG2USER } from "../UserLogger";
 
 export class ParseLocationUtil {
     static location(elem: FreDefinitionElement): string {
         if (!!elem) {
-            if (!!elem.location) {
+            if (!!elem.location && !!elem.location.filename) {
                 const shortFileName: string = ParseLocationUtil.getShortFileName(elem.location.filename);
                 return `[file: ${shortFileName}:${elem.location.start.line}:${elem.location.start.column}]`;
-            } else if (!!elem.aglParseLocation) {
+            } else if (!!elem.aglParseLocation && !!elem.aglParseLocation.filename) {
                 const shortFileName: string = ParseLocationUtil.getShortFileName(elem.aglParseLocation.filename);
                 return `[file: ${shortFileName}:${elem.aglParseLocation.line}:${elem.aglParseLocation.column}]`;
             }

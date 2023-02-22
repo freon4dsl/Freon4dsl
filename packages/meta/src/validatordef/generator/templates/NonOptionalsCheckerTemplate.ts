@@ -5,9 +5,9 @@ import { ValidationUtils } from "../ValidationUtils";
 const commentBefore = `/**
                         * Checks 'modelelement' before checking its children.
                         * Found errors are pushed onto 'errorlist'.
-                        * If an error is found, it is considered 'fatal', which means that no other checks on 
+                        * If an error is found, it is considered 'fatal', which means that no other checks on
                         * 'modelelement' are performed.
-                        *       
+                        *
                         * @param modelelement
                         */`;
 
@@ -30,15 +30,15 @@ export class NonOptionalsCheckerTemplate {
         // the template starts here
         return `
         import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
+        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
 
         /**
-         * Class ${checkerClassName} is part of the implementation of the default validator. 
+         * Class ${checkerClassName} is part of the implementation of the default validator.
          * It checks whether non-optional properties, as such defined in the .ast definition, indeed
          * have a value.
-         * Class ${Names.walker(language)} implements the traversal of the model tree. This class implements 
+         * Class ${Names.walker(language)} implements the traversal of the model tree. This class implements
          * the actual checking of each node in the tree.
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
@@ -75,11 +75,11 @@ export class NonOptionalsCheckerTemplate {
                 // if the property is of type `string`
                 // then add a check on the length of the string
                 let additionalStringCheck: string = null;
-                if (prop.isPrimitive && (prop.type == FrePrimitiveType.string || prop.type == FrePrimitiveType.identifier)) {
+                if (prop.isPrimitive && (prop.type === FrePrimitiveType.string || prop.type === FrePrimitiveType.identifier)) {
                     additionalStringCheck = `|| modelelement.${prop.name}?.length === 0`;
                 }
 
-                result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ${additionalStringCheck? additionalStringCheck : ""}) {
+                result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ${additionalStringCheck ? additionalStringCheck : ""}) {
                     hasFatalError = true;
                     this.errorList.push(new ${Names.FreError}("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, '${prop.name}', ${Names.FreErrorSeverity}.Error));
                 }

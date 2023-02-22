@@ -22,7 +22,7 @@ export class InterpreterGenerator {
     fileNames: string[] = [];
 
     generate(interpreterDef: FreInterpreterDef): void {
-        if (this.language == null) {
+        if (this.language === null) {
             LOGGER.error("Cannot generate interpreter because language is not set.");
             return;
         }
@@ -38,21 +38,21 @@ export class InterpreterGenerator {
         FileUtil.deleteFilesInDir(this.interpreterGenFolder, generationStatus);
 
         let generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
-        let generatedContent  = template.interpreterBase(this.language, interpreterDef);
+        let generatedContent = template.interpreterBase(this.language, interpreterDef);
         this.makeFile("interpreter base", generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterClassname(this.language)}.ts`;
-        generatedContent  = template.interpreterClass(this.language, interpreterDef);
+        generatedContent = template.interpreterClass(this.language, interpreterDef);
         FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter class");
         // this.makeFile("interpreter class", generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterInitname(this.language)}.ts`;
-        generatedContent  = template.interpreterInit(this.language, interpreterDef);
+        generatedContent = template.interpreterInit(this.language, interpreterDef);
         this.makeFile("interpreter init", generatedFilePath, generatedContent, generationStatus);
         // FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter init")
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterName(this.language)}.ts`;
-        generatedContent  = mainTemplate.interpreterMain(this.language, interpreterDef);
+        generatedContent = mainTemplate.interpreterMain(this.language, interpreterDef);
         this.makeFile("interpreter main", generatedFilePath, generatedContent, generationStatus);
     }
 

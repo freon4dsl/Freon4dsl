@@ -16,5 +16,5 @@ export {
     FretWhereExp,
     FretVarCallExp,
     FretCreateExp,
-    FretBinaryExp,
+    FretBinaryExp
 } from "./internal";

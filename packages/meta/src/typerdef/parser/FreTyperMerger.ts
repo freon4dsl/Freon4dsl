@@ -37,7 +37,7 @@ export class FreTyperMerger {
     }
 
     parseMulti(filePaths: string[]): TyperDef {
-        let submodels: TyperDef[] = [];
+        const submodels: TyperDef[] = [];
 
         // read the files and parse them separately
         for (const file of filePaths) {
@@ -84,7 +84,7 @@ export class FreTyperMerger {
 
     private merge(submodels: TyperDef[]) {
         if (submodels.length > 0) {
-            let result: TyperDef = submodels[0];
+            const result: TyperDef = submodels[0];
             submodels.forEach((sub, index) => {
                 if (index > 0) {
                     result.__types.push(...sub.__types);
@@ -94,7 +94,7 @@ export class FreTyperMerger {
                         if (!result.anyTypeSpec) {
                             result.anyTypeSpec = sub.anyTypeSpec;
                         } else {
-                            this.checker.errors.push(`Found a second anytype rule in ${ParseLocationUtil.location(sub.anyTypeSpec)}, the first one is in ${ParseLocationUtil.location(result.anyTypeSpec)}.`)
+                            this.checker.errors.push(`Found a second anytype rule in ${ParseLocationUtil.location(sub.anyTypeSpec)}, the first one is in ${ParseLocationUtil.location(result.anyTypeSpec)}.`);
                         }
                     }
                     result.classifierSpecs.push(...sub.classifierSpecs);

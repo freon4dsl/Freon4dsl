@@ -30,16 +30,16 @@ export class GrammarPart {
         import { ${this.imports.map(imp => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
         import { ${Names.FreNodeReference} } from "@freon4dsl/core";
-        
+
         export class ${className} {
             mainAnalyser: ${Names.syntaxAnalyser(language)};
-            
+
             constructor(mainAnalyser: ${Names.syntaxAnalyser(language)}) {
                 this.mainAnalyser = mainAnalyser;
             }
-            
+
             ${this.rules.map(rule => `${rule.toMethod("mainAnalyser")}`).join("\n\n")}
-        }`
+        }`;
 
     }
 }

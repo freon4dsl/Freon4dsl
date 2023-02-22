@@ -14,8 +14,8 @@ import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../../metalanguage
 const inferFunctionName: string = "inferType";
 const conformsFunctionName: string = "conformsTo";
 const equalsFunctionName: string = "equalsType";
-const typeofName: string = 'typeof';
-const commonSuperName: string= 'commonSuperType';
+const typeofName: string = "typeof";
+const commonSuperName: string = "commonSuperType";
 
 export class FreTyperGenUtils {
     static types: FreClassifier[] = [];
@@ -68,7 +68,7 @@ export class FreTyperGenUtils {
                 // TODO params that are lists themselves
                 result = `this.mainTyper.commonSuperType([${exp.actualParameters.map(par => `${FreTyperGenUtils.makeExpAsElement(par, varName, varIsType, imports)}`). join(", ")}])`;
             } else {
-                result = "null /* FretFunctionCallExp */"
+                result = "null /* FretFunctionCallExp */";
             }
         } else if (exp instanceof FretLimitedInstanceExp) {
             result = `AstType.create({ astElement: ${FreTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} }) /* FretLimitedInstanceExp */`;
@@ -90,7 +90,7 @@ export class FreTyperGenUtils {
                         result = `this.mainTyper.${inferFunctionName}(${FreTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)}) /* FretPropertyCallExp C */`;
                     }
                 } catch (e) {
-                    console.log(e.stack)
+                    console.log(e.stack);
                 }
             }
         } else if (exp instanceof FretSelfExp) {
@@ -145,7 +145,7 @@ export class FreTyperGenUtils {
     }
 
     public static makePropValue(propExp: FretPropInstance, varName: string, varIsType: boolean, imports: FreClassifier[]): string {
-        let result: string= FreTyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, varIsType, imports);
+        let result: string = FreTyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, varIsType, imports);
         if (!propExp.property.isPart) { // it is a reference, wrap it in a FreElementReference
             // TODO find solution for this import, currently it is imported always
             // ListUtil.addIfNotPresent(imports, Names.FreElementReference);
@@ -164,7 +164,7 @@ export class FreTyperGenUtils {
         } else {
             return `${Names.FreNodeReference}.create<${typeName}>((${toBeCopiedName} as ${toBeCopiedTypeName}).\$${prop.name}, "${typeName}")`;
         }
-        return '';
+        return "";
     }
 
 }

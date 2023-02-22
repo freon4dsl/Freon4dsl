@@ -2,7 +2,6 @@ import { FreClassifier, FreConceptProperty, MetaElementReference, FreProperty } 
 import { FretTypeConcept } from "./FretTypeConcept";
 
 export class FretProperty extends FreConceptProperty {
-    owner: FretTypeConcept;
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -50,6 +49,7 @@ export class FretProperty extends FreConceptProperty {
         // }
         return result;
     }
+    owner: FretTypeConcept;
     readonly $typename: string = "FretProperty"; // holds the metatype in the form of a string
 
     toFreString(): string {

@@ -14,8 +14,8 @@ export class FretFunctionCallExp extends FretExp {
         if (!!data.actualParameters) {
             data.actualParameters.forEach(x => result.actualParameters.push(x));
         }
-        if (!!data.__returnType) {
-            result.__returnType = data.__returnType;
+        if (!!data.$returnType) {
+            result.$returnType = data.$returnType;
         }
         if (!!data.returnType) {
             result.returnType = data.returnType;

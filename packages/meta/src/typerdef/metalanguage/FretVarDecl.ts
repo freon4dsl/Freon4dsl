@@ -10,7 +10,6 @@ import { FreTyperElement } from "./FreTyperElement";
  * to any changes in the state of its properties.
  */
 export class FretVarDecl extends FreTyperElement {
-    owner: FretWhereExp;
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -21,19 +20,20 @@ export class FretVarDecl extends FreTyperElement {
         if (!!data.name) {
             result.name = data.name;
         }
-        if (!!data.__type) {
-            result.__type = data.__type;
+        if (!!data.$type) {
+            result.$type = data.$type;
         }
         if (data.aglParseLocation) {
             result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }
+    owner: FretWhereExp;
 
     readonly $typename: string = "FretVarDecl"; // holds the metatype in the form of a string
     name: string = ""; // implementation of name
 
-    __type: MetaElementReference<FreClassifier>; // implementation of reference 'type'
+    $type: MetaElementReference<FreClassifier>; // implementation of reference 'type'
 
     /**
      * Convenience method for reference 'type'.
@@ -41,20 +41,20 @@ export class FretVarDecl extends FreTyperElement {
      * it returns the referred 'FreClassifier' object, if it can be found.
      */
     get type(): FreClassifier {
-        if (!!this.__type) {
-            return this.__type.referred;
+        if (!!this.$type) {
+            return this.$type.referred;
         }
         return null;
     }
 
     set type(newOne: FreClassifier) {
         if (!!newOne) {
-            this.__type = MetaElementReference.create<FreClassifier>(newOne, "FreClassifier");
-            this.__type.owner = this;
+            this.$type = MetaElementReference.create<FreClassifier>(newOne, "FreClassifier");
+            this.$type.owner = this;
         }
     }
 
     toFreString(): string {
-        return this.name + ' : ' + this.__type.name;
+        return this.name + " : " + this.$type.name;
     }
 }

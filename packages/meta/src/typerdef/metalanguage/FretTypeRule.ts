@@ -15,22 +15,22 @@ export abstract class FretTypeRule extends FreTyperElement {
     $id: string; // a unique identifier
 
     exp: FretExp; // implementation of part 'exp'
-    __returnType: MetaElementReference<FreClassifier>;    // to be set by the checker
+    $returnType: MetaElementReference<FreClassifier>;    // to be set by the checker
     owner: FretClassifierSpec;
 
     toFreString() {
         return "TO BE IMPLEMENTED BY SUBCLASSES OF FretTypeRule";
     }
     get returnType(): FreClassifier {
-        if (!!this.__returnType && !!this.__returnType.referred) {
-            return this.__returnType.referred;
+        if (!!this.$returnType && !!this.$returnType.referred) {
+            return this.$returnType.referred;
         }
         return null;
     }
     set returnType(cls: FreClassifier) {
         if (!!cls) {
-            this.__returnType = MetaElementReference.create<FreClassifier>(cls, "FreClassifier");
-            this.__returnType.owner = this;
+            this.$returnType = MetaElementReference.create<FreClassifier>(cls, "FreClassifier");
+            this.$returnType.owner = this;
         }
     }
 }

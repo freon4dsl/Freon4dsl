@@ -14,43 +14,43 @@ export class GrammarModel {
     // these four properties are set by the GrammarGenerator
     public language: FreLanguage = null;
     public parts: GrammarPart[] = [];
-    public trueValue: string = 'true';
-    public falseValue: string = 'false';
+    public trueValue: string = "true";
+    public falseValue: string = "false";
     public refSeparator: string = "."; // default reference separator
 
-    toGrammar() : string {
+    toGrammar(): string {
         // there is no prettier for the grammar string, therefore we take indentation and
         // other layout matters into account in this template
         // unfortunately, this makes things a little less legible :-(
-        return `// This file contains the input to the AGL parser generator 
-// (see https://https://github.com/dhakehurst/net.akehurst.language). 
+        return `// This file contains the input to the AGL parser generator
+// (see https://https://github.com/dhakehurst/net.akehurst.language).
 // The grammar in this file is read by ${Names.reader(this.language)}
-        
+
 export const ${Names.grammarStr(this.language)} = \`
 namespace ${Names.language(this.language)}
 grammar ${Names.grammar(this.language)} {
-                
-${this.grammarContent()}   
+
+${this.grammarContent()}
 
 ${refRuleName} = [ identifier / '${this.refSeparator}' ]+ ;
-        
+
 // white space and comments
 skip WHITE_SPACE = "\\\\s+" ;
 skip SINGLE_LINE_COMMENT = "//[^\\\\r\\\\n]*" ;
 skip MULTI_LINE_COMMENT = "/\\\\*[^*]*\\\\*+(?:[^*/][^*]*\\\\*+)*/" ;
-        
-// the predefined basic types   
+
+// the predefined basic types
 leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf stringLiteral       = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
 leaf numberLiteral       = "[0-9]+";
 leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
-            
+
 }\`; // end of grammar`;
     }
 
     private grammarContent(): string {
-        let result : string = '';
+        let result: string = "";
         this.parts.forEach(part => {
             if (!!part.unit) {
                 result += `// rules for "${part.unit.name}"\n`;
@@ -59,22 +59,22 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
             part.rules.map(rule => {
                 result += rule.toGrammar() + "\n\n";
-            })
+            });
         });
         return result.trimEnd();
     }
 
     toMethod(relativePath: string): string {
         const className: string = Names.syntaxAnalyser(this.language);
-        let switchContent: string = '';
+        let switchContent: string = "";
         this.parts.forEach(part => part.rules.map(rule => {
             const name = rule.ruleName;
-            switchContent += `if ('${name}' == brName) {
+            switchContent += `if ('${name}' === brName) {
                         return this.${this.getPartAnalyserName(part)}.transform${name}(branch);
                     } else `;
         }));
 
-        switchContent += `if ('${refRuleName}' == brName) {
+        switchContent += `if ('${refRuleName}' === brName) {
                         return this.transform${refRuleName}(branch);
                     } else `;
 
@@ -88,22 +88,22 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
         import { ${Names.FreNamedNode}, ${Names.FreParseLocation}, ${Names.FreNodeReference} } from "@freon4dsl/core";
         import { ${this.parts.map(part => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from ".";
-         
+
         /**
         *   Class ${className} is the main syntax analyser.
         *   The actual work is being done by its parts, one for each model unit,
         *   and one common part that contains the methods used in multiple units.
-        *   
+        *
         */
         export class ${className} implements SyntaxAnalyser {
             sourceName: string = "";
             locationMap: any;
             ${this.parts.map(part => `private ${this.getPartAnalyserName(part)}: ${Names.unitAnalyser(this.language, part.unit)} = new ${Names.unitAnalyser(this.language, part.unit)}(this)`).join(";\n")}
-        
+
             clear(): void {
                 throw new Error("Method not implemented.");
             }
-        
+
             transform\<T\>(sppt: SharedPackedParseTree): T {
                 if (!!sppt.root) {
                     return this.${internalTransformNode}(sppt.root) as unknown as T;
@@ -111,7 +111,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                     return null;
                 }
             }
-        
+
             public ${internalTransformNode}(node: SPPTNode): any {
                 if (!!node) {
                     try {
@@ -124,7 +124,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                         if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${className}")) {
                             throw e;
                         } else {
-                            // add more info to the error message 
+                            // add more info to the error message
                             throw new Error(\`Syntax error in "\${this.sourceName} (line: \${node.location.line}, column: \${node.location.column})": \${e.message}\`);
                         }
                         // console.log(e.message + e.stack);
@@ -133,7 +133,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                     return null;
                 }
             }
-            
+
             private ${internalTransformLeaf}(node: SPPTNode): any {
                 let tmp = ((node as SPPTLeaf)?.nonSkipMatchedText).trim();
                 if (tmp.length > 0) {
@@ -144,18 +144,18 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                         return false;
                     } else if (tmp == "${this.trueValue}") { // booleanLiteral
                         return true;
-                    } else if (Number.isInteger(parseInt(tmp))) { // numberLiteral
-                        return parseInt(tmp);
+                    } else if (Number.isInteger(parseInt(tmp, 10))) { // numberLiteral
+                        return parseInt(tmp, 10);
                     } else { // identifier
                         return tmp;
                     }
                 }
                 return null;
-            }     
-          
+            }
+
             private ${internalTransformBranch}(branch: SPPTBranch): any {
-                let brName: string = branch.name;
-                ${switchContent}                
+                const brName: string = branch.name;
+                ${switchContent}
                 {
                     throw new Error(\`Error in ${className}: \${brName} not handled for node '\${branch?.matchedText}'\`);
                 }
@@ -177,7 +177,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
 
             /**
              * Generic method to get the optional group of a branch. Throws an error if no group can be found.
-             */            
+             */
             public getGroup(branch: SPPTBranch) {
                 // take the first element in the [0..1] optional group or multi branch
                 let group: any = branch;
@@ -185,7 +185,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 while (!stop) {
                     let nextOne: any = null;
                     try {
-                        nextOne = group.nonSkipChildren?.toArray()[0]; 
+                        nextOne = group.nonSkipChildren?.toArray()[0];
                     } catch (e) {
                         throw new Error(\`Cannot follow group: \${e.message} (\${group.matchedText})\`);
                     }
@@ -197,7 +197,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 }
                 return group;
             }
-              
+
             public transform${refRuleName}(branch: SPPTBranch){
                 if (branch.name.includes("multi") || branch.name.includes("List")) { // its a path name
                     return this.${internalTransformList}<string>(branch, "${this.refSeparator}");
@@ -205,7 +205,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                     return this.${internalTransformLeaf}(branch);
                 }
             }
-    
+
             /**
              * Generic method to transform references
              * ...FreNodeRef = identifier;
@@ -216,17 +216,17 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                     // its a path name
                     referred = this.transformSharedPackedParseTreeList<string>(branch, '${this.refSeparator}');
                 }
-                if (referred == null || referred == undefined ) {
+                if (referred === null || referred === undefined ) {
                     // throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
                     return null;
-                } else if (typeof referred === "string" && (referred as string).length == 0) {
+                } else if (typeof referred === "string" && (referred as string).length === 0) {
                     // throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
                     return null;
                 } else {
                     return ${Names.FreNodeReference}.create<T>(referred, typeName);
                 }
             }
-        
+
             /**
              * Generic method to transform lists
              */
@@ -237,14 +237,14 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                     for (const child of children) {
                         let element: any = this.${internalTransformNode}(child);
                         if (element !== null && element !== undefined ) {
-                            if (separator == null || separator == undefined) {
+                            if (separator === null || separator === undefined) {
                                 result.push(element);
                             } else {
-                                if (element != separator) {
+                                if (element !== separator) {
                                     result.push(element);
                                 }
                             }
-                        } 
+                        }
                     }
                 }
                 return result;
@@ -252,7 +252,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
 
             /**
              * Generic method to transform lists of references
-             */            
+             */
             public ${internalTransformRefList}\<T extends ${Names.FreNamedNode}\>(branch: SPPTBranch, typeName: string, separator?: string): ${Names.FreNodeReference}\<T\>[] {
                 let result: ${Names.FreNodeReference}\<T\>[] = [];
                 const children = this.getChildren(branch);
@@ -272,7 +272,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 }
                 return result;
             }
-            
+
             public location(branch: SPPTBranch): ${Names.FreParseLocation} {
                 const location = ${Names.FreParseLocation}.create({
                     filename: this.sourceName,
