@@ -8,14 +8,14 @@ import { FreLangElement } from "../metalanguage/FreLanguage";
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { MetaElementReference } from "../metalanguage/MetaElementReference";
 
-export class LanguageExpressionTester extends  FreLangElement {
+export class LanguageExpressionTester extends FreLangElement {
     // location: ParseLocation;
     languageName: string;
     language: FreLanguage;
     conceptExps: TestExpressionsForConcept[] = [];
 }
 
-export class TestExpressionsForConcept extends  FreLangElement {
+export class TestExpressionsForConcept extends FreLangElement {
     // location: ParseLocation;
     conceptRef: MetaElementReference<FreConcept>;
     language: FreLanguage;

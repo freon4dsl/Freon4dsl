@@ -1,5 +1,5 @@
 import { FreLanguage } from "../../../languagedef/metalanguage";
-import { Names, FREON_CORE, TYPER_GEN_FOLDER } from "../../../utils";
+import { Names, FREON_CORE } from "../../../utils";
 
 export class CustomScoperTemplate {
     generateCustomScoperPart(language: FreLanguage, relativePath: string): string {

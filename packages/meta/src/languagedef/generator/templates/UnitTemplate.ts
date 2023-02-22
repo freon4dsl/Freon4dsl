@@ -1,4 +1,4 @@
-import { FREON_CORE, Names } from "../../../utils";
+import { Names } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
 import { FreUnitDescription } from "../../metalanguage/FreLanguage";
 import { ClassifierUtil } from "./ClassifierUtil";

@@ -1,7 +1,6 @@
 import {
     FreBinaryExpressionConcept,
     FreClassifier,
-    FreConcept,
     FreConceptProperty,
     FreProperty
 } from "../../languagedef/metalanguage";
@@ -31,14 +30,14 @@ export class Roles {
     }
 
     public static newPart(property: FreProperty): string {
-        return Roles.newConceptPart(property.owningClassifier, property)
+        return Roles.newConceptPart(property.owningClassifier, property);
         // return Roles.property(property);
     }
 
     public static newConceptPart(concept: FreClassifier, property: FreProperty): string {
-        if( concept instanceof FreBinaryExpressionConcept) {
-            if( !!(concept.base.referred) ){
-                if( !(concept.base.referred instanceof FreBinaryExpressionConcept)){
+        if ( concept instanceof FreBinaryExpressionConcept) {
+            if ( !!(concept.base.referred) ) {
+                if ( !(concept.base.referred instanceof FreBinaryExpressionConcept)) {
                     return "FreBinaryExpression" + "-" + property.name;
                 }
             }
@@ -52,7 +51,7 @@ export class Roles {
 
     private static startWithUpperCase(word: string): string {
         if (!!word) {
-            return word[0].toUpperCase() + word.substr(1);
+            return word[0].toUpperCase() + word.substring(1);
         }
         return "";
     }

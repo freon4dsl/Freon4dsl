@@ -1,4 +1,4 @@
-import { ListJoinType, FreEditProjectionGroup } from "./FreEditDefLang";
+import { ListJoinType } from "./FreEditDefLang";
 
 export class EditorDefaults {
     static standardReferenceSeparator = ".";

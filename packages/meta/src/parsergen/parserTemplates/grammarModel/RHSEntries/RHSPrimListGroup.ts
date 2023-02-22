@@ -20,7 +20,7 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `// RHSPrimListGroup 
+        return `// RHSPrimListGroup
             if (!${nodeName}[${index}].isEmptyMatch) {
                 // get the group that represents the optional primitive
                 // because primitives are leafs in the grammar, there is no need to get the children of this group
@@ -30,7 +30,7 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth + 1);
+        const indent = makeIndent(depth + 1);
         return indent + "RHSListGroup: " + indent + this.entry.toString(depth + 1) + " " + this.separatorText;
     }
 }

@@ -7,7 +7,7 @@ import { makeIndent } from "../GrammarUtils";
 export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
     // (propTypeName 'joinText' )*
     private entry: RHSPropEntry;
-    private isSingleEntry: boolean;
+    private readonly isSingleEntry: boolean;
 
     constructor(prop: FreProperty, entry: RHSPropEntry, separator: string, isSingleEntry: boolean) {
         super(prop, separator);
@@ -28,19 +28,19 @@ export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
         if (this.isSingleEntry) {
             myListStatement = `const _myList = ${nodeName};`;
         }
-        return `// RHSPartListWithTerminator  
+        return `// RHSPartListWithTerminator
             ${ParserGenUtil.internalName(this.property.name)} = [];
             ${myListStatement}
-            _myList.forEach(subNode => {  
-                const _transformed = this.${mainAnalyserName}.${internalTransformNode}(subNode.nonSkipChildren?.toArray()[0]);  
-                if (!!_transformed) {      
+            _myList.forEach(subNode => {
+                const _transformed = this.${mainAnalyserName}.${internalTransformNode}(subNode.nonSkipChildren?.toArray()[0]);
+                if (!!_transformed) {
                     ${ParserGenUtil.internalName(this.property.name)}.push(_transformed);
                 }
             });`;
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth + 1);
+        const indent = makeIndent(depth + 1);
         return indent + "RHSListGroup: " + indent + this.entry.toString(depth + 1) + " " + this.separatorText;
     }
 }

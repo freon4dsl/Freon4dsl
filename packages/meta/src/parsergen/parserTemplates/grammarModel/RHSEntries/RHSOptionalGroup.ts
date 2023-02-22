@@ -5,7 +5,7 @@ import { makeIndent } from "../GrammarUtils";
 import { RHSBooleanWithSingleKeyWord } from "./RHSBooleanWithSingleKeyWord";
 
 export class RHSOptionalGroup extends RHSPropEntry {
-    private subs: RightHandSideEntry[] = [];
+    private readonly subs: RightHandSideEntry[] = [];
     private propIndex: number = 0; // the index of the property in this optional group
 
     constructor(prop: FreProperty, subs: RightHandSideEntry[], propIndex: number) {
@@ -31,7 +31,7 @@ export class RHSOptionalGroup extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         if (this.subs.length > 1) {
-            return `            
+            return `
             if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
                 const _optGroup = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);` + // to avoid an extra newline
                 `const _propItem = this.${mainAnalyserName}.getChildren(_optGroup);` +
@@ -56,7 +56,7 @@ export class RHSOptionalGroup extends RHSPropEntry {
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSOptionalGroup: " + indent + this.subs.map(sub => sub.toString(depth + 1)).join(indent);
     }
 }

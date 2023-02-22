@@ -17,7 +17,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
     protected scopeFiles: string[] = [];
     protected typerFiles: string[] = [];
 
-    public constructor(options: ICommandLineActionOptions) {
+    protected constructor(options: ICommandLineActionOptions) {
         super(options);
     }
 

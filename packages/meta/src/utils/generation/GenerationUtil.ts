@@ -279,4 +279,19 @@ export class GenerationUtil {
             return exp;
         }
     }
+
+    public static sortUnitNames(language: FreLanguage, unitNames: string[]) {
+        // sort all names alphabetically
+        const tmp: string[] = [];
+        language.concepts.map(c =>
+            tmp.push(Names.concept(c))
+        );
+        language.interfaces.map(c =>
+            tmp.push(Names.interface(c))
+        );
+        tmp.push(...unitNames);
+        tmp.push(Names.classifier(language.modelConcept));
+
+        return tmp.sort();
+    }
 }

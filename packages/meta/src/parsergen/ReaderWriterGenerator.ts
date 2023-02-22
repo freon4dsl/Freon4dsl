@@ -27,7 +27,7 @@ export class ReaderWriterGenerator {
     private readerGenFolder: string;
 
     generate(editDef: FreEditUnit): void {
-        if (this.language == null) {
+        if (this.language === null) {
             LOGGER.error("Cannot generate parser and unparser because language is not set.");
             return;
         }
@@ -49,11 +49,11 @@ export class ReaderWriterGenerator {
         const relativePath = "../../";
 
         // remember all file names etc. for the index
-        let indexContent: string = '';
+        let indexContent: string = "";
 
         //  Generate the writer
         let generatedFilePath = `${this.writerGenFolder}/${Names.writer(this.language)}.ts`;
-        let generatedContent  = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
+        let generatedContent = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
         this.makeFile(`language writer`, generatedFilePath, generatedContent, generationStatus);
 
         // Generate the reader
@@ -98,19 +98,19 @@ export class ReaderWriterGenerator {
         // Get the semantic analyser and write it to file
         generatedFilePath = `${this.readerGenFolder}/${Names.semanticAnalyser(this.language)}.ts`;
         indexContent += `export * from "./${Names.semanticAnalyser(this.language)}";\n`;
-        generatedContent  = analyser.getRefCorrectorContent(this.language, relativePath);
+        generatedContent = analyser.getRefCorrectorContent(this.language, relativePath);
         this.makeFile(`semantic analyser`, generatedFilePath, generatedContent, generationStatus);
 
         // get the semantic analysis walker and write it to file
         generatedFilePath = `${this.readerGenFolder}/${Names.semanticWalker(this.language)}.ts`;
         indexContent += `export * from "./${Names.semanticWalker(this.language)}";\n`;
-        generatedContent  = analyser.getRefCorrectorWalkerContent(this.language, relativePath);
+        generatedContent = analyser.getRefCorrectorWalkerContent(this.language, relativePath);
         this.makeFile(`semantic analysis walker`, generatedFilePath, generatedContent, generationStatus);
 
         // get the reader and write it to file
         generatedFilePath = `${this.readerGenFolder}/${Names.reader(this.language)}.ts`;
         indexContent += `export * from "./${Names.reader(this.language)}";\n`;
-        generatedContent  = readerTemplate.generateReader(this.language, editDef, relativePath);
+        generatedContent = readerTemplate.generateReader(this.language, editDef, relativePath);
         this.makeFile(`language reader`, generatedFilePath, generatedContent, generationStatus);
 
         // write the index file for the reader gen folder

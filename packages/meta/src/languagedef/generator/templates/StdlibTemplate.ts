@@ -4,7 +4,6 @@ import {
     Names,
     FREON_CORE,
     CONFIGURATION_FOLDER,
-    LANGUAGE_UTILS_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER
 } from "../../../utils";
 
@@ -17,8 +16,8 @@ export class StdlibTemplate {
 
         return `
         import { ${Names.FreNamedNode}, ${Names.FreStdlib}, ${Names.FreLanguage} } from "${FREON_CORE}";
-        import { ${Names.metaType(language)}, 
-                    ${this.limitedConceptNames.map(name => `${name}`).join(", ") } 
+        import { ${Names.metaType(language)},
+                    ${this.limitedConceptNames.map(name => `${name}`).join(", ") }
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
         import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";
@@ -28,33 +27,33 @@ export class StdlibTemplate {
          * It holds all instances of limited concepts as defined in the language definition file.
          *
          * This class uses the singleton pattern to ensure that only one instance of the class is present.
-         */        
+         */
         export class ${Names.stdlib(language)} implements ${Names.FreStdlib} {
             private static stdlib: ${Names.FreStdlib};           // the only instance of this class
 
             /**
              * This method implements the singleton pattern
-             */        
+             */
             public static getInstance(): ${Names.FreStdlib} {
                 if (this.stdlib === undefined || this.stdlib === null) {
                     this.stdlib = new ${Names.stdlib(language)}();
                 }
                 return this.stdlib;
             }
-            
+
             public elements: ${Names.FreNamedNode}[] = [];    // the predefined elements of language ${language.name}
 
             /**
              * A private constructor, as demanded by the singleton pattern,
              * in which the list of predefined elements is filled.
-             */          
+             */
             private constructor() {
                 ${this.constructorText}
                 for (const lib of freonConfiguration.customStdLibs) {
                     ListUtil.addAllIfNotPresent<${Names.FreNamedNode}>(this.elements, lib.elements);
                 }
-            }  
-            
+            }
+
             /**
              * Returns the element named 'name', if it can be found in this library.
              * If the element can not be found, 'null' is returned.
@@ -62,7 +61,7 @@ export class StdlibTemplate {
              * an instance of this metatype.
              * @param name
              * @param metatype
-             */            
+             */
             public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.FreNamedNode} {
                 if (!!name) {
                     const possibles = this.elements.filter((elem) => elem.name === name);
@@ -77,9 +76,9 @@ export class StdlibTemplate {
                             return possibles[0];
                         }
                     }
-                }  
-                return null;               
-            }                      
+                }
+                return null;
+            }
         }`;
     }
 

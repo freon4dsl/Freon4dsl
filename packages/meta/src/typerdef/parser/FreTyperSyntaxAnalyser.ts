@@ -244,11 +244,10 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
     }
 
     public location(branch: net.akehurst.language.api.sppt.SPPTBranch) {
-        const location = FreParseLocation.create({
+        return FreParseLocation.create({
             filename: this.filename,
             line: branch.location.line,
             column: branch.location.column
         });
-        return location;
     }
 }

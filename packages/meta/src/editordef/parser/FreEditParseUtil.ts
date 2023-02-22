@@ -39,7 +39,7 @@ export class FreEditParseUtil {
             // console.log("calculated ignored indent on line " + index + " to be " + ignoredIndent + ", in \n\t" + line.toString())
             line.items.forEach(item => {
                 if (item instanceof FreOptionalPropertyProjection) {
-                    if (item.lines.length > 1) { // its a multi-line optional, so regard its lines as well, but skip the first which holds '[?'
+                    if (item.lines.length > 1) { // it's a multi-line optional, so regard its lines as well, but skip the first which holds '[?'
                         item.lines.forEach((subLine, subIndex) => {
                             if (subIndex !== 0) {
                                 const firstInnerItem = subLine.items[0];

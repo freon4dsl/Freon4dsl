@@ -17,12 +17,12 @@ export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const propType: string = Names.classifier(this.property.type);
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = 
+        return `${ParserGenUtil.internalName(this.property.name)} =
                         this.${mainAnalyserName}.${internalTransformRefList}<${baseType}>(${nodeName}[${index}], '${propType}', '${this.separatorText}'); // RHSRefListWithSeparator\n`;
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSRefListWithSeparator: " + this.property.name;
     }
 }

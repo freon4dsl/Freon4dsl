@@ -78,8 +78,8 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         this.runner = runner;
 
         // now we can start checking
-        this.checkTypeReferences(definition.__types);
-        this.checkTypeReferences(definition.__conceptsWithType);
+        this.checkTypeReferences(definition.$types);
+        this.checkTypeReferences(definition.$conceptsWithType);
         // from now on we can use the getters 'types' and 'conceptsWithType'!
         // all references that cannot be found are filtered out!
 

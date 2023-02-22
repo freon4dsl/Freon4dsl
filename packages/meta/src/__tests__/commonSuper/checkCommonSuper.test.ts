@@ -189,7 +189,7 @@ describe("Checking common super types algorithm", () => {
         myList.push(conceptWithBase("KK", myBase2));
         myList.push(conceptWithBase("LL", conceptWithBase("BB", myBase1)));
         myList.push(conceptWithBase("MM", conceptWithBase("CC", myBase1)));
-        let result: FreClassifier[] = CommonSuperTypeUtil.commonSuperType(myList);
+        let result: FreClassifier[];
         // expect(result.length).toBe(1);
         // expect(result[0]).toBe(myBase1);
         // console.log("COMMON SUPER: " + result.map(cls => cls.name).join(", "));

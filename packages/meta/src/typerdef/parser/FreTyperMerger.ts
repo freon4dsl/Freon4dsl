@@ -87,9 +87,9 @@ export class FreTyperMerger {
             const result: TyperDef = submodels[0];
             submodels.forEach((sub, index) => {
                 if (index > 0) {
-                    result.__types.push(...sub.__types);
+                    result.$types.push(...sub.$types);
                     result.typeConcepts.push(...sub.typeConcepts);
-                    result.__conceptsWithType.push(...sub.__conceptsWithType);
+                    result.$conceptsWithType.push(...sub.$conceptsWithType);
                     if (!!sub.anyTypeSpec) {
                         if (!result.anyTypeSpec) {
                             result.anyTypeSpec = sub.anyTypeSpec;

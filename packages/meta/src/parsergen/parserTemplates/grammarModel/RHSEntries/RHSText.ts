@@ -48,7 +48,7 @@ export class RHSText extends RightHandSideEntry {
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSText: " + this.text;
     }
 }

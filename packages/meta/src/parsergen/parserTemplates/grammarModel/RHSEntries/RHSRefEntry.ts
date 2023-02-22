@@ -20,7 +20,7 @@ export class RHSRefEntry extends RHSPropEntry {
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSRefEntry: " + this.property.name;
     }
 }

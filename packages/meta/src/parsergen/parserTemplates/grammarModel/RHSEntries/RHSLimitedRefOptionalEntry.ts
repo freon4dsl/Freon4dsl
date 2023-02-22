@@ -18,14 +18,14 @@ export class RHSLimitedRefOptionalEntry extends RHSPropEntry {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         return `// RHSLimitedRefOptionalEntry
             if (!${nodeName}[${index}].isEmptyMatch) {
-                // take the first element of the group that represents the optional part  
+                // take the first element of the group that represents the optional part
                 const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]).nonSkipChildren.toArray()[0];
                 ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.freNodeRef<${baseType}>(subNode, '${baseType}');
             }`;
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSLimitedRefEntry: " + this.property.name;
     }
 }

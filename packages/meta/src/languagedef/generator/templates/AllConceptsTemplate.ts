@@ -1,22 +1,11 @@
-import { Names } from "../../../utils";
+import { GenerationUtil, Names } from "../../../utils";
 import { FreLanguage } from "../../metalanguage";
 
 export class AllConceptsTemplate {
 
     generateAllConceptsClass(language: FreLanguage): string {
         const unitNames = language.units.map(unit => Names.classifier(unit));
-        // sort all names alphabetically
-        let tmp: string[] = [];
-        language.concepts.map(c =>
-            tmp.push(Names.concept(c))
-        );
-        language.interfaces.map(c =>
-            tmp.push(Names.interface(c))
-        );
-        tmp.push(...unitNames);
-        tmp.push(Names.classifier(language.modelConcept));
-
-        tmp = tmp.sort();
+        const tmp = GenerationUtil.sortUnitNames(language, unitNames);
 
         // the template starts here
         return `
@@ -36,11 +25,9 @@ export class AllConceptsTemplate {
         ).join(" | ")}
         ;
 
-
         /**
          * Type MODELUNIT combines the metatype of all possible modelunits of language ${language.name}
          */
         export type ${Names.modelunit(language)} = ${unitNames.map(name => `${name}`).join("| ")};`;
     }
-
 }

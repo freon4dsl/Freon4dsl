@@ -1,6 +1,5 @@
 import { FreDefinitionElement } from "../FreDefinitionElement";
 import { ParseLocation } from "./FreGenericParser";
-import { LOG2USER } from "../UserLogger";
 
 export class ParseLocationUtil {
     static location(elem: FreDefinitionElement): string {

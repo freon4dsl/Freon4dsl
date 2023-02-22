@@ -1,13 +1,12 @@
 import {
     FreClassifier,
     FreConcept,
-    MetaElementReference, FreInterface,
-    FrePrimitiveProperty,
+    MetaElementReference, FrePrimitiveProperty,
     FrePrimitiveType,
     FrePrimitiveValue,
     FreProperty
 } from "../metalanguage";
-import { CheckRunner, LangUtil, MetaLogger, Names, ParseLocationUtil } from "../../utils";
+import { CheckRunner, MetaLogger, Names, ParseLocationUtil } from "../../utils";
 
 const LOGGER = new MetaLogger("CommonChecker").mute();
 

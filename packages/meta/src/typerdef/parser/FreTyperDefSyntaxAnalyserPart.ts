@@ -110,9 +110,9 @@ export class FreTyperDefSyntaxAnalyserPart {
         }
 
         return TyperDef.create({
-            __types: __types,
+            $types: __types,
             typeConcepts: __typeConcepts,
-            __conceptsWithType: __conceptsWithType,
+            $conceptsWithType: __conceptsWithType,
             anyTypeSpec: __anyTypeSpec,
             classifierSpecs: __classifierSpecs,
             aglParseLocation: this.mainAnalyser.location(branch)

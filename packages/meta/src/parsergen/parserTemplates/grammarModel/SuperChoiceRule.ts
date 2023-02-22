@@ -22,15 +22,17 @@ export class SuperChoiceRule extends GrammarRule {
         let rule: string = "";
         if (this.implementors.length > 0) {
             // test to see if there is a binary expression concept here
-            let implementorsNoBinaries = this.implementors.filter(sub => !(sub instanceof FreBinaryExpressionConcept));
-            if (this.implementors.length != implementorsNoBinaries.length) { // there are binaries
+            const implementorsNoBinaries = this.implementors.filter(sub => !(sub instanceof FreBinaryExpressionConcept));
+            if (this.implementors.length !== implementorsNoBinaries.length) { // there are binaries
                 // exclude binary expression concepts
                 rule = `${(this.ruleName)} = ${implementorsNoBinaries.map(implementor =>
                     `${this.getTypeCallExcludeSelf(implementor)} `).join("\n    | ")}`;
                 // add the special binary concept rule(s) as choice
-                const expBases = ParserGenUtil.findAllExpressionBases(this.implementors.filter(sub => sub instanceof FreBinaryExpressionConcept) as FreBinaryExpressionConcept[]);
+                const expBases = ParserGenUtil.findAllExpressionBases(
+                    this.implementors.filter(sub => sub instanceof FreBinaryExpressionConcept) as FreBinaryExpressionConcept[]
+                );
                 if (implementorsNoBinaries.length > 0) { // there are already choices present in the rule, so add a '|' as separator
-                    rule += '\n    | ';
+                    rule += "\n    | ";
                 }
                 expBases.forEach(base => {
                     rule += `${BinaryExpMaker.getBinaryRuleName(base)} ;`;
@@ -56,7 +58,7 @@ export class SuperChoiceRule extends GrammarRule {
             }`;
     }
 
-    getTypeCallExcludeSelf(propType: FreClassifier) : string {
+    getTypeCallExcludeSelf(propType: FreClassifier): string {
         if (propType === this.myConcept) {
             return Names.classifier(propType);
         } else {

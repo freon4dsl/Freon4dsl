@@ -108,7 +108,7 @@ describe("Checking parser generation", () => {
                 generator.language = language;
                 generator.outputfolder = outputDir;
                 generator.generate(editor);
-                const grammarFile = outputDir + "reader/gen/Test2Grammar.ts";
+                const grammarFile = outputDir + "reader/gen/Test3Grammar.ts";
                 const isPresent: boolean = fs.existsSync(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {

@@ -128,7 +128,7 @@ export class FreGenericParser<DEFINITION> {
             this.checker.warnings = [];
             this.checker.check(model);
             // this.checker.check makes errorlist empty, thus we must
-            // add the non fatal parse errors after the call
+            // add the non-fatal parse errors after the call
             this.checker.errors.push(...this.getNonFatalParseErrors());
             if (this.checker.hasErrors()) {
                 this.checker.errors.forEach(error => LOG2USER.error(`${error}`));

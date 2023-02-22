@@ -1,10 +1,8 @@
 import {
-    FretAnytypeExp,
     FretExp,
     FretFunctionCallExp,
     FretLimitedInstanceExp, FretProperty,
-    FretPropertyCallExp, FretSelfExp,
-    FretWhereExp,
+    FretPropertyCallExp, FretWhereExp,
     TyperDef, FreTyperElement
 } from "../metalanguage";
 import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../metalanguage/expressions";

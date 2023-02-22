@@ -1,4 +1,4 @@
-import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
+import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
 import { FreLanguage, FreClassifier, FrePrimitiveType } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 

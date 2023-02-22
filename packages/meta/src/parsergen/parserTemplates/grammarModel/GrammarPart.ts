@@ -1,6 +1,6 @@
 import { GrammarRule } from "./GrammarRule";
 import { FreClassifier, FreLanguage, FrePrimitiveType } from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, READER_GEN_FOLDER } from "../../../utils";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 import { FreUnitDescription } from "../../../languagedef/metalanguage/FreLanguage";
 
 export class GrammarPart {

@@ -158,8 +158,7 @@ export class DefaultActionsTemplate {
     }
 
     customActionForParts(language: FreLanguage, editorDef: FreEditUnit): string {
-        const result = "";
         // Nothing to do for the moment
-        return result;
+        return "";
     }
 }

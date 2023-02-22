@@ -7,7 +7,7 @@ import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBinExpListWithSeparator extends RHSPropEntry {
     type: FreBinaryExpressionConcept = null;
-    private separatorText: string = "";
+    private readonly separatorText: string = "";
 
     constructor(prop: FreProperty, type: FreBinaryExpressionConcept, separatorText: string) {
         super(prop);
@@ -27,7 +27,7 @@ export class RHSBinExpListWithSeparator extends RHSPropEntry {
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSBinaryExp: " + this.property.name + ": " + this.type.name;
     }
 }

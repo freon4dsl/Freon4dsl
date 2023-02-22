@@ -2,10 +2,6 @@ import { FretExp } from "./FretExp";
 import { FreClassifier } from "../../../languagedef/metalanguage";
 import { FretVarDecl } from "../FretVarDecl";
 import { FretBinaryExp } from "./FretBinaryExp";
-import { FretPropertyCallExp } from "./FretPropertyCallExp";
-import { FretVarCallExp } from "./FretVarCallExp";
-import { FretEqualsExp } from "./FretEqualsExp";
-import { FretConformsExp } from "./FretConformsExp";
 
 export class FretWhereExp extends FretExp {
     /**

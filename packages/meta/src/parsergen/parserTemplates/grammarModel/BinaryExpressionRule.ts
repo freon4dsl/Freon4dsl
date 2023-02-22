@@ -6,7 +6,7 @@ import { getTypeCall } from "./GrammarUtils";
 
 export class BinaryExpressionRule extends GrammarRule {
     expressionBase: FreExpressionConcept;
-    private symbolToConcept: Map<FreClassifier, string> = new Map<FreClassifier, string>();
+    private readonly symbolToConcept: Map<FreClassifier, string> = new Map<FreClassifier, string>();
 
     constructor(ruleName: string, expressionBase: FreExpressionConcept, symbolToConcept: Map<FreClassifier, string>) {
         super();
@@ -79,7 +79,7 @@ export class BinaryExpressionRule extends GrammarRule {
     }
 
     private sortOnLength(cases: string[]) {
-        let result: string[] = [];
+        let result: string[];
         result = cases.sort((a, b): number => {
             return a.length > b.length ? -1 : (a.length === b.length ? 0 : 1);
         });

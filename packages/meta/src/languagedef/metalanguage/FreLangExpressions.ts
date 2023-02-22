@@ -1,5 +1,5 @@
-import { FreLangElement, FreClassifier, FreConcept, FreConceptProperty, FreFunction, FreInstance, FreLanguage, FreProperty } from "./internal";
-import { Names, ParseLocation } from "../../utils";
+import { FreLangElement, FreClassifier, FreFunction, FreInstance, FreLanguage, FreProperty } from "./internal";
+import { Names } from "../../utils";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other

@@ -81,12 +81,12 @@ export class FreTyperGenUtils {
                     if (FreTyperGenUtils.isType(exp.returnType)) {
                         result = `${FreTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} /* FretPropertyCallExp B */`;
                     } else {
-                        if (varName === "modelelement" && varIsType) {
-                            throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
-                        }
-                        if (varName !== "modelelement" && !varIsType) {
-                            throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
-                        }
+                        // if (varName === "modelelement" && varIsType) {
+                        //     throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
+                        // }
+                        // if (varName !== "modelelement" && !varIsType) {
+                        //     throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
+                        // }
                         result = `this.mainTyper.${inferFunctionName}(${FreTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)}) /* FretPropertyCallExp C */`;
                     }
                 } catch (e) {
@@ -164,7 +164,6 @@ export class FreTyperGenUtils {
         } else {
             return `${Names.FreNodeReference}.create<${typeName}>((${toBeCopiedName} as ${toBeCopiedTypeName}).\$${prop.name}, "${typeName}")`;
         }
-        return "";
     }
 
 }

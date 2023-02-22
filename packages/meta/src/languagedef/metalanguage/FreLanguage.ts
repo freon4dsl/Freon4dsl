@@ -402,10 +402,7 @@ export class FreProperty extends FreLangElement {
     owningClassifier: FreClassifier;
 
     get isPrimitive(): boolean {
-        if (this.type instanceof FrePrimitiveType) {
-            return true;
-        }
-        return false;
+        return this.type instanceof FrePrimitiveType;
     }
     get type(): FreClassifier {
         return this.$type?.referred;

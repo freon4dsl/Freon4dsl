@@ -1,5 +1,5 @@
 import { FreClassifier, FreConcept } from "../../languagedef/metalanguage";
-import { LangUtil, Names } from "../../utils";
+import { Names } from "../../utils";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { ChoiceRule } from "./grammarModel/ChoiceRule";
 import { SuperChoiceRule } from "./grammarModel/SuperChoiceRule";

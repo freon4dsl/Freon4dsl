@@ -1,5 +1,5 @@
 import { FreLanguage } from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
+import { Names } from "../../../utils";
 import {
     internalTransformBranch,
     internalTransformLeaf,

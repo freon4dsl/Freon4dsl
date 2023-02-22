@@ -80,7 +80,7 @@ describe("Checking expression on referredElement", () => {
             expect(zzConcept).not.toBeNull();
             expect(zzConcept).not.toBeUndefined();
             expect(zzConcept instanceof FreLimitedConcept);
-            // for each expression in the set, it should refer to an predefined instance of 'ZZ'
+            // for each expression in the set, it should refer to a predefined instance of 'ZZ'
             CCconceptExps.exps.forEach(exp => {
                 expect(exp.$referredElement?.referred === zzConcept);
                 const freInstance = exp.$referredElement.referred;

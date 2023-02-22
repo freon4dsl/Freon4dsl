@@ -1,4 +1,3 @@
-import { FreEditUnit } from "../../editordef/metalanguage";
 import { FreClassifier, FreLimitedConcept } from "../../languagedef/metalanguage";
 import { Names } from "../../utils";
 import { GrammarRule } from "./grammarModel/GrammarRule";

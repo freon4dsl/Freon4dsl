@@ -84,8 +84,8 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         if ( tr instanceof ExpressionRule) { this.checkExpressionRule(tr, enclosingConcept); }
         if ( tr instanceof IsuniqueRule) { this.checkIsuniqueRule(tr, enclosingConcept); }
         if (!!tr.severity) {
-            this.checkAndFindSeverity(tr.severity); }
-        else {
+            this.checkAndFindSeverity(tr.severity);
+        } else {
             // set default
             tr.severity = new ValidationSeverity();
             tr.severity.severity = FreErrorSeverity.ToDo;
@@ -230,8 +230,8 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         this.runner.nestedCheck(
             {
                 check: severityLevels.includes(myValue),
-                error:`Severity '${severity.value}' should equal (disregarding case) one of the values (${severityLevels.map(elem => `${elem}`).join(", ")}) ` +
-                            `${ParseLocationUtil.location(severity)}.`,
+                error: `Severity '${severity.value}' should equal (disregarding case) one of the values ` +
+                            `(${severityLevels.map(elem => `${elem}`).join(", ")}) ${ParseLocationUtil.location(severity)}.`,
                 whenOk: () => {
                     switch (myValue) {
                         case "error": {
@@ -270,7 +270,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                     if (part instanceof ValidationMessageReference) {
                         this.myExpressionChecker.checkLangExp(part.expression, enclosingConcept);
                     }
-                })
+                });
             }
         });
     }

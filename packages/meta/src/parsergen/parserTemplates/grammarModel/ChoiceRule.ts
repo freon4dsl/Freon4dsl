@@ -1,5 +1,5 @@
 import { GrammarRule } from "./GrammarRule";
-import { FreBinaryExpressionConcept, FreClassifier, FreExpressionConcept } from "../../../languagedef/metalanguage";
+import { FreBinaryExpressionConcept, FreClassifier } from "../../../languagedef/metalanguage";
 import { getTypeCall } from "./GrammarUtils";
 import { BinaryExpMaker } from "../BinaryExpMaker";
 import { internalTransformNode, ParserGenUtil } from "../ParserGenUtil";

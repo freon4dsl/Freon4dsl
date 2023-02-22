@@ -1,4 +1,4 @@
-import { FreClassifier, FreConceptProperty, MetaElementReference, FreProperty } from "../../languagedef/metalanguage";
+import { FreConceptProperty } from "../../languagedef/metalanguage";
 import { FretTypeConcept } from "./FretTypeConcept";
 
 export class FretProperty extends FreConceptProperty {
