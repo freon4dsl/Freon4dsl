@@ -9,6 +9,10 @@
  *                if false, it will not create an event listener, or remove the existing one.
  */
 export function clickOutsideConditional(node, { enabled: boolean }) {
+    /**
+     * onClick callback method, dispatches a new event when clicked outside the `node`.
+     * @param event
+     */
     const handleClick = event => {
         if (node && !node.contains(event.target) && !event.defaultPrevented) {
             node.dispatchEvent(

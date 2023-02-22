@@ -213,7 +213,7 @@
                     }
                 }
             }
-        } else { // dropDownShown = false
+        } else { // this component was selected using keystrokes, not by clicking, therefore dropDownShown = false
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
                     case ENTER: {
@@ -338,6 +338,9 @@
         }
     };
 
+    /**
+     * The "click_outside" event was triggered because of `use:clickOutsideConditional`.
+     */
     const onClickOutside = () => {
         LOGGER.log("onClickOutside", "focus");
         endEditing();
