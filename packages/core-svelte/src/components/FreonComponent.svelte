@@ -135,7 +135,7 @@
     } );
 
     const refreshSelection = async  (why?: string) => {
-        console.log("FreonComponent.refreshSelection: " + why + " editor selectedBox is " + editor?.selectedBox?.kind);
+        LOGGER.log("FreonComponent.refreshSelection: " + why + " editor selectedBox is " + editor?.selectedBox?.kind);
         if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             await tick();
             $selectedBoxes = getSelectableChildren(editor.selectedBox);
