@@ -1,0 +1,51 @@
+language LionWebM3
+
+model LionWebmetaModel {
+    name: identifier;
+    units: Metamodel;
+}
+
+modelunit Metamodel {
+    name: identifier;
+    id: string;
+    elements: MetamodelElement[];
+    file-extension = "exm";
+}
+
+abstract concept MetamodelElement base NamespacedEntity {}
+
+concept PrimitiveType base DataType {}
+
+concept Property base Feature { }
+
+concept Reference base Link { }
+
+abstract concept NamespacedEntity {
+    simpleName: identifier;
+    id: string;
+}
+
+concept Concept base FeaturesContainer {
+    abstract: boolean;
+}
+
+abstract concept Link base Feature  {}
+
+concept ConceptInterface  base FeaturesContainer { }
+
+concept Containment  base Link { }
+
+abstract concept DataType  base MetamodelElement { }
+
+concept Enumeration base DataType {
+    literals: EnumerationLiteral[];
+}
+
+concept EnumerationLiteral base NamespacedEntity {
+}
+
+abstract concept Feature base NamespacedEntity {
+  optional: boolean;
+}
+abstract concept FeaturesContainer base MetamodelElement {
+}
