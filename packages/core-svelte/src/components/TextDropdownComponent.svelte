@@ -138,7 +138,7 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log("TextDropdownComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId);
+        LOGGER.log("onKeyDown: " + id + " [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId + " dropdown:" + dropdownShown + " editing:" + isEditing);
         if (dropdownShown) {
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
@@ -213,7 +213,7 @@
                     }
                 }
             }
-        } else { // this component was entered using keystrokes, no dropdown is shown
+        } else { // this component was selected using keystrokes, not by clicking, therefore dropDownShown = false
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
                     case ENTER: {
@@ -237,7 +237,7 @@
      * is set as text in the textComponent and the editing state is ended.
      */
     const itemSelected = () => {
-        LOGGER.log('Textdropdown itemSelected')
+        LOGGER.log('itemSelected ' + selectedId)
         const index = filteredOptions.findIndex(o => o.id === selectedId);
         if (index >= 0 && index < filteredOptions.length) {
             const chosenOption = filteredOptions[index];
@@ -305,14 +305,13 @@
      * original value.
      */
     const endEditing = () => {
-        LOGGER.log('TextDropdownComponent: endEditing');
-        if (!isEditing) {
-            return;
+        LOGGER.log("endEditing " +id + " dropdownShow:" + dropdownShown);
+        if (! isEditing) {
+            isEditing = false;
         }
-        isEditing = false;
         if (dropdownShown) {
             // check whether the current text is a valid option
-            if (!allOptions) {
+            if (allOptions === undefined || allOptions === null) {
                 allOptions = getOptions();
             }
             let validOption = allOptions.find(o => o.label === text);
@@ -325,15 +324,26 @@
         }
     };
 
-    const onFocusOut = () => {
-        LOGGER.log("TextDropdownComponent.onFocusOut");
-        // todo test wether we need focusOut or blur
-        // todo maybe this should be done with custom event???
-        // Text component has lost focus, check where focus has moved to.
-        // Focus may have moved outside the document tab/window or to another box.
+    const onBlur = () => {
+        LOGGER.log("onBlur " + id);
         if (!document.hasFocus() || !$selectedBoxes.includes(box)) {
             endEditing();
         }
+    };
+
+    const onFocusOutText = () => {
+        LOGGER.log("onFocusOutText " + id, "focus");
+        if (isEditing) {
+            isEditing = false;
+        }
+    };
+
+    /**
+     * The "click_outside" event was triggered because of `use:clickOutsideConditional`.
+     */
+    const onClickOutside = () => {
+        LOGGER.log("onClickOutside", "focus");
+        endEditing();
     };
 
     refresh();
@@ -344,8 +354,8 @@
 <span id="{id}"
       on:keydown={onKeyDown}
       use:clickOutsideConditional={{enabled: dropdownShown}}
-      on:click_outside={endEditing}
-      on:blur={onFocusOut}
+      on:click_outside={onClickOutside}
+      on:blur={onBlur}
       on:contextmenu={(event) => endEditing()}
       class="dropdown"
 >
@@ -359,6 +369,7 @@
             on:textUpdate={textUpdate}
             on:startEditing={startEditing}
             on:endEditing={endEditing}
+            on:onFocusOutText={onFocusOutText}
     />
     {#if dropdownShown}
         <DropdownComponent
