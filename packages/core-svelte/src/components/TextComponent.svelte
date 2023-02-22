@@ -101,7 +101,7 @@
      * @param freCaret
      */
     const setCaret = (freCaret: FreCaret) => {
-		LOGGER.log(`TextComponent.setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]` );
+		LOGGER.log(`setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]` );
         switch (freCaret.position) {
             case FreCaretPosition.RIGHT_MOST:  // type nr 2
                 from = to = text.length;
@@ -165,7 +165,7 @@
      * the <span> element, and stores the current text in the textbox.
      */
     function endEditing() {
-        console.log(' endEditing ' + id);
+        LOGGER.log(' endEditing ' + id);
 		if (isEditing) {
 			// reset the local variables
 			isEditing = false;
@@ -209,7 +209,7 @@
         // see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
         // stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
         // preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
-        LOGGER.log("TextComponent onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
+        LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
 
 		if (event.altKey || event.ctrlKey) {  // No shift, because that is handled as normal text
 			// first check if this event has a command defined for it
@@ -386,15 +386,18 @@
     /**
      * When this component loses focus, do everything that is needed to end the editing state.
      */
-    const onFocusOut = (e) => {
-        LOGGER.log("TextComponent onFocusOut " + id)
-        if (!partOfActionBox && isEditing) {
-            endEditing();
-        } // else let TextDropdownComponent handle it
-    }
+	const onFocusOut = (e) => {
+		LOGGER.log("onFocusOut " + id + " partof:" + partOfActionBox + " isEditing:" + isEditing)
+		if (!partOfActionBox && isEditing) {
+			endEditing();
+		} else {
+			// let TextDropdownComponent handle it
+			dispatcher("onFocusOutText")
+		}
+	}
 
 	const refresh = () => {
-		LOGGER.log("REFRESH TextComponent " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
+		LOGGER.log("REFRESH " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
 		if (!isEditing) {
@@ -437,7 +440,7 @@
         if (isEditing && partOfActionBox) {
 			if (text !== originalText) {
 				// send event to parent
-				LOGGER.log('TextComponent dispatching event with text ' + text + ' from afterUpdate');
+				LOGGER.log('dispatching event with text ' + text + ' from afterUpdate');
 				dispatcher('textUpdate', {content: text, caret: from + 1});
 			}
         }
