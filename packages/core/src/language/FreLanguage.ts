@@ -21,7 +21,7 @@ export type Model = {
     isNamedElement?: boolean;
     subConceptNames?: string[];
     properties: Map<string, Property>;
-    constructor: () => FreModel;
+    constructor: (id?: string) => FreModel;
 };
 export type ModelUnit = {
     typeName: string;
@@ -31,7 +31,7 @@ export type ModelUnit = {
     subConceptNames?: string[];
     fileExtension: string;
     properties: Map<string, Property>;
-    constructor: () => FreModelUnit;
+    constructor: (id?: string) => FreModelUnit;
 };
 export type Concept = {
     typeName: string;
@@ -42,7 +42,7 @@ export type Concept = {
     baseName: string;
     subConceptNames: string[];
     properties: Map<string, Property>;
-    constructor: () => FreNode;
+    constructor: (id?: string) => FreNode;
     // Used by editor, therefore only in Concept
     trigger: string;
     referenceShortcut?: ReferenceShortcut;
@@ -238,24 +238,24 @@ export class FreLanguage {
         return Array.from(this.units.values()).map(unit => unit.typeName);
     }
 
-    createModel(): FreModel {
-        return this.pmodel?.constructor();
+    createModel(id?: string): FreModel {
+        return this.pmodel?.constructor(id);
     }
 
-    createUnit(typeName: string): FreModelUnit | undefined {
-        return this.units.get(typeName)?.constructor();
+    createUnit(typeName: string, id?: string): FreModelUnit | undefined {
+        return this.units.get(typeName)?.constructor(id);
     }
 
     /**
      * Create a new instance of the class `typeName`.
      * @param typeName
      */
-    createConceptOrUnit(typeName: string): FreNode | undefined {
+    createConceptOrUnit(typeName: string, id?: string): FreNode | undefined {
         let myType: Concept | ModelUnit | undefined = this.concept(typeName);
         if (isNullOrUndefined(myType)) {
             myType = this.unit(typeName);
         }
-        return myType?.constructor();
+        return myType?.constructor(id);
     }
 
     addModel(model: Model) {

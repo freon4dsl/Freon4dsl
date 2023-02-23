@@ -34,7 +34,7 @@ export class LanguageTemplate {
                     const model =             {
                         typeName: "${Names.classifier(language.modelConcept)}",
                         isNamespace: true,
-                        constructor: () => { return new ${Names.classifier(language.modelConcept)}(); },
+                        constructor: (id?: string) => { return new ${Names.classifier(language.modelConcept)}(id); },
                         properties: new Map< string, Property>(),
                     }
                     ${language.modelConcept.allPrimProperties().map(prop =>
@@ -74,7 +74,7 @@ export class LanguageTemplate {
                         typeName: "${Names.classifier(modelunit)}",
                         isNamedElement: true,
                         fileExtension: "${modelunit.fileExtension}",
-                        constructor: () => { return new ${Names.classifier(modelunit)}(); },
+                        constructor: (id?: string) => { return new ${Names.classifier(modelunit)}(id); },
                         properties: new Map< string, Property>(),
                     }
                     ${modelunit.allPrimProperties().map(prop =>
@@ -117,7 +117,7 @@ export class LanguageTemplate {
                         isPublic: ${concept.isPublic},
                         isNamedElement: ${concept.allPrimProperties().some(p => p.name === "name")},
                         trigger: "${Names.concept(concept)}",
-                        constructor: () => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}()`}; },
+                        constructor: (id?: string) => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}(id)`}; },
                         properties: new Map< string, Property>(),
                         baseName: ${!!concept.base ? `"${Names.classifier(concept.base.referred)}"` : "null"},
                         subConceptNames: [${LangUtil.subConcepts(concept).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
