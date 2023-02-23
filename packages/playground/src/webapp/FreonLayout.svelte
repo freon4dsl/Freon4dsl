@@ -39,8 +39,8 @@
 
 	import { modelNames } from "./components/stores/ServerStore";
 	import { drawerOpen } from "./components/stores/DrawerStore";
-	import { openModelDialogVisible } from "./components/stores/DialogStore";
-	import { userMessageOpen } from "./components/stores/UserMessageStore";
+	import { initializing, openModelDialogVisible } from "./components/stores/DialogStore";
+	import { setUserMessage, userMessageOpen } from "./components/stores/UserMessageStore";
 	import { languageName } from "./components/stores/LanguageStore";
 	import {currentModelName, unsavedChanges} from "./components/stores/ModelStore";
 	import { helpDialogVisible } from "./components/stores/DialogStore";
@@ -50,6 +50,7 @@
 
 	import StatusBar from "./components/editor-panel/StatusBar.svelte";
 	import { editorProgressShown } from "./components/stores/ModelStore";
+	import { EditorState } from "./language/EditorState";
 
 	// import this file to set which loggers will be active
 	import { muteLogs } from "./logging/LoggerSettings";
@@ -98,12 +99,27 @@
 				$modelNames = names;
 			}
 		});
-
-		if (!$userMessageOpen) {
-			// open the app with the open/new model dialog
-			$openModelDialogVisible = true;
+		// If a model is given as parameter, open this model
+		// A new model is created when this model does not exist
+		const urlParams = new URLSearchParams(window.location.search);
+		const model = urlParams.get('model');
+		if (model !== null) {
+			openModel(model);
+		} else {
+			// No model given as parameter, ask for it
+			if (!$userMessageOpen) {
+				// open the app with the open/new model dialog
+				$openModelDialogVisible = true;
+			}
 		}
 	});
+
+	function openModel(model: string) {
+		let comm = EditorState.getInstance();
+		comm.openModel(model);
+		$initializing = false;
+	}
+
 </script>
 
 <svelte:window on:beforeunload={onBeforeUnload} />

@@ -1,6 +1,6 @@
-import App from './FreonLayout.svelte';
+import Freonlayout from './FreonLayout.svelte';
 
-const app = new App({
+const app = new Freonlayout({
 	target: document.body,
 });
 
