@@ -157,7 +157,7 @@ export class FreLionwebSerializer {
             FreUtils.CHECK(property.propertyKind === "reference", "Reference value found for non reference property: " + property.name);
             FreUtils.CHECK(Array.isArray(jsonValue), "Found child value which is not a Array for property: " + property.name);
             for (const item of jsonValue as []) {
-                if (!isNullOrUndefined(jsonValue[item])) {
+                if (!isNullOrUndefined(item)) {
                     parsedChildren.push({ featureName: property.name, isList: property.isList, typeName: property.type, referredId: item });
                 }
             }
