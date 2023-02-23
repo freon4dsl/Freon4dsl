@@ -100,7 +100,7 @@
 			}
 		});
 		// If a model is given as parameter, open this model
-		//A new modelis created when this model does not exist
+		// A new model is created when this model does not exist
 		const urlParams = new URLSearchParams(window.location.search);
 		const model = urlParams.get('model');
 		if (model !== null) {
