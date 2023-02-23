@@ -19,7 +19,13 @@ export abstract class TableBox extends Box {
     public hasHeaders: boolean = false;
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    protected constructor(element: FreNode, propertyName: string, conceptName: string, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
+    protected constructor(element: FreNode,
+                          propertyName: string,
+                          conceptName: string,
+                          role: string,
+                          hasHeaders: boolean,
+                          children?: Box[],
+                          initializer?: Partial<TableBoxRowOriented>) {
         super(element, role);
         FreUtils.initializeObject(this, initializer);
         if (!!children) {
@@ -31,7 +37,7 @@ export abstract class TableBox extends Box {
         this.selectable = false;
     }
 
-    get direction() : TableDirection {
+    get direction(): TableDirection {
         return this._direction;
     }
 
@@ -50,7 +56,7 @@ export abstract class TableBox extends Box {
     replaceChildren(children: Box[]): TableBox {
         this._children.splice(0, this._children.length);
         if (!!children) {
-            children.forEach((child) => {
+            children.forEach(child => {
                 if (!!child) {
                     this._children.push(child);
                     child.parent = this;
@@ -132,7 +138,13 @@ export abstract class TableBox extends Box {
 export class TableBoxRowOriented extends TableBox {
     kind = "TableBoxRowOriented";
 
-    constructor(element: FreNode, propertyName: string, conceptName: string, role: string, hasHeaders: boolean, children?: (Box | null)[], initializer?: Partial<TableBoxRowOriented>) {
+    constructor(element: FreNode,
+                propertyName: string,
+                conceptName: string,
+                role: string,
+                hasHeaders: boolean,
+                children?: (Box | null)[],
+                initializer?: Partial<TableBoxRowOriented>) {
         super(element, propertyName, conceptName, role, hasHeaders, children, initializer);
         this._direction = TableDirection.HORIZONTAL;
     }
@@ -141,7 +153,13 @@ export class TableBoxRowOriented extends TableBox {
 export class TableBoxColumnOriented extends TableBox {
     kind = "TableBoxColumnOriented";
 
-    constructor(element: FreNode, propertyName: string, conceptName: string, role: string, hasHeaders: boolean, children?: Box[], initializer?: Partial<TableBoxRowOriented>) {
+    constructor(element: FreNode,
+                propertyName: string,
+                conceptName: string,
+                role: string,
+                hasHeaders: boolean,
+                children?: Box[],
+                initializer?: Partial<TableBoxRowOriented>) {
         super(element, propertyName, conceptName, role, hasHeaders, children, initializer);
         this._direction = TableDirection.VERTICAL;
     }

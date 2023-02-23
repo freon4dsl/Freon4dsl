@@ -52,11 +52,10 @@ export class FreProjectionHandler {
          */
         makeObservable<FreProjectionHandler, "_enabledProjections">(this, {
             enableProjections: action,
-            _enabledProjections:observable
+            _enabledProjections: observable
 
         });
     }
-
 
     /////////// The main methods ///////////
 
@@ -66,9 +65,10 @@ export class FreProjectionHandler {
      * @param element
      */
     getBox(element: FreNode): ElementBox {
+        // todo remove try-catch
         try {
             if (isNullOrUndefined(element)) {
-                throw Error('FreProjectionHandler.getBox: element is null/undefined');
+                throw Error("FreProjectionHandler.getBox: element is null/undefined");
             }
         } catch (e) {
             console.error(e.stack);
@@ -126,7 +126,7 @@ export class FreProjectionHandler {
      */
     addProjection(p: string) {
         ListUtil.addIfNotPresent(this._allProjections, p);
-        if (p !== 'default') {
+        if (p !== "default") {
             ListUtil.addIfNotPresent(this._enabledProjections, p);
         }
     }
@@ -177,7 +177,7 @@ export class FreProjectionHandler {
     /**
      * Returns the set of all custom projections.
      */
-    get customProjections() : FreProjection[] {
+    get customProjections(): FreProjection[] {
         return this._customProjections;
     }
 

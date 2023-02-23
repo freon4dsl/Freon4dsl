@@ -1,5 +1,5 @@
 import { FreNode } from "../../ast";
-import { Box, TableRowBox } from "../boxes";
+import { Box} from "../boxes";
 import { FreTableDefinition } from "../FreTableDefinition";
 
 /**

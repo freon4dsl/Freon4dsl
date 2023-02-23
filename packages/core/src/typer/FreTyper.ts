@@ -4,7 +4,7 @@ import { FreType } from "./FreType";
 export interface FreTyper {
     // name: string;
     mainTyper: FreTyper;
-    
+
     /**
      * Returns true if 'elem' is marked as 'isType' in the Typer definition
      * @param elem

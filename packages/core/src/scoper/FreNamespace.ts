@@ -55,7 +55,7 @@ export class FreNamespace {
      * as defined in the scoper definition.
      */
     public getVisibleElements(origin: FreModelUnit, metatype?: string): FreNamedNode[] {
-        let result: FreNamedNode[] = [];
+        let result: FreNamedNode[];
 
         result = this.getInternalVisibleElements(origin, metatype);
 
@@ -64,7 +64,9 @@ export class FreNamespace {
 
     /**
      * Returns the elements that are visible in this namespace only, without regard for additional namespaces
+     * @param origin
      * @param metatype
+     * @private
      */
     private getInternalVisibleElements(origin: FreModelUnit, metatype?: string): FreNamedNode[] {
         const result: FreNamedNode[] = [];
@@ -86,7 +88,10 @@ export class FreNamespace {
         myWalker.walk(this._myElem, (elem: FreNode) => {
             const sameModelUnit = (modelUnit(elem) === origin);
             const visit = !FreLanguage.getInstance().classifier(elem.freLanguageConcept()).isNamespace &&
-                (sameModelUnit || (!!elem.freOwner() && FreLanguage.getInstance().classifierProperty(elem.freOwner().freLanguageConcept(), elem.freOwnerDescriptor().propertyName).isPublic));
+                (sameModelUnit || (!!elem.freOwner() && FreLanguage.getInstance().classifierProperty(
+                    elem.freOwner().freLanguageConcept(),
+                    elem.freOwnerDescriptor().propertyName).isPublic
+                ));
             LOGGER.log("Namespace::Visit " + elem.freLanguageConcept() + "(" + elem["name"] + ")" + " ==> " + visit + "   same modelunit? " + sameModelUnit + "  _elem " + this._myElem.freLanguageConcept());
             return visit;
         });

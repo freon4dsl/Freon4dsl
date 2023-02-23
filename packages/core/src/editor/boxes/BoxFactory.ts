@@ -1,8 +1,8 @@
 import { runInAction } from "mobx";
 import { FreNode } from "../../ast";
-import { BehaviorExecutionResult } from "../util/BehaviorUtils";
+import { BehaviorExecutionResult } from "../util";
 import { FreLogger } from "../../logging";
-import { isNullOrUndefined, FreUtils } from "../../util/FreUtils";
+import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreEditor } from "../FreEditor";
 import {
     Box,
@@ -20,10 +20,10 @@ import {
 
 type RoleCache<T extends Box> = {
     [role: string]: T;
-}
+};
 type BoxCache<T extends Box> = {
     [id: string]: RoleCache<T>;
-}
+};
 
 const LOGGER: FreLogger = new FreLogger("BoxFactory").mute();
 
@@ -52,8 +52,8 @@ let cacheHorizontalLayoutOff: boolean = false;
 let cacheVerticalLayoutOff: boolean = false;
 let cacheHorizontalListOff: boolean = false;
 let cacheVerticalListOff: boolean = false;
-let cacheGridcellOff = true;
-let cacheTablecellOff = true;
+const cacheGridcellOff = true;
+const cacheTablecellOff = true;
 
 /**
  * Caching of boxes, avoid recalculating them.
@@ -203,7 +203,11 @@ export class BoxFactory {
         return oneOk && twoOk;
     }
 
-    static horizontalLayout(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
+    static horizontalLayout(element: FreNode,
+                            role: string,
+                            propertyName: string,
+                            children?: (Box | null)[],
+                            initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
         if (cacheHorizontalLayoutOff) {
             return new HorizontalLayoutBox(element, role, children, initializer);
         }
@@ -220,7 +224,10 @@ export class BoxFactory {
         return result;
     }
 
-    static verticalLayout(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
+    static verticalLayout(element: FreNode,
+                          role: string,
+                          propertyName: string,
+                          children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
         if (cacheVerticalLayoutOff) {
             return new VerticalLayoutBox(element, role, children, initializer);
         }
@@ -236,7 +243,11 @@ export class BoxFactory {
         return result;
     }
 
-    static horizontalList(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
+    static horizontalList(element: FreNode,
+                          role: string,
+                          propertyName: string,
+                          children?: (Box | null)[],
+                          initializer?: Partial<HorizontalListBox>): HorizontalListBox {
         if (cacheHorizontalListOff) {
             return new HorizontalListBox(element, role, propertyName, children, initializer);
         }
@@ -253,7 +264,11 @@ export class BoxFactory {
         return result;
     }
 
-    static verticalList(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
+    static verticalList(element: FreNode,
+                        role: string,
+                        propertyName: string,
+                        children?: (Box | null)[],
+                        initializer?: Partial<VerticalListBox>): VerticalListBox {
         if (cacheVerticalListOff) {
             return new VerticalListBox(element, role, propertyName, children, initializer);
         }
@@ -310,7 +325,13 @@ export class BoxFactory {
 
     }
 
-    static gridcell(element: FreNode, propertyName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>): GridCellBox {
+    static gridcell(element: FreNode,
+                    propertyName: string,
+                    role: string,
+                    row: number,
+                    column: number,
+                    box: Box,
+                    initializer?: Partial<GridCellBox>): GridCellBox {
         if (cacheGridcellOff) {
             return new GridCellBox(element, role, row, column, box, initializer);
         }
@@ -327,7 +348,15 @@ export class BoxFactory {
     }
 
     // todo this method is currently unused, maybe change TableUtil?
-    static tablecell(element: FreNode, propertyName: string, propertyIndex: number, conceptName: string, role: string, row: number, column: number, box: Box, initializer?: Partial<TableCellBox>): TableCellBox {
+    static tablecell(element: FreNode,
+                     propertyName: string,
+                     propertyIndex: number,
+                     conceptName: string,
+                     role: string,
+                     row: number,
+                     column: number,
+                     box: Box,
+                     initializer?: Partial<TableCellBox>): TableCellBox {
         if (cacheTablecellOff) {
             return new TableCellBox(element, propertyName, propertyIndex, conceptName, role, row, column, box, initializer);
         }
@@ -345,7 +374,7 @@ export class BoxFactory {
 }
 
 const equals = (a, b) => {
-    if (isNullOrUndefined(a)  && !isNullOrUndefined(b) || !isNullOrUndefined(a) && isNullOrUndefined(b)) {
+    if (isNullOrUndefined(a) && !isNullOrUndefined(b) || !isNullOrUndefined(a) && isNullOrUndefined(b)) {
         return false;
     }
     if (isNullOrUndefined(a) && isNullOrUndefined(b)) {

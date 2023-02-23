@@ -69,7 +69,9 @@ export function moveListElement(parentElement: FreNode, movedElement: FreNode, t
 
 /**
  * This function is executed when a list element is being dragged and then dropped into another list.
+ * @param editor
  * @param dropped
+ * @param targetMetaType
  * @param targetElem
  * @param targetPropertyName
  * @param targetIndex

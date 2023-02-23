@@ -1,6 +1,6 @@
 import { GridCellBox } from "./GridCellBox";
 
-import { Box } from "./internal";
+import { Box } from "./Box";
 import { FreNode } from "../../ast";
 import { FreUtils } from "../../util";
 

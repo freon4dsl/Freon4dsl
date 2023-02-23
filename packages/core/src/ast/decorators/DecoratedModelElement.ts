@@ -26,7 +26,7 @@ export class MobxModelElementImpl implements DecoratedModelElement {
             $$owner: observable,
             $$propertyName: observable,
             $$propertyIndex: observable
-        })
+        });
     }
 
     freOwner(): FreNode {
@@ -49,7 +49,7 @@ export function allOwners(dec: FreNode): FreNode[] {
     const result = [];
     let owner = dec?.freOwner();
 
-    while( !!owner) {
+    while ( !!owner) {
         result.push(owner);
         owner = owner.freOwner();
     }

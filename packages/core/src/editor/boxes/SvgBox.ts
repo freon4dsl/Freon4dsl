@@ -1,6 +1,6 @@
 import { FreUtils } from "../../util";
 import { FreNode } from "../../ast";
-import { Box } from "./internal";
+import { Box } from "./Box";
 
 export class SvgBox extends Box {
     readonly kind = "SvgBox";

@@ -1,12 +1,12 @@
-import { FreNode } from "../../ast/index";
+import { FreNode } from "../../ast";
 import { Box } from "./Box";
 
 export class ElementBox extends Box {
-    kind: string = 'ElementBox';
+    kind: string = "ElementBox";
     private _content: Box = null;
 
-    refreshComponent = (w?:string) => {
-        if( this._content  !== undefined && this._content.refreshComponent !== undefined) {
+    refreshComponent = (w?: string) => {
+        if ( this._content !== undefined && this._content.refreshComponent !== undefined) {
             this._content.refreshComponent(w);
         }
     };

@@ -46,7 +46,7 @@ describe ("Testing Typer on", () => {
         expect(unit1).not.toBeNull();
         if (!!unit1) {
             const errors: FreError[] = validator.validate(unit1);
-            console.log("ERRORS: " + errors.map(e => e.message + "\n"));
+            // console.log("ERRORS: " + errors.map(e => e.message + "\n"));
             expect(errors.length).toBe(6);
             expect(errors.find(e => e.message === "Type 'NUMBER' of [456] is not equal to STRING")).toBeTruthy();
             expect(errors.find(e => e.message === "Type 'NUMBER' of [456] is not equal to BOOLEAN")).toBeTruthy();

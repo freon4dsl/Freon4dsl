@@ -2,9 +2,9 @@ import { isRtBoolean, RtBoolean } from "./RtBoolean";
 import { RtObject } from "./RtObject";
 
 export class RtEmpty extends RtObject {
-    readonly _type: string = "RtEmpty";
 
     static NIX_VALUE = new RtEmpty();
+    readonly _type: string = "RtEmpty";
 
     toString(): string {
         return "RtNix";

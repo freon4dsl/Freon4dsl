@@ -7,7 +7,7 @@ const LOGGER = new FreLogger("FreScoperComposite").mute();
 export class FreScoperComposite implements FreScoper {
     // TOD: What of this?
     mainScoper: FreScoperComposite;
-    private scopers: FreScoper[] =[];
+    private scopers: FreScoper[] = [];
     name: string = "";
 
     constructor(name: string) {
@@ -84,5 +84,5 @@ export class FreScoperComposite implements FreScoper {
         }
         return null; // TODO or undefined?
     }
-    
+
 }

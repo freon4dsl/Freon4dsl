@@ -1,7 +1,7 @@
 import { IdProvider } from "./IdProvider";
 
 export class SimpleIdProvider implements IdProvider {
-    private prefix: string;
+    private readonly prefix: string;
     private latest: number = 0;
 
     constructor(prefix: string) {

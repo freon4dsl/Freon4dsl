@@ -5,7 +5,7 @@ export class InterpreterError extends Error {
     readonly _type = "InterpreterError";
 
     constructor(message: string) {
-        super(message)
+        super(message);
     }
 
     get message(): string {
@@ -13,7 +13,7 @@ export class InterpreterError extends Error {
     }
 
     toString(): string {
-        return this.message
+        return this.message;
     }
 }
 

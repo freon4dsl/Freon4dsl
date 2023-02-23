@@ -1,4 +1,4 @@
-import { FreCreateBinaryExpressionAction, FreCustomAction } from "./internal";
+import { FreCreateBinaryExpressionAction, FreCustomAction } from "./actions";
 
 export interface FreCombinedActions {
     binaryExpressionActions: FreCreateBinaryExpressionAction[];

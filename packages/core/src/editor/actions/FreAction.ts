@@ -10,7 +10,7 @@ export type CustomAction = (box: Box,
                             editor: FreEditor) => FreNode | null;
 export type FrePostAction = () => void;
 
-export const EMPTY_POST_ACTION = function() {};
+export const EMPTY_POST_ACTION = function() { /* to be done */ };
 
 export type ReferenceShortcut = {
     propertyName: string;
@@ -58,4 +58,3 @@ export abstract class FreAction {
      */
     abstract command(box: Box): FreCommand;
 }
-

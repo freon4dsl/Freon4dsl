@@ -37,18 +37,26 @@ export class BoxUtil {
         // find the information on the property to be shown
         const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
-        let property = element[propertyName];
+        const property = element[propertyName];
         // create the box
         if (property !== undefined && property !== null && typeof property === "string") {
             const roleName: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "textbox", index);
             if (isList && this.checkList(isList, index, propertyName)) {
-                result = BoxFactory.text(element, roleName, () => element[propertyName][index], (v: string) => runInAction( () => {(element[propertyName][index] = v)}), {
-                    placeHolder: `<${propertyName}>`
-                });
+                result = BoxFactory.text(
+                    element,
+                    roleName,
+                    () => element[propertyName][index],
+                    (v: string) => runInAction( () => { (element[propertyName][index] = v); }),
+                    { placeHolder: `<${propertyName}>` }
+                );
             } else {
-                result = BoxFactory.text(element, roleName, () => element[propertyName], (v: string) => runInAction( () => {(element[propertyName] = v)}), {
-                    placeHolder: `<${propertyName}>`
-                });
+                result = BoxFactory.text(
+                    element,
+                    roleName,
+                    () => element[propertyName],
+                    (v: string) => runInAction( () => { (element[propertyName] = v); }),
+                    { placeHolder: `<${propertyName}>` }
+                );
             }
             result.propertyName = propertyName;
             result.propertyIndex = index;
@@ -85,8 +93,8 @@ export class BoxUtil {
                     }),
                     {
                         placeHolder: `<${propertyName}>`,
-                        isCharAllowed: (currentText: string, key: string, index: number) => {
-                            return isNumber(currentText, key, index);
+                        isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
+                            return isNumber(currentText, key, innerIndex);
                         }
                     });
             } else {
@@ -99,8 +107,8 @@ export class BoxUtil {
                     }),
                     {
                         placeHolder: `<${propertyName}>`,
-                        isCharAllowed: (currentText: string, key: string, index: number) => {
-                            return isNumber(currentText, key, index);
+                        isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
+                            return isNumber(currentText, key, innerIndex);
                         }
                     });
             }
@@ -300,15 +308,19 @@ export class BoxUtil {
         );
     }
 
-    static verticalPartListBox(element: FreNode, list: FreNode[], propertyName: string, listJoin: FreListInfo, boxProviderCache: FreProjectionHandler): VerticalListBox {
+    static verticalPartListBox(element: FreNode,
+                               list: FreNode[],
+                               propertyName: string,
+                               listJoin: FreListInfo,
+                               boxProviderCache: FreProjectionHandler): VerticalListBox {
         // make the boxes for the children
         let children: Box[] = this.findPartItems(list, element, propertyName, listJoin, boxProviderCache);
         // add a placeholder where a new element can be added
         children = this.addPlaceholder(children, element, propertyName);
         // determine the role
-        let role: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "vpartlist");
+        const role: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "vpartlist");
         // return the box
-        let result = BoxFactory.verticalList(element, role, propertyName, children);
+        const result = BoxFactory.verticalList(element, role, propertyName, children);
         result.propertyName = propertyName;
         return result;
     }
@@ -337,15 +349,19 @@ export class BoxUtil {
         }
     }
 
-    static horizontalPartListBox(element: FreNode, list: FreNode[], propertyName: string, listJoin: FreListInfo, boxProviderCache: FreProjectionHandler): VerticalListBox {
+    static horizontalPartListBox(element: FreNode,
+                                 list: FreNode[],
+                                 propertyName: string,
+                                 listJoin: FreListInfo,
+                                 boxProviderCache: FreProjectionHandler): VerticalListBox {
         // make the boxes for the children
         let children: Box[] = this.findPartItems(list, element, propertyName, listJoin, boxProviderCache);
         // add a placeholder where a new element can be added
         children = this.addPlaceholder(children, element, propertyName);
         // determine the role
-        let role: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "vpartlist");
+        const role: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "vpartlist");
         // return the box
-        let result = BoxFactory.horizontalList(element, role, propertyName, children);
+        const result = BoxFactory.horizontalList(element, role, propertyName, children);
         result.propertyName = propertyName;
         return result;
     }
@@ -431,7 +447,7 @@ export class BoxUtil {
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
-                        return BoxFactory.horizontalLayout(element, roleName, propertyName,[
+                        return BoxFactory.horizontalLayout(element, roleName, propertyName, [
                             myProvider.box,
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]);
@@ -439,14 +455,14 @@ export class BoxUtil {
                         return myProvider.box;
                     }
                 } else if (listJoin.type === this.terminatorName) {
-                    return BoxFactory.horizontalLayout(element, roleName, propertyName,[
+                    return BoxFactory.horizontalLayout(element, roleName, propertyName, [
                         myProvider.box,
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]);
                 } else if (listJoin.type === this.initiatorName) {
-                    return BoxFactory.horizontalLayout(element, roleName, propertyName,[
+                    return BoxFactory.horizontalLayout(element, roleName, propertyName, [
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                        myProvider.box,
+                        myProvider.box
                     ]);
                 }
             } else {
@@ -507,6 +523,7 @@ export class BoxUtil {
 }
 
 function isNumber(currentText: string, key: string, index: number): CharAllowed {
+    // tslint:disable-next-line:max-line-length
     // console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof ["+ typeof currentText + "] key [" + key + "] index [" + index + "]");
     if (isNaN(Number(key))) {
         if (index === currentText.length) {

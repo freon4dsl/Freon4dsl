@@ -44,9 +44,9 @@ export class FreCreatePartCommand extends FreCommand {
             this.referenceShortcut +
             " parentbox " + box?.element?.freLanguageConcept()
         );
-        let ownerConcept: string = box.element.freLanguageConcept();
-        let propName: string = this.propertyName;
-        let theModelElement = box.element[propName];
+        const ownerConcept: string = box.element.freLanguageConcept();
+        const propName: string = this.propertyName;
+        const theModelElement = box.element[propName];
 
         const newElement: FreNode = FreLanguage.getInstance().concept(this.conceptName)?.constructor();
         if (newElement === undefined || newElement === null) {
@@ -70,10 +70,11 @@ export class FreCreatePartCommand extends FreCommand {
 
         return function () {
             // editor.selectElement(newElement);
-            console.log('CreatePartCommand: newElement:' + newElement.freId() + " " + newElement.freLanguageConcept() + ", selected element: " + editor.selectedBox.element.freId() + " of kind " + editor.selectedBox.kind)
+            // tslint:disable-next-line:max-line-length
+            console.log("CreatePartCommand: newElement:" + newElement.freId() + " " + newElement.freLanguageConcept() + ", selected element: " + editor.selectedBox.element.freId() + " of kind " + editor.selectedBox.kind);
             editor.selectFirstEditableChildBox(newElement);
         };
     }
 
-    undo(box: Box, editor: FreEditor) {}
+    undo(box: Box, editor: FreEditor) { /* to be done */ }
 }

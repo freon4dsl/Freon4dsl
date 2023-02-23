@@ -1,5 +1,3 @@
-import { forIn } from "lodash";
-
 /**
  * Logging helpers to enable quick filtering of certain log categories.
  */
@@ -15,13 +13,13 @@ export class FreLogger {
     static mutedLogs: string[] = [];
     // static shownLogs: string[] = [];
     static mute(t: string): void {
-        if(!this.mutedLogs.includes(t)) {
+        if (!this.mutedLogs.includes(t)) {
             this.mutedLogs.push(t);
         }
     }
     static unmute(t: string): void {
         const index = this.mutedLogs.indexOf(t);
-        if( index >= 0){
+        if ( index >= 0) {
             this.mutedLogs.splice(index, 1);
         }
     }
@@ -43,13 +41,13 @@ export class FreLogger {
     category: string;
 
     get active(): boolean {
-        return !FreLogger.mutedLogs.includes(this.category)
+        return !FreLogger.mutedLogs.includes(this.category);
     }
     set active(value: boolean) {
-        if( value){
-            FreLogger.unmute(this.category)
+        if ( value) {
+            FreLogger.unmute(this.category);
         } else {
-            FreLogger.mute(this.category)
+            FreLogger.mute(this.category);
         }
     }
 
@@ -73,7 +71,7 @@ export class FreLogger {
         if ((!FreLogger.muteAll) && this.active) {
             this.logToConsole(FreLogger.FG_BLACK, this.category + ": " + this.message(msg));
         } else if (tagOrTags !== undefined && tagOrTags !== null) {
-            const tags: string[] = (typeof tagOrTags === "string") ? [tagOrTags] : tagOrTags as Array<string>;
+            const tags: string[] = (typeof tagOrTags === "string") ? [tagOrTags] : tagOrTags as string[];
             for (const tag of tags) {
                 if (!FreLogger.mutedLogs.includes(tag)) {
                     this.logToConsole(FreLogger.FG_BLACK, this.category + "." + tag + ": " + this.message(msg));

@@ -1,15 +1,15 @@
 import { runInAction } from "mobx";
 import { FreLogger } from "../../logging";
 import { Box, PI_NULL_COMMAND, FreCommand, FreEditor } from "../index";
-import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../../ast";
+import { FreExpressionNode } from "../../ast";
 import { isFreExpression } from "../../ast-utils";
-import { isProKey, FreTriggerUse } from "../actions/FreTriggers";
+import { isProKey, FreTriggerUse } from "../actions";
 import { FreUtils } from "../../util";
 
 export type BooleanCallback = () => boolean;
 export type DynamicBoolean = BooleanCallback | boolean;
 
-export const wait = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const wait = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const NBSP: string = "".concat("\u00A0");
 
 const LATEST_ID = 0;
@@ -18,25 +18,11 @@ const LOGGER = new FreLogger("FreEditorUtils").mute();
 
 export class FreEditorUtil {
 
-    static setContainer(exp: FreNode, freOwnerDescriptor: FreOwnerDescriptor | null, editor: FreEditor): void {
-        runInAction(() => {
-            if (!!freOwnerDescriptor) {
-                if (freOwnerDescriptor.propertyIndex === undefined) {
-                    freOwnerDescriptor.owner[freOwnerDescriptor.propertyName] = exp;
-                } else {
-                    freOwnerDescriptor.owner[freOwnerDescriptor.propertyName][freOwnerDescriptor.propertyIndex] = exp;
-                }
-            } else {
-                editor.rootElement = exp;
-            }
-        });
-    }
-
     static replaceExpression(oldExpression: FreExpressionNode, newExpression: FreExpressionNode, editor: FreEditor) {
         FreUtils.CHECK(isFreExpression(oldExpression), "replaceExpression: old element should be a FreExpressionNode, but it isn't");
         FreUtils.CHECK(isFreExpression(newExpression), "replaceExpression: new element should be a FreExpressionNode, but it isn't");
         runInAction(() => {
-            FreEditorUtil.setContainer(newExpression, oldExpression.freOwnerDescriptor(), editor);
+            FreUtils.setContainer(newExpression, oldExpression.freOwnerDescriptor(), editor);
         });
     }
 
