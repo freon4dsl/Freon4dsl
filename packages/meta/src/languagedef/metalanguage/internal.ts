@@ -4,7 +4,7 @@
  * in order to avoid problem with circular imports.
  */
 
-export * from "./FreLangEveryConcept"
+export * from "./FreLangEveryConcept";
 export * from "./MetaElementReference";
 export * from "./FreLanguage";
 export * from "./FreLangExpressions";

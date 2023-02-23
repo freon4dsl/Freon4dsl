@@ -8,8 +8,8 @@ export class FretSelfExp extends FretExp {
      */
     static create(data: Partial<FretSelfExp>): FretSelfExp {
         const result: FretSelfExp = new FretSelfExp();
-        if (data.agl_location) {
-            result.agl_location = data.agl_location;
+        if (data.aglParseLocation) {
+            result.aglParseLocation = data.aglParseLocation;
         }
         return result;
     }

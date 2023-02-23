@@ -15,16 +15,16 @@ const LOGGER = new MetaLogger("Freon"); // .mute();
 
 // The main entry point for the Freon generator
 export class Freon extends CommandLineParser {
-    private languageAction: FreonGenerateLanguage;
-    private allAction: FreonGenerateAllAction;
-    private editorAction: FreonGenerateEditor;
-    private parserAction: FreonGenerateParser;
-    private diagramAction: FreonGenerateDiagrams;
-    private scoperAction: FreonGenerateScoper;
-    private validatorAction: FreonGenerateValidator;
-    private typerAction: FreonGenerateTyper;
-    private interpreterAction: FreonGenerateInterpreter;
-    private cleanAction: FreonCleanAction;
+    private readonly languageAction: FreonGenerateLanguage;
+    private readonly allAction: FreonGenerateAllAction;
+    private readonly editorAction: FreonGenerateEditor;
+    private readonly parserAction: FreonGenerateParser;
+    private readonly diagramAction: FreonGenerateDiagrams;
+    private readonly scoperAction: FreonGenerateScoper;
+    private readonly validatorAction: FreonGenerateValidator;
+    private readonly typerAction: FreonGenerateTyper;
+    private readonly interpreterAction: FreonGenerateInterpreter;
+    private readonly cleanAction: FreonCleanAction;
     private verboseArg: CommandLineFlagParameter;
     private watchArg: CommandLineFlagParameter;
 

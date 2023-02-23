@@ -29,10 +29,10 @@ export class FreTyperPartTemplate {
         // Template starts here
         return `
         import { ${Names.FreNode}, ${Names.FreType}, FreTyper, FreCompositeTyper} from "${FREON_CORE}";
-        
+
         export class ${generatedClassName} implements ${typerInterfaceName} {
             mainTyper: FreCompositeTyper;
-            
+
             /**
              * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
              * @param modelelement
@@ -40,7 +40,7 @@ export class FreTyperPartTemplate {
             public isType(modelelement: ${Names.FreNode}): boolean | null {
                 return false;
             }
-        
+
             /**
              * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
              * @param modelelement
@@ -48,7 +48,7 @@ export class FreTyperPartTemplate {
             public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} | null {
                 return null;
             }
-        
+
             /**
              * Returns true if type1 equals type2.
              * This is a strict equal.
@@ -58,7 +58,7 @@ export class FreTyperPartTemplate {
             public equals(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean | null {
                 return false;
             }
-        
+
             /**
              * Returns true if type1 conforms to type2. The direction is type1 conforms to type2.
              * @param type1
@@ -67,7 +67,7 @@ export class FreTyperPartTemplate {
             public conforms(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean | null {
                 return false;
             }
-        
+
             /**
              * Returns true if all types in typelist1 conform to the types in typelist2, in the given order.
              * @param typelist1
@@ -76,29 +76,29 @@ export class FreTyperPartTemplate {
             public conformsList(typelist1: ${Names.FreType}[], typelist2: ${Names.FreType}[]): boolean | null {
                 return false;
             }
-        
+
             /**
              * Returns the common super type of all types in typelist
              * @param typelist
              */
             public commonSuper(typelist: ${Names.FreType}[]): ${Names.FreType} | null {
                 return null;
-            }   
-            
+            }
+
             /**
              * Returns all super types as defined in the typer definition.
              * @param type
              */
             public getSuperTypes(type: ${Names.FreType}): ${Names.FreType}[] | null {
                 return [];
-            }     
+            }
         }`;
     }
 
     private generateFromDefinition(typerdef: TyperDef, language: FreLanguage, relativePath: string) {
         this.typerdef = typerdef;
         this.language = language;
-        let rootType = Names.classifier(typerdef?.typeRoot());
+        const rootType = Names.classifier(typerdef?.typeRoot());
         ListUtil.addIfNotPresent(this.imports, rootType);
         const allLangConcepts: string = Names.allConcepts(language);
         ListUtil.addIfNotPresent(this.imports, allLangConcepts);
@@ -112,7 +112,7 @@ export class FreTyperPartTemplate {
 
         // Template starts here
         const baseClass = `
-        
+
         /**
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
          * otherwise this class implements the default typer.
@@ -127,13 +127,13 @@ export class FreTyperPartTemplate {
             public isType(modelelement: ${Names.FreNode}): boolean | null {
                 ${this.makeIsType(typerdef.types)}
             }
-                        
+
             /**
              * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
              * @param modelelement
              */
             public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} | null {
-                if (!modelelement) return null;
+                if (!modelelement) { return null; }
                 let result: ${Names.FreType} = null;
                 ${inferMaker.makeInferType(typerdef, allLangConcepts, rootType, "modelelement", this.importedClassifiers)}
                 return result;
@@ -146,11 +146,11 @@ export class FreTyperPartTemplate {
              * @param type2
              */
             public equals(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean | null {
-                if (!type1 || !type2 ) return false;  
+                if (!type1 || !type2 ) return false;
                 ${equalsMaker.makeEqualsType(typerdef, "type1", "type2", this.importedClassifiers)}
                 return false;
             }
-            
+
             /**
              * Returns true if type1 conforms to type2. The direction is type1 conforms to type2.
              * @param type1
@@ -170,7 +170,7 @@ export class FreTyperPartTemplate {
                 }
                 return result;
             }
-            
+
             /**
              * Returns true if all types in typelist1 conform to the types in typelist2, pairswise, in the given order.
              * @param typelist1
@@ -185,13 +185,13 @@ export class FreTyperPartTemplate {
                 }
                 return result;
             }
-        
+
             /**
              * Returns the common super type of all types in typelist
              * @param typelist
              */
             public commonSuper(typelist: ${Names.FreType}[]): ${Names.FreType} | null {
-                const result: ${Names.FreType}[] = FreCommonSuperTypeUtil.commonSuperType(typelist, this.mainTyper);        
+                const result: ${Names.FreType}[] = FreCommonSuperTypeUtil.commonSuperType(typelist, this.mainTyper);
                 if (!!result && result.length > 0) {
                     return result[0];
                 }
@@ -205,9 +205,9 @@ export class FreTyperPartTemplate {
             public getSuperTypes(type: ${Names.FreType}): ${Names.FreType}[] {
                 ${superTypeMaker.makeSuperTypes(typerdef, "type", this.importedClassifiers)}
             }
-                        
+
             ${inferMaker.extraMethods.map(meth => meth).join("\n\n")}
-                      
+
             private typeOf(myArg: ${Names.FreNode} | ${Names.FreNode}[]): ${Names.FreType} {
                 let result: ${Names.FreType};
                 if (Array.isArray(myArg)) {
@@ -217,7 +217,7 @@ export class FreTyperPartTemplate {
                 }
                 return result;
             }
-            
+
             private getElemFromAstType(type: ${Names.FreType}, metatype: string): ${Names.FreNode} {
                 if (type.$typename === "AstType") {
                     const astElement: ${Names.FreNode} = (type as AstType).astElement;
@@ -256,11 +256,11 @@ export class FreTyperPartTemplate {
         myList.forEach(type => {
             ListUtil.addIfNotPresent(this.imports, Names.concept(type));
         });
-        result = `${myList.map(type => 
+        result = `${myList.map(type =>
             `if (modelelement instanceof ${Names.concept(type)}) {
                 return true;
             }`
-        ).join(' else ')}`;
+        ).join(" else ")}`;
         result = result.concat(`return false;`);
         return result;
     }

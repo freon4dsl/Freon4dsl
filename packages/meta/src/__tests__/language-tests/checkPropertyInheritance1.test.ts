@@ -106,7 +106,7 @@ describe("Checking property inheritance", () => {
         expect(rightOne).not.toBeNull();
         expect(rightOne).not.toBeUndefined();
         rightOne.allProperties().forEach(prop => {
-            console.log(`${prop.name} is owned by ${prop.owningClassifier.name}: ${prop.implementedInBase}`)
+            console.log(`${prop.name} is owned by ${prop.owningClassifier.name}: ${prop.implementedInBase}`);
             expect(prop.implementedInBase).toBeTruthy();
         });
     });

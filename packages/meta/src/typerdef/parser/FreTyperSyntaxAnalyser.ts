@@ -56,15 +56,15 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
                 // stringLiteral, strip the surrounding quotes
                 tmp = tmp.slice(1, tmp.length - 1);
                 return tmp;
-            } else if (tmp == "false") {
+            } else if (tmp === "false") {
                 // booleanLiteral
                 return false;
-            } else if (tmp == "true") {
+            } else if (tmp === "true") {
                 // booleanLiteral
                 return true;
-            } else if (Number.isInteger(parseInt(tmp))) {
+            } else if (Number.isInteger(parseInt(tmp, 10))) {
                 // numberLiteral
-                return parseInt(tmp);
+                return parseInt(tmp, 10);
             } else {
                 // identifier
                 return tmp;
@@ -74,52 +74,52 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
     }
 
     private transformSharedPackedParseTreeBranch(branch: SPPTBranch): any {
-        let brName: string = branch.name;
-        if ("TyperDef" == brName) {
+        const brName: string = branch.name;
+        if ("TyperDef" === brName) {
             return this._unit_TyperDef_analyser.transformTyperDef(branch);
-        } else if ("FretTypeConcept" == brName) {
+        } else if ("FretTypeConcept" === brName) {
             return this._unit_TyperDef_analyser.transformFretTypeConcept(branch);
-        } else if ("FretAnyTypeSpec" == brName) {
+        } else if ("FretAnyTypeSpec" === brName) {
             return this._unit_TyperDef_analyser.transformFretAnyTypeSpec(branch);
-        } else if ("FretInferenceRule" == brName) {
+        } else if ("FretInferenceRule" === brName) {
             return this._unit_TyperDef_analyser.transformFretInferenceRule(branch);
-        } else if ("FretPropertyCallExp" == brName) {
+        } else if ("FretPropertyCallExp" === brName) {
             return this._unit_TyperDef_analyser.transformFretPropertyCallExp(branch);
-        } else if ("FretSelfExp" == brName) {
+        } else if ("FretSelfExp" === brName) {
             return this._unit_TyperDef_analyser.transformFretSelfExp(branch);
-        } else if ("FretAnytypeExp" == brName) {
+        } else if ("FretAnytypeExp" === brName) {
             return this._unit_TyperDef_analyser.transformFretAnytypeExp(branch);
-        } else if ("FretVarCallExp" == brName) {
+        } else if ("FretVarCallExp" === brName) {
             return this._unit_TyperDef_analyser.transformFretVarCallExp(branch);
-        } else if ("FretCreateExp" == brName) {
+        } else if ("FretCreateExp" === brName) {
             return this._unit_TyperDef_analyser.transformFretCreateExp(branch);
-        } else if ("FretPropInstance" == brName) {
+        } else if ("FretPropInstance" === brName) {
             return this._unit_TyperDef_analyser.transformFretPropInstance(branch);
-        } else if ("FretFunctionCallExp" == brName) {
+        } else if ("FretFunctionCallExp" === brName) {
             return this._unit_TyperDef_analyser.transformFretFunctionCallExp(branch);
-        } else if ("FretLimitedInstanceExp" == brName) {
+        } else if ("FretLimitedInstanceExp" === brName) {
             return this._unit_TyperDef_analyser.transformFretLimitedInstanceExp(branch);
-        } else if ("FretWhereExp" == brName) {
+        } else if ("FretWhereExp" === brName) {
             return this._unit_TyperDef_analyser.transformFretWhereExp(branch);
-        } else if ("FretVarDecl" == brName) {
+        } else if ("FretVarDecl" === brName) {
             return this._unit_TyperDef_analyser.transformFretVarDecl(branch);
-        } else if ("FretConformanceRule" == brName) {
+        } else if ("FretConformanceRule" === brName) {
             return this._unit_TyperDef_analyser.transformFretConformanceRule(branch);
-        } else if ("FretEqualsRule" == brName) {
+        } else if ("FretEqualsRule" === brName) {
             return this._unit_TyperDef_analyser.transformFretEqualsRule(branch);
-        } else if ("FretLimitedRule" == brName) {
+        } else if ("FretLimitedRule" === brName) {
             return this._unit_TyperDef_analyser.transformFretLimitedRule(branch);
-        } else if ("FretClassifierSpec" == brName) {
+        } else if ("FretClassifierSpec" === brName) {
             return this._unit_TyperDef_analyser.transformFretClassifierSpec(branch);
-        } else if ("FretTypeRule" == brName) {
+        } else if ("FretTypeRule" === brName) {
             return this._unit_TyperDef_analyser.transformFretTypeRule(branch);
-        } else if ("FretExp" == brName) {
+        } else if ("FretExp" === brName) {
             return this._unit_TyperDef_analyser.transformFretExp(branch);
-        } else if ("__fre_binary_FretExp" == brName) {
+        } else if ("__fre_binary_FretExp" === brName) {
             return this._unit_TyperDef_analyser.transform__fre_binary_FretExp(branch);
-        } else if ("FretProperty" == brName) {
+        } else if ("FretProperty" === brName) {
             return this._unit_TyperDef_analyser.transformFretProperty(branch);
-        } else if ("__fre_reference" == brName) {
+        } else if ("__fre_reference" === brName) {
             return this.transform__fre_reference(branch);
         } else {
             throw new Error(`Error in FreTyperSyntaxAnalyser: ${brName} not handled for node '${branch?.matchedText}'`);
@@ -176,10 +176,10 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
      * ...FreNodeRef = identifier;
      */
     public freNodeRef<T extends FreLangElement>(branch: SPPTBranch, typeName: string): MetaElementReference<T> {
-        let referred: string | T = this.transformSharedPackedParseTreeNode(branch);
-        if (referred == null || referred == undefined) {
+        const referred: string | T = this.transformSharedPackedParseTreeNode(branch);
+        if (referred === null || referred === undefined) {
             throw new Error(`Syntax error in "${branch?.parent?.matchedText}": cannot create empty reference`);
-        } else if (typeof referred === "string" && (referred as string).length == 0) {
+        } else if (typeof referred === "string" && (referred as string).length === 0) {
             throw new Error(`Syntax error in "${branch?.parent?.matchedText}": cannot create empty reference`);
         } else {
             return this.makeFreElementReferenceWithLocation(referred, typeName, branch);
@@ -189,7 +189,7 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
     private makeFreElementReferenceWithLocation<T extends FreLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
         const result = MetaElementReference.create<T>(referred, typeName);
         const location = FreParseLocation.create({ filename: this.filename, line: branch.location.line, column: branch.location.column });
-        result.agl_location = location;
+        result.aglParseLocation = location;
         return result;
     }
 
@@ -197,16 +197,16 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
      * Generic method to transform lists
      */
     public transformSharedPackedParseTreeList<T>(branch: SPPTBranch, separator?: string): T[] {
-        let result: T[] = [];
+        const result: T[] = [];
         const children = this.getChildren(branch);
         if (!!children) {
             for (const child of children) {
-                let element: any = this.transformSharedPackedParseTreeNode(child);
+                const element: any = this.transformSharedPackedParseTreeNode(child);
                 if (element !== null && element !== undefined) {
-                    if (separator == null || separator == undefined) {
+                    if (separator === null || separator === undefined) {
                         result.push(element);
                     } else {
-                        if (element != separator) {
+                        if (element !== separator) {
                             result.push(element);
                         }
                     }
@@ -224,11 +224,11 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
         typeName: string,
         separator?: string
     ): MetaElementReference<T>[] {
-        let result: MetaElementReference<T>[] = [];
+        const result: MetaElementReference<T>[] = [];
         const children = this.getChildren(branch);
         if (!!children) {
             for (const child of children) {
-                let refName: any = this.transformSharedPackedParseTreeNode(child);
+                const refName: any = this.transformSharedPackedParseTreeNode(child);
                 if (refName !== null && refName !== undefined) {
                     if (separator === null || separator === undefined) {
                         result.push(this.makeFreElementReferenceWithLocation(refName, typeName, branch));
@@ -244,11 +244,10 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
     }
 
     public location(branch: net.akehurst.language.api.sppt.SPPTBranch) {
-        const location = FreParseLocation.create({
+        return FreParseLocation.create({
             filename: this.filename,
             line: branch.location.line,
             column: branch.location.column
         });
-        return location;
     }
 }

@@ -8,8 +8,8 @@ import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 export class RHSBinExpListWithTerminator extends RHSPropEntry {
     type: FreBinaryExpressionConcept = null;
     private entry: RHSPropEntry;
-    private separatorText: string = "";
-    private isSingleEntry: boolean;
+    private readonly separatorText: string = "";
+    private readonly isSingleEntry: boolean;
 
     constructor(prop: FreProperty, type: FreBinaryExpressionConcept, entry: RHSPropEntry, separatorText: string, isSingleEntry: boolean) {
         super(prop);
@@ -33,19 +33,19 @@ export class RHSBinExpListWithTerminator extends RHSPropEntry {
         if (this.isSingleEntry) {
             myListStatement = `const _myList = ${nodeName};`;
         }
-        return `// RHSBinExpListWithTerminator  
+        return `// RHSBinExpListWithTerminator
             ${ParserGenUtil.internalName(this.property.name)} = [];
             ${myListStatement}
-            _myList.forEach(subNode => {  
-                const _transformed = this.${mainAnalyserName}.${internalTransformNode}(subNode.nonSkipChildren?.toArray()[0]);  
-                if (!!_transformed) {      
+            _myList.forEach(subNode => {
+                const _transformed = this.${mainAnalyserName}.${internalTransformNode}(subNode.nonSkipChildren?.toArray()[0]);
+                if (!!_transformed) {
                     ${ParserGenUtil.internalName(this.property.name)}.push(_transformed);
                 }
             });`;
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSBinaryExp: " + this.property.name + ": " + this.type.name;
     }
 }

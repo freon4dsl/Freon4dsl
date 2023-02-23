@@ -2,7 +2,6 @@ import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 import { DiagramGenerator } from "../diagramgen/DiagramGenerator";
 
-
 const LOGGER = new MetaLogger("FreonGenerateDiagrams"); // .mute();
 
 export class FreonGenerateDiagrams extends FreonGeneratePartAction {

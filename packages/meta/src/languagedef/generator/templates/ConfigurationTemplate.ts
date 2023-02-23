@@ -16,10 +16,10 @@ export class ConfigurationTemplate {
             import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}";
             import { ${Names.customScoper(language)} } from "${relativePath}${SCOPER_FOLDER}";
             import { ${Names.customTyper(language)} } from "${relativePath}${TYPER_FOLDER}";
-            import { ${Names.customValidator(language)} } from "${relativePath}${VALIDATOR_FOLDER}";    
-            import { ${Names.customStdlib(language)} } from "${relativePath}${STDLIB_FOLDER}";                                  
+            import { ${Names.customValidator(language)} } from "${relativePath}${VALIDATOR_FOLDER}";
+            import { ${Names.customStdlib(language)} } from "${relativePath}${STDLIB_FOLDER}";
             import { ${workerName } } from "${relativePath}${VALIDATOR_GEN_FOLDER}";
-            
+
             /**
              * Class ${configurationName} is the place where you can add all your customisations.
              * These will be used through the 'freonConfiguration' constant by any generated
@@ -39,7 +39,7 @@ export class ConfigurationTemplate {
                 // add extra predefined instances here
                 customStdLibs: ${Names.FreStdlib}[] = [new ${Names.customStdlib(language)}()];
             }
-            
+
             export const freonConfiguration = new ${configurationName}();
         `;
     }

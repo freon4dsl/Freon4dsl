@@ -6,7 +6,7 @@ import { MetaLogger } from "../utils/MetaLogger";
 const LOGGER = new MetaLogger("FreonGenerateInterpreter").mute();
 
 export class FreonGenerateInterpreter extends FreonGeneratePartAction {
-    protected interpreterGenerator: InterpreterGenerator  = new InterpreterGenerator();
+    protected interpreterGenerator: InterpreterGenerator = new InterpreterGenerator();
 
     public constructor() {
         super({
@@ -27,8 +27,6 @@ export class FreonGenerateInterpreter extends FreonGeneratePartAction {
         }
         this.interpreterGenerator.outputfolder = this.outputFolder;
         this.interpreterGenerator.language = this.language;
-
-
         this.interpreterGenerator.fileNames = this.languageFiles;
         this.interpreterGenerator.generate(interpeterDef);
     }

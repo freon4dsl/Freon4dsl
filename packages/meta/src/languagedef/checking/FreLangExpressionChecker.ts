@@ -65,7 +65,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     // exp
     public checkLangExp(langExp: FreLangExp, enclosingConcept: FreClassifier) {
         if (!enclosingConcept) {
-            LOGGER.error("enclosingConcept is null in 'checkLangExp'.")
+            LOGGER.error("enclosingConcept is null in 'checkLangExp'.");
             return;
         }
         langExp.language = this.language;
@@ -109,7 +109,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                                             `${ParseLocationUtil.location(langExp)}.`
                                 );
                                 if (!!foundInstance) {
-                                    langExp.__referredElement = MetaElementReference.create<FreInstance>(foundInstance, "FreInstance");
+                                    langExp.$referredElement = MetaElementReference.create<FreInstance>(foundInstance, "FreInstance");
                                 }
                             }
                         });
@@ -122,8 +122,8 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     // self.XXX
     private checkSelfExpression(langExp: FreLangSelfExp, enclosingConcept: FreClassifier) {
         LOGGER.log("checkSelfExpression " + langExp?.toFreString());
-        langExp.__referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreConcept");
-        langExp.__referredElement.owner = langExp;
+        langExp.$referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreConcept");
+        langExp.$referredElement.owner = langExp;
         if (this.strictUseOfSelf) {
             this.runner.nestedCheck(
                 {
@@ -146,8 +146,8 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
             check: langExp.sourceName === containerKeyword,
             error: `Expression should start with 'self' ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
-                langExp.__referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreClassifier");
-                langExp.__referredElement.owner = langExp;
+                langExp.$referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreClassifier");
+                langExp.$referredElement.owner = langExp;
             }
         });
     }
@@ -187,8 +187,8 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                                     error: `Cannot find reference to ${p.sourceName} ${ParseLocationUtil.location(langExp)}`,
                                     whenOk: () => {
                                         functionType = foundClassifier;
-                                        p.__referredElement = MetaElementReference.create<FreClassifier>(foundClassifier, "FreClassifier");
-                                        p.__referredElement.owner = p;
+                                        p.$referredElement = MetaElementReference.create<FreClassifier>(foundClassifier, "FreClassifier");
+                                        p.$referredElement.owner = p;
                                     }
                                 });
                             }
@@ -220,7 +220,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     private checkAppliedFeatureExp(feat: FreLangAppliedFeatureExp, enclosingConcept: FreClassifier) {
         LOGGER.log("checkAppliedFeatureExp " + feat?.toFreString());
         if (!enclosingConcept) {
-            LOGGER.error("enclosingConcept is null in 'checkAppliedFeatureExp'.")
+            LOGGER.error("enclosingConcept is null in 'checkAppliedFeatureExp'.");
             return;
         }
         for (const e of enclosingConcept.allProperties()) {

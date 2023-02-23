@@ -5,11 +5,11 @@ export class LanguageTemplate {
 
     generateLanguage(language: FreLanguage): string {
         return `import { ${Names.FreLanguage}, Model, ModelUnit, Property, Concept, Interface, ${Names.FreNodeReference} } from "${FREON_CORE}";
-        
+
             import { ${Names.classifier(language.modelConcept)}, ${language.units.map(unit =>
             `${Names.classifier(unit)}`).join(", ") }, ${language.concepts.map(concept =>
                 `${Names.concept(concept)}`).join(", ")} } from "./internal";
-    
+
             /**
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.
              */
@@ -107,7 +107,7 @@ export class LanguageTemplate {
                         return modelunit;
                     }`
                 ).join("\n")}
-            
+
             ${language.concepts.map(concept =>
             `
                 function describe${Names.concept(concept)}(): Concept {

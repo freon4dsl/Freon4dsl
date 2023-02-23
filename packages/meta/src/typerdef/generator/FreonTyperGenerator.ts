@@ -24,7 +24,7 @@ export class FreonTyperGenerator {
     protected typerFolder: string;
 
     generate(typerdef: TyperDef): void {
-        if (this.language == null) {
+        if (this.language === null) {
             LOGGER.error("Cannot generate typer because language is not set.");
             return;
         }
@@ -56,7 +56,8 @@ export class FreonTyperGenerator {
         if (!!typerdef && typerdef.typeConcepts.length > 0 ) {
             typerdef.typeConcepts.forEach(con => {
                 LOGGER.log(`Generating type concept: ${this.typerConceptsFolder}/${Names.classifier(con)}.ts`);
-                const typeConceptFile = FileUtil.pretty(typeConceptMaker.generateTypeConcept(this.language, con, relativePath + "../"), "Type Concept", generationStatus);
+                const typeConceptFile = FileUtil.pretty(
+                    typeConceptMaker.generateTypeConcept(this.language, con, relativePath + "../"), "Type Concept", generationStatus);
                 fs.writeFileSync(`${this.typerConceptsFolder}/${Names.classifier(con)}.ts`, typeConceptFile);
             });
 
@@ -110,13 +111,14 @@ export class FreonTyperGenerator {
     }
 
     clean(force: boolean) {
-        // TODO error " FreonCleanAction: ERROR: Stopping typer cleansing because of errors: EPERM: operation not permitted, unlink 'src\testNoParserAvailable\typer\gen\type-concepts' "
+        // TODO error " FreonCleanAction: ERROR: Stopping typer cleansing because of errors: EPERM: operation not permitted,
+        //  unlink 'src\testNoParserAvailable\typer\gen\type-concepts' "
         this.getFolderNames();
         FileUtil.deleteDirAndContent(this.typerConceptsFolder);
         FileUtil.deleteDirAndContent(this.typerGenFolder);
         if (force) {
             FileUtil.deleteFile(`${this.typerFolder}/index.ts`);
-            if (this.language == null) {
+            if (this.language === null) {
                 LOG2USER.error("Cannot remove all files because language is not set.");
             } else {
                 FileUtil.deleteFile(`${this.typerFolder}/${Names.customTyper(this.language)}.ts`);
@@ -125,7 +127,7 @@ export class FreonTyperGenerator {
         } else {
             // do not delete the following files, because these may contain user edits
             LOG2USER.info(`Not removed: ${this.typerFolder}/${Names.customTyper(this.language)}.ts` +
-            '\n\t' + `${this.typerFolder}/index.ts`);
+            "\n\t" + `${this.typerFolder}/index.ts`);
         }
     }
 }

@@ -49,7 +49,7 @@ export class FreLanguage extends FreLangElement {
         return result;
     }
 
-    findBasicType(name:string): FreClassifier {
+    findBasicType(name: string): FreClassifier {
         return FrePrimitiveType.find(name);
     }
 
@@ -89,7 +89,7 @@ export abstract class FreClassifier extends FreLangElement {
     }
 
     allPrimProperties(): FrePrimitiveProperty[] {
-        let result: FrePrimitiveProperty[] = [];
+        const result: FrePrimitiveProperty[] = [];
         result.push(...this.primProperties);
         return result;
     }
@@ -103,7 +103,7 @@ export abstract class FreClassifier extends FreLangElement {
     }
 
     allProperties(): FreProperty[] {
-        let result: FreProperty[] = [];
+        const result: FreProperty[] = [];
         result.push(...this.allPrimProperties());
         result.push(...this.allParts());
         result.push(...this.allReferences());
@@ -204,7 +204,7 @@ export class FreConcept extends FreClassifier {
     interfaces: MetaElementReference<FreInterface>[] = []; // the interfaces that this concept implements
 
     allPrimProperties(): FrePrimitiveProperty[] {
-        let result: FrePrimitiveProperty[] = this.implementedPrimProperties();
+        const result: FrePrimitiveProperty[] = this.implementedPrimProperties();
         if (!!this.base && !!this.base.referred) {
             this.base.referred.allPrimProperties().forEach(p => {
                 // hide overwritten property
@@ -217,7 +217,7 @@ export class FreConcept extends FreClassifier {
     }
 
     allParts(): FreConceptProperty[] {
-        let result: FreConceptProperty[] = this.implementedParts();
+        const result: FreConceptProperty[] = this.implementedParts();
         if (!!this.base && !!this.base.referred) {
             this.base.referred.allParts().forEach(p => {
                 // hide overwritten property
@@ -230,7 +230,7 @@ export class FreConcept extends FreClassifier {
     }
 
     allReferences(): FreConceptProperty[] {
-        let result: FreConceptProperty[] = this.implementedReferences();
+        const result: FreConceptProperty[] = this.implementedReferences();
         if (!!this.base && !!this.base.referred) {
             this.base.referred.allReferences().forEach(p => {
                 // hide overwritten property
@@ -398,31 +398,28 @@ export class FreProperty extends FreLangElement {
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
     implementedInBase: boolean = false;
-    private __type: MetaElementReference<FreClassifier>;
+    private $type: MetaElementReference<FreClassifier>;
     owningClassifier: FreClassifier;
 
     get isPrimitive(): boolean {
-        if (this.type instanceof FrePrimitiveType) {
-            return true;
-        }
-        return false;
-    };
+        return this.type instanceof FrePrimitiveType;
+    }
     get type(): FreClassifier {
-        return this.__type?.referred;
+        return this.$type?.referred;
     }
     set type(t: FreClassifier) {
-        this.__type = MetaElementReference.create<FreClassifier>(t, "FreClassifier");
-        this.__type.owner = this;
+        this.$type = MetaElementReference.create<FreClassifier>(t, "FreClassifier");
+        this.$type.owner = this;
     }
     get typeReference(): MetaElementReference<FreClassifier> { // only used by FreLanguageChecker and FreTyperChecker
-        return this.__type;
+        return this.$type;
     }
-    set typeReference(t : MetaElementReference<FreClassifier>) { // only used by FreLanguageChecker and FreTyperChecker
-        this.__type = t;
-        this.__type.owner = this;
+    set typeReference(t: MetaElementReference<FreClassifier>) { // only used by FreLanguageChecker and FreTyperChecker
+        this.$type = t;
+        this.$type.owner = this;
     }
     toFreString(): string {
-        return this.name + ": " + this.__type.name;
+        return this.name + ": " + this.$type.name;
     }
 }
 
@@ -436,7 +433,7 @@ export class FrePrimitiveProperty extends FreProperty {
 
     get isPrimitive(): boolean {
         return true;
-    };
+    }
 
     get initialValue(): FrePrimitiveValue {
         return this.initialValueList[0];
@@ -499,10 +496,10 @@ export class FrePrimitiveType extends FreConcept {
         return result;
     }
 
-    static string: FrePrimitiveType = FrePrimitiveType.create({name: "string"});
-    static number: FrePrimitiveType = FrePrimitiveType.create({name: "number"});
-    static boolean: FrePrimitiveType = FrePrimitiveType.create({name: "boolean"});
-    static identifier: FrePrimitiveType = FrePrimitiveType.create({name: "identifier"});
+    static string: FrePrimitiveType = FrePrimitiveType.create({ name: "string" });
+    static number: FrePrimitiveType = FrePrimitiveType.create({ name: "number" });
+    static boolean: FrePrimitiveType = FrePrimitiveType.create({ name: "boolean" });
+    static identifier: FrePrimitiveType = FrePrimitiveType.create({ name: "identifier" });
     static $freAny: FrePrimitiveType; // default predefined instance
 
     static find(name: string) {

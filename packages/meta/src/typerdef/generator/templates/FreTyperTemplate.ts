@@ -28,7 +28,7 @@ export class FreTyperTemplate {
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
         import { ${defaultTyperName} } from "./${defaultTyperName}";
         import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";
-                
+
         /**
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
          * otherwise this class implements the default typer.
@@ -36,17 +36,17 @@ export class FreTyperTemplate {
         export class ${generatedClassName} implements ${typerInterfaceName} {
             private generatedTyper: ${defaultTyperName};
             mainTyper: ${Names.FreTyper}; // TODO remove tmp needed
-            
+
             constructor() {
                 this.generatedTyper = new ${defaultTyperName}();
                 this.generatedTyper.mainTyper = this;
             }
-                        
+
             /**
              * Returns true if 'modelelement' is marked as 'isType' in the Typer definition
              * @param modelelement
-             */    
-            public isType(modelelement: ${Names.FreNode}): boolean { 
+             */
+            public isType(modelelement: ${Names.FreNode}): boolean {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.isType(modelelement);
@@ -56,12 +56,12 @@ export class FreTyperTemplate {
                 }
                 // no result from custom typers => use the generated typer
                 return this.generatedTyper.isType(modelelement);
-            } 
+            }
 
             /**
              * Returns the type of 'modelelement' according to the type rules in the Typer Definition
              * @param modelelement
-             */   
+             */
             public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
@@ -73,7 +73,7 @@ export class FreTyperTemplate {
                 // no result from custom typers => use the generated typer
                 return this.generatedTyper.inferType(modelelement);
             }
-                        
+
             /**
              * Returns true if the type that inferType(elem1) returns equals the type that inferType(elem2) returns.
              * This is a strict equal.
@@ -86,10 +86,10 @@ export class FreTyperTemplate {
                 const $type1: ${Names.FreType} = this.inferType(elem1);
                 const $type2: ${Names.FreType} = this.inferType(elem2);
                 if (!$type1 || !$type2) return false;
-                
+
                 return this.equals($type1, $type2);
             }
-            
+
              /**
              * Returns true if type1 equals type2.
              * This is a strict equal.
@@ -107,7 +107,7 @@ export class FreTyperTemplate {
                 // no result from custom typers => use the generated typer
                 return this.generatedTyper.equals(type1, type2);
             }
-        
+
             /**
              * Returns true if the type that inferType(elem1) returns conforms to the type that inferType(elem2) returns, according to
              * the type rules in the Typer definition. The direction is elem1 conforms to elem2.
@@ -116,14 +116,14 @@ export class FreTyperTemplate {
              */
             public conformsType(elem1: ${Names.FreNode}, elem2: ${Names.FreNode}): boolean {
                 if (!elem1 || !elem2) return false;
-        
+
                 const $type1: ${Names.FreType} = this.inferType(elem1);
                 const $type2: ${Names.FreType} = this.inferType(elem2);
                 if (!$type1 || !$type2) return false;
-        
+
                 return this.conforms($type1, $type2);
             }
-            
+
             /**
              * Returns true if type1 conforms to type2. The direction is type1 conforms to type2.
              * @param type1
@@ -140,9 +140,9 @@ export class FreTyperTemplate {
                 // no result from custom typers => use the generated typer
                 return this.generatedTyper.conforms(type1, type2);
             }
-            
+
             /**
-             * Returns true if all types of the elements in elemlist1 conform to the types of the elements in elemlist2, 
+             * Returns true if all types of the elements in elemlist1 conform to the types of the elements in elemlist2,
              * pairwise, in the given order.
              * @param elemlist1
              * @param elemlist2
@@ -150,12 +150,12 @@ export class FreTyperTemplate {
             public conformsListType(elemlist1: ${Names.FreNode}[], elemlist2: ${Names.FreNode}[]): boolean {
                 if (!elemlist1 || !elemlist2) return false;
                 if (elemlist1.length !== elemlist2.length) return false;
-        
+
                 const $typelist1: ${Names.FreType}[] = this.elementListToTypeList(elemlist1);
                 const $typelist2: ${Names.FreType}[] = this.elementListToTypeList(elemlist2);
                 if ($typelist1.length === 0 || $typelist2.length === 0) return false;
                 if ($typelist1.length !== $typelist2.length) return false;
-        
+
                 return this.conformsList($typelist1, $typelist2);
             }
 
@@ -179,17 +179,17 @@ export class FreTyperTemplate {
             /**
              * Returns the common super type of all elements in elemlist
              * @param elemlist
-             */            
+             */
             public commonSuperType(elemlist: ${Names.FreNode}[]): ${Names.FreType} {
                 if (!elemlist ) return null;
                 if (elemlist.length === 0 ) return null;
-        
+
                 const $typelist: ${Names.FreType}[] = this.elementListToTypeList(elemlist);
                 if ($typelist.length === 0) return null;
-        
+
                 return this.commonSuper($typelist);
             }
-        
+
             /**
              * Returns the common super type of all types in typelist
              * @param typelist
@@ -205,7 +205,7 @@ export class FreTyperTemplate {
                 // no result from custom typers => use the generated typer
                 return this.generatedTyper.commonSuper(typelist);
             }
-            
+
             /**
              * Returns all super types as defined by the conformance rules in the typer definition.
              * @param type
@@ -221,13 +221,13 @@ export class FreTyperTemplate {
                 // no result from custom typers => use the generated typer
                 return this.generatedTyper.getSuperTypes(type);
             }
-    
+
             /**
              * Returns a list of types: one for each element of 'inlist',
              * if this type is not yet present in the result.
              * @param inlist
              * @private
-             */            
+             */
             private elementListToTypeList(inlist: ${Names.FreNode}[]): ${Names.FreType}[] {
                 const typelist: ${Names.FreType}[] = [];
                 for (const elem of inlist) {
@@ -235,7 +235,7 @@ export class FreTyperTemplate {
                 }
                 return typelist;
             }
-            
+
         }`;
     }
 

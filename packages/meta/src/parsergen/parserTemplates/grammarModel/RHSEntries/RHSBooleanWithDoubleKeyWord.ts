@@ -4,8 +4,8 @@ import { makeIndent } from "../GrammarUtils";
 import { ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
-    private trueKeyword: string = "";
-    private falseKeyword: string = "";
+    private readonly trueKeyword: string = "";
+    private readonly falseKeyword: string = "";
 
     constructor(prop: FrePrimitiveProperty, trueKeyword, falseKeyword) {
         super(prop);
@@ -28,7 +28,7 @@ export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSBooleanWithKeyWord: " + this.property.name + ": " + this.trueKeyword;
     }
 }

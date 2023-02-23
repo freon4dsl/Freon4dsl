@@ -1,6 +1,6 @@
 import { GrammarRule } from "./GrammarRule";
 import { FreClassifier, FreLanguage, FrePrimitiveType } from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, READER_GEN_FOLDER } from "../../../utils";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 import { FreUnitDescription } from "../../../languagedef/metalanguage/FreLanguage";
 
 export class GrammarPart {
@@ -30,16 +30,16 @@ export class GrammarPart {
         import { ${this.imports.map(imp => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
         import { ${Names.FreNodeReference} } from "@freon4dsl/core";
-        
+
         export class ${className} {
             mainAnalyser: ${Names.syntaxAnalyser(language)};
-            
+
             constructor(mainAnalyser: ${Names.syntaxAnalyser(language)}) {
                 this.mainAnalyser = mainAnalyser;
             }
-            
+
             ${this.rules.map(rule => `${rule.toMethod("mainAnalyser")}`).join("\n\n")}
-        }`
+        }`;
 
     }
 }

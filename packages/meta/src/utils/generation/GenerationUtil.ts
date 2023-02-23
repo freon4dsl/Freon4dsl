@@ -32,13 +32,13 @@ export class GenerationUtil {
             } else if (p instanceof MetaElementReference) {
                 newList.push(p.referred);
             }
-        })
+        });
         return this.sortClassifiers(newList) as FreConcept[];
     }
 
     /**
      * Sorts the classifiers such that any classifier comes before its super concept or interface
-     **/
+     */
     public static sortClassifiers(toBeSorted: FreClassifier[]): FreClassifier[] {
         const result: FreClassifier[] = [];
         const remaining: FreClassifier[] = []; // contains all elements that are not yet sorted
@@ -59,11 +59,11 @@ export class GenerationUtil {
             });
             // remove all elements that are already sorted, i.e. are in the result, from the 'remaining' list
             result.forEach(cls => {
-                const indexInRemaining: number = remaining.indexOf(cls)
+                const indexInRemaining: number = remaining.indexOf(cls);
                 if (indexInRemaining >= 0) {
                     remaining.splice(indexInRemaining, 1);
                 }
-            })
+            });
         }
         // reverse the list because the elements without supers were added first, but they should be last
         return result.reverse();
@@ -129,7 +129,7 @@ export class GenerationUtil {
         if (exp instanceof FreLangSelfExp) {
             result = `modelelement.${this.langExpToTypeScript(exp.appliedfeature)}`;
         } else if (exp instanceof FreLangFunctionCallExp) {
-            if (exp.sourceName === 'ancestor') {
+            if (exp.sourceName === "ancestor") {
                 const metaType: string = this.langExpToTypeScript(exp.actualparams[0]); // there is always 1 param to this function
                 result = `this.ancestor(modelelement, "${metaType}") as ${metaType}`;
             } else {
@@ -180,7 +180,7 @@ export class GenerationUtil {
      */
     private static isReferenceProperty(exp: FreLangAppliedFeatureExp) {
         let isRef: boolean = false;
-        const ref = exp.__referredElement?.referred;
+        const ref = exp.$referredElement?.referred;
         if (!!ref) { // should be present, otherwise it is an incorrect model
             // now see whether it is marked in the .ast file as 'reference'
             isRef = (ref instanceof FreConceptProperty) && !ref.isPart && !ref.isList;
@@ -250,7 +250,7 @@ export class GenerationUtil {
             type = `${Names.FreNodeReference}<${type}>`;
         }
         if (property.isList) {
-            type = type + '[]';
+            type = type + "[]";
         }
         return type;
     }
@@ -279,5 +279,19 @@ export class GenerationUtil {
             return exp;
         }
     }
-}
 
+    public static sortUnitNames(language: FreLanguage, unitNames: string[]) {
+        // sort all names alphabetically
+        const tmp: string[] = [];
+        language.concepts.map(c =>
+            tmp.push(Names.concept(c))
+        );
+        language.interfaces.map(c =>
+            tmp.push(Names.interface(c))
+        );
+        tmp.push(...unitNames);
+        tmp.push(Names.classifier(language.modelConcept));
+
+        return tmp.sort();
+    }
+}

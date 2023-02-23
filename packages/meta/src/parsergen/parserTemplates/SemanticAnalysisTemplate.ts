@@ -1,5 +1,5 @@
 import { FreClassifier, FreConcept, FreLanguage, FrePrimitiveProperty } from "../../languagedef/metalanguage";
-import { CONFIGURATION_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../utils";
+import { LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names } from "../../utils";
 import { FrePrimitiveType } from "../../languagedef/metalanguage/FreLanguage";
 import { UnitAnalyser } from "./UnitAnalyser";
 
@@ -19,11 +19,11 @@ export class SemanticAnalysisTemplate {
         for (const [classifier, subs] of analyser.interfacesAndAbstractsUsed) {
             if (!((classifier as FreConcept).base)) {
                 let hasProblems: boolean = false;
-                let subsWithSingleReference: FreConcept[] = [];
+                const subsWithSingleReference: FreConcept[] = [];
                 for (const sub of subs) {
                     if (sub instanceof FreConcept) {
                         for (const ref of sub.allReferences()) {
-                            if (analyser.classifiersUsed.includes(ref.type)){
+                            if (analyser.classifiersUsed.includes(ref.type)) {
                                 this.addProblem(sub);
                                 hasProblems = true;
                             }
@@ -37,7 +37,7 @@ export class SemanticAnalysisTemplate {
                         }
                     }
                     for (const prim of sub.allPrimProperties()) {
-                        if (prim.type == FrePrimitiveType.boolean) {
+                        if (prim.type === FrePrimitiveType.boolean) {
                             this.exprWithBooleanProp.set(sub, prim);
                         }
                     }
@@ -57,13 +57,13 @@ export class SemanticAnalysisTemplate {
     }
 
     private addSuper(classifier: FreClassifier) {
-        if( !this.supersOfProblems.includes(classifier)) {
+        if ( !this.supersOfProblems.includes(classifier)) {
             this.supersOfProblems.push(classifier);
         }
     }
 
     private addProblem(sub: FreConcept) {
-        if( !this.possibleProblems.includes(sub)) {
+        if ( !this.possibleProblems.includes(sub)) {
             this.possibleProblems.push(sub);
         }
     }
@@ -139,17 +139,17 @@ export class SemanticAnalysisTemplate {
             } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
             import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
             import { ${Names.FreNamedNode}, ${Names.FreLanguage}, ${Names.LanguageEnvironment}, ${Names.FreNodeReference} } from "@freon4dsl/core";
-            
+
             export class ${className} extends ${Names.defaultWorker(language)} implements ${Names.workerInterface(language)} {
                 changesToBeMade: Map<${everyConceptName}, ${everyConceptName}> = null;
-            
+
                 constructor(changesToBeMade: Map<${everyConceptName}, ${everyConceptName}>) {
                     super();
                     this.changesToBeMade = changesToBeMade;
                 }
-                
+
                 ${this.possibleProblems.map(poss => `${this.makeVistorMethod(poss)}`).join("\n")}
-                
+
                 private findReplacement(modelelement: ${Names.allConcepts(language)}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
                     const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
                     const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
@@ -165,7 +165,7 @@ export class SemanticAnalysisTemplate {
                         // true error, or boolean "true" or "false"
                         ${replacementBooleanStat}
                     }
-                }           
+                }
             }
             `;
     }
@@ -173,15 +173,15 @@ export class SemanticAnalysisTemplate {
     // TODO if there are possibles, but still the metatype is not correct, do not make a replacement
     private makeReplacementIfStat(): string {
         // TODO add replacement of properties that are lists
-        let result: string = '';
+        let result: string = "";
         for (const poss of this.possibleProblems) {
             if (!poss.isAbstract) {
-                let toBeCreated: string = Names.classifier(poss);
+                const toBeCreated: string = Names.classifier(poss);
                 for (const ref of poss.allReferences().filter(prop => !prop.isList)) {
-                    let type: FreClassifier = ref.type;
-                    let metatype: string = Names.classifier(type);
+                    const type: FreClassifier = ref.type;
+                    const metatype: string = Names.classifier(type);
                     this.addToImports(type);
-                    let propName: string = ref.name;
+                    const propName: string = ref.name;
                     result += `if (${Names.FreLanguage}.getInstance().metaConformsToType(elem, "${metatype}")) {
                         replacement = ${toBeCreated}.create({ ${propName}: ${Names.FreNodeReference}.create<${metatype}>(referredElem.name, metatype) });
                     } else `;
@@ -189,7 +189,7 @@ export class SemanticAnalysisTemplate {
             }
         }
         if (result.length > 0) {
-            result += `{ throw new Error("Semantic analysis error: cannot replace reference: " + referredElem.name + " of type " + metatype + "." ) }`
+            result += `{ throw new Error("Semantic analysis error: cannot replace reference: " + referredElem.name + " of type " + metatype + "." ) }`;
         }
         return result;
     }
@@ -208,7 +208,7 @@ export class SemanticAnalysisTemplate {
                 `referredElem = modelelement.${prop.name};
                 if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
                     this.findReplacement(modelelement, referredElem);
-                }`).join("\n")}                
+                }`).join("\n")}
                 return false;
             }`;
     }
@@ -235,14 +235,14 @@ export class SemanticAnalysisTemplate {
     }
 
     private makeBooleanStat(): string {
-        let result: string = '';
+        let result: string = "";
         for (const [concept, primProp] of this.exprWithBooleanProp) {
             if (concept instanceof FreConcept && !concept.isAbstract) {
                 result += `if (referredElem.name === "true") {
                     this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: true }));
                 } else if (referredElem.name === "false") {
                     this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: false }));
-                }`
+                }`;
             }
         }
         return result;

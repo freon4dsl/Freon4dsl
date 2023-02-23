@@ -3,8 +3,7 @@ import { FreTyperCheckerPhase1 } from "./FreTyperCheckerPhase1";
 import { FreTyperCheckerPhase2 } from "./FreTyperCheckerPhase2";
 import { TyperDef } from "../metalanguage";
 
-
-export class FreTyperChecker extends Checker<TyperDef>{
+export class FreTyperChecker extends Checker<TyperDef> {
     runner = new CheckRunner(this.errors, this.warnings);
 
     check(definition: TyperDef): void {

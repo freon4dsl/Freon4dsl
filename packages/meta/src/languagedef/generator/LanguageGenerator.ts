@@ -87,20 +87,24 @@ export class LanguageGenerator {
 
         language.units.forEach(unit => {
             LOGGER.log(`Generating concept: ${this.languageGenFolder}/${Names.classifier(unit)}.ts`);
-            const generated = FileUtil.pretty(unitTemplate.generateUnit(unit), "concept " + unit.name, generationStatus);
-            fs.writeFileSync(`${this.languageGenFolder}/${Names.classifier(unit)}.ts`, generated);
+            const innerGenerated = FileUtil.pretty(unitTemplate.generateUnit(unit), "concept " + unit.name, generationStatus);
+            fs.writeFileSync(`${this.languageGenFolder}/${Names.classifier(unit)}.ts`, innerGenerated);
         });
 
         language.concepts.forEach(concept => {
             LOGGER.log(`Generating concept: ${this.languageGenFolder}/${Names.concept(concept)}.ts`);
-            const generated = FileUtil.pretty(conceptTemplate.generateConcept(concept), "concept " + concept.name, generationStatus);
-            fs.writeFileSync(`${this.languageGenFolder}/${Names.concept(concept)}.ts`, generated);
+            const innerGenerated = FileUtil.pretty(conceptTemplate.generateConcept(concept), "concept " + concept.name, generationStatus);
+            fs.writeFileSync(`${this.languageGenFolder}/${Names.concept(concept)}.ts`, innerGenerated);
         });
 
         language.interfaces.forEach(freInterface => {
             LOGGER.log(`Generating interface: ${this.languageGenFolder}/${Names.interface(freInterface)}.ts`);
-            const generated = FileUtil.pretty(interfaceTemplate.generateInterface(freInterface, relativePath), "interface " + freInterface.name, generationStatus);
-            fs.writeFileSync(`${this.languageGenFolder}/${Names.interface(freInterface)}.ts`, generated);
+            const innerGenerated = FileUtil.pretty(
+                interfaceTemplate.generateInterface(freInterface, relativePath),
+                "interface " + freInterface.name,
+                generationStatus
+            );
+            fs.writeFileSync(`${this.languageGenFolder}/${Names.interface(freInterface)}.ts`, innerGenerated);
         });
 
         // the following classes do not need the relative path for their imports

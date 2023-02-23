@@ -1,5 +1,5 @@
 import { FreUnitDescription } from "../../languagedef/metalanguage/FreLanguage";
-import { CheckRunner, Checker } from "../../utils";
+import { CheckRunner, Checker, ParseLocationUtil } from "../../utils";
 import {
     FreConcept,
     FreLanguage,
@@ -18,7 +18,6 @@ import { CommonChecker } from "../../languagedef/checking/CommonChecker";
 
 const LOGGER = new MetaLogger("ScoperChecker").mute();
 
-// TODO use ParseLocatonUtil
 export class ScoperChecker extends Checker<ScopeDef> {
     runner = new CheckRunner(this.errors, this.warnings);
     myExpressionChecker: FreLangExpressionChecker;
@@ -42,7 +41,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
             {
                 check: this.language.name === definition.languageName,
                 error:  `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' ` +
-                        `does not match language '${this.language.name}' [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`
+                        `does not match language '${this.language.name}' ${ParseLocationUtil.location(definition)}.`
             });
 
         // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
@@ -66,7 +65,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         LOGGER.log("Checking namespace definition for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
-            error: `Cannot add namespaces to concept ${enclosingConcept.name} that is not a namespace itself [file: ${namespaceAddition.location.filename}:${namespaceAddition.location?.start.line}:${namespaceAddition.location?.start.column}].`,
+            error: `Cannot add namespaces to concept ${enclosingConcept.name} that is not a namespace itself ${ParseLocationUtil.location(namespaceAddition)}.`,
             whenOk: () => {
                 namespaceAddition.expressions.forEach(exp => {
                     this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
@@ -74,10 +73,10 @@ export class ScoperChecker extends Checker<ScopeDef> {
                     if (!!xx) {
                         this.runner.nestedCheck({
                             check: (!!xx.type && (xx.type instanceof FreConcept || xx.type instanceof FreUnitDescription)),
-                            error: `A namespace addition should refer to a concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`,
+                            error: `A namespace addition should refer to a concept ${ParseLocationUtil.location(exp)}.`,
                             whenOk: () => {
                                 this.runner.simpleCheck(this.myNamespaces.includes(xx.type),
-                                    `A namespace addition should refer to a namespace concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`);
+                                    `A namespace addition should refer to a namespace concept ${ParseLocationUtil.location(exp)}.`);
                             }
                         });
                     }

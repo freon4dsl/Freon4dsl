@@ -18,13 +18,13 @@ export class ScoperUtilsTemplate {
 
         // Template starts here
         return `
-        import { ${allLangConcepts}, 
+        import { ${allLangConcepts},
                     ${includeRoot ?
                         `${Names.classifier(language.modelConcept)},`
-                    : ``} 
-                    ${concreteNamespaces.map(ref => `${Names.classifier(ref)}`).join(", ")} 
+                    : ``}
+                    ${concreteNamespaces.map(ref => `${Names.classifier(ref)}`).join(", ")}
                 } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-              
+
         /**
          * Returns true if 'modelelement' is marked by 'isnamespace' in the scoper definition.
          * When no namespaces are defined in the scoper definition, this method only returns true if
@@ -32,8 +32,8 @@ export class ScoperUtilsTemplate {
          * @param modelelement
          */
         export function isNameSpace(modelelement: ${allLangConcepts}): boolean {
-            ${includeRoot ? `if (modelelement instanceof ${Names.classifier(language.modelConcept)}) { return true; }` : ``} 
-            ${concreteNamespaces.map(ref => `if (modelelement instanceof ${Names.classifier(ref)}) { return true; }`).join("\n")}      
+            ${includeRoot ? `if (modelelement instanceof ${Names.classifier(language.modelConcept)}) { return true; }` : ``}
+            ${concreteNamespaces.map(ref => `if (modelelement instanceof ${Names.classifier(ref)}) { return true; }`).join("\n")}
                 return false;
         }`;
     }

@@ -43,10 +43,8 @@ import {
     RHSBinExpListWithInitiator,
     RHSBinExpListWithSeparator, RHSBinExpListWithTerminator
 } from "./grammarModel";
-import { LOG2USER } from "../../utils/UserLogger";
-import { ListUtil } from "../../utils";
+import { LOG2USER, ListUtil } from "../../utils";
 import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator";
-
 
 export class ConceptMaker {
     imports: FreClassifier[] = [];
@@ -57,10 +55,10 @@ export class ConceptMaker {
 
     generateClassifiers(projectionGroup: FreEditProjectionGroup, conceptsUsed: FreClassifier[]): GrammarRule[] {
         this.currentProjectionGroup = projectionGroup;
-        let rules: GrammarRule[] = [];
+        const rules: GrammarRule[] = [];
         for (const freConcept of conceptsUsed) {
             // all methods in this class depend on the fact that only non-table projections are passes as parameter!!
-            let projection: FreEditProjection = ParserGenUtil.findNonTableProjection(projectionGroup, freConcept);
+            const projection: FreEditProjection = ParserGenUtil.findNonTableProjection(projectionGroup, freConcept);
             if (!!projection) {
                 // generate a grammar rule entry
                 rules.push(this.generateProjection(freConcept, projection, false));
@@ -80,7 +78,7 @@ export class ConceptMaker {
         } else {
             rule = new ConceptRule(freClassifier);
         }
-        const isSingleEntry: boolean = (projection.lines.length !== 1 ? false : true);
+        const isSingleEntry: boolean = (projection.lines.length === 1);
         for (const l of projection.lines) {
             rule.ruleParts.push(...this.doLine(l, false, isSingleEntry));
         }
@@ -98,14 +96,14 @@ export class ConceptMaker {
     }
 
     private addItems(list: FreEditProjectionItem[], inOptionalGroup: boolean, isSingleEntry: boolean): RightHandSideEntry[] {
-        let parts: RightHandSideEntry[] = [];
+        const parts: RightHandSideEntry[] = [];
         if (!!list && list.length !== 1) {
             isSingleEntry = false;
         }
         if (!!list && list.length > 0) {
-            list.forEach((item) => {
+            list.forEach(item => {
                 if (item instanceof FreOptionalPropertyProjection) {
-                    let subs: RightHandSideEntry[] = [];
+                    const subs: RightHandSideEntry[] = [];
                     let propIndex: number = 0; // the index in the list of parts in the optional group
                     let foundIndex: boolean = false;
                     item.lines.forEach(line => {
@@ -120,7 +118,7 @@ export class ConceptMaker {
                         if (!foundIndex) {
                             propIndex += subParts.length;
                         }
-                    })
+                    });
                     parts.push(new RHSOptionalGroup(item.property.referred, subs, propIndex));
                 } else if (item instanceof FreEditPropertyProjection) {
                     const propPart = this.makePropPart(item, inOptionalGroup, isSingleEntry);
@@ -130,7 +128,7 @@ export class ConceptMaker {
                 } else if (item instanceof FreEditProjectionText) {
                     parts.push(...this.makeTextPart(item));
                 } else if (item instanceof FreEditSuperProjection) {
-                    parts.push(...this.makeSuperParts(item, inOptionalGroup))
+                    parts.push(...this.makeSuperParts(item, inOptionalGroup));
                 }
             });
         }
@@ -146,7 +144,9 @@ export class ConceptMaker {
             // take care of named projections
             let myProjName: string = null;
             if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
-                ListUtil.addIfNotPresent<FreEditProjection>(this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName));
+                ListUtil.addIfNotPresent<FreEditProjection>(
+                    this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName)
+                );
                 myProjName = item.projectionName;
             }
             //
@@ -158,8 +158,8 @@ export class ConceptMaker {
                 if (!prop.isList) {
                     result = new RHSBinaryExp(prop, propType); // __fre_binary_propTypeName
                 } else {
-                    let joinText = this.makeListJoinText(item.listInfo?.joinText);
-                    if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+                    const joinText = this.makeListJoinText(item.listInfo?.joinText);
+                    if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
                         result = new RHSBinExpList(prop, propType); // __fre_binary_propTypeName*
                     } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                         result = new RHSBinExpListWithSeparator(prop, propType, joinText); // [ __fre_binary_propTypeName / "joinText" ]
@@ -186,8 +186,8 @@ export class ConceptMaker {
         let result: RHSPropEntry;
         if (prop.isPart) {
             // (list, part, optionality not relevant)
-            let joinText = this.makeListJoinText(item.listInfo?.joinText);
-            if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+            const joinText = this.makeListJoinText(item.listInfo?.joinText);
+            if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
                 result = new RHSPartListEntry(prop); // propTypeName*
             } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                 result = new RHSPartListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
@@ -200,8 +200,8 @@ export class ConceptMaker {
             }
         } else if (!prop.isPart) {
             // (list, reference, optionality not relevant)
-            let joinText = this.makeListJoinText(item.listInfo?.joinText);
-            if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+            const joinText = this.makeListJoinText(item.listInfo?.joinText);
+            if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
                 result = new RHSRefListEntry(prop); // propTypeName*
             } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                 result = new RHSRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
@@ -220,25 +220,25 @@ export class ConceptMaker {
     private makeSingleProperty(prop: FreProperty, myProjName: string, inOptionalGroup: boolean): RHSPropEntry {
         let result: RHSPropEntry;
         if (prop.isPart && (!prop.isOptional || inOptionalGroup)) {
-            result = new RHSPartEntry(prop, myProjName); //`${propTypeName}`;
+            result = new RHSPartEntry(prop, myProjName); // `${propTypeName}`;
         } else if (prop.isPart && prop.isOptional && !inOptionalGroup) {
-            result = new RHSPartOptionalEntry(prop, myProjName); //`${propTypeName} `;
+            result = new RHSPartOptionalEntry(prop, myProjName); // `${propTypeName} `;
         } else if (!prop.isPart && (!prop.isOptional || inOptionalGroup)) {
-            result = new RHSRefEntry(prop); //`${propTypeName} `;
+            result = new RHSRefEntry(prop); // `${propTypeName} `;
         } else if (!prop.isPart && prop.isOptional && !inOptionalGroup) {
-            result = new RHSRefOptionalEntry(prop); //`${propTypeName} `;
+            result = new RHSRefOptionalEntry(prop); // `${propTypeName} `;
         }
         return result;
     }
 
     private makeTextPart(item: FreEditProjectionText): RHSText[] {
-        let result: RHSText[] = [];
+        const result: RHSText[] = [];
         const trimmed = item.text.trim();
         let splitted: string[];
         if (trimmed.includes(" ")) {
             // we need to add a series of texts with whitespace between them
             splitted = trimmed.split(" ");
-            splitted.forEach((str) => {
+            splitted.forEach(str => {
                 if (str.length > 0) {
                     result.push(new RHSText(`\'${this.addExtraEscape(str)}\'`));
                 }
@@ -252,7 +252,10 @@ export class ConceptMaker {
         return result;
     }
 
-    private makePrimitiveProperty(prop: FrePrimitiveProperty, propType: FreClassifier, item: FreEditPropertyProjection, inOptionalGroup: boolean): RHSPropEntry {
+    private makePrimitiveProperty(prop: FrePrimitiveProperty,
+                                  propType: FreClassifier,
+                                  item: FreEditPropertyProjection,
+                                  inOptionalGroup: boolean): RHSPropEntry {
         if (propType === FrePrimitiveType.boolean && !!item.boolInfo) {
             // note that lists of booleans can never have a boolean keyword projection
             if (!item.boolInfo.falseKeyword) {
@@ -267,8 +270,8 @@ export class ConceptMaker {
                 return new RHSPrimOptionalEntry(prop);
             }
         } else {
-            let joinText = this.makeListJoinText(item.listInfo?.joinText);
-            if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+            const joinText = this.makeListJoinText(item.listInfo?.joinText);
+            if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
                 return new RHSPrimListEntry(prop); // propTypeName*
             } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                 return new RHSPrimListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
@@ -282,7 +285,6 @@ export class ConceptMaker {
                 return null;
             }
         }
-        return null;
     }
 
     private addExtraEscape(str: string) {
@@ -304,10 +306,10 @@ export class ConceptMaker {
     }
 
     private makeSuperParts(item: FreEditSuperProjection, inOptionalGroup: boolean): RightHandSideEntry[] {
-        let subs: RightHandSideEntry[] = [];
+        const subs: RightHandSideEntry[] = [];
         // find the projection that we need
-        let myProjection: FreEditProjection = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
-        const isSingleEntry: boolean = (myProjection.lines.length !== 1 ? false : true);
+        const myProjection: FreEditProjection = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
+        const isSingleEntry: boolean = (myProjection.lines.length === 1);
         myProjection.lines.forEach(line => {
             subs.push(...this.addItems(line.items, inOptionalGroup, isSingleEntry));
         });
@@ -322,8 +324,8 @@ export class ConceptMaker {
                 return new RHSLimitedRefOptionalEntry(prop);
             }
         } else {
-            let joinText = this.makeListJoinText(item.listInfo?.joinText);
-            if (joinText.length == 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+            const joinText = this.makeListJoinText(item.listInfo?.joinText);
+            if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
                 return new RHSLimitedRefListEntry(prop); // propTypeName*
             } else if (item.listInfo?.joinType === ListJoinType.Separator) {
                 return new RHSLimitedRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
@@ -339,7 +341,7 @@ export class ConceptMaker {
     }
 
     private checkRule(rule: ConceptRule) {
-        let xx: FreProperty[] = [];
+        const xx: FreProperty[] = [];
         for (const part of rule.ruleParts) {
             if (part instanceof RHSPropEntry) {
                 if (!xx.includes(part.property)) {

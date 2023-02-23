@@ -50,7 +50,7 @@ describe("Checking new typer", () => {
     });
 
     test(" on projectY.type file", () => {
-        if(!!language) {
+        if (!!language) {
             const predefType = language.concepts.find(x => x.name === "PredefinedType");
             expect(predefType).not.toBeNull();
             expect(predefType).not.toBeUndefined();
@@ -77,7 +77,7 @@ describe("Checking new typer", () => {
     });
 
     test(" on multiple type files", () => {
-        if(!!language) {
+        if (!!language) {
             const predefType = language.concepts.find(x => x.name === "PredefinedType");
             expect(predefType).not.toBeNull();
             expect(predefType).not.toBeUndefined();

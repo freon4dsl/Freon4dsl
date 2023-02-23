@@ -5,8 +5,8 @@ import { GenerationUtil } from "../../../../utils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPartEntry extends RHSPropEntry {
-    private projectionName: string;
-    
+    private readonly projectionName: string;
+
     constructor(prop: FreProperty, projectionName: string) {
         super(prop);
         this.isList = false;
@@ -19,11 +19,12 @@ export class RHSPartEntry extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         GenerationUtil.getBaseTypeAsString(this.property);
+        // tslint:disable-next-line:max-line-length
         return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformNode}(${nodeName}[${index}]); // RHSPartEntry\n`;
     }
 
     toString(depth: number): string {
-        let indent = makeIndent(depth);
+        const indent = makeIndent(depth);
         return indent + "RHSPartEntry: " + this.property.name;
     }
 }

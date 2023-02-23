@@ -8,29 +8,29 @@ import { FreTyperElement } from "./FreTyperElement";
 /**
  * Class FretTypeRule is the implementation of the concept with the same name in the language definition file.
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
- * to changes in the state of its properties.
+ * to any changes in the state of its properties.
  */
 export abstract class FretTypeRule extends FreTyperElement {
     readonly $typename: string = "FretTypeRule"; // holds the metatype in the form of a string
     $id: string; // a unique identifier
 
     exp: FretExp; // implementation of part 'exp'
-    __returnType: MetaElementReference<FreClassifier>;    // to be set by the checker
+    $returnType: MetaElementReference<FreClassifier>;    // to be set by the checker
     owner: FretClassifierSpec;
 
     toFreString() {
         return "TO BE IMPLEMENTED BY SUBCLASSES OF FretTypeRule";
     }
     get returnType(): FreClassifier {
-        if (!!this.__returnType && !!this.__returnType.referred) {
-            return this.__returnType.referred;
+        if (!!this.$returnType && !!this.$returnType.referred) {
+            return this.$returnType.referred;
         }
         return null;
     }
     set returnType(cls: FreClassifier) {
         if (!!cls) {
-            this.__returnType = MetaElementReference.create<FreClassifier>(cls, "FreClassifier");
-            this.__returnType.owner = this;
+            this.$returnType = MetaElementReference.create<FreClassifier>(cls, "FreClassifier");
+            this.$returnType.owner = this;
         }
     }
 }

@@ -21,7 +21,7 @@ export class ElementWithList extends FreNodeBaseImpl implements FreNamedNode  {
 
     readonly $typename: string = "ElementWithList"; // holds the metatype in the form of a string
     $id: string; // a unique identifier
-    // parse_location: FreParseLocation; // if relevant, the location of this element within the source from which it is parsed
+    // parseLocation: FreParseLocation; // if relevant, the location of this element within the source from which it is parsed
     name: string = ""; // implementation of name
     myList: SimpleElement[]; // the list!!!
 

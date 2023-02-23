@@ -18,7 +18,7 @@ export class ConceptRule extends GrammarRule {
     }
 
     private propsToSet(): FreProperty[] {
-        let xx: FreProperty[] = [];
+        const xx: FreProperty[] = [];
         for (const part of this.ruleParts) {
             if (part instanceof RHSPropEntry) {
                 if (!xx.includes(part.property)) {
@@ -37,7 +37,7 @@ export class ConceptRule extends GrammarRule {
         //     }
         // });
         // end check
-        let rule = `${this.ruleName} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(" ")}`;
+        const rule = `${this.ruleName} = ${this.ruleParts.map(part => `${part.toGrammar()}`).join(" ")}`;
         return rule.trimEnd() + " ;";
     }
 
@@ -49,16 +49,16 @@ export class ConceptRule extends GrammarRule {
                     // console.log('transform${this.ruleName} called: ' + branch.name);
                     ${myProperties.map(prop => `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)}`).join(";\n")}
                     const children = this.${mainAnalyserName}.getChildren(branch);` +  // to avoid an extra newline in the result
-            `${this.ruleParts.map((part, index) => `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}      
+            `${this.ruleParts.map((part, index) => `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}
                     return ${Names.classifier(this.concept)}.create({
                         ${myProperties.map(prop => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}
-                        ${myProperties.length > 0 ? ',' : ''} parse_location: this.${mainAnalyserName}.location(branch)
+                        ${myProperties.length > 0 ? "," : ""} parseLocation: this.${mainAnalyserName}.location(branch)
                     });
                 }`;
     }
 
     toString(): string {
-        let indent: string = "\n\t";
+        const indent: string = "\n\t";
         return indent + "ConceptRule: " + this.concept.name + indent + this.ruleParts.map(sub => sub.toString(2)).join(indent);
     }
 }

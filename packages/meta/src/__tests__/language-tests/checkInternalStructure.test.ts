@@ -3,9 +3,6 @@ import { FreConcept, FreExpressionConcept, FreLanguage, FreLimitedConcept, FrePr
 import { LangUtil, MetaLogger } from "../../utils";
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
-
-
-
 describe("Checking internal structure of language", () => {
     const parser = new LanguageParser();
     const testdir = "src/__tests__/language-tests/correctDefFiles/internal-structure/";
@@ -26,7 +23,7 @@ describe("Checking internal structure of language", () => {
     // on FretLanguage
     // ??? predefined (primitive types)
     test("internal structure of FretLanguage", () => {
-        let freLanguage: FreLanguage = readAstFile(testdir + "test2.ast");
+        const freLanguage: FreLanguage = readAstFile(testdir + "test2.ast");
 
         expect(freLanguage).not.toBeUndefined();
         // there is a root concept
@@ -52,7 +49,7 @@ describe("Checking internal structure of language", () => {
     // on FretConcept and FretInterface
     // TODO if an implemented interface has a prop, we can find it
     test("internal structure of FretConcept and FretInterface: properties", () => {
-        let freLanguage: FreLanguage = readAstFile(testdir + "test2.ast");
+        const freLanguage: FreLanguage = readAstFile(testdir + "test2.ast");
         expect(freLanguage).not.toBeUndefined();
         // no references in the parts list, and vice versa
         // no primProps in reference list
@@ -70,7 +67,7 @@ describe("Checking internal structure of language", () => {
     });
 
     test("internal structure of FretConcept and FretInterface: inheritance", () => {
-        let freLanguage: FreLanguage = readAstFile(testdir + "test3.ast");
+        const freLanguage: FreLanguage = readAstFile(testdir + "test3.ast");
         expect(freLanguage).not.toBeUndefined();
 
         // no references in the parts list, and vice versa
@@ -120,7 +117,7 @@ describe("Checking internal structure of language", () => {
 
     // on FretInstance
     test("internal structure of FretInstance", () => {
-        let freLanguage: FreLanguage = readAstFile(testdir + "test4.ast");
+        const freLanguage: FreLanguage = readAstFile(testdir + "test4.ast");
         expect(freLanguage).not.toBeUndefined();
         const list = freLanguage.concepts.filter(con => con instanceof FreLimitedConcept);
         // FretInstance.concept should be a limited property
@@ -145,7 +142,7 @@ describe("Checking internal structure of language", () => {
 
     // test initial value of properties
     test("initial values of primitive properties", () => {
-        let freLanguage: FreLanguage = readAstFile(testdir + "test5.ast");
+        const freLanguage: FreLanguage = readAstFile(testdir + "test5.ast");
         expect(freLanguage).not.toBeUndefined();
         const BB: FreConcept = freLanguage.concepts.find(con => con.name === "BB");
         expect(BB).not.toBeNull();
@@ -192,7 +189,7 @@ describe("Checking internal structure of language", () => {
     });
 
     test("all kinds of limited concepts", () => {
-        let freLanguage: FreLanguage = readAstFile(testdir + "test6.ast");
+        const freLanguage: FreLanguage = readAstFile(testdir + "test6.ast");
         expect(freLanguage).not.toBeUndefined();
         const CC: FreConcept = freLanguage.concepts.find(con => con.name === "CC");
         expect(CC instanceof FreLimitedConcept).toBe(true);
@@ -200,11 +197,11 @@ describe("Checking internal structure of language", () => {
             switch (inst.name) {
                 case "CC1": {
                     expect(inst.props.find(prop => prop.name === "AAprop1").value).toBe("some_text");
-                    expect(inst.props.find(prop => prop.name === "AAprop2").valueList).toStrictEqual([ "text1", "text2" ]);
+                    expect(inst.props.find(prop => prop.name === "AAprop2").valueList).toStrictEqual(["text1", "text2"]);
                     expect(inst.props.find(prop => prop.name === "AAprop3").value).toBe(78);
-                    expect(inst.props.find(prop => prop.name === "AAprop4").valueList).toStrictEqual([ 102, 3489 ]);
+                    expect(inst.props.find(prop => prop.name === "AAprop4").valueList).toStrictEqual([102, 3489]);
                     expect(inst.props.find(prop => prop.name === "AAprop5").value).toBe(true);
-                    expect(inst.props.find(prop => prop.name === "AAprop6").valueList).toStrictEqual([ false, false ]);
+                    expect(inst.props.find(prop => prop.name === "AAprop6").valueList).toStrictEqual([false, false]);
                     break;
                 }
                 case "CC2": {

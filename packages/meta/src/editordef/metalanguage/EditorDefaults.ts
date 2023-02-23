@@ -1,9 +1,9 @@
-import { ListJoinType, FreEditProjectionGroup } from "./FreEditDefLang";
+import { ListJoinType } from "./FreEditDefLang";
 
 export class EditorDefaults {
     static standardReferenceSeparator = ".";
     static startBracket = "{";
-    static endBracket ="}";
+    static endBracket = "}";
     static standardIndent = 4;
     static listJoinType = ListJoinType.Separator;
     static listJoinText = "";
@@ -16,6 +16,4 @@ export class EditorDefaults {
 
     // for parser/unparser
     static parserGroupName = "parser";
-
-
 }
