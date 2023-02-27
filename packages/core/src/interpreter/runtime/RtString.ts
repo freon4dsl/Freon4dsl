@@ -3,11 +3,9 @@ import { RtNumber } from "./RtNumber";
 import { RtObject } from "./RtObject";
 
 export class RtString extends RtObject {
-    readonly _type: string = "RtString";
-
     static readonly EMPTY_STRING = new RtString("");
-
-    private value: string;
+    readonly _type: string = "RtString";
+    private readonly value: string;
 
     constructor(value: string) {
         super();
@@ -26,15 +24,15 @@ export class RtString extends RtObject {
         return this.value;
     }
 
-    startsWith(other: RtString): RtBoolean  {
+    startsWith(other: RtString): RtBoolean {
         return RtBoolean.of(this.asString().startsWith(other.asString()));
     }
 
-    endsWith(other: RtString): RtBoolean  {
+    endsWith(other: RtString): RtBoolean {
         return RtBoolean.of(this.asString().endsWith(other.asString()));
     }
 
-    length(): RtNumber  {
+    length(): RtNumber {
         return new RtNumber(this.asString().length);
     }
 }

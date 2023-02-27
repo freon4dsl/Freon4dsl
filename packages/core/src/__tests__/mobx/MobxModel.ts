@@ -14,7 +14,7 @@ export class ModelContext {
         this.root = null;
         makeObservable(this, {
             root: observable
-        })
+        });
     }
 }
 
@@ -26,7 +26,7 @@ export class MobxTestElement extends FreNodeBaseImpl {
         this.name = name;
         makeObservable(this, {
             name: observable
-        })
+        });
     }
 
     toString() {
@@ -95,7 +95,6 @@ export class MobxTestParts extends MobxTestElement {
     }
 }
 
-
 export class MobxTestReferences extends MobxTestElement {
     name: string;
 
@@ -117,7 +116,7 @@ export class MobxTestTreeNode extends MobxTestElement {
     constructor(name: string) {
         super(name);
         observablepart(this, "left");
-        observablepart(this, "right")
+        observablepart(this, "right");
     }
 
     toString(): string {

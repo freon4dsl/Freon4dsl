@@ -17,8 +17,7 @@ export class SelectBox extends AbstractChoiceBox {
 
     private getAllOptions(editor: FreEditor): SelectOption[] {
         return [];
-    };
-
+    }
 
     constructor(
         exp: FreNode,
@@ -36,11 +35,12 @@ export class SelectBox extends AbstractChoiceBox {
     }
 
     getOptions(editor: FreEditor): SelectOption[] {
-        const matchingOptions: SelectOption[] = this.getAllOptions(editor);
+        let matchingOptions: SelectOption[];
+        matchingOptions = this.getAllOptions(editor);
         // matching text does not work correct as you need to know the cursor position.
         // TODO filter in the component where the cursor position is known.
             // .filter(option => MatchUtil.partialMatch(this.textBox.getText(), option.label));
-        return matchingOptions
+        return matchingOptions;
     }
 
     public deleteWhenEmpty1(): boolean {

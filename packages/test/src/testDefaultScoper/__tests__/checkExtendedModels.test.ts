@@ -79,8 +79,8 @@ describe("Testing Default Scoper", () => {
             "public7_OF_private6_OF_public2_OF_unit1_OF_model" ], "DSpublic");
 
         // add them to the other unit
-        let otherUnit = model.findUnit("unit16_OF_model");
-        console.log("otherUnit: " + otherUnit.$$propertyIndex)
+        const otherUnit = model.findUnit("unit16_OF_model");
+        // console.log("otherUnit: " + otherUnit.$$propertyIndex);
         otherUnit.dsRefs.push(ref1);
         otherUnit.dsRefs.push(ref2);
         otherUnit.dsRefs.push(ref3);

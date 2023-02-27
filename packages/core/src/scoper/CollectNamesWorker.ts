@@ -1,7 +1,6 @@
 /**
  * This worker class collects all visible names in the model.
  */
-import { element } from "svelte/internal";
 import { FreNode, FreModelUnit, FreNamedNode } from "../ast";
 import { AstWorker, modelUnit } from "../ast-utils";
 import { FreLanguage, Property } from "../language";
@@ -59,7 +58,8 @@ export class CollectNamesWorker implements AstWorker {
     /**
      * Checks whether 'property' has a type that conforms to 'this.metatype'.
      *
-     * @param namedElement
+     * @param freNode
+     * @private
      */
     private hasLookedForType(freNode: FreNode) {
         if (!!this.metatype) {

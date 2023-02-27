@@ -1,5 +1,5 @@
 import { FreEditor } from "../editor";
-import { FreInterpreter } from "../interpreter/index";
+import { FreInterpreter } from "../interpreter";
 import { FreValidator } from "../validator";
 import { FreScoperComposite } from "../scoper";
 import { FreCompositeTyper } from "../typer";
@@ -11,7 +11,7 @@ import { FreModel } from "../ast";
 export interface FreEnvironment {
     /**
      * Creates a new model, an implementation of the language defined in the .ast file
-     * @param name
+     * @param modelName
      */
     newModel(modelName: string): FreModel;
 
@@ -27,4 +27,3 @@ export interface FreEnvironment {
     languageName: string;
     fileExtensions: Map<string, string>;
 }
-

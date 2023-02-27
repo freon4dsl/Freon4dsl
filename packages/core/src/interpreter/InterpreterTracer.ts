@@ -1,6 +1,6 @@
 import { ConceptFunction, OwningPropertyFunction } from "./IMainInterpreter";
 import { InterpreterContext } from "./InterpreterContext";
-import { RtObject } from "./runtime/RtObject";
+import { RtObject } from "./runtime";
 
 const INDENT = "    ";
 const INDENT_DIRECT = "|-- ";
@@ -24,7 +24,7 @@ class TraceNode {
      * Return a tree-shaped tree with the full calculation.
      */
     toStringRecursive(): string {
-        return this.toIndentedString("", true)
+        return this.toIndentedString("", true);
     }
 
     /**
@@ -32,25 +32,26 @@ class TraceNode {
      */
     protected toIndentedString(indent: string, thisIsLast?: boolean): string {
         let result: string;
-        if( this.node === undefined ) {
+        if ( this.node === undefined ) {
             // The root, no output string here
             result = "";
         } else {
-            result = indent + this.tracer.property(this.node) + ": " + this.tracer.concept(this.node) + " = " + this.value + (this.idValid(this.ctx)? " Ctx " + this.ctx.toString() : "")  + "\n";
+            result = indent + this.tracer.property(this.node) + ": " + this.tracer.concept(this.node)
+                + " = " + this.value + (this.idValid(this.ctx) ? " Ctx " + this.ctx.toString() : "") + "\n";
         }
         this.children.forEach((child: TraceNode, index: number) => {
-            let baseIndent = "    ";
-            if( !thisIsLast) {
+            let baseIndent: string;
+            if ( !thisIsLast) {
                 baseIndent = (index === this.children.length ? indent : indent.replace(INDENT_DIRECT, INDENT_INDIRECT));
-            }else {
+            } else {
                 baseIndent = (index === this.children.length ? indent : indent.replace(INDENT_DIRECT, INDENT));
             }
-            result += child.toIndentedString(baseIndent + INDENT_DIRECT, (index === this.children.length-1));
+            result += child.toIndentedString(baseIndent + INDENT_DIRECT, (index === this.children.length - 1));
         } );
         return result;
     }
 
-    idValid(ctx: InterpreterContext){
+    idValid(ctx: InterpreterContext) {
         return !!ctx && (ctx !== InterpreterContext.EMPTY_CONTEXT);
     }
 }
@@ -78,7 +79,7 @@ export class InterpreterTracer {
         const newTrace = new TraceNode(this);
         newTrace.node = node;
         newTrace.parent = this.current;
-        if( this.current.ctx !== ctx) {
+        if ( this.current.ctx !== ctx) {
             newTrace.ctx = ctx;
         }
         this.current.children.push(newTrace);
@@ -86,9 +87,9 @@ export class InterpreterTracer {
     }
 
     push(node: Object, value: RtObject, ctx?: InterpreterContext) {
-        if(this.current.node !== node) {
+        if (this.current.node !== node) {
             console.error("INCORRECT ELEMENT IN TRACE");
-            throw new Error("INCORRECT ELEMENT IN TRACE")
+            throw new Error("INCORRECT ELEMENT IN TRACE");
         }
         this.current.value = value;
     }
@@ -101,5 +102,3 @@ export class InterpreterTracer {
         this.current = this.current.parent;
     }
 }
-
-

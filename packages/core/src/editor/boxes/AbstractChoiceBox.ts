@@ -11,7 +11,7 @@ export abstract class AbstractChoiceBox extends Box {
     _textBox: TextBox;
     textHelper: ChoiceTextHelper;
 
-    constructor(exp: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
+    protected constructor(exp: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
         super(exp, role);
         this.placeholder = placeHolder;
         this.textHelper = new ChoiceTextHelper();
@@ -54,7 +54,7 @@ export abstract class AbstractChoiceBox extends Box {
     selectOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
         console.error("AbstractChoiceBox.selectOption");
         return BehaviorExecutionResult.NULL;
-    };
+    }
 
     setCaret: (caret: FreCaret) => void = (caret: FreCaret) => {
         if (!!this.textBox) {

@@ -17,7 +17,7 @@ export class FreSearcher {
     findStructure(toFind: Partial<FreNode>, toBeSearched: FreNode, metatype?: string): FreNode[] {
         if (!!toFind && !!toBeSearched) {
             // create the finder
-            let searchWorker = new StructureSearchWorker(toFind, metatype);
+            const searchWorker = new StructureSearchWorker(toFind, metatype);
             // do the work
             return this.internalFind(toBeSearched, searchWorker);
         } else {
@@ -36,7 +36,7 @@ export class FreSearcher {
     findNamedElement(nameToFind: string, toBeSearched: FreNode, metatype?: string): FreNode[] {
         if (nameToFind.length > 0 && !!toBeSearched) {
             // create the finder
-            let searchWorker = new NamedElementSearchWorker(nameToFind, true, metatype);
+            const searchWorker = new NamedElementSearchWorker(nameToFind, true, metatype);
             // do the work
             return this.internalFind(toBeSearched, searchWorker);
         } else {
@@ -55,7 +55,7 @@ export class FreSearcher {
     findNamedElementNotCaseSensitive(nameToFind: string, toBeSearched: FreNode, metatype?: string): FreNode[] {
         if (nameToFind.length > 0 && !!toBeSearched) {
             // create the finder
-            let searchWorker = new NamedElementSearchWorker(nameToFind, false, metatype);
+            const searchWorker = new NamedElementSearchWorker(nameToFind, false, metatype);
             // do the work
             return this.internalFind(toBeSearched, searchWorker);
         } else {
@@ -81,7 +81,7 @@ export class FreSearcher {
         // TODO determine whether line breaks and tabs should be handled specially
         if (toFind.length > 0 && !!toBeSearched && !!writer) {
             // create the finder
-            let searchWorker = new StringSearchWorker(toFind, writer, metatype);
+            const searchWorker = new StringSearchWorker(toFind, writer, metatype);
             // do the work
             return this.internalFind(toBeSearched, searchWorker);
         } else {

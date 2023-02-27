@@ -320,9 +320,6 @@ export class FreLanguage {
      */
     public metaConformsToType(element: FreNode, requestedType: string): boolean {
         const metatype = element.freLanguageConcept();
-        if (metatype === requestedType || FreLanguage.getInstance().subConcepts(requestedType).includes(metatype)) {
-            return true;
-        }
-        return false;
+        return metatype === requestedType || FreLanguage.getInstance().subConcepts(requestedType).includes(metatype);
     }
 }

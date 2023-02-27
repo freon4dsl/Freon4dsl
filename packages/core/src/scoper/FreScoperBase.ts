@@ -1,9 +1,9 @@
-import { modelUnit } from "../ast-utils/index";
-import { FreNode, FreNodeReference, FreModelUnit, FreNamedNode } from "../ast/index";
-import { FreLanguageEnvironment } from "../environment/index";
-import { FreLanguage } from "../language/index";
-import { FreLogger } from "../logging/index";
-import { FreCompositeTyper } from "../typer/index";
+import { modelUnit } from "../ast-utils";
+import { FreNode, FreNodeReference, FreModelUnit, FreNamedNode } from "../ast";
+import { FreLanguageEnvironment } from "../environment";
+import { FreLanguage } from "../language";
+import { FreLogger } from "../logging";
+import { FreCompositeTyper } from "../typer";
 import { FreScoperComposite } from "./FreScoperComposite";
 import { FreNamespace } from "./FreNamespace";
 import { FreScoper } from "./FreScoper";
@@ -20,7 +20,7 @@ export abstract class FreScoperBase implements FreScoper {
     public resolvePathName(basePosition: FreNode, doNotSearch: string, pathname: string[], metatype?: string): FreNamedNode {
         this.currentRoleNames.push(doNotSearch);
         // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
-        let elementsFromBasePosition: FreNamedNode[] = this.getVisibleElements(basePosition);
+        const elementsFromBasePosition: FreNamedNode[] = this.getVisibleElements(basePosition);
         // start the loop over the set of names in the pathname
         let previousFound: FreNode = basePosition;
         let found: FreNamedNode = null;
@@ -49,7 +49,7 @@ export abstract class FreScoperBase implements FreScoper {
     }
 
     private isPublic(found: FreNamedNode): boolean {
-        // find the information about whether this element is public or private within its parent from the its owner:
+        // find the information about whether this element is public or private within its parent from the owner descriptor:
         // 1. check the language description to find the concept description of the parent
         // 2. from the parent find the property description with the right name
         // 3. check whether the found property is public
@@ -189,6 +189,6 @@ export abstract class FreScoperBase implements FreScoper {
     abstract hasAlternativeScope(modelelement: FreNode): boolean;
 
     abstract getAlternativeScope(modelelement: FreNode): FreNamespace;
-    
+
     abstract additionalNamespaces(element: FreNode): FreNode[];
 }

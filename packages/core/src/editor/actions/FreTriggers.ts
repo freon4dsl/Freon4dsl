@@ -1,4 +1,4 @@
-import { FreKey } from "../util/Keys";
+import { FreKey } from "../util";
 
 export type FreTriggerType = string | RegExp | FreKey; // the definition, like parameter
 export type FreTriggerUse = string | FreKey; // the use, like argument
@@ -20,7 +20,7 @@ export function isString(a: FreTriggerType): a is string {
 }
 
 export function triggerTypeToString(trigger: FreTriggerType): string {
-    if (isString(trigger)){
+    if (isString(trigger)) {
         return trigger;
     } else if (isProKey(trigger)) {
         return "'" + trigger.meta.toString() + "-" + trigger.key + "'";

@@ -43,11 +43,11 @@ export abstract class Box {
     actualWidth: number = -1;
     actualHeight: number = -1;
 
-    constructor(element: FreNode, role: string) {
+    protected constructor(element: FreNode, role: string) {
         FreUtils.CHECK(!!element, "Element cannot be empty in Box constructor");
         this.element = element;
         this.role = role;
-        this.$id = FreUtils.BOX_ID(); //uuid.v4();
+        this.$id = FreUtils.BOX_ID(); // uuid.v4();
     }
 
     get id(): string {
@@ -212,7 +212,7 @@ export abstract class Box {
      * @param propertyName
      * @param propertyIndex
      */
-    findChildBoxForProperty(propertyName?: string, propertyIndex?: number) : Box {
+    findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box {
         // console.log('findChildBoxForProperty ' + this.role + "[" + propertyName + ", " + propertyIndex + "]");
         for (const child of this.children) {
             // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")

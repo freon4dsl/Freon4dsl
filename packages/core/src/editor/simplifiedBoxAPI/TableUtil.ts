@@ -8,8 +8,7 @@ import {
     TableRowBox
 } from "../boxes";
 import {
-    Box, BoxUtil,
-    FreBoxProvider,
+    Box, FreBoxProvider,
     FreProjectionHandler,
     GridOrientation
 } from "../index";
@@ -56,7 +55,7 @@ export class TableUtil {
 
     public static rowBox(element: FreNode, propertyName: string, conceptName: string, cells: Box[], rowIndex: number, hasHeaders: boolean): TableRowBox {
         if (isNullOrUndefined(rowIndex)) {
-            console.log('NO rowIndex for TableRowBox! ' + element.freLanguageConcept() + element.freId());
+            console.log("NO rowIndex for TableRowBox! " + element.freLanguageConcept() + element.freId());
         }
         // Note that css grid counts from 1, not 0, which is common in lists.
         let gridIndex: number;
@@ -70,19 +69,23 @@ export class TableUtil {
             return new TableCellBox(element, propertyName, rowIndex, conceptName, cellRoleName, gridIndex, index + 1, cell);
         });
         const role: string = RoleProvider.row(element.freLanguageConcept(), propertyName, gridIndex);
-        let result = new TableRowBox(element, role, myContent, gridIndex);
+        const result = new TableRowBox(element, role, myContent, gridIndex);
         result.propertyName = propertyName;
         result.propertyIndex = rowIndex;
         return result;
     }
 
-    private static tableBox(orientation: GridOrientation, element: FreNode, list: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler): TableBox {
+    private static tableBox(orientation: GridOrientation,
+                            element: FreNode,
+                            list: FreNode[],
+                            propertyName: string,
+                            boxProviderCache: FreProjectionHandler): TableBox {
         // console.log('calling tableBox')
         // Find the information on the property to be shown and check it.
         const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
         FreUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.freLanguageConcept()}.${propertyName}' because it is not a list.`);
         // Create the TableRowBoxes.
-        let children: Box[] = [];
+        const children: Box[] = [];
         let hasHeaders: boolean = false;
         let nrOfColumns: number = 0;
         if (!isNullOrUndefined(list) && list.length > 0) {
@@ -119,7 +122,7 @@ export class TableUtil {
         const content = BoxFactory.action(element, "alias-add-row-or-column", `<add new ${orientation}>`,
             { propertyName: propertyName, conceptName: conceptName });
         // Note that a placeholder is only added when there are no other elements in the table, therefore its index is always 0.
-        return  TableUtil.rowBox(
+        return TableUtil.rowBox(
             element,
             propertyName,
             conceptName,

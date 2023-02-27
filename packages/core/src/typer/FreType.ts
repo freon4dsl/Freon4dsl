@@ -9,7 +9,7 @@ export interface FreType {
 
     /**
      * If this type corresponds with an element from the AST, then the corresponding element is returned.
-     * Otherwise the result is null.
+     * Otherwise, the result is null.
      */
     toAstElement(): FreNode;
 

@@ -45,7 +45,7 @@ export class FreUtils {
         if (!(target && source)) {
             return;
         }
-        Object.keys(source).forEach((key) => {
+        Object.keys(source).forEach(key => {
             if (source.hasOwnProperty(key)) {
                 (target as any)[key] = (source as any)[key];
             }

@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from "../../util/index";
+import { isNullOrUndefined } from "../../util";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjectionHandler } from "./FreProjectionHandler";
 import { FreNode } from "../../ast";
@@ -20,21 +20,21 @@ export class FreHeaderProvider extends FreBoxProvider {
 
     protected getContent(projectionName: string): Box {
         const cells: Box[] = [];
-        let headers = this.mainHandler.getTableHeaderInfo(this.conceptName, projectionName);
+        const headers = this.mainHandler.getTableHeaderInfo(this.conceptName, projectionName);
         // console.log('getting headers for ' + this.conceptName + ', with projection ' + projectionName + ' : ' + headers )
         // console.log('    know table projections ' + this.knownTableProjections )
         if (!!headers && headers.length > 0) {
             headers.forEach((head, index) => {
                 // console.log('pushing cell: ' + head);
                 // todo should the labelBox be wrapped in a TableCellBox?
-                cells.push(BoxUtil.labelBox(this._element, head, `table-header-${index+1}`));
+                cells.push(BoxUtil.labelBox(this._element, head, `table-header-${index + 1}`));
             });
             this._hasContent = true;
         } else {
             this._hasContent = false;
         }
 
-        let result: TableRowBox = TableUtil.rowBox(
+        const result: TableRowBox = TableUtil.rowBox(
             this._element,
             this.propertyName,
             this.conceptName,
@@ -73,7 +73,7 @@ export class FreHeaderProvider extends FreBoxProvider {
                 this.usedProjection = this.findProjectionToUse(true);
             } else {
                 // Named projection
-                this.usedProjection = ownerRequired
+                this.usedProjection = ownerRequired;
             }
         }
         // console.log("Header Provider Projection for " + this._element.freLanguageConcept() + " is " + this.usedProjection);

@@ -1,4 +1,4 @@
-import { FreAction } from "../actions/index";
+import { FreAction } from "../actions";
 
 /**
  * Describes an option in a dropdown
@@ -38,4 +38,3 @@ export function findOption(options: SelectOption[], id: string): SelectOption | 
     const index = options.findIndex(option => option.label === id);
     return (index === -1 ? null : options[index]);
 }
-

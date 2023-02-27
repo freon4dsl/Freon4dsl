@@ -81,7 +81,6 @@ export function isNumeric(event: KeyboardEvent): boolean {
             case "8":
             case "9": {
                 return true;
-                break;
             }
             default: {
                 return false;

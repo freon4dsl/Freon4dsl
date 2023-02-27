@@ -32,7 +32,8 @@ export class OptionalBox extends Box {
         super(element, role);
         this.content = box;
         box.parent = this;
-        this.placeholder = BoxFactory.action(element, role, actionText); // TODO question: should not the role be diff from role of this box? Where is the "action" prefix added?
+        // TODO question: should not the role be diff from role of this box? Where is the "action" prefix added?
+        this.placeholder = BoxFactory.action(element, role, actionText);
         this.placeholder.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;

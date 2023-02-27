@@ -4,7 +4,6 @@ import { FreType } from "./FreType";
 import { FreParseLocation } from "../reader";
 
 class NamedNode implements FreNamedNode {
-    name: string = "ANY";
     static environment: NamedNode;
 
     /**
@@ -16,6 +15,7 @@ class NamedNode implements FreNamedNode {
         }
         return this.environment;
     }
+    name: string = "ANY";
 
     /**
      * A private constructor, as demanded by the singleton pattern.
@@ -66,10 +66,9 @@ class NamedNode implements FreNamedNode {
 }
 
 export class AstType implements FreType {
-    astElement: FreNode;
 
     static create(data: Partial<AstType>): AstType {
-        const result: AstType = new AstType;
+        const result: AstType = new AstType();
         if (data.astElement) {
             result.astElement = data.astElement;
         }
@@ -77,7 +76,8 @@ export class AstType implements FreType {
     }
 
     static ANY: FreNamedNode = NamedNode.getInstance();
-    static ANY_TYPE: AstType = AstType.create({astElement: AstType.ANY});
+    static ANY_TYPE: AstType = AstType.create({ astElement: AstType.ANY });
+    astElement: FreNode;
 
     readonly $typename: string = "AstType";
 
@@ -97,7 +97,7 @@ export class AstType implements FreType {
     }
 
     copy(): AstType {
-        const result: AstType = new AstType;
+        const result: AstType = new AstType();
         if (this.astElement) {
             result.astElement = this.astElement;
         }

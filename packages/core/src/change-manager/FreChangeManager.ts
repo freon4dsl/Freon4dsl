@@ -44,10 +44,11 @@ export class FreChangeManager {
      * @param elemToChange
      * @param propertyName
      * @param newValue
+     * @param oldValue
      */
     public setPart(elemToChange: FreNode, propertyName: string, newValue: DecoratedModelElement, oldValue: DecoratedModelElement): void {
         LOGGER.log("ChangeManager: set PART value for " + elemToChange.freLanguageConcept() + "[" + propertyName + "] := " + newValue);
-        if(!!this.changePartCallbacks) {
+        if (!!this.changePartCallbacks) {
             const unit = modelUnit(elemToChange);
             if (!!unit?.freOwner() || elemToChange.freIsModel()) {
                 const delta: FrePartDelta = new FrePartDelta(unit, elemToChange, propertyName, oldValue, newValue);
@@ -66,7 +67,7 @@ export class FreChangeManager {
      */
     public setPrimitive(elemToChange: FreNode, propertyName: string, value: string | boolean | number): void {
         LOGGER.log("ChangeManager: set PRIMITIVE value for " + elemToChange.freLanguageConcept() + "[" + propertyName + "] := " + value);
-        if(!!this.changePrimCallbacks) {
+        if (!!this.changePrimCallbacks) {
             const unit = modelUnit(elemToChange);
             if (!!unit?.freOwner() || elemToChange.freIsModel()) {
                 const delta: FrePrimDelta = new FrePrimDelta(unit, elemToChange, propertyName, elemToChange[propertyName], value);
@@ -87,10 +88,10 @@ export class FreChangeManager {
         const owner: FreNode = oldValue.$$owner;
         const propertyName: string = oldValue.$$propertyName;
         LOGGER.log("ChangeManager: UPDATE LIST ELEMENT for " + owner.freLanguageConcept() + "[" + propertyName + "][ " + index + "] := " + newValue);
-        if(!!this.changeListElemCallbacks) {
+        if (!!this.changeListElemCallbacks) {
             const unit = modelUnit(owner);
             if (!!unit?.freOwner() || owner.freIsModel()) {
-                let delta: FreDelta = new FrePartDelta(unit, owner, propertyName, oldValue, newValue, index);
+                const delta: FreDelta = new FrePartDelta(unit, owner, propertyName, oldValue, newValue, index);
                 if (delta !== null && delta !== undefined) {
                     for (const cb of this.changeListElemCallbacks) {
                         cb(delta);
@@ -105,12 +106,12 @@ export class FreChangeManager {
      * @param listOwner     the owner of the list
      * @param propertyName  the name of the property in the owner that refers to the list
      * @param index         the index from which the change has taken place
-     * @param removedCount  number of elements that are removed
+     * @param removed       number of elements that are removed
      * @param added         the elements to be added
      */
     public updatePartList(listOwner: FreNode, propertyName: string, index: number, removed: DecoratedModelElement[], added: DecoratedModelElement[]) {
         LOGGER.log("ChangeManager: UPDATE PART LIST for " + listOwner.freLanguageConcept() + "[" + propertyName + "]");
-        if(!!this.changeListCallbacks) {
+        if (!!this.changeListCallbacks) {
             const unit = modelUnit(listOwner);
             if (!!unit?.freOwner() || listOwner.freIsModel()) {
                 const delta: FrePartListDelta = new FrePartListDelta(unit, listOwner, propertyName, index, removed, added);
@@ -123,7 +124,7 @@ export class FreChangeManager {
 
     public updatePrimList(listOwner: any, propertyName: string, index: number, removed: PrimType[], added: PrimType[]) {
         LOGGER.log("ChangeManager: UPDATE PRIMITIVE LIST for " + listOwner.freLanguageConcept() + "[" + propertyName + "]");
-        if(!!this.changeListCallbacks) {
+        if (!!this.changeListCallbacks) {
             const unit = modelUnit(listOwner);
             if (!!unit?.freOwner() || listOwner.freIsModel()) {
                 const delta: FrePrimListDelta = new FrePrimListDelta(unit, listOwner, propertyName, index, removed, added);
@@ -134,12 +135,16 @@ export class FreChangeManager {
         }
     }
 
-    public updatePrimListElement(listOwner: FreNode, propertyName: string, newValue: string | number | boolean, oldValue: string | number | boolean, index: number) {
+    public updatePrimListElement(listOwner: FreNode,
+                                 propertyName: string,
+                                 newValue: string | number | boolean,
+                                 oldValue: string | number | boolean,
+                                 index: number) {
         LOGGER.log("ChangeManager: UPDATE LIST ELEMENT for " + listOwner.freLanguageConcept() + "[" + propertyName + "][" + index + "] := " + newValue);
-        if(!!this.changeListElemCallbacks) {
+        if (!!this.changeListElemCallbacks) {
             const unit = modelUnit(listOwner);
             if (!!unit?.freOwner() || listOwner.freIsModel()) {
-                let delta: FreDelta = new FrePrimDelta(unit, listOwner, propertyName, oldValue, newValue, index);
+                const delta: FreDelta = new FrePrimDelta(unit, listOwner, propertyName, oldValue, newValue, index);
                 if (delta !== null && delta !== undefined) {
                     for (const cb of this.changeListElemCallbacks) {
                         cb(delta);

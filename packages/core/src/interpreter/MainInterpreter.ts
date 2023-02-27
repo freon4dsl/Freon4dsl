@@ -2,29 +2,15 @@ import { InterpreterContext } from "./InterpreterContext";
 import { InterpreterError } from "./InterpreterException";
 import { InterpreterTracer } from "./InterpreterTracer";
 import {
-    ConceptFunction,
-    EvaluateFunction,
-    IMainInterpreter,
-    InitFunction,
-    OwningPropertyFunction
+    ConceptFunction, EvaluateFunction, IMainInterpreter, InitFunction, OwningPropertyFunction
 } from "./IMainInterpreter";
-import { isRtError, RtError, RtObject } from "./runtime/index";
-import { RtArray } from "./runtime/RtArray";
+import { isRtError, RtObject } from "./runtime";
 
 /**
  * The main interpreter class, usually hidden by a facade specific for a project.
  */
 export class MainInterpreter implements IMainInterpreter {
-    // Lookup map of all evaluate functions from all interpreters
-    private functions: Map<string, EvaluateFunction> = new Map<string, EvaluateFunction>();
-    private tracing: boolean = false;
-    private tracer: InterpreterTracer;
-    // Function to get the concept name / type of a node
-    private getConcept: ConceptFunction;
-    // Function to get the name of the property in which a node is stored.
-    private getProperty: OwningPropertyFunction;
-
-    private static privateInstance ;
+    private static privateInstance;
 
     /**
      *
@@ -39,10 +25,19 @@ export class MainInterpreter implements IMainInterpreter {
         return MainInterpreter.privateInstance;
     }
 
-    constructor(init: InitFunction, getConceptFunction: ConceptFunction, getPropertyFunction: OwningPropertyFunction){``
+    // Lookup map of all evaluate functions from all interpreters
+    private functions: Map<string, EvaluateFunction> = new Map<string, EvaluateFunction>();
+    private tracing: boolean = false;
+    private tracer: InterpreterTracer;
+    // Function to get the concept name / type of the node
+    private readonly getConcept: ConceptFunction;
+    // Function to get the name of the property in which a node is stored.
+    private readonly getProperty: OwningPropertyFunction;
+
+    constructor(init: InitFunction, getConceptFunction: ConceptFunction, getPropertyFunction: OwningPropertyFunction) {
         init(this);
         this.getConcept = getConceptFunction;
-        this.getProperty = getPropertyFunction
+        this.getProperty = getPropertyFunction;
         this.tracer = new InterpreterTracer(getConceptFunction, getPropertyFunction);
     }
 
@@ -95,7 +90,7 @@ export class MainInterpreter implements IMainInterpreter {
             this.tracer.end(node);
         }
         if (isRtError(value)) {
-            console.error(value.toString())
+            console.error(value.toString());
             throw value;
         }
         return value;
