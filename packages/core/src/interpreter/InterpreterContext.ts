@@ -2,7 +2,7 @@
  * Class representing the comntext (or environment) in which an expreession is evaaluated.
  * The context contains values for objects and is hierarchical.
  */
-import { RtObject } from "./runtime/RtObject";
+import { RtObject } from "./runtime";
 
 export class InterpreterContext {
     // Dummy context, caan be used as the start context
@@ -23,7 +23,7 @@ export class InterpreterContext {
      */
     find<T extends RtObject>(node: Object): T {
         const result = this.values.get(node);
-        if(!!result) {
+        if (!!result) {
             return result as T;
         } else {
             return this.parentContext?.find(node);
@@ -40,13 +40,13 @@ export class InterpreterContext {
     toString(): string {
         let result = "{ ";
         this.values.forEach( (value: Object, node: Object) => {
-            result += node["name"] + " == " + value +", ";
+            result += node["name"] + " == " + value + ", ";
         });
         // return result + "}";
         return "{ " +
         Array.from(this.values.entries()).map(
-            ([node, value]) => {return node["name"] + " == " + value; }
+            ([node, value]) => { return node["name"] + " == " + value; }
         ).join(", ") +
-            " }"
+            " }";
     }
 }

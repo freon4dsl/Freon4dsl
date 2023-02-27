@@ -11,6 +11,14 @@ const LOGGER: FreLogger = new FreLogger("FreUndoStackManager");
  * The information is stored per model unit; one stack for undo info, one for redo info.
  */
 export class FreUndoStackManager {
+
+    private static hasIndex(delta: FreDelta): boolean {
+        return delta.index !== null && delta.index !== undefined;
+    }
+
+    private static checkIndex(delta: FreDelta): boolean {
+        return delta.index >= 0 && delta.index < delta.owner[delta.propertyName].length;
+    }
     changeSource: FreModelUnit;
 
     private undoStack: FreDelta[] = [];
@@ -136,19 +144,11 @@ export class FreUndoStackManager {
         }
     }
 
-    private static hasIndex(delta: FreDelta): boolean {
-        return delta.index !== null && delta.index !== undefined;
-    }
-
-    private static checkIndex(delta: FreDelta): boolean {
-        return delta.index >= 0 && delta.index < delta.owner[delta.propertyName].length;
-    }
-
     nextUndoAsText(): string {
         if (this.undoStack.length > 0) {
             return this.undoStack[this.undoStack.length - 1].toString();
         } else {
-            return 'nothing left to undo'
+            return "nothing left to undo";
         }
     }
 
@@ -156,7 +156,7 @@ export class FreUndoStackManager {
         if (this.redoStack.length > 0) {
             return this.redoStack[this.redoStack.length - 1].toString();
         } else {
-            return 'nothing left to redo'
+            return "nothing left to redo";
         }
     }
 }

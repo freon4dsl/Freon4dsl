@@ -4,7 +4,6 @@ import { Box, ElementBox, LabelBox } from "../boxes";
 import { FreProjectionHandler } from "./FreProjectionHandler";
 import { FreProjectionCalculator } from "./FreProjectionCalculator";
 
-
 /**
  * Base class for all box providers.
  */
@@ -18,7 +17,7 @@ export abstract class FreBoxProvider {
     // provider itself has methods that can provide the contents of the _mainBox.
     public knownTableProjections: string[] = [];     // The names of the generated table projections for this type of concept.
 
-    constructor(mainHandler: FreProjectionHandler) {
+    protected constructor(mainHandler: FreProjectionHandler) {
         this.mainHandler = mainHandler;
     }
 
@@ -69,7 +68,6 @@ export abstract class FreBoxProvider {
     /**
      * When the user of the webapp request a different projection, this method is called.
      * It clears the current used projection, so it will be recalculated when needed.
-     * @param enabledProjections
      */
     clearUsedProjection(): void {
         this.usedProjection = null;
@@ -99,7 +97,11 @@ export abstract class FreBoxProvider {
                 this.usedProjection = this.findProjectionToUse(false);
             } else {
                 const ownerBoxProvider: FreBoxProvider = this.mainHandler.getBoxProvider(ownerDescriptor.owner);
-                const ownerRequired = this.mainHandler.getRequiredProjection(ownerDescriptor.owner.freLanguageConcept(), ownerBoxProvider.projection() ,ownerDescriptor.propertyName);
+                const ownerRequired = this.mainHandler.getRequiredProjection(
+                    ownerDescriptor.owner.freLanguageConcept(),
+                    ownerBoxProvider.projection(),
+                    ownerDescriptor.propertyName
+                );
                 if (ownerRequired === null || ownerRequired === undefined) {
                     // No requirement from owner projection: just find the first projection in the active list of projections
                     this.usedProjection = this.findProjectionToUse(false);
@@ -109,7 +111,7 @@ export abstract class FreBoxProvider {
                         this.usedProjection = this.findProjectionToUse(true);
                     } else {
                         // Named projection
-                        this.usedProjection = ownerRequired
+                        this.usedProjection = ownerRequired;
                     }
                 }
             }
@@ -117,4 +119,3 @@ export abstract class FreBoxProvider {
         return this.usedProjection;
     }
 }
-

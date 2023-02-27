@@ -21,7 +21,7 @@ export class AstWalker {
      * This method is the entry point of the traversal through the model tree. Each of the workers will be called in
      * the order in which they are present in the array 'myWorkers'. If, for a tree node, a worker returns 'true',
      * none of the rest of the workers will be called. For that particular node both the 'execBefore' and 'execAfter'
-     * method of any of the other workers will be skipped.
+     * method of the other workers will be skipped.
      *
      * @param modelelement the top node of the part of the tree to be visited
      * @param includeNode tests every child of 'modelelement', if true, it will also be visited
@@ -46,7 +46,7 @@ export class AstWalker {
                 }
             }
 
-            for (let worker of this.myWorkers) {
+            for (const worker of this.myWorkers) {
                 if (!stopWalkingThisNode) {
                     stopWalkingThisNode = worker.execAfter(modelelement);
                 }

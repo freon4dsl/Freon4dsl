@@ -5,7 +5,7 @@ export class NamedElementSearchWorker implements FreSearchWorker {
     private readonly nameToFind: string;
     private readonly metatype: string | undefined ;
     private readonly caseSensitive: boolean;
-    private __result: FreNode[] = [];
+    private $result: FreNode[] = [];
 
     constructor(nameToFind: string, caseSensitive: boolean, metatype?: string) {
         this.nameToFind = nameToFind;
@@ -14,7 +14,7 @@ export class NamedElementSearchWorker implements FreSearchWorker {
     }
 
     get result(): FreNode[] {
-        return this.__result;
+        return this.$result;
     }
 
     execAfter(modelelement: FreNode): boolean {
@@ -34,7 +34,7 @@ export class NamedElementSearchWorker implements FreSearchWorker {
     }
 
     private checkElement(modelelement: FreNode) {
-        let valueOfNameProp = modelelement["name"];
+        const valueOfNameProp = modelelement["name"];
         if (valueOfNameProp !== null && valueOfNameProp !== undefined && typeof valueOfNameProp === "string" && valueOfNameProp.length > 0) {
             if (!this.caseSensitive) {
                 if (valueOfNameProp.toLowerCase().includes(this.nameToFind.toLowerCase())) {

@@ -7,7 +7,7 @@ import { UndoUnit } from "./UndoUnit";
 /**
  * Class UndoModel is the implementation of the model with the same name in the language definition file.
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
- * to changes in the state of its properties.
+ * to the changes in the state of its properties.
  */
 export class UndoModel extends FreNodeBaseImpl implements FreModel {
     /**
@@ -125,7 +125,7 @@ export class UndoModel extends FreNodeBaseImpl implements FreModel {
      */
     findUnit(name: string, metatype?: string): UndoUnit {
         let result: UndoUnit = null;
-        if (this.unit.name === name) result = this.unit;
+        if (this.unit.name === name) { result = this.unit; }
         if (!!result && !!metatype) {
             if (FreLanguage.getInstance().metaConformsToType(result, metatype)) {
                 return result;
@@ -214,7 +214,7 @@ export class UndoModel extends FreNodeBaseImpl implements FreModel {
      * Returns a list of model units.
      */
     getUnits(): UndoUnit[] {
-        let result: UndoUnit[] = [];
+        const result: UndoUnit[] = [];
         if (!!this.unit) {
             result.push(this.unit);
         }
@@ -227,7 +227,7 @@ export class UndoModel extends FreNodeBaseImpl implements FreModel {
     getUnitsForType(type: string): UndoUnit[] {
         switch (type) {
             case "UndoUnit": {
-                let result: UndoUnit[] = [];
+                const result: UndoUnit[] = [];
                 result.push(this.unit);
                 return result;
             }

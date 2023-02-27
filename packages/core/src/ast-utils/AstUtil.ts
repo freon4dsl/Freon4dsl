@@ -1,5 +1,5 @@
 import { FreLanguage } from "../language";
-import { FreBinaryExpression, FreNode, FreExpressionNode, FreModel, FreModelUnit } from "../ast";
+import { FreBinaryExpression, FreNode, FreExpressionNode, FreModel, FreModelUnit, FreNamedNode, FreNodeReference } from "../ast";
 
 export function isFreModel(element: FreNode): element is FreModel {
     return !!element && element.freIsModel && element.freIsModel();
@@ -64,6 +64,32 @@ export function isSubConcept(src, target: string): boolean {
  * @param toBeMatched
  */
 export function matchElementList(list: FreNode[], toBeMatched: Partial<FreNode>[]): boolean {
+    let foundMatch: boolean = true;
+    for (const theirs of toBeMatched) {
+        let xx: boolean = false;
+        for (const mine of list) {
+            if (mine.match(theirs)) {
+                xx = true;
+                break;
+            }
+        }
+        foundMatch = foundMatch && xx;
+        if (!foundMatch) {
+            return false;
+        }
+    }
+    return foundMatch;
+}
+
+/**
+ * matchReferenceList implements the match functionality on a list of FreElementReferences.
+ */
+export function matchReferenceList<T extends FreNamedNode>(
+    list: FreNodeReference<T>[],
+    toBeMatched: Partial<FreNodeReference<T>>[]
+): boolean {
+    // This code is the same as in matchElementList, but types do not conform,
+    // therefore this code is duplicated. // todo improve
     let foundMatch: boolean = true;
     for (const theirs of toBeMatched) {
         let xx: boolean = false;

@@ -32,6 +32,7 @@ export class FreNodeReferenceTestScoper<T extends FreNamedNode> extends MobxMode
         return result;
     }
 
+    // tslint:disable-next-line:no-shadowed-variable
     public copy<T extends FreNamedNode>(): FreNodeReferenceTestScoper<T> {
         return FreNodeReferenceTestScoper.create<T>(this._FRE_pathname, this.typeName);
     }
@@ -55,7 +56,7 @@ export class FreNodeReferenceTestScoper<T extends FreNamedNode> extends MobxMode
         makeObservable<FreNodeReferenceTestScoper<T>, "_FRE_pathname" | "_FRE_referred">(this, {
             _FRE_referred: observable,
             _FRE_pathname: observable,
-            referred: computed,
+            referred: computed
             // name: computed,
             // pathname: computed
         });
@@ -66,17 +67,17 @@ export class FreNodeReferenceTestScoper<T extends FreNamedNode> extends MobxMode
         this._FRE_referred = null;
     }
 
+    get name(): string {
+        return this._FRE_pathname[this._FRE_pathname.length - 1];
+    }
+
     set pathname(value: string[]) {
         this._FRE_pathname = value;
         this._FRE_referred = null;
     }
 
-    get name(): string {
-        return this._FRE_pathname[this._FRE_pathname.length - 1];
-    }
-
     get pathname(): string[] {
-        let result: string[] = [];
+        const result: string[] = [];
         for (const elem of this._FRE_pathname) {
             result.push(elem);
         }
@@ -86,7 +87,7 @@ export class FreNodeReferenceTestScoper<T extends FreNamedNode> extends MobxMode
     pathnameToString(separator: string): string {
         let result: string = "";
         for (let index = 0; index < this._FRE_pathname.length; index++) {
-            let str = this._FRE_pathname[index];
+            const str = this._FRE_pathname[index];
             if (index === this._FRE_pathname.length - 1) {
                 result += str;
             } else {
@@ -97,7 +98,8 @@ export class FreNodeReferenceTestScoper<T extends FreNamedNode> extends MobxMode
     }
 
     get referred(): T {
-        LOGGER.log("FreNodeReference " + this._FRE_pathname + " property " + this.freOwnerDescriptor().propertyName + " owner " + this.freOwnerDescriptor().owner.freLanguageConcept());
+        LOGGER.log("FreNodeReference " + this._FRE_pathname + " property " + this.freOwnerDescriptor().propertyName
+            + " owner " + this.freOwnerDescriptor().owner.freLanguageConcept());
         if (!!this._FRE_referred) {
             return this._FRE_referred;
         } else {

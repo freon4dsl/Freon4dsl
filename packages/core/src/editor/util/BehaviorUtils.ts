@@ -14,15 +14,15 @@ export enum BehaviorExecutionResult {
 /**
  * Try to execute the action `text`, and return true if this succeeds
  * Matching on full text only.
- * @param {Box} box
- * @param {string} text
- * @param {FreEditor} editor
- * @returns {boolean}
+ * @param box
+ * @param text
+ * @param label
+ * @param editor
  */
 export function executeBehavior(box: Box, text: string, label: string, editor: FreEditor): BehaviorExecutionResult {
     LOGGER.log("Enter executeBehavior text [" + text + "] label [" + label + "] box role [" + box.role + "]");
     let partialMatch: boolean = false;
-    let index = -1; // todo get the correct index
+    const index = -1; // todo get the correct index
 
     for (const action of editor.newFreActions) {
         const trigger = action.trigger;
@@ -80,7 +80,7 @@ export function executeSingleBehavior(action: FreAction, box: Box, text: string,
     LOGGER.log("Enter executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + action.referenceShortcut + "]");
     let execresult: FrePostAction;
 
-    let index = -1; // todo get the correct index
+    const index = -1; // todo get the correct index
     runInAction(() => {
         const command = action.command(box);
         execresult = command.execute(box, label, editor, index);

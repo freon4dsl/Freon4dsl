@@ -57,7 +57,7 @@ export class ActionBox extends AbstractChoiceBox {
      */
     getOptions(editor: FreEditor): SelectOption[] {
         const result: SelectOption[] = [];
-        if( !!this.propertyName && !!this.conceptName) {
+        if ( !!this.propertyName && !!this.conceptName) {
             // If the action box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
             const clsOtIntf = FreLanguage.getInstance().concept(this.conceptName) ?? FreLanguage.getInstance().interface(this.conceptName);
@@ -80,8 +80,8 @@ export class ActionBox extends AbstractChoiceBox {
             .forEach(action => {
                 const options: SelectOption[] = [];
                 options.push({
-                    id: triggerTypeToString(action.trigger) ,//+ "_action",
-                    label: triggerTypeToString(action.trigger),// + "_action",
+                    id: triggerTypeToString(action.trigger) , // + "_action",
+                    label: triggerTypeToString(action.trigger), // + "_action",
                     action: action,
                     description: "action " + triggerTypeToString(action.trigger)
                 });
@@ -98,7 +98,7 @@ export class ActionBox extends AbstractChoiceBox {
             label: concept.trigger,
             action: new FreCreatePartAction({
                 propertyName: propertyName,
-                conceptName: conceptName,
+                conceptName: conceptName
             }),
             description: "action auto"
         };
@@ -152,5 +152,3 @@ export function isActionBox(b: Box): b is ActionBox {
 export function isActionTextBox(b: Box): boolean {
     return b?.kind === "TextBox" && isActionBox(b?.parent);
 }
-
-

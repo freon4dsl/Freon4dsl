@@ -1,7 +1,7 @@
 import { FreUtils } from "../../util";
 import { FreCaret, FreCaretPosition } from "../util";
 import { FreNode } from "../../ast";
-import { Box } from "./internal";
+import { Box } from "./Box";
 import { FreLogger } from "../../logging";
 
 const LOGGER = new FreLogger("TextBox");
@@ -30,7 +30,7 @@ export class TextBox extends Box {
     placeHolder: string = "";
     caretPosition: number = -1;
     getText: () => string;
-    private $setText: (newValue: string) => void;
+    private readonly $setText: (newValue: string) => void;
 
     /**
      * Run the setText() as defined by the user of this box inside a mobx action.
@@ -62,7 +62,7 @@ export class TextBox extends Box {
     setCaret: (caret: FreCaret) => void = (caret: FreCaret) => {
         LOGGER.log("setCaret: " + caret.position);
         /* To be overwritten by `TextComponent` */
-        //TODO The followimng is needed to keep the cursor at the end when creating a nu8mberliteral in example
+        // TODO The followimng is needed to keep the cursor at the end when creating a nu8mberliteral in example
         //     Check in new components whether this is needed.
         switch (caret.position) {
             case FreCaretPosition.RIGHT_MOST:
@@ -78,7 +78,8 @@ export class TextBox extends Box {
                 break;
             default:
                 break;
-        }    };
+        }
+    };
 
     /** @internal
      * This function is called after the text changes in the browser.

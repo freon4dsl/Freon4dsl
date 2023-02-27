@@ -19,5 +19,3 @@ export * from "./projections";
 
 // load FreEditor last, as it needs one or more of the above definitions
 export * from "./FreEditor";
-
-

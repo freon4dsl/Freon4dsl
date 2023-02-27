@@ -88,7 +88,7 @@ describe("Change and Undo Manager", () => {
     it("change, undo, redo, undo on part", () => {
         // change the value of 'part'
         const oldPartId = unit.part.freId(); // remember the id of the old value
-        const newPart = UndoPart.create({name: "part42"});
+        const newPart = UndoPart.create({ name: "part42" });
         unit.part = newPart;
 
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
@@ -222,8 +222,7 @@ describe("Change and Undo Manager", () => {
 
         // change the value of 'part'
         const oldPartId = unit.part.freId(); // remember the id of the old value
-        const newPart = UndoPart.create({name: "part42"});
-        unit.part = newPart;
+        unit.part = UndoPart.create({ name: "part42" });
 
         // change the value of 'partlist'
         expect (unit.partlist.length).toBe(5);
@@ -244,6 +243,7 @@ describe("Change and Undo Manager", () => {
         const delta = undoStack[0];
         expect (delta instanceof FreTransactionDelta).toBe(true);
         if (delta instanceof FreTransactionDelta) {
+            // tslint:disable-next-line:max-line-length
             // console.log("length of internal stack: " + delta.internalDeltas.length + " => [[" + delta.internalDeltas.map(d => d.toString() + "\n\t").join("") + "]]");
             expect (delta.internalDeltas.length).toBe(3);
         }

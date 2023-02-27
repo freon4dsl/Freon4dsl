@@ -1,6 +1,6 @@
 import { FreNamedNode } from ".";
 import { computed, observable, makeObservable } from "mobx";
-import { FreLanguageEnvironment } from "../environment/FreLanguageEnvironment";
+import { FreLanguageEnvironment } from "../environment";
 import { FreLogger } from "../logging";
 import { MobxModelElementImpl } from "./decorators";
 
@@ -30,6 +30,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         return result;
     }
 
+    // tslint:disable-next-line:no-shadowed-variable
     public copy<T extends FreNamedNode>(): FreNodeReference<T> {
         return FreNodeReference.create<T>(this._FRE_pathname, this.typeName);
     }
@@ -53,7 +54,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         makeObservable<FreNodeReference<T>, "_FRE_pathname" | "_FRE_referred">(this, {
             _FRE_referred: observable,
             _FRE_pathname: observable,
-            referred: computed,
+            referred: computed
             // name: computed,
             // pathname: computed
         });
@@ -64,17 +65,17 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         this._FRE_referred = null;
     }
 
+    get name(): string {
+        return this._FRE_pathname[this._FRE_pathname.length - 1];
+    }
+
     set pathname(value: string[]) {
         this._FRE_pathname = value;
         this._FRE_referred = null;
     }
 
-    get name(): string {
-        return this._FRE_pathname[this._FRE_pathname.length - 1];
-    }
-
     get pathname(): string[] {
-        let result: string[] = [];
+        const result: string[] = [];
         for (const elem of this._FRE_pathname) {
             result.push(elem);
         }
@@ -84,7 +85,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
     pathnameToString(separator: string): string {
         let result: string = "";
         for (let index = 0; index < this._FRE_pathname.length; index++) {
-            let str = this._FRE_pathname[index];
+            const str = this._FRE_pathname[index];
             if (index === this._FRE_pathname.length - 1) {
                 result += str;
             } else {
@@ -95,7 +96,8 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
     }
 
     get referred(): T {
-        LOGGER.log("FreElementReference " + this._FRE_pathname + " property " + this.freOwnerDescriptor().propertyName + " owner " + this.freOwnerDescriptor().owner.freLanguageConcept());
+        LOGGER.log("FreElementReference " + this._FRE_pathname + " property " + this.freOwnerDescriptor().propertyName
+            + " owner " + this.freOwnerDescriptor().owner.freLanguageConcept());
         if (!!this._FRE_referred) {
            return this._FRE_referred;
        } else {

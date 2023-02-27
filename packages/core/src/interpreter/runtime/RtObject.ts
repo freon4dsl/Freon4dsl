@@ -7,12 +7,9 @@ export interface IRtObject {
 export abstract class RtObject implements IRtObject {
     readonly _type: string = "RtObject";
 
-    constructor() {
-    }
-
     get rtType(): string {
         return this._type;
     }
 
-    abstract equals(other: RtObject) : RtBoolean ;
+    abstract equals(other: RtObject): RtBoolean ;
 }

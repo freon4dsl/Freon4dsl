@@ -3,7 +3,7 @@ import {
     MobxModelElementImpl,
     FreNode,
     FreNodeBaseImpl,
-    FreModelUnit,
+    FreModelUnit
 } from "../ast";
 import { PrimType } from "../language";
 
@@ -31,14 +31,19 @@ export class FrePrimDelta extends FreDelta {
     oldValue: string | boolean | number;
     newValue: string | boolean | number;
 
-    constructor(unit: FreModelUnit, owner: FreNode, propertyName: string, oldValue: string | boolean | number, newValue: string | boolean | number, index?: number) {
+    constructor(unit: FreModelUnit,
+                owner: FreNode,
+                propertyName: string,
+                oldValue: string | boolean | number,
+                newValue: string | boolean | number,
+                index?: number) {
         super(unit, owner, propertyName, index);
         this.oldValue = oldValue;
         this.newValue = newValue;
     }
 
     toString(): string {
-        let indexStr: string = '';
+        let indexStr: string = "";
         if (this.index > 0) {
             indexStr = "[" + this.index + "]";
         }
@@ -86,7 +91,7 @@ export class FrePartListDelta extends FreDelta {
     }
 
     toString(): string {
-        let ownerName = DeltaUtil.getElemName(this.owner);
+        const ownerName = DeltaUtil.getElemName(this.owner);
         if (this.removed.length > 0) {
             return `remove [${this.removed.map(r => DeltaUtil.getElemName(r))}] from ${ownerName}.${this.propertyName}`;
         } else if (this.added.length > 0) {
@@ -111,7 +116,7 @@ export class FrePrimListDelta extends FreDelta {
     }
 
     toString(): string {
-        let ownerName = DeltaUtil.getElemName(this.owner);
+        const ownerName = DeltaUtil.getElemName(this.owner);
         if (this.removed.length > 0) {
             return `removed [${this.removed}] from ${ownerName}.${this.propertyName} from index ${this.index}`;
         } else if (this.added.length > 0) {
