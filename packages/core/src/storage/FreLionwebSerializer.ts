@@ -70,6 +70,7 @@ export class FreLionwebSerializer {
         return this.findRoot();
     }
 
+    // TODO Hardcoded Form
     private findRoot(): FreNode {
         for (const [id, parsedNode] of this.nodesfromJson.entries()) {
             if (parsedNode.freNode.freLanguageConcept() === "Form") {
