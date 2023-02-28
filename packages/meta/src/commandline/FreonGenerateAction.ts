@@ -16,6 +16,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
     protected validFiles: string[] = [];
     protected scopeFiles: string[] = [];
     protected typerFiles: string[] = [];
+    protected idFile: string;
 
     protected constructor(options: ICommandLineActionOptions) {
         super(options);
@@ -69,6 +70,8 @@ export abstract class FreonGenerateAction extends CommandLineAction {
                 this.scopeFiles.push(filename);
             } else if (/\.type$/.test(filename)) {
                 this.typerFiles.push(filename);
+            } else if (filename.endsWith("id.json")) {
+                this.idFile = filename;
             }
         }
     }

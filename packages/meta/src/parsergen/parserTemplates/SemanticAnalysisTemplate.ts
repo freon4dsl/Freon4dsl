@@ -79,7 +79,7 @@ export class SemanticAnalysisTemplate {
         return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
                 import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
                 import { ${refWalkerName} } from "./${refWalkerName}";
-                import { Concept, ${Names.FreLanguage}, ${Names.FreNode}, ${Names.FreNodeReference} } from "@freon4dsl/core";
+                import { FreLanguageConcept, ${Names.FreLanguage}, ${Names.FreNode}, ${Names.FreNodeReference} } from "@freon4dsl/core";
 
                 export class ${className} {
 
@@ -101,7 +101,7 @@ export class SemanticAnalysisTemplate {
 
                         // now change all ref errors
                         for (const [toBeReplaced, newObject] of changesToBeMade) {
-                            const myType: Concept = ${Names.FreLanguage}.getInstance().concept(toBeReplaced.freLanguageConcept());
+                            const myType: FreLanguageConcept = ${Names.FreLanguage}.getInstance().concept(toBeReplaced.freLanguageConcept());
                             myType.properties.forEach(prop => {
                                 if (prop.type !== "boolean" && !!toBeReplaced[prop.name]) {
                                     newObject[prop.name] = toBeReplaced[prop.name];

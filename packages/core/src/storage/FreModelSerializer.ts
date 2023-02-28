@@ -1,5 +1,5 @@
 import { FreNode } from "../ast";
-import { FreLanguage, Property } from "../language";
+import { FreLanguage, FreLanguageProperty } from "../language";
 import { isNullOrUndefined } from "../util";
 
 /**
@@ -54,7 +54,7 @@ export class FreModelSerializer {
         return result;
     }
 
-    private convertProperties(result: FreNode, property: Property, value: any) {
+    private convertProperties(result: FreNode, property: FreLanguageProperty, value: any) {
         // console.log(">> creating property "+ property.name + "  of type " + property.propertyKind + " isList " + property.isList);
         switch (property.propertyKind) {
             case "primitive":
@@ -106,7 +106,7 @@ export class FreModelSerializer {
         }
     }
 
-    private checkValueToType(value: any, shouldBeType: string, property: Property) {
+    private checkValueToType(value: any, shouldBeType: string, property: FreLanguageProperty) {
         if (typeof value !== shouldBeType) {
             throw new Error(`Value of property '${property.name}' is not of type '${shouldBeType}'.`);
         }
@@ -148,7 +148,7 @@ export class FreModelSerializer {
         return result;
     }
 
-    private convertPropertyToJSON(p: Property, tsObject: FreNode, publicOnly: boolean, result: Object) {
+    private convertPropertyToJSON(p: FreLanguageProperty, tsObject: FreNode, publicOnly: boolean, result: Object) {
         switch (p.propertyKind) {
             case "part":
                 const value = tsObject[p.name];

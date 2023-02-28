@@ -69,6 +69,7 @@ export abstract class FreClassifier extends FreLangElement {
         return this.__ANY;
     }
 
+    id?: string;
     language: FreLanguage;
     isPublic: boolean;
     properties: FreProperty[] = [];
@@ -393,6 +394,7 @@ export class FreLimitedConcept extends FreConcept {
 }
 
 export class FreProperty extends FreLangElement {
+    id?: string;
     isPublic: boolean;
     isOptional: boolean;
     isList: boolean;
