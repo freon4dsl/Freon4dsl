@@ -127,7 +127,7 @@ export class FreLionwebSerializer {
         if (isNullOrUndefined(conceptId)) {
             throw new Error(`Cannot read json: not a Freon structure, conceptname missing: ${JSON.stringify(jsonObject)}.`);
         }
-        console.log("Classifier with id " + conceptId + " classifier " + this.language.classifierById(conceptId));
+        // console.log("Classifier with id " + conceptId + " classifier " + this.language.classifierById(conceptId));
         const tsObject: FreNode = this.language.createConceptOrUnit(this.language.classifierById(conceptId).typeName, id);
         if (isNullOrUndefined(tsObject)) {
             throw new Error(`Cannot read json: ${conceptId} unknown.`);
@@ -144,7 +144,7 @@ export class FreLionwebSerializer {
         for (const [key, value] of Object.entries(jsonProperties)) {
             const property: FreLanguageProperty = this.language.classifierPropertyById(concept, key);
             if (isNullOrUndefined(property)) {
-                console.error("Unknown property: " + key + " for concept " + concept);
+                console.log("Unknown property: " + key + " for concept " + concept);
                 continue;
             }
             FreUtils.CHECK(!property.isList, "Lionweb does not support list properties: " + property.name);
@@ -168,7 +168,7 @@ export class FreLionwebSerializer {
         for (const [key, jsonValue] of Object.entries(jsonChildren)) {
             const property: FreLanguageProperty = this.language.classifierPropertyById(concept, key);
             if (isNullOrUndefined(property)) {
-                console.error("Unknown child property: " + key + " for concept " + concept);
+                console.log("Unknown child property: " + key + " for concept " + concept);
                 continue;
             }
             FreUtils.CHECK(property.propertyKind === "part", "Part value found for non part property: " + property.name);
@@ -188,7 +188,7 @@ export class FreLionwebSerializer {
         for (const [key, jsonValue] of Object.entries(jsonReferences)) {
             const property: FreLanguageProperty = this.language.classifierPropertyById(concept, key);
             if (isNullOrUndefined(property)) {
-                console.error("Unknown reference property: " + key + " for concept " + concept);
+                console.log("Unknown reference property: " + key + " for concept " + concept);
                 continue;
             }
             FreUtils.CHECK(property.propertyKind === "reference", "Reference value found for non reference property: " + property.name);
@@ -214,7 +214,7 @@ export class FreLionwebSerializer {
                             resolveInfo: ""
                         });
                     } else {
-                        console.error("Incorrect refeerence format: " + JSON.stringify(item));
+                        console.log("Incorrect refeerence format: " + JSON.stringify(item));
                     }
                 }
             }
