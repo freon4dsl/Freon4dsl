@@ -4,11 +4,10 @@ import { Names, FREON_CORE, LangUtil, GenerationUtil } from "../../../utils";
 export class LanguageTemplate {
 
     generateLanguage(language: FreLanguage): string {
-        return `import { ${Names.FreLanguage}, Model, ModelUnit, Property, Concept, Interface, ${Names.FreNodeReference} } from "${FREON_CORE}";
+        return `import { ${Names.FreLanguage}, Model, ModelUnit, FreLanguageProperty, FreLanguageConcept, Interface, ${Names.FreNodeReference} } from "${FREON_CORE}";
 
-            import { ${Names.classifier(language.modelConcept)}, ${language.units.map(unit =>
-            `${Names.classifier(unit)}`).join(", ") }, ${language.concepts.map(concept =>
-                `${Names.concept(concept)}`).join(", ")} } from "./internal";
+            // Import as MyLanguage to avoid naming conflicts in generated constructors
+            import * as MyLanguage from "./internal";
 
             /**
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.
@@ -34,8 +33,8 @@ export class LanguageTemplate {
                     const model =             {
                         typeName: "${Names.classifier(language.modelConcept)}",
                         isNamespace: true,
-                        constructor: (id?: string) => { return new ${Names.classifier(language.modelConcept)}(id); },
-                        properties: new Map< string, Property>(),
+                        constructor: (id?: string) => { return new MyLanguage.${Names.classifier(language.modelConcept)}(id); },
+                        properties: new Map< string, FreLanguageProperty>(),
                     }
                     ${language.modelConcept.allPrimProperties().map(prop =>
                         `model.properties.set("${prop.name}", {
@@ -72,14 +71,16 @@ export class LanguageTemplate {
                 function describe${Names.classifier(modelunit)}(): ModelUnit {
                     const modelunit =             {
                         typeName: "${Names.classifier(modelunit)}",
+                        id: "${modelunit.id}",
                         isNamedElement: true,
                         fileExtension: "${modelunit.fileExtension}",
-                        constructor: (id?: string) => { return new ${Names.classifier(modelunit)}(id); },
-                        properties: new Map< string, Property>(),
+                        constructor: (id?: string) => { return new MyLanguage.${Names.classifier(modelunit)}(id); },
+                        properties: new Map< string, FreLanguageProperty>(),
                     }
                     ${modelunit.allPrimProperties().map(prop =>
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
+                                        id: "${prop.id}",
                                         type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
@@ -89,6 +90,7 @@ export class LanguageTemplate {
                             ${modelunit.allParts().map(prop =>
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
+                                        id: "${prop.id}",
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
@@ -98,6 +100,7 @@ export class LanguageTemplate {
                             ${modelunit.allReferences().map(prop =>
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
+                                        id: "${prop.id}",
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
@@ -110,21 +113,23 @@ export class LanguageTemplate {
 
             ${language.concepts.map(concept =>
             `
-                function describe${Names.concept(concept)}(): Concept {
+                function describe${Names.concept(concept)}(): FreLanguageConcept {
                     const concept =             {
                         typeName: "${Names.concept(concept)}",
+                        id: "${concept.id}",
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
                         isNamedElement: ${concept.allPrimProperties().some(p => p.name === "name")},
                         trigger: "${Names.concept(concept)}",
-                        constructor: (id?: string) => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}(id)`}; },
-                        properties: new Map< string, Property>(),
+                        constructor: (id?: string) => { return ${ concept.isAbstract ? "null" : `new MyLanguage.${Names.concept(concept)}(id)`}; },
+                        properties: new Map< string, FreLanguageProperty>(),
                         baseName: ${!!concept.base ? `"${Names.classifier(concept.base.referred)}"` : "null"},
                         subConceptNames: [${LangUtil.subConcepts(concept).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
                     }
                     ${concept.allPrimProperties().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
+                                id: "${prop.id}",
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
@@ -134,6 +139,7 @@ export class LanguageTemplate {
                     ${concept.allParts().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
+                                id: "${prop.id}",
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
@@ -143,6 +149,7 @@ export class LanguageTemplate {
                     ${concept.allReferences().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
+                                id: "${prop.id}",
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
@@ -159,12 +166,13 @@ export class LanguageTemplate {
                         typeName: "${Names.interface(intface)}",
                         isPublic: ${intface.isPublic},
                         isNamedElement: ${intface.allPrimProperties().some(p => p.name === "name")},
-                        properties: new Map< string, Property>(),
+                        properties: new Map< string, FreLanguageProperty>(),
                         subConceptNames: [${LangUtil.subConcepts(intface).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
                     }
                 ${intface.allPrimProperties().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
+                                id: "${prop.id}",
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
@@ -174,6 +182,7 @@ export class LanguageTemplate {
                 ${intface.allParts().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
+                                id: "${prop.id}",
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
@@ -183,6 +192,7 @@ export class LanguageTemplate {
                 ${intface.allReferences().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
+                                id: "${prop.id}",
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
