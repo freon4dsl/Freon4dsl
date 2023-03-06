@@ -1,7 +1,7 @@
 
 // TODO rethink these interfaces
 import type { FreNode } from "@freon4dsl/core";
-import { FreNamedNode } from "@freon4dsl/core";
+import { FreErrorSeverity, FreNamedNode } from "@freon4dsl/core";
 // import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
 // export interface IModelUnitData {
@@ -67,7 +67,7 @@ export interface IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNode) => void);
+    loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNode) => void): Promise<void>;
 
     /**
      * Reads the public interface of the model unit according to the data in 'modelInfo' from the server and
@@ -85,4 +85,10 @@ export interface IServerCommunication {
      * @param loadCallback
      */
     // getInterfacesForModel(languageName: string, modelName: string, loadCallback: (piModel: FreNode) => void);
+
+    /**
+     * Sets the funtion that will be called when an error occurrs in the ServerCommunication.
+     * @param errorFunction
+     */
+    onError(errorFunction: (msg: string, severity: FreErrorSeverity) => void);
 }

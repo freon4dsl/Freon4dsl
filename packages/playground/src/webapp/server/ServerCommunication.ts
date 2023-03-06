@@ -1,7 +1,6 @@
 import type { FreNamedNode } from "@freon4dsl/core";
 import { FreErrorSeverity, FreLogger, FreModelSerializer } from "@freon4dsl/core";
 import type { IServerCommunication } from "./IServerCommunication";
-import { setUserMessage } from "../components/stores/UserMessageStore";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
@@ -29,6 +28,13 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
+    onError(errorFunction: (msg: string, severity: FreErrorSeverity) => void) {
+        this.giveError = errorFunction;
+    }
+
+    giveError = (error: string, severity: FreErrorSeverity): void => {
+        console.error(severity + ": " + error);
+    }
     /**
      * Takes 'piUnit' and stores it as 'unitName' in the folder 'modelName' on the server at SERVER_URL.
      * 'unitName' must start with a character and contain only characters and/or numbers.
@@ -49,7 +55,7 @@ export class ServerCommunication implements IServerCommunication {
             );
         } else {
             LOGGER.error( "Name of Unit '" + unitName + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
-            setUserMessage("Name of Unit '" + unitName
+            this.giveError("Name of Unit '" + unitName
                 + "' may contain only characters, numbers, '_', or '-', and must start with a character.", FreErrorSeverity.Error);
         }
     }
@@ -119,16 +125,22 @@ export class ServerCommunication implements IServerCommunication {
     async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNamedNode) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
         if (!!unitName && unitName.length > 0) {
+            LOGGER.log(">>>>>> Get model unit");
             const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}`);
+            LOGGER.log("<<<<<< Get model unit");
             if (!!res) {
                 try {
+                    LOGGER.log("top TS")
                     const unit = ServerCommunication.serial.toTypeScriptInstance(res);
                     loadCallback(unit);
+                    LOGGER.log("to TS result: " + unit)
                 } catch (e) {
-                    LOGGER.error( "loadModelUnit, " + e.message);
-                    setUserMessage(e.message);
+                    LOGGER.error( "ERROR loadModelUnit, " + e.message);
+                    this.giveError(e.message, FreErrorSeverity.Error);
                     console.log(e.stack);
                 }
+            } else {
+                LOGGER.log("    result is " + res)
             }
         }
     }
@@ -150,13 +162,13 @@ export class ServerCommunication implements IServerCommunication {
                     loadCallback(model);
                 } catch (e) {
                     LOGGER.error( "loadModelUnitInterface, " + e.message);
-                    setUserMessage(e.message);
+                    this.giveError(e.message, FreErrorSeverity.Error);
                 }
             }
         }
     }
 
-    private async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
+    async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
         params = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController();
@@ -205,7 +217,7 @@ export class ServerCommunication implements IServerCommunication {
             errorMess = `Time out: no response from ${SERVER_URL}.`;
         }
         LOGGER.error( errorMess);
-        setUserMessage(errorMess);
+        this.giveError(errorMess, FreErrorSeverity.Warning);
     }
 
     async renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: FreNamedNode) {
