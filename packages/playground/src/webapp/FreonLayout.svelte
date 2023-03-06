@@ -94,11 +94,8 @@
 
 	onMount(async () => {
 		// get list of models from server
-		await serverCommunication.loadModelList((names: string[]) => {
-			if (names.length > 0) {
-				$modelNames = names;
-			}
-		});
+		await EditorState.getInstance().loadModelUnits();
+
 		// If a model is given as parameter, open this model
 		// A new model is created when this model does not exist
 		const urlParams = new URLSearchParams(window.location.search);
