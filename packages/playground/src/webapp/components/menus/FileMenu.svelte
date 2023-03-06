@@ -81,15 +81,11 @@
     };
 
     // new model menuitem
-    const changeModel = () => {
+    const changeModel = async () => {
 		// console.log("FileMenu.changeModel");
         // get list of models from server
-        serverCommunication.loadModelList((names: string[]) => {
-            if (names.length > 0) {
-                $modelNames = names;
-            }
-            $openModelDialogVisible = true;
-        });
+		await EditorState.getInstance().loadModelUnits();
+		$openModelDialogVisible = true;
     }
 
     // new unit menuitem

@@ -62,14 +62,14 @@
     $: nameInvalid = newName.length > 0 ? newNameInvalid() : false;
     let helperText: string = initialHelperText;
 
-    function doSubmit() {
+    async function doSubmit() {
         let comm = EditorState.getInstance();
         if (internalSelected?.length > 0) { // should be checked first, because newName depends on it
-            comm.openModel(internalSelected);
+            await comm.openModel(internalSelected);
             // console.log("OPENING EXISTING MODEL: " + newName);
             $initializing = false;
         } else if (!newNameInvalid() && newName.length > 0) {
-            comm.newModel(newName);
+            await comm.newModel(newName);
             // console.log("CREATING NEW MODEL: " + newName);
             $initializing = false;
         } else {
