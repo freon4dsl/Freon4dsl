@@ -16,7 +16,9 @@ export class ModelManager {
     private static instance: ModelManager = null;
 
     static setServerCommunication(serverCommunication: IServerCommunication): void {
-        ModelManager.getInstance().serverCommunication = serverCommunication;
+        const mm =ModelManager.getInstance();
+        mm.serverCommunication = serverCommunication;
+        mm.serverCommunication.onError(mm.serverOnError);
     }
 
     static getInstance(): ModelManager {
@@ -29,18 +31,15 @@ export class ModelManager {
     private constructor() {
     }
 
-    private _onError: (errorMsg: string, severity: FreErrorSeverity) => void;
-    get onError(): (errorMsg: string, severity: FreErrorSeverity) => void {
-        return this._onError;
+    /**
+     * Default error handler prints to console
+     */
+    onError = (errorMsg: string, severity: FreErrorSeverity): void => {
+        console.log(severity + ": " + errorMsg);
     }
 
-    /**
-     * Set onError callkback function
-     * @param value
-     */
-    set onError(value: (errorMsg: string, severity: FreErrorSeverity) => void) {
-        this._onError = value;
-        this.serverCommunication.onError(value);
+    serverOnError = (errorMsg: string, severity: FreErrorSeverity): void => {
+        this.onError(errorMsg, severity);
     }
 
     /**
@@ -172,7 +171,7 @@ export class ModelManager {
                     await this.serverCommunication.putModelUnit(this._currentModel.name, unit.name, unit);
                 } else {
                     // TODO How to report an error back?
-                    this._onError(`Unit without name cannot be saved. Please, name it and try again.`, FreErrorSeverity.Warning);
+                    this.onError(`Unit without name cannot be saved. Please, name it and try again.`, FreErrorSeverity.Warning);
                 }
             } else {
                 LOGGER.log("Internal error: cannot save unit because current model is unknown.");
@@ -228,10 +227,9 @@ export class ModelManager {
             this.currentUnit = newUnit;
             this.currentUnitChanged(this)
         } else {
-            this._onError( `Model unit of type '${unitType}' could not be created.`, FreErrorSeverity.Error);
+            this.onError( `Model unit of type '${unitType}' could not be created.`, FreErrorSeverity.Error);
         }
     }
-
 
     /**
      * Deletes the unit 'unit', from the server and from the current in-memory model
