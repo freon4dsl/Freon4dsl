@@ -1,0 +1,30 @@
+editor default
+
+Form {
+    [
+    Form ${name}
+
+    ${groups}
+    ]
+}
+
+ItemGroup {
+    [
+    Itemgroup ${name}
+    Items:
+        ${items}
+
+    ]
+}
+
+SimpleItem {
+    [ Item ${name} : ${type} ]
+}
+
+StringType {
+    [ string ]
+}
+
+IntType {
+    [ integer ]
+}

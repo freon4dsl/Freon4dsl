@@ -1,0 +1,61 @@
+{
+    "language": "simpleforms",
+    "concepts": [
+        {
+            "concept": "Form",
+            "id": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0Mzg5MjY5",
+            "properties": [
+                {
+                    "name": "name",
+                    "id": "name"
+                },
+                {
+                    "name": "groups",
+                    "id": "groups"
+                }
+            ]
+        },
+        {
+            "concept": "ItemGroup",
+            "id": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0Mzg5NTA0",
+            "properties": [
+                {
+                    "name": "items",
+                    "id": "items"
+                }
+            ]
+        },
+        {
+            "concept": "SimpleItem",
+            "id": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0Mzg5NjIx",
+            "properties": [
+                {
+                    "name": "type",
+                    "id": "type"
+                }
+            ]
+        },
+        {
+            "concept": "IntType",
+            "id": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0MzkwOTEy",
+            "properties": []
+        },
+        {
+            "concept": "StringType",
+            "id": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0MzkwNDQ3",
+            "properties": []
+        },
+        {
+            "concept": "INamedConcept",
+            "id": "bXBzOmNlYWI1MTk1LTI1ZWEtNGYyMi05YjkyLTEwM2I5NWNhOGMwYy8xMTY5MTk0NjU4NDY4",
+            "properties": [
+                {
+                    "name": "name",
+                    "id": "name"
+                }
+            ]
+        }
+    ]
+}
+
+
