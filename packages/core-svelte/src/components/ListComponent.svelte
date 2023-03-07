@@ -184,19 +184,18 @@
 
 <!-- on:focus is here to avoid a known bug in svelte 3.4*: "A11y: on:mouseover must be accompanied by on:focus with Svelte v3.40 #285" -->
 <!-- Likewise on:blur is needed for on:mouseout -->
-<span class="list" id="{id}"
-      style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
-      style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}"
+<span class={isHorizontal ? "horizontalList" : "verticalList"}
+      id="{id}"
       bind:this={htmlElement}
       tabindex={0}
+      style={`grid-template-columns:${!isHorizontal ? 1 : shownElements.length};grid-template-rows:${isHorizontal ? 1 : shownElements.length};`}
 >
     {#each shownElements as box, index (box.id)}
         <span
                 class="list-item"
                 class:is-active={$activeElem?.row === index && $activeIn === id}
                 class:dragged={$draggedElem?.row === index && $draggedFrom === id}
-                style:grid-column="{!isHorizontal ? 1 : index+1}"
-                style:grid-row="{isHorizontal ? 1 : index+1}"
+                style="grid-column:{!isHorizontal ? 1 : index+1}; grid-row:{isHorizontal ? 1 : index+1}"
                 animate:flip
                 draggable=true
                 on:dragstart|stopPropagation={event => dragstart(event, id, index)}
@@ -223,11 +222,11 @@
         /*grid-template-rows: var(--fre-list-grid-template-rows);*/
         /*grid-template-columns: var(--fre-list-grid-template-columns);*/
         white-space: nowrap;
-        display: inline-block;
+        display: grid;
         padding: var(--freon-horizontallist-component-padding, 1px);
         background-color: var(--freon-editor-component-background-color, white);
         border-color: var(--freon-horizontallist-component-border-color, darkgreen);
-        border-width: var(--freon-horizontallist-component-border-width, 1pt);
+        border-width: var(--freon-horizontallist-component-border-width, 0pt);
         border-style: var(--freon-horizontallist-component-border-style, solid);
         margin: var(--freon-horizontallist-component-margin, 1px);
         box-sizing: border-box;
@@ -240,8 +239,8 @@
         background-color: var(--freon-editor-component-background-color, white);
         padding: var(--freon-verticallist-component-padding, 1px);
         margin: var(--freon-verticallist-component-margin, 1px);
-        border-color: var(--freon-verticallist-component-border-color, darkgreen);
-        border-width: var(--freon-verticallist-component-border-width, 1pt);
+        border-color: var(--freon-verticallist-component-border-color, red);
+        border-width: var(--freon-verticallist-component-border-width, 0pt);
         border-style: var(--freon-verticallist-component-border-style, solid);
 
         /*margin-top: 10px;*/
