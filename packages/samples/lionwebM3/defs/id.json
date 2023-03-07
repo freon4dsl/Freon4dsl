@@ -1,4 +1,5 @@
 {
+    "$COMMENT": "This json maps the names from the lionweb M3 model to their id's.",
     "language": "LIonWebM3",
     "concepts": [
         {
@@ -34,8 +35,8 @@
                     "id": "LIonCore_M3_Feature_optional"
                 },
                 {
-                    "name": "simpleName",
-                    "id"  : "LIonCore_M3_NamespacedEntity_simpleName"
+                    "name": "name",
+                    "id"  : "LIonCore_M3_NamespacedEntity_name"
                 },
                 {
                     "name": "type",
@@ -62,8 +63,8 @@
             "id": "LIonCore_M3_NamespacedEntity",
             "properties": [
                 {
-                    "name": "simpleName",
-                    "id": "LIonCore_M3_NamespacedEntity_simpleName"
+                    "name": "name",
+                    "id": "LIonCore_M3_NamespacedEntity_name"
                 },
                 {
                     "name": "identifier",

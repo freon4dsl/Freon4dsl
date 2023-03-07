@@ -5,10 +5,12 @@ boolean [YES | NO] // are the strings used to display a boolean value
 referenceSeparator [.] // is the string that separates the names in a path name, e.g. pack1.cls3.part
 
 
-Metamodel {
-    [
-    metamodel ${name}
+Metamodel {[
+    language ${name} //  (${qualifiedName})
 
+    modelunit ${name} {
+        file-extension = \"lmm\";
+    }
     ${elements}
     ]
     trigger = "metamodel"
@@ -16,8 +18,36 @@ Metamodel {
 
 Concept {
 [
-    concept ${name} abstract ${abstract} {
+    ${abstract [abstract]} concept ${name} [?base ${extends}] [?implements ${implements horizontal separator[,]}] {
         ${features vertical }
     }
 ]
 }
+ConceptInterface {
+ [
+     interface ${name} [?implements ${extends}] {
+         ${features vertical }
+     }
+ ]
+ }
+
+Property { [
+    ${name} : ${type} ;
+]}
+Reference { [
+    reference ${name} : ${type} ${multiple [\[\]|/* */]};
+]}
+
+Containment { [
+    ${name} : ${type} ${multiple [\[\]|/* */]};
+]}
+
+Enumeration {[
+    limited ${name} {
+        ${literals}
+    }
+]}
+
+EnumerationLiteral {[
+    ${name}
+]}
