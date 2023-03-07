@@ -188,14 +188,16 @@
       id="{id}"
       bind:this={htmlElement}
       tabindex={0}
-      style={`grid-template-columns:${!isHorizontal ? 1 : shownElements.length};grid-template-rows:${isHorizontal ? 1 : shownElements.length};`}
+      style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
+      style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}"
 >
     {#each shownElements as box, index (box.id)}
         <span
                 class="list-item"
                 class:is-active={$activeElem?.row === index && $activeIn === id}
                 class:dragged={$draggedElem?.row === index && $draggedFrom === id}
-                style="grid-column:{!isHorizontal ? 1 : index+1}; grid-row:{isHorizontal ? 1 : index+1}"
+                style:grid-column="{!isHorizontal ? 1 : index+1}"
+                style:grid-row="{isHorizontal ? 1 : index+1}"
                 animate:flip
                 draggable=true
                 on:dragstart|stopPropagation={event => dragstart(event, id, index)}
