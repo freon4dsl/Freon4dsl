@@ -1,0 +1,69 @@
+{
+  "__version": "QvcfL*ljvkewyOFpxArFzV7bdggUxLI_wfw7PrJYG2m8",
+  "nodes": [
+    {
+      "parent": 4294967315,
+      "references": {},
+      "children": {"groups": ["4294967318"]},
+      "concept": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0Mzg5MjY5",
+      "id": "4294967317",
+      "properties": {
+        "#mpsNodeId#": "7344893323394396109",
+        "name": "ACQ5"
+      }
+    },
+    {
+      "parent": 4294967317,
+      "references": {},
+      "children": {"items": [
+        "4294967319",
+        "4294967321"
+      ]},
+      "concept": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0Mzg5NTA0",
+      "id": "4294967318",
+      "properties": {
+        "#mpsNodeId#": "7344893323394396342",
+        "name": "data"
+      }
+    },
+    {
+      "parent": 4294967318,
+      "references": {},
+      "children": {"type": ["4294967320"]},
+      "concept": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0Mzg5NjIx",
+      "id": "4294967319",
+      "properties": {
+        "#mpsNodeId#": "7344893323394396460",
+        "name": "f1"
+      }
+    },
+    {
+      "parent": 4294967319,
+      "references": {},
+      "children": {},
+      "concept": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0MzkwOTEy",
+      "id": "4294967320",
+      "properties": {"#mpsNodeId#": "7344893323394396580"}
+    },
+    {
+      "parent": 4294967318,
+      "references": {},
+      "children": {"type": ["4294967322"]},
+      "concept": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0Mzg5NjIx",
+      "id": "4294967321",
+      "properties": {
+        "#mpsNodeId#": "7344893323394396583",
+        "name": "f2"
+      }
+    },
+    {
+      "parent": 4294967321,
+      "references": {},
+      "children": {},
+      "concept": "bXBzOjFiMWU0Y2JiLTg1MGYtNDk0My1hMmE4LTlhMzQ1ZDFlN2UyNS83MzQ0ODkzMzIzMzk0MzkwNDQ3",
+      "id": "4294967322",
+      "properties": {"#mpsNodeId#": "7344893323394396713"}
+    }
+  ],
+  "serializationFormatVersion": "1"
+}

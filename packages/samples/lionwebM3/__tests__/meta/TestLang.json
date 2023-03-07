@@ -1,0 +1,1807 @@
+{
+  "serializationFormatVersion": 1,
+  "nodes": [
+    {
+      "concept": "LIonCore_M3_Metamodel",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5",
+      "properties": {
+        "LIonCore_M3_Metamodel_qualifiedName": "io.lionweb.mps.converter.TestLang"
+      },
+      "children": {
+        "LIonCore_M3_Metamodel_elements": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQxMTI",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ5MDM",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTIxMjI",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMjMyMDU",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQzMDg",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTQzODU",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTUzODc",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzE",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTYzMjk",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ2Njc",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ1ODI",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ2MjY",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ3MDc"
+        ]
+      },
+      "references": {
+
+      }
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQxMTI",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "TestConceptPlain"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+        ],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ5MDM",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "TestConceptNoExtends"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "TestConceptBase"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwNjk1OQ",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwNzQwMw",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwNzg0OA",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwODMyMA",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwODY4OQ",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwOTEzNw",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIxMzM1OA",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIxNDAxNA",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwOTk1MA",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIxMDI2NA",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIxMDg2NQ",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIxMTc3OQ"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+        ],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwNjk1OQ",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "stringProp"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwNzQwMw",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "booleanProp"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODM2NTcwNjM"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwNzg0OA",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "integerProp"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODM2NTcwNjI"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwODMyMA",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "enumProp"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ1ODI"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwODY4OQ",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "constrainedProp"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ2Njc"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwOTEzNw",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "primitiveProp"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ3MDc"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Reference",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIxMzM1OA",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "false",
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "refZeroToOne"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Reference",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIxNDAxNA",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "false",
+        "LIonCore_M3_Feature_optional": "false",
+        "LIonCore_M3_NamespacedEntity_name": "refOne"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTUzODc"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Containment",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIwOTk1MA",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "false",
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "zeroToOne"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ5MDM"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Containment",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIxMDI2NA",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "false",
+        "LIonCore_M3_Feature_optional": "false",
+        "LIonCore_M3_NamespacedEntity_name": "one"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Containment",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIxMDg2NQ",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "true",
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "zeroToMany"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTQzODU"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Containment",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTEvMjU4NTM3ODE2NTk3MzIxMTc3OQ",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "true",
+        "LIonCore_M3_Feature_optional": "false",
+        "LIonCore_M3_NamespacedEntity_name": "oneToMany"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTIxMjI"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTIxMjI",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "TestConceptExtends1"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+        ],
+        "LIonCore_M3_Concept_implements": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTQzODU"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMjMyMDU",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "TestConceptExtends2"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTIxMjI"
+        ],
+        "LIonCore_M3_Concept_implements": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzE"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQzMDg",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestInterfacePlain"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTQzODU",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestInterfaceBase"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTQzODUvMjU4NTM3ODE2NTk3MzIxNzc4Mg"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTQzODUvMjU4NTM3ODE2NTk3MzIxNzc4Mg",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "testInterfaceBaseProp"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTQzODU"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTUzODc",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestInterfaceExtends1"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTUzODcvMjU4NTM3ODE2NTk3MzIxODUzOA"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTQzODU"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTUzODcvMjU4NTM3ODE2NTk3MzIxODUzOA",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "testInterfaceExtends1Prop"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODM2NTcwNjM"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTUzODc"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzE",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestInterfaceExtends2"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzEvMjU4NTM3ODE2NTk3MzIxOTExMg",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzEvMjU4NTM3ODE2NTk3MzIyMTgyMA",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzEvMjU4NTM3ODE2NTk3MzIyMjU3Ng"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTUzODc"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzEvMjU4NTM3ODE2NTk3MzIxOTExMg",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "testInterfaceExtends2Prop"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODM2NTcwNjI"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzE"
+    },
+    {
+      "concept": "LIonCore_M3_Containment",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzEvMjU4NTM3ODE2NTk3MzIyMTgyMA",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "true",
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "anything"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzE"
+    },
+    {
+      "concept": "LIonCore_M3_Reference",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzEvMjU4NTM3ODE2NTk3MzIyMjU3Ng",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "false",
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "circular"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDY0NTE"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzE"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTYzMjk",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestInterfaceExtends3"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTYzMjkvMjU4NTM3ODE2NTk3MzIyMDEyOA"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTQzODU",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTU4NzE"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTYzMjkvMjU4NTM3ODE2NTk3MzIyMDEyOA",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "testInterfaceExtends3Prop"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ2Njc"
+        ]
+      },
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMTYzMjk"
+    },
+    {
+      "concept": "LIonCore_M3_PrimitiveType",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ2Njc",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestConstrainedDatatype"
+      },
+      "children": {},
+      "references": {},
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_Enumeration",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ1ODI",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestEnumeration1"
+      },
+      "children": {
+        "LIonCore_M3_Enumeration_literals": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ1ODIvMjU4NTM3ODE2NTk3MzIwNDU4Mw",
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ1ODIvMjU4NTM3ODE2NTk3MzIwNDYyMw"
+        ]
+      },
+      "references": {},
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_EnumerationLiteral",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ1ODIvMjU4NTM3ODE2NTk3MzIwNDU4Mw",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestLiteral1"
+      },
+      "children": {},
+      "references": {},
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ1ODI"
+    },
+    {
+      "concept": "LIonCore_M3_EnumerationLiteral",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ1ODIvMjU4NTM3ODE2NTk3MzIwNDYyMw",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestLiteral2"
+      },
+      "children": {},
+      "references": {},
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ1ODI"
+    },
+    {
+      "concept": "LIonCore_M3_Enumeration",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ2MjY",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestEnumeration2"
+      },
+      "children": {
+        "LIonCore_M3_Enumeration_literals": [
+          "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ2MjYvMjU4NTM3ODE2NTk3MzIwNDYyNw"
+        ]
+      },
+      "references": {},
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_EnumerationLiteral",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ2MjYvMjU4NTM3ODE2NTk3MzIwNDYyNw",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestLiteral3"
+      },
+      "children": {},
+      "references": {},
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ2MjY"
+    },
+    {
+      "concept": "LIonCore_M3_PrimitiveType",
+      "id": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5LzI1ODUzNzgxNjU5NzMyMDQ3MDc",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "TestPrimitiveDatatype"
+      },
+      "children": {},
+      "references": {},
+      "parent": "MDhjYWFkNzUtODI0Ni00NDI3LWJiNGQtODQ0NGI2YzVjNzI5"
+    },
+    {
+      "concept": "LIonCore_M3_Metamodel",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj",
+      "properties": {
+        "LIonCore_M3_Metamodel_qualifiedName": "jetbrains.mps.lang.core"
+      },
+      "children": {
+        "LIonCore_M3_Metamodel_elements": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUxNjk5OTU1ODMxODQ1OTExNjE",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDU",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDg",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTA",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTg",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NQ",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQ0NTI5NjE5MDgyMDI1NTY5MDc",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTc0NjkzNjAyNjQ2NjM5NA",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjU",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzM3MTczMDExNTYxOTc2MjYyNzk",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5Nzg2Njg5NDU",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzg",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUyNTk2MzA5MjM1MDU3NzA2NjU",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExNjkxOTQ2NTg0Njg",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExOTY5Nzg2MzAyMTQ",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEyMjE2NDcwOTM4MTI",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEyMjQ2MDg4MzQ0NDU",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEyMzMxNjAyOTY1OTc",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEyMzQ5NzEzNTg0NTA",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzIwMTUzNzM2Nzg4MTA3MTkzMA",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzM3MzQxMTYyMTMxMjk3OTI0OTk",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwNDc0MDg4MjI0MDk2MDE2NDc",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzOTMxNjUxMjE4NDYwOTE1ODY",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzOTMxNjUxMjE4NDYwOTE1ODc",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzE4MzU2MjEwNjIxOTA2NjM4MTk",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjE0NzUzNzUxNTc0NjY1NTg",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEzMTk3MjgyNzQ3ODMwNzc3MTk",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEzMTk3MjgyNzQ3ODMxNTE0Nzk",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEzMTk3MjgyNzQ3ODQ5NzMwOTY",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzY5OTk3MzgyODg3Mzg0MjcxOTA",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzE1NTA4NzU0MjAyNzQ0NzYyMQ",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzU4MzE4ODc2MTUyOTk0NTcwOTE",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzIyMTY3NjA0NjQxOTk1MDI0MjI",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQxMjMxMjA3MzA5MzU0ODg0MzI",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTQ5MjYxOTIyMzQwMzYxODQ",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDc2MTQ5MjA",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQwNTgxNzc1NjkzNzUxNTAwMzg",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyNTE",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzcwMDA3Ng",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODM2NTcwNjI",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODM2NTcwNjM"
+        ]
+      },
+      "references": {
+      }
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "true",
+        "LIonCore_M3_NamespacedEntity_name": "BaseConcept"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjYvMTE1NjIzNDk2NjM4OA",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjYvMTE5MzY3NjM5NjQ0Nw",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjYvNTE2OTk5NTU4MzE4NDU5MTE3MA"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjYvMTE1NjIzNDk2NjM4OA",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "shortDescription"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjYvMTE5MzY3NjM5NjQ0Nw",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "virtualPackage"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+    },
+    {
+      "concept": "LIonCore_M3_Containment",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjYvNTE2OTk5NTU4MzE4NDU5MTE3MA",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "true",
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "smodelAttribute"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUxNjk5OTU1ODMxODQ1OTExNjE"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUxNjk5OTU1ODMxODQ1OTExNjE",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "true",
+        "LIonCore_M3_NamespacedEntity_name": "Attribute"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+        ],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDU",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "LinkAttribute"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDUvMTc1NzY5OTQ3NjY5MTIzNjExNg",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDUvMTM0MTg2MDkwMDQ4ODAxOTAzNg"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUxNjk5OTU1ODMxODQ1OTExNjE"
+        ],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDUvMTc1NzY5OTQ3NjY5MTIzNjExNg",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "role_DebugInfo"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDU"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDUvMTM0MTg2MDkwMDQ4ODAxOTAzNg",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "linkId"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDU"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDg",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "NodeAttribute"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUxNjk5OTU1ODMxODQ1OTExNjE"
+        ],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTA",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "PropertyAttribute"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTAvMTc1NzY5OTQ3NjY5MTIzNjExNw",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTAvMTM0MTg2MDkwMDQ4NzY0ODYyMQ",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTAvMTE4OTQyNDQ1NTI1NDYzMzAwNw"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUxNjk5OTU1ODMxODQ1OTExNjE"
+        ],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTAvMTc1NzY5OTQ3NjY5MTIzNjExNw",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "name_DebugInfo"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTA"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTAvMTM0MTg2MDkwMDQ4NzY0ODYyMQ",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "propertyId"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTA"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTAvMTE4OTQyNDQ1NTI1NDYzMzAwNw",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "enumUsageMigrated"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODM2NTcwNjM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NTA"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTg",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "SuppressErrorsAnnotation"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTgvMjQyMzQxNzM0NTY2OTc1NTYyOQ",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTgvODU3NTMyODM1MDU0MzQ5MzM2NQ",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTgvODU3NTMyODM1MDU0MzQ5MzM3MQ"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDg"
+        ],
+        "LIonCore_M3_Concept_implements": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzOTMxNjUxMjE4NDYwOTE1ODc"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTgvMjQyMzQxNzM0NTY2OTc1NTYyOQ",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "filter"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTg"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTgvODU3NTMyODM1MDU0MzQ5MzM2NQ",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "message"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTg"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTgvODU3NTMyODM1MDU0MzQ5MzM3MQ",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "comment"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQyMjIzMTg4MDY4MDI0MjUyOTg"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NQ",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "SideTransformInfo"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NS83NzkxMjg0OTI4NTM2OTkzNjE",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NS83NzkxMjg0OTI4NTM5MzQ1MjM",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NS83NzkxMjg0OTI4NTM5MzU5NjA"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDg"
+        ],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NS83NzkxMjg0OTI4NTM2OTkzNjE",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "side"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzcwMDA3Ng"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NQ"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NS83NzkxMjg0OTI4NTM5MzQ1MjM",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "cellId"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NQ"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NS83NzkxMjg0OTI4NTM5MzU5NjA",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "anchorTag"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzM2OTE2NQ"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQ0NTI5NjE5MDgyMDI1NTY5MDc",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "BaseCommentAttribute"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQ0NTI5NjE5MDgyMDI1NTY5MDcvMzA3ODY2NjY5OTA0MzAzOTM4OQ"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTc0NjkzNjAyNjQ2NjM5NA"
+        ],
+        "LIonCore_M3_Concept_implements": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzU4MzE4ODc2MTUyOTk0NTcwOTE",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzIyMTY3NjA0NjQxOTk1MDI0MjI",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzOTMxNjUxMjE4NDYwOTE1ODc"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Containment",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQ0NTI5NjE5MDgyMDI1NTY5MDcvMzA3ODY2NjY5OTA0MzAzOTM4OQ",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "false",
+        "LIonCore_M3_Feature_optional": "false",
+        "LIonCore_M3_NamespacedEntity_name": "commentedNode"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQ0NTI5NjE5MDgyMDI1NTY5MDc"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTc0NjkzNjAyNjQ2NjM5NA",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "ChildAttribute"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTc0NjkzNjAyNjQ2NjM5NC83MDk3NDY5MzYwMjY2MDkwMjk",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTc0NjkzNjAyNjQ2NjM5NC83MDk3NDY5MzYwMjY2MDkwMzE"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUxNjk5OTU1ODMxODQ1OTExNjE"
+        ],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTc0NjkzNjAyNjQ2NjM5NC83MDk3NDY5MzYwMjY2MDkwMjk",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "role_DebugInfo"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTc0NjkzNjAyNjQ2NjM5NA"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTc0NjkzNjAyNjQ2NjM5NC83MDk3NDY5MzYwMjY2MDkwMzE",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "linkId"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTc0NjkzNjAyNjQ2NjM5NA"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjU",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "ReviewMigration_old"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjUvMjQ4MjYxMTA3NDM0NjY2MTA3OA",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjUvMjQ4MjYxMTA3NDM0NjY2MTA3Mw",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjUvMjQ4MjYxMTA3NDM0NzE2OTUxNA"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDg"
+        ],
+        "LIonCore_M3_Concept_implements": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDc2MTQ5MjA"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjUvMjQ4MjYxMTA3NDM0NjY2MTA3OA",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "reasonShort"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjU"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjUvMjQ4MjYxMTA3NDM0NjY2MTA3Mw",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "todo"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjU"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjUvMjQ4MjYxMTA3NDM0NzE2OTUxNA",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "readableId"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDY2NjEwNjU"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzM3MTczMDExNTYxOTc2MjYyNzk",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "BasePlaceholder"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzM3MTczMDExNTYxOTc2MjYyNzkvMzcxNzMwMTE1NjE5NzYyNjMwMQ"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTc0NjkzNjAyNjQ2NjM5NA"
+        ],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Containment",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzM3MTczMDExNTYxOTc2MjYyNzkvMzcxNzMwMTE1NjE5NzYyNjMwMQ",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "false",
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "content"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQwNTgxNzc1NjkzNzUxNTAwMzg"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzM3MTczMDExNTYxOTc2MjYyNzk"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5Nzg2Njg5NDU",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "MigrationDataAnnotation"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5Nzg2Njg5NDUvNjgwNzkzMzQ0ODQ3MDMzMDU3NA"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDg"
+        ],
+        "LIonCore_M3_Concept_implements": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyNTE"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Containment",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5Nzg2Njg5NDUvNjgwNzkzMzQ0ODQ3MDMzMDU3NA",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "false",
+        "LIonCore_M3_Feature_optional": "false",
+        "LIonCore_M3_NamespacedEntity_name": "dataNode"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5Nzg2Njg5NDU"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzg",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "ReviewMigration"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzgvODcwMzE3OTQzNjk3OTM1OTIzOQ",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzgvODcwMzE3OTQzNjk3OTM1OTI0MA",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzgvODcwMzE3OTQzNjk3OTM1OTI0MQ"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjQ2NjA2MzgwNDgwNDk3NDg"
+        ],
+        "LIonCore_M3_Concept_implements": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyNTE"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzgvODcwMzE3OTQzNjk3OTM1OTIzOQ",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "reasonShort"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzg"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzgvODcwMzE3OTQzNjk3OTM1OTI0MA",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "todo"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzg"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzgvODcwMzE3OTQzNjk3OTM1OTI0MQ",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "readableId"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyMzg"
+    },
+    {
+      "concept": "LIonCore_M3_Concept",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUyNTk2MzA5MjM1MDU3NzA2NjU",
+      "properties": {
+        "LIonCore_M3_Concept_abstract": "false",
+        "LIonCore_M3_NamespacedEntity_name": "TypeAnnotated"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUyNTk2MzA5MjM1MDU3NzA2NjUvNTI1OTYzMDkyMzUwNTc3MDY2Ng"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_Concept_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+        ],
+        "LIonCore_M3_Concept_implements": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Containment",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUyNTk2MzA5MjM1MDU3NzA2NjUvNTI1OTYzMDkyMzUwNTc3MDY2Ng",
+      "properties": {
+        "LIonCore_M3_Link_multiple": "false",
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "annotation"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Link_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExMzM5MjA2NDE2MjY"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzUyNTk2MzA5MjM1MDU3NzA2NjU"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExNjkxOTQ2NTg0Njg",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "INamedConcept"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExNjkxOTQ2NTg0NjgvMTE2OTE5NDY2NDAwMQ"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExNjkxOTQ2NTg0NjgvMTE2OTE5NDY2NDAwMQ",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "name"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExNjkxOTQ2NTg0Njg"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExOTY5Nzg2MzAyMTQ",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IResolveInfo"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExOTY5Nzg2MzAyMTQvMTE5Njk3ODY1NjI3Nw"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExOTY5Nzg2MzAyMTQvMTE5Njk3ODY1NjI3Nw",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "resolveInfo"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzExOTY5Nzg2MzAyMTQ"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEyMjE2NDcwOTM4MTI",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IWrapper"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEyMjQ2MDg4MzQ0NDU",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IDeprecatable"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEyMzMxNjAyOTY1OTc",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IContainer"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEyMzQ5NzEzNTg0NTA",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IType"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzIwMTUzNzM2Nzg4MTA3MTkzMA",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IMetaLevelChanger"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzM3MzQxMTYyMTMxMjk3OTI0OTk",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "ScopeProvider"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwNDc0MDg4MjI0MDk2MDE2NDc",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IAntisuppressErrors"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzOTMxNjUxMjE4NDYwOTE1ODY",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "ICanSuppressErrors"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzOTMxNjUxMjE4NDYwOTE1ODc",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "ISuppressErrors"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzE4MzU2MjEwNjIxOTA2NjM4MTk",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IDontSubstituteByDefault"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjE0NzUzNzUxNTc0NjY1NTg",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "ScopeFacade"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEzMTk3MjgyNzQ3ODMwNzc3MTk",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "ImplementationPart"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzMzNjE0NzUzNzUxNTc0NjY1NTg"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEzMTk3MjgyNzQ3ODMxNTE0Nzk",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "ImplementationContainer"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEzMTk3MjgyNzQ3ODQ5NzMwOTY",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "InterfacePart"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzY5OTk3MzgyODg3Mzg0MjcxOTA",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "ImplementationWithStubPart"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEzMTk3MjgyNzQ3ODMwNzc3MTk"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzE1NTA4NzU0MjAyNzQ0NzYyMQ",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IStubForAnotherConcept"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEzMTk3MjgyNzQ3ODQ5NzMwOTY"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzU4MzE4ODc2MTUyOTk0NTcwOTE",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "ISkipConstraintsChecking"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzIyMTY3NjA0NjQxOTk1MDI0MjI",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IDontApplyTypesystemRules"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQxMjMxMjA3MzA5MzU0ODg0MzI",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IOldCommentContainer"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzcwOTQ5MjYxOTIyMzQwMzYxODQ",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "ISmartReferent"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDc2MTQ5MjA",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "MigrationAnnotation_old"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzQwNTgxNzc1NjkzNzUxNTAwMzg",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "IPlaceholderContent"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": []
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": []
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_ConceptInterface",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyNTE",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "MigrationAnnotation"
+      },
+      "children": {
+        "LIonCore_M3_FeaturesContainer_features": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyNTEvODcwMzE3OTQzNjk3OTM1OTI1Mg"
+        ]
+      },
+      "references": {
+        "LIonCore_M3_ConceptInterface_extends": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzI0ODI2MTEwNzQzNDc2MTQ5MjA"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_Property",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyNTEvODcwMzE3OTQzNjk3OTM1OTI1Mg",
+      "properties": {
+        "LIonCore_M3_Feature_optional": "true",
+        "LIonCore_M3_NamespacedEntity_name": "createdByScript"
+      },
+      "children": {},
+      "references": {
+        "LIonCore_M3_Property_type": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM"
+        ]
+      },
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzg3MDMxNzk0MzY5NzkzNTkyNTE"
+    },
+    {
+      "concept": "LIonCore_M3_Enumeration",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzcwMDA3Ng",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "SideTransformSide"
+      },
+      "children": {
+        "LIonCore_M3_Enumeration_literals": [
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzcwMDA3Ni83NzkxMjg0OTI4NTM3MDAwNzc",
+          "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzcwMDA3Ni83NzkxMjg0OTI4NTM3MDIyMjM"
+        ]
+      },
+      "references": {},
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_EnumerationLiteral",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzcwMDA3Ni83NzkxMjg0OTI4NTM3MDAwNzc",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "right"
+      },
+      "children": {},
+      "references": {},
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzcwMDA3Ng"
+    },
+    {
+      "concept": "LIonCore_M3_EnumerationLiteral",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzcwMDA3Ni83NzkxMjg0OTI4NTM3MDIyMjM",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "left"
+      },
+      "children": {},
+      "references": {},
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzc3OTEyODQ5Mjg1MzcwMDA3Ng"
+    },
+    {
+      "concept": "LIonCore_M3_PrimitiveType",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODMwNDE4NDM",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "string"
+      },
+      "children": {},
+      "references": {},
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_PrimitiveType",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODM2NTcwNjI",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "integer"
+      },
+      "children": {},
+      "references": {},
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    },
+    {
+      "concept": "LIonCore_M3_PrimitiveType",
+      "id": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBjLzEwODI5ODM2NTcwNjM",
+      "properties": {
+        "LIonCore_M3_NamespacedEntity_name": "boolean"
+      },
+      "children": {},
+      "references": {},
+      "parent": "Y2VhYjUxOTUtMjVlYS00ZjIyLTliOTItMTAzYjk1Y2E4YzBj"
+    }
+  ]
+}
