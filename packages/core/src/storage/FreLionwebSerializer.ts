@@ -73,7 +73,7 @@ export class FreLionwebSerializer {
     // TODO Hardcoded Form
     private findRoot(): FreNode {
         for (const [id, parsedNode] of this.nodesfromJson.entries()) {
-            if (parsedNode.freNode.freLanguageConcept() === "Form") {
+            if (parsedNode.freNode.freLanguageConcept() === "Metamodel") {
                 return parsedNode.freNode
             }
         }
@@ -109,7 +109,7 @@ export class FreLionwebSerializer {
                     parsedNode.freNode[reference.featureName] = freonRef;
                 }
 
-                console.log("REFERENCE: " + freonRef.typeName + ", ", printModel(freonRef.referred) + ", ", freonRef.name + ", " + freonRef.pathname)
+                // console.log("REFERENCE: " + freonRef.typeName + ", ", printModel(freonRef.referred) + ", ", freonRef.name + ", " + freonRef.pathname)
             }
         }
     }
