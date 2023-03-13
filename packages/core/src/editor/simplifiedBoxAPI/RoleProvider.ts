@@ -2,7 +2,6 @@ import { Concept, Interface, ModelUnit } from "../../language";
 import { FreNode } from "../../ast";
 
 export class RoleProvider {
-ß
     public static classifier(concept: ModelUnit | Concept | Interface): string {
         return RoleProvider.startWithUpperCase(concept.typeName);
     }
@@ -20,7 +19,7 @@ export class RoleProvider {
 
     private static startWithUpperCase(word: string): string {
         if (!!word) {
-            return word[0].toUpperCase() + word.substr(1);
+            return word[0].toUpperCase() + word.substring(1);
         }
         return "";
     }

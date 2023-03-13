@@ -1,11 +1,7 @@
 import { FreUtils } from "../../util";
-import { Box} from "./Box";
+import { Box } from "./Box";
 import { FreNode } from "../../ast";
-import { SelectOption } from "./SelectOption";
-import { Concept, FreLanguage } from "../../language";
-import { FreCreatePartAction } from "../actions";
 import { FreLogger } from "../../logging";
-import { MenuItem } from "../util";
 
 const LOGGER = new FreLogger("LayoutBox");
 export enum ListDirection {
@@ -48,14 +44,14 @@ export abstract class LayoutBox extends Box {
         this._children.forEach(ch => ch.parent = null);
         this._children.splice(0, this._children.length);
         if (!!children) {
-            children.forEach((child) => {
+            children.forEach(child => {
                 if (!!child) {
                     this._children.push(child);
                     child.parent = this;
                 }
             });
         }
-        LOGGER.log("Layout replaceChildren dirty " + this.role)
+        LOGGER.log("Layout replaceChildren dirty " + this.role);
         this.isDirty();
         return this;
     }
@@ -64,7 +60,7 @@ export abstract class LayoutBox extends Box {
         const dirty = (this._children.length !== 0);
         this._children.splice(0, this._children.length);
         if (dirty) {
-            LOGGER.log("Layout clearChildren dirty " + this.role)
+            LOGGER.log("Layout clearChildren dirty " + this.role);
             this.isDirty();
         }
     }
@@ -73,7 +69,7 @@ export abstract class LayoutBox extends Box {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
-            LOGGER.log("Layout addChild dirty " + this.role + " child added " + child.id)
+            LOGGER.log("Layout addChild dirty " + this.role + " child added " + child.id);
             this.isDirty();
         }
         return this;
@@ -160,4 +156,3 @@ export function isVerticalBox(b: Box): b is VerticalLayoutBox {
 export function isLayoutBox(b: Box): boolean {
     return (b.kind === "HorizontalLayoutBox" || b.kind === "VerticalLayoutBox");
 }
-

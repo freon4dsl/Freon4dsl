@@ -1,5 +1,5 @@
 import { FreNode } from "../../ast";
-import { Box } from "./internal";
+import { Box } from "./Box";
 
 /**
  * Box to indent another box with parameter "indent".

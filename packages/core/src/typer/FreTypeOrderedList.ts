@@ -5,7 +5,7 @@ export class FreTypeOrderedList<T extends FreType> implements Iterable<T> {
     protected elements: T[] = [];
 
     toArray(): T[] {
-        return  this.elements;
+        return this.elements;
     }
 
     add(p: T, typer: FreTyper) {
@@ -25,6 +25,7 @@ export class FreTypeOrderedList<T extends FreType> implements Iterable<T> {
     /**
      * Retains only the elements that are contained in the "list".
      * @param list
+     * @param typer
      */
     retainAll(list: FreTypeOrderedList<T>, typer: FreTyper) {
         const toRetain: T[] = [];

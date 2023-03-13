@@ -4,7 +4,7 @@ import { RtObject } from "./RtObject";
 export class RtError extends RtObject {
     readonly _type = "RtError";
 
-    private _message: string = "Error";
+    private readonly _message: string = "Error";
 
     constructor(message: string) {
         super();
@@ -20,7 +20,7 @@ export class RtError extends RtObject {
     }
 
     toString(): string {
-        return "Error: " + this._message
+        return "Error: " + this._message;
     }
 }
 
@@ -28,4 +28,3 @@ export function isRtError(obj: any): obj is RtError {
     const _type = (obj as any)?._type;
     return !!_type && _type === "RtError";
 }
-

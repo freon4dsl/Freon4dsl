@@ -1,4 +1,4 @@
-import { isProKey, isString, FreTriggerType, isRegExp } from "../editor";
+import { FreTriggerType, isProKey, isRegExp, isString } from "../editor";
 
 export class MatchUtil {
     public static fullMatch(text: string, trigger: FreTriggerType): boolean {
@@ -16,8 +16,7 @@ export class MatchUtil {
         if (isRegExp(trigger)) {
             const r: RegExp = toPartialMatchRegex(trigger);
             const x = text.match(r);
-            const b = exactlyOne(x, text);
-            return b;
+            return exactlyOne(x, text);
         } else if (isString(trigger)) {
             return trigger.startsWith(text);
         } else if (isProKey(trigger)) {
@@ -55,12 +54,12 @@ function toPartialMatchRegex(re: RegExp) {
         let tmp;
 
         function appendRaw(nbChars) {
-            result += source.substr(i, nbChars);
+            result += source.substring(i, nbChars);
             i += nbChars;
         }
 
         function appendOptional(nbChars) {
-            result += "(?:" + source.substr(i, nbChars) + "|$)";
+            result += "(?:" + source.substring(i, nbChars) + "|$)";
             i += nbChars;
         }
 
@@ -140,7 +139,7 @@ function toPartialMatchRegex(re: RegExp) {
                                 tmp = i;
                                 i += 3;
                                 process();
-                                result += source.substr(tmp, i - tmp);
+                                result += source.substring(tmp, i - tmp);
                                 break;
                         }
                     } else {

@@ -4,7 +4,7 @@ import { FreSearchWorker } from "./FreSearchWorker";
 export class StructureSearchWorker implements FreSearchWorker {
     private readonly toFind: Partial<FreNode>;
     private readonly metatype: string;
-    private __result: FreNode[] = [];
+    private $result: FreNode[] = [];
 
     constructor(toFind: Partial<FreNode>, metatype: string) {
         this.toFind = toFind;
@@ -12,7 +12,7 @@ export class StructureSearchWorker implements FreSearchWorker {
     }
 
     get result(): FreNode[] {
-        return this.__result;
+        return this.$result;
     }
 
     execAfter(modelelement: FreNode): boolean {
@@ -24,12 +24,12 @@ export class StructureSearchWorker implements FreSearchWorker {
         if (!!this.metatype) {
             if (this.metatype === modelelement.freLanguageConcept() || this.metatype === "FreNodeReference") {
                 if (modelelement.match(this.toFind)) {
-                    this.__result.push(modelelement);
+                    this.$result.push(modelelement);
                 }
             }
         } else {
             if (modelelement.match(this.toFind)) {
-                this.__result.push(modelelement);
+                this.$result.push(modelelement);
             }
         }
         return true; // is irrelevant, there are no other workers in this search

@@ -51,9 +51,9 @@ describe("Mobx Model", () => {
             () => {
                 return [root.element];
             },
-            element => {
+            innerElement => {
                 reaktion++;
-                // console.log("React " + reaktion + " on " + (!!element ? element["name"] : "element is null"));
+                // console.log("React " + reaktion + " on " + (!!innerElement ? innerElement["name"] : "innerElement is null"));
             }
         );
         reaktion = 0;
@@ -86,14 +86,14 @@ describe("Mobx Model", () => {
         part1.name = "part1-newname";
         // referred part changes name, but reference does not follow this change
         expect(element.singleReference.name).toBe("part1");
-        expect(element.singleReference.referred).toBeNull;
+        expect(element.singleReference.referred).toBeUndefined();
         checkUnchanged();
 
         element.singleReference.name = "part1";
 
         // reference to part1 cannot be found anymore
         expect(element.singleReference.name).toBe("part1");
-        expect(element.singleReference.referred).toBe(undefined);
+        expect(element.singleReference.referred).toBeUndefined();
         checkUnchanged();
 
         part1.name = "part1";

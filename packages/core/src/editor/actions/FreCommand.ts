@@ -7,7 +7,7 @@ import { CustomAction, EMPTY_POST_ACTION, FrePostAction } from "./FreAction";
 import { FreTriggerUse, triggerTypeToString } from "./FreTriggers";
 import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("FreCommand"); //.mute();
+const LOGGER = new FreLogger("FreCommand"); // .mute();
 
 /**
  * Abstract supercass for all commands in Freon.
@@ -16,7 +16,6 @@ const LOGGER = new FreLogger("FreCommand"); //.mute();
  * The `undo()` function is not always implemented yet.
  */
 export abstract class FreCommand {
-    constructor() {}
 
     /**
      * Executes the action, should contain all model changes for this action.
@@ -46,7 +45,7 @@ class FreNullCommand extends FreCommand {
         return EMPTY_POST_ACTION;
     }
 
-    undo(box: Box, editor: FreEditor): void {}
+    undo(box: Box, editor: FreEditor): void { /* to be done */ }
 }
 
 export const PI_NULL_COMMAND: FreCommand = new FreNullCommand();
@@ -67,11 +66,11 @@ export class FreCreateBinaryExpressionCommand extends FreCommand {
         // console.log("FreCreateBinaryExpressionCommand: trigger [" + triggerTypeToString(trigger) + "] part: ");
         const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, triggerTypeToString(trigger), editor), box, editor);
         return function () {
-            editor.selectElement(selected.element, selected.boxRoleToSelect)
+            editor.selectElement(selected.element, selected.boxRoleToSelect);
         };
     }
 
-    undo() {}
+    undo() { /* to be done */ }
 }
 
 export class FreCustomCommand extends FreCommand {
@@ -107,5 +106,5 @@ export class FreCustomCommand extends FreCommand {
         return EMPTY_POST_ACTION;
     }
 
-    undo() {}
+    undo() { /* to be done */ }
 }

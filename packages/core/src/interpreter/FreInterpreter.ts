@@ -1,5 +1,5 @@
 import { InterpreterTracer } from "./InterpreterTracer";
-import { RtObject } from "./runtime/RtObject";
+import { RtObject } from "./runtime";
 
 export interface FreInterpreter {
     setTracing(value: boolean): void;

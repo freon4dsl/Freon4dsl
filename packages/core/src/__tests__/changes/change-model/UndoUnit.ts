@@ -1,7 +1,7 @@
 /**
  * Class UndoUnit is the implementation of the model unit with the same name in the language definition file.
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
- * to changes in the state of its properties.
+ * to the changes in the state of its properties.
  */
 import { observablepart, observablepartlist, observableprim, observableprimlist, FreNodeBaseImpl, FreModelUnit } from "../../../ast";
 import { UndoPart } from "./UndoPart";

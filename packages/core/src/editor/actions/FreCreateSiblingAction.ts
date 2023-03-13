@@ -1,6 +1,6 @@
 import { FreUtils } from "../../util";
 import { FreLogger } from "../../logging";
-import { Box } from "../boxes/index";
+import { Box } from "../boxes";
 import { FreAction } from "./FreAction";
 import { FreCommand } from "./FreCommand";
 import { FreCreateSiblingCommand } from "./FreCreateSiblingCommand";

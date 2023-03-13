@@ -1,5 +1,3 @@
-import { Box } from "../boxes";
-
 export class FreTableHeaderInfo {
     conceptName: string;
     projectionName: string;

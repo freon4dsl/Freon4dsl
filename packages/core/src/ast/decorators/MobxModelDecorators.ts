@@ -54,6 +54,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
         let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         const storedValue = !!storedObserver ? storedObserver.get() : null;
         // console.log("newValue is " + JSON.stringify(newValue) );
+        // tslint:disable-next-line:max-line-length
         // console.log("newValue is " + JSON.stringify(newValue, ["$typename", "$id"]) + " owners: " + JSON.stringify(allOwners(this as any as FreNode), ["$typename", "$id"]) );
         if (allOwners(this as any as FreNode).includes(newValue as any as FreNode)) {
             throw Error("CYCLE IN AST");
@@ -145,7 +146,7 @@ export function observableprim(target: DecoratedModelElement, propertyKey: strin
             storedObserver = observable.box(newValue);
             this[privatePropertyKey] = storedObserver;
         }
-    }
+    };
     // tslint:disable no-unused-expression
     Reflect.deleteProperty(target, propertyKey);
     Reflect.defineProperty(target, propertyKey, {
@@ -243,8 +244,8 @@ function cleanOwner(oldValue: DecoratedModelElement) {
  * @param propertyKey   name of the property that is about to change, only used for error message
  */
 function objectWillChange(
-    change: IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement>
-    , propertyKey: string): IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement> | null {
+    change: IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement>,
+    propertyKey: string): IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement> | null {
 
     switch (change.type) {
         case "update":
@@ -267,7 +268,7 @@ function objectWillChange(
             }
             break;
         case "splice":
-            let index: number = change.index;
+            const index: number = change.index;
             const removedCount: number = change.removedCount;
             // find all elements that need to be removed
             const removed: any[] = [];
@@ -317,6 +318,8 @@ function objectWillChange(
  * that no null or undefined values are in the list.
  * Note: only used for lists of type string[] | boolean[] | number[].
  * @param change
+ * @param target
+ * @param propertyKey
  */
 function primWillChange(
     change: IArrayWillChange<PrimType> | IArrayWillSplice<PrimType>,
@@ -340,7 +343,7 @@ function primWillChange(
             }
             break;
         case "splice":
-            let index: number = change.index;
+            const index: number = change.index;
             const removedCount: number = change.removedCount;
             // find all elements that need to be removed
             const removed: PrimType[] = [];
@@ -366,4 +369,3 @@ function primWillChange(
     }
     return change;
 }
-

@@ -14,7 +14,7 @@ export const reservedWordsInTypescript = [
     "else" ,
     "enum",
     "export",
-    "extends",
+    // "extends",
     "false" ,
     "finally",
     "for" ,
@@ -38,7 +38,7 @@ export const reservedWordsInTypescript = [
     "while" ,
     "with",
     // The following keywords cannot be used as identifiers in strict mode code, but are otherwise not restricted:
-    "implements",
+    // "implements",
     "interface",
     "let",
     "package",

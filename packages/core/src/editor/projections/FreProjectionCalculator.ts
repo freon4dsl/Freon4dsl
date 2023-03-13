@@ -1,4 +1,3 @@
-import { startWithUpperCase } from "../../util";
 import { FreProjectionHandler } from "./FreProjectionHandler";
 
 /**

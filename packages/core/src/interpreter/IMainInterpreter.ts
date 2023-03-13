@@ -1,6 +1,6 @@
 import { InterpreterContext } from "./InterpreterContext";
 import { InterpreterTracer } from "./InterpreterTracer";
-import { RtObject } from "./runtime/RtObject";
+import { RtObject } from "./runtime";
 
 export type ConceptFunction = (node: Object) => string;
 export type OwningPropertyFunction = (node: Object) => string;

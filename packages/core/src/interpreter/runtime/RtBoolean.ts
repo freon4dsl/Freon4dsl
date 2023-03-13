@@ -1,15 +1,14 @@
 import { RtObject } from "./RtObject";
 
-export class RtBoolean extends  RtObject {
-    readonly _type = "RtBoolean";
-
+export class RtBoolean extends RtObject {
     static readonly TRUE = new RtBoolean(true);
     static readonly FALSE = new RtBoolean(false);
 
     static of(bool: boolean): RtBoolean {
         return bool ? RtBoolean.TRUE : RtBoolean.FALSE;
     }
-    private _value: boolean;
+    readonly _type = "RtBoolean";
+    private readonly _value: boolean;
 
     private constructor(value: boolean) {
         super();
@@ -41,7 +40,7 @@ export class RtBoolean extends  RtObject {
     }
 
     toString(): string {
-        return "" + this._value
+        return "" + this._value;
     }
 }
 

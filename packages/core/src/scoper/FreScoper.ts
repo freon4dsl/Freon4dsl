@@ -5,7 +5,7 @@ import { FreScoperComposite } from "./FreScoperComposite";
 
 export interface FreScoper {
     mainScoper: FreScoperComposite;
-    
+
     /**
      * Returns the element to which the 'pathname' refers. If the element cannot be found, or if the element is
      * not visible (private) from the location of 'modelelement', then null is returned.
