@@ -216,7 +216,7 @@ export class WriterTemplate {
             /**
              *
             */
-            private unparseReference(modelelement: ${Names.FreNodeReference}<${Names.FreNamedNode}>, short: boolean) {
+            private _unparseReference(modelelement: ${Names.FreNodeReference}<${Names.FreNamedNode}>, short: boolean) {
                 if (!!modelelement) {
                     const type: ${Names.FreNamedNode} = modelelement?.referred;
                     if (!!type) {
@@ -247,8 +247,10 @@ export class WriterTemplate {
              * @param vertical
              * @param indent
              * @param short
+             * @param method
+             * @private
              */
-            private unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean,
+            private _unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean,
         method: (modelelement: ${allLangConceptsName}, short: boolean) => void) {
                 list.forEach((listElem, index) => {
                     const isLastInList: boolean = index === list.length - 1;
@@ -261,7 +263,7 @@ export class WriterTemplate {
             /**
              * Adds a string representation of a list of references, where every reference
              * is replaced by the name of its referred element. The use of params
-             * 'sepText' and 'SepType' are equals to those in the private method unparseList.
+             * 'sepText' and 'SepType' are equals to those in the private method _unparseList.
              * @param list
              * @param sepText
              * @param sepType
@@ -269,11 +271,11 @@ export class WriterTemplate {
              * @param indent
              * @param short
              */
-            private unparseReferenceList(list: ${Names.FreNodeReference}<${Names.FreNamedNode}>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
+            private _unparseReferenceList(list: ${Names.FreNodeReference}<${Names.FreNamedNode}>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
                     const isLastInList: boolean = index === list.length - 1;
                     this.doInitiator(sepText, sepType);
-                    this.unparseReference(listElem, short);
+                    this._unparseReference(listElem, short);
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
             }
@@ -283,14 +285,14 @@ export class WriterTemplate {
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
              * If 'short' is false, then a multi-line result will be given. Otherwise, only one single-line string is added.
              * @param list
-             * @param isIdentifier : indicates whether or not the value should be surrounded with double quotes
+             * @param isIdentifier indicates whether the value should be surrounded with double quotes
              * @param sepText
              * @param sepType
              * @param vertical
              * @param indent
              * @param short
              */
-            private unparseListOfPrimitiveValues(
+            private _unparseListOfPrimitiveValues(
                 list: (string | number | boolean)[],
                 isIdentifier: boolean,
                 sepText: string,
@@ -614,7 +616,7 @@ export class WriterTemplate {
                 let myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
                 // Add a space to the join text. This is needed in a text string, not in a projectional editor.
                 myJoinText = (!!myJoinText && myJoinText.length > 0) ? myJoinText + " " : "";
-                result += `this.unparseListOfPrimitiveValues(
+                result += `this._unparseListOfPrimitiveValues(
                     ${elemStr}, ${isIdentifier},"${myJoinText}", ${joinType}, ${vertical},
                     this.output[this.currentLine].length,
                     short
@@ -711,11 +713,11 @@ export class WriterTemplate {
                         const myJoinText: string = (!!item.listInfo.joinText && item.listInfo.joinText.length > 0) ? item.listInfo.joinText + " " : "";
                         if (myElem.isPart) {
                             const myTypeScript: string = GenerationUtil.propertyToTypeScript(item.property.referred);
-                            result += `this.unparseList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short,
+                            result += `this._unparseList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short,
                             (modelelement, short) => this.${nameOfUnparseMethod}(modelelement${typeCast}, short) )`;
                         } else {
                             const myTypeScript: string = GenerationUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
-                            result += `this.unparseReferenceList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                            result += `this._unparseReferenceList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
                         }
                     }
                 }
@@ -727,7 +729,7 @@ export class WriterTemplate {
                     myCall += `this.${nameOfUnparseMethod}(${myTypeScript}, short) `;
                 } else {
                     myTypeScript = GenerationUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
-                    myCall += `this.unparseReference(${myTypeScript}, short);`;
+                    myCall += `this._unparseReference(${myTypeScript}, short);`;
                 }
                 if (myElem.isOptional && !inOptionalGroup) { // surround the unparse call with an if-statement, because the element may not be present
                     result += `if (!!${myTypeScript}) { ${myCall} }`;

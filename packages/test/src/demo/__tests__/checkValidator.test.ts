@@ -12,7 +12,7 @@ import {
     DemoVariable,
     Demo
 } from "../language/gen";
-import { DemoValidator } from "../validator/gen/DemoValidator";
+import { DemoValidator } from "../validator/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 
@@ -26,7 +26,7 @@ describe("Testing Validator", () => {
     });
 
     test("multiplication 3 * 10", () => {
-        let errors: FreError[] = [];
+        let errors: FreError[];
         let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
         mult.left = makeLiteralExp("3");
         mult.right = makeLiteralExp("10");
@@ -35,7 +35,7 @@ describe("Testing Validator", () => {
     });
 
     test("multiplication 3 * 'temp'", () => {
-        let errors: FreError[] = [];
+        let errors: FreError[];
         let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
         mult.left = makeLiteralExp("3");
         mult.right = makeLiteralExp("temp");
@@ -48,7 +48,7 @@ describe("Testing Validator", () => {
     });
 
     test("multiplication (3/4) * 'temp'", () => {
-        let errors: FreError[] = [];
+        let errors: FreError[];
         let div: DemoDivideExpression = new DemoDivideExpression();
         div.left = makeLiteralExp("3");
         div.right = makeLiteralExp("4");
@@ -64,7 +64,7 @@ describe("Testing Validator", () => {
     });
 
     test("'self.entities' and 'self.functions' may not empty and model unitName should be valid", () => {
-        let errors: FreError[] = [];
+        let errors: FreError[];
         const model = new DemoModel();
         model.name = "$%";
         errors = validator.validate(model);
@@ -77,7 +77,7 @@ describe("Testing Validator", () => {
     });
 
     test("incorrect unitName of DemoModel: YY\\XX", () => {
-        let errors: FreError[] = [];
+        let errors: FreError[];
         let model = new DemoModel();
         model.name = "YY\\XX";
         errors = validator.validate(model);
@@ -85,7 +85,7 @@ describe("Testing Validator", () => {
     });
 
     test("(1 + 2) * 'Person' should give type error", () => {
-        let errors: FreError[] = [];
+        let errors: FreError[];
         const variableExpression = new DemoVariableRef();
         const variable = DemoVariable.create({ name: "XXX" });
         const personEnt = DemoEntity.create({ name: "Person" });
@@ -104,7 +104,7 @@ describe("Testing Validator", () => {
     });
 
     test('"Hello Demo" + "Goodbye"\'\' should have 2 errors', () => {
-        let errors: FreError[] = [];
+        let errors: FreError[];
         let expression = MakePlusExp("Hello Demo", "Goodbye");
         // "Hello Demo" + "Goodbye"
 
@@ -117,7 +117,7 @@ describe("Testing Validator", () => {
     });
 
     test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 5 errors', () => {
-        let errors: FreError[] = [];
+        let errors: FreError[];
         const determine = DemoFunction.create({ name: "determine" });
         const AAP = DemoVariable.create({ name: "AAP" });
         determine.parameters.push(AAP);
@@ -126,7 +126,7 @@ describe("Testing Validator", () => {
         determine.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
         // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
         errors = validator.validate(determine, true);
-        console.log(errors.map(e => e.message + " in " + e.locationdescription + " of severity " + e.severity).join( '\n'));
+        // console.log(errors.map(e => e.message + " in " + e.locationdescription + " of severity " + e.severity).join( "\n"));
         // determine EXPRESSION TYPE IS NOT CORRECT!! in determine of severity Improvement
         // ER IS IETS FLINK MIS MET DIT DING in determine of severity Error
         // Type of [' "Hello Demo" '] should equal Integer in unnamed of severity Improvement
@@ -136,7 +136,7 @@ describe("Testing Validator", () => {
     });
 
     test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
-        let errors: FreError[] = [];
+        let errors: FreError[];
         const personEnt = DemoEntity.create({  name: "Person", x: "xxx", simpleprop: "simple" });
         const age = DemoAttribute.create({ name: "age" });
         const personName = DemoAttribute.create({ name: "name" });
@@ -170,7 +170,7 @@ describe("Testing Validator", () => {
 
     test ("test isUnique rule for model entities", () => {
         let model1 = new DemoModelCreator().createModelWithIsUniqueError();
-        let errors: FreError[] = [];
+        let errors: FreError[];
         errors = validator.validate(model1, true);
         // errors.forEach(e =>
         //     console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity)
@@ -180,7 +180,7 @@ describe("Testing Validator", () => {
 
     test ("test correct model", () => {
         let correctModel = new DemoModelCreator().createCorrectModel();
-        let errors: FreError[] = [];
+        let errors: FreError[];
         errors = validator.validate(correctModel, true);
         // errors.forEach(e =>
         //     console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
@@ -190,7 +190,7 @@ describe("Testing Validator", () => {
     });
 
     test("complete example model", () => {
-        let errors: FreError[] = [];
+        let errors: FreError[];
         // model.models.forEach(mm =>
         //     console.log(DemoEnvironment.getInstance().writer.writeToString(mm))
         // );

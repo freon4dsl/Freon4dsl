@@ -207,26 +207,6 @@ export class FreTyperPartTemplate {
             }
 
             ${inferMaker.extraMethods.map(meth => meth).join("\n\n")}
-
-            private typeOf(myArg: ${Names.FreNode} | ${Names.FreNode}[]): ${Names.FreType} {
-                let result: ${Names.FreType};
-                if (Array.isArray(myArg)) {
-                    result = this.mainTyper.commonSuperType(myArg);
-                } else {
-                    result = this.mainTyper.inferType(myArg);
-                }
-                return result;
-            }
-
-            private getElemFromAstType(type: ${Names.FreType}, metatype: string): ${Names.FreNode} {
-                if (type.$typename === "AstType") {
-                    const astElement: ${Names.FreNode} = (type as AstType).astElement;
-                    if (${Names.FreLanguage}.getInstance().metaConformsToType(astElement, metatype)) {
-                        return astElement;
-                    }
-                }
-                return null;
-            }
         }`;
 
         const typeConceptImports: string [] = [];
@@ -241,7 +221,7 @@ export class FreTyperPartTemplate {
 
         });
 
-        const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.FreNode}, ${Names.FreLanguage}, ${Names.FreNodeReference}, FreCommonSuperTypeUtil } from "${FREON_CORE}";
+        const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.FreNode}, ${Names.FreLanguage}, FreCommonSuperTypeUtil } from "${FREON_CORE}";
         import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}`;
 

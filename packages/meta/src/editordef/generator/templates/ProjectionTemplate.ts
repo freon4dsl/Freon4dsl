@@ -40,7 +40,7 @@ export class ProjectionTemplate {
     private configImports: string[] = [];   // imports from ../config/gen
     // Information about the use of projections from superconcepts or interfaces is also collected during the content
     // creation. This avoids the generation of unused classes and methods.
-    private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being usedknownBoxProjections
+    private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
     private supersUsed: FreClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
 
     setStandardBooleanKeywords(editorDef: FreEditUnit) {
@@ -55,7 +55,7 @@ export class ProjectionTemplate {
     generateBoxProvider(language: FreLanguage, concept: FreClassifier, editDef: FreEditUnit, extraClassifiers: FreClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        this.coreImports.push(...["Box", "BoxUtil", "BoxFactory", Names.FreNode, "FreBoxProvider", "FreProjectionHandler", Names.FreLanguage]);
+        this.coreImports.push(...["Box", "BoxUtil", "BoxFactory", "FreBoxProvider", "FreProjectionHandler"]);
 
         // see which projections there are for this concept
         // myProjections: all non table projections

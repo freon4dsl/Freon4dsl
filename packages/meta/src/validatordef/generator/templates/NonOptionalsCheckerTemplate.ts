@@ -27,13 +27,8 @@ export class NonOptionalsCheckerTemplate {
         classifiersToDo.push(...language.concepts);
         this.done = [];
 
-        // the template starts here
-        return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
-        import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
-
+        // the template starts here, imports are added after the generation
+        const result = `
         /**
          * Class ${checkerClassName} is part of the implementation of the default validator.
          * It checks whether non-optional properties, as such defined in the .ast definition, indeed
@@ -51,17 +46,14 @@ export class NonOptionalsCheckerTemplate {
             `${this.createChecksOnNonOptionalParts(concept)}`
         ).join("\n\n")}
         }`;
-    }
 
-    private createImports(language: FreLanguage): string {
-        return language.units?.map(unit => `
-                ${Names.classifier(unit)}`).concat(
-                    language.concepts?.map(concept => `
-                ${Names.concept(concept)}`).concat(
-            language.interfaces?.map(intf => `
-                ${Names.interface(intf)}`))).concat(
-                    Names.classifier(language.modelConcept)
-        ).join(", ");
+        return `
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
+        import { ${this.done.map(cls => Names.classifier(cls)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
+        import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
+        
+        ${result}`;
     }
 
     private createChecksOnNonOptionalParts(concept: FreClassifier): string {
@@ -87,9 +79,8 @@ export class NonOptionalsCheckerTemplate {
             }
         });
 
-        this.done.push(concept);
-
         if (result.length > 0 ) {
+            this.done.push(concept);
             return `${commentBefore}
                 public execBefore${Names.classifier(concept)}(modelelement: ${Names.classifier(concept)}): boolean {
                     let hasFatalError: boolean = false;

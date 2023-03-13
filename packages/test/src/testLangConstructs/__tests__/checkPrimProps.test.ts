@@ -42,9 +42,9 @@ describe("Checking primitive properties", () => {
         expect(concept2.conceptProp3).toBe(120117);
         expect(concept3.conceptProp3).toBe(120117);
         expect(concept4.conceptProp3).toBe(120117);
-        expect(concept1.conceptProp3 == concept2.conceptProp3).toBeTruthy();
-        expect(concept1.conceptProp3 == concept3.conceptProp3).toBeTruthy();
-        expect(concept1.conceptProp3 == concept4.conceptProp3).toBeTruthy();
+        expect(concept1.conceptProp3 === concept2.conceptProp3).toBeTruthy();
+        expect(concept1.conceptProp3 === concept3.conceptProp3).toBeTruthy();
+        expect(concept1.conceptProp3 === concept4.conceptProp3).toBeTruthy();
         // TODO compile error
         // expect(concept1.conceptProp2[0]).not.toBe(concept4.conceptProp6[1]);
     });

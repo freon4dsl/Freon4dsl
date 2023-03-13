@@ -70,6 +70,7 @@ export class ReferenceCheckerTemplate {
 
     private createChecksOnNonOptionalParts(concept: FreClassifier): string {
         let result: string = "";
+        // todo check location description, I (A) think that too often 'unnamed' is the result
         const locationdescription = ValidationUtils.findLocationDescription(concept);
         concept.allProperties().forEach(prop => {
             if (!prop.isPart) {
