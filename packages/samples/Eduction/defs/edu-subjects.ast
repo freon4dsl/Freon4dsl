@@ -10,6 +10,7 @@ model CAL /* Computer Aided Learning */ {
 
 modelunit Topic {
     description: string: /* e.g. Fractions, or Multiplications */
+    subjects: Subject[]
 }
 
 concept Subject {
@@ -46,4 +47,9 @@ concept ExamplePage base Page {
 concept InDepthMaterial {
     content: string;
     questions: Question[];
+}
+
+concept Question {
+    content: string;
+    correctAnswer: Answer;
 }
