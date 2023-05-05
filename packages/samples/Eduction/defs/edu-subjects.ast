@@ -1,0 +1,49 @@
+language Education
+
+model CAL /* Computer Aided Learning */ {
+    name: identifier; 
+    description: string: /* e.g. Mathematics for students age 10 */
+    topic: Topic[];
+    flow: FlowDescription[];
+    tests: Scenario[];
+}
+
+modelunit Topic {
+    description: string: /* e.g. Fractions, or Multiplications */
+}
+
+concept Subject {
+    id: identifier;
+    description: string: /* e.g. Simplifying fractions */
+    pages: Page[];
+    reference next: Subject;
+    reference prev: Subject;    
+}
+
+abstract concept Page {
+    index: identifier;
+    calcResult: Function; /* If the Page has no questions, the Function results in top grade */
+}
+
+concept Theory base Page {
+    content: string; /* For the sake of the example this is simplyfied. Should be formatted text including pictures. */
+}
+
+concept Video base Page {
+    url: string;
+    questions: Question[];
+}
+
+concept WorkSheet base Page {
+    questions: Question[];
+}
+
+concept ExamplePage base Page {
+    content: string;
+    questions: Question[];
+}
+
+concept InDepthMaterial {
+    content: string;
+    questions: Question[];
+}

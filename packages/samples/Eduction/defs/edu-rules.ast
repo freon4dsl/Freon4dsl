@@ -1,0 +1,16 @@
+language Education
+
+modelunit FlowDescription {
+    reference subject: Subject;
+    rules: FlowRule[];
+}
+
+concept FlowRule {
+    description: string;
+    formulae: RuleExpression[];
+}
+
+expression RuleExpression { /* e.g. 3 mistakes => show A, 2 mistakes => show B, 1 mistake => show C */
+    /* to be done */
+}
+

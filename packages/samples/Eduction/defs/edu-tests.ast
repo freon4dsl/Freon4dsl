@@ -1,0 +1,34 @@
+language Education
+
+modelunit Test {
+    name: string;
+    scenarios: Scenario[];
+    reference topic: Topic;
+    reference subject: Subject;
+}
+
+concept Scenario {
+    steps: Step[]; /* Note that the order is of importance */
+}
+
+concept Step {
+    reference fromPage: Page;
+    answersGiven: Answer[];
+    reference toPage: Page;
+}
+
+abstract concept Answer {
+}
+
+concept BooleanAnswer base Answer {
+    value: boolean;
+}
+
+concept FractionAnswer base Answer {
+    numerator: number;
+    denominator: number;
+}
+
+concept WholeNumberAnswer base Answer {
+    value: number;
+}
