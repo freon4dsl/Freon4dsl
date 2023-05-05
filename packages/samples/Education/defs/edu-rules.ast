@@ -14,3 +14,9 @@ expression RuleExpression { /* e.g. 3 mistakes => show A, 2 mistakes => show B, 
     /* to be done */
 }
 
+concept Function {
+    formula: RuleExpression;
+    result: Grade;
+}
+
+limited Grade { gradeA; gradeB; gradeC; gradeD; gradeE; gradeF; }

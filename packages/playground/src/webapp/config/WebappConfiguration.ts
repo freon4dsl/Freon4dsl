@@ -6,8 +6,8 @@ import { ServerCommunication } from "../server/ServerCommunication";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
-export const editorEnvironment: FreEnvironment = ExampleEnvironment.getInstance();
+import { EducationEnvironment } from "../../Education/config/gen/EducationEnvironment";
+export const editorEnvironment: FreEnvironment = EducationEnvironment.getInstance();
 LanguageInitializer.initialize();
 
 /**

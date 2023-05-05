@@ -1,0 +1,38 @@
+{
+   "$typename": "Topic",
+   "description": "Fractions for children of age 10",
+   "name": "Fractions10",
+   "subjects": [
+      {
+         "$typename": "Subject",
+         "name": "FRAC-10-Simplify",
+         "description": "Simplifying fractions",
+         "pages": [
+            {
+               "$typename": "Theory",
+               "content": "When you encounter a fraction, you want to simplify this as much as possible. This means that you make the numbers above and below the line as small as possible. How do you do this? By dividing both the numerator and the denominator by the same number.",
+               "name": "",
+               "calcResult": null
+            },
+            {
+               "$typename": "Video",
+               "url": "",
+               "name": "",
+               "questions": [
+                  {
+                     "$typename": "Question",
+                     "content": "Is 3 / 4 the same as 6 / 8?",
+                     "correctAnswer": {
+                        "$typename": "BooleanAnswer",
+                        "value": true
+                     }
+                  }
+               ],
+               "calcResult": null
+            }
+         ],
+         "next": null,
+         "prev": null
+      }
+   ]
+}

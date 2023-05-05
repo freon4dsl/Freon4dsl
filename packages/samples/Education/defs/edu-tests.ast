@@ -1,7 +1,7 @@
 language Education
 
 modelunit Test {
-    name: string;
+    name: identifier;
     scenarios: Scenario[];
     reference topic: Topic;
     reference subject: Subject;
