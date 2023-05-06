@@ -28,8 +28,8 @@ class LwMetaPointer {
 
 class LwChunk {
     serializationFormatVersion: string;
-    metamodels: LwUsedLanguage[];
-    nodes: LwNode[];
+    metamodels: LwUsedLanguage[] = [];
+    nodes: LwNode[] = [];
 }
 
 class LwUsedLanguage {
@@ -40,9 +40,9 @@ class LwUsedLanguage {
 class LwNode {
     id: string;
     concept: LwMetaPointer;
-    properties: LwProperty[];
-    children: LwChild[];
-    references: LwReference[];
+    properties: LwProperty[] = [];
+    children: LwChild[] = [];
+    references: LwReference[] = [];
     parent: string;
 }
 
@@ -53,12 +53,12 @@ class LwProperty {
 
 class LwChild {
     containment: LwMetaPointer;
-    children: string[];
+    children: string[] = [];
 }
 
 class LwReference {
     reference: LwMetaPointer;
-    targets: LwTarget[];
+    targets: LwTarget[] = [];
 }
 
 class LwTarget {
@@ -84,12 +84,13 @@ export class FreLionwebSerializer {
     toTypeScriptInstance(jsonObject: Object): FreNode {
         this.nodesfromJson.clear();
         if (!(jsonObject instanceof LwChunk)) {
-            throw new Error(`Cannot read json: jsonObject is not a LIonWeb chunk: ${JSON.stringify(jsonObject)}`);
+            console.log(`Cannot read json: jsonObject is not a LIonWeb chunk: ${JSON.stringify(jsonObject)}`);
         }
-        const serVersion = jsonObject.serializationFormatVersion;
+        const chunk = jsonObject as LwChunk;
+        const serVersion = chunk.serializationFormatVersion;
         console.log("SerializationFormatVersion: " + serVersion);
         // First read all nodes without childeren, etc.
-        const nodes: LwNode[] = jsonObject.nodes;
+        const nodes: LwNode[] = chunk.nodes;
         for (const object of nodes) {
             const parsedNode = this.toTypeScriptInstanceInternal(object);
             this.nodesfromJson.set(parsedNode.freNode.freId(), parsedNode);
@@ -303,70 +304,124 @@ export class FreLionwebSerializer {
     /**
      * Create JSON Object, storing references as names.
      */
-    public convertToJSON(freNode: FreNode, publicOnly?: boolean): Object {
+    public convertToJSON(freNode: FreNode, publicOnly?: boolean): LwNode[] {
         const typename = freNode.freLanguageConcept();
         // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
-        let result: Object;
+
+        const idMap = new Map<string, LwNode>();
+        let root: LwNode;
         if (publicOnly !== undefined && publicOnly) {
             // convert all units and all public concepts
             if (this.language.concept(typename)?.isPublic || !!this.language.unit(typename)) {
-                result = this.convertToJSONinternal(freNode, true, typename);
+                root = this.convertToJSONinternal(freNode, true, idMap);
             }
         } else {
-            result = this.convertToJSONinternal(freNode, false, typename);
+            root = this.convertToJSONinternal(freNode, false, idMap);
         }
         // console.log("end converting concept name " + tsObject.freLanguageConcept());
-        return result;
+        return Object.values(idMap);
     }
 
-    private convertToJSONinternal(freNode: FreNode, publicOnly: boolean, typename: string): Object {
-        const result: Object = { $typename: typename };
+    private convertToJSONinternal(freNode: FreNode, publicOnly: boolean, idMap: Map<string, LwNode>): LwNode {
+        let result = idMap.get(freNode.freId());
+        if (result !== undefined) {
+            console.log("already found", freNode.freId());
+            return result;
+        }
+        const typename = freNode.freLanguageConcept();
+        result = new LwNode();
+        idMap[freNode.freId()] = result;
+        result.id = freNode.freId();
+
+        let conceptKey: string;
+        const concept = this.language.concept(typename);
+        if (concept !== undefined) {
+            conceptKey = concept.id;
+        } else {
+          const unit = this.language.unit(typename);
+          conceptKey = unit?.id;
+        }
+        if (conceptKey === undefined) {
+            console.log(`Unknown concept key: ${typename}`);
+            return undefined;
+        }
+        result.concept = this.createMetaPointer(conceptKey);
         // console.log("typename: " + typename);
         for (const p of this.language.allConceptProperties(typename)) {
             // console.log(">>>> start converting property " + p.name + " of type " + p.propertyKind);
             if (publicOnly) {
                 if (p.isPublic) {
-                    this.convertPropertyToJSON(p, freNode, publicOnly, result);
+                    this.convertPropertyToJSON(p, freNode, publicOnly, result, idMap);
                 }
             } else {
-                this.convertPropertyToJSON(p, freNode, publicOnly, result);
+                this.convertPropertyToJSON(p, freNode, publicOnly, result, idMap);
             }
             // console.log("<<<< end converting property  " + p.name);
         }
         return result;
     }
 
-    private convertPropertyToJSON(p: FreLanguageProperty, tsObject: FreNode, publicOnly: boolean, result: Object) {
+    private createMetaPointer(key: string) {
+        return {
+            key: key,
+            version: undefined,
+            metamodel: this.language.id
+        };
+    }
+
+    private convertPropertyToJSON(p: FreLanguageProperty, freNode: FreNode, publicOnly: boolean, result: LwNode, idMap: Map<string, LwNode>) {
+        const typename = freNode.freLanguageConcept();
+        if (p.id === undefined) {
+            console.log(`no id defined for property ${p.name}`);
+            return;
+        }
         switch (p.propertyKind) {
             case "part":
-                const value = tsObject[p.name];
+                const value = freNode[p.name];
+                const child: LwChild = {
+                    containment: this.createMetaPointer(p.id),
+                    children: []
+                };
                 if (p.isList) {
-                    const parts: Object[] = tsObject[p.name];
-                    result[p.name] = [];
-                    for (let i: number = 0; i < parts.length; i++) {
-                        result[p.name][i] = this.convertToJSON(parts[i] as FreNode, publicOnly);
+                    const parts: FreNode[] = freNode[p.name];
+                    for (const part of parts) {
+                        child.children.push(this.convertToJSONinternal(part , publicOnly, idMap).id);
                     }
                 } else {
                     // single value
-                    result[p.name] = !!value ? this.convertToJSON(value as FreNode, publicOnly) : null;
+                    child.children.push((!!value ? this.convertToJSONinternal(value as FreNode, publicOnly, idMap) : null).id);
                 }
+                result.children.push(child);
                 break;
             case "reference":
+                const reference: LwReference = {
+                    reference: this.createMetaPointer(p.id),
+                    targets: []
+                };
                 if (p.isList) {
-                    const references: Object[] = tsObject[p.name];
-                    result[p.name] = [];
-                    for (let i: number = 0; i < references.length; i++) {
-                        result[p.name][i] = references[i]["name"];
+                    const references: FreNode[] = freNode[p.name];
+                    for (const ref of references) {
+                        reference.targets.push({
+                            reference: ref.freId(),
+                            resolveInfo: ref["name"]
+                        });
                     }
                 } else {
                     // single reference
-                    const value1 = tsObject[p.name];
-                    result[p.name] = !!value1 ? tsObject[p.name]["name"] : null;
+                    const ref = freNode[p.name];
+                    reference.targets.push({
+                        reference: ref?.freId(),
+                        resolveInfo: !!ref ? ref["name"] : null
+                    });
                 }
+                result.references.push(reference);
                 break;
             case "primitive":
-                const value2 = tsObject[p.name];
-                result[p.name] = value2;
+                const value2 = freNode[p.name];
+                result.properties.push({
+                    property: this.createMetaPointer(p.id),
+                    value: value2
+                });
                 break;
             default:
                 break;
