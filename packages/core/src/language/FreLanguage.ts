@@ -75,6 +75,7 @@ export class FreLanguage {
     }
 
     private languageName: string;
+    private languageId?: string;
     private pmodel: Model;
     private units: Map<string, ModelUnit> = new Map<string, ModelUnit>();
     private concepts: Map<string, FreLanguageConcept> = new Map<string, FreLanguageConcept>();
@@ -121,10 +122,10 @@ export class FreLanguage {
         return this.helperById(this.concepts, conceptId) as FreLanguageConcept;
     }
 
-    helperById(map: Map<string, Classifier>,conceptId: string): Classifier | undefined {
+    helperById(map: Map<string, Classifier>, conceptId: string): Classifier | undefined {
         // console.log("Language find concept " + typeName);
-        for( const concept of map.values()) {
-            if( concept.id === conceptId) {
+        for ( const concept of map.values()) {
+            if ( concept.id === conceptId) {
                 return concept;
             }
         }
@@ -198,9 +199,9 @@ export class FreLanguage {
         return this.helperPropById(this.conceptById(typeName).properties, propertyName);
     }
 
-    helperPropById(map: Map<string, FreLanguageProperty>,id: string): FreLanguageProperty | undefined {
-        for( const prop of map.values()) {
-            if( prop.id === id) {
+    helperPropById(map: Map<string, FreLanguageProperty>, id: string): FreLanguageProperty | undefined {
+        for ( const prop of map.values()) {
+            if ( prop.id === id) {
                 return prop;
             }
         }
@@ -384,6 +385,14 @@ export class FreLanguage {
 
     get name(): string {
         return this.languageName;
+    }
+
+    set id(id: string) {
+        this.languageId = id;
+    }
+
+    get id(): string {
+        return this.languageId;
     }
 
     subConcepts(typeName: string): string[] {

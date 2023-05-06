@@ -207,6 +207,11 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
 
     private processIds(language: FreLanguage, json: Object): void {
           const jsonLanguage = json["language"];
+          const languageId = json["id"];
+          if (typeof languageId === "string") {
+              console.log("Language has id " + languageId);
+              language.id = languageId;
+          }
           const concepts = json["concepts"];
           if (!Array.isArray(concepts)) {
               throw new Error("id.json 'concepts' property should be an array");
