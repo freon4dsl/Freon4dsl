@@ -30,7 +30,7 @@
     "concat-pegjs": "yarn pegjs-concat-language && yarn pegjs-concat-editor && yarn pegjs-concat-scoper",
     "build": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn lang-exp-parser && tsc && yarn copy-validtemplates",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "copy-validtemplates": "cpy src/utils/generation/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
+    "copy-validtemplates": "cp src/utils/generation/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
