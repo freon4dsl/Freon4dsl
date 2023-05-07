@@ -2,19 +2,6 @@ import { FreNode, FreNodeReference } from "../ast";
 import { FreLanguage, FreLanguageProperty } from "../language";
 import { FreUtils, isNullOrUndefined } from "../util";
 
-/**
- * JSON keys according to the LionWeb specification.
- */
-const JSON_CONCEPT_KEY = "concept";
-const JSON_ID_KEY = "id";
-const JSON_PROPERTIES_KEY = "properties";
-const JSON_CHILDREN_KEY = "children";
-const JSON_REFERENCES_KEY = "references";
-const JSON_REFERENCE_KEY = "reference";
-const JSON_SERIALIZATION_FORMAT_KEY = "serializationFormatVersion";
-const JSON_NODES_KEY = "nodes";
-const JSON_RESOLVE_INFO_KEY = "resolveInfo";
-
 type ParsedChild = {
     featureName: string;
     isList: boolean;
@@ -33,14 +20,52 @@ type ParsedNode = {
     children: ParsedChild[];
     references: ParsedReference[];
 };
+class LwMetaPointer {
+    metamodel: string;
+    version: string;
+    key: string;
+}
 
+class LwChunk {
+    serializationFormatVersion: string;
+    metamodels: LwUsedLanguage[] = [];
+    nodes: LwNode[] = [];
+}
 
-/**
- * Helper class to serialize a model using MobXModelElementImpl.
- * Will take care of model references.
- *
- * Depends on private keys etc. as defined in MobXModelElement decorators.
- */
+class LwUsedLanguage {
+    key: string;
+    version: string;
+}
+
+class LwNode {
+    id: string;
+    concept: LwMetaPointer;
+    properties: LwProperty[] = [];
+    children: LwChild[] = [];
+    references: LwReference[] = [];
+    parent: string;
+}
+
+class LwProperty {
+    property: LwMetaPointer;
+    value: string;
+}
+
+class LwChild {
+    containment: LwMetaPointer;
+    children: string[] = [];
+}
+
+class LwReference {
+    reference: LwMetaPointer;
+    targets: LwTarget[] = [];
+}
+
+class LwTarget {
+    resolveInfo: string;
+    reference: string;
+}
+
 export class FreLionwebSerializer {
     private language: FreLanguage;
     private nodesfromJson: Map<string, ParsedNode> = new Map<string, ParsedNode>();
@@ -58,10 +83,14 @@ export class FreLionwebSerializer {
      */
     toTypeScriptInstance(jsonObject: Object): FreNode {
         this.nodesfromJson.clear();
-        const serVersion = jsonObject[JSON_SERIALIZATION_FORMAT_KEY];
+        if (!(jsonObject instanceof LwChunk)) {
+            console.log(`Cannot read json: jsonObject is not a LIonWeb chunk: ${JSON.stringify(jsonObject)}`);
+        }
+        const chunk = jsonObject as LwChunk;
+        const serVersion = chunk.serializationFormatVersion;
         console.log("SerializationFormatVersion: " + serVersion);
         // First read all nodes without childeren, etc.
-        const nodes: Object[] = jsonObject[JSON_NODES_KEY];
+        const nodes: LwNode[] = chunk.nodes;
         for (const object of nodes) {
             const parsedNode = this.toTypeScriptInstanceInternal(object);
             this.nodesfromJson.set(parsedNode.freNode.freId(), parsedNode);
@@ -70,11 +99,10 @@ export class FreLionwebSerializer {
         return this.findRoot();
     }
 
-    // TODO Hardcoded Form
     private findRoot(): FreNode {
         for (const [id, parsedNode] of this.nodesfromJson.entries()) {
-            if (parsedNode.freNode.freLanguageConcept() === "Form") {
-                return parsedNode.freNode
+            if (parsedNode.freNode.freIsUnit()) {
+                return parsedNode.freNode;
             }
         }
         return null;
@@ -109,7 +137,7 @@ export class FreLionwebSerializer {
                     parsedNode.freNode[reference.featureName] = freonRef;
                 }
 
-                console.log("REFERENCE: " + freonRef.typeName + ", ", printModel(freonRef.referred) + ", ", freonRef.name + ", " + freonRef.pathname)
+                console.log("REFERENCE: " + freonRef.typeName + ", ", printModel(freonRef.referred) + ", ", freonRef.name + ", " + freonRef.pathname);
             }
         }
     }
@@ -119,37 +147,49 @@ export class FreLionwebSerializer {
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    private toTypeScriptInstanceInternal(jsonObject: Object): ParsedNode {
+    private toTypeScriptInstanceInternal(jsonObject: LwNode): ParsedNode {
         if (jsonObject === null) {
             throw new Error("Cannot read json: jsonObject is null.");
         }
-        const conceptId: string = jsonObject[JSON_CONCEPT_KEY];
-        const id: string = jsonObject[JSON_ID_KEY];
-        if (isNullOrUndefined(conceptId)) {
+        const jsonMetaPointer = jsonObject.concept;
+        const id: string = jsonObject.id;
+        if (isNullOrUndefined(jsonMetaPointer)) {
             throw new Error(`Cannot read json: not a Freon structure, conceptname missing: ${JSON.stringify(jsonObject)}.`);
         }
+        const conceptMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
         // console.log("Classifier with id " + conceptId + " classifier " + this.language.classifierById(conceptId));
-        const tsObject: FreNode = this.language.createConceptOrUnit(this.language.classifierById(conceptId).typeName, id);
-        if (isNullOrUndefined(tsObject)) {
-            throw new Error(`Cannot read json: ${conceptId} unknown.`);
+        const classifier = this.language.classifierById(conceptMetaPointer.key);
+        if (isNullOrUndefined(classifier)) {
+            throw new Error(`Cannot read json: ${conceptMetaPointer.key} unknown.`);
         }
-        this.convertPrimitiveProperties(tsObject, conceptId, jsonObject);
-        const parsedChildren = this.convertChildProperties(tsObject, conceptId, jsonObject);
-        const parsedReferences = this.convertReferenceProperties(tsObject, conceptId, jsonObject);
+        const tsObject: FreNode = this.language.createConceptOrUnit(classifier.typeName, id);
+        if (isNullOrUndefined(tsObject)) {
+            throw new Error(`Cannot read json: ${conceptMetaPointer.key} unknown.`);
+        }
+        this.convertPrimitiveProperties(tsObject, conceptMetaPointer.key, jsonObject);
+        const parsedChildren = this.convertChildProperties(tsObject, conceptMetaPointer.key, jsonObject);
+        const parsedReferences = this.convertReferenceProperties(tsObject, conceptMetaPointer.key, jsonObject);
         return { freNode: tsObject, children: parsedChildren, references: parsedReferences };
     }
 
-    private convertPrimitiveProperties(freNode: FreNode, concept: string, jsonObject: Object): void {
+    private convertPrimitiveProperties(freNode: FreNode, concept: string, jsonObject: LwNode): void {
         // console.log(">> creating property "+ property.name + "  of type " + property.propertyKind + " isList " + property.isList);
-        const jsonProperties = jsonObject[JSON_PROPERTIES_KEY];
-        for (const [key, value] of Object.entries(jsonProperties)) {
-            const property: FreLanguageProperty = this.language.classifierPropertyById(concept, key);
+        const jsonProperties = jsonObject.properties;
+        FreUtils.CHECK(Array.isArray(jsonProperties), "Found properties value which is not a Array for node: " + jsonObject.id);
+        for (const jsonProperty of Object.values(jsonProperties)) {
+            const jsonMetaPointer = jsonProperty.property;
+            const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
+            const property: FreLanguageProperty = this.language.classifierPropertyById(concept, propertyMetaPointer.key);
             if (isNullOrUndefined(property)) {
-                console.log("Unknown property: " + key + " for concept " + concept);
+                console.log("Unknown property: " + propertyMetaPointer.key + " for concept " + concept);
                 continue;
             }
             FreUtils.CHECK(!property.isList, "Lionweb does not support list properties: " + property.name);
             FreUtils.CHECK(property.propertyKind === "primitive", "Primitive value found for non primitive property: " + property.name);
+            const value = jsonProperty.value;
+            if (isNullOrUndefined(value)) {
+                throw new Error(`Cannot read json: ${property} value unset.`);
+            }
             if (property.type === "string" || property.type === "identifier") {
                 // this.checkValueToType(value, "string", property);
                 freNode[property.name] = value;
@@ -163,16 +203,44 @@ export class FreLionwebSerializer {
         }
     }
 
-    private convertChildProperties(freNode: FreNode, concept: string, jsonObject: Object): ParsedChild[] {
-        const jsonChildren = jsonObject[JSON_CHILDREN_KEY];
+    private convertMetaPointer(jsonObject: LwMetaPointer, parent: Object): LwMetaPointer {
+        if (isNullOrUndefined(jsonObject)) {
+            throw new Error(`Cannot read json: not a MetaPointer: ${JSON.stringify(parent)}.`);
+        }
+
+        const metamodel = jsonObject.metamodel;
+        if (isNullOrUndefined(metamodel)) {
+            throw new Error(`MetaPointer misses metamodel: ${JSON.stringify(jsonObject)}`);
+        }
+        const version = jsonObject.version;
+        if (isNullOrUndefined(version)) {
+            throw new Error(`MetaPointer misses version: ${JSON.stringify(jsonObject)}`);
+        }
+        const key = jsonObject.key;
+        if (isNullOrUndefined(version)) {
+            throw new Error(`MetaPointer misses key: ${JSON.stringify(jsonObject)}`);
+        }
+        return {
+            metamodel: metamodel,
+            version: version,
+            key: key
+        };
+    }
+
+    private convertChildProperties(freNode: FreNode, concept: string, jsonObject: LwNode): ParsedChild[] {
+        const jsonChildren = jsonObject.children;
+        FreUtils.CHECK(Array.isArray(jsonChildren), "Found children value which is not a Array for node: " + jsonObject.id);
         const parsedChildren: ParsedChild[] = [];
-        for (const [key, jsonValue] of Object.entries(jsonChildren)) {
-            const property: FreLanguageProperty = this.language.classifierPropertyById(concept, key);
+        for (const jsonChild of Object.values(jsonChildren)) {
+            const jsonMetaPointer = jsonChild.containment;
+            const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
+            const property: FreLanguageProperty = this.language.classifierPropertyById(concept, propertyMetaPointer.key);
             if (isNullOrUndefined(property)) {
-                console.log("Unknown child property: " + key + " for concept " + concept);
+                console.log("Unknown child property: " + propertyMetaPointer.key + " for concept " + concept);
                 continue;
             }
             FreUtils.CHECK(property.propertyKind === "part", "Part value found for non part property: " + property.name);
+            const jsonValue = jsonChild.children;
             FreUtils.CHECK(Array.isArray(jsonValue), "Found child value which is not a Array for property: " + property.name);
             for (const item of jsonValue as []) {
                 if (!isNullOrUndefined(item)) {
@@ -183,31 +251,35 @@ export class FreLionwebSerializer {
         return parsedChildren;
     }
 
-    private convertReferenceProperties(freNode: FreNode, concept: string, jsonObject: Object): ParsedReference[] {
-        const jsonReferences = jsonObject[JSON_REFERENCES_KEY];
-        const parsedChildren: ParsedReference[] = [];
-        for (const [key, jsonValue] of Object.entries(jsonReferences)) {
-            const property: FreLanguageProperty = this.language.classifierPropertyById(concept, key);
+    private convertReferenceProperties(freNode: FreNode, concept: string, jsonObject: LwNode): ParsedReference[] {
+        const jsonReferences = jsonObject.references;
+        FreUtils.CHECK(Array.isArray(jsonReferences), "Found references value which is not a Array for node: " + jsonObject.id);
+        const parsedReferences: ParsedReference[] = [];
+        for (const jsonReference of Object.values(jsonReferences)) {
+            const jsonMetaPointer = jsonReference.reference;
+            const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
+            const property: FreLanguageProperty = this.language.classifierPropertyById(concept, propertyMetaPointer.key);
             if (isNullOrUndefined(property)) {
-                console.log("Unknown reference property: " + key + " for concept " + concept);
+                console.log("Unknown reference property: " + propertyMetaPointer.key + " for concept " + concept);
                 continue;
             }
             FreUtils.CHECK(property.propertyKind === "reference", "Reference value found for non reference property: " + property.name);
-            FreUtils.CHECK(Array.isArray(jsonValue), "Found child value which is not a Array for property: " + property.name);
-            for (const item of jsonValue as []) {
+            const jsonValue = jsonReference.targets;
+            FreUtils.CHECK(Array.isArray(jsonValue), "Found targets value which is not a Array for property: " + property.name);
+            for (const item of jsonValue) {
                 if (!isNullOrUndefined(item)) {
                     if (typeof item === "object") {
                         // New reference format with resolveInfo
-                        parsedChildren.push({
+                        parsedReferences.push({
                             featureName: property.name,
                             isList: property.isList,
                             typeName: property.type,
-                            referredId: item[JSON_REFERENCE_KEY],
-                            resolveInfo: item[JSON_RESOLVE_INFO_KEY]
+                            referredId: item.reference,
+                            resolveInfo: item.resolveInfo
                         });
                     } else if (typeof item === "string") {
                         // OLD reference format, just an id
-                        parsedChildren.push({
+                        parsedReferences.push({
                             featureName: property.name,
                             isList: property.isList,
                             typeName: property.type,
@@ -220,7 +292,7 @@ export class FreLionwebSerializer {
                 }
             }
         }
-        return parsedChildren;
+        return parsedReferences;
     }
 
     private checkValueToType(value: any, shouldBeType: string, property: FreLanguageProperty) {
@@ -232,70 +304,124 @@ export class FreLionwebSerializer {
     /**
      * Create JSON Object, storing references as names.
      */
-    public convertToJSON(tsObject: FreNode, publicOnly?: boolean): Object {
-        const typename = tsObject.freLanguageConcept();
+    public convertToJSON(freNode: FreNode, publicOnly?: boolean): LwNode[] {
+        const typename = freNode.freLanguageConcept();
         // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
-        let result: Object;
+
+        const idMap = new Map<string, LwNode>();
+        let root: LwNode;
         if (publicOnly !== undefined && publicOnly) {
             // convert all units and all public concepts
             if (this.language.concept(typename)?.isPublic || !!this.language.unit(typename)) {
-                result = this.convertToJSONinternal(tsObject, true, typename);
+                root = this.convertToJSONinternal(freNode, true, idMap);
             }
         } else {
-            result = this.convertToJSONinternal(tsObject, false, typename);
+            root = this.convertToJSONinternal(freNode, false, idMap);
         }
         // console.log("end converting concept name " + tsObject.freLanguageConcept());
-        return result;
+        return Object.values(idMap);
     }
 
-    private convertToJSONinternal(tsObject: FreNode, publicOnly: boolean, typename: string): Object {
-        const result: Object = { $typename: typename };
+    private convertToJSONinternal(freNode: FreNode, publicOnly: boolean, idMap: Map<string, LwNode>): LwNode {
+        let result = idMap.get(freNode.freId());
+        if (result !== undefined) {
+            console.log("already found", freNode.freId());
+            return result;
+        }
+        const typename = freNode.freLanguageConcept();
+        result = new LwNode();
+        idMap[freNode.freId()] = result;
+        result.id = freNode.freId();
+
+        let conceptKey: string;
+        const concept = this.language.concept(typename);
+        if (concept !== undefined) {
+            conceptKey = concept.id;
+        } else {
+          const unit = this.language.unit(typename);
+          conceptKey = unit?.id;
+        }
+        if (conceptKey === undefined) {
+            console.log(`Unknown concept key: ${typename}`);
+            return undefined;
+        }
+        result.concept = this.createMetaPointer(conceptKey);
         // console.log("typename: " + typename);
         for (const p of this.language.allConceptProperties(typename)) {
             // console.log(">>>> start converting property " + p.name + " of type " + p.propertyKind);
             if (publicOnly) {
                 if (p.isPublic) {
-                    this.convertPropertyToJSON(p, tsObject, publicOnly, result);
+                    this.convertPropertyToJSON(p, freNode, publicOnly, result, idMap);
                 }
             } else {
-                this.convertPropertyToJSON(p, tsObject, publicOnly, result);
+                this.convertPropertyToJSON(p, freNode, publicOnly, result, idMap);
             }
             // console.log("<<<< end converting property  " + p.name);
         }
         return result;
     }
 
-    private convertPropertyToJSON(p: FreLanguageProperty, tsObject: FreNode, publicOnly: boolean, result: Object) {
+    private createMetaPointer(key: string) {
+        return {
+            key: key,
+            version: undefined,
+            metamodel: this.language.id
+        };
+    }
+
+    private convertPropertyToJSON(p: FreLanguageProperty, freNode: FreNode, publicOnly: boolean, result: LwNode, idMap: Map<string, LwNode>) {
+        const typename = freNode.freLanguageConcept();
+        if (p.id === undefined) {
+            console.log(`no id defined for property ${p.name}`);
+            return;
+        }
         switch (p.propertyKind) {
             case "part":
-                const value = tsObject[p.name];
+                const value = freNode[p.name];
+                const child: LwChild = {
+                    containment: this.createMetaPointer(p.id),
+                    children: []
+                };
                 if (p.isList) {
-                    const parts: Object[] = tsObject[p.name];
-                    result[p.name] = [];
-                    for (let i: number = 0; i < parts.length; i++) {
-                        result[p.name][i] = this.convertToJSON(parts[i] as FreNode, publicOnly);
+                    const parts: FreNode[] = freNode[p.name];
+                    for (const part of parts) {
+                        child.children.push(this.convertToJSONinternal(part , publicOnly, idMap).id);
                     }
                 } else {
                     // single value
-                    result[p.name] = !!value ? this.convertToJSON(value as FreNode, publicOnly) : null;
+                    child.children.push((!!value ? this.convertToJSONinternal(value as FreNode, publicOnly, idMap) : null).id);
                 }
+                result.children.push(child);
                 break;
             case "reference":
+                const reference: LwReference = {
+                    reference: this.createMetaPointer(p.id),
+                    targets: []
+                };
                 if (p.isList) {
-                    const references: Object[] = tsObject[p.name];
-                    result[p.name] = [];
-                    for (let i: number = 0; i < references.length; i++) {
-                        result[p.name][i] = references[i]["name"];
+                    const references: FreNode[] = freNode[p.name];
+                    for (const ref of references) {
+                        reference.targets.push({
+                            reference: ref.freId(),
+                            resolveInfo: ref["name"]
+                        });
                     }
                 } else {
                     // single reference
-                    const value1 = tsObject[p.name];
-                    result[p.name] = !!value1 ? tsObject[p.name]["name"] : null;
+                    const ref = freNode[p.name];
+                    reference.targets.push({
+                        reference: ref?.freId(),
+                        resolveInfo: !!ref ? ref["name"] : null
+                    });
                 }
+                result.references.push(reference);
                 break;
             case "primitive":
-                const value2 = tsObject[p.name];
-                result[p.name] = value2;
+                const value2 = freNode[p.name];
+                result.properties.push({
+                    property: this.createMetaPointer(p.id),
+                    value: value2
+                });
                 break;
             default:
                 break;
@@ -304,17 +430,17 @@ export class FreLionwebSerializer {
 }
 
 function printModel(element: FreNode): string {
-    return JSON.stringify(element, skipReferences, "  " )
+    return JSON.stringify(element, skipReferences, "  " );
 }
 
-const ownerprops = ["$$owner", "$$propertyName", "$$propertyIndex"];// "$id"];
+const ownerprops = ["$$owner", "$$propertyName", "$$propertyIndex"]; // "$id"];
 
 function skipReferences(key: string, value: Object) {
     if (ownerprops.includes(key)) {
         return undefined;
-    } else if( value instanceof FreNodeReference) {
+    } else if ( value instanceof FreNodeReference) {
         return "REF --|" ;
-    }else {
+    } else {
         return value;
     }
 }

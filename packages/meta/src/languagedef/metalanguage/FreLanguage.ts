@@ -11,6 +11,7 @@ export class FreLanguage extends FreLangElement {
     interfaces: FreInterface[] = [];
     modelConcept: FreModelDescription;
     units: FreUnitDescription[] = [];
+    id?: string;
 
     constructor() {
         super();
