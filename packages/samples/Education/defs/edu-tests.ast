@@ -8,12 +8,13 @@ modelunit Test {
 }
 
 concept Scenario {
+    description: string;
     steps: Step[]; /* Note that the order is of importance */
 }
 
 concept Step {
     reference fromPage: Page;
-    answersGiven: Answer[];
+    answerGiven: Answer;
     reference toPage: Page;
 }
 

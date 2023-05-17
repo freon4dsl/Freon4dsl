@@ -10,18 +10,51 @@
          "pages": [
             {
                "$typename": "Theory",
-               "content": "When you encounter a fraction, you want to simplify this as much as possible. This means that you make the numbers above and below the line as small as possible. How do you do this? By dividing both the numerator and the denominator by the same number.",
-               "name": "",
+               "name": "Fractions theory",
+               "lines": [
+                  {
+                     "$typename": "Line",
+                     "content": "When you encounter a fraction, you want to simplify this as much as possible."
+                  },
+                  {
+                     "$typename": "Line",
+                     "content": "This means that you make the numbers above and below the line as small as possible."
+                  },
+                  {
+                     "$typename": "Line",
+                     "content": "How do you do this?"
+                  },
+                  {
+                     "$typename": "Line",
+                     "content": "By dividing both the numerator and the denominator by the same number."
+                  }
+               ],
                "calcResult": null
             },
             {
                "$typename": "Video",
                "url": "",
-               "name": "",
+               "name": "Fractions video one",
                "questions": [
                   {
                      "$typename": "Question",
                      "content": "Is 3 / 4 the same as 6 / 8?",
+                     "correctAnswer": {
+                        "$typename": "BooleanAnswer",
+                        "value": true
+                     }
+                  }
+               ],
+               "calcResult": null
+            },
+            {
+               "$typename": "Video",
+               "url": "https://www.myvideo.com",
+               "name": "Fractions video two",
+               "questions": [
+                  {
+                     "$typename": "Question",
+                     "content": "Did you understand the video?",
                      "correctAnswer": {
                         "$typename": "BooleanAnswer",
                         "value": true

@@ -10,45 +10,54 @@ Subject {[
     Subject: ${self.name}
     Description: ${self.description}
     Next subject: ${self.next}
-    Previous Subject: ${self.prev}    
-    
+    Previous Subject: ${self.prev}
+
     Pages:
-    ${self.pages vertical}
+    ${self.pages vertical }
 ]}
 
 Page {[
-    ${self.name}
+    Page ${self.name}
     ${self.calcResult}
 ]}
 
 Theory {[
-    ${self.content} /* For the sake of the example this is simplyfied. Should be formatted text including pictures. */
+    Theory [=>Page]
+        ${self.lines vertical}
+]}
+
+Line {[
+    ${self.content}
 ]}
 
 Video {[
-    Maybe this video will help you understand.
-    ${self.url}
+    Video [=>Page]
+        Maybe this video will help you understand.
+        ${self.url}
 
-    ${self.questions vertical separator [.]}
+        ${self.questions vertical separator [.]}
 ]}
 
 WorkSheet {[
-    See if you can answer the following questions.
-    ${self.questions vertical separator [.]}
+    Worksheet [=>Page]
+        See if you can answer the following questions.
+        ${self.questions vertical separator [.]}
 ]}
 
 ExamplePage {[
-    ${self.content}
+    Example [=>Page]
+        ${self.content}
 
-    Now, please, answer the following questions.
-    ${self.questions vertical separator [.]}
+        Now, please, answer the following questions.
+        ${self.questions vertical separator [.]}
 ]}
 
 InDepthMaterial {[
-    ${self.content}
+    [=>Page]
+        ${self.content}
 
-    Test your understanding by answering the following questions.
-    ${self.questions vertical separator [.]}
+        Test your understanding by answering the following questions.
+         ${self.questions vertical separator [.]}
 ]}
 
 Question {[

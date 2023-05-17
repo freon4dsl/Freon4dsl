@@ -1,7 +1,7 @@
 language Education
 
 model CAL /* Computer Aided Learning */ {
-    name: identifier; 
+    name: identifier;
     description: string; /* e.g. Mathematics for students age 10 */
     topic: Topic[];
     flow: FlowDescription[];
@@ -18,7 +18,7 @@ concept Subject {
     description: string; /* e.g. Simplifying fractions */
     pages: Page[];
     reference next: Subject;
-    reference prev: Subject;    
+    reference prev: Subject;
 }
 
 abstract concept Page {
@@ -27,7 +27,11 @@ abstract concept Page {
 }
 
 concept Theory base Page {
-    content: string; /* For the sake of the example this is simplyfied. Should be formatted text including pictures. */
+    lines: Line[]; /* For the sake of the example this is simplyfied. Should be formatted text including pictures. */
+}
+
+concept Line {
+    content: string;
 }
 
 concept Video base Page {
@@ -44,7 +48,7 @@ concept ExamplePage base Page {
     questions: Question[];
 }
 
-concept InDepthMaterial {
+concept InDepthMaterial base Page {
     content: string;
     questions: Question[];
 }
