@@ -193,11 +193,11 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 
-  --freon-horizontallist-component-padding: 0px;
-  --freon-horizontallist-component-margin: 0px;
+  --freon-horizontallist-component-padding: 1px;
+  --freon-horizontallist-component-margin: 1px;
 
-  --freon-verticallist-component-padding: 0px;
-  --freon-verticallist-component-margin: 0px;
+  --freon-verticallist-component-padding: 1px;
+  --freon-verticallist-component-margin: 1px;
 }
 
 .gridcellOdd {
@@ -249,7 +249,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-label-component-font-weight: bold;
   --freon-label-component-color: red;
 }
-.unit {
+.Pages\: {
   --freon-label-component-font-weight: bold;
   --freon-label-component-color: darkmagenta;
 }

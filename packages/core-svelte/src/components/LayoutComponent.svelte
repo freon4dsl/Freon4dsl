@@ -68,9 +68,10 @@
         {/each}
     {:else}
         {#each children as child, i (child.id)}
-            {#if i > 0 && i < children.length && !(isEmptyLineBox(children[i - 1]))}
+<!--            {#if i > 0 && i < children.length && !(isEmptyLineBox(children[i - 1]))}
                 <br/>
             {/if}
+-->
             <RenderComponent box={child} editor={editor}/>
         {/each}
     {/if}
