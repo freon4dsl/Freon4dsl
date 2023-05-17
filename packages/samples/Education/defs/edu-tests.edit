@@ -1,0 +1,21 @@
+/* This file contains the default editor definition. */
+
+editor default
+
+Test {[
+    Name: ${self.name}
+    Topic: ${self.topic}    Subject: ${self.subject}
+
+    ${self.scenarios}
+]}
+
+Scenario {[
+    Description: ${self.description}
+
+    ${self.steps}
+]}
+
+Step {[
+    On page ${self.fromPage} answer is ${self.answerGiven} to page ${self.toPage}
+
+]}

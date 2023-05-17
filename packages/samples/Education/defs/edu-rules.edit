@@ -1,0 +1,16 @@
+/* This file contains the default editor definition. */
+
+editor default
+
+FlowRule {[
+    Description: ${self.description}
+
+    Expression:
+    ${self.formulae}
+]}
+
+Function {[
+    ${self.formula}
+    ${self.result}
+]}
+
