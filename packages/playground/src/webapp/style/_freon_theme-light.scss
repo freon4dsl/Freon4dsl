@@ -21,6 +21,7 @@
   //luminance,
   //text-emphasis,
   //tone
+
 );
 
 // Include all the global styles that do not involve dark/light modes.
@@ -107,17 +108,41 @@
   --freon-grid-component-border-color: orange;
   --freon-grid-component-border-width: 3pt;
   --freon-grid-component-border-style: dotted;
-
 }
 
 .mygrid {
   padding: 0px;
   grid-gap: -1px;
+  border: 2px;
+  border-style: solid;
+};
+
+.divider {
+  color: red;
+  fill: #ff11ac;
+  color: green;
+  stroke-width: 2px;
+  stroke: blue;
+}
+
+.fraction-all {
+  --freon-horizontallist-component-align-items: center;
+}
+.fraction-exp {
+  --freon-horizontallist-component-align-items: center;
+}
+.mysvgcell {
+  //--freon-gridcell-component-background-color: #{theme.$surface};
+  display: flex;
+  // justifySelf: stretch;
+  padding: 0px;
+  grid-gap: 1px;
   border: 0px;
   border-style: hidden;
 };
 
 .mycell {
+  //--freon-gridcell-component-background-color: #{theme.$surface};
   display: flex;
   // justifySelf: stretch;
   padding: 0px;
@@ -195,9 +220,10 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 
   --freon-horizontallist-component-padding: 1px;
   --freon-horizontallist-component-margin: 1px;
+  --freon-horizontallist-component-align-items: center;
 
-  --freon-verticallist-component-padding: 1px;
-  --freon-verticallist-component-margin: 1px;
+  --freon-verticallist-component-padding: 3px;
+  --freon-verticallist-component-margin: 2px;
 }
 
 .gridcellOdd {
