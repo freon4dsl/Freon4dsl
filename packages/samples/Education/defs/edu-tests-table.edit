@@ -10,6 +10,6 @@ Scenario {[
 
 Step { table [
     On Page          | Answer Given        | To Page
-    ${self.fromPage} | ${self.answerGiven} | ${self.toPage}
+    ${self.fromPage} | ${self.answersGiven vertical} | ${self.toPage}
 
 ]}

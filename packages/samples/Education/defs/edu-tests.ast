@@ -4,7 +4,6 @@ modelunit Test {
     name: identifier;
     scenarios: Scenario[];
     reference topic: Topic;
-    reference subject: Subject;
 }
 
 concept Scenario {
@@ -16,7 +15,7 @@ abstract concept AbstractStep {}
 
 concept Step base AbstractStep {
     reference fromPage: Page;
-    answerGiven: Answer;
+    answersGiven: Answer[];
     reference toPage: Page;
 }
 
@@ -24,29 +23,31 @@ concept ExitStep base AbstractStep {
     // nothing to do, scenarion ends
 }
 
-abstract concept Answer {
+concept Answer {
+    reference question: Question;
+    expr: RuleExpression;
 }
 
-concept BooleanAnswer base Answer {
-//    value: boolean;
-    bool: BooleanLiteralExpression;
-}
+//concept BooleanAnswer base Answer {
+////    value: boolean;
+//    bool: BooleanLiteralExpression;
+//}
+//
+//concept StringAnswer base Answer {
+//    value: string;
+//}
+//
+//concept FractionAnswer base Answer {
+//    fraction: FractionLiteralExpression;
+//}
+//
+//concept WholeNumberAnswer base Answer {
+//    value: number;
+//}
 
-concept StringAnswer base Answer {
-    value: string;
-}
-
-concept FractionAnswer base Answer {
-    fraction: FractionLiteralExpression;
-}
-
-concept WholeNumberAnswer base Answer {
-    value: number;
-}
-
-concept MultipleChoice base Answer {
+expression MultipleChoiceExpression base RuleExpression {
     answers: string[];
 }
 
-concept NoAnswer base Answer {
+expression Nothing base RuleExpression {
 }

@@ -1,0 +1,25 @@
+{
+   "$typename": "FlowDescription",
+   "name": "Flow",
+   "rules": [
+      {
+         "$typename": "FlowRule",
+         "description": "Continue to other page",
+         "formulae": [
+            null,
+            {
+               "$typename": "LessThenExpression",
+               "left": {
+                  "$typename": "QuestionRef",
+                  "question": "Q1"
+               },
+               "right": {
+                  "$typename": "QuestionRef",
+                  "question": "Q2"
+               }
+            }
+         ]
+      }
+   ],
+   "topic": null
+}

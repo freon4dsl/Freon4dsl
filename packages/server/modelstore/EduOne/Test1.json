@@ -1,0 +1,59 @@
+{
+   "$typename": "Test",
+   "name": "Test1",
+   "scenarios": [
+      {
+         "$typename": "Scenario",
+         "description": "Test what happens when all answers are correct",
+         "steps": [
+            {
+               "$typename": "Step",
+               "answersGiven": [
+                  {
+                     "$typename": "Answer",
+                     "expr": null,
+                     "question": null
+                  },
+                  {
+                     "$typename": "Answer",
+                     "expr": null,
+                     "question": null
+                  }
+               ],
+               "fromPage": "Fractions theory",
+               "toPage": "Fractions video two"
+            },
+            {
+               "$typename": "Step",
+               "answersGiven": [
+                  {
+                     "$typename": "Answer",
+                     "expr": null,
+                     "question": "Q2"
+                  }
+               ],
+               "fromPage": "Fractions video two",
+               "toPage": "Fractions theory"
+            },
+            {
+               "$typename": "Step",
+               "answersGiven": [
+                  {
+                     "$typename": "Answer",
+                     "expr": null,
+                     "question": "Simplify"
+                  }
+               ],
+               "fromPage": "Fractions video one",
+               "toPage": null
+            }
+         ]
+      },
+      {
+         "$typename": "Scenario",
+         "description": "",
+         "steps": []
+      }
+   ],
+   "topic": "Fractions10"
+}

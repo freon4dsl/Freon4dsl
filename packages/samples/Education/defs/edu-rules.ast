@@ -1,7 +1,7 @@
 language Education
 
 modelunit FlowDescription {
-    reference subject: Subject;
+    reference topic: Topic;
     rules: FlowRule[];
 }
 

@@ -4,7 +4,7 @@ editor default
 
 Test {[
     Name: ${self.name}
-    Topic: ${self.topic}    Subject: ${self.subject}
+    Topic: ${self.topic}
 
     ${self.scenarios}
 ]}
@@ -16,7 +16,7 @@ Scenario {[
 ]}
 
 Step {[
-    On page ${self.fromPage} answer is ${self.answerGiven} to page ${self.toPage}
+    On page ${self.fromPage} answers are ${self.answersGiven vertical} to page ${self.toPage}
 
 ]}
 
@@ -24,6 +24,6 @@ ExitStep {[
     Exit subject
 ]}
 
-NoAnswer {[
+Nothing {[
     No Answer
 ]}

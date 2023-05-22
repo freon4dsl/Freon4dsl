@@ -1,23 +1,16 @@
 scoper EducationScoper for language Education
 
-// isnamespace { Entity,Model }
-
-// isnamespace { Entity, Model }
-
-// 2 isnamespace { Method, Entity }
-
-isnamespace { Page, FlowDescription, Subject, PageRefExpression  }
+isnamespace { Page, FlowDescription, Topic, PageRefExpression, Step, Test  }
 
 FlowDescription {
-    namespace_addition = self.subject;
+    namespace_addition = self.topic;
 }
 
-//PageRefExpression {
-//    namespace_addition = self.page;
-//}
+Test {
+    namespace_addition = self.topic;
+}
 
-//AppliedFeature {
-//	scope = typeof( container );
-//}
-
+Step {
+    namespace_addition = self.fromPage;
+}
 

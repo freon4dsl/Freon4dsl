@@ -1,71 +1,136 @@
 {
    "$typename": "Topic",
-   "description": "Fractions for children of age 10",
    "name": "Fractions10",
-   "subjects": [
+   "description": "Fractions for children of age 10",
+   "pages": [
       {
-         "$typename": "Subject",
-         "name": "FRAC-10-Simplify",
-         "description": "Simplifying fractions",
-         "pages": [
+         "$typename": "Theory",
+         "name": "Fractions theory",
+         "lines": [
             {
-               "$typename": "Theory",
-               "name": "Fractions theory",
-               "lines": [
-                  {
-                     "$typename": "Line",
-                     "content": "When you encounter a fraction, you want to simplify this as much as possible."
-                  },
-                  {
-                     "$typename": "Line",
-                     "content": "This means that you make the numbers above and below the line as small as possible."
-                  },
-                  {
-                     "$typename": "Line",
-                     "content": "How do you do this?"
-                  },
-                  {
-                     "$typename": "Line",
-                     "content": "By dividing both the numerator and the denominator by the same number."
-                  }
-               ],
-               "calcResult": null
+               "$typename": "Line",
+               "content": "When you encounter a fraction, you want to simplify this as much as possible."
             },
             {
-               "$typename": "Video",
-               "url": "",
-               "name": "Fractions video one",
-               "questions": [
-                  {
-                     "$typename": "Question",
-                     "content": "Is 3 / 4 the same as 6 / 8?",
-                     "correctAnswer": {
-                        "$typename": "BooleanAnswer",
-                        "value": true
-                     }
-                  }
-               ],
-               "calcResult": null
+               "$typename": "Line",
+               "content": "This means that you make the numbers above and below the line as small as possible."
             },
             {
-               "$typename": "Video",
-               "url": "https://www.myvideo.com",
-               "name": "Fractions video two",
-               "questions": [
-                  {
-                     "$typename": "Question",
-                     "content": "Did you understand the video?",
-                     "correctAnswer": {
-                        "$typename": "BooleanAnswer",
-                        "value": true
-                     }
-                  }
-               ],
-               "calcResult": null
+               "$typename": "Line",
+               "content": "How do you do this?"
+            },
+            {
+               "$typename": "Line",
+               "content": ""
+            },
+            {
+               "$typename": "Line",
+               "content": "By dividing both the numerator and the denominator by the same number."
             }
          ],
-         "next": null,
-         "prev": null
+         "questions": [],
+         "calcResult": {
+            "$typename": "Function",
+            "cases": [
+               {
+                  "$typename": "FunctionCase",
+                  "formula": {
+                     "$typename": "AndExpression",
+                     "left": {
+                        "$typename": "EqualsExpression",
+                        "left": {
+                           "$typename": "QuestionRef",
+                           "question": "Q1"
+                        },
+                        "right": {
+                           "$typename": "FractionLiteralExpression",
+                           "numerator": 1,
+                           "denominator": 2
+                        }
+                     },
+                     "right": {
+                        "$typename": "GreaterThenExpression",
+                        "left": {
+                           "$typename": "QuestionRef",
+                           "question": "Q2"
+                        },
+                        "right": {
+                           "$typename": "BooleanLiteralExpression",
+                           "value": false
+                        }
+                     }
+                  },
+                  "grade": "gradeA"
+               },
+               {
+                  "$typename": "FunctionCase",
+                  "formula": {
+                     "$typename": "EqualsExpression",
+                     "left": {
+                        "$typename": "QuestionRef",
+                        "question": "Q1"
+                     },
+                     "right": {
+                        "$typename": "FractionLiteralExpression",
+                        "numerator": 10,
+                        "denominator": 20
+                     }
+                  },
+                  "grade": "gradeB"
+               },
+               {
+                  "$typename": "FunctionCase",
+                  "formula": null,
+                  "grade": "gradeA"
+               }
+            ]
+         }
+      },
+      {
+         "$typename": "Video",
+         "url": "",
+         "name": "Fractions video one",
+         "questions": [
+            {
+               "$typename": "Question",
+               "name": "Q1",
+               "content": "Is 3 / 4 the same as 6 / 8?",
+               "correctAnswer": {
+                  "$typename": "BooleanLiteralExpression",
+                  "value": true
+               }
+            },
+            {
+               "$typename": "Question",
+               "name": "Simplify",
+               "content": "Simplify  4/ 8",
+               "correctAnswer": {
+                  "$typename": "FractionLiteralExpression",
+                  "numerator": 1,
+                  "denominator": 2
+               }
+            }
+         ],
+         "calcResult": null
+      },
+      {
+         "$typename": "Video",
+         "url": "https://www.myvideo.com",
+         "name": "Fractions video two",
+         "questions": [
+            {
+               "$typename": "Question",
+               "name": "Q2",
+               "content": "Did you understand the video?",
+               "correctAnswer": {
+                  "$typename": "BooleanLiteralExpression",
+                  "value": true
+               }
+            }
+         ],
+         "calcResult": null
       }
-   ]
+   ],
+   "next": null,
+   "prev": null
 }

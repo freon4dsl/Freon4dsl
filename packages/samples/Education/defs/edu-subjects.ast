@@ -9,16 +9,11 @@ model CAL /* Computer Aided Learning */ {
 }
 
 modelunit Topic {
-    description: string; /* e.g. Fractions, or Multiplications */
-    subjects: Subject[];
-}
-
-concept Subject {
     name: identifier;
-    description: string; /* e.g. Simplifying fractions */
+    description: string; /* e.g. Fractions, or Multiplications */
     pages: Page[];
-    reference next: Subject;
-    reference prev: Subject;
+    reference next: Topic;
+    reference prev: Topic;
 }
 
 abstract concept Page {
@@ -28,6 +23,7 @@ abstract concept Page {
 
 concept Theory base Page {
     lines: Line[]; /* For the sake of the example this is simplyfied. Should be formatted text including pictures. */
+    questions: Question[];
 }
 
 concept Line {
@@ -56,5 +52,5 @@ concept InDepthMaterial base Page {
 concept Question {
     name: identifier;
     content: string;
-    correctAnswer: Answer;
+    correctAnswer: RuleExpression;
 }
