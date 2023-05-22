@@ -109,7 +109,7 @@
         justify-self: var(--freon-gridcell-component-justify-left, stretch);
         display: flex;
         padding: var(--freon-gridcell-component-padding, 1px);
-        background-color: var(--freon-gridcell-component-background-color, white);
+        /*background-color: var(--freon-gridcell-component-background-color, white);*/
         color: var(--freon-gridcell-component-color, inherit);
     }
 </style>

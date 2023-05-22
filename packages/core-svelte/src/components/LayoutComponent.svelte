@@ -89,7 +89,7 @@
         white-space: nowrap;
         /*display: inline-block; !* maybe use display: flex; ?? *!*/
         display: flex;
-        align-items: baseline;
+        align-items: var(--freon-horizontallist-component-align-items, baseline);
     }
 
     .vertical {
