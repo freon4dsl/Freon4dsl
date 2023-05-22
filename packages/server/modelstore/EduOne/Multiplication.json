@@ -1,64 +1,52 @@
 {
    "$typename": "Topic",
-   "description": "This topic teaches simple multiplication skills",
    "name": "Multiplication",
-   "subjects": [
+   "description": "This topic teaches simple multiplication skills",
+   "pages": [
       {
-         "$typename": "Subject",
-         "name": "Double",
-         "description": "Doubling numbers",
-         "pages": [
+         "$typename": "Theory",
+         "name": "Doubling",
+         "lines": [
             {
-               "$typename": "Theory",
-               "name": "Doubling",
-               "lines": [
-                  {
-                     "$typename": "Line",
-                     "content": "Calculating the double of a numner isn't that hard."
-                  },
-                  {
-                     "$typename": "Line",
-                     "content": "Doubling the number of X-es for XXX is XXX XXX"
-                  },
-                  {
-                     "$typename": "Line",
-                     "content": "This is the same as saying that three X-es times 2 gives you six X-es "
-                  },
-                  {
-                     "$typename": "Line",
-                     "content": "OR in mathematic terms two times three equals six: 2 * 3 = 6."
-                  }
-               ],
-               "calcResult": null
+               "$typename": "Line",
+               "content": "Calculating the double of a numner isn't that hard."
             },
             {
-               "$typename": "WorkSheet",
-               "name": "Exercises inn doubling",
-               "questions": [
-                  {
-                     "$typename": "Question",
-                     "name": "",
-                     "content": "What is the double of 2"
-                  },
-                  {
-                     "$typename": "Question",
-                     "name": "",
-                     "content": "What is the double of 3?"
-                  }
-               ],
-               "calcResult": null
+               "$typename": "Line",
+               "content": "Doubling the number of X-es for XXX is XXX XXX"
+            },
+            {
+               "$typename": "Line",
+               "content": "This is the same as saying that three X-es times 2 gives you six X-es "
+            },
+            {
+               "$typename": "Line",
+               "content": "OR in mathematic terms two times three equals six: 2 * 3 = 6."
             }
          ],
-         "next": null,
-         "prev": null
+         "questions": [],
+         "calcResult": null
       },
       {
-         "$typename": "Subject",
-         "name": "Triple Numbers",
-         "description": "",
-         "pages": [],
-         "next": null,
-         "prev": null
+         "$typename": "WorkSheet",
+         "name": "Exercises inn doubling",
+         "questions": [
+            {
+               "$typename": "Question",
+               "name": "",
+               "content": "What is the double of 2",
+               "correctAnswer": null
+            },
+            {
+               "$typename": "Question",
+               "name": "",
+               "content": "What is the double of 3?",
+               "correctAnswer": null
+            }
+         ],
+         "calcResult": null
       }
-   ]
+   ],
+   "next": null,
+   "prev": null
 }
