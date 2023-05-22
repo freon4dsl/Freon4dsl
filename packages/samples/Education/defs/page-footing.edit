@@ -1,0 +1,7 @@
+/* This file contains the default editor definition. */
+
+editor footing
+
+Page {[
+    ${self.calcResult}
+]}
