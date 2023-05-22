@@ -12,24 +12,41 @@ concept Scenario {
     steps: Step[]; /* Note that the order is of importance */
 }
 
-concept Step {
+abstract concept AbstractStep {}
+
+concept Step base AbstractStep {
     reference fromPage: Page;
     answerGiven: Answer;
     reference toPage: Page;
+}
+
+concept ExitStep base AbstractStep {
+    // nothing to do, scenarion ends
 }
 
 abstract concept Answer {
 }
 
 concept BooleanAnswer base Answer {
-    value: boolean;
+//    value: boolean;
+    bool: BooleanLiteralExpression;
+}
+
+concept StringAnswer base Answer {
+    value: string;
 }
 
 concept FractionAnswer base Answer {
-    numerator: number;
-    denominator: number;
+    fraction: FractionLiteralExpression;
 }
 
 concept WholeNumberAnswer base Answer {
     value: number;
+}
+
+concept MultipleChoice base Answer {
+    answers: string[];
+}
+
+concept NoAnswer base Answer {
 }

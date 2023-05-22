@@ -19,3 +19,11 @@ Step {[
     On page ${self.fromPage} answer is ${self.answerGiven} to page ${self.toPage}
 
 ]}
+
+ExitStep {[
+    Exit subject
+]}
+
+NoAnswer {[
+    No Answer
+]}

@@ -10,7 +10,71 @@ FlowRule {[
 ]}
 
 Function {[
-    ${self.formula}
-    ${self.result}
+    ${self.cases}
 ]}
 
+FunctionCase {[
+    ${self.grade} => ${self.formula}
+]}
+
+QuestionRef {[
+    ${question}
+    ]
+    referenceShortcut = ${question}
+}
+
+NrOfCorrectAnswers {[
+    number of correct answers
+    ]
+    trigger = "number of correct answers"
+}
+
+
+BooleanLiteralExpression {
+    [ ${value} ]
+    trigger = "boolean"
+}
+
+FractionLiteralExpression {
+    [ ${numerator} / ${denominator} ]
+    trigger = "fraction"
+}
+
+NumberLiteralExpression {
+    [${value}]
+}
+
+StringLiteralExpression {
+    ['${value}']
+    trigger = "'"
+}
+
+PlusExpression {
+    symbol = "+"
+}
+
+MultiplyExpression {
+    symbol = "*"
+}
+DivideExpression {
+    symbol = "/"
+}
+
+LessThenExpression {
+    symbol = "<"
+}
+
+OrExpression {
+    symbol = "or"
+}
+
+AndExpression {
+    symbol = "and"
+}
+
+GreaterThenExpression {
+    symbol = ">"
+}
+EqualsExpression {
+    symbol = "=="
+}

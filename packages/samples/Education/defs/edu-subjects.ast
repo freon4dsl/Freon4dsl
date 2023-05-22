@@ -54,6 +54,7 @@ concept InDepthMaterial base Page {
 }
 
 concept Question {
+    name: identifier;
     content: string;
     correctAnswer: Answer;
 }

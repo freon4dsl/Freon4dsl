@@ -22,8 +22,9 @@ Page {[
 ]}
 
 Theory {[
-    Theory [=>Page]
+    Theory [=>Page:heading]
         ${self.lines vertical}
+        [=>Page:footing]
 ]}
 
 Line {[
@@ -31,7 +32,7 @@ Line {[
 ]}
 
 Video {[
-    Video [=>Page]
+    Video [=>Page:heading]
         Maybe this video will help you understand.
         ${self.url}
 
@@ -61,11 +62,12 @@ InDepthMaterial {[
 ]}
 
 Question {[
+    ${name}
     ${self.content} Correct Answer: ${self.correctAnswer}
 ]}
 
-BooleanAnswer {[ ${value} ]}
+BooleanAnswer {[ ${bool} ]}
 
-FractionAnswer  {[ ${numerator} / ${denominator} ]}
+FractionAnswer  {[ ${fraction} ]}
 
 WholeNumberAnswer {[ ${value} ]}
