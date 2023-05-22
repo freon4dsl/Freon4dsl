@@ -1,3 +1,22 @@
+# MdeNet Presentation
+
+- [ ] subclasses of a namespace in scoper definition are not namespaces, but they should  be.
+     Fixed for concepts, but need to be done for subinterfaces as well.
+- [ ] Custom scoper is never used => need to implement custom scoper
+- [ ] Use of self.property.property in scoper is accepted, but generated code does not compile
+- [ ] Cursor sometimes goes to start of text field instaed of clicked position.
+- [ ] Need to document styling properties
+- [ ] Add more styling options in Svelte components.
+- [ ] Use of inherited projections in .edit file is not described in the documentation.
+- [ ] Reference shortcut fixed.
+- [ ] \<br/> in layoutcomponent does not work as intended.
+- [ ] Expression editing is broken: Typing + or / at end of number literel
+  - shows menu instead of directly adding the operator
+  - Adds operator to the left instead of the right: At GOTO_NEXT next leaf is binary post, which is incorrect and console says: it is NOT an action box.
+- [ ] Cursor is incorrectly placed after adding/creaating a binary expression. It is on the whole, it should be on one of the placeholders (left or right).
+  - 24/12/2022 selectElement(in PiEditor) chnaged signature, create bin expr command not changeed accordingly)!
+
+
 # Expressions
 
 ### Binary expressions:
