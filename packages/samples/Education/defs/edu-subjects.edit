@@ -24,6 +24,7 @@ Page {[
 Theory {[
     Theory [=>Page:heading]
         ${self.lines vertical}
+
         [=>Page:footing]
 ]}
 
@@ -37,12 +38,16 @@ Video {[
         ${self.url}
 
         ${self.questions vertical separator [.]}
+
+        [=>Page:footing]
 ]}
 
 WorkSheet {[
     Worksheet [=>Page]
         See if you can answer the following questions.
         ${self.questions vertical separator [.]}
+
+        [=>Page:footing]
 ]}
 
 ExamplePage {[
@@ -51,6 +56,8 @@ ExamplePage {[
 
         Now, please, answer the following questions.
         ${self.questions vertical separator [.]}
+
+        [=>Page:footing]
 ]}
 
 InDepthMaterial {[
@@ -59,11 +66,13 @@ InDepthMaterial {[
 
         Test your understanding by answering the following questions.
          ${self.questions vertical separator [.]}
+
+        [=>Page:footing]
 ]}
 
 Question {[
     ${name}
-    ${self.content} Correct Answer: ${self.correctAnswer}
+        ${self.content} Correct Answer: ${self.correctAnswer}
 ]}
 
 BooleanAnswer {[ ${bool} ]}

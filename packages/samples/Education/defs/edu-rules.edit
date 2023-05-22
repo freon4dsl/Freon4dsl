@@ -29,6 +29,11 @@ NrOfCorrectAnswers {[
     trigger = "number of correct answers"
 }
 
+PageRefExpression {[
+    In page ${page} {
+        ${expr}
+    }
+]}
 
 BooleanLiteralExpression {
     [ ${value} ]

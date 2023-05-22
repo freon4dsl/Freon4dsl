@@ -33,6 +33,11 @@ expression QuestionRef base RuleExpression {
 expression NrOfCorrectAnswers base RuleExpression {
     /* This is a function that needs no properties */
 }
+
+expression PageRefExpression base RuleExpression {
+    reference page: Page;
+    expr: RuleExpression;
+}
 ///////////////////////////////////////
 // Literals
 ///////////////////////////////////////
@@ -69,10 +74,6 @@ binary expression MultiplyExpression base BinaryExpression {
 
 binary expression PlusExpression base BinaryExpression {
     priority = 4;
-}
-
-binary expression DivideExpression base BinaryExpression {
-    priority = 8;
 }
 
 binary expression AndExpression base BinaryExpression {
