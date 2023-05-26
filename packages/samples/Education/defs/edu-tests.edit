@@ -4,13 +4,13 @@ editor default
 
 Test {[
     Name: ${self.name}
-    Topic: ${self.topic}
+    Topic: ${self.topic} using fules from ${flow}
 
     ${self.scenarios}
 ]}
 
 Scenario {[
-    Description: ${self.description}
+    Scenario: ${self.description}
 
     ${self.steps}
 ]}
@@ -24,6 +24,10 @@ ExitStep {[
     Exit subject
 ]}
 
-Nothing {[
-    No Answer
+//Nothing {[
+//    No Answer
+//]}
+
+Answer {[
+    ${question} = ${expr}
 ]}

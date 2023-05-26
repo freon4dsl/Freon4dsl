@@ -18,12 +18,12 @@ modelunit Topic {
 
 abstract concept Page {
     name: identifier;
+    questions: Question[];
     calcResult: Function; /* If the Page has no questions, the Function results in top grade */
 }
 
 concept Theory base Page {
     lines: Line[]; /* For the sake of the example this is simplyfied. Should be formatted text including pictures. */
-    questions: Question[];
 }
 
 concept Line {
@@ -32,21 +32,17 @@ concept Line {
 
 concept Video base Page {
     url: string;
-    questions: Question[];
 }
 
 concept WorkSheet base Page {
-    questions: Question[];
 }
 
 concept ExamplePage base Page {
     content: string;
-    questions: Question[];
 }
 
 concept InDepthMaterial base Page {
     content: string;
-    questions: Question[];
 }
 
 concept Question {

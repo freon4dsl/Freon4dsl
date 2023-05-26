@@ -4,6 +4,7 @@ modelunit Test {
     name: identifier;
     scenarios: Scenario[];
     reference topic: Topic;
+    reference flow: FlowDescription;
 }
 
 concept Scenario {
@@ -20,7 +21,7 @@ concept Step base AbstractStep {
 }
 
 concept ExitStep base AbstractStep {
-    // nothing to do, scenarion ends
+    // nothing to do, scenario ends
 }
 
 concept Answer {
@@ -28,26 +29,9 @@ concept Answer {
     expr: RuleExpression;
 }
 
-//concept BooleanAnswer base Answer {
-////    value: boolean;
-//    bool: BooleanLiteralExpression;
+//expression MultipleChoiceExpression base RuleExpression {
+//    answers: string[];
 //}
 //
-//concept StringAnswer base Answer {
-//    value: string;
+//expression Nothing base RuleExpression {
 //}
-//
-//concept FractionAnswer base Answer {
-//    fraction: FractionLiteralExpression;
-//}
-//
-//concept WholeNumberAnswer base Answer {
-//    value: number;
-//}
-
-expression MultipleChoiceExpression base RuleExpression {
-    answers: string[];
-}
-
-expression Nothing base RuleExpression {
-}

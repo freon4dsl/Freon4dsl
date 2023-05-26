@@ -1,9 +1,13 @@
 scoper EducationScoper for language Education
 
-isnamespace { Page, FlowDescription, Topic, PageRefExpression, Step, Test  }
+isnamespace { Page, FlowDescription, FlowRule, Topic, Step, Test  }
 
 FlowDescription {
     namespace_addition = self.topic;
+}
+
+FlowRule {
+    namespace_addition = self.page;
 }
 
 Test {

@@ -2,11 +2,19 @@
 
 editor default
 
-FlowRule {[
-    Description: ${self.description}
+FlowDescription {[
+    ${name} for topic ${topic}
 
-    Expression:
-    ${self.formulae}
+    ${rules}
+]}
+
+FlowRule {[
+    -------------------------------------
+    Name: ${name}
+        Description: ${self.description}
+        For page ${page}
+
+        ${self.transitions}
 ]}
 
 Function {[
@@ -16,6 +24,20 @@ Function {[
 FunctionCase {[
     ${self.grade} => ${self.formula}
 ]}
+
+PageResult {[
+    result of page
+]}
+
+PageTransition {[
+    when ${condition} goto page ${toPage}
+]}
+
+GradeLiteral {[
+    ${grade}
+]
+    referenceShortcut = ${grade}
+}
 
 QuestionRef {[
     ${question}
@@ -29,11 +51,6 @@ NrOfCorrectAnswers {[
     trigger = "number of correct answers"
 }
 
-PageRefExpression {[
-    In page ${page} {
-        ${expr}
-    }
-]}
 
 BooleanLiteralExpression {
     [ ${value} ]

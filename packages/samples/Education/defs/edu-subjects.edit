@@ -25,8 +25,6 @@ Theory {[
     Theory [=>Page:heading]
         ${self.lines vertical}
 
-        ${self.questions vertical separator [.]}
-
         [=>Page:footing]
 ]}
 
@@ -39,15 +37,12 @@ Video {[
         Maybe this video will help you understand.
         ${self.url}
 
-        ${self.questions vertical separator [.]}
-
         [=>Page:footing]
 ]}
 
 WorkSheet {[
-    Worksheet [=>Page]
+    Worksheet [=>Page:heading]
         See if you can answer the following questions.
-        ${self.questions vertical separator [.]}
 
         [=>Page:footing]
 ]}
@@ -57,7 +52,6 @@ ExamplePage {[
         ${self.content}
 
         Now, please, answer the following questions.
-        ${self.questions vertical separator [.]}
 
         [=>Page:footing]
 ]}
@@ -67,7 +61,6 @@ InDepthMaterial {[
         ${self.content}
 
         Test your understanding by answering the following questions.
-         ${self.questions vertical separator [.]}
 
         [=>Page:footing]
 ]}

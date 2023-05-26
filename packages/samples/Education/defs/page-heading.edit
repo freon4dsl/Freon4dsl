@@ -3,5 +3,5 @@
 editor heading
 
 Page {[
-    Page ${self.name}
+    ${self.name}
 ]}
