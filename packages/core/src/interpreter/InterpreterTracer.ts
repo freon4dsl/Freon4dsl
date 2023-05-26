@@ -1,3 +1,4 @@
+import { jsonAsString } from "../util/index";
 import { ConceptFunction, OwningPropertyFunction } from "./IMainInterpreter";
 import { InterpreterContext } from "./InterpreterContext";
 import { RtObject } from "./runtime";
@@ -37,7 +38,7 @@ class TraceNode {
             result = "";
         } else {
             result = indent + this.tracer.property(this.node) + ": " + this.tracer.concept(this.node)
-                + " = " + this.value + (this.idValid(this.ctx) ? " Ctx " + this.ctx.toString() : "") + "\n";
+                + " = " + jsonAsString(this.value) + (this.idValid(this.ctx) ? " Ctx " + this.ctx.toString() : "") + "\n";
         }
         this.children.forEach((child: TraceNode, index: number) => {
             let baseIndent: string;
