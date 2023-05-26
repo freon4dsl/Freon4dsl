@@ -1,5 +1,5 @@
 import { RtBoolean, RtObject } from "@freon4dsl/core";
-import { Grade, Page } from "../Education/language/gen/index";
+import { Grade, Page } from "../language/gen/index";
 
 export class RtPage extends RtObject {
     readonly _type: string = "RtPage";
