@@ -15,7 +15,12 @@
   - Adds operator to the left instead of the right: At GOTO_NEXT next leaf is binary post, which is incorrect and console says: it is NOT an action box.
 - [ ] Cursor is incorrectly placed after adding/creaating a binary expression. It is on the whole, it should be on one of the placeholders (left or right).
   - 24/12/2022 selectElement(in PiEditor) chnaged signature, create bin expr command not changeed accordingly)!
-
+- [ ] When a type of a property cannot be found the erro message is rather unclear: 
+  -  `ERROR: Element 'correctAnswer' should have a type`
+- [ ] Typecheck on abstract class is not evaluated for subclasses. Reason: walker only walks concrete classes.
+- [ ] Non existing concept in .valid file is not checked => get JavaScript exception.  Need to check whether concepts exist.
+- [ ] Typecheck error: select error wants to go to Question instead of QuestionRef in error inTest Scenaio
+- [ ] When opening a model, some references are not found (ref to Fraction10 from Flow in edu-example)
 
 # Expressions
 
