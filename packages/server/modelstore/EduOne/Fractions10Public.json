@@ -21,14 +21,24 @@
             },
             {
                "$typename": "Line",
-               "content": ""
+               "content": " "
             },
             {
                "$typename": "Line",
                "content": "By dividing both the numerator and the denominator by the same number."
             }
          ],
-         "questions": [],
+         "questions": [
+            {
+               "$typename": "Question",
+               "name": "Theory 1",
+               "content": "Bla",
+               "correctAnswer": {
+                  "$typename": "BooleanLiteralExpression",
+                  "value": false
+               }
+            }
+         ],
          "calcResult": {
             "$typename": "Function",
             "cases": [
@@ -40,7 +50,7 @@
                         "$typename": "EqualsExpression",
                         "left": {
                            "$typename": "QuestionRef",
-                           "question": "Q1"
+                           "question": "Theory 1"
                         },
                         "right": {
                            "$typename": "FractionLiteralExpression",
@@ -49,10 +59,10 @@
                         }
                      },
                      "right": {
-                        "$typename": "GreaterThenExpression",
+                        "$typename": "EqualsExpression",
                         "left": {
                            "$typename": "QuestionRef",
-                           "question": "Q2"
+                           "question": "Theory 1"
                         },
                         "right": {
                            "$typename": "BooleanLiteralExpression",
@@ -65,30 +75,17 @@
                {
                   "$typename": "FunctionCase",
                   "formula": {
-                     "$typename": "EqualsExpression",
-                     "left": {
-                        "$typename": "QuestionRef",
-                        "question": "Q1"
-                     },
-                     "right": {
-                        "$typename": "FractionLiteralExpression",
-                        "numerator": 10,
-                        "denominator": 20
-                     }
+                     "$typename": "BooleanLiteralExpression",
+                     "value": true
                   },
                   "grade": "gradeB"
-               },
-               {
-                  "$typename": "FunctionCase",
-                  "formula": null,
-                  "grade": "gradeA"
                }
             ]
          }
       },
       {
          "$typename": "Video",
-         "url": "",
+         "url": "https://www.mathematics.com/help",
          "name": "Fractions video one",
          "questions": [
             {
@@ -111,7 +108,41 @@
                }
             }
          ],
-         "calcResult": null
+         "calcResult": {
+            "$typename": "Function",
+            "cases": [
+               {
+                  "$typename": "FunctionCase",
+                  "formula": {
+                     "$typename": "EqualsExpression",
+                     "left": {
+                        "$typename": "QuestionRef",
+                        "question": "Q1"
+                     },
+                     "right": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": true
+                     }
+                  },
+                  "grade": "gradeA"
+               },
+               {
+                  "$typename": "FunctionCase",
+                  "formula": {
+                     "$typename": "EqualsExpression",
+                     "left": {
+                        "$typename": "QuestionRef",
+                        "question": "Q1"
+                     },
+                     "right": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": false
+                     }
+                  },
+                  "grade": "gradeB"
+               }
+            ]
+         }
       },
       {
          "$typename": "Video",
@@ -128,9 +159,43 @@
                }
             }
          ],
-         "calcResult": null
+         "calcResult": {
+            "$typename": "Function",
+            "cases": [
+               {
+                  "$typename": "FunctionCase",
+                  "formula": {
+                     "$typename": "EqualsExpression",
+                     "left": {
+                        "$typename": "QuestionRef",
+                        "question": "Q2"
+                     },
+                     "right": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": true
+                     }
+                  },
+                  "grade": "gradeA"
+               },
+               {
+                  "$typename": "FunctionCase",
+                  "formula": {
+                     "$typename": "EqualsExpression",
+                     "left": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": false
+                     },
+                     "right": {
+                        "$typename": "QuestionRef",
+                        "question": "Q2"
+                     }
+                  },
+                  "grade": "gradeB"
+               }
+            ]
+         }
       }
    ],
-   "next": null,
+   "next": "Multiplication",
    "prev": null
 }

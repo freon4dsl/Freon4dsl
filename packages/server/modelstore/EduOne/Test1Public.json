@@ -11,13 +11,11 @@
                "answersGiven": [
                   {
                      "$typename": "Answer",
-                     "expr": null,
-                     "question": null
-                  },
-                  {
-                     "$typename": "Answer",
-                     "expr": null,
-                     "question": null
+                     "expr": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": false
+                     },
+                     "question": "Theory 1"
                   }
                ],
                "fromPage": "Fractions theory",
@@ -28,11 +26,22 @@
                "answersGiven": [
                   {
                      "$typename": "Answer",
-                     "expr": null,
-                     "question": "Q2"
+                     "expr": {
+                        "$typename": "NumberLiteralExpression",
+                        "value": 30
+                     },
+                     "question": "Simplify"
+                  },
+                  {
+                     "$typename": "Answer",
+                     "expr": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": false
+                     },
+                     "question": "Q1"
                   }
                ],
-               "fromPage": "Fractions video two",
+               "fromPage": "Fractions video one",
                "toPage": "Fractions theory"
             },
             {
@@ -40,20 +49,24 @@
                "answersGiven": [
                   {
                      "$typename": "Answer",
-                     "expr": null,
-                     "question": "Simplify"
+                     "expr": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": false
+                     },
+                     "question": "Q2"
                   }
                ],
-               "fromPage": "Fractions video one",
-               "toPage": null
+               "fromPage": "Fractions video two",
+               "toPage": "Fractions theory"
             }
          ]
       },
       {
          "$typename": "Scenario",
-         "description": "",
+         "description": "Hi",
          "steps": []
       }
    ],
-   "topic": "Fractions10"
+   "topic": "Fractions10",
+   "flow": "Flow"
 }

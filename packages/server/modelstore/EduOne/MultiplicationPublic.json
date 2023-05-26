@@ -29,19 +29,25 @@
       },
       {
          "$typename": "WorkSheet",
-         "name": "Exercises inn doubling",
+         "name": "Exercises in doubling",
          "questions": [
             {
                "$typename": "Question",
-               "name": "",
+               "name": "Double-2",
                "content": "What is the double of 2",
-               "correctAnswer": null
+               "correctAnswer": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": 4
+               }
             },
             {
                "$typename": "Question",
-               "name": "",
+               "name": "Double-3",
                "content": "What is the double of 3?",
-               "correctAnswer": null
+               "correctAnswer": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": 6
+               }
             }
          ],
          "calcResult": null
