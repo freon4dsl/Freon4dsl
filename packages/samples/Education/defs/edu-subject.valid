@@ -1,0 +1,51 @@
+validator EduValidator for language Education
+
+//ExampleUnit {
+//    notEmpty self.entities;
+//    isunique name in self.entities;
+//    notEmpty self.methods;
+//    isunique name in self.methods;
+//    validIdentifier; // default is 'name'
+//}
+
+OrExpression {
+    typecheck equalsType( self.left, PrimitiveType:Boolean );
+    typecheck equalsType( self.right, PrimitiveType:Boolean );
+}
+
+MultiplyExpression {
+    typecheck equalsType( self.left, PrimitiveType:Integer );
+    typecheck equalsType( self.right, PrimitiveType:Integer );
+}
+
+PlusExpression {
+    typecheck equalsType( self.left, PrimitiveType:Integer );
+    typecheck equalsType( self.right, PrimitiveType:Integer );
+    typecheck conformsTo( self.left, self.right );
+}
+
+AndExpression {
+    typecheck equalsType( self.left, PrimitiveType:Boolean );
+    typecheck equalsType( self.right, PrimitiveType:Boolean );
+}
+
+ComparisonExpression {
+    typecheck equalsType( self.left, self.right );
+}
+
+EqualsExpression {
+    typecheck equalsType( self.left, self.right );
+}
+
+GreaterThenExpression {
+    typecheck equalsType( self.left, self.right );
+}
+LessThenExpression {
+    typecheck equalsType( self.left, self.right );
+}
+
+Answer {
+    typecheck equalsType( self.question, self.expr );
+}
+
+

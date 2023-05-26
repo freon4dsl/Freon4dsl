@@ -1,0 +1,76 @@
+typer
+
+// for now: first is considered to be the root of the type hierarchy
+istype { Type }
+
+hastype { RuleExpression, Question }
+
+anytype {
+    conformsto PrimitiveType:ANY;
+    equalsto PrimitiveType:ANY;
+}
+
+QuestionRef {
+    infertype self.question;
+}
+
+Question {
+    infertype self.correctAnswer;
+}
+
+NrOfCorrectAnswers {
+    infertype PrimitiveType:Integer;
+}
+
+FractionLiteralExpression {
+    infertype PrimitiveType:Fraction;
+}
+StringLiteralExpression {
+    infertype PrimitiveType:String;
+}
+
+GradeLiteral {
+    infertype PrimitiveType:AGrade;
+}
+
+PageResult {
+    infertype PrimitiveType:AGrade;
+}
+
+NumberLiteralExpression {
+    infertype PrimitiveType:Integer;
+}
+BooleanLiteralExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+OrExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+AndExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+MultiplyExpression {
+    infertype self.left;
+}
+
+PlusExpression {
+    infertype self.left;
+}
+
+ComparisonExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+LessThenExpression {
+    infertype PrimitiveType:Boolean;
+}
+GreaterThenExpression {
+    infertype PrimitiveType:Boolean;
+}
+
+EqualsExpression {
+    infertype PrimitiveType:Boolean;
+}
