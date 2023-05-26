@@ -12,7 +12,7 @@ export class InterpreterBaseTemplate {
     public interpreterBase(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
         return `// Generated my Freon, will be overwritten with every generation.
         import { InterpreterContext, RtObject, RtError } from "@freon4dsl/core";
-        import { ${interpreterDef.conceptsToEvaluate.map(c => Names.concept(c)).join(",")} } from "../../language/gen";
+        import { ${interpreterDef.conceptsToEvaluate.map(c => Names.classifier(c)).join(",")} } from "../../language/gen";
 
         /**
          * The base class containing all interpreter functions that should be defined.
@@ -23,8 +23,8 @@ export class InterpreterBaseTemplate {
             constructor() {}
 
             ${interpreterDef.conceptsToEvaluate.map(c =>
-                `eval${Names.concept(c)} (node: ${Names.concept(c)} , ctx: InterpreterContext): RtObject {
-                    throw new RtError("eval${Names.concept(c)} is not defined");
+                `eval${Names.classifier(c)} (node: ${Names.classifier(c)} , ctx: InterpreterContext): RtObject {
+                    throw new RtError("eval${Names.classifier(c)} is not defined");
                 }`
             ).join("\n\n")}
         }
@@ -65,7 +65,7 @@ export class InterpreterBaseTemplate {
             const interpreter = new ${interpreter}(main);
 
             ${interpreterDef.conceptsToEvaluate.map(c => {
-                return `main.registerFunction("${Names.concept(c)}", interpreter.eval${Names.concept(c)});`;
+                return `main.registerFunction("${Names.classifier(c)}", interpreter.eval${Names.classifier(c)});`;
             }).join("\n")} // DONE
 
         }`;
