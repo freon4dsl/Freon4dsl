@@ -118,8 +118,12 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     private generateInterpreter = () => {
         LOG2USER.info("Generating interpreter");
         const interpreterDef: FreInterpreterDef = new FreInterpreterDef();
+        // TODO For now simply evaluate all concepts and model units
         for (const concept of this.language.concepts) {
             interpreterDef.conceptsToEvaluate.push(concept);
+        }
+        for (const unit of this.language.units) {
+            interpreterDef.conceptsToEvaluate.push(unit);
         }
         try {
             this.interpreterGenerator.language = this.language;
