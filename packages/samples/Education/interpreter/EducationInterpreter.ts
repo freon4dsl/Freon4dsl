@@ -31,7 +31,7 @@ import { EducationInterpreterBase } from "./gen/EducationInterpreterBase";
 let main: IMainInterpreter;
 
 /**
- * The class containing all interpreter functions twritten by thge language engineer.
+ * The class containing all interpreter functions written by the language engineer.
  * This class is initially empty,  and will not be overwritten if it already exists.
  */
 export class EducationInterpreter extends EducationInterpreterBase {
@@ -48,7 +48,7 @@ export class EducationInterpreter extends EducationInterpreterBase {
             const nrSucceeds = result.array.filter(b => b.asBoolean()).length;
             const nrFailures = result.array.filter(b => !b.asBoolean()).length;
             if (nrFailures > 0) {
-                return new RtString("Screnario " + s.description + " has " + nrFailures + " failed steps");
+                return new RtString("Scenario " + s.description + " has " + nrFailures + " failed steps");
             }
         }
         return null;
@@ -86,11 +86,11 @@ export class EducationInterpreter extends EducationInterpreterBase {
         const rule: FlowRule = (ctx.find("CURRENT_FLOW") as RtFlowDescription).flow.rules.find(r =>
             r.page.referred === currentPage
         );
-        const actualPage = node.toPage.referred;
+        const expectedPage = node.expectedPage.referred;
         const usedTransition = rule.transitions.find(trans => trans.condition.$grade === pageScore.grade);
-        const expectedPage = usedTransition.$toPage;
+        const actualPage = usedTransition.$toPage;
         console.log("Step actual is [" + actualPage.name + "] expected [" + expectedPage.name + "]");
-        return RtBoolean.of(actualPage === expectedPage);
+        return RtBoolean.of(expectedPage === actualPage);
     }
 
     override evalAnswer(node: Answer, ctx: InterpreterContext): RtObject {
