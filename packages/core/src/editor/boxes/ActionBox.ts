@@ -65,7 +65,6 @@ export class ActionBox extends AbstractChoiceBox {
                 const creatableConcept = FreLanguage.getInstance().concept(creatableConceptname);
                 if (!!creatableConcept && !creatableConcept.isAbstract) {
                     if (!!(creatableConcept.referenceShortcut)) {
-                        console.log("ADD REF SHORTCUT " + creatableConcept.referenceShortcut.propertyName)
                         this.addReferenceShortcuts(creatableConcept, result, editor);
                     }
                     result.push(this.getCreateElementOption(this.propertyName, creatableConceptname, creatableConcept));
