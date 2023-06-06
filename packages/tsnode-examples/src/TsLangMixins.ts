@@ -57,6 +57,7 @@ console.log(flappySprite.scale + " -- " + flappySprite.name);
 type GConstructor<T = {}> = new (...args: any[]) => T;
 
 type Positionable = GConstructor<{ setPos: (x: number, y: number) => void }>;
+// type Positionable = GConstructor<{ setPos: (x: number, y: number) => void }>;
 type Spritable = GConstructor<Sprite>;
 type Loggable = GConstructor<{ print: () => void }>;
 
