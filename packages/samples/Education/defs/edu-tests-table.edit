@@ -9,7 +9,7 @@ Scenario {[
 ]}
 
 Step { table [
-    From Page          | Answer Given                 | To Page
-    ${self.fromPage}  | ${self.answersGiven vertical} | ${self.toPage}
+    From Page          | Answer Given                 | Expect Page
+    ${self.fromPage}  | ${self.answersGiven vertical} | ${self.expectedPage}
 
 ]}

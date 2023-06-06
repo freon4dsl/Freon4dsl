@@ -14,7 +14,7 @@ OrExpression {
 }
 
 MultiplyExpression {
-    typecheck equalsType( self.left, PrimitiveType:Integer );
+    typecheck equalsType( self.left, PrimitiveType:Integer ) ;
     typecheck equalsType( self.right, PrimitiveType:Integer );
 }
 
@@ -45,7 +45,11 @@ LessThenExpression {
 }
 
 Answer {
-    typecheck equalsType( self.question, self.expr );
+    typecheck equalsType( self.question, self.expr )
+    {
+        message: "The answer to question ${self.question.name} has the wrong type"
+    }
+    ;
 }
 
 

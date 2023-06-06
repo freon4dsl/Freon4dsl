@@ -9,7 +9,6 @@ concept FlowRule {
     name: identifier;
     description: string;
     reference page: Page;
-//    formulae: RuleExpression[];
     transitions: PageTransition[];
 }
 
@@ -27,7 +26,7 @@ concept Function {
 }
 
 expression PageResult base RuleExpression {
-    // RESULT OF CUIRRENT PAGE, no properties needed
+    // RESULT OF CURRENT PAGE, no properties needed
 }
 
 expression GradeLiteral base LiteralExpression {

@@ -25,7 +25,19 @@
             }
          ],
          "questions": [],
-         "calcResult": null
+         "calcResult": {
+            "$typename": "Function",
+            "cases": [
+               {
+                  "$typename": "FunctionCase",
+                  "formula": {
+                     "$typename": "BooleanLiteralExpression",
+                     "value": true
+                  },
+                  "grade": "gradeA"
+               }
+            ]
+         }
       },
       {
          "$typename": "WorkSheet",
@@ -50,9 +62,10 @@
                }
             }
          ],
-         "calcResult": null
+         "calcResult": {
+            "$typename": "Function",
+            "cases": []
+         }
       }
-   ],
-   "next": null,
-   "prev": null
+   ]
 }

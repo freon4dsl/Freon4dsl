@@ -6,10 +6,6 @@ FlowDescription {
     namespace_addition = self.topic;
 }
 
-FlowRule {
-    namespace_addition = self.page;
-}
-
 Test {
     namespace_addition = self.topic;
 }
@@ -18,3 +14,6 @@ Step {
     namespace_addition = self.fromPage;
 }
 
+//FlowRule {
+////    namespace_addition = self.page;
+//}

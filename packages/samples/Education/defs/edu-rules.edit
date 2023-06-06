@@ -17,13 +17,6 @@ FlowRule {[
         ${self.transitions}
 ]}
 
-Function {[
-    ${self.cases}
-]}
-
-FunctionCase {[
-    ${self.grade} => ${self.formula}
-]}
 
 PageResult {[
     result of page
@@ -59,7 +52,7 @@ BooleanLiteralExpression {
 
 FractionLiteralExpression {
     [ ${numerator} / ${denominator} ]
-    trigger = "fraction"
+    trigger = "/"
 }
 
 NumberLiteralExpression {
@@ -77,9 +70,6 @@ PlusExpression {
 
 MultiplyExpression {
     symbol = "*"
-}
-DivideExpression {
-    symbol = "/"
 }
 
 LessThenExpression {

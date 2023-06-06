@@ -9,31 +9,42 @@ referenceSeparator [:] // the string that separates the names in a path name, e.
 Topic {[
     Topic: ${self.name}
     Description: ${self.description}
-    Next topic: ${self.next}
-    Previous topic: ${self.prev}
 
     Pages:
     ${self.pages vertical }
 ]}
 
+//Theory {[
+//    ----------------------------------------------------
+//    Theory ${self.name}
+//        ${self.lines vertical}
+//
+//    Questions:
+//        ${self.questions vertical separator [.]}
+//
+//    Score
+//        ${self.calcResult}
+//]}
+//
+Line {[
+    ${self.content}
+]}
+
 Page {[
-    Page ${self.name}
-    ${self.calcResult}
+    ${self.name}
 ]}
 
 Theory {[
-    Theory [=>Page:heading]
+    ----------------------------------------------------
+    Theory [=>Page]
         ${self.lines vertical}
 
         [=>Page:footing]
 ]}
 
-Line {[
-    ${self.content}
-]}
-
 Video {[
-    Video [=>Page:heading]
+    ----------------------------------------------------
+    Video [=>Page]
         Maybe this video will help you understand.
         ${self.url}
 
@@ -41,13 +52,15 @@ Video {[
 ]}
 
 WorkSheet {[
-    Worksheet [=>Page:heading]
+    ----------------------------------------------------
+    Worksheet [=>Page]
         See if you can answer the following questions.
 
         [=>Page:footing]
 ]}
 
 ExamplePage {[
+    ----------------------------------------------------
     Example [=>Page]
         ${self.content}
 
@@ -57,6 +70,7 @@ ExamplePage {[
 ]}
 
 InDepthMaterial {[
+    ----------------------------------------------------
     [=>Page]
         ${self.content}
 
@@ -70,8 +84,11 @@ Question {[
         ${self.content} Correct Answer: ${self.correctAnswer}
 ]}
 
-//BooleanAnswer {[ ${bool} ]}
-//
-//FractionAnswer  {[ ${fraction} ]}
-//
-//WholeNumberAnswer {[ ${value} ]}
+
+Function {[
+    ${self.cases}
+]}
+
+FunctionCase {[
+    ${self.grade} => ${self.formula}
+]}

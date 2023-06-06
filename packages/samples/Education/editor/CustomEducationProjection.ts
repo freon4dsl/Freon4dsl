@@ -29,7 +29,7 @@ export class CustomEducationProjection implements FreProjection {
     nodeTypeToTableDefinition: Map<string, () => FreTableDefinition> = new Map<string, () => FreTableDefinition>([]);
 
     createSvgBox(fraction: FractionLiteralExpression): Box {
-        return new SvgBox(fraction, "sum-icon", dividerSvg, {
+        return new SvgBox(fraction, "divider", dividerSvg, {
             viewPortWidth: 5,
             viewPortHeight: 2,
             viewBoxWidth: 5,

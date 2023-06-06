@@ -17,7 +17,7 @@ abstract concept AbstractStep {}
 concept Step base AbstractStep {
     reference fromPage: Page;
     answersGiven: Answer[];
-    reference toPage: Page;
+    reference expectedPage: Page;
 }
 
 concept ExitStep base AbstractStep {

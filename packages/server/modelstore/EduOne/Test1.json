@@ -19,7 +19,7 @@
                   }
                ],
                "fromPage": "Fractions theory",
-               "toPage": "Fractions video two"
+               "expectedPage": "Fractions video two"
             },
             {
                "$typename": "Step",
@@ -30,7 +30,7 @@
                         "$typename": "NumberLiteralExpression",
                         "value": 30
                      },
-                     "question": "Simplify"
+                     "question": "Video1 Simplify"
                   },
                   {
                      "$typename": "Answer",
@@ -38,11 +38,11 @@
                         "$typename": "BooleanLiteralExpression",
                         "value": false
                      },
-                     "question": "Q1"
+                     "question": "Video1 Q1"
                   }
                ],
                "fromPage": "Fractions video one",
-               "toPage": "Fractions theory"
+               "expectedPage": "Fractions theory"
             },
             {
                "$typename": "Step",
@@ -53,11 +53,11 @@
                         "$typename": "BooleanLiteralExpression",
                         "value": false
                      },
-                     "question": "Q2"
+                     "question": "Video2 question"
                   }
                ],
                "fromPage": "Fractions video two",
-               "toPage": "Fractions theory"
+               "expectedPage": "Fractions theory"
             }
          ]
       },

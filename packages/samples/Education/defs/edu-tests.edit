@@ -16,17 +16,13 @@ Scenario {[
 ]}
 
 Step {[
-    On page ${self.fromPage} answers are ${self.answersGiven vertical} to page ${self.toPage}
+    On page ${self.fromPage} answers are ${self.answersGiven vertical} expected page is ${self.expectedPage}
 
 ]}
 
 ExitStep {[
     Exit subject
 ]}
-
-//Nothing {[
-//    No Answer
-//]}
 
 Answer {[
     ${question} = ${expr}

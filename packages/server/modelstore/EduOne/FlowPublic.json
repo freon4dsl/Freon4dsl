@@ -4,7 +4,31 @@
    "rules": [
       {
          "$typename": "FlowRule",
-         "name": "DefaultFlow",
+         "name": "TheoryRule",
+         "description": "A rule for Theory page",
+         "transitions": [
+            {
+               "$typename": "PageTransition",
+               "condition": {
+                  "$typename": "GradeLiteral",
+                  "grade": "gradeA"
+               },
+               "toPage": "Fractions video one"
+            },
+            {
+               "$typename": "PageTransition",
+               "condition": {
+                  "$typename": "GradeLiteral",
+                  "grade": "gradeB"
+               },
+               "toPage": "Fractions video two"
+            }
+         ],
+         "page": "Fractions theory"
+      },
+      {
+         "$typename": "FlowRule",
+         "name": "Video 2",
          "description": "Continue to other page",
          "transitions": [
             {
@@ -36,32 +60,8 @@
       },
       {
          "$typename": "FlowRule",
-         "name": "TheoryRule",
-         "description": "",
-         "transitions": [
-            {
-               "$typename": "PageTransition",
-               "condition": {
-                  "$typename": "GradeLiteral",
-                  "grade": "gradeA"
-               },
-               "toPage": "Fractions video one"
-            },
-            {
-               "$typename": "PageTransition",
-               "condition": {
-                  "$typename": "GradeLiteral",
-                  "grade": "gradeB"
-               },
-               "toPage": "Fractions video two"
-            }
-         ],
-         "page": "Fractions theory"
-      },
-      {
-         "$typename": "FlowRule",
          "name": "Video 2",
-         "description": "",
+         "description": "A rule for video 2",
          "transitions": [
             {
                "$typename": "PageTransition",

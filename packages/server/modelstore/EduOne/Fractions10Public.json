@@ -90,7 +90,7 @@
          "questions": [
             {
                "$typename": "Question",
-               "name": "Q1",
+               "name": "Video1 Q1",
                "content": "Is 3 / 4 the same as 6 / 8?",
                "correctAnswer": {
                   "$typename": "BooleanLiteralExpression",
@@ -99,7 +99,7 @@
             },
             {
                "$typename": "Question",
-               "name": "Simplify",
+               "name": "Video1 Simplify",
                "content": "Simplify  4/ 8",
                "correctAnswer": {
                   "$typename": "FractionLiteralExpression",
@@ -117,7 +117,7 @@
                      "$typename": "EqualsExpression",
                      "left": {
                         "$typename": "QuestionRef",
-                        "question": "Q1"
+                        "question": "Video1 Q1"
                      },
                      "right": {
                         "$typename": "BooleanLiteralExpression",
@@ -132,7 +132,7 @@
                      "$typename": "EqualsExpression",
                      "left": {
                         "$typename": "QuestionRef",
-                        "question": "Q1"
+                        "question": "Video1 Q1"
                      },
                      "right": {
                         "$typename": "BooleanLiteralExpression",
@@ -151,7 +151,7 @@
          "questions": [
             {
                "$typename": "Question",
-               "name": "Q2",
+               "name": "Video2 question",
                "content": "Did you understand the video?",
                "correctAnswer": {
                   "$typename": "BooleanLiteralExpression",
@@ -168,7 +168,7 @@
                      "$typename": "EqualsExpression",
                      "left": {
                         "$typename": "QuestionRef",
-                        "question": "Q2"
+                        "question": "Video2 question"
                      },
                      "right": {
                         "$typename": "BooleanLiteralExpression",
@@ -187,7 +187,7 @@
                      },
                      "right": {
                         "$typename": "QuestionRef",
-                        "question": "Q2"
+                        "question": "Video2 question"
                      }
                   },
                   "grade": "gradeB"
@@ -195,7 +195,5 @@
             ]
          }
       }
-   ],
-   "next": "Multiplication",
-   "prev": null
+   ]
 }

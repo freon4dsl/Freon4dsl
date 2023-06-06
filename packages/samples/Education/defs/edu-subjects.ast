@@ -12,8 +12,6 @@ modelunit Topic {
     name: identifier;
     description: string; /* e.g. Fractions, or Multiplications */
     pages: Page[];
-    reference next: Topic;
-    reference prev: Topic;
 }
 
 abstract concept Page {
@@ -50,3 +48,4 @@ concept Question {
     content: string;
     correctAnswer: RuleExpression;
 }
+
