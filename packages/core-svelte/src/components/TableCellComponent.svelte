@@ -228,8 +228,8 @@
 <style>
     .gridcellcomponent {
         box-sizing: border-box;
-        align-self: stretch; /* isn't this the default? */
-        justify-self: var(--freon-gridcell-component-justify-left, stretch);
+        align-self: baseline; /* isn't this the default? */
+        justify-self: var(--freon-gridcell-component-justify-left, baseline);
         padding: var(--freon-gridcell-component-padding, 1px);
         background-color: var(--freon-gridcell-component-background-color, transparent);
         color: var(--freon-gridcell-component-color, inherit);
