@@ -119,7 +119,7 @@ export class ActionBox extends AbstractChoiceBox {
         const self: ActionBox = this;
         runInAction(() => {
             const newElement = concept.constructor();
-            newElement["owner"] = this.element;
+            newElement["$$owner"] = this.element;
             result.push(...
                 editor.environment
                     .scoper.getVisibleNames(newElement, concept.referenceShortcut.conceptName)

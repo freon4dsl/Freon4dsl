@@ -1,0 +1,87 @@
+{
+   "$typename": "FlowDescription",
+   "name": "sssFlowddd",
+   "rules": [
+      {
+         "$typename": "FlowRule",
+         "name": "TheoryRule",
+         "description": "A rule for Theory page",
+         "transitions": [
+            {
+               "$typename": "PageTransition",
+               "condition": {
+                  "$typename": "GradeLiteral",
+                  "grade": "gradeA"
+               },
+               "toPage": "Fractions video one"
+            },
+            {
+               "$typename": "PageTransition",
+               "condition": {
+                  "$typename": "GradeLiteral",
+                  "grade": "gradeB"
+               },
+               "toPage": "Fractions video two"
+            }
+         ],
+         "page": "Fractions theory"
+      },
+      {
+         "$typename": "FlowRule",
+         "name": "Video 2",
+         "description": "Continue to other page",
+         "transitions": [
+            {
+               "$typename": "PageTransition",
+               "condition": {
+                  "$typename": "GradeLiteral",
+                  "grade": "gradeA"
+               },
+               "toPage": "Fractions theory"
+            },
+            {
+               "$typename": "PageTransition",
+               "condition": {
+                  "$typename": "GradeLiteral",
+                  "grade": "gradeB"
+               },
+               "toPage": "Fractions video one"
+            },
+            {
+               "$typename": "PageTransition",
+               "condition": {
+                  "$typename": "GradeLiteral",
+                  "grade": "gradeC"
+               },
+               "toPage": "Fractions video two"
+            }
+         ],
+         "page": "Fractions video one"
+      },
+      {
+         "$typename": "FlowRule",
+         "name": "Video 2",
+         "description": "A rule for video 2",
+         "transitions": [
+            {
+               "$typename": "PageTransition",
+               "condition": {
+                  "$typename": "GradeLiteral",
+                  "grade": "gradeA"
+               },
+               "toPage": "Fractions theory"
+            },
+            {
+               "$typename": "PageTransition",
+               "condition": {
+                  "$typename": "GradeLiteral",
+                  "grade": "gradeB"
+               },
+               "toPage": "Fractions video one"
+            }
+         ],
+         "page": "Fractions video two"
+      }
+   ],
+   "topic": "Fractions10"
+}

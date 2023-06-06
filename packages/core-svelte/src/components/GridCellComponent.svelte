@@ -105,11 +105,11 @@
 <style>
     .gridcellcomponent {
         box-sizing: border-box;
-        align-self: stretch;
-        justify-self: var(--freon-gridcell-component-justify-left, stretch);
+        align-self: baseline;
+        justify-self: var(--freon-gridcell-component-justify-left, baseline);
         display: flex;
         padding: var(--freon-gridcell-component-padding, 1px);
-        background-color: var(--freon-gridcell-component-background-color, white);
+        /*background-color: var(--freon-gridcell-component-background-color, white);*/
         color: var(--freon-gridcell-component-color, inherit);
     }
 </style>

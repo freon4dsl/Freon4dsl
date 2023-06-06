@@ -238,7 +238,7 @@
         /*grid-template-rows: var(--fre-list-grid-template-rows);*/
         /*grid-template-columns: var(--fre-list-grid-template-columns);*/
         /*display: grid;*/
-        background-color: var(--freon-editor-component-background-color, white);
+        /*background-color: var(--freon-editor-component-background-color, white);*/
         padding: var(--freon-verticallist-component-padding, 1px);
         margin: var(--freon-verticallist-component-margin, 1px);
         border-color: var(--freon-verticallist-component-border-color, red);

@@ -61,6 +61,7 @@
 
 	--freon-horizontallist-component-margin: 0px;
 	--freon-horizontallist-component-padding: 0px;
+	--freon-horizontallist-component-align-items: baseline;
 
 	--freon-verticallist-component-padding: 0px;
 	--freon-verticallist-component-margin: 0px;

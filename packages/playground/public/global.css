@@ -16,7 +16,7 @@
 	--theme-colors-text_app_bar: 'white';		/* Color of header and footer text */
 
 	/* Projectional Editor "globals" */
-	--theme-colors-bg_editor: white;			/* The background color of the editor */
+	--theme-colors-bg_editor: gray;			/* The background color of the editor */
 	--theme-colors-text_editor: darkblue;		/* The color of the text, unless set otherwise by the projection */
 	--theme-fonts-size_editor: 14px;				/* The font size of the text, unless set otherwise by the projection */
 	--theme-fonts-style_editor: italic;				/* The font size of the text, unless set otherwise by the projection */

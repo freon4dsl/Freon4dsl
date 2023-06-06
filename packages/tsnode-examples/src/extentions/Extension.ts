@@ -9,7 +9,7 @@ declare module "./GeneratedClass" {
 
 export class ExtensionClass extends GeneratedClass {
     public newMethod() {
-        console.log("X " + this.name);
+        return "new method " + this.name;
     }
 }
 

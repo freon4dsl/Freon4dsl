@@ -1,5 +1,5 @@
 import { FreBinaryExpression } from "../../ast";
-import { BTREE } from "../../util";
+import { BTREE, FRE_BINARY_EXPRESSION_LEFT } from "../../util";
 import { FreCaret, FreCaretPosition } from "../util";
 import { Box } from "../boxes";
 import { FreEditor } from "../FreEditor";
@@ -65,8 +65,10 @@ export class FreCreateBinaryExpressionCommand extends FreCommand {
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
         // console.log("FreCreateBinaryExpressionCommand: trigger [" + triggerTypeToString(trigger) + "] part: ");
         const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, triggerTypeToString(trigger), editor), box, editor);
+        // TODO Check whether this fix works consistently correct.
+        const childProperty = selected.boxRoleToSelect === FRE_BINARY_EXPRESSION_LEFT ? "left" : "right";
         return function () {
-            editor.selectElement(selected.element, selected.boxRoleToSelect);
+            editor.selectElement(selected.element, childProperty);
         };
     }
 

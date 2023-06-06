@@ -1,0 +1,94 @@
+/* This file contains the default editor definition. */
+
+editor default
+
+boolean [YES | NO] // the strings used to display a boolean value
+
+referenceSeparator [:] // the string that separates the names in a path name, e.g. pack1:cls3:part
+
+Topic {[
+    Topic: ${self.name}
+    Description: ${self.description}
+
+    Pages:
+    ${self.pages vertical }
+]}
+
+//Theory {[
+//    ----------------------------------------------------
+//    Theory ${self.name}
+//        ${self.lines vertical}
+//
+//    Questions:
+//        ${self.questions vertical separator [.]}
+//
+//    Score
+//        ${self.calcResult}
+//]}
+//
+Line {[
+    ${self.content}
+]}
+
+Page {[
+    ${self.name}
+]}
+
+Theory {[
+    ----------------------------------------------------
+    Theory [=>Page]
+        ${self.lines vertical}
+
+        [=>Page:footing]
+]}
+
+Video {[
+    ----------------------------------------------------
+    Video [=>Page]
+        Maybe this video will help you understand.
+        ${self.url}
+
+        [=>Page:footing]
+]}
+
+WorkSheet {[
+    ----------------------------------------------------
+    Worksheet [=>Page]
+        See if you can answer the following questions.
+
+        [=>Page:footing]
+]}
+
+ExamplePage {[
+    ----------------------------------------------------
+    Example [=>Page]
+        ${self.content}
+
+        Now, please, answer the following questions.
+
+        [=>Page:footing]
+]}
+
+InDepthMaterial {[
+    ----------------------------------------------------
+    [=>Page]
+        ${self.content}
+
+        Test your understanding by answering the following questions.
+
+        [=>Page:footing]
+]}
+
+Question {[
+    ${name}
+        ${self.content} Correct Answer: ${self.correctAnswer}
+]}
+
+
+Function {[
+    ${self.cases}
+]}
+
+FunctionCase {[
+    ${self.grade} => ${self.formula}
+]}

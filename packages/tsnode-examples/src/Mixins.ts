@@ -18,7 +18,13 @@ class MyClass {
     constructor() {
     }
 }
-abstract class Callable {
+
+interface ICallable {
+    call(): void;
+}
+interface MyClass extends ICallable {}
+
+class Callable implements ICallable {
     call() {
         console.log("Call!")
     }
@@ -35,9 +41,9 @@ abstract class Activable {
     }
 }
 
-interface MyClass extends Callable, Activable {}
+// interface MyClass extends Callable, Activable {}
 
 applyMixins(MyClass, [Callable, Activable])
 let o = new MyClass()
 o.call()
-o.activate()
+// o.activate()

@@ -1,6 +1,12 @@
 
 export type Constructor22 = new (...args: any[]) => {};
 
+/**
+ * Extends original with extension.
+ *
+ * @param extension
+ * @param original
+ */
 export function extension(extension: Constructor22, original: Constructor22) {
     const extensionPrototype = extension.prototype;
     const originalPrototype = original.prototype

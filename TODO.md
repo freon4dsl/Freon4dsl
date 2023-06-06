@@ -1,3 +1,49 @@
+# Jos
+
+- [ ] Merge MDEnet branch with development
+- [ ] Lionweb code naar development (model (de)serializer)
+- [ ] Convert Lionweb metamodel to Freon ast by CLI
+
+# Anneke
+
+- [ ] Documentatie aanpassen:
+  - [ ] link naar MDEnet presentatie
+  - [ ] MP3 Meinte op site
+- [ ] 
+
+# Beide
+- [ ] Opschonen ToDo list
+- [ ] Opschonen projectit directory op suusjee
+
+# MdeNet Presentation
+
+- [ ] subclasses of a namespace in scoper definition are not namespaces, but they should  be.
+     Fixed for concepts, but need to be done for subinterfaces as well. (A)
+- [ ] Custom scoper is never used => need to implement custom scoper
+  - [ ] Voorbeelden bedenken waarin custrom scoper nodig is (J)
+  - [ ] Custom scoper implementeren.
+- [ ] Use of self.property.property in scoper is accepted, but generated code does not compile
+- [ ] Cursor sometimes goes to start of text field instead of clicked position.
+- [ ] Need to document styling properties (J)
+- [ ] Add more styling options in Svelte components. (J)
+- [ ] Use of inherited projections in .edit file is not described in the documentation.(A)
+- [x] Reference shortcut fixed. (naar dev) 
+- [ ] \<br/> in layoutcomponent does not work as intended in LayoutComponent. (A)
+- [ ] Expression editing is broken: Typing + or / at end of number literal (J)
+  - shows menu instead of directly adding the operator
+  - Adds operator to the left instead of the right: At GOTO_NEXT next leaf is binary post, which is incorrect and console says: it is NOT an action box. (J)
+- [ ] Cursor is incorrectly placed after adding/creaating a binary expression. It is on the whole, it should be on one of the placeholders (left or right).(J)
+  - 24/12/2022 selectElement(in PiEditor) chnaged signature, create bin expr command not changeed accordingly)! (A)
+- [ ] When a type of a property cannot be found the erro message is rather unclear: (A)
+  -  `ERROR: Element 'correctAnswer' should have a type`
+- [ ] Typecheck on abstract class is not evaluated for subclasses. Reason: walker only walks concrete classes. (A)
+- [ ] Non existing concept in .valid file is not checked => get JavaScript exception.  Need to check whether concepts exist.(A)
+- [ ] Typecheck error: select error wants to go to Question instead of QuestionRef in error inTest Scenario (A)
+- [ ] When opening a model, some references are not found (ref to Fraction10 from Flow in edu-example) (J)
+- [ ] When sidebar is open, scrollbar goes wrong. (A)
+- [ ] Custom action trigger /0-9/ for number literal does not work anymore (J)
+- [ ] Svelte tests, Playwright? (A)
+
 # Expressions
 
 ### Binary expressions:
@@ -103,21 +149,7 @@ Naming: different names for overall language and used languages. E.g.:
 
 ## Freon Name Change
 
-Goal: 1-1-2023
-
 Todo:
 
-- [ ] Get URL 
-- [ ] Name change in **all** code and documentation
-  - "Pi" ==> "Fr" | "Fre" | "Freon" | F_ 
-  - Do we still want this prefix? 
 - [ ] Stop projectit.org Q3 2023
-- [ ] New github organization and projects
-- [ ] Publish code + documenatation under Freon name
 
-### Renames
-
-| Before    | after     | after(2)  | after(3)     | after(4) |
-| --------- | --------- | --------- | ------------ | -------- |
-| PiElement | FrAstNode | F_AstNode | FreonAstNode | AstNode  |
-| PiModel   | FrModel.  | F_Model   | FreonModel   | Model.   |

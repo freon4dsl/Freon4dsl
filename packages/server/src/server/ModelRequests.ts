@@ -37,6 +37,13 @@ export class ModelRequests {
                 .readdirSync(path.join(`${storeFolder}`, foldername))
                 .filter(f => f.endsWith(".json"))
                 .map(f => f.substring(0, f.length - 5));
+            // FIXME A hack to return a specific unit as the ffirst, only for Education demo!!
+            const tmp = dir.findIndex(s => s === "Fractions10");
+            if (tmp !== -1) {
+                dir.splice(tmp, 1);
+                dir.splice(0, 0, "Fractions10");
+            }
+            // FIXME End
             ctx.response.body = dir;
         } catch (e) {
             console.log(e.message);

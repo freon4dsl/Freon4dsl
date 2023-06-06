@@ -1,0 +1,29 @@
+/* This file contains the default editor definition. */
+
+editor default
+
+Test {[
+    Name: ${self.name}
+    Topic: ${self.topic} using fules from ${flow}
+
+    ${self.scenarios}
+]}
+
+Scenario {[
+    Scenario: ${self.description}
+
+    ${self.steps}
+]}
+
+Step {[
+    On page ${self.fromPage} answers are ${self.answersGiven vertical} expected page is ${self.expectedPage}
+
+]}
+
+ExitStep {[
+    Exit subject
+]}
+
+Answer {[
+    ${question} = ${expr}
+]}
