@@ -17,32 +17,36 @@
 
 # MdeNet Presentation
 
-- [ ] subclasses of a namespace in scoper definition are not namespaces, but they should  be.
-     Fixed for concepts, but need to be done for subinterfaces as well. (A)
-- [ ] Custom scoper is never used => need to implement custom scoper
-  - [ ] Voorbeelden bedenken waarin custrom scoper nodig is (J)
-  - [ ] Custom scoper implementeren.
 - [ ] Use of self.property.property in scoper is accepted, but generated code does not compile
 - [ ] Cursor sometimes goes to start of text field instead of clicked position.
-- [ ] Need to document styling properties (J)
-- [ ] Add more styling options in Svelte components. (J)
+
+## Anneke
 - [ ] Use of inherited projections in .edit file is not described in the documentation.(A)
-- [x] Reference shortcut fixed. (naar dev) 
 - [ ] \<br/> in layoutcomponent does not work as intended in LayoutComponent. (A)
-- [ ] Expression editing is broken: Typing + or / at end of number literal (J)
-  - shows menu instead of directly adding the operator
-  - Adds operator to the left instead of the right: At GOTO_NEXT next leaf is binary post, which is incorrect and console says: it is NOT an action box. (J)
-- [ ] Cursor is incorrectly placed after adding/creaating a binary expression. It is on the whole, it should be on one of the placeholders (left or right).(J)
-  - 24/12/2022 selectElement(in PiEditor) chnaged signature, create bin expr command not changeed accordingly)! (A)
+- [ ] subclasses of a namespace in scoper definition are not namespaces, but they should  be.
+  Fixed for concepts, but need to be done for subinterfaces as well. (A)
 - [ ] When a type of a property cannot be found the erro message is rather unclear: (A)
   -  `ERROR: Element 'correctAnswer' should have a type`
 - [ ] Typecheck on abstract class is not evaluated for subclasses. Reason: walker only walks concrete classes. (A)
 - [ ] Non existing concept in .valid file is not checked => get JavaScript exception.  Need to check whether concepts exist.(A)
 - [ ] Typecheck error: select error wants to go to Question instead of QuestionRef in error inTest Scenario (A)
-- [ ] When opening a model, some references are not found (ref to Fraction10 from Flow in edu-example) (J)
 - [ ] When sidebar is open, scrollbar goes wrong. (A)
-- [ ] Custom action trigger /0-9/ for number literal does not work anymore (J)
 - [ ] Svelte tests, Playwright? (A)
+
+## Jos
+- [ ] Custom scoper is never used => need to implement custom scoper
+  - [ ] Voorbeelden bedenken waarin custrom scoper nodig is (J)
+  - [ ] Custom scoper implementeren.
+- [ ] Need to document styling properties (J)
+- [ ] Add more styling options in Svelte components. (J)
+- [x] Reference shortcut fixed. (naar dev)
+- [ ] When opening a model, some references are not found (ref to Fraction10 from Flow in edu-example) (J)
+- [ ] Custom action trigger /0-9/ for number literal does not work anymore (J)
+- [ ] Expression editing is broken: Typing + or / at end of number literal (J)
+  - shows menu instead of directly adding the operator
+  - Adds operator to the left instead of the right: At GOTO_NEXT next leaf is binary post, which is incorrect and console says: it is NOT an action box. (J)
+- [ ] Cursor is incorrectly placed after adding/creaating a binary expression. It is on the whole, it should be on one of the placeholders (left or right).(J)
+  - 24/12/2022 selectElement(in PiEditor) chnaged signature, create bin expr command not changeed accordingly)! (A)
 
 # Expressions
 
@@ -56,7 +60,7 @@
 - [ ] Add brackets
 - [ ] Add unary expressions
 - [ ] Move to core
-  - Does parser already use priorities? If not, it should be solved by this. 
+  - Does parser already use priorities? If not, it should be solved by this.
 
 ### Interpreter:
 
@@ -64,7 +68,7 @@
 - [x] Add interpreter
 - [ ] Add interpreter values in expression tree view
 - [ ] Separate interpreter runtime from core.
-  - Separate package 
+  - Separate package
 
 ### Tests
 
