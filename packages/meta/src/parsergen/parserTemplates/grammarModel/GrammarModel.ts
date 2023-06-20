@@ -274,12 +274,11 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
 
             public location(branch: SPPTBranch): ${Names.FreParseLocation} {
-                const location = ${Names.FreParseLocation}.create({
+                return ${Names.FreParseLocation}.create({
                     filename: this.sourceName,
                     line: branch.location.line,
                     column: branch.location.column
                 });
-                return location;
             }
         }`;
         // end Template

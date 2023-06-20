@@ -42,7 +42,7 @@ export class FreSuperTypeMaker {
             if (!!foundRule) {
                 if (!FreTyperGenUtils.isType(foundRule.owner.myClassifier)) {
                     astSubRules.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(elem, "${myType}")) {
-
+                        // todo use the conforms rule for 'myType' (?)
                     }`);
                 }
             } else {

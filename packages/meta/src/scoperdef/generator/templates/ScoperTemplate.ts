@@ -40,12 +40,13 @@ export class ScoperTemplate {
         const generatedClassName: string = Names.scoper(language);
         const scoperBaseName: string = Names.FreScoperBase;
 
+        const coreImports: string[] = [scoperBaseName, Names.FreLogger, Names.FreNode, Names.FreNamespace ];
         if (!!scopedef) { // should always be the case, either the definition read from file or the default
             this.makeAlternativeScopeTexts(scopedef);
-            this.makeAdditionalNamespaceTexts(scopedef);
+            this.makeAdditionalNamespaceTexts(scopedef, coreImports);
         }
         // add the necessary names to the imports
-        ListUtil.addIfNotPresent(this.languageImports, langConceptType);
+        // ListUtil.addIfNotPresent(this.languageImports, langConceptType);
         // console.log("Adding 222: " + langConceptType + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
 
         // Template starts here - without imports, they are calculated while creating this text and added later
@@ -90,14 +91,14 @@ export class ScoperTemplate {
 
         // now we have enough information to create the correct imports
         const templateImports: string = `
-        import { ${scoperBaseName}, ${Names.FreLogger}, ${Names.FreNode}, ${Names.FreNodeReference}, ${Names.FreNamespace}, ${Names.FreTyper} } from "${FREON_CORE}"
-        import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        ${coreImports.length > 0 ? `import { ${coreImports.map(name => name).join(", ")} } from "${FREON_CORE}";`: "" }
+        ${this.languageImports.length > 0 ? `import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";`: "" }
         `;
 
         return templateImports + templateBody;
     }
 
-    private makeAdditionalNamespaceTexts(scopedef: ScopeDef) {
+    private makeAdditionalNamespaceTexts(scopedef: ScopeDef, coreImports: string[]) {
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceAdditions) {
                 const myClassifier = def.conceptRef.referred;
@@ -106,18 +107,18 @@ export class ScoperTemplate {
                 ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
                 if (myClassifier instanceof FreInterface) {
                     for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
-                        this.makeAdditionalNamespaceTextsForConcept(implementor, def, comment);
+                        this.makeAdditionalNamespaceTextsForConcept(implementor, def, comment, coreImports);
                         ListUtil.addIfNotPresent(this.languageImports, Names.concept(implementor));
                     }
                 } else {
-                    this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, comment);
+                    this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, comment, coreImports);
                     ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
                 }
             }
         }
     }
 
-    private makeAdditionalNamespaceTextsForConcept(freConcept: FreConcept, def: ScopeConceptDef, comment: string) {
+    private makeAdditionalNamespaceTextsForConcept(freConcept: FreConcept, def: ScopeConceptDef, comment: string, coreImports: string[]) {
         const typeName = Names.concept(freConcept);
         // we are adding to three textstrings
         // first, to the import statements
@@ -130,7 +131,7 @@ export class ScoperTemplate {
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
             `if (element instanceof ${typeName}) {`);
         for (const expression of def.namespaceAdditions.expressions) {
-            this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(this.addNamespaceExpression(expression));
+            this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(this.addNamespaceExpression(expression, coreImports));
         }
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
             `}\n`);
@@ -161,12 +162,14 @@ export class ScoperTemplate {
         }
     }
 
-    private addNamespaceExpression(expression: FreLangExp): string {
+    private addNamespaceExpression(expression: FreLangExp, coreImports: string[]): string {
         let result: string = "";
         const myRef = expression.findRefOfLastAppliedFeature();
 
         const loopVar: string = "loopVariable";
         if (myRef.isList) {
+            // add "FreNodeReference" to imports, because now we know that its is used
+            ListUtil.addIfNotPresent(coreImports, Names.FreNodeReference);
             result = result.concat(`
             // generated based on '${expression.toFreString()}'
             for (let ${loopVar} of element.${expression.appliedfeature.toFreString()}) {

@@ -1,5 +1,5 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
-import { DemoScoper } from "../scoper/gen/DemoScoper";
+import { DemoScoper } from "../scoper/gen";
 import { AppliedFeature, DemoAttributeRef, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 
@@ -109,7 +109,6 @@ describe("testing Alternative Scopes", () => {
 
         test("isInscope 'Company' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
             let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            let vi = scoper.getVisibleNames(appliedFeature);
             expect(scoper.isInScope(appliedFeature, "Company")).toBe(false);
         });
 

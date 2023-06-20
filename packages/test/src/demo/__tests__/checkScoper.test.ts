@@ -1,8 +1,7 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
-import { DemoScoper } from "../scoper/gen/DemoScoper";
+import { DemoScoper } from "../scoper/gen";
 import { DemoModel, DemoFunction, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
-
 
 describe("testing Scoper", () => {
     describe("Scoper.getVisibleElements from DemoModel Instance", () => {
@@ -15,19 +14,18 @@ describe("testing Scoper", () => {
         });
 
         test("visible elements in model and unit", () => {
-            let vi = scoper.getVisibleNames(model);
             // console.log("VI: " + vi);
             // expect(vi.length).toBe(5);
             for (let unit of model.models) {
-                let vi = scoper.getVisibleNames(unit);
+                let innerVi = scoper.getVisibleNames(unit);
                 // console.log(vi);
-                expect(vi.length).toBe(13);
+                expect(innerVi.length).toBe(13);
                 for (let e of unit.entities) {
-                    expect(vi).toContain(e.name);
+                    expect(innerVi).toContain(e.name);
                 }
 
                 for (let f of unit.functions) {
-                    expect(vi).toContain(f.name);
+                    expect(innerVi).toContain(f.name);
                 }
             }
         });
@@ -81,15 +79,15 @@ describe("testing Scoper", () => {
                     for (let f1 of ent.functions) {
                         let vis = scoper.getVisibleNames(f1);
                         expect(vis).toContain(f1.name);
-                        for (let e of unit.entities) {
+                        for (const e of unit.entities) {
                             expect(vis).toContain(e.name);
                         }
-                        for (let p of f1.parameters) {
+                        for (const p of f1.parameters) {
                             expect(vis).toContain(p.name);
                         }
-                        for (let f2 of unit.functions) {
+                        for (const f2 of unit.functions) {
                             if (f2 !== f1) {
-                                for (let p2 of f2.parameters) {
+                                for (const p2 of f2.parameters) {
                                     expect(vis).not.toContain(p2.name);
                                 }
                             }
@@ -110,7 +108,7 @@ describe("testing Scoper", () => {
 
         test("isInscope 'InCorrectModel'", () => {
             let nameTotest: string = "InCorrectModel";
-            for (let unit of model.models) {
+            for (const unit of model.models) {
                 expect(scoper.isInScope(model, nameTotest)).toBe(false);
                 // test if nameTotest is known in model functions
                 unit.functions.forEach(fun => {
@@ -128,7 +126,7 @@ describe("testing Scoper", () => {
 
         test("isInscope 'DemoModel_1'", () => {
             let nameTotest: string = "DemoModel_1";
-            for (let unit of model.models) {
+            for (const unit of model.models) {
                 expect(scoper.isInScope(model, nameTotest)).toBe(true);
                 // test if nameTotest is known in model functions
                 unit.functions.forEach(fun => {

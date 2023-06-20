@@ -1,6 +1,5 @@
 import { FreNodeReference } from "@freon4dsl/core";
 import {
-    DemoModel,
     DemoMultiplyExpression,
     DemoNumberLiteralExpression,
     DemoDivideExpression,
@@ -15,12 +14,12 @@ import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import { DemoValidator } from "../validator/gen";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
-import { FileHandler } from "../../utils/FileHandler";
+// import { FileHandler } from "../../utils/FileHandler";
 
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
-        const model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
+        // const model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
         const unparser = DemoEnvironment.getInstance().writer;
 
         beforeEach(done => {
@@ -28,7 +27,7 @@ describe("Testing Unparser", () => {
         });
 
         test("3", () => {
-            let result: string = "";
+            let result: string;
             const left = new DemoNumberLiteralExpression();
             left.value = 3;
             result = unparser.writeToString(left, 0);
@@ -36,7 +35,7 @@ describe("Testing Unparser", () => {
         });
 
         test("multiplication 3 * 10", () => {
-            let result: string = "";
+            let result: string;
             const mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
@@ -45,7 +44,7 @@ describe("Testing Unparser", () => {
         });
 
         test("multiplication 3 * 'temp'", () => {
-            let result: string = "";
+            let result: string;
             const mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
@@ -54,7 +53,7 @@ describe("Testing Unparser", () => {
         });
 
         test("multiplication 3 / 4 * 'temp'", () => {
-            let result: string = "";
+            let result: string;
             const div: DemoDivideExpression = new DemoDivideExpression();
             div.left = makeLiteralExp("3");
             div.right = makeLiteralExp("4");
@@ -66,7 +65,7 @@ describe("Testing Unparser", () => {
         });
 
         test("1 + 2 * 'Person'", () => {
-            let result: string = "";
+            let result: string;
             const variableExpression = new DemoVariableRef();
             const variable = new DemoVariable();
             variable.name = "Person";
@@ -81,7 +80,7 @@ describe("Testing Unparser", () => {
         });
 
         test('\'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"\'', () => {
-            let result: string = "";
+            let result: string;
             const determine = DemoFunction.create({ name: "determine" });
             const AAP = DemoVariable.create({ name: "AAP" });
             determine.parameters.push(AAP);
@@ -98,7 +97,7 @@ describe("Testing Unparser", () => {
         });
 
         test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 }", () => {
-            let result: string = "";
+            let result: string;
             let myType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
             const personEnt = DemoEntity.create({ name: "Person" });
             const age = DemoAttribute.create({ name: "age", declaredType: myType });
@@ -143,7 +142,7 @@ describe("Testing Unparser", () => {
         test("complete example model with simple attribute types", () => {
             let result: string = "";
             const testmodel = new DemoModelCreator().createModelWithMultipleUnits();
-            const fileHandler = new FileHandler();
+            // const fileHandler = new FileHandler();
 
             const validator = new DemoValidator();
             const errors = validator.validate(testmodel, true);

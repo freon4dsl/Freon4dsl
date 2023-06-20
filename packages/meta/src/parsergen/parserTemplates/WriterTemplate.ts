@@ -247,6 +247,8 @@ export class WriterTemplate {
              * @param vertical
              * @param indent
              * @param short
+             * @param method
+             * @private
              */
             private _unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean,
         method: (modelelement: ${allLangConceptsName}, short: boolean) => void) {
@@ -283,7 +285,7 @@ export class WriterTemplate {
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
              * If 'short' is false, then a multi-line result will be given. Otherwise, only one single-line string is added.
              * @param list
-             * @param isIdentifier : indicates whether or not the value should be surrounded with double quotes
+             * @param isIdentifier indicates whether the value should be surrounded with double quotes
              * @param sepText
              * @param sepType
              * @param vertical

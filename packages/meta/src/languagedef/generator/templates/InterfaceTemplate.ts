@@ -30,7 +30,7 @@ export class InterfaceTemplate {
         // Template starts here
         return `
             import { ${Names.FreNode} ${hasReferences ? `, ${Names.FreNodeReference}` : ""} } from "${FREON_CORE}";
-            import { ${imports.join(", ")} } from "./internal";
+            ${ imports.length > 0 ? `import { ${imports.join(", ")} } from "./internal";` : "" }
 
             /**
              * Interface ${myName} is the implementation of the interface with the same name in the language definition file.

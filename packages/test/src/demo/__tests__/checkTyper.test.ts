@@ -104,5 +104,15 @@ describe("Testing Typer", () => {
             const res = typer.conformsListType(func.parameters.map(p => p.declaredType.referred), func.parameters.map(p => p.declaredType.referred));
             expect(res).toBe(false);
         });
+
+        test("type conformance of a model with inheritance (baseEntities)", () => {
+            let inheritanceModel: DemoModel = new DemoModelCreator().createInheritanceModel().models[0];
+            inheritanceModel.entities.forEach(ent => {
+                if (!!ent.baseEntity) {
+                    console.log("trying " + ent.name + " found base entity: " + ent.baseEntity?.referred.name);
+                    expect(typer.conformsType(ent.baseEntity.referred, ent));
+                }
+            });
+        });
     });
 });

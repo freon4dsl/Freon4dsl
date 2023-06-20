@@ -45,7 +45,7 @@ export class ModelTemplate {
             `${p.isList ?
                 `result = this.${p.name}.find(mod => mod.name === name);`
                 :
-                `if (this.${p.name}.name === name ) result = this.${p.name}`
+                `if (this.${p.name}.name === name ) { result = this.${p.name}; }`
             }`
         ).join("\n")}
                     if (!!result && !!metatype) {
@@ -134,10 +134,9 @@ export class ModelTemplate {
                     }
 
                 /**
-                 * Returns an empty model unit of type 'unitTypeName' within 'model'.
+                 * Returns an empty model unit of type 'typeName' within 'model'.
                  *
-                 * @param model
-                 * @param unitTypeName
+                 * @param typename
                  */
                 newUnit(typename: ${Names.metaType(language)}) : ${Names.modelunit(language)}  {
                     switch (typename) {

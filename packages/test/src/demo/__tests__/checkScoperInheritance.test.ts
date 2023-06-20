@@ -1,5 +1,5 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
-import { DemoScoper } from "../scoper/gen/DemoScoper";
+import { DemoScoper } from "../scoper/gen";
 import { DemoEntity, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 

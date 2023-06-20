@@ -13,7 +13,6 @@ export class UnitTemplate {
     public generateUnit(unitDescription: FreUnitDescription) {
         const language = unitDescription.language;
         const myName = Names.classifier(unitDescription);
-        const needsObservable = unitDescription.primProperties.length > 0;
         const extendsClass = "MobxModelElementImpl";
         const hasReferences = unitDescription.references().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
@@ -47,7 +46,7 @@ export class UnitTemplate {
             `;
 
         return `
-            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
+            ${ConceptUtils.makeImportStatements(coreImports, modelImports)}
 
             ${result}`;
     }
