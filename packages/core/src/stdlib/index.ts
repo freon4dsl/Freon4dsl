@@ -1,1 +1,1 @@
-export { FreStdlib } from "./FreStdlib";
+export { FreStdlib, EmptyStdLib } from "./FreStdlib";

@@ -1,5 +1,6 @@
 import { ReferenceShortcut } from "../editor";
 import { FreNode, FreModel, FreModelUnit } from "../ast";
+import { EmptyStdLib, FreStdlib } from "../stdlib/index";
 import { isNullOrUndefined } from "../util";
 import { FreLogger } from "../logging";
 const LOGGER = new FreLogger("Language");
@@ -80,6 +81,13 @@ export class FreLanguage {
     private units: Map<string, ModelUnit> = new Map<string, ModelUnit>();
     private concepts: Map<string, FreLanguageConcept> = new Map<string, FreLanguageConcept>();
     private interfaces: Map<string, Interface> = new Map<string, Interface>();
+    private _stdLib: FreStdlib = new EmptyStdLib();
+    set stdLib(lib: FreStdlib) {
+        this._stdLib = lib;
+    }
+    get stdLib(): FreStdlib {
+        return this._stdLib;
+    }
 
     private constructor() {
     }
