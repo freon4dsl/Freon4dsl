@@ -29,6 +29,11 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
+    async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
+        return null
+    }
+
+
     /**
      * Takes 'piUnit' and stores it as 'unitName' in the folder 'modelName' on the server at SERVER_URL.
      * 'unitName' must start with a character and contain only characters and/or numbers.
@@ -156,7 +161,7 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
-    private async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
+    async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
         params = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController();

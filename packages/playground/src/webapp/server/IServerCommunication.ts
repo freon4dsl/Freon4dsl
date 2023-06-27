@@ -17,6 +17,8 @@ import { FreNamedNode } from "@freon4dsl/core";
  */
 export interface IServerCommunication {
 
+    generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]>;
+
     /**
      * Takes 'piUnit' and stores it according to the data in 'modelInfo'
      * @param modelName
