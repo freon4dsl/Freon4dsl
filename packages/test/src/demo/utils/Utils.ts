@@ -5,6 +5,7 @@ export function printModel1(element: FreNode): string {
 }
 
 const ownerprops = ["$$owner", "$$propertyName", "$$propertyIndex", "$id"];
+
 function skipReferences(key: string, value: Object) {
     if (ownerprops.includes(key)) {
         return undefined;

@@ -1,0 +1,166 @@
+{
+    "language": "LIonWebM3",
+    "concepts": [
+        {
+            "concept": "Metamodel",
+            "id": "LIonCore_M3_Metamodel",
+            "properties": [
+                {
+                    "name": "qualifiedName",
+                    "id": "LIonCore_M3_Metamodel_qualifiedName"
+                },
+                {
+                    "name": "elements",
+                    "id"  : "LIonCore_M3_Metamodel_elements"
+                }
+            ]
+        },
+        {
+            "concept": "MetamodelElement",
+            "id": "LIonCore_M3_MetamodelElement",
+            "properties": []
+        },
+        {
+            "concept": "PrimitiveType",
+            "id": "LIonCore_M3_PrimitiveType",
+            "properties": []
+        },
+        {
+            "concept": "Property",
+            "id": "LIonCore_M3_Property",
+            "properties": [
+                {
+                    "name": "optional",
+                    "id": "LIonCore_M3_Feature_optional"
+                },
+                {
+                    "name": "simpleName",
+                    "id"  : "LIonCore_M3_NamespacedEntity_simpleName"
+                },
+                {
+                    "name": "type",
+                    "id"  : "LIonCore_M3_Property_type"
+                }
+            ]
+        },
+        {
+            "concept": "Reference",
+            "id": "LIonCore_M3_Reference",
+            "properties": [
+                {
+                    "name": "multiple",
+                    "id"  : "LIonCore_M3_Reference_multiple"
+                },
+                {
+                    "name": "type",
+                    "id": "LIonCore_M3_Reference_type"
+                }
+            ]
+        },
+        {
+            "concept": "NamespacedEntity",
+            "id": "LIonCore_M3_NamespacedEntity",
+            "properties": [
+                {
+                    "name": "simpleName",
+                    "id": "LIonCore_M3_NamespacedEntity_simpleName"
+                },
+                {
+                    "name": "identifier",
+                    "id": "identifier"
+                },
+                {
+                    "name": "id",
+                    "id": "id"
+                }
+            ]
+        },
+        {
+            "concept": "Concept",
+            "id": "LIonCore_M3_Concept",
+            "properties": [
+                {
+                    "name": "abstract",
+                    "id": "LIonCore_M3_Concept_abstract"
+                },
+                {
+                    "name": "extends",
+                    "id": "LIonCore_M3_Concept_extends"
+                },
+                {
+                    "name": "implements",
+                    "id": "LIonCore_M3_Concept_implements"
+                }
+            ]
+        },
+        {
+            "concept": "Link",
+            "id": "LIonCore_M3_Link",
+            "properties": [
+                {
+                    "name": "multiple",
+                    "id": "LIonCore_M3_Link_multiple"
+                },
+                {
+                    "name": "type",
+                    "id": "LIonCore_M3_Link_type"
+                }
+            ]
+        },
+        {
+            "concept": "ConceptInterface",
+            "id": "LIonCore_M3_ConceptInterface",
+            "properties": [
+                {
+                    "name": "extends",
+                    "id": "LIonCore_M3_ConceptInterface_extends"
+                }
+            ]
+        },
+        {
+            "concept": "Containment",
+            "id": "LIonCore_M3_Containment",
+            "properties": []
+        },
+        {
+            "concept": "Datatype",
+            "id": "LIonCore_M3_Datatype",
+            "properties": []
+        },
+        {
+            "concept": "Enumeration",
+            "id": "LIonCore_M3_Enumeration",
+            "properties": [
+                {
+                    "name": "literals",
+                    "id": "LIonCore_M3_Enumeration_literals"
+                }
+            ]
+        },
+        {
+            "concept": "EnumerationLiteral",
+            "id": "LIonCore_M3_EnumerationLiteral",
+            "properties": []
+        },
+        {
+            "concept": "Feature",
+            "id": "LIonCore_M3_Feature",
+            "properties": [
+                {
+                    "name":"optional",
+                    "id":"LIonCore_M3_Feature_optional"
+                }
+            ]
+        },
+        {
+            "concept": "FeaturesContainer",
+            "id": "LIonCore_M3_FeaturesContainer",
+            "properties": [
+                {
+                    "name": "features",
+                    "id": "LIonCore_M3_FeaturesContainer_features"
+                }
+            ]
+        }
+    ]
+}

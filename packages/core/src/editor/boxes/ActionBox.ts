@@ -1,4 +1,4 @@
-import { Concept, FreLanguage } from "../../language";
+import { FreLanguageConcept, FreLanguage } from "../../language";
 import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../util";
 import { FreCreatePartAction } from "../actions";
 import { triggerTypeToString, FreEditor, TextBox, isProKey } from "../internal";
@@ -91,7 +91,7 @@ export class ActionBox extends AbstractChoiceBox {
         return result;
     }
 
-    private getCreateElementOption(propertyName: string, conceptName: string, concept: Concept): SelectOption {
+    private getCreateElementOption(propertyName: string, conceptName: string, concept: FreLanguageConcept): SelectOption {
         LOGGER.log("ActionBox.createElementAction property: " + propertyName + " concept " + conceptName);
         return {
             id: conceptName,
@@ -111,7 +111,7 @@ export class ActionBox extends AbstractChoiceBox {
      * @param editor  The editor context
      * @private
      */
-    private addReferenceShortcuts(concept: Concept, result: SelectOption[], editor: FreEditor) {
+    private addReferenceShortcuts(concept: FreLanguageConcept, result: SelectOption[], editor: FreEditor) {
         // Create the new element for this behavior inside a dummy and then point the owner to the
         // current element.  This way the new element is not part of the model and will not trigger mobx
         // reactions. But the scoper can be used to find available references, because the scoper only

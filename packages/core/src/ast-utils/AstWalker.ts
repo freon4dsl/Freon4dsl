@@ -1,4 +1,4 @@
-import { FreLanguage, Property } from "../language";
+import { FreLanguage, FreLanguageProperty } from "../language";
 import { FreLogger } from "../logging";
 import { AstWorker } from "./AstWorker";
 import { FreNode } from "../ast";
@@ -36,7 +36,7 @@ export class AstWalker {
             }
 
             // find part properties in the language meta definition
-            const partProperties: Property[] = FreLanguage.getInstance().getPropertiesOfKind(modelelement.freLanguageConcept(), "part");
+            const partProperties: FreLanguageProperty[] = FreLanguage.getInstance().getPropertiesOfKind(modelelement.freLanguageConcept(), "part");
             // walk all parts
             for (const prop of partProperties) {
                 for (const child of FreLanguage.getInstance().getPropertyValue(modelelement, prop)) {

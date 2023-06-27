@@ -1,0 +1,70 @@
+language LIonWebM3
+
+model LIonWebmetaModel {
+    name: identifier;
+    units: Metamodel;
+}
+
+modelunit Metamodel {
+    qualifiedName: string;
+    name: identifier;
+    id: string;
+    elements: MetamodelElement[];
+    file-extension = "lmm";
+}
+
+abstract concept MetamodelElement base NamespacedEntity {
+}
+
+concept PrimitiveType base Datatype {}
+
+concept Property base Feature {
+    optional: boolean;
+    simpleName: string;
+    reference type: Datatype;
+ }
+
+concept Reference base Link {
+    multiple: boolean = false;
+    reference type: FeaturesContainer;
+ }
+
+abstract concept NamespacedEntity {
+    simpleName: string;
+    name: identifier; // should be simpleName??
+    id: string;
+}
+
+concept Concept base FeaturesContainer {
+    abstract: boolean;
+    reference extends?: Concept;
+    reference implements: ConceptInterface[];
+}
+
+abstract concept Link base Feature  {
+    multiple: boolean;
+    reference type: FeaturesContainer;
+}
+
+concept ConceptInterface  base FeaturesContainer {
+    reference extends: ConceptInterface[];
+}
+
+concept Containment  base Link { }
+
+abstract concept Datatype  base MetamodelElement {
+}
+
+concept Enumeration base Datatype {
+    literals: EnumerationLiteral[];
+}
+
+concept EnumerationLiteral base NamespacedEntity {
+}
+
+abstract concept Feature base NamespacedEntity {
+  optional: boolean;
+}
+abstract concept FeaturesContainer base MetamodelElement {
+    features: Feature[];
+}

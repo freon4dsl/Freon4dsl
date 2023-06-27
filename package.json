@@ -72,5 +72,6 @@
     "packages/playground",
     "packages/test",
     "packages/server"
-  ]
+  ],
+  "version": "0.0.0"
 }
