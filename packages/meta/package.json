@@ -1,10 +1,9 @@
 {
-  "private": false,
   "publishConfig": {
     "access": "public"
   },
   "name": "@freon4dsl/meta",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -39,9 +38,9 @@
   },
   "dependencies": {
     "@rushstack/ts-command-line": "4.7.8",
-    "pegjs": "^0.10.0",
-    "net.akehurst.language-agl-processor": "4.0.0-rc.5",
     "kotlin": "^1.5.21",
+    "net.akehurst.language-agl-processor": "4.0.0-rc.5",
+    "pegjs": "^0.10.0",
     "tslib": "^2.4.0"
   }
 }
