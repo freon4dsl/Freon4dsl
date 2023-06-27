@@ -1,6 +1,7 @@
 import { FreNode } from "../ast";
 import { FreLanguage, FreLanguageProperty } from "../language";
 import { isNullOrUndefined } from "../util";
+import { FreSerializer } from "./FreSerializer";
 
 /**
  * Helper class to serialize a model using MobXModelElementImpl.
@@ -8,7 +9,7 @@ import { isNullOrUndefined } from "../util";
  *
  * Depends on private keys etc. as defined in MobXModelElement decorators.
  */
-export class FreModelSerializer {
+export class FreModelSerializer implements FreSerializer {
     private language: FreLanguage;
 
     constructor() {
@@ -22,7 +23,7 @@ export class FreModelSerializer {
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    toTypeScriptInstance(jsonObject: Object): any {
+    public toTypeScriptInstance(jsonObject: Object): FreNode {
         return this.toTypeScriptInstanceInternal(jsonObject);
     }
 
@@ -31,7 +32,7 @@ export class FreModelSerializer {
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    private toTypeScriptInstanceInternal(jsonObject: Object): any {
+    private toTypeScriptInstanceInternal(jsonObject: Object): FreNode {
         if (jsonObject === null) {
             throw new Error("Cannot read json: jsonObject is null.");
         }
