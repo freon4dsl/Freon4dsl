@@ -71,7 +71,7 @@ export class SimpleModelCreator {
             } else {
                 const serialized = this.serial.convertToJSON(completeUnit, true);
                 const unitInterface = this.serial.toTypeScriptInstance(serialized);
-                modelUnits.push(unitInterface);
+                modelUnits.push(unitInterface as DSunit);
             }
         }
         // add references, after all names have been created
