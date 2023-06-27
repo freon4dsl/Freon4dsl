@@ -1,7 +1,12 @@
 import { FreNode, FreNodeReference } from "../ast";
 import { FreLanguage, FreLanguageProperty } from "../language";
 import { FreUtils, isNullOrUndefined } from "../util";
+import { FreSerializer } from "./FreSerializer";
+import { createLwNode, isLwChunk, LwChild, LwChunk, LwMetaPointer, LwNode, LwReference } from "./LionwebM3";
 
+/**
+ * Helper types for nodes parsed from a Lionweb JSON.
+ */
 type ParsedChild = {
     featureName: string;
     isList: boolean;
@@ -20,53 +25,8 @@ type ParsedNode = {
     children: ParsedChild[];
     references: ParsedReference[];
 };
-class LwMetaPointer {
-    metamodel: string;
-    version: string;
-    key: string;
-}
 
-class LwChunk {
-    serializationFormatVersion: string;
-    metamodels: LwUsedLanguage[] = [];
-    nodes: LwNode[] = [];
-}
-
-class LwUsedLanguage {
-    key: string;
-    version: string;
-}
-
-class LwNode {
-    id: string;
-    concept: LwMetaPointer;
-    properties: LwProperty[] = [];
-    children: LwChild[] = [];
-    references: LwReference[] = [];
-    parent: string;
-}
-
-class LwProperty {
-    property: LwMetaPointer;
-    value: string;
-}
-
-class LwChild {
-    containment: LwMetaPointer;
-    children: string[] = [];
-}
-
-class LwReference {
-    reference: LwMetaPointer;
-    targets: LwTarget[] = [];
-}
-
-class LwTarget {
-    resolveInfo: string;
-    reference: string;
-}
-
-export class FreLionwebSerializer {
+export class FreLionwebSerializer implements FreSerializer {
     private language: FreLanguage;
     private nodesfromJson: Map<string, ParsedNode> = new Map<string, ParsedNode>();
 
@@ -83,17 +43,23 @@ export class FreLionwebSerializer {
      */
     toTypeScriptInstance(jsonObject: Object): FreNode {
         this.nodesfromJson.clear();
-        if (!(jsonObject instanceof LwChunk)) {
-            console.log(`Cannot read json: jsonObject is not a LIonWeb chunk: ${JSON.stringify(jsonObject)}`);
+        console.log("Starting ...")
+        // TODO Does not work, as there never is an instance of class LwChuld being constructed.
+        if (!isLwChunk(jsonObject)) {
+            console.log(`Cannot read json: jsonObject is not a LIonWeb chunk:`);
         }
+        // console.log(`jsonObject ${JSON.stringify(jsonObject)}`);
         const chunk = jsonObject as LwChunk;
         const serVersion = chunk.serializationFormatVersion;
         console.log("SerializationFormatVersion: " + serVersion);
-        // First read all nodes without childeren, etc.
+        // First read all nodes without children, and store them in a map.
         const nodes: LwNode[] = chunk.nodes;
         for (const object of nodes) {
+            console.log("node: " + object.concept.key + "     with id " + object.id)
             const parsedNode = this.toTypeScriptInstanceInternal(object);
-            this.nodesfromJson.set(parsedNode.freNode.freId(), parsedNode);
+            if (parsedNode !== null) {
+                this.nodesfromJson.set(parsedNode.freNode.freId(), parsedNode);
+            }
         }
         this.resolveChildrenAndReferences();
         return this.findRoot();
@@ -137,7 +103,7 @@ export class FreLionwebSerializer {
                     parsedNode.freNode[reference.featureName] = freonRef;
                 }
 
-                console.log("REFERENCE: " + freonRef.typeName + ", ", printModel(freonRef.referred) + ", ", freonRef.name + ", " + freonRef.pathname);
+                // console.log("REFERENCE: " + freonRef.typeName + ", ", printModel(freonRef.referred) + ", ", freonRef.name + ", " + freonRef.pathname);
             }
         }
     }
@@ -145,30 +111,32 @@ export class FreLionwebSerializer {
     /**
      * Do the real work of instantiating the TypeScript object.
      *
-     * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
+     * @param lwNode JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    private toTypeScriptInstanceInternal(jsonObject: LwNode): ParsedNode {
-        if (jsonObject === null) {
+    private toTypeScriptInstanceInternal(lwNode: LwNode): ParsedNode {
+        if (lwNode === null) {
             throw new Error("Cannot read json: jsonObject is null.");
         }
-        const jsonMetaPointer = jsonObject.concept;
-        const id: string = jsonObject.id;
+        const jsonMetaPointer = lwNode.concept;
+        const id: string = lwNode.id;
         if (isNullOrUndefined(jsonMetaPointer)) {
-            throw new Error(`Cannot read json: not a Freon structure, conceptname missing: ${JSON.stringify(jsonObject)}.`);
+            throw new Error(`Cannot read json: not a Freon structure, conceptname missing: ${JSON.stringify(lwNode)}.`);
         }
-        const conceptMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
+        const conceptMetaPointer = this.convertMetaPointer(jsonMetaPointer, lwNode);
         // console.log("Classifier with id " + conceptId + " classifier " + this.language.classifierById(conceptId));
         const classifier = this.language.classifierById(conceptMetaPointer.key);
         if (isNullOrUndefined(classifier)) {
-            throw new Error(`Cannot read json: ${conceptMetaPointer.key} unknown.`);
+            console.log(`1 Cannot read json: ${conceptMetaPointer.key} unknown.`);
+            return null;
         }
         const tsObject: FreNode = this.language.createConceptOrUnit(classifier.typeName, id);
         if (isNullOrUndefined(tsObject)) {
-            throw new Error(`Cannot read json: ${conceptMetaPointer.key} unknown.`);
+            console.log(`2 Cannot read json: ${conceptMetaPointer.key} unknown.`);
+            return null;
         }
-        this.convertPrimitiveProperties(tsObject, conceptMetaPointer.key, jsonObject);
-        const parsedChildren = this.convertChildProperties(tsObject, conceptMetaPointer.key, jsonObject);
-        const parsedReferences = this.convertReferenceProperties(tsObject, conceptMetaPointer.key, jsonObject);
+        this.convertPrimitiveProperties(tsObject, conceptMetaPointer.key, lwNode);
+        const parsedChildren = this.convertChildProperties(tsObject, conceptMetaPointer.key, lwNode);
+        const parsedReferences = this.convertReferenceProperties(tsObject, conceptMetaPointer.key, lwNode);
         return { freNode: tsObject, children: parsedChildren, references: parsedReferences };
     }
 
@@ -181,6 +149,8 @@ export class FreLionwebSerializer {
             const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
             const property: FreLanguageProperty = this.language.classifierPropertyById(concept, propertyMetaPointer.key);
             if (isNullOrUndefined(property)) {
+                // FIXME known prpblems
+                if( propertyMetaPointer.key !== "qualifiedName")
                 console.log("Unknown property: " + propertyMetaPointer.key + " for concept " + concept);
                 continue;
             }
@@ -188,7 +158,7 @@ export class FreLionwebSerializer {
             FreUtils.CHECK(property.propertyKind === "primitive", "Primitive value found for non primitive property: " + property.name);
             const value = jsonProperty.value;
             if (isNullOrUndefined(value)) {
-                throw new Error(`Cannot read json: ${property} value unset.`);
+                throw new Error(`Cannot read json: ${JSON.stringify(property, null, 2)} value unset.`);
             }
             if (property.type === "string" || property.type === "identifier") {
                 // this.checkValueToType(value, "string", property);
@@ -318,7 +288,7 @@ export class FreLionwebSerializer {
         } else {
             root = this.convertToJSONinternal(freNode, false, idMap);
         }
-        // console.log("end converting concept name " + tsObject.freLanguageConcept());
+        console.log("end converting concept name " + JSON.stringify(Object.values(idMap)));
         return Object.values(idMap);
     }
 
@@ -329,7 +299,7 @@ export class FreLionwebSerializer {
             return result;
         }
         const typename = freNode.freLanguageConcept();
-        result = new LwNode();
+        result = createLwNode();
         idMap[freNode.freId()] = result;
         result.id = freNode.freId();
 

@@ -15,10 +15,17 @@ export class ReaderTemplate {
         // Template starts here
         return `
         import { ${Names.FreReader} } from "${FREON_CORE}";
+        /* The following does not work with the command line toot because it is commonjs
+           Unclear why, but the lines below seem to work ok.
         import { net } from "net.akehurst.language-agl-processor";
         import LanguageProcessor = net.akehurst.language.api.processor.LanguageProcessor;
         import Agl = net.akehurst.language.agl.processor.Agl;
         import AutomatonKind_api = net.akehurst.language.api.processor.AutomatonKind_api;
+        */
+        import  agl from "net.akehurst.language-agl-processor";
+        import LanguageProcessor = agl.net.akehurst.language.api.processor.LanguageProcessor;
+        import Agl = agl.net.akehurst.language.agl.processor.Agl;
+        import AutomatonKind_api = agl.net.akehurst.language.api.processor.AutomatonKind_api;
         import { ${Names.modelunit(language)}, ModelUnitMetaType, ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";

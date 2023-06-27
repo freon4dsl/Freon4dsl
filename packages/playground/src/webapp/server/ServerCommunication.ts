@@ -123,7 +123,7 @@ export class ServerCommunication implements IServerCommunication {
             if (!!res) {
                 try {
                     const unit = ServerCommunication.serial.toTypeScriptInstance(res);
-                    loadCallback(unit);
+                    loadCallback(unit as FreNamedNode);
                 } catch (e) {
                     LOGGER.error( "loadModelUnit, " + e.message);
                     setUserMessage(e.message);
@@ -147,7 +147,7 @@ export class ServerCommunication implements IServerCommunication {
             if (!!res) {
                 try {
                     const model = ServerCommunication.serial.toTypeScriptInstance(res);
-                    loadCallback(model);
+                    loadCallback(model as FreNamedNode);
                 } catch (e) {
                     LOGGER.error( "loadModelUnitInterface, " + e.message);
                     setUserMessage(e.message);
