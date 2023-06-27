@@ -1,4 +1,4 @@
-import { FreNode, FreNodeReference } from "../ast";
+import { FreNamedNode, FreNode, FreNodeReference } from "../ast";
 import { FreLanguage, FreLanguageProperty } from "../language";
 import { FreUtils, isNullOrUndefined } from "../util";
 import { FreSerializer } from "./FreSerializer";
@@ -42,7 +42,11 @@ export class FreLionwebSerializer implements FreSerializer {
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
     toTypeScriptInstance(jsonObject: Object): FreNode {
+        console.log("toTypeScriptInstance");
         this.nodesfromJson.clear();
+        FreLanguage.getInstance().stdLib.elements.forEach(elem =>
+            this.nodesfromJson.set(elem.freId(), {freNode: elem, children: [], references: []})
+        );
         console.log("Starting ...")
         // TODO Does not work, as there never is an instance of class LwChuld being constructed.
         if (!isLwChunk(jsonObject)) {
@@ -89,14 +93,14 @@ export class FreLionwebSerializer implements FreSerializer {
                 }
             }
             for (const reference of parsedNode.references) {
-                const resolvedReference: ParsedNode = this.nodesfromJson.get(reference.referredId);
-                if (isNullOrUndefined(resolvedReference)) {
-                    console.error("Reference cannot be resolved: " + reference.referredId);
-                    continue;
-                }
+                // const resolvedReference: ParsedNode = this.nodesfromJson.get(reference.referredId);
+                // if (isNullOrUndefined(resolvedReference)) {
+                //     console.error("Reference cannot be resolved: " + reference.referredId);
+                //     continue;
+                // }
                 // TOIDO Create with id or resolveInfo
                 const freonRef: FreNodeReference<any> = FreNodeReference.create(reference.resolveInfo, reference.typeName);
-                freonRef.referred = resolvedReference.freNode;
+                // freonRef.referred = resolvedReference.freNode;
                 if (reference.isList) {
                     parsedNode.freNode[reference.featureName].push(freonRef);
                 } else {
@@ -276,7 +280,7 @@ export class FreLionwebSerializer implements FreSerializer {
      */
     public convertToJSON(freNode: FreNode, publicOnly?: boolean): LwNode[] {
         const typename = freNode.freLanguageConcept();
-        // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
+        console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
 
         const idMap = new Map<string, LwNode>();
         let root: LwNode;
@@ -334,26 +338,26 @@ export class FreLionwebSerializer implements FreSerializer {
     private createMetaPointer(key: string) {
         return {
             key: key,
-            version: undefined,
+            version: "1.0",
             metamodel: this.language.id
         };
     }
 
-    private convertPropertyToJSON(p: FreLanguageProperty, freNode: FreNode, publicOnly: boolean, result: LwNode, idMap: Map<string, LwNode>) {
-        const typename = freNode.freLanguageConcept();
+    private convertPropertyToJSON(p: FreLanguageProperty, parentNode: FreNode, publicOnly: boolean, result: LwNode, idMap: Map<string, LwNode>) {
+        const typename = parentNode.freLanguageConcept();
         if (p.id === undefined) {
             console.log(`no id defined for property ${p.name}`);
             return;
         }
         switch (p.propertyKind) {
             case "part":
-                const value = freNode[p.name];
+                const value = parentNode[p.name];
                 const child: LwChild = {
                     containment: this.createMetaPointer(p.id),
                     children: []
                 };
                 if (p.isList) {
-                    const parts: FreNode[] = freNode[p.name];
+                    const parts: FreNode[] = parentNode[p.name];
                     for (const part of parts) {
                         child.children.push(this.convertToJSONinternal(part , publicOnly, idMap).id);
                     }
@@ -364,30 +368,30 @@ export class FreLionwebSerializer implements FreSerializer {
                 result.children.push(child);
                 break;
             case "reference":
-                const reference: LwReference = {
+                const lwReference: LwReference = {
                     reference: this.createMetaPointer(p.id),
                     targets: []
                 };
                 if (p.isList) {
-                    const references: FreNode[] = freNode[p.name];
+                    const references: FreNodeReference<FreNamedNode>[] = parentNode[p.name];
                     for (const ref of references) {
-                        reference.targets.push({
-                            reference: ref.freId(),
+                        lwReference.targets.push({
+                            reference: ref?.referred?.freId(),
                             resolveInfo: ref["name"]
                         });
                     }
                 } else {
                     // single reference
-                    const ref = freNode[p.name];
-                    reference.targets.push({
-                        reference: ref?.freId(),
+                    const ref: FreNodeReference<FreNamedNode> = parentNode[p.name];
+                    lwReference.targets.push({
+                        reference: ref?.referred?.freId(),
                         resolveInfo: !!ref ? ref["name"] : null
                     });
                 }
-                result.references.push(reference);
+                result.references.push(lwReference);
                 break;
             case "primitive":
-                const value2 = freNode[p.name];
+                const value2 = parentNode[p.name];
                 result.properties.push({
                     property: this.createMetaPointer(p.id),
                     value: value2
