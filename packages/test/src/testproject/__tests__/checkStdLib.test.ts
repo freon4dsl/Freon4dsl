@@ -1,9 +1,11 @@
+import { FreLanguage, jsonAsString } from "@freon4dsl/core";
 import { KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestprojectEnvironment } from "../config/gen/TestprojectEnvironment";
 import { TestprojectStdlib } from "../stdlib/gen/TestprojectStdlib";
 
 describe("Checking stdlib for Demo", () => {
-    let stdlib: TestprojectStdlib = TestprojectEnvironment.getInstance().stdlib as TestprojectStdlib;
+    TestprojectEnvironment.getInstance();
+    let stdlib: TestprojectStdlib = FreLanguage.getInstance().stdLib as TestprojectStdlib;
     // The stdlib contains the following elements
     // ZZ.ZZinstance1
     // XX.XXinstance1

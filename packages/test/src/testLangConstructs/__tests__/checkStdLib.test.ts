@@ -1,9 +1,11 @@
+import { FreLanguage } from "@freon4dsl/core";
 import { LangConstructsEnvironment } from "../config/gen/LangConstructsEnvironment";
 import { LimitedConcept1, LimitedWithBase, LimitedWithInheritanceTree, LimitedWithInterface } from "../language/gen";
 import { LangConstructsStdlib } from "../stdlib/gen/LangConstructsStdlib";
 
 describe("Checking stdlib for Lang Constructs", () => {
-    let stdlib: LangConstructsStdlib = LangConstructsEnvironment.getInstance().stdlib as LangConstructsStdlib;
+    LangConstructsEnvironment.getInstance();
+    let stdlib: LangConstructsStdlib = FreLanguage.getInstance().stdLib as LangConstructsStdlib;
     // The stdlib contains the following elements
     // LimitedConcept1.FIRST
     // LimitedConcept1.SECOND
@@ -30,7 +32,7 @@ describe("Checking stdlib for Lang Constructs", () => {
         expect(stdlib.find("tweedeB")).toBe(LimitedWithBase.tweedeB);
         expect(stdlib.find("derdeB")).toBe(LimitedWithBase.derdeB);
         expect(stdlib.find("TREE1")).toBe(LimitedWithInheritanceTree.TREE1);
-        expect(stdlib.find("TREE2")).toBe(LimitedWithInheritanceTree.TREE2); 
+        expect(stdlib.find("TREE2")).toBe(LimitedWithInheritanceTree.TREE2);
         expect(stdlib.find("THIRD")).toBe(LimitedWithInheritanceTree.THIRD);
         expect(stdlib.find("limIntf1")).toBe(LimitedWithInterface.limIntf1);
         expect(stdlib.find("limIntf2")).toBe(LimitedWithInterface.limIntf2);
