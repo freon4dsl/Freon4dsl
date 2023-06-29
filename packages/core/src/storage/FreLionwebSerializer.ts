@@ -394,7 +394,7 @@ export class FreLionwebSerializer implements FreSerializer {
                 const value2 = parentNode[p.name];
                 result.properties.push({
                     property: this.createMetaPointer(p.id),
-                    value: value2
+                    value: propertyValueToString(value2)
                 });
                 break;
             default:
@@ -403,6 +403,14 @@ export class FreLionwebSerializer implements FreSerializer {
     }
 }
 
+function propertyValueToString(value: any): string {
+    switch (typeof value) {
+        case "string": return value;
+        case "boolean": return (value === true ? "true" : "false");
+        case "number": return "" + value;
+        default: return value;
+    }
+}
 function printModel(element: FreNode): string {
     return JSON.stringify(element, skipReferences, "  " );
 }
