@@ -1,5 +1,4 @@
 import { runInAction } from "mobx";
-// import { FreLogger } from "../logging";
 import { FreEditor } from "../editor";
 import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast";
 import { isFreExpression } from "../ast-utils";
