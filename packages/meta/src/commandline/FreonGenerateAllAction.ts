@@ -1,3 +1,4 @@
+import fs from "fs";
 import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator";
 import { FreInterpreterDef } from "../interpretergen/metalanguage/FreInterpreterDef";
 import { FreLanguage } from "../languagedef/metalanguage";
@@ -197,9 +198,48 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         // generate the language
         LOG2USER.info("Generating language structure");
         this.language = new LanguageParser().parseMulti(this.languageFiles);
+        if (this.idFile !== undefined && this.idFile !== null) {
+            const idFileString = fs.readFileSync(this.idFile, "utf-8");
+            const idJson = JSON.parse(idFileString);
+            this.processIds(this.language, idJson);
+        } else {
+            LOG2USER.info("No id.json found")
+        }
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(this.language);
     };
+
+    private processIds(language: FreLanguage, json: Object): void {
+          const jsonLanguage = json["language"];
+          const languageId = json["id"];
+          if (typeof languageId === "string") {
+              console.log("Language has id " + languageId);
+              language.id = languageId;
+          }
+          const concepts = json["concepts"];
+          if (!Array.isArray(concepts)) {
+              throw new Error("id.json 'concepts' property should be an array");
+          }
+          for(const jsonConcept of concepts) {
+              console.log("Concept " + jsonConcept["concept"] + " has id " + jsonConcept["id"]);
+              const concept = language.findClassifier(jsonConcept["concept"]);
+              concept.id = jsonConcept["id"];
+              const properties = jsonConcept["properties"];
+              if (!Array.isArray(properties)) {
+                  throw new Error("id.json 'properties' property should be an array");
+              }
+              for(const jsonProperty of properties) {
+                  const jsonPropertyName = jsonProperty["name"];
+                  console.log("    Property " + jsonPropertyName + " has id " + jsonProperty["id"]);
+                  const property = concept.allProperties().find(p => p.name === jsonPropertyName );
+                  if (property === undefined || property === null) {
+                      console.error("Property " + jsonPropertyName + " does not exist");
+                  } else {
+                      property.id = jsonProperty["id"];
+                  }
+              }
+          }
+    }
 
     private generateDiagrams = () => {
         // generate the language

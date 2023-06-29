@@ -17,7 +17,7 @@
         FreEditor,
         FreLogger,
         SelectOption,
-        TextBox
+        TextBox, jsonAsString
     } from "@freon4dsl/core";
 
     import { runInAction } from "mobx";
@@ -40,6 +40,13 @@
     let allOptions: SelectOption[];             // all options as calculated by the editor
     let textComponent;
 
+    let setText = (value: string) => {
+        if (value === null || value === undefined) {
+            text = "";
+        } else {
+            text = value;
+        }
+    }
     const noOptionsId = 'noOptions';            // constant for when the editor has no options
     let getOptions = (): SelectOption[] => {    // the function used to calculate all_options, called by onClick and setFocus
         let result = box?.getOptions(editor);
@@ -72,7 +79,7 @@
             let selectedOption = box.getSelectedOption();
             if (!!selectedOption) {
                 box.textHelper.setText(selectedOption.label);
-                text = box.textHelper.getText();
+                setText(box.textHelper.getText());
             }
         }
         // because the box maybe a different one than we started with ...
@@ -100,9 +107,9 @@
      * @param event
      */
     const textUpdate = (event: CustomEvent) => {
-        // console.log('textUpdate: ' + JSON.stringify(event.detail));
+        LOGGER.log('textUpdate: ' + JSON.stringify(event.detail));
         dropdownShown = true;
-        text = event.detail.content;
+        setText(event.detail.content);
         if (!allOptions) {
             allOptions = getOptions();
         }
@@ -197,7 +204,7 @@
                         if (!!chosenOption) {
                             storeAndExecute(chosenOption);
                         } else { //  no valid option, restore the original text
-                            text = textBox.getText();
+                            setText(textBox.getText());
                             // stop editing
                             isEditing = false;
                             dropdownShown = false;
@@ -229,7 +236,7 @@
     function clearText() {
         // todo find out whether we can do without this textHelper
         box.textHelper.setText("");
-        text = "";
+        setText("");
     }
 
     /**
@@ -266,7 +273,11 @@
             allOptions = getOptions();
         }
         if (!!event) {
-            filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+            if ( text === undefined || text === null) {
+                filteredOptions = allOptions.filter(o => true);
+            } else {
+                filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+            }
         } else {
             filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, 0)));
         }
@@ -290,7 +301,7 @@
             // TODO the execution of the option should set the text in the selectBox, for now this is handled here
             if (isSelectBox(box)) {
                 box.textHelper.setText(selected.label);
-                text = selected.label;
+                setText(selected.label);
             } else {
                 // ActionBox, action done, clear input text
                 clearText();
@@ -305,9 +316,14 @@
      * original value.
      */
     const endEditing = () => {
-        LOGGER.log("endEditing " +id + " dropdownShow:" + dropdownShown);
-        if (! isEditing) {
+        LOGGER.log("endEditing " +id + " dropdownShow:" + dropdownShown + " isEditing: " + isEditing);
+        if (isEditing === true) {
             isEditing = false;
+        } else {
+            if (dropdownShown === true) {
+                dropdownShown = false;
+            }
+            return;
         }
         if (dropdownShown) {
             // check whether the current text is a valid option
@@ -318,7 +334,7 @@
             if (!!validOption && validOption.id !== noOptionsId) {
                 storeAndExecute(validOption);
             } else { // no valid option, restore the previous value
-                text = textBox.getText();
+                setText(textBox.getText());
             }
             dropdownShown = false;
         }

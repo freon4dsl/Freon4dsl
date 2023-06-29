@@ -183,7 +183,7 @@ export class BoxUtil {
                 "<optional>",
                 () => [{ id: labels.yes, label: labels.yes }, { id: labels.no, label: labels.no }],
                 () => {
-                    if (element[propertyName]) {
+                    if (element[propertyName] === true) {
                         return { id: labels.yes, label: labels.yes };
                     } else {
                         return { id: labels.no, label: labels.no };

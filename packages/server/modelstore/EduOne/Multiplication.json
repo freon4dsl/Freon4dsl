@@ -1,71 +1,451 @@
 {
-   "$typename": "Topic",
-   "name": "Multiplication",
-   "description": "This topic teaches simple multiplication skills",
-   "pages": [
+   "serializationFormatVersion": "1",
+   "metamodels": [],
+   "nodes": [
       {
-         "$typename": "Theory",
-         "name": "Doubling",
-         "lines": [
+         "id": "ID-93",
+         "concept": {
+            "key": "Topic",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
             {
-               "$typename": "Line",
-               "content": "Calculating the double of a numner isn't that hard."
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "Multiplication"
             },
             {
-               "$typename": "Line",
-               "content": "Doubling the number of X-es for XXX is XXX XXX"
-            },
-            {
-               "$typename": "Line",
-               "content": "This is the same as saying that three X-es times 2 gives you six X-es "
-            },
-            {
-               "$typename": "Line",
-               "content": "OR in mathematic terms two times three equals six: 2 * 3 = 6."
+               "property": {
+                  "key": "description",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "This topic teaches simple multiplication skills"
             }
          ],
-         "questions": [],
-         "calcResult": {
-            "$typename": "Function",
-            "cases": [
-               {
-                  "$typename": "FunctionCase",
-                  "formula": {
-                     "$typename": "BooleanLiteralExpression",
-                     "value": true
-                  },
-                  "grade": "gradeA"
-               }
-            ]
-         }
+         "children": [
+            {
+               "containment": {
+                  "key": "pages",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-94",
+                  "ID-102"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
       },
       {
-         "$typename": "WorkSheet",
-         "name": "Exercises in doubling",
-         "questions": [
+         "id": "ID-94",
+         "concept": {
+            "key": "Theory",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
             {
-               "$typename": "Question",
-               "name": "Double-2",
-               "content": "What is the double of 2",
-               "correctAnswer": {
-                  "$typename": "NumberLiteralExpression",
-                  "value": 4
-               }
-            },
-            {
-               "$typename": "Question",
-               "name": "Double-3",
-               "content": "What is the double of 3?",
-               "correctAnswer": {
-                  "$typename": "NumberLiteralExpression",
-                  "value": 6
-               }
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "Doubling"
             }
          ],
-         "calcResult": {
-            "$typename": "Function",
-            "cases": []
-         }
+         "children": [
+            {
+               "containment": {
+                  "key": "lines",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-95",
+                  "ID-96",
+                  "ID-97",
+                  "ID-98"
+               ]
+            },
+            {
+               "containment": {
+                  "key": "questions",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "key": "calcResult",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-99"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-95",
+         "concept": {
+            "key": "Line",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "Calculating the double of a numner isn't that hard."
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-96",
+         "concept": {
+            "key": "Line",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "Doubling the number of X-es for XXX is XXX XXX"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-97",
+         "concept": {
+            "key": "Line",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "This is the same as saying that three X-es times 2 gives you six X-es "
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-98",
+         "concept": {
+            "key": "Line",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "OR in mathematic terms two times three equals six: 2 * 3 = 6."
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-99",
+         "concept": {
+            "key": "Function",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "cases",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-100"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-100",
+         "concept": {
+            "key": "FunctionCase",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "formula",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-101"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "grade",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-1",
+                     "resolveInfo": "gradeA"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-101",
+         "concept": {
+            "key": "BooleanLiteralExpression",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "value",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "false"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-102",
+         "concept": {
+            "key": "WorkSheet",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "Exercises in doubling"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "questions",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-103",
+                  "ID-105"
+               ]
+            },
+            {
+               "containment": {
+                  "key": "calcResult",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-107"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-103",
+         "concept": {
+            "key": "Question",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "Double-2"
+            },
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "What is the double of 2"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "correctAnswer",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-104"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-104",
+         "concept": {
+            "key": "NumberLiteralExpression",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "value",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "4"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-105",
+         "concept": {
+            "key": "Question",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "Double-3"
+            },
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "What is the double of 3?"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "correctAnswer",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-106"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-106",
+         "concept": {
+            "key": "NumberLiteralExpression",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "value",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "6"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-107",
+         "concept": {
+            "key": "Function",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "cases",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "parent": null
       }
    ]
 }

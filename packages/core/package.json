@@ -1,7 +1,6 @@
 {
-  "private": false,
   "name": "@freon4dsl/core",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "publishConfig": {
     "access": "public"
   },

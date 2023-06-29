@@ -1,5 +1,5 @@
-import type { FreNamedNode } from "@freon4dsl/core";
-import { FreErrorSeverity, FreLogger, FreModelSerializer } from "@freon4dsl/core";
+import type { FreNamedNode, FreNode, FreSerializer } from "@freon4dsl/core";
+import { FreErrorSeverity, FreLionwebSerializer, FreLogger, FreModelSerializer } from "@freon4dsl/core";
 import type { IServerCommunication } from "./IServerCommunication";
 import { setUserMessage } from "../components/stores/UserMessageStore";
 
@@ -11,7 +11,8 @@ const SERVER_URL = `http://127.0.0.1:${nodePort}/`;
 console.log("NODE_PORT:" + nodePort + "  env " + JSON.stringify(process.env));
 
 export class ServerCommunication implements IServerCommunication {
-    static serial: FreModelSerializer = new FreModelSerializer();
+    static serial: FreSerializer = new FreModelSerializer();
+    static lionweb_serial: FreSerializer = new FreLionwebSerializer();
     static instance: ServerCommunication;
 
     static getInstance(): ServerCommunication {
@@ -29,6 +30,11 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
+    async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
+        return null
+    }
+
+
     /**
      * Takes 'piUnit' and stores it as 'unitName' in the folder 'modelName' on the server at SERVER_URL.
      * 'unitName' must start with a character and contain only characters and/or numbers.
@@ -39,12 +45,25 @@ export class ServerCommunication implements IServerCommunication {
     async putModelUnit(modelName: string, unitName: string, piUnit: FreNamedNode) {
         LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitName}`);
         if (!!unitName && unitName.length > 0 && unitName.match(/^[a-z,A-Z][a-z,A-Z0-9_\-]*$/)) {
-            const model = ServerCommunication.serial.convertToJSON(piUnit);
-            const publicModel = ServerCommunication.serial.convertToJSON(piUnit, true);
-            await this.putWithTimeout(`putModelUnit`, model, `folder=${modelName}&name=${unitName}` );
+            const model = ServerCommunication.lionweb_serial.convertToJSON(piUnit);
+            const publicModel = ServerCommunication.lionweb_serial.convertToJSON(piUnit, true);
+            let output = {
+                "serializationFormatVersion": "1",
+                "metamodels": [],
+                // "__version": "1234abcdef",
+                "nodes": model
+            }
+
+            await this.putWithTimeout(`putModelUnit`, output, `folder=${modelName}&name=${unitName}` );
+            let publicOutput = {
+                "serializationFormatVersion": "1",
+                "metamodels": [],
+                // "__version": "1234abcdef",
+                "nodes": publicModel
+            }
             await this.putWithTimeout(
                 `putModelUnit`,
-                publicModel,
+                publicOutput,
                 `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`
             );
         } else {
@@ -122,8 +141,13 @@ export class ServerCommunication implements IServerCommunication {
             const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}`);
             if (!!res) {
                 try {
-                    const unit = ServerCommunication.serial.toTypeScriptInstance(res);
-                    loadCallback(unit);
+                    let unit: FreNode;
+                    if (res["$typename"] === undefined) {
+                        unit = ServerCommunication.lionweb_serial.toTypeScriptInstance(res);
+                    } else {
+                        unit = ServerCommunication.serial.toTypeScriptInstance(res);
+                    }
+                    loadCallback(unit as FreNamedNode);
                 } catch (e) {
                     LOGGER.error( "loadModelUnit, " + e.message);
                     setUserMessage(e.message);
@@ -146,8 +170,14 @@ export class ServerCommunication implements IServerCommunication {
             const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
             if (!!res) {
                 try {
-                    const model = ServerCommunication.serial.toTypeScriptInstance(res);
-                    loadCallback(model);
+                    let unit: FreNode;
+                    if (res["$typename"] === undefined) {
+                        unit = ServerCommunication.lionweb_serial.toTypeScriptInstance(res);
+                    } else {
+                        unit = ServerCommunication.serial.toTypeScriptInstance(res);
+                    }
+                    // const model = ServerCommunication.serial.toTypeScriptInstance(res);
+                    loadCallback(unit as FreNamedNode);
                 } catch (e) {
                     LOGGER.error( "loadModelUnitInterface, " + e.message);
                     setUserMessage(e.message);
@@ -156,7 +186,7 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
-    private async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
+    async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
         params = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController();

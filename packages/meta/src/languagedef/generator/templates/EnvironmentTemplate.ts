@@ -25,7 +25,6 @@ export class EnvironmentTemplate {
         import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoperDef(language)}";
         import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typerDef(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
-        import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
         import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}";
@@ -81,7 +80,6 @@ export class EnvironmentTemplate {
             editor: ${Names.FreEditor};
             scoper: ${Names.FreScoperComposite} = new ${Names.FreScoperComposite}("main");
             typer: ${Names.FreTyper} = new ${Names.FreTyper}("main");
-            stdlib: ${Names.FreStdlib} = ${Names.stdlib(language)}.getInstance();
             validator: ${Names.FreValidator} = new ${Names.validator(language)}();
             writer: ${Names.FreWriter} = new ${Names.writer(language)}();
             reader: ${Names.FreReader} = new ${Names.reader(language)}();

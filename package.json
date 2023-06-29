@@ -17,7 +17,6 @@
     "@rollup/plugin-commonjs": "19.0.0",
     "@rollup/plugin-node-resolve": "13.0.0",
     "@rollup/plugin-typescript": "8.3.0",
-    "rollup-plugin-auto-external": "2.0.0",
     "@tsconfig/svelte": "2.0.1",
     "@types/jest": "26.0.24",
     "@types/koa": "2.0.48",
@@ -33,6 +32,7 @@
     "jest": "27.0.6",
     "jest-css-modules-transform": "2.1.1",
     "js-yaml": "3.13.1",
+    "lerna": "3.20.2",
     "mobx-devtools": "0.9.21",
     "nodemon": "1.19.0",
     "pegjs": "0.10.0",
@@ -40,6 +40,7 @@
     "prettier-plugin-svelte": "2.6.0",
     "reflect-metadata": "0.1.13",
     "rollup": "2.53.1",
+    "rollup-plugin-auto-external": "2.0.0",
     "rollup-plugin-css-only": "3.1.0",
     "rollup-plugin-livereload": "2.0.5",
     "rollup-plugin-node-polyfills": "0.2.1",
@@ -59,8 +60,7 @@
     "tslint-eslint-rules": "5.4.0",
     "tslint-microsoft-contrib": "6.2.0",
     "typescript": "4.5.5",
-    "typescript-svelte-plugin": "0.3.14",
-    "lerna": "3.20.2"
+    "typescript-svelte-plugin": "0.3.14"
   },
   "resolutions": {
     "electron": "^11.0.1"
@@ -72,5 +72,6 @@
     "packages/playground",
     "packages/test",
     "packages/server"
-  ]
+  ],
+  "version": "0.0.0"
 }

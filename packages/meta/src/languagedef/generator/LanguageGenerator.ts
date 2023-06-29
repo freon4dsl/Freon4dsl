@@ -137,7 +137,7 @@ export class LanguageGenerator {
         // fs.writeFileSync(`${this.languageGenFolder}/${Names.FreElementReference}.ts`, referenceFile);
 
         LOGGER.log(`Generating language structure information: ${this.languageGenFolder}/${Names.language(language)}.ts`);
-        const structureFile = FileUtil.pretty(languageTemplate.generateLanguage(language), "Language Structure", generationStatus);
+        const structureFile = FileUtil.pretty(languageTemplate.generateLanguage(language, relativePath), "Language Structure", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/${Names.language(language)}.ts`, structureFile);
 
         LOGGER.log(`Generating language environment: ${this.configurationGenFolder}/${Names.environment(language)}.ts`);

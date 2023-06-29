@@ -1,87 +1,661 @@
 {
-   "$typename": "FlowDescription",
-   "name": "Flow",
-   "rules": [
+   "serializationFormatVersion": "1",
+   "metamodels": [],
+   "nodes": [
       {
-         "$typename": "FlowRule",
-         "name": "TheoryRule",
-         "description": "A rule for Theory page",
-         "transitions": [
+         "id": "ID-140",
+         "concept": {
+            "key": "FlowDescription",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
             {
-               "$typename": "PageTransition",
-               "condition": {
-                  "$typename": "GradeLiteral",
-                  "grade": "gradeA"
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "metamodel": "Education"
                },
-               "toPage": "Fractions video one"
-            },
-            {
-               "$typename": "PageTransition",
-               "condition": {
-                  "$typename": "GradeLiteral",
-                  "grade": "gradeB"
-               },
-               "toPage": "Fractions video two"
+               "value": "Flow"
             }
          ],
-         "page": "Fractions theory"
+         "children": [
+            {
+               "containment": {
+                  "key": "rules",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-141",
+                  "ID-146",
+                  "ID-153"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "topic",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-14",
+                     "resolveInfo": "Fractions10"
+                  }
+               ]
+            }
+         ],
+         "parent": null
       },
       {
-         "$typename": "FlowRule",
-         "name": "Video 2",
-         "description": "Continue to other page",
-         "transitions": [
+         "id": "ID-141",
+         "concept": {
+            "key": "FlowRule",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
             {
-               "$typename": "PageTransition",
-               "condition": {
-                  "$typename": "GradeLiteral",
-                  "grade": "gradeA"
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "metamodel": "Education"
                },
-               "toPage": "Fractions theory"
+               "value": "TheoryRule"
             },
             {
-               "$typename": "PageTransition",
-               "condition": {
-                  "$typename": "GradeLiteral",
-                  "grade": "gradeB"
+               "property": {
+                  "key": "description",
+                  "version": "1.0",
+                  "metamodel": "Education"
                },
-               "toPage": "Fractions video one"
-            },
-            {
-               "$typename": "PageTransition",
-               "condition": {
-                  "$typename": "GradeLiteral",
-                  "grade": "gradeC"
-               },
-               "toPage": "Fractions video two"
+               "value": "A rule for Theory page"
             }
          ],
-         "page": "Fractions video one"
+         "children": [
+            {
+               "containment": {
+                  "key": "transitions",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-142",
+                  "ID-144"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "page",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-15",
+                     "resolveInfo": "Fractions theory"
+                  }
+               ]
+            }
+         ],
+         "parent": null
       },
       {
-         "$typename": "FlowRule",
-         "name": "Video 2",
-         "description": "A rule for video 2",
-         "transitions": [
+         "id": "ID-142",
+         "concept": {
+            "key": "PageTransition",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [
             {
-               "$typename": "PageTransition",
-               "condition": {
-                  "$typename": "GradeLiteral",
-                  "grade": "gradeA"
+               "containment": {
+                  "key": "condition",
+                  "version": "1.0",
+                  "metamodel": "Education"
                },
-               "toPage": "Fractions theory"
-            },
-            {
-               "$typename": "PageTransition",
-               "condition": {
-                  "$typename": "GradeLiteral",
-                  "grade": "gradeB"
-               },
-               "toPage": "Fractions video one"
+               "children": [
+                  "ID-143"
+               ]
             }
          ],
-         "page": "Fractions video two"
+         "references": [
+            {
+               "reference": {
+                  "key": "toPage",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-34",
+                     "resolveInfo": "Fractions video one"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-143",
+         "concept": {
+            "key": "GradeLiteral",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "key": "grade",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-1",
+                     "resolveInfo": "gradeA"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-144",
+         "concept": {
+            "key": "PageTransition",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "condition",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-145"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "toPage",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-48",
+                     "resolveInfo": "Fractions video two"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-145",
+         "concept": {
+            "key": "GradeLiteral",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "key": "grade",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-2",
+                     "resolveInfo": "gradeB"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-146",
+         "concept": {
+            "key": "FlowRule",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "Video 2"
+            },
+            {
+               "property": {
+                  "key": "description",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "Continue to other page"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "transitions",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-147",
+                  "ID-149",
+                  "ID-151"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "page",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-34",
+                     "resolveInfo": "Fractions video one"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-147",
+         "concept": {
+            "key": "PageTransition",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "condition",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-148"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "toPage",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-15",
+                     "resolveInfo": "Fractions theory"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-148",
+         "concept": {
+            "key": "GradeLiteral",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "key": "grade",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-1",
+                     "resolveInfo": "gradeA"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-149",
+         "concept": {
+            "key": "PageTransition",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "condition",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-150"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "toPage",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-48",
+                     "resolveInfo": "Fractions video two"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-150",
+         "concept": {
+            "key": "GradeLiteral",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "key": "grade",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-3",
+                     "resolveInfo": "gradeC"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-151",
+         "concept": {
+            "key": "PageTransition",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "condition",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-152"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "toPage",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-34",
+                     "resolveInfo": "Fractions video one"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-152",
+         "concept": {
+            "key": "GradeLiteral",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "key": "grade",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-2",
+                     "resolveInfo": "gradeB"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-153",
+         "concept": {
+            "key": "FlowRule",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "Video 2"
+            },
+            {
+               "property": {
+                  "key": "description",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "value": "A rule for video 2"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "transitions",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-154",
+                  "ID-156"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "page",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-48",
+                     "resolveInfo": "Fractions video two"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-154",
+         "concept": {
+            "key": "PageTransition",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "condition",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-155"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "toPage",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-15",
+                     "resolveInfo": "Fractions theory"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-155",
+         "concept": {
+            "key": "GradeLiteral",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "key": "grade",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-1",
+                     "resolveInfo": "gradeA"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-156",
+         "concept": {
+            "key": "PageTransition",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "condition",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "children": [
+                  "ID-157"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "toPage",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-34",
+                     "resolveInfo": "Fractions video one"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-157",
+         "concept": {
+            "key": "GradeLiteral",
+            "version": "1.0",
+            "metamodel": "Education"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "key": "grade",
+                  "version": "1.0",
+                  "metamodel": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-2",
+                     "resolveInfo": "gradeB"
+                  }
+               ]
+            }
+         ],
+         "parent": null
       }
-   ],
-   "topic": "Fractions10"
+   ]
 }

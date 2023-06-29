@@ -1,10 +1,12 @@
+import { FreLanguage } from "@freon4dsl/core";
+import { TestprojectEnvironment } from "../config/gen/TestprojectEnvironment";
 import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestprojectScoper } from "../scoper/gen";
-import { TestprojectEnvironment } from "../config/gen/TestprojectEnvironment";
 import { TestprojectStdlib } from "../stdlib/gen/TestprojectStdlib";
 
 describe("Checking stdlib for Demo", () => {
-    let stdlib: TestprojectStdlib = TestprojectEnvironment.getInstance().stdlib as TestprojectStdlib;
+    TestprojectEnvironment.getInstance();
+    let stdlib: TestprojectStdlib = FreLanguage.getInstance().stdLib as TestprojectStdlib;
     // The stdlib contains the following elements
     // ZZ.ZZinstance1
     // XX.XXinstance1
@@ -58,7 +60,8 @@ describe("Checking scoper for testproject", () => {
     let model: BB;
     let super1: AA;
     let super2: AA;
-    let ZZinstance1: ZZ = (TestprojectEnvironment.getInstance().stdlib as TestprojectStdlib).find("ZZinstance1", "ZZ") as ZZ;
+    let stdlib: TestprojectStdlib = FreLanguage.getInstance().stdLib as TestprojectStdlib;
+    let ZZinstance1: ZZ = stdlib.find("ZZinstance1", "ZZ") as ZZ;
 
     beforeEach( ()=> {
 

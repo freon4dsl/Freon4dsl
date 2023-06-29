@@ -1,0 +1,72 @@
+{
+   "$typename": "Test",
+   "name": "Test1",
+   "scenarios": [
+      {
+         "$typename": "Scenario",
+         "description": "Test what happens when all answers are correct",
+         "steps": [
+            {
+               "$typename": "Step",
+               "answersGiven": [
+                  {
+                     "$typename": "Answer",
+                     "expr": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": false
+                     },
+                     "question": "Theory 1"
+                  }
+               ],
+               "fromPage": "Fractions theory",
+               "expectedPage": "Fractions video two"
+            },
+            {
+               "$typename": "Step",
+               "answersGiven": [
+                  {
+                     "$typename": "Answer",
+                     "expr": {
+                        "$typename": "NumberLiteralExpression",
+                        "value": 30
+                     },
+                     "question": "Video1 Simplify"
+                  },
+                  {
+                     "$typename": "Answer",
+                     "expr": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": false
+                     },
+                     "question": "Video1 Q1"
+                  }
+               ],
+               "fromPage": "Fractions video one",
+               "expectedPage": "Fractions theory"
+            },
+            {
+               "$typename": "Step",
+               "answersGiven": [
+                  {
+                     "$typename": "Answer",
+                     "expr": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": false
+                     },
+                     "question": "Video2 question"
+                  }
+               ],
+               "fromPage": "Fractions video two",
+               "expectedPage": "Fractions theory"
+            }
+         ]
+      },
+      {
+         "$typename": "Scenario",
+         "description": "Hi",
+         "steps": []
+      }
+   ],
+   "topic": "Fractions10",
+   "flow": "Flow"
+}

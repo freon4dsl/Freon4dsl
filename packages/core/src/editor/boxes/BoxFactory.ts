@@ -1,4 +1,3 @@
-import { runInAction } from "mobx";
 import { FreNode } from "../../ast";
 import { BehaviorExecutionResult } from "../util";
 import { FreLogger } from "../../logging";
@@ -140,12 +139,11 @@ export class BoxFactory {
         const creator = () => new ActionBox(element, role, placeHolder, initializer);
         const result: ActionBox = this.find<ActionBox>(element, role, creator, actionCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            result.placeholder = placeHolder;
-            result.textHelper.setText("");
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        result.placeholder = placeHolder;
+        result.textHelper.setText("");
+        FreUtils.initializeObject(result, initializer);
+
         return result;
     }
 
@@ -157,11 +155,9 @@ export class BoxFactory {
         const creator = () => new LabelBox(element, role, getLabel, initializer);
         const result: LabelBox = this.find<LabelBox>(element, role, creator, labelCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            result.setLabel(getLabel);
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        result.setLabel(getLabel);
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -174,12 +170,10 @@ export class BoxFactory {
         const creator = () => new TextBox(element, role, getText, setText, initializer);
         const result: TextBox = this.find<TextBox>(element, role, creator, textCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            result.getText = getText;
-            result.setText = setText;
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        result.getText = getText;
+        result.setText = setText;
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -213,13 +207,12 @@ export class BoxFactory {
         }
         const creator = () => new HorizontalLayoutBox(element, role, children, initializer);
         const result: HorizontalLayoutBox = this.find<HorizontalLayoutBox>(element, role, creator, horizontalLayoutCache);
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            if (!equals(result.children, children)) {
-                result.replaceChildren(children);
-            }
-            FreUtils.initializeObject(result, initializer);
-        });
+
+        // 2. Apply the other arguments in case they have changed
+        if (!equals(result.children, children)) {
+            result.replaceChildren(children);
+        }
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -233,13 +226,11 @@ export class BoxFactory {
         }
         const creator = () => new VerticalLayoutBox(element, role, children, initializer);
         const result: VerticalLayoutBox = this.find<VerticalLayoutBox>(element, role, creator, verticalLayoutCache);
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            if (!equals(result.children, children)) {
-                result.replaceChildren(children);
-            }
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        if (!equals(result.children, children)) {
+            result.replaceChildren(children);
+        }
+        FreUtils.initializeObject(result, initializer);
         return result;
     }
 
@@ -253,13 +244,11 @@ export class BoxFactory {
         }
         const creator = () => new HorizontalListBox(element, role, propertyName, children, initializer);
         const result: HorizontalListBox = this.find<HorizontalListBox>(element, role, creator, horizontalListCache);
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            if (!equals(result.children, children)) {
-                result.replaceChildren(children);
-            }
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        if (!equals(result.children, children)) {
+            result.replaceChildren(children);
+        }
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -274,13 +263,11 @@ export class BoxFactory {
         }
         const creator = () => new VerticalListBox(element, role, propertyName, children, initializer);
         const result: VerticalListBox = this.find<VerticalListBox>(element, role, creator, verticalListCache);
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            if (!equals(result.children, children)) {
-                result.replaceChildren(children);
-            }
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        if (!equals(result.children, children)) {
+            result.replaceChildren(children);
+        }
+        FreUtils.initializeObject(result, initializer);
         return result;
     }
 
@@ -298,14 +285,12 @@ export class BoxFactory {
         const creator = () => new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
         const result: SelectBox = this.find<SelectBox>(element, role, creator, selectCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            result.placeholder = placeHolder;
-            result.getOptions = getOptions;
-            result.getSelectedOption = getSelectedOption;
-            result.selectOption = selectOption;
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        result.placeholder = placeHolder;
+        result.getOptions = getOptions;
+        result.getSelectedOption = getSelectedOption;
+        result.selectOption = selectOption;
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -339,10 +324,8 @@ export class BoxFactory {
         const creator = () => new GridCellBox(element, role, row, column, box, initializer);
         const result: GridCellBox = this.find<GridCellBox>(element, role, creator, gridcellCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -364,10 +347,8 @@ export class BoxFactory {
         const creator = () => new TableCellBox(element, propertyName, propertyIndex, conceptName, role, row, column, box, initializer);
         const result: TableCellBox = this.find<TableCellBox>(element, role, creator, tableCellCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
