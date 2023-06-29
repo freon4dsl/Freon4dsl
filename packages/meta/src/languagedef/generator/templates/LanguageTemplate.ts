@@ -1,13 +1,14 @@
 import { FreLanguage } from "../../metalanguage";
-import { Names, FREON_CORE, LangUtil, GenerationUtil } from "../../../utils";
+import { Names, FREON_CORE, LangUtil, GenerationUtil, STDLIB_GEN_FOLDER } from "../../../utils";
 
 export class LanguageTemplate {
 
-    generateLanguage(language: FreLanguage): string {
+    generateLanguage(language: FreLanguage, relativePath: string): string {
         return `import { ${Names.FreLanguage}, Model, ModelUnit, FreLanguageProperty, FreLanguageConcept, Interface, ${Names.FreNodeReference} } from "${FREON_CORE}";
 
             // Import as MyLanguage to avoid naming conflicts in generated constructors
             import * as MyLanguage from "./internal";
+            import { ${Names.stdlib(language)} } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
 
             /**
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.
@@ -28,6 +29,7 @@ export class LanguageTemplate {
                 ${Names.FreLanguage}.getInstance().addReferenceCreator( (name: string, type: string) => {
                     return (!!name ? ${Names.FreNodeReference}.create(name, type) : null);
                 });
+                ${Names.FreLanguage}.getInstance().stdLib = ${Names.stdlib(language)}.getInstance();
             }
 
             function describe${Names.classifier(language.modelConcept)}(): Model {

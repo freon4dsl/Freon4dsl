@@ -178,11 +178,11 @@ export abstract class FreScoperBase implements FreScoper {
      */
     private getElementsFromStdlib(metatype?: string): FreNamedNode[] {
         if (!!metatype) {
-            return FreLanguageEnvironment.getInstance().stdlib.elements.filter(elem =>
+            return FreLanguage.getInstance().stdLib.elements.filter(elem =>
                 FreLanguage.getInstance().metaConformsToType(elem, metatype)
             );
         } else {
-            return FreLanguageEnvironment.getInstance().stdlib.elements;
+            return FreLanguage.getInstance().stdLib.elements;
         }
     }
 

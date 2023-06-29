@@ -19,7 +19,6 @@ export interface FreEnvironment {
     typer: FreCompositeTyper;
     validator: FreValidator;
     editor: FreEditor;
-    stdlib: FreStdlib;
     writer: FreWriter;
     reader: FreReader;
     interpreter: FreInterpreter;
