@@ -1,5 +1,6 @@
 /**
- * The types defining the struicture of the lionweb JSON format.
+ * The types defining the structure of the lionweb JSON format.
+ * @see https://lionweb-org.github.io/organization/lioncore/serialization/serialization.html
  * We use types instead of classes, because the purpose is to define the Lionweb JSON to be sent over the line.
  */
 type Id = string;
