@@ -106,7 +106,7 @@ export class LionWebCommunication extends ServerCommunication implements IServer
                 console.log("lionWebNodes", lionWebNodes)
                 let output = {
                     "serializationFormatVersion": "1",
-                    "metamodels": [],
+                    "languages": [],
                     // "__version": "1234abcdef",
                     "nodes": lionWebNodes
                 }

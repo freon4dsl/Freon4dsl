@@ -182,8 +182,8 @@ export class FreLionwebSerializer implements FreSerializer {
             throw new Error(`Cannot read json: not a MetaPointer: ${JSON.stringify(parent)}.`);
         }
 
-        const metamodel = jsonObject.metamodel;
-        if (isNullOrUndefined(metamodel)) {
+        const language = jsonObject.language;
+        if (isNullOrUndefined(language)) {
             throw new Error(`MetaPointer misses metamodel: ${JSON.stringify(jsonObject)}`);
         }
         const version = jsonObject.version;
@@ -195,7 +195,7 @@ export class FreLionwebSerializer implements FreSerializer {
             throw new Error(`MetaPointer misses key: ${JSON.stringify(jsonObject)}`);
         }
         return {
-            metamodel: metamodel,
+            language: language,
             version: version,
             key: key
         };
@@ -339,7 +339,7 @@ export class FreLionwebSerializer implements FreSerializer {
         return {
             key: key,
             version: "1.0",
-            metamodel: this.language.id
+            language: this.language.id
         };
     }
 

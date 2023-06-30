@@ -1,15 +1,14 @@
 # Jos
 
-- [ ] Merge MDEnet branch with development
-- [ ] Lionweb code naar development (model (de)serializer)
+- [x] Merge MDEnet branch with development
+- [x] Lionweb code naar development (model (de)serializer)
 - [ ] Convert Lionweb metamodel to Freon ast by CLI
 
 # Anneke
 
-- [ ] Documentatie aanpassen:
-  - [ ] link naar MDEnet presentatie
-  - [ ] MP3 Meinte op site
-- [ ] 
+- [x] Documentatie aanpassen:
+  - [x] link naar MDEnet presentatie
+  - [x] MP3 Meinte op site
 
 # Beide
 - [ ] Opschonen ToDo list

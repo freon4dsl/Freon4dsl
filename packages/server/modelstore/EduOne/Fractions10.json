@@ -1,20 +1,20 @@
 {
    "serializationFormatVersion": "1",
-   "metamodels": [],
+   "languages": [],
    "nodes": [
       {
          "id": "ID-14",
          "concept": {
             "key": "Topic",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Fractions10"
             },
@@ -22,7 +22,7 @@
                "property": {
                   "key": "description",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Fractions for children of age 10"
             }
@@ -32,7 +32,7 @@
                "containment": {
                   "key": "pages",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-15",
@@ -49,14 +49,14 @@
          "concept": {
             "key": "Theory",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Fractions theory"
             }
@@ -66,7 +66,7 @@
                "containment": {
                   "key": "lines",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-16",
@@ -80,7 +80,7 @@
                "containment": {
                   "key": "questions",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-21"
@@ -90,7 +90,7 @@
                "containment": {
                   "key": "calcResult",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-23"
@@ -105,14 +105,14 @@
          "concept": {
             "key": "Line",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "When you encounter a fraction, you want to simplify this as much as possible."
             }
@@ -126,14 +126,14 @@
          "concept": {
             "key": "Line",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "This means that you make the numbers above and below the line as small as possible."
             }
@@ -147,14 +147,14 @@
          "concept": {
             "key": "Line",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "How do you do this?"
             }
@@ -168,14 +168,14 @@
          "concept": {
             "key": "Line",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": " "
             }
@@ -189,14 +189,14 @@
          "concept": {
             "key": "Line",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "By dividing both the numerator and the denominator by the same number."
             }
@@ -210,14 +210,14 @@
          "concept": {
             "key": "Question",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Theory 1"
             },
@@ -225,7 +225,7 @@
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Bla"
             }
@@ -235,7 +235,7 @@
                "containment": {
                   "key": "correctAnswer",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-22"
@@ -250,14 +250,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "false"
             }
@@ -271,7 +271,7 @@
          "concept": {
             "key": "Function",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -279,7 +279,7 @@
                "containment": {
                   "key": "cases",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-24",
@@ -295,7 +295,7 @@
          "concept": {
             "key": "FunctionCase",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -303,7 +303,7 @@
                "containment": {
                   "key": "formula",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-25"
@@ -315,7 +315,7 @@
                "reference": {
                   "key": "grade",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -332,7 +332,7 @@
          "concept": {
             "key": "AndExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -340,7 +340,7 @@
                "containment": {
                   "key": "left",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-26"
@@ -350,7 +350,7 @@
                "containment": {
                   "key": "right",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-29"
@@ -365,7 +365,7 @@
          "concept": {
             "key": "EqualsExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -373,7 +373,7 @@
                "containment": {
                   "key": "left",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-27"
@@ -383,7 +383,7 @@
                "containment": {
                   "key": "right",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-28"
@@ -398,7 +398,7 @@
          "concept": {
             "key": "QuestionRef",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [],
@@ -407,7 +407,7 @@
                "reference": {
                   "key": "question",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -424,14 +424,14 @@
          "concept": {
             "key": "FractionLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "numerator",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "1"
             },
@@ -439,7 +439,7 @@
                "property": {
                   "key": "denominator",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "2"
             }
@@ -453,7 +453,7 @@
          "concept": {
             "key": "EqualsExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -461,7 +461,7 @@
                "containment": {
                   "key": "left",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-30"
@@ -471,7 +471,7 @@
                "containment": {
                   "key": "right",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-31"
@@ -486,7 +486,7 @@
          "concept": {
             "key": "QuestionRef",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [],
@@ -495,7 +495,7 @@
                "reference": {
                   "key": "question",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -512,14 +512,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "false"
             }
@@ -533,7 +533,7 @@
          "concept": {
             "key": "FunctionCase",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -541,7 +541,7 @@
                "containment": {
                   "key": "formula",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-33"
@@ -553,7 +553,7 @@
                "reference": {
                   "key": "grade",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -570,14 +570,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "true"
             }
@@ -591,14 +591,14 @@
          "concept": {
             "key": "Video",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "url",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "https://www.mathematics.com/help"
             },
@@ -606,7 +606,7 @@
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Fractions video one"
             }
@@ -616,7 +616,7 @@
                "containment": {
                   "key": "questions",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-35",
@@ -627,7 +627,7 @@
                "containment": {
                   "key": "calcResult",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-39"
@@ -642,14 +642,14 @@
          "concept": {
             "key": "Question",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Video1 Q1"
             },
@@ -657,7 +657,7 @@
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Is 3 / 4 the same as 6 / 8?"
             }
@@ -667,7 +667,7 @@
                "containment": {
                   "key": "correctAnswer",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-36"
@@ -682,14 +682,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "true"
             }
@@ -703,14 +703,14 @@
          "concept": {
             "key": "Question",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Video1 Simplify"
             },
@@ -718,7 +718,7 @@
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Simplify  4/ 8"
             }
@@ -728,7 +728,7 @@
                "containment": {
                   "key": "correctAnswer",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-38"
@@ -743,14 +743,14 @@
          "concept": {
             "key": "FractionLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "numerator",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "1"
             },
@@ -758,7 +758,7 @@
                "property": {
                   "key": "denominator",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "2"
             }
@@ -772,7 +772,7 @@
          "concept": {
             "key": "Function",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -780,7 +780,7 @@
                "containment": {
                   "key": "cases",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-40",
@@ -796,7 +796,7 @@
          "concept": {
             "key": "FunctionCase",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -804,7 +804,7 @@
                "containment": {
                   "key": "formula",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-41"
@@ -816,7 +816,7 @@
                "reference": {
                   "key": "grade",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -833,7 +833,7 @@
          "concept": {
             "key": "EqualsExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -841,7 +841,7 @@
                "containment": {
                   "key": "left",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-42"
@@ -851,7 +851,7 @@
                "containment": {
                   "key": "right",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-43"
@@ -866,7 +866,7 @@
          "concept": {
             "key": "QuestionRef",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [],
@@ -875,7 +875,7 @@
                "reference": {
                   "key": "question",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -892,14 +892,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "true"
             }
@@ -913,7 +913,7 @@
          "concept": {
             "key": "FunctionCase",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -921,7 +921,7 @@
                "containment": {
                   "key": "formula",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-45"
@@ -933,7 +933,7 @@
                "reference": {
                   "key": "grade",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -950,7 +950,7 @@
          "concept": {
             "key": "EqualsExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -958,7 +958,7 @@
                "containment": {
                   "key": "left",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-46"
@@ -968,7 +968,7 @@
                "containment": {
                   "key": "right",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-47"
@@ -983,7 +983,7 @@
          "concept": {
             "key": "QuestionRef",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [],
@@ -992,7 +992,7 @@
                "reference": {
                   "key": "question",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -1009,14 +1009,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "false"
             }
@@ -1030,14 +1030,14 @@
          "concept": {
             "key": "Video",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "url",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "https://www.myvideo.com"
             },
@@ -1045,7 +1045,7 @@
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Fractions video two"
             }
@@ -1055,7 +1055,7 @@
                "containment": {
                   "key": "questions",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-49"
@@ -1065,7 +1065,7 @@
                "containment": {
                   "key": "calcResult",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-51"
@@ -1080,14 +1080,14 @@
          "concept": {
             "key": "Question",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Video2 question"
             },
@@ -1095,7 +1095,7 @@
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Did you understand the video?"
             }
@@ -1105,7 +1105,7 @@
                "containment": {
                   "key": "correctAnswer",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-50"
@@ -1120,14 +1120,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "true"
             }
@@ -1141,7 +1141,7 @@
          "concept": {
             "key": "Function",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -1149,7 +1149,7 @@
                "containment": {
                   "key": "cases",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-52",
@@ -1165,7 +1165,7 @@
          "concept": {
             "key": "FunctionCase",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -1173,7 +1173,7 @@
                "containment": {
                   "key": "formula",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-53"
@@ -1185,7 +1185,7 @@
                "reference": {
                   "key": "grade",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -1202,7 +1202,7 @@
          "concept": {
             "key": "EqualsExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -1210,7 +1210,7 @@
                "containment": {
                   "key": "left",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-54"
@@ -1220,7 +1220,7 @@
                "containment": {
                   "key": "right",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-55"
@@ -1235,7 +1235,7 @@
          "concept": {
             "key": "QuestionRef",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [],
@@ -1244,7 +1244,7 @@
                "reference": {
                   "key": "question",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -1261,14 +1261,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "true"
             }
@@ -1282,7 +1282,7 @@
          "concept": {
             "key": "FunctionCase",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -1290,7 +1290,7 @@
                "containment": {
                   "key": "formula",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-57"
@@ -1302,7 +1302,7 @@
                "reference": {
                   "key": "grade",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -1319,7 +1319,7 @@
          "concept": {
             "key": "EqualsExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -1327,7 +1327,7 @@
                "containment": {
                   "key": "left",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-58"
@@ -1337,7 +1337,7 @@
                "containment": {
                   "key": "right",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-59"
@@ -1352,14 +1352,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "false"
             }
@@ -1373,7 +1373,7 @@
          "concept": {
             "key": "QuestionRef",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [],
@@ -1382,7 +1382,7 @@
                "reference": {
                   "key": "question",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
