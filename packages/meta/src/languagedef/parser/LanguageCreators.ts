@@ -116,6 +116,12 @@ export function createUnit(data: Partial<FreUnitDescription>): FreUnitDescriptio
             prop.owningClassifier = result;
         }
     }
+    if (!!data.interfaces) {
+        result.interfaces = data.interfaces;
+        for (const intf of result.interfaces) {
+            intf.owner = result;
+        }
+    }
     if (!!data.fileExtension) {
         result.fileExtension = data.fileExtension;
     }

@@ -10,7 +10,7 @@ Language_Definition
             "concepts": langparts,
             "location": location()
         });
-    } 
+    }
 
 abstractKey     = "abstract" rws { return true; }
 modelKey        = "model" rws { return true; }
@@ -39,17 +39,24 @@ model = isModel:modelKey name:var
         });
     }
 
-unit = isUnit:unitKey name:var
-    curly_begin props:property* fileExtension:(fileExtensionKey equals_separator "\"" fileExt:var "\"" semicolon_separator {return fileExt;})? curly_end    {
+unit = isUnit:unitKey name:var ws implementedInterfaces:implementedInterfaces?
+        curly_begin
+            props:property*
+            fileExtension:(fileExtensionKey equals_separator "\"" fileExt:var "\"" semicolon_separator {return fileExt;})?
+         curly_end    {
         return create.createUnit({
             "name": name,
             "properties": props,
+            "interfaces": implementedInterfaces,
             "fileExtension": (!!fileExtension ? fileExtension : ""),
             "location": location()
         });
     }
 
-concept = abs:abstractKey? conceptKey name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
+concept = abs:abstractKey? conceptKey name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
+            curly_begin
+                props:property*
+            curly_end
     {
         return create.createConcept({
             "isAbstract": (!!abs),
@@ -74,7 +81,10 @@ limited = abs:abstractKey? limitedKey ws name:var rws base:conceptbase? ws imple
         });
     }
 
-interface = interfaceKey ws name:var rws base:interfacebase? curly_begin props:property* curly_end
+interface = interfaceKey ws name:var rws base:interfacebase?
+            curly_begin
+                props:property*
+            curly_end
     {
         return create.createInterface({
             "name": name,
