@@ -9,7 +9,7 @@ import {
     TextBox,
     VerticalListBox
 } from "@freon4dsl/core";
-import { FreClassifier, FreConceptProperty, FreParameter } from "@freon4dsl/meta/dist/languagedef/metalanguage/index";
+import { FreMetaClassifier, FreMetaConceptProperty, FreMetaParameter } from "@freon4dsl/meta/dist/languagedef/metalanguage/index";
 
 function one(o: Object) {
     // if( o instanceof TextBox) { console.log("TEXTBOX 2");return; }
@@ -22,11 +22,11 @@ function one(o: Object) {
     if( o instanceof FreUtils) { console.log("TEXTBOX 2");return; }
     if( o instanceof FreAction) { console.log("TEXTBOX 2");return; }
     // if( o instanceof FreActionsUtil) { console.log("TEXTBOX 2");return; }
-    if( o instanceof FreClassifier) { console.log("TEXTBOX 2");return; }
-    if( o instanceof FreParameter) { console.log("TEXTBOX 2");return; }
+    if( o instanceof FreMetaClassifier) { console.log("TEXTBOX 2");return; }
+    if( o instanceof FreMetaParameter) { console.log("TEXTBOX 2");return; }
     // if( o instanceof FreCompositeProjection) { console.log("TEXTBOX 2");return; }
     if( o instanceof FreCommand) { console.log("TEXTBOX 2");return; }
-    if( o instanceof FreConceptProperty) { console.log("TEXTBOX 2");return; }
+    if( o instanceof FreMetaConceptProperty) { console.log("TEXTBOX 2");return; }
     if( o instanceof FreCustomCommand) { console.log("TEXTBOX 2");return; }
     if( o instanceof TextBox) { console.log("TEXTBOX 2");return; }
     console.log("NOT FOUND");
@@ -45,11 +45,11 @@ function two(o: Object){
         case FreUtils: console.log("OscillatorNode");return;
         case FreAction: console.log("OscillatorNode");return;
         // case FreActionsUtil: console.log("OscillatorNode");return;
-        case FreClassifier: console.log("OscillatorNode");return;
-        case FreParameter: console.log("OscillatorNode");return;
+        case FreMetaClassifier: console.log("OscillatorNode");return;
+        case FreMetaParameter: console.log("OscillatorNode");return;
         // case FreCompositeProjection: console.log("OscillatorNode");return;
         case FreCommand: console.log("OscillatorNode");return;
-        case FreConceptProperty: console.log("OscillatorNode");return;
+        case FreMetaConceptProperty: console.log("OscillatorNode");return;
         case FreCustomCommand: console.log("OscillatorNode");return;
         case TextBox: console.log("TEXTBOX 3");return;
     }

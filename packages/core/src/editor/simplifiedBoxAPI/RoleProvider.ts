@@ -1,8 +1,8 @@
-import { FreLanguageConcept, Interface, ModelUnit } from "../../language";
+import { FreLanguageConcept, FreLanguageInterface, ModelUnit } from "../../language";
 import { FreNode } from "../../ast";
 
 export class RoleProvider {
-    public static classifier(concept: ModelUnit | FreLanguageConcept | Interface): string {
+    public static classifier(concept: ModelUnit | FreLanguageConcept | FreLanguageInterface): string {
         return RoleProvider.startWithUpperCase(concept.typeName);
     }
 

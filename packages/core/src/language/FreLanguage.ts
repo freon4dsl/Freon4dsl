@@ -53,7 +53,7 @@ export type FreLanguageConcept = {
     referenceShortcut?: ReferenceShortcut;
 };
 
-export type Interface = {
+export type FreLanguageInterface = {
     typeName: string;
     id?: string;
     isPublic: boolean;
@@ -63,7 +63,7 @@ export type Interface = {
     properties: Map<string, FreLanguageProperty>;
 };
 
-export type Classifier = Model | ModelUnit | FreLanguageConcept | Interface;
+export type Classifier = Model | ModelUnit | FreLanguageConcept | FreLanguageInterface;
 
 export class FreLanguage {
     private static theInstance: FreLanguage;
@@ -80,7 +80,7 @@ export class FreLanguage {
     private pmodel: Model;
     private units: Map<string, ModelUnit> = new Map<string, ModelUnit>();
     private concepts: Map<string, FreLanguageConcept> = new Map<string, FreLanguageConcept>();
-    private interfaces: Map<string, Interface> = new Map<string, Interface>();
+    private interfaces: Map<string, FreLanguageInterface> = new Map<string, FreLanguageInterface>();
     private _stdLib: FreStdlib = new EmptyStdLib();
     set stdLib(lib: FreStdlib) {
         this._stdLib = lib;
@@ -140,12 +140,12 @@ export class FreLanguage {
         return null;
     }
 
-    interface(typeName: string): Interface | undefined {
+    interface(typeName: string): FreLanguageInterface | undefined {
         return this.interfaces.get(typeName);
     }
 
-    interfaceById(interfaceId: string): Interface | undefined {
-        return this.helperById(this.interfaces, interfaceId) as Interface;
+    interfaceById(interfaceId: string): FreLanguageInterface | undefined {
+        return this.helperById(this.interfaces, interfaceId) as FreLanguageInterface;
     }
 
     classifier(typeName: string): Classifier | undefined {
@@ -379,7 +379,7 @@ export class FreLanguage {
         this.concepts.set(concept.typeName, concept);
     }
 
-    addInterface(intface: Interface) {
+    addInterface(intface: FreLanguageInterface) {
         this.interfaces.set(intface.typeName, intface);
     }
 
