@@ -1,18 +1,18 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils";
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
 import { ScopeDef } from "../metalanguage";
 import { CustomScoperTemplate } from "./templates/CustomScoperTemplate";
 import { ScoperDefTemplate } from "./templates/ScoperDefTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
 import { MetaElementReference } from "../../languagedef/metalanguage";
-import { FreModelDescription } from "../../languagedef/metalanguage/FreLanguage";
+import { FreMetaModelDescription } from "../../languagedef/metalanguage/FreMetaLanguage";
 
 const LOGGER = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
-    public language: FreLanguage;
+    public language: FreMetaLanguage;
     protected scoperGenFolder: string;
     protected scoperFolder: string;
 
@@ -26,7 +26,7 @@ export class ScoperGenerator {
             scopedef = new ScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
-            scopedef.namespaces.push(MetaElementReference.create<FreModelDescription>(this.language.modelConcept, "FreModelDescription"));
+            scopedef.namespaces.push(MetaElementReference.create<FreMetaModelDescription>(this.language.modelConcept, "FreModelDescription"));
         }
 
         const generationStatus = new GenerationStatus();

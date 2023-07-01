@@ -1,5 +1,5 @@
 import { RHSPropEntry } from "./RHSPropEntry";
-import { FrePrimitiveProperty } from "../../../../languagedef/metalanguage";
+import { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage";
 import { makeIndent } from "../GrammarUtils";
 import { ParserGenUtil } from "../../ParserGenUtil";
 
@@ -7,7 +7,7 @@ export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
     private readonly trueKeyword: string = "";
     private readonly falseKeyword: string = "";
 
-    constructor(prop: FrePrimitiveProperty, trueKeyword, falseKeyword) {
+    constructor(prop: FreMetaPrimitiveProperty, trueKeyword, falseKeyword) {
         super(prop);
         this.trueKeyword = trueKeyword;
         this.falseKeyword = falseKeyword;

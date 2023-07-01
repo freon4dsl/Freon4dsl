@@ -1,4 +1,4 @@
-import { FreClassifier, FrePrimitiveType } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage";
 import { FretBinaryExp } from "./FretBinaryExp";
 
 export class FretConformsExp extends FretBinaryExp {
@@ -25,7 +25,7 @@ export class FretConformsExp extends FretBinaryExp {
     toFreString(): string {
         return `${this.left.toFreString()} conformsto ${this.right.toFreString()}`;
     }
-    get type(): FreClassifier {
-        return FrePrimitiveType.boolean;
+    get type(): FreMetaClassifier {
+        return FreMetaPrimitiveType.boolean;
     }
 }

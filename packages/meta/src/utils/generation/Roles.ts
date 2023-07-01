@@ -1,14 +1,14 @@
 import {
-    FreBinaryExpressionConcept,
-    FreClassifier,
-    FreConceptProperty,
-    FreProperty
+    FreMetaBinaryExpressionConcept,
+    FreMetaClassifier,
+    FreMetaConceptProperty,
+    FreMetaProperty
 } from "../../languagedef/metalanguage";
 import { Names } from "./Names";
 
 export class Roles {
 
-    public static elementVarName(concept: FreClassifier): string {
+    public static elementVarName(concept: FreMetaClassifier): string {
         return Names.classifier(concept).toLowerCase();
     }
 
@@ -25,19 +25,19 @@ export class Roles {
         return roleName;
     }
 
-    public static property(property: FreProperty): string {
+    public static property(property: FreMetaProperty): string {
         return Names.classifier(property.owningClassifier) + "-" + property.name;
     }
 
-    public static newPart(property: FreProperty): string {
+    public static newPart(property: FreMetaProperty): string {
         return Roles.newConceptPart(property.owningClassifier, property);
         // return Roles.property(property);
     }
 
-    public static newConceptPart(concept: FreClassifier, property: FreProperty): string {
-        if ( concept instanceof FreBinaryExpressionConcept) {
+    public static newConceptPart(concept: FreMetaClassifier, property: FreMetaProperty): string {
+        if ( concept instanceof FreMetaBinaryExpressionConcept) {
             if ( !!(concept.base.referred) ) {
-                if ( !(concept.base.referred instanceof FreBinaryExpressionConcept)) {
+                if ( !(concept.base.referred instanceof FreMetaBinaryExpressionConcept)) {
                     return "FreBinaryExpression" + "-" + property.name;
                 }
             }
@@ -45,7 +45,7 @@ export class Roles {
         return Names.classifier(concept) + "-" + property.name + "-new-list-item";
     }
 
-    public static newConceptReferencePart(reference: FreConceptProperty): string {
+    public static newConceptReferencePart(reference: FreMetaConceptProperty): string {
         return reference.name;
     }
 

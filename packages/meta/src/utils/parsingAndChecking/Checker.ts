@@ -1,11 +1,11 @@
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 
 export abstract class Checker<DEFINITION> {
-    language: FreLanguage; // should be set in every checker, except the checker for the language definition language (.ast)
+    language: FreMetaLanguage; // should be set in every checker, except the checker for the language definition language (.ast)
     errors = [];
     warnings = [];
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage) {
         this.language = language;
 
     }

@@ -1,12 +1,12 @@
 import { LANGUAGE_GEN_FOLDER, Names, GenerationUtil } from "../../../utils";
-import { FreClassifier, FreLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { ScopeDef } from "../../metalanguage";
 
 export class ScoperUtilsTemplate {
 
-    generateScoperUtils(language: FreLanguage, scopedef: ScopeDef, relativePath: string): string {
+    generateScoperUtils(language: FreMetaLanguage, scopedef: ScopeDef, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts(language);
-        const concreteNamespaces: FreClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scopedef.namespaces);
+        const concreteNamespaces: FreMetaClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scopedef.namespaces);
         const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
         // also process the units that are not explicitly marked as namespace
         language.units.forEach(unit => {

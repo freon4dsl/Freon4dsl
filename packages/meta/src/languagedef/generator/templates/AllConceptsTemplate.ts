@@ -1,9 +1,9 @@
 import { GenerationUtil, Names } from "../../../utils";
-import { FreLanguage } from "../../metalanguage";
+import { FreMetaLanguage } from "../../metalanguage";
 
 export class AllConceptsTemplate {
 
-    generateAllConceptsClass(language: FreLanguage): string {
+    generateAllConceptsClass(language: FreMetaLanguage): string {
         const unitNames = language.units.map(unit => Names.classifier(unit));
         const tmp = GenerationUtil.sortUnitNames(language, unitNames);
 

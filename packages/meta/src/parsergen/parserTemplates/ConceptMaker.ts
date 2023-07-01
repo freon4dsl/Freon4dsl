@@ -7,7 +7,7 @@ import {
     FreEditPropertyProjection, FreEditSuperProjection,
     FreOptionalPropertyProjection
 } from "../../editordef/metalanguage";
-import { FreBinaryExpressionConcept, FreClassifier, FreLimitedConcept, FrePrimitiveProperty, FrePrimitiveType, FreProperty } from "../../languagedef/metalanguage";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLimitedConcept, FreMetaPrimitiveProperty, FreMetaPrimitiveType, FreMetaProperty } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
 import {
     GrammarRule,
@@ -47,13 +47,13 @@ import { LOG2USER, ListUtil } from "../../utils";
 import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator";
 
 export class ConceptMaker {
-    imports: FreClassifier[] = [];
+    imports: FreMetaClassifier[] = [];
     private currentProjectionGroup: FreEditProjectionGroup = null;
     // namedProjections is the list of projections with a different name than the current projection group
     // this list is filled during the build of the template and should alwyas be the last to added
     private namedProjections: FreEditProjection[] = [];
 
-    generateClassifiers(projectionGroup: FreEditProjectionGroup, conceptsUsed: FreClassifier[]): GrammarRule[] {
+    generateClassifiers(projectionGroup: FreEditProjectionGroup, conceptsUsed: FreMetaClassifier[]): GrammarRule[] {
         this.currentProjectionGroup = projectionGroup;
         const rules: GrammarRule[] = [];
         for (const freConcept of conceptsUsed) {
@@ -71,7 +71,7 @@ export class ConceptMaker {
         return rules;
     }
 
-    private generateProjection(freClassifier: FreClassifier, projection: FreEditProjection, addName: boolean) {
+    private generateProjection(freClassifier: FreMetaClassifier, projection: FreEditProjection, addName: boolean) {
         let rule: ConceptRule;
         if (addName) {
             rule = new ConceptRule(freClassifier, projection.name);
@@ -136,10 +136,10 @@ export class ConceptMaker {
     }
 
     private makePropPart(item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
-        const prop: FreProperty = item.property.referred;
+        const prop: FreMetaProperty = item.property.referred;
         let result: RHSPropEntry = null;
         if (!!prop) {
-            const propType: FreClassifier = prop.type; // more efficient to determine referred only once
+            const propType: FreMetaClassifier = prop.type; // more efficient to determine referred only once
             this.imports.push(propType);
             // take care of named projections
             let myProjName: string = null;
@@ -150,11 +150,11 @@ export class ConceptMaker {
                 myProjName = item.projectionName;
             }
             //
-            if (prop instanceof FrePrimitiveProperty) {
+            if (prop instanceof FreMetaPrimitiveProperty) {
                 result = this.makePrimitiveProperty(prop, propType, item, inOptionalGroup);
-            } else if (propType instanceof FreLimitedConcept) {
+            } else if (propType instanceof FreMetaLimitedConcept) {
                 result = this.makeLimitedProp(prop, item, inOptionalGroup, isSingleEntry);
-            } else if (propType instanceof FreBinaryExpressionConcept) {
+            } else if (propType instanceof FreMetaBinaryExpressionConcept) {
                 if (!prop.isList) {
                     result = new RHSBinaryExp(prop, propType); // __fre_binary_propTypeName
                 } else {
@@ -182,7 +182,7 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeListProperty(prop: FreProperty, item: FreEditPropertyProjection, isSingleEntry: boolean): RHSPropEntry {
+    private makeListProperty(prop: FreMetaProperty, item: FreEditPropertyProjection, isSingleEntry: boolean): RHSPropEntry {
         let result: RHSPropEntry;
         if (prop.isPart) {
             // (list, part, optionality not relevant)
@@ -217,7 +217,7 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeSingleProperty(prop: FreProperty, myProjName: string, inOptionalGroup: boolean): RHSPropEntry {
+    private makeSingleProperty(prop: FreMetaProperty, myProjName: string, inOptionalGroup: boolean): RHSPropEntry {
         let result: RHSPropEntry;
         if (prop.isPart && (!prop.isOptional || inOptionalGroup)) {
             result = new RHSPartEntry(prop, myProjName); // `${propTypeName}`;
@@ -252,11 +252,11 @@ export class ConceptMaker {
         return result;
     }
 
-    private makePrimitiveProperty(prop: FrePrimitiveProperty,
-                                  propType: FreClassifier,
+    private makePrimitiveProperty(prop: FreMetaPrimitiveProperty,
+                                  propType: FreMetaClassifier,
                                   item: FreEditPropertyProjection,
                                   inOptionalGroup: boolean): RHSPropEntry {
-        if (propType === FrePrimitiveType.boolean && !!item.boolInfo) {
+        if (propType === FreMetaPrimitiveType.boolean && !!item.boolInfo) {
             // note that lists of booleans can never have a boolean keyword projection
             if (!item.boolInfo.falseKeyword) {
                 return new RHSBooleanWithSingleKeyWord(prop, item.boolInfo.trueKeyword);
@@ -316,7 +316,7 @@ export class ConceptMaker {
         return subs;
     }
 
-    private makeLimitedProp(prop: FreProperty, item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
+    private makeLimitedProp(prop: FreMetaProperty, item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
         if (!prop.isList) {
             if (!prop.isOptional || inOptionalGroup) {
                 return new RHSLimitedRefEntry(prop);
@@ -341,7 +341,7 @@ export class ConceptMaker {
     }
 
     private checkRule(rule: ConceptRule) {
-        const xx: FreProperty[] = [];
+        const xx: FreMetaProperty[] = [];
         for (const part of rule.ruleParts) {
             if (part instanceof RHSPropEntry) {
                 if (!xx.includes(part.property)) {

@@ -1,4 +1,4 @@
-import { FreClassifier, FreConcept, FreInterface, FreLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaConcept, FreMetaInterface, FreMetaLanguage } from "../../../languagedef/metalanguage";
 import {
     Names,
     FREON_CORE,
@@ -8,14 +8,14 @@ import { ScopeDef } from "../../metalanguage";
 
 export class ScoperDefTemplate {
 
-    generateScoperDef(language: FreLanguage, scoperDef: ScopeDef, relativePath: string): string {
+    generateScoperDef(language: FreMetaLanguage, scoperDef: ScopeDef, relativePath: string): string {
         // const allLangConcepts: string = Names.allConcepts(language);
-        const concreteNamespaces: FreClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scoperDef.namespaces);
+        const concreteNamespaces: FreMetaClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scoperDef.namespaces);
         // TODO Quick fix, add all subclasses of a namespace concept
         //      Need to also add classes implementing subinterfaces !
         for (const cls of scoperDef.namespaces) {
             const classifier = cls.referred;
-            if (classifier instanceof FreConcept) {
+            if (classifier instanceof FreMetaConcept) {
                 for (const subcls of classifier.allSubConceptsRecursive()) {
                     if (!concreteNamespaces.includes(subcls)) {
                         concreteNamespaces.push(subcls);

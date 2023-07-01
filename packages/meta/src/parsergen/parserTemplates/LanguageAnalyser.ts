@@ -1,27 +1,27 @@
 import {
-    FreBinaryExpressionConcept,
-    FreClassifier,
-    FreConcept,
-    FreLanguage,
-    FreLimitedConcept
+    FreMetaBinaryExpressionConcept,
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaLanguage,
+    FreMetaLimitedConcept
 } from "../../languagedef/metalanguage";
 import { UnitAnalyser } from "./UnitAnalyser";
-import { FreUnitDescription } from "../../languagedef/metalanguage/FreLanguage";
+import { FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 
 export interface FreAnalyser {
     // name of the unit
-    unit: FreUnitDescription;
+    unit: FreMetaUnitDescription;
     // all concepts used in this unit
-    classifiersUsed: FreClassifier[];
+    classifiersUsed: FreMetaClassifier[];
     // all binary concepts used in this unit
-    binaryConceptsUsed: FreBinaryExpressionConcept[];
+    binaryConceptsUsed: FreMetaBinaryExpressionConcept[];
     // all interfaces and abstract concepts that are mentioned in this unit
-    interfacesAndAbstractsUsed: Map<FreClassifier, FreClassifier[]> ;
+    interfacesAndAbstractsUsed: Map<FreMetaClassifier, FreMetaClassifier[]> ;
     // all limited concepts that are referred to (as type of properties), from this unit
-    limitedsReferred: FreLimitedConcept[];
+    limitedsReferred: FreMetaLimitedConcept[];
     // all concepts that are not abstract, but do have sub concepts, from this unit
-    conceptsWithSub: Map<FreConcept, FreClassifier[]>;
+    conceptsWithSub: Map<FreMetaConcept, FreMetaClassifier[]>;
 }
 
 export class LanguageAnalyser {
@@ -31,7 +31,7 @@ export class LanguageAnalyser {
     // it is not used to analyse anything!!
     commonAnalyser: UnitAnalyser = new UnitAnalyser();
 
-    analyseModel(language: FreLanguage) {
+    analyseModel(language: FreMetaLanguage) {
         this.commonAnalyser.reset();
 
         language.units.forEach(unit => {
@@ -49,11 +49,11 @@ export class LanguageAnalyser {
         // });
     }
 
-    getRefCorrectorContent(language: FreLanguage, relativePath: string): string {
+    getRefCorrectorContent(language: FreMetaLanguage, relativePath: string): string {
         return this.refCorrectorMaker.makeCorrector(language, relativePath);
     }
 
-    getRefCorrectorWalkerContent(language: FreLanguage, relativePath: string): string {
+    getRefCorrectorWalkerContent(language: FreMetaLanguage, relativePath: string): string {
         return this.refCorrectorMaker.makeWalker(language, relativePath);
     }
 
@@ -176,31 +176,31 @@ export class LanguageAnalyser {
         return result;
     }
 
-    private addClassifierUsed(classifier: FreClassifier) {
+    private addClassifierUsed(classifier: FreMetaClassifier) {
         if (!this.commonAnalyser.classifiersUsed.includes(classifier)) {
             this.commonAnalyser.classifiersUsed.push(classifier);
         }
     }
 
-    private addBinaryConceptsUsed(classifier: FreBinaryExpressionConcept) {
+    private addBinaryConceptsUsed(classifier: FreMetaBinaryExpressionConcept) {
         if (!this.commonAnalyser.binaryConceptsUsed.includes(classifier)) {
             this.commonAnalyser.binaryConceptsUsed.push(classifier);
         }
     }
 
-    private addLimitedsReferred(classifier: FreLimitedConcept) {
+    private addLimitedsReferred(classifier: FreMetaLimitedConcept) {
         if (!this.commonAnalyser.limitedsReferred.includes(classifier)) {
             this.commonAnalyser.limitedsReferred.push(classifier);
         }
     }
 
-    private addInterfacesAndAbstractsUsed(classifier: FreClassifier, used: FreClassifier[]) {
+    private addInterfacesAndAbstractsUsed(classifier: FreMetaClassifier, used: FreMetaClassifier[]) {
         if (!this.commonAnalyser.interfacesAndAbstractsUsed.has(classifier)) {
             this.commonAnalyser.interfacesAndAbstractsUsed.set(classifier, used);
         }
     }
 
-    private addConceptsWithSubs(classifier: FreConcept, used: FreClassifier[]) {
+    private addConceptsWithSubs(classifier: FreMetaConcept, used: FreMetaClassifier[]) {
         if (!this.commonAnalyser.conceptsWithSub.has(classifier)) {
             this.commonAnalyser.conceptsWithSub.set(classifier, used);
         }

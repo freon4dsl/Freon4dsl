@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import {
     GenerationStatus,
     FileUtil,
@@ -16,7 +16,7 @@ const LOGGER = new MetaLogger("InterpreterGenerator").mute();
  */
 export class InterpreterGenerator {
     public outputfolder: string = ".";
-    public language: FreLanguage;
+    public language: FreMetaLanguage;
     private interpreterFolder: string;
     private interpreterGenFolder: string;
     fileNames: string[] = [];

@@ -1,4 +1,4 @@
-import { FreLanguage, FreLimitedConcept } from "../../metalanguage";
+import { FreMetaLanguage, FreMetaLimitedConcept } from "../../metalanguage";
 import {
     LANGUAGE_GEN_FOLDER,
     Names,
@@ -11,7 +11,7 @@ export class StdlibTemplate {
     limitedConceptNames: string[] = [];
     constructorText: string = "";
 
-    generateStdlibClass(language: FreLanguage, relativePath: string): string {
+    generateStdlibClass(language: FreMetaLanguage, relativePath: string): string {
         this.makeTexts(language);
 
         return `
@@ -82,7 +82,7 @@ export class StdlibTemplate {
         }`;
     }
 
-    generateCustomStdlibClass(language: FreLanguage): string {
+    generateCustomStdlibClass(language: FreMetaLanguage): string {
         return `
         import { ${Names.FreNamedNode}, ${Names.FreStdlib} } from "@freon4dsl/core";
 
@@ -95,7 +95,7 @@ export class StdlibTemplate {
     }
 
     private makeTexts(language) {
-        language.concepts.filter(con => con instanceof FreLimitedConcept).map(limitedConcept => {
+        language.concepts.filter(con => con instanceof FreMetaLimitedConcept).map(limitedConcept => {
             const myName = Names.concept(limitedConcept);
             this.limitedConceptNames.push(myName);
             this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x =>
@@ -103,7 +103,7 @@ export class StdlibTemplate {
         });
     }
 
-    generateIndex(language: FreLanguage) {
+    generateIndex(language: FreMetaLanguage) {
         return `
         export * from "./${Names.customStdlib(language)}";
         `;

@@ -9,7 +9,7 @@ import {
 } from "../metalanguage/FreLangExpressions";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { Names } from "../../utils";
-import { FreClassifier } from "../metalanguage/FreLanguage";
+import { FreMetaClassifier } from "../metalanguage/FreMetaLanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
@@ -57,9 +57,9 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     return result;
 }
 
-export function createClassifierReference(data: Partial<MetaElementReference<FreClassifier>>): MetaElementReference<FreClassifier> {
+export function createClassifierReference(data: Partial<MetaElementReference<FreMetaClassifier>>): MetaElementReference<FreMetaClassifier> {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = MetaElementReference.create<FreClassifier>(data.name, "FreClassifier");
+    const result = MetaElementReference.create<FreMetaClassifier>(data.name, "FreClassifier");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;

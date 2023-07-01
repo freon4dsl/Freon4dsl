@@ -1,32 +1,32 @@
 import {
-    FreLangElement,
-    FreClassifier,
-    FreConcept,
-    FreConceptProperty,
-    FreInterface,
-    FreLanguage,
-    FreProperty,
+    FreMetaLangElement,
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaConceptProperty,
+    FreMetaInterface,
+    FreMetaLanguage,
+    FreMetaProperty,
     FreLangAppliedFeatureExp,
-    FrePrimitiveType, FreLimitedConcept
+    FreMetaPrimitiveType, FreMetaLimitedConcept
 } from "./internal";
 import { MetaLogger } from "../../utils/MetaLogger";
-import { FreDefinitionElement } from "../../utils";
+import { FreMetaDefinitionElement } from "../../utils";
 
 const LOGGER = new MetaLogger("FreLangScoper"); // .mute();
 const anyElement = "_$anyElement";
 
 export interface FreMetaScoper {
-    getFromVisibleElements(owner: FreDefinitionElement, name: string, typeName: string): FreLangElement;
+    getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement;
 }
 
 export class FreLangScoper {
-    public language: FreLanguage;
+    public language: FreMetaLanguage;
     extraScopers: FreMetaScoper[] = [];
 
-    public getFromVisibleElements(owner: FreDefinitionElement, name: string, typeName: string): FreLangElement {
-        let result: FreLangElement;
+    public getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement {
+        let result: FreMetaLangElement;
         if (typeName === "FrePrimitiveType" ) {
-            result = FrePrimitiveType.find(name);
+            result = FreMetaPrimitiveType.find(name);
         } else if (typeName === "FreConcept" || typeName === "FreLimitedConcept" || typeName === "FreExpressionConcept" || typeName === "FreBinaryExpressionConcept") {
             result = this.language.findConcept(name);
         } else if (typeName === "FreUnitDescription" ) {
@@ -41,13 +41,13 @@ export class FreLangScoper {
                 if (!(!!xx)) {
                     LOGGER.error(`Incorrect use of applied feature, source expression has unknown reference: '${owner.sourceExp.sourceName}'.`);
                 }
-                if (!!xx && xx instanceof FreClassifier) {
+                if (!!xx && xx instanceof FreMetaClassifier) {
                     result = xx.allProperties().filter(prop => prop.name === name)[0];
                 }
             }
         } else if (typeName === "FreInstance" ) {
-            this.language.concepts.filter(c => c instanceof FreLimitedConcept).forEach(lim => {
-                const tmp = (lim as FreLimitedConcept).findInstance(name);
+            this.language.concepts.filter(c => c instanceof FreMetaLimitedConcept).forEach(lim => {
+                const tmp = (lim as FreMetaLimitedConcept).findInstance(name);
                 if (!!tmp) {
                     result = tmp;
                 }

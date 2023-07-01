@@ -1,6 +1,6 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
 import { RHSPropEntry } from "./RHSPropEntry";
-import { FreProperty } from "../../../../languagedef/metalanguage";
+import { FreMetaProperty } from "../../../../languagedef/metalanguage";
 import { GenerationUtil } from "../../../../utils";
 import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
@@ -9,7 +9,7 @@ export class RHSPrimListGroupWithInitiator extends RHSPropPartWithSeparator {
     // `("joinText" propTypeName)*`
     private entry: RHSPropEntry;
 
-    constructor(prop: FreProperty, entry: RHSPropEntry, separator: string) {
+    constructor(prop: FreMetaProperty, entry: RHSPropEntry, separator: string) {
         super(prop, separator);
         this.entry = entry;
     }

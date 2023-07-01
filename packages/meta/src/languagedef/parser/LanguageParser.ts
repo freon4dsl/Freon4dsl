@@ -1,4 +1,4 @@
-import { FreLanguage } from "../metalanguage/";
+import { FreMetaLanguage } from "../metalanguage/";
 import { FreGenericParser, MetaLogger } from "../../utils";
 import * as pegjsParser from "./LanguageGrammar";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName } from "./LanguageCreators";
@@ -6,16 +6,16 @@ import { FreLangChecker } from "../checking/FreLangChecker";
 
 const LOGGER = new MetaLogger("LanguageParser").mute();
 
-export class LanguageParser extends FreGenericParser<FreLanguage> {
+export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     constructor() {
         super();
         this.parser = pegjsParser;
         this.checker = new FreLangChecker(null);
     }
 
-    protected merge(submodels: FreLanguage[]): FreLanguage {
+    protected merge(submodels: FreMetaLanguage[]): FreMetaLanguage {
         if (submodels.length > 0) {
-            const result: FreLanguage = new FreLanguage();
+            const result: FreMetaLanguage = new FreMetaLanguage();
             result.name = submodels[0].name;
             for (const sub of submodels) {
                 if (sub.name === result.name) { // all submodels should be of the same language

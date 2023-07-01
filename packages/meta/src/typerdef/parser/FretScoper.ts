@@ -1,8 +1,8 @@
 import { FreMetaScoper } from "../../languagedef/metalanguage/FreLangScoper";
-import { FreClassifier, FreLangElement } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLangElement } from "../../languagedef/metalanguage";
 import { FretCreateExp, FretPropertyCallExp, FretVarCallExp, FretWhereExp } from "../metalanguage/expressions";
 import { FretProperty, FretTypeConcept, TyperDef, FreTyperElement } from "../metalanguage";
-import { FreDefinitionElement, Names } from "../../utils";
+import { FreMetaDefinitionElement, Names } from "../../utils";
 
 /**
  * This class makes sure that references to parts of the typer definition can be found.
@@ -16,14 +16,14 @@ export class FretScoper implements FreMetaScoper {
         this.definition = definition;
     }
 
-    getFromVisibleElements(owner: FreDefinitionElement, name: string, typeName: string): FreLangElement {
-        let result: FreLangElement;
+    getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement {
+        let result: FreMetaLangElement;
         // if (name === "base2" ) {
         //     console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
         // }
         if (owner instanceof FretProperty || owner instanceof FreTyperElement ) { // FretProperty does not inherit from FretTyperElement!!
             if (typeName === "FreProperty") {
-                let nameSpace: FreClassifier;
+                let nameSpace: FreMetaClassifier;
                 if (owner instanceof FretCreateExp) {
                     nameSpace = owner.type;
                 } else if (owner instanceof FretPropertyCallExp) {

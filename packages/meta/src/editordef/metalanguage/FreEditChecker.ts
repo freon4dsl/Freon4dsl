@@ -1,11 +1,11 @@
 import {
-    FreClassifier, FreConcept, FreInterface,
-    FreLanguage,
-    FreLimitedConcept,
-    FrePrimitiveProperty,
-    FrePrimitiveType, FreProperty
+    FreMetaClassifier, FreMetaConcept, FreMetaInterface,
+    FreMetaLanguage,
+    FreMetaLimitedConcept,
+    FreMetaPrimitiveProperty,
+    FreMetaPrimitiveType, FreMetaProperty
 } from "../../languagedef/metalanguage";
-import { Checker, CheckRunner, LangUtil, Names, FreDefinitionElement, ParseLocationUtil } from "../../utils";
+import { Checker, CheckRunner, LangUtil, Names, FreMetaDefinitionElement, ParseLocationUtil } from "../../utils";
 import { FreEditParseUtil } from "../parser/FreEditParseUtil";
 import {
     ListInfo,
@@ -38,7 +38,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     private myExpressionChecker: FreLangExpressionChecker;
     private propsWithTableProjection: FreEditPropertyProjection[] = [];
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage) {
         super(language);
         this.myExpressionChecker = new FreLangExpressionChecker(this.language);
     }
@@ -150,8 +150,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 this.runner.simpleCheck(group.precedence === 0, `The 'default' projectionGroup must have precedence 0 ${ParseLocationUtil.location(group)}.`);
             }
         }
-        const classifiersWithNormalProj: FreClassifier[] = [];
-        const classifiersWithTableProj: FreClassifier[] = [];
+        const classifiersWithNormalProj: FreMetaClassifier[] = [];
+        const classifiersWithTableProj: FreMetaClassifier[] = [];
         // every classifier may have only one 'normal' projection in a group
         // every classifier may have only one 'table' projection in a group
         group.projections.forEach(proj => {
@@ -244,12 +244,12 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     private checkProjection(projection: FreEditClassifierProjection, editor: FreEditUnit) {
         LOGGER.log("checking projection for " + projection.classifier?.name);
-        const myClassifier: FreClassifier = projection.classifier.referred;
+        const myClassifier: FreMetaClassifier = projection.classifier.referred;
         this.runner.nestedCheck({
             check: !!myClassifier,
             error: `Classifier ${projection.classifier.name} is unknown ${ParseLocationUtil.location(projection)}`,
             whenOk: () => {
-                if (myClassifier instanceof FreLimitedConcept) {
+                if (myClassifier instanceof FreMetaLimitedConcept) {
                     this.runner.simpleCheck(false,
                         `A limited concept cannot have a projection, it can only be used as reference ${ParseLocationUtil.location(projection)}.`);
                 } else {
@@ -263,7 +263,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         });
     }
 
-    private checkNormalProjection(projection: FreEditProjection, cls: FreClassifier, editor: FreEditUnit) {
+    private checkNormalProjection(projection: FreEditProjection, cls: FreMetaClassifier, editor: FreEditUnit) {
         LOGGER.log("checking normal projection ");
         if (!!projection) {
             if (projection.lines.length > 1) {
@@ -310,7 +310,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
     }
 
-    private checkLine(line: FreEditProjectionLine, cls: FreClassifier, editor: FreEditUnit) {
+    private checkLine(line: FreEditProjectionLine, cls: FreMetaClassifier, editor: FreEditUnit) {
         LOGGER.log("checking line ");
         line.items.forEach(item => {
             if (item instanceof FreEditPropertyProjection) {
@@ -321,7 +321,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         });
     }
 
-    private checkTableProjection(projection: FreEditTableProjection, cls: FreClassifier, editor: FreEditUnit) {
+    private checkTableProjection(projection: FreEditTableProjection, cls: FreMetaClassifier, editor: FreEditUnit) {
         LOGGER.log("checking table projection for " + cls?.name);
         if (!!projection) {
             this.runner.nestedCheck({
@@ -339,10 +339,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
     }
 
-    private checkBooleanPropertyProjection(item: FreEditPropertyProjection, myProp: FreProperty) {
+    private checkBooleanPropertyProjection(item: FreEditPropertyProjection, myProp: FreMetaProperty) {
         LOGGER.log("checking boolean property projection: " + myProp?.name);
         this.runner.nestedCheck({
-            check: myProp instanceof FrePrimitiveProperty && myProp.type === FrePrimitiveType.boolean,
+            check: myProp instanceof FreMetaPrimitiveProperty && myProp.type === FreMetaPrimitiveType.boolean,
             error: `Property '${myProp.name}' may not have a keyword projection, because it is not of boolean type ${ParseLocationUtil.location(item)}.`,
             whenOk: () => {
                 this.runner.nestedCheck({check: !myProp.isList,
@@ -357,7 +357,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         });
     }
 
-    private checkListProperty(item: FreEditPropertyProjection, myProp: FreProperty) {
+    private checkListProperty(item: FreEditPropertyProjection, myProp: FreMetaProperty) {
         LOGGER.log("checking list property projection: " + myProp?.name);
         if (!!item.listInfo) {
             if (item.listInfo.isTable) {
@@ -393,7 +393,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
     }
 
-    private checkSuperProjection(editor: FreEditUnit, item: FreEditSuperProjection, cls: FreClassifier) {
+    private checkSuperProjection(editor: FreEditUnit, item: FreEditSuperProjection, cls: FreMetaClassifier) {
         LOGGER.log("checking super projection: " + cls?.name);
         const myParent = item.superRef.referred;
         this.runner.nestedCheck({
@@ -401,11 +401,11 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             error: `Cannot find "${item.superRef.name}" ${ParseLocationUtil.location(item)}`,
             whenOk: () => {
                 // see if myParent is indeed one of the implemented interfaces or a super concept
-                if (myParent instanceof FreConcept) {
+                if (myParent instanceof FreMetaConcept) {
                     const mySupers = LangUtil.superConcepts(cls);
                     this.runner.simpleCheck(!!mySupers.find(superCl => superCl === myParent),
                         `Concept ${myParent.name} is not a base concept of ${cls.name} ${ParseLocationUtil.location(item.superRef)}.`);
-                } else if (myParent instanceof FreInterface) {
+                } else if (myParent instanceof FreMetaInterface) {
                     const mySupers = LangUtil.superInterfaces(cls);
                     this.runner.simpleCheck(!!mySupers.find(superCl => superCl === myParent),
                         `Interface ${myParent.name} is not implemented by ${cls.name} ${ParseLocationUtil.location(item.superRef)}.`);
@@ -417,7 +417,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         });
     }
 
-    private checkOptionalProjection(item: FreOptionalPropertyProjection, cls: FreClassifier, editor: FreEditUnit) {
+    private checkOptionalProjection(item: FreOptionalPropertyProjection, cls: FreMetaClassifier, editor: FreEditUnit) {
         LOGGER.log("checking optional projection for " + cls?.name);
 
         const propProjections: FreEditPropertyProjection[] = [];
@@ -438,7 +438,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                             const myprop = propProjections[0].property.referred;
                             this.runner.simpleCheck(myprop.isOptional || myprop.isList || myprop.isPrimitive,
                                 `Property '${myprop.name}' is not a list, nor optional or primitive, therefore it may not be within an optional projection ${ParseLocationUtil.location(propProjections[0])}.`);
-                            if (myprop.isPrimitive && myprop.type === FrePrimitiveType.boolean) {
+                            if (myprop.isPrimitive && myprop.type === FreMetaPrimitiveType.boolean) {
                                 // when a primitive property is in an optional group, it will not be shown when it has the default value for that property
                                 // a property of boolean type with one keyword should not be within optional group
                                 if (!!propProjections[0].boolInfo) {
@@ -460,10 +460,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             // check the reference shortcut and change the expression into a reference to a property
             if (!!classifierInfo.referenceShortcutExp) {
                 this.myExpressionChecker.checkLangExp(classifierInfo.referenceShortcutExp, classifierInfo.classifier.referred);
-                const xx: FreProperty = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
+                const xx: FreMetaProperty = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
                 // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat
                 if (!!xx) {
-                    classifierInfo.referenceShortCut = MetaElementReference.create<FreProperty>(xx as FreProperty, "FreProperty");
+                    classifierInfo.referenceShortCut = MetaElementReference.create<FreMetaProperty>(xx as FreMetaProperty, "FreProperty");
                     classifierInfo.referenceShortCut.owner = this.language;
                 }
             }
@@ -508,7 +508,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
     }
 
-    private checkPropProjection(item: FreEditPropertyProjection, cls: FreClassifier, editor: FreEditUnit) {
+    private checkPropProjection(item: FreEditPropertyProjection, cls: FreMetaClassifier, editor: FreEditUnit) {
         LOGGER.log("checking property projection for " + cls?.name);
         if (item instanceof FreOptionalPropertyProjection) {
             this.checkOptionalProjection(item, cls, editor);
@@ -520,7 +520,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     error: `Cannot find property "${item.expression.toFreString()}" ${ParseLocationUtil.location(item)}`,
                     whenOk: () => {
                         // set the 'property' attribute of the projection
-                        item.property = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
+                        item.property = MetaElementReference.create<FreMetaProperty>(myProp, "FreProperty");
                         item.property.owner = this.language;
                         item.expression = null;
                         // check the rest
@@ -556,7 +556,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
     }
 
-    private checkProjectionName(projectionName: string, propType: FreClassifier, item: FreDefinitionElement, editor: FreEditUnit) {
+    private checkProjectionName(projectionName: string, propType: FreMetaClassifier, item: FreMetaDefinitionElement, editor: FreEditUnit) {
         if (projectionName === Names.defaultProjectionName) {
             return;
         }
@@ -567,8 +567,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             `Cannot find a projection named '${projectionName}' for concept or interface '${propType.name}' ${ParseLocationUtil.location(item)}.`);
     }
 
-    private copyReference(reference: MetaElementReference<FreProperty>): MetaElementReference<FreProperty> {
-        const result: MetaElementReference<FreProperty> = MetaElementReference.create<FreProperty>(reference.referred, "FreProperty");
+    private copyReference(reference: MetaElementReference<FreMetaProperty>): MetaElementReference<FreMetaProperty> {
+        const result: MetaElementReference<FreMetaProperty> = MetaElementReference.create<FreMetaProperty>(reference.referred, "FreProperty");
         result.owner = this.language;
         return result;
     }

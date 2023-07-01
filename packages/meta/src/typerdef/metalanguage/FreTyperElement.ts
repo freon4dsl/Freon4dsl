@@ -1,6 +1,6 @@
-import { FreDefinitionElement } from "../../utils";
+import { FreMetaDefinitionElement } from "../../utils";
 
-export class FreTyperElement extends FreDefinitionElement {
+export class FreTyperElement extends FreMetaDefinitionElement {
     owner: FreTyperElement;
     readonly $typename: string = "FreTyperElement";
 }

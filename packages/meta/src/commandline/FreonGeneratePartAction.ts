@@ -1,7 +1,7 @@
 import { ICommandLineActionOptions } from "@rushstack/ts-command-line";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { FreonGenerateAction } from "./FreonGenerateAction";
-import { FreLanguage } from "../languagedef/metalanguage/FreLanguage";
+import { FreMetaLanguage } from "../languagedef/metalanguage/FreMetaLanguage";
 
 /**
  * Generic generator action for generating part of the language, e.g. only the typer.
@@ -9,7 +9,7 @@ import { FreLanguage } from "../languagedef/metalanguage/FreLanguage";
  * Subclasses need to call super.generate().
  */
 export class FreonGeneratePartAction extends FreonGenerateAction {
-    protected language: FreLanguage;
+    protected language: FreMetaLanguage;
 
     public constructor(options: ICommandLineActionOptions) {
         super(options);

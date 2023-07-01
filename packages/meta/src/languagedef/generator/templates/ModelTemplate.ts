@@ -1,11 +1,11 @@
 import { Names, FREON_CORE } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
-import { FreModelDescription } from "../../metalanguage/FreLanguage";
+import { FreMetaModelDescription } from "../../metalanguage/FreMetaLanguage";
 import { ClassifierUtil } from "./ClassifierUtil";
 
 export class ModelTemplate {
     // Note: a model may not have other properties than units
-    public generateModel(modelDescription: FreModelDescription): string {
+    public generateModel(modelDescription: FreMetaModelDescription): string {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
@@ -202,7 +202,7 @@ export class ModelTemplate {
             ${result}`;
     }
 
-    private findModelImports(modelDescription: FreModelDescription, myName: string): string[] {
+    private findModelImports(modelDescription: FreMetaModelDescription, myName: string): string[] {
         return Array.from(
             new Set(
                 modelDescription.parts().map(part => Names.classifier(part.type))

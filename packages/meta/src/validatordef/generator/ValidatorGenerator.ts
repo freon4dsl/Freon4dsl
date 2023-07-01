@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils";
 import { ValidatorDef } from "../metalanguage";
 import { RulesCheckerTemplate } from "./templates/RulesCheckerTemplate";
@@ -15,7 +15,7 @@ import { LOG2USER } from "../../utils/UserLogger";
 const LOGGER = new MetaLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
-    public language: FreLanguage;
+    public language: FreMetaLanguage;
     protected validatorGenFolder: string;
     protected validatorFolder: string;
 

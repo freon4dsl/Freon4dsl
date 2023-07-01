@@ -1,4 +1,4 @@
-import { FreLanguage } from "../../languagedef/metalanguage/index";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index";
 import { FreGenericParser } from "../../utils";
 import { ValidatorChecker } from "../../validatordef/metalanguage";
 import { ValidatorDef } from "../metalanguage";
@@ -8,9 +8,9 @@ import { setCurrentFileName as expressionFileName } from "../../languagedef/pars
 const validatorParser = require("./ValidatorGrammar");
 
 export class ValidatorParser extends FreGenericParser<ValidatorDef> {
-    public language: FreLanguage;
+    public language: FreMetaLanguage;
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage) {
         super();
         this.parser = validatorParser;
         this.language = language;

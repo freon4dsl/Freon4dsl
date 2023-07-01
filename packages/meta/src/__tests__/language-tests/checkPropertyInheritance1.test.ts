@@ -1,6 +1,6 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 
 describe("Checking property inheritance", () => {
     const testdir = "src/__tests__/language-tests/faultyDefFiles/property-inheritance1/";
@@ -47,7 +47,7 @@ describe("Checking property inheritance", () => {
 
     test("props in single base concept on type equality: flag 'implementedInBase' is set", () => {
         const parseFile = testdir + "prop_test3.ast";
-        let model: FreLanguage = null;
+        let model: FreMetaLanguage = null;
         try {
             model = parser.parse(parseFile);
         } catch (e) {
@@ -94,7 +94,7 @@ describe("Checking property inheritance", () => {
     // TODO make sure this test works again
     test.skip("props in base concept in inheritance tree on type conformance: flag 'implementedInBase' is set", () => {
         const parseFile = testdir + "prop_test4b.ast";
-        let model: FreLanguage = null;
+        let model: FreMetaLanguage = null;
         try {
             model = parser.parse(parseFile);
         } catch (e) {

@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { Checker } from "./Checker";
 import { Parser } from "pegjs";
 import { LOG2USER } from "../UserLogger";
-import { FreDefinitionElement } from "../FreDefinitionElement";
+import { FreMetaDefinitionElement } from "../FreMetaDefinitionElement";
 import { ParseLocationUtil } from "./ParseLocationUtil";
 
 // The following two types are used to store the location information from the PEGJS parser
@@ -161,7 +161,7 @@ export class FreGenericParser<DEFINITION> {
         // throw Error("FreParser.cleanNonFatalParseErrors should be implemented by its subclasses.");
     }
 
-    protected location(elem: FreDefinitionElement): string {
+    protected location(elem: FreMetaDefinitionElement): string {
         if (!!elem.location) {
             return `[file: ${elem.location.filename}:${elem.location.start.line}:${elem.location.start.column}]`;
         }

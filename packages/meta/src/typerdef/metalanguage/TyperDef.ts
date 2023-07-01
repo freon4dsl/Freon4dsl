@@ -1,5 +1,5 @@
 import { FreTyperElement } from "./FreTyperElement";
-import { FreClassifier, MetaElementReference, FreLanguage, FreProperty } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, MetaElementReference, FreMetaLanguage, FreMetaProperty } from "../../languagedef/metalanguage";
 import { FretTypeConcept } from "./FretTypeConcept";
 import { FretClassifierSpec } from "./FretClassifierSpec";
 import { FretAnyTypeSpec } from "./FretAnyTypeSpec";
@@ -7,7 +7,7 @@ import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/Com
 import { Names } from "../../utils";
 
 export class TyperDef extends FreTyperElement {
-    static freonType: FreClassifier = this.makeFreType();
+    static freonType: FreMetaClassifier = this.makeFreType();
 
     /**
      * A convenience method that creates an instance of this class
@@ -47,27 +47,27 @@ export class TyperDef extends FreTyperElement {
         const result: FretTypeConcept = new FretTypeConcept();
         result.name = Names.FreType;
         // internal: FreElement
-        const prop: FreProperty = new FreProperty();
+        const prop: FreMetaProperty = new FreMetaProperty();
         prop.name = "internal";
-        prop.typeReference = MetaElementReference.create<FreClassifier>("FreNode", "FreClassifier");
+        prop.typeReference = MetaElementReference.create<FreMetaClassifier>("FreNode", "FreClassifier");
         prop.typeReference.owner = prop;
         result.properties.push(prop);
         return result;
     }
-    language: FreLanguage;
+    language: FreMetaLanguage;
 
     typeConcepts: FretTypeConcept[] = []; // implementation of part 'typeConcepts'
     anyTypeSpec: FretAnyTypeSpec; // implementation of part 'anyTypeSpec'
     classifierSpecs: FretClassifierSpec[] = []; // implementation of part 'classifierSpecs'
-    $types: MetaElementReference<FreClassifier>[] = []; // implementation of reference 'types'
-    $conceptsWithType: MetaElementReference<FreClassifier>[] = []; // implementation of reference 'conceptsWithType'
+    $types: MetaElementReference<FreMetaClassifier>[] = []; // implementation of reference 'types'
+    $conceptsWithType: MetaElementReference<FreMetaClassifier>[] = []; // implementation of reference 'conceptsWithType'
     // properties: FretProperty[] = [];
-    private $typeRoot: FreClassifier;
+    private $typeRoot: FreMetaClassifier;
     private typeRootHasBeenCalculated: boolean = false;
     readonly $typename: string = "TyperDef"; // holds the metatype in the form of a string
 
-    get types(): FreClassifier[] {
-        const result: FreClassifier[] = [];
+    get types(): FreMetaClassifier[] {
+        const result: FreMetaClassifier[] = [];
         for (const ref of this.$types) {
             if (!!ref.referred) {
                 result.push(ref.referred);
@@ -76,17 +76,17 @@ export class TyperDef extends FreTyperElement {
         return result;
     }
 
-    set types(newTypes: FreClassifier[]) {
+    set types(newTypes: FreMetaClassifier[]) {
         this.$types = [];
         newTypes.forEach(t => {
-            const xx = MetaElementReference.create<FreClassifier>(t, "FreClassifier");
+            const xx = MetaElementReference.create<FreMetaClassifier>(t, "FreClassifier");
             xx.owner = this.language;
             this.$types.push(xx);
         });
     }
 
-    get conceptsWithType(): FreClassifier[] {
-        const result: FreClassifier[] = [];
+    get conceptsWithType(): FreMetaClassifier[] {
+        const result: FreMetaClassifier[] = [];
         for (const ref of this.$conceptsWithType) {
             if (!!ref.referred) {
                 result.push(ref.referred);
@@ -95,15 +95,15 @@ export class TyperDef extends FreTyperElement {
         return result;
     }
 
-    set conceptsWithType(newTypes: FreClassifier[]) {
+    set conceptsWithType(newTypes: FreMetaClassifier[]) {
         this.$conceptsWithType = [];
         newTypes.forEach(t => {
-            const xx = MetaElementReference.create<FreClassifier>(t, "FreClassifier");
+            const xx = MetaElementReference.create<FreMetaClassifier>(t, "FreClassifier");
             xx.owner = this.language;
             this.$conceptsWithType.push(xx);
         });
     }
-    typeRoot(): FreClassifier {
+    typeRoot(): FreMetaClassifier {
         if (!this.typeRootHasBeenCalculated) {
             // get the common super type of all types, if possible
             const list = CommonSuperTypeUtil.commonSuperType(this.types);

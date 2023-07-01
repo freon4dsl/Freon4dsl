@@ -6,7 +6,7 @@ import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
 import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
 import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
 import { FreTyperDefSyntaxAnalyserPart } from ".";
-import { MetaElementReference, FreLangElement } from "../../languagedef/metalanguage";
+import { MetaElementReference, FreMetaLangElement } from "../../languagedef/metalanguage";
 import { FreParseLocation } from "../../utils";
 
 /**
@@ -175,7 +175,7 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
      * Generic method to transform references
      * ...FreNodeRef = identifier;
      */
-    public freNodeRef<T extends FreLangElement>(branch: SPPTBranch, typeName: string): MetaElementReference<T> {
+    public freNodeRef<T extends FreMetaLangElement>(branch: SPPTBranch, typeName: string): MetaElementReference<T> {
         const referred: string | T = this.transformSharedPackedParseTreeNode(branch);
         if (referred === null || referred === undefined) {
             throw new Error(`Syntax error in "${branch?.parent?.matchedText}": cannot create empty reference`);
@@ -186,7 +186,7 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
         }
     }
 
-    private makeFreElementReferenceWithLocation<T extends FreLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
+    private makeFreElementReferenceWithLocation<T extends FreMetaLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
         const result = MetaElementReference.create<T>(referred, typeName);
         const location = FreParseLocation.create({ filename: this.filename, line: branch.location.line, column: branch.location.column });
         result.aglParseLocation = location;
@@ -219,7 +219,7 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
     /**
      * Generic method to transform lists of references
      */
-    public transformSharedPackedParseTreeRefList<T extends FreLangElement>(
+    public transformSharedPackedParseTreeRefList<T extends FreMetaLangElement>(
         branch: SPPTBranch,
         typeName: string,
         separator?: string

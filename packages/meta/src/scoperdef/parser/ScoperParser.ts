@@ -1,4 +1,4 @@
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { FreGenericParser } from "../../utils";
 import { ScopeDef, ScoperChecker } from "../metalanguage";
 import { setCurrentFileName } from "./ScoperCreators";
@@ -7,9 +7,9 @@ import { setCurrentFileName as expressionFileName } from "../../languagedef/pars
 const scoperParser = require("./ScoperGrammar");
 
 export class ScoperParser extends FreGenericParser<ScopeDef> {
-    public language: FreLanguage;
+    public language: FreMetaLanguage;
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage) {
         super();
         this.parser = scoperParser;
         this.language = language;

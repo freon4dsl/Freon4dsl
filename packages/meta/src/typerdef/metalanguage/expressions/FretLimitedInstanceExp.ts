@@ -1,5 +1,5 @@
 import { FretExp } from "./FretExp";
-import { FreClassifier, MetaElementReference, FreInstance, FreLimitedConcept } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, MetaElementReference, FreMetaInstance, FreMetaLimitedConcept } from "../../../languagedef/metalanguage";
 
 export class FretLimitedInstanceExp extends FretExp {
     /**
@@ -28,8 +28,8 @@ export class FretLimitedInstanceExp extends FretExp {
     }
     readonly $typename: string = "FretLimitedInstanceExp"; // holds the metatype in the form of a string
 
-    $myLimited?: MetaElementReference<FreLimitedConcept>;
-    $myInstance: MetaElementReference<FreInstance>;
+    $myLimited?: MetaElementReference<FreMetaLimitedConcept>;
+    $myInstance: MetaElementReference<FreMetaInstance>;
     toFreString(): string {
         let prefix: string = "";
         if (!!this.$myLimited) {
@@ -38,35 +38,35 @@ export class FretLimitedInstanceExp extends FretExp {
         return `${prefix}${this.$myInstance.name}`;
     }
 
-    get myLimited(): FreLimitedConcept {
+    get myLimited(): FreMetaLimitedConcept {
         if (!!this.$myLimited && !!this.$myLimited.referred) {
             return this.$myLimited.referred;
         }
         return null;
     }
 
-    set myLimited(limitedConcept: FreLimitedConcept) {
+    set myLimited(limitedConcept: FreMetaLimitedConcept) {
         if (!!limitedConcept) {
-            this.$myLimited = MetaElementReference.create<FreLimitedConcept>(limitedConcept, "FreLimitedConcept");
+            this.$myLimited = MetaElementReference.create<FreMetaLimitedConcept>(limitedConcept, "FreLimitedConcept");
             this.$myLimited.owner = this.language;
         }
     }
 
-    get myInstance(): FreInstance {
+    get myInstance(): FreMetaInstance {
         if (!!this.$myInstance && !!this.$myInstance.referred) {
             return this.$myInstance.referred;
         }
         return null;
     }
 
-    set myInstance(cls: FreInstance) {
+    set myInstance(cls: FreMetaInstance) {
         if (!!cls) {
-            this.$myInstance = MetaElementReference.create<FreInstance>(cls, "FreInstance");
+            this.$myInstance = MetaElementReference.create<FreMetaInstance>(cls, "FreInstance");
             this.$myInstance.owner = this.language;
         }
     }
 
-    get type(): FreClassifier {
+    get type(): FreMetaClassifier {
         return this.myLimited;
     }
 }

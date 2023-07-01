@@ -1,4 +1,4 @@
-import { FreBinaryExpressionConcept, FreClassifier, FreLanguage, FreLimitedConcept } from "../../languagedef/metalanguage";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker, MetaLogger } from "../../utils";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
@@ -14,7 +14,7 @@ import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEdit
 describe("Checking FretEditUnit: ", () => {
     const testdir = "src/__tests__/editor-tests/correctDefFiles/";
     let parser: FreEditParser;
-    let language: FreLanguage;
+    let language: FreMetaLanguage;
     let checker: Checker<FreEditUnit>;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();
@@ -50,7 +50,7 @@ describe("Checking FretEditUnit: ", () => {
 
         expect(editor.language).toEqual(language);
         expect(editor.getDefaultProjectiongroup()).not.toBeNull();
-        language.concepts.filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept)).forEach(c => {
+        language.concepts.filter(c => !(c instanceof FreMetaLimitedConcept) && !(c instanceof FreMetaBinaryExpressionConcept)).forEach(c => {
             const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(c);
             expect(projections).not.toBeNull();
             expect(projections[0]).not.toBeNull();
@@ -66,8 +66,8 @@ describe("Checking FretEditUnit: ", () => {
         const editor = readFile(testdir + "test1.edit");
 
         // the series of classifiers that we are testing here
-        const classifiersToTest: FreClassifier[] = language.concepts
-            .filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
+        const classifiersToTest: FreMetaClassifier[] = language.concepts
+            .filter(c => !(c instanceof FreMetaLimitedConcept) && !(c instanceof FreMetaBinaryExpressionConcept));
         classifiersToTest.push(...language.units);
 
         classifiersToTest.forEach(c => {
@@ -96,8 +96,8 @@ describe("Checking FretEditUnit: ", () => {
         const editor = readFile(testdir + "test2.edit");
 
         // the series of classifiers that we are testing here
-        const classifiersToTest: FreClassifier[] = language.concepts
-            .filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
+        const classifiersToTest: FreMetaClassifier[] = language.concepts
+            .filter(c => !(c instanceof FreMetaLimitedConcept) && !(c instanceof FreMetaBinaryExpressionConcept));
         classifiersToTest.push(...language.units);
 
         // do the test
@@ -140,15 +140,15 @@ describe("Checking FretEditUnit: ", () => {
         const editor = readFile(testdir + "test3.edit");
 
         // the series of classifiers of which we are interested in its properties
-        const classifiersToTest: FreClassifier[] = language.concepts
-            .filter(c => !(c instanceof FreLimitedConcept) && !(c instanceof FreBinaryExpressionConcept));
+        const classifiersToTest: FreMetaClassifier[] = language.concepts
+            .filter(c => !(c instanceof FreMetaLimitedConcept) && !(c instanceof FreMetaBinaryExpressionConcept));
         classifiersToTest.push(...language.units);
 
         classifiersToTest.forEach(c => {
             c.allProperties().filter(prop => prop.isList).forEach(prop => {
                 // property type should have a non-table projection
                 const propType = prop.type;
-                if (!prop.isPrimitive && prop.isPart && !(propType instanceof FreLimitedConcept)) {
+                if (!prop.isPrimitive && prop.isPart && !(propType instanceof FreMetaLimitedConcept)) {
                     const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(propType);
                     const xx = projections.find(proj => proj instanceof FreEditProjection);
                     // if (!xx)

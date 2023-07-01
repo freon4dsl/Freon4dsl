@@ -18,7 +18,7 @@ import {
     FreOptionalPropertyProjection
 } from "../metalanguage";
 import { ListUtil, MetaLogger } from "../../utils";
-import { FreClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
 import { FreEditParseUtil } from "./FreEditParseUtil";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -52,7 +52,7 @@ function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEd
             if (!!proj.tableProjection) {
                 const myProj: FreEditTableProjection = new FreEditTableProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = MetaElementReference.create<FreClassifier>(proj.classifier.name, "FreClassifier");
+                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(proj.classifier.name, "FreClassifier");
                 }
                 if (!!proj.tableProjection.cells) {
                     myProj.cells = proj.tableProjection.cells;
@@ -71,7 +71,7 @@ function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEd
             if (!!proj.projection) {
                 const myProj: FreEditProjection = new FreEditProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = MetaElementReference.create<FreClassifier>(proj.classifier.name, "FreClassifier");
+                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(proj.classifier.name, "FreClassifier");
                 }
                 if (!!proj.projection.lines) {
                     myProj.lines = proj.projection.lines;
@@ -159,10 +159,10 @@ export function createStdBool(data: Partial<BoolKeywords>): BoolKeywords {
     return result;
 }
 
-export function createClassifierReference(data: Partial<MetaElementReference<FreClassifier>>): MetaElementReference<FreClassifier> {
-    let result: MetaElementReference<FreClassifier>;
+export function createClassifierReference(data: Partial<MetaElementReference<FreMetaClassifier>>): MetaElementReference<FreMetaClassifier> {
+    let result: MetaElementReference<FreMetaClassifier>;
     if (!!data.name) {
-        result = MetaElementReference.create<FreClassifier>(data.name, "FreClassifier");
+        result = MetaElementReference.create<FreMetaClassifier>(data.name, "FreClassifier");
     }
     if (!!data.location) {
         result.location = data.location;

@@ -1,10 +1,10 @@
-import { FreLanguage } from "../../metalanguage";
+import { FreMetaLanguage } from "../../metalanguage";
 import { Names, FREON_CORE, LangUtil, GenerationUtil, STDLIB_GEN_FOLDER } from "../../../utils";
 
 export class LanguageTemplate {
 
-    generateLanguage(language: FreLanguage, relativePath: string): string {
-        return `import { ${Names.FreLanguage}, Model, ModelUnit, FreLanguageProperty, FreLanguageConcept, Interface, ${Names.FreNodeReference} } from "${FREON_CORE}";
+    generateLanguage(language: FreMetaLanguage, relativePath: string): string {
+        return `import { ${Names.FreLanguage}, Model, ModelUnit, FreLanguageProperty, FreLanguageConcept, FreLanguageInterface, ${Names.FreNodeReference} } from "${FREON_CORE}";
 
             // Import as MyLanguage to avoid naming conflicts in generated constructors
             import * as MyLanguage from "./internal";
@@ -164,7 +164,7 @@ export class LanguageTemplate {
             ).join("\n")}
             ${language.interfaces.map(intface =>
             `
-                function describe${Names.interface(intface)}(): Interface {
+                function describe${Names.interface(intface)}(): FreLanguageInterface {
                     const intface =             {
                         typeName: "${Names.interface(intface)}",
                         isPublic: ${intface.isPublic},

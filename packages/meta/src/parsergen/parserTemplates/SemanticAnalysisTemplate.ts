@@ -1,6 +1,6 @@
-import { FreClassifier, FreConcept, FreLanguage, FrePrimitiveProperty } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage, FreMetaPrimitiveProperty } from "../../languagedef/metalanguage";
 import { LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names } from "../../utils";
-import { FrePrimitiveType } from "../../languagedef/metalanguage/FreLanguage";
+import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/FreMetaLanguage";
 import { UnitAnalyser } from "./UnitAnalyser";
 
 // first call 'analyse' then the other methods as they depend on the global variables to be set
@@ -8,20 +8,20 @@ import { UnitAnalyser } from "./UnitAnalyser";
 // TODO rethink semantic analysis => should be done on whole model
 // why is common unit not included???
 export class SemanticAnalysisTemplate {
-    imports: FreClassifier[] = [];
-    possibleProblems: FreConcept[] = [];
-    supersOfProblems: FreClassifier[] = [];
-    private exprWithBooleanProp: Map<FreClassifier, FrePrimitiveProperty> = new Map<FreClassifier, FrePrimitiveProperty>();
+    imports: FreMetaClassifier[] = [];
+    possibleProblems: FreMetaConcept[] = [];
+    supersOfProblems: FreMetaClassifier[] = [];
+    private exprWithBooleanProp: Map<FreMetaClassifier, FreMetaPrimitiveProperty> = new Map<FreMetaClassifier, FreMetaPrimitiveProperty>();
 
     analyse(analyser: UnitAnalyser) {
         // this.reset();
         // find which classifiers have possible problems
         for (const [classifier, subs] of analyser.interfacesAndAbstractsUsed) {
-            if (!((classifier as FreConcept).base)) {
+            if (!((classifier as FreMetaConcept).base)) {
                 let hasProblems: boolean = false;
-                const subsWithSingleReference: FreConcept[] = [];
+                const subsWithSingleReference: FreMetaConcept[] = [];
                 for (const sub of subs) {
-                    if (sub instanceof FreConcept) {
+                    if (sub instanceof FreMetaConcept) {
                         for (const ref of sub.allReferences()) {
                             if (analyser.classifiersUsed.includes(ref.type)) {
                                 this.addProblem(sub);
@@ -37,7 +37,7 @@ export class SemanticAnalysisTemplate {
                         }
                     }
                     for (const prim of sub.allPrimProperties()) {
-                        if (prim.type === FrePrimitiveType.boolean) {
+                        if (prim.type === FreMetaPrimitiveType.boolean) {
                             this.exprWithBooleanProp.set(sub, prim);
                         }
                     }
@@ -56,19 +56,19 @@ export class SemanticAnalysisTemplate {
         }
     }
 
-    private addSuper(classifier: FreClassifier) {
+    private addSuper(classifier: FreMetaClassifier) {
         if ( !this.supersOfProblems.includes(classifier)) {
             this.supersOfProblems.push(classifier);
         }
     }
 
-    private addProblem(sub: FreConcept) {
+    private addProblem(sub: FreMetaConcept) {
         if ( !this.possibleProblems.includes(sub)) {
             this.possibleProblems.push(sub);
         }
     }
 
-    makeCorrector(language: FreLanguage, relativePath: string): string {
+    makeCorrector(language: FreMetaLanguage, relativePath: string): string {
         this.imports = [];
         const everyConceptName: string = Names.allConcepts(language);
         const className: string = Names.semanticAnalyser(language);
@@ -121,7 +121,7 @@ export class SemanticAnalysisTemplate {
 `; // end Template
     }
 
-    makeWalker(language: FreLanguage, relativePath: string): string {
+    makeWalker(language: FreMetaLanguage, relativePath: string): string {
         this.imports = [];
         const className: string = Names.semanticWalker(language);
         const everyConceptName: string = Names.allConcepts(language);
@@ -178,7 +178,7 @@ export class SemanticAnalysisTemplate {
             if (!poss.isAbstract) {
                 const toBeCreated: string = Names.classifier(poss);
                 for (const ref of poss.allReferences().filter(prop => !prop.isList)) {
-                    const type: FreClassifier = ref.type;
+                    const type: FreMetaClassifier = ref.type;
                     const metatype: string = Names.classifier(type);
                     this.addToImports(type);
                     const propName: string = ref.name;
@@ -194,7 +194,7 @@ export class SemanticAnalysisTemplate {
         return result;
     }
 
-    private makeVistorMethod(freConcept: FreConcept): string {
+    private makeVistorMethod(freConcept: FreMetaConcept): string {
         // TODO add replacement of properties that are lists
         return `
             /**
@@ -213,7 +213,7 @@ export class SemanticAnalysisTemplate {
             }`;
     }
 
-    private addToImports(extra: FreClassifier | FreClassifier[]) {
+    private addToImports(extra: FreMetaClassifier | FreMetaClassifier[]) {
         if (!!extra) {
             if (Array.isArray(extra)) {
                 for (const ext of extra) {
@@ -231,13 +231,13 @@ export class SemanticAnalysisTemplate {
         this.supersOfProblems = [];
         this.possibleProblems = [];
         this.imports = [];
-        this.exprWithBooleanProp = new Map<FreClassifier, FrePrimitiveProperty>();
+        this.exprWithBooleanProp = new Map<FreMetaClassifier, FreMetaPrimitiveProperty>();
     }
 
     private makeBooleanStat(): string {
         let result: string = "";
         for (const [concept, primProp] of this.exprWithBooleanProp) {
-            if (concept instanceof FreConcept && !concept.isAbstract) {
+            if (concept instanceof FreMetaConcept && !concept.isAbstract) {
                 result += `if (referredElem.name === "true") {
                     this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: true }));
                 } else if (referredElem.name === "false") {

@@ -1,12 +1,12 @@
-import { FreClassifier, FreLanguage } from "../../metalanguage";
+import { FreMetaClassifier, FreMetaLanguage } from "../../metalanguage";
 import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil, FREON_CORE } from "../../../utils";
 
 export class WalkerTemplate {
 
-    generateWalker(language: FreLanguage, relativePath: string): string {
+    generateWalker(language: FreMetaLanguage, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: String = Names.walker(language);
-        const classifiersToDo: FreClassifier[] = [];
+        const classifiersToDo: FreMetaClassifier[] = [];
         // take care of the order, it is important
         classifiersToDo.push(...GenerationUtil.sortConceptsOrRefs(language.concepts));
         classifiersToDo.push(...language.units);

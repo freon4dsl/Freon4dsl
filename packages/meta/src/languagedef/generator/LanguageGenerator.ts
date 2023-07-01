@@ -13,7 +13,7 @@ import {
     STDLIB_FOLDER,
     STDLIB_GEN_FOLDER
 } from "../../utils";
-import { FreLanguage } from "../metalanguage";
+import { FreMetaLanguage } from "../metalanguage";
 import {
     AllConceptsTemplate,
     ConceptTemplate,
@@ -44,7 +44,7 @@ export class LanguageGenerator {
     private utilsFolder: string;
     private stdlibFolder: string;
 
-    generate(language: FreLanguage): void {
+    generate(language: FreMetaLanguage): void {
         LOGGER.log("Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_GEN_FOLDER);
         const generationStatus = new GenerationStatus();
         this.getFolderNames();

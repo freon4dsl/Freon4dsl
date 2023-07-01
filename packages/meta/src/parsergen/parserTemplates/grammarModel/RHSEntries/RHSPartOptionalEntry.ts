@@ -1,5 +1,5 @@
 import { RHSPropEntry } from "./RHSPropEntry";
-import { FreProperty } from "../../../../languagedef/metalanguage";
+import { FreMetaProperty } from "../../../../languagedef/metalanguage";
 import { getTypeCall, makeIndent } from "../GrammarUtils";
 import { GenerationUtil } from "../../../../utils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
@@ -7,7 +7,7 @@ import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 export class RHSPartOptionalEntry extends RHSPropEntry {
     private readonly projectionName: string;
 
-    constructor(prop: FreProperty, projectionName: string) {
+    constructor(prop: FreMetaProperty, projectionName: string) {
         super(prop);
         this.isList = false;
         this.projectionName = projectionName;

@@ -1,4 +1,4 @@
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { Names, ParseLocationUtil, FreGenericParser } from "../../utils";
 import { setCurrentFileName as editFileName } from "./FreEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
@@ -8,9 +8,9 @@ import { FreEditChecker } from "../metalanguage/FreEditChecker";
 const editorParser = require("./FreEditGrammar");
 
 export class FreEditParser extends FreGenericParser<FreEditUnit> {
-    language: FreLanguage;
+    language: FreMetaLanguage;
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage) {
         super();
         this.language = language;
         this.parser = editorParser;

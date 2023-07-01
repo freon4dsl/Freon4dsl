@@ -1,7 +1,7 @@
-import { FreConcept, FreModelDescription, FreProperty, FreUnitDescription } from "../../metalanguage";
+import { FreMetaConcept, FreMetaModelDescription, FreMetaProperty, FreMetaUnitDescription } from "../../metalanguage";
 
 export class ClassifierUtil {
-    public static findMobxImportsForConcept(hasSuper: boolean, concept: FreConcept): string[] {
+    public static findMobxImportsForConcept(hasSuper: boolean, concept: FreMetaConcept): string[] {
         const mobxImports: string[] = [];
         if (!hasSuper) {
             mobxImports.push("MobxModelElementImpl");
@@ -10,14 +10,14 @@ export class ClassifierUtil {
         return mobxImports;
     }
 
-    public static findMobxImports(unit: FreUnitDescription | FreModelDescription): string[] {
+    public static findMobxImports(unit: FreMetaUnitDescription | FreMetaModelDescription): string[] {
         const mobxImports: string[] = [];
         mobxImports.push("MobxModelElementImpl");
         this.getObserveFunctions(unit.allProperties(), mobxImports);
         return mobxImports;
     }
 
-    private static getObserveFunctions(props: FreProperty[], mobxImports: string[]) {
+    private static getObserveFunctions(props: FreMetaProperty[], mobxImports: string[]) {
         if (props.some(prop => !prop.isList && prop.isPrimitive)) {
             // for non-list primitive properties include "observableprim"
             mobxImports.push("observableprim");

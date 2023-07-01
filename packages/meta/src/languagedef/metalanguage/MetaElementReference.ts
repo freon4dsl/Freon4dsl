@@ -1,13 +1,13 @@
-import { FreLangElement, FreMetaEnvironment } from "./internal";
-import { ParseLocation, FreDefinitionElement, FreParseLocation } from "../../utils";
+import { FreMetaLangElement, FreMetaEnvironment } from "./internal";
+import { ParseLocation, FreMetaDefinitionElement, FreParseLocation } from "../../utils";
 
 /**
  * Implementation for a (named) reference in Freon.
  * Reference can be set with either a referred object, or with a unitName.
  */
-export class MetaElementReference<T extends FreLangElement> {
+export class MetaElementReference<T extends FreMetaLangElement> {
 
-    public static create<T extends FreLangElement>(name: string | T, typeName: string): MetaElementReference<T> {
+    public static create<T extends FreMetaLangElement>(name: string | T, typeName: string): MetaElementReference<T> {
         const result = new MetaElementReference(null, typeName);
         if (typeof name === "string") {
             result.name = name;
@@ -23,7 +23,7 @@ export class MetaElementReference<T extends FreLangElement> {
     // tslint:disable-next-line:variable-name
     private _FRE_referred: T = null;
 
-    public owner: FreDefinitionElement;
+    public owner: FreMetaDefinitionElement;
     public location: ParseLocation;
     public aglParseLocation: FreParseLocation;
 

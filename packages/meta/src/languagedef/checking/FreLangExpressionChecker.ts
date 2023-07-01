@@ -1,6 +1,6 @@
 import { Checker, MetaLogger, CheckRunner, ParseLocationUtil } from "../../utils";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../parser/LanguageExpressionTester";
-import { FreLanguage, FreClassifier, FreLimitedConcept, FreInstance, FreLangExp,
+import { FreMetaLanguage, FreMetaClassifier, FreMetaLimitedConcept, FreMetaInstance, FreLangExp,
     FreLangSelfExp,
     FreLangAppliedFeatureExp,
     FreLangConceptExp,
@@ -20,7 +20,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     strictUseOfSelf: boolean = true; // if true, then a ThisExpression must have an appliedfeature
     runner = new CheckRunner(this.errors, this.warnings);
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage) {
         super(language);
     }
 
@@ -63,7 +63,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     }
 
     // exp
-    public checkLangExp(langExp: FreLangExp, enclosingConcept: FreClassifier) {
+    public checkLangExp(langExp: FreLangExp, enclosingConcept: FreMetaClassifier) {
         if (!enclosingConcept) {
             LOGGER.error("enclosingConcept is null in 'checkLangExp'.");
             return;
@@ -96,20 +96,20 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
             error: `Cannot find limited concept ${langExp.sourceName} ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
                 this.runner.nestedCheck( {
-                    check: myLimitedConcept instanceof FreLimitedConcept,
+                    check: myLimitedConcept instanceof FreMetaLimitedConcept,
                     error: `Concept ${langExp.sourceName} does not defined any instances ${ParseLocationUtil.location(langExp)}.`,
                     whenOk: () => {
                         this.runner.nestedCheck( {
                             check: !!langExp.instanceName,
                             error: `A limited concept expression should have an instance name ${ParseLocationUtil.location(langExp)}.`,
                             whenOk: () => {
-                                const foundInstance = (myLimitedConcept as FreLimitedConcept).instances.find(l => l.name === langExp.instanceName);
+                                const foundInstance = (myLimitedConcept as FreMetaLimitedConcept).instances.find(l => l.name === langExp.instanceName);
                                 this.runner.simpleCheck(!!foundInstance,
                                     `${langExp.instanceName} is not a predefined instance of ${myLimitedConcept.name} ` +
                                             `${ParseLocationUtil.location(langExp)}.`
                                 );
                                 if (!!foundInstance) {
-                                    langExp.$referredElement = MetaElementReference.create<FreInstance>(foundInstance, "FreInstance");
+                                    langExp.$referredElement = MetaElementReference.create<FreMetaInstance>(foundInstance, "FreInstance");
                                 }
                             }
                         });
@@ -120,9 +120,9 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     }
 
     // self.XXX
-    private checkSelfExpression(langExp: FreLangSelfExp, enclosingConcept: FreClassifier) {
+    private checkSelfExpression(langExp: FreLangSelfExp, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("checkSelfExpression " + langExp?.toFreString());
-        langExp.$referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreConcept");
+        langExp.$referredElement = MetaElementReference.create<FreMetaClassifier>(enclosingConcept, "FreConcept");
         langExp.$referredElement.owner = langExp;
         if (this.strictUseOfSelf) {
             this.runner.nestedCheck(
@@ -139,21 +139,21 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     }
 
     // something.XXX -- may not occur, except when the expression is 'owner'
-    private checkConceptExpression(langExp: FreLangConceptExp, enclosingConcept: FreClassifier) {
+    private checkConceptExpression(langExp: FreLangConceptExp, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("checkConceptExpression " + langExp?.toFreString());
         // check if the keyword 'owner' was used
         this.runner.nestedCheck( {
             check: langExp.sourceName === containerKeyword,
             error: `Expression should start with 'self' ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
-                langExp.$referredElement = MetaElementReference.create<FreClassifier>(enclosingConcept, "FreClassifier");
+                langExp.$referredElement = MetaElementReference.create<FreMetaClassifier>(enclosingConcept, "FreClassifier");
                 langExp.$referredElement.owner = langExp;
             }
         });
     }
 
     // someFunction( XXX, YYY )
-    private checkFunctionCallExpression(langExp: FreLangFunctionCallExp, enclosingConcept: FreClassifier) {
+    private checkFunctionCallExpression(langExp: FreLangFunctionCallExp, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("checkFunctionCallExpression " + langExp?.toFreString());
         const functionName = validFunctionNames.find(name => name === langExp.sourceName);
         // TODO ??? set langExp.referredElement to one of the predefined functions
@@ -161,7 +161,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
             check: !!functionName,
             error: `${langExp.sourceName} is not a valid function ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
-                let functionType: FreClassifier = null;
+                let functionType: FreMetaClassifier = null;
                 if (langExp.sourceName === validFunctionNames[2]) { // "typeof"
                     this.runner.nestedCheck({
                         check: langExp.actualparams.length === 1,
@@ -187,7 +187,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                                     error: `Cannot find reference to ${p.sourceName} ${ParseLocationUtil.location(langExp)}`,
                                     whenOk: () => {
                                         functionType = foundClassifier;
-                                        p.$referredElement = MetaElementReference.create<FreClassifier>(foundClassifier, "FreClassifier");
+                                        p.$referredElement = MetaElementReference.create<FreMetaClassifier>(foundClassifier, "FreClassifier");
                                         p.$referredElement.owner = p;
                                     }
                                 });
@@ -217,7 +217,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     }
 
     // .XXX
-    private checkAppliedFeatureExp(feat: FreLangAppliedFeatureExp, enclosingConcept: FreClassifier) {
+    private checkAppliedFeatureExp(feat: FreLangAppliedFeatureExp, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("checkAppliedFeatureExp " + feat?.toFreString());
         if (!enclosingConcept) {
             LOGGER.error("enclosingConcept is null in 'checkAppliedFeatureExp'.");

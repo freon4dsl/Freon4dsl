@@ -1,12 +1,12 @@
 import { Names, FREON_CORE, GenerationUtil, ListUtil } from "../../../utils";
 import {
-    FreClassifier,
-    FreConcept,
-    FreConceptProperty,
-    FrePrimitiveProperty,
-    FreProperty,
-    FrePrimitiveType,
-    FreInterface
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaConceptProperty,
+    FreMetaPrimitiveProperty,
+    FreMetaProperty,
+    FreMetaPrimitiveType,
+    FreMetaInterface
 } from "../../metalanguage";
 
 export class ConceptUtils {
@@ -30,37 +30,37 @@ export class ConceptUtils {
                 parseLocation: ${Names.FreParseLocation};    // if relevant, the location of this element within the source from which it is parsed`;
     }
 
-    public static makePrimitiveProperty(freProp: FrePrimitiveProperty): string {
+    public static makePrimitiveProperty(freProp: FreMetaPrimitiveProperty): string {
         const comment = "// implementation of " + freProp.name;
         const arrayType = freProp.isList ? "[]" : "";
         return `${freProp.name} : ${GenerationUtil.getBaseTypeAsString(freProp)}${arrayType}; \t${comment}`;
     }
 
-    private static initializer(freProp: FrePrimitiveProperty): string {
+    private static initializer(freProp: FreMetaPrimitiveProperty): string {
         let initializer = "";
-        const myType: FreClassifier = freProp.type;
+        const myType: FreMetaClassifier = freProp.type;
         if (!freProp.isList) {
             switch (myType) {
-                case FrePrimitiveType.identifier: {
+                case FreMetaPrimitiveType.identifier: {
                     initializer = `this.${freProp.name} = \"${freProp.initialValue ? freProp.initialValue : ``}\"`;
                     break;
                 }
-                case FrePrimitiveType.string: {
+                case FreMetaPrimitiveType.string: {
                     initializer = `this.${freProp.name} = \"${freProp.initialValue ? freProp.initialValue : ``}\"`;
                     break;
                 }
-                case FrePrimitiveType.number: {
+                case FreMetaPrimitiveType.number: {
                     initializer = `this.${freProp.name} = ${freProp.initialValue ? freProp.initialValue : `0`}`;
                     break;
                 }
-                case FrePrimitiveType.boolean: {
+                case FreMetaPrimitiveType.boolean: {
                     initializer = `this.${freProp.name} = ${freProp.initialValue ? freProp.initialValue : `false`}`;
                     break;
                 }
             }
         } else {
             if (!!freProp.initialValueList) {
-                if (myType === FrePrimitiveType.string || myType === FrePrimitiveType.identifier) {
+                if (myType === FreMetaPrimitiveType.string || myType === FreMetaPrimitiveType.identifier) {
                     initializer = `${freProp.initialValueList.map(elem => `this.${freProp.name}.push(\"${elem}\")`).join("\n ")}`;
                 } else {
                     initializer = `${freProp.initialValueList.map(elem => `this.${freProp.name}.push(${elem})`).join("\n ")}`;
@@ -70,19 +70,19 @@ export class ConceptUtils {
         return initializer;
     }
 
-    public static makePartProperty(freProp: FreConceptProperty): string {
+    public static makePartProperty(freProp: FreMetaConceptProperty): string {
         const comment = "// implementation of part '" + freProp.name + "'";
         const arrayType = freProp.isList ? "[]" : "";
         return `${freProp.name} : ${Names.classifier(freProp.type)}${arrayType}; ${comment}`;
     }
 
-    public static makeReferenceProperty(freProp: FreConceptProperty): string {
+    public static makeReferenceProperty(freProp: FreMetaConceptProperty): string {
         const comment = "// implementation of reference '" + freProp.name + "'";
         const arrayType = freProp.isList ? "[]" : "";
         return `${freProp.name} : ${Names.FreNodeReference}<${Names.classifier(freProp.type)}>${arrayType}; ${comment}`;
     }
 
-    public static makeConvenienceMethods(list: FreConceptProperty[]): string {
+    public static makeConvenienceMethods(list: FreMetaConceptProperty[]): string {
         let result: string = "";
         for (const prop of list) {
             if (!prop.isPart) {
@@ -125,12 +125,12 @@ export class ConceptUtils {
         return result;
     }
 
-    public static makeConstructor(hasSuper: boolean, allProps: FreProperty[], importsFromCore: string[]): string {
+    public static makeConstructor(hasSuper: boolean, allProps: FreMetaProperty[], importsFromCore: string[]): string {
         // console.log("found overriding props: " + allProps.filter(p => p.isOverriding)
         // .map(p => `${p.name} of ${p.owningClassifier.name} [${p.location?.filename}]`).join("\n\t"))
         // console.log("found NON overriding props: " + allProps.filter(p => !p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
-        const allButPrimitiveProps: FreConceptProperty[] = allProps.filter(p => !p.isPrimitive && !p.implementedInBase) as FreConceptProperty[];
-        const allPrimitiveProps: FrePrimitiveProperty[] = allProps.filter(p => p.isPrimitive && !p.implementedInBase) as FrePrimitiveProperty[];
+        const allButPrimitiveProps: FreMetaConceptProperty[] = allProps.filter(p => !p.isPrimitive && !p.implementedInBase) as FreMetaConceptProperty[];
+        const allPrimitiveProps: FreMetaPrimitiveProperty[] = allProps.filter(p => p.isPrimitive && !p.implementedInBase) as FreMetaPrimitiveProperty[];
 
         // here we know that FreUtils needs to be imported => add to imports
         if (!hasSuper) {
@@ -223,7 +223,7 @@ export class ConceptUtils {
                 }`;
     }
 
-    public static makeStaticCreateMethod(concept: FreClassifier, myName: string): string {
+    public static makeStaticCreateMethod(concept: FreMetaClassifier, myName: string): string {
         return `/**
                  * A convenience method that creates an instance of this class
                  * based on the properties defined in 'data'.
@@ -250,7 +250,7 @@ export class ConceptUtils {
                 }`;
     }
 
-    public static makeCopyMethod(concept: FreClassifier, myName: string, isAbstract: boolean): string {
+    public static makeCopyMethod(concept: FreMetaClassifier, myName: string, isAbstract: boolean): string {
         const comment = `/**
                  * A convenience method that copies this instance into a new object.
                  */`;
@@ -298,12 +298,12 @@ export class ConceptUtils {
         return result;
     }
 
-    public static makeMatchMethod(hasSuper: boolean, concept: FreClassifier, myName: string, importsFromCore: string[]): string {
-        let propsToDo: FreProperty[];
-        if (hasSuper && concept instanceof FreConcept) {
-            propsToDo = (concept as FreConcept).implementedProperties();
-        } else if (hasSuper && concept instanceof FreInterface) {
-            propsToDo = (concept as FreInterface).properties;
+    public static makeMatchMethod(hasSuper: boolean, concept: FreMetaClassifier, myName: string, importsFromCore: string[]): string {
+        let propsToDo: FreMetaProperty[];
+        if (hasSuper && concept instanceof FreMetaConcept) {
+            propsToDo = (concept as FreMetaConcept).implementedProperties();
+        } else if (hasSuper && concept instanceof FreMetaInterface) {
+            propsToDo = (concept as FreMetaInterface).properties;
         } else {
             propsToDo = concept.allProperties();
         }
@@ -321,7 +321,7 @@ export class ConceptUtils {
                 }`;
     }
 
-    private static makeMatchEntry(freProperty: FreProperty, importsFromCore: string[]): string {
+    private static makeMatchEntry(freProperty: FreMetaProperty, importsFromCore: string[]): string {
         let result: string;
         if (freProperty.isPrimitive) {
             if (freProperty.isList) {
@@ -331,7 +331,7 @@ export class ConceptUtils {
                                 result = result && matchPrimitiveList(this.${freProperty.name}, toBeMatched.${freProperty.name});
                           }`;
             } else {
-                if (freProperty.type === FrePrimitiveType.string || freProperty.type === FrePrimitiveType.identifier) {
+                if (freProperty.type === FreMetaPrimitiveType.string || freProperty.type === FreMetaPrimitiveType.identifier) {
                     result = `if (result && toBeMatched.${freProperty.name} !== null && toBeMatched.${freProperty.name} !== undefined && toBeMatched.${freProperty.name}.length > 0) {
                                 result = result && this.${freProperty.name} === toBeMatched.${freProperty.name};
                           }`;

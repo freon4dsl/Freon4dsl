@@ -1,9 +1,9 @@
 import { Names, FREON_CORE } from "../../../utils";
-import { FreLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 
 export class CustomProjectionTemplate {
 
-    generate(language: FreLanguage): string {
+    generate(language: FreMetaLanguage): string {
         return `
             import { ${Names.FreNode}, ${Names.Box}, ${Names.FreProjection}, ${Names.FreTableDefinition} } from "${FREON_CORE}";
 

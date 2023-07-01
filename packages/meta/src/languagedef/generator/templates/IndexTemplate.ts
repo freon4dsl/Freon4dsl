@@ -1,9 +1,9 @@
-import { FreLanguage } from "../../metalanguage";
+import { FreMetaLanguage } from "../../metalanguage";
 import { Names, GenerationUtil } from "../../../utils";
 
 export class IndexTemplate {
 
-    generateIndex(language: FreLanguage): string {
+    generateIndex(language: FreMetaLanguage): string {
 
         const tmp: string[] = [];
         tmp.push(Names.classifier(language.modelConcept));
@@ -37,7 +37,7 @@ export class IndexTemplate {
         } from "./internal"`;
     }
 
-    generateInternal(language: FreLanguage): string {
+    generateInternal(language: FreMetaLanguage): string {
 
         const tmp: string[] = [];
         tmp.push(Names.classifier(language.modelConcept));
@@ -74,7 +74,7 @@ export class IndexTemplate {
         `;
     }
 
-    generateUtilsIndex(language: FreLanguage): string {
+    generateUtilsIndex(language: FreMetaLanguage): string {
         return `export * from "./${Names.workerInterface(language)}";
                 export * from "./${Names.walker(language)}";
                 export * from "./${Names.defaultWorker(language)}";`;

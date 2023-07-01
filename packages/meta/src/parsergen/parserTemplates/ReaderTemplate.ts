@@ -1,4 +1,4 @@
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { FreEditUnit } from "../../editordef/metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, FREON_CORE } from "../../utils";
 
@@ -8,7 +8,7 @@ export class ReaderTemplate {
      * Returns a string representation of a generic parser for 'language'. This parser is able
      * to handle every modelunit in the language.
      */
-    public generateReader(language: FreLanguage, editDef: FreEditUnit, relativePath: string): string {
+    public generateReader(language: FreMetaLanguage, editDef: FreEditUnit, relativePath: string): string {
         const semanticAnalyser: string = Names.semanticAnalyser(language);
         const syntaxAnalyser: string = Names.syntaxAnalyser(language);
 

@@ -1,7 +1,7 @@
 import fs from "fs";
 import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator";
 import { FreInterpreterDef } from "../interpretergen/metalanguage/FreInterpreterDef";
-import { FreLanguage } from "../languagedef/metalanguage";
+import { FreMetaLanguage } from "../languagedef/metalanguage";
 import { FreEditUnit } from "../editordef/metalanguage";
 import { FreEditParser } from "../editordef/parser/FreEditParser";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
@@ -32,7 +32,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
     protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
     protected interpreterGenerator: InterpreterGenerator = new InterpreterGenerator();
-    protected language: FreLanguage;
+    protected language: FreMetaLanguage;
     private diagramGenerator: DiagramGenerator = new DiagramGenerator();
 
     public constructor() {
@@ -209,7 +209,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         this.languageGenerator.generate(this.language);
     };
 
-    private processIds(language: FreLanguage, json: Object): void {
+    private processIds(language: FreMetaLanguage, json: Object): void {
           const jsonLanguage = json["language"];
           const languageId = json["id"];
           if (typeof languageId === "string") {
