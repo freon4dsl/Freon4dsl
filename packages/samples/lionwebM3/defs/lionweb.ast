@@ -10,7 +10,6 @@ interface INamed {
 }
 
 interface NamespaceProvider {
-    dummy: string;
 }
 
 modelunit Language implements INamed, NamespaceProvider {

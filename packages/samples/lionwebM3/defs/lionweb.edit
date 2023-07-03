@@ -7,8 +7,8 @@ referenceSeparator [.] // is the string that separates the names in a path name,
 
 Language {
     [
-    language ${name}
-
+    language ${name} key ${key}
+    version ${version}
     dependsOn languages: ${dependsOn}
 
     ${elements vertical}
@@ -40,8 +40,15 @@ Feature {[
 ]}
 
 Property {[
-    [=>Feature]
-    type: ${type}
+    ${self.optional [? | #]} property ${name} (${key}): ${type}
+]}
+
+Reference {[
+    ${self.optional [? | #]} reference ${name} (${key}): ${type} ${self.multiple [* | 1]}
+]}
+
+Containment {[
+    ${self.optional [? | #]} contains ${name} (${key}): ${type} ${self.multiple [* | 1]}
 ]}
 
 

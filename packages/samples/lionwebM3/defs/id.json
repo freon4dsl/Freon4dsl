@@ -3,164 +3,164 @@
     "concepts": [
         {
             "concept": "Language",
-            "id": "-id-Language",
+            "id": "Language",
             "properties": [
                 {
                     "name": "version",
-                    "id": "-id-Language-version"
+                    "id": "Language-version"
                 },
                 {
                     "name": "key",
-                    "id": "-id-Language-key"
+                    "id": "Language-key"
                 },
                 {
                     "name": "elements",
-                    "id"  : "-id-Language-elements"
+                    "id"  : "Language-elements"
                 },
                 {
                     "name": "dependsOn",
-                    "id"  : "-id-Language-dependsOn"
+                    "id"  : "Language-dependsOn"
                 }
             ]
         },
         {
             "concept": "LanguageElement",
-            "id": "-id-LanguageElement",
+            "id": "LanguageElement",
             "properties": []
         },
         {
             "concept": "PrimitiveType",
-            "id": "-id-PrimitiveType",
+            "id": "PrimitiveType",
             "properties": []
         },
         {
             "concept": "Property",
-            "id": "-id-Property",
+            "id": "Property",
             "properties": [
                 {
                     "name": "type",
-                    "id"  : "-id-Property-type"
+                    "id"  : "Property-type"
                 }
             ]
         },
         {
             "concept": "NamespacedEntity",
-            "id":"-id-NamespacedEntity",
+            "id":"NamespacedEntity",
             "properties": [
                 {
                     "name": "key",
-                    "id": "-id-NamespacedEntity-key"
+                    "id": "NamespacedEntity-key"
                 }
             ]
         },
         {
             "concept": "NamespaceProvider",
-            "id":"-id-NamespaceProvider",
+            "id":"NamespaceProvider",
             "properties": []
         },
         {
             "concept": "Reference",
-            "id": "-id-Reference",
+            "id": "Reference",
             "properties": []
         },
         {
             "concept": "NamespacedEntity",
-            "id": "-id-NamespacedEntity",
+            "id": "NamespacedEntity",
             "properties": [
                 {
                     "name": "key",
-                    "id": "-id-NamespacedEntity-key"
+                    "id": "NamespacedEntity-key"
                 }
             ]
         },
         {
             "concept": "Concept",
-            "id": "-id-Concept",
+            "id": "Concept",
             "properties": [
                 {
                     "name": "abstract",
-                    "id": "-id-Concept-abstract"
+                    "id": "Concept-abstract"
                 },
                 {
                     "name": "extends",
-                    "id": "-id-Concept-extends"
+                    "id": "Concept-extends"
                 },
                 {
                     "name": "implements",
-                    "id": "-id-Concept-implements"
+                    "id": "Concept-implements"
                 },
                 {
                     "name": "partition",
-                    "id": "-id-Concept-partition"
+                    "id": "Concept-partition"
                 }
             ]
         },
         {
             "concept": "Link",
-            "id": "-id-Link",
+            "id": "Link",
             "properties": [
                 {
                     "name": "multiple",
-                    "id": "-id-Link-multiple"
+                    "id": "Link-multiple"
                 },
                 {
                     "name": "type",
-                    "id": "-id-Link-type"
+                    "id": "Link-type"
                 }
             ]
         },
         {
             "concept": "ConceptInterface",
-            "id": "-id-ConceptInterface",
+            "id": "ConceptInterface",
             "properties": [
                 {
                     "name": "extends",
-                    "id": "-id-ConceptInterface-extends"
+                    "id": "ConceptInterface-extends"
                 }
             ]
         },
         {
             "concept": "Containment",
-            "id": "-id-Containment",
+            "id": "Containment",
             "properties": []
         },
         {
             "concept": "Datatype",
-            "id": "-id-DataType",
+            "id": "DataType",
             "properties": []
         },
         {
             "concept": "Enumeration",
-            "id": "-id-Enumeration",
+            "id": "Enumeration",
             "properties": [
                 {
                     "name": "literals",
-                    "id": "-id-Enumeration-literals"
+                    "id": "Enumeration-literals"
                 }
             ]
         },
         {
             "concept": "EnumerationLiteral",
-            "id": "-id-EnumerationLiteral",
+            "id": "EnumerationLiteral",
             "properties": []
         },
         {
             "concept": "Feature",
-            "id": "-id-Feature",
+            "id": "Feature",
             "properties": [
                 {
                     "name":"optional",
-                    "id":"-id-Feature-optional"
+                    "id":"Feature-optional"
                 }
             ]
         },
         {
             "concept": "FeaturesContainer",
-            "id": "-id-FeaturesContainer",
+            "id": "FeaturesContainer",
             "properties": [
                 {
                     "name": "features",
-                    "id": "-id-FeaturesContainer-features"
+                    "id": "FeaturesContainer-features"
                 }
             ]
         }
