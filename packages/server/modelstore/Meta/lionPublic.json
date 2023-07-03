@@ -1,0 +1,407 @@
+{
+   "serializationFormatVersion": "1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "ID-6",
+         "concept": {
+            "key": "LIonCore_M3_Language",
+            "version": "1.0",
+            "language": "LIonCoreM3"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "key",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "key": "version",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "lion"
+            },
+            {
+               "property": {
+                  "key": "dummy",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": ""
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "LIonCore_M3_Language_elements",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "children": [
+                  "ID-7",
+                  "ID-302"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "dependsOn",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "targets": []
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-7",
+         "concept": {
+            "key": "LIonCore_M3_Concept",
+            "version": "1.0",
+            "language": "LIonCoreM3"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "LIonCore_M3_Concept_abstract",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "key": "partition",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "key": "dummy",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "key": "key",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "FeaturesContainer"
+            },
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "FeaturesContainer"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "LIonCore_M3_FeaturesContainer_features",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "children": [
+                  "ID-8",
+                  "ID-1",
+                  "ID-301"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "LIonCore_M3_Concept_extends",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "targets": [
+                  {}
+               ]
+            },
+            {
+               "reference": {
+                  "key": "LIonCore_M3_Concept_implements",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "targets": []
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-8",
+         "concept": {
+            "key": "LIonCore_M3_Property",
+            "version": "1.0",
+            "language": "LIonCoreM3"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "LIonCore_M3_Feature_optional",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "key": "key",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": ""
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "key": "LIonCore_M3_Property_type",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-201",
+                     "resolveInfo": "Boolean"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-1",
+         "concept": {
+            "key": "LIonCore_M3_Reference",
+            "version": "1.0",
+            "language": "LIonCoreM3"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "LIonCore_M3_Link_multiple",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "key": "LIonCore_M3_Feature_optional",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "key": "key",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "ref"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "key": "LIonCore_M3_Link_type",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-7",
+                     "resolveInfo": "FeaturesContainer"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-301",
+         "concept": {
+            "key": "LIonCore_M3_Containment",
+            "version": "1.0",
+            "language": "LIonCoreM3"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "LIonCore_M3_Link_multiple",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "key": "LIonCore_M3_Feature_optional",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "key": "key",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "contain"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "key": "LIonCore_M3_Link_type",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-7",
+                     "resolveInfo": "FeaturesContainer"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-302",
+         "concept": {
+            "key": "LIonCore_M3_Concept",
+            "version": "1.0",
+            "language": "LIonCoreM3"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "LIonCore_M3_Concept_abstract",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "key": "partition",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "key": "dummy",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "key": "key",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "value": "fewq"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "LIonCore_M3_FeaturesContainer_features",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "LIonCore_M3_Concept_extends",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "targets": [
+                  {}
+               ]
+            },
+            {
+               "reference": {
+                  "key": "LIonCore_M3_Concept_implements",
+                  "version": "1.0",
+                  "language": "LIonCoreM3"
+               },
+               "targets": []
+            }
+         ],
+         "parent": null
+      }
+   ]
+}
