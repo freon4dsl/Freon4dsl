@@ -5,19 +5,45 @@ boolean [YES | NO] // are the strings used to display a boolean value
 referenceSeparator [.] // is the string that separates the names in a path name, e.g. pack1.cls3.part
 
 
-Metamodel {
+Language {
     [
-    metamodel ${name}
+    language ${name}
 
-    ${elements}
+    dependsOn languages: ${dependsOn}
+
+    ${elements vertical}
     ]
-    trigger = "metamodel"
+    trigger = "language"
 }
 
 Concept {
 [
     concept ${name} abstract ${abstract} {
+        key: ${key}
+        partition: ${partition}
+        extends: ${extends}
+        implements: ${implements}
         ${features vertical }
     }
-]
-}
+]}
+
+ConceptInterface {[
+    interface ${name} extends ${extends} {
+        key: ${key}
+        ${features vertical }
+]}
+
+Feature {[
+    name: ${name}
+    key: ${key}
+    optional: ${optional}
+]}
+
+Property {[
+    [=>Feature]
+    type: ${type}
+]}
+
+
+
+

@@ -1,15 +1,17 @@
-language LIonWebM3
+ language LIonCoreM3
 
-model LIonWebmetaModel {
+model LIonCoreM3 {
     name: identifier;
-    units: Language;
+    units: Language[];
 }
 
 interface INamed {
     name: identifier;
 }
 
-interface NamespaceProvider {}
+interface NamespaceProvider {
+    dummy: string;
+}
 
 modelunit Language implements INamed, NamespaceProvider {
     key: string;
@@ -24,8 +26,6 @@ abstract concept LanguageElement base NamespacedEntity {
 }
 
 concept Property base Feature {
-    optional: boolean;
-    simpleName: string;
     reference type: Datatype;
  }
 
@@ -65,7 +65,12 @@ concept Reference base Link {
 abstract concept Datatype base LanguageElement {
 }
 
-concept PrimitiveType base Datatype {}
+limited PrimitiveType base Datatype {
+    Boolean;
+    String;
+    Integer;
+    JSON;
+}
 
 concept Enumeration base Datatype implements NamespaceProvider {
     literals: EnumerationLiteral[];
