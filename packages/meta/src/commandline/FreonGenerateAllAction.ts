@@ -220,25 +220,48 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
           if (!Array.isArray(concepts)) {
               throw new Error("id.json 'concepts' property should be an array");
           }
-          for(const jsonConcept of concepts) {
-              console.log("Concept " + jsonConcept["concept"] + " has id " + jsonConcept["id"]);
-              const concept = language.findClassifier(jsonConcept["concept"]);
-              concept.id = jsonConcept["id"];
-              const properties = jsonConcept["properties"];
-              if (!Array.isArray(properties)) {
-                  throw new Error("id.json 'properties' property should be an array");
-              }
-              for(const jsonProperty of properties) {
-                  const jsonPropertyName = jsonProperty["name"];
-                  console.log("    Property " + jsonPropertyName + " has id " + jsonProperty["id"]);
-                  const property = concept.allProperties().find(p => p.name === jsonPropertyName );
-                  if (property === undefined || property === null) {
-                      console.error("Property " + jsonPropertyName + " does not exist");
-                  } else {
-                      property.id = jsonProperty["id"];
-                  }
-              }
-          }
+        for(const jsonConcept of concepts) {
+            LOG2USER.log("Concept " + jsonConcept["concept"] + " has id " + jsonConcept["id"]);
+            const concept = language.findClassifier(jsonConcept["concept"]);
+            concept.id = jsonConcept["id"];
+            const properties = jsonConcept["properties"];
+            if (!Array.isArray(properties)) {
+                throw new Error("id.json 'properties' property should be an array");
+            }
+            for(const jsonProperty of properties) {
+                const jsonPropertyName = jsonProperty["name"];
+                LOG2USER.log("    Property " + jsonPropertyName + " has id " + jsonProperty["id"]);
+                const property = concept.allProperties().find(p => p.name === jsonPropertyName );
+                if (property === undefined || property === null) {
+                    LOG2USER.error("Property " + jsonPropertyName + " does not exist");
+                } else {
+                    property.id = jsonProperty["id"];
+                }
+            }
+        }
+        const interfaces = json["interfaces"];
+        if (!Array.isArray(interfaces)) {
+            throw new Error("id.json 'interfaces' property should be an array");
+        }
+        for(const jsonInterface of interfaces) {
+            LOG2USER.log("Interface " + jsonInterface["interface"] + " has id " + jsonInterface["id"]);
+            const intface = language.findInterface(jsonInterface["interface"]);
+            intface.id = jsonInterface["id"];
+            const properties = jsonInterface["properties"];
+            if (!Array.isArray(properties)) {
+                throw new Error("id.json 'properties' property should be an array");
+            }
+            for(const jsonProperty of properties) {
+                const jsonPropertyName = jsonProperty["name"];
+                LOG2USER.log("    Property " + jsonPropertyName + " has id " + jsonProperty["id"]);
+                const property = intface.allProperties().find(p => p.name === jsonPropertyName );
+                if (property === undefined || property === null) {
+                    LOG2USER.error("Property " + jsonPropertyName + " does not exist");
+                } else {
+                    property.id = jsonProperty["id"];
+                }
+            }
+        }
     }
 
     private generateDiagrams = () => {
