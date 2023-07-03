@@ -3,14 +3,15 @@
     "calculator",
     "RulesLanguage",
     "DocuProject",
-"calculator",
-"Examples",
-"ExpressionLibrary",
-"ExpTest",
-"graphviz",
-"heat",
-"Json",
-"MpsExpressions",
-"octopus"
+    "Education",
+    "calculator",
+    "Examples",
+    "ExpressionLibrary",
+    "ExpTest",
+    "graphviz",
+    "heat",
+    "Json",
+    "MpsExpressions",
+    "octopus"
   ]
 }
