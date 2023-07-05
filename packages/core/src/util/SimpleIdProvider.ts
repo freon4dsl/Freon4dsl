@@ -2,7 +2,7 @@ import { IdProvider } from "./IdProvider";
 
 export class SimpleIdProvider implements IdProvider {
     private readonly prefix: string;
-    private latest: number = 200;
+    private latest: number = 0;
     private usedIds: string[] = [];
 
     constructor(prefix: string) {
