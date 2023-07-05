@@ -138,6 +138,8 @@ export class FreLionwebSerializer implements FreSerializer {
             console.log(`2 Cannot read json: ${conceptMetaPointer.key} unknown.`);
             return null;
         }
+        // Store id, so it will not be used for new instances
+        FreUtils.nodeIdProvider.usedId(tsObject.freId());
         this.convertPrimitiveProperties(tsObject, conceptMetaPointer.key, lwNode);
         const parsedChildren = this.convertChildProperties(tsObject, conceptMetaPointer.key, lwNode);
         const parsedReferences = this.convertReferenceProperties(tsObject, conceptMetaPointer.key, lwNode);
