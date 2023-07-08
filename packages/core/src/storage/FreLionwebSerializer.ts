@@ -1,6 +1,6 @@
 import { FreNamedNode, FreNode, FreNodeReference } from "../ast";
 import { FreLanguage, FreLanguageProperty } from "../language";
-import { FreUtils, isNullOrUndefined } from "../util";
+import { FreUtils, isNullOrUndefined, jsonAsString } from "../util";
 import { FreSerializer } from "./FreSerializer";
 import { createLwNode, isLwChunk, LwChild, LwChunk, LwMetaPointer, LwNode, LwReference } from "./LionwebM3";
 
@@ -154,6 +154,9 @@ export class FreLionwebSerializer implements FreSerializer {
             const jsonMetaPointer = jsonProperty.property;
             const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
             const property: FreLanguageProperty = this.language.classifierPropertyById(concept, propertyMetaPointer.key);
+            if (property === undefined || property === null) {
+                console.error("NULL PROPERTY")
+            }
             if (isNullOrUndefined(property)) {
                 // FIXME known prpblems
                 if( propertyMetaPointer.key !== "qualifiedName")
@@ -308,6 +311,7 @@ export class FreLionwebSerializer implements FreSerializer {
         result = createLwNode();
         idMap[freNode.freId()] = result;
         result.id = freNode.freId();
+        result.parent = freNode.freOwner().freId();
 
         let conceptKey: string;
         const concept = this.language.concept(typename);
@@ -338,10 +342,11 @@ export class FreLionwebSerializer implements FreSerializer {
     }
 
     private createMetaPointer(key: string) {
+        const result = {};
         return {
-            key: key,
-            version: "1.0",
-            language: this.language.id
+            language: this.language.id,
+            version: "1",
+            key: key
         };
     }
 
@@ -378,16 +383,16 @@ export class FreLionwebSerializer implements FreSerializer {
                     const references: FreNodeReference<FreNamedNode>[] = parentNode[p.name];
                     for (const ref of references) {
                         lwReference.targets.push({
-                            reference: ref?.referred?.freId(),
-                            resolveInfo: ref["name"]
+                            resolveInfo: ref["name"],
+                            reference: ref?.referred?.freId()
                         });
                     }
                 } else {
                     // single reference
                     const ref: FreNodeReference<FreNamedNode> = parentNode[p.name];
                     lwReference.targets.push({
-                        reference: ref?.referred?.freId(),
-                        resolveInfo: !!ref ? ref["name"] : null
+                        resolveInfo: !!ref ? ref["name"] : null,
+                        reference: ref?.referred?.freId()
                     });
                 }
                 result.references.push(lwReference);
