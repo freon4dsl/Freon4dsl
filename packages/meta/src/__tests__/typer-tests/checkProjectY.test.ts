@@ -32,7 +32,7 @@ function testTypeUnit(typeUnit: TyperDef) {
 
 describe("Checking new typer", () => {
     const testdir = "src/__tests__/typer-tests/correctDefFiles/";
-    const langParser = new LanguageParser();
+    const langParser = new LanguageParser(undefined);
 
     let parser: FreTyperMerger;
     let language: FreMetaLanguage;

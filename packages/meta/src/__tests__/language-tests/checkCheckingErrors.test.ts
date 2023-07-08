@@ -3,7 +3,7 @@ import { MetaLogger } from "../../utils";
 
 describe("Checking language parser on checking errors", () => {
     const testdir = "src/__tests__/language-tests/faultyDefFiles/checking-errors/";
-    const parser = new LanguageParser();
+    const parser = new LanguageParser(undefined);
     const checker = parser.checker;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();

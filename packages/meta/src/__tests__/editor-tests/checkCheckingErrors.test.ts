@@ -14,7 +14,7 @@ describe("Checking editor definition ", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
+            language = new LanguageParser(undefined).parse("src/__tests__/commonAstFiles/test-language.ast");
             parser = new FreEditParser(language);
             checker = parser.checker;
         } catch (e) {

@@ -5,7 +5,7 @@ import { FreMetaLanguage } from "../../languagedef/metalanguage";
 // The same tests as in property-inheritance1, only now all property types are interfaces
 describe("Checking property inheritance", () => {
     const testdir = "src/__tests__/language-tests/faultyDefFiles/property-inheritance2/";
-    const parser = new LanguageParser();
+    const parser = new LanguageParser(undefined);
     const checker = parser.checker;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();

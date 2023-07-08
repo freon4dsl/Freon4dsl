@@ -17,7 +17,7 @@ function parseCorrectModel(parser: LanguageParser, parseFile: string) {
 // The same tests as in property-inheritance1, only now all property types are interfaces
 describe("Checking generation of virtual props", () => {
     const testdir = "src/__tests__/language-tests/faultyDefFiles/property-inheritance3/";
-    const parser = new LanguageParser();
+    const parser = new LanguageParser(undefined);
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();
 
