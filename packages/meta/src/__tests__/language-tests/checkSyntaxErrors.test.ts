@@ -2,7 +2,7 @@ import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
 
 describe("Checking language parser on syntax errors", () => {
-    const parser = new LanguageParser(undefined);
+    const parser = new LanguageParser();
     const testdir = "src/__tests__/language-tests/faultyDefFiles/syntax-errors/";
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();

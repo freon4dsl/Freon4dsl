@@ -87,7 +87,6 @@ function splitProperties(propList: FreMetaProperty[], result: FreMetaClassifier)
             result.properties.push(prop);
         }
         prop.owningClassifier = result;
-        console.log("Setting property " + result.name + "." + prop.name + " to " + LanguageCreators_idMap.getPropertyId(result.name, prop.name))
         prop.id = LanguageCreators_idMap.getPropertyId(result.name, prop.name);
         prop.key = LanguageCreators_idMap.getPropertyKey(result.name, prop.name);
     }

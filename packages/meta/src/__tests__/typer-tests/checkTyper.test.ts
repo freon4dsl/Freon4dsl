@@ -14,7 +14,7 @@ describe("Checking new typer", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser(undefined).parse(testdir + "types.ast");
+            language = new LanguageParser().parse(testdir + "types.ast");
             parser = new FreTyperMerger(language);
         } catch (e) {
             console.log("Language could not be read: " + e.stack);

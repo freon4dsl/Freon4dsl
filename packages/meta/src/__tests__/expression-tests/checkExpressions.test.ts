@@ -11,7 +11,7 @@ describe("Checking expression on referredElement", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser(undefined).parse(testdir + "testLanguage.ast");
+            language = new LanguageParser().parse(testdir + "testLanguage.ast");
         } catch (e) {
             console.log("Language could not be read");
         }

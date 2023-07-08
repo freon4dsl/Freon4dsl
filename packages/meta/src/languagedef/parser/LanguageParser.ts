@@ -15,7 +15,7 @@ const LOGGER = new MetaLogger("LanguageParser").mute();
 export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     idFile: string;
 
-    constructor(idFile: string) {
+    constructor(idFile?: string) {
         super();
         this.idFile = idFile;
         this.parser = pegjsParser;

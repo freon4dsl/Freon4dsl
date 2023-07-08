@@ -28,7 +28,7 @@ describe("Checking parser generation", () => {
     });
 
     test("on primitives", () => {
-        const langParser = new LanguageParser(undefined);
+        const langParser = new LanguageParser();
         try {
             language = langParser.parse(testdir + "test1.ast");
         } catch (e) {
@@ -52,7 +52,7 @@ describe("Checking parser generation", () => {
     });
 
     test("on single properties", () => {
-        const langParser = new LanguageParser(undefined);
+        const langParser = new LanguageParser();
         try {
             language = langParser.parse(testdir + "test2.ast");
         } catch (e) {
@@ -86,7 +86,7 @@ describe("Checking parser generation", () => {
     });
 
     test("on list properties", () => {
-        const langParser = new LanguageParser(undefined);
+        const langParser = new LanguageParser();
         try {
             language = langParser.parse(testdir + "test3.ast");
         } catch (e) {
@@ -120,7 +120,7 @@ describe("Checking parser generation", () => {
     });
 
     test("on abstract concepts and interfaces", () => {
-        const langParser = new LanguageParser(undefined);
+        const langParser = new LanguageParser();
         try {
             language = langParser.parse(testdir + "test4.ast");
         } catch (e) {
