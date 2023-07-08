@@ -71,6 +71,7 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
     }
 
     id?: string;
+    key?: string;
     language: FreMetaLanguage;
     isPublic: boolean;
     properties: FreMetaProperty[] = [];
@@ -165,6 +166,12 @@ export class FreMetaUnitDescription extends FreMetaClassifier {
         }
         return result;
     }
+
+    allPrimProperties(): FreMetaPrimitiveProperty[] {
+        const result: FreMetaPrimitiveProperty[] = this.implementedPrimProperties();
+        return result;
+    }
+
 
 }
 
@@ -429,13 +436,27 @@ export class FreMetaLimitedConcept extends FreMetaConcept {
 
 export class FreMetaProperty extends FreMetaLangElement {
     id?: string;
+    key?: string;
     isPublic: boolean;
     isOptional: boolean;
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
     implementedInBase: boolean = false;
     private $type: MetaElementReference<FreMetaClassifier>;
-    owningClassifier: FreMetaClassifier;
+    private _owningClassifier: FreMetaClassifier;
+    originalOwningClassifier: FreMetaClassifier;
+    get owningClassifier() {
+        return this._owningClassifier;
+    }
+    set owningClassifier(c: FreMetaClassifier) {
+        if (this._owningClassifier === undefined || this._owningClassifier === null) {
+            this._owningClassifier = c;
+            this.originalOwningClassifier = c;
+        } else {
+            this.originalOwningClassifier = this._owningClassifier;
+            this._owningClassifier = c;
+        }
+    }
 
     get isPrimitive(): boolean {
         return this.type instanceof FreMetaPrimitiveType;

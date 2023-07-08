@@ -97,6 +97,7 @@ export class CommonChecker {
         copy.isPart = property.isPart;
         copy.implementedInBase = false; // false because the original property comes from an interface
         copy.type = property.type;
+        copy.key = property.key;
         copy.owningClassifier = classifier;
         if (property instanceof FreMetaPrimitiveProperty) {
             classifier.primProperties.push(copy as FreMetaPrimitiveProperty);

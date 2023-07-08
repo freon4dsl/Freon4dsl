@@ -75,8 +75,10 @@ export class LanguageTemplate {
                     const modelunit =             {
                         typeName: "${Names.classifier(modelunit)}",
                         id: ${modelunit.id !== undefined ? `"${modelunit.id}"` : `"${Names.classifier(modelunit)}"`},
+                        key: "${modelunit.key !== undefined ? modelunit.key : Names.classifier(modelunit)}",
                         isNamedElement: true,
                         fileExtension: "${modelunit.fileExtension}",
+                        subConceptNames: [], // Nothing yet, but may change in the future
                         constructor: (id?: string) => { return new MyLanguage.${Names.classifier(modelunit)}(id); },
                         properties: new Map< string, FreLanguageProperty>(),
                     }
@@ -84,6 +86,7 @@ export class LanguageTemplate {
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
                                         id: ${prop.id !== undefined ? `"${prop.id}"` : `"${prop.name}"`},
+                                        key: "${prop.key !== undefined ? prop.key : prop.originalOwningClassifier.name + "-" + prop.name}",
                                         type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
@@ -94,6 +97,7 @@ export class LanguageTemplate {
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
                                         id: ${prop.id !== undefined ? `"${prop.id}"` : `"${prop.name}"`},
+                                        key: "${prop.key !== undefined ? prop.key : prop.originalOwningClassifier.name + "-" + prop.name}",
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
@@ -104,6 +108,7 @@ export class LanguageTemplate {
                         `modelunit.properties.set("${prop.name}", {
                                         name: "${prop.name}",
                                         id: ${prop.id !== undefined ? `"${prop.id}"` : `"${prop.name}"`},
+                                        key: "${prop.key !== undefined ? prop.key : prop.originalOwningClassifier.name + "-" + prop.name}",
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
@@ -120,6 +125,7 @@ export class LanguageTemplate {
                     const concept =             {
                         typeName: "${Names.concept(concept)}",
                         id: ${concept.id !== undefined ? `"${concept.id}"` : `"${Names.concept(concept)}"`},
+                        key: "${concept.key !== undefined ? concept.key : "UN1"+Names.concept(concept)}",
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
                         isNamedElement: ${concept.allPrimProperties().some(p => p.name === "name")},
@@ -133,6 +139,7 @@ export class LanguageTemplate {
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 id: ${prop.id !== undefined ? `"${prop.id}"` : `"${prop.name}"`},
+                                key: "${prop.key !== undefined ? prop.key : prop.originalOwningClassifier.name + "-UN-" + prop.name}",
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
@@ -143,6 +150,7 @@ export class LanguageTemplate {
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 id: ${prop.id !== undefined ? `"${prop.id}"` : `"${prop.name}"`},
+                                key: "${prop.key !== undefined ? prop.key : prop.originalOwningClassifier.name + "-UN2-" + prop.name}",
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
@@ -153,6 +161,7 @@ export class LanguageTemplate {
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 id: ${prop.id !== undefined ? `"${prop.id}"` : `"${prop.name}"`},
+                                key: "${prop.key !== undefined ? prop.key : prop.originalOwningClassifier.name + "UN3-" + prop.name}",
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
@@ -167,6 +176,7 @@ export class LanguageTemplate {
                 function describe${Names.interface(intface)}(): FreLanguageInterface {
                     const intface =             {
                         typeName: "${Names.interface(intface)}",
+                        key: "${intface.key !== undefined ? intface.key : Names.interface(intface)}",
                         isPublic: ${intface.isPublic},
                         isNamedElement: ${intface.allPrimProperties().some(p => p.name === "name")},
                         properties: new Map< string, FreLanguageProperty>(),
@@ -176,6 +186,7 @@ export class LanguageTemplate {
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 id: ${prop.id !== undefined ? `"${prop.id}"` : `"${prop.name}"`},
+                                key: "${prop.key !== undefined ? prop.key : prop.originalOwningClassifier.name + "-" + prop.name}",
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
@@ -186,6 +197,7 @@ export class LanguageTemplate {
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 id: ${prop.id !== undefined ? `"${prop.id}"` : `"${prop.name}"`},
+                                key: "${prop.key !== undefined ? prop.key : prop.originalOwningClassifier.name + "-" + prop.name}",
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
@@ -196,6 +208,7 @@ export class LanguageTemplate {
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 id: ${prop.id !== undefined ? `"${prop.id}"` : `"${prop.name}"`},
+                                key: "${prop.key !== undefined ? prop.key : prop.originalOwningClassifier.name + "-" + prop.name}",
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},

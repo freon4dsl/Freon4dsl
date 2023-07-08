@@ -1,3 +1,4 @@
+import { IdMap } from "../../commandline/IdMap";
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
@@ -20,6 +21,11 @@ import { ParseLocationUtil } from "../../utils";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";
+// The id's and key's of the language elements as needed by LionWeb.
+let LanguageCreators_idMap: IdMap = new IdMap();
+export function setIdMap(idMap: IdMap): void {
+    LanguageCreators_idMap = idMap;
+}
 
 export function setCurrentFileName(newName: string) {
     currentFileName = newName;
@@ -81,6 +87,9 @@ function splitProperties(propList: FreMetaProperty[], result: FreMetaClassifier)
             result.properties.push(prop);
         }
         prop.owningClassifier = result;
+        console.log("Setting property " + result.name + "." + prop.name + " to " + LanguageCreators_idMap.getPropertyId(result.name, prop.name))
+        prop.id = LanguageCreators_idMap.getPropertyId(result.name, prop.name);
+        prop.key = LanguageCreators_idMap.getPropertyKey(result.name, prop.name);
     }
 }
 
@@ -103,6 +112,8 @@ export function createModel(data: Partial<FreMetaModelDescription>): FreMetaMode
 export function createUnit(data: Partial<FreMetaUnitDescription>): FreMetaUnitDescription {
     // console.log("createUnit " + data.name);
     const result = new FreMetaUnitDescription();
+    result.id = LanguageCreators_idMap.getConceptId(data.name);
+    result.key = LanguageCreators_idMap.getConceptKey(data.name);
     if (!!data.name) {
         result.name = data.name;
     }
@@ -114,6 +125,8 @@ export function createUnit(data: Partial<FreMetaUnitDescription>): FreMetaUnitDe
                 result.properties.push(prop);
             }
             prop.owningClassifier = result;
+            prop.id = LanguageCreators_idMap.getPropertyId(result.name, prop.name);
+            prop.key = LanguageCreators_idMap.getPropertyKey(result.name, prop.name);
         }
     }
     if (!!data.interfaces) {
@@ -135,6 +148,8 @@ export function createUnit(data: Partial<FreMetaUnitDescription>): FreMetaUnitDe
 export function createConcept(data: Partial<FreMetaConcept>): FreMetaConcept {
     // console.log("createConceptOrUnit " + data.name);
     const result = new FreMetaConcept();
+    result.id = LanguageCreators_idMap.getConceptId(data.name);
+    result.key = LanguageCreators_idMap.getConceptKey(data.name);
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
@@ -143,6 +158,8 @@ export function createConcept(data: Partial<FreMetaConcept>): FreMetaConcept {
 export function createLimitedConcept(data: Partial<FreMetaLimitedConcept>): FreMetaLimitedConcept {
     // console.log("createLimitedConcept " + data.name);
     const result = new FreMetaLimitedConcept();
+    result.id = LanguageCreators_idMap.getConceptId(data.name);
+    result.key = LanguageCreators_idMap.getConceptKey(data.name);
     result.isAbstract = !!data.isAbstract;
     if (!!data.instances) {
         result.instances = data.instances;
@@ -158,6 +175,8 @@ export function createLimitedConcept(data: Partial<FreMetaLimitedConcept>): FreM
 export function createInterface(data: Partial<FreMetaInterface>): FreMetaInterface {
     // console.log("createInterface " + data.name);
     const result = new FreMetaInterface();
+    result.id = LanguageCreators_idMap.getConceptId(data.name);
+    result.key = LanguageCreators_idMap.getConceptKey(data.name);
     if (!!data.name) {
         result.name = data.name;
     }
@@ -199,6 +218,8 @@ function createCommonConceptProps(data: Partial<FreMetaExpressionConcept>, resul
                 result.properties.push(prop);
             }
             prop.owningClassifier = result;
+            prop.id = LanguageCreators_idMap.getPropertyId(result.name, prop.name);
+            prop.key = LanguageCreators_idMap.getPropertyKey(result.name, prop.name);
         }
     }
     if (!!data.location) {
@@ -210,6 +231,8 @@ function createCommonConceptProps(data: Partial<FreMetaExpressionConcept>, resul
 export function createBinaryExpressionConcept(data: Partial<FreMetaBinaryExpressionConcept>): FreMetaBinaryExpressionConcept {
     // console.log("createBinaryExpressionConcept " + data.name);
     const result = new FreMetaBinaryExpressionConcept();
+    result.id = LanguageCreators_idMap.getConceptId(data.name);
+    result.key = LanguageCreators_idMap.getConceptKey(data.name);
     result.isAbstract = !!data.isAbstract;
     if ( !!data.priority ) {
         result.priority = data.priority;
@@ -221,6 +244,8 @@ export function createBinaryExpressionConcept(data: Partial<FreMetaBinaryExpress
 export function createExpressionConcept(data: Partial<FreMetaExpressionConcept>): FreMetaExpressionConcept {
     // console.log("createExpressionConcept " + data.name);
     const result = new FreMetaExpressionConcept();
+    result.id = LanguageCreators_idMap.getConceptId(data.name);
+    result.key = LanguageCreators_idMap.getConceptKey(data.name);
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
