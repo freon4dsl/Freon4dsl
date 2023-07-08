@@ -13,6 +13,7 @@ export type FreLanguageProperty = {
     name: string;
     type: string;
     id?: string;
+    key?: string;// used for LionWeb
     isList: boolean;
     isPublic: boolean;
     propertyKind: PropertyKind;
@@ -20,26 +21,33 @@ export type FreLanguageProperty = {
 export type Model = {
     typeName: string;
     id?: string;
+    key?: string;// used for LionWeb
     isNamespace?: boolean;
     isNamedElement?: boolean;
+    isAbstract: boolean;
     subConceptNames?: string[];
     properties: Map<string, FreLanguageProperty>;
     constructor: (id?: string) => FreModel;
+    referenceShortcut?: ReferenceShortcut;
 };
 export type ModelUnit = {
     typeName: string;
     id?: string;
+    key?: string;// used for LionWeb
     // isPublic?: boolean;
     isNamespace?: boolean;
     isNamedElement?: boolean;
-    subConceptNames?: string[];
+    isAbstract: boolean;
+    subConceptNames: string[];
     fileExtension: string;
     properties: Map<string, FreLanguageProperty>;
     constructor: (id?: string) => FreModelUnit;
+    referenceShortcut?: ReferenceShortcut;
 };
 export type FreLanguageConcept = {
     typeName: string;
     id?: string;
+    key?: string;// used for LionWeb
     isAbstract: boolean;
     isPublic: boolean;
     isNamespace?: boolean;
@@ -56,11 +64,14 @@ export type FreLanguageConcept = {
 export type FreLanguageInterface = {
     typeName: string;
     id?: string;
+    key?: string;// used for LionWeb
     isPublic: boolean;
     isNamespace?: boolean;
     isNamedElement?: boolean;
+    isAbstract: boolean;
     subConceptNames: string[];
     properties: Map<string, FreLanguageProperty>;
+    referenceShortcut?: ReferenceShortcut;
 };
 
 export type Classifier = Model | ModelUnit | FreLanguageConcept | FreLanguageInterface;
@@ -133,7 +144,7 @@ export class FreLanguage {
     helperById(map: Map<string, Classifier>, conceptId: string): Classifier | undefined {
         // console.log("Language find concept " + typeName);
         for ( const concept of map.values()) {
-            if ( concept.id === conceptId) {
+            if ( concept.key === conceptId) {
                 return concept;
             }
         }
@@ -209,7 +220,7 @@ export class FreLanguage {
 
     helperPropById(map: Map<string, FreLanguageProperty>, id: string): FreLanguageProperty | undefined {
         for ( const prop of map.values()) {
-            if ( prop.id === id) {
+            if ( prop.key === id) {
                 return prop;
             }
         }
