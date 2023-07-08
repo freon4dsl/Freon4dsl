@@ -3,164 +3,198 @@
     "concepts": [
         {
             "concept": "Language",
-            "id": "Language",
+            "id": "-id-Language",
+            "key": "Language",
             "properties": [
                 {
                     "name": "version",
-                    "id": "Language-version"
+                    "id": "-id-Language-version",
+                    "key": "Language-version"
                 },
                 {
                     "name": "key",
-                    "id": "Language-key"
+                    "id": "-id-Language-key",
+                    "key": "Language-key"
                 },
                 {
                     "name": "elements",
-                    "id"  : "Language-elements"
+                    "id"  : "-id-Language-elements",
+                    "key"  : "Language-elements"
                 },
                 {
                     "name": "dependsOn",
-                    "id"  : "Language-dependsOn"
+                    "id"  : "-id-Language-dependsOn",
+                    "key"  : "Language-dependsOn"
                 }
             ]
         },
         {
             "concept": "LanguageElement",
-            "id": "LanguageElement",
+            "id": "-id-LanguageElement",
+            "key": "LanguageElement",
             "properties": []
         },
         {
             "concept": "PrimitiveType",
-            "id": "PrimitiveType",
+            "id": "-id-PrimitiveType",
+            "key": "PrimitiveType",
             "properties": []
         },
         {
             "concept": "Property",
-            "id": "Property",
+            "id": "-id-Property",
+            "key": "Property",
             "properties": [
                 {
                     "name": "type",
-                    "id"  : "Property-type"
+                    "id"  : "-id-Property-type",
+                    "key"  : "Property-type"
                 }
             ]
         },
         {
             "concept": "NamespacedEntity",
-            "id":"NamespacedEntity",
+            "id":"-id-NamespacedEntity",
+            "key":"NamespacedEntity",
             "properties": [
                 {
                     "name": "key",
-                    "id": "NamespacedEntity-key"
+                    "id": "-id-NamespacedEntity-key",
+                    "key": "NamespacedEntity-key"
                 }
             ]
         },
         {
             "concept": "NamespaceProvider",
-            "id":"NamespaceProvider",
+            "id":"-id-NamespaceProvider",
+            "key":"NamespaceProvider",
             "properties": []
         },
         {
             "concept": "Reference",
-            "id": "Reference",
+            "id": "-id-Reference",
+            "key": "Reference",
             "properties": []
         },
         {
             "concept": "NamespacedEntity",
-            "id": "NamespacedEntity",
+            "id": "-id-NamespacedEntity",
+            "key": "NamespacedEntity",
             "properties": [
                 {
                     "name": "key",
-                    "id": "NamespacedEntity-key"
+                    "id": "-id-NamespacedEntity-key",
+                    "key": "NamespacedEntity-key"
                 }
             ]
         },
         {
             "concept": "Concept",
-            "id": "Concept",
+            "id": "-id-Concept",
+            "key": "Concept",
             "properties": [
                 {
                     "name": "abstract",
-                    "id": "Concept-abstract"
+                    "id": "-id-Concept-abstract",
+                    "key": "Concept-abstract"
                 },
                 {
                     "name": "extends",
-                    "id": "Concept-extends"
+                    "id": "-id-Concept-extends",
+                    "key": "Concept-extends"
                 },
                 {
                     "name": "implements",
-                    "id": "Concept-implements"
+                    "id": "-id-Concept-implements",
+                    "key": "Concept-implements"
                 },
                 {
                     "name": "partition",
-                    "id": "Concept-partition"
+                    "id": "-id-Concept-partition",
+                    "key": "Concept-partition"
                 }
             ]
         },
         {
             "concept": "Link",
-            "id": "Link",
+            "id": "-id-Link",
+            "key": "Link",
             "properties": [
                 {
                     "name": "multiple",
-                    "id": "Link-multiple"
+                    "id": "-id-Link-multiple",
+                    "key": "Link-multiple"
                 },
                 {
                     "name": "type",
-                    "id": "Link-type"
+                    "id": "-id-Link-type",
+                    "key": "Link-type"
                 }
             ]
         },
         {
             "concept": "ConceptInterface",
-            "id": "ConceptInterface",
+            "id": "-id-ConceptInterface",
+            "key": "ConceptInterface",
             "properties": [
                 {
                     "name": "extends",
-                    "id": "ConceptInterface-extends"
+                    "id": "-id-ConceptInterface-extends",
+                    "key": "ConceptInterface-extends"
                 }
             ]
         },
         {
             "concept": "Containment",
-            "id": "Containment",
+            "id": "-id-Containment",
+            "key": "Containment",
             "properties": []
         },
         {
             "concept": "Datatype",
-            "id": "DataType",
+            "id": "-id-DataType",
+            "key": "DataType",
             "properties": []
         },
         {
             "concept": "Enumeration",
-            "id": "Enumeration",
+            "id": "-id-Enumeration",
+            "key": "Enumeration",
             "properties": [
                 {
                     "name": "literals",
-                    "id": "Enumeration-literals"
+                    "id": "-id-Enumeration-literals",
+                    "key": "Enumeration-literals"
                 }
             ]
         },
         {
             "concept": "EnumerationLiteral",
-            "id": "EnumerationLiteral",
+            "id": "-id-EnumerationLiteral",
+            "key": "EnumerationLiteral",
             "properties": []
         },
         {
             "concept": "Feature",
-            "id": "Feature",
+            "id": "-id-Feature",
+            "key": "Feature",
             "properties": [
                 {
                     "name":"optional",
-                    "id":"Feature-optional"
+                    "id":"-id-Feature-optional",
+                    "key":"Feature-optional"
                 }
             ]
         },
         {
             "concept": "FeaturesContainer",
-            "id": "FeaturesContainer",
+            "id": "-id-FeaturesContainer",
+            "key": "FeaturesContainer",
             "properties": [
                 {
                     "name": "features",
-                    "id": "FeaturesContainer-features"
+                    "id": "-id-FeaturesContainer-features",
+                    "key": "FeaturesContainer-features"
                 }
             ]
         }
@@ -169,10 +203,24 @@
         {
             "interface": "INamed",
             "id": "LIonCore-builtins-INamed",
+            "key": "LIonCore-builtins-INamed",
             "properties": [
                 {
                     "name": "name",
-                    "id": "LIonCore-builtins-INamed-name"
+                    "id": "LIonCore-builtins-INamed-name",
+                    "key": "LIonCore-builtins-INamed-name"
+                }
+            ]
+        },
+        {
+            "interface": "NamespacedEntity",
+            "id": "-id-NamespacedEntity",
+            "key": "NamespacedEntity",
+            "properties": [
+                {
+                    "name": "key",
+                    "id": "-id-NamespacedEntity-key",
+                    "key": "NamespacedEntity-key"
                 }
             ]
         }

@@ -21,23 +21,23 @@ modelunit Language implements INamed, NamespaceProvider {
     file-extension = "lmm";
 }
 
-abstract concept LanguageElement base NamespacedEntity {
+interface NamespacedEntity base INamed {
+    key: string;
+}
+
+abstract concept LanguageElement implements NamespacedEntity {
 }
 
 concept Property base Feature {
     reference type: Datatype;
- }
+}
 
-abstract concept NamespacedEntity implements INamed {
-    key: string;
+abstract concept Feature implements NamespacedEntity {
+  optional: boolean;
 }
 
 abstract concept FeaturesContainer base LanguageElement implements NamespaceProvider {
     features: Feature[];
-}
-
-abstract concept Feature base NamespacedEntity {
-  optional: boolean;
 }
 
 concept Concept base FeaturesContainer {
@@ -65,16 +65,17 @@ abstract concept Datatype base LanguageElement {
 }
 
 limited PrimitiveType base Datatype {
-    Boolean;
-    String;
-    Integer;
-    JSON;
+    key: string;
+    Boolean = { name: "Boolean", key: "LIonCore-builtins-Boolean" }
+    String = { name: "String", key: "LIonCore-builtins-String" }
+    Integer = { name: "Integer", key: "LIonCore-builtins-Integer" }
+    JSON = { name: "JSON", key: "LIonCore-builtins-JSON" }
 }
 
 concept Enumeration base Datatype implements NamespaceProvider {
     literals: EnumerationLiteral[];
 }
 
-concept EnumerationLiteral base NamespacedEntity {
+concept EnumerationLiteral implements NamespacedEntity {
 }
 
