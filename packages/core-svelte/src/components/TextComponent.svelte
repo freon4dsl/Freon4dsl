@@ -174,10 +174,12 @@
 
 			if (!partOfActionBox) {
 				// store the current value in the textbox, or delete the box, if appropriate
+				LOGGER.log(`   save text using box.setText(${text})`)
 				runInAction(() => {
 					if (box.deleteWhenEmpty && text.length === 0) {
 						editor.deleteBox(box);
 					} else if (text !== box.getText()) {
+						LOGGER.log(`   text is new value`)
 						box.setText(text);
 					}
 				});

@@ -1,3 +1,4 @@
+import { FreLogger } from "../../logging/index";
 import { Box, BoxFactory, ElementBox } from "../boxes";
 import { isNullOrUndefined } from "../../util";
 import { FreNode } from "../../ast";
@@ -8,6 +9,7 @@ import { ListUtil } from "../../util/ListUtil";
 import { FreTableHeaderInfo } from "./FreTableHeaderInfo";
 import { FreHeaderProvider } from "./FreHeaderProvider";
 
+const LOGGER = new FreLogger("FreProjectionHandler");
 /**
  * This class, of which there should be one instance per editor, registers all
  * custom projections (of type FreProjection), and all box providers (of type
@@ -99,6 +101,7 @@ export class FreProjectionHandler {
      * @param element
      */
     getBoxProvider(element: FreNode): FreBoxProvider {
+        LOGGER.log("getBoxProvider for " + element.freId() + " (" + element.freLanguageConcept() + ")")
         if (isNullOrUndefined(element)) {
             console.error("FreProjectionHandler.getBoxProvider: element is null/undefined");
             return null;
