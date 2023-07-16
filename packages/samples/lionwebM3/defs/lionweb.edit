@@ -11,7 +11,7 @@ Language {
     version ${version}
     dependsOn languages: ${dependsOn}
 
-    ${elements vertical}
+    ${entities vertical}
     ]
     trigger = "language"
 }

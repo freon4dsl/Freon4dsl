@@ -15,7 +15,7 @@ interface IKeyed base INamed {
 
 modelunit Language implements IKeyed {
     version: string;
-    elements: LanguageEntity[];
+    entities: LanguageEntity[];
     reference dependsOn: Language[];
     // Freon specific addition
     file-extension = "lmm";

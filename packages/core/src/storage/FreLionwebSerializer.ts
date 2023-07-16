@@ -59,7 +59,7 @@ export class FreLionwebSerializer implements FreSerializer {
         // First read all nodes without children, and store them in a map.
         const nodes: LwNode[] = chunk.nodes;
         for (const object of nodes) {
-            console.log("node: " + object.concept.key + "     with id " + object.id)
+            // console.log("node: " + object.concept.key + "     with id " + object.id)
             const parsedNode = this.toTypeScriptInstanceInternal(object);
             if (parsedNode !== null) {
                 this.nodesfromJson.set(parsedNode.freNode.freId(), parsedNode);
@@ -119,23 +119,23 @@ export class FreLionwebSerializer implements FreSerializer {
      */
     private toTypeScriptInstanceInternal(lwNode: LwNode): ParsedNode {
         if (lwNode === null) {
-            throw new Error("Cannot read json: jsonObject is null.");
+            throw new Error("Cannot read json 1: jsonObject is null.");
         }
         const jsonMetaPointer = lwNode.concept;
         const id: string = lwNode.id;
         if (isNullOrUndefined(jsonMetaPointer)) {
-            throw new Error(`Cannot read json: not a Freon structure, conceptname missing: ${JSON.stringify(lwNode)}.`);
+            throw new Error(`Cannot read json 2: not a Freon structure, conceptname missing: ${JSON.stringify(lwNode)}.`);
         }
         const conceptMetaPointer = this.convertMetaPointer(jsonMetaPointer, lwNode);
         // console.log("Classifier with id " + conceptId + " classifier " + this.language.classifierById(conceptId));
         const classifier = this.language.classifierById(conceptMetaPointer.key);
         if (isNullOrUndefined(classifier)) {
-            console.log(`1 Cannot read json: ${conceptMetaPointer.key} unknown.`);
+            console.log(`1 Cannot read json 3: ${conceptMetaPointer.key} unknown.`);
             return null;
         }
         const tsObject: FreNode = this.language.createConceptOrUnit(classifier.typeName, id);
         if (isNullOrUndefined(tsObject)) {
-            console.log(`2 Cannot read json: ${conceptMetaPointer.key} unknown.`);
+            console.log(`2 Cannot read json 4: ${conceptMetaPointer.key} unknown.`);
             return null;
         }
         // Store id, so it will not be used for new instances
@@ -167,7 +167,7 @@ export class FreLionwebSerializer implements FreSerializer {
             FreUtils.CHECK(property.propertyKind === "primitive", "Primitive value found for non primitive property: " + property.name);
             const value = jsonProperty.value;
             if (isNullOrUndefined(value)) {
-                throw new Error(`Cannot read json: ${JSON.stringify(property, null, 2)} value unset.`);
+                throw new Error(`Cannot read json 5: ${JSON.stringify(property, null, 2)} value unset.`);
             }
             if (property.type === "string" || property.type === "identifier") {
                 // this.checkValueToType(value, "string", property);
@@ -184,7 +184,7 @@ export class FreLionwebSerializer implements FreSerializer {
 
     private convertMetaPointer(jsonObject: LwMetaPointer, parent: Object): LwMetaPointer {
         if (isNullOrUndefined(jsonObject)) {
-            throw new Error(`Cannot read json: not a MetaPointer: ${JSON.stringify(parent)}.`);
+            throw new Error(`Cannot read json 6: not a MetaPointer: ${JSON.stringify(parent)}.`);
         }
 
         const language = jsonObject.language;
@@ -316,10 +316,10 @@ export class FreLionwebSerializer implements FreSerializer {
         let conceptKey: string;
         const concept = this.language.concept(typename);
         if (concept !== undefined) {
-            conceptKey = concept.id;
+            conceptKey = concept.key;
         } else {
           const unit = this.language.unit(typename);
-          conceptKey = unit?.id;
+          conceptKey = unit?.key;
         }
         if (conceptKey === undefined) {
             console.log(`Unknown concept key: ${typename}`);
@@ -360,7 +360,7 @@ export class FreLionwebSerializer implements FreSerializer {
             case "part":
                 const value = parentNode[p.name];
                 const child: LwChild = {
-                    containment: this.createMetaPointer(p.id),
+                    containment: this.createMetaPointer(p.key),
                     children: []
                 };
                 if (p.isList) {
@@ -376,7 +376,7 @@ export class FreLionwebSerializer implements FreSerializer {
                 break;
             case "reference":
                 const lwReference: LwReference = {
-                    reference: this.createMetaPointer(p.id),
+                    reference: this.createMetaPointer(p.key),
                     targets: []
                 };
                 if (p.isList) {
@@ -400,7 +400,7 @@ export class FreLionwebSerializer implements FreSerializer {
             case "primitive":
                 const value2 = parentNode[p.name];
                 result.properties.push({
-                    property: this.createMetaPointer(p.id),
+                    property: this.createMetaPointer(p.key),
                     value: propertyValueToString(value2)
                 });
                 break;

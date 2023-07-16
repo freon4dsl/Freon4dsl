@@ -17,9 +17,9 @@
                     "key": "Language-key"
                 },
                 {
-                    "name": "elements",
-                    "id"  : "-id-Language-elements",
-                    "key"  : "Language-elements"
+                    "name": "entities",
+                    "id"  : "-id-Language-entities",
+                    "key"  : "Language-entities"
                 },
                 {
                     "name": "dependsOn",
@@ -29,9 +29,9 @@
             ]
         },
         {
-            "concept": "LanguageElement",
-            "id": "-id-LanguageElement",
-            "key": "LanguageElement",
+            "concept": "LanguageEntity",
+            "id": "-id-LanguageEntity",
+            "key": "LanguageEntity",
             "properties": []
         },
         {
