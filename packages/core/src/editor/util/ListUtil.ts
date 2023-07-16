@@ -232,6 +232,8 @@ function addListElement(listParent: FreNode, propertyName: string, index: number
  * @param element
  */
 function deleteListElement(listParent: FreNode, propertyName: string, index: number, element: FreNode) {
+    // TODO Check whether this still works for tables as well.
+    //      Remove 'element'  if possible.
     console.log("Delete list element in property: " + propertyName + "[" + index + "]");
     // get info about the property that needs to be changed
     // const parentElement: FreNode = element.freOwnerDescriptor().owner;
