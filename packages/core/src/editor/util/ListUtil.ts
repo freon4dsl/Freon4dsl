@@ -3,6 +3,7 @@
  * They support drag-and-drop and cut/copy-paste functionality.
  */
 
+import { jsonAsString } from "../../util/index";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import * as Keys from "./Keys";
 import { MetaKey } from "./Keys";
@@ -115,11 +116,11 @@ export function dropListElement(editor: FreEditor,
  * @param optionsType       in case the options are created for a placeholder or header, we add lesser items (e.g. no DELETE)
  */
 export function getContextMenuOptions(conceptName: string, listParent: FreNode, propertyName: string, optionsType: MenuOptionsType): MenuItem[] {
-    // console.log(`getContextMenuOptions
-    // conceptname: ${conceptName}
-    // listparent: ${listParent.freId()}=${listParent.freLanguageConcept()}
-    // propertyName: ${propertyName}
-    // optionsType ${optionsType}`);
+    console.log(`getContextMenuOptions
+    conceptname: ${conceptName}
+    listparent: ${listParent.freId()}=${listParent.freLanguageConcept()}
+    propertyName: ${propertyName}
+    optionsType ${optionsType}`);
     // do some checks
     const clsOtIntf = FreLanguage.getInstance().concept(conceptName) ?? FreLanguage.getInstance().interface(conceptName);
     // tslint:disable-next-line:no-empty
@@ -174,7 +175,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
             new MenuItem(
                 "Delete",
                 "",
-                (element: FreNode, index: number, editor: FreEditor) => deleteListElement(listParent, propertyName, element)),
+                (element: FreNode, index: number, editor: FreEditor) => deleteListElement(listParent, propertyName, index, element)),
             new MenuItem(
                 "---",
                 "",
@@ -230,24 +231,27 @@ function addListElement(listParent: FreNode, propertyName: string, index: number
  * @param propertyName
  * @param element
  */
-function deleteListElement(listParent: FreNode, propertyName: string, element: FreNode) {
+function deleteListElement(listParent: FreNode, propertyName: string, index: number, element: FreNode) {
+    console.log("Delete list element in property: " + propertyName + "[" + index + "]");
     // get info about the property that needs to be changed
     // const parentElement: FreNode = element.freOwnerDescriptor().owner;
     // const targetPropertyName: string = element.freOwnerDescriptor().propertyName;
-    const targetIndex: number = element.freOwnerDescriptor().propertyIndex;
+    const targetIndex: number = index;//  element.freOwnerDescriptor().propertyIndex;
     // console.log(`deleteListElement=> listParent: ${listParent.freLanguageConcept()},
     // propertyName ${propertyName}, index: ${targetIndex}`);
 
+    console.log("   index of element " + element.freLanguageConcept() + "." + element.freId() + " is " + targetIndex);
+    console.log(jsonAsString(element, 2))
     const { property, isList } = getPropertyInfo(listParent, propertyName);
     // make the change
     if (isList) {
-        // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
+        // console.log('List before: [' + property.length()); //map(x => x.freId()).join(', ') + ']');
         runInAction(() => {
             if (targetIndex < property.length) {
                 property.splice(targetIndex, 1);
             }
         });
-        // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
+        // console.log('List after: [' + property.length()); //map(x => x.freId()).join(', ') + ']');
     }
 }
 
@@ -260,7 +264,7 @@ function deleteListElement(listParent: FreNode, propertyName: string, element: F
  * @param editor
  */
 function cutListElement(listParent: FreNode, propertyName: string, element: FreNode, editor: FreEditor) {
-    deleteListElement(listParent, propertyName, element);
+    deleteListElement(listParent, propertyName, 0, element);
     editor.copiedElement = element;
 }
 
