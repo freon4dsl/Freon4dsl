@@ -40,15 +40,15 @@ Feature {[
 ]}
 
 Property {[
-    ${self.optional [? | #]} property ${name} (${key}): ${type}
+    ${self.optional [optional | mandatory]} property ${name} (${key}): ${type}
 ]}
 
 Reference {[
-    ${self.optional [? | #]} reference ${name} (${key}): ${type} ${self.multiple [* | 1]}
+    ${self.optional [optional | mandatory]} reference ${name} (${key}): ${type} ${self.multiple [* | 1]}
 ]}
 
 Containment {[
-    ${self.optional [? | #]} contains ${name} (${key}): ${type} ${self.multiple [* | 1]}
+    ${self.optional [optional | mandatory]} contains ${name} (${key}): ${type} ${self.multiple [* | 1]}
 ]}
 
 

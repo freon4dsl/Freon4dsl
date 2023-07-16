@@ -1,4 +1,4 @@
- language LIonCoreM3
+language LIonCoreM3
 
 model LIonCoreM3 {
     name: identifier;
@@ -61,7 +61,7 @@ abstract concept Datatype base LanguageEntity {
 }
 
 limited PrimitiveType base Datatype {
-    key: string;
+//    key: string;
     Boolean = { name: "Boolean", key: "LIonCore-builtins-Boolean" }
     String = { name: "String", key: "LIonCore-builtins-String" }
     Integer = { name: "Integer", key: "LIonCore-builtins-Integer" }

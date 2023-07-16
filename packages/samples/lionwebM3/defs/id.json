@@ -167,6 +167,12 @@
                     "key": "Classifier-features"
                 }
             ]
+        },
+        {
+            "concept": "Node",
+            "id": "LIonCore-builtins-Node",
+            "key": "LIonCore-builtins-Node",
+            "properties": []
         }
     ],
     "interfaces": [
@@ -193,6 +199,28 @@
                     "key": "IKeyed-key"
                 }
             ]
+        }
+    ],
+    "limited" : [
+        {
+            "instance":"Boolean",
+            "id": "LIonCore-builtins-Boolean",
+            "key": "LIonCore-builtins-Boolean"
+        },
+        {
+            "instance":"String",
+            "id": "LIonCore-builtins-String",
+            "key": "LIonCore-builtins-String"
+        },
+        {
+            "instance":"JSON",
+            "id": "LIonCore-builtins-JSON",
+            "key": "LIonCore-builtins-JSON"
+        },
+        {
+            "instance":"Integer",
+            "id": "LIonCore-builtins-Integer",
+            "key": "LIonCore-builtins-Integer"
         }
     ]
 }
