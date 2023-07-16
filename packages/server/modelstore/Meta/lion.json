@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "LIonCore-M3",
+         "version": "1"
+      }
+   ],
    "nodes": [
       {
          "id": "-id-LIonCore-M3",
@@ -137,7 +142,6 @@
                   "key": "Concept-extends"
                },
                "targets": [
-                  {}
                ]
             },
             {
@@ -1316,7 +1320,6 @@
                   "key": "Concept-extends"
                },
                "targets": [
-                  {}
                ]
             },
             {
@@ -1396,7 +1399,6 @@
                   "key": "Concept-extends"
                },
                "targets": [
-                  {}
                ]
             },
             {
@@ -1851,7 +1853,6 @@
                   "key": "Concept-extends"
                },
                "targets": [
-                  {}
                ]
             },
             {
