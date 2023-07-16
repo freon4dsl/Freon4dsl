@@ -41,6 +41,8 @@ export class CommonChecker {
         if (!nameProperty) {
             nameProperty = new FreMetaPrimitiveProperty();
             nameProperty.name = "name";
+            nameProperty.id = "TODO_set-correct-id";
+            nameProperty.key = "TODO_set-correct-key";
             nameProperty.type = FreMetaPrimitiveType.identifier;
             nameProperty.isPart = true;
             nameProperty.isList = false;
@@ -98,6 +100,7 @@ export class CommonChecker {
         copy.implementedInBase = false; // false because the original property comes from an interface
         copy.type = property.type;
         copy.key = property.key;
+        copy.id = property.id;
         copy.owningClassifier = classifier;
         if (property instanceof FreMetaPrimitiveProperty) {
             classifier.primProperties.push(copy as FreMetaPrimitiveProperty);

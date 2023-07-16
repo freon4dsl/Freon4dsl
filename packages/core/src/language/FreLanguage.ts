@@ -1,3 +1,4 @@
+import { forEach } from "lodash";
 import { ReferenceShortcut } from "../editor";
 import { FreNode, FreModel, FreModelUnit } from "../ast";
 import { EmptyStdLib, FreStdlib } from "../stdlib/index";
@@ -120,6 +121,12 @@ export class FreLanguage {
     }
 
     unitById(id: string): ModelUnit | undefined {
+        // console.log("Language.unitById: " + id);
+        // let u = "Units: ";
+        // for(const s of this.units.keys()) {
+        //     u += u + ", " + s;
+        // }
+        // console.log(u);
         return this.helperById(this.units, id) as ModelUnit;
         // console.log("Find unit by id: " + id + " in " + this.units.size )
         // for (const [key, unit] of this.units.entries()) {
@@ -142,12 +149,14 @@ export class FreLanguage {
     }
 
     helperById(map: Map<string, Classifier>, conceptId: string): Classifier | undefined {
-        // console.log("Language find concept " + typeName);
+        // console.log("Language.helperById: find classifier " + conceptId);
         for ( const concept of map.values()) {
             if ( concept.key === conceptId) {
+                // console.log("     found it");
                 return concept;
             }
         }
+        // console.log("    NOT foundd")
         return null;
     }
 
@@ -215,12 +224,12 @@ export class FreLanguage {
 
     conceptPropertyById(typeName: string, propertyName: string): FreLanguageProperty | undefined {
         // LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
-        return this.helperPropById(this.conceptById(typeName).properties, propertyName);
+        return this.helperPropByKey(this.conceptById(typeName).properties, propertyName);
     }
 
-    helperPropById(map: Map<string, FreLanguageProperty>, id: string): FreLanguageProperty | undefined {
+    helperPropByKey(map: Map<string, FreLanguageProperty>, key: string): FreLanguageProperty | undefined {
         for ( const prop of map.values()) {
-            if ( prop.key === id) {
+            if ( prop.key === key) {
                 return prop;
             }
         }
@@ -234,7 +243,7 @@ export class FreLanguage {
 
     unitPropertyById(typeName: string, propertyName: string): FreLanguageProperty | undefined {
         // LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
-        return this.helperPropById(this.unitById(typeName).properties, propertyName);
+        return this.helperPropByKey(this.unitById(typeName).properties, propertyName);
     }
 
     interfaceProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
@@ -243,7 +252,7 @@ export class FreLanguage {
 
     interfacePropertyById(typeName: string, propertyName: string): FreLanguageProperty | undefined {
         // LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
-        return this.helperPropById(this.interfaceById(typeName).properties, propertyName);
+        return this.helperPropByKey(this.interfaceById(typeName).properties, propertyName);
     }
 
     classifierProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
@@ -273,7 +282,7 @@ export class FreLanguage {
     classifierPropertyById(typeName: string, propertyName: string): FreLanguageProperty | undefined {
         // LOGGER.log("CLASSIFIERPROPERTY " + typeName + "." + propertyName);
         const concept1 = this.classifierById(typeName);
-        return this.helperPropById(concept1.properties, propertyName);
+        return this.helperPropByKey(concept1.properties, propertyName);
     }
 
     allConceptProperties(typeName: string): IterableIterator<FreLanguageProperty> | undefined {

@@ -11,7 +11,7 @@ export class FreMetaLanguage extends FreMetaLangElement {
     interfaces: FreMetaInterface[] = [];
     modelConcept: FreMetaModelDescription;
     units: FreMetaUnitDescription[] = [];
-    id?: string;
+    id: string;
 
     constructor() {
         super();
@@ -70,8 +70,8 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
         return this.__ANY;
     }
 
-    id?: string;
-    key?: string;
+    id: string;
+    key: string;
     language: FreMetaLanguage;
     isPublic: boolean;
     properties: FreMetaProperty[] = [];
