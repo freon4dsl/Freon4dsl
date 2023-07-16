@@ -9,38 +9,34 @@ interface INamed {
     name: identifier;
 }
 
-interface NamespaceProvider {
+interface IKeyed base INamed {
+    key: string;
 }
 
-modelunit Language implements INamed, NamespaceProvider {
-    key: string;
+modelunit Language implements IKeyed {
     version: string;
-    elements: LanguageElement[];
+    elements: LanguageEntity[];
     reference dependsOn: Language[];
     // Freon specific addition
     file-extension = "lmm";
 }
 
-interface NamespacedEntity base INamed {
-    key: string;
-}
-
-abstract concept LanguageElement implements NamespacedEntity {
+abstract concept LanguageEntity implements IKeyed {
 }
 
 concept Property base Feature {
     reference type: Datatype;
 }
 
-abstract concept Feature implements NamespacedEntity {
+abstract concept Feature implements IKeyed {
   optional: boolean;
 }
 
-abstract concept FeaturesContainer base LanguageElement implements NamespaceProvider {
+abstract concept Classifier base LanguageEntity  {
     features: Feature[];
 }
 
-concept Concept base FeaturesContainer {
+concept Concept base Classifier {
     abstract: boolean;
     partition: boolean;
     reference extends?: Concept;
@@ -49,10 +45,10 @@ concept Concept base FeaturesContainer {
 
 abstract concept Link base Feature  {
     multiple: boolean;
-    reference type: FeaturesContainer;
+    reference type: Classifier;
 }
 
-concept ConceptInterface  base FeaturesContainer {
+concept ConceptInterface  base Classifier {
     reference extends: ConceptInterface[];
 }
 
@@ -61,7 +57,7 @@ concept Containment  base Link { }
 concept Reference base Link {
  }
 
-abstract concept Datatype base LanguageElement {
+abstract concept Datatype base LanguageEntity {
 }
 
 limited PrimitiveType base Datatype {
@@ -72,10 +68,10 @@ limited PrimitiveType base Datatype {
     JSON = { name: "JSON", key: "LIonCore-builtins-JSON" }
 }
 
-concept Enumeration base Datatype implements NamespaceProvider {
+concept Enumeration base Datatype {
     literals: EnumerationLiteral[];
 }
 
-concept EnumerationLiteral implements NamespacedEntity {
+concept EnumerationLiteral implements IKeyed {
 }
 

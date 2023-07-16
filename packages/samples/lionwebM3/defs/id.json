@@ -53,40 +53,10 @@
             ]
         },
         {
-            "concept": "NamespacedEntity",
-            "id":"-id-NamespacedEntity",
-            "key":"NamespacedEntity",
-            "properties": [
-                {
-                    "name": "key",
-                    "id": "-id-NamespacedEntity-key",
-                    "key": "NamespacedEntity-key"
-                }
-            ]
-        },
-        {
-            "concept": "NamespaceProvider",
-            "id":"-id-NamespaceProvider",
-            "key":"NamespaceProvider",
-            "properties": []
-        },
-        {
             "concept": "Reference",
             "id": "-id-Reference",
             "key": "Reference",
             "properties": []
-        },
-        {
-            "concept": "NamespacedEntity",
-            "id": "-id-NamespacedEntity",
-            "key": "NamespacedEntity",
-            "properties": [
-                {
-                    "name": "key",
-                    "id": "-id-NamespacedEntity-key",
-                    "key": "NamespacedEntity-key"
-                }
-            ]
         },
         {
             "concept": "Concept",
@@ -187,14 +157,14 @@
             ]
         },
         {
-            "concept": "FeaturesContainer",
-            "id": "-id-FeaturesContainer",
-            "key": "FeaturesContainer",
+            "concept": "Classifier",
+            "id": "-id-Classifier",
+            "key": "Classifier",
             "properties": [
                 {
                     "name": "features",
-                    "id": "-id-FeaturesContainer-features",
-                    "key": "FeaturesContainer-features"
+                    "id": "-id-Classifier-features",
+                    "key": "Classifier-features"
                 }
             ]
         }
@@ -213,14 +183,14 @@
             ]
         },
         {
-            "interface": "NamespacedEntity",
-            "id": "-id-NamespacedEntity",
-            "key": "NamespacedEntity",
+            "interface": "IKeyed",
+            "id": "-id-IKeyed",
+            "key": "IKeyed",
             "properties": [
                 {
                     "name": "key",
-                    "id": "-id-NamespacedEntity-key",
-                    "key": "NamespacedEntity-key"
+                    "id": "-id-IKeyed-key",
+                    "key": "IKeyed-key"
                 }
             ]
         }
