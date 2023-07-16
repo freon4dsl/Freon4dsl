@@ -46,16 +46,16 @@
                   "-id-Language",
                   "-id-ConceptInterface",
                   "-id-LIonCore-builtins-INamed",
-                  "ID-7",
+                  "-id-IKeyed",
                   "-id-Concept",
                   "-id-Containment",
                   "-id-DataType",
                   "-id-Enumeration",
                   "-id-EnumerationLiteral",
                   "-id-Feature",
-                  "-id-FeaturesContainer",
+                  "-id-Classifier",
                   "-id-Link",
-                  "-id-LanguageElement",
+                  "-id-LanguageEntity",
                   "-id-PrimitiveType",
                   "-id-Property",
                   "-id-Reference"
@@ -125,7 +125,7 @@
                "children": [
                   "-id-Language-version",
                   "-id-Language-dependsOn",
-                  "-id-Language-elements"
+                  "-id-Language-entities"
                ]
             }
          ],
@@ -149,7 +149,7 @@
                "targets": [
                   {
                      "resolveInfo": "LW_IKeyed",
-                     "reference": "ID-7"
+                     "reference": "-id-IKeyed"
                   }
                ]
             }
@@ -267,7 +267,7 @@
          "parent": "-id-Language"
       },
       {
-         "id": "-id-Language-elements",
+         "id": "-id-Language-entities",
          "concept": {
             "language": "LIonCoreM3",
             "version": "1",
@@ -318,7 +318,7 @@
                "targets": [
                   {
                      "resolveInfo": "LW_LanguageEntity",
-                     "reference": "-id-LanguageElement"
+                     "reference": "-id-LanguageEntity"
                   }
                ]
             }
@@ -388,7 +388,7 @@
                "targets": [
                   {
                      "resolveInfo": "LW_Classifier",
-                     "reference": "-id-FeaturesContainer"
+                     "reference": "-id-Classifier"
                   }
                ]
             },
@@ -563,7 +563,7 @@
          "parent": "-id-LIonCore-builtins-INamed"
       },
       {
-         "id": "ID-7",
+         "id": "-id-IKeyed",
          "concept": {
             "language": "LIonCoreM3",
             "version": "1",
@@ -595,7 +595,7 @@
                   "key": "Classifier-features"
                },
                "children": [
-                  "ID-9"
+                  "-id-IKeyed-key"
                ]
             }
          ],
@@ -617,7 +617,7 @@
          "parent": "-id-LIonCore-M3"
       },
       {
-         "id": "ID-9",
+         "id": "-id-IKeyed-key",
          "concept": {
             "language": "LIonCoreM3",
             "version": "1",
@@ -646,7 +646,7 @@
                   "version": "1",
                   "key": "IKeyed-key"
                },
-               "value": "IKeyed-key"
+               "value": "Property"
             }
          ],
          "children": [],
@@ -665,7 +665,7 @@
                ]
             }
          ],
-         "parent": "ID-7"
+         "parent": "-id-IKeyed"
       },
       {
          "id": "-id-Concept",
@@ -733,7 +733,7 @@
                "targets": [
                   {
                      "resolveInfo": "LW_Classifier",
-                     "reference": "-id-FeaturesContainer"
+                     "reference": "-id-Classifier"
                   }
                ]
             },
@@ -1105,7 +1105,7 @@
                "targets": [
                   {
                      "resolveInfo": "LW_LanguageEntity",
-                     "reference": "-id-LanguageElement"
+                     "reference": "-id-LanguageEntity"
                   }
                ]
             },
@@ -1328,7 +1328,7 @@
                "targets": [
                   {
                      "resolveInfo": "LW_IKeyed",
-                     "reference": "ID-7"
+                     "reference": "-id-IKeyed"
                   }
                ]
             }
@@ -1408,7 +1408,7 @@
                "targets": [
                   {
                      "resolveInfo": "LW_IKeyed",
-                     "reference": "ID-7"
+                     "reference": "-id-IKeyed"
                   }
                ]
             }
@@ -1467,7 +1467,7 @@
          "parent": "-id-Feature"
       },
       {
-         "id": "-id-FeaturesContainer",
+         "id": "-id-Classifier",
          "concept": {
             "language": "LIonCoreM3",
             "version": "1",
@@ -1515,7 +1515,7 @@
                   "key": "Classifier-features"
                },
                "children": [
-                  "-id-FeaturesContainer-features"
+                  "-id-Classifier-features"
                ]
             }
          ],
@@ -1529,7 +1529,7 @@
                "targets": [
                   {
                      "resolveInfo": "LW_LanguageEntity",
-                     "reference": "-id-LanguageElement"
+                     "reference": "-id-LanguageEntity"
                   }
                ]
             },
@@ -1545,7 +1545,7 @@
          "parent": "-id-LIonCore-M3"
       },
       {
-         "id": "-id-FeaturesContainer-features",
+         "id": "-id-Classifier-features",
          "concept": {
             "language": "LIonCoreM3",
             "version": "1",
@@ -1601,7 +1601,7 @@
                ]
             }
          ],
-         "parent": "-id-FeaturesContainer"
+         "parent": "-id-Classifier"
       },
       {
          "id": "-id-Link",
@@ -1785,7 +1785,7 @@
                "targets": [
                   {
                      "resolveInfo": "LW_Classifier",
-                     "reference": "-id-FeaturesContainer"
+                     "reference": "-id-Classifier"
                   }
                ]
             }
@@ -1793,7 +1793,7 @@
          "parent": "-id-Link"
       },
       {
-         "id": "-id-LanguageElement",
+         "id": "-id-LanguageEntity",
          "concept": {
             "language": "LIonCoreM3",
             "version": "1",
@@ -1863,7 +1863,7 @@
                "targets": [
                   {
                      "resolveInfo": "LW_IKeyed",
-                     "reference": "ID-7"
+                     "reference": "-id-IKeyed"
                   }
                ]
             }
