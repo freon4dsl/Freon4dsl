@@ -96,8 +96,8 @@ export class WriterTemplate {
 
         // Template starts here
         return `
-        import { ${Names.FreNamedNode}, ${Names.FreNodeReference}, ${writerInterfaceName} } from "${FREON_CORE}";
-        import { ${allLangConceptsName},
+        import { ${Names.FreNamedNode}, ${Names.FreNodeReference}, ${writerInterfaceName}, ${Names.FreNode} } from "${FREON_CORE}";
+        import { 
             ${language.interfaces.length > 0
             ? language.interfaces.map(concept => `
                 ${Names.classifier(concept)}, `).join("")

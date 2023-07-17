@@ -76,7 +76,7 @@ export class SemanticAnalysisTemplate {
         // TODO rethink the replacement of all properties of an object and test it
 
         // start Template
-        return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        return `import { ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
                 import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
                 import { ${refWalkerName} } from "./${refWalkerName}";
                 import { FreLanguageConcept, ${Names.FreLanguage}, ${Names.FreNode}, ${Names.FreNodeReference} } from "@freon4dsl/core";
@@ -135,10 +135,10 @@ export class SemanticAnalysisTemplate {
 
         return `
             import {
-              ${Names.allConcepts(language)}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
+              ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
             } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
             import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
-            import { ${Names.FreNamedNode}, ${Names.FreLanguage}, ${Names.LanguageEnvironment}, ${Names.FreNodeReference} } from "@freon4dsl/core";
+            import { ${Names.FreNamedNode}, ${Names.FreLanguage}, ${Names.LanguageEnvironment}, ${Names.FreNodeReference}, ${Names.FreNode} } from "@freon4dsl/core";
 
             export class ${className} extends ${Names.defaultWorker(language)} implements ${Names.workerInterface(language)} {
                 changesToBeMade: Map<${everyConceptName}, ${everyConceptName}> = null;

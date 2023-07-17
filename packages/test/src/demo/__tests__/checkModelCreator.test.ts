@@ -1,4 +1,5 @@
-import { DemoModel, DemoFunction, DemoEntity, DemoEveryConcept } from "../language/gen";
+import { FreNode } from "@freon4dsl/core";
+import { DemoModel, DemoFunction, DemoEntity } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("Demo Model", () => {
@@ -51,7 +52,7 @@ describe("Demo Model", () => {
     });
 });
 
-function checkFunctionDef(f1: DemoFunction, owner: DemoEveryConcept) {
+function checkFunctionDef(f1: DemoFunction, owner: FreNode) {
     expect(f1.name).not.toBeNull();
     expect(f1.expression.freOwner()).toBe(f1);
     expect(f1.freOwner()).toBe(owner);

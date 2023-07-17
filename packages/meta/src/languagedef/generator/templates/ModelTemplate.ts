@@ -196,8 +196,8 @@ export class ModelTemplate {
                 }`;
 
         return `
-            import { ${coreImports.join(",")} } from "${FREON_CORE}";
-            import { ${Names.modelunit(language)}, ${modelImports.join(", ")} } from "./internal";
+            import { ${Names.modelunit(language)}, ${coreImports.join(",")} } from "${FREON_CORE}";
+            import { ${modelImports.join(", ")} } from "./internal";
 
             ${result}`;
     }
@@ -206,7 +206,7 @@ export class ModelTemplate {
         return Array.from(
             new Set(
                 modelDescription.parts().map(part => Names.classifier(part.type))
-                    .concat(Names.metaType(modelDescription.language))
+                    // .concat(Names.metaType(modelDescription.language))
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )

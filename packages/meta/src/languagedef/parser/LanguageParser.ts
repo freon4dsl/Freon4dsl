@@ -51,16 +51,16 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
             const result: FreMetaLanguage = new FreMetaLanguage();
             result.name = submodels[0].name;
             for (const sub of submodels) {
-                if (sub.name === result.name) { // all submodels should be of the same language
+                // if (sub.name === result.name) { // all submodels should be of the same language
                     if (!!sub.modelConcept) {
                         result.modelConcept = sub.modelConcept;
                     }
                     result.units.push(...sub.units);
                     result.concepts.push(...sub.concepts);
                     result.interfaces.push(...sub.interfaces);
-                } else {
-                    LOGGER.error("All sublanguages should be of the same language, found sublanguage: '" + sub.name + "' in '" + result.name + "'.");
-                }
+                // } else {
+                //     LOGGER.error("All sublanguages should be of the same language, found sublanguage: '" + sub.name + "' in '" + result.name + "'.");
+                // }
             }
             result.conceptsAndInterfaces().forEach(classifier => {
                 classifier.language = result;

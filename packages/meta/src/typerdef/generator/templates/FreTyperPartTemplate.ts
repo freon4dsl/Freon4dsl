@@ -101,7 +101,7 @@ export class FreTyperPartTemplate {
         const rootType = Names.classifier(typerdef?.typeRoot());
         ListUtil.addIfNotPresent(this.imports, rootType);
         const allLangConcepts: string = Names.allConcepts(language);
-        ListUtil.addIfNotPresent(this.imports, allLangConcepts);
+        // ListUtil.addIfNotPresent(this.imports, allLangConcepts);
         const generatedClassName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.FreTyperPart;
         const equalsMaker: FreTypeEqualsMaker = new FreTypeEqualsMaker();

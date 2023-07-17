@@ -18,7 +18,7 @@ export class ScoperUtilsTemplate {
 
         // Template starts here
         return `
-        import { ${allLangConcepts},
+        import { 
                     ${includeRoot ?
                         `${Names.classifier(language.modelConcept)},`
                     : ``}

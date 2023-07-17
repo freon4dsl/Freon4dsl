@@ -188,15 +188,15 @@ export class Names {
     }
 
     public static metaType(language: FreMetaLanguage): string {
-        return this.startWithUpperCase(language?.name) + "MetaType";
+        return "string"; //this.startWithUpperCase(language?.name) + "MetaType";
     }
 
     public static allConcepts(language: FreMetaLanguage): string {
-        return this.startWithUpperCase(language?.name) + "EveryConcept";
+        return "FreNode"; // this.startWithUpperCase(language?.name) + "EveryConcept";
     }
 
     public static modelunit(language: FreMetaLanguage): string {
-        return this.startWithUpperCase(language?.name) + "ModelUnitType";
+        return "FreModelUnit"; // this.startWithUpperCase(language?.name) + "ModelUnitType";
     }
 
     public static namespace(language: FreMetaLanguage): string {

@@ -36,7 +36,7 @@ export class ScoperTemplate {
         this.hasAlternativeScopeText = "";
         this.getAlternativeScopeText = "";
 
-        const langConceptType: string = Names.metaType(language);
+        // const langConceptType: string = Names.metaType(language);
         const generatedClassName: string = Names.scoper(language);
         const scoperBaseName: string = Names.FreScoperBase;
 
@@ -45,7 +45,7 @@ export class ScoperTemplate {
             this.makeAdditionalNamespaceTexts(scopedef);
         }
         // add the necessary names to the imports
-        ListUtil.addIfNotPresent(this.languageImports, langConceptType);
+        // ListUtil.addIfNotPresent(this.languageImports, langConceptType);
         // console.log("Adding 222: " + langConceptType + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
 
         // Template starts here - without imports, they are calculated while creating this text and added later

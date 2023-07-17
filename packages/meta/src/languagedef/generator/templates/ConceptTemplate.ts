@@ -227,7 +227,7 @@ export class ConceptTemplate {
                     .concat((concept.base ? Names.concept(concept.base.referred) : null))
                     .concat(concept.implementedParts().map(part => Names.classifier(part.type)))
                     .concat(concept.implementedReferences().map(part => Names.classifier(part.type)))
-                    .concat(Names.metaType(concept.language))
+                    // .concat(Names.metaType(concept.language))
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )

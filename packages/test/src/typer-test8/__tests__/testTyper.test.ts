@@ -1,5 +1,5 @@
-import { FreModelSerializer, FreError } from "@freon4dsl/core";
-import { ProjectYModelUnitType, XXunit, XX } from "../language/gen";
+import { FreModelSerializer, FreError, FreModelUnit } from "@freon4dsl/core";
+import { XXunit, XX } from "../language/gen";
 import { ProjectYEnvironment } from "../config/gen/ProjectYEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 
@@ -16,7 +16,7 @@ const testdir = "src/typer-test8/__inputs__/";
 function compareReadAndWrittenFiles(path: string) {
     try {
         const model = new XX();
-        const unit1 = reader.readFromString(handler.stringFromFile(path), metatype, model) as ProjectYModelUnitType;
+        const unit1 = reader.readFromString(handler.stringFromFile(path), metatype, model) as FreModelUnit;
         let result: string = writer.writeToString(unit1, 0, false);
         expect(result.length).toBeGreaterThan(0);
         const unit2 = reader.readFromString(result, metatype, model);

@@ -20,8 +20,8 @@ export class ValidatorTemplate {
 
         // Template starts here
         return `
-        import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName} } from "${FREON_CORE}";
-        import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
+        import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName}, ${Names.FreNode} } from "${FREON_CORE}";
+        // import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
         import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}";

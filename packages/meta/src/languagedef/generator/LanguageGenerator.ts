@@ -15,7 +15,7 @@ import {
 } from "../../utils";
 import { FreMetaLanguage } from "../metalanguage";
 import {
-    AllConceptsTemplate,
+    // AllConceptsTemplate,
     ConceptTemplate,
     EnvironmentTemplate,
     IndexTemplate,
@@ -53,10 +53,10 @@ export class LanguageGenerator {
         const unitTemplate = new UnitTemplate();
         const conceptTemplate = new ConceptTemplate();
         const languageTemplate = new LanguageTemplate();
-        const metaTypeTemplate = new MetaTypeTemplate();
+        // const metaTypeTemplate = new MetaTypeTemplate();
         const interfaceTemplate = new InterfaceTemplate();
         const languageIndexTemplate = new IndexTemplate();
-        const allConceptsTemplate = new AllConceptsTemplate();
+        // const allConceptsTemplate = new AllConceptsTemplate();
         const environmentTemplate = new EnvironmentTemplate();
         const stdlibTemplate = new StdlibTemplate();
         const walkerTemplate = new WalkerTemplate();
@@ -108,13 +108,13 @@ export class LanguageGenerator {
         });
 
         // the following classes do not need the relative path for their imports
-        LOGGER.log(`Generating metatype info: ${this.languageGenFolder}/${Names.metaType(language)}.ts`);
-        const languageFile = FileUtil.pretty(metaTypeTemplate.generateMetaType(language), "Model info", generationStatus);
-        fs.writeFileSync(`${this.languageGenFolder}/${Names.metaType(language)}.ts`, languageFile);
+        // LOGGER.log(`Generating metatype info: ${this.languageGenFolder}/${Names.metaType(language)}.ts`);
+        // const languageFile = FileUtil.pretty(metaTypeTemplate.generateMetaType(language), "Model info", generationStatus);
+        // fs.writeFileSync(`${this.languageGenFolder}/${Names.metaType(language)}.ts`, languageFile);
 
-        LOGGER.log(`Generating metatype class: ${this.languageGenFolder}/${Names.allConcepts(language)}.ts`);
-        const allConceptsFile = FileUtil.pretty(allConceptsTemplate.generateAllConceptsClass(language), "All Concepts Class", generationStatus);
-        fs.writeFileSync(`${this.languageGenFolder}/${Names.allConcepts(language)}.ts`, allConceptsFile);
+        // LOGGER.log(`Generating metatype class: ${this.languageGenFolder}/${Names.allConcepts(language)}.ts`);
+        // const allConceptsFile = FileUtil.pretty(allConceptsTemplate.generateAllConceptsClass(language), "All Concepts Class", generationStatus);
+        // fs.writeFileSync(`${this.languageGenFolder}/${Names.allConcepts(language)}.ts`, allConceptsFile);
 
         LOGGER.log(`Generating language external index: ${this.languageGenFolder}/index.ts`);
         const languageIndexFile = FileUtil.pretty(languageIndexTemplate.generateIndex(language), "Language Index", generationStatus);

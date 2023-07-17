@@ -63,7 +63,7 @@ export class UnitTemplate {
                 unitDescription.parts().map(part => Names.classifier(part.type))
                     .concat(unitDescription.interfaces.map(intf => Names.interface((intf.referred))))
                     .concat(unitDescription.references().map(part => Names.classifier(part.type)))
-                    .concat(Names.metaType(unitDescription.language))
+                    // .concat(Names.metaType(unitDescription.language))
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )

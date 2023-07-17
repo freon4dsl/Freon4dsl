@@ -16,8 +16,7 @@ export class StdlibTemplate {
 
         return `
         import { ${Names.FreNamedNode}, ${Names.FreStdlib}, ${Names.FreLanguage} } from "${FREON_CORE}";
-        import { ${Names.metaType(language)},
-                    ${this.limitedConceptNames.map(name => `${name}`).join(", ") }
+        import { ${this.limitedConceptNames.map(name => `${name}`).join(", ") }
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
         import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";

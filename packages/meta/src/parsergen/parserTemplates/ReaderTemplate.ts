@@ -14,7 +14,7 @@ export class ReaderTemplate {
 
         // Template starts here
         return `
-        import { ${Names.FreReader} } from "${FREON_CORE}";
+        import { ${Names.FreReader}, ${Names.modelunit(language)} } from "${FREON_CORE}";
         /* The following does not work with the command line toot because it is commonjs
            Unclear why, but the lines below seem to work ok.
         import { net } from "net.akehurst.language-agl-processor";
@@ -26,7 +26,7 @@ export class ReaderTemplate {
         import LanguageProcessor = agl.net.akehurst.language.api.processor.LanguageProcessor;
         import Agl = agl.net.akehurst.language.agl.processor.Agl;
         import AutomatonKind_api = agl.net.akehurst.language.api.processor.AutomatonKind_api;
-        import { ${Names.modelunit(language)}, ModelUnitMetaType, ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
         import { ${semanticAnalyser} } from "./${semanticAnalyser}";
@@ -48,7 +48,7 @@ export class ReaderTemplate {
              * @param model         the model to which the unit will be added
              * @param sourceName    the (optional) name of the source that contains 'sentence'
              */
-            readFromString(sentence: string, metatype: ModelUnitMetaType, model: ${Names.classifier(language.modelConcept)}, sourceName?: string): ${Names.modelunit(language)} {
+            readFromString(sentence: string, metatype: string, model: ${Names.classifier(language.modelConcept)}, sourceName?: string): ${Names.modelunit(language)} {
                 this.analyser.sourceName = sourceName;
                 let startRule: string = "";
                 // choose the correct parser

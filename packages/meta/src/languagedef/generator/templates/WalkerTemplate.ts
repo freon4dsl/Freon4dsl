@@ -14,11 +14,11 @@ export class WalkerTemplate {
 
         // Template starts here
         return `
-        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        // import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${classifiersToDo.map(concept => `
                 ${Names.classifier(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
-        import { ${Names.FreLogger} } from "${FREON_CORE}";
+        import { ${Names.FreLogger}, ${Names.FreNode} } from "${FREON_CORE}";
 
         const LOGGER = new ${Names.FreLogger}("${generatedClassName}");
 
