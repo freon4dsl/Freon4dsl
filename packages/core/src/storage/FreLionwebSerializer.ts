@@ -382,18 +382,24 @@ export class FreLionwebSerializer implements FreSerializer {
                 if (p.isList) {
                     const references: FreNodeReference<FreNamedNode>[] = parentNode[p.name];
                     for (const ref of references) {
-                        lwReference.targets.push({
-                            resolveInfo: ref["name"],
-                            reference: ref?.referred?.freId()
-                        });
+                        const referredId = ref?.referred?.freId();
+                        if (!!ref.name || !!referredId) {
+                            lwReference.targets.push({
+                                resolveInfo: ref.name,
+                                reference: referredId
+                            });
+                        }
                     }
                 } else {
                     // single reference
                     const ref: FreNodeReference<FreNamedNode> = parentNode[p.name];
-                    lwReference.targets.push({
-                        resolveInfo: !!ref ? ref["name"] : null,
-                        reference: ref?.referred?.freId()
-                    });
+                    const referredId = ref?.referred?.freId();
+                    if (!!ref.name || !!referredId) {
+                        lwReference.targets.push({
+                            resolveInfo: !!ref ? ref["name"] : null,
+                            reference: ref?.referred?.freId()
+                        });
+                    }
                 }
                 result.references.push(lwReference);
                 break;

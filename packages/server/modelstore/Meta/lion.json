@@ -1,11 +1,6 @@
 {
    "serializationFormatVersion": "1",
-   "languages": [
-      {
-         "key": "LIonCore-M3",
-         "version": "1"
-      }
-   ],
+   "languages": [],
    "nodes": [
       {
          "id": "-id-LIonCore-M3",
@@ -141,8 +136,7 @@
                   "version": "1",
                   "key": "Concept-extends"
                },
-               "targets": [
-               ]
+               "targets": []
             },
             {
                "reference": {
@@ -1319,8 +1313,7 @@
                   "version": "1",
                   "key": "Concept-extends"
                },
-               "targets": [
-               ]
+               "targets": []
             },
             {
                "reference": {
@@ -1398,8 +1391,7 @@
                   "version": "1",
                   "key": "Concept-extends"
                },
-               "targets": [
-               ]
+               "targets": []
             },
             {
                "reference": {
@@ -1852,8 +1844,7 @@
                   "version": "1",
                   "key": "Concept-extends"
                },
-               "targets": [
-               ]
+               "targets": []
             },
             {
                "reference": {
