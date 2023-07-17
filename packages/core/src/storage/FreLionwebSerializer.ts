@@ -128,7 +128,7 @@ export class FreLionwebSerializer implements FreSerializer {
         }
         const conceptMetaPointer = this.convertMetaPointer(jsonMetaPointer, lwNode);
         // console.log("Classifier with id " + conceptId + " classifier " + this.language.classifierById(conceptId));
-        const classifier = this.language.classifierById(conceptMetaPointer.key);
+        const classifier = this.language.classifierByKey(conceptMetaPointer.key);
         if (isNullOrUndefined(classifier)) {
             console.log(`1 Cannot read json 3: ${conceptMetaPointer.key} unknown.`);
             return null;
@@ -153,7 +153,7 @@ export class FreLionwebSerializer implements FreSerializer {
         for (const jsonProperty of Object.values(jsonProperties)) {
             const jsonMetaPointer = jsonProperty.property;
             const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
-            const property: FreLanguageProperty = this.language.classifierPropertyById(concept, propertyMetaPointer.key);
+            const property: FreLanguageProperty = this.language.classifierPropertyByKey(concept, propertyMetaPointer.key);
             if (property === undefined || property === null) {
                 console.error("NULL PROPERTY")
             }
@@ -213,7 +213,7 @@ export class FreLionwebSerializer implements FreSerializer {
         for (const jsonChild of Object.values(jsonChildren)) {
             const jsonMetaPointer = jsonChild.containment;
             const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
-            const property: FreLanguageProperty = this.language.classifierPropertyById(concept, propertyMetaPointer.key);
+            const property: FreLanguageProperty = this.language.classifierPropertyByKey(concept, propertyMetaPointer.key);
             if (isNullOrUndefined(property)) {
                 console.log("Unknown child property: " + propertyMetaPointer.key + " for concept " + concept);
                 continue;
@@ -237,7 +237,7 @@ export class FreLionwebSerializer implements FreSerializer {
         for (const jsonReference of Object.values(jsonReferences)) {
             const jsonMetaPointer = jsonReference.reference;
             const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
-            const property: FreLanguageProperty = this.language.classifierPropertyById(concept, propertyMetaPointer.key);
+            const property: FreLanguageProperty = this.language.classifierPropertyByKey(concept, propertyMetaPointer.key);
             if (isNullOrUndefined(property)) {
                 console.log("Unknown reference property: " + propertyMetaPointer.key + " for concept " + concept);
                 continue;
