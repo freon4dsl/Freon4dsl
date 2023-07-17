@@ -4,7 +4,7 @@ import { Names, FREON_CORE, LangUtil, GenerationUtil, STDLIB_GEN_FOLDER } from "
 export class LanguageTemplate {
 
     generateLanguage(language: FreMetaLanguage, relativePath: string): string {
-        return `import { ${Names.FreLanguage}, Model, ModelUnit, FreLanguageProperty, FreLanguageConcept, FreLanguageInterface, ${Names.FreNodeReference} } from "${FREON_CORE}";
+        return `import { ${Names.FreLanguage}, FreLanguageModel, FreLanguageModelUnit, FreLanguageProperty, FreLanguageConcept, FreLanguageInterface, ${Names.FreNodeReference} } from "${FREON_CORE}";
 
             // Import as MyLanguage to avoid naming conflicts in generated constructors
             import * as MyLanguage from "./internal";
@@ -32,7 +32,7 @@ export class LanguageTemplate {
                 ${Names.FreLanguage}.getInstance().stdLib = ${Names.stdlib(language)}.getInstance();
             }
 
-            function describe${Names.classifier(language.modelConcept)}(): Model {
+            function describe${Names.classifier(language.modelConcept)}(): FreLanguageModel {
                     const model =             {
                         typeName: "${Names.classifier(language.modelConcept)}",
                         isNamespace: true,
@@ -71,7 +71,7 @@ export class LanguageTemplate {
 
             ${language.units.map(modelunit =>
             `
-                function describe${Names.classifier(modelunit)}(): ModelUnit {
+                function describe${Names.classifier(modelunit)}(): FreLanguageModelUnit {
                     const modelunit =             {
                         typeName: "${Names.classifier(modelunit)}",
                         id: "${modelunit.id}",
