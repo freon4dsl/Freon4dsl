@@ -341,7 +341,7 @@ export class FreLionwebSerializer implements FreSerializer {
         return result;
     }
 
-    private createMetaPointer(key: string) {
+    private createMetaPointer(key: string): LwMetaPointer {
         const result = {};
         return {
             language: this.language.id,
