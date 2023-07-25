@@ -18,7 +18,7 @@
 
     const indentWidth: number = 8;
     let style: string = `margin-left: ${box?.indent * indentWidth}px;`;
-    let id: string = !!box ? componentId(box) : 'indent-for-unknow-box';
+    let id: string = !!box ? componentId(box) : 'indent-for-unknown-box';
     let child: Box;
 
     onMount( () => {
@@ -29,7 +29,7 @@
     })
 
     const refresh = (why?: string): void => {
-        LOGGER.log("REFRESH Indent for box " + box?.role + " child " + box?.child?.role);
+        LOGGER.log("REFRESH Indent for box (" + why + ") " + box?.role + " child " + box?.child?.role);
         child = box?.child;
         style = `margin-left: ${box?.indent * indentWidth}px;`
     };
