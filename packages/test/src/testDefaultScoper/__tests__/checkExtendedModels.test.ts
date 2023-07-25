@@ -1,7 +1,7 @@
 import { FreNodeReference } from "@freon4dsl/core";
 import { DSmodel, DSref, DSunit } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
-import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";
+import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
 import { ExtendedModelCreator } from "./ExtendedModelCreator";
 
 function print(prefix: string, visibleNames: string[]) {
@@ -25,13 +25,13 @@ function printDifference(creator: SimpleModelCreator, visibleNames: string[]) {
 }
 
 describe("Testing Default Scoper", () => {
-    const environment = ScoperTestEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
+    const environment = DSmodelEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
     const creator = new ExtendedModelCreator();
     const scoper = environment.scoper;
     const unparser = environment.writer;
 
     beforeEach(done => {
-        ScoperTestEnvironment.getInstance();
+        DSmodelEnvironment.getInstance();
         done();
     });
 

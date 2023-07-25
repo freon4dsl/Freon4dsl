@@ -1,11 +1,11 @@
 import { FreModelSerializer, FreError, FreModelUnit } from "@freon4dsl/core";
 import { XXunit, XX } from "../language/gen";
-import { ProjectYEnvironment } from "../config/gen/ProjectYEnvironment";
+import { XXEnvironment } from "../config/gen/XXEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 
-const writer = ProjectYEnvironment.getInstance().writer;
-const reader = ProjectYEnvironment.getInstance().reader;
-const validator = ProjectYEnvironment.getInstance().validator;
+const writer = XXEnvironment.getInstance().writer;
+const reader = XXEnvironment.getInstance().reader;
+const validator = XXEnvironment.getInstance().validator;
 const serial: FreModelSerializer = new FreModelSerializer();
 const handler = new FileHandler();
 const metatype: string = "XXunit";
@@ -36,7 +36,7 @@ describe ("Testing Typer on", () => {
     // TODO make an input file in which a number of NamedTypes are created and used
 
     beforeEach(done => {
-        ProjectYEnvironment.getInstance();
+        XXEnvironment.getInstance();
         done();
     });
 

@@ -1,9 +1,9 @@
-import { OctopusEnvironment } from "../config/gen/OctopusEnvironment";
+import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
 import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions";
 import { OctopusModel } from "../language/gen";
 
-const writer = OctopusEnvironment.getInstance().writer;
-const reader = OctopusEnvironment.getInstance().reader;
+const writer = OctopusModelEnvironment.getInstance().writer;
+const reader = OctopusModelEnvironment.getInstance().reader;
 
 describe("Testing Parser", () => {
     // TODO use snapshots

@@ -1,11 +1,11 @@
 import { FreUtils } from "@freon4dsl/core";
-import { TestParserEnvironment } from "../config/gen/TestParserEnvironment";
+import { TestParserModelEnvironment } from "../config/gen/TestParserModelEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, PrimsWithKeywordTest, TestParserModel } from "../language/gen";
 
 describe("Parser properties of type", () => {
-    const reader = TestParserEnvironment.getInstance().reader;
-    const writer = TestParserEnvironment.getInstance().writer;
+    const reader = TestParserModelEnvironment.getInstance().reader;
+    const writer = TestParserModelEnvironment.getInstance().writer;
     const fileHandler = new FileHandler();
 
     beforeEach(() => {

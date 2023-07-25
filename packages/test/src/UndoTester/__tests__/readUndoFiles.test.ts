@@ -1,10 +1,10 @@
 import { UndoModel, UndoPart, UndoUnit } from "../language/gen";
-import { UndoTesterEnvironment } from "../config/gen/UndoTesterEnvironment";
+import { UndoModelEnvironment } from "../config/gen/UndoModelEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { FreUndoManager } from "@freon4dsl/core";
 
 const handler = new FileHandler();
-const reader = UndoTesterEnvironment.getInstance().reader;
+const reader = UndoModelEnvironment.getInstance().reader;
 // const writer = UndoTesterEnvironment.getInstance().writer;
 
 function readUnitInTransaction(manager: FreUndoManager, filePath: string) {

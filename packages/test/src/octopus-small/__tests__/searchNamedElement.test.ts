@@ -5,10 +5,10 @@ import {
     OctopusModel,
     UmlPart
 } from "../language/gen";
-import { OctopusEnvironment } from "../config/gen/OctopusEnvironment";
+import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
 
-const writer = OctopusEnvironment.getInstance().writer;
-const reader = OctopusEnvironment.getInstance().reader;
+const writer = OctopusModelEnvironment.getInstance().writer;
+const reader = OctopusModelEnvironment.getInstance().reader;
 const handler = new FileHandler();
 const searcher = new FreSearcher();
 
