@@ -7,7 +7,7 @@ describe("Checking expression on referredElement", () => {
     const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
     let language: FreMetaLanguage;
     MetaLogger.muteAllLogs();
-    MetaLogger.muteAllErrors();
+    // MetaLogger.muteAllErrors();
 
     beforeEach(() => {
         try {

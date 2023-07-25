@@ -1,5 +1,5 @@
 language test3
-model TEST {
+model TEST3 {
     unit: TEST_LISTS;
 }
 modelunit TEST_LISTS {

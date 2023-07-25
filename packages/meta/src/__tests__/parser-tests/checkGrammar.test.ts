@@ -35,13 +35,15 @@ describe("Checking parser generation", () => {
             console.log("Language could not be read: " + e.message);
             console.log(langParser.checker.errors.map(e => e).join("\n"));
         }
+        console.log("Parsed language: " + language.name)
         if (!!language) {
             const editor = new FreEditParser(language).parse(testdir + "test1.edit");
+            console.log("Parsed editor: ");
             const generator = new ReaderWriterGenerator();
             generator.language = language;
             generator.outputfolder = outputDir;
             generator.generate(editor);
-            const grammarFile = outputDir + "reader/gen/Test1Grammar.ts";
+            const grammarFile = outputDir + "reader/gen/TEST1Grammar.ts";
             const isPresent: boolean = fs.existsSync(grammarFile);
             expect(isPresent).toBe(true);
             if (isPresent) {
@@ -74,7 +76,7 @@ describe("Checking parser generation", () => {
                 generator.language = language;
                 generator.outputfolder = outputDir;
                 generator.generate(editor);
-                const grammarFile = outputDir + "reader/gen/Test2Grammar.ts";
+                const grammarFile = outputDir + "reader/gen/TEST2Grammar.ts";
                 const isPresent: boolean = fs.existsSync(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
@@ -108,7 +110,7 @@ describe("Checking parser generation", () => {
                 generator.language = language;
                 generator.outputfolder = outputDir;
                 generator.generate(editor);
-                const grammarFile = outputDir + "reader/gen/Test3Grammar.ts";
+                const grammarFile = outputDir + "reader/gen/TEST3Grammar.ts";
                 const isPresent: boolean = fs.existsSync(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
@@ -142,7 +144,7 @@ describe("Checking parser generation", () => {
                 generator.language = language;
                 generator.outputfolder = outputDir;
                 generator.generate(editor);
-                const grammarFile = outputDir + "reader/gen/Test4Grammar.ts";
+                const grammarFile = outputDir + "reader/gen/TEST4Grammar.ts";
                 const isPresent: boolean = fs.existsSync(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
