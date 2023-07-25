@@ -37,12 +37,12 @@ export class ScoperChecker extends Checker<ScopeDef> {
         }
         this.runner = new CheckRunner(this.errors, this.warnings);
 
-        this.runner.nestedCheck(
-            {
-                check: this.language.name === definition.languageName,
-                error:  `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' ` +
-                        `does not match language '${this.language.name}' ${ParseLocationUtil.location(definition)}.`
-            });
+        // this.runner.nestedCheck(
+        //     {
+        //         check: this.language.name === definition.languageName,
+        //         error:  `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' ` +
+        //                 `does not match language '${this.language.name}' ${ParseLocationUtil.location(definition)}.`
+        //     });
 
         // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
         this.myNamespaces = this.findAllNamespaces(definition.namespaces);

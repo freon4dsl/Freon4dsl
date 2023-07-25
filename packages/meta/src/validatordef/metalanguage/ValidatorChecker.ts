@@ -53,7 +53,8 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
 
         this.runner.nestedCheck(
             {
-                check: this.language.name === definition.languageName,
+                // TODO Need to still ckech this?
+                check: true, // this.language.name === definition.languageName,
                 error: `Language reference ('${definition.languageName}') in ` +
                     `validator definition '${definition.validatorName}' does not match language '${this.language.name}' ` +
                     `${ParseLocationUtil.location(definition)}.`,

@@ -32,10 +32,10 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
         }
         // Note: this should be done first, otherwise the references will not be resolved
         FreMetaEnvironment.metascoper.language = this.language;
-
         this.runner.nestedCheck(
             {
-                check: this.language.name === definition.languageName,
+                // TODO Do we still need to report this?
+                check: true, //this.language.name === definition.languageName,
                 error: `Language reference ('${definition.languageName}') in Test expression checker does not match language '${this.language.name}' ` +
                         `${ParseLocationUtil.location(definition)}.`,
                 whenOk: () => {
