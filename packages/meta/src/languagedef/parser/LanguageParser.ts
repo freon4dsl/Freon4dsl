@@ -51,6 +51,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
             const result: FreMetaLanguage = new FreMetaLanguage();
             result.name = submodels[0].name;
             for (const sub of submodels) {
+                result.usedLanguages.push(sub.name);
                 // if (sub.name === result.name) { // all submodels should be of the same language
                     if (!!sub.modelConcept) {
                         result.modelConcept = sub.modelConcept;

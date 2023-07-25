@@ -1,3 +1,4 @@
+import { jsonAsString } from "../../utils/Json";
 import { FreMetaLangElement, FreMetaClassifier, FreMetaFunction, FreMetaInstance, FreMetaLanguage, FreMetaProperty } from "./internal";
 import { Names } from "../../utils";
 // The next import should be separate and the last of the imports.

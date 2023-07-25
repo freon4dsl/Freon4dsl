@@ -1,3 +1,4 @@
+import { LOG2USER } from "../utils/index";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
@@ -29,6 +30,10 @@ export class FreonGenerateValidator extends FreonGeneratePartAction {
         if (validator === null) {
             throw new Error("Validator definition could not be parsed, cannot generate validator.");
         }
-        this.validatorGenerator.generate(validator);
+        try {
+            this.validatorGenerator.generate(validator);
+        } catch(e) {
+            LOG2USER.error("Stopping validator generation action because of errors: " + e.message + "\n" + e.stack);
+        }
     }
 }

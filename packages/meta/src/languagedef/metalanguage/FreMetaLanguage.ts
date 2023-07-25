@@ -17,7 +17,8 @@ export class FreMetaLanguage extends FreMetaLangElement {
     interfaces: FreMetaInterface[] = [];
     modelConcept: FreMetaModelDescription;
     units: FreMetaUnitDescription[] = [];
-    id: string;
+    id: string
+    usedLanguages: string[] = [];
 
     constructor() {
         super();

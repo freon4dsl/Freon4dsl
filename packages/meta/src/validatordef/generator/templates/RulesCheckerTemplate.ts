@@ -10,6 +10,7 @@ import {
     FREON_CORE
 } from "../../../utils";
 import { FreMetaLanguage, FreMetaPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { jsonAsString } from "../../../utils/Json";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,

@@ -46,6 +46,7 @@ export function createLanguage(data: Partial<FreMetaLanguage>): FreMetaLanguage 
     const result = new FreMetaLanguage();
     if (!!data.name) {
         result.name = data.name;
+        result.usedLanguages.push(data.name);
     }
     if (!!data.concepts) {
         let hasModel: boolean = false;

@@ -26,7 +26,7 @@ import {
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage";
 import { CommonChecker, FreLangExpressionChecker } from "../../languagedef/checking";
 
-const LOGGER = new MetaLogger("ValidatorChecker").mute();
+const LOGGER = new MetaLogger("ValidatorChecker").show();
 const equalsTypeName = "equalsType";
 const conformsToName = "conformsTo";
 
@@ -40,6 +40,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
 
     constructor(language: FreMetaLanguage) {
         super(language);
+        LOGGER.log("Created validator checker");
         this.myExpressionChecker = new FreLangExpressionChecker(this.language);
     }
 
@@ -66,6 +67,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     }
 
     private checkConceptRule(rule: ConceptRuleSet) {
+        LOGGER.log("Check concept rule");
         CommonChecker.checkClassifierReference(rule.conceptRef, this.runner);
 
         const enclosingConcept = rule.conceptRef.referred;
@@ -96,6 +98,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     }
 
     checkValidNameRule(tr: ValidNameRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkValidNameRule");
         // check whether tr.property (if set) is a property of enclosingConcept
         // if not set, set tr.property to the 'self.unitName' property of the enclosingConcept
         if (!!tr.property) {
@@ -129,6 +132,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     }
 
     checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkEqualsTypeRule");
         // check references to types
         this.runner.nestedCheck(
             {
@@ -166,6 +170,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     }
 
     private checkExpressionRule(tr: ExpressionRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkExpressionRule");
         this.runner.nestedCheck(
             {
                 check: tr.exp1 !== null && tr.exp2 !== null,
@@ -194,6 +199,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     }
 
     private checkIsuniqueRule(tr: IsuniqueRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkIsuniqueRule");
         this.runner.nestedCheck(
             {
                 check: tr.list !== null && tr.listproperty !== null,
