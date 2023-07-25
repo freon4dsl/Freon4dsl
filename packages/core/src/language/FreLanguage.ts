@@ -17,6 +17,7 @@ export type FreLanguageProperty = {
     key?: string;// used for LionWeb
     isList: boolean;
     isPublic: boolean;
+    language: string;
     propertyKind: PropertyKind;
 };
 export type FreLanguageModel = {
@@ -26,6 +27,7 @@ export type FreLanguageModel = {
     isNamespace?: boolean;
     isNamedElement?: boolean;
     isAbstract?: boolean;
+    language: string;
     subConceptNames?: string[];
     properties: Map<string, FreLanguageProperty>;
     constructor: (id?: string) => FreModel;
@@ -39,6 +41,7 @@ export type FreLanguageModelUnit = {
     isNamespace?: boolean;
     isNamedElement?: boolean;
     isAbstract?: boolean;
+    language: string;
     subConceptNames: string[];
     fileExtension: string;
     properties: Map<string, FreLanguageProperty>;
@@ -53,6 +56,7 @@ export type FreLanguageConcept = {
     isPublic: boolean;
     isNamespace?: boolean;
     isNamedElement?: boolean;
+    language: string;
     baseName: string;
     subConceptNames: string[];
     properties: Map<string, FreLanguageProperty>;

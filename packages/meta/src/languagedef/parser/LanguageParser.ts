@@ -1,3 +1,4 @@
+import { jsonAsString } from "@freon4dsl/core";
 import fs from "fs";
 import { IdMap } from "../../commandline/IdMap";
 import { FreMetaLanguage } from "../metalanguage/";
@@ -120,6 +121,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
                 idMap.setPropertyIdAndKey(jsonInterface["interface"], jsonProperty["name"], jsonProperty["id"], jsonProperty["key"]);
             }
         }
+        console.log("End parse ids")
         return idMap;
     }
 

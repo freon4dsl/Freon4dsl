@@ -36,6 +36,7 @@ export class LanguageTemplate {
                     const model =             {
                         typeName: "${Names.classifier(language.modelConcept)}",
                         isNamespace: true,
+                        language: "${language.modelConcept.language.name}",
                         constructor: (id?: string) => { return new MyLanguage.${Names.classifier(language.modelConcept)}(id); },
                         properties: new Map< string, FreLanguageProperty>(),
                     }
@@ -45,6 +46,7 @@ export class LanguageTemplate {
                                         type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        language: "${prop.language.name}",
                                         propertyKind: "primitive"
                                     });`
                     ).join("\n")}
@@ -54,6 +56,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        language: "${prop.language.name}",
                                         propertyKind: "part"
                                     });`
                     ).join("\n")}
@@ -63,6 +66,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        language: "${prop.language.name}",
                                         propertyKind: "reference"
                                     });`
                        ).join("\n")}
@@ -77,6 +81,7 @@ export class LanguageTemplate {
                         id: "${modelunit.id}",
                         key: "${modelunit.key}",
                         isNamedElement: true,
+                        language: "${modelunit.language.name}",
                         fileExtension: "${modelunit.fileExtension}",
                         subConceptNames: [], // Nothing yet, but may change in the future
                         constructor: (id?: string) => { return new MyLanguage.${Names.classifier(modelunit)}(id); },
@@ -90,6 +95,7 @@ export class LanguageTemplate {
                                         type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        language: "${prop.language.name}",
                                         propertyKind: "primitive"
                                     });`
                     ).join("\n")}
@@ -101,6 +107,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        language: "${prop.language.name}",
                                         propertyKind: "part"
                                     });`
                     ).join("\n")}
@@ -112,6 +119,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        language: "${prop.language.name}",
                                         propertyKind: "reference"
                                     });`
                     ).join("\n")}
@@ -128,6 +136,7 @@ export class LanguageTemplate {
                         key: "${concept.key}",
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
+                        language: "${concept.originalOwningLanguage.name}",
                         isNamedElement: ${concept.allPrimProperties().some(p => p.name === "name")},
                         trigger: "${Names.concept(concept)}",
                         constructor: (id?: string) => { return ${ concept.isAbstract ? "null" : `new MyLanguage.${Names.concept(concept)}(id)`}; },
@@ -143,6 +152,7 @@ export class LanguageTemplate {
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                language: "${prop.language.name}",
                                 propertyKind: "primitive"
                             });`
                     ).join("\n")}
@@ -154,6 +164,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                language: "${prop.language.name}",
                                 propertyKind: "part"
                             });`
                     ).join("\n")}
@@ -165,6 +176,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                language: "${prop.language.name}",
                                 propertyKind: "reference"
                             });`
                     ).join("\n")}
@@ -180,6 +192,7 @@ export class LanguageTemplate {
                         isPublic: ${intface.isPublic},
                         isNamedElement: ${intface.allPrimProperties().some(p => p.name === "name")},
                         properties: new Map< string, FreLanguageProperty>(),
+                        language: "${intface.language.name}",
                         subConceptNames: [${LangUtil.subConcepts(intface).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
                     }
                 ${intface.allPrimProperties().map(prop =>
@@ -190,6 +203,7 @@ export class LanguageTemplate {
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                language: "${prop.language.name}",
                                 propertyKind: "primitive"
                             });`
                 ).join("\n")}
@@ -201,6 +215,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                language: "${prop.language.name}",
                                 propertyKind: "part"
                             });`
                 ).join("\n")}
@@ -212,6 +227,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                language: "${prop.language.name}",
                                 propertyKind: "reference"
                             });`
                 ).join("\n")}

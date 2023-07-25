@@ -35,7 +35,6 @@ export class FretPropInstance extends FreTyperElement {
     owner: FretCreateExp;
 
     readonly $typename: string = "FretPropInstance"; // holds the metatype in the form of a string
-    name: string = ""; // implementation of name
     value: FretExp; // implementation of part 'value'
     $property: MetaElementReference<FreMetaProperty>; // implementation of reference 'property'
 

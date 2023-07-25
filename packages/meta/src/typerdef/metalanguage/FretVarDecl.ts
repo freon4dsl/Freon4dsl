@@ -31,7 +31,6 @@ export class FretVarDecl extends FreTyperElement {
     owner: FretWhereExp;
 
     readonly $typename: string = "FretVarDecl"; // holds the metatype in the form of a string
-    name: string = ""; // implementation of name
 
     $type: MetaElementReference<FreMetaClassifier>; // implementation of reference 'type'
 

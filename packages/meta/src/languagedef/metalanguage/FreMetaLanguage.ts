@@ -3,7 +3,13 @@ import { FreMetaDefinitionElement } from "../../utils/FreMetaDefinitionElement";
 
 // root of the inheritance structure of all elements in a language definition
 export abstract class FreMetaLangElement extends FreMetaDefinitionElement {
-    name: string;
+    protected _name: string = "";
+    get name(): string {
+        return this._name;
+    }
+    set name(v: string) {
+        this._name = v;
+    }
 }
 
 export class FreMetaLanguage extends FreMetaLangElement {
@@ -15,6 +21,18 @@ export class FreMetaLanguage extends FreMetaLangElement {
 
     constructor() {
         super();
+        this.name = "";
+    }
+
+    get name(): string {
+        if (!!this.modelConcept) {
+            return this.modelConcept.name;
+        } else {
+            return this._name;
+        }
+    }
+    set name(v: string) {
+        this._name = v;
     }
 
     classifiers(): FreMetaClassifier[] {
@@ -72,7 +90,22 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
 
     id: string;
     key: string;
-    language: FreMetaLanguage;
+
+    private _owningLanguage: FreMetaLanguage;
+    originalOwningLanguage: FreMetaLanguage;
+    get language() {
+        return this._owningLanguage;
+    }
+    set language(c: FreMetaLanguage) {
+        if (this._owningLanguage === undefined || this._owningLanguage === null) {
+            this._owningLanguage = c;
+            this.originalOwningLanguage = c;
+        } else {
+            this.originalOwningLanguage = this._owningLanguage;
+            this._owningLanguage = c;
+        }
+    }
+
     isPublic: boolean;
     properties: FreMetaProperty[] = [];
     // TODO remove this attribute and make it a function on 'properties'
@@ -456,6 +489,9 @@ export class FreMetaProperty extends FreMetaLangElement {
             this.originalOwningClassifier = this._owningClassifier;
             this._owningClassifier = c;
         }
+    }
+    get language(): FreMetaLanguage {
+        return this.originalOwningClassifier.originalOwningLanguage;
     }
 
     get isPrimitive(): boolean {

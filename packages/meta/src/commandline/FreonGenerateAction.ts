@@ -72,6 +72,8 @@ export abstract class FreonGenerateAction extends CommandLineAction {
                 this.typerFiles.push(filename);
             } else if (filename.endsWith("id.json")) {
                 this.idFile = filename;
+            } else {
+                console.log("WARNING: unrecognized file: " + filename)
             }
         }
     }
