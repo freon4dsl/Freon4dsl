@@ -15,14 +15,11 @@ export class EditorIndexTemplate {
             boxProviderConcepts.push(concept);
         });
         boxProviderConcepts.push(...extraClassifiers);
-        return `
-        export * from "./${Names.actions(language)}";
-        export * from "./${Names.defaultActions(language)}";
-        ${boxProviderConcepts.map(cls =>
-            `export * from "./${Names.boxProvider(cls)}";`
-        ).join("")}
-        export * from "./EditorDef";
-        `;
+        return ` ${language.usedLanguages.map(lang => `  
+            export * from "./${Names.actions(language)}"; 
+            export * from "./${Names.defaultActions(language)}";`).join("")} 
+        ${boxProviderConcepts.map(cls => `export * from "./${Names.boxProvider(cls)}";` ).join("")} 
+            export * from "./EditorDef"; `;
     }
 
     generateIndex(language: FreMetaLanguage, editorDef: FreEditUnit): string {
