@@ -1,4 +1,3 @@
-import { jsonAsString } from "@freon4dsl/core";
 import fs from "fs";
 import { IdMap } from "../../commandline/IdMap";
 import { FreMetaLanguage } from "../metalanguage/";
