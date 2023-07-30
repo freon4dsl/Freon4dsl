@@ -1,2 +1,2 @@
 #!/bin/sh
-node  "../meta/dist/bin/freon-generator.js" "$@"
+node  "../meta/dist/bin/freon-generator.js" -v "$@"

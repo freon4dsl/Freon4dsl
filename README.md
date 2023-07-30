@@ -1,7 +1,10 @@
 [![Build Status](https://github.com/freon4dsl/freon4dsl/actions/workflows/node.js.yml/badge.svg)]
 
 # Freon, previously know as ProjectIt
-Projectional Editor for the Web. The current release (version 0.5.0) can be found on npm.
+Projectional Editor for the Web. The current release (version 0.6.0-beta.0) can be found on npm.
+
+This beta release supports [LIonWeb](https://github.com/LIonWeb-org) (de)serialization. 
+As LIonWeb is in motion, excpect this release to change according to LIonWeb changes before it becomes final. 
 
 ## What is Freon
 
