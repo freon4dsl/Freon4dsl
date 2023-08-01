@@ -56,18 +56,22 @@ export class ActionBox extends AbstractChoiceBox {
      * @param editor
      */
     getOptions(editor: FreEditor): SelectOption[] {
+        LOGGER.log("getOptions for " + this.$id + "- " + this.conceptName + "." + this.propertyName);
         const result: SelectOption[] = [];
         if ( !!this.propertyName && !!this.conceptName) {
+            LOGGER.log("  has property and concept names");
             // If the action box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
-            const clsOtIntf = FreLanguage.getInstance().concept(this.conceptName) ?? FreLanguage.getInstance().interface(this.conceptName);
+            const clsOtIntf = FreLanguage.getInstance().classifier(this.conceptName);
+            LOGGER.log(  `clsIntf: ${clsOtIntf}`)
             clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (creatableConceptname: string) => {
-                const creatableConcept = FreLanguage.getInstance().concept(creatableConceptname);
+                const creatableConcept = FreLanguage.getInstance().classifier(creatableConceptname);
+                LOGGER.log(  `creatableConcept: ${creatableConcept}`)
                 if (!!creatableConcept && !creatableConcept.isAbstract) {
                     if (!!(creatableConcept.referenceShortcut)) {
-                        this.addReferenceShortcuts(creatableConcept, result, editor);
+                        this.addReferenceShortcuts(creatableConcept as FreLanguageConcept, result, editor);
                     }
-                    result.push(this.getCreateElementOption(this.propertyName, creatableConceptname, creatableConcept));
+                    result.push(this.getCreateElementOption(this.propertyName, creatableConceptname, creatableConcept as FreLanguageConcept));
                 }
             });
         } else {

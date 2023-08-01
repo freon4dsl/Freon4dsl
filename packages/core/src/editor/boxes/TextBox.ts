@@ -1,3 +1,4 @@
+import { autorun } from "mobx";
 import { FreUtils } from "../../util";
 import { FreCaret, FreCaretPosition } from "../util";
 import { FreNode } from "../../ast";
@@ -29,15 +30,21 @@ export class TextBox extends Box {
 
     placeHolder: string = "";
     caretPosition: number = -1;
-    getText: () => string;
-    private readonly $setText: (newValue: string) => void;
+    $getText: () => string;
+    $setText: (newValue: string) => void;
 
     /**
      * Run the setText() as defined by the user of this box inside a mobx action.
      * @param newValue
      */
     setText(newValue: string): void {
+        LOGGER.log("setText to " + newValue);
         this.$setText(newValue);
+        this.isDirty();
+    }
+
+    getText(): string {
+        return this.$getText();
     }
 
     isCharAllowed: (currentText: string, key: string, index: number) => CharAllowed = () => {
@@ -47,7 +54,7 @@ export class TextBox extends Box {
     constructor(exp: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>) {
         super(exp, role);
         FreUtils.initializeObject(this, initializer);
-        this.getText = getText;
+        this.$getText = getText;
         this.$setText = setText;
     }
 

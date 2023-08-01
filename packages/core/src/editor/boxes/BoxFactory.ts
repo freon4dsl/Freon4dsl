@@ -171,8 +171,8 @@ export class BoxFactory {
         const result: TextBox = this.find<TextBox>(element, role, creator, textCache);
 
         // 2. Apply the other arguments in case they have changed
-        result.getText = getText;
-        result.setText = setText;
+        result.$getText = getText;
+        result.$setText = setText;
         FreUtils.initializeObject(result, initializer);
 
         return result;
@@ -353,6 +353,8 @@ export class BoxFactory {
         return result;
     }
 }
+
+BoxFactory.cachesOff();
 
 const equals = (a, b) => {
     if (isNullOrUndefined(a) && !isNullOrUndefined(b) || !isNullOrUndefined(a) && isNullOrUndefined(b)) {
