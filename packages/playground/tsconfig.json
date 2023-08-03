@@ -89,6 +89,10 @@
       "es2019"
     ]
   },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+  },
   "exclude": [
     "node_modules/*",
     "__sapper__/*",
