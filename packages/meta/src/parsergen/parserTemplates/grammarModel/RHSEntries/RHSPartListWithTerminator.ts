@@ -1,6 +1,6 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
 import { RHSPropEntry } from "./RHSPropEntry";
-import { FreProperty } from "../../../../languagedef/metalanguage";
+import { FreMetaProperty } from "../../../../languagedef/metalanguage";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
 
@@ -9,7 +9,7 @@ export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
     private entry: RHSPropEntry;
     private readonly isSingleEntry: boolean;
 
-    constructor(prop: FreProperty, entry: RHSPropEntry, separator: string, isSingleEntry: boolean) {
+    constructor(prop: FreMetaProperty, entry: RHSPropEntry, separator: string, isSingleEntry: boolean) {
         super(prop, separator);
         this.entry = entry;
         this.isList = true;

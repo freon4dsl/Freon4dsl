@@ -5,12 +5,10 @@
         ENTER,
         type FreEditor,
         FreLogger,
-        toFreKey,
         GridCellBox,
         Box
     } from "@freon4dsl/core";
     import { afterUpdate, onMount } from "svelte";
-    import { writable, type Writable } from "svelte/store";
     import RenderComponent from "./RenderComponent.svelte";
     import { componentId } from "./svelte-utils";
     import { executeCustomKeyboardShortCut, isOdd } from "./svelte-utils";
@@ -25,7 +23,6 @@
     //local variables
     const LOGGER = new FreLogger("GridCellComponent");
     let contentBox: Box;
-    let cssVariables: string;
     let id: string = !!cellBox? componentId(cellBox) : 'gridcell-for-unknown-box';
 
     let row: string;
@@ -76,7 +73,7 @@
     const onKeydown = (event: KeyboardEvent) => {
         // todo this does not work anymore because the key down is handled by the box inside the table cell, remove it?
         LOGGER.log("GridCellComponent onKeyDown");
-        const freKey = toFreKey(event);
+        // const freKey = toFreKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
             const index = cellBox.propertyIndex;

@@ -1,10 +1,10 @@
 import {
-    FreClassifier,
-    FreConcept,
-    MetaElementReference, FrePrimitiveProperty,
-    FrePrimitiveType,
-    FrePrimitiveValue,
-    FreProperty
+    FreMetaClassifier,
+    FreMetaConcept,
+    MetaElementReference, FreMetaPrimitiveProperty,
+    FreMetaPrimitiveType,
+    FreMetaPrimitiveValue,
+    FreMetaProperty
 } from "../metalanguage";
 import { CheckRunner, MetaLogger, Names, ParseLocationUtil } from "../../utils";
 
@@ -12,7 +12,7 @@ const LOGGER = new MetaLogger("CommonChecker").mute();
 
 export class CommonChecker {
 
-    public static checkClassifierReference(reference: MetaElementReference<FreClassifier>, runner: CheckRunner) {
+    public static checkClassifierReference(reference: MetaElementReference<FreMetaClassifier>, runner: CheckRunner) {
         if (!runner) {
             LOGGER.log("NO RUNNER in CommonChecker.checkClassifierReference");
             return;
@@ -31,7 +31,7 @@ export class CommonChecker {
             });
     }
 
-    public static checkOrCreateNameProperty(classifier: FreClassifier, runner: CheckRunner) {
+    public static checkOrCreateNameProperty(classifier: FreMetaClassifier, runner: CheckRunner) {
         if (!runner) {
             LOGGER.log("NO RUNNER in CommonChecker.checkOrCreateNameProperty");
             return;
@@ -39,9 +39,11 @@ export class CommonChecker {
         let nameProperty = classifier.allPrimProperties().find(p => p.name === "name");
         // if 'name' property is not present, create it.
         if (!nameProperty) {
-            nameProperty = new FrePrimitiveProperty();
+            nameProperty = new FreMetaPrimitiveProperty();
             nameProperty.name = "name";
-            nameProperty.type = FrePrimitiveType.identifier;
+            nameProperty.id = "TODO_set-correct-id";
+            nameProperty.key = "TODO_set-correct-key";
+            nameProperty.type = FreMetaPrimitiveType.identifier;
             nameProperty.isPart = true;
             nameProperty.isList = false;
             nameProperty.isOptional = false;
@@ -50,12 +52,12 @@ export class CommonChecker {
             nameProperty.owningClassifier = classifier;
             classifier.primProperties.push(nameProperty);
         } else {
-            runner.simpleCheck(nameProperty.type === FrePrimitiveType.identifier,
+            runner.simpleCheck(nameProperty.type === FreMetaPrimitiveType.identifier,
                 `The 'name' property of '${classifier.name}' should be of type 'identifier' ${ParseLocationUtil.location(classifier)}.`);
         }
     }
 
-    public static checkUniqueNameOfClassifier(names: string[], classifier: FreClassifier, isUnit: boolean, runner: CheckRunner) {
+    public static checkUniqueNameOfClassifier(names: string[], classifier: FreMetaClassifier, isUnit: boolean, runner: CheckRunner) {
         // check unique names, disregarding upper/lower case of first character
         if (names.includes(classifier.name)) {
             runner.simpleCheck(false,
@@ -71,24 +73,24 @@ export class CommonChecker {
      * @param value
      * @param type
      */
-    public static checkValueToType(value: FrePrimitiveValue, type: FrePrimitiveType): boolean {
+    public static checkValueToType(value: FreMetaPrimitiveValue, type: FreMetaPrimitiveType): boolean {
         // LOGGER.log("checkValueToType: " + value + ", " + type + ", typeof " + typeof value);
-        if (type === FrePrimitiveType.identifier && typeof value === "string") {
+        if (type === FreMetaPrimitiveType.identifier && typeof value === "string") {
             return true;
-        } else if (type === FrePrimitiveType.string && typeof value === "string") {
+        } else if (type === FreMetaPrimitiveType.string && typeof value === "string") {
             return true;
-        } else if (type === FrePrimitiveType.number && typeof value === "number") {
+        } else if (type === FreMetaPrimitiveType.number && typeof value === "number") {
             return true;
-        } else if (type === FrePrimitiveType.boolean && typeof value === "boolean") {
+        } else if (type === FreMetaPrimitiveType.boolean && typeof value === "boolean") {
             return true;
         }
         return false;
     }
 
-    public static makeCopyOfProp(property: FreProperty, classifier: FreConcept): FreProperty {
-        let copy: FreProperty = new FreProperty();
-        if (property instanceof FrePrimitiveProperty) {
-            copy = new FrePrimitiveProperty();
+    public static makeCopyOfProp(property: FreMetaProperty, classifier: FreMetaConcept): FreMetaProperty {
+        let copy: FreMetaProperty = new FreMetaProperty();
+        if (property instanceof FreMetaPrimitiveProperty) {
+            copy = new FreMetaPrimitiveProperty();
         }
         copy.name = property.name;
         copy.isPublic = property.isPublic;
@@ -97,9 +99,11 @@ export class CommonChecker {
         copy.isPart = property.isPart;
         copy.implementedInBase = false; // false because the original property comes from an interface
         copy.type = property.type;
+        copy.key = property.key;
+        copy.id = property.id;
         copy.owningClassifier = classifier;
-        if (property instanceof FrePrimitiveProperty) {
-            classifier.primProperties.push(copy as FrePrimitiveProperty);
+        if (property instanceof FreMetaPrimitiveProperty) {
+            classifier.primProperties.push(copy as FreMetaPrimitiveProperty);
         } else {
             classifier.properties.push(copy);
         }

@@ -1,5 +1,5 @@
 import { CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names, PathProvider, FREON_CORE } from "../../../utils";
-import { FreLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { ValidatorDef } from "../../metalanguage";
 
 export class ValidatorTemplate {
@@ -7,7 +7,7 @@ export class ValidatorTemplate {
     validatorInterfaceName: string = Names.FreValidator;
     typerInterfaceName: string = Names.FreTyper;
 
-    generateValidator(language: FreLanguage, validdef: ValidatorDef, relativePath: string): string {
+    generateValidator(language: FreMetaLanguage, validdef: ValidatorDef, relativePath: string): string {
         const doValidDef = validdef !== null && validdef !== undefined;
 
         const allLangConcepts: string = Names.allConcepts(language);
@@ -20,8 +20,8 @@ export class ValidatorTemplate {
 
         // Template starts here
         return `
-        import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName} } from "${FREON_CORE}";
-        import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
+        import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName}, ${Names.FreNode} } from "${FREON_CORE}";
+        // import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
         import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}";
@@ -95,7 +95,7 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateGenIndex(language: FreLanguage, validdef: ValidatorDef): string {
+    generateGenIndex(language: FreMetaLanguage, validdef: ValidatorDef): string {
         return `
         export * from "./${Names.nonOptionalsChecker(language)}";
         export * from "./${Names.validator(language)}";
@@ -103,7 +103,7 @@ export class ValidatorTemplate {
         `;
     }
 
-    generateCustomValidator(language: FreLanguage, relativePath: string): string {
+    generateCustomValidator(language: FreMetaLanguage, relativePath: string): string {
         const className: string = Names.customValidator(language);
         const defaultWorkerName: string = Names.defaultWorker(language);
         const interfaceName: string = Names.checkerInterface(language);
@@ -118,7 +118,7 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateIndex(language: FreLanguage) {
+    generateIndex(language: FreMetaLanguage) {
         return `
         export * from "./${Names.customValidator(language)}";
         `;

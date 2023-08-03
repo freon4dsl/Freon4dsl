@@ -6,7 +6,7 @@
      */
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
-    import { OptionalBox, FreLogger, type FreEditor } from "@freon4dsl/core";
+    import { OptionalBox, FreLogger, type FreEditor, Box } from "@freon4dsl/core";
     import { componentId } from "./svelte-utils";
 
     export let box: OptionalBox;
@@ -15,14 +15,14 @@
     const LOGGER = new FreLogger("OptionalComponent");
     let id: string;                             // an id for the html element showing the optional
     id = !!box ? componentId(box) : 'optional-for-unknown-box';
-    let childBox ;
+    let childBox: Box;
     let mustShow = false;
     let showByCondition = false;
-    let contentComponent;
-    let placeholderComponent;
+    let contentComponent: RenderComponent;
+    let placeholderComponent: RenderComponent;
 
     const refresh = (why?: string): void => {
-        LOGGER.log("REFRESH OptionalBox");
+        LOGGER.log("REFRESH OptionalBox: " + why);
         mustShow = box.mustShow;
         showByCondition = box.condition();
         childBox = box.content;
@@ -37,7 +37,7 @@
         } else {
             console.error("OptionalComponent " + id + " has no elements to put focus on");
         }
-    };
+    }
 
     onMount( () => {
         box.setFocus = setFocus;

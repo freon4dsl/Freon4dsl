@@ -1,11 +1,11 @@
 import { FreLanguage } from "@freon4dsl/core";
-import { LangConstructsEnvironment } from "../config/gen/LangConstructsEnvironment";
+import { AllEnvironment } from "../config/gen/AllEnvironment";
 import { LimitedConcept1, LimitedWithBase, LimitedWithInheritanceTree, LimitedWithInterface } from "../language/gen";
-import { LangConstructsStdlib } from "../stdlib/gen/LangConstructsStdlib";
+import { AllStdlib } from "../stdlib/gen/AllStdlib";
 
 describe("Checking stdlib for Lang Constructs", () => {
-    LangConstructsEnvironment.getInstance();
-    let stdlib: LangConstructsStdlib = FreLanguage.getInstance().stdLib as LangConstructsStdlib;
+    AllEnvironment.getInstance();
+    let stdlib: AllStdlib = FreLanguage.getInstance().stdLib as AllStdlib;
     // The stdlib contains the following elements
     // LimitedConcept1.FIRST
     // LimitedConcept1.SECOND

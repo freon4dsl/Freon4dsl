@@ -1,20 +1,20 @@
 {
    "serializationFormatVersion": "1",
-   "metamodels": [],
+   "languages": [],
    "nodes": [
       {
          "id": "ID-93",
          "concept": {
             "key": "Topic",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Multiplication"
             },
@@ -22,7 +22,7 @@
                "property": {
                   "key": "description",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "This topic teaches simple multiplication skills"
             }
@@ -32,7 +32,7 @@
                "containment": {
                   "key": "pages",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-94",
@@ -48,14 +48,14 @@
          "concept": {
             "key": "Theory",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Doubling"
             }
@@ -65,7 +65,7 @@
                "containment": {
                   "key": "lines",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-95",
@@ -78,7 +78,7 @@
                "containment": {
                   "key": "questions",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": []
             },
@@ -86,7 +86,7 @@
                "containment": {
                   "key": "calcResult",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-99"
@@ -101,14 +101,14 @@
          "concept": {
             "key": "Line",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Calculating the double of a numner isn't that hard."
             }
@@ -122,14 +122,14 @@
          "concept": {
             "key": "Line",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Doubling the number of X-es for XXX is XXX XXX"
             }
@@ -143,14 +143,14 @@
          "concept": {
             "key": "Line",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "This is the same as saying that three X-es times 2 gives you six X-es "
             }
@@ -164,14 +164,14 @@
          "concept": {
             "key": "Line",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "OR in mathematic terms two times three equals six: 2 * 3 = 6."
             }
@@ -185,7 +185,7 @@
          "concept": {
             "key": "Function",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -193,7 +193,7 @@
                "containment": {
                   "key": "cases",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-100"
@@ -208,7 +208,7 @@
          "concept": {
             "key": "FunctionCase",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -216,7 +216,7 @@
                "containment": {
                   "key": "formula",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-101"
@@ -228,7 +228,7 @@
                "reference": {
                   "key": "grade",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -245,14 +245,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "false"
             }
@@ -266,14 +266,14 @@
          "concept": {
             "key": "WorkSheet",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Exercises in doubling"
             }
@@ -283,7 +283,7 @@
                "containment": {
                   "key": "questions",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-103",
@@ -294,7 +294,7 @@
                "containment": {
                   "key": "calcResult",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-107"
@@ -309,14 +309,14 @@
          "concept": {
             "key": "Question",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Double-2"
             },
@@ -324,7 +324,7 @@
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "What is the double of 2"
             }
@@ -334,7 +334,7 @@
                "containment": {
                   "key": "correctAnswer",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-104"
@@ -349,14 +349,14 @@
          "concept": {
             "key": "NumberLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "4"
             }
@@ -370,14 +370,14 @@
          "concept": {
             "key": "Question",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Double-3"
             },
@@ -385,7 +385,7 @@
                "property": {
                   "key": "content",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "What is the double of 3?"
             }
@@ -395,7 +395,7 @@
                "containment": {
                   "key": "correctAnswer",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-106"
@@ -410,14 +410,14 @@
          "concept": {
             "key": "NumberLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "6"
             }
@@ -431,7 +431,7 @@
          "concept": {
             "key": "Function",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -439,7 +439,7 @@
                "containment": {
                   "key": "cases",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": []
             }

@@ -12,7 +12,6 @@
         ENTER,
         type FreEditor,
         FreLogger,
-        toFreKey,
         TableCellBox,
         FreLanguage,
         TableDirection,
@@ -26,7 +25,7 @@
     } from "@freon4dsl/core";
     import { onMount, createEventDispatcher, afterUpdate } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
-    import { componentId, executeCustomKeyboardShortCut } from "./svelte-utils";
+    import { componentId } from "./svelte-utils";
     import {
         activeElem,
         activeIn,
@@ -49,7 +48,6 @@
     // local variables
     const LOGGER = new FreLogger("TableCellComponent"); //.mute();
     const dispatcher = createEventDispatcher();
-    let cssVariables: string;
     let id: string = !!box ? `cell-${componentId(box)}` : 'table-cell-for-unknown-box';
 
     let row: number;
@@ -105,7 +103,6 @@
 
     const onKeydown = (event: KeyboardEvent) => {
         LOGGER.log("GridCellComponent onKeyDown");
-        const freKey = toFreKey(event);
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
             let index: number = parentOrientation === TableDirection.HORIZONTAL ? row : column;

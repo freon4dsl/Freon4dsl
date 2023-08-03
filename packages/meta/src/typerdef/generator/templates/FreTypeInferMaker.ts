@@ -1,6 +1,6 @@
 import { FretInferenceRule, TyperDef } from "../../metalanguage";
 import { Names, GenerationUtil } from "../../../utils";
-import { FreClassifier, FreLimitedConcept } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/metalanguage";
 import { FreTyperGenUtils } from "./FreTyperGenUtils";
 import { FretEqualsRule } from "../../metalanguage/FretEqualsRule";
 
@@ -12,7 +12,7 @@ export class FreTypeInferMaker {
     typerdef: TyperDef = null;
     // private toBeCopied: FreClassifier[] = [];
 
-    public makeInferType(typerDef: TyperDef, allLangConcepts: string, rootType: string, varName: string, imports: FreClassifier[]): string {
+    public makeInferType(typerDef: TyperDef, allLangConcepts: string, rootType: string, varName: string, imports: FreMetaClassifier[]): string {
         FreTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
         const result: string[] = [];
@@ -35,7 +35,7 @@ export class FreTypeInferMaker {
         });
 
         // add an entry for all limited concepts
-        const allLimited = typerDef.language.concepts.filter(con => con instanceof FreLimitedConcept) as FreLimitedConcept[];
+        const allLimited = typerDef.language.concepts.filter(con => con instanceof FreMetaLimitedConcept) as FreMetaLimitedConcept[];
         allLimited.map(lim =>
             result.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(${varName}, "${Names.classifier(lim)}")) {
                 result = AstType.create({ astElement: modelelement });

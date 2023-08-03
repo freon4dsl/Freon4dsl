@@ -1,11 +1,11 @@
 import { FreUtils } from "@freon4dsl/core";
 import { FileHandler } from "../../utils/FileHandler";
-import { ParserOnConceptsEnvironment } from "../config/gen/ParserOnConceptsEnvironment";
+import { TestConceptsModelEnvironment } from "../config/gen/TestConceptsModelEnvironment";
 import { ExpressionTest, TestConceptsModel } from "../language/gen";
 
 describe("Parser concepts of type", () => {
-    const reader = ParserOnConceptsEnvironment.getInstance().reader;
-    const writer = ParserOnConceptsEnvironment.getInstance().writer;
+    const reader = TestConceptsModelEnvironment.getInstance().reader;
+    const writer = TestConceptsModelEnvironment.getInstance().writer;
     const fileHandler = new FileHandler();
 
     beforeEach(() => {

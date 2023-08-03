@@ -1,8 +1,8 @@
-import { FreDefinitionElement } from "../FreDefinitionElement";
+import { FreMetaDefinitionElement } from "../FreMetaDefinitionElement";
 import { ParseLocation } from "./FreGenericParser";
 
 export class ParseLocationUtil {
-    static location(elem: FreDefinitionElement): string {
+    static location(elem: FreMetaDefinitionElement): string {
         if (!!elem) {
             if (!!elem.location && !!elem.location.filename) {
                 const shortFileName: string = ParseLocationUtil.getShortFileName(elem.location.filename);

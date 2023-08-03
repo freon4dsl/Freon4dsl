@@ -1,9 +1,9 @@
 import { Names, FREON_CORE } from "../../../utils";
-import { FreLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 
 export class CustomActionsTemplate {
 
-    generate(language: FreLanguage): string {
+    generate(language: FreMetaLanguage): string {
         return `
             import {
                 ${Names.FreCreateBinaryExpressionAction},

@@ -1,9 +1,9 @@
 import {
-    FreConcept,
-    FreInterface,
+    FreMetaConcept,
+    FreMetaInterface,
     FreLangExp,
     FreLangFunctionCallExp,
-    FreLanguage
+    FreMetaLanguage
 } from "../../../languagedef/metalanguage";
 import {
     Names,
@@ -19,24 +19,24 @@ export class ScoperTemplate {
     getAlternativeScopeText: string = "";
     getAdditionalNamespacetext = "";
 
-    generateGenIndex(language: FreLanguage): string {
+    generateGenIndex(language: FreMetaLanguage): string {
         return `
         export * from "./${Names.scoper(language)}";
         export * from "./${Names.scoperDef(language)}";
         `;
     }
 
-    generateIndex(language: FreLanguage): string {
+    generateIndex(language: FreMetaLanguage): string {
         return `
         export * from "./${Names.customScoper(language)}";
         `;
     }
 
-    generateScoper(language: FreLanguage, scopedef: ScopeDef, relativePath: string): string {
+    generateScoper(language: FreMetaLanguage, scopedef: ScopeDef, relativePath: string): string {
         this.hasAlternativeScopeText = "";
         this.getAlternativeScopeText = "";
 
-        const langConceptType: string = Names.metaType(language);
+        // const langConceptType: string = Names.metaType(language);
         const generatedClassName: string = Names.scoper(language);
         const scoperBaseName: string = Names.FreScoperBase;
 
@@ -45,7 +45,7 @@ export class ScoperTemplate {
             this.makeAdditionalNamespaceTexts(scopedef);
         }
         // add the necessary names to the imports
-        ListUtil.addIfNotPresent(this.languageImports, langConceptType);
+        // ListUtil.addIfNotPresent(this.languageImports, langConceptType);
         // console.log("Adding 222: " + langConceptType + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
 
         // Template starts here - without imports, they are calculated while creating this text and added later
@@ -104,7 +104,7 @@ export class ScoperTemplate {
                 // let isDone: boolean = false;
                 const comment = "// based on namespace addition for " + myClassifier.name + "\n";
                 ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
-                if (myClassifier instanceof FreInterface) {
+                if (myClassifier instanceof FreMetaInterface) {
                     for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
                         this.makeAdditionalNamespaceTextsForConcept(implementor, def, comment);
                         ListUtil.addIfNotPresent(this.languageImports, Names.concept(implementor));
@@ -117,7 +117,7 @@ export class ScoperTemplate {
         }
     }
 
-    private makeAdditionalNamespaceTextsForConcept(freConcept: FreConcept, def: ScopeConceptDef, comment: string) {
+    private makeAdditionalNamespaceTextsForConcept(freConcept: FreMetaConcept, def: ScopeConceptDef, comment: string) {
         const typeName = Names.concept(freConcept);
         // we are adding to three textstrings
         // first, to the import statements

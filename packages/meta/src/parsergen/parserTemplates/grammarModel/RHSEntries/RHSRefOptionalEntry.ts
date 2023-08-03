@@ -1,11 +1,11 @@
 import { RHSPropEntry } from "./RHSPropEntry";
-import { FreProperty } from "../../../../languagedef/metalanguage";
+import { FreMetaProperty } from "../../../../languagedef/metalanguage";
 import { GenerationUtil } from "../../../../utils";
 import { makeIndent, refRuleName } from "../GrammarUtils";
 import { ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSRefOptionalEntry extends RHSPropEntry {
-    constructor(prop: FreProperty) {
+    constructor(prop: FreMetaProperty) {
         super(prop);
         this.isList = false;
     }

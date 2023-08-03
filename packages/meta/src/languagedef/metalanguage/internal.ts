@@ -6,7 +6,7 @@
 
 export * from "./FreLangEveryConcept";
 export * from "./MetaElementReference";
-export * from "./FreLanguage";
+export * from "./FreMetaLanguage";
 export * from "./FreLangExpressions";
 export * from "./FreLangScoper";
 export * from "./FreMetaEnvironment";

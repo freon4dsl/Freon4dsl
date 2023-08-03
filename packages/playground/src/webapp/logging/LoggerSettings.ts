@@ -38,6 +38,7 @@ export function muteLogs() {
     FreLogger.mute("Box");
     // FreLogger.mute("ListBox");
     FreLogger.mute("LayoutBox");
+    FreLogger.mute("FreProjectionHandler");
 
     // from ~/webapp:
     FreLogger.mute("EditorCommunication");

@@ -5,6 +5,9 @@ export class LionwebIdProvider implements IdProvider {
         return this.availableIds.pop();
     }
 
-    availableIds: string[];
+    usedId(id: string): void {
+    }
 
+
+    availableIds: string[];
 }

@@ -1,4 +1,4 @@
-import { FreClassifier, FreLimitedConcept } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLimitedConcept } from "../../languagedef/metalanguage";
 import { Names } from "../../utils";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { LimitedRule } from "./grammarModel/LimitedRule";
@@ -12,9 +12,9 @@ import { LimitedRule } from "./grammarModel/LimitedRule";
 export class LimitedMaker {
     generatedParseRules: string[] = [];
     branchNames: string[] = [];
-    imports: FreClassifier[] = [];
+    imports: FreMetaClassifier[] = [];
 
-    generateLimitedRules(limitedConcepts: FreLimitedConcept[]): GrammarRule[] {
+    generateLimitedRules(limitedConcepts: FreMetaLimitedConcept[]): GrammarRule[] {
         const rules: GrammarRule[] = [];
         for (const limitedConcept of limitedConcepts) {
             // find the mapping of keywords to predef instances

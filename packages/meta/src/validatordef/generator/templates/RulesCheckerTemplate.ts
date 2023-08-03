@@ -9,7 +9,8 @@ import {
     FreErrorSeverity,
     FREON_CORE
 } from "../../../utils";
-import { FreLanguage, FrePrimitiveProperty } from "../../../languagedef/metalanguage";
+import { FreMetaLanguage, FreMetaPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { jsonAsString } from "../../../utils/Json";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -28,7 +29,7 @@ import { ValidationUtils } from "../ValidationUtils";
 
 export class RulesCheckerTemplate {
 
-    generateRulesChecker(language: FreLanguage, validdef: ValidatorDef, relativePath: string): string {
+    generateRulesChecker(language: FreMetaLanguage, validdef: ValidatorDef, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName: string = Names.FreError;
         const checkerClassName: string = Names.rulesChecker(language);
@@ -93,7 +94,7 @@ export class RulesCheckerTemplate {
         `;
     }
 
-    private createImports(language: FreLanguage): string {
+    private createImports(language: FreMetaLanguage): string {
         return `${language.concepts?.map(concept => `
                 ${Names.concept(concept)}`).concat(
                     language.interfaces?.map(intf => `
@@ -275,7 +276,7 @@ export class RulesCheckerTemplate {
                     // console.log("FOUND message text: '" + cont.value + "'");
                     result += `${cont.value}`;
                 } else if (cont instanceof ValidationMessageReference) {
-                    if (cont.expression.findRefOfLastAppliedFeature() instanceof FrePrimitiveProperty) {
+                    if (cont.expression.findRefOfLastAppliedFeature() instanceof FreMetaPrimitiveProperty) {
                         result += `\${${GenerationUtil.langExpToTypeScript(cont.expression)}}`;
                     } else {
                         // console.log("FOUND message expression: '" + cont.expression.toFreString() + "'");

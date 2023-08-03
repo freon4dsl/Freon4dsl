@@ -1,5 +1,5 @@
 import {
-    FreClassifier, FreConcept, FreInstance, FreInterface, FreLanguage, FrePrimitiveProperty, FreProperty, FreModelDescription, FreUnitDescription
+    FreMetaClassifier, FreMetaConcept, FreMetaInstance, FreMetaInterface, FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty, FreMetaModelDescription, FreMetaUnitDescription
 } from "../../languagedef/metalanguage";
 import { FreEditClassifierProjection, FreEditProjectionGroup, FreEditTableProjection } from "../../editordef/metalanguage";
 
@@ -110,39 +110,39 @@ export class Names {
     public static listUtil: string = "ListUtil";
     public static brackets: string = "Brackets";
 
-    public static environment(language: FreLanguage) {
+    public static environment(language: FreMetaLanguage) {
         return this.startWithUpperCase(language?.name) + "Environment";
     }
 
-    public static context(language: FreLanguage): string {
+    public static context(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Context";
     }
 
-    public static actions(language: FreLanguage): string {
+    public static actions(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Actions";
     }
 
-    public static defaultActions(language: FreLanguage): string {
+    public static defaultActions(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "DefaultActions";
     }
 
-    public static customActions(language: FreLanguage): string {
+    public static customActions(language: FreMetaLanguage): string {
         return "Custom" + this.actions(language);
     }
 
-    public static customScoper(language: FreLanguage): string {
+    public static customScoper(language: FreMetaLanguage): string {
         return "Custom" + this.scoper(language);
     }
 
-    public static customTyper(language: FreLanguage): string {
+    public static customTyper(language: FreMetaLanguage): string {
         return "Custom" + this.typerPart(language);
     }
 
-    public static customValidator(language: FreLanguage): string {
+    public static customValidator(language: FreMetaLanguage): string {
         return "Custom" + this.validator(language);
     }
 
-    public static customStdlib(language: FreLanguage): string {
+    public static customStdlib(language: FreMetaLanguage): string {
         return "Custom" + this.stdlib(language);
     }
 
@@ -150,120 +150,120 @@ export class Names {
         return group.name;
     }
 
-    public static customProjection(language: FreLanguage): string {
+    public static customProjection(language: FreMetaLanguage): string {
         return "Custom" + this.startWithUpperCase(language?.name) + "Projection";
     }
 
-    public static language(language: FreLanguage): string {
+    public static language(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Language";
     }
 
-    public static initialization(language: FreLanguage) {
+    public static initialization(language: FreMetaLanguage) {
         return this.startWithUpperCase(language?.name) + "Initialization";
     }
 
-    public static concept(concept: FreConcept): string {
+    public static concept(concept: FreMetaConcept): string {
         return this.startWithUpperCase(concept?.name);
     }
 
-    public static classifier(concept: FreClassifier): string {
+    public static classifier(concept: FreMetaClassifier): string {
         return this.startWithUpperCase(concept?.name);
     }
 
-    public static primitivePropertyField(property: FrePrimitiveProperty): string {
+    public static primitivePropertyField(property: FreMetaPrimitiveProperty): string {
         // return "$$" + property.name;
         return property.name;
     }
 
-    public static primitivePropertyGetter(property: FrePrimitiveProperty): string {
+    public static primitivePropertyGetter(property: FreMetaPrimitiveProperty): string {
         return property.name;
     }
 
-    public static primitivePropertySetter(property: FrePrimitiveProperty): string {
+    public static primitivePropertySetter(property: FreMetaPrimitiveProperty): string {
         return property.name;
     }
 
-    public static interface(interf: FreInterface): string {
+    public static interface(interf: FreMetaInterface): string {
         return this.startWithUpperCase(interf?.name);
     }
 
-    public static metaType(language: FreLanguage): string {
-        return this.startWithUpperCase(language?.name) + "MetaType";
+    public static metaType(language: FreMetaLanguage): string {
+        return "string"; //this.startWithUpperCase(language?.name) + "MetaType";
     }
 
-    public static allConcepts(language: FreLanguage): string {
-        return this.startWithUpperCase(language?.name) + "EveryConcept";
+    public static allConcepts(language: FreMetaLanguage): string {
+        return "FreNode"; // this.startWithUpperCase(language?.name) + "EveryConcept";
     }
 
-    public static modelunit(language: FreLanguage): string {
-        return this.startWithUpperCase(language?.name) + "ModelUnitType";
+    public static modelunit(language: FreMetaLanguage): string {
+        return "FreModelUnit"; // this.startWithUpperCase(language?.name) + "ModelUnitType";
     }
 
-    public static namespace(language: FreLanguage): string {
+    public static namespace(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Namespace";
     }
 
-    public static scoper(language: FreLanguage): string {
+    public static scoper(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Scoper";
     }
 
-    public static scoperDef(language: FreLanguage): string {
+    public static scoperDef(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "ScoperDef";
     }
 
-    public static typerDef(language: FreLanguage): string {
+    public static typerDef(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "TyperDef";
     }
 
-    public static scoperUtils(language: FreLanguage): string {
+    public static scoperUtils(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "ScoperUtils";
     }
 
-    public static namesCollector(language: FreLanguage): string {
+    public static namesCollector(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "NamesCollector";
     }
 
-    public static validator(language: FreLanguage): string {
+    public static validator(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Validator";
     }
 
-    public static checkerInterface(language: FreLanguage): string {
+    public static checkerInterface(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "CheckerInterface";
     }
 
-    public static rulesChecker(language: FreLanguage): string {
+    public static rulesChecker(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "ValidationRulesChecker";
     }
 
-    public static nonOptionalsChecker(language: FreLanguage): string {
+    public static nonOptionalsChecker(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "NonOptionalsChecker";
     }
 
-    public static referenceChecker(language: FreLanguage): string {
+    public static referenceChecker(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "ReferenceChecker";
     }
 
-    public static typerPart(language: FreLanguage): string {
+    public static typerPart(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "TyperPart";
     }
 
-    public static typer(language: FreLanguage): string {
+    public static typer(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Typer";
     }
 
-    public static stdlib(language: FreLanguage): string {
+    public static stdlib(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Stdlib";
     }
 
-    public static walker(language: FreLanguage): string {
+    public static walker(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Walker";
     }
 
-    public static workerInterface(language: FreLanguage): string {
+    public static workerInterface(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Worker";
     }
 
-    public static defaultWorker(language: FreLanguage): string {
+    public static defaultWorker(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "DefaultWorker";
     }
 
@@ -290,27 +290,27 @@ export class Names {
         return "getHeadersFor" + this.startWithUpperCase(proj.name);
     }
 
-    public static writer(language: FreLanguage): string {
+    public static writer(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
 
-    public static parser(language: FreLanguage): string {
+    public static parser(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Parser";
     }
 
-    public static grammar(language: FreLanguage): string {
+    public static grammar(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "Grammar";
     }
 
-    public static grammarStr(language: FreLanguage): string {
+    public static grammarStr(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "GrammarStr";
     }
 
-    public static syntaxAnalyser(language: FreLanguage): string {
+    public static syntaxAnalyser(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "SyntaxAnalyser";
     }
 
-    public static unitAnalyser(language: FreLanguage, unit: FreUnitDescription | FreModelDescription): string {
+    public static unitAnalyser(language: FreMetaLanguage, unit: FreMetaUnitDescription | FreMetaModelDescription): string {
         if (!!unit) {
             return this.startWithUpperCase(unit?.name) + "SyntaxAnalyserPart";
         } else {
@@ -318,15 +318,15 @@ export class Names {
         }
     }
 
-    public static semanticAnalyser(language: FreLanguage): string {
+    public static semanticAnalyser(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "SemanticAnalyser";
     }
 
-    public static semanticWalker(language: FreLanguage): string {
+    public static semanticWalker(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "SemanticAnalysisWalker";
     }
 
-    public static reader(language: FreLanguage): string {
+    public static reader(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }
 
@@ -334,35 +334,35 @@ export class Names {
         return "_getBinaryExpressionBox";
     }
 
-    public static instance(instance: FreInstance): string {
+    public static instance(instance: FreMetaInstance): string {
         return instance.name;
     }
 
-    public static refName(property: FreProperty): string {
+    public static refName(property: FreMetaProperty): string {
         return "$" + property.name;
     }
 
-    public static interpreterClassname(language: FreLanguage): string {
+    public static interpreterClassname(language: FreMetaLanguage): string {
         return Names.startWithUpperCase(language.name) + "Interpreter";
     }
 
-    public static interpreterBaseClassname(language: FreLanguage): string {
+    public static interpreterBaseClassname(language: FreMetaLanguage): string {
         return Names.interpreterClassname(language) + "Base";
     }
 
-    public static interpreterInterfacename(language: FreLanguage): string {
+    public static interpreterInterfacename(language: FreMetaLanguage): string {
         return "I" + Names.interpreterClassname(language);
     }
 
-    public static interpreterInitname(language: FreLanguage): string {
+    public static interpreterInitname(language: FreMetaLanguage): string {
         return Names.interpreterClassname(language) + "Init";
     }
 
-    public static interpreterName(language: FreLanguage): string {
+    public static interpreterName(language: FreMetaLanguage): string {
         return "Main" + Names.interpreterClassname(language);
     }
 
-    public static boxProvider(concept: FreClassifier): string {
+    public static boxProvider(concept: FreMetaClassifier): string {
         return Names.startWithUpperCase(concept.name) + "BoxProvider";
     }
 

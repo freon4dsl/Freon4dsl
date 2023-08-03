@@ -1,4 +1,4 @@
-import { FreClassifier, MetaElementReference, FreProperty } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, MetaElementReference, FreMetaProperty } from "../../../languagedef/metalanguage";
 import { FretExp } from "./FretExp";
 
 export class FretPropertyCallExp extends FretExp {
@@ -26,7 +26,7 @@ export class FretPropertyCallExp extends FretExp {
     readonly $typename: string = "FretPropertyCallExp"; // holds the metatype in the form of a string
 
     source: FretExp; // implementation of part 'source'
-    $property: MetaElementReference<FreProperty>;
+    $property: MetaElementReference<FreMetaProperty>;
     toFreString(): string {
         let sourceStr: string = "";
         if (!!this.source) {
@@ -34,19 +34,19 @@ export class FretPropertyCallExp extends FretExp {
         }
         return `${sourceStr}${this.$property.name}`;
     }
-    get property(): FreProperty {
+    get property(): FreMetaProperty {
         if (!!this.$property && !!this.$property.referred) {
             return this.$property.referred;
         }
         return null;
     }
-    set property(cls: FreProperty) {
+    set property(cls: FreMetaProperty) {
         if (!!cls) {
-            this.$property = MetaElementReference.create<FreProperty>(cls, "FreProperty");
+            this.$property = MetaElementReference.create<FreMetaProperty>(cls, "FreProperty");
             this.$property.owner = this.language;
         }
     }
-    get type(): FreClassifier {
+    get type(): FreMetaClassifier {
         return this.property?.type;
     }
 

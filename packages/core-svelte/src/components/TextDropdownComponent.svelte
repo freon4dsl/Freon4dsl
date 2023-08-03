@@ -17,7 +17,7 @@
         FreEditor,
         FreLogger,
         SelectOption,
-        TextBox, jsonAsString
+        TextBox
     } from "@freon4dsl/core";
 
     import { runInAction } from "mobx";

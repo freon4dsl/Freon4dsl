@@ -1,9 +1,9 @@
-import { FreLanguage } from "../../metalanguage";
+import { FreMetaLanguage } from "../../metalanguage";
 import { GenerationUtil, Names } from "../../../utils";
 
 export class MetaTypeTemplate {
 
-    generateMetaType(language: FreLanguage): string {
+    generateMetaType(language: FreMetaLanguage): string {
         const unitNames = language.units.map(unit => Names.classifier(unit));
         const tmp = GenerationUtil.sortUnitNames(language, unitNames);
 

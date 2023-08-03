@@ -1,37 +1,37 @@
 import { GenerationUtil, Names } from "../../../utils";
 import {
-    FrePrimitiveProperty,
-    FreBinaryExpressionConcept,
-    FreExpressionConcept,
-    FreConcept,
-    FreLimitedConcept,
-    FreProperty,
-    FreInstanceProperty,
-    FreClassifier,
-    FrePrimitiveType
+    FreMetaPrimitiveProperty,
+    FreMetaBinaryExpressionConcept,
+    FreMetaExpressionConcept,
+    FreMetaConcept,
+    FreMetaLimitedConcept,
+    FreMetaProperty,
+    FreMetaInstanceProperty,
+    FreMetaClassifier,
+    FreMetaPrimitiveType
 } from "../../metalanguage";
 import { ConceptUtils } from "./ConceptUtils";
 import { ClassifierUtil } from "./ClassifierUtil";
 
 export class ConceptTemplate {
-    generateConcept(concept: FreConcept): string {
-        if (concept instanceof FreLimitedConcept) {
+    generateConcept(concept: FreMetaConcept): string {
+        if (concept instanceof FreMetaLimitedConcept) {
             return this.generateLimited(concept);
-        } else if (concept instanceof FreBinaryExpressionConcept) {
+        } else if (concept instanceof FreMetaBinaryExpressionConcept) {
             return this.generateBinaryExpression(concept);
         } else {
             return this.generateConceptPrivate(concept);
         }
     }
 
-    private generateConceptPrivate(concept: FreConcept): string {
+    private generateConceptPrivate(concept: FreMetaConcept): string {
         const language = concept.language;
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
         const hasReferences = concept.implementedReferences().length > 0;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const isAbstract = concept.isAbstract;
-        const isExpression = (concept instanceof FreBinaryExpressionConcept) || (concept instanceof FreExpressionConcept);
+        const isExpression = (concept instanceof FreMetaBinaryExpressionConcept) || (concept instanceof FreMetaExpressionConcept);
         const abstract = (concept.isAbstract ? "abstract" : "");
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const implementsFre = (isExpression ? Names.FreExpressionNode : (hasName ? Names.FreNamedNode : Names.FreNode));
@@ -77,7 +77,7 @@ export class ConceptTemplate {
             ${result}`;
     }
 
-    private generateBinaryExpression(concept: FreBinaryExpressionConcept) {
+    private generateBinaryExpression(concept: FreMetaBinaryExpressionConcept) {
         const language = concept.language;
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
@@ -166,7 +166,7 @@ export class ConceptTemplate {
 // the folowing template is based on assumptions about a limited concept.
     // a limited does not have any non-prim properties
     // a limited does not have any references
-    private generateLimited(concept: FreLimitedConcept): string {
+    private generateLimited(concept: FreMetaLimitedConcept): string {
         const language = concept.language;
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
@@ -220,30 +220,30 @@ export class ConceptTemplate {
             ${result}`;
     }
 
-    private findModelImports(concept: FreConcept, myName: string): string[] {
+    private findModelImports(concept: FreMetaConcept, myName: string): string[] {
         return Array.from(
             new Set(
                 concept.interfaces.map(i => Names.interface(i.referred))
                     .concat((concept.base ? Names.concept(concept.base.referred) : null))
                     .concat(concept.implementedParts().map(part => Names.classifier(part.type)))
                     .concat(concept.implementedReferences().map(part => Names.classifier(part.type)))
-                    .concat(Names.metaType(concept.language))
+                    // .concat(Names.metaType(concept.language))
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )
         );
     }
 
-    private createInstancePropValue(property: FreInstanceProperty): string {
-        const refProperty: FreProperty = property.property?.referred;
-        if (!!refProperty && refProperty instanceof FrePrimitiveProperty) { // should always be the case
-            const type: FreClassifier = refProperty.type;
+    private createInstancePropValue(property: FreMetaInstanceProperty): string {
+        const refProperty: FreMetaProperty = property.property?.referred;
+        if (!!refProperty && refProperty instanceof FreMetaPrimitiveProperty) { // should always be the case
+            const type: FreMetaClassifier = refProperty.type;
             if (refProperty.isList) {
                 return `[ ${property.valueList.map(value =>
-                    `${(type === FrePrimitiveType.string || type === FrePrimitiveType.identifier) ? `"${value}"` : `${value}` }`
+                    `${(type === FreMetaPrimitiveType.string || type === FreMetaPrimitiveType.identifier) ? `"${value}"` : `${value}` }`
                 ).join(", ")} ]`;
             } else {
-                return `${(type === FrePrimitiveType.string || type === FrePrimitiveType.identifier) ? `"${property.value}"` : `${property.value}` }`;
+                return `${(type === FreMetaPrimitiveType.string || type === FreMetaPrimitiveType.identifier) ? `"${property.value}"` : `${property.value}` }`;
             }
         }
         return ``;

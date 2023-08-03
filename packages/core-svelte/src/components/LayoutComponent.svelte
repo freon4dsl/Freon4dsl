@@ -10,7 +10,6 @@
     import RenderComponent from "./RenderComponent.svelte";
     import {
         Box,
-        isEmptyLineBox,
         FreEditor,
         FreLogger,
         ListDirection,

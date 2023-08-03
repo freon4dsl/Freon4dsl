@@ -1,5 +1,5 @@
 import { FretExp } from "./FretExp";
-import { FreClassifier } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier } from "../../../languagedef/metalanguage";
 import { FretVarDecl } from "../FretVarDecl";
 import { FretBinaryExp } from "./FretBinaryExp";
 
@@ -32,7 +32,7 @@ export class FretWhereExp extends FretExp {
         ${this.conditions.map(cond => cond.toFreString()).join("\n\t\t")}
     }`;
     }
-    get type(): FreClassifier {
+    get type(): FreMetaClassifier {
         return this.variable.type;
     }
 }

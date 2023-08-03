@@ -1,5 +1,5 @@
 language test1
-model TEST {
+model TEST1 {
     unit: TEST_PRIMS;
 }
 modelunit TEST_PRIMS {

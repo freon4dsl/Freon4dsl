@@ -1,5 +1,5 @@
 import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { FreLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { TyperDef } from "../../metalanguage";
 
 /**
@@ -7,9 +7,9 @@ import { TyperDef } from "../../metalanguage";
  * typer(s). It also generates the indexes for the 'gen' folder and the folder with the custom typer.
  */
 export class FreTyperTemplate {
-    language: FreLanguage;
+    language: FreMetaLanguage;
 
-    generateTyper(language: FreLanguage, typerdef: TyperDef, relativePath: string): string {
+    generateTyper(language: FreMetaLanguage, typerdef: TyperDef, relativePath: string): string {
         this.language = language;
         // const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typer(language);
@@ -239,13 +239,13 @@ export class FreTyperTemplate {
         }`;
     }
 
-    generateGenIndex(language: FreLanguage): string {
+    generateGenIndex(language: FreMetaLanguage): string {
         return `
         export * from "./${Names.typerPart(language)}";
         `;
     }
 
-    generateIndex(language: FreLanguage): string {
+    generateIndex(language: FreMetaLanguage): string {
         return `
         export * from "./${Names.customTyper(language)}";
         `;

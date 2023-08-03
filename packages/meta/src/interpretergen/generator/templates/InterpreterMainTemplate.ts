@@ -1,4 +1,4 @@
-import { FreLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils/index";
 import { FreInterpreterDef } from "../../metalanguage/FreInterpreterDef";
 
@@ -9,7 +9,7 @@ export class InterpreterMainTemplate {
      * @param language
      * @param interpreterDef
      */
-    public interpreterMain(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
+    public interpreterMain(language: FreMetaLanguage, interpreterDef: FreInterpreterDef): string {
         return `// Generated my Freon, will be overwritten with every generation.
         import {
             ConceptFunction, ${Names.FreInterpreter},

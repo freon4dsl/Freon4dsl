@@ -1,41 +1,43 @@
 /**
- * The types defining the struicture of the lionweb JSON format.
+ * The types defining the structure of the lionweb JSON format.
+ * @see https://lionweb-org.github.io/organization/lioncore/serialization/serialization.html
  * We use types instead of classes, because the purpose is to define the Lionweb JSON to be sent over the line.
  */
+type Id = string;
 
 export type LwMetaPointer = {
-    metamodel: string;
+    language: Id;
     version: string;
-    key: string;
+    key: Id;
 }
 
 export function isLwMetaPointer(node: any): node is LwMetaPointer {
     const metaPointer = node as LwMetaPointer;
     return metaPointer.key !== undefined &&
         metaPointer.version !== undefined &&
-        metaPointer.metamodel !== undefined;
+        metaPointer.language !== undefined;
 }
 
 export type LwChunk = {
     serializationFormatVersion: string;
-    metamodels: LwUsedLanguage[];
+    languages: LwUsedLanguage[];
     nodes: LwNode[];
 }
 
 export function isLwChunk(box: any): box is LwChunk {
     const cnk = box as LwChunk;
     return cnk.serializationFormatVersion !== undefined &&
-        cnk.metamodels !== undefined &&
+        cnk.languages !== undefined &&
         cnk.nodes !== undefined;
 }
 
 export type LwUsedLanguage = {
-    key: string;
+    key: Id;
     version: string;
 }
 
 export type LwNode = {
-    id: string;
+    id: Id;
     concept: LwMetaPointer;
     properties: LwProperty[];
     children: LwChild[];
@@ -76,10 +78,10 @@ export type LwChild = {
 
 export type LwReference = {
     reference: LwMetaPointer;
-    targets: LwTarget[];
+    targets: LwReferenceTarget[];
 }
 
-export type LwTarget = {
+export type LwReferenceTarget = {
     resolveInfo: string;
-    reference: string;
+    reference: Id;
 }

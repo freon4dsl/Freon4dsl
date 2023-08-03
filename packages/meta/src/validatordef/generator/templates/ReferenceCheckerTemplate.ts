@@ -1,11 +1,11 @@
 import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { FreLanguage, FreClassifier } from "../../../languagedef/metalanguage";
+import { FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
 export class ReferenceCheckerTemplate {
     imports: string[] = [];
 
-    generateChecker(language: FreLanguage, relativePath: string): string {
+    generateChecker(language: FreMetaLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName: string = Names.FreError;
         const errorSeverityName: string = Names.FreErrorSeverity;
@@ -18,15 +18,15 @@ export class ReferenceCheckerTemplate {
         // and thus fills 'this.imports' list, it needs to be called before the rest of the template
         // is returned
         this.imports = [];
-        const allClassifiers: FreClassifier[] = [];
+        const allClassifiers: FreMetaClassifier[] = [];
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
         const allMethods: string = `${allClassifiers.map(concept => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}`;
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.FreNodeReference}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${overallTypeName}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.FreNodeReference}, ${Names.FreNamedNode}, ${Names.FreNode}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
+        import { ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
 
@@ -68,7 +68,7 @@ export class ReferenceCheckerTemplate {
         }`;
     }
 
-    private createChecksOnNonOptionalParts(concept: FreClassifier): string {
+    private createChecksOnNonOptionalParts(concept: FreMetaClassifier): string {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
         concept.allProperties().forEach(prop => {

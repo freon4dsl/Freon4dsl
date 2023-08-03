@@ -1,5 +1,5 @@
 import { FreTyperMerger } from "../../typerdef/parser";
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { FretClassifierSpec, FretInferenceRule, TyperDef } from "../../typerdef/metalanguage";
@@ -35,7 +35,7 @@ describe("Checking new typer", () => {
     const langParser = new LanguageParser();
 
     let parser: FreTyperMerger;
-    let language: FreLanguage;
+    let language: FreMetaLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 

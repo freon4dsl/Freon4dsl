@@ -10,7 +10,7 @@ import {
     TyperDef
 } from "../metalanguage";
 import { ClassifierChecker } from "../../languagedef/checking/ClassifierChecker";
-import { FreProperty } from "../../languagedef/metalanguage";
+import { FreMetaProperty } from "../../languagedef/metalanguage";
 
 // const LOGGER = new MetaLogger("FreTyperCheckerPhase2"); //.mute();
 
@@ -140,7 +140,7 @@ export class FreTyperCheckerPhase2 extends CheckerPhase<TyperDef> {
 
     private sortConditions(conditions: FretBinaryExp[], variable: FretVarDecl): FretBinaryExp[] {
         const result: FretBinaryExp[] = [];
-        const properties: FreProperty[] = [];
+        const properties: FreMetaProperty[] = [];
         conditions.forEach(cond => {
             // find out which part of the condition refers to 'variable'
             let variablePart: FretExp;
@@ -167,7 +167,7 @@ export class FreTyperCheckerPhase2 extends CheckerPhase<TyperDef> {
         return result;
     }
 
-    private checkUniquenessOfProperty(variablePart: FretExp, properties: FreProperty[]) {
+    private checkUniquenessOfProperty(variablePart: FretExp, properties: FreMetaProperty[]) {
         if (!!variablePart && variablePart instanceof FretPropertyCallExp) {
             if (properties.includes(variablePart.property)) {
                 this.runner.simpleCheck(false,

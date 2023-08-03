@@ -1,9 +1,9 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
-import { FreLanguage, FreProperty } from "../../languagedef/metalanguage";
+import { FreMetaLanguage, FreMetaProperty } from "../../languagedef/metalanguage";
 
 function parseCorrectModel(parser: LanguageParser, parseFile: string) {
-    let model: FreLanguage = null;
+    let model: FreMetaLanguage = null;
     try {
         model = parser.parse(parseFile);
     } catch (e) {
@@ -104,7 +104,7 @@ describe("Checking generation of virtual props", () => {
         expect(found.type.name).toBe("boolean");
 
         // check all other properties
-        const otherProps: FreProperty[] = [];
+        const otherProps: FreMetaProperty[] = [];
         for (let index = 2; index < 5; index++) {
             let found2 = rightOne.properties.find(prop => prop.name === "name" + index);
             expect(!!found2).toEqual(false);

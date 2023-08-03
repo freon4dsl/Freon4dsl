@@ -7,7 +7,7 @@ import {
     ValidNameRule
 } from "../metalanguage";
 import { FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
-import { FreDefinitionElement } from "../../utils";
+import { FreMetaDefinitionElement } from "../../utils";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang)
 // from the parsed data objects (from ValidatorGrammar.pegjs).
@@ -204,7 +204,7 @@ export function createValidationMessageText(data: Partial<ValidationMessageText>
     return result;
 }
 
-function setLocationAndFileName(result: FreDefinitionElement, data: Partial<ValidationMessageText>) {
+function setLocationAndFileName(result: FreMetaDefinitionElement, data: Partial<ValidationMessageText>) {
     result.location = data.location;
     result.location.filename = currentFileName;
 }

@@ -11,7 +11,8 @@ import { FreonGenerateParser } from "./FreonGenerateParser";
 import { FreonGenerateDiagrams } from "./FreonGenerateDiagrams";
 import { FreonCleanAction } from "./FreonCleanAction";
 
-const LOGGER = new MetaLogger("Freon"); // .mute();
+require('source-map-support').install();
+const LOGGER = new MetaLogger("Freon").mute();
 
 // The main entry point for the Freon generator
 export class Freon extends CommandLineParser {

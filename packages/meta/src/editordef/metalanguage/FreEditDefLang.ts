@@ -1,5 +1,5 @@
-import { FreClassifier, FreLangExp, FreLanguage, FreProperty, MetaElementReference } from "../../languagedef/metalanguage";
-import { Names, FreDefinitionElement } from "../../utils";
+import { FreMetaClassifier, FreLangExp, FreMetaLanguage, FreMetaProperty, MetaElementReference } from "../../languagedef/metalanguage";
+import { Names, FreMetaDefinitionElement } from "../../utils";
 
 /**
  * Super type of all elements that may be part of a projection definition
@@ -33,8 +33,8 @@ export enum ListJoinType {
 /**
  * The root of the complete editor definition
  */
-export class FreEditUnit extends FreDefinitionElement {
-    language: FreLanguage;
+export class FreEditUnit extends FreMetaDefinitionElement {
+    language: FreMetaLanguage;
     projectiongroups: FreEditProjectionGroup[] = [];
     classifiersUsedInSuperProjection: string[] = []; // holds the names of all classifiers that are refered in an FreEditSuperProjection
 
@@ -54,7 +54,7 @@ export class FreEditUnit extends FreDefinitionElement {
         return result;
     }
 
-    findProjectionsForType(cls: FreClassifier): FreEditClassifierProjection[] {
+    findProjectionsForType(cls: FreMetaClassifier): FreEditClassifierProjection[] {
         const result: FreEditClassifierProjection[] = [];
         for (const group of this.projectiongroups) {
             const found: FreEditClassifierProjection[] = group.findProjectionsForType(cls);
@@ -73,7 +73,7 @@ export class FreEditUnit extends FreDefinitionElement {
         return result;
     }
 
-    findTableProjectionsForType(cls: FreClassifier): FreEditTableProjection[] {
+    findTableProjectionsForType(cls: FreMetaClassifier): FreEditTableProjection[] {
         const result: FreEditTableProjection[] = [];
         for (const group of this.projectiongroups) {
             const found = group.findTableProjectionForType(cls);
@@ -88,12 +88,12 @@ export class FreEditUnit extends FreDefinitionElement {
         return `${this.projectiongroups.map(pr => pr.toString()). join("\n")}`;
     }
 
-    findExtrasForType(cls: FreClassifier): ExtraClassifierInfo {
+    findExtrasForType(cls: FreMetaClassifier): ExtraClassifierInfo {
         return this.getDefaultProjectiongroup().findExtrasForType(cls);
     }
 }
 
-export class BoolKeywords extends FreDefinitionElement {
+export class BoolKeywords extends FreMetaDefinitionElement {
     trueKeyword: string = "true";
     falseKeyword?: string;
 
@@ -105,7 +105,7 @@ export class BoolKeywords extends FreDefinitionElement {
 /**
  * A group of projection definitions that share the same name
  */
-export class FreEditProjectionGroup extends FreDefinitionElement {
+export class FreEditProjectionGroup extends FreMetaDefinitionElement {
     name: string = null;
     projections: FreEditClassifierProjection[] = [];
     standardBooleanProjection: BoolKeywords = null; // may only be present in default group
@@ -114,19 +114,19 @@ export class FreEditProjectionGroup extends FreDefinitionElement {
     owningDefinition: FreEditUnit;
     precedence: number;
 
-    findProjectionsForType(cls: FreClassifier): FreEditClassifierProjection[] {
+    findProjectionsForType(cls: FreMetaClassifier): FreEditClassifierProjection[] {
         return this.projections.filter(con => con.classifier.referred === cls);
     }
 
-    findTableProjectionForType(cls: FreClassifier): FreEditTableProjection {
+    findTableProjectionForType(cls: FreMetaClassifier): FreEditTableProjection {
         return this.allTableProjections().find(con => con.classifier.referred === cls);
     }
 
-    findNonTableProjectionForType(cls: FreClassifier): FreEditProjection {
+    findNonTableProjectionForType(cls: FreMetaClassifier): FreEditProjection {
         return this.allNonTableProjections().find(con => con.classifier.referred === cls);
     }
 
-    findExtrasForType(cls: FreClassifier): ExtraClassifierInfo {
+    findExtrasForType(cls: FreMetaClassifier): ExtraClassifierInfo {
         if (!!this.extras) {
             return this.extras.find(con => con.classifier.referred === cls);
         } else {
@@ -156,9 +156,9 @@ export class FreEditProjectionGroup extends FreDefinitionElement {
 /**
  * A single projection definition for a single concept or interface
  */
-export abstract class FreEditClassifierProjection extends FreDefinitionElement {
+export abstract class FreEditClassifierProjection extends FreMetaDefinitionElement {
     name: string;
-    classifier: MetaElementReference<FreClassifier>;
+    classifier: MetaElementReference<FreMetaClassifier>;
     toString(): string {
         return `TO BE IMPLEMENTED BY SUBCLASSES`;
     }
@@ -170,7 +170,7 @@ export abstract class FreEditClassifierProjection extends FreDefinitionElement {
 export class FreEditProjection extends FreEditClassifierProjection {
     lines: FreEditProjectionLine[] = [];
 
-    firstProperty(): FreProperty {
+    firstProperty(): FreMetaProperty {
         for (const line of this.lines) {
             for (const item of line.items) {
                 if (item instanceof FreEditPropertyProjection) {
@@ -227,12 +227,12 @@ export class FreEditTableProjection extends FreEditClassifierProjection {
 /**
  * Holds extra information, defined in the default editor, per classifier
  */
-export class ExtraClassifierInfo extends FreDefinitionElement {
-    classifier: MetaElementReference<FreClassifier>;
+export class ExtraClassifierInfo extends FreMetaDefinitionElement {
+    classifier: MetaElementReference<FreMetaClassifier>;
     // The string that triggers the creation of an object of this class in the editor.
     trigger: string = null;
     // The property to be used when an element of type 'classifier' is used within a reference.
-    referenceShortCut: MetaElementReference<FreProperty> = null;
+    referenceShortCut: MetaElementReference<FreMetaProperty> = null;
     // The parsed expression that refers to the referenceShortcut. Deleted during checking!
     referenceShortcutExp: FreLangExp = null;
     // Only for binary expressions: the operator between left and right parts.
@@ -250,7 +250,7 @@ export class ExtraClassifierInfo extends FreDefinitionElement {
 /**
  * One of the lines in a 'normal' projection definition
  */
-export class FreEditProjectionLine extends FreDefinitionElement {
+export class FreEditProjectionLine extends FreMetaDefinitionElement {
     items: FreEditProjectionItem[] = [];
     indent: number = 0; // this number is calculated by FreEditParseUtil.normalize()
 
@@ -270,7 +270,7 @@ export class FreEditProjectionLine extends FreDefinitionElement {
 /**
  * An element of a line in a projection definition that holds a (simple) text.
  */
-export class FreEditProjectionText extends FreDefinitionElement {
+export class FreEditProjectionText extends FreMetaDefinitionElement {
     public static create(text: string): FreEditProjectionText {
         const result = new FreEditProjectionText();
         result.text = text;
@@ -289,8 +289,8 @@ export class FreEditProjectionText extends FreDefinitionElement {
  * Note that properties that are lists, properties that have boolean type, and optional properties,
  * are represented by subclasses of this class.
  */
-export class FreEditPropertyProjection extends FreDefinitionElement {
-    property: MetaElementReference<FreProperty> = null;
+export class FreEditPropertyProjection extends FreMetaDefinitionElement {
+    property: MetaElementReference<FreMetaProperty> = null;
     // expression used during parsing, should not be used after that phase
     expression: FreLangExp = null;
     // projection info if the referred property is a list
@@ -357,7 +357,7 @@ export class FreOptionalPropertyProjection extends FreEditPropertyProjection {
  * horizontal or vertical, row or columns based; with a terminator, separator, initiator, or
  * without any of these.
  */
-export class ListInfo extends FreDefinitionElement {
+export class ListInfo extends FreMetaDefinitionElement {
     isTable: boolean = false;
     direction: FreEditProjectionDirection = FreEditProjectionDirection.Vertical;
     joinType: ListJoinType = ListJoinType.NONE; // indicates that user has not inserted join info
@@ -375,8 +375,8 @@ export class ListInfo extends FreDefinitionElement {
 /**
  * An element of a line in a projection definition that represents the projection of a superconcept or interface.
  */
-export class FreEditSuperProjection extends FreDefinitionElement {
-    superRef: MetaElementReference<FreClassifier> = null;
+export class FreEditSuperProjection extends FreMetaDefinitionElement {
+    superRef: MetaElementReference<FreMetaClassifier> = null;
     projectionName: string = "";
     toString(): string {
         return `[=> ${this.superRef?.name} /* found ${this.superRef?.referred?.name} */ ${this.projectionName.length > 0 ? `:${this.projectionName}` : ``}]`;
@@ -408,7 +408,7 @@ export class FreEditParsedNewline {
 /**
  * This class is only used by the parser and removed from the edit model after normalization.
  */
-export class FreEditParsedProjectionIndent extends FreDefinitionElement {
+export class FreEditParsedProjectionIndent extends FreMetaDefinitionElement {
     indent: string = "";
     amount: number = 0;
 

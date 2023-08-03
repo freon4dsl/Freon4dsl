@@ -1,10 +1,10 @@
-import { FreUnitDescription } from "../../languagedef/metalanguage/FreLanguage";
+import { FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage";
 import { CheckRunner, Checker, ParseLocationUtil } from "../../utils";
 import {
-    FreConcept,
-    FreLanguage,
-    FreProperty,
-    FreClassifier
+    FreMetaConcept,
+    FreMetaLanguage,
+    FreMetaProperty,
+    FreMetaClassifier
 } from "../../languagedef/metalanguage";
 import { FreAlternativeScope, FreNamespaceAddition, ScopeDef } from "./FreScopeDefLang";
 import { LangUtil, MetaLogger } from "../../utils";
@@ -21,9 +21,9 @@ const LOGGER = new MetaLogger("ScoperChecker").mute();
 export class ScoperChecker extends Checker<ScopeDef> {
     runner = new CheckRunner(this.errors, this.warnings);
     myExpressionChecker: FreLangExpressionChecker;
-    myNamespaces: FreClassifier[] = [];
+    myNamespaces: FreMetaClassifier[] = [];
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage) {
         super(language);
         this.myExpressionChecker = new FreLangExpressionChecker(this.language);
         // in a scope definition an expression may be simply 'self'
@@ -37,12 +37,12 @@ export class ScoperChecker extends Checker<ScopeDef> {
         }
         this.runner = new CheckRunner(this.errors, this.warnings);
 
-        this.runner.nestedCheck(
-            {
-                check: this.language.name === definition.languageName,
-                error:  `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' ` +
-                        `does not match language '${this.language.name}' ${ParseLocationUtil.location(definition)}.`
-            });
+        // this.runner.nestedCheck(
+        //     {
+        //         check: this.language.name === definition.languageName,
+        //         error:  `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' ` +
+        //                 `does not match language '${this.language.name}' ${ParseLocationUtil.location(definition)}.`
+        //     });
 
         // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
         this.myNamespaces = this.findAllNamespaces(definition.namespaces);
@@ -61,7 +61,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
     }
 
-    private checkNamespaceAdditions(namespaceAddition: FreNamespaceAddition, enclosingConcept: FreConcept) {
+    private checkNamespaceAdditions(namespaceAddition: FreNamespaceAddition, enclosingConcept: FreMetaConcept) {
         LOGGER.log("Checking namespace definition for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
@@ -69,10 +69,10 @@ export class ScoperChecker extends Checker<ScopeDef> {
             whenOk: () => {
                 namespaceAddition.expressions.forEach(exp => {
                     this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
-                    const xx: FreProperty = exp.findRefOfLastAppliedFeature();
+                    const xx: FreMetaProperty = exp.findRefOfLastAppliedFeature();
                     if (!!xx) {
                         this.runner.nestedCheck({
-                            check: (!!xx.type && (xx.type instanceof FreConcept || xx.type instanceof FreUnitDescription)),
+                            check: (!!xx.type && (xx.type instanceof FreMetaConcept || xx.type instanceof FreMetaUnitDescription)),
                             error: `A namespace addition should refer to a concept ${ParseLocationUtil.location(exp)}.`,
                             whenOk: () => {
                                 this.runner.simpleCheck(this.myNamespaces.includes(xx.type),
@@ -85,13 +85,13 @@ export class ScoperChecker extends Checker<ScopeDef> {
         });
     }
 
-    private checkAlternativeScope(alternativeScope: FreAlternativeScope, enclosingConcept: FreConcept) {
+    private checkAlternativeScope(alternativeScope: FreAlternativeScope, enclosingConcept: FreMetaConcept) {
         LOGGER.log("Checking alternative scope definition for " + enclosingConcept?.name);
         this.myExpressionChecker.checkLangExp(alternativeScope.expression, enclosingConcept);
     }
 
-    private findAllNamespaces(namespaces: MetaElementReference<FreClassifier>[]): FreClassifier[] {
-        let result: FreClassifier[] = [];
+    private findAllNamespaces(namespaces: MetaElementReference<FreMetaClassifier>[]): FreMetaClassifier[] {
+        let result: FreMetaClassifier[] = [];
         namespaces.forEach(ref => {
             CommonChecker.checkClassifierReference(ref, this.runner);
             const myClassifier = ref.referred;

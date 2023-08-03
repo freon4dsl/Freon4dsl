@@ -1,4 +1,4 @@
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
 import { LimitedMaker } from "./LimitedMaker";
 import { BinaryExpMaker } from "./BinaryExpMaker";
@@ -12,7 +12,7 @@ import { ParserGenUtil } from "./ParserGenUtil";
 
 export class GrammarGenerator {
 
-    createGrammar(language: FreLanguage, analyser: LanguageAnalyser, editUnit: FreEditUnit): GrammarModel {
+    createGrammar(language: FreMetaLanguage, analyser: LanguageAnalyser, editUnit: FreEditUnit): GrammarModel {
         // create an empty model of the grammar and syntax analysis
         const grammar = new GrammarModel();
         grammar.language = language;
@@ -40,7 +40,7 @@ export class GrammarGenerator {
         return grammar;
     }
 
-    private createGrammarRules(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: FreLanguage) {
+    private createGrammarRules(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: FreMetaLanguage) {
         // generate the rules for each unit
         for (const unitAnalyser of myLanguageAnalyser.unitAnalysers) {
             this.createRulesPerAnalyser(grammar, projectionGroup, unitAnalyser, language);
@@ -49,7 +49,7 @@ export class GrammarGenerator {
         this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser.commonAnalyser, language);
     }
 
-    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, analyser: FreAnalyser, language: FreLanguage) {
+    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, analyser: FreAnalyser, language: FreMetaLanguage) {
         const grammarPart = new GrammarPart();
         grammarPart.unit = analyser.unit;
         // create parse rules and syntax analysis methods for the concepts

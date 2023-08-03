@@ -11,11 +11,11 @@ import {
     READER_GEN_FOLDER,
     INTERPRETER_FOLDER
 } from "../../../utils/";
-import { FreLanguage } from "../../metalanguage";
+import { FreMetaLanguage } from "../../metalanguage";
 
 export class EnvironmentTemplate {
 
-    generateEnvironment(language: FreLanguage, relativePath: string): string {
+    generateEnvironment(language: FreMetaLanguage, relativePath: string): string {
         return `
         import { ${Names.FreEditor}, ${Names.FreEnvironment}, ${Names.FreReader},
                     ${Names.FreTyper}, ${Names.FreValidator}, ${Names.FreStdlib},

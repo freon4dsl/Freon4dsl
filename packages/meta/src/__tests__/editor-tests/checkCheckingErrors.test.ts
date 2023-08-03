@@ -1,4 +1,4 @@
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker, MetaLogger } from "../../utils";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
@@ -7,7 +7,7 @@ import { FreEditUnit } from "../../editordef/metalanguage";
 describe("Checking editor definition ", () => {
     const testdir = "src/__tests__/editor-tests/faultyDefFiles/checking-errors/";
     let parser: FreEditParser;
-    let language: FreLanguage;
+    let language: FreMetaLanguage;
     let checker: Checker<FreEditUnit>;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();

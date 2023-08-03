@@ -12,7 +12,7 @@
     const LOGGER = new FreLogger("LabelComponent");
 
     let id: string = !!box ? componentId(box) : 'label-for-unknown-box';
-    let element: HTMLDivElement = null;
+    let element: HTMLSpanElement = null;
     let style: string;
     let cssClass: string;
     let text: string;

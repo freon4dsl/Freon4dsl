@@ -33,7 +33,8 @@
     let itemHeight = 40;
     let submenuOpen = false;
 
-    let contextmenu, submenu: HTMLElement;
+    // let contextmenu: HTMLElement;
+    // let submenu: HTMLElement;
 
     /**
      * This function shows the context menu. Note that the items to be shown should
@@ -67,7 +68,7 @@
     /**
      * This function shows the sub menu
      */
-    async function openSub(itemIndex) {
+    async function openSub(itemIndex: number) {
         submenuOpen = true;
         await tick(); // wait in order to detemrine the size of the submenu
         // determine the 'normal' position of the sub menu, which is
@@ -101,7 +102,7 @@
      * This function finds the context menu dimensions the moment that
      * $contextMenuVisible becomes true and the menu is shown.
      */
-    function getContextMenuDimension(node) {
+    function getContextMenuDimension(node: HTMLElement) {
         menuHeight = node.offsetHeight;
         menuWidth = node.offsetWidth;
     }
@@ -110,7 +111,7 @@
      * This function finds the sub menu dimensions the moment that
      * submenuOpen becomes true and the menu is shown.
      */
-    function getSubMenuDimension(node) {
+    function getSubMenuDimension(node: HTMLElement) {
         submenuHeight = node.offsetHeight;
         submenuWidth = node.offsetWidth;
     }

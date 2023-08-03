@@ -1,20 +1,20 @@
 {
    "serializationFormatVersion": "1",
-   "metamodels": [],
+   "languages": [],
    "nodes": [
       {
          "id": "ID-176",
          "concept": {
             "key": "Test",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Test1"
             }
@@ -24,7 +24,7 @@
                "containment": {
                   "key": "scenarios",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-177",
@@ -37,7 +37,7 @@
                "reference": {
                   "key": "topic",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -50,7 +50,7 @@
                "reference": {
                   "key": "flow",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -67,14 +67,14 @@
          "concept": {
             "key": "Scenario",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "description",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Test what happens when all answers are correct"
             }
@@ -84,7 +84,7 @@
                "containment": {
                   "key": "steps",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-178",
@@ -101,7 +101,7 @@
          "concept": {
             "key": "Step",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -109,7 +109,7 @@
                "containment": {
                   "key": "answersGiven",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-179"
@@ -121,7 +121,7 @@
                "reference": {
                   "key": "fromPage",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -134,7 +134,7 @@
                "reference": {
                   "key": "expectedPage",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -151,7 +151,7 @@
          "concept": {
             "key": "Answer",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -159,7 +159,7 @@
                "containment": {
                   "key": "expr",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-180"
@@ -171,7 +171,7 @@
                "reference": {
                   "key": "question",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -188,14 +188,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "false"
             }
@@ -209,7 +209,7 @@
          "concept": {
             "key": "Step",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -217,7 +217,7 @@
                "containment": {
                   "key": "answersGiven",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-182",
@@ -230,7 +230,7 @@
                "reference": {
                   "key": "fromPage",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -243,7 +243,7 @@
                "reference": {
                   "key": "expectedPage",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -260,7 +260,7 @@
          "concept": {
             "key": "Answer",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -268,7 +268,7 @@
                "containment": {
                   "key": "expr",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-183"
@@ -280,7 +280,7 @@
                "reference": {
                   "key": "question",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -297,14 +297,14 @@
          "concept": {
             "key": "NumberLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "30"
             }
@@ -318,7 +318,7 @@
          "concept": {
             "key": "Answer",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -326,7 +326,7 @@
                "containment": {
                   "key": "expr",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-185"
@@ -338,7 +338,7 @@
                "reference": {
                   "key": "question",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -355,14 +355,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "false"
             }
@@ -376,7 +376,7 @@
          "concept": {
             "key": "Step",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -384,7 +384,7 @@
                "containment": {
                   "key": "answersGiven",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-187"
@@ -396,7 +396,7 @@
                "reference": {
                   "key": "fromPage",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -409,7 +409,7 @@
                "reference": {
                   "key": "expectedPage",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -426,7 +426,7 @@
          "concept": {
             "key": "Answer",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [],
          "children": [
@@ -434,7 +434,7 @@
                "containment": {
                   "key": "expr",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": [
                   "ID-188"
@@ -446,7 +446,7 @@
                "reference": {
                   "key": "question",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "targets": [
                   {
@@ -463,14 +463,14 @@
          "concept": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "value",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "false"
             }
@@ -484,14 +484,14 @@
          "concept": {
             "key": "Scenario",
             "version": "1.0",
-            "metamodel": "Education"
+            "language": "Education"
          },
          "properties": [
             {
                "property": {
                   "key": "description",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "value": "Hi"
             }
@@ -501,7 +501,7 @@
                "containment": {
                   "key": "steps",
                   "version": "1.0",
-                  "metamodel": "Education"
+                  "language": "Education"
                },
                "children": []
             }

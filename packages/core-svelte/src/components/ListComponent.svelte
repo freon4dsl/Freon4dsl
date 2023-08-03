@@ -202,7 +202,7 @@
                 draggable=true
                 on:dragstart|stopPropagation={event => dragstart(event, id, index)}
                 on:drop|stopPropagation={event => drop(event, index)}
-                ondragover="return false"
+                on:dragover={() => "return false"}
                 on:dragenter|stopPropagation={(event) => dragenter(event, index)}
                 on:mouseout|stopPropagation={mouseout}
                 on:focus={() => {}}

@@ -1,4 +1,4 @@
-import { FreClassifier, FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker } from "../../utils";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
@@ -9,7 +9,7 @@ import {
     FreOptionalPropertyProjection
 } from "../../editordef/metalanguage";
 
-function getAndTestProjection(editDef: FreEditUnit, classifier: FreClassifier) {
+function getAndTestProjection(editDef: FreEditUnit, classifier: FreMetaClassifier) {
     const myProj: FreEditProjection = editDef.getDefaultProjectiongroup().findNonTableProjectionForType(classifier);
     expect(myProj).not.toBeNull();
     expect(myProj).not.toBeUndefined();
@@ -19,7 +19,7 @@ function getAndTestProjection(editDef: FreEditUnit, classifier: FreClassifier) {
 describe("Checking indentation ", () => {
     const testdir = "src/__tests__/editor-tests/indentationFiles/";
     let parser: FreEditParser;
-    let language: FreLanguage;
+    let language: FreMetaLanguage;
     let checker: Checker<FreEditUnit>;
     // MetaLogger.muteAllErrors();
     // MetaLogger.muteAllLogs();
@@ -44,7 +44,7 @@ describe("Checking indentation ", () => {
             // tslint:disable-next-line:no-unused-expression
             expect(e.message).toBeNull();
         }
-        const myAAA: FreClassifier = language.units.find(c => c.name === "AAAAAA");
+        const myAAA: FreMetaClassifier = language.units.find(c => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
         expect(myAAA).not.toBeUndefined();
         let myProj: FreEditProjection = getAndTestProjection(editDef, myAAA);
@@ -76,7 +76,7 @@ describe("Checking indentation ", () => {
             // tslint:disable-next-line:no-unused-expression
             expect(e.message).toBeNull();
         }
-        const myAAA: FreClassifier = language.units.find(c => c.name === "AAAAAA");
+        const myAAA: FreMetaClassifier = language.units.find(c => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
         expect(myAAA).not.toBeUndefined();
         // expect(false).toBe(true);
@@ -109,7 +109,7 @@ describe("Checking indentation ", () => {
             // tslint:disable-next-line:no-unused-expression
             expect(e.message).toBeNull();
         }
-        const myAAA: FreClassifier = language.units.find(c => c.name === "AAAAAA");
+        const myAAA: FreMetaClassifier = language.units.find(c => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
         expect(myAAA).not.toBeUndefined();
         // expect(false).toBe(true);

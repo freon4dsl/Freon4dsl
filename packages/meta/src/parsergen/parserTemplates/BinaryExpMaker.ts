@@ -1,26 +1,26 @@
-import { FreBinaryExpressionConcept, FreClassifier, FreExpressionConcept, FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept, FreMetaLanguage } from "../../languagedef/metalanguage";
 import { FreEditProjectionGroup } from "../../editordef/metalanguage";
 import { GrammarRule, BinaryExpressionRule } from "./grammarModel";
 import { GenerationUtil } from "../../utils";
 
 export class BinaryExpMaker {
     private static specialBinaryRuleName = `__fre_binary_`;
-    public static getBinaryRuleName(expBase: FreExpressionConcept) {
+    public static getBinaryRuleName(expBase: FreMetaExpressionConcept) {
         return BinaryExpMaker.specialBinaryRuleName + expBase.name;
     }
 
-    imports: FreClassifier[] = [];
+    imports: FreMetaClassifier[] = [];
 
-    public generateBinaryExpressions(language: FreLanguage,
+    public generateBinaryExpressions(language: FreMetaLanguage,
                                      projectionGroup: FreEditProjectionGroup,
-                                     binaryConceptsUsed: FreBinaryExpressionConcept[]
+                                     binaryConceptsUsed: FreMetaBinaryExpressionConcept[]
                                     ): GrammarRule[] {
         const result: GrammarRule[] = [];
 
         // in case there are multiple expression hierarchies, we need to group the binaries based on their expressionBase
-        const groups: Map<FreExpressionConcept, FreBinaryExpressionConcept[]> = new Map<FreBinaryExpressionConcept, FreBinaryExpressionConcept[]>();
+        const groups: Map<FreMetaExpressionConcept, FreMetaBinaryExpressionConcept[]> = new Map<FreMetaBinaryExpressionConcept, FreMetaBinaryExpressionConcept[]>();
         binaryConceptsUsed.forEach(bin => {
-            const expBase: FreExpressionConcept = GenerationUtil.findExpressionBase(bin);
+            const expBase: FreMetaExpressionConcept = GenerationUtil.findExpressionBase(bin);
             if (groups.has(expBase)) {
                 groups.get(expBase).push(bin);
             } else {
@@ -28,9 +28,9 @@ export class BinaryExpMaker {
             }
         });
 
-        groups.forEach((binaries: FreBinaryExpressionConcept[], expBase: FreExpressionConcept) => {
+        groups.forEach((binaries: FreMetaBinaryExpressionConcept[], expBase: FreMetaExpressionConcept) => {
             // common information
-            const editDefs: Map<FreClassifier, string> = this.findEditDefs(binaries, projectionGroup);
+            const editDefs: Map<FreMetaClassifier, string> = this.findEditDefs(binaries, projectionGroup);
             const branchName = BinaryExpMaker.getBinaryRuleName(expBase);
 
             this.imports.push(expBase);
@@ -42,8 +42,8 @@ export class BinaryExpMaker {
         return result;
     }
 
-    private findEditDefs(binaryConceptsUsed: FreBinaryExpressionConcept[], projectionGroup: FreEditProjectionGroup): Map<FreClassifier, string> {
-        const result: Map<FreClassifier, string> = new Map<FreClassifier, string>();
+    private findEditDefs(binaryConceptsUsed: FreMetaBinaryExpressionConcept[], projectionGroup: FreEditProjectionGroup): Map<FreMetaClassifier, string> {
+        const result: Map<FreMetaClassifier, string> = new Map<FreMetaClassifier, string>();
         for (const binCon of binaryConceptsUsed) {
             const mySymbol = projectionGroup.findExtrasForType(binCon).symbol;
             result.set(binCon, mySymbol);

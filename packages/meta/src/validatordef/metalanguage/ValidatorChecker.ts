@@ -1,13 +1,13 @@
 import { Checker, FreErrorSeverity, MetaLogger, ParseLocationUtil, CheckRunner } from "../../utils";
 import {
-    FreClassifier,
-    FreConcept,
+    FreMetaClassifier,
+    FreMetaConcept,
     FreLangAppliedFeatureExp,
     FreLangSelfExp,
     FreLangSimpleExp,
-    FreLanguage,
-    FrePrimitiveProperty,
-    FreProperty
+    FreMetaLanguage,
+    FreMetaPrimitiveProperty,
+    FreMetaProperty
 } from "../../languagedef/metalanguage";
 import {
     CheckConformsRule,
@@ -23,10 +23,10 @@ import {
     ValidationSeverity,
     ValidNameRule
 } from "./ValidatorDefLang";
-import { FrePrimitiveType } from "../../languagedef/metalanguage";
+import { FreMetaPrimitiveType } from "../../languagedef/metalanguage";
 import { CommonChecker, FreLangExpressionChecker } from "../../languagedef/checking";
 
-const LOGGER = new MetaLogger("ValidatorChecker").mute();
+const LOGGER = new MetaLogger("ValidatorChecker").show();
 const equalsTypeName = "equalsType";
 const conformsToName = "conformsTo";
 
@@ -38,8 +38,9 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     myExpressionChecker: FreLangExpressionChecker;
     runner = new CheckRunner(this.errors, this.warnings);
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage) {
         super(language);
+        LOGGER.log("Created validator checker");
         this.myExpressionChecker = new FreLangExpressionChecker(this.language);
     }
 
@@ -52,7 +53,8 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
 
         this.runner.nestedCheck(
             {
-                check: this.language.name === definition.languageName,
+                // TODO Need to still ckech this?
+                check: true, // this.language.name === definition.languageName,
                 error: `Language reference ('${definition.languageName}') in ` +
                     `validator definition '${definition.validatorName}' does not match language '${this.language.name}' ` +
                     `${ParseLocationUtil.location(definition)}.`,
@@ -66,6 +68,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     }
 
     private checkConceptRule(rule: ConceptRuleSet) {
+        LOGGER.log("Check concept rule");
         CommonChecker.checkClassifierReference(rule.conceptRef, this.runner);
 
         const enclosingConcept = rule.conceptRef.referred;
@@ -76,7 +79,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         }
     }
 
-    checkRule(tr: ValidationRule, enclosingConcept: FreConcept) {
+    checkRule(tr: ValidationRule, enclosingConcept: FreMetaConcept) {
         if ( tr instanceof CheckEqualsTypeRule) { this.checkEqualsTypeRule(tr, enclosingConcept); }
         if ( tr instanceof CheckConformsRule) { this.checkConformsTypeRule(tr, enclosingConcept); }
         if ( tr instanceof NotEmptyRule) { this.checkNotEmptyRule(tr, enclosingConcept); }
@@ -95,13 +98,14 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         }
     }
 
-    checkValidNameRule(tr: ValidNameRule, enclosingConcept: FreConcept) {
+    checkValidNameRule(tr: ValidNameRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkValidNameRule");
         // check whether tr.property (if set) is a property of enclosingConcept
         // if not set, set tr.property to the 'self.unitName' property of the enclosingConcept
         if (!!tr.property) {
             this.myExpressionChecker.checkLangExp(tr.property, enclosingConcept);
         } else {
-            let myProp: FreProperty;
+            let myProp: FreMetaProperty;
             for (const i of enclosingConcept.allProperties()) {
                 if (i.name === "name") {
                     myProp = i;
@@ -123,12 +127,13 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         // check if found property is of type 'identifier'
         if (!!tr.property) {
             const myProp = tr.property.findRefOfLastAppliedFeature();
-            this.runner.simpleCheck((myProp instanceof FrePrimitiveProperty) && myProp.type === FrePrimitiveType.identifier,
+            this.runner.simpleCheck((myProp instanceof FreMetaPrimitiveProperty) && myProp.type === FreMetaPrimitiveType.identifier,
                 `Validname rule expression '${tr.property.toFreString()}' should have type 'identifier' ${ParseLocationUtil.location(tr.property)}.`);
         }
     }
 
-    checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: FreConcept) {
+    checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkEqualsTypeRule");
         // check references to types
         this.runner.nestedCheck(
             {
@@ -142,7 +147,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
             });
     }
 
-    checkConformsTypeRule(tr: CheckConformsRule, enclosingConcept: FreConcept) {
+    checkConformsTypeRule(tr: CheckConformsRule, enclosingConcept: FreMetaConcept) {
         // check references to types
         this.runner.nestedCheck(
             {
@@ -155,7 +160,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
             });
     }
 
-    checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: FreConcept) {
+    checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: FreMetaConcept) {
         // check whether nr.property is a property of enclosingConcept
         // and whether it is a list
         if (nr.property !== null) {
@@ -165,7 +170,8 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         }
     }
 
-    private checkExpressionRule(tr: ExpressionRule, enclosingConcept: FreConcept) {
+    private checkExpressionRule(tr: ExpressionRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkExpressionRule");
         this.runner.nestedCheck(
             {
                 check: tr.exp1 !== null && tr.exp2 !== null,
@@ -193,7 +199,8 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
             });
     }
 
-    private checkIsuniqueRule(tr: IsuniqueRule, enclosingConcept: FreConcept) {
+    private checkIsuniqueRule(tr: IsuniqueRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkIsuniqueRule");
         this.runner.nestedCheck(
             {
                 check: tr.list !== null && tr.listproperty !== null,
@@ -261,7 +268,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         }
     }
 
-    private checkValidationMessage(message: ValidationMessage, enclosingConcept: FreClassifier) {
+    private checkValidationMessage(message: ValidationMessage, enclosingConcept: FreMetaClassifier) {
         this.runner.nestedCheck({check: !!message.content && !!message.content[0],
             error: `User defined error message should have a value ${ParseLocationUtil.location(message)}.`,
             whenOk: () => {

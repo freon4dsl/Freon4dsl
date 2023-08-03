@@ -1,13 +1,13 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { LanguageExpressionParser } from "../../languagedef/parser/LanguageExpressionParser";
-import { FreInstance, FreLangFunctionCallExp, FreLangSelfExp, FreLanguage, FreLimitedConcept } from "../../languagedef/metalanguage";
+import { FreMetaInstance, FreLangFunctionCallExp, FreLangSelfExp, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 
 describe("Checking expression on referredElement", () => {
     const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
-    let language: FreLanguage;
+    let language: FreMetaLanguage;
     MetaLogger.muteAllLogs();
-    MetaLogger.muteAllErrors();
+    // MetaLogger.muteAllErrors();
 
     beforeEach(() => {
         try {
@@ -79,14 +79,14 @@ describe("Checking expression on referredElement", () => {
             const zzConcept = language.findConcept("ZZ");
             expect(zzConcept).not.toBeNull();
             expect(zzConcept).not.toBeUndefined();
-            expect(zzConcept instanceof FreLimitedConcept);
+            expect(zzConcept instanceof FreMetaLimitedConcept);
             // for each expression in the set, it should refer to a predefined instance of 'ZZ'
             CCconceptExps.exps.forEach(exp => {
                 expect(exp.$referredElement?.referred === zzConcept);
                 const freInstance = exp.$referredElement.referred;
                 expect(freInstance).not.toBeNull();
-                expect(freInstance instanceof FreInstance);
-                expect((zzConcept as FreLimitedConcept).instances.includes(freInstance as FreInstance));
+                expect(freInstance instanceof FreMetaInstance);
+                expect((zzConcept as FreMetaLimitedConcept).instances.includes(freInstance as FreMetaInstance));
             });
         } else {
             console.log("Language not present");

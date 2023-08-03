@@ -1,6 +1,7 @@
-import { FreDefinitionElement } from "../../utils";
+import { FreMetaLangElement } from "../../languagedef/metalanguage/index";
+import { FreMetaDefinitionElement } from "../../utils";
 
-export class FreTyperElement extends FreDefinitionElement {
+export class FreTyperElement extends FreMetaLangElement {
     owner: FreTyperElement;
     readonly $typename: string = "FreTyperElement";
 }

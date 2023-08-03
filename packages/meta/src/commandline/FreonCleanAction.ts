@@ -12,7 +12,7 @@ import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
 import { MetaLogger } from "../utils/MetaLogger";
 import { GenerationStatus, FileUtil } from "../utils";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
-import { FreLanguage } from "../languagedef/metalanguage";
+import { FreMetaLanguage } from "../languagedef/metalanguage";
 
 const LOGGER = new MetaLogger("FreonCleanAction"); // .mute();
 
@@ -31,7 +31,7 @@ export class FreonCleanAction extends CommandLineAction {
     protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
     protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
-    private language: FreLanguage;
+    private language: FreMetaLanguage;
 
     public constructor() {
         super({
@@ -170,7 +170,7 @@ export class FreonCleanAction extends CommandLineAction {
                     languageFiles.push(filename);
                 }
             }
-            this.language = new LanguageParser().parseMulti(languageFiles);
+            this.language = new LanguageParser("dummy").parseMulti(languageFiles);
         }
     }
 }

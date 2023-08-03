@@ -1,7 +1,7 @@
-import { FreConceptProperty } from "../../languagedef/metalanguage";
+import { FreMetaConceptProperty } from "../../languagedef/metalanguage";
 import { FretTypeConcept } from "./FretTypeConcept";
 
-export class FretProperty extends FreConceptProperty {
+export class FretProperty extends FreMetaConceptProperty {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.

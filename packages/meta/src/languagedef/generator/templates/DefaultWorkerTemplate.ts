@@ -1,9 +1,9 @@
 import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils";
-import { FreLanguage } from "../../metalanguage";
+import { FreMetaLanguage } from "../../metalanguage";
 
 export class DefaultWorkerTemplate {
 
-    generateDefaultWorker(language: FreLanguage, relativePath: string): string {
+    generateDefaultWorker(language: FreMetaLanguage, relativePath: string): string {
         const workerInterfaceName = Names.workerInterface(language);
         const defaultWorkerClassName = Names.defaultWorker(language);
         const commentBefore = `/**

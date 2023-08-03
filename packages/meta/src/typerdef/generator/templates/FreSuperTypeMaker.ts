@@ -6,7 +6,7 @@ import {
 } from "../../metalanguage";
 import { FreTyperGenUtils } from "./FreTyperGenUtils";
 import { ListUtil, Names, GenerationUtil } from "../../../utils";
-import { FreClassifier, FreLimitedConcept } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/metalanguage";
 
 /**
  * This class generates the code for all 'conformsto' entries in the .type file.
@@ -14,7 +14,7 @@ import { FreClassifier, FreLimitedConcept } from "../../../languagedef/metalangu
 export class FreSuperTypeMaker {
     typerdef: TyperDef;
 
-    public makeSuperTypes(typerdef: TyperDef, typevarName: string, imports: FreClassifier[]): string {
+    public makeSuperTypes(typerdef: TyperDef, typevarName: string, imports: FreMetaClassifier[]): string {
         FreTyperGenUtils.types = typerdef.types;
         this.typerdef = typerdef;
         // Find all conformsto rules, which are (1) all FretConformanceRules,
@@ -25,7 +25,7 @@ export class FreSuperTypeMaker {
             conformanceRules.push(...spec.rules.filter(r => r instanceof FretConformanceRule));
         });
         typerdef.classifierSpecs.forEach(spec => {
-            if (spec.myClassifier instanceof FreLimitedConcept) {
+            if (spec.myClassifier instanceof FreMetaLimitedConcept) {
                 if (spec.rules.filter(r => r.exp instanceof FretConformsExp)) {
                     limitedSpecs.push(spec);
                 }
@@ -93,7 +93,7 @@ export class FreSuperTypeMaker {
         return result;`;
     }
 
-    private makeSuperTypeForLimited(binaryExps: FretBinaryExp[], varName: string, varIsType: boolean, imports: FreClassifier[]): string {
+    private makeSuperTypeForLimited(binaryExps: FretBinaryExp[], varName: string, varIsType: boolean, imports: FreMetaClassifier[]): string {
         let result: string = "";
 
         binaryExps.map(stat =>
@@ -104,7 +104,7 @@ export class FreSuperTypeMaker {
         return result;
     }
 
-    private makeSuperForExp(exp: FretExp, typevarName: string, imports: FreClassifier[]): string {
+    private makeSuperForExp(exp: FretExp, typevarName: string, imports: FreMetaClassifier[]): string {
         if (exp instanceof FretWhereExp) {
             return this.makeWhereExp(exp, typevarName, imports);
         } else {
@@ -112,7 +112,7 @@ export class FreSuperTypeMaker {
         }
     }
 
-    public makeWhereExp(exp: FretWhereExp, varName: string, imports: FreClassifier[]): string {
+    public makeWhereExp(exp: FretWhereExp, varName: string, imports: FreMetaClassifier[]): string {
         let result: string = "/* FretWhereExp */\n";
         const myConditions = exp.conditions;
         myConditions.forEach((cond, index) => {
@@ -124,7 +124,7 @@ export class FreSuperTypeMaker {
             }
         });
         if (myConditions.length > 1) {
-            const cls: FreClassifier = exp.variable.type;
+            const cls: FreMetaClassifier = exp.variable.type;
             ListUtil.addIfNotPresent(imports, cls);
             result += `/* make cartesian product of all conditions */`;
             for (let i = 0; i < myConditions.length; i++) {
@@ -188,7 +188,7 @@ export class FreSuperTypeMaker {
         return "unknown";
     }
 
-    private makeCondition(right: FretExp, partName: string, imports: FreClassifier[]): string {
+    private makeCondition(right: FretExp, partName: string, imports: FreMetaClassifier[]): string {
         ListUtil.addIfNotPresent(imports, right.returnType);
         return `(${partName} as ${Names.classifier(right.returnType)})`;
     }

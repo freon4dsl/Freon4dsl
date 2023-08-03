@@ -1,6 +1,6 @@
 import fs from "fs";
 import { LOG2USER } from "../../utils/UserLogger";
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { TyperDef } from "../metalanguage";
 import { FreTyperReader } from "./FreTyperReader";
 import { FreTyperChecker } from "./FreTyperChecker";
@@ -11,11 +11,11 @@ import { ParseLocationUtil } from "../../utils/parsingAndChecking/ParseLocationU
  * checker by the FreTyperCheckerPhase1.
  */
 export class FreTyperMerger {
-    public language: FreLanguage;
+    public language: FreMetaLanguage;
     public checker: FreTyperChecker;
     private reader: FreTyperReader;
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage) {
         this.language = language;
         this.checker = new FreTyperChecker(language);
         this.reader = new FreTyperReader();

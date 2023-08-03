@@ -1,5 +1,5 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { FreConcept, FreExpressionConcept, FreLanguage, FreLimitedConcept, FrePrimitiveProperty } from "../../languagedef/metalanguage";
+import { FreMetaConcept, FreMetaExpressionConcept, FreMetaLanguage, FreMetaLimitedConcept, FreMetaPrimitiveProperty } from "../../languagedef/metalanguage";
 import { LangUtil, MetaLogger } from "../../utils";
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
@@ -9,8 +9,8 @@ describe("Checking internal structure of language", () => {
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 
-    function readAstFile(parseFile: string): FreLanguage {
-        let freLanguage: FreLanguage;
+    function readAstFile(parseFile: string): FreMetaLanguage {
+        let freLanguage: FreMetaLanguage;
         try {
             freLanguage = parser.parse(parseFile);
         } catch (e) {
@@ -23,14 +23,14 @@ describe("Checking internal structure of language", () => {
     // on FretLanguage
     // ??? predefined (primitive types)
     test("internal structure of FretLanguage", () => {
-        const freLanguage: FreLanguage = readAstFile(testdir + "test2.ast");
+        const freLanguage: FreMetaLanguage = readAstFile(testdir + "test2.ast");
 
         expect(freLanguage).not.toBeUndefined();
         // there is a root concept
         expect(freLanguage.modelConcept).not.toBeNull();
         // there is a single expression base or none at all
         const result = freLanguage.concepts.filter(c => {
-            return c instanceof FreExpressionConcept && (!!c.base ? !(c.base.referred instanceof FreExpressionConcept) : true);
+            return c instanceof FreMetaExpressionConcept && (!!c.base ? !(c.base.referred instanceof FreMetaExpressionConcept) : true);
         });
         expect(result.length).toBeLessThan(2);
         // if there is a classifier, we can find it
@@ -49,7 +49,7 @@ describe("Checking internal structure of language", () => {
     // on FretConcept and FretInterface
     // TODO if an implemented interface has a prop, we can find it
     test("internal structure of FretConcept and FretInterface: properties", () => {
-        const freLanguage: FreLanguage = readAstFile(testdir + "test2.ast");
+        const freLanguage: FreMetaLanguage = readAstFile(testdir + "test2.ast");
         expect(freLanguage).not.toBeUndefined();
         // no references in the parts list, and vice versa
         // no primProps in reference list
@@ -59,7 +59,7 @@ describe("Checking internal structure of language", () => {
         });
         freConcept.references().forEach(part => {
             expect(part.isPart).toBe(false);
-            expect(part).not.toBeInstanceOf(FrePrimitiveProperty);
+            expect(part).not.toBeInstanceOf(FreMetaPrimitiveProperty);
         });
         freConcept.primProperties.forEach(part => {
             expect(part.isPart).toBe(true);
@@ -67,7 +67,7 @@ describe("Checking internal structure of language", () => {
     });
 
     test("internal structure of FretConcept and FretInterface: inheritance", () => {
-        const freLanguage: FreLanguage = readAstFile(testdir + "test3.ast");
+        const freLanguage: FreMetaLanguage = readAstFile(testdir + "test3.ast");
         expect(freLanguage).not.toBeUndefined();
 
         // no references in the parts list, and vice versa
@@ -79,7 +79,7 @@ describe("Checking internal structure of language", () => {
         });
         freConcept.allReferences().forEach(ref => {
             expect(ref.isPart).toBe(false);
-            expect(ref).not.toBeInstanceOf(FrePrimitiveProperty);
+            expect(ref).not.toBeInstanceOf(FreMetaPrimitiveProperty);
         });
         freConcept.allPrimProperties().forEach(part => {
             expect(part.isPart).toBe(true);
@@ -117,15 +117,15 @@ describe("Checking internal structure of language", () => {
 
     // on FretInstance
     test("internal structure of FretInstance", () => {
-        const freLanguage: FreLanguage = readAstFile(testdir + "test4.ast");
+        const freLanguage: FreMetaLanguage = readAstFile(testdir + "test4.ast");
         expect(freLanguage).not.toBeUndefined();
-        const list = freLanguage.concepts.filter(con => con instanceof FreLimitedConcept);
+        const list = freLanguage.concepts.filter(con => con instanceof FreMetaLimitedConcept);
         // FretInstance.concept should be a limited property
         // let myLimited = freLanguage.findConcept("BB");
         list.forEach(myLimited => {
-            expect(myLimited).toBeInstanceOf(FreLimitedConcept);
+            expect(myLimited).toBeInstanceOf(FreMetaLimitedConcept);
             // test FretInstance against its concept
-            (myLimited as FreLimitedConcept).instances.forEach(inst => {
+            (myLimited as FreMetaLimitedConcept).instances.forEach(inst => {
                 expect(inst.concept.referred).toBe(myLimited);
                 inst.props.forEach(instProp => {
                     expect(myLimited.allProperties()).toContain(instProp.property.referred);
@@ -142,9 +142,9 @@ describe("Checking internal structure of language", () => {
 
     // test initial value of properties
     test("initial values of primitive properties", () => {
-        const freLanguage: FreLanguage = readAstFile(testdir + "test5.ast");
+        const freLanguage: FreMetaLanguage = readAstFile(testdir + "test5.ast");
         expect(freLanguage).not.toBeUndefined();
-        const BB: FreConcept = freLanguage.concepts.find(con => con.name === "BB");
+        const BB: FreMetaConcept = freLanguage.concepts.find(con => con.name === "BB");
         expect(BB).not.toBeNull();
         BB.allPrimProperties().forEach(prim => {
             switch (prim.name) {
@@ -189,11 +189,11 @@ describe("Checking internal structure of language", () => {
     });
 
     test("all kinds of limited concepts", () => {
-        const freLanguage: FreLanguage = readAstFile(testdir + "test6.ast");
+        const freLanguage: FreMetaLanguage = readAstFile(testdir + "test6.ast");
         expect(freLanguage).not.toBeUndefined();
-        const CC: FreConcept = freLanguage.concepts.find(con => con.name === "CC");
-        expect(CC instanceof FreLimitedConcept).toBe(true);
-        (CC as FreLimitedConcept).instances.forEach(inst => {
+        const CC: FreMetaConcept = freLanguage.concepts.find(con => con.name === "CC");
+        expect(CC instanceof FreMetaLimitedConcept).toBe(true);
+        (CC as FreMetaLimitedConcept).instances.forEach(inst => {
             switch (inst.name) {
                 case "CC1": {
                     expect(inst.props.find(prop => prop.name === "AAprop1").value).toBe("some_text");

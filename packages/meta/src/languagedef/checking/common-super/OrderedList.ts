@@ -1,11 +1,11 @@
-import { FreLangElement } from "../../metalanguage";
+import { FreMetaLangElement } from "../../metalanguage";
 
 interface InternalElement<T> {
     name: string;
     element: T;
 }
 
-export class OrderedList<T extends FreLangElement> implements Iterable<T> {
+export class OrderedList<T extends FreMetaLangElement> implements Iterable<T> {
     protected elements: InternalElement<T>[] = [];
 
     toArray(): T[] {
@@ -64,7 +64,7 @@ export class OrderedList<T extends FreLangElement> implements Iterable<T> {
 
 }
 
-export class OrderedListIterator<T extends FreLangElement> implements Iterator<T> {
+export class OrderedListIterator<T extends FreMetaLangElement> implements Iterator<T> {
     private index = 0;
     private list: OrderedList<T>;
 

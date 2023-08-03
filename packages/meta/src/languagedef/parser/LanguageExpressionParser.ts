@@ -1,4 +1,4 @@
-import { FreLanguage } from "../metalanguage/FreLanguage";
+import { FreMetaLanguage } from "../metalanguage/FreMetaLanguage";
 import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker";
 import { FreGenericParser } from "../../utils/parsingAndChecking/FreGenericParser";
 import { LanguageExpressionTester } from "./LanguageExpressionTester";
@@ -6,9 +6,9 @@ const pegjsParser = require("./ExpressionGrammar");
 import { setCurrentFileName } from "./ExpressionCreators";
 
 export class LanguageExpressionParser extends FreGenericParser<LanguageExpressionTester> {
-    public language: FreLanguage;
+    public language: FreMetaLanguage;
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage) {
         super();
         this.parser = pegjsParser;
         this.language = language;

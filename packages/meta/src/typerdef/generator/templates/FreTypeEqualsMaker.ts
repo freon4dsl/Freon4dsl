@@ -6,7 +6,7 @@ import {
 import { Names, GenerationUtil } from "../../../utils";
 import { FreTyperGenUtils } from "./FreTyperGenUtils";
 import { FretEqualsRule } from "../../metalanguage/FretEqualsRule";
-import { FreClassifier } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier } from "../../../languagedef/metalanguage";
 
 /**
  * This class generates the code for the 'equalsto' entries in the .type file.
@@ -14,7 +14,7 @@ import { FreClassifier } from "../../../languagedef/metalanguage";
 export class FreTypeEqualsMaker {
     typerdef: TyperDef = null;
 
-    public makeEqualsType(typerDef: TyperDef, leftVarName: string, rightVarName: string, imports: FreClassifier[]): string {
+    public makeEqualsType(typerDef: TyperDef, leftVarName: string, rightVarName: string, imports: FreMetaClassifier[]): string {
         FreTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
         const allRules: string[] = [];
@@ -58,7 +58,7 @@ export class FreTypeEqualsMaker {
         return allRules.map(r => r).join(" else ");
     }
 
-    private makeEqualsForExp(exp: FretExp, leftVarName: string, rightVarName: string, varIsType: boolean, imports: FreClassifier[]): string {
+    private makeEqualsForExp(exp: FretExp, leftVarName: string, rightVarName: string, varIsType: boolean, imports: FreMetaClassifier[]): string {
         if (exp instanceof FretWhereExp) {
             const allConditions: string[] = [];
             let returnStr: string = "";

@@ -1,9 +1,9 @@
-import { FreLanguage } from "../../metalanguage";
+import { FreMetaLanguage } from "../../metalanguage";
 import { Names, GenerationUtil } from "../../../utils";
 
 export class IndexTemplate {
 
-    generateIndex(language: FreLanguage): string {
+    generateIndex(language: FreMetaLanguage): string {
 
         const tmp: string[] = [];
         tmp.push(Names.classifier(language.modelConcept));
@@ -16,10 +16,10 @@ export class IndexTemplate {
         language.interfaces.map(c =>
             tmp.push(Names.interface(c))
         );
-        tmp.push(Names.modelunit(language));
-        tmp.push("ModelUnitMetaType");
-        tmp.push(Names.allConcepts(language));
-        tmp.push(Names.metaType(language));
+        // tmp.push(Names.modelunit(language));
+        // tmp.push("ModelUnitMetaType");
+        // tmp.push(Names.allConcepts(language));
+        // tmp.push(Names.metaType(language));
         tmp.push(Names.initializeLanguage);
 
         // the template starts here
@@ -37,7 +37,7 @@ export class IndexTemplate {
         } from "./internal"`;
     }
 
-    generateInternal(language: FreLanguage): string {
+    generateInternal(language: FreMetaLanguage): string {
 
         const tmp: string[] = [];
         tmp.push(Names.classifier(language.modelConcept));
@@ -53,8 +53,8 @@ export class IndexTemplate {
             tmp.push(Names.concept(c))
         );
 
-        tmp.push(Names.allConcepts(language));
-        tmp.push(Names.metaType(language));
+        // tmp.push(Names.allConcepts(language));
+        // tmp.push(Names.metaType(language));
         tmp.push(Names.language(language));
 
         // the template starts here
@@ -74,7 +74,7 @@ export class IndexTemplate {
         `;
     }
 
-    generateUtilsIndex(language: FreLanguage): string {
+    generateUtilsIndex(language: FreMetaLanguage): string {
         return `export * from "./${Names.workerInterface(language)}";
                 export * from "./${Names.walker(language)}";
                 export * from "./${Names.defaultWorker(language)}";`;

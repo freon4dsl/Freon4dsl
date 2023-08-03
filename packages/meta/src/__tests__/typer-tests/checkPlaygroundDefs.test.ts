@@ -1,4 +1,4 @@
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
 import { TyperDef } from "../../typerdef/metalanguage";
@@ -8,7 +8,7 @@ describe("Checking new typer", () => {
     const testdir = "src/__tests__/typer-tests/";
     let parser: FreTyperMerger;
 
-    let language: FreLanguage;
+    let language: FreMetaLanguage;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 

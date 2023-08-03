@@ -15,7 +15,7 @@ import { SimpleIdProvider } from "./SimpleIdProvider";
 
 export class FreUtils {
     // Default generators initialized below the class declaration
-    static nodeIdProvider: IdProvider;
+    static nodeIdProvider: IdProvider= new SimpleIdProvider("ID-");
     static boxIdProvider: IdProvider;
 
     /**
