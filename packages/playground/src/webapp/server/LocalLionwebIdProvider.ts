@@ -10,7 +10,7 @@ export class LocalLionwebIdProvider implements IdProvider {
             let newId = "ID-" + this.index;
             this.index++;
         }
-        this.idUsed(newId);
+        this.usedId(newId);
         return newId;
     }
 
