@@ -5,6 +5,8 @@ type PropertyData = {
     key: string;
 };
 
+type LanguageData = PropertyData;
+
 type ClassifierData = {
     id: string;
     key: string;
@@ -12,6 +14,30 @@ type ClassifierData = {
 };
 export class IdMap {
     idAndKeyStore = new Map<string, ClassifierData>();
+    languageStore = new Map<string, LanguageData>();
+
+    setLanguageIdAndKey(language: string, id: string, key: string): void {
+        console.log("IdMap.setLanguageIdAndKey " + language + " id " + id + " key " + key);
+        this.languageStore.set(language, {id: id, key: key});
+    }
+
+    getLanguageId(language: string): string {
+        const data = this.languageStore.get(language);
+        if (data === undefined || data.id === undefined) {
+            return "-default-id-" + language;
+        } else {
+            return data.id;
+        }
+    }
+
+    getLanguageKey(language: string): string {
+        const data = this.languageStore.get(language);
+        if (data === undefined || data.id === undefined) {
+            return "-default-key-" + language;
+        } else {
+            return data.key;
+        }
+    }
 
     setClassifierIdAndKey(classifier: string, id: string, key: string): void {
         // console.log("IdMap.setClassifierIdAndKey " + classifier + " id " + id + " key " + key);

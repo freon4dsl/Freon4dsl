@@ -101,6 +101,7 @@ export class CommonChecker {
         copy.type = property.type;
         copy.key = property.key;
         copy.id = property.id;
+        copy.owningClassifier = property.owningClassifier;
         copy.owningClassifier = classifier;
         if (property instanceof FreMetaPrimitiveProperty) {
             classifier.primProperties.push(copy as FreMetaPrimitiveProperty);

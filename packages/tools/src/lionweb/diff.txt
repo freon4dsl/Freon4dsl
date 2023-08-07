@@ -1,0 +1,8 @@
+LwDiff: Language with  key LIonCore-M3 does not exist in first object
+Object -id-LIonCore-M3 has parent ID-5 vs null
+Property IKeyed-key has value LionCore-M3 vs LIonCore-M3
+Property LIonCore-builtins-INamed-name has value lion vs LIonCore.M3
+Property IKeyed-key has value Property vs IKeyed-key
+Node with concept key ID-6 does not exist in second object
+Object LIonCore-builtins-INamed has parent ID-6 vs LIonCore-builtins
+Node with concept key LIonCore-builtins does not exist in first object

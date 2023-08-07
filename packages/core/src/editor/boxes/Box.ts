@@ -73,7 +73,7 @@ export abstract class Box {
     /**
      * Get the first selectable leaf box in the tree with `this` as root.
      */
-    get firstLeaf(): Box {
+    get firstLeaf(): Box | null {
         if (this.isLeaf() && this.selectable) {
             return this;
         }
@@ -94,7 +94,7 @@ export abstract class Box {
     /**
      * Get the last selectable leaf box in the tree with `this` as root.
      */
-    get lastLeaf(): Box {
+    get lastLeaf(): Box | null {
         if (this.isLeaf() && this.selectable) {
             return this;
         }
@@ -112,7 +112,7 @@ export abstract class Box {
     /**
      * Return the previous selectable leaf in the tree.
      */
-    get nextLeafRight(): Box {
+    get nextLeafRight(): Box | null {
         if (!this.parent) {
             return null;
         }
@@ -134,7 +134,7 @@ export abstract class Box {
     /**
      * Return the next selectable leaf in the tree.
      */
-    get nextLeafLeft(): Box {
+    get nextLeafLeft(): Box | null {
         if (this.parent === null || this.parent === undefined) {
             return null;
         }
@@ -212,7 +212,7 @@ export abstract class Box {
      * @param propertyName
      * @param propertyIndex
      */
-    findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box {
+    findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box | null {
         // console.log('findChildBoxForProperty ' + this.role + "[" + propertyName + ", " + propertyIndex + "]");
         for (const child of this.children) {
             // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
@@ -256,8 +256,8 @@ export abstract class Box {
     /**
      * Get the first editable leaf box in the tree with `this` as root.
      */
-    get firstEditableChild(): Box {
-        const editableChildren = [];
+    get firstEditableChild(): Box | null {
+        const editableChildren: Box[] = [];
         this.getEditableChildrenRecursive(editableChildren);
         if (editableChildren.length > 0) {
             return editableChildren[0];

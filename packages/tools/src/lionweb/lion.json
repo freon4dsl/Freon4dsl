@@ -24,7 +24,7 @@
                   "version": "1",
                   "key": "IKeyed-key"
                },
-               "value": "LIonCore-M3"
+               "value": "LionCore-M3"
             },
             {
                "property": {
@@ -188,8 +188,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "JSON",
-                     "reference": "ID-4"
+                     "resolveInfo": "String",
+                     "reference": "ID-2"
                   }
                ]
             }
@@ -535,7 +535,7 @@
                   "version": "1",
                   "key": "IKeyed-key"
                },
-               "value": "IKeyed-key"
+               "value": "Property"
             }
          ],
          "children": [],

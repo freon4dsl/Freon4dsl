@@ -50,11 +50,11 @@ export function instanceOfSub(src: FreNode, target: string): boolean {
     return isSubConcept(src.freLanguageConcept(), target);
 }
 
-export function isExactConcept(src, target: string): boolean {
+export function isExactConcept(src: string, target: string): boolean {
     return src === target;
 }
 
-export function isSubConcept(src, target: string): boolean {
+export function isSubConcept(src: string, target: string): boolean {
     return src === target || FreLanguage.getInstance().classifier(target).subConceptNames.includes(src);
 }
 
