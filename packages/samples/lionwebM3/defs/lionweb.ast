@@ -1,12 +1,8 @@
-language LionCoreM3
+language LionCoreM3 
 
 model LionCoreM3 {
     name: identifier;
     units: Language[];
-}
-
-interface INamed {
-    name: identifier;
 }
 
 interface IKeyed base INamed {
@@ -60,12 +56,7 @@ concept Reference base Link {
 abstract concept Datatype base LanguageEntity {
 }
 
-limited PrimitiveType base Datatype {
-//    key: string;
-    Boolean = { name: "Boolean", key: "LionCore-builtins-Boolean" }
-    String = { name: "String", key: "LionCore-builtins-String" }
-    Integer = { name: "Integer", key: "LionCore-builtins-Integer" }
-    JSON = { name: "JSON", key: "LionCore-builtins-JSON" }
+concept PrimitiveType base Datatype {
 }
 
 concept Enumeration base Datatype {

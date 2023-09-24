@@ -1,5 +1,17 @@
 {
     "language": "LionWebM3",
+    "languages": [
+        {
+            "language": "LionCoreM3",
+            "key": "LionCore-M3",
+            "id": "-id-LionCore-M3"
+        },
+        {
+            "language": "LionCore_builtins",
+            "key": "LionCore-builtins",
+            "id": "-id-LionCore-builtins"
+        }
+    ],
     "concepts": [
         {
             "concept": "Language",
@@ -25,6 +37,23 @@
                     "name": "dependsOn",
                     "id"  : "-id-Language-dependsOn",
                     "key"  : "Language-dependsOn"
+                }
+            ]
+        },
+        {
+            "concept": "LionCoreM3",
+            "id": "-id-LionCoreM3",
+            "key": "LionCore-M3.Model",
+            "properties": [
+                {
+                    "name": "name",
+                    "id"  : "-id-LionCore-M3.model-name",
+                    "key"  : "LionCore-M3.model-name"
+                },
+                {
+                    "name": "units",
+                    "id"  : "-id-LionCore-M3.model-entities",
+                    "key"  : "LionCore-M3.model-entities"
                 }
             ]
         },
