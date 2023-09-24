@@ -52,7 +52,7 @@ export class FreLionwebSerializer implements FreSerializer {
         LOGGER.log("Starting ...")
         // TODO Does not work, as there never is an instance of class LwChuld being constructed.
         if (!isLwChunk(jsonObject)) {
-            LOGGER.log(`Cannot read json: jsonObject is not a LIonWeb chunk:`);
+            LOGGER.log(`Cannot read json: jsonObject is not a LionWeb chunk:`);
         }
         // LOGGER.log(`jsonObject ${JSON.stringify(jsonObject)}`);
         const chunk = jsonObject as LwChunk;

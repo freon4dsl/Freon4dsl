@@ -1,6 +1,6 @@
-language LIonCoreM3
+language LionCoreM3
 
-model LIonCoreM3 {
+model LionCoreM3 {
     name: identifier;
     units: Language[];
 }
@@ -62,10 +62,10 @@ abstract concept Datatype base LanguageEntity {
 
 limited PrimitiveType base Datatype {
 //    key: string;
-    Boolean = { name: "Boolean", key: "LIonCore-builtins-Boolean" }
-    String = { name: "String", key: "LIonCore-builtins-String" }
-    Integer = { name: "Integer", key: "LIonCore-builtins-Integer" }
-    JSON = { name: "JSON", key: "LIonCore-builtins-JSON" }
+    Boolean = { name: "Boolean", key: "LionCore-builtins-Boolean" }
+    String = { name: "String", key: "LionCore-builtins-String" }
+    Integer = { name: "Integer", key: "LionCore-builtins-Integer" }
+    JSON = { name: "JSON", key: "LionCore-builtins-JSON" }
 }
 
 concept Enumeration base Datatype {
