@@ -46,6 +46,7 @@ export type FreLanguageModelUnit = {
     fileExtension: string;
     properties: Map<string, FreLanguageProperty>;
     constructor: (id?: string) => FreModelUnit;
+    trigger: string;
     referenceShortcut?: ReferenceShortcut;
 };
 export type FreLanguageConcept = {

@@ -94,6 +94,7 @@ export class LanguageTemplate {
                         subConceptNames: [], // Nothing yet, but may change in the future
                         constructor: (id?: string) => { return new MyLanguage.${Names.classifier(modelunit)}(id); },
                         properties: new Map< string, FreLanguageProperty>(),
+                        trigger: "${Names.classifier(modelunit)}"
                     }
                     ${modelunit.allPrimProperties().map(prop =>
                         `modelunit.properties.set("${prop.name}", {
