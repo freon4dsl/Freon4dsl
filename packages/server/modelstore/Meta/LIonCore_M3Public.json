@@ -71,7 +71,7 @@
                "targets": []
             }
          ],
-         "parent": "ID-5"
+         "parent": "ID-1"
       },
       {
          "id": "-id-Language",
@@ -189,7 +189,7 @@
                "targets": [
                   {
                      "resolveInfo": "JSON",
-                     "reference": "ID-4"
+                     "reference": "LIonCore-builtins-JSON"
                   }
                ]
             }
@@ -549,7 +549,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-2"
+                     "reference": "LIonCore-builtins-String"
                   }
                ]
             }
@@ -681,7 +681,7 @@
                "targets": [
                   {
                      "resolveInfo": "Boolean",
-                     "reference": "ID-1"
+                     "reference": "LIonCore-builtins-Boolean"
                   }
                ]
             }
@@ -732,7 +732,7 @@
                "targets": [
                   {
                      "resolveInfo": "Boolean",
-                     "reference": "ID-1"
+                     "reference": "LIonCore-builtins-Boolean"
                   }
                ]
             }
@@ -1328,7 +1328,7 @@
                "targets": [
                   {
                      "resolveInfo": "Boolean",
-                     "reference": "ID-1"
+                     "reference": "LIonCore-builtins-Boolean"
                   }
                ]
             }
@@ -1595,7 +1595,7 @@
                "targets": [
                   {
                      "resolveInfo": "Boolean",
-                     "reference": "ID-1"
+                     "reference": "LIonCore-builtins-Boolean"
                   }
                ]
             }

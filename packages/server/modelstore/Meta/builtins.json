@@ -57,7 +57,7 @@
                "targets": []
             }
          ],
-         "parent": "ID-5"
+         "parent": "ID-1"
       },
       {
          "id": "LIonCore-builtins-INamed",
@@ -152,7 +152,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-2"
+                     "reference": "LIonCore-builtins-String"
                   }
                ]
             }
