@@ -4,7 +4,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/meta",
-  "version": "0.6.0-beta.1",
+  "version": "0.6.0-beta.2",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
