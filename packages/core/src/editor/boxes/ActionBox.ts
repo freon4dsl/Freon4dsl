@@ -1,9 +1,9 @@
-import { FreLanguageConcept, FreLanguage } from "../../language";
+import { FreLanguageConcept, FreLanguage, FreLanguageProperty, FreLanguageClassifier } from "../../language";
 import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../util";
-import { FreCreatePartAction } from "../actions";
+import { FreCreatePartAction, FreCustomAction, FreTriggerType } from "../actions";
 import { triggerTypeToString, FreEditor, TextBox, isProKey } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
-import { FreNode } from "../../ast";
+import { FreNode, FreNodeReference } from "../../ast";
 import { runInAction } from "mobx";
 import { FreLogger } from "../../logging";
 
@@ -56,17 +56,18 @@ export class ActionBox extends AbstractChoiceBox {
      * @param editor
      */
     getOptions(editor: FreEditor): SelectOption[] {
-        LOGGER.log("getOptions for " + this.$id + "- " + this.conceptName + "." + this.propertyName);
+        console.log("getOptions for " + this.$id + "- " + this.conceptName + "." + this.propertyName);
         const result: SelectOption[] = [];
         if ( !!this.propertyName && !!this.conceptName) {
-            LOGGER.log("  has property and concept names");
+            console.log(`  has property ${this.propertyName} and concept ${this.conceptName}`);
             // If the action box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
             const clsOtIntf = FreLanguage.getInstance().classifier(this.conceptName);
-            LOGGER.log(  `clsIntf: ${clsOtIntf}`)
-            clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (creatableConceptname: string) => {
+            const propDef = FreLanguage.getInstance().classifierProperty(this.conceptName, this.propertyName);
+            console.log(`clsIntf: ${clsOtIntf} prop kind: ${propDef?.propertyKind}`);
+            clsOtIntf.subConceptNames.concat(this.conceptName).forEach((creatableConceptname: string) => {
                 const creatableConcept = FreLanguage.getInstance().classifier(creatableConceptname);
-                LOGGER.log(  `creatableConcept: ${creatableConcept}`)
+                LOGGER.log(`creatableConcept: ${creatableConcept}`)
                 if (!!creatableConcept && !creatableConcept.isAbstract) {
                     if (!!(creatableConcept.referenceShortcut)) {
                         this.addReferenceShortcuts(creatableConcept as FreLanguageConcept, result, editor);
@@ -74,8 +75,13 @@ export class ActionBox extends AbstractChoiceBox {
                     result.push(this.getCreateElementOption(this.propertyName, creatableConceptname, creatableConcept as FreLanguageConcept));
                 }
             });
+        } else if (!!this.propertyName) {
+            // Reference property
+            const propDef = FreLanguage.getInstance().classifierProperty(this.element.freLanguageConcept(), this.propertyName);
+            console.log(`parent: ${this.element.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`);
+            this.addReferences(this.element, propDef, result, editor);
         } else {
-            LOGGER.log("No property and concept defined for action box " + this.role);
+            console.log("No property and concept defined for action box " + this.role);
         }
         // Using the new actions:
         // Now look in all actions defined in the editor whether they fit this action, except for the keyboard shortcuts
@@ -139,6 +145,43 @@ export class ActionBox extends AbstractChoiceBox {
                             },
                             propertyName: self.propertyName,
                             conceptName: concept.typeName
+                        })
+                    })));
+        });
+    }    
+    
+    /**
+     * Get all referrable element for the concept.property
+     * @param concept The concept with the referenceShortcut
+     * @param result  The array where the resutling actions should be addedd to
+     * @param editor  The editor context
+     * @private
+     */
+    private addReferences(parentNode: FreNode, property: FreLanguageProperty, result: SelectOption[], editor: FreEditor) {
+        // Create the new element for this behavior inside a dummy and then point the owner to the
+        // current element.  This way the new element is not part of the model and will not trigger mobx
+        // reactions. But the scoper can be used to find available references, because the scoper only
+        // needs the owner.
+        console.log("addReferences: " + parentNode.freLanguageConcept() + " property " + property.name)
+        const propType: string = property.type;
+        const self: ActionBox = this;
+        runInAction(() => {
+            // const newElement = concept.constructor();
+            // newElement["$$owner"] = this.element;
+            result.push(...
+                editor.environment
+                    .scoper.getVisibleNames(parentNode, propType)
+                    .filter(name => !!name && name !== "")
+                    .map(name => ({
+                        id: parentNode.freLanguageConcept() + "-" + name,
+                        label: "REFERENCE TO " + name,
+                        description: "create ref to " + propType,
+                        action: FreCustomAction.create({
+                            activeInBoxRoles: [],
+                            action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
+                                parentNode[property.name].push(FreNodeReference.create(name, null));
+                                return null;
+                            }
                         })
                     })));
         });
