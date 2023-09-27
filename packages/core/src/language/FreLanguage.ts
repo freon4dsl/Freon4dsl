@@ -46,6 +46,7 @@ export type FreLanguageModelUnit = {
     fileExtension: string;
     properties: Map<string, FreLanguageProperty>;
     constructor: (id?: string) => FreModelUnit;
+    trigger: string;
     referenceShortcut?: ReferenceShortcut;
 };
 export type FreLanguageConcept = {
@@ -269,13 +270,16 @@ export class FreLanguage {
         return this.helperPropByKey(concept1.properties, propertyKey);
     }
 
-    allConceptProperties(typeName: string): IterableIterator<FreLanguageProperty> | undefined {
+    allConceptProperties(typeName: string): FreLanguageProperty[] | undefined {
         // console.log("Looking up properties for "+ typeName);
         let myType: FreLanguageConcept | FreLanguageModelUnit | undefined = this.concept(typeName);
         if (isNullOrUndefined(myType)) {
             myType = this.unit(typeName);
         }
-        return myType?.properties.values();
+        if (myType === undefined) {
+            return [];
+        }
+        return [...myType.properties.values()];
     }
 
     /**

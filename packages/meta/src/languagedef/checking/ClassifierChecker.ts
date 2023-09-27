@@ -97,7 +97,7 @@ export class ClassifierChecker {
             classifier.allInterfaces().forEach(intf => {
                 intf.allProperties().forEach(toBeImplemented => {
                     const implementedProp = this.findImplementedProperty(toBeImplemented, classifier, false);
-                    if (!implementedProp) { // there is NO counterpart in either this concept or its base
+                    if (implementedProp === null || implementedProp === undefined) { // there is NO counterpart in either this concept or its base
                         const inAnotherInterface = innerPropsDone.find(prevProp => prevProp.name === toBeImplemented.name);
                         if (!!inAnotherInterface) { // there is a prop with the same name in another implemented interface
                             // we must check type conformance both ways!

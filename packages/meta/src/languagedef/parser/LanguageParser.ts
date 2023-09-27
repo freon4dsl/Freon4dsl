@@ -88,7 +88,13 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
         console.log("PARSE IDS")
         const idMap = new IdMap();
 
-        const jsonLanguage = json["language"];
+        const jsonLanguages = json["languages"];
+        for(const jsonLanguage of jsonLanguages) {
+            idMap.setLanguageIdAndKey(jsonLanguage["language"], jsonLanguage["id"], jsonLanguage["key"]);
+        }
+        if (!Array.isArray(jsonLanguages)) {
+            throw new Error("id.json 'languages' property should be an array");
+        }
         const languageId = json["id"];
         if (typeof languageId === "string") {
             console.log("Language has id " + languageId);

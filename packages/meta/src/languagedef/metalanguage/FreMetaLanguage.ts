@@ -17,7 +17,8 @@ export class FreMetaLanguage extends FreMetaLangElement {
     interfaces: FreMetaInterface[] = [];
     modelConcept: FreMetaModelDescription;
     units: FreMetaUnitDescription[] = [];
-    id: string
+    id: string;
+    key: string;
     usedLanguages: string[] = [];
 
     constructor() {
@@ -25,6 +26,9 @@ export class FreMetaLanguage extends FreMetaLangElement {
         this.name = "";
     }
 
+    get NAME(): string {
+        return this._name;
+    }
     get name(): string {
         if (!!this.modelConcept) {
             return this.modelConcept.name;
@@ -100,9 +104,11 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
     set language(c: FreMetaLanguage) {
         if (this._owningLanguage === undefined || this._owningLanguage === null) {
             this._owningLanguage = c;
-            this.originalOwningLanguage = c;
+            // if (this.originalOwningLanguage === undefined || this.originalOwningLanguage === null) {
+                this.originalOwningLanguage = c;
+            // }
         } else {
-            this.originalOwningLanguage = this._owningLanguage;
+            // this.originalOwningLanguage = this._owningLanguage;
             this._owningLanguage = c;
         }
     }
@@ -487,7 +493,7 @@ export class FreMetaProperty extends FreMetaLangElement {
             this._owningClassifier = c;
             this.originalOwningClassifier = c;
         } else {
-            this.originalOwningClassifier = this._owningClassifier;
+            // this.originalOwningClassifier = this._owningClassifier;
             this._owningClassifier = c;
         }
     }

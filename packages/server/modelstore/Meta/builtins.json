@@ -1,0 +1,163 @@
+{
+   "serializationFormatVersion": "1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "LionCore-builtins",
+         "concept": {
+            "language": "LionCore-M3",
+            "version": "1",
+            "key": "Language"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "LionCore-M3",
+                  "version": "1",
+                  "key": "Language-version"
+               },
+               "value": "1"
+            },
+            {
+               "property": {
+                  "language": "LionCore-M3",
+                  "version": "1",
+                  "key": "IKeyed-key"
+               },
+               "value": "LionCore-builtins"
+            },
+            {
+               "property": {
+                  "language": "LionCore-builtins",
+                  "version": "1",
+                  "key": "LionCore-builtins-INamed-name"
+               },
+               "value": "builtins"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "LionCore-M3",
+                  "version": "1",
+                  "key": "Language-entities"
+               },
+               "children": [
+                  "LionCore-builtins-INamed"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "LionCore-M3",
+                  "version": "1",
+                  "key": "Language-dependsOn"
+               },
+               "targets": []
+            }
+         ],
+         "parent": "ID-1"
+      },
+      {
+         "id": "LionCore-builtins-INamed",
+         "concept": {
+            "language": "LionCore-M3",
+            "version": "1",
+            "key": "ConceptInterface"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "LionCore-builtins",
+                  "version": "1",
+                  "key": "LionCore-builtins-INamed-name"
+               },
+               "value": "INamed"
+            },
+            {
+               "property": {
+                  "language": "LionCore-M3",
+                  "version": "1",
+                  "key": "IKeyed-key"
+               },
+               "value": "LionCore-builtins-INamed"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "LionCore-M3",
+                  "version": "1",
+                  "key": "Classifier-features"
+               },
+               "children": [
+                  "LionCore-builtins-INamed-name"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "LionCore-M3",
+                  "version": "1",
+                  "key": "ConceptInterface-extends"
+               },
+               "targets": []
+            }
+         ],
+         "parent": "LionCore-builtins"
+      },
+      {
+         "id": "LionCore-builtins-INamed-name",
+         "concept": {
+            "language": "LionCore-M3",
+            "version": "1",
+            "key": "Property"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "LionCore-M3",
+                  "version": "1",
+                  "key": "Feature-optional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "LionCore-builtins",
+                  "version": "1",
+                  "key": "LionCore-builtins-INamed-name"
+               },
+               "value": "name"
+            },
+            {
+               "property": {
+                  "language": "LionCore-M3",
+                  "version": "1",
+                  "key": "IKeyed-key"
+               },
+               "value": "LionCore-builtins-INamed-name"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "LionCore-M3",
+                  "version": "1",
+                  "key": "Property-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "LionCore-builtins-String"
+                  }
+               ]
+            }
+         ],
+         "parent": "LionCore-builtins-INamed"
+      }
+   ]
+}

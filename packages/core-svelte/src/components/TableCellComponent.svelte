@@ -76,6 +76,7 @@
             childBox = box.content;
             myMetaType = box.conceptName;
         }
+        LOGGER.log("    refresh row, col = " + row + ", " + column);
     }
 
     /**

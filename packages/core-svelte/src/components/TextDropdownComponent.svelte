@@ -114,7 +114,24 @@
             allOptions = getOptions();
         }
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+        makeUnique();
     };
+
+    function makeUnique() {
+        // make doubles unique, to avoid errors
+        const seen: string[] = [];
+        const result: SelectOption[] = [];
+        filteredOptions.forEach( option => {
+            if (seen.includes(option.label)) {
+                console.error("Option " + JSON.stringify(option) + " is a duplicate");
+            } else {
+                seen.push(option.label);
+                result.push(option)
+            }
+        });
+        filteredOptions = result;
+
+    }
 
     function selectLastOption() {
         if (dropdownShown) {
@@ -276,11 +293,15 @@
             if ( text === undefined || text === null) {
                 filteredOptions = allOptions.filter(o => true);
             } else {
-                filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+                filteredOptions = allOptions.filter(o => {
+                    LOGGER.log(`startsWith text [${text}], option is ${JSON.stringify(o)}`);
+                    return o.label.startsWith(text.substring(0, event.detail.caret))
+                });
             }
         } else {
             filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, 0)));
         }
+        makeUnique();
     };
 
     /**

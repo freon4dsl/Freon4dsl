@@ -46,11 +46,15 @@ export function createLanguage(data: Partial<FreMetaLanguage>): FreMetaLanguage 
     const result = new FreMetaLanguage();
     if (!!data.name) {
         result.name = data.name;
+        result.id = LanguageCreators_idMap.getLanguageId(result.name);
+        result.key = LanguageCreators_idMap.getLanguageKey(result.name);
+        console.log("LANGUAGE NAME IS [" + data.name + "] " + "key " + result.key + " id " + result.id);
         result.usedLanguages.push(data.name);
     }
     if (!!data.concepts) {
         let hasModel: boolean = false;
         for (const con of data.concepts) {
+            con.language = result;
             if (con instanceof FreMetaInterface) {
                 result.interfaces.push(con);
             } else if (con instanceof FreMetaModelDescription) {
@@ -98,6 +102,8 @@ export function createModel(data: Partial<FreMetaModelDescription>): FreMetaMode
     const result = new FreMetaModelDescription();
     if (!!data.name) {
         result.name = data.name;
+        result.id = LanguageCreators_idMap.getConceptId(result.name);
+        result.key = LanguageCreators_idMap.getConceptKey(result.name);
     }
     if (!!data.properties) {
         splitProperties(data.properties, result);

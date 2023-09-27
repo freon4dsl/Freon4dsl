@@ -5,16 +5,16 @@
       {
          "id": "ID-206",
          "concept": {
-            "key": "LIonCore_M3_Language",
+            "key": "LionCore_M3_Language",
             "version": "1.0",
-            "language": "LIonCoreM3"
+            "language": "LionCoreM3"
          },
          "properties": [
             {
                "property": {
                   "key": "key",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "value": ""
             },
@@ -22,7 +22,7 @@
                "property": {
                   "key": "version",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "value": ""
             },
@@ -30,7 +30,7 @@
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "value": "ExprLanguage"
             },
@@ -38,7 +38,7 @@
                "property": {
                   "key": "dummy",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "value": ""
             }
@@ -46,9 +46,9 @@
          "children": [
             {
                "containment": {
-                  "key": "LIonCore_M3_Language_elements",
+                  "key": "LionCore_M3_Language_elements",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "children": [
                   "ID-301"
@@ -60,7 +60,7 @@
                "reference": {
                   "key": "dependsOn",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "targets": [
                   {
@@ -75,16 +75,16 @@
       {
          "id": "ID-301",
          "concept": {
-            "key": "LIonCore_M3_Concept",
+            "key": "LionCore_M3_Concept",
             "version": "1.0",
-            "language": "LIonCoreM3"
+            "language": "LionCoreM3"
          },
          "properties": [
             {
                "property": {
-                  "key": "LIonCore_M3_Concept_abstract",
+                  "key": "LionCore_M3_Concept_abstract",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "value": "false"
             },
@@ -92,7 +92,7 @@
                "property": {
                   "key": "partition",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "value": "false"
             },
@@ -100,7 +100,7 @@
                "property": {
                   "key": "dummy",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "value": ""
             },
@@ -108,7 +108,7 @@
                "property": {
                   "key": "key",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "value": ""
             },
@@ -116,7 +116,7 @@
                "property": {
                   "key": "name",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "value": ""
             }
@@ -124,9 +124,9 @@
          "children": [
             {
                "containment": {
-                  "key": "LIonCore_M3_FeaturesContainer_features",
+                  "key": "LionCore_M3_FeaturesContainer_features",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "children": []
             }
@@ -134,9 +134,9 @@
          "references": [
             {
                "reference": {
-                  "key": "LIonCore_M3_Concept_extends",
+                  "key": "LionCore_M3_Concept_extends",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "targets": [
                   {}
@@ -144,9 +144,9 @@
             },
             {
                "reference": {
-                  "key": "LIonCore_M3_Concept_implements",
+                  "key": "LionCore_M3_Concept_implements",
                   "version": "1.0",
-                  "language": "LIonCoreM3"
+                  "language": "LionCoreM3"
                },
                "targets": []
             }

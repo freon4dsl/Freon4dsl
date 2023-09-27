@@ -1,5 +1,17 @@
 {
-    "language": "LIonWebM3",
+    "language": "LionWebM3",
+    "languages": [
+        {
+            "language": "LionCoreM3",
+            "key": "LionCore-M3",
+            "id": "-id-LionCore-M3"
+        },
+        {
+            "language": "LionCore_builtins",
+            "key": "LionCore-builtins",
+            "id": "-id-LionCore-builtins"
+        }
+    ],
     "concepts": [
         {
             "concept": "Language",
@@ -25,6 +37,23 @@
                     "name": "dependsOn",
                     "id"  : "-id-Language-dependsOn",
                     "key"  : "Language-dependsOn"
+                }
+            ]
+        },
+        {
+            "concept": "LionCoreM3",
+            "id": "-id-LionCoreM3",
+            "key": "LionCore-M3.Model",
+            "properties": [
+                {
+                    "name": "name",
+                    "id"  : "-id-LionCore-M3.model-name",
+                    "key"  : "LionCore-M3.model-name"
+                },
+                {
+                    "name": "units",
+                    "id"  : "-id-LionCore-M3.model-entities",
+                    "key"  : "LionCore-M3.model-entities"
                 }
             ]
         },
@@ -170,21 +199,21 @@
         },
         {
             "concept": "Node",
-            "id": "LIonCore-builtins-Node",
-            "key": "LIonCore-builtins-Node",
+            "id": "LionCore-builtins-Node",
+            "key": "LionCore-builtins-Node",
             "properties": []
         }
     ],
     "interfaces": [
         {
             "interface": "INamed",
-            "id": "LIonCore-builtins-INamed",
-            "key": "LIonCore-builtins-INamed",
+            "id": "LionCore-builtins-INamed",
+            "key": "LionCore-builtins-INamed",
             "properties": [
                 {
                     "name": "name",
-                    "id": "LIonCore-builtins-INamed-name",
-                    "key": "LIonCore-builtins-INamed-name"
+                    "id": "LionCore-builtins-INamed-name",
+                    "key": "LionCore-builtins-INamed-name"
                 }
             ]
         },
@@ -204,23 +233,23 @@
     "limited" : [
         {
             "instance":"Boolean",
-            "id": "LIonCore-builtins-Boolean",
-            "key": "LIonCore-builtins-Boolean"
+            "id": "LionCore-builtins-Boolean",
+            "key": "LionCore-builtins-Boolean"
         },
         {
             "instance":"String",
-            "id": "LIonCore-builtins-String",
-            "key": "LIonCore-builtins-String"
+            "id": "LionCore-builtins-String",
+            "key": "LionCore-builtins-String"
         },
         {
             "instance":"JSON",
-            "id": "LIonCore-builtins-JSON",
-            "key": "LIonCore-builtins-JSON"
+            "id": "LionCore-builtins-JSON",
+            "key": "LionCore-builtins-JSON"
         },
         {
             "instance":"Integer",
-            "id": "LIonCore-builtins-Integer",
-            "key": "LIonCore-builtins-Integer"
+            "id": "LionCore-builtins-Integer",
+            "key": "LionCore-builtins-Integer"
         }
     ]
 }

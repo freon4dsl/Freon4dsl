@@ -2,7 +2,7 @@ import { FreLanguage, FreLionwebSerializer, FreNode, FreNodeReference } from "@f
 import { CommandLineAction, CommandLineStringParameter } from "@rushstack/ts-command-line";
 import fs from "fs";
 import path from "node:path";
-import { LIonCoreM3Environment } from "../lionwebM3/config/gen/LIonCoreM3Environment";
+import { LionCoreM3Environment } from "../lionwebM3/config/gen/LionCoreM3Environment";
 import { LwChunk } from "@freon4dsl/core";
 
 export class LionWebMM extends CommandLineAction {
@@ -78,7 +78,7 @@ export class LionWebMM extends CommandLineAction {
 
     async readLionweb() {
         // ensure language is initialized
-        const tmp = LIonCoreM3Environment.getInstance();
+        const tmp = LionCoreM3Environment.getInstance();
         for (const x of FreLanguage.getInstance().getNamedConcepts()) {
             console.log("Named concept " + x);
         }
