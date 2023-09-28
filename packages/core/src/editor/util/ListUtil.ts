@@ -137,7 +137,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
         // todo subclasses to be tested in different project than Example
         const submenuItemsBefore: MenuItem[] = [];
         const submenuItemsAfter: MenuItem[] = [];
-        clsOtIntf.subConceptNames.forEach((creatableConceptname: string) => {
+        clsOtIntf.subConceptNames.filter(subName => !FreLanguage.getInstance().classifier(subName).isAbstract).forEach((creatableConceptname: string) => {
             submenuItemsBefore.push(new MenuItem(creatableConceptname,
                 "",
                 (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, creatableConceptname, true)));
@@ -202,7 +202,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
  * @param before
  */
 function addListElement(listParent: FreNode, propertyName: string, index: number, typeOfAdded: string, before: boolean) {
-    console.log(`addListElement index: ${index}`);
+    console.log(`addListElement of type: ${typeOfAdded} index: ${index}`);
     // get info about the property that needs to be changed
     const { property, isList, type } = getPropertyInfo(listParent, propertyName);
     if (!before) {
