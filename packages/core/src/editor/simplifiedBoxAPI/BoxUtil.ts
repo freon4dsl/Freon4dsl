@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import { FreNode, FreNamedNode } from "../../ast";
+import { FreNode, FreNamedNode, FreNodeReference } from "../../ast";
 import { Box, BoxFactory, CharAllowed, HorizontalListBox, SelectBox, SelectOption, TextBox, VerticalListBox } from "../boxes";
 import { FreUtils } from "../../util";
 import { BehaviorExecutionResult } from "../util";
@@ -331,9 +331,9 @@ export class BoxUtil {
         // check whether the property is a reference list
         if (property !== undefined && propertyName !== null && isList && isPart === "reference") {
             // find the children to show in this listBox
-            let children = this.makeRefItems(property, element, propertyName, scoper, listInfo);
+            let children = this.makeRefItems(property as FreNodeReference<FreNamedNode>[], element, propertyName, scoper, listInfo);
             // add a placeholder where a new element can be added
-            children = this.addPlaceholder(children, element, propertyName);
+            children = this.addReferencePlaceholder(children, element, propertyName);
             let result: VerticalListBox;
             result = BoxFactory.verticalList(
                 element,
@@ -375,7 +375,7 @@ export class BoxUtil {
             // find the children to show in this listBox
             let children: Box[] = this.makeRefItems(property, element, propertyName, scoper, listJoin);
             // add a placeholder where a new element can be added
-            children = this.addPlaceholder(children, element, propertyName);
+            children = this.addReferencePlaceholder(children, element, propertyName);
             // return the box
             let result: HorizontalListBox;
             result = BoxFactory.horizontalList(
@@ -439,6 +439,19 @@ export class BoxUtil {
         );
     }
 
+    private static addReferencePlaceholder(children: Box[], element: FreNode, propertyName: string) {
+        return children.concat(
+            BoxFactory.action(
+                element,
+                RoleProvider.property(element.freLanguageConcept(), propertyName, "new-list-item"),
+                `<+ ${propertyName}>`,
+                {
+                    propertyName: `${propertyName}`
+                    // conceptName: FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName).type
+                })
+        );
+    }
+
     private static findPartItems(property: FreNode[], element: FreNode, propertyName: string, listJoin: FreListInfo, boxProviderCache: FreProjectionHandler) {
         const numberOfItems = property.length;
         return property.map((listElem, index) => {
@@ -472,7 +485,7 @@ export class BoxUtil {
         });
     }
 
-    private static makeRefItems(properties: FreNamedNode[], element: FreNode, propertyName: string, scoper: FreScoper, listJoin?: FreListInfo): Box[] {
+    private static makeRefItems(properties: FreNodeReference<FreNamedNode>[], element: FreNode, propertyName: string, scoper: FreScoper, listJoin?: FreListInfo): Box[] {
         const result: Box[] = [];
         const numberOfItems = properties.length;
         properties.forEach((listElem, index) => {

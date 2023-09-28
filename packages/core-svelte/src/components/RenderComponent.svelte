@@ -41,7 +41,7 @@
     import { componentId, setBoxSizes } from "./svelte-utils";
     import ElementComponent from "./ElementComponent.svelte";
 
-    const LOGGER = new FreLogger("RenderComponent");
+    const LOGGER = new FreLogger("RenderComponent").mute();
 
     export let box: Box = null;
     export let editor: FreEditor;
