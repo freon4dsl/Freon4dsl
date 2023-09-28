@@ -174,7 +174,7 @@ export class ActionBox extends AbstractChoiceBox {
                     .filter(name => !!name && name !== "")
                     .map(name => ({
                         id: parentNode.freLanguageConcept() + "-" + name,
-                        label: "REFERENCE TO " + name,
+                        label: name,
                         description: "create ref to " + propType,
                         action: FreCustomAction.create({
                             activeInBoxRoles: [],
