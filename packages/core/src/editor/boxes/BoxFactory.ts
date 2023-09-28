@@ -296,9 +296,10 @@ export class BoxFactory {
     }
 
     static optional(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string): OptionalBox {
-        if (cacheOptionalOff) {
-            return new OptionalBox(element, role, condition, box, mustShow, actionText);
-        }
+        // TODO This only works with cache on, should also work with cache off. 
+        // if (cacheOptionalOff) {
+        //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
+        // }
         // 1. Create the optional box, or find the one that already exists for this element and role
         const creator = () => new OptionalBox(element, role, condition, box, mustShow, actionText);
         const result: OptionalBox = this.find<OptionalBox>(element, role, creator, optionalCache);
