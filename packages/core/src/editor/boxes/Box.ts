@@ -29,7 +29,7 @@ export abstract class Box {
      */
     isDirty(): void {
         if (this.refreshComponent !== undefined && this.refreshComponent !== null) {
-            this.refreshComponent("====== FROM Box " + this.kind + " " + this.id);
+            this.refreshComponent("Called by Box " + this.kind + " " + this.id);
         } else {
             LOGGER.log("No refreshComponent() for " + this.role);
         }
