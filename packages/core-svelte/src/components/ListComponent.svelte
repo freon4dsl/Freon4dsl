@@ -120,9 +120,9 @@
             // determine the contents of the menu based on listBox, before showing the menu!
             if (isActionBox(elemBox)) { // the selected box is the placeholder => show different menu items
                 // console.log('index of ActionBox: ' + index);
-                $contextMenu.items = box.options(MenuOptionsType.placeholder);
+                $contextMenu.items = box.options(MenuOptionsType.placeholder, index);
             } else {
-                $contextMenu.items = box.options(MenuOptionsType.normal);
+                $contextMenu.items = box.options(MenuOptionsType.normal, index);
             }
             $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
         }

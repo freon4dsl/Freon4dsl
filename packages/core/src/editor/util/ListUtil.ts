@@ -115,7 +115,7 @@ export function dropListElement(editor: FreEditor,
  * @param propertyName      the name of the property in which the list is stored
  * @param optionsType       in case the options are created for a placeholder or header, we add lesser items (e.g. no DELETE)
  */
-export function getContextMenuOptions(conceptName: string, listParent: FreNode, propertyName: string, optionsType: MenuOptionsType): MenuItem[] {
+export function getContextMenuOptions(conceptName: string, listParent: FreNode, propertyName: string, optionsType: MenuOptionsType, index?: number): MenuItem[] {
     console.log(`getContextMenuOptions
     conceptname: ${conceptName}
     listparent: ${listParent.freId()}=${listParent.freLanguageConcept()}
@@ -133,6 +133,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     // first create the items that depend upon the conceptName
     let addBefore: MenuItem;
     let addAfter: MenuItem;
+    const contextMsg = ""; // TODO Use this?: index !== undefined && (listParent[propertyName][index]["name"] !== undefined) ? listParent[propertyName][index]["name"] : ""
     if (clsOtIntf.subConceptNames.length > 0) { // there are sub concepts, so create sub menu items
         // todo subclasses to be tested in different project than Example
         const submenuItemsBefore: MenuItem[] = [];
@@ -146,14 +147,14 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
                 (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, creatableConceptname, false)));
         });
         // tslint:disable-next-line:no-empty
-        addBefore = new MenuItem("Add before", "Ctrl+A", (element: FreNode, index: number, editor: FreEditor) => {}, submenuItemsBefore);
+        addBefore = new MenuItem(`Add before ${contextMsg}`, "Ctrl+A", (element: FreNode, index: number, editor: FreEditor) => {}, submenuItemsBefore);
         // tslint:disable-next-line:no-empty
-        addAfter = new MenuItem("Add after", "Ctrl+I", (element: FreNode, index: number, editor: FreEditor) => {}, submenuItemsAfter);
+        addAfter = new MenuItem(`Add after ${contextMsg}`, "Ctrl+I", (element: FreNode, index: number, editor: FreEditor) => {}, submenuItemsAfter);
     } else {
-        addBefore = new MenuItem("Add before",
+        addBefore = new MenuItem(`Add before ${contextMsg}`,
             "Ctrl+A",
             (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, conceptName, true));
-        addAfter = new MenuItem("Add after",
+        addAfter = new MenuItem(`Add after ${contextMsg}`,
             "Ctrl+I",
             (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, conceptName, false));
     }
