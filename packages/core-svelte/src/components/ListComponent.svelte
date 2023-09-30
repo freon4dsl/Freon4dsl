@@ -52,12 +52,10 @@
     const drop = (event: DragEvent, targetIndex) => {
         const data: ListElementInfo = $draggedElem;
 
-        LOGGER.log("DROPPING item [" + data.element.freId() + "] from [" + data.componentId + "] in list [" + id + "] on position [" + targetIndex + "]");
+        LOGGER.log("drag DROPPING item [" + data.element.freId() + "] from [" + data.componentId + "] in list [" + id + "] on position [" + targetIndex + "]");
         if (data.componentId === id) { // dropping in the same list
-            // console.log('moving item within list');
             moveListElement(box.element, data.element, box.propertyName, targetIndex);
         } else { // dropping in another list
-            // console.log('moving item to another list');
             dropListElement(editor, data, myMetaType, box.element, box.propertyName, targetIndex);
         }
         // everything is done, so reset the variables
@@ -69,8 +67,12 @@
         // event.dataTransfer.clearData(); // has problems in Firefox!
     };
 
+    const dragend = (event: DragEvent, listId: string, listIndex: number) => {
+        LOGGER.log("Drag End " + box.id ); // + " index: " + listIndex);
+        return false;
+    }
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
-        LOGGER.log("LIST Drag Start " + box.id);
+        LOGGER.log("Drag Start " + box.id + " index: " + listIndex);
         // close any context menu
         $contextMenuVisible = false;
 
@@ -84,8 +86,13 @@
         $draggedElem = new ListElementInfo(shownElements[listIndex].element, id);
         $draggedFrom = listId;
     };
+    const dragleave = (event: DragEvent, index): boolean => {
+        LOGGER.log("Drag Leave" + box.id + " index: " + index);
+        return false;
+    }
     const dragenter = (event: DragEvent, index): boolean => {
-        LOGGER.log("LIST Drag Enter" + box.id)
+        LOGGER.log("Drag Enter" + box.id+ " index: " + index);
+        event.preventDefault();
         const data: ListElementInfo = $draggedElem;
         // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
         if (isNullOrUndefined($draggedElem)) {
@@ -98,7 +105,11 @@
         }
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
-
+    const dragover = (event: DragEvent, index): boolean => {
+        LOGGER.log("drag over " + box.id);
+        event.preventDefault();
+        return false;
+    }
     const mouseout = (): boolean => {
         LOGGER.log("LIST mouse out " + box.id);
         // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
@@ -119,10 +130,9 @@
             }
             // determine the contents of the menu based on listBox, before showing the menu!
             if (isActionBox(elemBox)) { // the selected box is the placeholder => show different menu items
-                // console.log('index of ActionBox: ' + index);
-                $contextMenu.items = box.options(MenuOptionsType.placeholder);
+                $contextMenu.items = box.options(MenuOptionsType.placeholder, index);
             } else {
-                $contextMenu.items = box.options(MenuOptionsType.normal);
+                $contextMenu.items = box.options(MenuOptionsType.normal, index);
             }
             $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
         }
@@ -201,9 +211,11 @@
                 animate:flip
                 draggable=true
                 on:dragstart|stopPropagation={event => dragstart(event, id, index)}
+                on:dragend|stopPropagation={event => dragend(event, id, index)}
                 on:drop|stopPropagation={event => drop(event, index)}
-                on:dragover={() => "return false"}
+                on:dragover|preventDefault={event => {}}
                 on:dragenter|stopPropagation={(event) => dragenter(event, index)}
+                on:dragleave|stopPropagation={(event) => dragleave(event, index)}
                 on:mouseout|stopPropagation={mouseout}
                 on:focus={() => {}}
                 on:blur={() => {}}
