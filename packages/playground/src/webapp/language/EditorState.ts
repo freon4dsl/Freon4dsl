@@ -198,7 +198,7 @@ export class EditorState {
         //     await this.saveCurrentUnit();
         // }
         unit.name = newName;
-        ServerCommunication.getInstance().renameModelUnit(this.currentModel.name, oldName, newName, unit);
+        serverCommunication.renameModelUnit(this.currentModel.name, oldName, newName, unit);
         this.setUnitLists();
         console.log("Units after: " + this.currentModel.getUnits().map(u => u.name));
     }
