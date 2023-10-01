@@ -1,16 +1,35 @@
 import type { FreNamedNode, FreNode, FreSerializer } from "@freon4dsl/core";
 import { FreErrorSeverity, FreLionwebSerializer, FreLogger, FreModelSerializer } from "@freon4dsl/core";
 import type { IServerCommunication } from "./IServerCommunication";
-import { setUserMessage } from "../components/stores/UserMessageStore";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
 
-const nodePort = process.env.NODE_PORT || 3001;
-const SERVER_URL = `http://127.0.0.1:${nodePort}/`;
-console.log("NODE_PORT:" + nodePort + "  env " + JSON.stringify(process.env));
-
 export class ServerCommunication implements IServerCommunication {
+    get nodePort(): any {
+        return this._nodePort;
+    }
+
+    set nodePort(value: any) {
+        this._nodePort = value;
+        this.SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
+    }
+
+    get SERVER_URL(): string {
+        return this._SERVER_URL;
+    }
+
+    set SERVER_URL(value: string) {
+        this._SERVER_URL = value;
+    }
+    get SERVER_IP(): string {
+        return this._SERVER_IP;
+    }
+
+    set SERVER_IP(value: string) {
+        this._SERVER_IP = value;
+        this.SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
+    }
     static serial: FreSerializer = new FreModelSerializer();
     static lionweb_serial: FreSerializer = new FreLionwebSerializer();
     static instance: ServerCommunication;
@@ -28,6 +47,15 @@ export class ServerCommunication implements IServerCommunication {
         } else {
             return "";
         }
+    }
+
+    private _nodePort = process.env.NODE_PORT || 3001;
+    private _SERVER_IP = `http://127.0.0.1`;
+    private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
+
+    onError(msg: string,  severity: FreErrorSeverity): void {
+        // default implementation
+        console.error(`ServerCommunication ${severity}: ${msg}`);
     }
 
     async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
@@ -68,8 +96,8 @@ export class ServerCommunication implements IServerCommunication {
             );
         } else {
             LOGGER.error( "Name of Unit '" + unitName + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
-            setUserMessage("Name of Unit '" + unitName
-                + "' may contain only characters, numbers, '_', or '-', and must start with a character.", FreErrorSeverity.Error);
+            this.onError("Name of Unit '" + unitName
+                + "' may contain only characters, numbers, '_', or '-', and must start with a character.", FreErrorSeverity.NONE);
         }
     }
 
@@ -150,7 +178,7 @@ export class ServerCommunication implements IServerCommunication {
                     loadCallback(unit as FreNamedNode);
                 } catch (e) {
                     LOGGER.error( "loadModelUnit, " + e.message);
-                    setUserMessage(e.message);
+                    this.onError(e.message, FreErrorSeverity.NONE);
                     console.log(e.stack);
                 }
             }
@@ -180,7 +208,7 @@ export class ServerCommunication implements IServerCommunication {
                     loadCallback(unit as FreNamedNode);
                 } catch (e) {
                     LOGGER.error( "loadModelUnitInterface, " + e.message);
-                    setUserMessage(e.message);
+                    this.onError(e.message, FreErrorSeverity.NONE);
                 }
             }
         }
@@ -192,7 +220,7 @@ export class ServerCommunication implements IServerCommunication {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
             const promise = await fetch(
-                `${SERVER_URL}${method}${params}`,
+                `${this._SERVER_URL}${method}${params}`,
                 {
                     signal: controller.signal,
                     method: "get",
@@ -214,7 +242,7 @@ export class ServerCommunication implements IServerCommunication {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
             await fetch(
-                `${SERVER_URL}${method}${params}`,
+                `${this._SERVER_URL}${method}${params}`,
                 {
                     signal: controller.signal,
                     method: "put",
@@ -232,10 +260,10 @@ export class ServerCommunication implements IServerCommunication {
     private handleError(e: Error) {
         let errorMess: string = e.message;
         if (e.message.includes("aborted")) {
-            errorMess = `Time out: no response from ${SERVER_URL}.`;
+            errorMess = `Time out: no response from ${this._SERVER_URL}.`;
         }
         LOGGER.error( errorMess);
-        setUserMessage(errorMess);
+        this.onError(errorMess, FreErrorSeverity.NONE);
     }
 
     async renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: FreNamedNode) {

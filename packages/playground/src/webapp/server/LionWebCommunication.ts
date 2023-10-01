@@ -1,8 +1,6 @@
-import {IServerCommunication} from "./IServerCommunication";
-import {setUserMessage} from "../components/stores/UserMessageStore";
-import { FreLionwebSerializer, FreLogger, FreNamedNode, FreNode } from "@freon4dsl/core";
-// import {Freon2LionWebConverter} from "./Freon2LionWebConverter";
-import {ServerCommunication} from "./ServerCommunication";
+import { FreErrorSeverity, FreLionwebSerializer, FreLogger, FreNamedNode, FreNode } from "@freon4dsl/core";
+import { IServerCommunication } from "./IServerCommunication";
+import { ServerCommunication } from "./ServerCommunication";
 
 const LOGGER = new FreLogger("LionWebCommunication"); // .mute();
 
@@ -26,6 +24,10 @@ export class LionWebCommunication extends ServerCommunication implements IServer
         return LionWebCommunication.instanceLionWeb;
     }
 
+    onError(msg: string,  severity: FreErrorSeverity): void {
+        // default implementation
+        console.error(`ServerCommunication ${severity}: ${msg}`);
+    }
     // deleteModel(modelName: string) {
     // }
     //
@@ -89,7 +91,7 @@ export class LionWebCommunication extends ServerCommunication implements IServer
                     loadCallback(unit as FreNamedNode);
                 } catch (e) {
                     LOGGER.error( "loadModelUnit, " + e.message);
-                    setUserMessage(e.message);
+                    this.onError("loadModelUnit: " + e.message, FreErrorSeverity.Error);
                     console.log(e.stack);
                 }
             }
@@ -113,7 +115,7 @@ export class LionWebCommunication extends ServerCommunication implements IServer
                 await this.postWithTimeoutLionWeb(modelPath, output, "")
             } catch (e) {
                 LOGGER.error( "loadModelUnit, " + e.message);
-                setUserMessage(e.message);
+                this.onError("loadModelUnit: " + e.message, FreErrorSeverity.Error);
                 console.log(e.stack);
             }
         }
@@ -173,6 +175,6 @@ export class LionWebCommunication extends ServerCommunication implements IServer
             errorMess = `Time out: no response from ${SERVER_URL}.`;
         }
         LOGGER.error( errorMess);
-        setUserMessage(errorMess);
+        this.onError(errorMess, FreErrorSeverity.NONE);
     }
 }
