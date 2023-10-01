@@ -23,7 +23,6 @@ import {
 import { setUserMessage } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
 import { modelErrors } from "../components/stores/InfoPanelStore";
-import { ServerCommunication } from "../server/ServerCommunication";
 import { runInAction } from "mobx";
 
 const LOGGER = new FreLogger("EditorState"); // .mute();

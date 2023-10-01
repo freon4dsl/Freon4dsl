@@ -1,5 +1,5 @@
-import type { FreNode } from "@freon4dsl/core";
-import { FreErrorSeverity, FreNamedNode } from "@freon4dsl/core";
+import { FreNamedNode, FreNode } from "../ast/index";
+import { FreErrorSeverity } from "../validator/index";
 
 export type OnError = (errorMsg: string, severity: FreErrorSeverity) => void;
 /**

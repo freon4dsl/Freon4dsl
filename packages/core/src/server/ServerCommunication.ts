@@ -1,5 +1,7 @@
-import type { FreNamedNode, FreNode, FreSerializer } from "@freon4dsl/core";
-import { FreErrorSeverity, FreLionwebSerializer, FreLogger, FreModelSerializer } from "@freon4dsl/core";
+import { FreNamedNode, FreNode } from "../ast/index";
+import { FreLogger } from "../logging/index";
+import { FreLionwebSerializer, FreModelSerializer, FreSerializer } from "../storage/index";
+import { FreErrorSeverity } from "../validator/index";
 import type { IServerCommunication } from "./IServerCommunication";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();

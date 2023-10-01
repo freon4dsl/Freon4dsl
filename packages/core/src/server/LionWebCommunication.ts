@@ -1,4 +1,7 @@
-import { FreErrorSeverity, FreLionwebSerializer, FreLogger, FreNamedNode, FreNode } from "@freon4dsl/core";
+import { FreNamedNode, FreNode } from "../ast/index";
+import { FreLogger } from "../logging/index";
+import { FreLionwebSerializer } from "../storage/index";
+import { FreErrorSeverity } from "../validator/index";
 import { IServerCommunication } from "./IServerCommunication";
 import { ServerCommunication } from "./ServerCommunication";
 

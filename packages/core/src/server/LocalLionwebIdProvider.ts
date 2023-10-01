@@ -1,4 +1,4 @@
-import { IdProvider } from "@freon4dsl/core";
+import { IdProvider } from "../util/index";
 
 export class LocalLionwebIdProvider implements IdProvider {
     index: number = 300;

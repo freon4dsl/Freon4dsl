@@ -1,8 +1,7 @@
-import type { FreEnvironment, FreErrorSeverity } from "@freon4dsl/core";
+import { ServerCommunication } from "@freon4dsl/core";
+import type { FreEnvironment, FreErrorSeverity, IServerCommunication } from "@freon4dsl/core";
 import { setUserMessage } from "../components/stores/UserMessageStore";
 import { LanguageInitializer } from "../language/LanguageInitializer";
-import type { IServerCommunication } from "../server/IServerCommunication";
-import { ServerCommunication } from "../server/ServerCommunication";
 
 /**
  * The one and only reference to the actual language for which this editor runs

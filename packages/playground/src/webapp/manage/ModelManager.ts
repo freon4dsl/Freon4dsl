@@ -1,15 +1,16 @@
 import { FreErrorSeverity, FreLanguage, FreLogger, FreModel, FreModelUnit, FreNamedNode } from "@freon4dsl/core";
-import { IServerCommunication } from "../server/IServerCommunication";
+import { IServerCommunication } from "@freon4dsl/core";
 
 const LOGGER = new FreLogger("ModelManager");
 
 export type CallbackFunction = (m: ModelManager) => void;
 
+export type CurrentUnitChanged = (m: ModelManager) => void;
 /**
  * ModelManager keeps im memory track of the current model, the modelunits in memory and the current model unit.
  * Performs all communication with the server.
  *
- * By providing callback functions one caan subscribe to changes in the model or modelunit(s).
+ * By providing callback functions one can subscribe to changes in the model or modelunit(s).
  * This is _not_ meant for subscribing to changes inside  a model unit.
  */
 export class ModelManager {
@@ -29,6 +30,22 @@ export class ModelManager {
     private constructor() {
     }
 
+    private currentUnitListeners: CallbackFunction[] = [];
+    addCurrentUnitListener(l: CallbackFunction): void {
+        this.currentUnitListeners.push(l);
+    }
+    currentUnitChanged(): void {
+        this.currentUnitListeners.forEach(l => l(this));
+    }
+
+    private currentModelListeners: CallbackFunction[] = [];
+    addCurrentModelListener(l: CallbackFunction): void {
+        this.currentModelListeners.push(l);
+    }
+    currentModelChanged(): void {
+        this.currentModelListeners.forEach(l => l(this));
+    }
+
     private _onError: (errorMsg: string, severity: FreErrorSeverity) => void;
     get onError(): (errorMsg: string, severity: FreErrorSeverity) => void {
         return this._onError;
@@ -40,14 +57,14 @@ export class ModelManager {
      */
     set onError(value: (errorMsg: string, severity: FreErrorSeverity) => void) {
         this._onError = value;
-        this.serverCommunication.onError(value);
+        this.serverCommunication.onError = value;
     }
 
     /**
      * Callbacks to inform listeners that the currentmodel/currentunit has changed.
      */
-    currentUnitChanged: CallbackFunction;
-    currentModelChanged: CallbackFunction;
+    // currentUnitChanged: CallbackFunction;
+    // currentModelChanged: CallbackFunction;
     allModelsChanged: CallbackFunction;
 
     serverCommunication: IServerCommunication;
@@ -74,7 +91,7 @@ export class ModelManager {
     set currentUnit(value: FreModelUnit) {
         LOGGER.log("Set current unit " + value?.name);
         this._currentUnit = value;
-        this?.currentUnitChanged(this)
+        this?.currentUnitChanged()
     }
     get currentModel(): FreModel {
         return this._currentModel;
@@ -82,7 +99,7 @@ export class ModelManager {
 
     set currentModel(value: FreModel) {
         this._currentModel = value;
-        this?.currentModelChanged(this);
+        this?.currentModelChanged();
     }
 
     /**
@@ -111,8 +128,8 @@ export class ModelManager {
         this.currentModel = FreLanguage.getInstance().createModel();
         this._currentModel.name = modelName;
         this.currentUnit = null;
-        this.currentModelChanged(this);
-        this.currentUnitChanged(this);
+        this.currentModelChanged();
+        this.currentUnitChanged();
     }
 
     /**
@@ -143,15 +160,15 @@ export class ModelManager {
                             this._currentModel.addUnit(unit);
                             LOGGER.log("First: Current model / unit is " + this?._currentModel?.name + "/" + unit?.name);
                             this.currentUnit = unit;
-                            this?.currentUnitChanged(this);
-                            this?.currentModelChanged(this);
+                            this?.currentUnitChanged();
+                            this?.currentModelChanged();
                         });
                         first = false;
                     } else {
                         await this.serverCommunication.loadModelUnitInterface(modelName, unitName, (unit: FreModelUnit) => {
                             LOGGER.log("Not first: Current model / unit is " + this?._currentModel?.name + "/" + unit?.name);
                             this._currentModel.addUnit(unit);
-                            this?.currentModelChanged(this);
+                            this?.currentModelChanged();
                         });
                     }
                 }
@@ -226,7 +243,7 @@ export class ModelManager {
         if (!!newUnit) {
             newUnit.name = newName;
             this.currentUnit = newUnit;
-            this.currentUnitChanged(this)
+            this.currentUnitChanged()
         } else {
             this._onError( `Model unit of type '${unitType}' could not be created.`, FreErrorSeverity.Error);
         }
@@ -247,9 +264,9 @@ export class ModelManager {
         // if the unit is shown in the editor, get rid of that one, as well
         if (this.currentUnit === unit) {
             this.currentUnit = null;
-            this.currentUnitChanged(this);
+            this.currentUnitChanged();
         }
-        this.currentModelChanged(this);
+        this.currentModelChanged();
    }
 
     /**
@@ -299,7 +316,7 @@ export class ModelManager {
                         this.currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
                         this.currentUnit = newCompleteUnit;
                         // notify observers
-                        this.currentUnitChanged(this);
+                        this.currentUnitChanged();
                     }
                 });
         } else {
@@ -307,7 +324,7 @@ export class ModelManager {
             this.currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
             // notify observers
             this.currentUnit = newCompleteUnit;
-            this.currentUnitChanged(this);
+            this.currentUnitChanged();
         }
     }
 }
