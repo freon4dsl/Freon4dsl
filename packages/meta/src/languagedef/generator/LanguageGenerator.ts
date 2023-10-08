@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { MetaLogger, LOG2USER } from "../../utils";
+import { MetaLogger, LOG2USER, COMMAND_LINE_FOLDER } from "../../utils";
 import {
     CONFIGURATION_FOLDER,
     CONFIGURATION_GEN_FOLDER,
@@ -27,6 +27,7 @@ import {
     InterfaceTemplate,
     StdlibTemplate
 } from "./templates";
+import { CommandLineTemplate } from "./templates/CommandLineTemplate";
 import { ConfigurationTemplate } from "./templates/ConfigurationTemplate";
 import { ModelTemplate } from "./templates/ModelTemplate";
 import { UnitTemplate } from "./templates/UnitTemplate";
@@ -43,6 +44,7 @@ export class LanguageGenerator {
     private languageFolder: string;
     private utilsFolder: string;
     private stdlibFolder: string;
+    private commandlineFolder: string;
 
     generate(language: FreMetaLanguage): void {
         LOGGER.log("Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_GEN_FOLDER);
@@ -64,6 +66,7 @@ export class LanguageGenerator {
         const defaultWorkerTemplate = new DefaultWorkerTemplate();
         const listTemplate = new ListUtilTemplate();
         const configurationTemplate = new ConfigurationTemplate();
+        const commandLineTemplate = new CommandLineTemplate();
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.configurationFolder);
@@ -71,6 +74,7 @@ export class LanguageGenerator {
         FileUtil.createDirIfNotExisting(this.configurationGenFolder);
         FileUtil.createDirIfNotExisting(this.utilsGenFolder);
         FileUtil.createDirIfNotExisting(this.stdlibGenFolder);
+        FileUtil.createDirIfNotExisting(this.commandlineFolder);
         // do not delete files in configurationFolder, because these may contain user edits
         FileUtil.deleteFilesInDir(this.languageGenFolder, generationStatus);
         FileUtil.deleteFilesInDir(this.configurationGenFolder, generationStatus);
@@ -169,13 +173,28 @@ export class LanguageGenerator {
         const utilIndexFile = FileUtil.pretty(languageIndexTemplate.generateUtilsIndex(language), "Utils Index", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/index.ts`, utilIndexFile);
 
-        LOGGER.log(`Generating custom stdlib: ${this.stdlibFolder}/${Names.customStdlib(language)}.ts`);
-        const customFile = FileUtil.pretty(stdlibTemplate.generateCustomStdlibClass(language), "Custom Stdlib Class", generationStatus);
-        FileUtil.generateManualFile(`${this.stdlibFolder}/${Names.customStdlib(language)}.ts`, customFile, "Custom Stdlib Class");
+        {
+            LOGGER.log(`Generating custom stdlib: ${this.stdlibFolder}/${Names.customStdlib(language)}.ts`);
+            const customFile = FileUtil.pretty(stdlibTemplate.generateCustomStdlibClass(language), "Custom Stdlib Class", generationStatus);
+            FileUtil.generateManualFile(`${this.stdlibFolder}/${Names.customStdlib(language)}.ts`, customFile, "Custom Stdlib Class");
+        }
+        {
+            LOGGER.log(`Generating stdlib index: ${this.stdlibFolder}/index.ts`);
+            const indexFile = FileUtil.pretty(stdlibTemplate.generateIndex(language), "Stdlib Index Class", generationStatus);
+            FileUtil.generateManualFile(`${this.stdlibFolder}/index.ts`, indexFile, "Stdlib Index Class");
+        }
 
-        LOGGER.log(`Generating stdlib index: ${this.stdlibFolder}/index.ts`);
-        const indexFile = FileUtil.pretty(stdlibTemplate.generateIndex(language), "Stdlib Index Class", generationStatus);
-        FileUtil.generateManualFile(`${this.stdlibFolder}/index.ts`, indexFile, "Stdlib Index Class");
+        LOGGER.log(`Generating command line: ${this.commandlineFolder}/FreonCommandLine.ts`);
+        const commandLineFile = FileUtil.pretty(commandLineTemplate.generateCommandLine(language), "CommandLine Class", generationStatus);
+        FileUtil.generateManualFile(`${this.commandlineFolder}/FreonCommandLine.ts`, commandLineFile, "CommandLine Class");
+
+        LOGGER.log(`Generating command line runner: ${this.commandlineFolder}/FreonCommandLineRunner.ts`);
+        const commandLineRunnerFile = FileUtil.pretty(commandLineTemplate.generateCommandLineRunner(language), "CommandLineRunner Class", generationStatus);
+        FileUtil.generateManualFile(`${this.commandlineFolder}/FreonCommandLineRunner.ts`, commandLineRunnerFile, "CommandLineRunner Class");
+
+        LOGGER.log(`Generating dummy action: ${this.commandlineFolder}/DummyAction.ts`);
+        const emptyActionFile = FileUtil.pretty(commandLineTemplate.generateEmptyAction(language), "DummyAction Class", generationStatus);
+        FileUtil.generateManualFile(`${this.commandlineFolder}/DummyAction.ts`, emptyActionFile, "DummyAction Class");
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.info(`Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);
@@ -193,6 +212,7 @@ export class LanguageGenerator {
         this.utilsFolder = this.outputfolder + "/" + LANGUAGE_UTILS_FOLDER;
         this.configurationFolder = this.outputfolder + "/" + CONFIGURATION_FOLDER;
         this.stdlibFolder = this.outputfolder + "/" + STDLIB_FOLDER;
+        this.commandlineFolder = this.outputfolder + "/" + COMMAND_LINE_FOLDER;
     }
 
     clean(force: boolean) {
