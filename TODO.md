@@ -2,7 +2,7 @@
 
 - [x] Merge MDEnet branch with development
 - [x] Lionweb code naar development (model (de)serializer)
-- [ ] Convert Lionweb metamodel to Freon ast by CLI
+- [x] Convert Lionweb metamodel to Freon ast by CLI
 
 # Anneke
 
@@ -150,9 +150,22 @@ Naming: different names for overall language and used languages. E.g.:
 | DSL                | language      |
 | FreLanguage.          | .             |
 
-## Freon Name Change
+## LionWeb
 
-Todo:
+- how to integrate built-ins
+  [x] as a std library in Freon?
 
-- [ ] Stop projectit.org Q3 2023
+- Freon CLI tool
+  [x] Needs other import syntax for AGL because it is commonjs ?!?!
+
+- Import metamodel
+  [ ] Use M3 lamguage deserializer, unparse in memory and call Freon generator in memory
+    Export metamodels
+  [x] write projection to enable editing and nice syntax for metamodels.
+
+- $id vs id
+  - $id should be optionally visible and editable in the editor
+  - editable mainly for meta models.
+  - as part of the .edit?
+  - or generically ... but how?
 
