@@ -313,7 +313,10 @@ export class FreLionwebSerializer implements FreSerializer {
         result = createLwNode();
         idMap[freNode.freId()] = result;
         result.id = freNode.freId();
-        result.parent = freNode.freOwner().freId();
+        result.parent = freNode?.freOwner()?.freId();
+        if (result.parent === undefined) {
+            result.parent = null;
+        }
 
         let conceptKey: string;
         let language: string;

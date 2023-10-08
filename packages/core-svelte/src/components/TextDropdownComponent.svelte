@@ -295,11 +295,11 @@
             } else {
                 filteredOptions = allOptions.filter(o => {
                     LOGGER.log(`startsWith text [${text}], option is ${JSON.stringify(o)}`);
-                    return o.label.startsWith(text.substring(0, event.detail.caret))
+                    return o?.label?.startsWith(text.substring(0, event.detail.caret))
                 });
             }
         } else {
-            filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, 0)));
+            filteredOptions = allOptions.filter(o => o?.label?.startsWith(text.substring(0, 0)));
         }
         makeUnique();
     };

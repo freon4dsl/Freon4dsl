@@ -355,7 +355,7 @@ export class BoxFactory {
     }
 }
 
-BoxFactory.cachesOff();
+// BoxFactory.cachesOff();
 
 const equals = (a, b) => {
     if (isNullOrUndefined(a) && !isNullOrUndefined(b) || !isNullOrUndefined(a) && isNullOrUndefined(b)) {

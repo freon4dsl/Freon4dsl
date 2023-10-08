@@ -122,11 +122,12 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     propertyName: ${propertyName}
     optionsType ${optionsType}`);
     // do some checks
-    const clsOtIntf = FreLanguage.getInstance().concept(conceptName) ?? FreLanguage.getInstance().interface(conceptName);
+    const clsOtIntf = FreLanguage.getInstance().classifier(conceptName);
     // tslint:disable-next-line:no-empty
     const errorItem: MenuItem = new MenuItem("No options available", "", (element: FreNode, index: number, editor: FreEditor) => {
     });
-    if (!clsOtIntf) {
+    if (clsOtIntf === undefined || clsOtIntf === null) {
+        console.log("Cabnnot find class or interface for [" + conceptName + "]");
         return [errorItem];
     }
     let items: MenuItem[];
