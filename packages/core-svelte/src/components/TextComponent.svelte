@@ -152,7 +152,9 @@
      */
     function onClick(event: MouseEvent) {
         LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
-		setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+		if (!!inputElement) {
+			setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+		}
 		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
             LOGGER.log('dispatching from on click');
             dispatcher('textUpdate', {content: text, caret: from});

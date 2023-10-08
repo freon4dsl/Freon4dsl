@@ -1,3 +1,4 @@
+import { FreLogger } from "../../logging/index";
 import { EMPTY_POST_ACTION, FrePostAction, ReferenceShortcut } from "./FreAction";
 import { Box } from "../boxes";
 import { isString, FreTriggerUse, triggerTypeToString } from "./FreTriggers";
@@ -6,6 +7,7 @@ import { FreNode } from "../../ast";
 import { FreLanguage } from "../../language";
 import { FreCommand } from "./FreCommand";
 
+const LOGGER = new FreLogger("FreCommand");
 /**
  * Command to create a part (child) of a FreElement.
  * The FreElement of the box on which this command is executed shpould have a property with `propertyName` of
@@ -21,7 +23,7 @@ export class FreCreatePartCommand extends FreCommand {
         this.propertyName = propertyName;
         this.conceptName = conceptName;
         this.referenceShortcut = referenceShortcut;
-        console.log("+++++++++++++++ Create part command " + propertyName + ", " + conceptName);
+        LOGGER.log("+++++++++++++++ Create part command " + propertyName + ", " + conceptName);
     }
 
     /**
@@ -33,7 +35,7 @@ export class FreCreatePartCommand extends FreCommand {
      */
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor, index: number): FrePostAction {
         // todo make index optional and set the default value to -1;
-        console.log(
+        LOGGER.log(
             "CreatePartCommand: trigger [" +
             triggerTypeToString(trigger) +
             "] part: " +
@@ -54,7 +56,7 @@ export class FreCreatePartCommand extends FreCommand {
             console.error("ActionBox action: Unexpected new element undefined");
             return EMPTY_POST_ACTION;
         }
-        console.log(`FreCreatePartCommand: setting/adding to ${propName} of ${box.element.freId()} (${box.element.freLanguageConcept()}) to ${newElement.freId()} (${newElement.freLanguageConcept()})`);
+        LOGGER.log(`FreCreatePartCommand: setting/adding to ${propName} of ${box.element.freId()} (${box.element.freLanguageConcept()}) to ${newElement.freId()} (${newElement.freLanguageConcept()})`);
         if (FreLanguage.getInstance().classifierProperty(ownerConcept, propName).isList) {
             if (index >= 0) {
                 theModelElement.splice(index, 0, newElement);
@@ -71,7 +73,7 @@ export class FreCreatePartCommand extends FreCommand {
         return function () {
             // editor.selectElement(newElement);
             // tslint:disable-next-line:max-line-length
-            console.log("CreatePartCommand: newElement:" + newElement.freId() + " " + newElement.freLanguageConcept() + ", selected element: " + editor.selectedBox.element.freId() + " of kind " + editor.selectedBox.kind);
+            LOGGER.log("CreatePartCommand: newElement:" + newElement.freId() + " " + newElement.freLanguageConcept() + ", selected element: " + editor.selectedBox.element.freId() + " of kind " + editor.selectedBox.kind);
             editor.selectFirstEditableChildBox(newElement);
         };
     }

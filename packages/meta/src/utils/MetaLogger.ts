@@ -34,7 +34,7 @@ export class MetaLogger {
     }
 
     category: string;
-    active: boolean = true;
+    active: boolean = false;
 
     constructor(cat: string) {
         this.category = cat;

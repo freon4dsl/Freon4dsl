@@ -9,7 +9,7 @@ const LOGGER = new FreLogger("LionWebCommunication"); // .mute();
 
 const lionWebPort = process.env.LIONWEB_PORT || 63320;
 const SERVER_URL = `http://127.0.0.1:${lionWebPort}`;
-console.log("NODE_PORT:" + lionWebPort+ "  env " + JSON.stringify(process.env));
+// console.log("NODE_PORT:" + lionWebPort+ "  env " + JSON.stringify(process.env));
 
 const modelName = "r:5dda8fb0-8c78-4ed5-8c46-0eb8c112a60a(import_from_json.properties.instance)"
 const projectName = "mps-meetup-2023"

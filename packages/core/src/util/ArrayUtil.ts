@@ -4,7 +4,7 @@
  * a list contains an entry more than once (i.e. it is a true Set), or that
  * null values are added to the list.
  */
-export class ListUtil {
+export class ArrayUtil {
     /**
      * Adds 'addition' to 'list', if 'addition' is not yet present and
      * not equal to null or undefined.
@@ -25,7 +25,7 @@ export class ListUtil {
      */
     static addAllIfNotPresent<T>(list: T[], listOfAdditions: T[]) {
         for (const xx of listOfAdditions) {
-            ListUtil.addIfNotPresent<T>(list, xx);
+            ArrayUtil.addIfNotPresent<T>(list, xx);
         }
     }
 }

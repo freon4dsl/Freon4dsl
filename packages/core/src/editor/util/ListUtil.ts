@@ -14,7 +14,7 @@ import { FreNode } from "../../ast";
 import { runInAction } from "mobx";
 import { FreErrorSeverity } from "../../validator";
 
-const LOGGER = new FreLogger("ListBoxUtil");
+const LOGGER = new FreLogger("ListUtil");
 
 export enum MenuOptionsType { normal, placeholder, header }
 
@@ -116,7 +116,7 @@ export function dropListElement(editor: FreEditor,
  * @param optionsType       in case the options are created for a placeholder or header, we add lesser items (e.g. no DELETE)
  */
 export function getContextMenuOptions(conceptName: string, listParent: FreNode, propertyName: string, optionsType: MenuOptionsType, index?: number): MenuItem[] {
-    console.log(`getContextMenuOptions
+    LOGGER.log(`getContextMenuOptions
     conceptname: ${conceptName}
     listparent: ${listParent.freId()}=${listParent.freLanguageConcept()}
     propertyName: ${propertyName}
@@ -127,7 +127,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     const errorItem: MenuItem = new MenuItem("No options available", "", (element: FreNode, index: number, editor: FreEditor) => {
     });
     if (clsOtIntf === undefined || clsOtIntf === null) {
-        console.log("Cabnnot find class or interface for [" + conceptName + "]");
+        console.log("Unexpected: Cannot find class or interface for [" + conceptName + "]");
         return [errorItem];
     }
     let items: MenuItem[];
@@ -204,7 +204,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
  * @param before
  */
 function addListElement(listParent: FreNode, propertyName: string, index: number, typeOfAdded: string, before: boolean) {
-    console.log(`addListElement of type: ${typeOfAdded} index: ${index}`);
+    LOGGER.log(`addListElement of type: ${typeOfAdded} index: ${index}`);
     // get info about the property that needs to be changed
     const { property, isList, type } = getPropertyInfo(listParent, propertyName);
     if (!before) {
@@ -214,7 +214,7 @@ function addListElement(listParent: FreNode, propertyName: string, index: number
     // targetPropertyName ${propertyName}, index: ${index}`);
 
     // make the change, if the property is a list and the type of the new element conforms to the type of elements in the list
-    const newElement: FreNode = FreLanguage.getInstance().concept(typeOfAdded)?.constructor();
+    const newElement: FreNode = FreLanguage.getInstance().classifier(typeOfAdded)?.constructor();
     if (newElement === undefined || newElement === null) {
         console.error("New element undefined"); // TODO Find out why this happens sometimes
         return;
@@ -236,7 +236,7 @@ function addListElement(listParent: FreNode, propertyName: string, index: number
 function deleteListElement(listParent: FreNode, propertyName: string, index: number, element: FreNode) {
     // TODO Check whether this still works for tables as well.
     //      Remove 'element'  if possible.
-    console.log("Delete list element in property: " + propertyName + "[" + index + "]");
+    LOGGER.log("Delete list element in property: " + propertyName + "[" + index + "]");
     // get info about the property that needs to be changed
     // const parentElement: FreNode = element.freOwnerDescriptor().owner;
     // const targetPropertyName: string = element.freOwnerDescriptor().propertyName;
@@ -244,8 +244,8 @@ function deleteListElement(listParent: FreNode, propertyName: string, index: num
     // console.log(`deleteListElement=> listParent: ${listParent.freLanguageConcept()},
     // propertyName ${propertyName}, index: ${targetIndex}`);
 
-    console.log("   index of element " + element.freLanguageConcept() + "." + element.freId() + " is " + targetIndex);
-    console.log(jsonAsString(element, 2))
+    LOGGER.log("   index of element " + element.freLanguageConcept() + "." + element.freId() + " is " + targetIndex);
+    LOGGER.log(jsonAsString(element, 2))
     const { property, isList } = getPropertyInfo(listParent, propertyName);
     // make the change
     if (isList) {
@@ -291,7 +291,7 @@ function copyListElement(element: FreNode, editor: FreEditor) {
  * @param before
  */
 function pasteListElement(listParent: FreNode, propertyName: string, index: number, editor: FreEditor, before: boolean) {
-    console.log(`pasteListElement index: ${index}`);
+    LOGGER.log(`pasteListElement index: ${index}`);
 
     // first, do some checks
     if (editor.copiedElement === null || editor.copiedElement === undefined) {
@@ -316,7 +316,7 @@ function pasteListElement(listParent: FreNode, propertyName: string, index: numb
 
     // make the change
     if (isList) {
-        console.log("List before: [" + property.map(x => x.freId()).join(", ") + "]");
+        LOGGER.log("List before: [" + property.map(x => x.freId()).join(", ") + "]");
         runInAction(() => {
             // make a copy before the element is added as part of the model,
             // because mobx decorators change the element's owner info:
@@ -328,7 +328,7 @@ function pasteListElement(listParent: FreNode, propertyName: string, index: numb
             // make sure the element can be pasted elsewhere
             editor.copiedElement = tmp;
         });
-        console.log("List after: [" + property.map(x => x.freId()).join(", ") + "]");
+        LOGGER.log("List after: [" + property.map(x => x.freId()).join(", ") + "]");
     }
 }
 

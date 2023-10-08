@@ -150,7 +150,7 @@ export class FreEditor {
      * @param caretPosition
      */
     selectElement(element: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
-        console.log("selectElement " + element?.freLanguageConcept() + " with id " + element?.freId() + ", property: [" + propertyName + ", " + propertyIndex + "]");
+        LOGGER.log("selectElement " + element?.freLanguageConcept() + " with id " + element?.freId() + ", property: [" + propertyName + ", " + propertyIndex + "]");
         if (this.checkParam(element)) {
             const box = this.projection.getBox(element);
             const propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
@@ -234,7 +234,7 @@ export class FreEditor {
     }
 
     private selectParentForBox(box: Box) { // private method needed because of recursion
-        console.log("==> selectParent of " + box?.role + " of kind " + box?.kind);
+        LOGGER.log("==> selectParent of " + box?.role + " of kind " + box?.kind);
         const parent = box?.parent;
         if (!!parent) {
             // todo too much recursion when called from a Dropdown!!!

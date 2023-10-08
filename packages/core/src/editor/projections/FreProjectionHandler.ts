@@ -5,7 +5,7 @@ import { FreNode } from "../../ast";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjection } from "./FreProjection";
 import { action, makeObservable, observable } from "mobx";
-import { ListUtil } from "../../util/ListUtil";
+import { ArrayUtil } from "../../util/ArrayUtil";
 import { FreTableHeaderInfo } from "./FreTableHeaderInfo";
 import { FreHeaderProvider } from "./FreHeaderProvider";
 
@@ -128,9 +128,9 @@ export class FreProjectionHandler {
      * @param p
      */
     addProjection(p: string) {
-        ListUtil.addIfNotPresent(this._allProjections, p);
+        ArrayUtil.addIfNotPresent(this._allProjections, p);
         if (p !== "default") {
-            ListUtil.addIfNotPresent(this._enabledProjections, p);
+            ArrayUtil.addIfNotPresent(this._enabledProjections, p);
         }
     }
 
@@ -189,7 +189,7 @@ export class FreProjectionHandler {
      * @param p
      */
     addCustomProjection(p: FreProjection) {
-        ListUtil.addIfNotPresent(this._customProjections, p);
+        ArrayUtil.addIfNotPresent(this._customProjections, p);
         this.addProjection(p.name);
     }
 

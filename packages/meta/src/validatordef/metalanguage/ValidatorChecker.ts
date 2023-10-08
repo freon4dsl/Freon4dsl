@@ -26,7 +26,7 @@ import {
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage";
 import { CommonChecker, FreLangExpressionChecker } from "../../languagedef/checking";
 
-const LOGGER = new MetaLogger("ValidatorChecker").show();
+const LOGGER = new MetaLogger("ValidatorChecker");
 const equalsTypeName = "equalsType";
 const conformsToName = "conformsTo";
 

@@ -369,7 +369,7 @@
     };
 
     const onFocusOutText = () => {
-        LOGGER.log("onFocusOutText " + id, "focus");
+        LOGGER.log("onFocusOutText " + id);
         if (isEditing) {
             isEditing = false;
         }
@@ -379,7 +379,7 @@
      * The "click_outside" event was triggered because of `use:clickOutsideConditional`.
      */
     const onClickOutside = () => {
-        LOGGER.log("onClickOutside", "focus");
+        LOGGER.log("onClickOutside");
         endEditing();
     };
 
