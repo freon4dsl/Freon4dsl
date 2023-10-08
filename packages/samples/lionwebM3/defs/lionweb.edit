@@ -51,6 +51,13 @@ Containment {[
     ${self.optional [optional | mandatory]} contains ${name} (${key}): ${type} ${self.multiple [* | 1]}
 ]}
 
+Annotation {[
+    annotation ${name} multiple ${multiple} for ${annotates} {
+        extends: ${extends}
+        implements: ${implements}
+        ${features vertical }
+]}
+
 
 
 

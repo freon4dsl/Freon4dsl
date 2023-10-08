@@ -3,6 +3,7 @@ language LionCoreM3
 model LionCoreM3 {
     name: identifier;
     units: Language[];
+    constraints: Constraints[];
 }
 
 interface IKeyed base INamed {
@@ -35,6 +36,13 @@ abstract concept Classifier base LanguageEntity  {
 concept Concept base Classifier {
     abstract: boolean;
     partition: boolean;
+    reference extends?: Concept;
+    reference implements: ConceptInterface[];
+}
+
+concept Annotation base Classifier {
+    multiple: boolean;
+    reference annotates: Classifier;
     reference extends?: Concept;
     reference implements: ConceptInterface[];
 }
