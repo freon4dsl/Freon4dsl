@@ -161,3 +161,7 @@ button:focus {
 :focus {
 	outline: none;
 }
+
+optional {
+	background-color: purple;
+}
