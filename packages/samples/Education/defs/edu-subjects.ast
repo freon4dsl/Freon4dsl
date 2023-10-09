@@ -1,6 +1,6 @@
 language Education
 
-model CAL /* Computer Aided Learning */ {
+model Education /* Computer Aided Learning */ {
     name: identifier;
     description: string; /* e.g. Mathematics for students age 10 */
     topic: Topic[];
