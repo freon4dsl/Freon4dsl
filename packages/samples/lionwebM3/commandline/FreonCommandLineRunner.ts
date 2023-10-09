@@ -4,7 +4,6 @@ import { LionCoreM3Environment } from "../config/gen/LionCoreM3Environment";
 import { ConvertLionCore2FreonAction } from "./ConvertLionCore2FreonAction";
 import { ConvertLionCoreFolder2FreonAction } from "./ConvertLionCoreFolder2FreonAction";
 import { FreonCommandLine } from "./FreonCommandLine";
-import { DummyAction } from "./DummyAction";
 
 // ensure language is initialized
 const tmp = LionCoreM3Environment.getInstance();
