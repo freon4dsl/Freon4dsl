@@ -364,6 +364,7 @@ export class ProjectionTemplate {
 
     private generateOptionalProjection(optional: FreOptionalPropertyProjection, elementVarName: string, mainBoxLabel: string, language: FreMetaLanguage): string {
         const propertyProjection: FreEditPropertyProjection = optional.findPropertyProjection();
+        const property: FreMetaProperty = optional.property.referred;
         if (!!propertyProjection) {
             const optionalPropertyName = propertyProjection.property.name;
             const myLabel = `${mainBoxLabel}-optional-${optionalPropertyName}`;
@@ -373,9 +374,12 @@ export class ProjectionTemplate {
 
             // surround with optional box, and add "BoxFactory" to imports
             ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
-            result = `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
+            const condition = property.isList   ? `() => (!!${elementVarName}.${optionalPropertyName}) && (${elementVarName}.${optionalPropertyName}).length !== 0`
+                                                : `() => (!!${elementVarName}.${optionalPropertyName})`
+            result = `BoxFactory.optional2(${elementVarName}, "optional-${optionalPropertyName}", ${condition},
                 ${result},
-                false, "<+>"
+                false, 
+                ${this.generatePropertyProjection(propertyProjection, elementVarName, "mainLabel", language)}
             )`;
             return result;
         } else {
