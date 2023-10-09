@@ -14,7 +14,7 @@ import {
     OptionalBox,
     HorizontalListBox, VerticalListBox, SvgBox, BoolFunctie, GridCellBox,
     HorizontalLayoutBox, VerticalLayoutBox,
-    TableCellBox
+    TableCellBox, OptionalBox2
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -33,6 +33,7 @@ let textCache: BoxCache<TextBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
+let optionalCache2: BoxCache<OptionalBox2> = {};
 let svgCache: BoxCache<SvgBox> = {};
 let horizontalLayoutCache: BoxCache<HorizontalLayoutBox> = {};
 let verticalLayoutCache: BoxCache<VerticalLayoutBox> = {};
@@ -65,6 +66,7 @@ export class BoxFactory {
         selectCache = {};
         indentCache = {};
         optionalCache = {};
+        optionalCache2 = {};
         svgCache = {};
         horizontalLayoutCache = {};
         verticalLayoutCache = {};
@@ -295,7 +297,7 @@ export class BoxFactory {
         return result;
     }
 
-    static optional(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string): OptionalBox {
+    static optional(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string, initializer?: Partial<OptionalBox>): OptionalBox {
         // TODO This only works with cache on, should also work with cache off. 
         // if (cacheOptionalOff) {
         //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
@@ -305,10 +307,24 @@ export class BoxFactory {
         const result: OptionalBox = this.find<OptionalBox>(element, role, creator, optionalCache);
 
         // 2. Apply the other arguments in case they have changed
-        // FreUtils.initializeObject(result, initializer);
+        FreUtils.initializeObject(result, initializer);
 
         return result;
+    }
 
+    static optional2(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, optional: Box, initializer?: Partial<OptionalBox2>): OptionalBox2 {
+        // TODO This only works with cache on, should also work with cache off. 
+        // if (cacheOptionalOff) {
+        //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
+        // }
+        // 1. Create the optional box, or find the one that already exists for this element and role
+        const creator = () => new OptionalBox2(element, role, condition, box, mustShow, optional);
+        const result: OptionalBox2 = this.find<OptionalBox2>(element, role, creator, optionalCache2);
+
+        // 2. Apply the other arguments in case they have changed
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
     }
 
     static gridcell(element: FreNode,

@@ -1,3 +1,4 @@
+import { autorun } from "mobx";
 import { FreNode } from "../../ast";
 import { Box, ActionBox, BoxFactory } from "./internal";
 
@@ -36,11 +37,18 @@ export class OptionalBox extends Box {
         this.placeholder = BoxFactory.action(element, role, actionText);
         this.placeholder.parent = this;
         this.mustShow = mustShow;
-        this.condition = condition;
+        this.condition = condition;        
+        autorun(this.conditionChanged);
     }
 
     get showByCondition(): boolean {
         return this.condition();
+    }
+    
+    conditionChanged = () => {
+        console.log("AUTORUN showByCondition")
+        this.condition();
+        this.isDirty();
     }
 
     /**

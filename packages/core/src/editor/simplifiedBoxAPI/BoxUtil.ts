@@ -243,7 +243,7 @@ export class BoxUtil {
         result = BoxFactory.select(
             element,
             roleName,
-            `<select ${propertyName}>`,
+            `<${propertyName}>`,
             () => {
                 return scoper.getVisibleNames(element, propType)
                     .filter(name => !!name && name !== "")

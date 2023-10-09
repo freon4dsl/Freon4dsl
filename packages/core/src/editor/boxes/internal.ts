@@ -19,6 +19,7 @@ export * from "./ListBox";
 export * from "./LayoutBox";
 export * from "./ActionBox";
 export * from "./OptionalBox";
+export * from "./OptionalBox2";
 export * from "./SvgBox";
 export * from "./TextBox";
 export * from "./SelectBox";

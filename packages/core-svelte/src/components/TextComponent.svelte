@@ -58,7 +58,8 @@
     let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
     let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
     										// Note that 'from <= to' always holds.
-
+	let placeHolderStyle: string;
+	$: placeHolderStyle = (partOfActionBox ? "actionPlaceholder" : "placeholder");
     let boxType: BoxType = "text";          // indication how is this text component is used, determines styling
     $: boxType = !!box.parent ? (isActionBox(box?.parent) ? "action" : isSelectBox(box?.parent) ? "select" : "text") : "text";
 
@@ -546,7 +547,7 @@
 			{#if !!text && text.length > 0}
 				{text}
 			{:else}
-				{placeholder}
+				<span class="{placeHolderStyle}">{placeholder}</span>
 			{/if}
 		</span>
 	{/if}
@@ -570,6 +571,7 @@
 
     .inputtext {
         /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
+		color: var(--freon-text-component-color, blue);
 		padding: var(--freon-text-component-padding, 1px);
         line-height: 6px;
         width: 100%;
@@ -595,4 +597,29 @@
         white-space: normal;
         display: inline-block;
     }
+
+	.placeholder {
+		color: var(--freon-text-component-placeholder-color, blue);
+		background: var(--freon-text-component-background-color, inherit);
+		font-family: var(--freon-text-component-font-family, "Arial");
+		font-size: var(--freon-text-component-font-size, 14pt);
+		font-weight: var(--freon-text-component-font-weight, inherit);
+		font-style: var(--freon-text-component-font-style, inherit);
+		padding: var(--freon-text-component-padding, 1px);
+		margin: var(--freon-text-component-margin, 1px);
+		white-space: normal;
+		display: inline-block;
+	}
+	.actionPlaceholder {
+		color: var(--freon-text-component-actionplaceholder-color, darkgrey);
+		background: var(--freon-text-component-background-color, inherit);
+		font-family: var(--freon-text-component-font-family, "Arial");
+		font-size: var(--freon-text-component-font-size, 14pt);
+		font-weight: var(--freon-text-component-font-weight, inherit);
+		font-style: var(--freon-text-component-font-style, inherit);
+		padding: var(--freon-text-component-padding, 1px);
+		margin: var(--freon-text-component-margin, 1px);
+		white-space: normal;
+		display: inline-block;
+	}
 </style>
