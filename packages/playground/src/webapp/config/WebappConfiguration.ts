@@ -1,11 +1,12 @@
 import { ServerCommunication } from "@freon4dsl/core";
 import type { FreEnvironment, IServerCommunication } from "@freon4dsl/core";
 import { LanguageInitializer } from "../language/LanguageInitializer";
+
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { LionCoreM3Environment } from "../../lionwebM3/config/gen/LionCoreM3Environment";
-export const editorEnvironment: FreEnvironment = LionCoreM3Environment.getInstance();
+import { EducationEnvironment } from "../../Education/config/gen/EducationEnvironment";
+export const editorEnvironment: FreEnvironment = EducationEnvironment.getInstance();
 LanguageInitializer.initialize();
 
 /**
