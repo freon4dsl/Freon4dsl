@@ -12,8 +12,8 @@ export class GridCellBox extends Box {
     columnSpan?: number;
     kind: string = "GridCellBox";
 
-    constructor(element: FreNode, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>) {
-        super(element, role);
+    constructor(node: FreNode, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>) {
+        super(node, role);
         this.row = row;
         this.column = column;
         this.content = box;

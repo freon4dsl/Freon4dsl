@@ -51,8 +51,8 @@ export class TextBox extends Box {
         return CharAllowed.OK;
     };
 
-    constructor(exp: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>) {
-        super(exp, role);
+    constructor(node: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>) {
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.$getText = getText;
         this.$setText = setText;

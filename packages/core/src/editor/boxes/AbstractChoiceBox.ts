@@ -11,13 +11,13 @@ export abstract class AbstractChoiceBox extends Box {
     _textBox: TextBox;
     textHelper: ChoiceTextHelper;
 
-    protected constructor(exp: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
-        super(exp, role);
+    protected constructor(node: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
+        super(node, role);
         this.placeholder = placeHolder;
         this.textHelper = new ChoiceTextHelper();
         FreUtils.initializeObject(this, initializer);
         this._textBox = BoxFactory.text(
-            exp,
+            node,
             "action-" + role + "-textbox",
             () => {
                 /* To be overwritten by `SelectComponent` */

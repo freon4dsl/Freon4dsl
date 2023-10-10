@@ -27,8 +27,8 @@ export class OptionalBox2 extends Box {
         this.isDirty();
     }
 
-    constructor(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, placeholder: Box) {
-        super(element, role);
+    constructor(node: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, placeholder: Box) {
+        super(node, role);
         this.content = box;
         box.parent = this;
         // TODO question: should not the role be diff from role of this box? Where is the "action" prefix added?
@@ -42,9 +42,12 @@ export class OptionalBox2 extends Box {
     get showByCondition(): boolean {
         return this.condition();
     }
-    
+
+    /**
+     * Ensure a refresh is triggered if the condition for showing this optional bix has changed.
+     */
     conditionChanged = () => {
-        console.log("AUTORUN showByCondition")
+        // console.log("AUTORUN showByCondition")
         this.condition();
         this.isDirty();
     }

@@ -11,8 +11,8 @@ export class GridBox extends Box {
     cells: GridCellBox[] = [];
     orientation: GridOrientation = "neutral";
 
-    constructor(exp: FreNode, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
-        super(exp, role);
+    constructor(node: FreNode, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.cells = cells;
         this.cells.forEach(c => {

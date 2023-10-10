@@ -106,12 +106,12 @@ export class FreEditor {
     /**
      * Sets a new root element in this editor, calculates the projection for this element,
      * which returns the root box.
-     * @param exp
+     * @param node
      */
-    set rootElement(exp: FreNode) {
-        this._rootElement = exp;
+    set rootElement(node: FreNode) {
+        this._rootElement = node;
         // select first editable child
-        this.selectFirstEditableChildBox(exp);
+        this.selectFirstEditableChildBox(node);
     }
 
     get rootElement(): FreNode {
@@ -252,8 +252,8 @@ export class FreEditor {
      */
     deleteBox(box: Box) {
         LOGGER.log("deleteBox");
-        const exp: FreNode = box.element;
-        const ownerDescriptor: FreOwnerDescriptor = exp.freOwnerDescriptor();
+        const node: FreNode = box.element;
+        const ownerDescriptor: FreOwnerDescriptor = node.freOwnerDescriptor();
         if (ownerDescriptor !== null) {
             LOGGER.log("remove from parent splice " + [ownerDescriptor.propertyIndex] + ", 1");
             const propertyIndex = ownerDescriptor.propertyIndex;

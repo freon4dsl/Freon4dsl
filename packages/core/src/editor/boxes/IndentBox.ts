@@ -21,8 +21,8 @@ export class IndentBox extends Box {
 
     indent: number = 4;
 
-    constructor(exp: FreNode, role: string, indent: number, child: Box) {
-        super(exp, role);
+    constructor(node: FreNode, role: string, indent: number, child: Box) {
+        super(node, role);
         this.indent = indent;
         this.child = child;
         this.selectable = false;
