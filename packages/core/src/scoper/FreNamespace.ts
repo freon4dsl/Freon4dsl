@@ -15,16 +15,16 @@ export class FreNamespace {
 
     /**
      * This method ensures that every element in the model has one and only one associated namespace object.
-     * The type of element 'elem' should be marked as namespace in the scoper definition.
-     * @param elem
+     * The type of element 'node' should be marked as namespace in the scoper definition.
+     * @param node
      */
-    public static create(elem: FreNode): FreNamespace {
-        const existingNS = this.allNamespaces.get(elem);
+    public static create(node: FreNode): FreNamespace {
+        const existingNS = this.allNamespaces.get(node);
         if (!!existingNS) {
             return existingNS;
         } else {
-            const result = new FreNamespace(elem);
-            this.allNamespaces.set(elem, result);
+            const result = new FreNamespace(node);
+            this.allNamespaces.set(node, result);
             return result;
         }
     }

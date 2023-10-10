@@ -49,24 +49,24 @@ export class StringSearchWorker implements FreSearchWorker {
         return this.$result;
     }
 
-    execAfter(modelelement: FreNode): boolean {
+    execAfter(node: FreNode): boolean {
         // unused
         return false;
     }
 
-    execBefore(modelelement: FreNode): boolean {
+    execBefore(node: FreNode): boolean {
         if (!!this.writer) {
             if (!!this.metatype && this.metatype.length > 0) {
-                if (this.metatype === modelelement.freLanguageConcept() || this.metatype === "FreNodeReference") {
-                    if (this.writer.writeToString(modelelement).includes(this.toFind)) {
-                        this.$result.push(modelelement);
+                if (this.metatype === node.freLanguageConcept() || this.metatype === "FreNodeReference") {
+                    if (this.writer.writeToString(node).includes(this.toFind)) {
+                        this.$result.push(node);
                     }
                 }
             } else {
-                const stringRepresentation: string = this.writer.writeToString(modelelement);
+                const stringRepresentation: string = this.writer.writeToString(node);
                 const count: number = StringSearchWorker.countSubsInText(stringRepresentation, this.toFind);
-                this.elementMap.set(modelelement, count);
-                const owner: FreNode = modelelement.freOwner();
+                this.elementMap.set(node, count);
+                const owner: FreNode = node.freOwner();
                 if (this.elementMap.has(owner)) {
                     this.elementMap.set(owner, this.elementMap.get(owner) - count);
                 }
@@ -75,9 +75,9 @@ export class StringSearchWorker implements FreSearchWorker {
         return true; // is irrelevant, there are no other workers in this search
     }
 
-    includeNode(modelelement: FreNode): boolean {
+    includeNode(node: FreNode): boolean {
         if (!this.metatype || this.metatype.length <= 0) {
-            const owner: FreNode = modelelement.freOwner();
+            const owner: FreNode = node.freOwner();
             if (this.elementMap.has(owner) && this.elementMap.get(owner) <= 0) {
                 return false;
             } else {

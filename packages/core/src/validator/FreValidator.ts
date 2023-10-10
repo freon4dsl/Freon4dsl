@@ -26,13 +26,13 @@ export class FreError {
     severity: FreErrorSeverity;         // indication of how serious the error is, default is 'To Do'
 
     constructor(message: string,
-                element: FreNode | FreNode[],
+                node: FreNode | FreNode[],
                 locationdescription: string,
                 propertyName: string,
                 severity?: FreErrorSeverity,
                 propertyIndex?: number) {
         this.message = message;
-        this.reportedOn = element;
+        this.reportedOn = node;
         this.locationdescription = locationdescription;
         if (!!severity) {
             this.severity = severity;

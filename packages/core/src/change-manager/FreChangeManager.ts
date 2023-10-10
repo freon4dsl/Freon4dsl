@@ -41,17 +41,17 @@ export class FreChangeManager {
 
     /**
      * Reacts to the change of the value of a part property
-     * @param elemToChange
+     * @param nodeToChange
      * @param propertyName
      * @param newValue
      * @param oldValue
      */
-    public setPart(elemToChange: FreNode, propertyName: string, newValue: DecoratedModelElement, oldValue: DecoratedModelElement): void {
-        LOGGER.log("ChangeManager: set PART value for " + elemToChange.freLanguageConcept() + "[" + propertyName + "] := " + newValue);
+    public setPart(nodeToChange: FreNode, propertyName: string, newValue: DecoratedModelElement, oldValue: DecoratedModelElement): void {
+        LOGGER.log("ChangeManager: set PART value for " + nodeToChange.freLanguageConcept() + "[" + propertyName + "] := " + newValue);
         if (!!this.changePartCallbacks) {
-            const unit = modelUnit(elemToChange);
-            if (!!unit?.freOwner() || elemToChange.freIsModel()) {
-                const delta: FrePartDelta = new FrePartDelta(unit, elemToChange, propertyName, oldValue, newValue);
+            const unit = modelUnit(nodeToChange);
+            if (!!unit?.freOwner() || nodeToChange.freIsModel()) {
+                const delta: FrePartDelta = new FrePartDelta(unit, nodeToChange, propertyName, oldValue, newValue);
                 for (const cb of this.changePartCallbacks) {
                     cb(delta);
                 }
@@ -61,16 +61,16 @@ export class FreChangeManager {
 
     /**
      * Reacts to the change of the value of a primitive property
-     * @param elemToChange
+     * @param nodeToChange
      * @param propertyName
      * @param value
      */
-    public setPrimitive(elemToChange: FreNode, propertyName: string, value: string | boolean | number): void {
-        LOGGER.log("ChangeManager: set PRIMITIVE value for " + elemToChange.freLanguageConcept() + "[" + propertyName + "] := " + value);
+    public setPrimitive(nodeToChange: FreNode, propertyName: string, value: string | boolean | number): void {
+        LOGGER.log("ChangeManager: set PRIMITIVE value for " + nodeToChange.freLanguageConcept() + "[" + propertyName + "] := " + value);
         if (!!this.changePrimCallbacks) {
-            const unit = modelUnit(elemToChange);
-            if (!!unit?.freOwner() || elemToChange.freIsModel()) {
-                const delta: FrePrimDelta = new FrePrimDelta(unit, elemToChange, propertyName, elemToChange[propertyName], value);
+            const unit = modelUnit(nodeToChange);
+            if (!!unit?.freOwner() || nodeToChange.freIsModel()) {
+                const delta: FrePrimDelta = new FrePrimDelta(unit, nodeToChange, propertyName, nodeToChange[propertyName], value);
                 for (const cb of this.changePrimCallbacks) {
                     cb(delta);
                 }

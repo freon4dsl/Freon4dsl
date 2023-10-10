@@ -4,35 +4,35 @@ import { FreNode } from "../ast";
 export interface FreWriter {
 
     /**
-     * Returns a string representation of 'modelelement'.
+     * Returns a string representation of 'node'.
      * If 'short' is present and true, then a single-line result will be given.
      * Otherwise, the result is always a multi-line string.
      * Note that the single-line-string cannot be parsed into a correct model.
      *
-     * @param modelelement
+     * @param node
      * @param startIndent
      * @param short
      */
-    writeToString(modelelement: FreNode, startIndent?: number, short?: boolean): string;
+    writeToString(node: FreNode, startIndent?: number, short?: boolean): string;
 
     /**
-     * Returns a string representation of 'modelelement', divided into an array of strings,
+     * Returns a string representation of 'node', divided into an array of strings,
      * each of which contain a single line (without newline).
      * If 'short' is present and true, then a single-line result will be given.
      * Otherwise, the result is always a multi-line string.
      *
-     * @param modelelement
+     * @param node
      * @param startIndent
      * @param short
      */
-    writeToLines(modelelement: FreNode, startIndent?: number, short?: boolean): string[];
+    writeToLines(node: FreNode, startIndent?: number, short?: boolean): string[];
 
     /**
-     * Returns the name of 'modelelement' if it has one, else returns
-     * a short unparsing of 'modelelement'.
+     * Returns the name of 'node' if it has one, else returns
+     * a short unparsing of 'node'.
      * Used by the validator to produce readable error messages.
      *
-     * @param modelelement
+     * @param node
      */
-    writeNameOnly(modelelement: FreNode): string;
+    writeNameOnly(node: FreNode): string;
 }
