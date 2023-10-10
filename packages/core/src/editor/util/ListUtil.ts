@@ -206,7 +206,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
 function addListElement(listParent: FreNode, propertyName: string, index: number, typeOfAdded: string, before: boolean) {
     LOGGER.log(`addListElement of type: ${typeOfAdded} index: ${index}`);
     // get info about the property that needs to be changed
-    const { property, isList, type } = getPropertyInfo(listParent, propertyName);
+    const { property, isList, isPart, type } = getPropertyInfo(listParent, propertyName);
     if (!before) {
         index++;
     }
@@ -332,13 +332,19 @@ function pasteListElement(listParent: FreNode, propertyName: string, index: numb
     }
 }
 
+export type PropertyInfo = {
+    property: any;
+    isList: boolean;
+    isPart: PropertyKind;
+    type: string;
+}
 /**
  * This function returns information on the property within 'element' with name 'propertyName',
  * as it is available in 'Language.getInstance()'.
  * @param element
  * @param propertyName
  */
-function getPropertyInfo(element: FreNode, propertyName: string) {
+function getPropertyInfo(element: FreNode, propertyName: string): PropertyInfo {
     // console.log(`element: ${element.freId()}, element type: ${element.freLanguageConcept()}, propertyName: ${propertyName}`)
     const property = element[propertyName];
     const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
