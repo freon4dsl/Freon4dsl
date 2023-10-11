@@ -74,7 +74,7 @@ export class ServerCommunication implements IServerCommunication {
      */
     async putModelUnit(modelName: string, unitName: string, piUnit: FreNamedNode) {
         LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitName}`);
-        if (!!unitName && unitName.length > 0 && unitName.match(/^[a-z,A-Z][a-z,A-Z0-9_\-]*$/)) {
+        if (!!unitName && unitName.length > 0 && unitName.match(/^[a-z,A-Z][a-z,A-Z0-9_\-\.]*$/)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(piUnit);
             const publicModel = ServerCommunication.lionweb_serial.convertToJSON(piUnit, true);
             let output = {
@@ -218,9 +218,11 @@ export class ServerCommunication implements IServerCommunication {
 
     async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
         params = ServerCommunication.findParams(params);
+        LOGGER.log("fetchWithTimeout Params = " + params);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
+            LOGGER.log("Input: " + `${this._SERVER_URL}${method}${params}`)
             const promise = await fetch(
                 `${this._SERVER_URL}${method}${params}`,
                 {
