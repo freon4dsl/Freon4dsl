@@ -74,6 +74,7 @@
      * It sets the text in the box, if this is a SelectBox.
      */
     const refresh = (why?: string) => {
+        LOGGER.log("refresh: " + why)
         if (isSelectBox(box)) {
             // TODO see todo in 'storeOrExecute'
             let selectedOption = box.getSelectedOption();
@@ -286,9 +287,7 @@
         isEditing = true;
         dropdownShown = true;
         editor.selectElementForBox(box);
-        if (!allOptions) {
-            allOptions = getOptions();
-        }
+        allOptions = getOptions();
         if (!!event) {
             if ( text === undefined || text === null) {
                 filteredOptions = allOptions.filter(o => true);
