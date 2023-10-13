@@ -153,19 +153,23 @@ Naming: different names for overall language and used languages. E.g.:
 ## LionWeb
 
 - how to integrate built-ins
-  [x] as a std library in Freon?
+  - [x] as a std library in Freon?
 
 - Freon CLI tool
-  [x] Needs other import syntax for AGL because it is commonjs ?!?!
+ -  [x] Needs other import syntax for AGL because it is commonjs ?!?!
 
 - Import metamodel
-  [ ] Use M3 lamguage deserializer, unparse in memory and call Freon generator in memory
-    Export metamodels
-  [x] write projection to enable editing and nice syntax for metamodels.
+  - [x] Use M3 language deserializer, unparse in memory and generate .ast files
+  - [x] write projection to enable editing and nice syntax for metamodels.
 
 - $id vs id
-  - $id should be optionally visible and editable in the editor
-  - editable mainly for meta models.
-  - as part of the .edit?
-  - or generically ... but how?
+  - [ ] $id should be optionally visible and editable in the editor
+  - [ ] editable mainly for meta models.
+  - [ ] as part of the .edit?
+  - [ ] or generically ... but how?
 
+- [ ] How to show for a single word boolean that something can be added/changed
+- [x] For an optional edit part have different user defined projections for show / now show
+  - [x] For e.g. "[?extends ${extends>]" show just the ${extends} for now show.  
+- [ ] Tables with different types of nodes do not work now, all nodes must be of the same concept.
+  - [x]  Lists are ok with different types, but they do not have to have the columns defined
