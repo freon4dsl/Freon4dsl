@@ -26,7 +26,7 @@ Concept {
 ]}
 
 ConceptInterface {[
-    interface ${name} extends ${extends} {
+    interface ${name} [?extends ${extends}] {
         key: ${key}
         ${features vertical }
 ]}
@@ -50,9 +50,8 @@ Containment {[
 ]}
 
 Annotation {[
-    annotation ${name} multiple ${multiple} for ${annotates} {
-        extends: ${extends}
-        implements: ${implements}
+    annotation ${name} annotates ${annotates} [?extends ${extends}] [?implements ${implements}] {
+        multiple ${multiple}
         ${features vertical }
 ]}
 

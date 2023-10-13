@@ -198,6 +198,33 @@
             ]
         },
         {
+            "concept": "Annotation",
+            "id": "-id-Annotation",
+            "key": "Annotation",
+            "properties": [
+                {
+                    "name": "annotates",
+                    "id": "-id-Annotation-annotates",
+                    "key": "Annotation-annotates"
+                },
+                {
+                    "name": "implements",
+                    "id": "-id-Annotation-implements",
+                    "key": "Annotation-implements"
+                },
+                {
+                    "name": "extends",
+                    "id": "-id-Annotation-extends",
+                    "key": "Annotation-extends"
+                },
+                {
+                    "name": "multiple",
+                    "id": "-id-Annotation-multiple",
+                    "key": "Annotation-multiple"
+                }
+            ]
+        },
+        {
             "concept": "Node",
             "id": "LionCore-builtins-Node",
             "key": "LionCore-builtins-Node",

@@ -3,7 +3,6 @@ language LionCoreM3
 model LionCoreM3 {
     name: identifier;
     units: Language[];
-    constraints: Constraints[];
 }
 
 interface IKeyed base INamed {
