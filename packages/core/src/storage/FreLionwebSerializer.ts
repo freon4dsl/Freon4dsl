@@ -123,10 +123,10 @@ export class FreLionwebSerializer implements FreSerializer {
         if (lwNode === null) {
             throw new Error("Cannot read json 1: jsonObject is null.");
         }
-        const jsonMetaPointer = lwNode.concept;
+        const jsonMetaPointer = lwNode.classifier;
         const id: string = lwNode.id;
         if (isNullOrUndefined(jsonMetaPointer)) {
-            throw new Error(`Cannot read json 2: not a Freon structure, conceptname missing: ${JSON.stringify(lwNode)}.`);
+            throw new Error(`Cannot read json 2: not a Freon structure, classifier name missing: ${JSON.stringify(lwNode)}.`);
         }
         const conceptMetaPointer = this.convertMetaPointer(jsonMetaPointer, lwNode);
         // LOGGER.log("Classifier with id " + conceptId + " classifier " + this.language.classifierById(conceptId));
@@ -314,7 +314,7 @@ export class FreLionwebSerializer implements FreSerializer {
         idMap[freNode.freId()] = result;
         result.id = freNode.freId();
         result.parent = freNode?.freOwner()?.freId();
-        if (result.parent === undefined) {
+        if (result.parent === undefined  || freNode.freIsUnit()) {
             result.parent = null;
         }
 
@@ -333,7 +333,7 @@ export class FreLionwebSerializer implements FreSerializer {
             LOGGER.error(`Unknown concept key: ${typename}`);
             return undefined;
         }
-        result.concept = this.createMetaPointer(conceptKey, language);
+        result.classifier = this.createMetaPointer(conceptKey, language);
         // LOGGER.log("typename: " + typename);
         for (const p of this.language.allConceptProperties(typename)) {
             // LOGGER.log(">>>> start converting property " + p.name + " of type " + p.propertyKind);
