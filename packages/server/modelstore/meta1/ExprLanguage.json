@@ -4,7 +4,7 @@
    "nodes": [
       {
          "id": "ID-206",
-         "concept": {
+         "classifier": {
             "key": "Language",
             "version": "1.0",
             "language": "LionCoreM3"
@@ -62,7 +62,7 @@
       },
       {
          "id": "ID-301",
-         "concept": {
+         "classifier": {
             "key": "Concept",
             "version": "1.0",
             "language": "LionCoreM3"
