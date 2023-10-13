@@ -353,7 +353,8 @@ export class FreLionwebSerializer implements FreSerializer {
         const result = {};
         return {
             language: language,
-            version: "1",
+            // TODO hardcoded version, need to include language version in Freon proprely
+            version: "2023.1",
             key: key
         };
     }
