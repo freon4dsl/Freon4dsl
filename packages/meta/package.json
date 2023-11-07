@@ -34,6 +34,7 @@
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "republish-local": "yarn unpublish-local && yarn publish-local",
     "test": "jest",
     "build-release": "yarn build && yarn copy-validtemplates"
   },

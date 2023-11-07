@@ -110,7 +110,7 @@ export class LionWebCommunication extends ServerCommunication implements IServer
                 const lionWebNodes = serializer.convertToJSON(piUnit);
                 console.log("lionWebNodes", lionWebNodes)
                 let output = {
-                    "serializationFormatVersion": "1",
+                    "serializationFormatVersion": "2023.1",
                     "languages": [],
                     // "__version": "1234abcdef",
                     "nodes": lionWebNodes

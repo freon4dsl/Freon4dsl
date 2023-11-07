@@ -78,7 +78,7 @@ export class ServerCommunication implements IServerCommunication {
             const model = ServerCommunication.lionweb_serial.convertToJSON(piUnit);
             const publicModel = ServerCommunication.lionweb_serial.convertToJSON(piUnit, true);
             let output = {
-                "serializationFormatVersion": "1",
+                "serializationFormatVersion": "2023.1",
                 "languages": [],
                 // "__version": "1234abcdef",
                 "nodes": model
@@ -86,7 +86,7 @@ export class ServerCommunication implements IServerCommunication {
 
             await this.putWithTimeout(`putModelUnit`, output, `folder=${modelName}&name=${unitName}` );
             let publicOutput = {
-                "serializationFormatVersion": "1",
+                "serializationFormatVersion": "2023.1",
                 "languages": [],
                 // "__version": "1234abcdef",
                 "nodes": publicModel
