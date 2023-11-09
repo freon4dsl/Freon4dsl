@@ -206,6 +206,9 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-text-component-padding: 0px 1px 0px 1px;
   --freon-text-component-margin: 1px;
 
+  --freon-text-component-placeholder-color: #{theme.$blue-900};
+  --freon-text-component-actionplaceholder-color: darkgrey;
+
   --freon-label-component-color: black;
   --freon-label-component-background-color: inherit;
   --freon-label-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */

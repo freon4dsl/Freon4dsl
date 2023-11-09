@@ -3,7 +3,7 @@ import { FreLanguage, FreLanguageProperty } from "../language";
 import { FreLogger } from "../logging/index";
 import { FreUtils, isNullOrUndefined, jsonAsString } from "../util";
 import { FreSerializer } from "./FreSerializer";
-import { createLwNode, isLwChunk, LwChild, LwChunk, LwMetaPointer, LwNode, LwReference } from "./LionwebM3";
+import { createLwNode, isLwChunk, LwContainment, LwChunk, LwMetaPointer, LwNode, LwReference } from "./LionwebM3";
 
 const LOGGER = new FreLogger("FreLionwebSerializer");
 /**
@@ -123,10 +123,10 @@ export class FreLionwebSerializer implements FreSerializer {
         if (lwNode === null) {
             throw new Error("Cannot read json 1: jsonObject is null.");
         }
-        const jsonMetaPointer = lwNode.concept;
+        const jsonMetaPointer = lwNode.classifier;
         const id: string = lwNode.id;
         if (isNullOrUndefined(jsonMetaPointer)) {
-            throw new Error(`Cannot read json 2: not a Freon structure, conceptname missing: ${JSON.stringify(lwNode)}.`);
+            throw new Error(`Cannot read json 2: not a Freon structure, classifier name missing: ${JSON.stringify(lwNode)}.`);
         }
         const conceptMetaPointer = this.convertMetaPointer(jsonMetaPointer, lwNode);
         // LOGGER.log("Classifier with id " + conceptId + " classifier " + this.language.classifierById(conceptId));
@@ -209,7 +209,7 @@ export class FreLionwebSerializer implements FreSerializer {
     }
 
     private convertChildProperties(freNode: FreNode, concept: string, jsonObject: LwNode): ParsedChild[] {
-        const jsonChildren = jsonObject.children;
+        const jsonChildren = jsonObject.containments;
         FreUtils.CHECK(Array.isArray(jsonChildren), "Found children value which is not a Array for node: " + jsonObject.id);
         const parsedChildren: ParsedChild[] = [];
         for (const jsonChild of Object.values(jsonChildren)) {
@@ -313,7 +313,10 @@ export class FreLionwebSerializer implements FreSerializer {
         result = createLwNode();
         idMap[freNode.freId()] = result;
         result.id = freNode.freId();
-        result.parent = freNode.freOwner().freId();
+        result.parent = freNode?.freOwner()?.freId();
+        if (result.parent === undefined  || freNode.freIsUnit()) {
+            result.parent = null;
+        }
 
         let conceptKey: string;
         let language: string;
@@ -330,7 +333,7 @@ export class FreLionwebSerializer implements FreSerializer {
             LOGGER.error(`Unknown concept key: ${typename}`);
             return undefined;
         }
-        result.concept = this.createMetaPointer(conceptKey, language);
+        result.classifier = this.createMetaPointer(conceptKey, language);
         // LOGGER.log("typename: " + typename);
         for (const p of this.language.allConceptProperties(typename)) {
             // LOGGER.log(">>>> start converting property " + p.name + " of type " + p.propertyKind);
@@ -350,7 +353,8 @@ export class FreLionwebSerializer implements FreSerializer {
         const result = {};
         return {
             language: language,
-            version: "1",
+            // TODO hardcoded version, need to include language version in Freon proprely
+            version: "2023.1",
             key: key
         };
     }
@@ -368,7 +372,7 @@ export class FreLionwebSerializer implements FreSerializer {
                     LOGGER.log("PART is null: " + + parentNode["name"] + "." + p.name);
                     break;
                 }
-                const child: LwChild = {
+                const child: LwContainment = {
                     containment: this.createMetaPointer(p.key, p.language),
                     children: []
                 };
@@ -381,7 +385,7 @@ export class FreLionwebSerializer implements FreSerializer {
                     // single value
                     child.children.push((!!value ? this.convertToJSONinternal(value as FreNode, publicOnly, idMap) : null).id);
                 }
-                result.children.push(child);
+                result.containments.push(child);
                 break;
             case "reference":
                 const lwReference: LwReference = {

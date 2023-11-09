@@ -74,6 +74,7 @@
      * It sets the text in the box, if this is a SelectBox.
      */
     const refresh = (why?: string) => {
+        LOGGER.log("refresh: " + why)
         if (isSelectBox(box)) {
             // TODO see todo in 'storeOrExecute'
             let selectedOption = box.getSelectedOption();
@@ -286,20 +287,18 @@
         isEditing = true;
         dropdownShown = true;
         editor.selectElementForBox(box);
-        if (!allOptions) {
-            allOptions = getOptions();
-        }
+        allOptions = getOptions();
         if (!!event) {
             if ( text === undefined || text === null) {
                 filteredOptions = allOptions.filter(o => true);
             } else {
                 filteredOptions = allOptions.filter(o => {
                     LOGGER.log(`startsWith text [${text}], option is ${JSON.stringify(o)}`);
-                    return o.label.startsWith(text.substring(0, event.detail.caret))
+                    return o?.label?.startsWith(text.substring(0, event.detail.caret))
                 });
             }
         } else {
-            filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, 0)));
+            filteredOptions = allOptions.filter(o => o?.label?.startsWith(text.substring(0, 0)));
         }
         makeUnique();
     };
@@ -369,7 +368,7 @@
     };
 
     const onFocusOutText = () => {
-        LOGGER.log("onFocusOutText " + id, "focus");
+        LOGGER.log("onFocusOutText " + id);
         if (isEditing) {
             isEditing = false;
         }
@@ -379,7 +378,7 @@
      * The "click_outside" event was triggered because of `use:clickOutsideConditional`.
      */
     const onClickOutside = () => {
-        LOGGER.log("onClickOutside", "focus");
+        LOGGER.log("onClickOutside");
         endEditing();
     };
 

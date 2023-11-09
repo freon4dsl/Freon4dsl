@@ -5,7 +5,7 @@ import { FreNode } from "../../ast";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjection } from "./FreProjection";
 import { action, makeObservable, observable } from "mobx";
-import { ListUtil } from "../../util/ListUtil";
+import { ArrayUtil } from "../../util/ArrayUtil";
 import { FreTableHeaderInfo } from "./FreTableHeaderInfo";
 import { FreHeaderProvider } from "./FreHeaderProvider";
 
@@ -98,21 +98,22 @@ export class FreProjectionHandler {
     /**
      * Returns a box provider for element. Either it is newly created or it is found in
      * 'this.elementToProvider'.
-     * @param element
+     * @param node
      */
-    getBoxProvider(element: FreNode): FreBoxProvider {
-        LOGGER.log("getBoxProvider for " + element.freId() + " (" + element.freLanguageConcept() + ")")
-        if (isNullOrUndefined(element)) {
-            console.error("FreProjectionHandler.getBoxProvider: element is null/undefined");
+    getBoxProvider(node: FreNode): FreBoxProvider {
+        LOGGER.log("getBoxProvider for " + node.freId() + " (" + node.freLanguageConcept() + ")")
+        if (isNullOrUndefined(node)) {
+            console.error("FreProjectionHandler.getBoxProvider: node is null/undefined");
             return null;
         }
 
         // return if present, else create a new provider based on the language concept
-        let boxProvider = this.elementToProvider.get(element.freId());
+        let boxProvider = this.elementToProvider.get(node.freId());
         if (isNullOrUndefined(boxProvider)) {
-            boxProvider = this.conceptNameToProviderConstructor.get(element.freLanguageConcept())(this);
-            this.elementToProvider.set(element.freId(), boxProvider);
-            boxProvider.element = element;
+            LOGGER.log("getBoxProvider is null/undefined for type " + node.freLanguageConcept());
+            boxProvider = this.conceptNameToProviderConstructor.get(node.freLanguageConcept())(this);
+            this.elementToProvider.set(node.freId(), boxProvider);
+            boxProvider.element = node;
         }
         return boxProvider;
     }
@@ -128,9 +129,9 @@ export class FreProjectionHandler {
      * @param p
      */
     addProjection(p: string) {
-        ListUtil.addIfNotPresent(this._allProjections, p);
+        ArrayUtil.addIfNotPresent(this._allProjections, p);
         if (p !== "default") {
-            ListUtil.addIfNotPresent(this._enabledProjections, p);
+            ArrayUtil.addIfNotPresent(this._enabledProjections, p);
         }
     }
 
@@ -189,7 +190,7 @@ export class FreProjectionHandler {
      * @param p
      */
     addCustomProjection(p: FreProjection) {
-        ListUtil.addIfNotPresent(this._customProjections, p);
+        ArrayUtil.addIfNotPresent(this._customProjections, p);
         this.addProjection(p.name);
     }
 
@@ -220,23 +221,24 @@ export class FreProjectionHandler {
         this.tableHeaderInfo = list;
     }
 
-    getHeaderProvider(element: FreNode, propertyName: string, conceptName: string): FreHeaderProvider {
-        if (isNullOrUndefined(element)) {
-            console.error("FreProjectionHandler.getHeaderProvider: element is null/undefined");
+    getHeaderProvider(node: FreNode, propertyName: string, conceptName: string): FreHeaderProvider {
+        if (isNullOrUndefined(node)) {
+            console.error("FreProjectionHandler.getHeaderProvider: node is null/undefined");
             return null;
         }
 
         // return if present, else create a new provider
-        let headerProvider = this.headerProviders.get([element.freId(), propertyName]);
+        let headerProvider = this.headerProviders.get([node.freId(), propertyName]);
         if (isNullOrUndefined(headerProvider)) {
-            headerProvider = new FreHeaderProvider(element, propertyName, conceptName, this);
-            this.headerProviders.set([element.freId(), propertyName], headerProvider);
+            headerProvider = new FreHeaderProvider(node, propertyName, conceptName, this);
+            this.headerProviders.set([node.freId(), propertyName], headerProvider);
             // headerProvider.initUsedProjection();
         }
         return headerProvider;
     }
 
     getKnownTableProjectionsFor(conceptName: string): string[] {
+        LOGGER.log("getKnownTableProjectionsFor: " + conceptName);
         return this.conceptNameToProviderConstructor.get(conceptName)(this).knownTableProjections;
     }
 

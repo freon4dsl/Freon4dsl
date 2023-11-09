@@ -44,9 +44,9 @@ export function isLwUsedLanguage(obj: any): obj is LwUsedLanguage {
 
 export type LwNode = {
     id: Id;
-    concept: LwMetaPointer;
+    classifier: LwMetaPointer;
     properties: LwProperty[];
-    children: LwChild[];
+    containments: LwContainment[];
     references: LwReference[];
     parent: string;
 }
@@ -54,9 +54,9 @@ export type LwNode = {
 export function isLwNode(box: any): box is LwNode {
     const lwNode = box as LwNode;
     return lwNode.id !== undefined &&
-        lwNode.concept !== undefined &&
+        lwNode.classifier !== undefined &&
         lwNode.properties !== undefined &&
-        lwNode.children !== undefined &&
+        lwNode.containments !== undefined &&
         lwNode.references !== undefined &&
         lwNode.parent !== undefined;
 }
@@ -64,9 +64,9 @@ export function isLwNode(box: any): box is LwNode {
 export function createLwNode(): LwNode {
     return {
         id: null,
-        concept: null,
+        classifier: null,
         properties: [],
-        children: [],
+        containments: [],
         references: [],
         parent: null
     }
@@ -83,13 +83,13 @@ export function isLwProperty(obj: any): obj is LwProperty {
         lwProperty.value !== undefined;
 }
 
-export type LwChild = {
+export type LwContainment = {
     containment: LwMetaPointer;
     children: string[];
 }
 
-export function isLwChild(obj: any): obj is LwChild {
-    const lwChild = obj as LwChild;
+export function isLwChild(obj: any): obj is LwContainment {
+    const lwChild = obj as LwContainment;
     return lwChild.containment !== undefined &&
         lwChild.children !== undefined;
 }
@@ -130,7 +130,7 @@ function check(b: boolean, message: string): void {
 function findNode(nodes: LwNode[], key: string): LwNode | null {
     for (const node of nodes) {
         check(isLwNode(node), "Expected an LwNode, but got " + JSON.stringify(node));
-        if (node.concept.key === key) {
+        if (node.classifier.key === key) {
             return node;
         }
     }
@@ -145,7 +145,7 @@ export function lwDiff(obj1: any, obj2: any): LwDiff {
         // TODO check languages 
         for (const node of obj1.nodes) {
             check(isLwNode(node), "Expected an LwNode, but got " + JSON.stringify(node));
-            const key = node.concept.key;
+            const key = node.classifier.key;
             const otherNode = findNode(obj2.nodes, key);
             if (otherNode === null) {
                 return { isEqual: false, diffMessage: `Node with concept key ${key} does not exist in second object`};

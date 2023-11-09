@@ -9,9 +9,9 @@ export class TableRowBox extends Box {
     _cells: TableCellBox[] = [];
     _isHeader: boolean = false;
 
-    constructor(element: FreNode, role: string, cells: TableCellBox[], rowIndex: number, initializer?: Partial<TableRowBox>) {
+    constructor(node: FreNode, role: string, cells: TableCellBox[], rowIndex: number, initializer?: Partial<TableRowBox>) {
         // todo add isHeader to the params
-        super(element, role);
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.cells = cells;
         this.rowIndex = rowIndex;

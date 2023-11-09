@@ -40,6 +40,9 @@
 	--freon-text-component-color: darkblue;
 	--freon-text-component-background-color: white;
 
+	--freon-text-component-placeholder-color: blue;
+	--freon-text-component-actionplaceholder-color: darkgrey;
+
 	--freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
 	--freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
 	--freon-label-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */

@@ -2,7 +2,7 @@
 
 - [x] Merge MDEnet branch with development
 - [x] Lionweb code naar development (model (de)serializer)
-- [ ] Convert Lionweb metamodel to Freon ast by CLI
+- [x] Convert Lionweb metamodel to Freon ast by CLI
 
 # Anneke
 
@@ -150,9 +150,26 @@ Naming: different names for overall language and used languages. E.g.:
 | DSL                | language      |
 | FreLanguage.          | .             |
 
-## Freon Name Change
+## LionWeb
 
-Todo:
+- how to integrate built-ins
+  - [x] as a std library in Freon?
 
-- [ ] Stop projectit.org Q3 2023
+- Freon CLI tool
+ -  [x] Needs other import syntax for AGL because it is commonjs ?!?!
 
+- Import metamodel
+  - [x] Use M3 language deserializer, unparse in memory and generate .ast files
+  - [x] write projection to enable editing and nice syntax for metamodels.
+
+- $id vs id
+  - [ ] $id should be optionally visible and editable in the editor
+  - [ ] editable mainly for meta models.
+  - [ ] as part of the .edit?
+  - [ ] or generically ... but how?
+
+- [ ] How to show for a single word boolean that something can be added/changed
+- [x] For an optional edit part have different user defined projections for show / now show
+  - [x] For e.g. "[?extends ${extends>]" show just the ${extends} for now show.  
+- [ ] Tables with different types of nodes do not work now, all nodes must be of the same concept.
+  - [x]  Lists are ok with different types, but they do not have to have the columns defined

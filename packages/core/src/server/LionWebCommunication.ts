@@ -1,14 +1,15 @@
-import {IServerCommunication} from "./IServerCommunication";
-import {setUserMessage} from "../components/stores/UserMessageStore";
-import { FreLionwebSerializer, FreLogger, FreNamedNode, FreNode } from "@freon4dsl/core";
-// import {Freon2LionWebConverter} from "./Freon2LionWebConverter";
-import {ServerCommunication} from "./ServerCommunication";
+import { FreNamedNode, FreNode } from "../ast/index";
+import { FreLogger } from "../logging/index";
+import { FreLionwebSerializer } from "../storage/index";
+import { FreErrorSeverity } from "../validator/index";
+import { IServerCommunication } from "./IServerCommunication";
+import { ServerCommunication } from "./ServerCommunication";
 
 const LOGGER = new FreLogger("LionWebCommunication"); // .mute();
 
 const lionWebPort = process.env.LIONWEB_PORT || 63320;
 const SERVER_URL = `http://127.0.0.1:${lionWebPort}`;
-console.log("NODE_PORT:" + lionWebPort+ "  env " + JSON.stringify(process.env));
+// console.log("NODE_PORT:" + lionWebPort+ "  env " + JSON.stringify(process.env));
 
 const modelName = "r:5dda8fb0-8c78-4ed5-8c46-0eb8c112a60a(import_from_json.properties.instance)"
 const projectName = "mps-meetup-2023"
@@ -26,6 +27,10 @@ export class LionWebCommunication extends ServerCommunication implements IServer
         return LionWebCommunication.instanceLionWeb;
     }
 
+    onError(msg: string,  severity: FreErrorSeverity): void {
+        // default implementation
+        console.error(`ServerCommunication ${severity}: ${msg}`);
+    }
     // deleteModel(modelName: string) {
     // }
     //
@@ -89,7 +94,7 @@ export class LionWebCommunication extends ServerCommunication implements IServer
                     loadCallback(unit as FreNamedNode);
                 } catch (e) {
                     LOGGER.error( "loadModelUnit, " + e.message);
-                    setUserMessage(e.message);
+                    this.onError("loadModelUnit: " + e.message, FreErrorSeverity.Error);
                     console.log(e.stack);
                 }
             }
@@ -105,7 +110,7 @@ export class LionWebCommunication extends ServerCommunication implements IServer
                 const lionWebNodes = serializer.convertToJSON(piUnit);
                 console.log("lionWebNodes", lionWebNodes)
                 let output = {
-                    "serializationFormatVersion": "1",
+                    "serializationFormatVersion": "2023.1",
                     "languages": [],
                     // "__version": "1234abcdef",
                     "nodes": lionWebNodes
@@ -113,7 +118,7 @@ export class LionWebCommunication extends ServerCommunication implements IServer
                 await this.postWithTimeoutLionWeb(modelPath, output, "")
             } catch (e) {
                 LOGGER.error( "loadModelUnit, " + e.message);
-                setUserMessage(e.message);
+                this.onError("loadModelUnit: " + e.message, FreErrorSeverity.Error);
                 console.log(e.stack);
             }
         }
@@ -173,6 +178,6 @@ export class LionWebCommunication extends ServerCommunication implements IServer
             errorMess = `Time out: no response from ${SERVER_URL}.`;
         }
         LOGGER.error( errorMess);
-        setUserMessage(errorMess);
+        this.onError(errorMess, FreErrorSeverity.NONE);
     }
 }

@@ -1,22 +1,14 @@
+import { FreNamedNode, FreNode } from "../ast/index";
+import { FreErrorSeverity } from "../validator/index";
 
-// TODO rethink these interfaces
-import type { FreNode } from "@freon4dsl/core";
-import { FreNamedNode } from "@freon4dsl/core";
-// import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
-
-// export interface IModelUnitData {
-//     // id: number;
-//     unitName: string;
-//     modelName: string;
-//     language: string;
-//     // url?: string;
-// }
-
+export type OnError = (errorMsg: string, severity: FreErrorSeverity) => void;
 /**
  *  Takes care of the communication with the server at SERVER_URL from WebappConfiguration.
  */
 export interface IServerCommunication {
 
+    onError: OnError;
+    
     generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]>;
 
     /**

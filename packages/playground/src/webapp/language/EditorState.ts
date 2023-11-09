@@ -23,7 +23,6 @@ import {
 import { setUserMessage } from "../components/stores/UserMessageStore";
 import { editorEnvironment, serverCommunication } from "../config/WebappConfiguration";
 import { modelErrors } from "../components/stores/InfoPanelStore";
-import { ServerCommunication } from "../server/ServerCommunication";
 import { runInAction } from "mobx";
 
 const LOGGER = new FreLogger("EditorState"); // .mute();
@@ -198,7 +197,7 @@ export class EditorState {
         //     await this.saveCurrentUnit();
         // }
         unit.name = newName;
-        ServerCommunication.getInstance().renameModelUnit(this.currentModel.name, oldName, newName, unit);
+        serverCommunication.renameModelUnit(this.currentModel.name, oldName, newName, unit);
         this.setUnitLists();
         console.log("Units after: " + this.currentModel.getUnits().map(u => u.name));
     }

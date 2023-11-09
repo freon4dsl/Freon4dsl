@@ -43,9 +43,9 @@ export abstract class Box {
     actualWidth: number = -1;
     actualHeight: number = -1;
 
-    protected constructor(element: FreNode, role: string) {
-        FreUtils.CHECK(!!element, "Element cannot be empty in Box constructor");
-        this.element = element;
+    protected constructor(node: FreNode, role: string) {
+        FreUtils.CHECK(!!node, "Element cannot be empty in Box constructor");
+        this.element = node;
         this.role = role;
         this.$id = FreUtils.BOX_ID(); // uuid.v4();
     }

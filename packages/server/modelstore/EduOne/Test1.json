@@ -4,7 +4,7 @@
    "nodes": [
       {
          "id": "ID-176",
-         "concept": {
+         "classifier": {
             "key": "Test",
             "version": "1.0",
             "language": "Education"
@@ -64,7 +64,7 @@
       },
       {
          "id": "ID-177",
-         "concept": {
+         "classifier": {
             "key": "Scenario",
             "version": "1.0",
             "language": "Education"
@@ -98,7 +98,7 @@
       },
       {
          "id": "ID-178",
-         "concept": {
+         "classifier": {
             "key": "Step",
             "version": "1.0",
             "language": "Education"
@@ -148,7 +148,7 @@
       },
       {
          "id": "ID-179",
-         "concept": {
+         "classifier": {
             "key": "Answer",
             "version": "1.0",
             "language": "Education"
@@ -185,7 +185,7 @@
       },
       {
          "id": "ID-180",
-         "concept": {
+         "classifier": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
             "language": "Education"
@@ -206,7 +206,7 @@
       },
       {
          "id": "ID-181",
-         "concept": {
+         "classifier": {
             "key": "Step",
             "version": "1.0",
             "language": "Education"
@@ -257,7 +257,7 @@
       },
       {
          "id": "ID-182",
-         "concept": {
+         "classifier": {
             "key": "Answer",
             "version": "1.0",
             "language": "Education"
@@ -294,7 +294,7 @@
       },
       {
          "id": "ID-183",
-         "concept": {
+         "classifier": {
             "key": "NumberLiteralExpression",
             "version": "1.0",
             "language": "Education"
@@ -315,7 +315,7 @@
       },
       {
          "id": "ID-184",
-         "concept": {
+         "classifier": {
             "key": "Answer",
             "version": "1.0",
             "language": "Education"
@@ -352,7 +352,7 @@
       },
       {
          "id": "ID-185",
-         "concept": {
+         "classifier": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
             "language": "Education"
@@ -373,7 +373,7 @@
       },
       {
          "id": "ID-186",
-         "concept": {
+         "classifier": {
             "key": "Step",
             "version": "1.0",
             "language": "Education"
@@ -423,7 +423,7 @@
       },
       {
          "id": "ID-187",
-         "concept": {
+         "classifier": {
             "key": "Answer",
             "version": "1.0",
             "language": "Education"
@@ -460,7 +460,7 @@
       },
       {
          "id": "ID-188",
-         "concept": {
+         "classifier": {
             "key": "BooleanLiteralExpression",
             "version": "1.0",
             "language": "Education"
@@ -481,7 +481,7 @@
       },
       {
          "id": "ID-189",
-         "concept": {
+         "classifier": {
             "key": "Scenario",
             "version": "1.0",
             "language": "Education"

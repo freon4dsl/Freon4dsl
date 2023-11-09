@@ -1,273 +1,1844 @@
 {
-   "$typename": "ExampleUnit",
-   "name": "LargeUnit",
-   "entities": [
+   "serializationFormatVersion": "1",
+   "languages": [],
+   "nodes": [
       {
-         "$typename": "Entity",
-         "name": "entity1",
-         "attributes": [
+         "id": "ID-18",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-ExampleUnit"
+         },
+         "properties": [
             {
-               "$typename": "Attribute",
-               "name": "attr1",
-               "declaredType": "String"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "attr2",
-               "declaredType": "Integer"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "attr3",
-               "declaredType": "Boolean"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "attr4",
-               "declaredType": "entity1"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "attr5",
-               "declaredType": "ANY"
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-ExampleUnit-name"
+               },
+               "value": "LargeUnit"
             }
          ],
-         "methods": [
+         "children": [
             {
-               "$typename": "Method",
-               "name": "meth1",
-               "body": {
-                  "$typename": "AbsExpression",
-                  "expr": {
-                     "$typename": "ParameterRef",
-                     "appliedfeature": null,
-                     "parameter": "par2"
-                  },
-                  "appliedfeature": null
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-ExampleUnit-entities"
                },
-               "parameters": [
+               "children": [
+                  "ID-19",
+                  "ID-30",
+                  "ID-37"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-ExampleUnit-methods"
+               },
+               "children": [
+                  "ID-44",
+                  "ID-40",
+                  "ID-46",
+                  "ID-48",
+                  "ID-42",
+                  "ID-54",
+                  "ID-62",
+                  "ID-66"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-17"
+      },
+      {
+         "id": "ID-19",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Entity"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-BaseType-name"
+               },
+               "value": "entity1"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Entity-attributes"
+               },
+               "children": [
+                  "ID-21",
+                  "ID-20",
+                  "ID-22",
+                  "ID-23",
+                  "ID-24"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Entity-methods"
+               },
+               "children": [
+                  "ID-25"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-21",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "attr2"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
                   {
-                     "$typename": "Parameter",
-                     "name": "par1",
-                     "declaredType": "String"
-                  },
-                  {
-                     "$typename": "Parameter",
-                     "name": "par2",
-                     "declaredType": "Integer"
+                     "resolveInfo": "Integer",
+                     "reference": "ID-2"
                   }
-               ],
-               "declaredType": "Integer"
+               ]
             }
          ],
-         "baseEntity": null
+         "parent": "ID-19"
       },
       {
-         "$typename": "Entity",
-         "name": "entityNoAttrs",
-         "attributes": [],
-         "methods": [
+         "id": "ID-20",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
             {
-               "$typename": "Method",
-               "name": "meth21",
-               "body": {
-                  "$typename": "EqualsExpression",
-                  "left": {
-                     "$typename": "ParameterRef",
-                     "appliedfeature": null,
-                     "parameter": "parA"
-                  },
-                  "right": {
-                     "$typename": "ParameterRef",
-                     "appliedfeature": null,
-                     "parameter": "parB"
-                  },
-                  "appliedfeature": null
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-name"
                },
-               "parameters": [
+               "value": "attr1"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
                   {
-                     "$typename": "Parameter",
-                     "name": "parA",
-                     "declaredType": "entityNoAttrs"
-                  },
-                  {
-                     "$typename": "Parameter",
-                     "name": "parB",
-                     "declaredType": "entityNoAttrs"
+                     "resolveInfo": "String",
+                     "reference": "ID-1"
                   }
-               ],
-               "declaredType": "Boolean"
+               ]
             }
          ],
-         "baseEntity": null
+         "parent": "ID-19"
       },
       {
-         "$typename": "Entity",
-         "name": "entityNoMeths",
-         "attributes": [
+         "id": "ID-22",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
             {
-               "$typename": "Attribute",
-               "name": "attrA",
-               "declaredType": "Integer"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "attrB",
-               "declaredType": "entityNoAttrs"
-            }
-         ],
-         "methods": [],
-         "baseEntity": null
-      }
-   ],
-   "methods": [
-      {
-         "$typename": "Method",
-         "name": "AA",
-         "body": {
-            "$typename": "MethodCallExpression",
-            "args": [],
-            "appliedfeature": null,
-            "methodDefinition": "HH"
-         },
-         "parameters": [],
-         "declaredType": "String"
-      },
-      {
-         "$typename": "Method",
-         "name": "BB",
-         "body": {
-            "$typename": "BooleanLiteralExpression",
-            "value": true,
-            "appliedfeature": null
-         },
-         "parameters": [],
-         "declaredType": "Boolean"
-      },
-      {
-         "$typename": "Method",
-         "name": "CC",
-         "body": {
-            "$typename": "StringLiteralExpression",
-            "value": "some stuff",
-            "appliedfeature": null
-         },
-         "parameters": [],
-         "declaredType": "ANY"
-      },
-      {
-         "$typename": "Method",
-         "name": "DD",
-         "body": {
-            "$typename": "MethodCallExpression",
-            "args": [],
-            "appliedfeature": null,
-            "methodDefinition": "AA"
-         },
-         "parameters": [],
-         "declaredType": "String"
-      },
-      {
-         "$typename": "Method",
-         "name": "EE",
-         "body": {
-            "$typename": "IfExpression",
-            "condition": {
-               "$typename": "ParameterRef",
-               "appliedfeature": null,
-               "parameter": "test"
-            },
-            "whenTrue": {
-               "$typename": "NumberLiteralExpression",
-               "value": 10,
-               "appliedfeature": null
-            },
-            "whenFalse": {
-               "$typename": "NumberLiteralExpression",
-               "value": 666,
-               "appliedfeature": null
-            },
-            "appliedfeature": null
-         },
-         "parameters": [
-            {
-               "$typename": "Parameter",
-               "name": "test",
-               "declaredType": "Boolean"
-            }
-         ],
-         "declaredType": "Integer"
-      },
-      {
-         "$typename": "Method",
-         "name": "FF",
-         "body": {
-            "$typename": "SumExpression",
-            "variable": {
-               "$typename": "LoopVariable",
-               "name": "xx"
-            },
-            "from": {
-               "$typename": "NumberLiteralExpression",
-               "value": 0,
-               "appliedfeature": null
-            },
-            "to": {
-               "$typename": "NumberLiteralExpression",
-               "value": 999,
-               "appliedfeature": null
-            },
-            "body": {
-               "$typename": "ParameterRef",
-               "appliedfeature": {
-                  "$typename": "AttributeRef",
-                  "appliedfeature": null,
-                  "attribute": "attr2"
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-name"
                },
-               "parameter": "par7"
-            },
-            "appliedfeature": null
-         },
-         "parameters": [
-            {
-               "$typename": "Parameter",
-               "name": "par7",
-               "declaredType": "entity1"
+               "value": "attr3"
             }
          ],
-         "declaredType": "Integer"
-      },
-      {
-         "$typename": "Method",
-         "name": "GG",
-         "body": {
-            "$typename": "ParameterRef",
-            "appliedfeature": {
-               "$typename": "AttributeRef",
-               "appliedfeature": null,
-               "attribute": "attr4"
-            },
-            "parameter": "myEnt"
-         },
-         "parameters": [
+         "children": [],
+         "references": [
             {
-               "$typename": "Parameter",
-               "name": "myEnt",
-               "declaredType": "entity1"
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-3"
+                  }
+               ]
             }
          ],
-         "declaredType": "entity1"
+         "parent": "ID-19"
       },
       {
-         "$typename": "Method",
-         "name": "HH",
-         "body": {
-            "$typename": "StringLiteralExpression",
-            "value": "some text as a string literal",
-            "appliedfeature": null
+         "id": "ID-23",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Attribute"
          },
-         "parameters": [],
-         "declaredType": "String"
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "attr4"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "entity1",
+                     "reference": "ID-19"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-24",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "attr5"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "ANY"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-25",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "meth1"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-26"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": [
+                  "ID-28",
+                  "ID-29"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Integer",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-26",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-AbsExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-AbsExpression-expr"
+               },
+               "children": [
+                  "ID-27"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-25"
+      },
+      {
+         "id": "ID-27",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-ParameterRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-ParameterRef-parameter"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "par2",
+                     "reference": "ID-29"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-26"
+      },
+      {
+         "id": "ID-28",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "par1"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-25"
+      },
+      {
+         "id": "ID-29",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "par2"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Integer",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-25"
+      },
+      {
+         "id": "ID-30",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Entity"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-BaseType-name"
+               },
+               "value": "entityNoAttrs"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Entity-attributes"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Entity-methods"
+               },
+               "children": [
+                  "ID-31"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-31",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "meth21"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-32"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": [
+                  "ID-35",
+                  "ID-36"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-32",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-33"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-34"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-31"
+      },
+      {
+         "id": "ID-33",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-ParameterRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-ParameterRef-parameter"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "parA",
+                     "reference": "ID-35"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-32"
+      },
+      {
+         "id": "ID-34",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-ParameterRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-ParameterRef-parameter"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "parB",
+                     "reference": "ID-36"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-32"
+      },
+      {
+         "id": "ID-35",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "parA"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "entityNoAttrs",
+                     "reference": "ID-30"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-31"
+      },
+      {
+         "id": "ID-36",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "parB"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "entityNoAttrs",
+                     "reference": "ID-30"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-31"
+      },
+      {
+         "id": "ID-37",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Entity"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-BaseType-name"
+               },
+               "value": "entityNoMeths"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Entity-attributes"
+               },
+               "children": [
+                  "ID-38",
+                  "ID-39"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Entity-methods"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-38",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "attrA"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Integer",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-37"
+      },
+      {
+         "id": "ID-39",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "attrB"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "entityNoAttrs",
+                     "reference": "ID-30"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-37"
+      },
+      {
+         "id": "ID-44",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "CC"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-45"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "ANY"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-45",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-StringLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-StringLiteralExpression-value"
+               },
+               "value": "some stuff"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-44"
+      },
+      {
+         "id": "ID-40",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "AA"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-41"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-41",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-MethodCallExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-MethodCallExpression-args"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-MethodCallExpression-methodDefinition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "HH",
+                     "reference": "ID-66"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-40"
+      },
+      {
+         "id": "ID-46",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "DD"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-47"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-47",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-MethodCallExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-MethodCallExpression-args"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-MethodCallExpression-methodDefinition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "AA",
+                     "reference": "ID-40"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-46"
+      },
+      {
+         "id": "ID-48",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "EE"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-49"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": [
+                  "ID-53"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Integer",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-49",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-IfExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-IfExpression-condition"
+               },
+               "children": [
+                  "ID-50"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-IfExpression-whenTrue"
+               },
+               "children": [
+                  "ID-51"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-IfExpression-whenFalse"
+               },
+               "children": [
+                  "ID-52"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-48"
+      },
+      {
+         "id": "ID-50",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-ParameterRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-ParameterRef-parameter"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "test",
+                     "reference": "ID-53"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-51",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "10"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-52",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "666"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-53",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "test"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-48"
+      },
+      {
+         "id": "ID-42",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "BB"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-43"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-43",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "true"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-42"
+      },
+      {
+         "id": "ID-54",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "FF"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-55"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": [
+                  "ID-61"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Integer",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-55",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-SumExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-SumExpression-variable"
+               },
+               "children": [
+                  "ID-56"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-SumExpression-from"
+               },
+               "children": [
+                  "ID-57"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-SumExpression-to"
+               },
+               "children": [
+                  "ID-58"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-SumExpression-body"
+               },
+               "children": [
+                  "ID-59"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-54"
+      },
+      {
+         "id": "ID-56",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-LoopVariable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-LoopVariable-name"
+               },
+               "value": "xx"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-57",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "0"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-58",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "999"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-59",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-ParameterRef"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Expression-appliedfeature"
+               },
+               "children": [
+                  "ID-60"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-ParameterRef-parameter"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "par7",
+                     "reference": "ID-61"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-60",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-AttributeRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-AttributeRef-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "attr2",
+                     "reference": "ID-21"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-59"
+      },
+      {
+         "id": "ID-61",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "par7"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "entity1",
+                     "reference": "ID-19"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-54"
+      },
+      {
+         "id": "ID-62",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "GG"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-63"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": [
+                  "ID-65"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "entity1",
+                     "reference": "ID-19"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-63",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-ParameterRef"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Expression-appliedfeature"
+               },
+               "children": [
+                  "ID-64"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-ParameterRef-parameter"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "myEnt",
+                     "reference": "ID-65"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-62"
+      },
+      {
+         "id": "ID-64",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-AttributeRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-AttributeRef-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "attr4",
+                     "reference": "ID-23"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-63"
+      },
+      {
+         "id": "ID-65",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "myEnt"
+            }
+         ],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "entity1",
+                     "reference": "ID-19"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-62"
+      },
+      {
+         "id": "ID-66",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "HH"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-67"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-67",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "1",
+            "key": "-default-key-StringLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "1",
+                  "key": "-default-key-StringLiteralExpression-value"
+               },
+               "value": "some text as a string literal"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-66"
       }
    ]
 }

@@ -4,7 +4,7 @@
    "nodes": [
       {
          "id": "ID-108",
-         "concept": {
+         "classifier": {
             "key": "FlowDescription",
             "version": "1.0",
             "language": "Education"
@@ -52,7 +52,7 @@
       },
       {
          "id": "ID-109",
-         "concept": {
+         "classifier": {
             "key": "FlowRule",
             "version": "1.0",
             "language": "Education"
@@ -107,7 +107,7 @@
       },
       {
          "id": "ID-110",
-         "concept": {
+         "classifier": {
             "key": "PageTransition",
             "version": "1.0",
             "language": "Education"
@@ -144,7 +144,7 @@
       },
       {
          "id": "ID-111",
-         "concept": {
+         "classifier": {
             "key": "GradeLiteral",
             "version": "1.0",
             "language": "Education"
@@ -170,7 +170,7 @@
       },
       {
          "id": "ID-112",
-         "concept": {
+         "classifier": {
             "key": "PageTransition",
             "version": "1.0",
             "language": "Education"
@@ -207,7 +207,7 @@
       },
       {
          "id": "ID-113",
-         "concept": {
+         "classifier": {
             "key": "GradeLiteral",
             "version": "1.0",
             "language": "Education"
@@ -233,7 +233,7 @@
       },
       {
          "id": "ID-114",
-         "concept": {
+         "classifier": {
             "key": "FlowRule",
             "version": "1.0",
             "language": "Education"
@@ -289,7 +289,7 @@
       },
       {
          "id": "ID-115",
-         "concept": {
+         "classifier": {
             "key": "PageTransition",
             "version": "1.0",
             "language": "Education"
@@ -326,7 +326,7 @@
       },
       {
          "id": "ID-116",
-         "concept": {
+         "classifier": {
             "key": "GradeLiteral",
             "version": "1.0",
             "language": "Education"
@@ -352,7 +352,7 @@
       },
       {
          "id": "ID-117",
-         "concept": {
+         "classifier": {
             "key": "PageTransition",
             "version": "1.0",
             "language": "Education"
@@ -389,7 +389,7 @@
       },
       {
          "id": "ID-118",
-         "concept": {
+         "classifier": {
             "key": "GradeLiteral",
             "version": "1.0",
             "language": "Education"
@@ -415,7 +415,7 @@
       },
       {
          "id": "ID-119",
-         "concept": {
+         "classifier": {
             "key": "PageTransition",
             "version": "1.0",
             "language": "Education"
@@ -452,7 +452,7 @@
       },
       {
          "id": "ID-120",
-         "concept": {
+         "classifier": {
             "key": "GradeLiteral",
             "version": "1.0",
             "language": "Education"
@@ -478,7 +478,7 @@
       },
       {
          "id": "ID-121",
-         "concept": {
+         "classifier": {
             "key": "FlowRule",
             "version": "1.0",
             "language": "Education"
@@ -533,7 +533,7 @@
       },
       {
          "id": "ID-122",
-         "concept": {
+         "classifier": {
             "key": "PageTransition",
             "version": "1.0",
             "language": "Education"
@@ -570,7 +570,7 @@
       },
       {
          "id": "ID-123",
-         "concept": {
+         "classifier": {
             "key": "GradeLiteral",
             "version": "1.0",
             "language": "Education"
@@ -596,7 +596,7 @@
       },
       {
          "id": "ID-124",
-         "concept": {
+         "classifier": {
             "key": "PageTransition",
             "version": "1.0",
             "language": "Education"
@@ -633,7 +633,7 @@
       },
       {
          "id": "ID-125",
-         "concept": {
+         "classifier": {
             "key": "GradeLiteral",
             "version": "1.0",
             "language": "Education"

@@ -9,7 +9,7 @@ Language {
     [
     language ${name} key ${key}
     version ${version}
-    dependsOn languages: ${dependsOn}
+    depends on languages: ${dependsOn}
 
     ${entities vertical}
     ]
@@ -18,17 +18,15 @@ Language {
 
 Concept {
 [
-    concept ${name} abstract ${abstract} {
+    [?${abstract [abstract | concrete]}] concept ${name} [?extends ${extends}] [?implements ${implements}] {
         key: ${key}
         partition: ${partition}
-        extends: ${extends}
-        implements: ${implements}
         ${features vertical }
     }
 ]}
 
 ConceptInterface {[
-    interface ${name} extends ${extends} {
+    interface ${name} [?extends ${extends}] {
         key: ${key}
         ${features vertical }
 ]}
@@ -48,7 +46,13 @@ Reference {[
 ]}
 
 Containment {[
-    ${self.optional [optional | mandatory]} contains ${name} (${key}): ${type} ${self.multiple [* | 1]}
+    ${self.optional [optional | mandatory]} containment ${name} (${key}): ${type} ${self.multiple [* | 1]}
+]}
+
+Annotation {[
+    annotation ${name} annotates ${annotates} [?extends ${extends}] [?implements ${implements}] {
+        multiple ${multiple}
+        ${features vertical }
 ]}
 
 

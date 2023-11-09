@@ -23,7 +23,7 @@
         isSvgBox,
         FreEditor,
         FreLogger,
-        Box, isElementBox
+        Box, isElementBox, isOptionalBox2
     } from "@freon4dsl/core";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
     import GridComponent from "./GridComponent.svelte";
@@ -32,6 +32,7 @@
     import LayoutComponent from "./LayoutComponent.svelte";
     import ListComponent from "./ListComponent.svelte";
     import OptionalComponent from "./OptionalComponent.svelte";
+    import OptionalComponentNew from "./OptionalComponentNew.svelte";
     import TableComponent from "./TableComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
     import TextDropdownComponent from "./TextDropdownComponent.svelte";
@@ -114,6 +115,8 @@
             <ListComponent box={box} editor={editor}/>
         {:else if isOptionalBox(box) }
             <OptionalComponent box={box} editor={editor}/>
+        {:else if isOptionalBox2(box) }
+            <OptionalComponentNew box={box} editor={editor}/>
         {:else if isSvgBox(box) }
             <SvgComponent box={box}/>
         {:else if isTableBox(box) }

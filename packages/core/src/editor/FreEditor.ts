@@ -106,12 +106,12 @@ export class FreEditor {
     /**
      * Sets a new root element in this editor, calculates the projection for this element,
      * which returns the root box.
-     * @param exp
+     * @param node
      */
-    set rootElement(exp: FreNode) {
-        this._rootElement = exp;
+    set rootElement(node: FreNode) {
+        this._rootElement = node;
         // select first editable child
-        this.selectFirstEditableChildBox(exp);
+        this.selectFirstEditableChildBox(node);
     }
 
     get rootElement(): FreNode {
@@ -150,7 +150,7 @@ export class FreEditor {
      * @param caretPosition
      */
     selectElement(element: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
-        console.log("selectElement " + element?.freLanguageConcept() + " with id " + element?.freId() + ", property: [" + propertyName + ", " + propertyIndex + "]");
+        LOGGER.log("selectElement " + element?.freLanguageConcept() + " with id " + element?.freId() + ", property: [" + propertyName + ", " + propertyIndex + "]");
         if (this.checkParam(element)) {
             const box = this.projection.getBox(element);
             const propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
@@ -234,7 +234,7 @@ export class FreEditor {
     }
 
     private selectParentForBox(box: Box) { // private method needed because of recursion
-        console.log("==> selectParent of " + box?.role + " of kind " + box?.kind);
+        LOGGER.log("==> selectParent of " + box?.role + " of kind " + box?.kind);
         const parent = box?.parent;
         if (!!parent) {
             // todo too much recursion when called from a Dropdown!!!
@@ -252,8 +252,8 @@ export class FreEditor {
      */
     deleteBox(box: Box) {
         LOGGER.log("deleteBox");
-        const exp: FreNode = box.element;
-        const ownerDescriptor: FreOwnerDescriptor = exp.freOwnerDescriptor();
+        const node: FreNode = box.element;
+        const ownerDescriptor: FreOwnerDescriptor = node.freOwnerDescriptor();
         if (ownerDescriptor !== null) {
             LOGGER.log("remove from parent splice " + [ownerDescriptor.propertyIndex] + ", 1");
             const propertyIndex = ownerDescriptor.propertyIndex;

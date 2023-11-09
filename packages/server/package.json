@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/server",
-  "version": "0.6.0-beta.3",
+  "version": "0.6.0-beta.5",
   "publishConfig": {
     "access": "public"
   },
@@ -24,6 +24,7 @@
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "republish-local": "yarn unpublish-local && yarn publish-local",
     "test": "jest"
   },
   "dependencies": {

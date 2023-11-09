@@ -11,8 +11,8 @@ export class SvgBox extends Box {
     viewBoxWidth: number = 20;
     viewBoxHeight: number = 20;
 
-    constructor(element: FreNode, role: string, svgPath: string, initializer?: Partial<SvgBox>) {
-        super(element, role);
+    constructor(node: FreNode, role: string, svgPath: string, initializer?: Partial<SvgBox>) {
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.svgPath = svgPath;
         this.selectable = false;

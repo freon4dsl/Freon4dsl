@@ -19,14 +19,14 @@ export abstract class TableBox extends Box {
     public hasHeaders: boolean = false;
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    protected constructor(element: FreNode,
+    protected constructor(node: FreNode,
                           propertyName: string,
                           conceptName: string,
                           role: string,
                           hasHeaders: boolean,
                           children?: Box[],
                           initializer?: Partial<TableBoxRowOriented>) {
-        super(element, role);
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
         if (!!children) {
             children.forEach(b => this.addChild(b));

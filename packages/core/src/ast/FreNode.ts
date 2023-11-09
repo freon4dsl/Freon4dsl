@@ -26,5 +26,5 @@ export interface FreNode {
 
     match(toBeMatched: Partial<FreNode>): boolean;
 
-    parseLocation?: FreParseLocation;    // if relevant, the location of this element within the source from which it is parsed
+    parseLocation?: FreParseLocation;    // if relevant, the location of this node within the source from which it is parsed
 }

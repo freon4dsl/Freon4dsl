@@ -20,7 +20,7 @@ export class SelectBox extends AbstractChoiceBox {
     }
 
     constructor(
-        exp: FreNode,
+        node: FreNode,
         role: string,
         placeHolder: string,
         getOptions: (editor: FreEditor) => SelectOption[],
@@ -28,7 +28,7 @@ export class SelectBox extends AbstractChoiceBox {
         selectOption: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult,
         initializer?: Partial<SelectBox>
     ) {
-        super(exp, role, placeHolder, initializer);
+        super(node, role, placeHolder, initializer);
         this.getAllOptions = getOptions;
         this.getSelectedOption = getSelectedOption;
         this.selectOption = selectOption;

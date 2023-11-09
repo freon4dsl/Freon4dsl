@@ -56,15 +56,15 @@ export class ActionBox extends AbstractChoiceBox {
      * @param editor
      */
     getOptions(editor: FreEditor): SelectOption[] {
-        console.log("getOptions for " + this.$id + "- " + this.conceptName + "." + this.propertyName);
+        LOGGER.log("getOptions for " + this.$id + "- " + this.conceptName + "." + this.propertyName);
         const result: SelectOption[] = [];
         if ( !!this.propertyName && !!this.conceptName) {
-            console.log(`  has property ${this.propertyName} and concept ${this.conceptName}`);
+            LOGGER.log(`  has property ${this.propertyName} and concept ${this.conceptName}`);
             // If the action box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
             const clsOtIntf = FreLanguage.getInstance().classifier(this.conceptName);
             const propDef = FreLanguage.getInstance().classifierProperty(this.conceptName, this.propertyName);
-            console.log(`clsIntf: ${clsOtIntf} prop kind: ${propDef?.propertyKind}`);
+            LOGGER.log(`clsIntf: ${clsOtIntf} prop kind: ${propDef?.propertyKind}`);
             clsOtIntf.subConceptNames.concat(this.conceptName).forEach((creatableConceptname: string) => {
                 const creatableConcept = FreLanguage.getInstance().classifier(creatableConceptname);
                 LOGGER.log(`creatableConcept: ${creatableConcept}`)
@@ -78,10 +78,10 @@ export class ActionBox extends AbstractChoiceBox {
         } else if (!!this.propertyName) {
             // Reference property
             const propDef = FreLanguage.getInstance().classifierProperty(this.element.freLanguageConcept(), this.propertyName);
-            console.log(`parent: ${this.element.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`);
+            LOGGER.log(`parent: ${this.element.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`);
             this.addReferences(this.element, propDef, result, editor);
         } else {
-            console.log("No property and concept defined for action box " + this.role);
+            LOGGER.log("No property and concept defined for action box " + this.role);
         }
         // Using the new actions:
         // Now look in all actions defined in the editor whether they fit this action, except for the keyboard shortcuts
@@ -162,7 +162,7 @@ export class ActionBox extends AbstractChoiceBox {
         // current element.  This way the new element is not part of the model and will not trigger mobx
         // reactions. But the scoper can be used to find available references, because the scoper only
         // needs the owner.
-        console.log("addReferences: " + parentNode.freLanguageConcept() + " property " + property.name)
+        LOGGER.log("addReferences: " + parentNode.freLanguageConcept() + " property " + property.name)
         const propType: string = property.type;
         const self: ActionBox = this;
         runInAction(() => {

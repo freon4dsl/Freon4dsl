@@ -14,8 +14,8 @@ export abstract class LayoutBox extends Box {
     protected direction: ListDirection = ListDirection.HORIZONTAL;
     protected _children: Box[] = [];
 
-    protected constructor(element: FreNode, role: string, children?: Box[], initializer?: Partial<LayoutBox>) {
-        super(element, role);
+    protected constructor(node: FreNode, role: string, children?: Box[], initializer?: Partial<LayoutBox>) {
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
         if (!!children) {
             children.forEach(b => this.addChildNoDirty(b));

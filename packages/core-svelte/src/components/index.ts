@@ -6,6 +6,7 @@ import IndentComponent from './IndentComponent.svelte';
 import LabelComponent from './LabelComponent.svelte';
 import ListComponent from './ListComponent.svelte';
 import OptionalComponent from './OptionalComponent.svelte';
+import OptionalComponentNew from './OptionalComponentNew.svelte';
 import FreonComponent from './FreonComponent.svelte';
 import RenderComponent from './RenderComponent.svelte';
 import SvgComponent from './SvgComponent.svelte';
@@ -21,6 +22,7 @@ export {
     LabelComponent,
     ListComponent,
     OptionalComponent,
+    OptionalComponentNew,
     FreonComponent,
     RenderComponent,
     SvgComponent,

@@ -39,6 +39,13 @@ concept Concept base Classifier {
     reference implements: ConceptInterface[];
 }
 
+concept Annotation base Classifier {
+    multiple: boolean;
+    reference annotates: Classifier;
+    reference extends?: Concept;
+    reference implements: ConceptInterface[];
+}
+
 abstract concept Link base Feature  {
     multiple: boolean;
     reference type: Classifier;

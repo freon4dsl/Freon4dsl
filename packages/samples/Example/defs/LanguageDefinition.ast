@@ -1,6 +1,6 @@
 language Example
 
-model Demo {
+model Example {
     name: identifier;
     units: ExampleUnit[];
     rules: Rules[];
