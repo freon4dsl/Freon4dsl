@@ -46,7 +46,7 @@ export type LwNode = {
     id: Id;
     classifier: LwMetaPointer;
     properties: LwProperty[];
-    children: LwChild[];
+    containments: LwContainment[];
     references: LwReference[];
     parent: string;
 }
@@ -56,7 +56,7 @@ export function isLwNode(box: any): box is LwNode {
     return lwNode.id !== undefined &&
         lwNode.classifier !== undefined &&
         lwNode.properties !== undefined &&
-        lwNode.children !== undefined &&
+        lwNode.containments !== undefined &&
         lwNode.references !== undefined &&
         lwNode.parent !== undefined;
 }
@@ -66,7 +66,7 @@ export function createLwNode(): LwNode {
         id: null,
         classifier: null,
         properties: [],
-        children: [],
+        containments: [],
         references: [],
         parent: null
     }
@@ -83,13 +83,13 @@ export function isLwProperty(obj: any): obj is LwProperty {
         lwProperty.value !== undefined;
 }
 
-export type LwChild = {
+export type LwContainment = {
     containment: LwMetaPointer;
     children: string[];
 }
 
-export function isLwChild(obj: any): obj is LwChild {
-    const lwChild = obj as LwChild;
+export function isLwChild(obj: any): obj is LwContainment {
+    const lwChild = obj as LwContainment;
     return lwChild.containment !== undefined &&
         lwChild.children !== undefined;
 }

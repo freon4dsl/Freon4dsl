@@ -3,7 +3,7 @@ import { FreLanguage, FreLanguageProperty } from "../language";
 import { FreLogger } from "../logging/index";
 import { FreUtils, isNullOrUndefined, jsonAsString } from "../util";
 import { FreSerializer } from "./FreSerializer";
-import { createLwNode, isLwChunk, LwChild, LwChunk, LwMetaPointer, LwNode, LwReference } from "./LionwebM3";
+import { createLwNode, isLwChunk, LwContainment, LwChunk, LwMetaPointer, LwNode, LwReference } from "./LionwebM3";
 
 const LOGGER = new FreLogger("FreLionwebSerializer");
 /**
@@ -209,7 +209,7 @@ export class FreLionwebSerializer implements FreSerializer {
     }
 
     private convertChildProperties(freNode: FreNode, concept: string, jsonObject: LwNode): ParsedChild[] {
-        const jsonChildren = jsonObject.children;
+        const jsonChildren = jsonObject.containments;
         FreUtils.CHECK(Array.isArray(jsonChildren), "Found children value which is not a Array for node: " + jsonObject.id);
         const parsedChildren: ParsedChild[] = [];
         for (const jsonChild of Object.values(jsonChildren)) {
@@ -372,7 +372,7 @@ export class FreLionwebSerializer implements FreSerializer {
                     LOGGER.log("PART is null: " + + parentNode["name"] + "." + p.name);
                     break;
                 }
-                const child: LwChild = {
+                const child: LwContainment = {
                     containment: this.createMetaPointer(p.key, p.language),
                     children: []
                 };
@@ -385,7 +385,7 @@ export class FreLionwebSerializer implements FreSerializer {
                     // single value
                     child.children.push((!!value ? this.convertToJSONinternal(value as FreNode, publicOnly, idMap) : null).id);
                 }
-                result.children.push(child);
+                result.containments.push(child);
                 break;
             case "reference":
                 const lwReference: LwReference = {
