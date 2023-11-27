@@ -210,7 +210,7 @@ function addListElement(listParent: FreNode, propertyName: string, index: number
     if (!before) {
         index++;
     }
-    // console.log(`addListElement=> listParent: ${listParent.freLanguageConcept()}, isList: ${isList},
+    // LOGGER.log(`addListElement=> listParent: ${listParent.freLanguageConcept()}, isList: ${isList},
     // targetPropertyName ${propertyName}, index: ${index}`);
 
     // make the change, if the property is a list and the type of the new element conforms to the type of elements in the list
@@ -219,11 +219,11 @@ function addListElement(listParent: FreNode, propertyName: string, index: number
         console.error("New element undefined"); // TODO Find out why this happens sometimes
         return;
     } else if (isList && FreLanguage.getInstance().metaConformsToType(newElement, type)) { // allow subtyping
-        // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
+        // LOGGER.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
         runInAction(() => {
             property.splice(index, 0, newElement);
         });
-        // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
+        // LOGGER.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
     }
 }
 
