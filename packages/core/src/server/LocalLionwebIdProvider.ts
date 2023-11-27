@@ -4,11 +4,11 @@ export class LocalLionwebIdProvider implements IdProvider {
     index: number = 300;
 
     newId(): string {
-        let newId = "ID-" + this.index;
         this.index++;
+        let newId = "ID-" + this.index;
         while (this.existingIds.includes(newId)) {
-            let newId = "ID-" + this.index;
             this.index++;
+            newId = "ID-" + this.index;
         }
         this.usedId(newId);
         return newId;
