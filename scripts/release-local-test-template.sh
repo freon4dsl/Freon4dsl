@@ -16,7 +16,7 @@ cd ../tmp
 rm -rf Freon-template
 git clone https://github.com/freon4dsl/Freon-template.git
 cd Freon-template
-git checkout 0.6.0-beta.6
+git checkout 0.6.0
 yarn install --registry http://localhost:4873
 yarn generate
 yarn build
