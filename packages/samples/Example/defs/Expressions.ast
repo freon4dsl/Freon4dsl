@@ -1,5 +1,20 @@
 language Example
 
+interface BaseType {
+    name: identifier;
+}
+
+limited PrimitiveType implements Type {
+    name: identifier;
+    extra: number;
+    String = { "extra": 199}
+    Integer = { "extra": 240261}
+    Boolean = { "extra": 5479}
+    ANY = { name: "++", "extra": 456}
+}
+
+concept DateType implements Type {
+}
 
 abstract expression Expression {
     appliedfeature?: AppliedFeature;
