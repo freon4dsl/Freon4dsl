@@ -54,6 +54,7 @@ Go to directory `packages/server` and start the server:
 Goto the playground directory `packages/playground` (or stay there if you are already there) and start Freon:
 ```bash
     cd packages/playground
+    yarn prepare-app
     yarn dev
 ```   
 This will open a browser with the example from the playground package on 
