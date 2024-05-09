@@ -20,12 +20,12 @@
     "start": "cross-env NODE_ENV=development NODE_PORT=3002 nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server-starter.ts",
     "build": "tsc --build",
     "build-verbose": "tsc --build --verbose --listFiles --listEmittedFiles",
-    "build-release": "yarn build",
+    "build-release": "npm run build",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
-    "republish-local": "yarn unpublish-local && yarn publish-local",
+    "republish-local": "npm run unpublish-local && npm run publish-local",
     "test": "jest"
   },
   "dependencies": {

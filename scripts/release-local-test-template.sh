@@ -17,9 +17,9 @@ rm -rf Freon-template
 git clone https://github.com/freon4dsl/Freon-template.git
 cd Freon-template
 git checkout 0.6.0
-yarn install --registry http://localhost:4873
-yarn generate
-yarn build
-yarn prepare-app
-yarn model-server &
-yarn dev
+npm install --registry http://localhost:4873
+npm run generate
+npm run build
+npm run prepare-app
+npm run model-server &
+npm run dev

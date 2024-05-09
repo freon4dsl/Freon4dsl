@@ -34,11 +34,11 @@
     "typer-test8": "bash ../../scripts/freon-dev.sh all -d src/typer-test8/defs -o src/typer-test8",
     "undo-tester": "bash ../../scripts/freon-dev.sh all -d src/UndoTester/defs -o src/UndoTester",
     "vehicles": "bash ../../scripts/freon-dev.sh all -d src/vehicles/defs -o src/vehicles",
-    "build": "yarn demo && yarn octopus && yarn parser-conc && yarn basic-props && yarn parsergen && yarn imports && yarn defaultscoper && yarn definedscoper && yarn langconstr && yarn noparser && yarn prim-gen && yarn testproject && yarn typer-test8 && yarn undo-tester && yarn vehicles && tsc",
+    "build": "npm run demo && npm run octopus && npm run parser-conc && npm run basic-props && npm run parsergen && npm run imports && npm run defaultscoper && npm run definedscoper && npm run langconstr && npm run noparser && npm run prim-gen && npm run testproject && npm run typer-test8 && npm run undo-tester && npm run vehicles && tsc",
     "clean-config": "rm */*/config/FreonConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-parser": "rm -r */*/*parse*",
-    "clean-code": "yarn clean-config && yarn clean-custom",
+    "clean-code": "npm run clean-config && npm run clean-custom",
     "clean-demo": "bash ../../scripts/freon-dev.sh clean-it -d src/demo/defs -o src/demo",
     "clean-octopus": "bash ../../scripts/freon-dev.sh clean-it -f -d src/octopus-small/defs -o src/octopus-small",
     "clean-parser-conc": "bash ../../scripts/freon-dev.sh clean-it -f -d src/parser-basic-concepts/defs -o src/parser-basic-concepts",
@@ -54,7 +54,7 @@
     "clean-typer-test8": "bash ../../scripts/freon-dev.sh clean-it -d src/typer-test8/defs -o src/typer-test8",
     "clean-undo-tester": "bash ../../scripts/freon-dev.sh clean-it -d src/UndoTester/defs -o src/UndoTester",
     "clean-vehicles": "bash ../../scripts/freon-dev.sh clean-it -f -d src/vehicles/defs -o src/vehicles",
-    "clean-all-projects": "yarn clean-demo && yarn clean-octopus && yarn clean-parser-conc && yarn clean-basic-props && yarn clean-parsergen && yarn clean-imports && yarn clean-defaultscoper && yarn clean-definedscoper && yarn clean-langconstr && yarn clean-noparser && yarn clean-prim-gen && yarn clean-testproject && yarn clean-typer-test8 && yarn clean-vehicles",
+    "clean-all-projects": "npm run clean-demo && npm run clean-octopus && npm run clean-parser-conc && npm run clean-basic-props && npm run clean-parsergen && npm run clean-imports && npm run clean-defaultscoper && npm run clean-definedscoper && npm run clean-langconstr && npm run clean-noparser && npm run clean-prim-gen && npm run clean-testproject && npm run clean-typer-test8 && npm run clean-vehicles",
     "test": "jest"
   },
   "dependencies": {

@@ -17,9 +17,9 @@ rm -rf Freon-example
 git clone https://github.com/freon4dsl/Freon-example.git
 cd Freon-example
 git checkout 0.6.0
-yarn install-local
-yarn generate
+npm run install-local
+npm run generate
 # yarn build
-yarn model-server &
-yarn prepare-app
-yarn dev
+npm run model-server &
+npm run prepare-app
+npm run dev

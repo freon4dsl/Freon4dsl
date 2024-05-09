@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "build-release": "yarn run build",
+    "build-release": "npm run build",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "test": "jest --config ./jest.config.js",
     "start": "echo Start core",
@@ -23,7 +23,7 @@
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
-    "republish-local": "yarn unpublish-local && yarn publish-local"
+    "republish-local": "npm run unpublish-local && npm run publish-local"
   },
   "dependencies": {
     "lodash": "^4.17.21",

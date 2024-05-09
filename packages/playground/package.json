@@ -11,7 +11,7 @@
     "start": "sirv public",
     "validate": "svelte-check --tsconfig ./tsconfig.json",
     "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
-    "install-local": "yarn install --registry http://localhost:4873",
+    "install-local": "npm install --registry http://localhost:4873",
     "prepare-app": "npm run styles-light && npm run styles-dark",
     "styles-light": "smui-theme compile public/site.css -i src/webapp/style",
     "styles-dark": "smui-theme compile public/site-dark.css -i src/webapp/style/dark",
@@ -79,10 +79,10 @@
     "install-undo":         "ts-node ../tools/src/InstallLanguage.ts install -d ../samples/UndoTester -t ./src",
     "install-simple":       "ts-node ../tools/src/InstallLanguage.ts install -d ../samples/SimpleProject -t ./src",
     "clean-libraries": "bash ../../scripts/freon-dev.sh clean-it -f -d src/libraries-test/defs -o src/libraries-test",
-    "clean-all-examples": "yarn clean-calculator && yarn clean-example && yarn clean-graphviz && yarn clean-heating && yarn clean-json && yarn clean-libraries && yarn clean-expressions && yarn clean-octopus && yarn clean-openhab && yarn clean-pi-languages && yarn clean-rules && yarn clean-taxrules",
+    "clean-all-examples": "npm run clean-calculator && npm run clean-example && npm run clean-graphviz && npm run clean-heating && npm run clean-json && npm run clean-libraries && npm run clean-expressions && npm run clean-octopus && npm run clean-openhab && npm run clean-pi-languages && npm run clean-rules && npm run clean-taxrules",
     "clean-config": "rm */*/config/FreonConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
-    "clean-code": "yarn clean-config && yarn clean-custom"
+    "clean-code": "npm run clean-config && npm run clean-custom"
   },
   "devDependencies": {
     "@material/theme": "^13.0.0",

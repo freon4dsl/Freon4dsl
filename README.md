@@ -15,9 +15,8 @@ For more information see the <a href="https://www.freon4dsl.dev" target="_blank"
 
 ## Developing Freon
 
-The main prerequisites are: [Node.js](https://nodejs.org/) and [yarn](https://yarnpkg.com/).
+The main prerequisites are: [Node.js](https://nodejs.org/) and [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/).
 We are typically using the latest versions of both, although older versions likely work just as well.
-You could also try and use NPM instead of yarn.
 
 Clone or fork this github project, check out the `development` branch, and install dependencies:
 ```bash
@@ -37,8 +36,8 @@ Choose one of the projects in playground. Note that not all of them will work co
 Generate the code for that project (we have choosen the 'example' project):
 ```bash
   cd packages/playground
-  yarn install-example
-  yarn example
+  npm run install-example
+  npm run example
 ```
 
 To start the projectional editor for the choosen language in the playground package,
@@ -47,14 +46,14 @@ do two things in separate terminals:
 Go to directory `packages/server` and start the server:
 ```bash
     cd packages/server
-    yarn start
+    npm run start
 ```
 
 Goto the playground directory `packages/playground` (or stay there if you are already there) and start Freon:
 ```bash
     cd packages/playground
-    yarn prepare-app
-    yarn dev
+    npm run prepare-app
+    npm run dev
 ```   
 This will open a browser with the example from the playground package on 
 the URL displayed: `http://localhost:5000/`. The example and all other projects in playground are
