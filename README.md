@@ -19,19 +19,18 @@ The main prerequisites are: [Node.js](https://nodejs.org/) and [yarn](https://ya
 We are typically using the latest versions of both, although older versions likely work just as well.
 You could also try and use NPM instead of yarn.
 
-Clone or fork this github project, check out the `development` branch, and install lerna:
+Clone or fork this github project, check out the `development` branch, and install dependencies:
 ```bash
   git clone https://github.com/freon4dsl/Freon4dsl.git
-  yarn global add lerna
 ```
-Setup the lerna structure:
+Setup the multirepo and install all dependencies:
 ```bash
-  yarn bootstrap
+  npm install
 ```
 
 Now you can build Freon with:
 ```bash
-  yarn build
+  npm run build
 ```
 
 Choose one of the projects in playground. Note that not all of them will work correctly (it is a playground :-)). 

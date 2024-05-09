@@ -6,6 +6,8 @@
     "start": "npm run start --stream --parallel",
     "build": "npm run build -w packages --if-present",
     "build-release": "npm run build-release -w packages --if-present",
+    "publish-local": "npm run publish-local -w packages --if-present",
+    "unpublish-local": "npm run unpublish-local -w packages --if-present",
     "lint": "npm run lint -w packages --if-present",
     "setup": "npm run setup -w packages --if-present",
     "test": "npm run test -w packages --if-present",
@@ -30,8 +32,6 @@
     "jest": "27.0.6",
     "jest-css-modules-transform": "2.1.1",
     "js-yaml": "3.13.1",
-    "lerna": "3.20.2",
-    "mobx-devtools": "0.9.21",
     "nodemon": "1.19.0",
     "pegjs": "0.10.0",
     "prettier": "2.5.1",
@@ -55,9 +55,6 @@
     "tslib": "2.4.0",
     "typescript": "4.5.5",
     "typescript-svelte-plugin": "0.3.14"
-  },
-  "resolutions": {
-    "electron": "^11.0.1"
   },
   "workspaces": [
     "packages/core",

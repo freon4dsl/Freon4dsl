@@ -6,9 +6,9 @@ set -e
 verdaccio &
 
 # publish freon
-lerna run build-release
-lerna run unpublish-local
-lerna run publish-local
+npm run build-release
+npm run unpublish-local
+npm run publish-local
 
 # checkout and build example project
 mkdir -p ../tmp
