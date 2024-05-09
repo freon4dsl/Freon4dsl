@@ -170,7 +170,7 @@ export class FreonCleanAction extends CommandLineAction {
                     languageFiles.push(filename);
                 }
             }
-            this.language = new LanguageParser("dummy").parseMulti(languageFiles);
+            this.language = new LanguageParser().parseMulti(languageFiles);
         }
     }
 }

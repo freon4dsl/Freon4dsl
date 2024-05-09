@@ -5,8 +5,8 @@ import { ServerCommunication } from "@freon4dsl/core";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { LionCoreM3Environment } from "../../lionwebM3/config/gen/LionCoreM3Environment";
-export const editorEnvironment: FreEnvironment = LionCoreM3Environment.getInstance();
+import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
+export const editorEnvironment: FreEnvironment = ExampleEnvironment.getInstance();
 LanguageInitializer.initialize();
 
 /**

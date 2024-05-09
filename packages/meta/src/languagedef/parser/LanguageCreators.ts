@@ -48,7 +48,7 @@ export function createLanguage(data: Partial<FreMetaLanguage>): FreMetaLanguage 
         result.name = data.name;
         result.id = LanguageCreators_idMap.getLanguageId(result.name);
         result.key = LanguageCreators_idMap.getLanguageKey(result.name);
-        console.log("LANGUAGE NAME IS [" + data.name + "] " + "key " + result.key + " id " + result.id);
+        // console.log("LANGUAGE NAME IS [" + data.name + "] " + "key " + result.key + " id " + result.id);
         result.usedLanguages.push(data.name);
     }
     if (!!data.concepts) {
