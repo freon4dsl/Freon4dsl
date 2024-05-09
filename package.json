@@ -34,7 +34,7 @@
     "js-yaml": "3.13.1",
     "nodemon": "1.19.0",
     "pegjs": "0.10.0",
-    "prettier": "2.5.1",
+    "@prettier/sync": "^0.5.2",
     "prettier-plugin-svelte": "2.6.0",
     "reflect-metadata": "0.1.13",
     "rollup": "2.53.1",
