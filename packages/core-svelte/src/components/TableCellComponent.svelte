@@ -217,7 +217,7 @@
         on:focus={() => {}}
         on:blur={() => {}}
         on:keydown={onKeydown}
-        on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event)}
+
         tabIndex={0}
         bind:this={htmlElement}
 >

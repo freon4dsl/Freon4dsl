@@ -6,8 +6,8 @@ import { ServerCommunication } from "../server/ServerCommunication";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { EducationEnvironment } from "../../Education/config/gen/EducationEnvironment";
-export const editorEnvironment: FreEnvironment = EducationEnvironment.getInstance();
+import { LayoutTestsEnvironment } from "../../LayoutTests/config/gen/LayoutTestsEnvironment";
+export const editorEnvironment: FreEnvironment = LayoutTestsEnvironment.getInstance();
 LanguageInitializer.initialize();
 
 /**

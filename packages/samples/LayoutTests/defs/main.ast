@@ -1,0 +1,9 @@
+language LayoutTests
+
+modelunit Tests {
+    aList: Element[];
+}
+
+concept Element {
+    name: identifier;
+}
