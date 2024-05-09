@@ -2,15 +2,13 @@
   "name": "freon4dsl",
   "private": true,
   "scripts": {
-    "alive": "echo I am alive",
-    "bootstrap": "lerna bootstrap",
-    "cleanup": "rm -rf ./node_modules",
-    "start": "lerna run start --stream --parallel",
-    "build": "lerna run build --stream",
-    "build-release": "lerna run build-release --stream",
-    "test": "lerna run test --stream",
-    "lint": "lerna run lint --stream",
-    "nuke": "lerna exec \"rm -f package-lock.json npm-shrinkwrap.json\" && lerna clean --yes && lerna bootstrap && lerna exec --stream -- \"test -f package-lock.json || npm install --package-lock-only\"",
+    "clean": "rm -rf node_modules/ && npm run clean -w packages --if-present",
+    "start": "npm run start --stream --parallel",
+    "build": "npm run build -w packages --if-present",
+    "build-release": "npm run build-release -w packages --if-present",
+    "lint": "npm run lint -w packages --if-present",
+    "setup": "npm run setup -w packages --if-present",
+    "test": "npm run test -w packages --if-present",
     "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css"
   },
   "devDependencies": {
@@ -55,10 +53,6 @@
     "ts-node": "^10.9.1",
     "ts-pegjs": "0.2.6",
     "tslib": "2.4.0",
-    "tslint": "6.1.3",
-    "tslint-config-prettier": "1.18.0",
-    "tslint-eslint-rules": "5.4.0",
-    "tslint-microsoft-contrib": "6.2.0",
     "typescript": "4.5.5",
     "typescript-svelte-plugin": "0.3.14"
   },

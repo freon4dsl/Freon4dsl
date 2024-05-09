@@ -11,6 +11,7 @@
   },
   "type": "module",
   "scripts": {
+    "clean": "rm -rf node_modules/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "meta-it": "bash ../../scripts/freon-dev.sh -v meta-it -l src/demo/defs/LanguageDefinition.ast -o src/demo",
     "scope-it": "bash ../../scripts/freon-dev.sh -v scope-it -l src/demo/defs/LanguageDefinition.ast -s src/demo/defs/LanguageDefinition.scope -o src/demo",
@@ -37,7 +38,7 @@
     "clean-config": "rm */*/config/FreonConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-parser": "rm -r */*/*parse*",
-    "clean": "yarn clean-config && yarn clean-custom",
+    "clean-code": "yarn clean-config && yarn clean-custom",
     "clean-demo": "bash ../../scripts/freon-dev.sh clean-it -d src/demo/defs -o src/demo",
     "clean-octopus": "bash ../../scripts/freon-dev.sh clean-it -f -d src/octopus-small/defs -o src/octopus-small",
     "clean-parser-conc": "bash ../../scripts/freon-dev.sh clean-it -f -d src/parser-basic-concepts/defs -o src/parser-basic-concepts",

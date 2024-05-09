@@ -4,6 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "clean": "rm -rf node_modules/",
     "build": "echo No build for playground",
     "build-app": "rollup -c",
     "dev": "cross-env NODE_PORT=3002 rollup -c -w",
@@ -81,7 +82,7 @@
     "clean-all-examples": "yarn clean-calculator && yarn clean-example && yarn clean-graphviz && yarn clean-heating && yarn clean-json && yarn clean-libraries && yarn clean-expressions && yarn clean-octopus && yarn clean-openhab && yarn clean-pi-languages && yarn clean-rules && yarn clean-taxrules",
     "clean-config": "rm */*/config/FreonConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
-    "clean": "yarn clean-config && yarn clean-custom"
+    "clean-code": "yarn clean-config && yarn clean-custom"
   },
   "devDependencies": {
     "@material/theme": "^13.0.0",
