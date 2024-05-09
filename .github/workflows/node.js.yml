@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 16.x ]
+        node-version: [ 18.x ]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -26,11 +26,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         # cache: 'npm'
-    - run: npm install --global yarn@1.22.19
-    - run: yarn cache clean --all
-    - run: yarn install
-    - run: yarn build
-    - run: yarn test
+    - run: npm install
+    - run: nmp run build
+    - run: npm run test
 
 #    - name: Send mail
 #      if: always()
