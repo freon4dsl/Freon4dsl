@@ -10,7 +10,7 @@ export const TEST4GrammarStr = \`
 namespace TEST4Language
 grammar TEST4Grammar {
 
-// rules for \\"TEST_CHOICES\\"
+// rules for "TEST_CHOICES"
 TEST_CHOICES = Aa
 	 Bb
 	 __fre_super_Cc
@@ -45,15 +45,15 @@ __fre_super_Cc = Cc
 __fre_reference = [ identifier / '.' ]+ ;
 
 // white space and comments
-skip WHITE_SPACE = \\"\\\\\\\\s+\\" ;
-skip SINGLE_LINE_COMMENT = \\"//[^\\\\\\\\r\\\\\\\\n]*\\" ;
-skip MULTI_LINE_COMMENT = \\"/\\\\\\\\*[^*]*\\\\\\\\*+(?:[^*/][^*]*\\\\\\\\*+)*/\\" ;
+skip WHITE_SPACE = "\\\\s+" ;
+skip SINGLE_LINE_COMMENT = "//[^\\\\r\\\\n]*" ;
+skip MULTI_LINE_COMMENT = "/\\\\*[^*]*\\\\*+(?:[^*/][^*]*\\\\*+)*/" ;
 
 // the predefined basic types
-leaf identifier          = \\"[a-zA-Z_][a-zA-Z0-9_]*\\" ;
+leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
-leaf stringLiteral       = '\\"' \\"[^\\\\\\\\\\"\\\\\\\\\\\\\\\\]*(\\\\\\\\\\\\\\\\.[^\\\\\\\\\\"\\\\\\\\\\\\\\\\]*)*\\" '\\"' ;
-leaf numberLiteral       = \\"[0-9]+\\";
+leaf stringLiteral       = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
+leaf numberLiteral       = "[0-9]+";
 leaf booleanLiteral      = 'false' | 'true';
 
 }\`; // end of grammar
@@ -70,7 +70,7 @@ export const TEST3GrammarStr = \`
 namespace TEST3Language
 grammar TEST3Grammar {
 
-// rules for \\"TEST_LISTS\\"
+// rules for "TEST_LISTS"
 TEST_LISTS = Aa
 	 Bb
 	 Cc
@@ -103,15 +103,15 @@ Hh = ( '%' __fre_reference )* ;
 __fre_reference = [ identifier / '.' ]+ ;
 
 // white space and comments
-skip WHITE_SPACE = \\"\\\\\\\\s+\\" ;
-skip SINGLE_LINE_COMMENT = \\"//[^\\\\\\\\r\\\\\\\\n]*\\" ;
-skip MULTI_LINE_COMMENT = \\"/\\\\\\\\*[^*]*\\\\\\\\*+(?:[^*/][^*]*\\\\\\\\*+)*/\\" ;
+skip WHITE_SPACE = "\\\\s+" ;
+skip SINGLE_LINE_COMMENT = "//[^\\\\r\\\\n]*" ;
+skip MULTI_LINE_COMMENT = "/\\\\*[^*]*\\\\*+(?:[^*/][^*]*\\\\*+)*/" ;
 
 // the predefined basic types
-leaf identifier          = \\"[a-zA-Z_][a-zA-Z0-9_]*\\" ;
+leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
-leaf stringLiteral       = '\\"' \\"[^\\\\\\\\\\"\\\\\\\\\\\\\\\\]*(\\\\\\\\\\\\\\\\.[^\\\\\\\\\\"\\\\\\\\\\\\\\\\]*)*\\" '\\"' ;
-leaf numberLiteral       = \\"[0-9]+\\";
+leaf stringLiteral       = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
+leaf numberLiteral       = "[0-9]+";
 leaf booleanLiteral      = 'false' | 'true';
 
 }\`; // end of grammar
@@ -128,7 +128,7 @@ export const TEST1GrammarStr = \`
 namespace TEST1Language
 grammar TEST1Grammar {
 
-// rules for \\"TEST_PRIMS\\"
+// rules for "TEST_PRIMS"
 TEST_PRIMS = Aa
 	 Bb
 	 Cc
@@ -162,15 +162,15 @@ Jj = ( '=' numberLiteral )* ;
 __fre_reference = [ identifier / '.' ]+ ;
 
 // white space and comments
-skip WHITE_SPACE = \\"\\\\\\\\s+\\" ;
-skip SINGLE_LINE_COMMENT = \\"//[^\\\\\\\\r\\\\\\\\n]*\\" ;
-skip MULTI_LINE_COMMENT = \\"/\\\\\\\\*[^*]*\\\\\\\\*+(?:[^*/][^*]*\\\\\\\\*+)*/\\" ;
+skip WHITE_SPACE = "\\\\s+" ;
+skip SINGLE_LINE_COMMENT = "//[^\\\\r\\\\n]*" ;
+skip MULTI_LINE_COMMENT = "/\\\\*[^*]*\\\\*+(?:[^*/][^*]*\\\\*+)*/" ;
 
 // the predefined basic types
-leaf identifier          = \\"[a-zA-Z_][a-zA-Z0-9_]*\\" ;
+leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
-leaf stringLiteral       = '\\"' \\"[^\\\\\\\\\\"\\\\\\\\\\\\\\\\]*(\\\\\\\\\\\\\\\\.[^\\\\\\\\\\"\\\\\\\\\\\\\\\\]*)*\\" '\\"' ;
-leaf numberLiteral       = \\"[0-9]+\\";
+leaf stringLiteral       = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
+leaf numberLiteral       = "[0-9]+";
 leaf booleanLiteral      = 'false' | 'true';
 
 }\`; // end of grammar
@@ -187,7 +187,7 @@ export const TEST2GrammarStr = \`
 namespace TEST2Language
 grammar TEST2Grammar {
 
-// rules for \\"TEST_SINGLES\\"
+// rules for "TEST_SINGLES"
 TEST_SINGLES = Aa
 	 Bb1
 	 Bb2
@@ -220,15 +220,15 @@ Ff = __fre_reference* ;
 __fre_reference = [ identifier / '.' ]+ ;
 
 // white space and comments
-skip WHITE_SPACE = \\"\\\\\\\\s+\\" ;
-skip SINGLE_LINE_COMMENT = \\"//[^\\\\\\\\r\\\\\\\\n]*\\" ;
-skip MULTI_LINE_COMMENT = \\"/\\\\\\\\*[^*]*\\\\\\\\*+(?:[^*/][^*]*\\\\\\\\*+)*/\\" ;
+skip WHITE_SPACE = "\\\\s+" ;
+skip SINGLE_LINE_COMMENT = "//[^\\\\r\\\\n]*" ;
+skip MULTI_LINE_COMMENT = "/\\\\*[^*]*\\\\*+(?:[^*/][^*]*\\\\*+)*/" ;
 
 // the predefined basic types
-leaf identifier          = \\"[a-zA-Z_][a-zA-Z0-9_]*\\" ;
+leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
-leaf stringLiteral       = '\\"' \\"[^\\\\\\\\\\"\\\\\\\\\\\\\\\\]*(\\\\\\\\\\\\\\\\.[^\\\\\\\\\\"\\\\\\\\\\\\\\\\]*)*\\" '\\"' ;
-leaf numberLiteral       = \\"[0-9]+\\";
+leaf stringLiteral       = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
+leaf numberLiteral       = "[0-9]+";
 leaf booleanLiteral      = 'false' | 'true';
 
 }\`; // end of grammar
