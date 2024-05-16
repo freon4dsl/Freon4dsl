@@ -1,9 +1,8 @@
 import * as fs from "fs";
-import parserTypeScript = require("prettier/parser-typescript");
+import * as prettier from "@prettier/sync";
 import { MetaLogger } from "../MetaLogger";
 
 const LOGGER = new MetaLogger("FileUtil").mute();
-const prettier = require("prettier/standalone");
 const path = require("path");
 
 export class GenerationStatus {
@@ -44,7 +43,7 @@ export class FileUtil {
                     parser: "typescript",
                     printWidth: 140,
                     tabWidth: 4,
-                    plugins: [parserTypeScript],
+                    // plugins: [parserTypeScript],
                     trailingComma: "none",
                     arrowParens: "avoid"
                 })

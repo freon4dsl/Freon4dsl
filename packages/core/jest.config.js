@@ -170,7 +170,8 @@ module.exports = {
   // testRunner: "jasmine2",
 
   // This option sets the URL for the jsdom editorEnvironment. It is reflected in properties such as location.href
-  testURL: "http://localhost",
+  // testURL: "http://localhost",
+  testEnvironmentOptions: { url: 'https://localhost' },
 
   // Setting this value to "fake" allows the use of fake timers for functions such as "setTimeout"
   // timers: "real",
