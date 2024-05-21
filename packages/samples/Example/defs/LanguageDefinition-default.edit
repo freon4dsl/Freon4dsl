@@ -18,6 +18,7 @@ Entity {
 }
 ExampleUnit {
         [
+        ${documentation}
         unit ${name} {
             ${entities vertical }
         unit level methods:
@@ -25,6 +26,11 @@ ExampleUnit {
         }
         ]
 }
+
+Documentation {
+   [ doc start ${text} end doc ]
+}
+
 Method {
     [
         method ${name} ( ${parameters table rows} ): ${declaredType} {

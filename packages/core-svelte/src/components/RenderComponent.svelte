@@ -23,8 +23,9 @@
         isSvgBox,
         FreEditor,
         FreLogger,
-        Box, isElementBox, isOptionalBox2
+        Box, isElementBox, isOptionalBox2, isMultiLineTextBox
     } from "@freon4dsl/core";
+    import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
     import GridComponent from "./GridComponent.svelte";
     import IndentComponent from "./IndentComponent.svelte";
@@ -123,6 +124,8 @@
             <TableComponent box={box} editor={editor} />
         {:else if isTextBox(box) }
             <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
+        {:else if isMultiLineTextBox(box) }
+            <MultiLineTextComponent box={box} editor={editor} text=""/>
         {:else if isActionBox(box) || isSelectBox(box)}
             <TextDropdownComponent box={box} editor={editor}/>
         {:else}

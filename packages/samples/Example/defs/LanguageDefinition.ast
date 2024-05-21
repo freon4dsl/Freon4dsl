@@ -7,10 +7,15 @@ model Example {
 }
 
 modelunit ExampleUnit {
+    documentation: Documentation;
     name: identifier;
     entities: Entity[];
     methods: Method[];
     file-extension = "exm";
+}
+
+concept Documentation {
+    text: string;
 }
 
 interface Type base BaseType {
