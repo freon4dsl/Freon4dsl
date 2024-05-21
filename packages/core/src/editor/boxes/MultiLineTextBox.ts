@@ -1,6 +1,6 @@
-import { FreNode } from "../../ast/index.js";
-import { FreUtils } from "../../util/index.js";
-import { Box } from "./Box.js";
+import { FreNode } from "../../ast/index";
+import { FreUtils } from "../../util/index";
+import { Box } from "./Box";
 import { FreLogger } from "../../logging";
 
 const LOGGER = new FreLogger("MultiLineTextBox");
