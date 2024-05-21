@@ -152,8 +152,8 @@
      * @param event
      */
     function onClick(event: MouseEvent) {
-        LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 		if (!!inputElement) {
+			LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 			setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
 		}
 		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
