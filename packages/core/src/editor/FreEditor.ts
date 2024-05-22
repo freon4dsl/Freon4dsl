@@ -65,8 +65,7 @@ export class FreEditor {
         this.initializeActions(actions);
         makeObservable<FreEditor, "_rootElement">(this, {
             // theme: observable,
-            _rootElement: observable,
-            rootElement: computed
+            _rootElement: observable
         });
         autorun(this.auto);
     }
@@ -94,7 +93,7 @@ export class FreEditor {
     }
 
     auto = () => {
-        // console.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept());
+        console.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept());
         if (this.rootElement !== null) {
             this._rootBox = this.projection.getBox(this.rootElement);
             this.rootBoxChanged();
@@ -307,7 +306,7 @@ export class FreEditor {
      * @private
      */
     private initializeActions(actions?: FreCombinedActions) {
-        if (!actions) {
+        if (actions === undefined || actions === null) {
             return;
         }
         actions.customActions.forEach(ca => this.newFreActions.push(ca));
