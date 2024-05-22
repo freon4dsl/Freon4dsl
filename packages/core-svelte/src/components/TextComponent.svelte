@@ -29,7 +29,7 @@
 		FreErrorSeverity,
 		SHIFT,
 		TAB,
-		TextBox
+		TextBox, isRegExp, triggerTypeToString, FrePostAction
 	} from "@freon4dsl/core";
 
 	import { runInAction } from "mobx";
@@ -356,6 +356,34 @@
 							LOGGER.log('CharAllowed');
 							event.stopPropagation();
 							// afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
+							if (editor.selectedBox.kind === "ActionBox") {
+								// TODO This matches one character regular expressions only
+								const matchingOption = (editor.selectedBox as ActionBox).getOptions(editor).find(option => {
+									if (isRegExp(option.action.trigger) ){
+										if (option.action.trigger.test(event.key)) {
+											LOGGER.log("Matching regexp" + triggerTypeToString(option.action.trigger))
+											return true
+										}
+										return false
+									}
+								})
+								if (!!matchingOption) {
+									let execresult: FrePostAction = null;
+									runInAction(() => {
+										runInAction(() => {
+											const command = matchingOption.action.command(box);
+											execresult = command.execute(box, event.key, editor, 0);
+										});
+										if (!!execresult) {
+											execresult();
+										}
+									})
+									event.preventDefault();
+									event.stopPropagation();
+								}
+							} else {
+								LOGGER.log("     is NOT an action box, but: " + editor.selectedBox.kind);
+							}
 							break;
 						case CharAllowed.NOT_OK: // ignore
 							// ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
