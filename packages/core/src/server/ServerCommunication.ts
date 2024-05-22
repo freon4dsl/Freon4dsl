@@ -51,7 +51,7 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
-    private _nodePort = process.env.NODE_PORT || 3001;
+    private _nodePort = process.env.NODE_PORT || 8001;
     private _SERVER_IP = `http://127.0.0.1`;
     private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
 
