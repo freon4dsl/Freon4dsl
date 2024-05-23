@@ -1,0 +1,66 @@
+editor default
+
+boolean [YES | NO] // are the strings used to display a boolean value
+
+StudyConfiguration {
+    [
+        DEFAULT EDITORX
+        Study Name: ${name}
+        Options:
+            ${showActivityDetails} Also Show Task Details
+            ${showSystems} Also Show Systems
+        Study Periods
+        ${periods }
+        Tasks Details:
+        ${taskDetails }
+    ]
+}
+Period {
+    [
+        ${name} Period
+        
+        Events
+
+            ${events }
+
+    ]
+}
+Event {
+    [
+            ${name} Event
+
+            Description: ${description}
+
+            ${showSequenced} Allow Sequencing
+
+            Checklist:
+            ${checkList }
+    ]  
+}
+
+CheckList {
+    [
+    Checklist:
+    ${activities table rows}
+    ]
+}
+
+Task {
+    table [
+             Name    | Details | Notes / Decisions / Branches 
+             ${name} | ${taskDetails} | ${decision}
+        ]
+}
+
+WorkflowDecision {
+    [${description}]
+}
+
+SystemAccess {
+    [ 
+        System Name: ${nameWithoutFunction}
+        description: ${description}
+
+    ]
+}
+

@@ -1,0 +1,116 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "ID-20",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-ExampleUnit"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-name"
+               },
+               "value": "example"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-entities"
+               },
+               "children": [
+                  "ID-22"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-methods"
+               },
+               "children": [
+                  "ID-21"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-22",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Entity"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseType-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-attributes"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-methods"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "parent": "ID-20"
+      },
+      {
+         "id": "ID-21",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "parent": "ID-20"
+      }
+   ]
+}

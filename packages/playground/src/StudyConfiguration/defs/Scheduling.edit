@@ -1,0 +1,40 @@
+editor default
+
+When {
+    [
+        when ${startWhen}
+    ]
+}
+
+Day {
+    [
+        day ${startDay}
+    ]
+}
+
+StudyStart {
+    [Study Start]
+}
+
+Repeats {
+    [
+      ${repeatCount} time(s) 
+    ]
+}
+
+Window {
+    [
+        From: ${fromTimePoint}
+        To:   ${toTimePoint}
+    ]
+}
+
+EventSchedule {
+    [
+    First Scheduled: ${firstScheduled}
+
+    Then Repeats: ${repeats}
+
+    Window: ${window}
+    ]
+}

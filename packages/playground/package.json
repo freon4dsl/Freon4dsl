@@ -82,7 +82,10 @@
     "clean-all-examples": "npm run clean-calculator && npm run clean-example && npm run clean-graphviz && npm run clean-heating && npm run clean-json && npm run clean-libraries && npm run clean-expressions && npm run clean-octopus && npm run clean-openhab && npm run clean-pi-languages && npm run clean-rules && npm run clean-taxrules",
     "clean-config": "rm */*/config/FreonConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
-    "clean-code": "npm run clean-config && npm run clean-custom"
+    "clean-code": "npm run clean-config && npm run clean-custom",
+    "install-study-configuration": "ts-node ../tools/src/InstallLanguage.ts install -d ../samples/StudyConfiguration -t ./src",
+    "study-configuration": "bash ../../scripts/freon-dev.sh -v all -d src/StudyConfiguration/defs -o src/StudyConfiguration",
+    "clean-study-configuration": "bash ../../scripts/freon-dev.sh clean-it -d src/StudyConfiguration/defs -o src/StudyConfiguration"
   },
   "devDependencies": {
     "@material/theme": "^13.0.0",

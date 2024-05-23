@@ -1,0 +1,73 @@
+editor default
+
+
+StartDay {
+    [Start Day ]
+}
+
+LastDay {
+    [Last Day ]
+}
+
+PreviousVisit {
+    [Previous-Visit ]
+}
+
+NextVisit {
+    [Next-Visit ]
+}
+
+PlusExpression {
+    symbol = "+"
+}
+
+Number {
+    [${value}]
+}
+
+String {
+    ['${value}']
+    trigger = "'"
+}
+
+Boolean {
+    [$value]
+}
+
+MultiplyExpression {
+    symbol = "*"
+}
+DivideExpression {
+    symbol = "/"
+}
+
+LessThenExpression {
+    symbol = "<"
+}
+
+OrExpression {
+    symbol = "or"
+}
+
+AndExpression {
+    symbol = "and"
+}
+
+GreaterThenExpression {
+    symbol = ">"
+}
+EqualsExpression {
+    symbol = "=="
+}
+
+IfExpression {
+        [
+        if (${condition}) then
+            ${whenTrue}
+        else
+            ${whenFalse}
+        endif
+        ]
+    trigger = "if"
+}
+

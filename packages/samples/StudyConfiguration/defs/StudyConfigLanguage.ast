@@ -1,0 +1,130 @@
+language StudyConfigurationModel
+
+model StudyConfigurationModel {
+    configuration: StudyConfiguration;
+}
+
+modelunit StudyConfiguration {
+    name: identifier;
+    showActivityDetails: boolean;
+    showSystems: boolean;
+    periods: Period[];
+    taskDetails: TaskDetail[];
+    systemAccesses: SystemAccess[];
+    staffing: Staffing;
+}
+
+concept Period {
+    name: identifier;
+    events: Event[];
+}
+
+// How model something needed in model and in other concepts?
+concept TaskDetailDef {
+    taskDetails: TaskDetail;
+}
+
+ concept TaskDetail {
+    name: identifier;
+    numberedSteps: boolean;
+    description: string;
+    decision: StudyConfigExpression;
+    steps: Step[];
+}
+
+concept Staffing {
+    roles: StaffRole[]; 
+    assignments: Assignment[];
+}
+
+concept StaffRole {
+    name: identifier;
+}
+
+concept Assignment {
+    reference role: StaffRole;
+    reference person: Person;
+}
+
+concept Event {
+    name: identifier;
+    showSequenced: boolean;
+    eventNumber: number;
+    checkList: CheckList;
+    description: string;
+}
+
+concept CheckList {
+    workflowNumber: number; // Only used by generator in MPS.
+    activities: Task[];
+}
+
+concept Task {
+    name: identifier;
+    sequenced: boolean;
+    decision: WorkflowDecision;
+    reference taskDetails: TaskDetail;
+}
+
+concept Step {
+    title: string;
+    detailsDescription?: string;
+    references: Reference[];
+    people: Person[];
+    systems: SystemAccessReference[];
+}
+
+concept SystemAccess {
+    name: identifier;
+    functionName: string;
+    accessedAt: AccessedAt;
+    robotMappings?: RobotMapping;
+    description?: string;
+}
+
+concept SystemAccessReference {
+    reference system: SystemAccess;
+}
+
+interface AccessedAt {
+}
+
+
+concept AccessedAtURL implements AccessedAt {
+    url: string;
+}
+
+concept AccessedAPhoneNumber implements AccessedAt {
+    phoneNumber: string;
+}
+
+concept Reference {
+    title: string;
+    link: string;
+    description: string;
+}
+
+concept RobotMapping {
+    name: identifier;
+    sourcePage: string;
+    targetPage: string;
+    closeSource: boolean;
+    sourceToTargetMappings: SourceToTargetMapping[];
+}
+
+concept SourceToTargetMapping {
+    sourceField : string;
+    targetField : string;
+}
+
+concept WorkflowDecision {
+    description: string;
+}
+
+concept Person {
+    name: identifier;
+    useSystemContact: boolean;
+    email: string;
+    phoneNumber: string;
+    role: StaffRole;
+}

@@ -1,0 +1,84 @@
+language StudyConfigurationModel
+
+expression StudyConfigExpression {
+}
+
+expression IfExpression base StudyConfigExpression {
+    condition: StudyConfigExpression;
+    whenTrue: StudyConfigExpression;
+    whenFalse: StudyConfigExpression;
+}
+
+expression StartDay base StudyConfigExpression {
+}
+
+expression LastDay base StudyConfigExpression {
+}
+
+expression PreviousVisit base StudyConfigExpression {
+}
+
+expression NextVisit base StudyConfigExpression {
+}
+
+abstract expression LiteralExpression base StudyConfigExpression {}
+
+expression String base LiteralExpression {
+    value: string;
+}
+
+expression Number base LiteralExpression   {
+    value: number;
+}
+
+expression Boolean base LiteralExpression {
+    value: boolean;
+}
+
+///////////////////////////////////
+//    Binary Expressions
+////////////////////////////////////
+abstract binary expression BinaryExpression base StudyConfigExpression {
+    left: StudyConfigExpression;
+    right: StudyConfigExpression;
+}
+
+binary expression MultiplyExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression PlusExpression base BinaryExpression {
+    priority = 4;
+}
+
+binary expression DivideExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression AndExpression base BinaryExpression {
+    priority = 1;
+}
+
+binary expression OrExpression base BinaryExpression {
+    priority = 1;
+}
+
+abstract binary expression ComparisonExpression base BinaryExpression {
+}
+
+binary expression LessThenExpression base ComparisonExpression {
+    priority = 2;
+}
+
+binary expression GreaterThenExpression base ComparisonExpression {
+    priority = 2;
+}
+
+binary expression EqualsExpression base ComparisonExpression {
+    priority = 2;
+}
+
+interface Type {
+    name: identifier;
+}
+

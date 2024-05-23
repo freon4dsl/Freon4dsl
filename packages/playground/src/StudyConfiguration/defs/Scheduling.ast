@@ -1,0 +1,24 @@
+language StudyConfigurationModel
+
+concept ScheduleConstraint {
+}  
+
+concept When base ScheduleConstraint {
+    startWhen: StudyConfigExpression;
+}
+
+concept Day base ScheduleConstraint {
+    startDay: StudyConfigExpression;
+}
+
+concept StudyStart base ScheduleConstraint {
+}
+
+concept Repeats {
+    repeatCount: number;
+} 
+
+concept Window {
+    fromTimePoint: number;
+    toTimePoint: number;
+}
