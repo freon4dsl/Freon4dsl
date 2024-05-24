@@ -51,7 +51,7 @@ concept Event {
     showSequenced: boolean;
     eventNumber: number;
     checkList: CheckList;
-    description: string;
+    description: Description;
     schedule: EventSchedule;
 }
 
@@ -129,3 +129,8 @@ concept Person {
     phoneNumber: string;
     role: StaffRole;
 }
+ 
+concept Description {
+    text: string;
+}
+

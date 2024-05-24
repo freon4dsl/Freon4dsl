@@ -35,7 +35,7 @@ RepeatCount {
 
 EventTimeOfDay {
     [
-        ${startHour}:${startMinute} - ${endHour}:${endMinute}
+        ${startHour}:${startMinute}   -    ${endHour}:${endMinute}
     ]
 }
 
