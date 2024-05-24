@@ -1,6 +1,6 @@
 language StudyConfigurationModel
 
-expression StudyConfigExpression {
+abstract expression StudyConfigExpression {
 }
 
 expression IfExpression base StudyConfigExpression {

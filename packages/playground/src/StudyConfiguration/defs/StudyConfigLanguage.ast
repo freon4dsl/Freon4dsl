@@ -46,11 +46,6 @@ concept Assignment {
     reference person: Person;
 }
 
-concept EventSchedule {
-    firstScheduled: ScheduleConstraint;
-    window: Window;
-    repeats: Repeats;
-}
 concept Event {
     name: identifier;
     showSequenced: boolean;

@@ -16,13 +16,30 @@ StudyStart {
     [Study Start]
 }
 
-Repeats {
+AnyDay {
+    [Any Day]
+}
+
+RepeatCondition {
     [
-      ${repeatCount} time(s) 
+    ${repeatUnit} max  ${maxRepeats}  times
+    until ${until}
     ]
 }
 
-Window {
+RepeatCount {
+    [
+        ${repeatCount} time(s)
+    ]
+}
+
+EventTimeOfDay {
+    [
+        ${startHour}:${startMinute} - ${endHour}:${endMinute}
+    ]
+}
+
+EventWindow {
     [
         From: ${fromTimePoint}
         To:   ${toTimePoint}
@@ -31,10 +48,13 @@ Window {
 
 EventSchedule {
     [
-    First Scheduled: ${firstScheduled}
+    First Scheduled  : ${eventStart}
 
-    Then Repeats: ${repeats}
+    Then Repeats     : ${eventRepeat}
 
-    Window: ${window}
+    Scheduling Window: ${eventWindow}
+
+    Time of Day      : ${eventTimeOfDay}
     ]
 }
+

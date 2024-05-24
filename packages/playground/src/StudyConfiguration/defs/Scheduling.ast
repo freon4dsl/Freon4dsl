@@ -1,24 +1,55 @@
 language StudyConfigurationModel
 
-concept ScheduleConstraint {
+abstract expression EventStart {
 }  
 
-concept When base ScheduleConstraint {
+expression When base EventStart {
     startWhen: StudyConfigExpression;
 }
 
-concept Day base ScheduleConstraint {
+expression Day base EventStart {
     startDay: StudyConfigExpression;
 }
 
-concept StudyStart base ScheduleConstraint {
+expression StudyStart base EventStart {
 }
 
-concept Repeats {
+expression AnyDay base EventStart {
+}
+
+interface RepeatExpression {    
+}
+
+limited RepeatUnit {
+    daily; weekly; monthly; forever;
+}
+
+concept RepeatCondition implements RepeatExpression {
+    repeatUnit: RepeatUnit;
+    maxRepeats: number;
+    until: StudyConfigExpression;
+}
+
+concept RepeatCount implements RepeatExpression {
     repeatCount: number;
-} 
-
-concept Window {
-    fromTimePoint: number;
-    toTimePoint: number;
 }
+
+concept EventWindow {
+    fromTimePoint: string;
+    toTimePoint: string;
+}
+
+concept EventTimeOfDay {
+    startHour: number;
+    startMinute: number;
+    endHour: number;
+    endMinute: number;
+}
+
+concept EventSchedule {
+    eventStart: EventStart;
+    eventWindow: EventWindow;
+    eventRepeat: RepeatExpression;
+    eventTimeOfDay: EventTimeOfDay;
+}
+
