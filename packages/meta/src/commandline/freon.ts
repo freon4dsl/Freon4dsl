@@ -11,7 +11,10 @@ import { FreonGenerateParser } from "./FreonGenerateParser";
 import { FreonGenerateDiagrams } from "./FreonGenerateDiagrams";
 import { FreonCleanAction } from "./FreonCleanAction";
 
-require('source-map-support').install();
+// require('source-map-support').install();
+import sm_support from 'source-map-support';
+sm_support.install();
+
 const LOGGER = new MetaLogger("Freon").mute();
 
 // The main entry point for the Freon generator
