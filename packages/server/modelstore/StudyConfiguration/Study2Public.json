@@ -3,7 +3,7 @@
    "languages": [],
    "nodes": [
       {
-         "id": "ID-6",
+         "id": "ID-7",
          "classifier": {
             "language": "-default-key-StudyConfigurationModel",
             "version": "2023.1",
@@ -16,7 +16,7 @@
                   "version": "2023.1",
                   "key": "-default-key-StudyConfiguration-name"
                },
-               "value": "config1"
+               "value": "Study2"
             },
             {
                "property": {
@@ -43,7 +43,7 @@
                   "key": "-default-key-StudyConfiguration-periods"
                },
                "children": [
-                  "ID-7"
+                  "ID-8"
                ]
             },
             {
@@ -53,7 +53,7 @@
                   "key": "-default-key-StudyConfiguration-taskDetails"
                },
                "children": [
-                  "ID-8"
+                  "ID-15"
                ]
             },
             {
@@ -61,16 +61,6 @@
                   "language": "-default-key-StudyConfigurationModel",
                   "version": "2023.1",
                   "key": "-default-key-StudyConfiguration-systemAccesses"
-               },
-               "children": [
-                  "ID-9"
-               ]
-            },
-            {
-               "containment": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-StudyConfiguration-staffing"
                },
                "children": [
                   "ID-11"
@@ -81,7 +71,7 @@
          "parent": null
       },
       {
-         "id": "ID-7",
+         "id": "ID-8",
          "classifier": {
             "language": "-default-key-StudyConfigurationModel",
             "version": "2023.1",
@@ -105,15 +95,15 @@
                   "key": "-default-key-Period-events"
                },
                "children": [
-                  "ID-14"
+                  "ID-9"
                ]
             }
          ],
          "references": [],
-         "parent": "ID-6"
+         "parent": "ID-7"
       },
       {
-         "id": "ID-14",
+         "id": "ID-9",
          "classifier": {
             "language": "-default-key-StudyConfigurationModel",
             "version": "2023.1",
@@ -143,14 +133,6 @@
                   "key": "-default-key-Event-eventNumber"
                },
                "value": "0"
-            },
-            {
-               "property": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-Event-description"
-               },
-               "value": ""
             }
          ],
          "containments": [
@@ -161,15 +143,25 @@
                   "key": "-default-key-Event-checkList"
                },
                "children": [
-                  "ID-15"
+                  "ID-13"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-StudyConfigurationModel",
+                  "version": "2023.1",
+                  "key": "-default-key-Event-description"
+               },
+               "children": [
+                  "ID-10"
                ]
             }
          ],
          "references": [],
-         "parent": "ID-7"
+         "parent": "ID-8"
       },
       {
-         "id": "ID-15",
+         "id": "ID-13",
          "classifier": {
             "language": "-default-key-StudyConfigurationModel",
             "version": "2023.1",
@@ -193,15 +185,15 @@
                   "key": "-default-key-CheckList-activities"
                },
                "children": [
-                  "ID-16"
+                  "ID-14"
                ]
             }
          ],
          "references": [],
-         "parent": "ID-14"
+         "parent": "ID-9"
       },
       {
-         "id": "ID-16",
+         "id": "ID-14",
          "classifier": {
             "language": "-default-key-StudyConfigurationModel",
             "version": "2023.1",
@@ -214,7 +206,7 @@
                   "version": "2023.1",
                   "key": "-default-key-Task-name"
                },
-               "value": "IC1"
+               "value": ""
             },
             {
                "property": {
@@ -226,25 +218,32 @@
             }
          ],
          "containments": [],
-         "references": [
-            {
-               "reference": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-Task-taskDetails"
-               },
-               "targets": [
-                  {
-                     "resolveInfo": "IC",
-                     "reference": "ID-8"
-                  }
-               ]
-            }
-         ],
-         "parent": "ID-15"
+         "references": [],
+         "parent": "ID-13"
       },
       {
-         "id": "ID-8",
+         "id": "ID-10",
+         "classifier": {
+            "language": "-default-key-StudyConfigurationModel",
+            "version": "2023.1",
+            "key": "-default-key-Description"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-StudyConfigurationModel",
+                  "version": "2023.1",
+                  "key": "-default-key-Description-text"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "parent": "ID-9"
+      },
+      {
+         "id": "ID-15",
          "classifier": {
             "language": "-default-key-StudyConfigurationModel",
             "version": "2023.1",
@@ -257,7 +256,7 @@
                   "version": "2023.1",
                   "key": "-default-key-TaskDetail-name"
                },
-               "value": "IC"
+               "value": ""
             },
             {
                "property": {
@@ -266,87 +265,54 @@
                   "key": "-default-key-TaskDetail-numberedSteps"
                },
                "value": "false"
-            },
+            }
+         ],
+         "containments": [
             {
-               "property": {
+               "containment": {
                   "language": "-default-key-StudyConfigurationModel",
                   "version": "2023.1",
                   "key": "-default-key-TaskDetail-description"
                },
-               "value": ""
-            }
-         ],
-         "containments": [
+               "children": [
+                  "ID-16"
+               ]
+            },
             {
                "containment": {
                   "language": "-default-key-StudyConfigurationModel",
                   "version": "2023.1",
                   "key": "-default-key-TaskDetail-steps"
                },
-               "children": [
-                  "ID-13"
-               ]
+               "children": []
             }
          ],
          "references": [],
-         "parent": "ID-6"
+         "parent": "ID-7"
       },
       {
-         "id": "ID-13",
+         "id": "ID-16",
          "classifier": {
             "language": "-default-key-StudyConfigurationModel",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-default-key-Description"
          },
          "properties": [
             {
                "property": {
                   "language": "-default-key-StudyConfigurationModel",
                   "version": "2023.1",
-                  "key": "-default-key-Step-title"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-Step-detailsDescription"
+                  "key": "-default-key-Description-text"
                },
                "value": ""
             }
          ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-Step-references"
-               },
-               "children": []
-            },
-            {
-               "containment": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-Step-people"
-               },
-               "children": []
-            },
-            {
-               "containment": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-Step-systems"
-               },
-               "children": []
-            }
-         ],
+         "containments": [],
          "references": [],
-         "parent": "ID-8"
+         "parent": "ID-15"
       },
       {
-         "id": "ID-9",
+         "id": "ID-11",
          "classifier": {
             "language": "-default-key-StudyConfigurationModel",
             "version": "2023.1",
@@ -368,129 +334,36 @@
                   "key": "-default-key-SystemAccess-functionName"
                },
                "value": ""
-            },
+            }
+         ],
+         "containments": [
             {
-               "property": {
+               "containment": {
                   "language": "-default-key-StudyConfigurationModel",
                   "version": "2023.1",
                   "key": "-default-key-SystemAccess-description"
                },
-               "value": ""
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-SystemAccess-robotMappings"
-               },
-               "children": [
-                  "ID-10"
-               ]
-            }
-         ],
-         "references": [],
-         "parent": "ID-6"
-      },
-      {
-         "id": "ID-10",
-         "classifier": {
-            "language": "-default-key-StudyConfigurationModel",
-            "version": "2023.1",
-            "key": "-default-key-RobotMapping"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-RobotMapping-name"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-RobotMapping-sourcePage"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-RobotMapping-targetPage"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-RobotMapping-closeSource"
-               },
-               "value": "false"
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-RobotMapping-sourceToTargetMappings"
-               },
-               "children": []
-            }
-         ],
-         "references": [],
-         "parent": "ID-9"
-      },
-      {
-         "id": "ID-11",
-         "classifier": {
-            "language": "-default-key-StudyConfigurationModel",
-            "version": "2023.1",
-            "key": "-default-key-Staffing"
-         },
-         "properties": [],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-Staffing-roles"
-               },
                "children": [
                   "ID-12"
                ]
-            },
-            {
-               "containment": {
-                  "language": "-default-key-StudyConfigurationModel",
-                  "version": "2023.1",
-                  "key": "-default-key-Staffing-assignments"
-               },
-               "children": []
             }
          ],
          "references": [],
-         "parent": "ID-6"
+         "parent": "ID-7"
       },
       {
          "id": "ID-12",
          "classifier": {
             "language": "-default-key-StudyConfigurationModel",
             "version": "2023.1",
-            "key": "-default-key-StaffRole"
+            "key": "-default-key-Description"
          },
          "properties": [
             {
                "property": {
                   "language": "-default-key-StudyConfigurationModel",
                   "version": "2023.1",
-                  "key": "-default-key-StaffRole-name"
+                  "key": "-default-key-Description-text"
                },
                "value": ""
             }

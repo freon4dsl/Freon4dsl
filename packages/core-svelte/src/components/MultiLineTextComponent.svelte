@@ -6,6 +6,7 @@
 	import { afterUpdate, onMount } from "svelte";
 	import { componentId } from "./svelte-utils";
 	import { FreEditor, FreLogger, MultiLineTextBox } from "@freon4dsl/core";
+	import { AutoResizeTextarea } from "svelte-autoresize-textarea";
 
 	import { runInAction } from "mobx";
 	// Probably needed to code/encode HTML inside <TextArea>
@@ -22,7 +23,7 @@
     // Local variables
     let id: string;                         // an id for the html element
     id = !!box ? componentId(box) : 'text-with-unknown-box';
-    let textArea: HTMLAreaElement  ; 	// the teaxt area element on the screen
+    let textArea: AutoResizeTextarea; 	// the text area element on the screen including auto-resize
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
 
 
@@ -84,19 +85,32 @@
 		keyEvent.stopPropagation()
 	}
 
+	export let value = '';
+	export let minRows = 1;
+	export let maxRows;
+	
+	$: minHeight = `${1 + minRows * 1.2}em`;
+	$: maxHeight = maxRows ? `${1 + maxRows * 1.2}em` : `auto`;
+
 	refresh();
 </script>
 
-<textarea
-	class="{box.role} multilinetext-box text"
-	id="{id}"
-	on:focusout={onFocusOut}
-	on:keydown={onKeyDown}
-	spellcheck=false
-	bind:this={textArea}
-	placeholder={placeholder}
-	bind:value={text}
-></textarea>
+<template>
+	<AutoResizeTextarea
+		class="{box.role} multilinetext-box text"
+		id="{id}"
+		on:focusout={onFocusOut}
+		on:keydown={onKeyDown}
+		spellcheck=false
+		bind:this={textArea}
+		placeholder={placeholder}
+		bind:value={text}
+		minRows={40}
+		maxRows={80}
+		aria-hidden="true"
+		style="min-height: {minHeight}; max-height: {maxHeight}"	>
+	</AutoResizeTextarea>
+	</template>
 
 <style>
     .text {
@@ -111,6 +125,26 @@
         white-space: normal;
         display: inline-block;
 		height: auto;
+		.container {
+		position: relative;
+	}
+	
+	pre, textarea {
+		font-family: inherit;
+		padding: 0.5em;
+		box-sizing: border-box;
+		border: 1px solid #eee;
+		line-height: 1.2;
+		overflow: hidden;
+	}
+	
+	textarea {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		resize: none;
+	}
 	}
 
 

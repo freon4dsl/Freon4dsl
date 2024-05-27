@@ -14,6 +14,7 @@
     "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css"
   },
   "devDependencies": {
+    "@prettier/sync": "^0.5.2",
     "@rollup/plugin-commonjs": "19.0.0",
     "@rollup/plugin-node-resolve": "13.0.0",
     "@rollup/plugin-typescript": "8.3.0",
@@ -32,7 +33,6 @@
     "jest-environment-jsdom": "29.7.0",
     "nodemon": "3.1.0",
     "pegjs": "0.10.0",
-    "@prettier/sync": "^0.5.2",
     "prettier-plugin-svelte": "2.6.0",
     "reflect-metadata": "0.2.2",
     "rollup": "2.53.1",
@@ -61,5 +61,8 @@
     "packages/test",
     "packages/server"
   ],
-  "version": "0.6.0"
+  "version": "0.6.0",
+  "dependencies": {
+    "svelte-autoresize-textarea": "^0.0.6"
+  }
 }
