@@ -27,7 +27,7 @@ concept TaskDetailDef {
  concept TaskDetail {
     name: identifier;
     numberedSteps: boolean;
-    description: NoteOrDescription;
+    description: Description;
     decision: StudyConfigExpression;
     steps: Step[];
 }
@@ -51,7 +51,7 @@ concept Event {
     showSequenced: boolean;
     eventNumber: number;
     checkList: CheckList;
-    description: NoteOrDescription;
+    description: Description;
     schedule: EventSchedule;
 }
 
@@ -80,7 +80,7 @@ concept SystemAccess {
     functionName: string;
     accessedAt: AccessedAt;
     robotMappings?: RobotMapping;
-    description?: NoteOrDescription;
+    description?: Description;
 }
 
 concept SystemAccessReference {
@@ -102,7 +102,7 @@ concept AccessedAPhoneNumber implements AccessedAt {
 concept Reference {
     title: string;
     link: string;
-    description: NoteOrDescription;
+    description: Description;
 }
 
 concept RobotMapping {
@@ -121,8 +121,8 @@ concept SourceToTargetMapping {
 interface WorkflowDecision {
 }
 
-concept WorkflowDescription implements WorkflowDecision, NoteOrDescription {
-
+concept WorkflowDescription implements WorkflowDecision {
+    text: Description;
 }
 
 concept WorkflowBranch implements WorkflowDecision {
