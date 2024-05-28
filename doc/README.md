@@ -7,7 +7,7 @@ Open Terminal on your Mac.
 Navigate to your local repository (the forked one).
 Add the original repository as a remote repository:
 
-> git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git
+> git remote add upstream https://github.com/freon4dsl/Freon4dsl.git
 
 Fetch the branches and their commits from the upstream repository:
 > git fetch upstream
