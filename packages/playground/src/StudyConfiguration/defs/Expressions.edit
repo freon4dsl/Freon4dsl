@@ -1,6 +1,8 @@
 editor default
 
-
+NumberLiteralExpression {
+    [${value}]
+}
 StartDay {
     [Start Day ]
 }

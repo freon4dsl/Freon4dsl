@@ -52,7 +52,7 @@ Event {
             Checklist:    ${showSequenced} Allow Sequencing
                 ${checkList }
 
-    ]  
+    ]  trigger = "Visit"
 }
 
 CheckList {

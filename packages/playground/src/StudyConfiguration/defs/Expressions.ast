@@ -35,6 +35,10 @@ expression Boolean base LiteralExpression {
     value: boolean;
 }
 
+expression NumberLiteralExpression base LiteralExpression   {
+    value: number;
+}
+
 ///////////////////////////////////
 //    Binary Expressions
 ////////////////////////////////////

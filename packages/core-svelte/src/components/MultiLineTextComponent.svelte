@@ -6,7 +6,6 @@
 	import { afterUpdate, onMount } from "svelte";
 	import { componentId } from "./svelte-utils";
 	import { FreEditor, FreLogger, MultiLineTextBox } from "@freon4dsl/core";
-	import { AutoResizeTextarea } from "svelte-autoresize-textarea"; // see: https://github.com/ankurrsinghal/svelte-autoresize-textarea
 
 	import { runInAction } from "mobx";
 	// Probably needed to code/encode HTML inside <TextArea>
@@ -23,7 +22,7 @@
     // Local variables
     let id: string;                         // an id for the html element
     id = !!box ? componentId(box) : 'text-with-unknown-box';
-    let textArea: AutoResizeTextarea  ; 	// the text area element on the screen including auto-resize
+    let textArea: HTMLAreaElement  ; 	// the teaxt area element on the screen
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
 
 
@@ -88,20 +87,16 @@
 	refresh();
 </script>
 
-<template>
-	<AutoResizeTextarea
-		class="{box.role} multilinetext-box text"
-		id="{id}"
-		on:focusout={onFocusOut}
-		on:keydown={onKeyDown}
-		spellcheck=false
-		bind:this={textArea}
-		placeholder={placeholder}
-		bind:value={text}
-		minRows={40}
-		maxRows={80}
-	></AutoResizeTextarea>
-</template>
+<textarea
+	class="{box.role} multilinetext-box text"
+	id="{id}"
+	on:focusout={onFocusOut}
+	on:keydown={onKeyDown}
+	spellcheck=false
+	bind:this={textArea}
+	placeholder={placeholder}
+	bind:value={text}
+></textarea>
 
 <style>
     .text {
