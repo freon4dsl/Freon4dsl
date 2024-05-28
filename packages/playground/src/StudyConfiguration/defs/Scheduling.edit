@@ -4,7 +4,8 @@ When {
     [
         when ${startWhen}
     ]
-}
+    trigger = "When Some Condition Is True"
+} 
 
 Day {
     [
@@ -14,30 +15,36 @@ Day {
 
 StudyStart {
     [Study Start]
-}
+    trigger = "Study Start"
+} 
 
 AnyDay {
     [Any Day]
-}
+    trigger = "Any Day"
+} 
 
 RepeatCondition {
     [
-    ${repeatUnit} max  ${maxRepeats}  times
+    frequency: ${repeatUnit}
+    max  ${maxRepeats}  times
     until ${until}
     ]
-}
+    trigger = "Max...Until"
+} 
 
 RepeatCount {
     [
-        ${repeatCount} time(s)
+        time(s) ${repeatCount} 
     ]
-}
+    trigger = "Number of Times"
+} 
 
 EventTimeOfDay {
     [
         ${startHour}:${startMinute}   -    ${endHour}:${endMinute}
-    ]
-}
+    ] 
+    trigger = "Time of Day"
+} 
 
 EventWindow {
     [
@@ -56,5 +63,6 @@ EventSchedule {
 
     Time of Day      : ${eventTimeOfDay}
     ]
-}
+    trigger = "First, Repeats, Window..."
+} 
 

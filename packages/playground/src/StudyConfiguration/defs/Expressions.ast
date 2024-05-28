@@ -31,7 +31,7 @@ expression Number base LiteralExpression   {
     value: number;
 }
 
-expression Boolean base LiteralExpression {
+expression BooleanLiteralExpression base LiteralExpression {
     value: boolean;
 }
 
@@ -51,12 +51,16 @@ binary expression MultiplyExpression base BinaryExpression {
     priority = 8;
 }
 
+binary expression DivideExpression base BinaryExpression {
+    priority = 8;
+}
+
 binary expression PlusExpression base BinaryExpression {
     priority = 4;
 }
 
-binary expression DivideExpression base BinaryExpression {
-    priority = 8;
+binary expression MinusExpression base BinaryExpression {
+    priority = 4;
 }
 
 binary expression AndExpression base BinaryExpression {

@@ -176,10 +176,14 @@ StaffRole {
     ]
 }
 
-WorkflowDecision {
+WorkflowDescription {
     [
-    ${description}
+    Description: ${text}
     ]
+}
+
+WorkflowBranch {
+    [ Branch: ${branch}  ]
 }
 
 RobotMapping {
@@ -197,7 +201,7 @@ SourceToTargetMapping {
     ]
 }
 
-Description {
+NoteOrDescription {
    [ ${text} ]
 }
 

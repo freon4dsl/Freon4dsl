@@ -32,13 +32,15 @@ String {
     trigger = "'"
 }
 
-Boolean {
-    [$value]
+BooleanLiteralExpression {
+    [ ${value} ]
+    trigger = "boolean"
 }
 
 MultiplyExpression {
     symbol = "*"
 }
+
 DivideExpression {
     symbol = "/"
 }

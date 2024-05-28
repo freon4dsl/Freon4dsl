@@ -13,7 +13,7 @@ import {
     FRE_BINARY_EXPRESSION_RIGHT,
     HorizontalListBox, FreProjection, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil
 } from "@freon4dsl/core";
-import { Description } from "../language/gen/";
+import { NoteOrDescription } from "../language/gen/";
 
 /**
  * Class CustomStudyConfigurationModelProjection provides an entry point for the language engineer to
@@ -29,7 +29,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
      // add your custom methods here
 
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
-        ["Description", this.createDescription]
+        ["NoteOrDescription", this.createNoteOrDescription]
     ]);
 
     nodeTypeToTableDefinition: Map<string, () => FreTableDefinition> = new Map<string, () => FreTableDefinition>([
@@ -43,15 +43,15 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
 
     ////////////////////////////////////////////////////////////////////
 
-    createDescription (doc: Description): Box {
+    createNoteOrDescription (doc: NoteOrDescription): Box {
         return BoxFactory.horizontalLayout(
             doc,
-            "Description-hlist-line-0",
+            "NoteOrDescription-hlist-line-0",
             "",
             [
                 // BoxUtil.labelBox(doc, "", "top-1-line-0-item-0"),
                 // BoxUtil.textBox(this._element as Documentation, "text"),
-                new MultiLineTextBox(doc, "study-part-description",
+                new MultiLineTextBox(doc, "study-part-NoteOrDescription",
                     () => { return doc.text},
                     (t: string) => { doc.text = t}
                 ),
