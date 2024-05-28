@@ -61,8 +61,5 @@
     "packages/test",
     "packages/server"
   ],
-  "version": "0.6.0",
-  "dependencies": {
-    "svelte-autoresize-textarea": "^0.0.6"
-  }
+  "version": "0.6.0"
 }
