@@ -142,10 +142,10 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
         clsOtIntf.subConceptNames.filter(subName => !FreLanguage.getInstance().classifier(subName).isAbstract).forEach((creatableConceptname: string) => {
             submenuItemsBefore.push(new MenuItem(creatableConceptname,
                 "",
-                (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, creatableConceptname, true)));
+                (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, creatableConceptname, true)));
             submenuItemsAfter.push(new MenuItem(creatableConceptname,
                 "",
-                (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, creatableConceptname, false)));
+                (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, creatableConceptname, false)));
         });
         // tslint:disable-next-line:no-empty
         addBefore = new MenuItem(`Add before ${contextMsg}`, "Ctrl+A", (element: FreNode, index: number, editor: FreEditor) => {}, submenuItemsBefore);
@@ -154,10 +154,10 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     } else {
         addBefore = new MenuItem(`Add before ${contextMsg}`,
             "Ctrl+A",
-            (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, conceptName, true));
+            (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, conceptName, true));
         addAfter = new MenuItem(`Add after ${contextMsg}`,
             "Ctrl+I",
-            (element: FreNode, index: number, editor: FreEditor) => addListElement(listParent, propertyName, index, conceptName, false));
+            (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, conceptName, false));
     }
     const pasteBefore = new MenuItem("Paste before",
         "",
@@ -203,7 +203,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
  * @param typeOfAdded
  * @param before
  */
-function addListElement(listParent: FreNode, propertyName: string, index: number, typeOfAdded: string, before: boolean) {
+function addListElement(editor: FreEditor, listParent: FreNode, propertyName: string, index: number, typeOfAdded: string, before: boolean) {
     LOGGER.log(`addListElement of type: ${typeOfAdded} index: ${index}`);
     // get info about the property that needs to be changed
     const { property, isList, isPart, type } = getPropertyInfo(listParent, propertyName);
@@ -223,6 +223,8 @@ function addListElement(listParent: FreNode, propertyName: string, index: number
         runInAction(() => {
             property.splice(index, 0, newElement);
         });
+        editor.selectElement(newElement)
+        editor.selectFirstEditableChildBox(newElement)
         // LOGGER.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
     }
 }
@@ -317,17 +319,18 @@ function pasteListElement(listParent: FreNode, propertyName: string, index: numb
     // make the change
     if (isList) {
         LOGGER.log("List before: [" + property.map(x => x.freId()).join(", ") + "]");
+        let insertedElement = editor.copiedElement
         runInAction(() => {
-            // make a copy before the element is added as part of the model,
-            // because mobx decorators change the element's owner info:
-            // it is removed from 'editor.copiedElement'!
-            const tmp: FreNode = editor.copiedElement.copy();
             if (targetIndex <= property.length) {
                 property.splice(targetIndex, 0, editor.copiedElement);
             }
             // make sure the element can be pasted elsewhere
-            editor.copiedElement = tmp;
+            insertedElement = editor.copiedElement
+            editor.copiedElement = insertedElement.copy();
         });
+        editor.selectElement(insertedElement)
+        editor.selectFirstEditableChildBox(insertedElement)
+
         LOGGER.log("List after: [" + property.map(x => x.freId()).join(", ") + "]");
     }
 }

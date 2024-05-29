@@ -1,5 +1,6 @@
 import { FreBinaryExpression } from "../../ast";
 import { BTREE, FRE_BINARY_EXPRESSION_LEFT } from "../../util";
+import { RoleProvider } from "../simplifiedBoxAPI/index";
 import { FreCaret, FreCaretPosition } from "../util";
 import { Box } from "../boxes";
 import { FreEditor } from "../FreEditor";
@@ -68,7 +69,9 @@ export class FreCreateBinaryExpressionCommand extends FreCommand {
         // TODO Check whether this fix works consistently correct.
         const childProperty = selected.boxRoleToSelect === FRE_BINARY_EXPRESSION_LEFT ? "left" : "right";
         return function () {
+            LOGGER.log("FreCreateBinaryExpressionCommand select after: " + selected.element.freLanguageConcept() + " ID " + selected.element.freId() + " rolr " + childProperty)
             editor.selectElement(selected.element, childProperty);
+            editor.selectFirstEditableChildBox(selected.element)
         };
     }
 
@@ -77,13 +80,14 @@ export class FreCreateBinaryExpressionCommand extends FreCommand {
 
 export class FreCustomCommand extends FreCommand {
     boxRoleToSelect: string;
-    caretPosition: FreCaretPosition;
+    caretPosition: FreCaret;
     action: CustomAction;
 
-    constructor(action: CustomAction, boxRoleToSelect) {
+    constructor(action: CustomAction, boxRoleToSelect: string, caretPosition: FreCaret) {
         super();
         this.action = action;
         this.boxRoleToSelect = boxRoleToSelect;
+        this.caretPosition = caretPosition;
     }
 
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
@@ -96,7 +100,7 @@ export class FreCustomCommand extends FreCommand {
             if (!!self.boxRoleToSelect) {
                 return function () {
                     // console.log("FreCommand select " + box.element.freLanguageConcept() + " box " + self.boxRoleToSelect);
-                    editor.selectElement(selected, self.boxRoleToSelect);
+                    editor.selectElementBox(selected, self.boxRoleToSelect, self.caretPosition);
                 };
             } else {
                 // Default: select the first editable child of the selected element

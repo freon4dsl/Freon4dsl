@@ -27,4 +27,8 @@ export class FreCaret {
             this.to = from;
         }
     }
+    
+    toString(): string {
+        return "" + this.position
+    }
 }

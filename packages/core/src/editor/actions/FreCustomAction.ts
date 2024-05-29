@@ -23,6 +23,6 @@ export class FreCustomAction extends FreAction {
     }
 
     command(box: Box): FreCommand {
-        return new FreCustomCommand(this.action, this.boxRoleToSelect);
+        return new FreCustomCommand(this.action, this.boxRoleToSelect, this.caretPosition);
     }
 }

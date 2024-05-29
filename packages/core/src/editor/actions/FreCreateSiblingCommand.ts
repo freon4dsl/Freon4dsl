@@ -56,7 +56,7 @@ export class FreCreateSiblingCommand extends FreCommand {
         const self = this;
         if (!!this.boxRoleToSelect) {
             return function () {
-                editor.selectElement(newElement, self.boxRoleToSelect);
+                editor.selectElementBox(newElement, self.boxRoleToSelect);
             };
         } else {
             return function () {
