@@ -1,9 +1,10 @@
 import { FreLogger } from "../../logging/index";
+import { BTREE } from "../../util/index";
 import { EMPTY_POST_ACTION, FrePostAction, ReferenceShortcut } from "./FreAction";
 import { Box } from "../boxes";
 import { isString, FreTriggerUse, triggerTypeToString } from "./FreTriggers";
 import { FreEditor } from "../FreEditor";
-import { FreNode } from "../../ast";
+import { FreBinaryExpression, FreNode } from "../../ast";
 import { FreLanguage } from "../../language";
 import { FreCommand } from "./FreCommand";
 
@@ -69,7 +70,10 @@ export class FreCreatePartCommand extends FreCommand {
         if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
             newElement[this.referenceShortcut.propertyName] = FreLanguage.getInstance().referenceCreator(trigger, this.referenceShortcut.conceptName);
         }
-
+        // Always rebalance for a binary expression
+        if (newElement.freIsBinaryExpression()) {
+            BTREE.balanceTree(newElement as FreBinaryExpression, editor)
+        }
         return function () {
             // editor.selectElement(newElement);
             // tslint:disable-next-line:max-line-length

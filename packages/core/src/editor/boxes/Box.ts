@@ -1,5 +1,10 @@
 import { FreNode } from "../../ast";
-import { isNullOrUndefined, FreUtils } from "../../util";
+import {
+    isNullOrUndefined,
+    FreUtils,
+    FRE_BINARY_EXPRESSION_LEFT,
+    FRE_BINARY_EXPRESSION_RIGHT
+} from "../../util";
 import { FreLogger } from "../../logging";
 
 const LOGGER = new FreLogger("Box");
@@ -174,6 +179,22 @@ export abstract class Box {
     }
 
     /**
+     * Find the first box with role = `role`.
+     */
+    findBoxWithRole(role: string): Box | null {
+        if (this.role === role) {
+            return this;
+        }
+
+        for (const b of this.children) {
+            const result = b.findBoxWithRole(role);
+            if (result !== null) {
+                return result;
+            }
+        }
+        return null;
+    }
+    /**
      * Find first box for element with `freId()` equals elementId and with `role` inside `this`
      * and all of its children recursively.
      * @param propertyName
@@ -213,7 +234,9 @@ export abstract class Box {
      * @param propertyIndex
      */
     findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box | null {
-        // console.log('findChildBoxForProperty ' + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+        // if (propertyName === "value" && propertyIndex === undefined) {
+            console.log('findChildBoxForProperty ' + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+        // }
         for (const child of this.children) {
             // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
             if (!isNullOrUndefined(propertyName)) {
@@ -260,7 +283,12 @@ export abstract class Box {
         const editableChildren: Box[] = [];
         this.getEditableChildrenRecursive(editableChildren);
         if (editableChildren.length > 0) {
-            return editableChildren[0];
+            // Prefer a left- or right-placeholder if possible
+            const binaryPlaceHolders = editableChildren.filter(box => 
+                box.role === FRE_BINARY_EXPRESSION_LEFT ||
+                box.role === FRE_BINARY_EXPRESSION_RIGHT
+            )
+            return binaryPlaceHolders.length > 0 ? binaryPlaceHolders[0] : editableChildren[0];
         } else {
             return this;
         }

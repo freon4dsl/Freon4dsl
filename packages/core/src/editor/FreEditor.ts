@@ -77,6 +77,7 @@ export class FreEditor {
     // Called when the editor selection has changed
     selectionChanged(): void {
         if (this.refreshComponentSelection !== undefined && this.refreshComponentSelection !== null) {
+            LOGGER.log("selectionChanged() for FreEditor");
             this.refreshComponentSelection("====== FROM FreEditor");
         } else {
             LOGGER.log("No selectionChanged() for FreEditor");
@@ -149,7 +150,7 @@ export class FreEditor {
      * @param caretPosition
      */
     selectElement(element: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
-        LOGGER.log("selectElement " + element?.freLanguageConcept() + " with id " + element?.freId() + ", property: [" + propertyName + ", " + propertyIndex + "]");
+        LOGGER.log("selectElement " + element?.freLanguageConcept() + " with id " + element?.freId() + ", property: [" + propertyName + ", " + propertyIndex + "]" + " " + caretPosition);
         if (this.checkParam(element)) {
             const box = this.projection.getBox(element);
             const propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
@@ -163,6 +164,42 @@ export class FreEditor {
                 this._selectedIndex = -1;
             }
             if (!isNullOrUndefined(caretPosition)) {
+                LOGGER.log("Set caretPosition to " +  caretPosition)
+                this._selectedPosition = caretPosition;
+            } else {
+                this._selectedPosition = FreCaret.UNSPECIFIED;
+            }
+            this._selectedElement = element;
+            this.selectionChanged();
+        }
+    }
+
+    /**
+     * The only setter for _selectedElement, used to programmatically select an element,
+     * e.g. from the webapp or caused by a model change on the server.
+     * @param element
+     * @param propertyName
+     * @param propertyIndex
+     * @param caretPosition
+     */
+    selectElementBox(element: FreNode, role: string, caretPosition?: FreCaret) {
+        LOGGER.log("selectElementBox " + element?.freLanguageConcept() + " with id " + element?.freId() + ", role: [" + role + "]" + " " + caretPosition);
+        if (this.checkParam(element)) {
+            const box = this.projection.getBox(element);
+            const propBox = box.findBoxWithRole(role);
+            if (!isNullOrUndefined(propBox)) {
+                this._selectedBox = propBox;
+                // this._selectedProperty = propertyName;
+                // this._selectedIndex = propertyIndex;
+                this._selectedProperty = "";
+                this._selectedIndex = -1;
+            } else {
+                this._selectedBox = box;
+                this._selectedProperty = "";
+                this._selectedIndex = -1;
+            }
+            if (!isNullOrUndefined(caretPosition)) {
+                LOGGER.log("Set caretPosition to " +  caretPosition)
                 this._selectedPosition = caretPosition;
             } else {
                 this._selectedPosition = FreCaret.UNSPECIFIED;
@@ -263,7 +300,7 @@ export class FreEditor {
                 const length = arrayProperty.length;
                 if (length === 0) {
                     // TODO Maybe we should select the element (or leaf) just before the list.
-                    this.selectElement(parentElement, `${ownerDescriptor.owner.freLanguageConcept()}-${ownerDescriptor.propertyName}`);
+                    this.selectElementBox(parentElement, `${ownerDescriptor.owner.freLanguageConcept()}-${ownerDescriptor.propertyName}`);
                 } else if (length <= propertyIndex) {
                     this.selectElement(arrayProperty[propertyIndex - 1]);
                 } else {
@@ -272,7 +309,7 @@ export class FreEditor {
             } else {
                 ownerDescriptor.owner[ownerDescriptor.propertyName] = null;
                 // TODO The rolename is identical to the one generated in Roles.ts,  should not be copied here
-                this.selectElement(ownerDescriptor.owner,
+                this.selectElementBox(ownerDescriptor.owner,
                     (ownerDescriptor.owner.freIsBinaryExpression() ? `FreBinaryExpression-${ownerDescriptor.propertyName}` : `${ownerDescriptor.owner.freLanguageConcept()}-${ownerDescriptor.propertyName}`));
             }
         }

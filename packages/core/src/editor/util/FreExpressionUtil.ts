@@ -135,7 +135,7 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
                     FreUtils.replaceExpression(exp, newExp, innerEditor);
                     BTREE.balanceTree(newExp, innerEditor);
                     exp = newExp;
-                    innerEditor.selectElement(newExp, AFTER_BINARY_OPERATOR); // todo adjust property name
+                    innerEditor.selectElementBox(newExp, AFTER_BINARY_OPERATOR); // todo adjust property name
                     // editor.selectBoxNew(operatorBox.nextLeafRight.firstLeaf, FreCaret.LEFT_MOST);
                     return BehaviorExecutionResult.EXECUTED;
                 }
