@@ -23,6 +23,10 @@ PlusExpression {
     symbol = "+"
 }
 
+MinusExpression {
+    symbol = "-"
+}
+
 Number {
     [${value}]
 }
