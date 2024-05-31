@@ -1,46 +1,22 @@
 import * as fs from "fs";
 import request from "supertest";
-
-const modelUnitInterfacePostfix: string = "Public";
-const modelName: string = "__TEST__";
-const contentHgUnit = {
-    $typename: "ExampleUnit",
-    name: "hg",
-    entities: [],
-    methods: [
-        {
-            $typename: "Method",
-            name: "gfah ",
-            body: null,
-            parameters: [],
-            declaredType: null
-        }
-    ]
-};
-const contentHgIntf = {
-    $typename: "ExampleUnit",
-    name: "hg",
-    entities: [],
-    methods: [
-        {
-            $typename: "Method",
-            name: "gfah "
-        }
-    ]
-};
-const emptyJson = {};
-const storeFolder = "./modelstore";
-var path = require("path");
+import { FreModelUnit, FreModel, FreNode, FreLanguage, LwChunk, FreLogger, FreLionwebSerializer } from "@freon4dsl/core";
+// import * as classes from '../../../playground/src/StudyConfiguration/language/gen/index';
+import { StudyConfigurationModelEnvironment } from "../../../playground/src/StudyConfiguration/config/gen/StudyConfigurationModelEnvironment";  
+import { StudyConfiguration } from "../../../playground/src/StudyConfiguration/language/gen/StudyConfiguration";
 
 describe("Generate Study Site", () => {
 
     test(" is able to generate a file from a model", async () => {
-        console.log("Generate Study Site");
-        var name = "hg";
-        var modelAsJson:string = fs.readFileSync(path.join(`${storeFolder}`, modelName, `${name}.json`)).toString();
-        let parsedModel = JSON.parse(modelAsJson);
-        parsedModel.
-        expect(parsedModel).toEqual(contentHgUnit);
+
+        FreLogger.muteAllLogs();
+        const tmp = StudyConfigurationModelEnvironment.getInstance();
+        const serializer = new FreLionwebSerializer();
+        let metaModel: LwChunk = JSON.parse(fs.readFileSync("./modelstore/StudyConfiguration/Study2.json").toString());
+        console.log("Instance:" + JSON.stringify(FreLanguage.getInstance()));
+        const ts = serializer.toTypeScriptInstance(metaModel);
+        let model: StudyConfiguration = ts as StudyConfiguration;
+        console.log("model:" + JSON.stringify(model.freId()));
     });
 
 });
