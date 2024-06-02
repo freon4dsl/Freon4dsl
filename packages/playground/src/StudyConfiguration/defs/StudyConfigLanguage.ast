@@ -121,8 +121,7 @@ concept SourceToTargetMapping {
 interface WorkflowDecision {
 }
 
-concept WorkflowDescription implements WorkflowDecision {
-    text: Description;
+concept WorkflowDescription base Description implements WorkflowDecision  {
 }
 
 concept WorkflowBranch implements WorkflowDecision {
