@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.json",
 
   "compilerOptions": {
-    "importsNotUsedAsValues": "error",
-    "isolatedModules": true
+//    "importsNotUsedAsValues": "error", /* deprecated and will stop functioning in TypeScript 5.5 */
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false
   }
 }

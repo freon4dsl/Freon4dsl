@@ -44,14 +44,14 @@
     "@rollup/plugin-terser": "0.4.4",
     "svelte": "3.55.1",
     "svelte-check": "3.0.3",
-    "svelte-preprocess": "5.0.1",
+    "svelte-preprocess": "5.1.4",
     "ts-jest": "29.1.2",
     "ts-loader": "6.2.0",
     "ts-node": "^10.9.1",
     "ts-pegjs": "0.2.6",
     "tslib": "2.4.0",
-    "typescript": "4.5.5",
-    "typescript-svelte-plugin": "0.3.14"
+    "typescript": "5.4.5",
+    "typescript-svelte-plugin": "0.3.38"
   },
   "workspaces": [
     "packages/core",
