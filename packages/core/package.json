@@ -30,6 +30,6 @@
     "lodash": "^4.17.21",
     "mobx": "6.3.3",
     "reflect-metadata": "^0.1.13",
-    "tslib": "2.4.0"
+    "tslib": "2.6.2"
   }
 }

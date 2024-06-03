@@ -35,6 +35,6 @@
     "koa-router": "10.0.0",
     "koa2-cors": "2.0.6",
     "supertest": "^6.1.6",
-    "tslib": "2.4.0"
+    "tslib": "2.6.2"
   }
 }

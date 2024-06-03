@@ -124,11 +124,11 @@
     "smui-theme": "^6.0.0-beta.16",
     "svelte-check": "^3.8.0",
     "svelte-preprocess": "^5.1.4",
-    "typescript": "4.5.5"
+    "typescript": "5.4.5"
   },
   "dependencies": {
     "@freon4dsl/core": "0.6.0",
-    "@freon4dsl/core-svelte": "0.6.0",
+    "@freon4dsl/core-svelte": "0.7.0",
     "@freon4dsl/server": "0.6.0",
     "@types/node": "^20.12.11",
     "click-outside": "1.0.4",
@@ -138,6 +138,6 @@
     "mobx-utils": "6.0.4",
     "net.akehurst.language-agl-processor": "4.0.0-rc.5",
     "sirv-cli": "^1.0.0",
-    "tslib": "^2.4.0"
+    "tslib": "^2.6.2"
   }
 }
