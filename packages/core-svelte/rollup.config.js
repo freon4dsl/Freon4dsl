@@ -10,7 +10,7 @@ import autoExternal from 'rollup-plugin-auto-external';
 
 // const production = !process.env.ROLLUP_WATCH;
 const production = false;
-const name = pkg.name
+const nname = pkg.name
 	.replace(/^(@\S+\/)?(svelte-)?(\S+)/, '$3')
 	.replace(/^\w/, m => m.toUpperCase())
 	.replace(/-\w/g, m => m[1].toUpperCase());
@@ -44,7 +44,7 @@ export default {
 		{
 			file: pkg.main,
 			format: 'umd',
-			name,
+			name: nname,
 			sourcemap: !production,
 			globals: {
 				'@freon4dsl/core': '@freon4dsl/core',
