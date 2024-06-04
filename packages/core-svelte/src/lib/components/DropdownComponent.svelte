@@ -3,7 +3,7 @@
      * This component is a dropdown menu that is used with a TextDropdownComponent.
      */
     import { createEventDispatcher } from "svelte";
-    import { FreLogger, SelectOption } from "@freon4dsl/core";
+    import { FreLogger, type SelectOption } from "@freon4dsl/core";
 
     export let selectedId: string = "";
     export let options: SelectOption[] = [];

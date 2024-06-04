@@ -29,7 +29,7 @@
 		FreErrorSeverity,
 		SHIFT,
 		TAB,
-		TextBox, isRegExp, triggerTypeToString, FrePostAction
+		TextBox, isRegExp, triggerTypeToString, type FrePostAction
 	} from "@freon4dsl/core";
 
 	import { runInAction } from "mobx";

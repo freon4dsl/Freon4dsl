@@ -128,7 +128,7 @@
   },
   "dependencies": {
     "@freon4dsl/core": "0.6.0",
-    "@freon4dsl/core-svelte": "0.7.0",
+    "@freon4dsl/core-svelte": "0.6.0",
     "@freon4dsl/server": "0.6.0",
     "@types/node": "^20.12.11",
     "click-outside": "1.0.4",

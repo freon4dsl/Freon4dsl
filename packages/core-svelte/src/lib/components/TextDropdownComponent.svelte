@@ -8,7 +8,7 @@
     import DropdownComponent from "./DropdownComponent.svelte";
     import { clickOutsideConditional, componentId, selectedBoxes } from "./svelte-utils";
     import {
-        AbstractChoiceBox,
+        type AbstractChoiceBox,
         ARROW_DOWN,
         ARROW_UP,
         ENTER,
@@ -16,7 +16,7 @@
         isSelectBox,
         FreEditor,
         FreLogger,
-        SelectOption,
+        type SelectOption,
         TextBox
     } from "@freon4dsl/core";
 
