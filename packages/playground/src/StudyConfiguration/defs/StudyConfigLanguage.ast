@@ -75,6 +75,24 @@ concept Step {
     systems: SystemAccessReference[];
 }
 
+interface WorkflowDecision {
+}
+
+concept WorkflowDescription implements WorkflowDecision  {
+    text: Description;
+}
+
+concept WorkflowBranch implements WorkflowDecision {
+    branch: StudyConfigExpression;
+}
+
+interface NoteOrDescription {
+    text: string;
+}
+
+concept Description implements NoteOrDescription {
+}
+
 concept SystemAccess {
     name: identifier;
     functionName: string;
@@ -118,16 +136,6 @@ concept SourceToTargetMapping {
     targetField : string;
 }
 
-interface WorkflowDecision {
-}
-
-concept WorkflowDescription base Description implements WorkflowDecision  {
-}
-
-concept WorkflowBranch implements WorkflowDecision {
-    branch: StudyConfigExpression;
-}
-
 concept Person {
     name: identifier;
     useSystemContact: boolean;
@@ -136,10 +144,3 @@ concept Person {
     role: StaffRole;
 }
  
-interface NoteOrDescription {
-    text: string;
-}
-
-concept Description implements NoteOrDescription {
-}
-

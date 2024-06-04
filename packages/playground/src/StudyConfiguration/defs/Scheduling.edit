@@ -34,7 +34,7 @@ RepeatCondition {
 
 RepeatCount {
     [
-        time(s) ${repeatCount} 
+        ${repeatCount} time(s)  
     ]
     trigger = "Number of Times"
 } 
@@ -48,21 +48,26 @@ EventTimeOfDay {
 
 EventWindow {
     [
-        From: ${fromTimePoint}
-        To:   ${toTimePoint}
+        ${daysBefore} day(s) before
+        ${daysAfter}  day(s) after
     ]
+    trigger = "Before/After"
 }
 
 EventSchedule {
     [
-    First Scheduled  : ${eventStart}
+    First Scheduled : ${eventStart}
 
-    Then Repeats     : ${eventRepeat}
+    Then Repeats    : ${eventRepeat}
 
-    Scheduling Window: ${eventWindow}
+    Window          : ${eventWindow}
 
-    Time of Day      : ${eventTimeOfDay}
+    Time of Day     : ${eventTimeOfDay}
     ]
     trigger = "First, Repeats, Window..."
 } 
+
+Days {
+    [${count}]
+}
 

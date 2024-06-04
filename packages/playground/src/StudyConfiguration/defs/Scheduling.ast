@@ -34,9 +34,13 @@ concept RepeatCount implements RepeatExpression {
     repeatCount: number;
 }
 
+concept Days {
+    count: number;
+}
+
 concept EventWindow {
-    fromTimePoint: string;
-    toTimePoint: string;
+    daysBefore: Days;
+    daysAfter: Days;
 }
 
 concept EventTimeOfDay {
@@ -52,4 +56,3 @@ concept EventSchedule {
     eventRepeat: RepeatExpression;
     eventTimeOfDay: EventTimeOfDay;
 }
-

@@ -49,13 +49,11 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             "Description-hlist-line-0",
             "",
             [
-                // BoxUtil.labelBox(doc, "", "top-1-line-0-item-0"),
                 // BoxUtil.textBox(this._element as Documentation, "text"),
                 new MultiLineTextBox(doc, "study-part-description",
                     () => { return doc.text},
                     (t: string) => { doc.text = t}
                 ),
-                // BoxUtil.labelBox(doc, ":end doc", "top-1-line-0-item-2")
             ],
             { selectable: false }
         );
