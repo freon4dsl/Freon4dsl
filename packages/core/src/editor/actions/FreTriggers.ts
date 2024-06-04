@@ -4,6 +4,9 @@ export type FreTriggerType = string | RegExp | FreKey; // the definition, like p
 export type FreTriggerUse = string | FreKey; // the use, like argument
 
 export function isRegExp(a: FreTriggerType): a is RegExp {
+    if (a === undefined) {
+        return false
+    }
     return (a as any).exec !== undefined;
 }
 
