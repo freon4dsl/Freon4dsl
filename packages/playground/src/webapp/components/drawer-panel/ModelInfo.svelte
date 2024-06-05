@@ -57,17 +57,18 @@
 </div>
 
 <script lang="ts">
-    import List, { Group, Item, Text, Separator } from "@smui/list";
+    import List, { Group, Item, Separator, Text } from "@smui/list";
     import { unitTypes } from "../stores/LanguageStore";
     import { currentUnitName, toBeDeleted, toBeRenamed, units } from "../stores/ModelStore";
     import type { MenuComponentDev } from "@smui/menu";
-    import { Subtitle } from "@smui/drawer";
     import Menu from "@smui/menu";
+    import { Subtitle } from "@smui/drawer";
     import { deleteUnitDialogVisible, renameUnitDialogVisible } from "../stores/DialogStore";
     import { EditorState } from "../../language/EditorState";
     import { setUserMessage } from "../stores/UserMessageStore";
     import { ImportExportHandler } from "../../language/ImportExportHandler";
-    import { Anchor } from '@smui/menu-surface';
+    import { Anchor } from "@smui/menu-surface";
+    import { FreErrorSeverity } from "@freon4dsl/core";
 
     // TODO add rename option to context menu
     let menus: MenuComponentDev[] = [];
@@ -115,9 +116,9 @@
         // console.log("ModelInfo.saveUnit: " + $units[index].name);
         if ($units[index].name === $currentUnitName) {
             EditorState.getInstance().saveCurrentUnit();
-            setUserMessage(`Unit '${$units[index].name}' saved.`, 0);
+            setUserMessage(`Unit '${$units[index].name}' saved.`, FreErrorSeverity.Warning);
         } else {
-            setUserMessage(`Unit '${$units[index].name}' has no changes.`, 0);
+            setUserMessage(`Unit '${$units[index].name}' has no changes.`, FreErrorSeverity.Warning);
         }
     };
 
@@ -130,7 +131,8 @@
     const exportUnit = (index: number) => {
         // TODO Only allow export of current unit, may be extended to other units.
         if ($units[index].name !== $currentUnitName) {
-            setUserMessage('Can only export unit in editor', 0);
+            // TODO make error message more clear
+            setUserMessage('Can only export unit in editor', FreErrorSeverity.Warning);
         } else {
             new ImportExportHandler().exportUnit($units[index]);
         }

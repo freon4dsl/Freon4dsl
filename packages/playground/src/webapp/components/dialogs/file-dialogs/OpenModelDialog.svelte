@@ -98,16 +98,22 @@
         resetVariables();
     }
 
-    const handleKeydown = (event: KeyboardEvent) => {
-        switch (event.key) {
-            case Keys.ENTER: { // on Enter key try to submit
-                event.stopPropagation();
-                event.preventDefault();
-                if (!newNameInvalid()) {
-                    doSubmit();
-                    resetVariables();
+    function isKeyBoardEvent(event: Event): event is KeyboardEvent {
+        return 'detail' in event;
+    }
+
+    const handleKeydown = (event: Event) => {
+        if (isKeyBoardEvent(event)) {
+            switch (event.key) {
+                case Keys.ENTER: { // on Enter key try to submit
+                    event.stopPropagation();
+                    event.preventDefault();
+                    if (!newNameInvalid()) {
+                        doSubmit();
+                        resetVariables();
+                    }
+                    break;
                 }
-                break;
             }
         }
     }

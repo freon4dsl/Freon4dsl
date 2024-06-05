@@ -13,7 +13,7 @@
     import Button from "@smui/button";
     import { FreErrorSeverity } from "@freon4dsl/core";
 
-    // <Icon slot='icon' class="less-padding" component={Svg} viewBox='0 0 48 48'>
+    // <Icon slot='icon' class="less-padding" tag=svg viewBox='0 0 48 48'>
     //     {#if $severity === FreErrorSeverity.Info}
     //     <path d={mdiInformation}/>
     // {:else if $severity === FreErrorSeverity.Hint}

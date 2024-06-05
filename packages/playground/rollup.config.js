@@ -7,7 +7,6 @@ import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
-
 import childProcess from 'child_process';
 
 const production = !process.env.ROLLUP_WATCH;
@@ -46,7 +45,8 @@ export default {
 		name: 'app',
 		file: 'public/build/bundle.js',
 		globals: {
-			'kotlin': 'kotlin'
+			'kotlin': 'kotlin',
+			'agl': 'net.akehurst.language-agl-processor'
 		}
 	},
 	plugins: [
@@ -71,7 +71,8 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: ['svelte'],
+			exportConditions: ['svelte']
 		}),
 
 		typescript({
@@ -80,7 +81,7 @@ export default {
 		}),
 		injectProcessEnv({
 			NODE_ENV: 'development',
-			NODE_PORT: '3002'
+			NODE_PORT: '8001'
 		}),
 
 		// In dev mode, call `npm run start` once
