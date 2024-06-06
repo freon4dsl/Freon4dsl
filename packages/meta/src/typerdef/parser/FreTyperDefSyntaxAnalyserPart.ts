@@ -35,6 +35,7 @@ import { FretPropInstance } from "../metalanguage/FretPropInstance";
 import { FretBinaryExp } from "../metalanguage/expressions/FretBinaryExp";
 import { FretConformanceRule } from "../metalanguage/FretConformanceRule";
 import { FretEqualsRule } from "../metalanguage/FretEqualsRule";
+import SPPTBranchFromInput = net.akehurst.language.agl.sppt.SPPTBranchFromInput;
 
 /**
  * This class is the (mainly) generated syntax analyser that reforms the parsed
@@ -144,7 +145,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         } // RHSListGroup
         __properties = [];
         const _myList = this.mainAnalyser.getChildren(children[4]);
-        _myList.forEach(subNode => {
+        _myList.forEach((subNode: SPPTBranchFromInput) => {
             const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(subNode.nonSkipChildren?.toArray()[0]);
             if (!!_transformed) {
                 __properties.push(_transformed);
@@ -338,7 +339,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         // RHSBinExpListWithTerminator
         __conditions = [];
         const _myList = this.mainAnalyser.getChildren(children[3]);
-        _myList.forEach(subNode => {
+        _myList.forEach((subNode: SPPTBranchFromInput) => {
             const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(subNode.nonSkipChildren?.toArray()[0]);
             if (!!_transformed) {
                 __conditions.push(_transformed);

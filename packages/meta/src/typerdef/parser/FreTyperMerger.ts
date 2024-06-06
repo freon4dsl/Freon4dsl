@@ -51,9 +51,11 @@ export class FreTyperMerger {
                 if (!!typeDefinition) {
                     submodels.push(typeDefinition);
                 }
-            } catch (e) {
-                console.log(e.stack);
-                throw new Error("In file " + file + ": " + e.message);
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    console.log(e.stack);
+                    throw new Error("In file " + file + ": " + e.message);
+                }
             }
         }
 

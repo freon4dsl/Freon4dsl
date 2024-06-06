@@ -9,7 +9,7 @@ import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
-import { MetaLogger } from "../utils/MetaLogger";
+import { MetaLogger } from "../utils";
 import { GenerationStatus, FileUtil } from "../utils";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { FreMetaLanguage } from "../languagedef/metalanguage";
@@ -93,8 +93,10 @@ export class FreonCleanAction extends CommandLineAction {
             this.cleanValidator();
             this.cleanScoper();
             this.cleanTyper();
-        } catch (e) {
-            LOGGER.error("Stopping cleaning because of errors: " + e.message + "\n");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOGGER.error("Stopping cleaning because of errors: " + e.message + "\n");
+            }
         }
     }
 
@@ -104,9 +106,11 @@ export class FreonCleanAction extends CommandLineAction {
             this.typerGenerator.outputfolder = this.outputFolder;
             this.typerGenerator.language = this.language;
             this.typerGenerator.clean(this.force);
-        } catch (e) {
-            // LOGGER.error("Stopping typer cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error("Stopping typer cleansing because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // LOGGER.error("Stopping typer cleansing because of errors: " + e.message + "\n" + e.stack);
+                LOGGER.error("Stopping typer cleansing because of errors: " + e.message);
+            }
         }
     };
 
@@ -116,9 +120,11 @@ export class FreonCleanAction extends CommandLineAction {
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.language = this.language;
             this.scoperGenerator.clean(this.force);
-        } catch (e) {
-            // LOGGER.error("Stopping scoper cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error("Stopping scoper cleansing because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // LOGGER.error("Stopping scoper cleansing because of errors: " + e.message + "\n" + e.stack);
+                LOGGER.error("Stopping scoper cleansing because of errors: " + e.message);
+            }
         }
     };
 
@@ -128,9 +134,11 @@ export class FreonCleanAction extends CommandLineAction {
             this.validatorGenerator.outputfolder = this.outputFolder;
             this.validatorGenerator.language = this.language;
             this.validatorGenerator.clean(this.force);
-        } catch (e) {
-            // LOGGER.error("Stopping validator cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error("Stopping validator cleansing because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // LOGGER.error("Stopping validator cleansing because of errors: " + e.message + "\n" + e.stack);
+                LOGGER.error("Stopping validator cleansing because of errors: " + e.message);
+            }
         }
     };
 
@@ -144,9 +152,11 @@ export class FreonCleanAction extends CommandLineAction {
             this.parserGenerator.outputfolder = this.outputFolder;
             this.parserGenerator.language = this.language;
             this.parserGenerator.clean(this.force);
-        } catch (e) {
-            // LOGGER.error("Stopping editor and parser cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error("Stopping editor, reader and writer cleansing because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // LOGGER.error("Stopping editor and parser cleansing because of errors: " + e.message + "\n" + e.stack);
+                LOGGER.error("Stopping editor, reader and writer cleansing because of errors: " + e.message);
+            }
         }
     };
 

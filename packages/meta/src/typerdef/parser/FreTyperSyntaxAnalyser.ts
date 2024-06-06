@@ -39,12 +39,14 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
             } else if (node.isBranch) {
                 return this.transformSharedPackedParseTreeBranch(node as SPPTBranch);
             }
-        } catch (e) {
-            if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in MetaTyperSyntaxAnalyser")) {
-                throw e;
-            } else {
-                // add more info to the error message
-                throw new Error(`Syntax error in "${node?.matchedText.trimEnd()}": ${e.message}`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in MetaTyperSyntaxAnalyser")) {
+                    throw e;
+                } else {
+                    // add more info to the error message
+                    throw new Error(`Syntax error in "${node?.matchedText.trimEnd()}": ${e.message}`);
+                }
             }
         }
     }
@@ -133,8 +135,10 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
         if (!!branch && !!branch.nonSkipChildren) {
             try {
                 return branch.nonSkipChildren.toArray();
-            } catch (e) {
-                throw new Error(`Cannot follow branch: ${e.message} (${branch.matchedText.trimEnd()})`);
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    throw new Error(`Cannot follow branch: ${e.message} (${branch.matchedText.trimEnd()})`);
+                }
             }
         }
         return null;
@@ -151,8 +155,10 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
             let nextOne: any = null;
             try {
                 nextOne = group.nonSkipChildren.toArray()[0];
-            } catch (e) {
-                throw new Error(`Cannot follow group: ${e.message} (${group.matchedText})`);
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    throw new Error(`Cannot follow group: ${e.message} (${group.matchedText})`);
+                }
             }
             if (!nextOne.name.includes("multi") && !nextOne.name.includes("group")) {
                 stop = true; // found a branch with actual content, return its parent!

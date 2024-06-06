@@ -1,11 +1,11 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { FreGenericParser } from "../../utils";
-import { ValidatorChecker } from "../../validatordef/metalanguage";
+import { ValidatorChecker } from "../metalanguage";
 import { ValidatorDef } from "../metalanguage";
 import { setCurrentFileName } from "./ValidatorCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 
-const validatorParser = require("./ValidatorGrammar");
+import validatorParser  from "./ValidatorGrammar";
 
 export class ValidatorParser extends FreGenericParser<ValidatorDef> {
     public language: FreMetaLanguage;
@@ -32,7 +32,8 @@ export class ValidatorParser extends FreGenericParser<ValidatorDef> {
             });
             return result;
         } else {
-            return null;
+            return null as any;
+            // TODO rethink use of null, maybe make return type of function 'ValidatorDef | null'
         }
     }
 

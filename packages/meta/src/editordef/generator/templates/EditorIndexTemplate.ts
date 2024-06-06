@@ -16,7 +16,7 @@ export class EditorIndexTemplate {
         });
         boxProviderConcepts.push(...extraClassifiers);
         return ` ${language.usedLanguages.map(lang => `  
-            export * from "./${Names.actions(language)}"; 
+            export * from "./${Names.actions(language)}";
             export * from "./${Names.defaultActions(language)}";`).join("")} 
         ${boxProviderConcepts.map(cls => `export * from "./${Names.boxProvider(cls)}";` ).join("")} 
             export * from "./EditorDef"; `;

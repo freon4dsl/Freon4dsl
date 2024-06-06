@@ -84,13 +84,12 @@ export class FreTyperGenUtils {
                         // if (varName === "modelelement" && varIsType) {
                         //     throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
                         // }
-                        // if (varName !== "modelelement" && !varIsType) {
-                        //     throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
-                        // }
                         result = `this.mainTyper.${inferFunctionName}(${FreTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)}) /* FretPropertyCallExp C */`;
                     }
-                } catch (e) {
-                    console.log(e.stack);
+                } catch (e: unknown) {
+                    if (e instanceof Error) {
+                        console.log(e.stack);
+                    }
                 }
             }
         } else if (exp instanceof FretSelfExp) {

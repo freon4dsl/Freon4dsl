@@ -131,9 +131,11 @@ export class ReaderWriterGenerator {
             testContent = testContent.replace("}\`; // end of grammar", "}");
             testContent = testContent.replace(new RegExp("\\\\\\\\", "gm"), "\\");
             Agl.processorFromString(testContent, null, null, null);
-        } catch (e) {
-            generationStatus.numberOfErrors += 1;
-            LOGGER.error(`Error in creating grammar for ${this.language?.name}: '${e.message}`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                generationStatus.numberOfErrors += 1;
+                LOGGER.error(`Error in creating grammar for ${this.language?.name}: '${e.message}`);
+            }
         }
     }
 
