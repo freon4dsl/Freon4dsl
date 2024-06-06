@@ -55,7 +55,7 @@ export class ProjectionTemplate {
     generateBoxProvider(language: FreMetaLanguage, concept: FreMetaClassifier, editDef: FreEditUnit, extraClassifiers: FreMetaClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        this.coreImports.push(...["Box", "BoxUtil", "BoxFactory", Names.FreNode, "FreBoxProvider", "FreProjectionHandler", Names.FreLanguage]);
+        this.coreImports.push(...["Box", "BoxUtil", "BoxFactory", "FreBoxProvider", "FreProjectionHandler"]);
 
         // see which projections there are for this concept
         // myProjections: all non table projections

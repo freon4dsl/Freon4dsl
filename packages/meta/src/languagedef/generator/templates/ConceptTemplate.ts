@@ -35,7 +35,6 @@ export class ConceptTemplate {
         const abstract = (concept.isAbstract ? "abstract" : "");
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const implementsFre = (isExpression ? Names.FreExpressionNode : (hasName ? Names.FreNamedNode : Names.FreNode));
-        const needsObservable = concept.implementedPrimProperties().length > 0;
         const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .concat(implementsFre).concat([Names.FreParseLocation]).concat(hasReferences ? (Names.FreNodeReference) : "");
         const metaType = Names.metaType(language);
@@ -72,7 +71,7 @@ export class ConceptTemplate {
         `;
 
         return `
-            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
+            ${ConceptUtils.makeImportStatements(coreImports, modelImports)}
 
             ${result}`;
     }
@@ -85,7 +84,6 @@ export class ConceptTemplate {
         const isAbstract = concept.isAbstract;
         const baseExpressionName = Names.concept(GenerationUtil.findExpressionBase(concept));
         const abstract = concept.isAbstract ? "abstract" : "";
-        const needsObservable = concept.implementedPrimProperties().length > 0;
         const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .concat([Names.FreBinaryExpression, Names.FreParseLocation]);
         const metaType = Names.metaType(language);
@@ -158,7 +156,7 @@ export class ConceptTemplate {
         `;
 
         return `
-            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, modelImports)}
+            ${ConceptUtils.makeImportStatements(coreImports, modelImports)}
 
             ${result}`;
     }
@@ -172,7 +170,6 @@ export class ConceptTemplate {
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const abstract = (concept.isAbstract ? "abstract" : "");
-        const needsObservable = concept.implementedPrimProperties().length > 0;
         const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([Names.FreNamedNode, Names.FreParseLocation]);
         const metaType = Names.metaType(language);
         const imports = this.findModelImports(concept, myName);
@@ -215,7 +212,7 @@ export class ConceptTemplate {
                     });` ). join(" ")}`;
 
         return `
-            ${ConceptUtils.makeImportStatements(needsObservable, coreImports, imports)}
+            ${ConceptUtils.makeImportStatements(coreImports, imports)}
 
             ${result}`;
     }

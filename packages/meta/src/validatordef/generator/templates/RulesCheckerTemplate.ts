@@ -87,8 +87,7 @@ export class RulesCheckerTemplate {
             // may not contain whitespaces
             if (/[\\t|\\n|\\r| ]/.test(name)) return false;
             // may not be a Typescript keyword
-            if (reservedWordsInTypescript.includes(name)) return false;
-            return true;
+            return !reservedWordsInTypescript.includes(name);
             }
         }
         `;
