@@ -196,7 +196,7 @@ export class RulesCheckerTemplate {
     }
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
-        if (message && message.length === 0) {
+        if (message || message.length === 0) {
             message = `"Type " + this.typer.inferType(${GenerationUtil.langExpToTypeScript(r.type1)})?.toFreString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1)}) +
                          "] does not conform to " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2)})`;
         }
@@ -211,7 +211,7 @@ export class RulesCheckerTemplate {
         // TODO make sure alle errors message use the same format
         const leftElement: string = GenerationUtil.langExpToTypeScript(r.type1);
         const rightElement: string = GenerationUtil.langExpToTypeScript(r.type2);
-        if (message && message.length === 0) {
+        if (message || message.length === 0) {
             message = `"Type of '"+ this.myWriter.writeNameOnly(${leftElement})
                         + "' (" + leftType${index}?.toFreString(this.myWriter) + ") should equal the type of '"
                         + this.myWriter.writeNameOnly(${rightElement})
