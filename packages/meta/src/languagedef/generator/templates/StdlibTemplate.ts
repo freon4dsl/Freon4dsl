@@ -1,4 +1,4 @@
-import { FreMetaLanguage, FreMetaLimitedConcept } from "../../metalanguage";
+import {FreMetaConcept, FreMetaInstance, FreMetaLanguage, FreMetaLimitedConcept} from "../../metalanguage";
 import {
     LANGUAGE_GEN_FOLDER,
     Names,
@@ -93,11 +93,12 @@ export class StdlibTemplate {
         }`;
     }
 
-    private makeTexts(language) {
-        language.concepts.filter(con => con instanceof FreMetaLimitedConcept).map(limitedConcept => {
+    private makeTexts(language: FreMetaLanguage) {
+        language.concepts.filter((con: FreMetaConcept) => con instanceof FreMetaLimitedConcept).map((limCon: FreMetaConcept) => {
+            const limitedConcept: FreMetaLimitedConcept = limCon as FreMetaLimitedConcept;
             const myName = Names.concept(limitedConcept);
             this.limitedConceptNames.push(myName);
-            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x =>
+            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map((x: FreMetaInstance) =>
                 `this.elements.push(${myName}.${x.name});`).join("\n ")}`);
         });
     }

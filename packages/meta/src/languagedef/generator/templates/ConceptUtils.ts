@@ -175,7 +175,7 @@ export class ConceptUtils {
             }`;
     }
 
-    public static makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression): string {
+    public static makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression: boolean): string {
         return `
                 /**
                  * Returns the metatype of this instance in the form of a string.
@@ -275,7 +275,7 @@ export class ConceptUtils {
         }
     }
 
-    private static makeCopyProperty(freProperty): string {
+    private static makeCopyProperty(freProperty: FreMetaProperty): string {
         let result: string;
         if (freProperty.isList) {
             if (freProperty.isPrimitive) {

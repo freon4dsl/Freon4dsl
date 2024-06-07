@@ -2,6 +2,17 @@ import { FreMetaDefinitionElement } from "../FreMetaDefinitionElement";
 import { ParseLocation } from "./FreGenericParser";
 
 export class ParseLocationUtil {
+    static defaultParseLocation: ParseLocation = {
+        filename: 'filename unknown',
+        start: {
+            offset: 1,
+            line: 1,
+            column: 1 },
+        end: {
+            offset: 1,
+            line: 1,
+            column: 1 }
+    };
     static location(elem: FreMetaDefinitionElement): string {
         if (!!elem) {
             if (!!elem.location && !!elem.location.filename) {

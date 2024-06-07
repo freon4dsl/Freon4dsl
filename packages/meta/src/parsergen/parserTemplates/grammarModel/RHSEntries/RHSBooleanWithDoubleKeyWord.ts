@@ -7,7 +7,7 @@ export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
     private readonly trueKeyword: string = "";
     private readonly falseKeyword: string = "";
 
-    constructor(prop: FreMetaPrimitiveProperty, trueKeyword, falseKeyword) {
+    constructor(prop: FreMetaPrimitiveProperty, trueKeyword: string, falseKeyword: string) {
         super(prop);
         this.trueKeyword = trueKeyword;
         this.falseKeyword = falseKeyword;
