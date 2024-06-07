@@ -12,8 +12,10 @@ describe("Checking expression on referredElement", () => {
     beforeEach(() => {
         try {
             language = new LanguageParser().parse(testdir + "testLanguage.ast");
-        } catch (e) {
-            console.log("Language could not be read");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read");
+            }
         }
     });
 

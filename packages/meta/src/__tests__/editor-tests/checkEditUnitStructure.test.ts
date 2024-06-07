@@ -25,16 +25,20 @@ describe("Checking FretEditUnit: ", () => {
             language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
             parser = new FreEditParser(language);
             checker = parser.checker;
-        } catch (e) {
-            console.log("Language could not be read");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read");
+            }
         }
         // read the .edit file
         let editor: FreEditUnit;
         try {
             editor = parser.parse(parseFile);
-        } catch (e) {
-            console.log(e.message + e.stack);
-            console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log(e.message + e.stack);
+                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            }
         }
         if (editor !== null && editor !== undefined) {
             DefaultEditorGenerator.addDefaults(editor);

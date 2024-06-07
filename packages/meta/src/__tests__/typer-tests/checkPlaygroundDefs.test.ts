@@ -16,8 +16,10 @@ describe("Checking new typer", () => {
         try {
             language = new LanguageParser().parse(testdir + "playgroundDefs/types.ast");
             parser = new FreTyperMerger(language);
-        } catch (e) {
-            console.log("Language could not be read: " + e.stack);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read: " + e.stack);
+            }
         }
     });
 
@@ -53,16 +55,18 @@ describe("Checking new typer", () => {
                 expect(typeUnit.typeRoot).not.toBeNull();
                 expect(typeUnit.typeRoot).not.toBeUndefined();
             }
-        } catch (e) {
-            // expect(e).toBeNaN();
-            // console.log(e.stack);
-            const errors: string[] = parser.checker.errors;
-            expect(errors.length).toBe(2);
-            // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
-            expect(errors.includes("A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:41:5]."))
-                .toBeTruthy();
-            expect(errors.includes("A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:49:5]."))
-                .toBeTruthy();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // expect(e).toBeNaN();
+                // console.log(e.stack);
+                const errors: string[] = parser.checker.errors;
+                expect(errors.length).toBe(2);
+                // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+                expect(errors.includes("A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:41:5]."))
+                    .toBeTruthy();
+                expect(errors.includes("A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:49:5]."))
+                    .toBeTruthy();
+            }
         }
     });
 });

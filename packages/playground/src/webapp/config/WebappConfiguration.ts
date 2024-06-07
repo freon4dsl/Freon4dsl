@@ -5,8 +5,8 @@ import { ServerCommunication } from "@freon4dsl/core";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { DemoEnvironment } from "../../Example/config/gen/DemoEnvironment";
-export const editorEnvironment: FreEnvironment = DemoEnvironment.getInstance();
+import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
+export const editorEnvironment: FreEnvironment = ExampleEnvironment.getInstance();
 LanguageInitializer.initialize();
 
 /**
