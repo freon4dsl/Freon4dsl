@@ -87,7 +87,7 @@ export class InterpreterTracer {
         this.current = newTrace;
     }
 
-    push(node: Object, value: RtObject, ctx?: InterpreterContext) {
+    push(node: Object, value: RtObject) {
         if (this.current.node !== node) {
             console.error("INCORRECT ELEMENT IN TRACE");
             throw new Error("INCORRECT ELEMENT IN TRACE");
@@ -99,7 +99,7 @@ export class InterpreterTracer {
      * Stop tracing `node`.
      * The current node becomes the parent traced node
      */
-    end(node: Object, ctx?: InterpreterContext) {
+    end() {
         this.current = this.current.parent;
     }
 }

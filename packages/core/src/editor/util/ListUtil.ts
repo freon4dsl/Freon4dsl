@@ -115,7 +115,7 @@ export function dropListElement(editor: FreEditor,
  * @param propertyName      the name of the property in which the list is stored
  * @param optionsType       in case the options are created for a placeholder or header, we add lesser items (e.g. no DELETE)
  */
-export function getContextMenuOptions(conceptName: string, listParent: FreNode, propertyName: string, optionsType: MenuOptionsType, index?: number): MenuItem[] {
+export function getContextMenuOptions(conceptName: string, listParent: FreNode, propertyName: string, optionsType: MenuOptionsType): MenuItem[] {
     LOGGER.log(`getContextMenuOptions
     conceptname: ${conceptName}
     listparent: ${listParent.freId()}=${listParent.freLanguageConcept()}
@@ -123,7 +123,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     optionsType ${optionsType}`);
     // do some checks
     const clsOtIntf = FreLanguage.getInstance().classifier(conceptName);
-    // tslint:disable-next-line:no-empty
+    // @ts-ignore
     const errorItem: MenuItem = new MenuItem("No options available", "", (element: FreNode, index: number, editor: FreEditor) => {
     });
     if (clsOtIntf === undefined || clsOtIntf === null) {
@@ -135,6 +135,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     let addBefore: MenuItem;
     let addAfter: MenuItem;
     const contextMsg = ""; // TODO Use this?: index !== undefined && (listParent[propertyName][index]["name"] !== undefined) ? listParent[propertyName][index]["name"] : ""
+    // the handler signature demands the use of certain parameters, therefore the ts-ignore-s
     if (clsOtIntf.subConceptNames.length > 0) { // there are sub concepts, so create sub menu items
         // todo subclasses to be tested in different project than Example
         const submenuItemsBefore: MenuItem[] = [];
@@ -142,28 +143,34 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
         clsOtIntf.subConceptNames.filter(subName => !FreLanguage.getInstance().classifier(subName).isAbstract).forEach((creatableConceptname: string) => {
             submenuItemsBefore.push(new MenuItem(creatableConceptname,
                 "",
+                // @ts-ignore
                 (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, creatableConceptname, true)));
             submenuItemsAfter.push(new MenuItem(creatableConceptname,
                 "",
+                // @ts-ignore
                 (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, creatableConceptname, false)));
         });
-        // tslint:disable-next-line:no-empty
+        // @ts-ignore
         addBefore = new MenuItem(`Add before ${contextMsg}`, "Ctrl+A", (element: FreNode, index: number, editor: FreEditor) => {}, submenuItemsBefore);
-        // tslint:disable-next-line:no-empty
+        // @ts-ignore
         addAfter = new MenuItem(`Add after ${contextMsg}`, "Ctrl+I", (element: FreNode, index: number, editor: FreEditor) => {}, submenuItemsAfter);
     } else {
         addBefore = new MenuItem(`Add before ${contextMsg}`,
             "Ctrl+A",
+            // @ts-ignore
             (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, conceptName, true));
         addAfter = new MenuItem(`Add after ${contextMsg}`,
             "Ctrl+I",
+            // @ts-ignore
             (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, conceptName, false));
     }
     const pasteBefore = new MenuItem("Paste before",
         "",
+        // @ts-ignore
         (element: FreNode, index: number, editor: FreEditor) => pasteListElement(listParent, propertyName, index, editor, true));
     const pasteAfter = new MenuItem("Paste after",
         "",
+        // @ts-ignore
         (element: FreNode, index: number, editor: FreEditor) => pasteListElement(listParent, propertyName, index, editor, false));
 
     // now create the whole item list
@@ -172,23 +179,28 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     } else if (optionsType === MenuOptionsType.header) { // add lesser items for a header
         items = [addAfter, pasteAfter];
     } else {
+        // In the following some parameters are only present to adhere to signature of super class
         items = [addBefore,
             addAfter,
             new MenuItem(
                 "Delete",
                 "",
+                // @ts-ignore
                 (element: FreNode, index: number, editor: FreEditor) => deleteListElement(listParent, propertyName, index, element)),
             new MenuItem(
                 "---",
                 "",
+                // @ts-ignore
                 (element: FreNode, index: number, editor: FreEditor) => console.log("this is not an option")),
             new MenuItem(
                 "Cut",
                 "",
+                // @ts-ignore
                 (element: FreNode, index: number, editor: FreEditor) => cutListElement(listParent, propertyName, element, editor)),
             new MenuItem(
                 "Copy",
                 "",
+                // @ts-ignore
                 (element: FreNode, index: number, editor: FreEditor) => copyListElement(element, editor)), pasteBefore, pasteAfter];
     }
     return items;

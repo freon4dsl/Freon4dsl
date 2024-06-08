@@ -15,6 +15,8 @@ export class StructureSearchWorker implements FreSearchWorker {
         return this.$result;
     }
 
+    // @ts-ignore
+    // parameter is present to adhere to signature of super class
     execAfter(node: FreNode): boolean {
         // unused
         return false;

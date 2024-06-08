@@ -24,7 +24,7 @@ export class FreCreateBinaryExpressionAction extends FreAction {
         super();
     }
 
-    command(box: Box): FreCommand {
+    command(): FreCommand {
         return new FreCreateBinaryExpressionCommand(this.expressionBuilder);
     }
 

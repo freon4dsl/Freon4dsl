@@ -37,6 +37,8 @@ export class FreLanguageEnvironment implements FreEnvironment {
     public writer: FreWriter;
     public interpreter: FreInterpreter;
 
+    // @ts-ignore
+    // function needs to be implemented because it is part of the interface FreEnvironment
     public newModel(modelName: string): FreModel {
         return undefined;
     }

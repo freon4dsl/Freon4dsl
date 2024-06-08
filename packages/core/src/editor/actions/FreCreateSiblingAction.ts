@@ -1,10 +1,9 @@
 import { FreUtils } from "../../util";
-import { Box } from "../boxes";
 import { FreAction } from "./FreAction";
 import { FreCommand } from "./FreCommand";
 import { FreCreateSiblingCommand } from "./FreCreateSiblingCommand";
+
 // import { FreLogger } from "../../logging";
-//
 // const LOGGER = new FreLogger("FreCreateSiblingAction");
 
 export class FreCreateSiblingAction extends FreAction {
@@ -20,7 +19,7 @@ export class FreCreateSiblingAction extends FreAction {
         FreUtils.initializeObject(this, initializer);
     }
 
-    command(box: Box): FreCommand {
+    command(): FreCommand {
         return new FreCreateSiblingCommand(this.conceptName, null);
     }
 }

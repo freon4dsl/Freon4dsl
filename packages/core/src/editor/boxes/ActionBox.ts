@@ -178,6 +178,8 @@ export class ActionBox extends AbstractChoiceBox {
                         description: "create ref to " + propType,
                         action: FreCustomAction.create({
                             activeInBoxRoles: [],
+                            // @ts-ignore
+                            // todo check whether param 'ed' can be removed
                             action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
                                 parentNode[property.name].push(FreNodeReference.create(name, null));
                                 return null;
@@ -188,7 +190,7 @@ export class ActionBox extends AbstractChoiceBox {
     }
 
     triggerKeyPressEvent = (key: string) => { // TODO rename this one, e.g. to triggerKeyEvent
-        console.error("ActionBox " + this.role + " has empty triggerKeyPressEvent");
+        console.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
     };
 }
 

@@ -201,6 +201,8 @@ export class BoxFactory {
 
     static horizontalLayout(element: FreNode,
                             role: string,
+                            // @ts-expect-error
+                            // todo remove this parameter and adjust the generation in meta
                             propertyName: string,
                             children?: (Box | null)[],
                             initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
@@ -221,6 +223,8 @@ export class BoxFactory {
 
     static verticalLayout(element: FreNode,
                           role: string,
+                          // @ts-expect-error
+                          // todo remove this parameter and adjust the generation in meta
                           propertyName: string,
                           children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
         if (cacheVerticalLayoutOff) {
@@ -328,6 +332,8 @@ export class BoxFactory {
     }
 
     static gridcell(element: FreNode,
+                    // @ts-expect-error
+                    // todo remove this parameter and adjust the generation in meta
                     propertyName: string,
                     role: string,
                     row: number,

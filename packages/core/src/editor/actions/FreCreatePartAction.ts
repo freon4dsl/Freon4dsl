@@ -1,5 +1,4 @@
 import { FreUtils } from "../../util";
-import { Box } from "../boxes";
 import { FreAction } from "./FreAction";
 import { FreCommand } from "./FreCommand";
 import { FreCreatePartCommand } from "./FreCreatePartCommand";
@@ -23,7 +22,7 @@ export class FreCreatePartAction extends FreAction {
         FreUtils.initializeObject(this, initializer);
     }
 
-    command(box: Box): FreCommand {
+    command(): FreCommand {
         return new FreCreatePartCommand(this.propertyName, this.conceptName, this.referenceShortcut);
     }
 }

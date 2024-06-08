@@ -21,7 +21,7 @@ export class ActionsUtil {
     }
 
     static remove(from: FreAction[], item: FreAction) {
-        remove(from, (value, index, collection) => this.equalsTrigger(value.trigger, item.trigger));
+        remove(from, (value) => this.equalsTrigger(value.trigger, item.trigger));
     }
 
     static equalsTrigger(trigger1: FreTriggerType, trigger2: FreTriggerType): boolean {

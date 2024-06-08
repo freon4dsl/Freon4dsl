@@ -54,7 +54,6 @@ export abstract class FreAction {
 
     /**
      * Returns the command object that can be executed to perform the action.
-     * @param box
      */
-    abstract command(box: Box): FreCommand;
+    abstract command(): FreCommand;
 }

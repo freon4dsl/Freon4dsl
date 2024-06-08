@@ -21,8 +21,8 @@ export abstract class ListBox extends LayoutBox {
         this.conceptName = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)?.type;
     }
 
-    options(type: MenuOptionsType, index: number): MenuItem[] {
-        return getContextMenuOptions(this.conceptName, this.element, this.propertyName, type, index);
+    options(type: MenuOptionsType): MenuItem[] {
+        return getContextMenuOptions(this.conceptName, this.element, this.propertyName, type);
     }
 }
 

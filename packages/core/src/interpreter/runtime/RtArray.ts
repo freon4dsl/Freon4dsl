@@ -30,6 +30,8 @@ export class RtArray<T extends RtObject> extends RtObject {
         return new RtNumber(this.array.length);
     }
 
+    // @ts-ignore
+    // parameter is present to adhere to signature of super class
     equals(other: RtObject): RtBoolean {
         return RtBoolean.FALSE;
     }

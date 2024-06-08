@@ -1,6 +1,6 @@
 import { FreNamedNode, FreNode, FreNodeReference } from "../ast";
 import { FreLanguage, FreLanguageProperty } from "../language";
-import { FreLogger } from "../logging/index";
+import { FreLogger } from "../logging";
 import { FreUtils, isNullOrUndefined } from "../util";
 import { FreSerializer } from "./FreSerializer";
 import { createLwNode, isLwChunk, LwContainment, LwChunk, LwMetaPointer, LwNode, LwReference } from "./LionwebM3";
@@ -145,8 +145,8 @@ export class FreLionwebSerializer implements FreSerializer {
         // Store id, so it will not be used for new instances
         FreUtils.nodeIdProvider.usedId(tsObject.freId());
         this.convertPrimitiveProperties(tsObject, conceptMetaPointer.key, lwNode);
-        const parsedChildren = this.convertChildProperties(tsObject, conceptMetaPointer.key, lwNode);
-        const parsedReferences = this.convertReferenceProperties(tsObject, conceptMetaPointer.key, lwNode);
+        const parsedChildren = this.convertChildProperties(conceptMetaPointer.key, lwNode);
+        const parsedReferences = this.convertReferenceProperties(conceptMetaPointer.key, lwNode);
         return { freNode: tsObject, children: parsedChildren, references: parsedReferences };
     }
 
@@ -210,7 +210,7 @@ export class FreLionwebSerializer implements FreSerializer {
         };
     }
 
-    private convertChildProperties(freNode: FreNode, concept: string, jsonObject: LwNode): ParsedChild[] {
+    private convertChildProperties(concept: string, jsonObject: LwNode): ParsedChild[] {
         const jsonChildren = jsonObject.containments;
         FreUtils.CHECK(Array.isArray(jsonChildren), "Found children value which is not a Array for node: " + jsonObject.id);
         const parsedChildren: ParsedChild[] = [];
@@ -234,7 +234,7 @@ export class FreLionwebSerializer implements FreSerializer {
         return parsedChildren;
     }
 
-    private convertReferenceProperties(freNode: FreNode, concept: string, jsonObject: LwNode): ParsedReference[] {
+    private convertReferenceProperties(concept: string, jsonObject: LwNode): ParsedReference[] {
         const jsonReferences = jsonObject.references;
         FreUtils.CHECK(Array.isArray(jsonReferences), "Found references value which is not a Array for node: " + jsonObject.id);
         const parsedReferences: ParsedReference[] = [];

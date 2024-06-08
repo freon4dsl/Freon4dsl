@@ -1,5 +1,4 @@
 import { FreUtils } from "../../util";
-import { Box } from "../boxes";
 import { FreAction, CustomAction } from "./internal";
 import { FreCommand, FreCustomCommand } from "./FreCommand";
 // import { FreLogger } from "../../logging";
@@ -22,7 +21,7 @@ export class FreCustomAction extends FreAction {
         super();
     }
 
-    command(box: Box): FreCommand {
+    command(): FreCommand {
         return new FreCustomCommand(this.action, this.boxRoleToSelect, this.caretPosition);
     }
 }

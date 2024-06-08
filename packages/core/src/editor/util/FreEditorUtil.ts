@@ -43,7 +43,7 @@ export class FreEditorUtil {
                 if (act.trigger.meta === freKey.meta && act.trigger.key === freKey.key) {
                     if (act.activeInBoxRoles.includes(box.role)) {
                         LOGGER.log("findKeyboardShortcutCommand: executing keyboard action");
-                        return act.command(box);
+                        return act.command();
                     } else {
                         LOGGER.log("findKeyboardShortcutCommand: Keyboard action does not include role " + box.role);
                     }
