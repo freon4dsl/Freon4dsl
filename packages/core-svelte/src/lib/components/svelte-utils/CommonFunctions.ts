@@ -1,5 +1,5 @@
 import type { Box } from "@freon4dsl/core";
-import { PI_NULL_COMMAND, FreCommand, FreEditor, FreEditorUtil, FrePostAction, toFreKey } from "@freon4dsl/core";
+import { PI_NULL_COMMAND, FreCommand, FreEditor, FreEditorUtil, type FrePostAction, toFreKey } from "@freon4dsl/core";
 import { runInAction } from "mobx";
 import { viewport } from "./EditorViewportStore";
 import { get } from "svelte/store";

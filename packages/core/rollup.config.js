@@ -1,9 +1,9 @@
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
-import pkg from './package.json';
-import nodePolyfills from 'rollup-plugin-node-polyfills';
+import pkg from './package.json' assert { type: 'json'};
+import nodePolyfills from 'rollup-plugin-polyfill-node';
 // import builtins from 'rollup-plugin-node-builtins';
 // import globals from 'rollup-plugin-node-globals';
 
