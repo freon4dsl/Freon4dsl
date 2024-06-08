@@ -60,7 +60,7 @@ export class WriterTemplate {
         }
 
         // next, do some admin: which concepts should be generated as what?
-        const allLangConceptsName: string = Names.allConcepts(language);
+        const allLangConceptsName: string = Names.allConcepts();
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.FreWriter;
         const limitedConcepts: FreMetaLimitedConcept[] = language.concepts.filter(c => c instanceof FreMetaLimitedConcept) as FreMetaLimitedConcept[];
@@ -210,7 +210,7 @@ export class WriterTemplate {
             ${binaryExtras.map(bin => `${this.makeBinaryExpMethod(bin)}`).join("\n")}
             ${limitedConcepts.map(con => `${this.makeLimitedMethod(con)}`).join("\n")}
             ${conceptsWithoutProjection.map(concept => `${this.makeAbstractConceptMethodWithout(concept)}`).join("\n")}
-            ${interfacesWithoutProjection.map(intf => `${this.makeInterfaceMethod(intf, Names.allConcepts(language))}`).join("\n") }
+            ${interfacesWithoutProjection.map(intf => `${this.makeInterfaceMethod(intf, Names.allConcepts())}`).join("\n") }
             ${this.namedProjections.map(projection => `${this.makeConceptMethod(projection)}`).join("\n")}
 
             /**
@@ -247,6 +247,8 @@ export class WriterTemplate {
              * @param vertical
              * @param indent
              * @param short
+             * @param method
+             * @private
              */
             private _unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean,
         method: (modelelement: ${allLangConceptsName}, short: boolean) => void) {
@@ -283,7 +285,7 @@ export class WriterTemplate {
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
              * If 'short' is false, then a multi-line result will be given. Otherwise, only one single-line string is added.
              * @param list
-             * @param isIdentifier : indicates whether or not the value should be surrounded with double quotes
+             * @param isIdentifier indicates whether the value should be surrounded with double quotes
              * @param sepText
              * @param sepType
              * @param vertical
@@ -547,9 +549,9 @@ export class WriterTemplate {
         } else if (item instanceof FreEditPropertyProjection) {
             const myElem = item.property.referred;
             if (myElem instanceof FreMetaPrimitiveProperty) {
-                result += this.makeItemWithPrimitiveType(myElem, item, inOptionalGroup);
+                result += this.makeItemWithPrimitiveType(myElem, item);
             } else {
-                result += this.makeItemWithConceptType(myElem, item, indent, inOptionalGroup);
+                result += this.makeItemWithConceptType(myElem, item, inOptionalGroup);
             }
         } else if (item instanceof FreEditSuperProjection) {
             // take care of named projection
@@ -598,7 +600,7 @@ export class WriterTemplate {
      * @param item
      * @param inOptionalGroup
      */
-    private makeItemWithPrimitiveType(myElem: FreMetaPrimitiveProperty, item: FreEditPropertyProjection, inOptionalGroup: boolean): string {
+    private makeItemWithPrimitiveType(myElem: FreMetaPrimitiveProperty, item: FreEditPropertyProjection): string {
         // the property is of primitive type
         let result: string = ``;
         const elemStr = GenerationUtil.propertyToTypeScript(item.property.referred);
@@ -680,7 +682,7 @@ export class WriterTemplate {
      * @param indent
      * @param inOptionalGroup
      */
-    private makeItemWithConceptType(myElem: FreMetaProperty, item: FreEditPropertyProjection, indent: number, inOptionalGroup: boolean) {
+    private makeItemWithConceptType(myElem: FreMetaProperty, item: FreEditPropertyProjection, inOptionalGroup: boolean) {
         // the property has a concept as type, thus we need to call its unparse method
         let result: string = "";
         const type = myElem.type;

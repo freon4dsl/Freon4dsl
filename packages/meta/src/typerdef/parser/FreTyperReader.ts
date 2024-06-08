@@ -3,7 +3,6 @@ import { net } from "net.akehurst.language-agl-processor";
 import LanguageProcessor = net.akehurst.language.api.processor.LanguageProcessor;
 import Agl = net.akehurst.language.agl.processor.Agl;
 import AutomatonKind_api = net.akehurst.language.api.processor.AutomatonKind_api;
-import { TyperDef } from "../metalanguage";
 import { MetaTyperGrammarStr } from "./FreTyperGrammar";
 import { FreTyperSyntaxAnalyser } from "./FreTyperSyntaxAnalyser";
 
@@ -34,14 +33,16 @@ export class FreTyperReader {
                 } else {
                     unit = this.parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
                 }
-            } catch (e) {
-                // strip the error message, otherwise it's too long for the webapp
-                // console.log(e.message);
-                const mess = e.message?.replace("Could not match goal,", "Parse error");
-                if (!!mess && mess.length > 0) {
-                    throw new Error(mess);
-                } else {
-                    throw e;
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    // strip the error message, otherwise it's too long for the webapp
+                    // console.log(e.message);
+                    const mess = e.message?.replace("Could not match goal,", "Parse error");
+                    if (!!mess && mess.length > 0) {
+                        throw new Error(mess);
+                    } else {
+                        throw e;
+                    }
                 }
             }
             // TODO semantic analysis has been skipped for now, but there are parse errors that are handled in the checker ('checkLimitedRule')

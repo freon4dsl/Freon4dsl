@@ -1,7 +1,7 @@
 import { FreMetaScoper } from "../../languagedef/metalanguage/FreLangScoper";
 import { FreMetaClassifier, FreMetaLangElement } from "../../languagedef/metalanguage";
 import { FretCreateExp, FretPropertyCallExp, FretVarCallExp, FretWhereExp } from "../metalanguage/expressions";
-import { FretProperty, FretTypeConcept, TyperDef, FreTyperElement } from "../metalanguage";
+import { FretProperty, TyperDef, FreTyperElement } from "../metalanguage";
 import { FreMetaDefinitionElement, Names } from "../../utils";
 
 /**

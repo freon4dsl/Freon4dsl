@@ -76,11 +76,13 @@ export class LanguageAnalyser {
                 analyser.limitedsReferred.splice(index, 1);
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             });
-            for (const [classifier, used] of this.commonAnalyser.interfacesAndAbstractsUsed) {
+            const mapKeys: IterableIterator<FreMetaClassifier> = this.commonAnalyser.interfacesAndAbstractsUsed.keys();
+            for (const classifier of mapKeys) {
                 analyser.interfacesAndAbstractsUsed.delete(classifier);
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             }
-            for (const [classifier, used] of this.commonAnalyser.conceptsWithSub) {
+            const mapKeys2: IterableIterator<FreMetaConcept> = this.commonAnalyser.conceptsWithSub.keys();
+            for (const classifier of mapKeys2) {
                 analyser.conceptsWithSub.delete(classifier);
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             }
@@ -134,37 +136,37 @@ export class LanguageAnalyser {
         // this.LOG();
     }
 
-    private LOG() {
-        console.log(`Found common classifiers: ${this.commonAnalyser.classifiersUsed.map(cl => cl.name).join(", ")}`);
-        console.log(`Found common binary expressions: ${this.commonAnalyser.binaryConceptsUsed.map(cl => cl.name).join(", ")}`);
-        console.log(`Found common limited concepts: ${this.commonAnalyser.limitedsReferred.map(cl => cl.name).join(", ")}`);
-        let names: string = "";
-        for (const [classifier, used] of this.commonAnalyser.interfacesAndAbstractsUsed) {
-            names += classifier.name + ", ";
-        }
-        console.log(`Found common interfaces and abstracts: ${names}`);
-        names = "";
-        for (const [classifier, used] of this.commonAnalyser.conceptsWithSub) {
-            names += classifier.name + ", ";
-        }
-        console.log(`Found common concepts with subs: ${names}`);
-    }
+    // private LOG() {
+    //     console.log(`Found common classifiers: ${this.commonAnalyser.classifiersUsed.map(cl => cl.name).join(", ")}`);
+    //     console.log(`Found common binary expressions: ${this.commonAnalyser.binaryConceptsUsed.map(cl => cl.name).join(", ")}`);
+    //     console.log(`Found common limited concepts: ${this.commonAnalyser.limitedsReferred.map(cl => cl.name).join(", ")}`);
+    //     let names: string = "";
+    //     for (const [classifier, used] of this.commonAnalyser.interfacesAndAbstractsUsed) {
+    //         names += classifier.name + ", ";
+    //     }
+    //     console.log(`Found common interfaces and abstracts: ${names}`);
+    //     names = "";
+    //     for (const [classifier, used] of this.commonAnalyser.conceptsWithSub) {
+    //         names += classifier.name + ", ";
+    //     }
+    //     console.log(`Found common concepts with subs: ${names}`);
+    // }
 
-    private LOG_UNIT(unitAnalyser: UnitAnalyser) {
-        console.log(`Found classifiers in ${unitAnalyser.unit.name}: ${unitAnalyser.classifiersUsed.map(cl => cl.name).join(", ")}`);
-        // console.log(`Found binary expressions in ${unitAnalyser.unit.name}: ${unitAnalyser.binaryConceptsUsed.map(cl => cl.name).join(", ")}`);
-        // console.log(`Found limited concepts in ${unitAnalyser.unit.name}: ${unitAnalyser.limitedsReferred.map(cl => cl.name).join(", ")}`);
-        // let names: string = "";
-        // for (const [classifier, used] of unitAnalyser.interfacesAndAbstractsUsed) {
-        //     names += classifier.name + ", ";
-        // }
-        // console.log(`Found interfaces and abstracts in ${unitAnalyser.unit.name}: ${names}`);
-        // names = "";
-        // for (const [classifier, used] of unitAnalyser.conceptsWithSub) {
-        //     names += classifier.name + ", ";
-        // }
-        // console.log(`Found concepts with subs in ${unitAnalyser.unit.name}: ${names}`);
-    }
+    // private LOG_UNIT(unitAnalyser: UnitAnalyser) {
+    //     console.log(`Found classifiers in ${unitAnalyser.unit.name}: ${unitAnalyser.classifiersUsed.map(cl => cl.name).join(", ")}`);
+    //     console.log(`Found binary expressions in ${unitAnalyser.unit.name}: ${unitAnalyser.binaryConceptsUsed.map(cl => cl.name).join(", ")}`);
+    //     console.log(`Found limited concepts in ${unitAnalyser.unit.name}: ${unitAnalyser.limitedsReferred.map(cl => cl.name).join(", ")}`);
+    //     let names: string = "";
+    //     for (const [classifier, used] of unitAnalyser.interfacesAndAbstractsUsed) {
+    //         names += classifier.name + ", ";
+    //     }
+    //     console.log(`Found interfaces and abstracts in ${unitAnalyser.unit.name}: ${names}`);
+    //     names = "";
+    //     for (const [classifier, used] of unitAnalyser.conceptsWithSub) {
+    //         names += classifier.name + ", ";
+    //     }
+    //     console.log(`Found concepts with subs in ${unitAnalyser.unit.name}: ${names}`);
+    // }
 
     private getOtherAnalysers(currentAnalyser: UnitAnalyser): UnitAnalyser[] {
         const result: UnitAnalyser[] = [];

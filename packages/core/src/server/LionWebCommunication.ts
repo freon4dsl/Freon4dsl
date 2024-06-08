@@ -4,6 +4,7 @@ import { FreLionwebSerializer } from "../storage/index";
 import { FreErrorSeverity } from "../validator/index";
 import { IServerCommunication } from "./IServerCommunication";
 import { ServerCommunication } from "./ServerCommunication";
+import process from 'process';
 
 const LOGGER = new FreLogger("LionWebCommunication"); // .mute();
 

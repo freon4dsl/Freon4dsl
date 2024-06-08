@@ -1,18 +1,8 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
-import { FreMetaLanguage, FreMetaProperty } from "../../languagedef/metalanguage";
+import { FreMetaProperty } from "../../languagedef/metalanguage";
+import { parseCorrectModel} from "./utils";
 
-function parseCorrectModel(parser: LanguageParser, parseFile: string) {
-    let model: FreMetaLanguage = null;
-    try {
-        model = parser.parse(parseFile);
-    } catch (e) {
-        // console.log(e.message + e.stack);
-        // console.log(parser.checker.errors.map(err => `"${err}"`).join("\n") );
-        expect(e.message).toBeNull();
-    }
-    return model;
-}
 
 // The same tests as in property-inheritance1, only now all property types are interfaces
 describe("Checking generation of virtual props", () => {

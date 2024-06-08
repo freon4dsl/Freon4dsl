@@ -22,7 +22,8 @@ export class LimitedRule extends GrammarRule {
             // note that this rule cannot be prefixed with 'leaf'; this would cause the syntax analysis to fail
             result = `${this.ruleName} = `;
             let first = true;
-            for (const [key, value] of this.myMap) {
+            const mapKeys: IterableIterator<string> = this.myMap.values();
+            for (const value of mapKeys) {
                 // prefix the second and all other choices with the '|' symbol
                 if (first) {
                     first = false;
@@ -37,11 +38,11 @@ export class LimitedRule extends GrammarRule {
         return result + " ;";
     }
 
-    toMethod(mainAnalyserName: string): string {
+    toMethod(): string {
         if (!!this.myMap && this.myMap.size > 0) { // found a limited concept with a special projection
             let ifStat: string = "";
             for (const [key, value] of this.myMap) {
-                ifStat += `if (choice == '${value}') {
+                ifStat += `if (choice === '${value}') {
                 return ${key};
             } else `;
             }
@@ -52,7 +53,7 @@ export class LimitedRule extends GrammarRule {
             return `
                 ${ParserGenUtil.makeComment(this.toGrammar())}
                 public transform${this.ruleName}(branch: SPPTBranch): ${Names.classifier(this.concept)} {
-                    let choice = branch.nonSkipMatchedText;
+                    const choice = branch.nonSkipMatchedText;
                     ${ifStat}
                 }`;
         } else { // make a 'normal' reference method

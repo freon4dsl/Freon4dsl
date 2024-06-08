@@ -11,14 +11,13 @@ import {
 
 export class ConceptUtils {
 
-    public static makeImportStatements(needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
+    public static makeImportStatements(importsFromCore: string[], modelImports: string[]): string {
         // remove all empty strings and duplicates from the arrays
         const checkedCoreImports: string[] = [];
         ListUtil.addListIfNotPresent(checkedCoreImports, importsFromCore);
         const checkedModelImports: string[] = [];
         ListUtil.addListIfNotPresent(checkedModelImports, modelImports);
         return `
-            ${needsObservable ? `import { observable } from "mobx";` : ""}
             ${ checkedCoreImports.length > 0 ? `import { ${checkedCoreImports.join(", ")} } from "${FREON_CORE}";` : ""}
             ${ checkedModelImports.length > 0 ? `import { ${checkedModelImports.join(", ")} } from "./internal";` : ""}
             `;
@@ -176,7 +175,7 @@ export class ConceptUtils {
             }`;
     }
 
-    public static makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression): string {
+    public static makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression: boolean): string {
         return `
                 /**
                  * Returns the metatype of this instance in the form of a string.
@@ -276,7 +275,7 @@ export class ConceptUtils {
         }
     }
 
-    private static makeCopyProperty(freProperty): string {
+    private static makeCopyProperty(freProperty: FreMetaProperty): string {
         let result: string;
         if (freProperty.isList) {
             if (freProperty.isPrimitive) {

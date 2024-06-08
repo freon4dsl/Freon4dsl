@@ -43,9 +43,11 @@ describe("Checking new typer", () => {
         try {
             language = langParser.parse(testdir + "projectY.ast");
             parser = new FreTyperMerger(language);
-        } catch (e) {
-            console.log("Language could not be read: " + e.stack);
-            // console.log("found errors in .ast: " + langParser.checker.errors.map(e => e).join("\n"));
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read: " + e.stack);
+                // console.log("found errors in .ast: " + langParser.checker.errors.map(e => e).join("\n"));
+            }
         }
     });
 
@@ -64,11 +66,13 @@ describe("Checking new typer", () => {
                 if (!!parser) {
                     typeUnit = parser.parse(testdir + "projectY.type");
                 }
-            } catch (e) {
-                // console.log(e.stack);
-                const errors: string[] = parser.checker.errors;
-                expect(errors.length).toBe(0);
-                // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    // console.log(e.stack);
+                    const errors: string[] = parser.checker.errors;
+                    expect(errors.length).toBe(0);
+                    // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+                }
             }
 
            // console.log(typeUnit?.toFretString());
@@ -93,11 +97,13 @@ describe("Checking new typer", () => {
                         [testdir + "multiFileInput/projectY-part1.type",
                             testdir + "multiFileInput/projectY-part2.type"]);
                 }
-            } catch (e) {
-                // console.log(e.stack);
-                const errors: string[] = parser.checker.errors;
-                expect(errors.length).toBe(0);
-                // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    // console.log(e.stack);
+                    const errors: string[] = parser.checker.errors;
+                    expect(errors.length).toBe(0);
+                    // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+                }
             }
             testTypeUnit(typeUnit);
         }

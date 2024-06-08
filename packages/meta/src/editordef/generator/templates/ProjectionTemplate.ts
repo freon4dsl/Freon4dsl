@@ -55,7 +55,7 @@ export class ProjectionTemplate {
     generateBoxProvider(language: FreMetaLanguage, concept: FreMetaClassifier, editDef: FreEditUnit, extraClassifiers: FreMetaClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        this.coreImports.push(...["Box", "BoxUtil", "BoxFactory", Names.FreNode, "FreBoxProvider", "FreProjectionHandler", Names.FreLanguage]);
+        this.coreImports.push(...["Box", "BoxUtil", "BoxFactory", "FreBoxProvider", "FreProjectionHandler"]);
 
         // see which projections there are for this concept
         // myProjections: all non table projections
@@ -355,7 +355,7 @@ export class ProjectionTemplate {
         } else if (item instanceof FreEditPropertyProjection) {
             // Note: this condition must come after FreOptionalPropertyProjection,
             // because FreOptionalPropertyProjection is a subclass of FreEditPropertyProjection
-            result += this.generatePropertyProjection(item, elementVarName, mainBoxLabel, language);
+            result += this.generatePropertyProjection(item, elementVarName, language);
         } else if (item instanceof FreEditSuperProjection) {
             result += this.generateSuperProjection(item);
         }
@@ -379,7 +379,7 @@ export class ProjectionTemplate {
             result = `BoxFactory.optional2(${elementVarName}, "optional-${optionalPropertyName}", ${condition},
                 ${result},
                 false, 
-                ${this.generatePropertyProjection(propertyProjection, elementVarName, "mainLabel", language)}
+                ${this.generatePropertyProjection(propertyProjection, elementVarName, language)}
             )`;
             return result;
         } else {
@@ -397,7 +397,7 @@ export class ProjectionTemplate {
      * @param language
      * @private
      */
-    private generatePropertyProjection(item: FreEditPropertyProjection, elementVarName: string, mainLabel: string, language: FreMetaLanguage) {
+    private generatePropertyProjection(item: FreEditPropertyProjection, elementVarName: string, language: FreMetaLanguage) {
         let result: string = "";
         const property: FreMetaProperty = item.property.referred;
         if (property instanceof FreMetaPrimitiveProperty) {
@@ -408,7 +408,7 @@ export class ProjectionTemplate {
                     if (!!item.listInfo && item.listInfo.isTable) {  // if there is information on how to project the property as a table, make it a table
                         result += this.generatePropertyAsTable(item.listInfo.direction, property, elementVarName, language);
                     } else if (!!item.listInfo) { // if there is information on how to project the property as a list, make it a list
-                        result += this.generatePartAsList(item, property, elementVarName, language);
+                        result += this.generatePartAsList(item, property, elementVarName);
                     }
                 } else { // single element
                     ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
@@ -471,7 +471,7 @@ export class ProjectionTemplate {
      * @param language
      * @private
      */
-    private generatePartAsList(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string, language: FreMetaLanguage) {
+    private generatePartAsList(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string) {
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
         const joinEntry = this.getJoinEntry(item.listInfo);
         if (item.listInfo.direction === FreEditProjectionDirection.Vertical) {

@@ -1,4 +1,3 @@
-import { Names } from "../utils/index";
 
 type PropertyData = {
     id: string;

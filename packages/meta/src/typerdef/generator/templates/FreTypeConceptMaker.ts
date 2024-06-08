@@ -1,4 +1,4 @@
-import { FreMetaConcept, FreMetaLanguage, FreMetaPrimitiveType } from "../../../languagedef/metalanguage";
+import { FreMetaConcept, FreMetaPrimitiveType } from "../../../languagedef/metalanguage";
 import { FretTypeConcept, TyperDef } from "../../metalanguage";
 import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils";
 import { LANGUAGE_GEN_FOLDER, ListUtil, Names, FREON_CORE } from "../../../utils";
@@ -6,7 +6,7 @@ import { LANGUAGE_GEN_FOLDER, ListUtil, Names, FREON_CORE } from "../../../utils
 export class FreTypeConceptMaker {
     freTypeName: string = Names.FreType;
 
-    generateTypeConcept(language: FreMetaLanguage, concept: FretTypeConcept, relativePath: string): string {
+    generateTypeConcept(concept: FretTypeConcept, relativePath: string): string {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? `extends ${Names.classifier(concept.base.referred)}` : `implements ${this.freTypeName}`;
@@ -15,7 +15,7 @@ export class FreTypeConceptMaker {
             coreImports.push(this.freTypeName);
             coreImports.push(Names.FreNode);
         }
-        const modelImports: string[] = this.findModelImports(concept, language);
+        const modelImports: string[] = this.findModelImports(concept);
         const typeImports: string[] = this.findTypeImports(concept, hasSuper);
 
         // Template starts here
@@ -87,7 +87,7 @@ export class FreTypeConceptMaker {
                 }`;
     }
 
-    private findModelImports(concept: FretTypeConcept, language: FreMetaLanguage): string[] {
+    private findModelImports(concept: FretTypeConcept): string[] {
         // return the names of all property types that are not FretTypeConcepts
         const result: string[] = [];
         concept.implementedParts().forEach(part => {

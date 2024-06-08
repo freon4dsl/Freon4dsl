@@ -10,7 +10,6 @@ import {
     FREON_CORE
 } from "../../../utils";
 import { FreMetaLanguage, FreMetaPrimitiveProperty } from "../../../languagedef/metalanguage";
-import { jsonAsString } from "../../../utils/Json";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -87,8 +86,7 @@ export class RulesCheckerTemplate {
             // may not contain whitespaces
             if (/[\\t|\\n|\\r| ]/.test(name)) return false;
             // may not be a Typescript keyword
-            if (reservedWordsInTypescript.includes(name)) return false;
-            return true;
+            return !reservedWordsInTypescript.includes(name);
             }
         }
         `;
@@ -197,7 +195,7 @@ export class RulesCheckerTemplate {
     }
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
-        if (message.length === 0) {
+        if (!message || message.length === 0) {
             message = `"Type " + this.typer.inferType(${GenerationUtil.langExpToTypeScript(r.type1)})?.toFreString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1)}) +
                          "] does not conform to " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2)})`;
         }
@@ -212,7 +210,7 @@ export class RulesCheckerTemplate {
         // TODO make sure alle errors message use the same format
         const leftElement: string = GenerationUtil.langExpToTypeScript(r.type1);
         const rightElement: string = GenerationUtil.langExpToTypeScript(r.type2);
-        if (message.length === 0) {
+        if (!message || message.length === 0) {
             message = `"Type of '"+ this.myWriter.writeNameOnly(${leftElement})
                         + "' (" + leftType${index}?.toFreString(this.myWriter) + ") should equal the type of '"
                         + this.myWriter.writeNameOnly(${rightElement})

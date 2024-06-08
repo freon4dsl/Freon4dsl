@@ -70,7 +70,7 @@ export class SemanticAnalysisTemplate {
 
     makeCorrector(language: FreMetaLanguage, relativePath: string): string {
         this.imports = [];
-        const everyConceptName: string = Names.allConcepts(language);
+        const everyConceptName: string = Names.allConcepts();
         const className: string = Names.semanticAnalyser(language);
         const refWalkerName: string = Names.semanticWalker(language);
         // TODO rethink the replacement of all properties of an object and test it
@@ -124,9 +124,10 @@ export class SemanticAnalysisTemplate {
     makeWalker(language: FreMetaLanguage, relativePath: string): string {
         this.imports = [];
         const className: string = Names.semanticWalker(language);
-        const everyConceptName: string = Names.allConcepts(language);
+        const everyConceptName: string = Names.allConcepts();
         this.addToImports(this.possibleProblems);
-        for (const [key, value] of this.exprWithBooleanProp) {
+        const mapKeys: IterableIterator<FreMetaClassifier> = this.exprWithBooleanProp.keys();
+        for (const key of mapKeys) {
             this.addToImports(key);
         }
         // call this method before starting the template; it will fill the 'imports'
@@ -150,12 +151,12 @@ export class SemanticAnalysisTemplate {
 
                 ${this.possibleProblems.map(poss => `${this.makeVistorMethod(poss)}`).join("\n")}
 
-                private findReplacement(modelelement: ${Names.allConcepts(language)}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
+                private findReplacement(modelelement: ${Names.allConcepts()}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
                     const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
                     const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                     if (possibles.length > 0) {
                         // element probably refers to something with another type
-                        let replacement: ${Names.allConcepts(language)} = null;
+                        let replacement: ${Names.allConcepts()} = null;
                         for (const elem of possibles) {
                             const metatype = elem.freLanguageConcept();
                             ${replacementIfStat}
@@ -227,12 +228,12 @@ export class SemanticAnalysisTemplate {
         }
     }
 
-    private reset() {
-        this.supersOfProblems = [];
-        this.possibleProblems = [];
-        this.imports = [];
-        this.exprWithBooleanProp = new Map<FreMetaClassifier, FreMetaPrimitiveProperty>();
-    }
+    // private reset() {
+    //     this.supersOfProblems = [];
+    //     this.possibleProblems = [];
+    //     this.imports = [];
+    //     this.exprWithBooleanProp = new Map<FreMetaClassifier, FreMetaPrimitiveProperty>();
+    // }
 
     private makeBooleanStat(): string {
         let result: string = "";

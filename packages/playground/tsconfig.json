@@ -96,8 +96,7 @@
     "experimentalSpecifierResolution": "node",
   },
   "exclude": [
-    "node_modules/*",
-    "__sapper__/*",
+    "node_modules",
     "public/*",
     "dist",
     "src/**/*.test.ts",

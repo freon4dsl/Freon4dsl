@@ -20,12 +20,12 @@ export function makeLiteralExp(incoming: any): DemoExpression {
         (mine as DemoNumberLiteralExpression).value = Number.parseInt(incoming, 10);
     } else if (typeof incoming === "string" && (incoming === "true" || incoming === "false")) {
         mine = new DemoBooleanLiteralExpression();
-        (mine as DemoBooleanLiteralExpression).value = (incoming === "true" ? true : false);
+        (mine as DemoBooleanLiteralExpression).value = (incoming === "true");
     } else if (typeof incoming === "string") {
         mine = new DemoStringLiteralExpression();
         (mine as DemoStringLiteralExpression).value = incoming;
     } else {
-        // When no expression can be created, return a place holder expression.
+        // When no expression can be created, return a placeholder expression.
         mine = null;
     }
     return mine;

@@ -29,8 +29,10 @@ describe("Checking indentation ", () => {
             language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
             parser = new FreEditParser(language);
             checker = parser.checker;
-        } catch (e) {
-            console.log("Language could not be read");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read");
+            }
         }
     });
 
@@ -38,11 +40,17 @@ describe("Checking indentation ", () => {
         let editDef: FreEditUnit;
         try {
             editDef = parser.parse(testdir + "test1.edit");
-        } catch (e) {
-            console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            // tslint:disable-next-line:no-unused-expression
-            expect(e.message).toBeNull();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log(e.message + e.stack);
+                // To avoid "error TS6133: 'checker' is declared but its value is never read.",
+                // and still keep it easy to reintroduce the log statements,
+                // we use variable 'checker' here unnecessary.
+                checker.hasErrors();
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                // tslint:disable-next-line:no-unused-expression
+                expect(e.message).toBeNull();
+            }
         }
         const myAAA: FreMetaClassifier = language.units.find(c => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
@@ -70,11 +78,13 @@ describe("Checking indentation ", () => {
         let editDef: FreEditUnit;
         try {
             editDef = parser.parse(testdir + "test2.edit");
-        } catch (e) {
-            console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            // tslint:disable-next-line:no-unused-expression
-            expect(e.message).toBeNull();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                // tslint:disable-next-line:no-unused-expression
+                expect(e.message).toBeNull();
+            }
         }
         const myAAA: FreMetaClassifier = language.units.find(c => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
@@ -103,11 +113,13 @@ describe("Checking indentation ", () => {
         let editDef: FreEditUnit;
         try {
             editDef = parser.parse(testdir + "test3.edit");
-        } catch (e) {
-            console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            // tslint:disable-next-line:no-unused-expression
-            expect(e.message).toBeNull();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                // tslint:disable-next-line:no-unused-expression
+                expect(e.message).toBeNull();
+            }
         }
         const myAAA: FreMetaClassifier = language.units.find(c => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
@@ -136,11 +148,13 @@ describe("Checking indentation ", () => {
         let editDef: FreEditUnit;
         try {
             editDef = parser.parse(testdir + "test4.edit");
-        } catch (e) {
-            console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            // tslint:disable-next-line:no-unused-expression
-            expect(e.message).toBeNull();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                // tslint:disable-next-line:no-unused-expression
+                expect(e.message).toBeNull();
+            }
         }
         const myCC = language.concepts.find(c => c.name === "CC");
         expect(myCC).not.toBeNull();
@@ -155,11 +169,13 @@ describe("Checking indentation ", () => {
         let editDef: FreEditUnit;
         try {
             editDef = parser.parse(testdir + "test5.edit");
-        } catch (e) {
-            console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            // tslint:disable-next-line:no-unused-expression
-            expect(e.message).toBeNull();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                // tslint:disable-next-line:no-unused-expression
+                expect(e.message).toBeNull();
+            }
         }
         const myCC = language.concepts.find(c => c.name === "CC");
         expect(myCC).not.toBeNull();
@@ -179,11 +195,13 @@ describe("Checking indentation ", () => {
         let editDef: FreEditUnit;
         try {
             editDef = parser.parse(testdir + "test6.edit");
-        } catch (e) {
-            console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            // tslint:disable-next-line:no-unused-expression
-            expect(e.message).toBeNull();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                // tslint:disable-next-line:no-unused-expression
+                expect(e.message).toBeNull();
+            }
         }
         const myCC = language.concepts.find(c => c.name === "CC");
         expect(myCC).not.toBeNull();

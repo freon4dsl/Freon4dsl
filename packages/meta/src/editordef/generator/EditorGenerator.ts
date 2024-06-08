@@ -132,12 +132,12 @@ export class EditorGenerator {
         // FileUtil.generateManualFile(`${this.stylesFolder}/CustomStyles.ts`, editorStylesConst, "Editor Styles Constant");
 
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
-        const editorIndexGenFile = FileUtil.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef, allExtraClassifiers),
+        const editorIndexGenFile = FileUtil.pretty(editorIndexTemplate.generateGenIndex(this.language, allExtraClassifiers),
             "Editor Gen Index", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/index.ts`, editorIndexGenFile);
 
         LOGGER.log(`Generating editor index: ${this.editorFolder}/index.ts`);
-        const editorIndexFile = FileUtil.pretty(editorIndexTemplate.generateIndex(this.language, editDef), "Editor Index", generationStatus);
+        const editorIndexFile = FileUtil.pretty(editorIndexTemplate.generateIndex(this.language), "Editor Index", generationStatus);
         fs.writeFileSync(`${this.editorFolder}/index.ts`, editorIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {

@@ -1,4 +1,4 @@
-import { FreMetaLanguage, FreMetaConcept } from "../../languagedef/metalanguage/FreMetaLanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/FreMetaLanguage";
 import { Names } from "./Names";
 
 // files need to be generated into folders ...
@@ -68,19 +68,6 @@ export class PathProvider {
     public static typeFile(defFolder: string, languageFile: string): string {
         const languageName: string = languageFile.slice(0, languageFile.length - 5);
         return defFolder + "/" + languageName + ".type";
-    }
-
-    // the generated classes that implement the language can be found in ...
-    public static concept(concept: FreMetaConcept): string {
-        return LANGUAGE_GEN_FOLDER;
-    }
-
-    public static languageConceptType(language: FreMetaLanguage): string {
-        return LANGUAGE_GEN_FOLDER;
-    }
-
-    public static allConcepts(language: FreMetaLanguage): string {
-        return LANGUAGE_GEN_FOLDER;
     }
 
     // the generated classes that implement the editor can be found in ...

@@ -1,4 +1,3 @@
-import fs from "fs";
 import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator";
 import { FreInterpreterDef } from "../interpretergen/metalanguage/FreInterpreterDef";
 import { FreMetaLanguage } from "../languagedef/metalanguage";
@@ -63,15 +62,19 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 this.generateTyper();
                 this.generateInterpreter();
                 this.generateDiagrams();
-            } catch (e) {
-                LOG2USER.error("Stopping generation because of errors in the language definition: " + e.message + "\n");
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    LOG2USER.error("Stopping generation because of errors in the language definition: " + e.message + "\n");
+                }
             }
             if (this.watch) {
                 LOG2USER.info("Watching language definition files ...");
             }
         // this try-catch is here for debugging purposes, should be removed from release
-        } catch (e) {
-            LOG2USER.error(e.stack);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOG2USER.error(e.stack);
+            }
         }
     }
 
@@ -110,9 +113,11 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             this.typerGenerator.language = this.language;
             this.typerGenerator.outputfolder = this.outputFolder;
             this.typerGenerator.generate(typer);
-        } catch (e) {
-            LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
-            // LOG2USER.error("Stopping typer generation because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
+                // LOG2USER.error("Stopping typer generation because of errors: " + e.message);
+            }
         }
     };
 
@@ -130,9 +135,11 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             this.interpreterGenerator.language = this.language;
             this.interpreterGenerator.outputfolder = this.outputFolder;
             this.interpreterGenerator.generate(interpreterDef);
-        } catch (e) {
-            LOG2USER.error("Stopping interpreter generation because of errors: " + e.message + "\n" + e.stack);
-            // LOG2USER.error("Stopping typer generation because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOG2USER.error("Stopping interpreter generation because of errors: " + e.message + "\n" + e.stack);
+                // LOG2USER.error("Stopping typer generation because of errors: " + e.message);
+            }
         }
     };
 
@@ -146,9 +153,11 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             this.scoperGenerator.language = this.language;
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.generate(scoper);
-        } catch (e) {
-            LOG2USER.error("Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
-            // LOG2USER.error("Stopping scoper generation because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOG2USER.error("Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
+                // LOG2USER.error("Stopping scoper generation because of errors: " + e.message);
+            }
         }
     };
 
@@ -162,9 +171,11 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             this.validatorGenerator.language = this.language;
             this.validatorGenerator.outputfolder = this.outputFolder;
             this.validatorGenerator.generate(validator);
-        } catch (e) {
-            LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
-            // LOG2USER.error("Stopping validator generation because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
+                // LOG2USER.error("Stopping validator generation because of errors: " + e.message);
+            }
         }
     };
 
@@ -187,9 +198,11 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
 
             this.editorGenerator.generate(editor);
             this.parserGenerator.generate(editor);
-        } catch (e) {
-            LOG2USER.error("Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
-            // LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOG2USER.error("Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
+                // LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
+            }
         }
         return editor;
     };

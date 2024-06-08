@@ -9,6 +9,9 @@ export abstract class CheckerPhase<DEFINITION> {
         this.language = language;
     }
 
+    // @ts-ignore
+    // error TS6133: 'lang' is declared but its value is never read.
+    // This error is ignored because this parameter is only used by subclasses of CheckerPhase.
     public check(lang: DEFINITION, runner: CheckRunner): void {
         this.runner = runner;
     }

@@ -1,10 +1,9 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { CONFIGURATION_FOLDER, Names, FREON_CORE } from "../../../utils";
-import { TyperDef } from "../../metalanguage/index";
 
 export class TyperDefTemplate {
 
-    generateTyperDef(language: FreMetaLanguage, typerDef: TyperDef, relativePath: string): string {
+    generateTyperDef(language: FreMetaLanguage, relativePath: string): string {
         return `import { FreCompositeTyper } from "${FREON_CORE}";
 
             import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}";

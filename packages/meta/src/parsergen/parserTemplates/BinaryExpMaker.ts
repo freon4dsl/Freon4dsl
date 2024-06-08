@@ -1,4 +1,4 @@
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept, FreMetaLanguage } from "../../languagedef/metalanguage";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../languagedef/metalanguage";
 import { FreEditProjectionGroup } from "../../editordef/metalanguage";
 import { GrammarRule, BinaryExpressionRule } from "./grammarModel";
 import { GenerationUtil } from "../../utils";
@@ -11,7 +11,7 @@ export class BinaryExpMaker {
 
     imports: FreMetaClassifier[] = [];
 
-    public generateBinaryExpressions(language: FreMetaLanguage,
+    public generateBinaryExpressions(
                                      projectionGroup: FreEditProjectionGroup,
                                      binaryConceptsUsed: FreMetaBinaryExpressionConcept[]
                                     ): GrammarRule[] {

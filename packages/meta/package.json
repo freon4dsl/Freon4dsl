@@ -40,11 +40,12 @@
     "build-release": "npm run build && npm run copy-validtemplates"
   },
   "dependencies": {
-    "@rushstack/ts-command-line": "4.22.0",
+    "@rushstack/ts-command-line": "^4.22.0",
     "kotlin": "^1.5.21",
     "net.akehurst.language-agl-processor": "4.0.0-rc.5",
     "pegjs": "^0.10.0",
+    "prettier": "^3.3.0",
     "source-map-support": "^0.5.21",
-    "tslib": "^2.6.2"
+    "tslib": "^2.6.3"
   }
 }

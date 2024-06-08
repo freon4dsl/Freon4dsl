@@ -16,7 +16,7 @@ export class RHSBooleanWithSingleKeyWord extends RHSPropEntry {
         return `'${this.keyword}'?` + this.doNewline();
     }
 
-    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+    toMethod(index: number, nodeName: string): string {
         return `// RHSBooleanWithSingleKeyWord
                 if (!${nodeName}[${index}].isEmptyMatch) {
                     ${ParserGenUtil.internalName(this.property.name)} = true;

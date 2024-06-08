@@ -32,8 +32,10 @@ export class FreonGenerateValidator extends FreonGeneratePartAction {
         }
         try {
             this.validatorGenerator.generate(validator);
-        } catch(e) {
-            LOG2USER.error("Stopping validator generation action because of errors: " + e.message + "\n" + e.stack);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOG2USER.error("Stopping validator generation action because of errors: " + e.message + "\n" + e.stack);
+            }
         }
     }
 }

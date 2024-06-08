@@ -132,7 +132,7 @@
 				<div class="drawer-space-right"></div>
 			{/if}
 			<IconButton on:click={() => ($drawerOpen = !$drawerOpen)}>
-				<Icon component={Svg} viewBox="0 0 24 24">
+				<Icon tag=svg viewBox="0 0 24 24">
 					<path fill="currentColor" d={$drawerOpen ? mdiChevronLeft : mdiChevronRight} />
 				</Icon>
 			</IconButton>
@@ -149,22 +149,22 @@
 		</Section>
 		<Section align="end" toolbar>
 			<IconButton aria-label="GitHub" target="_blank" href="https://github.com/freon4dsl/Freon4dsl.git">
-				<Icon component={Svg} viewBox="0 0 24 24">
+				<Icon tag=svg viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiGithub} />
 				</Icon>
 			</IconButton>
 			<IconButton aria-label="Documentation Site" target="_blank" href="https://www.freon4dsl.dev/">
-				<Icon component={Svg} viewBox="0 0 24 24">
+				<Icon tag=svg viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiWeb} />
 				</Icon>
 			</IconButton>
 			<IconButton aria-label="Help Page" on:click={() => {$helpDialogVisible = true; console.log($helpDialogVisible)}}>
-				<Icon component={Svg} viewBox="0 0 24 24">
+				<Icon tag=svg viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiHelp} />
 				</Icon>
 			</IconButton>
 			<IconButton aria-label="Theme Toggle" on:click={switchTheme}>
-				<Icon component={Svg} viewBox="0 0 24 24">
+				<Icon tag=svg viewBox="0 0 24 24">
 					<path fill="currentColor" d={lightTheme ? mdiWeatherNight : mdiWeatherSunny} />
 				</Icon>
 			</IconButton>

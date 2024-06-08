@@ -2,7 +2,7 @@ import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { Names, FREON_CORE } from "../../../utils";
 
 export class FreCustomTyperPartTemplate {
-    generateCustomTyperPart(language: FreMetaLanguage, relativePath: string): string {
+    generateCustomTyperPart(language: FreMetaLanguage): string {
         // const allLangConcepts: string = Names.allConcepts(language);
         const typerInterfaceName: string = Names.FreTyperPart;
         const generatedClassName: string = Names.customTyper(language);
