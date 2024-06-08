@@ -1,4 +1,3 @@
-import { autorun } from "mobx";
 import { FreUtils } from "../../util";
 import { FreCaret, FreCaretPosition } from "../util";
 import { FreNode } from "../../ast";

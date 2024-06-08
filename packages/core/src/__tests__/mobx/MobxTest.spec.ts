@@ -51,6 +51,8 @@ describe("Mobx Model", () => {
             () => {
                 return [root.element];
             },
+            // @ts-ignore
+            // todo check whether this ts-ignore is correct
             innerElement => {
                 reaktion++;
                 // console.log("React " + reaktion + " on " + (!!innerElement ? innerElement["name"] : "innerElement is null"));

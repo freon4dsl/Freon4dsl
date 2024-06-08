@@ -68,7 +68,7 @@ export abstract class FreScoperBase implements FreScoper {
             return FreLanguage.getInstance().unit(metaType).properties.get(ownerDescriptor.propertyName).isPublic;
         } else {
             // Must be a conccept
-            const x = FreLanguage.getInstance().concept(metaType);
+            // const x = FreLanguage.getInstance().concept(metaType);
             return FreLanguage.getInstance().concept(metaType).properties.get(ownerDescriptor.propertyName).isPublic;
         }
     }

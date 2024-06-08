@@ -12,7 +12,7 @@ import {
     SelectBox,
     IndentBox,
     OptionalBox,
-    HorizontalListBox, VerticalListBox, SvgBox, BoolFunctie, GridCellBox,
+    HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox,
     HorizontalLayoutBox, VerticalLayoutBox,
     TableCellBox, OptionalBox2
 } from "./internal";
@@ -31,10 +31,10 @@ let actionCache: BoxCache<ActionBox> = {};
 let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
-let indentCache: BoxCache<IndentBox> = {};
+// let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
 let optionalCache2: BoxCache<OptionalBox2> = {};
-let svgCache: BoxCache<SvgBox> = {};
+// let svgCache: BoxCache<SvgBox> = {};
 let horizontalLayoutCache: BoxCache<HorizontalLayoutBox> = {};
 let verticalLayoutCache: BoxCache<VerticalLayoutBox> = {};
 let horizontalListCache: BoxCache<HorizontalListBox> = {};
@@ -46,8 +46,8 @@ let cacheActionOff: boolean = false;
 let cacheLabelOff: boolean = false;
 let cacheTextOff: boolean = false;
 let cacheSelectOff: boolean = false;
-let cacheIndentOff: boolean = false;
-let cacheOptionalOff: boolean = false;
+// let cacheIndentOff: boolean = false;
+// let cacheOptionalOff: boolean = false;
 let cacheHorizontalLayoutOff: boolean = false;
 let cacheVerticalLayoutOff: boolean = false;
 let cacheHorizontalListOff: boolean = false;
@@ -64,10 +64,10 @@ export class BoxFactory {
         labelCache = {};
         textCache = {};
         selectCache = {};
-        indentCache = {};
+        // indentCache = {};
         optionalCache = {};
         optionalCache2 = {};
-        svgCache = {};
+        // svgCache = {};
         horizontalLayoutCache = {};
         verticalLayoutCache = {};
         horizontalListCache = {};
@@ -81,8 +81,8 @@ export class BoxFactory {
         cacheLabelOff = true;
         cacheTextOff = true;
         cacheSelectOff = true;
-        cacheIndentOff = true;
-        cacheOptionalOff = true;
+        // cacheIndentOff = true;
+        // cacheOptionalOff = true;
         cacheHorizontalLayoutOff = true;
         cacheVerticalLayoutOff = true;
         cacheHorizontalListOff = true;
@@ -94,8 +94,8 @@ export class BoxFactory {
         cacheLabelOff = false;
         cacheTextOff = false;
         cacheSelectOff = false;
-        cacheIndentOff = false;
-        cacheOptionalOff = false;
+        // cacheIndentOff = false;
+        // cacheOptionalOff = false;
         cacheHorizontalLayoutOff = false;
         cacheVerticalLayoutOff = false;
         cacheHorizontalListOff = false;
@@ -201,6 +201,8 @@ export class BoxFactory {
 
     static horizontalLayout(element: FreNode,
                             role: string,
+                            // @ts-expect-error
+                            // todo remove this parameter and adjust the generation in meta
                             propertyName: string,
                             children?: (Box | null)[],
                             initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
@@ -221,6 +223,8 @@ export class BoxFactory {
 
     static verticalLayout(element: FreNode,
                           role: string,
+                          // @ts-expect-error
+                          // todo remove this parameter and adjust the generation in meta
                           propertyName: string,
                           children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
         if (cacheVerticalLayoutOff) {
@@ -328,6 +332,8 @@ export class BoxFactory {
     }
 
     static gridcell(element: FreNode,
+                    // @ts-expect-error
+                    // todo remove this parameter and adjust the generation in meta
                     propertyName: string,
                     role: string,
                     row: number,

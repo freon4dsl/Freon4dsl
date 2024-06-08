@@ -35,7 +35,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: F
                 let execresult: FrePostAction = null;
                 if (matchArray !== null && label === matchArray[0]) {
                     runInAction(() => {
-                        const command = action.command(box);
+                        const command = action.command();
                         execresult = command.execute(box, label, editor, index);
                     });
                     if (!!execresult) {
@@ -48,7 +48,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: F
                     LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + action.referenceShortcut + "]");
                     let postAction: FrePostAction;
                     runInAction(() => {
-                        const command = action.command(box);
+                        const command = action.command();
                         postAction = command.execute(box, label, editor, index);
                     });
                     postAction();
@@ -82,7 +82,7 @@ export function executeSingleBehavior(action: FreAction, box: Box, text: string,
 
     const index = -1; // todo get the correct index
     runInAction(() => {
-        const command = action.command(box);
+        const command = action.command();
         execresult = command.execute(box, label, editor, index);
     });
     if (!!execresult) {

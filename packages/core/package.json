@@ -19,7 +19,6 @@
     "cleanup": "bash ../../scripts/cleanup.sh",
     "test": "jest --config ./jest.config.js",
     "start": "echo Start core",
-    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "dummy": "echo DUMMY",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",

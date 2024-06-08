@@ -87,7 +87,7 @@ export class MainInterpreter implements IMainInterpreter {
         }
         if (this.tracing) {
             this.tracer.push(node, value);
-            this.tracer.end(node);
+            this.tracer.end();
         }
         if (isRtError(value)) {
             console.error(value.toString());
