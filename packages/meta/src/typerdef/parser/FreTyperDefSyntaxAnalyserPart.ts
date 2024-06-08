@@ -217,7 +217,7 @@ export class FreTyperDefSyntaxAnalyserPart {
     public transformFretSelfExp(branch: SPPTBranch): FretSelfExp {
         // console.log('transformFretSelfExp called: ' + branch.name);
 
-        const children = this.mainAnalyser.getChildren(branch);
+        // const children = this.mainAnalyser.getChildren(branch);
         return FretSelfExp.create({ aglParseLocation: this.mainAnalyser.location(branch) });
     }
 
@@ -230,7 +230,7 @@ export class FreTyperDefSyntaxAnalyserPart {
     public transformFretAnytypeExp(branch: SPPTBranch): FretAnytypeExp {
         // console.log('transformFretAnytypeExp called: ' + branch.name);
 
-        const children = this.mainAnalyser.getChildren(branch);
+        // const children = this.mainAnalyser.getChildren(branch);
         return FretAnytypeExp.create({ aglParseLocation: this.mainAnalyser.location(branch) });
     }
 

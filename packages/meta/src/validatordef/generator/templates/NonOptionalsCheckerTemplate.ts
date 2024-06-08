@@ -56,16 +56,16 @@ export class NonOptionalsCheckerTemplate {
         ${result}`;
     }
 
-    private createImports(language: FreMetaLanguage): string {
-        return language.units?.map(unit => `
-                ${Names.classifier(unit)}`).concat(
-                    language.concepts?.map(concept => `
-                ${Names.concept(concept)}`).concat(
-            language.interfaces?.map(intf => `
-                ${Names.interface(intf)}`))).concat(
-                    Names.classifier(language.modelConcept)
-        ).join(", ");
-    }
+    // private createImports(language: FreMetaLanguage): string {
+    //     return language.units?.map(unit => `
+    //             ${Names.classifier(unit)}`).concat(
+    //                 language.concepts?.map(concept => `
+    //             ${Names.concept(concept)}`).concat(
+    //         language.interfaces?.map(intf => `
+    //             ${Names.interface(intf)}`))).concat(
+    //                 Names.classifier(language.modelConcept)
+    //     ).join(", ");
+    // }
 
     private createChecksOnNonOptionalParts(concept: FreMetaClassifier): string {
         let result: string = "";

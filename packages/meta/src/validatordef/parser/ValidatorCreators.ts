@@ -7,7 +7,7 @@ import {
     ValidNameRule
 } from "../metalanguage";
 import { FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
-import {FreMetaDefinitionElement, ParseLocation, ParseLocationUtil} from "../../utils";
+import {FreMetaDefinitionElement, ParseLocationUtil} from "../../utils";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang)
 // from the parsed data objects (from ValidatorGrammar.pegjs).

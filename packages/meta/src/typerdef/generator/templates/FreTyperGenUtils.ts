@@ -12,8 +12,6 @@ import { FreMetaClassifier, FreMetaProperty } from "../../../languagedef/metalan
 import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../../metalanguage/expressions";
 
 const inferFunctionName: string = "inferType";
-const conformsFunctionName: string = "conformsTo";
-const equalsFunctionName: string = "equalsType";
 const typeofName: string = "typeof";
 const commonSuperName: string = "commonSuperType";
 

@@ -22,7 +22,8 @@ export class LimitedRule extends GrammarRule {
             // note that this rule cannot be prefixed with 'leaf'; this would cause the syntax analysis to fail
             result = `${this.ruleName} = `;
             let first = true;
-            for (const [key, value] of this.myMap) {
+            const mapKeys: IterableIterator<string> = this.myMap.values();
+            for (const value of mapKeys) {
                 // prefix the second and all other choices with the '|' symbol
                 if (first) {
                     first = false;

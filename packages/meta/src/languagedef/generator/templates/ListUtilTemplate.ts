@@ -7,11 +7,11 @@ export class ListUtilTemplate {
 
         // Template starts here
         return `/**
-         * Class ListUtil implements two helper methods on lists, each prevents that
+         * Class ${generatedClassName} implements two helper methods on lists, each prevents that
          * a list contains an entry more than once (i.e. it is a true Set), or that
          * null values are added to the list.
          */
-        export class ListUtil {
+        export class ${generatedClassName} {
             /**
              * Adds 'addition' to 'list', if 'addition' is not yet present and
              * not equal to null or undefined.
@@ -32,7 +32,7 @@ export class ListUtilTemplate {
              */
             static addAllIfNotPresent<T>(list: T[], listOfAdditions: T[]) {
                 for (const xx of listOfAdditions) {
-                    ListUtil.addIfNotPresent<T>(list, xx);
+                    ${generatedClassName}.addIfNotPresent<T>(list, xx);
                 }
             }
         }`;

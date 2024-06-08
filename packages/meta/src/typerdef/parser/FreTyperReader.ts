@@ -3,7 +3,6 @@ import { net } from "net.akehurst.language-agl-processor";
 import LanguageProcessor = net.akehurst.language.api.processor.LanguageProcessor;
 import Agl = net.akehurst.language.agl.processor.Agl;
 import AutomatonKind_api = net.akehurst.language.api.processor.AutomatonKind_api;
-import { TyperDef } from "../metalanguage";
 import { MetaTyperGrammarStr } from "./FreTyperGrammar";
 import { FreTyperSyntaxAnalyser } from "./FreTyperSyntaxAnalyser";
 

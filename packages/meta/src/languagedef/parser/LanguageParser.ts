@@ -1,7 +1,7 @@
 import fs from "fs";
 import { IdMap } from "../../commandline/IdMap";
 import { FreMetaLanguage } from "../metalanguage/";
-import { FreGenericParser, LOG2USER, MetaLogger } from "../../utils";
+import { FreGenericParser, LOG2USER } from "../../utils";
 import * as pegjsParser from "./LanguageGrammar";
 import {
     cleanNonFatalParseErrors,
@@ -10,7 +10,7 @@ import {
 } from "./LanguageCreators";
 import { FreLangChecker } from "../checking/FreLangChecker";
 
-const LOGGER = new MetaLogger("LanguageParser").mute();
+// const LOGGER = new MetaLogger("LanguageParser").mute();
 
 export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     idFile: string;

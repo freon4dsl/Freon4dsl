@@ -1,4 +1,4 @@
-import { FreMetaClassifier, FreMetaConcept, FreMetaInterface, FreMetaLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage } from "../../../languagedef/metalanguage";
 import {
     Names,
     FREON_CORE,

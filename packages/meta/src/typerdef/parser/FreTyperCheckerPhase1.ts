@@ -3,7 +3,6 @@ import {
     CheckerPhase,
     LangUtil,
     ListUtil,
-    MetaLogger,
     Names,
     ParseLocationUtil,
     reservedWordsInTypescript,
@@ -46,7 +45,7 @@ import { FretScoper } from "./FretScoper";
 import { FretOwnerSetter } from "./FretOwnerSetter";
 import { CommonChecker, CommonSuperTypeUtil } from "../../languagedef/checking";
 
-const LOGGER = new MetaLogger("NewFreTyperChecker"); // .mute();
+// const LOGGER = new MetaLogger("NewFreTyperChecker"); // .mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];
 
 /**

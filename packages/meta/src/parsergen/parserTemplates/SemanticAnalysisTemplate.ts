@@ -126,7 +126,8 @@ export class SemanticAnalysisTemplate {
         const className: string = Names.semanticWalker(language);
         const everyConceptName: string = Names.allConcepts(language);
         this.addToImports(this.possibleProblems);
-        for (const [key, value] of this.exprWithBooleanProp) {
+        const mapKeys: IterableIterator<FreMetaClassifier> = this.exprWithBooleanProp.keys();
+        for (const key of mapKeys) {
             this.addToImports(key);
         }
         // call this method before starting the template; it will fill the 'imports'
@@ -227,12 +228,12 @@ export class SemanticAnalysisTemplate {
         }
     }
 
-    private reset() {
-        this.supersOfProblems = [];
-        this.possibleProblems = [];
-        this.imports = [];
-        this.exprWithBooleanProp = new Map<FreMetaClassifier, FreMetaPrimitiveProperty>();
-    }
+    // private reset() {
+    //     this.supersOfProblems = [];
+    //     this.possibleProblems = [];
+    //     this.imports = [];
+    //     this.exprWithBooleanProp = new Map<FreMetaClassifier, FreMetaPrimitiveProperty>();
+    // }
 
     private makeBooleanStat(): string {
         let result: string = "";

@@ -17,7 +17,7 @@ import {
     FreEditUnit,
     FreOptionalPropertyProjection
 } from "../metalanguage";
-import { ListUtil, MetaLogger } from "../../utils";
+import { ListUtil } from "../../utils";
 import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
 import { FreEditParseUtil } from "./FreEditParseUtil";
 // The next import should be separate and the last of the imports.
@@ -26,7 +26,7 @@ import { FreEditParseUtil } from "./FreEditParseUtil";
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { MetaElementReference } from "../../languagedef/metalanguage";
 
-const LOGGER = new MetaLogger("EditorCreators").mute();
+// const LOGGER = new MetaLogger("EditorCreators").mute();
 
 let currentFileName: string = "SOME_FILENAME";
 const classifiersUsedInSuperProjection: string[] = []; // remember these to add this list to the overall FreEditUnit

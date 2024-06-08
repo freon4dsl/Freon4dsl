@@ -1,11 +1,7 @@
 import {
     FreMetaLangElement,
     FreMetaClassifier,
-    FreMetaConcept,
-    FreMetaConceptProperty,
-    FreMetaInterface,
     FreMetaLanguage,
-    FreMetaProperty,
     FreLangAppliedFeatureExp,
     FreMetaPrimitiveType, FreMetaLimitedConcept
 } from "./internal";
@@ -13,7 +9,7 @@ import { MetaLogger } from "../../utils/MetaLogger";
 import { FreMetaDefinitionElement } from "../../utils";
 
 const LOGGER = new MetaLogger("FreLangScoper"); // .mute();
-const anyElement = "_$anyElement";
+// const anyElement = "_$anyElement";
 
 export interface FreMetaScoper {
     getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement;

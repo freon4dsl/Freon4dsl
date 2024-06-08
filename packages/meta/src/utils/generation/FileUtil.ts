@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import synchronizedPrettier from "@prettier/sync";
-import * as prettierPluginEstree from "prettier/plugins/estree";
 import { MetaLogger } from "../MetaLogger";
 
 const LOGGER = new MetaLogger("FileUtil").mute();

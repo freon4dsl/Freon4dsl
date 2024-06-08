@@ -167,8 +167,8 @@ export class ConceptMaker {
                         const sub1 = new RHSPartEntry(prop, item.projectionName);
                         result = new RHSBinExpListWithInitiator(prop, propType, sub1, joinText); // `("joinText" __fre_binary_propTypeName)*`
                     } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
-                        const sub1 = new RHSPartEntry(prop, item.projectionName);
-                        result = new RHSBinExpListWithTerminator(prop, propType, sub1, joinText, isSingleEntry); // `(__fre_binary_propTypeName 'joinText' )*`
+                        // const sub1 = new RHSPartEntry(prop, item.projectionName);
+                        result = new RHSBinExpListWithTerminator(prop, propType, joinText, isSingleEntry); // `(__fre_binary_propTypeName 'joinText' )*`
                     }
                 }
             } else {

@@ -20,7 +20,6 @@ import {
     EnvironmentTemplate,
     IndexTemplate,
     LanguageTemplate,
-    MetaTypeTemplate,
     WalkerTemplate,
     WorkerInterfaceTemplate,
     DefaultWorkerTemplate,

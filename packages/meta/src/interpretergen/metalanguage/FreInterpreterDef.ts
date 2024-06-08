@@ -1,4 +1,4 @@
-import { FreMetaClassifier, FreMetaConcept } from "../../languagedef/metalanguage/index";
+import { FreMetaClassifier } from "../../languagedef/metalanguage/index";
 import { FreMetaDefinitionElement } from "../../utils/index";
 
 export class FreInterpreterDef extends FreMetaDefinitionElement {
