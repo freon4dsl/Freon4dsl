@@ -1,12 +1,12 @@
 import { FreBinaryExpression } from "../../ast";
 import { FreUtils } from "../../util";
-import { FreLogger } from "../../logging";
 import { Box } from "../boxes";
 import { FreEditor } from "../FreEditor";
 import { FreAction } from "./FreAction";
 import { FreCommand, FreCreateBinaryExpressionCommand } from "./FreCommand";
 
-const LOGGER = new FreLogger("FreCreateBinaryExpressionAction");
+// import { FreLogger } from "../../logging";
+// const LOGGER = new FreLogger("FreCreateBinaryExpressionAction");
 
 export class FreCreateBinaryExpressionAction extends FreAction {
 

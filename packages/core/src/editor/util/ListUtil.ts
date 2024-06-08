@@ -206,7 +206,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
 function addListElement(editor: FreEditor, listParent: FreNode, propertyName: string, index: number, typeOfAdded: string, before: boolean) {
     LOGGER.log(`addListElement of type: ${typeOfAdded} index: ${index}`);
     // get info about the property that needs to be changed
-    const { property, isList, isPart, type } = getPropertyInfo(listParent, propertyName);
+    const { property, isList, type } = getPropertyInfo(listParent, propertyName);
     if (!before) {
         index++;
     }

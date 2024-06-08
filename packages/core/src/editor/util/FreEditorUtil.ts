@@ -12,8 +12,6 @@ export type DynamicBoolean = BooleanCallback | boolean;
 export const wait = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const NBSP: string = "".concat("\u00A0");
 
-const LATEST_ID = 0;
-
 const LOGGER = new FreLogger("FreEditorUtils").mute();
 
 export class FreEditorUtil {

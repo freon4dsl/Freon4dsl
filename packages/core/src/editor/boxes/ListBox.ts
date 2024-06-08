@@ -1,11 +1,11 @@
 import { Box } from "./Box";
 import { FreNode } from "../../ast";
 import { FreLanguage } from "../../language";
-import { FreLogger } from "../../logging";
 import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
 import { LayoutBox, ListDirection } from "./LayoutBox";
 
-const LOGGER = new FreLogger("ListBox");
+// import { FreLogger } from "../../logging";
+// const LOGGER = new FreLogger("ListBox");
 
 /**
  * This Box represents a list in the FreElement model, i.e. one that is defined in the .ast file

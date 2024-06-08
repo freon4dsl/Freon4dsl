@@ -1,7 +1,6 @@
 import { FreBinaryExpression } from "../../ast";
 import { BTREE, FRE_BINARY_EXPRESSION_LEFT } from "../../util";
-import { RoleProvider } from "../simplifiedBoxAPI/index";
-import { FreCaret, FreCaretPosition } from "../util";
+import { FreCaret } from "../util";
 import { Box } from "../boxes";
 import { FreEditor } from "../FreEditor";
 import { CustomAction, EMPTY_POST_ACTION, FrePostAction } from "./FreAction";

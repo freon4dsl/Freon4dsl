@@ -1,7 +1,7 @@
-import { FreLanguageConcept, FreLanguage, FreLanguageProperty, FreLanguageClassifier } from "../../language";
+import { FreLanguageConcept, FreLanguage, FreLanguageProperty } from "../../language";
 import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../util";
 import { FreCreatePartAction, FreCustomAction, FreTriggerType } from "../actions";
-import { triggerTypeToString, FreEditor, TextBox, isProKey } from "../internal";
+import { triggerTypeToString, FreEditor, isProKey } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
 import { FreNode, FreNodeReference } from "../../ast";
 import { runInAction } from "mobx";
@@ -164,7 +164,7 @@ export class ActionBox extends AbstractChoiceBox {
         // needs the owner.
         LOGGER.log("addReferences: " + parentNode.freLanguageConcept() + " property " + property.name)
         const propType: string = property.type;
-        const self: ActionBox = this;
+        // const self: ActionBox = this;
         runInAction(() => {
             // const newElement = concept.constructor();
             // newElement["$$owner"] = this.element;

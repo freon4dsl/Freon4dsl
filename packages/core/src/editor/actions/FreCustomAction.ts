@@ -1,10 +1,10 @@
 import { FreUtils } from "../../util";
-import { FreLogger } from "../../logging";
 import { Box } from "../boxes";
 import { FreAction, CustomAction } from "./internal";
 import { FreCommand, FreCustomCommand } from "./FreCommand";
+// import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("FreCustomAction");
+// const LOGGER = new FreLogger("FreCustomAction");
 
 export class FreCustomAction extends FreAction {
 
