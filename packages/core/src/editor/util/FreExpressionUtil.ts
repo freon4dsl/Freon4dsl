@@ -28,7 +28,9 @@ import { BehaviorExecutionResult } from "./BehaviorUtils";
 // const LOGGER = new FreLogger("FreExpressionNodeHelpers");
 // todo maybe moved these functions to BoxUtils?
 
-export function createDefaultExpressionBox(exp: FreExpressionNode, children: Box[]): Box {
+// @ts-ignore
+// todo remove param initializer and change generation in meta accordingly
+export function createDefaultExpressionBox(exp: FreExpressionNode, role: string, children: Box[], initializer?: Partial<HorizontalLayoutBox>): Box {
     const isLeftMost: Boolean = BTREE.isLeftMostChild(exp);
     const isRightMost: Boolean = BTREE.isRightMostChild(exp);
     if (isLeftMost || isRightMost) {
