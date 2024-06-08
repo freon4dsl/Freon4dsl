@@ -1,6 +1,6 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
-import { FreMetaLanguage, FreMetaProperty } from "../../languagedef/metalanguage";
+import { FreMetaProperty } from "../../languagedef/metalanguage";
 import { parseCorrectModel} from "./utils";
 
 

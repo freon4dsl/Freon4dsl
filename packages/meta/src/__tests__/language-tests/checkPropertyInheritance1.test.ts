@@ -1,7 +1,6 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
 import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { parseCorrectModel} from "./utils";
 
 describe("Checking property inheritance", () => {
     const testdir = "src/__tests__/language-tests/faultyDefFiles/property-inheritance1/";

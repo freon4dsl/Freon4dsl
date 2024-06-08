@@ -43,6 +43,10 @@ describe("Checking indentation ", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 console.log(e.message + e.stack);
+                // To avoid "error TS6133: 'checker' is declared but its value is never read.",
+                // and still keep it easy to reintroduce the log statements,
+                // we use variable 'checker' here unnecessary.
+                checker.hasErrors();
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                 // tslint:disable-next-line:no-unused-expression
                 expect(e.message).toBeNull();

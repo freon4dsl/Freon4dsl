@@ -7,12 +7,12 @@ describe("Checking expression parser on syntax errors", () => {
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 
-    beforeEach(() => {
+    test("read testLanguage", () => {
         try {
-            const language = new LanguageParser().parse(testdir + "testLanguage.ast");
+            new LanguageParser().parse(testdir + "testLanguage.ast");
         } catch (e: unknown) {
             if (e instanceof Error) {
-                console.log("Language could not be read");
+                console.log("Language could not be read: ");
             }
         }
     });
@@ -26,7 +26,7 @@ describe("Checking expression parser on syntax errors", () => {
         const checker = parser.checker;
         const demoExpressionFile = testdir + "demoExpressions.fretest";
         try {
-            const readTest = parser.parse(demoExpressionFile);
+            parser.parse(demoExpressionFile);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);

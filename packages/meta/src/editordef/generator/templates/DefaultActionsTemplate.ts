@@ -71,14 +71,14 @@ export class DefaultActionsTemplate {
             ];
 
             export const CUSTOM_ACTIONS: ${Names.FreCustomAction}[] = [
-                ${this.customActionsForOptional(language, editorDef)}
+                ${this.customActionsForOptional(editorDef)}
                 ${this.customActionForParts(language, editorDef)}
                 ${this.customActionForReferences(language, editorDef)}
             ];
             `;
         }
 
-    customActionsForOptional(language: FreMetaLanguage, editorDef: FreEditUnit): string {
+    customActionsForOptional(editorDef: FreEditUnit): string {
         let result: string = "";
         editorDef.getDefaultProjectiongroup().projections.forEach( projection => {
             if (!!projection && projection instanceof FreEditProjection) {
