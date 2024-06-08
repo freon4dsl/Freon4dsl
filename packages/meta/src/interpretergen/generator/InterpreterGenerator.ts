@@ -39,24 +39,24 @@ export class InterpreterGenerator {
 
         let generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
         let generatedContent = template.interpreterBase(this.language, interpreterDef);
-        this.makeFile("interpreter base", generatedFilePath, generatedContent, generationStatus);
+        this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterClassname(this.language)}.ts`;
-        generatedContent = template.interpreterClass(this.language, interpreterDef);
+        generatedContent = template.interpreterClass(this.language);
         FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter class");
         // this.makeFile("interpreter class", generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterInitname(this.language)}.ts`;
         generatedContent = template.interpreterInit(this.language, interpreterDef);
-        this.makeFile("interpreter init", generatedFilePath, generatedContent, generationStatus);
+        this.makeFile(generatedFilePath, generatedContent, generationStatus);
         // FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter init")
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterName(this.language)}.ts`;
-        generatedContent = mainTemplate.interpreterMain(this.language, interpreterDef);
-        this.makeFile("interpreter main", generatedFilePath, generatedContent, generationStatus);
+        generatedContent = mainTemplate.interpreterMain(this.language);
+        this.makeFile(generatedFilePath, generatedContent, generationStatus);
     }
 
-    private makeFile(generationMessage: string, generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {
+    private makeFile(generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {
         LOGGER.log(`Generating: ${generatedFilePath}`);
         const generated = FileUtil.pretty(generatedContent, "interpreter " , generationStatus);
         fs.writeFileSync(generatedFilePath, generated);
@@ -70,6 +70,10 @@ export class InterpreterGenerator {
     clean(force: boolean) {
         this.getFolderNames();
         FileUtil.deleteDirAndContent(this.interpreterGenFolder);
-        FileUtil.deleteDirIfEmpty(this.interpreterFolder);
+        if (force) {
+            FileUtil.deleteDirAndContent(this.interpreterFolder);
+        } else {
+            FileUtil.deleteDirIfEmpty(this.interpreterFolder);
+        }
     }
 }

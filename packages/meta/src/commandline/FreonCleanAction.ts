@@ -48,7 +48,11 @@ export class FreonCleanAction extends CommandLineAction {
         self.outputFolder = this.outputFolderArg.value;
         self.force = this.forceFlag.value;
         self.defFolder = this.defFolderArg.value;
-        return new Promise(function(resolve, rejest) {
+        // @ts-ignore
+        // error TS6133: 'resolve' is declared but its value is never read.
+        // error TS6133: 'reject' is declared but its value is never read.
+        // The parameters are expected by the constructor of Promise.
+        return new Promise(function(resolve, reject) {
             self.doClean();
         });
     }

@@ -100,8 +100,6 @@ export class FreTyperPartTemplate {
         this.language = language;
         const rootType = Names.classifier(typerdef?.typeRoot());
         ListUtil.addIfNotPresent(this.imports, rootType);
-        const allLangConcepts: string = Names.allConcepts(language);
-        // ListUtil.addIfNotPresent(this.imports, allLangConcepts);
         const generatedClassName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.FreTyperPart;
         const equalsMaker: FreTypeEqualsMaker = new FreTypeEqualsMaker();
@@ -135,7 +133,7 @@ export class FreTyperPartTemplate {
             public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} | null {
                 if (!modelelement) { return null; }
                 let result: ${Names.FreType} = null;
-                ${inferMaker.makeInferType(typerdef, allLangConcepts, rootType, "modelelement", this.importedClassifiers)}
+                ${inferMaker.makeInferType(typerdef, "modelelement", this.importedClassifiers)}
                 return result;
             }
 

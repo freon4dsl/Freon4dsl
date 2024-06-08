@@ -60,7 +60,7 @@ export class ScoperGenerator {
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoperDef(this.language)}.ts`, scoperDefFile);
 
         LOGGER.log(`Generating custom scoper: ${this.scoperGenFolder}/${Names.customScoper(this.language)}.ts`);
-        const scoperCustomFile = FileUtil.pretty(customScoperTemplate.generateCustomScoperPart(this.language, relativePath), "Custom Scoper", generationStatus);
+        const scoperCustomFile = FileUtil.pretty(customScoperTemplate.generateCustomScoperPart(this.language), "Custom Scoper", generationStatus);
         FileUtil.generateManualFile(`${this.scoperFolder}/${Names.customScoper(this.language)}.ts`, scoperCustomFile, "Custom Scoper");
 
         LOGGER.log(`Generating scoper gen index: ${this.scoperGenFolder}/index.ts`);
@@ -86,6 +86,10 @@ export class ScoperGenerator {
     clean(force: boolean) {
         this.getFolderNames();
         FileUtil.deleteDirAndContent(this.scoperGenFolder);
-        FileUtil.deleteDirIfEmpty(this.scoperFolder);
+        if (force) {
+            FileUtil.deleteDirAndContent(this.scoperFolder);
+        } else {
+            FileUtil.deleteDirIfEmpty(this.scoperFolder);
+        }
     }
 }

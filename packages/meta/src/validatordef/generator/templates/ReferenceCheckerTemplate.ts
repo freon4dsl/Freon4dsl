@@ -12,7 +12,7 @@ export class ReferenceCheckerTemplate {
         const checkerClassName: string = Names.referenceChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const writerInterfaceName: string = Names.FreWriter;
-        const overallTypeName: string = Names.allConcepts(language);
+        const overallTypeName: string = Names.allConcepts();
 
         // because 'createChecksOnNonOptionalParts' determines which concepts to import
         // and thus fills 'this.imports' list, it needs to be called before the rest of the template

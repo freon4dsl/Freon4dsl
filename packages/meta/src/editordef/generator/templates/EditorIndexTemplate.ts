@@ -1,10 +1,9 @@
 import { Names } from "../../../utils";
 import { FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../../languagedef/metalanguage";
-import { FreEditUnit } from "../../metalanguage";
 
 export class EditorIndexTemplate {
 
-    generateGenIndex(language: FreMetaLanguage, editorDef: FreEditUnit, extraClassifiers: FreMetaClassifier[]): string {
+    generateGenIndex(language: FreMetaLanguage, extraClassifiers: FreMetaClassifier[]): string {
         const boxProviderConcepts: FreMetaClassifier[] = [];
         language.concepts.forEach(concept => {
             if (!(concept instanceof FreMetaLimitedConcept) && !concept.isAbstract) {
@@ -15,6 +14,8 @@ export class EditorIndexTemplate {
             boxProviderConcepts.push(concept);
         });
         boxProviderConcepts.push(...extraClassifiers);
+        // todo remove the loop over usedLanguages, it is unused
+        // @ts-expect-error
         return ` ${language.usedLanguages.map(lang => `  
             export * from "./${Names.actions(language)}";
             export * from "./${Names.defaultActions(language)}";`).join("")} 
@@ -22,7 +23,7 @@ export class EditorIndexTemplate {
             export * from "./EditorDef"; `;
     }
 
-    generateIndex(language: FreMetaLanguage, editorDef: FreEditUnit): string {
+    generateIndex(language: FreMetaLanguage): string {
         return `
         export * from "./gen";
         export * from "./${Names.customProjection(language)}";

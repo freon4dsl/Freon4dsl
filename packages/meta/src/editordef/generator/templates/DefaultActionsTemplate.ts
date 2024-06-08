@@ -157,6 +157,10 @@ export class DefaultActionsTemplate {
         return result;
     }
 
+    // @ts-expect-error
+    // error TS6133: 'language' is declared but its value is never read.
+    // error TS6133: 'editorDef' is declared but its value is never read.
+    // This error is ignored because ... todo remove parameters or implement this function
     customActionForParts(language: FreMetaLanguage, editorDef: FreEditUnit): string {
         // Nothing to do for the moment
         return "";

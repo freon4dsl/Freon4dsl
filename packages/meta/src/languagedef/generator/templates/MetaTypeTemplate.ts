@@ -9,10 +9,10 @@ export class MetaTypeTemplate {
 
         return `
         /**
-         * Type ${Names.metaType(language)} is a union of the metatype, represented by a name, of all concepts
+         * Type ${Names.metaType()} is a union of the metatype, represented by a name, of all concepts
          * and interfaces that are defined for language Demo.
          */
-        export type ${Names.metaType(language)} = ${tmp.map(u => `"${u}"`).join(" | ")};
+        export type ${Names.metaType()} = ${tmp.map(u => `"${u}"`).join(" | ")};
 
         /**
          * Type MODELUNIT combines the metatype of all possible modelunits of language ${language.name}

@@ -11,7 +11,7 @@ export class UnitTemplate {
     // a unit is not an expression
     // a unit is not abstract
     public generateUnit(unitDescription: FreMetaUnitDescription) {
-        const language = unitDescription.language;
+        // const language = unitDescription.language;
         const myName = Names.classifier(unitDescription);
         const extendsClass = "MobxModelElementImpl";
         const hasReferences = unitDescription.references().length > 0;
@@ -19,7 +19,7 @@ export class UnitTemplate {
         const coreImports = ClassifierUtil.findMobxImports(unitDescription)
             .concat([Names.FreModelUnit, Names.FreParseLocation])
             .concat(hasReferences ? (Names.FreNodeReference) : null);
-        const metaType = Names.metaType(language);
+        const metaType = Names.metaType();
         const intfaces = Array.from(
             new Set(
                 unitDescription.interfaces.map(i => Names.interface(i.referred))

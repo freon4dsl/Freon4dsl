@@ -64,7 +64,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         return result.trimEnd();
     }
 
-    toMethod(relativePath: string): string {
+    toMethod(): string {
         const className: string = Names.syntaxAnalyser(this.language);
         let switchContent: string = "";
         this.parts.forEach(part => part.rules.map(rule => {

@@ -25,7 +25,7 @@ export class ConceptTemplate {
     }
 
     private generateConceptPrivate(concept: FreMetaConcept): string {
-        const language = concept.language;
+        // const language = concept.language;
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
         const hasReferences = concept.implementedReferences().length > 0;
@@ -37,7 +37,7 @@ export class ConceptTemplate {
         const implementsFre = (isExpression ? Names.FreExpressionNode : (hasName ? Names.FreNamedNode : Names.FreNode));
         const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .concat(implementsFre).concat([Names.FreParseLocation]).concat(hasReferences ? (Names.FreNodeReference) : "");
-        const metaType = Names.metaType(language);
+        const metaType = Names.metaType();
         const modelImports = this.findModelImports(concept, myName);
         const intfaces = Array.from(
             new Set(
@@ -77,7 +77,6 @@ export class ConceptTemplate {
     }
 
     private generateBinaryExpression(concept: FreMetaBinaryExpressionConcept) {
-        const language = concept.language;
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
@@ -86,7 +85,7 @@ export class ConceptTemplate {
         const abstract = concept.isAbstract ? "abstract" : "";
         const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .concat([Names.FreBinaryExpression, Names.FreParseLocation]);
-        const metaType = Names.metaType(language);
+        const metaType = Names.metaType();
         let modelImports = this.findModelImports(concept, myName);
         if (!modelImports.includes(baseExpressionName)) {
             modelImports = modelImports.concat(baseExpressionName);
@@ -165,13 +164,13 @@ export class ConceptTemplate {
     // a limited does not have any non-prim properties
     // a limited does not have any references
     private generateLimited(concept: FreMetaLimitedConcept): string {
-        const language = concept.language;
+        // const language = concept.language;
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const abstract = (concept.isAbstract ? "abstract" : "");
         const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([Names.FreNamedNode, Names.FreParseLocation]);
-        const metaType = Names.metaType(language);
+        const metaType = Names.metaType();
         const imports = this.findModelImports(concept, myName);
         const intfaces = Array.from(
             new Set(

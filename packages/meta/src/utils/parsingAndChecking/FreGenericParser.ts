@@ -160,6 +160,9 @@ export class FreGenericParser<DEFINITION> {
         return null;
     }
 
+    // @ts-expect-error
+    // error TS6133: 'file' is declared but its value is never read.
+    // This error is ignored because this implementation is here merely to avoid it being called.
     protected setCurrentFileName(file: string) {
         throw Error("FreParser.setCurrentFileName should be implemented by its subclasses.");
     }

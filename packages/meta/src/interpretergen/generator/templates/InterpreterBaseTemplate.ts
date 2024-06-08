@@ -31,7 +31,7 @@ export class InterpreterBaseTemplate {
         `;
     }
 
-    public interpreterClass(language: FreMetaLanguage, interpreterDef: FreInterpreterDef): string {
+    public interpreterClass(language: FreMetaLanguage): string {
         const baseName = Names.interpreterBaseClassname(language);
         return `// Generated my Freon once, will NEVER be overwritten.
         import { InterpreterContext, IMainInterpreter, RtObject } from "@freon4dsl/core";

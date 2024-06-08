@@ -38,7 +38,7 @@ export class LimitedRule extends GrammarRule {
         return result + " ;";
     }
 
-    toMethod(mainAnalyserName: string): string {
+    toMethod(): string {
         if (!!this.myMap && this.myMap.size > 0) { // found a limited concept with a special projection
             let ifStat: string = "";
             for (const [key, value] of this.myMap) {

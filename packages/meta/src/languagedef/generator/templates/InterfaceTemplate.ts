@@ -7,7 +7,7 @@ import { Names, FREON_CORE, GenerationUtil } from "../../../utils";
 
 export class InterfaceTemplate {
 
-    generateInterface(intf: FreMetaInterface, relativePath: string): string {
+    generateInterface(intf: FreMetaInterface): string {
         // const language = intf.language;
         // const hasSuper = intf.base.length > 0;
         const extendsInterfaces: string[] = Array.from (

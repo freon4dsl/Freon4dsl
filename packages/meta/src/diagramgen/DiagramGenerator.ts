@@ -105,11 +105,24 @@ export class DiagramGenerator {
 
     clean(force: boolean) {
         this.getFolderNames();
+        // Note that the order in which the folders are removed is significant
         FileUtil.deleteDirAndContent(this.diagramAstFolder);
-        FileUtil.deleteDirIfEmpty(this.diagramAstFolder);
+        if (force) {
+            FileUtil.deleteDirAndContent(this.diagramAstFolder);
+        } else {
+            FileUtil.deleteDirIfEmpty(this.diagramAstFolder);
+        }
         FileUtil.deleteDirAndContent(this.diagramGenFolder);
-        FileUtil.deleteDirIfEmpty(this.diagramGenFolder);
+        if (force) {
+            FileUtil.deleteDirAndContent(this.diagramGenFolder);
+        } else {
+            FileUtil.deleteDirIfEmpty(this.diagramGenFolder);
+        }
         FileUtil.deleteDirAndContent(this.diagramFolder);
-        FileUtil.deleteDirIfEmpty(this.diagramFolder);
+        if (force) {
+            FileUtil.deleteDirAndContent(this.diagramFolder);
+        } else {
+            FileUtil.deleteDirIfEmpty(this.diagramFolder);
+        }
     }
 }

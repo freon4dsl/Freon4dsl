@@ -72,6 +72,8 @@ export class OrderedListIterator<T extends FreMetaLangElement> implements Iterat
         this.list = list;
     }
 
+    // todo remove parameter
+    // @ts-expect-error
     next(value?: any): IteratorResult<T> {
         const l = this.list.length();
         if (this.index < l) {

@@ -61,7 +61,7 @@ export class StdlibTemplate {
              * @param name
              * @param metatype
              */
-            public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.FreNamedNode} {
+            public find(name: string, metatype?: ${Names.metaType()}) : ${Names.FreNamedNode} {
                 if (!!name) {
                     const possibles = this.elements.filter((elem) => elem.name === name);
                     if (possibles.length !== 0) {
