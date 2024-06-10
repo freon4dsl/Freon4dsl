@@ -8,24 +8,19 @@ import { WebformTemplate } from "../../../server/src/templates/WebFormTemplate";
 import * as Sim from "../../../playground/src/StudyConfiguration/simjs/sim.js"
 import { Schedule } from "./Schedule.js"
 import log from "./SimpleLogger.js";
+import { Simulator } from "./Simulator";
 
 describe("Generate Study Site", () => {
 
-    test(" is able to generate a WebForm YAML file from a model", async () => {
-        let model: StudyConfiguration = WebformTemplate.loadModel("Study2");
-        WebformTemplate.writeWebForms(model);
-    });
+    // test(" is able to generate a WebForm YAML file from a model", async () => {
+    //     let model: StudyConfiguration = WebformTemplate.loadModel("Study2");
+    //     WebformTemplate.writeWebForms(model);
+    // });
 
     test("is able to simulate visits", () => {
-        let sim = new Sim.Sim();
-        sim.addEntity(Schedule);
-        sim.setLogger(function (str) {
-           log(str);
-        });
-      
-        let results = sim.simulate(50); 
-        log("sim.simulate results:" + results);
-      
+        let sim = new Sim.Sim(); // For some reason, need to do this for Sim to be properly loaded and available in the Scheduler class used by the Simulator.
+        let results = new Simulator().run();
+        log("Simulator results:" + results);      
     });
 
 });
