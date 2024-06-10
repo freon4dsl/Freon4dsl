@@ -49,7 +49,7 @@ elements: |-
         - step-content
     step0_instructions:
       '#type': processed_text
-      '#text': '<div id="container" class="step-detail"><div id="definition" class="step-detail-definition"><ul><li>Description text for T1</li></ul></div></div>'
+      '#text': '<div id="container" class="step-detail"><div id="definition" class="step-detail-definition"><ul><li>null</li></ul></div></div>'
       '#format': full_html
   submit_buttons:
     '#type': webform_flexbox

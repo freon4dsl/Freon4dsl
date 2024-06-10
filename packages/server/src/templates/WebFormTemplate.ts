@@ -4,6 +4,7 @@ import { FreModelUnit, FreModel, FreNode, FreLanguage, LwChunk, FreLogger, FreLi
 import * as classes from '../../../playground/src/StudyConfiguration/language/gen/index';
 import { StudyConfigurationModelEnvironment } from "../../../playground/src/StudyConfiguration/config/gen/StudyConfigurationModelEnvironment";  
 import {StudyConfiguration, WorkflowDescription, Event } from "../../../playground/src/StudyConfiguration/language/gen/index";  
+import log from "../__tests__/SimpleLogger.js";
 
 export class WebformTemplate {
 
@@ -20,24 +21,24 @@ export class WebformTemplate {
       let metaModel: LwChunk = JSON.parse(fs.readFileSync(`./modelstore/StudyConfiguration/${modelName}.json`).toString());
       const ts = serializer.toTypeScriptInstance(metaModel);
       let model: StudyConfiguration = ts as StudyConfiguration;
-      // console.log(`Study Configuration name: ${model.name}`);
-      // console.log("before periods:" + model.periods.length);
-      // model.periods.forEach(p => {console.log("period name:" + p.name)});
-      // model.periods.forEach(p => {p.events.forEach(e => {console.log("Event Description:" + e.description.text)})});
+      // log(`Study Configuration name: ${model.name}`);
+      // log("before periods:" + model.periods.length);
+      // model.periods.forEach(p => {log("period name:" + p.name)});
+      // model.periods.forEach(p => {p.events.forEach(e => {log("Event Description:" + e.description.text)})});
       // model.periods.forEach(p => {p.events.forEach(e => {e.checkList.activities.forEach(a => {
       //     let decision = a.decision as WorkflowDescription;
-      //     // console.log("decision:" + decision.text.text) })})}); //Needed when WorkflowDescription has Decision member
-      //    console.log("decision:" + decision.text)
+      //     // log("decision:" + decision.text.text) })})}); //Needed when WorkflowDescription has Decision member
+      //    log("decision:" + decision.text)
       //   })})});
-      // console.log("model:" + JSON.stringify(model.freId()));
+      // log("model:" + JSON.stringify(model.freId()));
       return model;
     }
   
     public static writeWebForms(model: StudyConfiguration) {
       model.periods.forEach((period, periodNumber) => {
-        console.log("Period Name:" + period.name);
+        log("Period Name:" + period.name);
         period.events.forEach((event, eventNumber) => {
-          console.log("Event Name:" + event.name);
+          log("Event Name:" + event.name);
           // Get the list of activities that go on this form
           var activities = event.checkList.activities;
           var template = `# TASK WEBFORM - ${event.name} 
@@ -306,19 +307,19 @@ variants: {  }`;
     }
 
     private static writeWebFormToFile(webFormYaml: string, formName: string) {
-      console.log("template:" + webFormYaml);
+      log("template:" + webFormYaml);
       var fileName = `${formName}.yaml`;
       if (fs.existsSync(fileName)) {
         try {
           fs.unlinkSync(fileName);
-          console.log(`${fileName} has been removed`);
+          log(`${fileName} has been removed`);
         } catch (err) {
           console.error(`Error removing file ${fileName}: ${err}`);
         }
       }
       try {
         fs.writeFileSync(fileName, webFormYaml);
-        console.log(`${fileName} has been written`);
+        log(`${fileName} has been written`);
       } catch (err) {
         console.error('Error writing file:', err);
       }
