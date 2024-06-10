@@ -10,14 +10,15 @@ import { Schedule } from "./Schedule.js"
 import log from "./SimpleLogger.js";
 import { Simulator } from "./Simulator";
 
+
 describe("Generate Study Site", () => {
 
-    // test(" is able to generate a WebForm YAML file from a model", async () => {
-    //     let model: StudyConfiguration = WebformTemplate.loadModel("Study2");
-    //     WebformTemplate.writeWebForms(model);
-    // });
+    test(" is able to generate a WebForm YAML file from a model", async () => {
+        let model: StudyConfiguration = WebformTemplate.loadModel("Study2");
+        WebformTemplate.writeWebForms(model);
+    });
 
-    test("is able to simulate visits", () => {
+    test.only("is able to simulate visits", () => {
         let sim = new Sim.Sim(); // For some reason, need to do this for Sim to be properly loaded and available in the Scheduler class used by the Simulator.
         let results = new Simulator().run();
         log("Simulator results:" + results);      
