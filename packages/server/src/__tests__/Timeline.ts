@@ -1,5 +1,34 @@
-import { Event } from "../../../playground/src/StudyConfiguration/language/gen/index";
+/*
+ * A Timeline records the events and the days they occur on.
+ */
+export class Timeline {
+  days: TimelineDay[] = [];
 
+  constructor() {
+  }
+
+  newEventInstance(name?: string, day?: number, startDay?: number, endDay?: number) {
+    return new EventInstance(name, day, startDay, endDay);
+  }
+
+  addEvent(event: EventInstance) {
+    let day = this.days.find(d => d.day === event.day);
+    if (!day) {
+      day = new TimelineDay(event.day);
+      this.days.push(day);
+    }
+    day.events.push(event);
+  }
+
+  getEvents(day: number) {
+    let timelineDay = this.days.find(d => d.day === day);
+    return timelineDay ? timelineDay.events : [];
+  }
+}
+
+ /*
+  * An EventInstance represents an instance of an event on a day on the timeline.
+  */
 export class EventInstance {
   name: string;
   day: number;
@@ -12,31 +41,12 @@ export class EventInstance {
     this.startDay = startDay;
     this.endDay = endDay;
   }
-
-
 }
 
-export class ScheduledEvent {
-  event: Event;
-  
-  constructor(event: Event) {
-    this.event = event;
-  }
-
-  day():number {
-    return 1;
-  }
-
-  name():string {
-    return this.event.name;
-  } 
-
-  dependency(): string {
-    return null;
-  }
-}
-
-export class Day {
+/*
+ * A Day represents a day on the timeline and the events that occurred on that day.
+ */
+export class TimelineDay {
   day: number;
   events: EventInstance[] = [];
 
@@ -45,28 +55,4 @@ export class Day {
   }
 }
 
-export class Timeline {
-  days: Day[] = [];
-
-  constructor() {
-  }
-
-  newEventInstance(name?: string, day?: number, startDay?: number, endDay?: number) {
-    return new EventInstance(name, day, startDay, endDay);
-  }
-
-  addEvent(event: EventInstance) {
-    let day = this.days.find(d => d.day === event.day);
-    if (!day) {
-      day = new Day(event.day);
-      this.days.push(day);
-    }
-    day.events.push(event);
-  }
-
-  getEvents(day: number) {
-    let timelineDay = this.days.find(d => d.day === day);
-    return timelineDay ? timelineDay.events : [];
-  }
-}
 
