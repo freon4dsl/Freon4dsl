@@ -1,4 +1,4 @@
-export class EventSchedule {
+export class DummyEventSchedule {
 
   // This is just a hack to prove typescript classes can be passed to the scheduler
   
