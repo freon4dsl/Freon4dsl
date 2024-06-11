@@ -7,7 +7,7 @@ concept When implements EventStart {
     startWhen: StudyConfigExpression;
 }
 
-concept Day implements EventStart {
+expression Day implements EventStart {
     startDay: number;
 }
 
