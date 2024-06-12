@@ -1,20 +1,20 @@
 language StudyConfigurationModel
 
-interface EventStart {
+concept EventStart {
 }  
 
-concept When implements EventStart {
+concept When base EventStart {
     startWhen: StudyConfigExpression;
 }
 
-expression Day implements EventStart {
+expression Day base EventStart {
     startDay: number;
 }
 
-expression StudyStart implements EventStart {
+expression StudyStart base EventStart {
 }
 
-concept AnyDay implements EventStart {
+concept AnyDay base EventStart {
 }
 
 interface RepeatExpression {    

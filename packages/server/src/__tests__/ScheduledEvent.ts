@@ -14,17 +14,17 @@ export class ScheduledEvent {
   }
 
   day():number {
-    let day = this.event.schedule.eventStart as Day;
+    // let day = this.event.schedule.eventStart as Day;
+    let eventStart = this.event.schedule.eventStart;
     const interpreter = new MainStudyConfigurationModelInterpreter()
 		interpreter.setTracing(true);
-		const value = interpreter.evaluate(day);
+		const value = interpreter.evaluate(eventStart);
 		if(isRtError(value)){
-			console.log("interpreter returned value: " + value.toString());
+			console.log("interpreter isRtError, value: " + value.toString());
 		} else {
 			const trace = interpreter.getTrace().root.toStringRecursive();
 			console.log(trace);
 		}
-
     return (value as RtNumber).value
   }
 
