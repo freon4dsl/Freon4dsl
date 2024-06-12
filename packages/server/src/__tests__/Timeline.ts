@@ -1,3 +1,5 @@
+import { ScheduledEvent } from './ScheduledEvent';
+
 /*
  * A Timeline records the events and the days they occur on.
  */
@@ -7,8 +9,12 @@ export class Timeline {
   constructor() {
   }
 
-  newEventInstance(name?: string, day?: number, startDay?: number, endDay?: number) {
-    return new EventInstance(name, day, startDay, endDay);
+  // newEventInstance(name?: string, day?: number, startDay?: number, endDay?: number) {
+  //   return new EventInstance(name, day, startDay, endDay);
+  // }
+
+  newEventInstance(scheduledEvent:ScheduledEvent, day?: number, startDay?: number, endDay?: number) {
+    return new EventInstance(scheduledEvent, day, startDay, endDay);
   }
 
   addEvent(event: EventInstance) {
@@ -34,9 +40,10 @@ export class EventInstance {
   day: number;
   startDay: number;
   endDay: number;
+  scheduledEvent: ScheduledEvent;
 
-  constructor(name?: string, day?: number, startDay?: number, endDay?: number) {
-    this.name = name;
+  constructor(scheduledEvent: ScheduledEvent,day?: number, startDay?: number, endDay?: number) {
+    this.name = scheduledEvent.name();
     this.day = day;
     this.startDay = startDay;
     this.endDay = endDay;

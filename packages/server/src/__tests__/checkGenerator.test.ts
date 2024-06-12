@@ -5,6 +5,7 @@ import * as Sim from "../../../playground/src/StudyConfiguration/simjs/sim.js"
 import { Simulator, } from "./Simulator";
 import { Timeline, EventInstance, TimelineDay } from "./Timeline";
 import { create } from "lodash";
+import { ScheduledEvent } from "./ScheduledEvent";
 
 // function addEventToPeriod(period: Period, eventName: string, startDay: number): Event {
 //     let event = new Event(eventName);
@@ -92,7 +93,7 @@ describe("Simulation of Trial to Generate the Timeline", () => {
 
         // Then the generated timeline has one event on the expected event day
         let expectedTimeline = new Timeline()
-        expectedTimeline.addEvent(new EventInstance("Visit 1", 1));
+        expectedTimeline.addEvent(new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[0]), 1));
 
         expect(simulatedTimeline).toEqual(expectedTimeline);  
     });
@@ -106,14 +107,28 @@ describe("Simulation of Trial to Generate the Timeline", () => {
         simulator.run();
         let simulatedTimeline = simulator.timeline;
 
-        // Then the generated timeline has one event on the expected event day
+        // Then the generated timeline has two events on the expected event days
         let expectedTimeline = new Timeline()
-        expectedTimeline.addEvent(new EventInstance("Visit 1", 1));
-        expectedTimeline.addEvent(new EventInstance("Visit 2", 8));
+        expectedTimeline.addEvent(new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[0]), 1));
+        expectedTimeline.addEvent(new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[1]), 8));
 
         expect(simulatedTimeline).toEqual(expectedTimeline);  
     });
 
-    // it.only("generate a chart for a two visit timeline for a visit 7 days after the end of the first visit")
+    // it.only("generate a chart for a two visit timeline for a visit 7 days after the end of the first visit"), () => {
+    //     // GIVEN a study configuration with one period and two events
+    //     studyConfiguration = createConfigWithAPeriodAndTwoEvents("Screening", "Visit 1", 1, "Visit 2", 7);
+
+    //     // WHEN the study is simulated and a timeline picture is generated
+    //     let simulator = new Simulator(studyConfiguration);
+    //     simulator.run();
+    //     let simulatedTimeline = simulator.timeline;
+    //     let timelinePicture = simulatedTimeline.generatePicture();
+
+    //     // Then the generated timeline picture has two events on the expected event days
+    //     expectedPicture = "";
+    //     expect(timelinePicture).toEqual(expectedPicture);
+
+    // } 
 
 });

@@ -21,16 +21,6 @@ export class WebformTemplate {
       let metaModel: LwChunk = JSON.parse(fs.readFileSync(`./modelstore/StudyConfiguration/${modelName}.json`).toString());
       const ts = serializer.toTypeScriptInstance(metaModel);
       let model: StudyConfiguration = ts as StudyConfiguration;
-      // log(`Study Configuration name: ${model.name}`);
-      // log("before periods:" + model.periods.length);
-      // model.periods.forEach(p => {log("period name:" + p.name)});
-      // model.periods.forEach(p => {p.events.forEach(e => {log("Event Description:" + e.description.text)})});
-      // model.periods.forEach(p => {p.events.forEach(e => {e.checkList.activities.forEach(a => {
-      //     let decision = a.decision as WorkflowDescription;
-      //     // log("decision:" + decision.text.text) })})}); //Needed when WorkflowDescription has Decision member
-      //    log("decision:" + decision.text)
-      //   })})});
-      // log("model:" + JSON.stringify(model.freId()));
       return model;
     }
   

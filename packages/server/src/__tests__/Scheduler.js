@@ -41,7 +41,7 @@
           let currentEvent = Scheduler.events[this.eventsIndex];
           console.log('Scheduling Visit: ' + (this.eventsIndex+1).toFixed(0));  // +1 because we are 0 indexed but what to display as a 1-based visit number
           console.log('Adding to Timeline Event Name: ' + currentEvent.name() + ' on Day: ' + currentEvent.day());
-          Scheduler.timeline.addEvent(Scheduler.timeline.newEventInstance(currentEvent.name(), currentEvent.day()));
+          Scheduler.timeline.addEvent(Scheduler.timeline.newEventInstance(currentEvent, currentEvent.day()));
           let daysToWait = currentEvent.day();
           if (daysToWait === null) {
             if (currentEvent.dependency) {
