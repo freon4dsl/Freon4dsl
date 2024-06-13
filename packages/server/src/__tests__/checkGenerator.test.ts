@@ -6,6 +6,7 @@ import { Simulator, } from "./Simulator";
 import { Timeline, EventInstance, TimelineDay } from "./Timeline";
 import { create } from "lodash";
 import { ScheduledEvent } from "./ScheduledEvent";
+import { TimelineScriptTemplate } from "../templates/TimelineScriptTemplate";
 
 // function addEventToPeriod(period: Period, eventName: string, startDay: number): Event {
 //     let event = new Event(eventName);
@@ -43,7 +44,7 @@ function addEventToPeriod(period: Period, eventName: string, eventSchedule: Even
     return event;
 }
 
-fdescribe("Generate Study Site", () => {
+describe("Generate Study Site", () => {
 
     test(" is able to generate a WebForm YAML file from a model", async () => {
         let model: StudyConfiguration = WebformTemplate.loadModel("Study2");
@@ -89,46 +90,75 @@ describe("Simulation of Trial to Generate the Timeline", () => {
         // WHEN the study is simulated and a timeline is generated
         let simulator = new Simulator(studyConfiguration);
         simulator.run();
-        let simulatedTimeline = simulator.timeline;
+        let timeline = simulator.timeline;
 
         // Then the generated timeline has one event on the expected event day
         let expectedTimeline = new Timeline()
         expectedTimeline.addEvent(new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[0]), 1));
 
-        expect(simulatedTimeline).toEqual(expectedTimeline);  
+        expect(timeline).toEqual(expectedTimeline);  
     });
 
-    it.only("generates a two visit timeline for a visit 7 days after the end of the first visit", () => {
+    it("generates a two visit timeline for a visit 7 days after the end of the first visit", () => {
         // GIVEN a study configuration with one period and two events
         studyConfiguration = createConfigWithAPeriodAndTwoEvents("Screening", "Visit 1", 1, "Visit 2", 7);
 
         // WHEN the study is simulated and a timeline is generated
         let simulator = new Simulator(studyConfiguration);
         simulator.run();
-        let simulatedTimeline = simulator.timeline;
+        let timeline = simulator.timeline;
+        console.log("timeline: " + timeline.days.toString);
 
         // Then the generated timeline has two events on the expected event days
         let expectedTimeline = new Timeline()
         expectedTimeline.addEvent(new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[0]), 1));
         expectedTimeline.addEvent(new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[1]), 8));
 
-        expect(simulatedTimeline).toEqual(expectedTimeline);  
+        expect(timeline).toEqual(expectedTimeline);  
     });
 
-    // it.only("generate a chart for a two visit timeline for a visit 7 days after the end of the first visit"), () => {
-    //     // GIVEN a study configuration with one period and two events
-    //     studyConfiguration = createConfigWithAPeriodAndTwoEvents("Screening", "Visit 1", 1, "Visit 2", 7);
+    let expectedTimelineDataAsScript = 
+`  var groups = new vis.DataSet([
+    { "content": "<b>Phase</b>", "id": "Phase", className: 'phase' },
+    { "content": "Visit 1", "id": "Visit 1" },
+    { "content": "Visit 2", "id": "Visit 2" },
+    { "content": "Any Day", "id": "AnyDay", className: 'any-day' },
+  ]);
 
-    //     // WHEN the study is simulated and a timeline picture is generated
-    //     let simulator = new Simulator(studyConfiguration);
-    //     simulator.run();
-    //     let simulatedTimeline = simulator.timeline;
-    //     let timelinePicture = simulatedTimeline.generatePicture();
+  var items = new vis.DataSet([
+    { start: new Date(2024, 0, 1), end: new Date(2024, 0, 6, 23, 59, 59), group: "Phase", className: "screening-phase", title: "tip...", content: "<b>Screening</b>", id: "1" },
+    { start: new Date(2024, 0, 7, 0, 1), end: new Date(2024, 0, 30, 23, 59, 59), group: "Phase", className: "treatment-phase", title: "tip...", content: "<b>Treatment<b>", id: "2" },
 
-    //     // Then the generated timeline picture has two events on the expected event days
-    //     expectedPicture = "";
-    //     expect(timelinePicture).toEqual(expectedPicture);
+    { start: new Date(2024, 0, 0), end: new Date(2024, 0, 0, 23, 59, 59), group: "Visit 1", className: "window", title: "Window before Event", content: "&nbsp;", id: "before-0" },
+    { start: new Date(2024, 0, 1), end: new Date(2024, 0, 1, 23, 59, 59), group: "Visit 1", className: "treatment-visits", title: "day 1", content: "&nbsp;", id: "0" },
+    { start: new Date(2024, 0, 2), end: new Date(2024, 0, 2, 23, 59, 59), group: "Visit 1", className: "window", title: "Window after Event", content: "&nbsp;", id: "after-0" },
 
-    // } 
+    { start: new Date(2024, 0, 7), end: new Date(2024, 0, 7, 23, 59, 59), group: "Visit 2", className: "window", title: "Window before Event", content: "&nbsp;", id: "before-1" },
+    { start: new Date(2024, 0, 8), end: new Date(2024, 0, 8, 23, 59, 59), group: "Visit 2", className: "treatment-visits", title: "when Start Day + 7", content: "&nbsp;", id: "1" },
+    { start: new Date(2024, 0, 9), end: new Date(2024, 0, 9, 23, 59, 59), group: "Visit 2", className: "window", title: "Window after Event", content: "&nbsp;", id: "after-1" },
+
+    { start: new Date(2024, 0, 6), end: new Date(2024, 0, 30, 23, 59, 59), group: "AnyDay", className: "any-day", title: "Adverse Event", content: "Unscheduled Adverse Event Visit", id: "911" },
+
+  ])
+`;
+
+    it.only("generate a chart for a two visit timeline for a visit 7 days after the end of the first visit", () => {
+        // GIVEN a study configuration with one period and two events
+        studyConfiguration = createConfigWithAPeriodAndTwoEvents("Screening", "Visit 1", 1, "Visit 2", 7);
+
+        // WHEN the study is simulated and a timeline picture is generated
+        let simulator = new Simulator(studyConfiguration);
+        simulator.run();
+        let timeline = simulator.timeline;
+
+        // console.log("timeline: " + timeline.getDays()[0].day);
+        // console.log("timeline: " + timeline.getDays()[0].events[0].name);
+        let timelineDataAsScript = TimelineScriptTemplate.getTimelineDataAsScript(timeline);
+        console.log("timelineDataAsScript: " + timelineDataAsScript);
+
+        // Then the generated timeline picture has two events on the expected event days
+        expect(timelineDataAsScript).toEqual(expectedTimelineDataAsScript);
+
+    }); 
 
 });

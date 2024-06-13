@@ -8,8 +8,8 @@
     static day = new Sim.Event("Day");
     static studyEvent = new Sim.Event("Visit");
     static completedEvents = [];
-    static events = [];
-    static timeline = [];
+    static events;
+    static timeline;
       
       start() {
         console.log('Scheduler Start');
@@ -42,6 +42,7 @@
           console.log('Scheduling Visit: ' + (this.eventsIndex+1).toFixed(0));  // +1 because we are 0 indexed but what to display as a 1-based visit number
           console.log('Adding to Timeline Event Name: ' + currentEvent.name() + ' on Day: ' + currentEvent.day());
           Scheduler.timeline.addEvent(Scheduler.timeline.newEventInstance(currentEvent, currentEvent.day()));
+          console.log('Scheduler Timeline Length: ' + Scheduler.timeline.days.length);
           let daysToWait = currentEvent.day();
           if (daysToWait === null) {
             if (currentEvent.dependency) {

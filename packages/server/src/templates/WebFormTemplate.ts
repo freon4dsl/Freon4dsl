@@ -8,13 +8,7 @@ import log from "../__tests__/SimpleLogger.js";
 
 export class WebformTemplate {
 
-    constructor(formData: string[]) {
-        this.formData = formData;
-    }
-
-    formData: string[];
-
-    public static loadModel(modelName: string): StudyConfiguration {
+  public static loadModel(modelName: string): StudyConfiguration {
       FreLogger.muteAllLogs();
       const tmp = StudyConfigurationModelEnvironment.getInstance();
       const serializer = new FreLionwebSerializer();
