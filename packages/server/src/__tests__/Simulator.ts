@@ -16,12 +16,12 @@ export class Simulator {
   events: Event[];
   name = "Simulator";
   scheduledEvents: ScheduledEvent[] = [];
+  studyConfiguration: StudyConfiguration;
 
   constructor(studyConfiguration: StudyConfiguration) {
     // Setup the Scheduler
-    let periods = studyConfiguration.periods;
-    this.events = periods[0].events;
-    this.scheduledEvents = this.events.map(event => {return new ScheduledEvent(event)});
+    this.studyConfiguration = studyConfiguration;
+    this.setupScheduledEvents();
     this.timeline = new Timeline();
 
     // Setup the simulator so it uses the Scheduler and link the Scheduler to this Simulator instance
@@ -33,13 +33,39 @@ export class Simulator {
     });
   }
 
+  // Setup the ScheduledEvents to be a ScheduleEvent for every Event in every Period of the StudyConfiguration
+  setupScheduledEvents() {
+    let allEvents = this.getPeriods().map(period => period.events).flat();
+    this.scheduledEvents = allEvents.map(event => {return new ScheduledEvent(event)});
+  }
+
+  getPeriods() {
+    return this.studyConfiguration.periods;
+  }
+
+  getFirstPeriod() {
+    return this.studyConfiguration.periods[0];
+  }
+
   getEvents() {
     return this.scheduledEvents;
   }
 
+  getAllEventsInAPeriod(period: Period) {
+    return period.events;
+  }
+
+
   getTimeline() {
     return this.timeline;
   }
+
+  // getFirstEvent() {
+  //   //TODO: change to searching for the event(s) that start on day 1
+  //   let firstPeriod = this.getFirstPeriod();
+  //   firstPeriod.events.find(event => event.schedule.eventStart === 1);
+  //   return this.scheduledEvents[0];
+  // }
 
   run() {
     // Run the simulation for the appropriate number of days

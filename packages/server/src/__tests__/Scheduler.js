@@ -10,15 +10,16 @@
     completedEvents = [];
     events;
     timeline;
-    simulation
+    simulation;
       
     start(...args) {
       console.log('Scheduler Start args length:'+ args.length);
-      this.simulation = args[0]
+      this.simulation = args[0];
+      //TODO: switch to not having events and timelines as variables and just use the simulation object.
       this.events = this.simulation.getEvents();
       this.timeline = this.simulation.getTimeline();
       this.eventsIndex = 0;
-      this.scheduleVisit(this.studyEvent, this.events[this.eventsIndex]);
+      this.scheduleVisit(this.studyEvent, this.simulation.getFirstEvent());
     }
 
     scheduleVisit(visit) {
