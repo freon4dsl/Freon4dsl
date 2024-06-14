@@ -22,13 +22,10 @@ export class Simulator {
     let periods = studyConfiguration.periods;
     this.events = periods[0].events;
     this.scheduledEvents = this.events.map(event => {return new ScheduledEvent(event)});
-    // Scheduler.setEvents(scheduledEvents);
-
     this.timeline = new Timeline();
-    // // TODO: Find a way to allow scheduler to access the typescript instances without using class variables. Class variables will not work when multiple simulations are run in parallel on the server.
-    // Scheduler.setTimeline(this.timeline);
 
-    // Setup the simulator so it uses the Scheduler 
+    // Setup the simulator so it uses the Scheduler and link the Scheduler to this Simulator instance
+    // This Scheduler is JavaScript and passing the Simulator instance to it is a way to allow the JavaScript to call back into the TypeScript data structures.
     this.sim = new Sim.Sim();
     this.sim.addEntity(Scheduler, "Scheduler", this);
     this.sim.setLogger(function (s: string) {

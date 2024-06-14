@@ -21,16 +21,6 @@
       this.scheduleVisit(this.studyEvent, this.events[this.eventsIndex]);
     }
 
-    // static setEvents(events) {
-    //   console.log('Setting Events of length: ' + this.events.length);
-    //   this.events = events;
-    // }
-
-    // static setTimeline(timeline) {
-    //   console.log('Setting Timeline');
-    //   this.timeline = timeline;
-    // }
-
     scheduleVisit(visit) {
       console.log('Scheduling Visit where eventsIndex is:' + this.eventsIndex);
       if (this.eventsIndex > 0) {
