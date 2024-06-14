@@ -5,6 +5,7 @@ import { ScheduledEvent } from './ScheduledEvent';
  */
 export class Timeline {
   days: TimelineDay[] = [];
+  phaseOccurrences: PhaseOccurrence[] = [];
 
   constructor() {
   }
@@ -64,6 +65,22 @@ export class TimelineDay {
 
   constructor(day: number) {
     this.day = day;
+  }
+}
+
+/*
+ * A PhaseOccurrence represents a phase of the study that occurred on the timeline.
+ */
+export class PhaseOccurrence {
+  name: string;
+  startDay: number;
+  endDay: number;
+  startEvent: EventInstance;
+
+  constructor(name: string, startEvent: EventInstance, startDay: number, endDay: number) {
+    this.name = name;
+    this.startDay = startDay;
+    this.endDay = endDay;
   }
 }
 
