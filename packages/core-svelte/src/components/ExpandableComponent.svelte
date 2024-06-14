@@ -28,6 +28,11 @@
         box.refreshComponent = refresh;
     })
 
+    let htmlElement: HTMLElement;
+    async function setFocus(): Promise<void> {
+        htmlElement.focus();
+    }
+
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH Expand for box (" + why + ") " + box?.role + " child " + box?.child?.role);
         child = box?.child;
