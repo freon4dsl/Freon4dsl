@@ -30,6 +30,7 @@ export * from "./ElementBox";
 export * from "./TableBox";
 export * from "./TableCellBox";
 export * from "./TableRowBox";
+export * from "./ExpandableBox";
 
 // the following files contain export that do not depend on any other file
 export * from "./SelectOption";

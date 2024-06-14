@@ -12,6 +12,7 @@ import RenderComponent from './RenderComponent.svelte';
 import SvgComponent from './SvgComponent.svelte';
 import TextComponent from './TextComponent.svelte';
 import TextDropdownComponent from './TextDropdownComponent.svelte';
+import ExpandableComponent from './ExpandableComponent.svelte';
 
 export {
     DropdownComponent,
@@ -27,7 +28,8 @@ export {
     RenderComponent,
     SvgComponent,
     TextComponent,
-    TextDropdownComponent
+    TextDropdownComponent,
+    ExpandableComponent
 }
 
 export * from "./svelte-utils";

@@ -36,8 +36,7 @@ Choose one of the projects in playground. Note that not all of them will work co
 Generate the code for that project (we have choosen the 'example' project):
 ```bash
   cd packages/playground
-  npm run install-example
-  npm run example
+  npm run study-configuration
 ```
 
 To start the projectional editor for the choosen language in the playground package,

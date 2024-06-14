@@ -11,9 +11,10 @@ import {
     FreLanguage,
     FRE_BINARY_EXPRESSION_LEFT,
     FRE_BINARY_EXPRESSION_RIGHT,
-    HorizontalListBox, FreProjection, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil
+    HorizontalListBox, FreProjection, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil, ExpandableBox
 } from "@freon4dsl/core";
 import { Description } from "../language/gen/";
+import exp from "constants";
 
 /**
  * Class CustomStudyConfigurationModelProjection provides an entry point for the language engineer to
@@ -49,14 +50,15 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             "Description-hlist-line-0",
             "",
             [
-                // BoxUtil.textBox(this._element as Documentation, "text"),
-                new MultiLineTextBox(doc, "study-part-description",
-                    () => { return doc.text},
-                    (t: string) => { doc.text = t}
-                ),
+                new ExpandableBox(doc, "study-part-expandable-box", 
+                    // BoxUtil.textBox(this._element as Documentation, "text"),
+                    new MultiLineTextBox(doc, "study-part-description",
+                        () => { return doc.text},
+                        (t: string) => { doc.text = t}
+                    ),
+                )
             ],
             { selectable: false }
         );
     }
-    
 }
