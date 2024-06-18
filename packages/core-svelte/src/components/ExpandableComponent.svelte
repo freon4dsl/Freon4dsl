@@ -9,6 +9,7 @@
     import RenderComponent from "./RenderComponent.svelte";
     import type {ExpandableBox, FreEditor} from "@freon4dsl/core";
     import { componentId } from "./svelte-utils";
+    import { AccordionItem, Accordion } from 'flowbite-svelte';
 
     // Parameters
     export let box: ExpandableBox;
@@ -32,42 +33,55 @@
         LOGGER.log("REFRESH Expand for box (" + why + ") " + box?.role + " child " + box?.child?.role);
         child = box?.child;
         // style = `margin-left: ${box?.indent * indentWidth}px;`
+
     };
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
     }
+
+    let content: HTMLDivElement;
+
+    function toggleButton() {
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+      }
 </script>
 
-<details id="{id}">
-    <summary>
-      What is the meaning of life?
-      <span class="icon">👇</span>
-    </summary>
-    <RenderComponent box={child} editor={editor}/>
-  </details>
+<button class="collapsible" on:click={toggleButton}>Open v3</button>
+
+<div bind:this={content}>
+  <p>Lorem ipsum...</p>
+  <RenderComponent box={child} editor={editor}/>
+</div>
+
+
 
 <style>
-    details {
-  user-select: none;
-}
-
-details>summary span.icon {
-  width: 24px;
-  height: 24px;
-  transition: all 0.3s;
-  margin-left: auto;
-}
-
-details[open] summary span.icon {
-  transform: rotate(180deg);
-}
-
-summary {
-  display: flex;
+ .collapsible {
+  background-color: #eee;
+  color: #444;
   cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
 }
 
-summary::-webkit-details-marker {
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapsible:hover {
+  background-color: #ccc;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
   display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
 }
 </style>
