@@ -43,11 +43,14 @@
     }
 </script>
 
-<details id="{id}">
+<details id="{id}" open>
     <summary>
       What is the meaning of life?
       <span class="icon">👇</span>
     </summary>
+    <p>
+      hello
+    </p>
     <RenderComponent box={child} editor={editor}/>
   </details>
 

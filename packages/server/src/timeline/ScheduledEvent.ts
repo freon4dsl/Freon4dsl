@@ -7,15 +7,15 @@ import { MainStudyConfigurationModelInterpreter } from "../../../playground/src/
  * It provides a simplified interface for the simulator and allows for the same Event to be scheduled multiple times.
  */
 export class ScheduledEvent {
-  event: Event;
+  configuredEvent: Event;
   
   constructor(event: Event) {
-    this.event = event;
+    this.configuredEvent = event;
   }
 
   day():number {
     // let day = this.event.schedule.eventStart as Day;
-    let eventStart = this.event.schedule.eventStart;
+    let eventStart = this.configuredEvent.schedule.eventStart;
     const interpreter = new MainStudyConfigurationModelInterpreter()
 		interpreter.setTracing(true);
 		const value = interpreter.evaluate(eventStart);
@@ -29,7 +29,7 @@ export class ScheduledEvent {
   }
 
   name():string {
-    return this.event.name;
+    return this.configuredEvent.name;
   } 
 
   dependency(): string {

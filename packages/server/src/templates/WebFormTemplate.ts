@@ -4,7 +4,7 @@ import { FreModelUnit, FreModel, FreNode, FreLanguage, LwChunk, FreLogger, FreLi
 import * as classes from '../../../playground/src/StudyConfiguration/language/gen/index';
 import { StudyConfigurationModelEnvironment } from "../../../playground/src/StudyConfiguration/config/gen/StudyConfigurationModelEnvironment";  
 import {StudyConfiguration, WorkflowDescription, Event } from "../../../playground/src/StudyConfiguration/language/gen/index";  
-import log from "../__tests__/SimpleLogger.js";
+import log from "../utils/SimpleLogger.js";
 
 export class WebformTemplate {
 
@@ -20,9 +20,9 @@ export class WebformTemplate {
   
     public static writeWebForms(model: StudyConfiguration) {
       model.periods.forEach((period, periodNumber) => {
-        log("Period Name:" + period.name);
+        // log("Period Name:" + period.name);
         period.events.forEach((event, eventNumber) => {
-          log("Event Name:" + event.name);
+          // log("Event Name:" + event.name);
           // Get the list of activities that go on this form
           var activities = event.checkList.activities;
           var template = `# TASK WEBFORM - ${event.name} 
@@ -291,19 +291,19 @@ variants: {  }`;
     }
 
     private static writeWebFormToFile(webFormYaml: string, formName: string) {
-      log("template:" + webFormYaml);
+      // log("template:" + webFormYaml);
       var fileName = `${formName}.yaml`;
       if (fs.existsSync(fileName)) {
         try {
           fs.unlinkSync(fileName);
-          log(`${fileName} has been removed`);
+          // log(`${fileName} has been removed`);
         } catch (err) {
           console.error(`Error removing file ${fileName}: ${err}`);
         }
       }
       try {
         fs.writeFileSync(fileName, webFormYaml);
-        log(`${fileName} has been written`);
+        // log(`${fileName} has been written`);
       } catch (err) {
         console.error('Error writing file:', err);
       }
