@@ -1,3 +1,4 @@
+import { Timeline } from "./Timeline";
 import { Day, Period, StudyConfiguration } from "../../../playground/src/StudyConfiguration/language/gen";
 import { ScheduledEvent } from "./ScheduledEvent";
 import { ScheduledPeriod } from "./ScheduledPeriod";
@@ -21,7 +22,7 @@ export class ScheduledStudyConfiguration {
   }
 
   getAllScheduledEvents() {
-    return this.scheduledPeriods.map(scheduledPeriod => scheduledPeriod.getAllScheduledEvents).flat();
+    return this.scheduledPeriods.map(scheduledPeriod => scheduledPeriod.getAllScheduledEvents().flat()).flat();
   }
 
   getConfiguredPeriods() {
@@ -62,5 +63,11 @@ export class ScheduledStudyConfiguration {
     });
     return firstEventOnDay1;
   }
+
+  getReadyEvents(timeline: Timeline) {
+    console.log("this.getAllScheduledEvents: " + this.getAllScheduledEvents().length);
+    let readyEvents = this.getAllScheduledEvents().filter(scheduledEvent => scheduledEvent.getInstanceIfEventIsReady(timeline));
+    return readyEvents;
+  } 
 }
 

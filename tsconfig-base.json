@@ -16,7 +16,8 @@
       ],
       "@freon4dsl/server/*": [
         "packages/server/src/*"
-      ]
+      ],
+      "@timeline/*": ["../../../server/src/*"] // work around till code moved from server
     }
   }
 }

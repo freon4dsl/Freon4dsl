@@ -39,6 +39,16 @@
                 return new RtNumber(1);
             }
                 
+            evalEventReference(node: language.EventReference, ctx: InterpreterContext): RtObject {
+                console.log("Entered evalEventReference");
+                console.log("evalEventReference node.$id: " + node.$id);
+                console.log("referenced event: " + node.$event);
+                let timeline = ctx.find("timeline") as unknown as Timeline;
+                timeline.getLastInstanceForThisEvent(node.$event);
+    
+                throw new RtError("evalEventReference is not defined");
+            }
+
             evalEventStart(node: language.EventStart, ctx: InterpreterContext): RtObject {
                 if (node instanceof language.Day) {
                     return main.evaluate(node, ctx);

@@ -67,6 +67,11 @@ EventSchedule {
     trigger = "First, Repeats, Window..."
 } 
 
+
+EventReference {
+    [${event}]
+}
+
 Days {
     [${count}]
 }

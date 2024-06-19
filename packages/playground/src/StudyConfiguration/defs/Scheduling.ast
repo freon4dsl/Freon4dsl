@@ -11,6 +11,10 @@ expression Day base EventStart {
     startDay: number;
 }
 
+expression EventReference base EventStart {
+    reference event: Event;
+}
+
 expression StudyStart base EventStart {
 }
 

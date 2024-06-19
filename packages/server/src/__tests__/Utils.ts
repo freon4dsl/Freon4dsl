@@ -1,6 +1,7 @@
 import * as Sim from "../../../playground/src/StudyConfiguration/simjs/sim.js"
 import { StudyConfigurationModelEnvironment } from "../../../playground/src/StudyConfiguration/config/gen/StudyConfigurationModelEnvironment";  
-import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number } from "../../../playground/src/StudyConfiguration/language/gen/index";
+import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference } from "../../../playground/src/StudyConfiguration/language/gen/index";
+import { FreNodeReference } from "@freon4dsl/core";
 
 // Setup the sim.js environment and an empty StudyConfiguration.
 export function setupEnvironment(): StudyConfiguration{
@@ -38,7 +39,11 @@ export function addEventToPeriod(period: Period, eventName: string, eventSchedul
   return event;
 }
 
-// Add a Period DSL element containing Events based on a Day and When DSL EventSchedule elements to the Study Configuration.
+/* Add a Period DSL element containing two Events to the Study Configuration:
+ * - First event named 'event1Name' starts on 'event1Day'
+ * - Second event named 'event2Name'  starts 'When StartDay + event2Day' .
+ * Return the updated Study Configuration.
+ */
 export function addAPeriodAndTwoEvents(studyConfiguration: StudyConfiguration, periodName: string, event1Name: string, event1Day: number, event2Name: string, event2Day ): StudyConfiguration {
   let period = new Period(periodName);
   period.name = periodName;
@@ -54,3 +59,22 @@ export function addAPeriodAndTwoEvents(studyConfiguration: StudyConfiguration, p
   return studyConfiguration;
 }
 
+
+export function addEventScheduledOffCompletedEvent(studyConfiguration: StudyConfiguration, periodName: string, event1Name: string, event1Day: number, event2Name: string, event2Day ): StudyConfiguration {
+  let period = new Period(periodName);
+  period.name = periodName;
+
+  let dayEventSchedule = createDayEventSchedule(event1Name, event1Day);
+  let firstEvent = addEventToPeriod(period, event1Name, dayEventSchedule);
+
+  let eventReference = new EventReference(event1Name);
+  let freNodeReference = FreNodeReference.create(firstEvent, "Event");
+  eventReference.event = freNodeReference;
+  let when = createWhenEventSchedule(event2Name, PlusExpression.create({left: eventReference,
+                                                                        right: Number.create({value:event2Day})}));
+
+  addEventToPeriod(period, event2Name, when);
+
+  studyConfiguration.periods.push(period);
+  return studyConfiguration;
+}
