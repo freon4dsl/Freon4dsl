@@ -45,7 +45,7 @@
     import { deleteModelDialogVisible } from "../../stores/DialogStore";
 
     import { modelNames } from "../../stores/ServerStore";
-    import { serverCommunication } from "../../../../starter/config/WebappConfiguration";
+    import {WebappConfigurator} from "../../../WebappConfigurator.js";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -54,7 +54,7 @@
     function closeHandler(e: CustomEvent<{ action: string }>) {
         switch (e.detail.action) {
             case submitStr:
-                serverCommunication.deleteModel(modelToBeDeleted);
+                WebappConfigurator.getInstance().serverCommunication.deleteModel(modelToBeDeleted);
                 break;
             default:
                 // This means the user clicked the scrim or pressed Esc to close the dialog.

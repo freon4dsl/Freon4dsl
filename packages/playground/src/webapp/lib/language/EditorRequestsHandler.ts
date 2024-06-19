@@ -1,4 +1,3 @@
-import { editorEnvironment } from "../../starter/config/WebappConfiguration";
 import {
     Box, FreProjectionHandler,
     isActionBox,
@@ -7,12 +6,13 @@ import {
     FreLogger,
     FreUndoManager,
     FreSearcher,
-    FreErrorSeverity
+    FreErrorSeverity, FreEnvironment
 } from "@freon4dsl/core";
 import type { FreNode } from "@freon4dsl/core";
 import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore";
 import { EditorState } from "./EditorState";
 import { setUserMessage } from "../components/stores/UserMessageStore";
+import {WebappConfigurator} from "../WebappConfigurator";
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
@@ -26,21 +26,23 @@ export class EditorRequestsHandler {
         return EditorRequestsHandler.instance;
     }
 
+    private langEnv: FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
+
     /**
      * Makes sure that the editor show the current unit using the projections selected by the user
      * @param name
      */
     enableProjections(names: string[]): void {
         LOGGER.log("enabling Projection " + names);
-        const proj = editorEnvironment.editor.projection;
+        const proj = this.langEnv.editor.projection;
         if (proj instanceof FreProjectionHandler) {
             proj.enableProjections(names);
         }
         // Let the editor know that the projections have changed.
         // TODO rootBoxChanged should NOT be called from outside FreEditor.
-        // editorEnvironment.editor.rootBoxChanged();
+        // this.langEnv.editor.rootBoxChanged();
         // TODO: Shoukd this become mobx enabled, or staay like this?
-        editorEnvironment.editor.auto();
+        this.langEnv.editor.auto();
     }
 
     /**
@@ -49,7 +51,7 @@ export class EditorRequestsHandler {
      */
     // disableProjection(name: string): void {
     //     LOGGER.log("disabling Projection " + name);
-    //     const proj = editorEnvironment.editor.projection;
+    //     const proj = this.langEnv.editor.projection;
     //     if (proj instanceof FreProjectionHandler) {
     //         proj.disableProjection(name);
     //     }
@@ -73,11 +75,11 @@ export class EditorRequestsHandler {
 
     cut() {
         LOGGER.log("cut called");
-        const tobecut: FreNode = editorEnvironment.editor.selectedElement;
+        const tobecut: FreNode = this.langEnv.editor.selectedElement;
         if (!!tobecut) {
             EditorState.getInstance().deleteElement(tobecut);
-            editorEnvironment.editor.copiedElement = tobecut;
-            // console.log("element " + editorEnvironment.editor.copiedElement.freId() + " is stored ");
+            this.langEnv.editor.copiedElement = tobecut;
+            // console.log("element " + this.langEnv.editor.copiedElement.freId() + " is stored ");
         } else {
             setUserMessage("Nothing selected", FreErrorSeverity.Warning);
         }
@@ -85,10 +87,10 @@ export class EditorRequestsHandler {
 
     copy() {
         LOGGER.log("copy called");
-        const tobecopied: FreNode = editorEnvironment.editor.selectedElement;
+        const tobecopied: FreNode = this.langEnv.editor.selectedElement;
         if (!!tobecopied) {
-            editorEnvironment.editor.copiedElement = tobecopied.copy();
-            // console.log("element " + editorEnvironment.editor.copiedElement.freId() + " is stored ");
+            this.langEnv.editor.copiedElement = tobecopied.copy();
+            // console.log("element " + this.langEnv.editor.copiedElement.freId() + " is stored ");
         } else {
             setUserMessage("Nothing selected", FreErrorSeverity.Warning);
         }
@@ -96,9 +98,9 @@ export class EditorRequestsHandler {
 
     paste() {
         LOGGER.log("paste called");
-        const tobepasted = editorEnvironment.editor.copiedElement;
+        const tobepasted = this.langEnv.editor.copiedElement;
         if (!!tobepasted) {
-            const currentSelection: Box = editorEnvironment.editor.selectedBox;
+            const currentSelection: Box = this.langEnv.editor.selectedBox;
             const element: FreNode = currentSelection.element;
             if (!!currentSelection) {
                 if (isActionTextBox(currentSelection)) {
@@ -146,7 +148,7 @@ export class EditorRequestsHandler {
         searchResultLoaded.set(false);
         activeTab.set(searchTab);
         const searcher = new FreSearcher();
-        const results: FreNode[] = searcher.findString(stringToFind, EditorState.getInstance().currentUnit, editorEnvironment.writer);
+        const results: FreNode[] = searcher.findString(stringToFind, EditorState.getInstance().currentUnit, this.langEnv.writer);
         this.showSearchResults(results, stringToFind);
     }
 

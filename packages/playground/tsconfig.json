@@ -91,10 +91,10 @@
       "es2019"
     ]
   },
-//  "ts-node": {
-//    "esm": true,
-//    "experimentalSpecifierResolution": "node",
-//  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+  },
   "exclude": [
     "node_modules",
     "public/*",

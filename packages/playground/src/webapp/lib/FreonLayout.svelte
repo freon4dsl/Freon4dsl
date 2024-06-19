@@ -39,12 +39,11 @@
 	import { modelNames } from "./components/stores/ServerStore";
 	import { drawerOpen } from "./components/stores/DrawerStore";
 	import { initializing, openModelDialogVisible } from "./components/stores/DialogStore";
-	import { setUserMessage, userMessageOpen } from "./components/stores/UserMessageStore";
+	import { userMessageOpen } from "./components/stores/UserMessageStore";
 	import { languageName } from "./components/stores/LanguageStore";
 	import {currentModelName, unsavedChanges} from "./components/stores/ModelStore";
 	import { helpDialogVisible } from "./components/stores/DialogStore";
 
-	import { serverCommunication } from "../starter/config/WebappConfiguration";
 	import LinearProgress from '@smui/linear-progress';
 
 	import StatusBar from "./components/editor-panel/StatusBar.svelte";
@@ -55,6 +54,7 @@
 	import { muteLogs } from "./logging/LoggerSettings";
 	import FreonContent from "./FreonContent.svelte";
 	import RenameUnitDialog from "./components/dialogs/file-dialogs/RenameUnitDialog.svelte";
+	import {WebappConfigurator} from "./WebappConfigurator.js";
 
 	muteLogs();
 
@@ -93,7 +93,7 @@
 
 	onMount(async () => {
 		// get list of models from server
-		await serverCommunication.loadModelList((names: string[]) => {
+		await WebappConfigurator.getInstance().serverCommunication.loadModelList((names: string[]) => {
 			if (names.length > 0) {
 				$modelNames = names;
 			}

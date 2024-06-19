@@ -26,7 +26,7 @@
 </div>
 
 <script lang="ts">
-	import { isRtError, FreNode } from "@freon4dsl/core";
+	import {isRtError, FreNode, FreEnvironment} from "@freon4dsl/core";
 	import MenuComponentDev from '@smui/menu';
 	import Menu from '@smui/menu';
 	import { Anchor } from '@smui/menu-surface';
@@ -36,7 +36,6 @@
 		Text
 	} from '@smui/list';
 	import Button, { Label } from '@smui/button';
-	import { editorEnvironment } from "../../../starter/config/WebappConfiguration";
 	import { activeTab, interpreterTab, interpreterTrace } from "../stores/InfoPanelStore";
 	import { MenuItem } from "../ts-utils/MenuItem";
 	import {
@@ -44,8 +43,9 @@
 		findStructureDialogVisible,
 		findTextDialogVisible
 	} from "../stores/DialogStore";
-	import { EditorRequestsHandler } from "../../language/EditorRequestsHandler";
-	import { setUserMessage } from "../stores/UserMessageStore";
+	import { EditorRequestsHandler } from "../../language/EditorRequestsHandler.js";
+	import { setUserMessage } from "../stores/UserMessageStore.js";
+	import { WebappConfigurator } from "../../WebappConfigurator.js";
 
 	let menu: MenuComponentDev;
 
@@ -71,9 +71,10 @@
 	}
 
 	const runInterpreter = () => {
-		const intp = editorEnvironment.interpreter;
+		const langEnv : FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
+		const intp = langEnv.interpreter;
 		intp.setTracing(true);
-		const node: FreNode = editorEnvironment.editor.selectedElement;
+		const node: FreNode = langEnv.editor.selectedElement;
 
 		const value = intp.evaluate(node);
 		if(isRtError(value)){

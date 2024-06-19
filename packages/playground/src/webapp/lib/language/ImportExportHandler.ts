@@ -1,12 +1,13 @@
 import { EditorState } from "./EditorState";
 import { setUserMessage } from "../components/stores/UserMessageStore";
-import { editorEnvironment, serverCommunication } from "../../starter/config/WebappConfiguration";
-import type { FreModelUnit } from "@freon4dsl/core";
+import {FreEnvironment, FreModelUnit} from "@freon4dsl/core";
 import { editorProgressShown } from "../components/stores/ModelStore";
+import {WebappConfigurator} from "../WebappConfigurator";
 
 // TODO rethink this class using Workers, see https://developer.mozilla.org/en-US/docs/Web/API/Worker
 
 export class ImportExportHandler {
+    private langEnv: FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
 
     importUnits(fileList: FileList){
         editorProgressShown.set(true);
@@ -57,7 +58,7 @@ export class ImportExportHandler {
 
     private _exportUnit(unit: FreModelUnit) {
         // do not try to export a unit with errors, parsing and unparsing will not proceed correctly
-        const list = editorEnvironment.validator.validate(unit);
+        const list = this.langEnv.validator.validate(unit);
         // TODO Only allow export of current unit for now.
         if (list.length > 0) {
             setUserMessage(`Cannot export a unit that has errors (found ${list.length}).`);
@@ -65,10 +66,10 @@ export class ImportExportHandler {
             return;
         }
         // create a text string from the unit
-        let text: string = editorEnvironment.writer.writeToString(unit);
+        let text: string = this.langEnv.writer.writeToString(unit);
 
         // get the default file name from the unit
-        const fileExtension: string = editorEnvironment.fileExtensions.get(unit.freLanguageConcept());
+        const fileExtension: string = this.langEnv.fileExtensions.get(unit.freLanguageConcept());
         let defaultFileName: string = unit.name + "." + fileExtension;
 
         // create a HTML element that contains the text string
@@ -98,9 +99,9 @@ export class ImportExportHandler {
 
     private allExtensionsToString() : string {
         let result: string = '';
-        const size: number = editorEnvironment.fileExtensions.size;
+        const size: number = this.langEnv.fileExtensions.size;
         let i: number = 0;
-        for (let [key, value] of editorEnvironment.fileExtensions) {
+        for (let [key, value] of this.langEnv.fileExtensions) {
             result += value;
             if (i < size - 1) { // only add a comma between, not after, the extensions.
                 result += ", ";
@@ -111,7 +112,7 @@ export class ImportExportHandler {
     }
 
     private metaTypeForExtension (extension: string) {
-        for (let [key, value] of editorEnvironment.fileExtensions) {
+        for (let [key, value] of this.langEnv.fileExtensions) {
             if (value === extension)
                 return key;
         }

@@ -40,10 +40,10 @@
 	import { fileExtensions } from "../stores/LanguageStore";
 	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../stores/DialogStore";
 	import { setUserMessage } from "../stores/UserMessageStore";
-	import { serverCommunication } from "../../../starter/config/WebappConfiguration";
 	import { modelNames } from "../stores/ServerStore";
 	import { EditorState } from "../../language/EditorState";
 	import { ImportExportHandler } from "../../language/ImportExportHandler";
+	import {WebappConfigurator} from "../../WebappConfigurator.js";
 
 	// variables for the file import
 	let file_selector: HTMLElement;
@@ -84,7 +84,7 @@
     const changeModel = () => {
 		// console.log("FileMenu.changeModel");
         // get list of models from server
-        serverCommunication.loadModelList((names: string[]) => {
+        WebappConfigurator.getInstance().serverCommunication.loadModelList((names: string[]) => {
             if (names.length > 0) {
                 $modelNames = names;
             }
@@ -97,7 +97,7 @@
 		// console.log("FileMenu.newUnit");
 		if (!!$currentModelName && $currentModelName.length > 0) {
 			// get list of units from server, because new unit may not have the same name as an existing one
-			serverCommunication.loadUnitList($currentModelName, (names: string[]) => {
+			WebappConfigurator.getInstance().serverCommunication.loadUnitList($currentModelName, (names: string[]) => {
 				// list may be empty => this is the first unit to be stored
 				$unitNames = names;
 				$newUnitDialogVisible = true;
@@ -118,7 +118,7 @@
     const deleteModel = () => {
         // console.log("FileMenu.deleteModel");
         // get list of models from server
-        serverCommunication.loadModelList((names: string[]) => {
+		WebappConfigurator.getInstance().serverCommunication.loadModelList((names: string[]) => {
             // if list not empty, show dialog
             if (names.length > 0) {
                 $modelNames = names;

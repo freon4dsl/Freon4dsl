@@ -6,14 +6,14 @@
         </div>
             </div>
     {:else}
-        <FreonComponent editor={editorEnvironment.editor}/>
+        <FreonComponent editor={WebappConfigurator.getInstance().editorEnvironment.editor}/>
     {/if}
 </div>
 
 <script lang="ts">
     import { FreonComponent } from "@freon4dsl/core-svelte";
-    import { editorEnvironment } from "../../../starter/config/WebappConfiguration";
     import { noUnitAvailable } from "../stores/ModelStore";
+    import {WebappConfigurator} from "../../WebappConfigurator.js";
 </script>
 
 <style>

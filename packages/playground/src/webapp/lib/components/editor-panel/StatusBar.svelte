@@ -3,12 +3,12 @@
 <script lang="ts">
     import { Box, isTextBox } from "@freon4dsl/core";
 	import { selectedBoxes } from "@freon4dsl/core-svelte";
-    import { editorEnvironment } from "../../../starter/config/WebappConfiguration";
     import { currentModelName, currentUnitName } from "../stores/ModelStore";
     import { modelErrors } from "../stores/InfoPanelStore";
     import { mdiCheckCircle, mdiChevronRight, mdiAlertCircle } from "@mdi/js";
     import { Icon } from "@smui/common";
     import IconButton from "@smui/button";
+	import {WebappConfigurator} from "../../WebappConfigurator.js";
 
     let currentBox: Box = null;
 	$: currentBox = $selectedBoxes[0];
@@ -57,8 +57,8 @@
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		(x, y): {(!!currentBox ? Math.round(currentBox.actualX + editorEnvironment.editor.scrollX)
-    + ", " + Math.round(currentBox?.actualY + editorEnvironment.editor.scrollY) : "NAN")}
+		(x, y): {(!!currentBox ? Math.round(currentBox.actualX + WebappConfigurator.getInstance().editorEnvironment.editor.scrollX)
+    + ", " + Math.round(currentBox?.actualY + WebappConfigurator.getInstance().editorEnvironment.editor.scrollY) : "NAN")}
     "{(isTextBox(currentBox) ? currentBox.getText() : "NotTextBox")}"
 		</div>
 </span>
