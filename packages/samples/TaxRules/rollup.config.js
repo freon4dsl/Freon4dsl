@@ -12,8 +12,8 @@ const config = [
             globals: {
                 'kotlin': 'kotlin',
                 'agl': 'net.akehurst.language-agl-processor',
-            }
-        },
+                }
+            },
         plugins: [typescript()],
         external: ['@freon4dsl/core', 'net.akehurst.language-agl-processor']
     }

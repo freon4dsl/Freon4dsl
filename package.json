@@ -2,7 +2,7 @@
   "name": "freon4dsl",
   "private": true,
   "scripts": {
-    "clean": "rm -rf node_modules/ && npm run clean -w packages --if-present",
+    "clean": "rm -rf node_modules/ && npm run clean --workspaces --if-present",
     "start": "npm run start --stream --parallel",
     "build": "npm run build --workspaces --if-present",
     "build-release": "npm run build-release --workspaces --if-present",
@@ -57,7 +57,7 @@
     "packages/meta",
     "packages/playground",
     "packages/test",
-    "packages/samples/Example",
+    "packages/samples/*",
     "packages/server"
   ],
   "version": "0.6.0"

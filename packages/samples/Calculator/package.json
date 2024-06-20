@@ -1,5 +1,5 @@
 {
-  "name": "@freon4dsl/samples-example",
+  "name": "@freon4dsl/samples-calculator",
   "version": "0.7.0-beta",
   "license": "MIT",
   "type": "module",

@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/core-svelte",
-  "version": "0.6.0",
+  "version": "0.7.0-beta",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -45,7 +45,7 @@
   ],
   "peerDependencies": {
     "svelte": "^4.0.0",
-    "@freon4dsl/core": "^0.6.0",
+    "@freon4dsl/core": "^0.7.0-beta",
     "mobx": "^6.12.3"
   },
   "devDependencies": {
