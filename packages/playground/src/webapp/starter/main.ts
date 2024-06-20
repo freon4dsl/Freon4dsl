@@ -1,10 +1,10 @@
 import Freonlayout from '../lib/FreonLayout.svelte';
-import {WebappConfigurator} from "../lib/WebappConfigurator";
+import { WebappConfigurator } from "../lib/WebappConfigurator";
 
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
+import {ExampleEnvironment} from "@freon4dsl/samples-example";
 WebappConfigurator.getInstance().setEditorEnvironment(ExampleEnvironment.getInstance());
 
 /**
