@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/svelte";
 import { FreProjectionHandler, LabelBox, OptionalBox, FreEditor } from "@freon4dsl/core";
 import { MockVariables } from "./mock-components/MockVariables";
 import { ModelMaker } from "./models/ModelMaker";
-import OptionalComponent from "../components/OptionalComponent.svelte"; // Note that this form of import is neccessary for jest to function!
+import OptionalComponent from "../lib/components/OptionalComponent.svelte"; // Note that this form of import is neccessary for jest to function!
 import { ElementWithOptional } from "./models/ElementWithOptional";
 import TestOptional from "./mock-components/TestOptional.svelte";
 import { configure } from '@testing-library/dom'

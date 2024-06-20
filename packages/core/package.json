@@ -8,6 +8,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/freon4dsl/Freon4dsl"
@@ -18,7 +19,6 @@
     "cleanup": "bash ../../scripts/cleanup.sh",
     "test": "jest --config ./jest.config.js",
     "start": "echo Start core",
-    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "dummy": "echo DUMMY",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
@@ -32,5 +32,8 @@
     "mobx": "6.3.3",
     "reflect-metadata": "^0.1.13",
     "tslib": "2.4.0"
+    "mobx": "^6.12.3",
+    "reflect-metadata": "^0.2.2",
+    "tslib": "^2.6.3"
   }
 }

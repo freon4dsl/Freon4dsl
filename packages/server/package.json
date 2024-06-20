@@ -17,7 +17,7 @@
   "scripts": {
     "clean": "rm -rf node_modules/",
     "cleanup": "bash ../../scripts/cleanup.sh",
-    "start": "cross-env NODE_ENV=development NODE_PORT=3002 nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server-starter.ts",
+    "start": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server-starter.ts",
     "build": "tsc --build",
     "build-verbose": "tsc --build --verbose --listFiles --listEmittedFiles",
     "build-release": "npm run build",
@@ -35,6 +35,6 @@
     "koa-router": "10.0.0",
     "koa2-cors": "2.0.6",
     "supertest": "^6.1.6",
-    "tslib": "2.4.0"
+    "tslib": "^2.6.3"
   }
 }

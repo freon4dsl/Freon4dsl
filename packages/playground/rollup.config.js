@@ -2,11 +2,12 @@ import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
+import childProcess from 'child_process';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -20,10 +21,15 @@ function serve() {
 	return {
 		writeBundle() {
 			if (server) return;
-			server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
+			server = childProcess.spawn('npm', ['run', 'start', '--', '--dev'], {
 				stdio: ['ignore', 'inherit', 'inherit'],
 				shell: true
 			});
+
+			// server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
+			// 	stdio: ['ignore', 'inherit', 'inherit'],
+			// 	shell: true
+			// });
 
 			process.on('SIGTERM', toExit);
 			process.on('exit', toExit);
@@ -39,10 +45,12 @@ export default {
 		name: 'app',
 		file: 'public/build/bundle.js',
 		globals: {
-			'kotlin': 'kotlin'
+			'kotlin': 'kotlin',
+			'agl': 'net.akehurst.language-agl-processor'
 		}
 	},
 	plugins: [
+		commonjs(),
 		svelte({
 			extensions: ['.svelte', '.svg'],
 			preprocess: sveltePreprocess({ sourceMap: !production }),
@@ -55,6 +63,7 @@ export default {
 		// a separate file - better for performance
 		css({ output: 'bundle.css' }),
 
+
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
 		// some cases you'll need additional configuration -
@@ -62,16 +71,17 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: ['svelte'],
+			exportConditions: ['svelte']
 		}),
-		commonjs(),
+
 		typescript({
 			sourceMap: !production,
 			inlineSources: !production
 		}),
 		injectProcessEnv({
 			NODE_ENV: 'development',
-			NODE_PORT: '3002'
+			NODE_PORT: '8001'
 		}),
 
 		// In dev mode, call `npm run start` once

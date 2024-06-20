@@ -11,8 +11,8 @@ export class MetaLogger {
     private static fgRed = "\x1b[31m";
     private static fgBlack = "\x1b[30m";
     private static fgBlue = "\x1b[34m";
-    private static fgCyan = "\x1b[36m";
-    private static fgMagenta = "\x1b[35m";
+    // private static fgCyan = "\x1b[36m";
+    // private static fgMagenta = "\x1b[35m";
     private static fgYellow = "\x1b[33m";
 
     static muteAllLogs() {

@@ -11,6 +11,9 @@ export class FileWatcher {
         fs.watch(filename, this.fileWatcher);
     }
 
+    // @ts-ignore
+    // error TS6133: 'filename' is declared but its value is never read.
+    // error TS6133: 'event' is declared but its value is never read.
     // Note that the params are required by fs.watch.
     fileWatcher = (event: string, filename: string) => {
         const timestamp = fs.statSync(this.filename).mtimeMs;

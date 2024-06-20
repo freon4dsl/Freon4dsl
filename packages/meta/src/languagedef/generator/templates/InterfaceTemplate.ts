@@ -7,7 +7,7 @@ import { Names, FREON_CORE, GenerationUtil } from "../../../utils";
 
 export class InterfaceTemplate {
 
-    generateInterface(intf: FreMetaInterface, relativePath: string): string {
+    generateInterface(intf: FreMetaInterface): string {
         // const language = intf.language;
         // const hasSuper = intf.base.length > 0;
         const extendsInterfaces: string[] = Array.from (
@@ -30,7 +30,7 @@ export class InterfaceTemplate {
         // Template starts here
         return `
             import { ${Names.FreNode} ${hasReferences ? `, ${Names.FreNodeReference}` : ""} } from "${FREON_CORE}";
-            import { ${imports.join(", ")} } from "./internal";
+            ${ imports.length > 0 ? `import { ${imports.join(", ")} } from "./internal";` : "" }
 
             /**
              * Interface ${myName} is the implementation of the interface with the same name in the language definition file.

@@ -19,42 +19,42 @@
 	<div class='mdc-typography--caption'>
 	<IconButton style="margin-right: -24px; margin-left: -12px;">
 		{#if $modelErrors.length > 0}
-			<Icon component={Svg} viewBox='0 0 24 24'>
+			<Icon tag=svg viewBox='0 0 24 24'>
 				<path d={mdiAlertCircle}/>
 			</Icon>
 		{:else}
-			<Icon component={Svg} viewBox='0 0 24 24'>
+			<Icon tag=svg viewBox='0 0 24 24'>
 				<path d={mdiCheckCircle}/>
 			</Icon>
 		{/if}
 	</IconButton>
 	{$currentModelName}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
-		<Icon component={Svg} viewBox="0 0 24 24">
+		<Icon tag=svg viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
 	{$currentUnitName}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
-		<Icon component={Svg} viewBox="0 0 24 24">
+		<Icon tag=svg viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
 		box: {currentBox?.role} {currentBox?.$id}
 			<IconButton style="margin-right: -30px; margin-left: -20px;">
-		<Icon component={Svg} viewBox="0 0 24 24">
+		<Icon tag=svg viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
 		kind: {currentBox?.kind}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
-		<Icon component={Svg} viewBox="0 0 24 24">
+		<Icon tag=svg viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
 		elem: {currentBox?.element?.freId()} - {currentBox?.element?.freLanguageConcept()}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
-		<Icon component={Svg} viewBox="0 0 24 24">
+		<Icon tag=svg viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>

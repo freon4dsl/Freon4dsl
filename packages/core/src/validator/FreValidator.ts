@@ -34,8 +34,8 @@ export class FreError {
         this.message = message;
         this.reportedOn = node;
         this.locationdescription = locationdescription;
-        // TODO Why use typeof
-        if (!!severity) {
+        // TODO Check typeof
+        if (typeof(severity) !== 'undefined') {
             this.severity = severity;
         } else {
             this.severity = FreErrorSeverity.ToDo;

@@ -105,7 +105,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         if (!!tr.property) {
             this.myExpressionChecker.checkLangExp(tr.property, enclosingConcept);
         } else {
-            let myProp: FreMetaProperty;
+            let myProp: FreMetaProperty | undefined = undefined;
             for (const i of enclosingConcept.allProperties()) {
                 if (i.name === "name") {
                     myProp = i;
@@ -115,8 +115,9 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                 check: !!myProp,
                 error: `Cannot find property 'name' in ${enclosingConcept.name} ${ParseLocationUtil.location(tr)}.`,
                 whenOk: () => {
+                    let testedProp: FreMetaProperty = myProp!; // here we can use the non-null assertion operator
                     tr.property = FreLangSelfExp.create(enclosingConcept);
-                    tr.property.appliedfeature = FreLangAppliedFeatureExp.create(tr.property, "name", myProp);
+                    tr.property.appliedfeature = FreLangAppliedFeatureExp.create(tr.property, "name", testedProp);
                     // tr.property.appliedfeature.sourceName = "unitName";
                     // tr.property.appliedfeature.referredElement = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
                     tr.property.location = tr.location;

@@ -5,6 +5,7 @@ import { FreLionwebSerializer } from "../storage/index";
 import { FreErrorSeverity } from "../validator/index";
 import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication";
 import { ServerCommunication } from "./ServerCommunication";
+import process from 'process';
 
 const LOGGER = new FreLogger("LionWebCommunication"); // .mute();
 
@@ -43,6 +44,8 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
         return []
     }
 
+    // @ts-ignore
+    // todo reimplement with use of callback or change signature
     async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
         LOGGER.log(`generateIds ${quantity}`);
         let result = ["10000","10010","10020","10030","10040"];
@@ -69,8 +72,9 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
      * @param unitName
      * @param loadCallback
      */
-    async loadModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<FreNode> {
-        const unitName = unit.name
+    // @ts-ignore
+    // parameter present to adhere to interface
+    async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNamedNode) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
         if (!!unitName && unitName.length > 0) {
             const res = await this.fetchWithTimeout<Object>(modelPath, ``);
@@ -93,6 +97,8 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
     }
 
 
+    // @ts-ignore
+    // parameter present to adhere to interface
     async putModelUnit(modelName: string, unitIdentifier: ModelUnitIdentifier, unit: FreNode) {
         console.log("unit", unit)
         if (!!unitIdentifier.name && unitIdentifier.name.length > 0 && !!unit) {

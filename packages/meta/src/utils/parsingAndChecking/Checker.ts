@@ -2,8 +2,8 @@ import { FreMetaLanguage } from "../../languagedef/metalanguage";
 
 export abstract class Checker<DEFINITION> {
     language: FreMetaLanguage; // should be set in every checker, except the checker for the language definition language (.ast)
-    errors = [];
-    warnings = [];
+    errors: string[] = [];
+    warnings: string[] = [];
 
     constructor(language: FreMetaLanguage) {
         this.language = language;

@@ -13,9 +13,11 @@ describe("Checking internal structure of language", () => {
         let freLanguage: FreMetaLanguage;
         try {
             freLanguage = parser.parse(parseFile);
-        } catch (e) {
-            // this would be a true error
-            console.log(e.message + parser.checker.errors.map(err => err).join("\n") + e.stack );
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // this would be a true error
+                console.log(e.message + parser.checker.errors.map(err => err).join("\n") + e.stack);
+            }
         }
         return freLanguage;
     }

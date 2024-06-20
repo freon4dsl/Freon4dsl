@@ -31,9 +31,11 @@ describe("Checking parser generation", () => {
         const langParser = new LanguageParser();
         try {
             language = langParser.parse(testdir + "test1.ast");
-        } catch (e) {
-            console.log("Language could not be read: " + e.message);
-            console.log(langParser.checker.errors.map(e => e).join("\n"));
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read: " + e.message);
+                console.log(langParser.checker.errors.map(e => e).join("\n"));
+            }
         }
         console.log("Parsed language: " + language.name)
         if (!!language) {
@@ -57,9 +59,11 @@ describe("Checking parser generation", () => {
         const langParser = new LanguageParser();
         try {
             language = langParser.parse(testdir + "test2.ast");
-        } catch (e) {
-            console.log("Language could not be read: " + e.message);
-            console.log(langParser.checker.errors.map(e => e).join("\n"));
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read: " + e.message);
+                console.log(langParser.checker.errors.map(e => e).join("\n"));
+            }
         }
         if (!!language) {
             const editParser = new FreEditParser(language);
@@ -67,9 +71,11 @@ describe("Checking parser generation", () => {
             try {
                 editor = editParser.parse(testdir + "test2.edit");
 
-            } catch (e) {
-                console.log("Edit definition could not be read: " + e.message);
-                console.log(editParser.checker.errors.map(e => e).join("\n"));
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    console.log("Edit definition could not be read: " + e.message);
+                    console.log(editParser.checker.errors.map(e => e).join("\n"));
+                }
             }
             if (!!editor) {
                 const generator = new ReaderWriterGenerator();
@@ -91,19 +97,22 @@ describe("Checking parser generation", () => {
         const langParser = new LanguageParser();
         try {
             language = langParser.parse(testdir + "test3.ast");
-        } catch (e) {
-            console.log("Language could not be read: " + e.message);
-            console.log(langParser.checker.errors.map(e => e).join("\n"));
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read: " + e.message);
+                console.log(langParser.checker.errors.map(e => e).join("\n"));
+            }
         }
         if (!!language) {
             const editParser = new FreEditParser(language);
             let editor: FreEditUnit = null;
             try {
                 editor = editParser.parse(testdir + "test3.edit");
-
-            } catch (e) {
-                console.log("Edit definition could not be read: " + e.message);
-                console.log(editParser.checker.errors.map(e => e).join("\n"));
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    console.log("Edit definition could not be read: " + e.message);
+                    console.log(editParser.checker.errors.map(e => e).join("\n"));
+                }
             }
             if (!!editor) {
                 const generator = new ReaderWriterGenerator();
@@ -125,19 +134,22 @@ describe("Checking parser generation", () => {
         const langParser = new LanguageParser();
         try {
             language = langParser.parse(testdir + "test4.ast");
-        } catch (e) {
-            console.log("Language could not be read: " + e.message);
-            console.log(langParser.checker.errors.map(e => e).join("\n"));
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read: " + e.message);
+                console.log(langParser.checker.errors.map(e => e).join("\n"));
+            }
         }
         if (!!language) {
             const editParser = new FreEditParser(language);
             let editor: FreEditUnit = null;
             try {
                 editor = editParser.parse(testdir + "test4.edit");
-
-            } catch (e) {
-                console.log("Edit definition could not be read: " + e.message);
-                console.log(editParser.checker.errors.map(e => e).join("\n"));
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    console.log("Edit definition could not be read: " + e.message);
+                    console.log(editParser.checker.errors.map(e => e).join("\n"));
+                }
             }
             if (!!editor) {
                 const generator = new ReaderWriterGenerator();

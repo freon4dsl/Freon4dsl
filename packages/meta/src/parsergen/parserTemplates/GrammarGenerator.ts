@@ -36,20 +36,20 @@ export class GrammarGenerator {
         }
 
         // create the grammar rules and add them to the model
-        this.createGrammarRules(grammar, projectionGroup, analyser, language);
+        this.createGrammarRules(grammar, projectionGroup, analyser);
         return grammar;
     }
 
-    private createGrammarRules(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: FreMetaLanguage) {
+    private createGrammarRules(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser) {
         // generate the rules for each unit
         for (const unitAnalyser of myLanguageAnalyser.unitAnalysers) {
-            this.createRulesPerAnalyser(grammar, projectionGroup, unitAnalyser, language);
+            this.createRulesPerAnalyser(grammar, projectionGroup, unitAnalyser);
         }
         // do the same for the common analyser
-        this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser.commonAnalyser, language);
+        this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser.commonAnalyser);
     }
 
-    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, analyser: FreAnalyser, language: FreMetaLanguage) {
+    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, analyser: FreAnalyser) {
         const grammarPart = new GrammarPart();
         grammarPart.unit = analyser.unit;
         // create parse rules and syntax analysis methods for the concepts
@@ -71,7 +71,7 @@ export class GrammarGenerator {
             groupForBinaries = projectionGroup.owningDefinition.getDefaultProjectiongroup();
         }
         if (analyser.binaryConceptsUsed.length > 0) {
-            grammarPart.rules.push(...binaryExpMaker.generateBinaryExpressions(language, groupForBinaries, analyser.binaryConceptsUsed));
+            grammarPart.rules.push(...binaryExpMaker.generateBinaryExpressions(groupForBinaries, analyser.binaryConceptsUsed));
         }
 
         // create parse rules and syntax analysis methods for the limited concepts

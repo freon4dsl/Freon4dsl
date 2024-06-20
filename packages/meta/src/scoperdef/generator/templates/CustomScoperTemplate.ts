@@ -2,7 +2,7 @@ import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { Names, FREON_CORE } from "../../../utils";
 
 export class CustomScoperTemplate {
-    generateCustomScoperPart(language: FreMetaLanguage, relativePath: string): string {
+    generateCustomScoperPart(language: FreMetaLanguage): string {
         const scoperInterfaceName: string = Names.FrScoperPart;
         const generatedClassName: string = Names.customScoper(language);
 

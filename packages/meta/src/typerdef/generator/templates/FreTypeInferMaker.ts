@@ -12,7 +12,7 @@ export class FreTypeInferMaker {
     typerdef: TyperDef = null;
     // private toBeCopied: FreClassifier[] = [];
 
-    public makeInferType(typerDef: TyperDef, allLangConcepts: string, rootType: string, varName: string, imports: FreMetaClassifier[]): string {
+    public makeInferType(typerDef: TyperDef, varName: string, imports: FreMetaClassifier[]): string {
         FreTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
         const result: string[] = [];

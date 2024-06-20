@@ -1,4 +1,10 @@
-import { CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names, PathProvider, FREON_CORE } from "../../../utils";
+import {
+    CONFIGURATION_FOLDER,
+    LANGUAGE_UTILS_GEN_FOLDER,
+    Names,
+    FREON_CORE,
+    LANGUAGE_GEN_FOLDER
+} from "../../../utils";
 import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { ValidatorDef } from "../../metalanguage";
 
@@ -10,7 +16,7 @@ export class ValidatorTemplate {
     generateValidator(language: FreMetaLanguage, validdef: ValidatorDef, relativePath: string): string {
         const doValidDef = validdef !== null && validdef !== undefined;
 
-        const allLangConcepts: string = Names.allConcepts(language);
+        const allLangConcepts: string = Names.allConcepts();
         const generatedClassName: string = Names.validator(language);
         const rulesChecker: string = Names.rulesChecker(language);
         const nonOptionalsChecker: string = Names.nonOptionalsChecker(language);
@@ -21,7 +27,7 @@ export class ValidatorTemplate {
         // Template starts here
         return `
         import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName}, ${Names.FreNode} } from "${FREON_CORE}";
-        // import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
+        // import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}";

@@ -17,7 +17,7 @@ import {
     FreEditUnit,
     FreOptionalPropertyProjection
 } from "../metalanguage";
-import { ListUtil, MetaLogger } from "../../utils";
+import { ListUtil } from "../../utils";
 import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
 import { FreEditParseUtil } from "./FreEditParseUtil";
 // The next import should be separate and the last of the imports.
@@ -26,7 +26,7 @@ import { FreEditParseUtil } from "./FreEditParseUtil";
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { MetaElementReference } from "../../languagedef/metalanguage";
 
-const LOGGER = new MetaLogger("EditorCreators").mute();
+// const LOGGER = new MetaLogger("EditorCreators").mute();
 
 let currentFileName: string = "SOME_FILENAME";
 const classifiersUsedInSuperProjection: string[] = []; // remember these to add this list to the overall FreEditUnit
@@ -296,7 +296,7 @@ export function createSuperProjection(data: Partial<FreEditSuperProjection>): Fr
 }
 
 // tslint:disable-next-line:typedef
-export function createPropertyProjection(data: { expression, projectionName, location }): FreEditPropertyProjection {
+export function createPropertyProjection(data: { expression: any, projectionName: any, location: any }): FreEditPropertyProjection {
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
     if (!!data["expression"]) {
         result.expression = data["expression"];
@@ -312,7 +312,7 @@ export function createPropertyProjection(data: { expression, projectionName, loc
 }
 
 // tslint:disable-next-line:typedef
-export function createListPropertyProjection(data: { expression, projectionName, listInfo, location }): FreEditPropertyProjection {
+export function createListPropertyProjection(data: { expression: any, projectionName: any, location: any, listInfo: any }): FreEditPropertyProjection {
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
     result.listInfo = data["listInfo"];
     if (!!data["expression"]) {
@@ -329,7 +329,7 @@ export function createListPropertyProjection(data: { expression, projectionName,
 }
 
 // tslint:disable-next-line:typedef
-export function createTablePropertyProjection(data: { expression, projectionName, tableInfo, location }): FreEditPropertyProjection {
+export function createTablePropertyProjection(data: { expression: any, projectionName: any, location: any, tableInfo: any }): FreEditPropertyProjection {
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
     if (!!data["tableInfo"]) {
         result.listInfo = data["tableInfo"];
@@ -349,7 +349,7 @@ export function createTablePropertyProjection(data: { expression, projectionName
 }
 
 // tslint:disable-next-line:typedef
-export function createBooleanPropertyProjection(data: { expression, projectionName, keyword, location }): FreEditPropertyProjection {
+export function createBooleanPropertyProjection(data: { expression: any, projectionName: any, keyword: any, location: any }): FreEditPropertyProjection {
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
     if (!!data["keyword"]) {
         result.boolInfo = data["keyword"];
@@ -382,7 +382,7 @@ export function createBoolKeywords(data: Partial<BoolKeywords>): BoolKeywords {
     return result;
 }
 
-export function createListDirection(data: Object): FreEditProjectionDirection {
+export function createListDirection(data: {[direction: string]:any}): FreEditProjectionDirection {
     const dir = data["direction"];
     if ( dir === "horizontal" || dir === "rows" ) {
         return FreEditProjectionDirection.Horizontal;
@@ -390,8 +390,8 @@ export function createListDirection(data: Object): FreEditProjectionDirection {
     return FreEditProjectionDirection.Vertical;
 }
 
-export function createJoinType(data: Object): ListJoinType {
-    const type = data["type"];
+export function createJoinType(data: {[type: string]:any}): ListJoinType {
+    const type: string = data["type"];
     if ( type === "separator" ) {
         return ListJoinType.Separator;
     } else if ( type === "terminator" ) {

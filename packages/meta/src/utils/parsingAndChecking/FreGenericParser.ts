@@ -1,11 +1,12 @@
 import * as fs from "fs";
 import { Checker } from "./Checker";
-import { Parser } from "pegjs";
+import { Parser, PegjsError } from "pegjs";
 import { LOG2USER } from "../UserLogger";
 import { FreMetaDefinitionElement } from "../FreMetaDefinitionElement";
 import { ParseLocationUtil } from "./ParseLocationUtil";
 
 // The following two types are used to store the location information from the PEGJS parser
+// todo rethink how to adjust the errors from the PegJs parser
 export type ParseLocation = {
     filename: string;
     start: Location;
@@ -17,6 +18,10 @@ export type Location = {
     line: number;
     column: number;
 };
+
+function isPegjsError(object: any): object is PegjsError {
+    return 'location' in object;
+}
 
 /**
  * This class is used to store the location information from the AGL parser.
@@ -63,15 +68,18 @@ export class FreGenericParser<DEFINITION> {
         try {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
             model = this.parser.parse(langSpec);
-        } catch (e) {
-            // syntax error
-            const errorstr = `${e}
+        } catch (e: unknown) {
+            if (isPegjsError(e)) {
+                // syntax error
+                const errorLoc: ParseLocation = { filename: definitionFile, start: e.location.start, end: e.location.end };
+                const errorstr: string = `${e}
                 ${e.location && e.location.start ?
-                    ParseLocationUtil.locationPlus(definitionFile, e.location)
-                :
+                    ParseLocationUtil.locationPlus(definitionFile, errorLoc)
+                    :
                     ``}`;
-            LOG2USER.error(errorstr);
-            throw new Error("syntax error: " + errorstr);
+                LOG2USER.error(errorstr);
+                throw new Error("syntax error: " + errorstr);
+            }
         }
 
         // run the checker
@@ -98,16 +106,19 @@ export class FreGenericParser<DEFINITION> {
                 try {
                     this.setCurrentFileName(file); // sets the filename in the creator functions to the right value
                     submodels.push(this.parser.parse(langSpec));
-                } catch (e) {
-                    // throw syntax error, but adjust the location first
-                    // to avoid a newline in the output, we do not put this if-stat in a smart string
-                    let location: string = "";
-                    if (!!e.location && !!e.location.start) {
-                        location = ParseLocationUtil.locationPlus(file, e.location);
+                } catch (e: unknown) {
+                    if (isPegjsError(e)) {
+                        // throw syntax error, but adjust the location first
+                        // to avoid a newline in the output, we do not put this if-stat in a smart string
+                        const errorLoc: ParseLocation = { filename: file, start: e.location.start, end: e.location.end };
+                        let location: string = "";
+                        if (!!e.location && !!e.location.start) {
+                            location = ParseLocationUtil.locationPlus(file, errorLoc);
+                        }
+                        const errorstr = `${e.message.trimEnd()} ${location}`;
+                        LOG2USER.error(errorstr);
+                        throw new Error("syntax error: " + errorstr);
                     }
-                    const errorstr = `${e.message.trimEnd()} ${location}`;
-                    LOG2USER.error(errorstr);
-                    throw new Error("syntax error: " + errorstr);
                 }
             }
         }
@@ -149,6 +160,9 @@ export class FreGenericParser<DEFINITION> {
         return null;
     }
 
+    // @ts-expect-error
+    // error TS6133: 'file' is declared but its value is never read.
+    // This error is ignored because this implementation is here merely to avoid it being called.
     protected setCurrentFileName(file: string) {
         throw Error("FreParser.setCurrentFileName should be implemented by its subclasses.");
     }

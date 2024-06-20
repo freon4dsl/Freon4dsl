@@ -4,7 +4,7 @@ import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil, FREON_CORE } from "../../..
 export class WalkerTemplate {
 
     generateWalker(language: FreMetaLanguage, relativePath: string): string {
-        const allLangConcepts: string = Names.allConcepts(language);
+        const allLangConcepts: string = Names.allConcepts();
         const generatedClassName: String = Names.walker(language);
         const classifiersToDo: FreMetaClassifier[] = [];
         // take care of the order, it is important

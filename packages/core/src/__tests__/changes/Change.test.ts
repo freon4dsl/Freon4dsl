@@ -29,7 +29,7 @@ describe("Change and Undo Manager", () => {
     let part5: UndoPart = null;
     let part6: UndoPart = null;
     let unit: UndoUnit = null;
-    let model: UndoModel = null;
+    // let model: UndoModel = null;
     const manager = FreUndoManager.getInstance();
 
     beforeEach(done => {
@@ -48,7 +48,7 @@ describe("Change and Undo Manager", () => {
             part: part1,
             partlist: [part2, part3, part4, part5, part6]
         });
-        model = UndoModel.create({ unit: unit });
+        UndoModel.create({ unit: unit });
         done();
     });
 
@@ -221,7 +221,7 @@ describe("Change and Undo Manager", () => {
         unit.prim = "nieuwe_waarde";
 
         // change the value of 'part'
-        const oldPartId = unit.part.freId(); // remember the id of the old value
+        // const oldPartId = unit.part.freId(); // remember the id of the old value
         unit.part = UndoPart.create({ name: "part42" });
 
         // change the value of 'partlist'

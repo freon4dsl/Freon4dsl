@@ -78,7 +78,7 @@ export class ReaderWriterGenerator {
         // Write the main syntax analyser to file
         generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(this.language)}.ts`;
         indexContent += `export * from "./${Names.syntaxAnalyser(this.language)}";\n`;
-        const mainContent = grammarModel.toMethod(relativePath);
+        const mainContent = grammarModel.toMethod();
         this.makeFile(`main syntax analyser`, generatedFilePath, mainContent, generationStatus);
 
         // Write the syntax analysers for each unit to file
@@ -110,7 +110,7 @@ export class ReaderWriterGenerator {
         // get the reader and write it to file
         generatedFilePath = `${this.readerGenFolder}/${Names.reader(this.language)}.ts`;
         indexContent += `export * from "./${Names.reader(this.language)}";\n`;
-        generatedContent = readerTemplate.generateReader(this.language, editDef, relativePath);
+        generatedContent = readerTemplate.generateReader(this.language, relativePath);
         this.makeFile(`language reader`, generatedFilePath, generatedContent, generationStatus);
 
         // write the index file for the reader gen folder
@@ -131,9 +131,11 @@ export class ReaderWriterGenerator {
             testContent = testContent.replace("}\`; // end of grammar", "}");
             testContent = testContent.replace(new RegExp("\\\\\\\\", "gm"), "\\");
             Agl.processorFromString(testContent, null, null, null);
-        } catch (e) {
-            generationStatus.numberOfErrors += 1;
-            LOGGER.error(`Error in creating grammar for ${this.language?.name}: '${e.message}`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                generationStatus.numberOfErrors += 1;
+                LOGGER.error(`Error in creating grammar for ${this.language?.name}: '${e.message}`);
+            }
         }
     }
 
@@ -154,7 +156,12 @@ export class ReaderWriterGenerator {
         this.getFolderNames();
         FileUtil.deleteDirAndContent(this.writerGenFolder);
         FileUtil.deleteDirAndContent(this.readerGenFolder);
-        FileUtil.deleteDirIfEmpty(this.writerFolder);
-        FileUtil.deleteDirIfEmpty(this.readerFolder);
+        if (force) {
+            FileUtil.deleteDirAndContent(this.writerFolder);
+            FileUtil.deleteDirAndContent(this.readerFolder);
+        } else {
+            FileUtil.deleteDirIfEmpty(this.writerFolder);
+            FileUtil.deleteDirIfEmpty(this.readerFolder);
+        }
     }
 }

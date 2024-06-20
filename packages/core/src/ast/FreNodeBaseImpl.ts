@@ -12,6 +12,8 @@ export abstract class FreNodeBaseImpl extends MobxModelElementImpl implements Fr
         throw new Error("Method should be implemented by subclasses of FreElementBaseImpl.");
     }
 
+    // @ts-ignore
+    // parameter present to adhere to interface
     match(toBeMatched: Partial<FreNode>): boolean {
         throw new Error("Method should be implemented by subclasses of FreElementBaseImpl.");
     }

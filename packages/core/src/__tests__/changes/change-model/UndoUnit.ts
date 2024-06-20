@@ -6,6 +6,9 @@
 import { observablepart, observablepartlist, observableprim, observableprimlist, FreNodeBaseImpl, FreModelUnit } from "../../../ast";
 import { UndoPart } from "./UndoPart";
 import { FreUtils } from "../../../util";
+import {FreLogger} from "../../../logging";
+
+const LOGGER = new FreLogger("UndoUnit");
 
 export class UndoUnit extends FreNodeBaseImpl implements FreModelUnit {
     /**
@@ -135,7 +138,9 @@ export class UndoUnit extends FreNodeBaseImpl implements FreModelUnit {
      * based on the properties defined in the partial.
      * @param toBeMatched
      */
+    // @ts-ignore
     public match(toBeMatched: Partial<UndoUnit>): boolean {
+        LOGGER.log("function UndoUnit.match needs to be implemented");
         // let result: boolean = true;
         // if (result && toBeMatched.prim !== null && toBeMatched.prim !== undefined && toBeMatched.prim.length > 0) {
         //     result = result && this.prim === toBeMatched.prim;

@@ -104,7 +104,8 @@ export abstract class Box {
             return this;
         }
         // TODO Why filter or concat here?
-        const childrenReversed = this.children.filter(ch => true).reverse();
+        // const childrenReversed = this.children.filter(ch => true).reverse();
+        const childrenReversed = this.children.concat().reverse();
         for (const child of childrenReversed) {
             const leafChild = child.lastLeaf;
             if (!!leafChild) {

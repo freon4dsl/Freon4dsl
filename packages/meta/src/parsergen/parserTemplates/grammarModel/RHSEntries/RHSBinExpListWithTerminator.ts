@@ -7,14 +7,12 @@ import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBinExpListWithTerminator extends RHSPropEntry {
     type: FreMetaBinaryExpressionConcept = null;
-    private entry: RHSPropEntry;
     private readonly separatorText: string = "";
     private readonly isSingleEntry: boolean;
 
-    constructor(prop: FreMetaProperty, type: FreMetaBinaryExpressionConcept, entry: RHSPropEntry, separatorText: string, isSingleEntry: boolean) {
+    constructor(prop: FreMetaProperty, type: FreMetaBinaryExpressionConcept, separatorText: string, isSingleEntry: boolean) {
         super(prop);
         this.type = type;
-        this.entry = entry;
         this.isList = true;
         this.isSingleEntry = isSingleEntry;
         this.separatorText = separatorText;

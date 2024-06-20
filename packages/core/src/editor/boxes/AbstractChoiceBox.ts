@@ -47,10 +47,14 @@ export abstract class AbstractChoiceBox extends Box {
         return null;
     }
 
+    // @ts-ignore
+    // parameter is present to support subclasses
     getOptions(editor: FreEditor): SelectOption[] {
         return [];
     }
 
+    // @ts-ignore
+    // parameter is present to support subclasses
     selectOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
         console.error("AbstractChoiceBox.selectOption");
         return BehaviorExecutionResult.NULL;

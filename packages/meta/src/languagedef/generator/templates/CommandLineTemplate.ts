@@ -3,7 +3,7 @@ import { Names, CONFIGURATION_GEN_FOLDER } from "../../../utils";
 
 export class CommandLineTemplate {
 
-    generateCommandLine(language: FreMetaLanguage): string {
+    generateCommandLine(): string {
         return `import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
 
             export class FreonCommandLine extends CommandLineParser {
@@ -35,7 +35,7 @@ export class CommandLineTemplate {
             }`
     }
 
-    generateEmptyAction(language: FreMetaLanguage): string {
+    generateEmptyAction(): string {
         return `import { CommandLineAction, CommandLineStringParameter } from "@rushstack/ts-command-line";
             
             export class DummyAction extends CommandLineAction {

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/svelte';
-import { TextComponent } from "../../components";
+import { TextComponent } from "../../lib/components";
 import { FreEditor, TextBox } from "@freon4dsl/core";
 
 // see https://testing-library.com/docs/ for testing options

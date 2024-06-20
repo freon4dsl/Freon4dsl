@@ -9,8 +9,8 @@ export class FreTypeOrderedList<T extends FreType> implements Iterable<T> {
     }
 
     add(p: T, typer: FreTyper) {
-        // TODO Why use typeof
-        if (!!typer) {
+        // TODO Check: Why use typeof
+        if (typeof typer !== 'undefined') {
             if (!this.elements.find(e => typer.equals(e, p))) {
                 this.elements.push(p);
             }
@@ -30,7 +30,7 @@ export class FreTypeOrderedList<T extends FreType> implements Iterable<T> {
      */
     retainAll(list: FreTypeOrderedList<T>, typer: FreTyper) {
         const toRetain: T[] = [];
-        this.elements.forEach((old, index) => {
+        this.elements.forEach((old) => {
             if (list.includes(old, typer)) {
                 toRetain.push(old);
             }
@@ -72,6 +72,8 @@ export class FrOrderedListIterator<T extends FreType> implements Iterator<T> {
         this.list = list;
     }
 
+    // @ts-expect-error
+    // todo remove parameter
     next(value?: any): IteratorResult<T> {
         const l = this.list.length();
         if (this.index < l) {

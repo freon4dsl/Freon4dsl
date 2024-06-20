@@ -242,6 +242,7 @@ export class FreTyperTemplate {
     generateGenIndex(language: FreMetaLanguage): string {
         return `
         export * from "./${Names.typerPart(language)}";
+        export * from "./${Names.typerDef(language)}";
         `;
     }
 

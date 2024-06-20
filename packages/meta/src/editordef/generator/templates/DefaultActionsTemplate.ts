@@ -71,14 +71,14 @@ export class DefaultActionsTemplate {
             ];
 
             export const CUSTOM_ACTIONS: ${Names.FreCustomAction}[] = [
-                ${this.customActionsForOptional(language, editorDef)}
+                ${this.customActionsForOptional(editorDef)}
                 ${this.customActionForParts(language, editorDef)}
                 ${this.customActionForReferences(language, editorDef)}
             ];
             `;
         }
 
-    customActionsForOptional(language: FreMetaLanguage, editorDef: FreEditUnit): string {
+    customActionsForOptional(editorDef: FreEditUnit): string {
         let result: string = "";
         editorDef.getDefaultProjectiongroup().projections.forEach( projection => {
             if (!!projection && projection instanceof FreEditProjection) {
@@ -157,6 +157,10 @@ export class DefaultActionsTemplate {
         return result;
     }
 
+    // @ts-expect-error
+    // error TS6133: 'language' is declared but its value is never read.
+    // error TS6133: 'editorDef' is declared but its value is never read.
+    // This error is ignored because ... todo remove parameters or implement this function
     customActionForParts(language: FreMetaLanguage, editorDef: FreEditUnit): string {
         // Nothing to do for the moment
         return "";

@@ -165,6 +165,7 @@ export class BoxUtil {
                         return { id: labels.no, label: labels.no };
                     }
                 },
+                // @ts-ignore
                 (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
                     runInAction(() => {
                         if (option.id === labels.yes) {
@@ -189,6 +190,7 @@ export class BoxUtil {
                         return { id: labels.no, label: labels.no };
                     }
                 },
+                // @ts-ignore
                 (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
                     runInAction(() => {
                         if (option.id === labels.yes) {
@@ -260,6 +262,7 @@ export class BoxUtil {
                     return null;
                 }
             },
+            // @ts-ignore
             (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
                 // L.log("==> SET selected option for property " + propertyName + " of " + element["name"] + " to " + option?.label);
                 if (!!option) {

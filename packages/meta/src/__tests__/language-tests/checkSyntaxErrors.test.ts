@@ -11,11 +11,13 @@ describe("Checking language parser on syntax errors", () => {
         const parseFile = testdir + "test1.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message);
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected variable but "{" found.`
-                + "\n                "
-                + `[file: test1.ast:2:8]`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message);
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected variable but "{" found.`
+                    + "\n                "
+                    + `[file: test1.ast:2:8]`);
+            }
         }
     });
 
@@ -23,10 +25,12 @@ describe("Checking language parser on syntax errors", () => {
         const parseFile = testdir + "test2.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected required whitespace but "." found.`
-                + "\n                "
-                + `[file: test2.ast:1:14]`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected required whitespace but "." found.`
+                    + "\n                "
+                    + `[file: test2.ast:1:14]`);
+            }
         }
     });
 
@@ -34,10 +38,12 @@ describe("Checking language parser on syntax errors", () => {
         const parseFile = testdir + "test3.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected ":" or "?" but "[" found.`
-                + "\n                "
-                + `[file: test3.ast:10:22]`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected ":" or "?" but "[" found.`
+                    + "\n                "
+                    + `[file: test3.ast:10:22]`);
+            }
         }
     });
 
@@ -45,10 +51,12 @@ describe("Checking language parser on syntax errors", () => {
         const parseFile = testdir + "test5.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected "private", "reference", "}", or variable but "=" found.`
-                + "\n                "
-                + `[file: test5.ast:12:5]`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected "private", "reference", "}", or variable but "=" found.`
+                    + "\n                "
+                    + `[file: test5.ast:12:5]`);
+            }
         }
     });
 
@@ -56,10 +64,12 @@ describe("Checking language parser on syntax errors", () => {
         const parseFile = testdir + "test6.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected ";", "=", or "[]" but "p" found.`
-                + "\n                "
-                + `[file: test6.ast:11:5]`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected ";", "=", or "[]" but "p" found.`
+                    + "\n                "
+                    + `[file: test6.ast:11:5]`);
+            }
         }
     });
 
@@ -67,10 +77,12 @@ describe("Checking language parser on syntax errors", () => {
         const parseFile = testdir + "test7.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected ":" but "?" found.`
-                + "\n                "
-                + `[file: test7.ast:10:10]`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected ":" but "?" found.`
+                    + "\n                "
+                    + `[file: test7.ast:10:10]`);
+            }
         }
     });
 
@@ -78,10 +90,12 @@ describe("Checking language parser on syntax errors", () => {
         const parseFile = testdir + "test8.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected "implements" or "{" but "," found.`
-                + "\n                "
-                + `[file: test8.ast:9:23]`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected "implements" or "{" but "," found.`
+                    + "\n                "
+                    + `[file: test8.ast:9:23]`);
+            }
         }
     });
 
@@ -89,10 +103,12 @@ describe("Checking language parser on syntax errors", () => {
         const parseFile = testdir + "test9.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected "base" or "{" but "i" found.`
-                + "\n                "
-                + `[file: test9.ast:9:16]`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected "base" or "{" but "i" found.`
+                    + "\n                "
+                    + `[file: test9.ast:9:16]`);
+            }
         }
     });
 
@@ -100,10 +116,12 @@ describe("Checking language parser on syntax errors", () => {
         const parseFile = testdir + "test10.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            expect(e.message).toBe(`syntax error: SyntaxError: Expected "\\"" or variable but "}" found.`
-                + "\n                "
-                + `[file: test10.ast:11:21]`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected "\\"" or variable but "}" found.`
+                    + "\n                "
+                    + `[file: test10.ast:11:21]`);
+            }
         }
     });
 

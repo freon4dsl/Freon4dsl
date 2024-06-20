@@ -16,10 +16,10 @@ import { FreNode } from "../../ast";
 import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreLanguage } from "../../language";
 import { RoleProvider } from "./RoleProvider";
-import { FreLogger } from "../../logging";
 import { FreHeaderProvider } from "../projections/FreHeaderProvider";
 
-const LOGGER = new FreLogger("NewTableUtil");
+// import { FreLogger } from "../../logging";
+// const LOGGER = new FreLogger("NewTableUtil");
 
 export class TableUtil {
     // Note that both tableBoxRowOriented and tableBoxColumnOriented look very similar.

@@ -23,13 +23,13 @@ export class CommonSuperTypeUtil {
         return [];
     }
 
-    private static printOrderedList(comment: string, list: OrderedList<FreMetaClassifier>) {
-        let result: string = comment;
-        for (const freClassifier of list) {
-            result += "\t" + freClassifier.name;
-        }
-        console.log(result);
-    }
+    // private static printOrderedList(comment: string, list: OrderedList<FreMetaClassifier>) {
+    //     let result: string = comment;
+    //     for (const freClassifier of list) {
+    //         result += "\t" + freClassifier.name;
+    //     }
+    //     console.log(result);
+    // }
 
     /**
      * Breath first search for supers of 'inCls'.
