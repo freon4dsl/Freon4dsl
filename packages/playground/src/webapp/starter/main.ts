@@ -5,13 +5,12 @@ import {WebappConfigurator} from "../lib/WebappConfigurator";
  * The one and only reference to the actual language for which this editor runs
  */
 import { ExampleEnvironment } from "../../Example/config/gen/ExampleEnvironment";
-
 WebappConfigurator.getInstance().setEditorEnvironment(ExampleEnvironment.getInstance());
 
 /**
  * The one and only reference to the server on which the models are stored
  */
-import {ServerCommunication} from "@freon4dsl/core";
+import { ServerCommunication } from "@freon4dsl/core";
 WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance());
 // export const serverCommunication: IServerCommunication = MpsServerCommunication.getInstance();
 

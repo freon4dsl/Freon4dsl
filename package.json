@@ -4,13 +4,13 @@
   "scripts": {
     "clean": "rm -rf node_modules/ && npm run clean -w packages --if-present",
     "start": "npm run start --stream --parallel",
-    "build": "npm run build -w packages --if-present",
-    "build-release": "npm run build-release -w packages --if-present",
-    "publish-local": "npm run publish-local -w packages --if-present",
-    "unpublish-local": "npm run unpublish-local -w packages --if-present",
-    "lint": "npm run lint -w packages --if-present",
-    "setup": "npm run setup -w packages --if-present",
-    "test": "npm run test -w packages --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "build-release": "npm run build-release --workspaces --if-present",
+    "publish-local": "npm run publish-local --workspaces --if-present",
+    "unpublish-local": "npm run unpublish-local --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "setup": "npm run setup --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
     "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css"
   },
   "devDependencies": {
@@ -57,6 +57,7 @@
     "packages/meta",
     "packages/playground",
     "packages/test",
+    "packages/samples/Example",
     "packages/server"
   ],
   "version": "0.6.0"
