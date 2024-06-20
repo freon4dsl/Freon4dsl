@@ -4,6 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "test": "jest",
     "clean": "rm -rf node_modules/",
     "build": "echo No build for playground",
     "build-app": "rollup -c",
@@ -78,6 +79,7 @@
     "clean-study-configuration": "bash ../../scripts/freon-dev.sh clean-it -d src/StudyConfiguration/defs -o src/StudyConfiguration"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.24.7",
     "@material/theme": "^13.0.0",
     "@material/typography": "^13.0.0",
     "@mdi/js": "^6.6.96",

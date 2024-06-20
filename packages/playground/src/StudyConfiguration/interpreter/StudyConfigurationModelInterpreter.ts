@@ -2,6 +2,7 @@
         import { InterpreterContext, IMainInterpreter, RtObject, RtError, RtNumber, RtBoolean } from "@freon4dsl/core";
         import { StudyConfigurationModelInterpreterBase } from "./gen/StudyConfigurationModelInterpreterBase";
         import * as language from "../language/gen/index";
+        import { Timeline } from "../custom/timeline/Timeline";
 
         let main: IMainInterpreter;
 
@@ -44,7 +45,8 @@
                 console.log("evalEventReference node.$id: " + node.$id);
                 console.log("referenced event: " + node.$event);
                 let timeline = ctx.find("timeline") as unknown as Timeline;
-                timeline.getLastInstanceForThisEvent(node.$event);
+                let referencedEvent = node.$event;
+                timeline.getLastInstanceForThisEvent(referencedEvent);
     
                 throw new RtError("evalEventReference is not defined");
             }

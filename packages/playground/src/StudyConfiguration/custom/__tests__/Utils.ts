@@ -1,6 +1,6 @@
-import * as Sim from "../../../playground/src/StudyConfiguration/simjs/sim.js"
-import { StudyConfigurationModelEnvironment } from "../../../playground/src/StudyConfiguration/config/gen/StudyConfigurationModelEnvironment";  
-import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference } from "../../../playground/src/StudyConfiguration/language/gen/index";
+import * as Sim from "../simjs/sim.js"
+import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
+import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference } from "../../language/gen/index";
 import { FreNodeReference } from "@freon4dsl/core";
 
 // Setup the sim.js environment and an empty StudyConfiguration.

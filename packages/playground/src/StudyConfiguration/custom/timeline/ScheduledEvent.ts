@@ -1,6 +1,6 @@
-import { Event, Day } from "../../../playground/src/StudyConfiguration/language/gen/index";
+import { Event, Day } from "../../language/gen/index";
 import { InterpreterContext, isRtError, RtNumber } from "@freon4dsl/core";
-import { MainStudyConfigurationModelInterpreter } from "../../../playground/src/StudyConfiguration/interpreter/MainStudyConfigurationModelInterpreter";
+import { MainStudyConfigurationModelInterpreter } from "../../interpreter/MainStudyConfigurationModelInterpreter";
 import { EventInstance, Timeline } from "./Timeline";
 
 /*
@@ -44,7 +44,7 @@ export class ScheduledEvent {
    * otherwise return null.
    */
   getInstanceIfEventIsReady(timeline: Timeline): unknown {
-    console.log("this.day(): " + this.day());
+    console.log("this.day(): " + this.day(timeline));
     console.log("timeline.currentDay: " + timeline.currentDay);
     console.log("timeline.hasCompletedInstanceOf(this): " + timeline.hasCompletedInstanceOf(this));
     if (!timeline.hasCompletedInstanceOf(this) && this.day(timeline) <= timeline.currentDay) {

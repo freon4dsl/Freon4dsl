@@ -1,10 +1,10 @@
-import * as Sim from "../../../playground/src/StudyConfiguration/simjs/sim.js"
-import { Timeline, EventInstance, TimelineDay } from "../timeline/Timeline";
-import { Simulator, } from "../timeline/Simulator";
-import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number } from "../../../playground/src/StudyConfiguration/language/gen/index";
+import * as Sim from "../simjs/sim.js"
+import { Timeline, EventInstance, TimelineDay } from "../timeline/Timeline.js";
+import { Simulator, } from "../timeline/Simulator.js";
+import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number } from "../../language/gen/index";
 import * as utils from "./Utils";
-import { ScheduledEvent } from "../timeline/ScheduledEvent";
-import { TimelineScriptTemplate } from "../templates/TimelineScriptTemplate";
+import { ScheduledEvent } from "../timeline/ScheduledEvent.js";
+import { TimelineScriptTemplate } from "../templates/TimelineScriptTemplate.js";
 
 describe ("Access to simulation data", () => {
 

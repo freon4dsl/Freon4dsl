@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import request from "supertest";
 import { FreModelUnit, FreModel, FreNode, FreLanguage, LwChunk, FreLogger, FreLionwebSerializer } from "@freon4dsl/core";
-import * as classes from '../../../playground/src/StudyConfiguration/language/gen/index';
-import { StudyConfigurationModelEnvironment } from "../../../playground/src/StudyConfiguration/config/gen/StudyConfigurationModelEnvironment";  
-import {StudyConfiguration, WorkflowDescription, Event } from "../../../playground/src/StudyConfiguration/language/gen/index";  
+import * as classes from '../language/gen/index';
+import { StudyConfigurationModelEnvironment } from "../config/gen/StudyConfigurationModelEnvironment";  
+import {StudyConfiguration, WorkflowDescription, Event } from "../language/gen/index";  
 import log from "../utils/SimpleLogger.js";
 
 export class WebformTemplate {

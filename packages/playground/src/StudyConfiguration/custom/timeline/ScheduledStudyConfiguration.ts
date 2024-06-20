@@ -1,5 +1,5 @@
 import { Timeline } from "./Timeline";
-import { Day, Period, StudyConfiguration } from "../../../playground/src/StudyConfiguration/language/gen";
+import { Day, Period, StudyConfiguration } from "../../language/gen";
 import { ScheduledEvent } from "./ScheduledEvent";
 import { ScheduledPeriod } from "./ScheduledPeriod";
 

@@ -1,3 +1,5 @@
+import * as Sim from "../simjs/sim.js"
+
 
    /*
     * The Scheduler is based on code copied from on simjs.updated (https://github.com/btelles/simjs-updated) and is used to run the simulations.

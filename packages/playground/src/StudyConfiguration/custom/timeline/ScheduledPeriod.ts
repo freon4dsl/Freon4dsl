@@ -1,5 +1,5 @@
 
-import { Period } from "../../../playground/src/StudyConfiguration/language/gen/index";
+import { Period } from "../../language/gen/index";
 import { ScheduledEvent } from "./ScheduledEvent";
 
 export class ScheduledPeriod {

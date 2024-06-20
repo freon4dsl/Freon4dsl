@@ -1,10 +1,10 @@
-import { Scheduler } from "./Scheduler"
-import * as Sim from "../../../playground/src/StudyConfiguration/simjs/sim.js"
-import log from "../utils/SimpleLogger";
+import { Scheduler } from "./Scheduler.js"
+import * as Sim from "../simjs/sim.js"
+import log from "../utils/SimpleLogger.js";
 import { Timeline } from "./Timeline";
 import { ScheduledEvent } from "./ScheduledEvent";
-import { Day } from "../../../playground/src/StudyConfiguration/language/gen/index";
-import {StudyConfiguration, WorkflowDescription, Period, Event, EventSchedule } from "../../../playground/src/StudyConfiguration/language/gen/index";
+import { Day } from "../../language/gen/index";
+import {StudyConfiguration, WorkflowDescription, Period, Event, EventSchedule } from "../../language/gen/index";
 import { time } from "console";
 import { ScheduledPeriod } from "./ScheduledPeriod";
 import { ScheduledStudyConfiguration } from "./ScheduledStudyConfiguration";
@@ -15,7 +15,7 @@ import { ScheduledStudyConfiguration } from "./ScheduledStudyConfiguration";
   */
 
 export class Simulator {
-  sim: Sim;
+  sim: Sim.Sim;
   timeline: Timeline;
   events: Event[];
   name = "Simulator";

@@ -1,5 +1,5 @@
 import { time } from "console";
-import { StudyConfiguration } from "../../../playground/src/StudyConfiguration/language/gen";
+import { StudyConfiguration } from "../../language/gen";
 import { ScheduledStudyConfiguration } from "../timeline/ScheduledStudyConfiguration";
 import { Simulator } from "../timeline/Simulator";
 import { EventInstance, EventInstanceState, Timeline } from "../timeline/Timeline";

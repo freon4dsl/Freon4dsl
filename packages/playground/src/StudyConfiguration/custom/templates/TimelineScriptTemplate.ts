@@ -1,6 +1,6 @@
 
 import { Timeline } from '../timeline/Timeline';
-import {StudyConfigurationModelModelUnitWriter} from '../../../playground/src/StudyConfiguration/writer/gen/StudyConfigurationModelModelUnitWriter';
+import {StudyConfigurationModelModelUnitWriter} from '../writer/gen/StudyConfigurationModelModelUnitWriter';
 import { writeFileSync } from 'fs';
 
 export class TimelineScriptTemplate {
