@@ -9,7 +9,6 @@
     import RenderComponent from "./RenderComponent.svelte";
     import type {ExpandableBox, FreEditor} from "@freon4dsl/core";
     import { componentId } from "./svelte-utils";
-    import { AccordionItem, Accordion } from 'flowbite-svelte';
 
     // Parameters
     export let box: ExpandableBox;
@@ -61,8 +60,6 @@
   <p>Lorem ipsum...</p>
   <RenderComponent box={child} editor={editor}/>
 </div>
-
-
 
 <style>
  .collapsible {
