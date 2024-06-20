@@ -1,29 +1,4 @@
-import * as fs from "fs";
-import { FreModelUnit, FreModel, FreNode, FreLanguage, LwChunk, FreLogger, FreLionwebSerializer } from "@freon4dsl/core";
-import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
-import {StudyConfiguration, WorkflowDescription, Event } from "../../language/gen/index";  
-
-export class WebformTemplate {
-
-  public static loadModel(modelName: string): StudyConfiguration {
-      FreLogger.muteAllLogs();
-      const tmp = StudyConfigurationModelEnvironment.getInstance();
-      const serializer = new FreLionwebSerializer();
-      console.log("current directory:"+process.cwd());
-      let metaModel: LwChunk = JSON.parse(fs.readFileSync(`./src/StudyConfiguration/custom/__tests__/modelstore/StudyConfiguration/${modelName}.json`).toString());
-      const ts = serializer.toTypeScriptInstance(metaModel);
-      let model: StudyConfiguration = ts as StudyConfiguration;
-      return model;
-    }
-  
-    public static writeWebForms(model: StudyConfiguration) {
-      model.periods.forEach((period, periodNumber) => {
-        // log("Period Name:" + period.name);
-        period.events.forEach((event, eventNumber) => {
-          // log("Event Name:" + event.name);
-          // Get the list of activities that go on this form
-          var activities = event.checkList.activities;
-          var template = `# TASK WEBFORM - ${event.name} 
+# TASK WEBFORM - E1 
 langcode: en
 status: open
 dependencies: {  }
@@ -33,8 +8,10 @@ close: null
 uid: 1
 template: false
 archive: false
-id: ${event.freId}
-title: ${event.name}
+id: freId() {
+        return this.$id;
+    }
+title: E1
 description: ''
 categories:
   - Task
@@ -56,25 +33,24 @@ elements: |-
       - authenticated
     '#access_view_roles':
       - authenticated
-${activities.map ((a, counter) => `<#list steps?values as step>
-  step_${counter}:
+<#list steps?values as step>
+  step_0:
     '#type': checkbox
-    '#title': 'Step ${counter} - ${a.name}'
+    '#title': 'Step 0 - T1'
     '#wrapper_attributes':
       class:
         - step-header
-  step${counter}_details:
+  step0_details:
     '#type': details
     '#title': Details
     '#title_display': invisible
     '#attributes':
       class:
         - step-content
-    step${counter}_instructions:
+    step0_instructions:
       '#type': processed_text
-      '#text': '<div id="container" class="step-detail"><div id="definition" class="step-detail-definition"><ul><li>${((a.decision as WorkflowDescription).text)}</li></ul></div></div>'
-      '#format': full_html`
-)}
+      '#text': '<div id="container" class="step-detail"><div id="definition" class="step-detail-definition"><ul><li>null</li></ul></div></div>'
+      '#format': full_html
   submit_buttons:
     '#type': webform_flexbox
     complete:
@@ -281,30 +257,4 @@ access:
     users: {  }
     permissions: {  }
 handlers: {  }
-variants: {  }`;
-
-          this.writeWebFormToFile(template, event.name);
-        });
-      });
-    }
-
-    private static writeWebFormToFile(webFormYaml: string, formName: string) {
-      // log("template:" + webFormYaml);
-      var fileName = `${formName}.yaml`;
-      if (fs.existsSync(fileName)) {
-        try {
-          fs.unlinkSync(fileName);
-          // log(`${fileName} has been removed`);
-        } catch (err) {
-          console.error(`Error removing file ${fileName}: ${err}`);
-        }
-      }
-      try {
-        fs.writeFileSync(fileName, webFormYaml);
-        // log(`${fileName} has been written`);
-      } catch (err) {
-        console.error('Error writing file:', err);
-      }
-    }
-
-}
+variants: {  }

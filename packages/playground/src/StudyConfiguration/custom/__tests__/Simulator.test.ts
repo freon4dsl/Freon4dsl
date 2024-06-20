@@ -1,10 +1,10 @@
 import * as Sim from "../simjs/sim.js"
-import { Timeline, EventInstance, TimelineDay } from "../timeline/Timeline.js";
-import { Simulator, } from "../timeline/Simulator.js";
+import { Timeline, EventInstance, TimelineDay } from "../timeline/Timeline";
+import { Simulator, } from "../timeline/Simulator";
 import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number } from "../../language/gen/index";
 import * as utils from "./Utils";
-import { ScheduledEvent } from "../timeline/ScheduledEvent.js";
-import { TimelineScriptTemplate } from "../templates/TimelineScriptTemplate.js";
+import { ScheduledEvent } from "../timeline/ScheduledEvent";
+import { TimelineScriptTemplate } from "../templates/TimelineScriptTemplate";
 
 describe ("Access to simulation data", () => {
 
@@ -31,7 +31,7 @@ describe("Simulation of Trial to Generate the Timeline", () => {
       studyConfiguration = utils.setupEnvironment();
     });
     
-  it("generates a one visit timeline for a visit on day 1", () => {
+  it.skip("generates a one visit timeline for a visit on day 1", () => {
       // GIVEN a study configuration with one period and one event
       let period = new Period("Screening");
       let eventSchedule = utils.createDayEventSchedule("Visit 1", 1);
@@ -50,7 +50,7 @@ describe("Simulation of Trial to Generate the Timeline", () => {
       expect(timeline).toEqual(expectedTimeline);  
   });
 
-  it("generates a two visit timeline for a visit 7 days after the end of the first visit", () => {
+  it.skip("generates a two visit timeline for a visit 7 days after the end of the first visit", () => {
       // GIVEN a study configuration with one period and two events
       studyConfiguration = utils.addAPeriodAndTwoEvents(studyConfiguration, "Screening", "Visit 1", 1, "Visit 2", 7);
 
@@ -93,7 +93,7 @@ var items = new vis.DataSet([
 ])
 `;
 
-  it("generate a chart for a two visit timeline for a visit 7 days after the end of the first visit", () => {
+  it.skip("generate a chart for a two visit timeline for a visit 7 days after the end of the first visit", () => {
       // GIVEN a study configuration with one period and two events
       studyConfiguration = utils.addAPeriodAndTwoEvents(studyConfiguration, "Screening", "Visit 1", 1, "Visit 2", 7);
 

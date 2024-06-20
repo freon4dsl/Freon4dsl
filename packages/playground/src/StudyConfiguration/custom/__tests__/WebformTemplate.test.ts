@@ -1,4 +1,4 @@
-import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number } from "../../../playground/src/StudyConfiguration/language/gen/index";
+import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number } from "../../language/gen/index";
 import { WebformTemplate } from "../templates/WebFormTemplate";
 
 describe("Generate Study Site", () => {

@@ -97,7 +97,7 @@ describe ("Access to simulation data", () => {
 
     describe ("Check for the correct Events scheduled just using 'Completed-Event + #'", () => {
 
-      it.only ("can get next event based on reference to completed event" , () => {
+      it ("can get next event based on reference to completed event" , () => {
         // GIVEN a scheduled study configuration with an event + 7 days from the first event
         studyConfiguration = utils.addEventScheduledOffCompletedEvent(studyConfiguration, "Screening", "Visit 1", 1, "Visit 2", 7);
         scheduledStudyConfiguration = new ScheduledStudyConfiguration(studyConfiguration);
