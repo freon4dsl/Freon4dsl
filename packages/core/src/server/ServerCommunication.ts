@@ -1,4 +1,4 @@
-import { FreNamedNode, FreNode } from "../ast/index";
+import { FreModelUnit, FreNamedNode, FreNode } from "../ast/index";
 import { FreLogger } from "../logging/index";
 import { FreLionwebSerializer, FreModelSerializer, FreSerializer } from "../storage/index";
 import { FreErrorSeverity } from "../validator/index";
@@ -199,7 +199,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    async loadModelUnitInterface(modelName: string, unit: ModelUnitIdentifier, loadCallback: (piUnitInterface: FreNamedNode) => void) {
+    async loadModelUnitInterface(modelName: string, unit: ModelUnitIdentifier, loadCallback: (piUnitInterface: FreModelUnit) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
             const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unit.name}${modelUnitInterfacePostfix}`);
@@ -212,7 +212,7 @@ export class ServerCommunication implements IServerCommunication {
                         unit = ServerCommunication.serial.toTypeScriptInstance(res);
                     }
                     // const model = ServerCommunication.serial.toTypeScriptInstance(res);
-                    loadCallback(unit as FreNamedNode);
+                    loadCallback(unit as FreModelUnit);
                 } catch (e) {
                     LOGGER.error( "loadModelUnitInterface, " + e.message);
                     this.onError(e.message, FreErrorSeverity.NONE);
@@ -283,6 +283,7 @@ export class ServerCommunication implements IServerCommunication {
         this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId()});
     }
 
+    // @ts-ignore
     createModel(modelName: string): any {
     }
 

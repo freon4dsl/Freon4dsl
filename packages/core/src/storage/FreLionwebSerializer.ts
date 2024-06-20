@@ -132,7 +132,7 @@ export class FreLionwebSerializer implements FreSerializer {
         const jsonMetaPointer = node.classifier;
         const id: string = node.id;
         if (isNullOrUndefined(jsonMetaPointer)) {
-            throw new Error(`Cannot read json 2: not a Freon structure, classifier name missing: ${JSON.stringify(LionWebJsonNode)}.`);
+            throw new Error(`Cannot read json 2: not a Freon structure, classifier name missing: ${JSON.stringify(node)}.`);
         }
         const conceptMetaPointer = this.convertMetaPointer(jsonMetaPointer, node);
         // LOGGER.log("Classifier with id " + conceptId + " classifier " + this.language.classifierById(conceptId));

@@ -20,13 +20,13 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         return LionWebRepositoryCommunication.instance;
     }
 
-    private static findParams(params?: string) {
-        if (!!params && params.length > 0) {
-            return "?" + params;
-        } else {
-            return "";
-        }
-    }
+    // private static findParams(params?: string) {
+    //     if (!!params && params.length > 0) {
+    //         return "?" + params;
+    //     } else {
+    //         return "";
+    //     }
+    // }
 
     private _nodePort = process.env.NODE_PORT || 3005;
     private _SERVER_IP = `http://127.0.0.1`;
@@ -37,6 +37,8 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         console.error(`LionWebRepositoryCommunication ${severity}: ${msg}`);
     }
 
+    // TODO fix callback
+    // @ts-ignore
     async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
         const ids = await this.client.bulk.ids(quantity)
         return ids.body.ids
@@ -117,6 +119,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      */
     async loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]> {
         LOGGER.log(`loadUnitList`);
+        this.client.repository = modelName
         let modelUnits: ClientResponse<PartitionsResponse> = await this.client.bulk.listPartitions();
         return modelUnits.body.chunk.nodes.map(n => { return {name: "name " + n.id, id: n.id} } );
     }
@@ -130,6 +133,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      */
     async loadModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<FreNode> {
         LOGGER.log(`loadModelUnit ${unit.name}`);
+        this.client.repository = modelName
         if (!!unit.name && unit.name.length > 0) {
             const res = await this.client.bulk.retrieve([unit.id])
             if (!!res) {
@@ -153,6 +157,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
+    // @ts-ignore
     async loadModelUnitInterface(modelName: string, unitName: ModelUnitIdentifier, loadCallback: (piUnitInterface: FreNamedNode) => void) {
         // LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
         // if (!!unitName && unitName.length > 0) {
@@ -174,7 +179,8 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         //     }
         // }
     }
-    
+  
+    // @ts-ignore
     private handleError(e: Error) {
         let errorMess: string = e.message;
         if (e.message.includes("aborted")) {

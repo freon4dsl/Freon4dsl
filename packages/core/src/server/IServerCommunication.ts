@@ -1,4 +1,4 @@
-import { FreNamedNode, FreNode } from "../ast/index";
+import { FreModelUnit, FreNamedNode, FreNode } from "../ast/index";
 import { FreErrorSeverity } from "../validator/index";
 
 export type OnError = (errorMsg: string, severity: FreErrorSeverity) => void;
@@ -90,7 +90,7 @@ export interface IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    loadModelUnitInterface(modelName: string, unit: ModelUnitIdentifier, loadCallback: (unit: FreNode) => void);
+    loadModelUnitInterface(modelName: string, unit: ModelUnitIdentifier, loadCallback: (unit: FreModelUnit) => void);
 
     /**
      * Reads all interfaces for all available units of model 'modelName' and calls loadCallback for each.

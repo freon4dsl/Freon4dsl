@@ -1,4 +1,3 @@
-import { RepositoryClient } from "@lionweb/repository-client";
 import { FreNamedNode, FreNode } from "../ast/index";
 import { FreLogger } from "../logging/index";
 import { FreLionwebSerializer } from "../storage/index";
@@ -40,6 +39,7 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
         ]);
     }
 
+    // @ts-ignore
     async loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]> {
         return []
     }

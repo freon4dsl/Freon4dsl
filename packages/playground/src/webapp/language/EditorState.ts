@@ -132,7 +132,9 @@ export class EditorState {
             // get the interface of the current unit from the server
             serverCommunication.loadModelUnitInterface(
                 get(currentModelName),
-                get(currentUnitName),
+                // FIXME Incorrect, should be UnitIdentifier
+                null,
+                // get(currentUnitName),
                 (oldUnitInterface: FreModelUnit) => {
                     if (!!oldUnitInterface) {
                         // swap current unit with its interface in the in-memory model
@@ -252,7 +254,7 @@ export class EditorState {
         await this.saveCurrentUnit();
         // newUnit is stored in the in-memory model as an interface only
         // we must get the full unit from the server and make a swap
-        const newCompleteUnit = await serverCommunication.loadModelUnit(this.currentModel.name, newUnit.name) as FreModelUnit; //, (newCompleteUnit: FreModelUnit) => {
+        const newCompleteUnit = await serverCommunication.loadModelUnit(this.currentModel.name, {name: newUnit.name, id: newUnit.freId()}) as FreModelUnit; //, (newCompleteUnit: FreModelUnit) => {
             this.swapInterfaceAndUnits(newCompleteUnit, newUnit);
         // });
     }
@@ -272,7 +274,7 @@ export class EditorState {
             // get the interface of the current unit from the server
             serverCommunication.loadModelUnitInterface(
                 EditorState.getInstance().currentModel.name,
-                EditorState.getInstance().currentUnit.name,
+                { name: EditorState.getInstance().currentUnit.name, id: EditorState.getInstance().currentUnit.freId()},
                 (oldUnitInterface: FreModelUnit) => {
                     if (!!newCompleteUnit) { // the new unit which has been retrieved from the server
                         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available

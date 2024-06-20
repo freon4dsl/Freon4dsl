@@ -216,7 +216,7 @@ export class ModelManager {
             // get the interface of the current unit from the server
             await this.serverCommunication.loadModelUnitInterface(
                 this.currentModel.name,
-                this.currentUnit.name,
+                {name: this.currentUnit.name, id: this.currentUnit.freId()},
                 (oldUnitInterface: FreModelUnit) => {
                     if (!!oldUnitInterface) {
                         // swap current unit with its interface in the in-memory model
@@ -305,7 +305,7 @@ export class ModelManager {
             // get the interface of the current unit from the server
             this.serverCommunication.loadModelUnitInterface(
                 this.currentModel.name,
-                this.currentUnit.name,
+                {name: this.currentUnit.name, id: this.currentUnit.freId()},
                 (oldUnitInterface: FreModelUnit) => {
                     if (!!newCompleteUnit) { // the new unit which has been retrieved from the server
                         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
