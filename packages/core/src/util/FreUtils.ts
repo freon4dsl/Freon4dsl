@@ -59,6 +59,7 @@ export class FreUtils {
 
     static setContainer(exp: FreNode, freOwnerDescriptor: FreOwnerDescriptor | null, editor: FreEditor): void {
         runInAction(() => {
+            // TODO Why use typeof
             if (!!freOwnerDescriptor) {
                 if (freOwnerDescriptor.propertyIndex === undefined) {
                     freOwnerDescriptor.owner[freOwnerDescriptor.propertyName] = exp;

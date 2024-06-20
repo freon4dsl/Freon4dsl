@@ -34,6 +34,7 @@ export class FreError {
         this.message = message;
         this.reportedOn = node;
         this.locationdescription = locationdescription;
+        // TODO Why use typeof
         if (!!severity) {
             this.severity = severity;
         } else {

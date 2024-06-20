@@ -9,6 +9,7 @@ export class FreTypeOrderedList<T extends FreType> implements Iterable<T> {
     }
 
     add(p: T, typer: FreTyper) {
+        // TODO Why use typeof
         if (!!typer) {
             if (!this.elements.find(e => typer.equals(e, p))) {
                 this.elements.push(p);
