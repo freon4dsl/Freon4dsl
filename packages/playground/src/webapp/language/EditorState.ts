@@ -74,23 +74,23 @@ export class EditorState {
         this.currentModel = editorEnvironment.newModel(modelName);
         currentModelName.set(modelName);
         // fill the new model with the units loaded from the server
-        serverCommunication.loadUnitList(modelName, (localUnitNames: string[]) => {
-            unitNames.set(localUnitNames);
-            if (localUnitNames && localUnitNames.length > 0) {
+        const unitIdentifiers = await serverCommunication.loadUnitList(modelName)
+            unitNames.set(unitIdentifiers.map(n => n.name));
+            if (!!unitIdentifiers && unitIdentifiers.length > 0) {
                 // load the first unit completely and show it
                 // load all others units as interfaces
                 let first: boolean = true;
-                for (const unitName of localUnitNames) {
+                for (const unitIdentifier of unitIdentifiers) {
                     if (first) {
-                        serverCommunication.loadModelUnit(modelName, unitName, (unit: FreModelUnit) => {
+                        const unit = await  serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit //, (unit: FreModelUnit) => {
                             this.currentModel.addUnit(unit);
                             this.currentUnit = unit;
                             currentUnitName.set(this.currentUnit.name);
                             EditorState.getInstance().showUnitAndErrors(this.currentUnit);
-                        });
+                        // });
                         first = false;
                     } else {
-                        serverCommunication.loadModelUnitInterface(modelName, unitName, (unit: FreModelUnit) => {
+                        serverCommunication.loadModelUnitInterface(modelName, unitIdentifier, (unit: FreModelUnit) => {
                             this.currentModel.addUnit(unit);
                             this.setUnitLists();
                         });
@@ -99,7 +99,6 @@ export class EditorState {
             } else {
                 editorProgressShown.set(false);
             }
-        });
 
     }
 
@@ -175,7 +174,7 @@ export class EditorState {
         if (!!unit) {
             if (!!this.currentModel?.name && this.currentModel?.name.length) {
                 if (!!unit.name && unit.name.length > 0) {
-                    await serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit);
+                    await serverCommunication.putModelUnit(this.currentModel.name, {name: unit.name, id: unit.freId()}, unit);
                     currentUnitName.set(unit.name); // just in case the user has changed the name in the editor
                     EditorState.getInstance().setUnitLists();
                     this.hasChanges = false;
@@ -210,7 +209,7 @@ export class EditorState {
         LOGGER.log("delete called for unit: " + unit.name);
 
         // get rid of the unit on the server
-        await serverCommunication.deleteModelUnit(get(currentModelName), unit.name);
+        await serverCommunication.deleteModelUnit(get(currentModelName), {name: unit.name, id: unit.freId()});
         // get rid of old model unit from memory
         this.currentModel.removeUnit(unit);
         // if the unit is shown in the editor, get rid of that one, as well
@@ -253,9 +252,9 @@ export class EditorState {
         await this.saveCurrentUnit();
         // newUnit is stored in the in-memory model as an interface only
         // we must get the full unit from the server and make a swap
-        await serverCommunication.loadModelUnit(this.currentModel.name, newUnit.name, (newCompleteUnit: FreModelUnit) => {
+        const newCompleteUnit = await serverCommunication.loadModelUnit(this.currentModel.name, newUnit.name) as FreModelUnit; //, (newCompleteUnit: FreModelUnit) => {
             this.swapInterfaceAndUnits(newCompleteUnit, newUnit);
-        });
+        // });
     }
 
     /**
@@ -316,7 +315,7 @@ export class EditorState {
                     // set elem in editor
                     this.showUnitAndErrors(unit);
                 }
-                serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit);
+                serverCommunication.putModelUnit(this.currentModel.name, {name: unit.name, id: unit.freId()}, unit);
             }
         } catch (e) {
             setUserMessage(e.message, FreErrorSeverity.Error);

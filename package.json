@@ -10,7 +10,8 @@
     "unpublish-local": "npm run unpublish-local -w packages --if-present",
     "lint": "npm run lint -w packages --if-present",
     "setup": "npm run setup -w packages --if-present",
-    "test": "npm run test -w packages --if-present",
+    "test": "npm run test --stream -w packages --if-present",
+    "install-local": "npm install --registry http://localhost:4873",
     "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css"
   },
   "devDependencies": {

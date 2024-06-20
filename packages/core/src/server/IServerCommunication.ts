@@ -3,38 +3,58 @@ import { FreErrorSeverity } from "../validator/index";
 
 export type OnError = (errorMsg: string, severity: FreErrorSeverity) => void;
 /**
+ * ModelUnit identity for communication with server.
+ * Needs both name and id, as the Freon server uses thge name, and the LionWeb server uses the id.
+ */
+export type ModelUnitIdentifier = {
+    name: string
+    id: string
+}
+
+/**
  *  Takes care of the communication with the server at SERVER_URL from WebappConfiguration.
  */
 export interface IServerCommunication {
 
     onError: OnError;
-    
+
+    /**
+     * return a set of unused Id's
+     * @param quantity
+     * @param callback
+     */
     generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]>;
 
     /**
-     * Takes 'piUnit' and stores it according to the data in 'modelInfo'
+     * Takes 'unit' and stores it according to the data in 'modelInfo'
      * @param modelName
      * @param unitName
-     * @param piUnit
+     * @param unit
      */
-    putModelUnit(modelName: string, unitName: string, piUnit: FreNode);
+    putModelUnit(modelName: string, unitId: ModelUnitIdentifier, unit: FreNode);
 
     /**
      * Deletes the unit according to the data in 'modelInfo' from the server
      * @param modelName
      * @param unitName
      */
-    deleteModelUnit(modelName: string, unitName: string);
+    deleteModelUnit(modelName: string, unit: ModelUnitIdentifier);
 
     /**
-     * Renames 'piUnit' in model with name 'modelName' to 'newName'.
+     * Renames 'unit' in model with name 'modelName' to 'newName'.
      * @param modelName
      * @param oldName
      * @param newName
-     * @param piUnit
+     * @param unit
      */
-    renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: FreNamedNode) ;
+    renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode) ;
 
+    /**
+     * Create a new model with name _modelName_.
+     * @param modelName
+     */
+    createModel(modelName: string): any;
+    
     /**
      * Deletes the complete model with name 'modelName', including all its modelunits
      * @param modelName
@@ -42,7 +62,7 @@ export interface IServerCommunication {
     deleteModel(modelName: string);
 
     /**
-     * Reads the list of model units that are available on the server and calls 'modelListCallback'.
+     * Reads the list of models that are available on the server and calls 'modelListCallback'.
      * @param modelListCallback
      */
     loadModelList(modelListCallback: (names: string[]) => void);
@@ -52,7 +72,7 @@ export interface IServerCommunication {
      * @param modelName
      * @param modelListCallback
      */
-    loadUnitList(modelName: string, modelListCallback: (names: string[]) => void);
+    loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]>
 
     /**
      * Reads the model unit according to the data in 'modelInfo' from the server and
@@ -61,7 +81,7 @@ export interface IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNode) => void);
+    loadModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<FreNode>;
 
     /**
      * Reads the public interface of the model unit according to the data in 'modelInfo' from the server and
@@ -70,7 +90,7 @@ export interface IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnit: FreNode) => void);
+    loadModelUnitInterface(modelName: string, unit: ModelUnitIdentifier, loadCallback: (unit: FreNode) => void);
 
     /**
      * Reads all interfaces for all available units of model 'modelName' and calls loadCallback for each.
@@ -78,5 +98,5 @@ export interface IServerCommunication {
      * @param modelName
      * @param loadCallback
      */
-    // getInterfacesForModel(languageName: string, modelName: string, loadCallback: (piModel: FreNode) => void);
+    // getInterfacesForModel(languageName: string, modelName: string, loadCallback: (model: FreNode) => void);
 }
