@@ -46,9 +46,9 @@
                 console.log("referenced event: " + node.$event);
                 let timeline = ctx.find("timeline") as unknown as Timeline;
                 let referencedEvent = node.$event;
-                timeline.getLastInstanceForThisEvent(referencedEvent);
-    
-                throw new RtError("evalEventReference is not defined");
+                let lastInstanceOfReferencedEvent = timeline.getLastInstanceForThisEvent(referencedEvent);
+                console.log("lastInstanceOfReferencedEvent: " + lastInstanceOfReferencedEvent.day);
+                return new RtNumber(lastInstanceOfReferencedEvent.day);
             }
 
             evalEventStart(node: language.EventStart, ctx: InterpreterContext): RtObject {

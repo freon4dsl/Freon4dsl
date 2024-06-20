@@ -116,8 +116,9 @@ describe ("Access to simulation data", () => {
           // WHEN the schedule is checked 
           let readyEvents = scheduledStudyConfiguration.getReadyEvents(timeline);
 
-          // THEN the next event is Visit 2
+          // THEN the next and only event is Visit 2
           expect(readyEvents.length).toEqual(1);
+          expect(readyEvents[0].configuredEvent.name).toEqual("Visit 2");
         }
           
       });
