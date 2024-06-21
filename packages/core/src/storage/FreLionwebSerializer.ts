@@ -5,7 +5,6 @@ import { FreLogger } from "../logging";
 import { FreUtils, isNullOrUndefined } from "../util";
 import { FreSerializer } from "./FreSerializer";
 import { createLionWebJsonNode, isLionWebJsonChunk } from "./NewLionwebM3";
-// import { createLionWebJsonNode, isLionWebJsonChunk, LwContainment, LionWebJsonChunk, LwMetaPointer, LionWebJsonNode, LwReference } from "./LionwebM3";
 
 const LOGGER = new FreLogger("FreLionwebSerializer");
 /**
