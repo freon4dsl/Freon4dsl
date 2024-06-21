@@ -69,7 +69,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     }
 
     async createModel(modelName: string): Promise<any> {
-        await this.client.dbAdmin.createRepository(modelName)
+        await this.client.dbAdmin.createRepository(modelName, false)
     }
 
     
