@@ -1,9 +1,9 @@
 @use 'sass:color';
 
-@use '../../../../../../../node_modules/@material/theme/color-palette';
+@use '@material/theme/color-palette';
 
 // Freon Colors!! (Dark Theme)
-@use '../../../../../../../node_modules/@material/theme/index' as theme with (
+@use '@material/theme/index' as theme with (
   $primary: #00695c,
   $secondary: color.scale(#b53d00, $whiteness: +20%),
   $surface: color-palette.$grey-900,
@@ -26,7 +26,7 @@
 @use '../app';
 
 // linear-progress is included for the progress indicator in the EditorPart component
-@use '../../../../../../../node_modules/@material/linear-progress/index' as linear-progress;
+@use '@material/linear-progress/index' as linear-progress;
 
 // my-colored-bar style is used for the progress indicator in the EditorPart component
 .my-colored-bar {
