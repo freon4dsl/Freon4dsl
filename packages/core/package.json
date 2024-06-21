@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/core",
-  "version": "0.6.0",
+  "version": "0.7.0-beta",
   "publishConfig": {
     "access": "public"
   },
@@ -15,6 +15,7 @@
   },
   "scripts": {
     "build": "rollup -c",
+    "clean": "rm -rf node_modules/ && rm -rf dist/",
     "build-release": "npm run build",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "test": "jest --config ./jest.config.js",
@@ -28,7 +29,7 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "@lionweb/validation": "0.6.2",
-    "@lionweb/repository-client": "0.1.1",
+    "@lionweb/repository-client": "0.2.0",
     "mobx": "^6.12.3",
     "reflect-metadata": "^0.2.2",
     "tslib": "^2.6.3"

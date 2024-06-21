@@ -1,5 +1,8 @@
-import { FreErrorSeverity, FreLanguage, FreLogger, FreModel, FreModelUnit, FreNamedNode } from "@freon4dsl/core";
+import { FreModelUnit, FreModel, FreNamedNode } from "../ast/index";
+import { FreLanguage } from "../language/index";
+import { FreLogger } from "../logging/index";
 import { IServerCommunication, ModelUnitIdentifier } from "../server/IServerCommunication";
+import { FreErrorSeverity } from "../validator/index";
 
 const LOGGER = new FreLogger("ModelManager");
 
