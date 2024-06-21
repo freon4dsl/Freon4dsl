@@ -15,7 +15,7 @@
         ListDirection,
         LayoutBox
     } from "@freon4dsl/core";
-    import { componentId } from "./svelte-utils";
+    import { componentId } from "./svelte-utils/index.js";
 
     // Parameters
     export let box: LayoutBox;

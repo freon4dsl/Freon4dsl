@@ -38,6 +38,7 @@
     "rollup": "4.18.0",
     "rollup-plugin-auto-external": "2.0.0",
     "rollup-plugin-css-only": "4.5.2",
+    "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-livereload": "2.0.5",
     "rollup-plugin-polyfill-node": "0.13.0",
     "rollup-plugin-svelte": "^7.2.0",
@@ -47,7 +48,7 @@
     "svelte-preprocess": "5.1.4",
     "ts-jest": "29.1.4",
     "ts-node": "^10.9.2",
-    "tslib": "2.6.2",
+    "tslib": "^2.6.3",
     "typescript": "5.4.5",
     "typescript-svelte-plugin": "0.3.38"
   },
@@ -55,10 +56,11 @@
     "packages/core",
     "packages/core-svelte",
     "packages/meta",
-    "packages/playground",
     "packages/test",
     "packages/samples/*",
-    "packages/server"
+    "packages/server",
+    "packages/webapp-lib",
+    "packages/webapp-starter"
   ],
-  "version": "0.6.0"
+  "version": "0.7.0-beta"
 }

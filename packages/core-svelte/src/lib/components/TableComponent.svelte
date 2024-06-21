@@ -18,7 +18,7 @@
         TableCellBox
     } from "@freon4dsl/core";
     import { afterUpdate, onMount } from "svelte";
-    import { activeElem, activeIn, componentId, draggedElem, draggedFrom } from "./svelte-utils";
+    import { activeElem, activeIn, componentId, draggedElem, draggedFrom } from "./svelte-utils/index.js";
     import { dropListElement, moveListElement } from "@freon4dsl/core";
     import TableCellComponent from "./TableCellComponent.svelte";
 

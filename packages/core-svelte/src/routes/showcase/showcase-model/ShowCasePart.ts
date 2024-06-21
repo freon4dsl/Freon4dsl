@@ -4,7 +4,7 @@
  * to the changes in the state of its properties.
  */
 import { observableprim, FreNodeBaseImpl, FreUtils } from "@freon4dsl/core";
-import type FreNamedNode from "@freon4dsl/core";
+import type {FreNamedNode} from "@freon4dsl/core";
 
 export class ShowCasePart extends FreNodeBaseImpl implements FreNamedNode {
     /**

@@ -30,7 +30,7 @@
         contextMenu,
         contextMenuVisible,
         componentId
-    } from "./svelte-utils";
+    } from "./svelte-utils/index.js";
     import { afterUpdate, onMount } from "svelte";
 
     // Parameters

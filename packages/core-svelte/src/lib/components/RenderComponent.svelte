@@ -39,8 +39,8 @@
     import TextDropdownComponent from "./TextDropdownComponent.svelte";
     import SvgComponent from "./SvgComponent.svelte";
     import { afterUpdate } from "svelte";
-    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
-    import { componentId, setBoxSizes } from "./svelte-utils";
+    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore.js";
+    import { componentId, setBoxSizes } from "./svelte-utils/index.js";
     import ElementComponent from "./ElementComponent.svelte";
 
     const LOGGER = new FreLogger("RenderComponent").mute();

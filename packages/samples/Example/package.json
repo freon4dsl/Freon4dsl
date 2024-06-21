@@ -2,10 +2,10 @@
   "name": "@freon4dsl/samples-example",
   "version": "0.7.0-beta",
   "license": "MIT",
-  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "clean": "rm -rf node_modules/",
     "build": "npm run generate && tsc && rollup --config",

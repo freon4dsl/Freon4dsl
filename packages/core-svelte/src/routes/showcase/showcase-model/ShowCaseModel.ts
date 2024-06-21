@@ -1,7 +1,7 @@
 
 import { observablepart, FreNodeBaseImpl, FreUtils, FreLanguage } from "@freon4dsl/core";
-import type FreModel from "@freon4dsl/core";
-import { ShowCaseUnit } from "./ShowCaseUnit";
+import type {FreModel} from "@freon4dsl/core";
+import { ShowCaseUnit } from "./ShowCaseUnit.js";
 
 /**
  * Class ShowCaseModel is the implementation of the model with the same name in the language definition file.
@@ -40,6 +40,8 @@ export class ShowCaseModel extends FreNodeBaseImpl implements FreModel {
         } else {
             this.$id = FreUtils.ID(); // uuid.v4();
         }
+        this.name = '';
+        this.unit = null;
 
         // Both 'observablepart' and 'observablepartlist' change the get and set of the attribute
         // such that the parent-part relationship is consistently maintained,
