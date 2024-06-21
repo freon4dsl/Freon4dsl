@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@freon4dsl/test",
-  "version": "0.6.0",
+  "version": "0.7.0-beta",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "type": "module",
   "scripts": {
-    "clean": "rm -rf node_modules/",
+    "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "meta-it": "bash ../../scripts/freon-dev.sh -v meta-it -l src/demo/defs/LanguageDefinition.ast -o src/demo",
     "scope-it": "bash ../../scripts/freon-dev.sh -v scope-it -l src/demo/defs/LanguageDefinition.ast -s src/demo/defs/LanguageDefinition.scope -o src/demo",
@@ -58,8 +58,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@freon4dsl/core": "0.6.0",
-    "@freon4dsl/meta": "0.6.0",
+    "@freon4dsl/core": "0.7.0-beta",
+    "@freon4dsl/meta": "0.7.0-beta",
     "@types/history": "^5.0.0",
     "global": "^4.4.0",
     "kotlin": "^1.5.21",

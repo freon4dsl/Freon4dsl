@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/playground",
-  "version": "0.6.0",
+  "version": "0.7.0-beta",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -117,9 +117,9 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "@freon4dsl/core": "0.6.0",
-    "@freon4dsl/core-svelte": "0.6.0",
-    "@freon4dsl/server": "0.6.0",
+    "@freon4dsl/core": "0.7.0-beta",
+    "@freon4dsl/core-svelte": "0.7.0-beta",
+    "@freon4dsl/server": "0.7.0-beta",
     "@types/node": "^20.14.1",
     "click-outside": "^2.0.2",
     "kotlin": "^1.5.21",

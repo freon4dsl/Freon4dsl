@@ -4,7 +4,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/meta",
-  "version": "0.6.0",
+  "version": "0.7.0-beta",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,7 @@
     "freon": "dist/bin/freon-generator.js"
   },
   "scripts": {
-    "clean": "rm -rf node_modules/",
+    "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "lang-parser": "pegjs src/languagedef/parser/LanguageGrammar.pegjs",
     "scop-parser": "pegjs src/scoperdef/parser/ScoperGrammar.pegjs",
