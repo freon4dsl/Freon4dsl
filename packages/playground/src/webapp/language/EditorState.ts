@@ -75,7 +75,7 @@ export class EditorState {
         currentModelName.set(modelName);
         // fill the new model with the units loaded from the server
         const unitIdentifiers = await serverCommunication.loadUnitList(modelName)
-            unitNames.set(unitIdentifiers.map(n => n.name));
+            unitNames.set(unitIdentifiers);
             if (!!unitIdentifiers && unitIdentifiers.length > 0) {
                 // load the first unit completely and show it
                 // load all others units as interfaces
@@ -234,7 +234,7 @@ export class EditorState {
     private setUnitLists() {
         LOGGER.log("setUnitLists");
         const unitsInModel = this.currentModel.getUnits();
-        unitNames.set(unitsInModel.map(u => u.name));
+        unitNames.set(unitsInModel.map(u => ({name: u.name, id: u.freId()})));
         units.set(unitsInModel);
     }
 

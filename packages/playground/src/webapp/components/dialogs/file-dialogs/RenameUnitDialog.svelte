@@ -64,7 +64,7 @@
     }
 
     function newNameInvalid(): boolean {
-        if ($unitNames.includes(newName)) {
+        if ($unitNames.map(u => u.name).includes(newName)) {
             helperText = "Unit with this name already exists.";
             return true;
         } else if (newName.match(/^[0-9]/)) {

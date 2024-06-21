@@ -30,6 +30,7 @@
 <input class:file_selector bind:this={file_selector} {...file_selector_props} on:change={process_files}>
 
 <script lang="ts">
+	import { ModelUnitIdentifier } from "@freon4dsl/core";
 	import type { MenuComponentDev } from '@smui/menu';
 	import Menu from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
@@ -97,9 +98,9 @@
 		// console.log("FileMenu.newUnit");
 		if (!!$currentModelName && $currentModelName.length > 0) {
 			// get list of units from server, because new unit may not have the same name as an existing one
-			const names = await serverCommunication.loadUnitList($currentModelName);
+			const names: ModelUnitIdentifier[] = await serverCommunication.loadUnitList($currentModelName);
 			// list may be empty => this is the first unit to be stored
-			$unitNames = names.map(n => n.name);
+			$unitNames = names;
 			$newUnitDialogVisible = true;
 		} else {
 			setUserMessage("Please, select or create a model first.");
