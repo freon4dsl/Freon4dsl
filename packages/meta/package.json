@@ -30,6 +30,7 @@
     "pegjs-concat-validator": "cd src/validatordef/parser && bash ./concat.sh",
     "concat-pegjs": "npm run pegjs-concat-language && npm run pegjs-concat-editor && npm run pegjs-concat-scoper",
     "build": "npm run concat-pegjs && npm run lang-parser && npm run pegjs-concat-validator && npm run scop-parser && npm run valid-parser && npm run edit-parser && npm run lang-exp-parser && tsc && npm run copy-validtemplates",
+    "build-dev": "npm run build",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-validtemplates": "cp src/utils/generation/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
     "release": "npm publish",

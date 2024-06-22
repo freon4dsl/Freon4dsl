@@ -17,6 +17,7 @@
     "clean": "rm -rf node_modules/",
     "dev": "vite dev",
     "build": "vite build && npm run package",
+    "build-dev": "vite build && npm run package",
     "preview": "vite preview",
     "package": "svelte-kit sync && svelte-package && publint",
     "prepublishOnly": "npm run package",

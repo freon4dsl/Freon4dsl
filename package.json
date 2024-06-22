@@ -5,6 +5,7 @@
     "clean": "rm -f package-lock.json && rm -rf node_modules/ && npm run clean --workspaces --if-present",
     "start": "npm run start --stream --parallel",
     "build": "npm run build --workspaces --if-present",
+    "build-dev": "npm run build-dev --workspaces --if-present",
     "build-release": "npm run build-release --workspaces --if-present",
     "publish-local": "npm run publish-local --workspaces --if-present",
     "unpublish-local": "npm run unpublish-local --workspaces --if-present",

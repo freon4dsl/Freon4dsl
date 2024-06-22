@@ -19,6 +19,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
+    "build-dev": "rollup -c",
     "build-release": "npm run build",
     "clean": "rm -rf node_modules/",
     "cleanup": "bash ../../scripts/cleanup.sh",
