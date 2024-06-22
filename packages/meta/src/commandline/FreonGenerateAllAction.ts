@@ -73,7 +73,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         // this try-catch is here for debugging purposes, should be removed from release
         } catch (e: unknown) {
             if (e instanceof Error) {
-                LOG2USER.error(e.stack);
+                LOG2USER.error(e.stack ? e.stack : 'No stack trace provided.');
             }
         }
     }
@@ -109,10 +109,10 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         try {
             if (this.typerFiles.length > 0) {
                 typer = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
+                this.typerGenerator.language = this.language;
+                this.typerGenerator.outputfolder = this.outputFolder;
+                this.typerGenerator.generate(typer);
             }
-            this.typerGenerator.language = this.language;
-            this.typerGenerator.outputfolder = this.outputFolder;
-            this.typerGenerator.generate(typer);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
@@ -149,10 +149,10 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         try {
             if (this.scopeFiles.length > 0) {
                 scoper = new ScoperParser(this.language).parseMulti(this.scopeFiles);
+                this.scoperGenerator.language = this.language;
+                this.scoperGenerator.outputfolder = this.outputFolder;
+                this.scoperGenerator.generate(scoper);
             }
-            this.scoperGenerator.language = this.language;
-            this.scoperGenerator.outputfolder = this.outputFolder;
-            this.scoperGenerator.generate(scoper);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 LOG2USER.error("Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
@@ -167,10 +167,10 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         try {
             if (this.validFiles.length > 0) {
                 validator = new ValidatorParser(this.language).parseMulti(this.validFiles);
+                this.validatorGenerator.language = this.language;
+                this.validatorGenerator.outputfolder = this.outputFolder;
+                this.validatorGenerator.generate(validator);
             }
-            this.validatorGenerator.language = this.language;
-            this.validatorGenerator.outputfolder = this.outputFolder;
-            this.validatorGenerator.generate(validator);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
@@ -181,7 +181,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
 
     private generateEditorAndParser = () => {
         LOG2USER.info("Generating editor, reader and writer");
-        let editor: FreEditUnit = null;
+        let editor: FreEditUnit;
         try {
             this.editorGenerator.outputfolder = this.outputFolder;
             this.editorGenerator.language = this.language;
@@ -198,13 +198,14 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
 
             this.editorGenerator.generate(editor);
             this.parserGenerator.generate(editor);
+            return editor;
         } catch (e: unknown) {
             if (e instanceof Error) {
                 LOG2USER.error("Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
                 // LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
             }
         }
-        return editor;
+        return null;
     };
 
     private generateLanguage = () => {

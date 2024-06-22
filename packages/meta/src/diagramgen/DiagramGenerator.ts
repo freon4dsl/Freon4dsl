@@ -12,10 +12,10 @@ const LOGGER = new MetaLogger("DiagramGenerator").mute();
 export class DiagramGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage;
-    private diagramFolder: string;
-    private diagramGenFolder: string;
+    private diagramFolder: string = '';
+    private diagramGenFolder: string = '';
     fileNames: string[] = [];
-    private diagramAstFolder: string;
+    private diagramAstFolder: string = '';
 
     generate(): void {
         if (this.language === null) {
@@ -70,19 +70,25 @@ export class DiagramGenerator {
 
         // Generate diagrams for all .ast files
         for (const name of this.fileNames) {
-            const fName: string = name.split(FileUtil.separator()).pop().split(".").shift();
-            title = `Class diagram for file ${fName}`;
-            //  Generate the html version of the inheritance diagram
-            generatedFilePath = `${this.diagramAstFolder}/${fName}-view.html`;
-            content = htmlMaker.makeOverviewPerFile(this.language, name);
-            generatedContent = htmlTemplate.generate(title, content);
-            this.makeFile(`${fName} diagram in html`, generatedFilePath, generatedContent);
+            let tmpName: string | undefined = name.split(FileUtil.separator()).pop();
+            if ( !!tmpName && tmpName.length > 0) {
+                tmpName = tmpName.split(".").shift();
+            }
+            if ( !!tmpName && tmpName.length > 0) {
+                const fName: string = tmpName as string;
+                title = `Class diagram for file ${fName}`;
+                //  Generate the html version of the inheritance diagram
+                generatedFilePath = `${this.diagramAstFolder}/${fName}-view.html`;
+                content = htmlMaker.makeOverviewPerFile(this.language, name);
+                generatedContent = htmlTemplate.generate(title, content);
+                this.makeFile(`${fName} diagram in html`, generatedFilePath, generatedContent);
 
-            //  Generate the md version of the inheritance diagram
-            generatedFilePath = `${this.diagramAstFolder}/${fName}-view.md`;
-            content = mdMaker.makeOverviewPerFile(this.language, name);
-            generatedContent = mdTemplate.generate(title, content);
-            this.makeFile(`${fName} diagram in md`, generatedFilePath, generatedContent);
+                //  Generate the md version of the inheritance diagram
+                generatedFilePath = `${this.diagramAstFolder}/${fName}-view.md`;
+                content = mdMaker.makeOverviewPerFile(this.language, name);
+                generatedContent = mdTemplate.generate(title, content);
+                this.makeFile(`${fName} diagram in md`, generatedFilePath, generatedContent);
+            }
         }
 
         if (generationStatus.numberOfErrors > 0) {

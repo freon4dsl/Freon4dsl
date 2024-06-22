@@ -28,7 +28,7 @@ export class MetaElementReference<T extends FreMetaLangElement> {
     public aglParseLocation: FreParseLocation;
 
     // Need for the scoper to work
-    private typeName: string;
+    private typeName: string = '';
     private scoper = FreMetaEnvironment.metascoper;
 
     private constructor(referredElement: T, typeName: string) {

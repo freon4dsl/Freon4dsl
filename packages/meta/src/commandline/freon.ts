@@ -59,13 +59,11 @@ export class Freon extends CommandLineParser {
         this.addAction(this.typerAction);
         this.addAction(this.interpreterAction);
         this.addAction(this.cleanAction);
-    }
 
-    protected onDefineParameters(): void {
         this.verboseArg = this.defineFlagParameter({
-            parameterLongName: "--verbose",
-            parameterShortName: "-v",
-            description: "Show extra logging detail"
+            parameterLongName: '--verbose',
+            parameterShortName: '-v',
+            description: 'Show extra logging detail'
         });
         this.watchArg = this.defineFlagParameter({
             parameterLongName: "--watch",
@@ -73,6 +71,19 @@ export class Freon extends CommandLineParser {
             description: "Start generator in watch mode (only in combination with 'all')"
         });
     }
+
+    // protected onDefineParameters(): void {
+    //     this.verboseArg = this.defineFlagParameter({
+    //         parameterLongName: "--verbose",
+    //         parameterShortName: "-v",
+    //         description: "Show extra logging detail"
+    //     });
+    //     this.watchArg = this.defineFlagParameter({
+    //         parameterLongName: "--watch",
+    //         parameterShortName: "-w",
+    //         description: "Start generator in watch mode (only in combination with 'all')"
+    //     });
+    // }
 
     protected onExecute(): Promise<void> {
         if (!this.verboseArg.value) {

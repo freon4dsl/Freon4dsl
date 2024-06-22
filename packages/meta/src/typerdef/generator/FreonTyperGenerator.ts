@@ -19,9 +19,9 @@ const LOGGER = new MetaLogger("FreonTyperGenerator").mute();
 export class FreonTyperGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage;
-    protected typerGenFolder: string;
-    protected typerConceptsFolder: string;
-    protected typerFolder: string;
+    protected typerGenFolder: string = '';
+    protected typerConceptsFolder: string = '';
+    protected typerFolder: string = '';
 
     generate(typerdef: TyperDef): void {
         if (this.language === null) {

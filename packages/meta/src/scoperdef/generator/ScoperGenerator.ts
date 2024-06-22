@@ -13,8 +13,8 @@ const LOGGER = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage;
-    protected scoperGenFolder: string;
-    protected scoperFolder: string;
+    protected scoperGenFolder: string = '';
+    protected scoperFolder: string = '';
 
     generate(scopedef: ScopeDef): void {
         if (this.language === null) {

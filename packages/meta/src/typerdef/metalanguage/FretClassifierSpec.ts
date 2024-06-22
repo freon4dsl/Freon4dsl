@@ -30,7 +30,7 @@ export class FretClassifierSpec extends FreTyperElement {
     owner: TyperDef;
 
     readonly $typename: string = "FretClassifierSpec"; // holds the metatype in the form of a string
-    $id: string; // a unique identifier
+    $id: string = ''; // a unique identifier
 
     rules: FretTypeRule[] = []; // implementation of part 'rules'
     $myClassifier: MetaElementReference<FreMetaClassifier>; // implementation of reference 'myClassifier'

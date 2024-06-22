@@ -264,7 +264,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                     }
                 }
         });
-        if (!!!severity.severity) {
+        if (!severity.severity) {
             severity.severity = FreErrorSeverity.ToDo;
         }
     }

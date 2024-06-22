@@ -16,8 +16,8 @@ const LOGGER = new MetaLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage;
-    protected validatorGenFolder: string;
-    protected validatorFolder: string;
+    protected validatorGenFolder: string = '';
+    protected validatorFolder: string = '';
 
     generate(validdef: ValidatorDef): void {
         if (this.language === null) {

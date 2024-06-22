@@ -6,7 +6,7 @@ import { GenerationUtil, Names } from "../../../../utils";
 import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBinExpListWithSeparator extends RHSPropEntry {
-    type: FreMetaBinaryExpressionConcept = null;
+    type: FreMetaBinaryExpressionConcept;
     private readonly separatorText: string = "";
 
     constructor(prop: FreMetaProperty, type: FreMetaBinaryExpressionConcept, separatorText: string) {

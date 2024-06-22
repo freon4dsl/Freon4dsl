@@ -247,7 +247,7 @@ export class FreTyperPartTemplate {
     }
 
     private makeIsType(allTypes: FreMetaClassifier[]) {
-        let result: string;
+        let result: string = '';
         // add statements for all concepts that are marked 'isType'
         // all elements of allTypes should be FreConcepts
         const myList: FreMetaConcept[] = allTypes.filter(t => t instanceof FreMetaConcept) as FreMetaConcept[];

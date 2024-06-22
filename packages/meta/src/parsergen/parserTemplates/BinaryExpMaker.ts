@@ -22,6 +22,7 @@ export class BinaryExpMaker {
         binaryConceptsUsed.forEach(bin => {
             const expBase: FreMetaExpressionConcept = GenerationUtil.findExpressionBase(bin);
             if (groups.has(expBase)) {
+                // @ts-ignore
                 groups.get(expBase).push(bin);
             } else {
                 groups.set(expBase, [bin]);

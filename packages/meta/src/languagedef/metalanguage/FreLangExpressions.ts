@@ -16,7 +16,7 @@ import { MetaElementReference } from ".";
  */
 
 export abstract class FreLangExp extends FreMetaLangElement {
-    sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
+    sourceName: string = '';							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
     appliedfeature: FreLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
     $referredElement: MetaElementReference<FreMetaLangElement>;  // refers to the element called 'sourceName'
     language: FreMetaLanguage;                           // the language for which this expression is defined
@@ -80,7 +80,7 @@ export class FreLangSelfExp extends FreLangExp {
 
 export class FreInstanceExp extends FreLangExp {
     // sourceName should be name of a limited concept
-    instanceName: string;   // should be name of one of the predefined instances of 'sourceName'
+    instanceName: string = '';   // should be name of one of the predefined instances of 'sourceName'
     $referredElement: MetaElementReference<FreMetaInstance>;
 
     toFreString(): string {
@@ -143,7 +143,7 @@ export class FreLangAppliedFeatureExp extends FreLangExp {
 }
 
 export class FreLangFunctionCallExp extends FreLangExp {
-    // sourceName: string; 			// only used in validator for 'conformsTo' and 'equalsType'
+    // sourceName: string = ''; 			// only used in validator for 'conformsTo' and 'equalsType'
     actualparams: FreLangExp[] = [];
     returnValue: boolean;
     $referredElement: MetaElementReference<FreMetaFunction>;

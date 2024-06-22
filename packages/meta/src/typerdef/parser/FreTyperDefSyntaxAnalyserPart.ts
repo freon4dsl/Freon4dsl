@@ -131,7 +131,7 @@ export class FreTyperDefSyntaxAnalyserPart {
      */
     public transformFretTypeConcept(branch: SPPTBranch): FretTypeConcept {
         // console.log('transformFretTypeConcept called: ' + branch.name);
-        let __name: string;
+        let __name: string = '';
         let __base: MetaElementReference<FreMetaConcept>;
         let __properties: FretProperty[];
         const children = this.mainAnalyser.getChildren(branch);
@@ -288,7 +288,7 @@ export class FreTyperDefSyntaxAnalyserPart {
      */
     public transformFretFunctionCallExp(branch: SPPTBranch): FretFunctionCallExp {
         // console.log('transformFretFunctionCallExp called: ' + branch.name);
-        let __calledFunction: string;
+        let __calledFunction: string = '';
         let __arguments: FretExp[];
         const children = this.mainAnalyser.getChildren(branch);
         __calledFunction = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
@@ -356,7 +356,7 @@ export class FreTyperDefSyntaxAnalyserPart {
      */
     public transformFretVarDecl(branch: SPPTBranch): FretVarDecl {
         // console.log('transformFretVarDecl called: ' + branch.name);
-        let __name: string;
+        let __name: string = '';
         let __type: MetaElementReference<FreMetaClassifier>;
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
@@ -441,7 +441,7 @@ export class FreTyperDefSyntaxAnalyserPart {
      */
     public transformFretProperty(branch: SPPTBranch): FretProperty {
         // console.log('transformFretProperty called: ' + branch.name);
-        let __name: string;
+        let __name: string = '';
         let __type: MetaElementReference<FreMetaClassifier>;
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry

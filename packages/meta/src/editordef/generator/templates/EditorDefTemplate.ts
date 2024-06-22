@@ -216,7 +216,7 @@ export class EditorDefTemplate {
 /** private class to store some info */
 class ConceptTriggerElement {
     concept: FreMetaConcept;
-    trigger: string;
+    trigger: string = '';
 
     constructor(concept: FreMetaConcept, trigger: string) {
         this.concept = concept;
@@ -248,14 +248,18 @@ function conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyPr
         result += "    [                           // Concept has special projection for (one of) its parts\n";
         result += '        "' + conceptName + '", new Map( [                          // Projection has special projection for (one of) the parts\n';
         const conceptMap = conceptProjectionToPropertyProjection.get(conceptName);
-        for (const projection of conceptMap.keys()) {
-            result += "            [" + "                                       // Projection has special projection for some part \n";
-            result += '                "' + projection + '", new Map ([\n';
-            const projectionMap = conceptMap.get(projection);
-            for (const propertyProjection of projectionMap) {
-                result += '            [ "' + propertyProjection[0] + '", "' + propertyProjection[1] + '" ],             // special projection\n';
+        if (!!conceptMap) {
+            for (const projection of conceptMap.keys()) {
+                result += "            [" + "                                       // Projection has special projection for some part \n";
+                result += '                "' + projection + '", new Map ([\n';
+                const projectionMap = conceptMap.get(projection);
+                if (!!projectionMap) {
+                    for (const propertyProjection of projectionMap) {
+                        result += '            [ "' + propertyProjection[0] + '", "' + propertyProjection[1] + '" ],             // special projection\n';
+                    }
+                }
+                result += "         ])],";
             }
-            result += "         ])],";
         }
         result += "     ])],";
     }

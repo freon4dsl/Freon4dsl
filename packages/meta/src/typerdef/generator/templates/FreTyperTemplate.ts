@@ -15,7 +15,7 @@ export class FreTyperTemplate {
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.FreTyperPart;
-        let rootType: string;
+        let rootType: string = '';
         if (!!typerdef) {
             rootType = Names.classifier(typerdef.typeRoot());
         }

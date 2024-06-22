@@ -52,7 +52,7 @@ export class WriterTemplate {
         const stdBoolKeywords = editDef.getDefaultProjectiongroup().standardBooleanProjection;
         if (!!stdBoolKeywords) {
             this.trueValue = stdBoolKeywords.trueKeyword;
-            this.falseValue = stdBoolKeywords.falseKeyword;
+            this.falseValue = stdBoolKeywords.falseKeyword ? stdBoolKeywords.falseKeyword : '';
         }
         const refSeparator = editDef.getDefaultProjectiongroup().standardReferenceSeparator;
         if (!!refSeparator) {
@@ -623,7 +623,7 @@ export class WriterTemplate {
                 );`;
             }
         } else {
-            let myCall: string;
+            let myCall: string = '';
             const myType: FreMetaClassifier = myElem.type;
             if (myType === FreMetaPrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
@@ -638,7 +638,7 @@ export class WriterTemplate {
                     if (!!item.boolInfo.falseKeyword) {
                         myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.falseKeyword);
                     } else {
-                        myFalseKeyword = null;
+                        myFalseKeyword = '';
                     }
                 }
                 if (myTrueKeyword === "true" && myFalseKeyword === "false") {
@@ -723,7 +723,7 @@ export class WriterTemplate {
                 }
             } else {
                 let myCall: string = "";
-                let myTypeScript: string;
+                let myTypeScript: string = '';
                 if (myElem.isPart) {
                     myTypeScript = GenerationUtil.propertyToTypeScript(item.property.referred);
                     myCall += `this.${nameOfUnparseMethod}(${myTypeScript}, short) `;

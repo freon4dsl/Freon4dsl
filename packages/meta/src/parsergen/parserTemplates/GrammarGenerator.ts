@@ -14,14 +14,13 @@ export class GrammarGenerator {
 
     createGrammar(language: FreMetaLanguage, analyser: LanguageAnalyser, editUnit: FreEditUnit): GrammarModel {
         // create an empty model of the grammar and syntax analysis
-        const grammar = new GrammarModel();
-        grammar.language = language;
+        const grammar = new GrammarModel(language);
 
         // add the standard option from the editor definition
         const stdBoolKeywords = editUnit.getDefaultProjectiongroup().standardBooleanProjection;
         if (!!stdBoolKeywords) {
             grammar.trueValue = stdBoolKeywords.trueKeyword;
-            grammar.falseValue = stdBoolKeywords.falseKeyword;
+            grammar.falseValue = stdBoolKeywords.falseKeyword ? stdBoolKeywords.falseKeyword : '';
         }
         const refSeparator = editUnit.getDefaultProjectiongroup().standardReferenceSeparator;
         if (!!refSeparator) {

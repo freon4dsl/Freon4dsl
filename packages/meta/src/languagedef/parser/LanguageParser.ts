@@ -13,11 +13,11 @@ import { FreLangChecker } from "../checking/FreLangChecker";
 // const LOGGER = new MetaLogger("LanguageParser").mute();
 
 export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
-    idFile: string;
+    idFile: string = '';
 
     constructor(idFile?: string) {
         super();
-        this.idFile = idFile;
+        this.idFile = idFile ? idFile : '';
         this.parser = pegjsParser;
         this.checker = new FreLangChecker(null);
     }

@@ -1,7 +1,7 @@
 import * as fs from "fs";
 
 export class FileWatcher {
-    filename: string;
+    filename: string = '';
     lastChanged: number = 0;
     callback: () => void;
 

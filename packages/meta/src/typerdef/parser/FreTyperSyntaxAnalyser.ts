@@ -17,7 +17,7 @@ import { FreParseLocation } from "../../utils";
  */
 export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
     locationMap: any;
-    filename: string;
+    filename: string = '';
     private _unit_TyperDef_analyser: FreTyperDefSyntaxAnalyserPart = new FreTyperDefSyntaxAnalyserPart(this);
 
     clear(): void {

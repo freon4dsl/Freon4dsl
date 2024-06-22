@@ -220,7 +220,7 @@ export class ConceptTemplate {
         return Array.from(
             new Set(
                 concept.interfaces.map(i => Names.interface(i.referred))
-                    .concat((concept.base ? Names.concept(concept.base.referred) : null))
+                    .concat((concept.base ? Names.concept(concept.base.referred) : ''))
                     .concat(concept.implementedParts().map(part => Names.classifier(part.type)))
                     .concat(concept.implementedReferences().map(part => Names.classifier(part.type)))
                     // .concat(Names.metaType(concept.language))

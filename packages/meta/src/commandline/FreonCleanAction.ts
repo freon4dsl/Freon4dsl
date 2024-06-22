@@ -21,9 +21,9 @@ export class FreonCleanAction extends CommandLineAction {
     private defFolderArg: CommandLineStringParameter;
     protected forceFlag: CommandLineFlagParameter;
 
-    protected outputFolder: string;
-    private defFolder: string;
-    private force: boolean;
+    protected outputFolder: string = '';
+    private defFolder: string = '';
+    private force: boolean = false;
 
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
@@ -41,23 +41,7 @@ export class FreonCleanAction extends CommandLineAction {
                 "Removes the TypeScript code for the language implementation, the editor, the scoper, the typer, the reader, the writer, and the " +
                 "validator. Any files that may contain customizations are left untouched."
         });
-    }
 
-    protected onExecute(): Promise<void> {
-        const self = this;
-        self.outputFolder = this.outputFolderArg.value;
-        self.force = this.forceFlag.value;
-        self.defFolder = this.defFolderArg.value;
-        // @ts-ignore
-        // error TS6133: 'resolve' is declared but its value is never read.
-        // error TS6133: 'reject' is declared but its value is never read.
-        // The parameters are expected by the constructor of Promise.
-        return new Promise(function(resolve, reject) {
-            self.doClean();
-        });
-    }
-
-    protected onDefineParameters(): void {
         this.forceFlag = this.defineFlagParameter({
             parameterLongName: "--force",
             parameterShortName: "-f",
@@ -77,6 +61,20 @@ export class FreonCleanAction extends CommandLineAction {
             parameterShortName: "-o",
             description: "The directory where the generated files are located",
             required: false
+        });
+    }
+
+    protected onExecute(): Promise<void> {
+        const self = this;
+        self.outputFolder = this.outputFolderArg.value;
+        self.force = this.forceFlag.value;
+        self.defFolder = this.defFolderArg.value;
+        // @ts-ignore
+        // error TS6133: 'resolve' is declared but its value is never read.
+        // error TS6133: 'reject' is declared but its value is never read.
+        // The parameters are expected by the constructor of Promise.
+        return new Promise(function(resolve, reject) {
+            self.doClean();
         });
     }
 

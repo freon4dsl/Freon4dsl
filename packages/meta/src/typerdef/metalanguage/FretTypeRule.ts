@@ -12,7 +12,7 @@ import { FreTyperElement } from "./FreTyperElement";
  */
 export abstract class FretTypeRule extends FreTyperElement {
     readonly $typename: string = "FretTypeRule"; // holds the metatype in the form of a string
-    $id: string; // a unique identifier
+    $id: string = ''; // a unique identifier
 
     exp: FretExp; // implementation of part 'exp'
     $returnType: MetaElementReference<FreMetaClassifier>;    // to be set by the checker

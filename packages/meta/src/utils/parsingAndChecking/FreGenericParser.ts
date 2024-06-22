@@ -41,9 +41,9 @@ export class FreParseLocation {
         }
         return result;
     }
-    filename: string;
-    line: number;
-    column: number;
+    filename: string = '';
+    line: number = 0;
+    column: number = 0;
 }
 
 /**

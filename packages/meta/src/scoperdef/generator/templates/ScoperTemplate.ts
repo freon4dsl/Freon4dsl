@@ -215,7 +215,7 @@ export class ScoperTemplate {
         let result;
         // special case: the expression refers to 'typeof'
         if (expression instanceof FreLangFunctionCallExp && expression.sourceName === "typeof") {
-            let actualParamToGenerate: string;
+            let actualParamToGenerate: string = '';
             // we know that typeof has exactly 1 actual parameter
             if ( expression.actualparams[0].sourceName === "container" ) {
                 actualParamToGenerate = `modelelement.freOwnerDescriptor().owner`;

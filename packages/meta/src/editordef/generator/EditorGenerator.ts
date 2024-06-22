@@ -20,9 +20,9 @@ const LOGGER = new MetaLogger("EditorGenerator").mute();
 
 export class EditorGenerator {
     public outputfolder: string = ".";
-    protected editorGenFolder: string;
-    protected editorFolder: string;
-    protected stylesFolder: string;
+    protected editorGenFolder: string = '';
+    protected editorFolder: string = '';
+    protected stylesFolder: string = '';
     language: FreMetaLanguage;
 
     generate(editDef: FreEditUnit): void {

@@ -95,7 +95,7 @@ export class FreEditUnit extends FreMetaDefinitionElement {
 
 export class BoolKeywords extends FreMetaDefinitionElement {
     trueKeyword: string = "true";
-    falseKeyword?: string;
+    falseKeyword?: string = '';
 
     toString(): string {
         return `BoolKeywords [ ${this.trueKeyword} | ${this.falseKeyword} ]`;
@@ -157,7 +157,7 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
  * A single projection definition for a single concept or interface
  */
 export abstract class FreEditClassifierProjection extends FreMetaDefinitionElement {
-    name: string;
+    name: string = '';
     classifier: MetaElementReference<FreMetaClassifier>;
     toString(): string {
         return `TO BE IMPLEMENTED BY SUBCLASSES`;
@@ -302,7 +302,7 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
     projectionName: string = null;
 
     toString(): string {
-        let extraText: string;
+        let extraText: string = '';
         if (!!this.listInfo) {
             extraText = `\n/* list */ ${this.listInfo}`;
         }

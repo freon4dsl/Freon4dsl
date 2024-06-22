@@ -27,7 +27,7 @@ export class FretFunctionCallExp extends FretExp {
     }
     readonly $typename: string = "FretFunctionCallExp"; // holds the metatype in the form of a string
 
-    calledFunction: string;
+    calledFunction: string = '';
     actualParameters: FretExp[] = [];
 
     toFreString(): string {
