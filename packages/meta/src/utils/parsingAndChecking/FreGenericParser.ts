@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { Checker } from "./Checker";
-import { Parser, PegjsError } from "pegjs";
+import { Parser, parser } from "pegjs";
 import { LOG2USER } from "../UserLogger";
 import { FreMetaDefinitionElement } from "../FreMetaDefinitionElement";
 import { ParseLocationUtil } from "./ParseLocationUtil";
@@ -19,7 +19,7 @@ export type Location = {
     column: number;
 };
 
-function isPegjsError(object: any): object is PegjsError {
+function isPegjsError(object: any): object is parser.SyntaxError {
     return 'location' in object;
 }
 
