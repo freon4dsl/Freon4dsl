@@ -43,12 +43,9 @@
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*"
   ],
-  "peerDependencies": {
-    "svelte": "^4.0.0",
-    "@freon4dsl/core": "^0.7.0-beta",
-    "mobx": "^6.12.3"
-  },
   "devDependencies": {
+    "@freon4dsl/core": "^0.7.0-beta",
+    "mobx": "^6.12.3",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/svelte": "^5.1.0",
     "@testing-library/user-event": "^14.5.2",

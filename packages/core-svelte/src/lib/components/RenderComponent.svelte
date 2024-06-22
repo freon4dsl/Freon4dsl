@@ -129,7 +129,8 @@
         {:else if isActionBox(box) || isSelectBox(box)}
             <TextDropdownComponent box={box} editor={editor}/>
         {:else}
-            <p class="error">[UNKNOWN BOX TYPE: {box.kind}]</p>
+            <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
+            <p class="error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
         {/if}
     </span>
 {/if}

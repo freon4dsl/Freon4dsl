@@ -5,15 +5,23 @@ import typescript from '@rollup/plugin-typescript';
 import pkg from './package.json' assert { type: 'json'};
 import dts from 'rollup-plugin-dts';
 
+const production = false;
+
 const config = [
 	{
 		input: 'src/index.ts',
 		output: [
 			{
-				sourcemap: true,
+				sourcemap: !production,
 				format: 'es',
 				name: pkg.name,
 				file: pkg.module,
+			},
+			{
+				sourcemap: !production,
+				format: 'umd',
+				name: pkg.name,
+				file: pkg.main,
 			}
 		],
 		plugins: [
@@ -27,15 +35,17 @@ const config = [
 			https://github.com/rollup/plugins/tree/master/packages/node-resolve/#readme
 			regarding "Resolving Built-Ins (like fs)"
 			 */
-			commonjs(),
 			resolve({ preferBuiltins: false }),
+			commonjs(),
 			typescript(),
 
-			// minify
-			terser()
+			// If we're building for production (npm run build
+			// instead of npm run dev), minify
+			production && terser()
 		]
 	},
 	{
+		// create a bundled version of the types for use in the sveltekit packages
 		input: "./dist/dts/index.d.ts",
 		output: [{ file: 'dist/index.d.ts', format: 'es' }],
 		plugins: [dts()],

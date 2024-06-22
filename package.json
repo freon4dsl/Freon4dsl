@@ -2,7 +2,7 @@
   "name": "freon4dsl",
   "private": true,
   "scripts": {
-    "clean": "rm -rf node_modules/ && npm run clean --workspaces --if-present",
+    "clean": "rm -f package-lock.json && rm -rf node_modules/ && npm run clean --workspaces --if-present",
     "start": "npm run start --stream --parallel",
     "build": "npm run build --workspaces --if-present",
     "build-release": "npm run build-release --workspaces --if-present",
@@ -56,11 +56,11 @@
     "packages/core",
     "packages/core-svelte",
     "packages/meta",
-    "packages/test",
-    "packages/samples/*",
-    "packages/server",
     "packages/webapp-lib",
-    "packages/webapp-starter"
+    "packages/samples/*",
+    "packages/webapp-starter",
+    "packages/server",
+    "packages/test"
   ],
   "version": "0.7.0-beta"
 }
