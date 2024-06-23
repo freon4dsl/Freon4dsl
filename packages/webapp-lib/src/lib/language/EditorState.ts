@@ -262,9 +262,10 @@ export class EditorState {
         await this.saveCurrentUnit();
         // newUnit is stored in the in-memory model as an interface only
         // we must get the full unit from the server and make a swap
-        const newCompleteUnit = await this.serverCommunication.loadModelUnit(this.currentModel.name, {name: newUnit.name, id: newUnit.freId()}) as FreModelUnit; //, (newCompleteUnit: FreModelUnit) => {
-            this.swapInterfaceAndUnits(newCompleteUnit, newUnit);
+        // const newCompleteUnit = await this.serverCommunication.loadModelUnit(this.currentModel.name, {name: newUnit.name, id: newUnit.freId()}) as FreModelUnit; //, (newCompleteUnit: FreModelUnit) => {
+        // await this.swapInterfaceAndUnits(newCompleteUnit, newUnit);
         // });
+        this.showUnitAndErrors(newUnit);
     }
 
     /**
@@ -276,11 +277,11 @@ export class EditorState {
      * @param newUnitInterface
      * @private
      */
-    private swapInterfaceAndUnits(newCompleteUnit: FreModelUnit, newUnitInterface: FreModelUnit) {
+    private async swapInterfaceAndUnits(newCompleteUnit: FreModelUnit, newUnitInterface: FreModelUnit) {
         LOGGER.log("swapInterfaceAndUnits called");
         if (!!EditorState.getInstance().currentUnit) {
             // get the interface of the current unit from the server
-            this.serverCommunication.loadModelUnitInterface(
+            await this.serverCommunication.loadModelUnitInterface(
                 EditorState.getInstance().currentModel.name,
                 { name: EditorState.getInstance().currentUnit.name, id: EditorState.getInstance().currentUnit.freId()},
                 (oldUnitInterface: FreModelUnit) => {

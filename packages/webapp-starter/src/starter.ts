@@ -10,7 +10,7 @@ WebappConfigurator.getInstance().setEditorEnvironment(ExampleEnvironment.getInst
 /**
  * The one and only reference to the server on which the models are stored
  */
-import { ServerCommunication, LionWebRepositoryCommunication } from "@freon4dsl/core";
+import { ServerCommunication, LionWebRepositoryCommunication, FreLogger } from "@freon4dsl/core"
 WebappConfigurator.getInstance().setServerCommunication(LionWebRepositoryCommunication.getInstance());
 // export const serverCommunication: IServerCommunication = MpsServerCommunication.getInstance();
 
@@ -20,5 +20,7 @@ WebappConfigurator.getInstance().setServerCommunication(LionWebRepositoryCommuni
 const app = new FreonLayout({
 	target: document.body,
 });
+
+FreLogger.unmute("EditorState");
 
 export default app;
