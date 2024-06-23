@@ -68,8 +68,8 @@
     import { setUserMessage } from "../stores/UserMessageStore.js";
     import { ImportExportHandler } from "../../language/ImportExportHandler.js";
     import { Anchor } from "@smui/menu-surface";
-    import { FreErrorSeverity, FreModelUnit } from "@freon4dsl/core";
-
+    import { FreErrorSeverity, type FreModelUnit } from "@freon4dsl/core";
+    
     // TODO add rename option to context menu
     let menus: MenuComponentDev[] = [];
     // following is used to position the menu

@@ -57,7 +57,7 @@ export class EditorState {
         // reset all visible information on the model and unit
         this.resetGlobalVariables();
         // create a new model
-        serverCommunication.createModel(modelName)
+        this.serverCommunication.createModel(modelName)
         this.currentModel = this.langEnv.newModel(modelName);
         currentModelName.set(this.currentModel.name);
         
@@ -80,7 +80,7 @@ export class EditorState {
         this.currentModel = this.langEnv.newModel(modelName);
         currentModelName.set(modelName);
         // fill the new model with the units loaded from the server
-        const unitIdentifiers = await serverCommunication.loadUnitList(modelName)
+        const unitIdentifiers = await this.serverCommunication.loadUnitList(modelName)
             unitNames.set(unitIdentifiers);
             if (!!unitIdentifiers && unitIdentifiers.length > 0) {
                 // load the first unit completely and show it
@@ -88,7 +88,7 @@ export class EditorState {
                 let first: boolean = true;
                 for (const unitIdentifier of unitIdentifiers) {
                     if (first) {
-                        const unit = await  serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit //, (unit: FreModelUnit) => {
+                        const unit = await  this.serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit //, (unit: FreModelUnit) => {
                             this.currentModel.addUnit(unit);
                             this.currentUnit = unit;
                             currentUnitName.set({name: this.currentUnit.name, id: this.currentUnit.freId()});
@@ -99,7 +99,7 @@ export class EditorState {
                         //     this.currentModel.addUnit(unit);
                         //     this.setUnitLists();
                         // });
-                        const unit = await serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit
+                        const unit = await this.serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit
                         this.currentModel.addUnit(unit);
                     }
                 }
@@ -167,7 +167,7 @@ export class EditorState {
         const newUnit = EditorState.getInstance().currentModel.newUnit(unitType);
         if (!!newUnit) {
             newUnit.name = newName;
-            await serverCommunication.createModelUnit(EditorState.getInstance().currentModel.name, newUnit);
+            await this.serverCommunication.createModelUnit(EditorState.getInstance().currentModel.name, newUnit);
             // show the new unit in the editor
             this.showUnitAndErrors(newUnit);
         } else {
@@ -184,7 +184,7 @@ export class EditorState {
         if (!!unit) {
             if (!!this.currentModel?.name && this.currentModel?.name.length) {
                 if (!!unit.name && unit.name.length > 0) {
-                    await serverCommunication.putModelUnit(this.currentModel.name, {name: unit.name, id: unit.freId()}, unit);
+                    await this.serverCommunication.putModelUnit(this.currentModel.name, {name: unit.name, id: unit.freId()}, unit);
                     currentUnitName.set({ name: unit.name, id: unit.freId() }); // just in case the user has changed the name in the editor
                     EditorState.getInstance().setUnitLists();
                     this.hasChanges = false;
@@ -219,7 +219,7 @@ export class EditorState {
         LOGGER.log("delete called for unit: " + unit.name);
 
         // get rid of the unit on the server
-        await serverCommunication.deleteModelUnit(get(currentModelName), {name: unit.name, id: unit.freId()});
+        await this.serverCommunication.deleteModelUnit(get(currentModelName), {name: unit.name, id: unit.freId()});
         // get rid of old model unit from memory
         this.currentModel.removeUnit(unit);
         // if the unit is shown in the editor, get rid of that one, as well
@@ -262,7 +262,7 @@ export class EditorState {
         await this.saveCurrentUnit();
         // newUnit is stored in the in-memory model as an interface only
         // we must get the full unit from the server and make a swap
-        const newCompleteUnit = await serverCommunication.loadModelUnit(this.currentModel.name, {name: newUnit.name, id: newUnit.freId()}) as FreModelUnit; //, (newCompleteUnit: FreModelUnit) => {
+        const newCompleteUnit = await this.serverCommunication.loadModelUnit(this.currentModel.name, {name: newUnit.name, id: newUnit.freId()}) as FreModelUnit; //, (newCompleteUnit: FreModelUnit) => {
             this.swapInterfaceAndUnits(newCompleteUnit, newUnit);
         // });
     }
@@ -325,7 +325,7 @@ export class EditorState {
                     // set elem in editor
                     this.showUnitAndErrors(unit);
                 }
-                serverCommunication.putModelUnit(this.currentModel.name, {name: unit.name, id: unit.freId()}, unit);
+                this.serverCommunication.putModelUnit(this.currentModel.name, {name: unit.name, id: unit.freId()}, unit);
             }
         } catch (e: unknown) {
             if (e instanceof Error) {

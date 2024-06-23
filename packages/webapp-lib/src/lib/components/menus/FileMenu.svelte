@@ -30,7 +30,7 @@
 <input class:file_selector bind:this={file_selector} {...file_selector_props} on:change={process_files}>
 
 <script lang="ts">
-	import { ModelUnitIdentifier } from "@freon4dsl/core";
+	import { type ModelUnitIdentifier } from "@freon4dsl/core";
 	import MenuComponentDev from "@smui/menu";
 	import Menu from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
