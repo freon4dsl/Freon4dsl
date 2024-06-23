@@ -1,10 +1,9 @@
-import { forEach } from "lodash";
 import { ReferenceShortcut } from "../editor";
 import { FreNode, FreModel, FreModelUnit } from "../ast";
 import { EmptyStdLib, FreStdlib } from "../stdlib/index";
 import { isNullOrUndefined } from "../util";
-import { FreLogger } from "../logging";
-const LOGGER = new FreLogger("Language");
+// import { FreLogger } from "../logging";
+// const LOGGER = new FreLogger("Language");
 
 export type PropertyKind = "primitive" | "part" | "reference";
 
@@ -204,13 +203,13 @@ export class FreLanguage {
         return undefined;
     }
 
-    private conceptProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
-        return this.concepts.get(typeName)?.properties.get(propertyName);
-    }
-
-    private conceptPropertyByKey(conceptKey: string, propertyKey: string): FreLanguageProperty | undefined {
-        return this.helperPropByKey(this.conceptByKey(conceptKey).properties, propertyKey);
-    }
+    // private conceptProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
+    //     return this.concepts.get(typeName)?.properties.get(propertyName);
+    // }
+    //
+    // private conceptPropertyByKey(conceptKey: string, propertyKey: string): FreLanguageProperty | undefined {
+    //     return this.helperPropByKey(this.conceptByKey(conceptKey).properties, propertyKey);
+    // }
 
     helperPropByKey(map: Map<string, FreLanguageProperty>, key: string): FreLanguageProperty | undefined {
         for ( const prop of map.values()) {
@@ -219,21 +218,20 @@ export class FreLanguage {
             }
         }
         return undefined;
-
     }
 
-    private unitProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
-        return this.units.get(typeName)?.properties.get(propertyName);
-    }
+    // private unitProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
+    //     return this.units.get(typeName)?.properties.get(propertyName);
+    // }
 
     unitPropertyByKey(unitKey: string, propertyKey: string): FreLanguageProperty | undefined {
         // LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
         return this.helperPropByKey(this.unitByKey(unitKey).properties, propertyKey);
     }
 
-    private interfaceProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
-        return this.interfaces.get(typeName)?.properties.get(propertyName);
-    }
+    // private interfaceProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
+    //     return this.interfaces.get(typeName)?.properties.get(propertyName);
+    // }
 
     interfacePropertyByKey(interfaceKey: string, propertyKey: string): FreLanguageProperty | undefined {
         // LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");

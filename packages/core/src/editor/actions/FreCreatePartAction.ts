@@ -1,11 +1,10 @@
 import { FreUtils } from "../../util";
-import { FreLogger } from "../../logging";
-import { Box } from "../boxes";
 import { FreAction } from "./FreAction";
 import { FreCommand } from "./FreCommand";
 import { FreCreatePartCommand } from "./FreCreatePartCommand";
 
-const LOGGER = new FreLogger("FreCreateElementAction");
+// import { FreLogger } from "../../logging";
+// const LOGGER = new FreLogger("FreCreateElementAction");
 
 export class FreCreatePartAction extends FreAction {
     /**
@@ -23,7 +22,7 @@ export class FreCreatePartAction extends FreAction {
         FreUtils.initializeObject(this, initializer);
     }
 
-    command(box: Box): FreCommand {
+    command(): FreCommand {
         return new FreCreatePartCommand(this.propertyName, this.conceptName, this.referenceShortcut);
     }
 }
