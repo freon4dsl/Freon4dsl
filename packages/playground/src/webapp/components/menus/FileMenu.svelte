@@ -111,7 +111,7 @@
     const saveUnit = () => {
         // console.log("FileMenu.saveUnit: " + $currentUnitName);
         EditorState.getInstance().saveCurrentUnit();
-		setUserMessage(`Unit '${$currentUnitName}' saved.`);
+		setUserMessage(`Unit '${$currentUnitName.name}' saved.`);
     }
 
     // delete model menuitem

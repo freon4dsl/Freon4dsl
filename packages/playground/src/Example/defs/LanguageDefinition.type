@@ -1,0 +1,33 @@
+typer
+
+hastype { Parameter, Attribute, Method, AttributeRef, ParameterRef }
+
+Parameter {
+    infertype self.declaredType;
+}
+
+ParameterRef   {
+    infertype self.parameter.declaredType;
+}
+
+Entity {
+    conformsto self.baseEntity;
+}
+
+Attribute {
+    infertype self.declaredType;
+}
+
+DirectAttributeRef {
+    infertype self.attribute.declaredType;
+}
+
+Method {
+    infertype self.declaredType;
+}
+MethodCallExpression {
+    infertype self.methodDefinition;
+}
+AttributeRef   {
+    infertype self.attribute.declaredType;
+}

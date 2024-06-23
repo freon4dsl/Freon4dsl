@@ -287,4 +287,11 @@ export class ServerCommunication implements IServerCommunication {
     createModel(modelName: string): any {
     }
 
+    // @ts-ignore
+    createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
+        return Promise.resolve(undefined)
+    }
+    
+    
+
 }

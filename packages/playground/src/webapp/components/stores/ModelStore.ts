@@ -4,7 +4,7 @@ import type { Writable } from 'svelte/store';
 import type { FreModelUnit, ModelUnitIdentifier } from "@freon4dsl/core";
 
 export let currentModelName: Writable<string> = writable<string>('');
-export let currentUnitName: Writable<string> = writable<string>('');
+export let currentUnitName: Writable<ModelUnitIdentifier> = writable<ModelUnitIdentifier>(null);
 
 export let noUnitAvailable: Writable<boolean> = writable<boolean>(true);
 export let units: Writable<FreModelUnit[]> = writable<FreModelUnit[]>(null);

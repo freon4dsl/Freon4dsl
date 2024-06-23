@@ -45,7 +45,7 @@ export class EditorState {
      * Creates a new model
      * @param modelName
      */
-    newModel(modelName: string) {
+    async newModel(modelName: string) {
         LOGGER.log("new model called: " + modelName);
         editorProgressShown.set(true);
         // save the old current unit, if there is one
@@ -53,8 +53,10 @@ export class EditorState {
         // reset all visible information on the model and unit
         this.resetGlobalVariables();
         // create a new model
+        serverCommunication.createModel(modelName)
         this.currentModel = editorEnvironment.newModel(modelName);
         currentModelName.set(this.currentModel.name);
+        
         editorProgressShown.set(false);
     }
 
@@ -85,17 +87,19 @@ export class EditorState {
                         const unit = await  serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit //, (unit: FreModelUnit) => {
                             this.currentModel.addUnit(unit);
                             this.currentUnit = unit;
-                            currentUnitName.set(this.currentUnit.name);
-                            EditorState.getInstance().showUnitAndErrors(this.currentUnit);
+                            currentUnitName.set({name: this.currentUnit.name, id: this.currentUnit.freId()});
                         // });
                         first = false;
                     } else {
-                        serverCommunication.loadModelUnitInterface(modelName, unitIdentifier, (unit: FreModelUnit) => {
-                            this.currentModel.addUnit(unit);
-                            this.setUnitLists();
-                        });
+                        // serverCommunication.loadModelUnitInterface(modelName, unitIdentifier, (unit: FreModelUnit) => {
+                        //     this.currentModel.addUnit(unit);
+                        //     this.setUnitLists();
+                        // });
+                        const unit = await serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit
+                        this.currentModel.addUnit(unit);
                     }
                 }
+                EditorState.getInstance().showUnitAndErrors(this.currentUnit);
             } else {
                 editorProgressShown.set(false);
             }
@@ -127,23 +131,22 @@ export class EditorState {
 
         // replace the current unit by its interface
         // and create a new unit named 'newName'
-        const oldName: string = get(currentUnitName);
+        const oldName: string = get(currentUnitName)?.name;
         if (!!oldName && oldName !== "") {
             // get the interface of the current unit from the server
-            serverCommunication.loadModelUnitInterface(
-                get(currentModelName),
-                // FIXME Incorrect, should be UnitIdentifier
-                null,
-                // get(currentUnitName),
-                (oldUnitInterface: FreModelUnit) => {
-                    if (!!oldUnitInterface) {
-                        // swap current unit with its interface in the in-memory model
-                        EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
-                    }
-                    this.createNewUnit(newName, unitType);
-                });
+            // await serverCommunication.loadModelUnitInterface(
+            //     get(currentModelName),
+            //     get(currentUnitName),
+            //     (oldUnitInterface: FreModelUnit) => {
+            //         if (!!oldUnitInterface) {
+            //             // swap current unit with its interface in the in-memory model
+            //             EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
+            //         }
+            //         this.createNewUnit(newName, unitType);
+            //     });
+            await this.createNewUnit(newName, unitType)
         } else {
-            this.createNewUnit(newName, unitType);
+            await this.createNewUnit(newName, unitType);
         }
     }
 
@@ -154,12 +157,13 @@ export class EditorState {
      * @param unitType
      * @private
      */
-    private createNewUnit(newName: string, unitType: string) {
+    private async createNewUnit(newName: string, unitType: string) {
         LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: " + newName);
         // create a new unit and add it to the current model
         const newUnit = EditorState.getInstance().currentModel.newUnit(unitType);
         if (!!newUnit) {
             newUnit.name = newName;
+            await serverCommunication.createModelUnit(EditorState.getInstance().currentModel.name, newUnit);
             // show the new unit in the editor
             this.showUnitAndErrors(newUnit);
         } else {
@@ -171,13 +175,13 @@ export class EditorState {
      * Pushes the current unit to the server
      */
     async saveCurrentUnit() {
-        LOGGER.log("EditorState.saveCurrentUnit: " + get(currentUnitName));
+        LOGGER.log("EditorState.saveCurrentUnit: " + get(currentUnitName)?.name);
         const unit: FreNamedNode = editorEnvironment.editor.rootElement as FreNamedNode;
         if (!!unit) {
             if (!!this.currentModel?.name && this.currentModel?.name.length) {
                 if (!!unit.name && unit.name.length > 0) {
                     await serverCommunication.putModelUnit(this.currentModel.name, {name: unit.name, id: unit.freId()}, unit);
-                    currentUnitName.set(unit.name); // just in case the user has changed the name in the editor
+                    currentUnitName.set({ name: unit.name, id: unit.freId() }); // just in case the user has changed the name in the editor
                     EditorState.getInstance().setUnitLists();
                     this.hasChanges = false;
                 } else {
@@ -221,7 +225,7 @@ export class EditorState {
             modelErrors.set([]);
         }
         // get rid of the name in the navigator
-        currentUnitName.set("");
+        currentUnitName.set(null);
         this.setUnitLists();
     }
 
@@ -378,7 +382,7 @@ export class EditorState {
             noUnitAvailable.set(false);
             editorEnvironment.editor.rootElement = newUnit;
             this.currentUnit = newUnit;
-            currentUnitName.set(newUnit.name);
+            currentUnitName.set({name: newUnit.name, id: newUnit.freId()});
             this.setUnitLists();
             this.hasChanges = true;
             this.getErrors();
@@ -386,7 +390,7 @@ export class EditorState {
             noUnitAvailable.set(true);
             editorEnvironment.editor.rootElement = null;
             this.currentUnit = null;
-            currentUnitName.set("<noUnit>");
+            currentUnitName.set(null);
             this.setUnitLists();
             this.hasChanges = false;
         }
